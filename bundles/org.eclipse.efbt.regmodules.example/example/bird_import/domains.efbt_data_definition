@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<efbt_data_definition:DomainModule xmlns:efbt_data_definition="http://www.eclipse.org/efbt_data_definition" license="Copyright (c) 2020 Bird Software Solutions Ltd&amp;#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&amp;#xA;&amp;#xA;SPDX-License-Identifier: EPL-2.0 &amp;#xA;&amp;#xA; Contributors:&amp;#xA; Neil Mackenzie - initial API and implementation&amp;#xD;">
+  <domains code="CRRNCY" data_type="String" domain_id="CRRNCY" is_enumerated="true" name="Currencies"/>
+  <domains code="EC" description="Defines the exposure class for capital requirement purposes" domain_id="EBA_EC" is_enumerated="true" name="Exposure classes"/>
+  <domains code="MNTRY" data_type="Double" domain_id="ECB2_MNTRY" name="Monetary"/>
+  <domains code="CRDT_RTNG_AGNCY" description="Credit rating agency used in Asset encumbrance.&#xA;See EBA ITS on Asset encumbrance, 5.2.3. Instructions concerning specific columns, External credit rating on covered bond (090-140), As per credit rating agencies' methodology to maintain current external credit rating on covered bond (230-250)." domain_id="CRDT_RTNG_AGNCY" is_enumerated="true" name="Credit rating agency"/>
+  <domains code="TYP_INTRST_RT" domain_id="TYP_INTRST_RT" is_enumerated="true" name="Interest rate type"/>
+  <domains code="CRDT_QLTY" description="" domain_id="CRDT_QLTY" is_enumerated="true" name="Credit quality"/>
+  <domains code="String" data_type="String" domain_id="EBA_String" name="String"/>
+  <domains code="SHRT_TRM_SCRTY" description="It identifies a short term security as it is described by the Reporting Bank, in accordance with the definition of short term ratings of the rating agencies." domain_id="SHRT_TRM_SCRTY" is_enumerated="true" name="Short Term Security"/>
+  <domains code="RL" data_type="Double" domain_id="ECB2_RL" name="Real"/>
+  <domains code="DT" data_type="DateTime" description="" domain_id="DT" name="Date"/>
+  <domains code="STRNG" data_type="String" domain_id="ECB2_STRNG" name="String"/>
+  <domains code="GGRPHCL_ARS" data_type="String" description="" domain_id="GGRPHCL_ARS" is_enumerated="true" name="Geographical Area"/>
+  <domains code="CRDT_QLTY_STP" domain_id="CRDT_QLTY_STP" name="Credit quality step"/>
+  <domains code="BLN" data_type="String" description="" domain_id="BLN" is_enumerated="true" name="Boolean"/>
+</efbt_data_definition:DomainModule>

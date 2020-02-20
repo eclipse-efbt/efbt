@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Platformcalls
+Bundle-SymbolicName: org.eclipse.efbt.model.platformcalls
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Bird Software Solutions
+Automatic-Module-Name: org.eclipse.efbt.model.platformcalls
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.eclipse.efbt.generator.scala;bundle-version="1.0.0",
+ org.eclipse.efbt.model;bundle-version="1.0.0",
+ org.eclipse.efbt.model.util;bundle-version="1.0.0",
+ org.eclipse.efbt.generator.scala
+Import-Package: org.eclipse.xtext.generator
+Export-Package: org.eclipse.efbt.model.platformcalls

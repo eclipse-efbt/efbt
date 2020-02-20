@@ -1,0 +1,1059 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.model/src" modelPluginID="org.eclipse.efbt.model"
+    modelName="Efbt" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="8.0" copyrightFields="false"
+    usedGenPackages="../../org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore" operationReflection="true"
+    importOrganizing="true">
+  <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+    <genAnnotations source="selectedPackages">
+      <details key="http://www.eclipse.org/attribute_lineage" value="attribute_lineage.xsd"/>
+      <details key="http://www.eclipse.org/base_cube_data" value="base_cube_data.xsd"/>
+      <details key="http://www.eclipse.org/bird_model" value="bird_model.xsd"/>
+      <details key="http://www.eclipse.org/column_transformation_logic" value="column_transformation_logic.xsd"/>
+      <details key="http://www.eclipse.org/core" value="core.xsd"/>
+      <details key="http://www.eclipse.org/cube_data" value="cube_data.xsd"/>
+      <details key="http://www.eclipse.org/cube_schema" value="cube_schema.xsd"/>
+      <details key="http://www.eclipse.org/cube_transformation_logic" value="cube_transformation_logic.xsd"/>
+      <details key="http://www.eclipse.org/cubes" value="cubes.xsd"/>
+      <details key="http://www.eclipse.org/data_definition" value="data_definition.xsd"/>
+      <details key="http://www.eclipse.org/data_lineage" value="data_lineage.xsd"/>
+      <details key="http://www.eclipse.org/efbt_data_definition" value="efbt_data_definition.xsd"/>
+      <details key="http://www.eclipse.org/efbt_mapping" value="efbt_mapping.xsd"/>
+      <details key="http://www.eclipse.org/efbt_vtl_transformation" value="efbt_vtl_transformation.xsd"/>
+      <details key="http://www.eclipse.org/functions" value="functions.xsd"/>
+      <details key="http://www.eclipse.org/mapping" value="mapping.xsd"/>
+      <details key="http://www.eclipse.org/module_management" value="module_management.xsd"/>
+      <details key="http://www.eclipse.org/navigation_context" value="navigation_context.xsd"/>
+      <details key="http://www.eclipse.org/platform_call" value="platform_call.xsd"/>
+      <details key="http://www.eclipse.org/rendering" value="rendering.xsd"/>
+      <details key="http://www.eclipse.org/reports" value="reports.xsd"/>
+      <details key="http://www.eclipse.org/row_transformation_logic" value="row_transformation_logic.xsd"/>
+      <details key="http://www.eclipse.org/transformation" value="transformation.xsd"/>
+      <details key="http://www.eclipse.org/trl_report_cell_views" value="trl_report_cell_views.xsd"/>
+      <details key="http://www.eclipse.org/trl_sql_views" value="trl_sql_views.xsd"/>
+      <details key="http://www.eclipse.org/vtl_transformation" value="vtl_transformation.xsd"/>
+      <details key="http://www.eclipse.org/emf/2002/Ecore" value="Ecore.xsd"/>
+    </genAnnotations>
+    <details key="directoryURI" value="../xsd_model/"/>
+  </genAnnotations>
+  <foreignModel>attribute_lineage.ecore</foreignModel>
+  <foreignModel>base_cube_data.ecore</foreignModel>
+  <foreignModel>bird_model.ecore</foreignModel>
+  <foreignModel>column_transformation_logic.ecore</foreignModel>
+  <foreignModel>core.ecore</foreignModel>
+  <foreignModel>cube_data.ecore</foreignModel>
+  <foreignModel>cube_schema.ecore</foreignModel>
+  <foreignModel>cube_transformation_logic.ecore</foreignModel>
+  <foreignModel>cubes.ecore</foreignModel>
+  <foreignModel>data_definition.ecore</foreignModel>
+  <foreignModel>data_lineage.ecore</foreignModel>
+  <foreignModel>efbt_data_definition.ecore</foreignModel>
+  <foreignModel>efbt_mapping.ecore</foreignModel>
+  <foreignModel>efbt_vtl_transformation.ecore</foreignModel>
+  <foreignModel>functions.ecore</foreignModel>
+  <foreignModel>mapping.ecore</foreignModel>
+  <foreignModel>module_management.ecore</foreignModel>
+  <foreignModel>navigation_context.ecore</foreignModel>
+  <foreignModel>platform_call.ecore</foreignModel>
+  <foreignModel>rendering.ecore</foreignModel>
+  <foreignModel>reports.ecore</foreignModel>
+  <foreignModel>row_transformation_logic.ecore</foreignModel>
+  <foreignModel>transformation.ecore</foreignModel>
+  <foreignModel>trl_report_cell_views.ecore</foreignModel>
+  <foreignModel>trl_sql_views.ecore</foreignModel>
+  <foreignModel>vtl_transformation.ecore</foreignModel>
+  <genPackages prefix="Attribute_lineage" resource="XML" disposableProviderFactory="true"
+      ecorePackage="attribute_lineage.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="../xsd_model/attribute_lineage.xsd">
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="../xsd_model/Ecore.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genClasses ecoreClass="attribute_lineage.ecore#//AttributeLineageModel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference attribute_lineage.ecore#//AttributeLineageModel/rowTransformations"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference attribute_lineage.ecore#//AttributeLineageModel/baseSchemas"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference attribute_lineage.ecore#//AttributeLineageModel/specialFunctionSpecs"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute attribute_lineage.ecore#//AttributeLineageModel/name"/>
+    </genClasses>
+    <genClasses ecoreClass="attribute_lineage.ecore#//AttributeLineageModelModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference attribute_lineage.ecore#//AttributeLineageModelModule/attributeLineageModels"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Base_cube_data" resource="XML" disposableProviderFactory="true"
+      ecorePackage="base_cube_data.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="../xsd_model/base_cube_data.xsd">
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="../xsd_model/Ecore.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genClasses image="false" ecoreClass="base_cube_data.ecore#//BaseCell"/>
+    <genClasses ecoreClass="base_cube_data.ecore#//BaseCellWithEnumeratedValue">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference base_cube_data.ecore#//BaseCellWithEnumeratedValue/value"/>
+    </genClasses>
+    <genClasses ecoreClass="base_cube_data.ecore#//BaseCellWithValue">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute base_cube_data.ecore#//BaseCellWithValue/value"/>
+    </genClasses>
+    <genClasses ecoreClass="base_cube_data.ecore#//BaseCubeData">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference base_cube_data.ecore#//BaseCubeData/rows"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference base_cube_data.ecore#//BaseCubeData/cube"/>
+    </genClasses>
+    <genClasses ecoreClass="base_cube_data.ecore#//BaseRowData">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference base_cube_data.ecore#//BaseRowData/cells"/>
+    </genClasses>
+    <genClasses ecoreClass="base_cube_data.ecore#//TargetCubeExpectedResultsData">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference base_cube_data.ecore#//TargetCubeExpectedResultsData/rows"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference base_cube_data.ecore#//TargetCubeExpectedResultsData/cube"/>
+    </genClasses>
+    <genClasses ecoreClass="base_cube_data.ecore#//InputData">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference base_cube_data.ecore#//InputData/sourceTableData"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute base_cube_data.ecore#//InputData/name"/>
+    </genClasses>
+    <genClasses ecoreClass="base_cube_data.ecore#//InputDataModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference base_cube_data.ecore#//InputDataModule/inputData"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Bird_model" disposableProviderFactory="true" ecorePackage="bird_model.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="../xsd_model/bird_model.xsd">
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="../xsd_model/Ecore.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genClasses ecoreClass="bird_model.ecore#//BIRDModel">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bird_model.ecore#//BIRDModel/domains"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bird_model.ecore#//BIRDModel/members"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bird_model.ecore#//BIRDModel/variables"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bird_model.ecore#//BIRDModel/cubes"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bird_model.ecore#//BIRDModel/combinations"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bird_model.ecore#//BIRDModel/transformationSchemes"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bird_model.ecore#//BIRDModel/mappings"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bird_model.ecore#//BIRDModel/name"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Column_transformation_logic" resource="XML" disposableProviderFactory="true"
+      ecorePackage="column_transformation_logic.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="../xsd_model/column_transformation_logic.xsd">
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="../xsd_model/Ecore.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genClasses ecoreClass="column_transformation_logic.ecore#//AggregateColumnFunction">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference column_transformation_logic.ecore#//AggregateColumnFunction/aggregateFunction"/>
+    </genClasses>
+    <genClasses ecoreClass="column_transformation_logic.ecore#//BasicColumnFunction"/>
+    <genClasses ecoreClass="column_transformation_logic.ecore#//ColumnFunction"/>
+    <genClasses ecoreClass="column_transformation_logic.ecore#//CubeColumn">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_transformation_logic.ecore#//CubeColumn/columnID"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference column_transformation_logic.ecore#//CubeColumn/cube"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_transformation_logic.ecore#//CubeColumn/usedInSubsets"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference column_transformation_logic.ecore#//CubeColumn/variable"/>
+    </genClasses>
+    <genClasses ecoreClass="column_transformation_logic.ecore#//StandardBasicColumnFunction">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference column_transformation_logic.ecore#//StandardBasicColumnFunction/basicFunction"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Core" resource="XML" disposableProviderFactory="true" ecorePackage="core.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="../xsd_model/core.xsd">
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="../xsd_model/Ecore.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="core.ecore#//FACET_VALUE_TYPE">
+      <genEnumLiterals ecoreEnumLiteral="core.ecore#//FACET_VALUE_TYPE/BigInteger"/>
+      <genEnumLiterals ecoreEnumLiteral="core.ecore#//FACET_VALUE_TYPE/Boolean"/>
+      <genEnumLiterals ecoreEnumLiteral="core.ecore#//FACET_VALUE_TYPE/DateTime"/>
+      <genEnumLiterals ecoreEnumLiteral="core.ecore#//FACET_VALUE_TYPE/DayMonthDayMonth"/>
+      <genEnumLiterals ecoreEnumLiteral="core.ecore#//FACET_VALUE_TYPE/Decimal"/>
+      <genEnumLiterals ecoreEnumLiteral="core.ecore#//FACET_VALUE_TYPE/Double"/>
+      <genEnumLiterals ecoreEnumLiteral="core.ecore#//FACET_VALUE_TYPE/Duration"/>
+      <genEnumLiterals ecoreEnumLiteral="core.ecore#//FACET_VALUE_TYPE/Float"/>
+      <genEnumLiterals ecoreEnumLiteral="core.ecore#//FACET_VALUE_TYPE/GregorianDay"/>
+      <genEnumLiterals ecoreEnumLiteral="core.ecore#//FACET_VALUE_TYPE/GregorianMonth"/>
+      <genEnumLiterals ecoreEnumLiteral="core.ecore#//FACET_VALUE_TYPE/GregorianYear"/>
+      <genEnumLiterals ecoreEnumLiteral="core.ecore#//FACET_VALUE_TYPE/Integer"/>
+      <genEnumLiterals ecoreEnumLiteral="core.ecore#//FACET_VALUE_TYPE/Long"/>
+      <genEnumLiterals ecoreEnumLiteral="core.ecore#//FACET_VALUE_TYPE/Short"/>
+      <genEnumLiterals ecoreEnumLiteral="core.ecore#//FACET_VALUE_TYPE/String"/>
+      <genEnumLiterals ecoreEnumLiteral="core.ecore#//FACET_VALUE_TYPE/Time"/>
+      <genEnumLiterals ecoreEnumLiteral="core.ecore#//FACET_VALUE_TYPE/URI"/>
+    </genEnums>
+    <genDataTypes ecoreDataType="core.ecore#//FACET_VALUE_TYPEObject"/>
+    <genClasses ecoreClass="core.ecore#//DOMAIN">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//DOMAIN/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//DOMAIN/data_type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//DOMAIN/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//DOMAIN/domain_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference core.ecore#//DOMAIN/facet_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//DOMAIN/is_enumerated"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//DOMAIN/is_reference"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference core.ecore#//DOMAIN/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//DOMAIN/name"/>
+    </genClasses>
+    <genClasses ecoreClass="core.ecore#//FACET_COLLECTION">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//FACET_COLLECTION/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//FACET_COLLECTION/facet_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//FACET_COLLECTION/facet_value_type"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference core.ecore#//FACET_COLLECTION/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//FACET_COLLECTION/name"/>
+    </genClasses>
+    <genClasses ecoreClass="core.ecore#//FACET_ENUMERATION">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference core.ecore#//FACET_ENUMERATION/facet_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference core.ecore#//FACET_ENUMERATION/facet_type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//FACET_ENUMERATION/observation_value"/>
+    </genClasses>
+    <genClasses ecoreClass="core.ecore#//facet_type">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//facet_type/decimals"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//facet_type/endTime"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//facet_type/endValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//facet_type/interval"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//facet_type/isSequence"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//facet_type/maxLength"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//facet_type/maxValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//facet_type/minLength"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//facet_type/minValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//facet_type/pattern"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//facet_type/startTime"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//facet_type/startValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//facet_type/timeInterval"/>
+    </genClasses>
+    <genClasses ecoreClass="core.ecore#//MAINTENANCE_AGENCY">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//MAINTENANCE_AGENCY/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//MAINTENANCE_AGENCY/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//MAINTENANCE_AGENCY/name"/>
+    </genClasses>
+    <genClasses ecoreClass="core.ecore#//MEMBER">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//MEMBER/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//MEMBER/description"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference core.ecore#//MEMBER/domain_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference core.ecore#//MEMBER/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//MEMBER/member_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//MEMBER/name"/>
+    </genClasses>
+    <genClasses ecoreClass="core.ecore#//MEMBER_HIERARCHY">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//MEMBER_HIERARCHY/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//MEMBER_HIERARCHY/description"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference core.ecore#//MEMBER_HIERARCHY/domain_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference core.ecore#//MEMBER_HIERARCHY/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//MEMBER_HIERARCHY/member_hierarchy_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//MEMBER_HIERARCHY/name"/>
+    </genClasses>
+    <genClasses ecoreClass="core.ecore#//MEMBER_HIERARCHY_NODE">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//MEMBER_HIERARCHY_NODE/comparator"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//MEMBER_HIERARCHY_NODE/level"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference core.ecore#//MEMBER_HIERARCHY_NODE/member_hierarchy_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference core.ecore#//MEMBER_HIERARCHY_NODE/member_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//MEMBER_HIERARCHY_NODE/operator"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference core.ecore#//MEMBER_HIERARCHY_NODE/parent_member_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//MEMBER_HIERARCHY_NODE/valid_from"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//MEMBER_HIERARCHY_NODE/valid_to"/>
+    </genClasses>
+    <genClasses ecoreClass="core.ecore#//SUBDOMAIN">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//SUBDOMAIN/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//SUBDOMAIN/description"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference core.ecore#//SUBDOMAIN/domain_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference core.ecore#//SUBDOMAIN/facet_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//SUBDOMAIN/is_listed"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//SUBDOMAIN/is_natural"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference core.ecore#//SUBDOMAIN/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//SUBDOMAIN/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//SUBDOMAIN/subdomain_id"/>
+    </genClasses>
+    <genClasses ecoreClass="core.ecore#//SUBDOMAIN_ENUMERATION">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference core.ecore#//SUBDOMAIN_ENUMERATION/member_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//SUBDOMAIN_ENUMERATION/order"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference core.ecore#//SUBDOMAIN_ENUMERATION/subdomain_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//SUBDOMAIN_ENUMERATION/valid_from"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//SUBDOMAIN_ENUMERATION/valid_to"/>
+    </genClasses>
+    <genClasses ecoreClass="core.ecore#//VARIABLE">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//VARIABLE/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//VARIABLE/description"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference core.ecore#//VARIABLE/domain_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference core.ecore#//VARIABLE/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//VARIABLE/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//VARIABLE/primary_concept"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//VARIABLE/variable_id"/>
+    </genClasses>
+    <genClasses ecoreClass="core.ecore#//VARIABLE_SET">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//VARIABLE_SET/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//VARIABLE_SET/description"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference core.ecore#//VARIABLE_SET/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//VARIABLE_SET/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//VARIABLE_SET/variable_set_id"/>
+    </genClasses>
+    <genClasses ecoreClass="core.ecore#//VARIABLE_SET_ENUMERATION">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//VARIABLE_SET_ENUMERATION/is_flow"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//VARIABLE_SET_ENUMERATION/order"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference core.ecore#//VARIABLE_SET_ENUMERATION/subdomain_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//VARIABLE_SET_ENUMERATION/valid_from"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//VARIABLE_SET_ENUMERATION/valid_to"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference core.ecore#//VARIABLE_SET_ENUMERATION/variable_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference core.ecore#//VARIABLE_SET_ENUMERATION/variable_set_id"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Cube_data" resource="XML" disposableProviderFactory="true"
+      ecorePackage="cube_data.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="../xsd_model/cube_data.xsd">
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="../xsd_model/Ecore.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genClasses ecoreClass="cube_data.ecore#//Cell">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cube_data.ecore#//Cell/cellID"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cube_data.ecore#//Cell/column"/>
+    </genClasses>
+    <genClasses ecoreClass="cube_data.ecore#//CubeData">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cube_data.ecore#//CubeData/name"/>
+    </genClasses>
+    <genClasses ecoreClass="cube_data.ecore#//CubeDataModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cube_data.ecore#//CubeDataModule/cubeData"/>
+    </genClasses>
+    <genClasses ecoreClass="cube_data.ecore#//RowData">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cube_data.ecore#//RowData/rowID"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Cube_schema" resource="XML" disposableProviderFactory="true"
+      ecorePackage="cube_schema.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="../xsd_model/cube_schema.xsd">
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="../xsd_model/Ecore.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genClasses ecoreClass="cube_schema.ecore#//CubeSchema">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cube_schema.ecore#//CubeSchema/cube"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cube_schema.ecore#//CubeSchema/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cube_schema.ecore#//CubeSchema/baseCube"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Cube_transformation_logic" resource="XML" disposableProviderFactory="true"
+      ecorePackage="cube_transformation_logic.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="../xsd_model/cube_transformation_logic.xsd">
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="../xsd_model/Ecore.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genClasses ecoreClass="cube_transformation_logic.ecore#//CustomRowFunction">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cube_transformation_logic.ecore#//CustomRowFunction/dependantVariables"/>
+    </genClasses>
+    <genClasses ecoreClass="cube_transformation_logic.ecore#//FilterAndGroupToOneRowFunction">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cube_transformation_logic.ecore#//FilterAndGroupToOneRowFunction/filterFunction"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cube_transformation_logic.ecore#//FilterAndGroupToOneRowFunction/groupByVariables"/>
+    </genClasses>
+    <genClasses ecoreClass="cube_transformation_logic.ecore#//FunctionalCubeLogic">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cube_transformation_logic.ecore#//FunctionalCubeLogic/rowFunction"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cube_transformation_logic.ecore#//FunctionalCubeLogic/cube"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cube_transformation_logic.ecore#//FunctionalCubeLogic/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cube_transformation_logic.ecore#//FunctionalCubeLogic/ultimateCubeSource"/>
+    </genClasses>
+    <genClasses ecoreClass="cube_transformation_logic.ecore#//OneToOneRowFunction"/>
+    <genClasses ecoreClass="cube_transformation_logic.ecore#//RowFilterFunction">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cube_transformation_logic.ecore#//RowFilterFunction/filterFunction"/>
+    </genClasses>
+    <genClasses ecoreClass="cube_transformation_logic.ecore#//RowFunction">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cube_transformation_logic.ecore#//RowFunction/dependantCubeColumns"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cube_transformation_logic.ecore#//RowFunction/createdCubeColumns"/>
+    </genClasses>
+    <genClasses ecoreClass="cube_transformation_logic.ecore#//RowGroupByFunction">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cube_transformation_logic.ecore#//RowGroupByFunction/groupByColumns"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cube_transformation_logic.ecore#//RowGroupByFunction/groupByCubeColumns"/>
+    </genClasses>
+    <genClasses ecoreClass="cube_transformation_logic.ecore#//RowJoinFunction">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cube_transformation_logic.ecore#//RowJoinFunction/joinFunction"/>
+    </genClasses>
+    <genClasses ecoreClass="cube_transformation_logic.ecore#//UnionRowFunction"/>
+  </genPackages>
+  <genPackages prefix="Cubes" resource="XML" disposableProviderFactory="true" ecorePackage="cubes.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="../xsd_model/cubes.xsd">
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="../xsd_model/Ecore.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genClasses ecoreClass="cubes.ecore#//BaseCube"/>
+    <genClasses ecoreClass="cubes.ecore#//FreeBirdToolsCube">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cubes.ecore#//FreeBirdToolsCube/cube_name"/>
+    </genClasses>
+    <genClasses ecoreClass="cubes.ecore#//FreeBirdToolsCubeModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cubes.ecore#//FreeBirdToolsCubeModule/cubes"/>
+    </genClasses>
+    <genClasses ecoreClass="cubes.ecore#//DerivedCube">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cubes.ecore#//DerivedCube/sourceCubes"/>
+    </genClasses>
+    <genClasses ecoreClass="cubes.ecore#//TargetCube"/>
+  </genPackages>
+  <genPackages prefix="Data_definition" resource="XML" disposableProviderFactory="true"
+      ecorePackage="data_definition.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="../xsd_model/data_definition.xsd">
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="../xsd_model/Ecore.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="data_definition.ecore#//TYP_DMNSN">
+      <genEnumLiterals ecoreEnumLiteral="data_definition.ecore#//TYP_DMNSN/B"/>
+      <genEnumLiterals ecoreEnumLiteral="data_definition.ecore#//TYP_DMNSN/M"/>
+      <genEnumLiterals ecoreEnumLiteral="data_definition.ecore#//TYP_DMNSN/T"/>
+      <genEnumLiterals ecoreEnumLiteral="data_definition.ecore#//TYP_DMNSN/U"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="data_definition.ecore#//TYP_RL">
+      <genEnumLiterals ecoreEnumLiteral="data_definition.ecore#//TYP_RL/O"/>
+      <genEnumLiterals ecoreEnumLiteral="data_definition.ecore#//TYP_RL/A"/>
+      <genEnumLiterals ecoreEnumLiteral="data_definition.ecore#//TYP_RL/D"/>
+    </genEnums>
+    <genDataTypes ecoreDataType="data_definition.ecore#//TYP_DMNSNObject"/>
+    <genDataTypes ecoreDataType="data_definition.ecore#//TYP_RLObject"/>
+    <genClasses ecoreClass="data_definition.ecore#//COMBINATION">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//COMBINATION/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//COMBINATION/combination_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//COMBINATION/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//COMBINATION/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//COMBINATION/valid_from"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//COMBINATION/valid_to"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//COMBINATION/version"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference data_definition.ecore#//COMBINATION/combination_items"/>
+    </genClasses>
+    <genClasses ecoreClass="data_definition.ecore#//COMBINATION_ITEM">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//COMBINATION_ITEM/member_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//COMBINATION_ITEM/subdomain_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//COMBINATION_ITEM/variable_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//COMBINATION_ITEM/variable_set_id"/>
+    </genClasses>
+    <genClasses ecoreClass="data_definition.ecore#//CUBE">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE/cube_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//CUBE/cube_structure_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE/cube_type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE/description"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//CUBE/framework_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE/is_allowed"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//CUBE/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE/published"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE/valid_from"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE/valid_to"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE/version"/>
+    </genClasses>
+    <genClasses ecoreClass="data_definition.ecore#//CUBE_GROUP">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_GROUP/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_GROUP/cube_group_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_GROUP/description"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//CUBE_GROUP/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_GROUP/name"/>
+    </genClasses>
+    <genClasses ecoreClass="data_definition.ecore#//CUBE_GROUP_ENUMERATION">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//CUBE_GROUP_ENUMERATION/cube_group_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//CUBE_GROUP_ENUMERATION/cube_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_GROUP_ENUMERATION/order"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_GROUP_ENUMERATION/valid_from"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_GROUP_ENUMERATION/valid_to"/>
+    </genClasses>
+    <genClasses ecoreClass="data_definition.ecore#//CUBE_HIERARCHY">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_HIERARCHY/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_HIERARCHY/cube_hierarchy_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_HIERARCHY/cube_hierarchy_type"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//CUBE_HIERARCHY/framework_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//CUBE_HIERARCHY/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_HIERARCHY/name"/>
+    </genClasses>
+    <genClasses ecoreClass="data_definition.ecore#//CUBE_HIERARCHY_NODE">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//CUBE_HIERARCHY_NODE/cube_group_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//CUBE_HIERARCHY_NODE/cube_hierarchy_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_HIERARCHY_NODE/level"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_HIERARCHY_NODE/nODE_CODE"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_HIERARCHY_NODE/node_name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_HIERARCHY_NODE/order"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//CUBE_HIERARCHY_NODE/parent_node_code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_HIERARCHY_NODE/valid_from"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_HIERARCHY_NODE/valid_to"/>
+    </genClasses>
+    <genClasses ecoreClass="data_definition.ecore#//CUBE_RELATIONSHIP">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_RELATIONSHIP/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_RELATIONSHIP/cube_relationship_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_RELATIONSHIP/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_RELATIONSHIP/establishes_integrity"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//CUBE_RELATIONSHIP/foreign_cube_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//CUBE_RELATIONSHIP/foreign_cube_variable_code"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//CUBE_RELATIONSHIP/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_RELATIONSHIP/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//CUBE_RELATIONSHIP/primary_cube_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//CUBE_RELATIONSHIP/primary_cube_variable_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_RELATIONSHIP/valid_from"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_RELATIONSHIP/valid_to"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_RELATIONSHIP/version"/>
+    </genClasses>
+    <genClasses ecoreClass="data_definition.ecore#//CUBE_STRUCTURE">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_STRUCTURE/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_STRUCTURE/cube_structure_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_STRUCTURE/description"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//CUBE_STRUCTURE/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_STRUCTURE/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_STRUCTURE/valid_from"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_STRUCTURE/valid_to"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_STRUCTURE/version"/>
+    </genClasses>
+    <genClasses ecoreClass="data_definition.ecore#//CUBE_STRUCTURE_ITEM">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//CUBE_STRUCTURE_ITEM/attribute_associated_variable"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//CUBE_STRUCTURE_ITEM/cube_structure_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//CUBE_STRUCTURE_ITEM/cube_variable_code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_STRUCTURE_ITEM/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_STRUCTURE_ITEM/dimension_type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_STRUCTURE_ITEM/is_flow"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_STRUCTURE_ITEM/is_mandatory"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//CUBE_STRUCTURE_ITEM/member_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_STRUCTURE_ITEM/order"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_STRUCTURE_ITEM/role"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//CUBE_STRUCTURE_ITEM/subdomain_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//CUBE_STRUCTURE_ITEM/variable_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//CUBE_STRUCTURE_ITEM/variable_set_id"/>
+    </genClasses>
+    <genClasses ecoreClass="data_definition.ecore#//CUBE_TO_COMBINATION">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//CUBE_TO_COMBINATION/combination_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//CUBE_TO_COMBINATION/cube_id"/>
+    </genClasses>
+    <genClasses ecoreClass="data_definition.ecore#//FRAMEWORK">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//FRAMEWORK/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//FRAMEWORK/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//FRAMEWORK/framework_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//FRAMEWORK/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//FRAMEWORK/name"/>
+    </genClasses>
+    <genClasses ecoreClass="data_definition.ecore#//FRAMEWORK_SUBDOMAIN">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//FRAMEWORK_SUBDOMAIN/framework_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//FRAMEWORK_SUBDOMAIN/subdomain_id"/>
+    </genClasses>
+    <genClasses ecoreClass="data_definition.ecore#//FRAMEWORK_VARIABLE_SET">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//FRAMEWORK_VARIABLE_SET/framework_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//FRAMEWORK_VARIABLE_SET/variable_set_id"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Data_lineage" resource="XML" disposableProviderFactory="true"
+      ecorePackage="data_lineage.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="../xsd_model/data_lineage.xsd">
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="../xsd_model/Ecore.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genClasses ecoreClass="data_lineage.ecore#//DataLineageModel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference data_lineage.ecore#//DataLineageModel/dataTraceableByCell"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference data_lineage.ecore#//DataLineageModel/sourceData"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_lineage.ecore#//DataLineageModel/name"/>
+    </genClasses>
+    <genClasses ecoreClass="data_lineage.ecore#//DerivedCell">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference data_lineage.ecore#//DerivedCell/function"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_lineage.ecore#//DerivedCell/value"/>
+    </genClasses>
+    <genClasses ecoreClass="data_lineage.ecore#//DerivedCubeData">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference data_lineage.ecore#//DerivedCubeData/rows"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_lineage.ecore#//DerivedCubeData/cube"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_lineage.ecore#//DerivedCubeData/cubeLogic"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_lineage.ecore#//DerivedCubeData/sourceCubeData"/>
+    </genClasses>
+    <genClasses ecoreClass="data_lineage.ecore#//DerivedRowData">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference data_lineage.ecore#//DerivedRowData/derivedCells"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference data_lineage.ecore#//DerivedRowData/specialDerivedCells"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_lineage.ecore#//DerivedRowData/sourceRows"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Efbt_data_definition" resource="XML" disposableProviderFactory="true"
+      ecorePackage="efbt_data_definition.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="../xsd_model/efbt_data_definition.xsd">
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="../xsd_model/Ecore.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genClasses ecoreClass="efbt_data_definition.ecore#//CombinationModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_data_definition.ecore#//CombinationModule/combinations"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_data_definition.ecore#//CombinationModule/combination_items"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_data_definition.ecore#//CombinationModule/cubeToCombinationLinks"/>
+    </genClasses>
+    <genClasses ecoreClass="efbt_data_definition.ecore#//CubeModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_data_definition.ecore#//CubeModule/cubes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_data_definition.ecore#//CubeModule/cubeStructures"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_data_definition.ecore#//CubeModule/cubeStructureItems"/>
+    </genClasses>
+    <genClasses ecoreClass="efbt_data_definition.ecore#//DomainModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_data_definition.ecore#//DomainModule/domains"/>
+    </genClasses>
+    <genClasses ecoreClass="efbt_data_definition.ecore#//MemberHierarchyModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_data_definition.ecore#//MemberHierarchyModule/memberHierarchies"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_data_definition.ecore#//MemberHierarchyModule/memberHierarchiesNodes"/>
+    </genClasses>
+    <genClasses ecoreClass="efbt_data_definition.ecore#//MemberModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_data_definition.ecore#//MemberModule/members"/>
+    </genClasses>
+    <genClasses ecoreClass="efbt_data_definition.ecore#//VariableModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_data_definition.ecore#//VariableModule/variables"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Efbt_mapping" disposableProviderFactory="true" ecorePackage="efbt_mapping.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="../xsd_model/efbt_mapping.xsd">
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="../xsd_model/Ecore.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genClasses ecoreClass="efbt_mapping.ecore#//MappingDefinitionModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_mapping.ecore#//MappingDefinitionModule/mappings"/>
+    </genClasses>
+    <genClasses ecoreClass="efbt_mapping.ecore#//CubeMappingModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_mapping.ecore#//CubeMappingModule/cubeMappings"/>
+    </genClasses>
+    <genClasses ecoreClass="efbt_mapping.ecore#//MemberMappingModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_mapping.ecore#//MemberMappingModule/memberMappings"/>
+    </genClasses>
+    <genClasses ecoreClass="efbt_mapping.ecore#//VariableMappingModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_mapping.ecore#//VariableMappingModule/variableMappings"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Efbt_vtl_transformation" disposableProviderFactory="true" ecorePackage="efbt_vtl_transformation.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="../xsd_model/efbt_vtl_transformation.xsd">
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="../xsd_model/Ecore.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genClasses ecoreClass="efbt_vtl_transformation.ecore#//TransformationSchemeModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_vtl_transformation.ecore#//TransformationSchemeModule/schemes"/>
+    </genClasses>
+    <genClasses ecoreClass="efbt_vtl_transformation.ecore#//NodeRelationshipModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_vtl_transformation.ecore#//NodeRelationshipModule/relationships"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Functions" resource="XML" disposableProviderFactory="true"
+      ecorePackage="functions.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="../xsd_model/functions.xsd">
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="../xsd_model/Ecore.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genClasses ecoreClass="functions.ecore#//AggregateFunction">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference functions.ecore#//AggregateFunction/functionSpec"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//AggregateFunctionSpec"/>
+    <genClasses ecoreClass="functions.ecore#//BasicFunction">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference functions.ecore#//BasicFunction/functionSpec"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//BasicFunctionSpec">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//BasicFunctionSpec/isInfix"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//BooleanFunction"/>
+    <genClasses ecoreClass="functions.ecore#//CellsParameter">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference functions.ecore#//CellsParameter/cells"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//Function">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference functions.ecore#//Function/parameters"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//Function/name"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//FunctionSpec">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference functions.ecore#//FunctionSpec/parameterSpecs"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//FunctionSpec/functionalName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//FunctionSpec/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//FunctionSpec/sqlName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//FunctionSpec/type"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//FunctionSpecModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference functions.ecore#//FunctionSpecModule/functionSpecs"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//MemberParameter">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference functions.ecore#//MemberParameter/param"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//ParamaterSpec">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//ParamaterSpec/datatype"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//ParamaterSpec/name"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//Parameter"/>
+    <genClasses ecoreClass="functions.ecore#//ResolvedCubeColumnParameter">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference functions.ecore#//ResolvedCubeColumnParameter/cubeColumn"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//SpeculativeCubeColumnParameter">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference functions.ecore#//SpeculativeCubeColumnParameter/column"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference functions.ecore#//SpeculativeCubeColumnParameter/cube"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//ValueParameter">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//ValueParameter/dataType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//ValueParameter/value"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Mapping" disposableProviderFactory="true" ecorePackage="mapping.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="../xsd_model/mapping.xsd">
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="../xsd_model/Ecore.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genClasses ecoreClass="mapping.ecore#//CUBE_MAPPING">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mapping.ecore#//CUBE_MAPPING/cube_mapping_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mapping.ecore#//CUBE_MAPPING/description"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mapping.ecore#//CUBE_MAPPING/source_cube"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mapping.ecore#//CUBE_MAPPING/target_cube"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mapping.ecore#//CUBE_MAPPING/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mapping.ecore#//CUBE_MAPPING/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mapping.ecore#//CUBE_MAPPING/maintenance_agency_id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference mapping.ecore#//CUBE_MAPPING/mappingsToCube"/>
+    </genClasses>
+    <genClasses ecoreClass="mapping.ecore#//MEMBER_MAPPING">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mapping.ecore#//MEMBER_MAPPING/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mapping.ecore#//MEMBER_MAPPING/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mapping.ecore#//MEMBER_MAPPING/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mapping.ecore#//MEMBER_MAPPING/member_mapping_id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference mapping.ecore#//MEMBER_MAPPING/memberMappingItems"/>
+    </genClasses>
+    <genClasses ecoreClass="mapping.ecore#//MEMBER_MAPPING_ITEM">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mapping.ecore#//MEMBER_MAPPING_ITEM/isSource"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mapping.ecore#//MEMBER_MAPPING_ITEM/member"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mapping.ecore#//MEMBER_MAPPING_ITEM/variable"/>
+    </genClasses>
+    <genClasses ecoreClass="mapping.ecore#//VARIABLE_MAPPING_ITEM">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mapping.ecore#//VARIABLE_MAPPING_ITEM/isSource"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mapping.ecore#//VARIABLE_MAPPING_ITEM/variable"/>
+    </genClasses>
+    <genClasses ecoreClass="mapping.ecore#//VARIABLE_MAPPING">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference mapping.ecore#//VARIABLE_MAPPING/varaibleMappingItems"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mapping.ecore#//VARIABLE_MAPPING/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mapping.ecore#//VARIABLE_MAPPING/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mapping.ecore#//VARIABLE_MAPPING/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mapping.ecore#//VARIABLE_MAPPING/variable_mapping_id"/>
+    </genClasses>
+    <genClasses ecoreClass="mapping.ecore#//MAPPING_TO_CUBE">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mapping.ecore#//MAPPING_TO_CUBE/mapping"/>
+    </genClasses>
+    <genClasses ecoreClass="mapping.ecore#//VARIABLE_SET_MAPPING">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mapping.ecore#//VARIABLE_SET_MAPPING/sourceMapping"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mapping.ecore#//VARIABLE_SET_MAPPING/targetMapping"/>
+    </genClasses>
+    <genClasses ecoreClass="mapping.ecore#//MAPPING_DEFINITION">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mapping.ecore#//MAPPING_DEFINITION/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mapping.ecore#//MAPPING_DEFINITION/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mapping.ecore#//MAPPING_DEFINITION/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mapping.ecore#//MAPPING_DEFINITION/mapping_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mapping.ecore#//MAPPING_DEFINITION/mapping_type"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mapping.ecore#//MAPPING_DEFINITION/memberMapping"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mapping.ecore#//MAPPING_DEFINITION/variableMapping"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Module_management" resource="XML" disposableProviderFactory="true"
+      ecorePackage="module_management.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="../xsd_model/module_management.xsd">
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="../xsd_model/Ecore.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genClasses image="false" ecoreClass="module_management.ecore#//Module">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference module_management.ecore#//Module/dependencies"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute module_management.ecore#//Module/theDescription"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute module_management.ecore#//Module/license"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute module_management.ecore#//Module/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute module_management.ecore#//Module/version"/>
+    </genClasses>
+    <genClasses ecoreClass="module_management.ecore#//ModuleDependencies">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference module_management.ecore#//ModuleDependencies/theModules"/>
+    </genClasses>
+    <genClasses ecoreClass="module_management.ecore#//ModuleDependency">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute module_management.ecore#//ModuleDependency/moduleName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute module_management.ecore#//ModuleDependency/moduleVersion"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference module_management.ecore#//ModuleDependency/theModule"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Navigation_context" resource="XML" disposableProviderFactory="true"
+      ecorePackage="navigation_context.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="../xsd_model/navigation_context.xsd">
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="../xsd_model/Ecore.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genClasses ecoreClass="navigation_context.ecore#//NavigationContext">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference navigation_context.ecore#//NavigationContext/transformationContext"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference navigation_context.ecore#//NavigationContext/transformationsSchemeModule"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute navigation_context.ecore#//NavigationContext/license"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference navigation_context.ecore#//NavigationContext/birdModel"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Platform_call" resource="XML" disposableProviderFactory="true"
+      ecorePackage="platform_call.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="../xsd_model/platform_call.xsd">
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="../xsd_model/Ecore.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genClasses ecoreClass="platform_call.ecore#//ExecuteAttributeLineageModel">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform_call.ecore#//ExecuteAttributeLineageModel/attributeLineageModel"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//ExecuteAttributeLineageModel/inputdir"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//ExecuteAttributeLineageModel/outputdir"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform_call.ecore#//ExecuteAttributeLineageModel/programInputs"/>
+    </genClasses>
+    <genClasses ecoreClass="platform_call.ecore#//PlatformCall">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//PlatformCall/errorMessage"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//PlatformCall/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//PlatformCall/returnStatus"/>
+    </genClasses>
+    <genClasses ecoreClass="platform_call.ecore#//PlatformCallModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform_call.ecore#//PlatformCallModule/platformCalls"/>
+    </genClasses>
+    <genClasses ecoreClass="platform_call.ecore#//GetAttributeLineageModel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform_call.ecore#//GetAttributeLineageModel/resultingModel"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform_call.ecore#//GetAttributeLineageModel/transformationContext"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform_call.ecore#//GetAttributeLineageModel/unresolvedCubeColumnParams"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Rendering" resource="XML" disposableProviderFactory="true"
+      ecorePackage="rendering.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="../xsd_model/rendering.xsd">
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="../xsd_model/Ecore.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genClasses ecoreClass="rendering.ecore#//AXIS">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rendering.ecore#//AXIS/axis_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rendering.ecore#//AXIS/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rendering.ecore#//AXIS/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rendering.ecore#//AXIS/is_open_axis"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rendering.ecore#//AXIS/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rendering.ecore#//AXIS/order"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rendering.ecore#//AXIS/orientation"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference rendering.ecore#//AXIS/table_id"/>
+    </genClasses>
+    <genClasses ecoreClass="rendering.ecore#//AXIS_ORDINATE">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference rendering.ecore#//AXIS_ORDINATE/axis_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rendering.ecore#//AXIS_ORDINATE/axis_ordinate_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rendering.ecore#//AXIS_ORDINATE/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rendering.ecore#//AXIS_ORDINATE/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rendering.ecore#//AXIS_ORDINATE/is_abstract_header"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rendering.ecore#//AXIS_ORDINATE/level"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rendering.ecore#//AXIS_ORDINATE/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rendering.ecore#//AXIS_ORDINATE/order"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference rendering.ecore#//AXIS_ORDINATE/parent_axis_ordinate_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rendering.ecore#//AXIS_ORDINATE/path"/>
+    </genClasses>
+    <genClasses ecoreClass="rendering.ecore#//CELL_POSITION">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference rendering.ecore#//CELL_POSITION/axis_ordinate_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference rendering.ecore#//CELL_POSITION/cell_id"/>
+    </genClasses>
+    <genClasses ecoreClass="rendering.ecore#//ORDINATE_ITEM">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference rendering.ecore#//ORDINATE_ITEM/axis_ordinate_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rendering.ecore#//ORDINATE_ITEM/is_starting_member_included"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference rendering.ecore#//ORDINATE_ITEM/member_hierarchy_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference rendering.ecore#//ORDINATE_ITEM/member_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference rendering.ecore#//ORDINATE_ITEM/starting_member_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference rendering.ecore#//ORDINATE_ITEM/variable_id"/>
+    </genClasses>
+    <genClasses ecoreClass="rendering.ecore#//TABLE">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rendering.ecore#//TABLE/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rendering.ecore#//TABLE/description"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference rendering.ecore#//TABLE/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rendering.ecore#//TABLE/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rendering.ecore#//TABLE/table_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rendering.ecore#//TABLE/valid_from"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rendering.ecore#//TABLE/valid_to"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rendering.ecore#//TABLE/version"/>
+    </genClasses>
+    <genClasses ecoreClass="rendering.ecore#//TABLE_CELL">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rendering.ecore#//TABLE_CELL/cell_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference rendering.ecore#//TABLE_CELL/combination_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rendering.ecore#//TABLE_CELL/is_shaded"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference rendering.ecore#//TABLE_CELL/table_id"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Reports" resource="XML" disposableProviderFactory="true" ecorePackage="reports.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="../xsd_model/reports.xsd">
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="../xsd_model/Ecore.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genClasses ecoreClass="reports.ecore#//AxisModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reports.ecore#//AxisModule/axes"/>
+    </genClasses>
+    <genClasses ecoreClass="reports.ecore#//AxisOrdinateModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reports.ecore#//AxisOrdinateModule/axis_ordinates"/>
+    </genClasses>
+    <genClasses ecoreClass="reports.ecore#//CellPositionModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reports.ecore#//CellPositionModule/reportTables"/>
+    </genClasses>
+    <genClasses ecoreClass="reports.ecore#//OrdinateItemModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reports.ecore#//OrdinateItemModule/ordinateItems"/>
+    </genClasses>
+    <genClasses ecoreClass="reports.ecore#//PopulatedReport">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reports.ecore#//PopulatedReport/reportCellValues"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reports.ecore#//PopulatedReport/name"/>
+    </genClasses>
+    <genClasses ecoreClass="reports.ecore#//ReportCell">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference reports.ecore#//ReportCell/combination"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reports.ecore#//ReportCell/name"/>
+    </genClasses>
+    <genClasses ecoreClass="reports.ecore#//ReportCellValue">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference reports.ecore#//ReportCellValue/reportCell"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reports.ecore#//ReportCellValue/value"/>
+    </genClasses>
+    <genClasses ecoreClass="reports.ecore#//ReportTableModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reports.ecore#//ReportTableModule/reportTables"/>
+    </genClasses>
+    <genClasses ecoreClass="reports.ecore#//TableCellModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reports.ecore#//TableCellModule/tableCells"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Row_transformation_logic" resource="XML" disposableProviderFactory="true"
+      ecorePackage="row_transformation_logic.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="../xsd_model/row_transformation_logic.xsd">
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="../xsd_model/Ecore.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genClasses ecoreClass="row_transformation_logic.ecore#//BaseRowStructure">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//BaseRowStructure/columns"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//BaseRowStructure/cube"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute row_transformation_logic.ecore#//BaseRowStructure/usedInSubsets"/>
+    </genClasses>
+    <genClasses ecoreClass="row_transformation_logic.ecore#//ColumnFunctionGroup">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//ColumnFunctionGroup/columnFunctions"/>
+    </genClasses>
+    <genClasses ecoreClass="row_transformation_logic.ecore#//FunctionalRowLogic">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//FunctionalRowLogic/columnFunctionGroup"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//FunctionalRowLogic/cubeLogic"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute row_transformation_logic.ecore#//FunctionalRowLogic/usedInSubsets"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Transformation" resource="XML" disposableProviderFactory="true"
+      ecorePackage="transformation.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="../xsd_model/transformation.xsd">
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="../xsd_model/Ecore.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genClasses ecoreClass="transformation.ecore#//DataSetTransformation">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference transformation.ecore#//DataSetTransformation/cube"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute transformation.ecore#//DataSetTransformation/name"/>
+    </genClasses>
+    <genClasses ecoreClass="transformation.ecore#//DataSetTransformationTransformationScheme"/>
+    <genClasses ecoreClass="transformation.ecore#//ReadDataSourceTransformationScheme"/>
+    <genClasses ecoreClass="transformation.ecore#//Release">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute transformation.ecore#//Release/version"/>
+    </genClasses>
+    <genClasses ecoreClass="transformation.ecore#//ReportCellCreationTransformationScheme"/>
+    <genClasses ecoreClass="transformation.ecore#//TransformationScheme">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute transformation.ecore#//TransformationScheme/name"/>
+    </genClasses>
+    <genClasses ecoreClass="transformation.ecore#//TransformationSchemeModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference transformation.ecore#//TransformationSchemeModule/transformationSchemes"/>
+    </genClasses>
+    <genClasses ecoreClass="transformation.ecore#//VersionedComponentsSet">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference transformation.ecore#//VersionedComponentsSet/cubeSchemaModules"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference transformation.ecore#//VersionedComponentsSet/datasetTransformationModules"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute transformation.ecore#//VersionedComponentsSet/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference transformation.ecore#//VersionedComponentsSet/reportCellViewModules"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute transformation.ecore#//VersionedComponentsSet/license"/>
+    </genClasses>
+    <genClasses ecoreClass="transformation.ecore#//VersionedCubeSchemaModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference transformation.ecore#//VersionedCubeSchemaModule/schemas"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference transformation.ecore#//VersionedCubeSchemaModule/transformationScheme"/>
+    </genClasses>
+    <genClasses ecoreClass="transformation.ecore#//VersionedTransformationSchemeLogic">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference transformation.ecore#//VersionedTransformationSchemeLogic/transformationScheme"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Trl_report_cell_views" resource="XML" disposableProviderFactory="true"
+      ecorePackage="trl_report_cell_views.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="../xsd_model/trl_report_cell_views.xsd">
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="../xsd_model/Ecore.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genClasses ecoreClass="trl_report_cell_views.ecore#//ReportCellView">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_report_cell_views.ecore#//ReportCellView/reportCell"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_report_cell_views.ecore#//ReportCellViewModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_report_cell_views.ecore#//ReportCellViewModule/reportCellViews"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_report_cell_views.ecore#//ReportCellViewModule/transformationScheme"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Trl_sql_views" resource="XML" disposableProviderFactory="true"
+      ecorePackage="trl_sql_views.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="../xsd_model/trl_sql_views.xsd">
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="../xsd_model/Ecore.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genClasses ecoreClass="trl_sql_views.ecore#//AggregateEnrichmentView">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//AggregateEnrichmentView/functions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//AggregateEnrichmentView/groupByClause"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_sql_views.ecore#//CopyView"/>
+    <genClasses ecoreClass="trl_sql_views.ecore#//EnrichmentView">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//EnrichmentView/functions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//EnrichmentView/renames"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_sql_views.ecore#//FilterByConditionView">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//FilterByConditionView/whereClause"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_sql_views.ecore#//GenericView">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//GenericView/selectClause"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//GenericView/whereClause"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//GenericView/groupByClause"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_sql_views.ecore#//GroupByClause">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//GroupByClause/groupByColumns"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_sql_views.ecore#//IgnoreColumn">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//IgnoreColumn/columnToIgnore"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//IgnoreColumn/cube"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_sql_views.ecore#//JoinView">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//JoinView/whereClause"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//JoinView/renames"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//JoinView/ignores"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_sql_views.ecore#//RenameAs">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//RenameAs/fromCube"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//RenameAs/fromVariable"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//RenameAs/toVariable"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_sql_views.ecore#//SelectClause">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//SelectClause/aggregateFunctions"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//SelectClause/basicFunctions"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//SelectClause/varaibles"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_sql_views.ecore#//SQLView">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute trl_sql_views.ecore#//SQLView/VTL_Code"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_sql_views.ecore#//UnionView"/>
+    <genClasses ecoreClass="trl_sql_views.ecore#//VersionedSQLViewsModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//VersionedSQLViewsModule/sqlViews"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_sql_views.ecore#//WhereClause">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//WhereClause/function"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Vtl_transformation" disposableProviderFactory="true" ecorePackage="vtl_transformation.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="../xsd_model/vtl_transformation.xsd">
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="../xsd_model/Ecore.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genClasses ecoreClass="vtl_transformation.ecore#//TRANSFORMATION_SCHEME">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute vtl_transformation.ecore#//TRANSFORMATION_SCHEME/transformation_scheme_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute vtl_transformation.ecore#//TRANSFORMATION_SCHEME/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute vtl_transformation.ecore#//TRANSFORMATION_SCHEME/description"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference vtl_transformation.ecore#//TRANSFORMATION_SCHEME/tranformations"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute vtl_transformation.ecore#//TRANSFORMATION_SCHEME/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute vtl_transformation.ecore#//TRANSFORMATION_SCHEME/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute vtl_transformation.ecore#//TRANSFORMATION_SCHEME/maintenance_agency_id"/>
+    </genClasses>
+    <genClasses ecoreClass="vtl_transformation.ecore#//TRANSFORMATION">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute vtl_transformation.ecore#//TRANSFORMATION/transformation_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute vtl_transformation.ecore#//TRANSFORMATION/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute vtl_transformation.ecore#//TRANSFORMATION/expression"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference vtl_transformation.ecore#//TRANSFORMATION/rootNode"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute vtl_transformation.ecore#//TRANSFORMATION/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute vtl_transformation.ecore#//TRANSFORMATION/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute vtl_transformation.ecore#//TRANSFORMATION/maintenance_agency_id"/>
+    </genClasses>
+    <genClasses ecoreClass="vtl_transformation.ecore#//TRANSFORMATION_NODE">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference vtl_transformation.ecore#//TRANSFORMATION_NODE/subNodes"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute vtl_transformation.ecore#//TRANSFORMATION_NODE/expresssion"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute vtl_transformation.ecore#//TRANSFORMATION_NODE/type"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference vtl_transformation.ecore#//TRANSFORMATION_NODE/variable"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference vtl_transformation.ecore#//TRANSFORMATION_NODE/member"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute vtl_transformation.ecore#//TRANSFORMATION_NODE/transformation_node_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute vtl_transformation.ecore#//TRANSFORMATION_NODE/level"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute vtl_transformation.ecore#//TRANSFORMATION_NODE/order"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute vtl_transformation.ecore#//TRANSFORMATION_NODE/parent_node_id"/>
+    </genClasses>
+    <genClasses ecoreClass="vtl_transformation.ecore#//NODE_RELATIONSHIP">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference vtl_transformation.ecore#//NODE_RELATIONSHIP/sourceNode"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference vtl_transformation.ecore#//NODE_RELATIONSHIP/targetNode"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<base_cube_data:InputDataModule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:base_cube_data="http://www.eclipse.org/base_cube_data" license="Copyright (c) 2020 Bird Software Solutions Ltd&amp;#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&amp;#xA;&amp;#xA;SPDX-License-Identifier: EPL-2.0 &amp;#xA;&amp;#xA; Contributors:&amp;#xA; Neil Mackenzie - initial API and implementation&amp;#xD;">
+  <inputData name="loans_data">
+    <sourceTableData name="loans1" cube="efbt_cubes.cubes#loans">
+      <rows rowID="loans_row1">
+        <cells xsi:type="base_cube_data:BaseCellWithValue" cellID="loans_row1:ECB2_MRKT_VL" column="../bird_import/variables.efbt_data_definition#ECB2_MRKT_VL" value="5000"/>
+        <cells xsi:type="base_cube_data:BaseCellWithValue" cellID="loans_row1:NTNL_AMNT" column="../bird_import/variables.efbt_data_definition#NTNL_AMNT" value="100000"/>
+        <cells xsi:type="base_cube_data:BaseCellWithValue" cellID="loans_row1:ECB2_ENTITY_LEI" column="../bird_import/variables.efbt_data_definition#ECB2_ENTITY_LEI" value="Mizuho"/>
+      </rows>
+      <rows rowID="loans_row2">
+        <cells xsi:type="base_cube_data:BaseCellWithValue" cellID="loans_row2:ECB2_MRKT_VL" column="../bird_import/variables.efbt_data_definition#ECB2_MRKT_VL" value="9000"/>
+        <cells xsi:type="base_cube_data:BaseCellWithValue" cellID="loans_row2:NTNL_AMNT" column="../bird_import/variables.efbt_data_definition#NTNL_AMNT" value="200000"/>
+        <cells xsi:type="base_cube_data:BaseCellWithValue" cellID="loans_row2:ECB2_ENTITY_LEI" column="../bird_import/variables.efbt_data_definition#ECB2_ENTITY_LEI" value="Mizuho"/>
+      </rows>
+      <rows rowID="loans_row3">
+        <cells xsi:type="base_cube_data:BaseCellWithValue" cellID="loans_row3:ECB2_MRKT_VL" column="../bird_import/variables.efbt_data_definition#ECB2_MRKT_VL" value="15000"/>
+        <cells xsi:type="base_cube_data:BaseCellWithValue" cellID="loans_row3:NTNL_AMNT" column="../bird_import/variables.efbt_data_definition#NTNL_AMNT" value="300000"/>
+        <cells xsi:type="base_cube_data:BaseCellWithValue" cellID="loans_row3:ECB2_ENTITY_LEI" column="../bird_import/variables.efbt_data_definition#ECB2_ENTITY_LEI" value="Citibank"/>
+      </rows>
+    </sourceTableData>
+    <sourceTableData name="counteparty1" cube="efbt_cubes.cubes#counterparty">
+      <rows rowID="counterparty_row1">
+        <cells xsi:type="base_cube_data:BaseCellWithValue" cellID="counterparty_row1:ECB2_ENTITY_LEI" column="../bird_import/variables.efbt_data_definition#ECB2_ENTITY_LEI" value="Citibank"/>
+        <cells xsi:type="base_cube_data:BaseCellWithEnumeratedValue" cellID="counterparty_row1:CNTRY" column="../bird_import/variables.efbt_data_definition#CNTRY" value="../bird_import/members.efbt_data_definition#EBA_GA_EBA_US"/>
+      </rows>
+      <rows rowID="counterparty_row2">
+        <cells xsi:type="base_cube_data:BaseCellWithValue" cellID="counterparty_row2:ECB2_ENTITY_LEI" column="../bird_import/variables.efbt_data_definition#ECB2_ENTITY_LEI" value="Mizuho"/>
+        <cells xsi:type="base_cube_data:BaseCellWithEnumeratedValue" cellID="counterparty_row2:CNTRY" column="../bird_import/variables.efbt_data_definition#CNTRY" value="../bird_import/members.efbt_data_definition#EBA_GA_EBA_JP"/>
+      </rows>
+    </sourceTableData>
+    <sourceTableData name="rating1" cube="efbt_cubes.cubes#rating">
+      <rows rowID="rating_row1">
+        <cells xsi:type="base_cube_data:BaseCellWithEnumeratedValue" cellID="rating_row1:CRDT_RTNG_AGNCY" column="../bird_import/variables.efbt_data_definition#CRDT_RTNG_AGNCY" value="../bird_import/members.efbt_data_definition#CRDT_RTNG_AGNCY_1"/>
+        <cells xsi:type="base_cube_data:BaseCellWithValue" cellID="rating_row1:RTNG_SCL_CD" column="../bird_import/variables.efbt_data_definition#RTNG_SCL_CD" value="AAA"/>
+        <cells xsi:type="base_cube_data:BaseCellWithValue" cellID="rating_row1:ECB2_ENTITY_LEI" column="../bird_import/variables.efbt_data_definition#ECB2_ENTITY_LEI" value="Citibank"/>
+      </rows>
+      <rows rowID="rating_row2">
+        <cells xsi:type="base_cube_data:BaseCellWithEnumeratedValue" cellID="rating_row2:CRDT_RTNG_AGNCY" column="../bird_import/variables.efbt_data_definition#CRDT_RTNG_AGNCY" value="../bird_import/members.efbt_data_definition#CRDT_RTNG_AGNCY_1"/>
+        <cells xsi:type="base_cube_data:BaseCellWithValue" cellID="rating_row2:RTNG_SCL_CD" column="../bird_import/variables.efbt_data_definition#RTNG_SCL_CD" value="AA"/>
+        <cells xsi:type="base_cube_data:BaseCellWithValue" cellID="rating_row2:ECB2_ENTITY_LEI" column="../bird_import/variables.efbt_data_definition#ECB2_ENTITY_LEI" value="Mizuho"/>
+      </rows>
+    </sourceTableData>
+  </inputData>
+</base_cube_data:InputDataModule>

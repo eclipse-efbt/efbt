@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Util
+Bundle-SymbolicName: org.eclipse.efbt.model.util
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Bird Software Solutions
+Automatic-Module-Name: org.eclipse.efbt.model.util
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.eclipse.emf.ecore;visibility:=reexport,
+ org.eclipse.core.runtime,
+ org.eclipse.efbt.model;bundle-version="1.0.0"
+Export-Package: org.eclipse.efbt.model.util
+

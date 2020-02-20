@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<transformation:TransformationSchemeModule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:transformation="http://www.eclipse.org/transformation" license="Copyright (c) 2020 Bird Software Solutions Ltd&amp;amp;#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&amp;amp;#xA;&amp;amp;#xA;SPDX-License-Identifier: EPL-2.0 &amp;amp;#xA;&amp;amp;#xA; Contributors:&amp;amp;#xA; Neil Mackenzie - initial API and implementation&amp;amp;#xD;" name="schemes">
+  <transformationSchemes xsi:type="transformation:DataSetTransformationTransformationScheme" name="processExampleData"/>
+  <transformationSchemes xsi:type="transformation:ReadDataSourceTransformationScheme" name="readInExampleData"/>
+  <transformationSchemes xsi:type="transformation:ReportCellCreationTransformationScheme" name="createReportCells"/>
+</transformation:TransformationSchemeModule>
