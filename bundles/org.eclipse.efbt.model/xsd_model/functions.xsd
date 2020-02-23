@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:column_transformation_logic="http://www.eclipse.org/column_transformation_logic" xmlns:core="http://www.eclipse.org/core" xmlns:cube_data="http://www.eclipse.org/cube_data" xmlns:cubes="http://www.eclipse.org/cubes" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:functions="http://www.eclipse.org/functions" xmlns:module_management="http://www.eclipse.org/module_management" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="functions" ecore:package="functions" targetNamespace="http://www.eclipse.org/functions">
+  <xsd:import namespace="http://www.eclipse.org/cubes" schemaLocation="cubes.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/column_transformation_logic" schemaLocation="column_transformation_logic.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/module_management" schemaLocation="module_management.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/core" schemaLocation="core.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/cube_data" schemaLocation="cube_data.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/emf/2002/Ecore" schemaLocation="Ecore.xsd"/>
+  <xsd:annotation>
+    <xsd:documentation>TheFunctions pckage cotain information about functions and their specifications. 
+Functions ae used in DataSetTransformations such as the ones for TRL and VTL. 
+Functions are also used in AttributeLineageModels an in DataLineageModels.
+</xsd:documentation>
+  </xsd:annotation>
+  <xsd:annotation>
+    <xsd:appinfo ecore:key="license" source="license">Copyright (c) 2020 Bird Software Solutions Ltd
+ All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html
+
+SPDX-License-Identifier: EPL-2.0 
+
+ Contributors:
+ Neil Mackenzie - initial API and implementation&#13;</xsd:appinfo>
+  </xsd:annotation>
+  <xsd:complexType name="AggregateFunction">
+    <xsd:annotation>
+      <xsd:documentation>A function which is  responsible for aggregating values from multiple rows in the same source cube</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="functions:Function">
+        <xsd:attribute ecore:reference="functions:AggregateFunctionSpec" name="functionSpec" type="xsd:anyURI">
+          <xsd:annotation>
+            <xsd:documentation>The function specification</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="AggregateFunctionSpec">
+    <xsd:annotation>
+      <xsd:documentation>A Function Specification for an  AggregateFunction</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="functions:FunctionSpec"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="BasicFunction">
+    <xsd:annotation>
+      <xsd:documentation>A function which is not responsible for aggregating values from multiple rows in the same source cube</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="functions:Function">
+        <xsd:attribute ecore:reference="functions:BasicFunctionSpec" name="functionSpec" type="xsd:anyURI">
+          <xsd:annotation>
+            <xsd:documentation>The function specification</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="BasicFunctionSpec">
+    <xsd:annotation>
+      <xsd:documentation>A Function Specification for a Basic Function (as opposed to an AggregateFunction)</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="functions:FunctionSpec">
+        <xsd:attribute ecore:unsettable="false" name="isInfix" type="ecore:EBoolean">
+          <xsd:annotation>
+            <xsd:documentation>true if the function is to be displayed in an infix fashion (like - or + functions)</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="BooleanFunction">
+    <xsd:annotation>
+      <xsd:documentation>A Function which returns a boolean result.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="functions:BasicFunction"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CellsParameter">
+    <xsd:annotation>
+      <xsd:documentation>For DataLineageModels, we use Functions which will have Cell parameters as opposed to Cube column Parameters.
+            This is because we want to show the traceability of cells. </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="functions:Parameter">
+        <xsd:attribute ecore:reference="cube_data:Cell" name="cells" type="xsd:anyURI">
+          <xsd:annotation>
+            <xsd:documentation>The cell</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Function">
+    <xsd:annotation>
+      <xsd:documentation>A Function represents a function that takes parameters and returns a result.
+      The parameters of a function may be other functions also.  </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="functions:Parameter">
+        <xsd:sequence>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="parameters" type="functions:Parameter">
+            <xsd:annotation>
+              <xsd:documentation>The parameters of the function</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute ecore:id="true" name="name" type="ecore:EString">
+          <xsd:annotation>
+            <xsd:documentation>The name of the Parameter</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="FunctionSpec">
+    <xsd:annotation>
+      <xsd:documentation>A Function Specification</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="parameterSpecs" type="functions:ParamaterSpec">
+        <xsd:annotation>
+          <xsd:documentation>The parameter spec of the function</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="functionalName" type="ecore:EString">
+      <xsd:annotation>
+        <xsd:documentation>If the function spec represents a common function in a functional language like +, then this field holds that name.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute ecore:id="true" name="name" type="ecore:EString">
+      <xsd:annotation>
+        <xsd:documentation>The unique name of the function spec. </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="sqlName" type="ecore:EString">
+      <xsd:annotation>
+        <xsd:documentation>If the function spec represents a common SQL function like SUM, then this field holds that name </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute ecore:unsettable="false" name="type" type="core:FACET_VALUE_TYPE">
+      <xsd:annotation>
+        <xsd:documentation>The type of the parameter</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="FunctionSpecModule">
+    <xsd:annotation>
+      <xsd:documentation>A Module made up of a list of FunctionSpecs </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="module_management:Module">
+        <xsd:sequence>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="functionSpecs" type="functions:FunctionSpec">
+            <xsd:annotation>
+              <xsd:documentation>The set of FunctionSpecs contained in the Module</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="MemberParameter">
+    <xsd:annotation>
+      <xsd:documentation>A Parameter which is a Member of a Dimension, useful in Functions like 'Currency = USD' where Currency is a column and USD is a member of the Currency Dimension. </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="functions:Parameter">
+        <xsd:attribute ecore:reference="core:MEMBER" name="param" type="xsd:anyURI">
+          <xsd:annotation>
+            <xsd:documentation>The member</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="ParamaterSpec">
+    <xsd:annotation>
+      <xsd:documentation>A Specification of  the parameters required by a function</xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute ecore:unsettable="false" name="datatype" type="core:FACET_VALUE_TYPE">
+      <xsd:annotation>
+        <xsd:documentation>The return type</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="name" type="ecore:EString">
+      <xsd:annotation>
+        <xsd:documentation>A name for the parameter specification</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="Parameter">
+    <xsd:annotation>
+      <xsd:documentation>A Parameter</xsd:documentation>
+    </xsd:annotation>
+  </xsd:complexType>
+  <xsd:complexType name="ResolvedCubeColumnParameter">
+    <xsd:annotation>
+      <xsd:documentation>A Cube Column parameter, this is a reference to a real existing CubeColumn.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="functions:Parameter">
+        <xsd:attribute ecore:reference="column_transformation_logic:CubeColumn" name="cubeColumn" type="xsd:anyURI">
+          <xsd:annotation>
+            <xsd:documentation>TheCubeColumn this is a reference to a real existing cubeColumn.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="SpeculativeCubeColumnParameter">
+    <xsd:annotation>
+      <xsd:documentation>A Parameter where we are taking a CubeColumn from a cube.
+Note that functions are always part of RowFunctions or cubeColumnFunctions, both of these are associated with derived cubes,  and  we only allow to take  CubeColumns for source cubes of the derived cube.
+ Speculative here relates to the fact that this cubeColumn may or may not actually exist. 
+ Note that during development of a program that set of actually existing CubeColumns changes.
+ Allowing a specultiveCubeColumnParameter    means that we can develop more quickly, and run checks occasionally to check that all SpeculativeCubeColumnParameters can be resolved  to real CubeColumns.
+               </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="functions:Parameter">
+        <xsd:attribute ecore:reference="core:VARIABLE" name="column" type="xsd:anyURI">
+          <xsd:annotation>
+            <xsd:documentation>The Column of the desired cube Column</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute ecore:reference="cubes:FreeBirdToolsCube" name="cube" type="xsd:anyURI">
+          <xsd:annotation>
+            <xsd:documentation>The cube of the desired cube Column</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="ValueParameter">
+    <xsd:annotation>
+      <xsd:documentation>A Parameter which is a value </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="functions:Parameter">
+        <xsd:attribute ecore:unsettable="false" name="dataType" type="core:FACET_VALUE_TYPE">
+          <xsd:annotation>
+            <xsd:documentation>the values datatype</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="value" type="ecore:EString">
+          <xsd:annotation>
+            <xsd:documentation>The value as a string representation</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+</xsd:schema>

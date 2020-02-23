@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:base_cube_data="http://www.eclipse.org/base_cube_data" xmlns:core="http://www.eclipse.org/core" xmlns:cube_data="http://www.eclipse.org/cube_data" xmlns:cubes="http://www.eclipse.org/cubes" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:module_management="http://www.eclipse.org/module_management" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="base_cube_data" ecore:package="base_cube_data" targetNamespace="http://www.eclipse.org/base_cube_data">
+  <xsd:import namespace="http://www.eclipse.org/module_management" schemaLocation="module_management.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/cubes" schemaLocation="cubes.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/emf/2002/Ecore" schemaLocation="Ecore.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/core" schemaLocation="core.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/cube_data" schemaLocation="cube_data.xsd"/>
+  <xsd:annotation>
+    <xsd:documentation> This package describes the storage of base cube data (as opposed to derived cube data) 
+</xsd:documentation>
+  </xsd:annotation>
+  <xsd:annotation>
+    <xsd:appinfo ecore:key="license" source="license">Copyright (c) 2020 Bird Software Solutions Ltd
+ All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html
+
+SPDX-License-Identifier: EPL-2.0 
+
+ Contributors:
+ Neil Mackenzie - initial API and implementation&#13;</xsd:appinfo>
+  </xsd:annotation>
+  <xsd:complexType abstract="true" name="BaseCell">
+    <xsd:annotation>
+      <xsd:documentation>Cell data of Rows of BaseCubes</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="cube_data:Cell"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="BaseCellWithEnumeratedValue">
+    <xsd:annotation>
+      <xsd:documentation>Base Cell data which contains one member of a list of enumerated values (e.g. a currency)</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="base_cube_data:BaseCell">
+        <xsd:attribute ecore:reference="core:MEMBER" name="value" type="xsd:anyURI">
+          <xsd:annotation>
+            <xsd:documentation>The member</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="BaseCellWithValue">
+    <xsd:annotation>
+      <xsd:documentation>Base Cell data which contains a value (e.g. price)</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="base_cube_data:BaseCell">
+        <xsd:attribute name="value" type="ecore:EString">
+          <xsd:annotation>
+            <xsd:documentation>The value of the cell represented as a String</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="BaseCubeData">
+    <xsd:annotation>
+      <xsd:documentation>Data For BaseCubes as a set of RowData</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="cube_data:CubeData">
+        <xsd:sequence>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="rows" type="base_cube_data:BaseRowData">
+            <xsd:annotation>
+              <xsd:documentation>The rows which make up the table data</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute ecore:reference="cubes:BaseCube" name="cube" type="xsd:anyURI">
+          <xsd:annotation>
+            <xsd:documentation>The cube with which the data is associated</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="BaseRowData">
+    <xsd:annotation>
+      <xsd:documentation>Data For Rows of BaseCubes</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="cube_data:RowData">
+        <xsd:sequence>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="cells" type="base_cube_data:BaseCell">
+            <xsd:annotation>
+              <xsd:documentation>The cells containing the data associated with the BaseRows</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType ecore:name="TargetCubeExpectedResultsData" name="TargetTableExpectedResultsData">
+    <xsd:annotation>
+      <xsd:documentation>Cube data for expected results associated with Target tables</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="cube_data:CubeData">
+        <xsd:sequence>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="rows" type="base_cube_data:BaseRowData">
+            <xsd:annotation>
+              <xsd:documentation>The rows which make up the table data</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute ecore:reference="cubes:TargetCube" name="cube" type="xsd:anyURI">
+          <xsd:annotation>
+            <xsd:documentation>The target cube with which the expected results are associated</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="InputData">
+    <xsd:annotation>
+      <xsd:documentation>InputData for a test</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element ecore:ordered="false" ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="sourceTableData" type="base_cube_data:BaseCubeData">
+        <xsd:annotation>
+          <xsd:documentation>The set of pupulated BaseCubes that represent the input data.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="name" type="ecore:EString">
+      <xsd:annotation>
+        <xsd:documentation>The name associated with the input data.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="InputDataModule">
+    <xsd:annotation>
+      <xsd:documentation>A module containeing a set of input data</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="module_management:Module">
+        <xsd:sequence>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="inputData" type="base_cube_data:InputData">
+            <xsd:annotation>
+              <xsd:documentation>The input data that makes up the module</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+</xsd:schema>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:bird_model="http://www.eclipse.org/bird_model" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:navigation_context="http://www.eclipse.org/navigation_context" xmlns:transformation="http://www.eclipse.org/transformation" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="navigation_context" ecore:package="navigation_context" targetNamespace="http://www.eclipse.org/navigation_context">
+  <xsd:import namespace="http://www.eclipse.org/bird_model" schemaLocation="bird_model.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/emf/2002/Ecore" schemaLocation="Ecore.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/transformation" schemaLocation="transformation.xsd"/>
+  <xsd:annotation>
+    <xsd:documentation> This package describes NavigationContext, used to tie together a set of artifacts with tags and requiremnts </xsd:documentation>
+  </xsd:annotation>
+  <xsd:annotation>
+    <xsd:appinfo ecore:key="license" source="license">Copyright (c) 2020 Bird Software Solutions Ltd
+ All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html
+
+SPDX-License-Identifier: EPL-2.0 
+
+ Contributors:
+ Neil Mackenzie - initial API and implementation&#13;</xsd:appinfo>
+  </xsd:annotation>
+  <xsd:complexType name="NavigationContext">
+    <xsd:annotation>
+      <xsd:documentation> The NavigationContextis used to tie together a set of artifacts with tags and requirements.
+    Note that it is possible to have more than one set of tags which link different requirments to the same artefacts.
+    We see this in regulatory reporting when different national regulations might want to use the same logic.
+    The navigation context makes it clear which links we want to use when navigating related links.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute ecore:reference="transformation:VersionedComponentsSet" name="transformationContext" type="xsd:anyURI">
+      <xsd:annotation>
+        <xsd:documentation>The related transformation context</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute ecore:reference="transformation:TransformationSchemeModule" name="transformationsSchemeModule" type="xsd:anyURI">
+      <xsd:annotation>
+        <xsd:documentation>The related Transformation Module</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="license" type="ecore:EString"/>
+    <xsd:attribute ecore:reference="bird_model:BIRDModel" name="birdModel" type="xsd:anyURI"/>
+  </xsd:complexType>
+</xsd:schema>

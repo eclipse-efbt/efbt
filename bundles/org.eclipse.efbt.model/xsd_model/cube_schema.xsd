@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:cube_schema="http://www.eclipse.org/cube_schema" xmlns:cubes="http://www.eclipse.org/cubes" xmlns:data_definition="http://www.eclipse.org/data_definition" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="cube_schema" ecore:package="cube_schema" targetNamespace="http://www.eclipse.org/cube_schema">
+  <xsd:import namespace="http://www.eclipse.org/cubes" schemaLocation="cubes.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/emf/2002/Ecore" schemaLocation="Ecore.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/data_definition" schemaLocation="data_definition.xsd"/>
+  <xsd:annotation>
+    <xsd:documentation> This package describes the schemas of FreeBirdToolsCubes by providing  means to access the relevent the data_definition:CUBE_STRUCTURE    
+</xsd:documentation>
+  </xsd:annotation>
+  <xsd:annotation>
+    <xsd:appinfo ecore:key="license" source="license">Copyright (c) 2020 Bird Software Solutions Ltd
+ All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html
+
+SPDX-License-Identifier: EPL-2.0 
+
+ Contributors:
+ Neil Mackenzie - initial API and implementation&#13;</xsd:appinfo>
+  </xsd:annotation>
+  <xsd:complexType name="CubeSchema">
+    <xsd:annotation>
+      <xsd:documentation>This class  describes the schemas of FreeBirdToolsCubes by providing  means to access the relevent the data_definition:CUBE_STRUCTURE via an associated data_definition:CUBE  </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute ecore:reference="data_definition:CUBE" name="cube" type="xsd:anyURI">
+      <xsd:annotation>
+        <xsd:documentation>the associated data_definition:CUBE</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="name" type="ecore:EString">
+      <xsd:annotation>
+        <xsd:documentation>the schema name</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute ecore:reference="cubes:BaseCube" name="baseCube" type="xsd:anyURI">
+      <xsd:annotation>
+        <xsd:documentation>The FreeBIRDToolsCube</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+</xsd:schema>

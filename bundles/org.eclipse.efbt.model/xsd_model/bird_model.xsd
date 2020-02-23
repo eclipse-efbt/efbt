@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:bird_model="http://www.eclipse.org/bird_model" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:efbt_data_definition="http://www.eclipse.org/efbt_data_definition" xmlns:efbt_mapping="http://www.eclipse.org/efbt_mapping" xmlns:efbt_vtl_transformation="http://www.eclipse.org/efbt_vtl_transformation" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="bird_model" ecore:package="bird_model" targetNamespace="http://www.eclipse.org/bird_model">
+  <xsd:import namespace="http://www.eclipse.org/emf/2002/Ecore" schemaLocation="Ecore.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/efbt_mapping" schemaLocation="efbt_mapping.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/efbt_vtl_transformation" schemaLocation="efbt_vtl_transformation.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/efbt_data_definition" schemaLocation="efbt_data_definition.xsd"/>
+  <xsd:annotation>
+    <xsd:documentation> This package describes the bird model 
+ 
+ </xsd:documentation>
+  </xsd:annotation>
+  <xsd:annotation>
+    <xsd:appinfo ecore:key="license" source="license">Copyright (c) 2020 Bird Software Solutions Ltd
+ All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html
+
+SPDX-License-Identifier: EPL-2.0 
+
+ Contributors:
+ Neil Mackenzie - initial API and implementation&#13;</xsd:appinfo>
+  </xsd:annotation>
+  <xsd:element ecore:ignore="true" name="BIRDModel" type="bird_model:BIRDModel"/>
+  <xsd:complexType name="BIRDModel">
+    <xsd:annotation>
+      <xsd:documentation>This class stores the reference to all the BIRD artefacts that make up a release of BIRD</xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute ecore:reference="efbt_data_definition:DomainModule" name="domains">
+      <xsd:annotation>
+        <xsd:documentation>The Domains</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:list itemType="xsd:anyURI"/>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute ecore:reference="efbt_data_definition:MemberModule" name="members">
+      <xsd:annotation>
+        <xsd:documentation>The Members</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:list itemType="xsd:anyURI"/>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute ecore:reference="efbt_data_definition:VariableModule" name="variables">
+      <xsd:annotation>
+        <xsd:documentation>The Variables</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:list itemType="xsd:anyURI"/>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute ecore:reference="efbt_data_definition:CubeModule" name="cubes">
+      <xsd:annotation>
+        <xsd:documentation>The Cubes</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:list itemType="xsd:anyURI"/>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute ecore:reference="efbt_data_definition:CombinationModule" name="combinations">
+      <xsd:annotation>
+        <xsd:documentation>The Combinations</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:list itemType="xsd:anyURI"/>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute ecore:reference="efbt_vtl_transformation:TransformationSchemeModule" name="transformationSchemes">
+      <xsd:annotation>
+        <xsd:documentation>The Tranformation Schemes and contained Transformations</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:list itemType="xsd:anyURI"/>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute ecore:reference="efbt_mapping:MappingDefinitionModule" name="mappings">
+      <xsd:annotation>
+        <xsd:documentation>The Mappings</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:list itemType="xsd:anyURI"/>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute ecore:id="true" name="name" type="ecore:EString"/>
+  </xsd:complexType>
+</xsd:schema>

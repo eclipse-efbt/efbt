@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:core="http://www.eclipse.org/core" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="core" ecore:package="core" targetNamespace="http://www.eclipse.org/core">
+  <xsd:import namespace="http://www.eclipse.org/emf/2002/Ecore" schemaLocation="Ecore.xsd"/>
+  <xsd:annotation>
+    <xsd:appinfo ecore:key="license" source="license">Copyright (c) 2020 Bird Software Solutions Ltd
+ All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html
+
+SPDX-License-Identifier: EPL-2.0 
+
+ Contributors:
+ Neil Mackenzie - initial API and implementation&#13; This file contains a representation of the core package  of the SMCubes Information Model. The SMCubes Information Model is freely available at https://www.ecb.europa.eu/stats/ecb_statistics/co-operation_and_standards/smcube/html/index.en.html</xsd:appinfo>
+  </xsd:annotation>
+  <xsd:complexType name="DOMAIN">
+    <xsd:attribute name="code" type="ecore:EString"/>
+    <xsd:attribute ecore:name="data_type" ecore:unsettable="false" name="data_type" type="core:FACET_VALUE_TYPE"/>
+    <xsd:attribute name="description" type="ecore:EString"/>
+    <xsd:attribute ecore:id="true" ecore:name="domain_id" name="domain_id" type="ecore:EString"/>
+    <xsd:attribute ecore:name="facet_id" ecore:reference="core:FACET_COLLECTION" name="facet_id" type="xsd:anyURI"/>
+    <xsd:attribute ecore:name="is_enumerated" ecore:unsettable="false" name="is_enumerated" type="ecore:EBoolean"/>
+    <xsd:attribute ecore:name="is_reference" ecore:unsettable="false" name="is_reference" type="ecore:EBoolean"/>
+    <xsd:attribute ecore:name="maintenance_agency_id" ecore:reference="core:MAINTENANCE_AGENCY" name="maintenance_agency_id" type="xsd:anyURI"/>
+    <xsd:attribute name="name" type="ecore:EString"/>
+  </xsd:complexType>
+  <xsd:complexType ecore:name="FACET_COLLECTION" name="FACET_COLLECTION">
+    <xsd:attribute name="code" type="ecore:EString"/>
+    <xsd:attribute ecore:id="true" ecore:name="facet_id" name="facet_id" type="ecore:EString"/>
+    <xsd:attribute ecore:name="facet_value_type" ecore:unsettable="false" name="facet_value_type" type="core:FACET_VALUE_TYPE"/>
+    <xsd:attribute ecore:name="maintenance_agency_id" ecore:reference="core:FACET_COLLECTION" name="maintenance_agency_id" type="xsd:anyURI"/>
+    <xsd:attribute name="name" type="ecore:EString"/>
+  </xsd:complexType>
+  <xsd:complexType ecore:name="FACET_ENUMERATION" name="FACET_ENUMERATION">
+    <xsd:attribute ecore:name="facet_id" ecore:reference="core:FACET_COLLECTION" name="facet_id" type="xsd:anyURI"/>
+    <xsd:attribute ecore:name="facet_type" ecore:reference="core:facet_type" name="facet_type" type="xsd:anyURI"/>
+    <xsd:attribute ecore:name="observation_value" name="observation_value" type="ecore:EString"/>
+  </xsd:complexType>
+  <xsd:complexType ecore:name="facet_type" name="facet_type">
+    <xsd:attribute ecore:unsettable="false" name="decimals" type="ecore:EInt"/>
+    <xsd:attribute name="endTime" type="ecore:EString"/>
+    <xsd:attribute ecore:unsettable="false" name="endValue" type="ecore:EInt"/>
+    <xsd:attribute name="interval" type="ecore:EString"/>
+    <xsd:attribute name="isSequence" type="ecore:EString"/>
+    <xsd:attribute ecore:unsettable="false" name="maxLength" type="ecore:EInt"/>
+    <xsd:attribute ecore:unsettable="false" name="maxValue" type="ecore:EInt"/>
+    <xsd:attribute ecore:unsettable="false" name="minLength" type="ecore:EInt"/>
+    <xsd:attribute ecore:unsettable="false" name="minValue" type="ecore:EInt"/>
+    <xsd:attribute name="pattern" type="ecore:EString"/>
+    <xsd:attribute name="startTime" type="ecore:EString"/>
+    <xsd:attribute ecore:unsettable="false" name="startValue" type="ecore:EInt"/>
+    <xsd:attribute name="timeInterval" type="ecore:EString"/>
+  </xsd:complexType>
+  <xsd:simpleType ecore:name="FACET_VALUE_TYPE" name="FACET_VALUE_TYPE">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="BigInteger"/>
+      <xsd:enumeration value="Boolean"/>
+      <xsd:enumeration value="DateTime"/>
+      <xsd:enumeration ecore:name="DayMonthDayMonth" value="Day_MonthDay_Month"/>
+      <xsd:enumeration value="Decimal"/>
+      <xsd:enumeration value="Double"/>
+      <xsd:enumeration value="Duration"/>
+      <xsd:enumeration value="Float"/>
+      <xsd:enumeration value="GregorianDay"/>
+      <xsd:enumeration value="GregorianMonth"/>
+      <xsd:enumeration ecore:value="11" value="GregorianYear"/>
+      <xsd:enumeration ecore:value="12" value="Integer"/>
+      <xsd:enumeration ecore:value="13" value="Long"/>
+      <xsd:enumeration ecore:value="14" value="Short"/>
+      <xsd:enumeration ecore:value="15" value="String"/>
+      <xsd:enumeration ecore:value="16" value="Time"/>
+      <xsd:enumeration ecore:value="17" value="URI"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType ecore:name="MAINTENANCE_AGENCY" name="MAINTENANCE_AGENCY">
+    <xsd:attribute name="code" type="ecore:EString"/>
+    <xsd:attribute ecore:id="true" ecore:name="maintenance_agency_id" name="maintenance_agency_id" type="ecore:EString"/>
+    <xsd:attribute name="name" type="ecore:EString"/>
+  </xsd:complexType>
+  <xsd:complexType name="MEMBER">
+    <xsd:attribute name="code" type="ecore:EString"/>
+    <xsd:attribute name="description" type="ecore:EString"/>
+    <xsd:attribute ecore:name="domain_id" ecore:reference="core:DOMAIN" name="domain_id" type="xsd:anyURI"/>
+    <xsd:attribute ecore:name="maintenance_agency_id" ecore:reference="core:MAINTENANCE_AGENCY" name="maintenance_agency_id" type="xsd:anyURI"/>
+    <xsd:attribute ecore:id="true" ecore:name="member_id" name="member_id" type="ecore:EString"/>
+    <xsd:attribute name="name" type="ecore:EString"/>
+  </xsd:complexType>
+  <xsd:complexType ecore:name="MEMBER_HIERARCHY" name="MEMBER_HIERARCHY">
+    <xsd:attribute name="code" type="ecore:EString"/>
+    <xsd:attribute name="description" type="ecore:EString"/>
+    <xsd:attribute ecore:name="domain_id" ecore:reference="core:DOMAIN" name="domain_id" type="xsd:anyURI"/>
+    <xsd:attribute ecore:name="maintenance_agency_id" ecore:reference="core:MAINTENANCE_AGENCY" name="maintenance_agency_id" type="xsd:anyURI"/>
+    <xsd:attribute ecore:name="member_hierarchy_id" name="member_hierarchy_id" type="ecore:EString"/>
+    <xsd:attribute name="name" type="ecore:EString"/>
+  </xsd:complexType>
+  <xsd:complexType ecore:name="MEMBER_HIERARCHY_NODE" name="MEMBER_HIERARCHY_NODE">
+    <xsd:attribute name="comparator" type="ecore:EString"/>
+    <xsd:attribute ecore:unsettable="false" name="level" type="ecore:EInt"/>
+    <xsd:attribute ecore:name="member_hierarchy_id" ecore:reference="core:MEMBER_HIERARCHY" name="member_hierarchy_id" type="xsd:anyURI"/>
+    <xsd:attribute ecore:name="member_id" ecore:reference="core:MEMBER" name="member_id" type="xsd:anyURI"/>
+    <xsd:attribute name="operator" type="ecore:EString"/>
+    <xsd:attribute ecore:name="parent_member_id" ecore:reference="core:MEMBER" name="parent_member_id" type="xsd:anyURI"/>
+    <xsd:attribute ecore:name="valid_from" name="valid_from" type="ecore:EDate"/>
+    <xsd:attribute ecore:name="valid_to" name="valid_to" type="ecore:EDate"/>
+  </xsd:complexType>
+  <xsd:complexType name="SUBDOMAIN">
+    <xsd:attribute name="code" type="ecore:EString"/>
+    <xsd:attribute name="description" type="ecore:EString"/>
+    <xsd:attribute ecore:name="domain_id" ecore:reference="core:DOMAIN" name="domain_id" type="xsd:anyURI"/>
+    <xsd:attribute ecore:name="facet_id" ecore:reference="core:FACET_COLLECTION" name="facet_id" type="xsd:anyURI"/>
+    <xsd:attribute ecore:name="is_listed" ecore:unsettable="false" name="IS_LISTED" type="ecore:EBoolean"/>
+    <xsd:attribute ecore:name="is_natural" ecore:unsettable="false" name="is_natural" type="ecore:EBoolean"/>
+    <xsd:attribute ecore:name="maintenance_agency_id" ecore:reference="core:MAINTENANCE_AGENCY" name="maintenance_agency_id" type="xsd:anyURI"/>
+    <xsd:attribute name="name" type="ecore:EString"/>
+    <xsd:attribute ecore:id="true" ecore:name="subdomain_id" name="subdomain_id" type="ecore:EString"/>
+  </xsd:complexType>
+  <xsd:complexType ecore:name="SUBDOMAIN_ENUMERATION" name="SUBDOMAIN_ENUMERATION">
+    <xsd:attribute ecore:name="member_id" ecore:reference="core:MEMBER" name="member_id" type="xsd:anyURI"/>
+    <xsd:attribute ecore:unsettable="false" name="order" type="ecore:EInt"/>
+    <xsd:attribute ecore:name="subdomain_id" ecore:reference="core:SUBDOMAIN" name="subdomain_id" type="xsd:anyURI"/>
+    <xsd:attribute ecore:name="valid_from" name="valid_from" type="ecore:EDate"/>
+    <xsd:attribute ecore:name="valid_to" name="valid_to" type="ecore:EDate"/>
+  </xsd:complexType>
+  <xsd:complexType name="VARIABLE">
+    <xsd:attribute name="code" type="ecore:EString"/>
+    <xsd:attribute name="description" type="ecore:EString"/>
+    <xsd:attribute ecore:name="domain_id" ecore:reference="core:DOMAIN" name="domain_id" type="xsd:anyURI"/>
+    <xsd:attribute ecore:name="maintenance_agency_id" ecore:reference="core:MAINTENANCE_AGENCY" name="maintenance_agency_id" type="xsd:anyURI"/>
+    <xsd:attribute name="name" type="ecore:EString"/>
+    <xsd:attribute ecore:name="primary_concept" name="primary_concept" type="ecore:EString"/>
+    <xsd:attribute ecore:id="true" ecore:name="variable_id" name="variable_id" type="ecore:EString"/>
+  </xsd:complexType>
+  <xsd:complexType ecore:name="VARIABLE_SET" name="VARIABLE_SET">
+    <xsd:attribute name="code" type="ecore:EString"/>
+    <xsd:attribute name="description" type="ecore:EString"/>
+    <xsd:attribute ecore:name="maintenance_agency_id" ecore:reference="core:MAINTENANCE_AGENCY" name="maintenance_agency_id" type="xsd:anyURI"/>
+    <xsd:attribute name="name" type="ecore:EString"/>
+    <xsd:attribute ecore:id="true" ecore:name="variable_set_id" name="variable_set_id" type="ecore:EString"/>
+  </xsd:complexType>
+  <xsd:complexType ecore:name="VARIABLE_SET_ENUMERATION" name="VARIABLE_SET_ENUMERATION">
+    <xsd:attribute ecore:name="is_flow" ecore:unsettable="false" name="is_flow" type="ecore:EBoolean"/>
+    <xsd:attribute ecore:unsettable="false" name="order" type="ecore:EInt"/>
+    <xsd:attribute ecore:name="subdomain_id" ecore:reference="core:SUBDOMAIN" name="subdomain_id" type="xsd:anyURI"/>
+    <xsd:attribute ecore:name="valid_from" name="valid_from" type="ecore:EDate"/>
+    <xsd:attribute ecore:name="valid_to" name="valid_to" type="ecore:EDate"/>
+    <xsd:attribute ecore:name="variable_id" ecore:reference="core:VARIABLE" name="variable_id" type="xsd:anyURI"/>
+    <xsd:attribute ecore:name="variable_set_id" ecore:reference="core:VARIABLE_SET" name="variable_set_id" type="xsd:anyURI"/>
+  </xsd:complexType>
+</xsd:schema>

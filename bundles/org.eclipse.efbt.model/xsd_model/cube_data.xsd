@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:core="http://www.eclipse.org/core" xmlns:cube_data="http://www.eclipse.org/cube_data" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:module_management="http://www.eclipse.org/module_management" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="cube_data" ecore:package="cube_data" targetNamespace="http://www.eclipse.org/cube_data">
+  <xsd:import namespace="http://www.eclipse.org/module_management" schemaLocation="module_management.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/core" schemaLocation="core.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/emf/2002/Ecore" schemaLocation="Ecore.xsd"/>
+  <xsd:annotation>
+    <xsd:documentation> This package describes the storage of  cube data  </xsd:documentation>
+  </xsd:annotation>
+  <xsd:annotation>
+    <xsd:appinfo ecore:key="license" source="license">Copyright (c) 2020 Bird Software Solutions Ltd
+ All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html
+
+SPDX-License-Identifier: EPL-2.0 
+
+ Contributors:
+ Neil Mackenzie - initial API and implementation&#13;</xsd:appinfo>
+  </xsd:annotation>
+  <xsd:complexType name="Cell">
+    <xsd:annotation>
+      <xsd:documentation>Cell data of Rows of Cubes</xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute ecore:id="true" name="cellID" type="ecore:EString">
+      <xsd:annotation>
+        <xsd:documentation>The unique ID of a cell</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute ecore:reference="core:VARIABLE" name="column" type="xsd:anyURI">
+      <xsd:annotation>
+        <xsd:documentation>The variable associated with the cell</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="CubeData">
+    <xsd:annotation>
+      <xsd:documentation>Data For Cubes</xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute ecore:id="true" name="name" type="ecore:EString">
+      <xsd:annotation>
+        <xsd:documentation>The unique ID of the cube data</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="CubeDataModule">
+    <xsd:annotation>
+      <xsd:documentation>a module of CubeData</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="module_management:Module">
+        <xsd:sequence>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="cubeData" type="cube_data:CubeData">
+            <xsd:annotation>
+              <xsd:documentation>The set of CubeData</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="RowData">
+    <xsd:annotation>
+      <xsd:documentation>Data For Rows of Cubes</xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute ecore:id="true" name="rowID" type="ecore:EString">
+      <xsd:annotation>
+        <xsd:documentation>The unique ID of the row data</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+</xsd:schema>

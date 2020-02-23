@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:cubes="http://www.eclipse.org/cubes" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:module_management="http://www.eclipse.org/module_management" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="cubes" ecore:package="cubes" targetNamespace="http://www.eclipse.org/cubes">
+  <xsd:import namespace="http://www.eclipse.org/module_management" schemaLocation="module_management.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/emf/2002/Ecore" schemaLocation="Ecore.xsd"/>
+  <xsd:annotation>
+    <xsd:documentation> This package describes the FreeBirdToolsCubes of Bird Bench, these are at a slightly different 
+    level of abstraction form  the related Cubes from the data_definition package. 
+ 
+ </xsd:documentation>
+  </xsd:annotation>
+  <xsd:annotation>
+    <xsd:appinfo ecore:key="license" source="license">Copyright (c) 2020 Bird Software Solutions Ltd
+ All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html
+
+SPDX-License-Identifier: EPL-2.0 
+
+ Contributors:
+ Neil Mackenzie - initial API and implementation&#13;</xsd:appinfo>
+  </xsd:annotation>
+  <xsd:complexType name="BaseCube">
+    <xsd:annotation>
+      <xsd:documentation>This is a cube which can contain actual base data, as opposed to DerivedCubes which contain data which is derived from BaseCubes, and other DerivedCubes. 
+The BaseCube class is a lightweight class which effectively just has a name, which allows us to define a very high level outline of the relationships between cubes.
+The CubeSchema class in the cube_schema package links the BaseCube to a CUBE from the data_definition package which has a structure.
+The BaseCubeData class in the base_cube_data package associates the  BaseCube with actual data to describe a populated cube.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="cubes:FreeBirdToolsCube"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="FreeBirdToolsCube">
+    <xsd:annotation>
+      <xsd:documentation> A cube of the FreeBIRDTools platform
+The FreeBirdToolsCube class is a lightweight class which effectively just has a name, which allows us to define a very high level outline of the relationships between cubes.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute ecore:id="true" ecore:name="cube_name" name="cube_name" type="ecore:EString">
+      <xsd:annotation>
+        <xsd:documentation>the name of the cube</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="FreeBirdToolsCubeModule">
+    <xsd:annotation>
+      <xsd:documentation> A Module containing a list of FreeBirdToolsCubes</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="module_management:Module">
+        <xsd:sequence>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="cubes" type="cubes:FreeBirdToolsCube">
+            <xsd:annotation>
+              <xsd:documentation> The list of FreeBirdToolsCubes</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="DerivedCube">
+    <xsd:annotation>
+      <xsd:documentation>This is a cube which can contain data which is derived from BaseCubes, and other DerivedCubes. DeriveCubes are different from BaseCubes which can contain actual base data 
+The DerivedCube class is a lightweight class which effectively just has a name, and the set of source cubes which it is derived from, this allows us to define a very high level outline of the relationships between cubes.
+The DataSetTransformation class in the tranformation package links the DerivedCube to the logic which is used to derive the cubes structure from the structure of its source cubes, and to derive its data from populated source cubes.
+Note that the DataSetTransformations has many subsclasses, currently they represent structures from the TraceableReportingLanguage (TRL), and soon these will be replaced by subclasses which represent structures from VTL.
+When we create AttributeLineageModels, The ColumnFunctionGroup from the row_transformation_logic package shows the structure of the DerivedCube as a set of Columns each with a formula deriving data from columns of source cubes.
+The DataLineageModel class from the data_lineage package shows tha actual derived data for a derived cube, supplemented with the formula used to calculate each piece of data from data in populated source cubes.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="cubes:FreeBirdToolsCube">
+        <xsd:attribute ecore:reference="cubes:FreeBirdToolsCube" name="sourceCubes">
+          <xsd:annotation>
+            <xsd:documentation>the sourceCubes from which this cube is derived</xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+            <xsd:list itemType="xsd:anyURI"/>
+          </xsd:simpleType>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="TargetCube">
+    <xsd:annotation>
+      <xsd:documentation> A Derived Cube from which no other DerivedCubes are Derived</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="cubes:DerivedCube"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+</xsd:schema>
