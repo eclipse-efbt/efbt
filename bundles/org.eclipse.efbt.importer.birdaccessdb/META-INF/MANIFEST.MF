@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Accessdb
+Bundle-SymbolicName: org.eclipse.efbt.importer.birdaccessdb
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: org.eclipse.efbt.birdimport.accessdb
+Require-Bundle: org.apache.commons.lang3,org.apache.commons.logging, org.eclipse.efbt.model, org.eclipse.efbt.importer
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+
