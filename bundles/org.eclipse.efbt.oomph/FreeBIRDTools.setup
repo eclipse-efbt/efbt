@@ -44,7 +44,7 @@
   <setupTask
       xsi:type="git:GitCloneTask"
       id="git.clone.freebirdtools"
-      remoteURI="Bird Software Solutions/EclipseFreeBIRDToolsIC">
+      remoteURI="eclipse/efbt">
     <annotation
         source="http://www.eclipse.org/oomph/setup/InducedChoices">
       <detail
@@ -78,7 +78,7 @@
         xsi:type="setup:EclipseIniTask"
         disabled="true"
         option="-Doomph.redirection.FreeBIRDTools"
-        value="=https://raw.githubusercontent.com/Bird Software Solutions/EclipseFreeBIRDToolsIC/master/.../Users/FreeBIRDTools.setup->${git.clone.freebirdtools.location|uri}/.../Users/FreeBIRDTools.setup"
+        value="=https://raw.githubusercontent.com/eclipse/efbt/master/.../Users/FreeBIRDTools.setup->${git.clone.freebirdtools.location|uri}/.../Users/FreeBIRDTools.setup"
         vm="true">
       <description>
         Set an Oomph redirection system property to redirect the logical location of this setup to its physical location in the Git clone.
