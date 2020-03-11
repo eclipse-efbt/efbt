@@ -45,7 +45,7 @@ public class ScalaRuntimeUtil {
    */
   public static String getcalcText(BasicFunction calculation) {
 
-    return getScalaStringForFunction(calculation, false);
+    return getScalaStringForFunction(calculation, false); 
 
   }
 

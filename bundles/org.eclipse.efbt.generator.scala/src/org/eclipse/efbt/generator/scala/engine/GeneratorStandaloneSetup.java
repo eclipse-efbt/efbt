@@ -112,7 +112,7 @@ public class GeneratorStandaloneSetup  implements ISetup {
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("base_cube_data", resourceFactory);	
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("cube_data", resourceFactory);
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("cubes", resourceFactory);
-		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("data_lineage", resourceFactory);
+		//Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("data_lineage", resourceFactory);
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("typing", resourceFactory);
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("platform_call", resourceFactory);
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("attribute_lineage", resourceFactory);
@@ -144,7 +144,7 @@ public class GeneratorStandaloneSetup  implements ISetup {
 		org.eclipse.xtext.resource.IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put("base_cube_data", serviceProvider);						
 		org.eclipse.xtext.resource.IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put("cube_data", serviceProvider);		
 		org.eclipse.xtext.resource.IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put("cubes", serviceProvider);
-		org.eclipse.xtext.resource.IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put("data_lineage", serviceProvider);		
+		//org.eclipse.xtext.resource.IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put("data_lineage", serviceProvider);		
 		org.eclipse.xtext.resource.IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put("typing", serviceProvider);
 		org.eclipse.xtext.resource.IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put("platform_call", serviceProvider);
 		org.eclipse.xtext.resource.IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put("attribute_lineage", serviceProvider);

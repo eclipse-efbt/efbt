@@ -14,28 +14,18 @@ package org.eclipse.efbt.model.util;
 
 import java.io.File;
 import java.util.Iterator;
-import java.util.List;
-
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-
-import attribute_lineage.AttributeLineageModel;
-import attribute_lineage.Attribute_lineageFactory;
 import bird_model.BIRDModel;
-import efbt_data_definition.CombinationModule;
 import efbt_data_definition.CubeModule;
 import efbt_data_definition.MemberModule;
 import column_transformation_logic.AggregateColumnFunction;
 import column_transformation_logic.BasicColumnFunction;
-
 import column_transformation_logic.ColumnFunction;
-
 import column_transformation_logic.Column_transformation_logicFactory;
 import column_transformation_logic.CubeColumn;
 import column_transformation_logic.StandardBasicColumnFunction;
@@ -47,14 +37,12 @@ import cube_transformation_logic.FilterAndGroupToOneRowFunction;
 import cube_transformation_logic.FunctionalCubeLogic;
 import cube_transformation_logic.OneToOneRowFunction;
 import cube_transformation_logic.RowFilterFunction;
-
 import cube_transformation_logic.RowGroupByFunction;
 import cube_transformation_logic.RowJoinFunction;
 import cube_transformation_logic.UnionRowFunction;
 import cube_transformation_logic.impl.Cube_transformation_logicFactoryImpl;
 import cubes.FreeBirdToolsCube;
 import cubes.DerivedCube;
-
 import data_definition.COMBINATION;
 import data_definition.COMBINATION_ITEM;
 import data_definition.CUBE;
@@ -65,15 +53,9 @@ import functions.BasicFunction;
 import functions.BooleanFunction;
 import functions.FunctionsFactory;
 import functions.MemberParameter;
-
 import functions.SpeculativeCubeColumnParameter;
 import navigation_context.NavigationContext;
-import platform_call.GetAttributeLineageModel;
-
-
-import platform_call.Platform_callPackage;
 import reports.ReportCell;
-import row_transformation_logic.BaseRowStructure;
 import row_transformation_logic.ColumnFunctionGroup;
 import row_transformation_logic.FunctionalRowLogic;
 import row_transformation_logic.Row_transformation_logicFactory;
@@ -103,87 +85,7 @@ import trl_sql_views.VersionedSQLViewsModule;
  *
  */
 public class TRLUtil {
-  /**
-   * Creates an attributeLineageModel according to the details of the GetAttributeLineageModel
-   * call, this is then set as the resultingModel field of the call.
-   * 
-   * @param call
-   */
-  public static void createAttributeLineageModel(GetAttributeLineageModel call) {
-
-    // delete the old row logic group and build the new one.
-    call.eUnset(call.eClass().getEStructuralFeature(Platform_callPackage.GET_ATTRIBUTE_LINEAGE_MODEL__RESULTING_MODEL));
-    AttributeLineageModel attributeLineageModel = Attribute_lineageFactory.eINSTANCE.createAttributeLineageModel();
-    call.setResultingModel(attributeLineageModel);
-    // we should create the set of useful functions
-    SpecialFunctionSpecs specialFunctions = Util.setSpecialFucntions(attributeLineageModel);
-
-    // loop through each view in each sqlViews modules.
-
-    EList<VersionedTransformationSchemeLogic> transformationSchemeLogicList = call.getTransformationContext()
-        .getDatasetTransformationModules();
-    EList<ReportCellViewModule> reportViewModuleList = call.getTransformationContext().getReportCellViewModules();
-    EList<VersionedCubeSchemaModule> cubeSchemaModuleList = call.getTransformationContext().getCubeSchemaModules();
-
-    Iterator<VersionedTransformationSchemeLogic> transformationModuleIter = transformationSchemeLogicList.iterator();
-    Iterator<ReportCellViewModule> reportViewModuleIter = reportViewModuleList.iterator();
-    Iterator<VersionedCubeSchemaModule> CubeSchemaModuleIter = cubeSchemaModuleList.iterator();
-
-    while (transformationModuleIter.hasNext()) {
-          VersionedSQLViewsModule viewModules = (VersionedSQLViewsModule) transformationModuleIter.next();
-      EList<SQLView> viewList = viewModules.getSqlViews();
-      Iterator<SQLView> viewIter = viewList.iterator();
-      while (viewIter.hasNext()) {
-     
-        SQLView view = viewIter.next();
-        FunctionalRowLogic rowlogic = translateViewToFunctionalRowLogic(view, transformationSchemeLogicList,
-            cubeSchemaModuleList, specialFunctions);
-        if (rowlogic.getCubeLogic() != null) {
-
-          attributeLineageModel.getRowTransformations().add(rowlogic);
-        }
-      }
-
-    }
-    while (reportViewModuleIter.hasNext()) {
-    
-      ReportCellViewModule reportViewModules = reportViewModuleIter.next();
-      EList<ReportCellView> reportCellViewList = reportViewModules.getReportCellViews();
-      Iterator<ReportCellView> reportViewIter = reportCellViewList.iterator();
-      while (reportViewIter.hasNext()) {
-       
-        SQLView view = reportViewIter.next();
-        FunctionalRowLogic rowlogic = translateViewToFunctionalRowLogic(view, transformationSchemeLogicList,
-            cubeSchemaModuleList, specialFunctions);
-        if (rowlogic.getCubeLogic() != null) {
-
-          attributeLineageModel.getRowTransformations().add(rowlogic);
-        }
-      }
-
-    }
-
-    while (CubeSchemaModuleIter.hasNext()) {
-     
-      VersionedCubeSchemaModule versionedCubeSchemaModule = CubeSchemaModuleIter.next();
-      EList<CubeSchema> tableSchemaList = versionedCubeSchemaModule.getSchemas();
-      Iterator<CubeSchema> tableSchemaIter = tableSchemaList.iterator();
-      while (tableSchemaIter.hasNext()) {
-      
-        CubeSchema ts = tableSchemaIter.next();
-        BaseRowStructure e = Util.translateCubeSchemaToBaseRowStructure(ts, transformationSchemeLogicList,
-            cubeSchemaModuleList);
-
-        attributeLineageModel.getBaseSchemas().add(e);
-
-      }
-
-    }
-
-    Util.replaceSpeculativeColumnReferencesWithResolvedColumnReference(attributeLineageModel);
-  
-
-  }
+ 
 
   /**
    * Create a FunctionalRowLogic object form an SQLView.
@@ -1048,7 +950,7 @@ public class TRLUtil {
   
 
   private static NavigationContext getDefaultNavigationContext(DOMAIN domain) {
-	// TODO Auto-generated method stub
+	
 	  ResourceSet rs = domain.eResource().getResourceSet();
 	    String tagsXMLFile = domain.eResource().getURI().trimSegments(1)
 	        + "/defaultNavigationContext.navigation_context";
@@ -1088,6 +990,5 @@ public class TRLUtil {
     }
     return returnScheme;
   }
-  
- 
+
 }
