@@ -22,6 +22,41 @@ SPDX-License-Identifier: EPL-2.0
  Neil Mackenzie - initial API and implementation&#13;</xsd:appinfo>
   </xsd:annotation>
   <xsd:element ecore:ignore="true" name="GetAttributeLineageForOneReportCell" type="platform_call:GetAttributeLineageForOneReportCell"/>
+  <xsd:complexType name="CompareAttributeLineageModels">
+    <xsd:annotation>
+      <xsd:documentation>This is a PlatformCall which compares 2 AttributeModels</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="platform_call:PlatformCall">
+        <xsd:sequence>
+          <xsd:element ecore:resolveProxies="true" minOccurs="0" name="resultingModel" type="attribute_lineage:AttributeLineageModel">
+            <xsd:annotation>
+              <xsd:documentation>This is he resulting Attributemodel, it makes use of the isSubset field to say which items are inluded in both the first model and the second model</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element ecore:resolveProxies="true" minOccurs="0" name="subsetBoolean" type="platform_call:SubsetBoolean">
+            <xsd:annotation>
+              <xsd:documentation>This field is used to state if the firt model is a subset of the second model or not.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element ecore:resolveProxies="true" minOccurs="0" name="notIncludedModel" type="attribute_lineage:AttributeLineageModel"/>
+        </xsd:sequence>
+        <xsd:attribute ecore:reference="attribute_lineage:AttributeLineageModel" name="firstModel" type="xsd:anyURI"/>
+        <xsd:attribute ecore:reference="attribute_lineage:AttributeLineageModel" name="secondModel" type="xsd:anyURI"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="IsNotSubset">
+    <xsd:complexContent>
+      <xsd:extension base="platform_call:SubsetBoolean"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="IsSubset">
+    <xsd:complexContent>
+      <xsd:extension base="platform_call:SubsetBoolean"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="SubsetBoolean"/>
   <xsd:complexType name="ExecuteAttributeLineageModel">
     <xsd:annotation>
       <xsd:documentation>A Platform call, which takes an AttributeLineageModel and creates a set of Scala files to execute that AttributeLineageModel. When it is run a number of Scla files will be available in the output directory specified by outputdir</xsd:documentation>

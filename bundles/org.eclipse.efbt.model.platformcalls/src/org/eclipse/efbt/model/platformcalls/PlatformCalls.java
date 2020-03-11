@@ -15,6 +15,7 @@ package org.eclipse.efbt.model.platformcalls;
 import org.eclipse.efbt.generator.scala.engine.GeneratorConfig;
 import org.eclipse.efbt.generator.scala.engine.GeneratorStandaloneSetup;
 import org.eclipse.efbt.model.util.AttributeLineageUtil;
+import org.eclipse.efbt.model.util.ComparisonUtil;
 import org.eclipse.emf.mwe.utils.DirectoryCleaner;
 import org.eclipse.emf.mwe2.runtime.workflow.IWorkflowContext;
 import org.eclipse.emf.mwe2.runtime.workflow.WorkflowContextImpl;
@@ -22,6 +23,8 @@ import org.eclipse.xtext.generator.GeneratorComponent;
 import org.eclipse.xtext.generator.GeneratorComponent.Outlet;
 import org.eclipse.xtext.mwe.Reader;
 import org.eclipse.xtext.mwe.ResourceLoadingSlotEntry;
+
+import platform_call.CompareAttributeLineageModels;
 import platform_call.ExecuteAttributeLineageModel;
 import platform_call.GetAttributeLineageForOneReportCell;
 import platform_call.GetAttributeLineageModel;
@@ -42,6 +45,8 @@ public class PlatformCalls {
     if (call instanceof GetAttributeLineageForOneReportCell)
     	AttributeLineageUtil.createAttributeLineageModelForOneReportCell((GetAttributeLineageForOneReportCell) call);
   
+    if (call instanceof CompareAttributeLineageModels)
+        ComparisonUtil.compareAttributeLineageModels((CompareAttributeLineageModels) call);
     
     if (call instanceof ExecuteAttributeLineageModel) {
 
