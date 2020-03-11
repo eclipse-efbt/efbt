@@ -149,4 +149,12 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GetAttributeLineageForOneReportCell"
+      eSuperTypes="#//PlatformCall">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="transformationContext"
+        eType="ecore:EClass transformation.ecore#//VersionedComponentsSet"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reportCell" eType="ecore:EClass reports.ecore#//ReportCell"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resultingModel" eType="ecore:EClass attribute_lineage.ecore#//AttributeLineageModel"
+        containment="true"/>
+  </eClassifiers>
 </ecore:EPackage>

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data_lineage:DataLineageModel xmlns:data_lineage="http://www.eclipse.org/data_lineage" xmlns:base_cube_data="http://www.eclipse.org/base_cube_data" xmlns:functions="http://www.eclipse.org/functions" >
+<dataTraceableByCell name="aggregateLoans" cubeLogic="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/platform_calls/getAttributeLineageForJustOneCell.platform_call#aggregateLoans" sourceCubeData="#loans" cube="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/extra/efbt_cubes.cubes#aggregateLoans"> 
+<rows rowID="aggregateLoans:4b9c32385dbb4161489aa6f901f5ee31" sourceRows="#loans_row3">
+<derivedCells cellID="aggregateLoans:4b9c32385dbb4161489aa6f901f5ee31:ECB2_MRKT_VL" column="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/variables.efbt_data_definition#ECB2_MRKT_VL" value="15000.0">
+   <function xsi:type="functions:AggregateFunction" functionSpec="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/extra/commonFunctions.functions#SUM">
+     <parameters xsi:type="functions:CellsParameter" cells="#loans_row3:ECB2_MRKT_VL"/>
+   </function>
+   </derivedCells>
+<derivedCells cellID="aggregateLoans:4b9c32385dbb4161489aa6f901f5ee31:ECB2_ENTITY_LEI" column="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/variables.efbt_data_definition#ECB2_ENTITY_LEI" value="Citibank">
+   <function xsi:type="functions:AggregateFunction" functionSpec="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/platform_calls/getAttributeLineageForJustOneCell.platform_call#First">
+     <parameters xsi:type="functions:CellsParameter" cells="#loans_row3:ECB2_ENTITY_LEI"/>
+   </function>
+   </derivedCells>
+</rows>
+<rows rowID="aggregateLoans:cf031455d7bbeb50c829db75ad687623" sourceRows="#loans_row2 #loans_row1">
+<derivedCells cellID="aggregateLoans:cf031455d7bbeb50c829db75ad687623:ECB2_MRKT_VL" column="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/variables.efbt_data_definition#ECB2_MRKT_VL" value="14000.0">
+   <function xsi:type="functions:AggregateFunction" functionSpec="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/extra/commonFunctions.functions#SUM">
+     <parameters xsi:type="functions:CellsParameter" cells="#loans_row1:ECB2_MRKT_VL"/>
+     <parameters xsi:type="functions:CellsParameter" cells="#loans_row2:ECB2_MRKT_VL"/>
+   </function>
+   </derivedCells>
+<derivedCells cellID="aggregateLoans:cf031455d7bbeb50c829db75ad687623:ECB2_ENTITY_LEI" column="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/variables.efbt_data_definition#ECB2_ENTITY_LEI" value="Mizuho">
+   <function xsi:type="functions:AggregateFunction" functionSpec="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/platform_calls/getAttributeLineageForJustOneCell.platform_call#First">
+     <parameters xsi:type="functions:CellsParameter" cells="#loans_row1:ECB2_ENTITY_LEI"/>
+     <parameters xsi:type="functions:CellsParameter" cells="#loans_row2:ECB2_ENTITY_LEI"/>
+   </function>
+   </derivedCells>
+</rows>
+</dataTraceableByCell>
+ <dataTraceableByCell name="aggregateLoansAndCounterparties" cubeLogic="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/platform_calls/getAttributeLineageForJustOneCell.platform_call#aggregateLoansAndCounterparties" sourceCubeData="#aggregateLoans #counterparty" cube="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/extra/efbt_cubes.cubes#aggregateLoansAndCounterparties"> 
+<rows rowID="aggregateLoansAndCounterparties:81f5e66ba63bdaee7e77d5088e23d9ae" sourceRows="#aggregateLoans:4b9c32385dbb4161489aa6f901f5ee31 #counterparty_row1">
+<derivedCells cellID="aggregateLoansAndCounterparties:81f5e66ba63bdaee7e77d5088e23d9ae:ECB2_MRKT_VL" column="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/variables.efbt_data_definition#ECB2_MRKT_VL" value="15000.0">
+   <function xsi:type="functions:BasicFunction" functionSpec="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/platform_calls/getAttributeLineageForJustOneCell.platform_call#CopyColumn">
+     <parameters xsi:type="functions:CellsParameter" cells="#aggregateLoans:4b9c32385dbb4161489aa6f901f5ee31:ECB2_MRKT_VL"/>
+   </function>
+   </derivedCells>
+<derivedCells cellID="aggregateLoansAndCounterparties:81f5e66ba63bdaee7e77d5088e23d9ae:ECB2_ENTITY_LEI" column="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/variables.efbt_data_definition#ECB2_ENTITY_LEI" value="Citibank">
+   <function xsi:type="functions:BasicFunction" functionSpec="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/platform_calls/getAttributeLineageForJustOneCell.platform_call#CopyColumn">
+     <parameters xsi:type="functions:CellsParameter" cells="#counterparty_row1:ECB2_ENTITY_LEI"/>
+   </function>
+   </derivedCells>
+<derivedCells cellID="aggregateLoansAndCounterparties:81f5e66ba63bdaee7e77d5088e23d9ae:CNTRY" column="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/variables.efbt_data_definition#CNTRY" value="UNITED STATES">
+   <function xsi:type="functions:BasicFunction" functionSpec="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/platform_calls/getAttributeLineageForJustOneCell.platform_call#CopyColumn">
+     <parameters xsi:type="functions:CellsParameter" cells="#counterparty_row1:CNTRY"/>
+   </function>
+   </derivedCells>
+</rows>
+<rows rowID="aggregateLoansAndCounterparties:318664c8a3bd6b5be870f15b134cb752" sourceRows="#aggregateLoans:cf031455d7bbeb50c829db75ad687623 #counterparty_row2">
+<derivedCells cellID="aggregateLoansAndCounterparties:318664c8a3bd6b5be870f15b134cb752:ECB2_MRKT_VL" column="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/variables.efbt_data_definition#ECB2_MRKT_VL" value="14000.0">
+   <function xsi:type="functions:BasicFunction" functionSpec="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/platform_calls/getAttributeLineageForJustOneCell.platform_call#CopyColumn">
+     <parameters xsi:type="functions:CellsParameter" cells="#aggregateLoans:cf031455d7bbeb50c829db75ad687623:ECB2_MRKT_VL"/>
+   </function>
+   </derivedCells>
+<derivedCells cellID="aggregateLoansAndCounterparties:318664c8a3bd6b5be870f15b134cb752:ECB2_ENTITY_LEI" column="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/variables.efbt_data_definition#ECB2_ENTITY_LEI" value="Mizuho">
+   <function xsi:type="functions:BasicFunction" functionSpec="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/platform_calls/getAttributeLineageForJustOneCell.platform_call#CopyColumn">
+     <parameters xsi:type="functions:CellsParameter" cells="#counterparty_row2:ECB2_ENTITY_LEI"/>
+   </function>
+   </derivedCells>
+<derivedCells cellID="aggregateLoansAndCounterparties:318664c8a3bd6b5be870f15b134cb752:CNTRY" column="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/variables.efbt_data_definition#CNTRY" value="JAPAN">
+   <function xsi:type="functions:BasicFunction" functionSpec="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/platform_calls/getAttributeLineageForJustOneCell.platform_call#CopyColumn">
+     <parameters xsi:type="functions:CellsParameter" cells="#counterparty_row2:CNTRY"/>
+   </function>
+   </derivedCells>
+</rows>
+</dataTraceableByCell>
+ <dataTraceableByCell name="loansCounterpartiesAndRatings" cubeLogic="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/platform_calls/getAttributeLineageForJustOneCell.platform_call#loansCounterpartiesAndRatings" sourceCubeData="#aggregateLoansAndCounterparties #rating" cube="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/extra/efbt_cubes.cubes#loansCounterpartiesAndRatings"> 
+<rows rowID="loansCounterpartiesAndRatings:caa12d10c8555c5dd8bd7ae541b7ed9a" sourceRows="#aggregateLoansAndCounterparties:81f5e66ba63bdaee7e77d5088e23d9ae #rating_row1">
+<derivedCells cellID="loansCounterpartiesAndRatings:caa12d10c8555c5dd8bd7ae541b7ed9a:ECB2_MRKT_VL" column="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/variables.efbt_data_definition#ECB2_MRKT_VL" value="15000.0">
+   <function xsi:type="functions:BasicFunction" functionSpec="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/platform_calls/getAttributeLineageForJustOneCell.platform_call#CopyColumn">
+     <parameters xsi:type="functions:CellsParameter" cells="#aggregateLoansAndCounterparties:81f5e66ba63bdaee7e77d5088e23d9ae:ECB2_MRKT_VL"/>
+   </function>
+   </derivedCells>
+<derivedCells cellID="loansCounterpartiesAndRatings:caa12d10c8555c5dd8bd7ae541b7ed9a:CNTRY" column="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/variables.efbt_data_definition#CNTRY" value="UNITED STATES">
+   <function xsi:type="functions:BasicFunction" functionSpec="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/platform_calls/getAttributeLineageForJustOneCell.platform_call#CopyColumn">
+     <parameters xsi:type="functions:CellsParameter" cells="#aggregateLoansAndCounterparties:81f5e66ba63bdaee7e77d5088e23d9ae:CNTRY"/>
+   </function>
+   </derivedCells>
+</rows>
+<rows rowID="loansCounterpartiesAndRatings:cbce936304d501df4ad466e96fe33938" sourceRows="#aggregateLoansAndCounterparties:318664c8a3bd6b5be870f15b134cb752 #rating_row2">
+<derivedCells cellID="loansCounterpartiesAndRatings:cbce936304d501df4ad466e96fe33938:ECB2_MRKT_VL" column="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/variables.efbt_data_definition#ECB2_MRKT_VL" value="14000.0">
+   <function xsi:type="functions:BasicFunction" functionSpec="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/platform_calls/getAttributeLineageForJustOneCell.platform_call#CopyColumn">
+     <parameters xsi:type="functions:CellsParameter" cells="#aggregateLoansAndCounterparties:318664c8a3bd6b5be870f15b134cb752:ECB2_MRKT_VL"/>
+   </function>
+   </derivedCells>
+<derivedCells cellID="loansCounterpartiesAndRatings:cbce936304d501df4ad466e96fe33938:CNTRY" column="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/variables.efbt_data_definition#CNTRY" value="JAPAN">
+   <function xsi:type="functions:BasicFunction" functionSpec="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/platform_calls/getAttributeLineageForJustOneCell.platform_call#CopyColumn">
+     <parameters xsi:type="functions:CellsParameter" cells="#aggregateLoansAndCounterparties:318664c8a3bd6b5be870f15b134cb752:CNTRY"/>
+   </function>
+   </derivedCells>
+</rows>
+</dataTraceableByCell>
+ <dataTraceableByCell name="enrichedExposures" cubeLogic="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/platform_calls/getAttributeLineageForJustOneCell.platform_call#enrichedExposures" sourceCubeData="#loansCounterpartiesAndRatings" cube="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/extra/efbt_cubes.cubes#enrichedExposures"> 
+<rows rowID="enrichedExposures:62541ed437b38866d2bcf016c0cfad1e" sourceRows="#loansCounterpartiesAndRatings:caa12d10c8555c5dd8bd7ae541b7ed9a">
+<derivedCells cellID="enrichedExposures:62541ed437b38866d2bcf016c0cfad1e:ECB2_MRKT_VL" column="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/variables.efbt_data_definition#ECB2_MRKT_VL" value="15000.0">
+   <function xsi:type="functions:BasicFunction" functionSpec="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/platform_calls/getAttributeLineageForJustOneCell.platform_call#CopyColumn">
+     <parameters xsi:type="functions:CellsParameter" cells="#loansCounterpartiesAndRatings:caa12d10c8555c5dd8bd7ae541b7ed9a:ECB2_MRKT_VL"/>
+   </function>
+   </derivedCells>
+<derivedCells cellID="enrichedExposures:62541ed437b38866d2bcf016c0cfad1e:CNTRY" column="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/variables.efbt_data_definition#CNTRY" value="UNITED STATES">
+   <function xsi:type="functions:BasicFunction" functionSpec="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/platform_calls/getAttributeLineageForJustOneCell.platform_call#CopyColumn">
+     <parameters xsi:type="functions:CellsParameter" cells="#loansCounterpartiesAndRatings:caa12d10c8555c5dd8bd7ae541b7ed9a:CNTRY"/>
+   </function>
+   </derivedCells>
+</rows>
+<rows rowID="enrichedExposures:c82aee153103e20efd09e3e40c19554f" sourceRows="#loansCounterpartiesAndRatings:cbce936304d501df4ad466e96fe33938">
+<derivedCells cellID="enrichedExposures:c82aee153103e20efd09e3e40c19554f:ECB2_MRKT_VL" column="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/variables.efbt_data_definition#ECB2_MRKT_VL" value="14000.0">
+   <function xsi:type="functions:BasicFunction" functionSpec="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/platform_calls/getAttributeLineageForJustOneCell.platform_call#CopyColumn">
+     <parameters xsi:type="functions:CellsParameter" cells="#loansCounterpartiesAndRatings:cbce936304d501df4ad466e96fe33938:ECB2_MRKT_VL"/>
+   </function>
+   </derivedCells>
+<derivedCells cellID="enrichedExposures:c82aee153103e20efd09e3e40c19554f:CNTRY" column="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/variables.efbt_data_definition#CNTRY" value="JAPAN">
+   <function xsi:type="functions:BasicFunction" functionSpec="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/platform_calls/getAttributeLineageForJustOneCell.platform_call#CopyColumn">
+     <parameters xsi:type="functions:CellsParameter" cells="#loansCounterpartiesAndRatings:cbce936304d501df4ad466e96fe33938:CNTRY"/>
+   </function>
+   </derivedCells>
+</rows>
+</dataTraceableByCell>
+ <dataTraceableByCell name="totalJPMktValue" cubeLogic="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/platform_calls/getAttributeLineageForJustOneCell.platform_call#totalJPMktValue_view" sourceCubeData="#enrichedExposures" cube="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/extra/efbt_cubes.cubes#totalJPMktValue"> 
+<rows rowID="totalJPMktValue:d9404bf96836ca6dc473d5b66cba120c" sourceRows="#enrichedExposures:c82aee153103e20efd09e3e40c19554f">
+<derivedCells cellID="totalJPMktValue:d9404bf96836ca6dc473d5b66cba120c:ECB2_MRKT_VL" column="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/variables.efbt_data_definition#ECB2_MRKT_VL" value="14000.0">
+   <function xsi:type="functions:AggregateFunction" functionSpec="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/platform_calls/getAttributeLineageForJustOneCell.platform_call#SUM">
+     <parameters xsi:type="functions:CellsParameter" cells="#enrichedExposures:c82aee153103e20efd09e3e40c19554f:ECB2_MRKT_VL"/>
+   </function>
+   </derivedCells>
+<derivedCells cellID="totalJPMktValue:d9404bf96836ca6dc473d5b66cba120c:CNTRY" column="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/variables.efbt_data_definition#CNTRY" value="JAPAN">
+   <function xsi:type="functions:AggregateFunction" functionSpec="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/platform_calls/getAttributeLineageForJustOneCell.platform_call#First">
+     <parameters xsi:type="functions:CellsParameter" cells="#enrichedExposures:c82aee153103e20efd09e3e40c19554f:CNTRY"/>
+   </function>
+   </derivedCells>
+</rows>
+</dataTraceableByCell>
+ <sourceData name="counterparty" cube="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/extra/efbt_cubes.cubes#counterparty"> 
+<rows rowID="counterparty_row1">
+<cells xsi:type="base_cube_data:BaseCellWithValue" cellID="counterparty_row1:ECB2_ENTITY_LEI" column="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/variables.efbt_data_definition#ECB2_ENTITY_LEI" value="Citibank"/>
+<cells xsi:type="base_cube_data:BaseCellWithEnumeratedValue" cellID="counterparty_row1:CNTRY" column="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/variables.efbt_data_definition#CNTRY" value="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/members.efbt_data_definition#EBA_GA_EBA_US"/>
+</rows>
+<rows rowID="counterparty_row2">
+<cells xsi:type="base_cube_data:BaseCellWithValue" cellID="counterparty_row2:ECB2_ENTITY_LEI" column="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/variables.efbt_data_definition#ECB2_ENTITY_LEI" value="Mizuho"/>
+<cells xsi:type="base_cube_data:BaseCellWithEnumeratedValue" cellID="counterparty_row2:CNTRY" column="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/variables.efbt_data_definition#CNTRY" value="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/members.efbt_data_definition#EBA_GA_EBA_JP"/>
+</rows>
+</sourceData>
+ <sourceData name="rating" cube="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/extra/efbt_cubes.cubes#rating"> 
+<rows rowID="rating_row1">
+<cells xsi:type="base_cube_data:BaseCellWithValue" cellID="rating_row1:ECB2_ENTITY_LEI" column="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/variables.efbt_data_definition#ECB2_ENTITY_LEI" value="Citibank"/>
+</rows>
+<rows rowID="rating_row2">
+<cells xsi:type="base_cube_data:BaseCellWithValue" cellID="rating_row2:ECB2_ENTITY_LEI" column="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/variables.efbt_data_definition#ECB2_ENTITY_LEI" value="Mizuho"/>
+</rows>
+</sourceData>
+ <sourceData name="loans" cube="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/extra/efbt_cubes.cubes#loans"> 
+<rows rowID="loans_row1">
+<cells xsi:type="base_cube_data:BaseCellWithValue" cellID="loans_row1:ECB2_MRKT_VL" column="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/variables.efbt_data_definition#ECB2_MRKT_VL" value="5000"/>
+<cells xsi:type="base_cube_data:BaseCellWithValue" cellID="loans_row1:ECB2_ENTITY_LEI" column="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/variables.efbt_data_definition#ECB2_ENTITY_LEI" value="Mizuho"/>
+</rows>
+<rows rowID="loans_row2">
+<cells xsi:type="base_cube_data:BaseCellWithValue" cellID="loans_row2:ECB2_MRKT_VL" column="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/variables.efbt_data_definition#ECB2_MRKT_VL" value="9000"/>
+<cells xsi:type="base_cube_data:BaseCellWithValue" cellID="loans_row2:ECB2_ENTITY_LEI" column="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/variables.efbt_data_definition#ECB2_ENTITY_LEI" value="Mizuho"/>
+</rows>
+<rows rowID="loans_row3">
+<cells xsi:type="base_cube_data:BaseCellWithValue" cellID="loans_row3:ECB2_MRKT_VL" column="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/variables.efbt_data_definition#ECB2_MRKT_VL" value="15000"/>
+<cells xsi:type="base_cube_data:BaseCellWithValue" cellID="loans_row3:ECB2_ENTITY_LEI" column="file:/C:/freebirdtools-develop/git/efbt/bundles/org.eclipse.efbt.regmodules.example/example/bird_import/variables.efbt_data_definition#ECB2_ENTITY_LEI" value="Citibank"/>
+</rows>
+</sourceData>
+ </data_lineage:DataLineageModel>

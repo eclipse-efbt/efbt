@@ -14,10 +14,6 @@
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
-
-
-
-
 import org.eclipse.emf.common.util.EList
 import row_transformation_logic.FunctionalRowLogic
 import row_transformation_logic.BaseRowStructure
@@ -32,30 +28,19 @@ import java.util.List
 import java.util.ArrayList
 import functions.BooleanFunction
 import cube_transformation_logic.RowFilterFunction
-
 import functions.BasicFunction
 import cube_transformation_logic.RowGroupByFunction
 import column_transformation_logic.AggregateColumnFunction
 import cube_transformation_logic.FilterAndGroupToOneRowFunction
 import functions.ResolvedCubeColumnParameter
 import functions.AggregateFunction
-
-
 import trl_sql_views.SQLView
-
 import core.VARIABLE
 import base_cube_data.BaseCellWithEnumeratedValue
 import base_cube_data.BaseCellWithValue
 import core.FACET_VALUE_TYPE
-
-
-
-
 import cubes.FreeBirdToolsCube
-import cubes.BaseCube
-
 import platform_call.ExecuteAttributeLineageModel
-
 import attribute_lineage.AttributeLineageModel
 import cube_transformation_logic.UnionRowFunction
 import org.eclipse.efbt.model.util.AttributeLineageUtil
@@ -73,16 +58,16 @@ class JavaBeanTemplate implements IGenerator {
 		input.allContents.filter(ExecuteAttributeLineageModel).forEach[
 		
 			
-			
+		    val almName = it.name
 			val content2 = generateTheCellModelCreator(it)
-		    fsa.generateFile("TheCellModelCreator.scala", content2)
+		   fsa.generateFile(almName +"_TheCellModelCreator.scala", content2)
 			val sourceCubes = it.programInputs.sourceTableData
 			sourceCubes.forEach[
 				
 				val content = generateScalaCodeForTableData(it)
 				val cubename = it.cube.cube_name
 				
-				fsa.generateFile(cubename +"Data.scala", content)
+				fsa.generateFile(almName  + "_"+ cubename + "_Data.scala", content)
 				
 			]
 			val rowLogicGroup = it.attributeLineageModel
@@ -95,7 +80,7 @@ class JavaBeanTemplate implements IGenerator {
 					
 				
 					
-					fsa.generateFile(cubename +".scala", content)
+				fsa.generateFile(almName  +  "_"+ cubename + ".scala", content)
 			
 
 			]
@@ -106,7 +91,7 @@ class JavaBeanTemplate implements IGenerator {
 					val content = generateSourceSchemaScalaCode(it)
 					val cubename = it.cube.cube_name
 					System.out.println("SourceSchema" + cubename)
-					fsa.generateFile(cubename +".scala", content)
+					fsa.generateFile(almName  +  "_"+ cubename +".scala", content)
 			
 				
 			]
@@ -131,6 +116,7 @@ class JavaBeanTemplate implements IGenerator {
 	def generateTheCellModelCreator(ExecuteAttributeLineageModel test)  '''
 		
 		«val outputdir = test.outputdir.addbackslashes»
+		«val almName = test.attributeLineageModel.name»
 		«FOR schema:test.attributeLineageModel.baseSchemas»
 				import «schema.cube.cube_name»_def._  
 				import «schema.cube.cube_name»_data._  
@@ -155,7 +141,7 @@ class JavaBeanTemplate implements IGenerator {
 				«FOR logic:test.attributeLineageModel.rowTransformations SEPARATOR "+"»stringFor«logic.cubeLogic.cube.cube_name»Table(t_«logic.cubeLogic.cube.cube_name») «ENDFOR»+ «FOR schema:test.attributeLineageModel.baseSchemas SEPARATOR "+"»stringFor«schema.cube.cube_name»Table(t_«schema.cube.cube_name») «ENDFOR» +stringForEndOfXML()
 				
 					import java.io._
-				    val pw = new PrintWriter(new File("«outputdir»\\generated.data_lineage" ))
+				    val pw = new PrintWriter(new File("«outputdir»\\«almName»_generated.data_lineage" ))
 				    pw.write(stringForFile)
 				    pw.close
 		}
@@ -944,7 +930,7 @@ class JavaBeanTemplate implements IGenerator {
 	def String getScalaFunctionString(BooleanFunction function) {
 		return ScalaRuntimeUtil.getRowFunctionText(function)
 
-	}
+	} 
 
 	/**
     * Get the dependent cube names.

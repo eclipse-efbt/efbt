@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<platform_call:PlatformCallModule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:column_transformation_logic="http://www.eclipse.org/column_transformation_logic" xmlns:cube_transformation_logic="http://www.eclipse.org/cube_transformation_logic" xmlns:functions="http://www.eclipse.org/functions" xmlns:platform_call="http://www.eclipse.org/platform_call" license="Copyright (c) 2020 Bird Software Solutions Ltd&amp;#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&amp;#xA;&amp;#xA;SPDX-License-Identifier: EPL-2.0 &amp;#xA;&amp;#xA; Contributors:&amp;#xA; Neil Mackenzie - initial API and implementation&amp;#xD;">
+  <platformCalls xsi:type="platform_call:GetAttributeLineageForOneReportCell" name="getAttributeLineageForJustOneCell" reportCell="../extra/reportcell_definitions.trl_report_cell_views#totalJPMktValue" transformationContext="../extra/example_release.transformation#example_release">
+    <resultingModel name="ALMForJPMktValue">
+      <rowTransformations usedInSubsets="true">
+        <columnFunctionGroup>
+          <columnFunctions xsi:type="column_transformation_logic:AggregateColumnFunction" columnID="aggregateLoans:ECB2_MRKT_VL" cube="../extra/efbt_cubes.cubes#aggregateLoans" usedInSubsets="true" variable="../bird_import/variables.efbt_data_definition#ECB2_MRKT_VL">
+            <aggregateFunction name="sum" functionSpec="../extra/commonFunctions.functions#SUM">
+              <parameters xsi:type="functions:ResolvedCubeColumnParameter" cubeColumn="#loans:ECB2_MRKT_VL"/>
+            </aggregateFunction>
+          </columnFunctions>
+          <columnFunctions xsi:type="column_transformation_logic:AggregateColumnFunction" columnID="aggregateLoans:ECB2_ENTITY_LEI" cube="../extra/efbt_cubes.cubes#aggregateLoans" usedInSubsets="true" variable="../bird_import/variables.efbt_data_definition#ECB2_ENTITY_LEI">
+            <aggregateFunction functionSpec="#First">
+              <parameters xsi:type="functions:ResolvedCubeColumnParameter" cubeColumn="#loans:ECB2_ENTITY_LEI"/>
+            </aggregateFunction>
+          </columnFunctions>
+        </columnFunctionGroup>
+        <cubeLogic cube="../extra/efbt_cubes.cubes#aggregateLoans" name="aggregateLoans">
+          <rowFunction xsi:type="cube_transformation_logic:RowGroupByFunction" groupByColumns="../bird_import/variables.efbt_data_definition#ECB2_ENTITY_LEI" groupByCubeColumns="#loans:ECB2_ENTITY_LEI">
+            <dependantCubeColumns cubeColumn="#loans:ECB2_ENTITY_LEI"/>
+          </rowFunction>
+        </cubeLogic>
+      </rowTransformations>
+      <rowTransformations usedInSubsets="true">
+        <columnFunctionGroup>
+          <columnFunctions xsi:type="column_transformation_logic:StandardBasicColumnFunction" columnID="aggregateLoansAndCounterparties:ECB2_MRKT_VL" cube="../extra/efbt_cubes.cubes#aggregateLoansAndCounterparties" usedInSubsets="true" variable="../bird_import/variables.efbt_data_definition#ECB2_MRKT_VL">
+            <basicFunction functionSpec="#CopyColumn">
+              <parameters xsi:type="functions:ResolvedCubeColumnParameter" cubeColumn="#aggregateLoans:ECB2_MRKT_VL"/>
+            </basicFunction>
+          </columnFunctions>
+          <columnFunctions xsi:type="column_transformation_logic:StandardBasicColumnFunction" columnID="aggregateLoansAndCounterparties:ECB2_ENTITY_LEI" cube="../extra/efbt_cubes.cubes#aggregateLoansAndCounterparties" usedInSubsets="true" variable="../bird_import/variables.efbt_data_definition#ECB2_ENTITY_LEI">
+            <basicFunction functionSpec="#CopyColumn">
+              <parameters xsi:type="functions:ResolvedCubeColumnParameter" cubeColumn="#counterparty:ECB2_ENTITY_LEI"/>
+            </basicFunction>
+          </columnFunctions>
+          <columnFunctions xsi:type="column_transformation_logic:StandardBasicColumnFunction" columnID="aggregateLoansAndCounterparties:CNTRY" cube="../extra/efbt_cubes.cubes#aggregateLoansAndCounterparties" usedInSubsets="true" variable="../bird_import/variables.efbt_data_definition#CNTRY">
+            <basicFunction functionSpec="#CopyColumn">
+              <parameters xsi:type="functions:ResolvedCubeColumnParameter" cubeColumn="#counterparty:CNTRY"/>
+            </basicFunction>
+          </columnFunctions>
+        </columnFunctionGroup>
+        <cubeLogic cube="../extra/efbt_cubes.cubes#aggregateLoansAndCounterparties" name="aggregateLoansAndCounterparties">
+          <rowFunction xsi:type="cube_transformation_logic:RowJoinFunction">
+            <dependantCubeColumns cubeColumn="#aggregateLoans:ECB2_ENTITY_LEI"/>
+            <dependantCubeColumns cubeColumn="#counterparty:ECB2_ENTITY_LEI"/>
+            <joinFunction name="=" functionSpec="../extra/commonFunctions.functions#=">
+              <parameters xsi:type="functions:ResolvedCubeColumnParameter" cubeColumn="#aggregateLoans:ECB2_ENTITY_LEI"/>
+              <parameters xsi:type="functions:ResolvedCubeColumnParameter" cubeColumn="#counterparty:ECB2_ENTITY_LEI"/>
+            </joinFunction>
+          </rowFunction>
+        </cubeLogic>
+      </rowTransformations>
+      <rowTransformations usedInSubsets="true">
+        <columnFunctionGroup>
+          <columnFunctions xsi:type="column_transformation_logic:StandardBasicColumnFunction" columnID="loansCounterpartiesAndRatings:ECB2_MRKT_VL" cube="../extra/efbt_cubes.cubes#loansCounterpartiesAndRatings" usedInSubsets="true" variable="../bird_import/variables.efbt_data_definition#ECB2_MRKT_VL">
+            <basicFunction functionSpec="#CopyColumn">
+              <parameters xsi:type="functions:ResolvedCubeColumnParameter" cubeColumn="#aggregateLoansAndCounterparties:ECB2_MRKT_VL"/>
+            </basicFunction>
+          </columnFunctions>
+          <columnFunctions xsi:type="column_transformation_logic:StandardBasicColumnFunction" columnID="loansCounterpartiesAndRatings:CNTRY" cube="../extra/efbt_cubes.cubes#loansCounterpartiesAndRatings" usedInSubsets="true" variable="../bird_import/variables.efbt_data_definition#CNTRY">
+            <basicFunction functionSpec="#CopyColumn">
+              <parameters xsi:type="functions:ResolvedCubeColumnParameter" cubeColumn="#aggregateLoansAndCounterparties:CNTRY"/>
+            </basicFunction>
+          </columnFunctions>
+        </columnFunctionGroup>
+        <cubeLogic cube="../extra/efbt_cubes.cubes#loansCounterpartiesAndRatings" name="loansCounterpartiesAndRatings">
+          <rowFunction xsi:type="cube_transformation_logic:RowJoinFunction">
+            <dependantCubeColumns cubeColumn="#aggregateLoansAndCounterparties:ECB2_ENTITY_LEI"/>
+            <dependantCubeColumns cubeColumn="#rating:ECB2_ENTITY_LEI"/>
+            <joinFunction name="==" functionSpec="../extra/commonFunctions.functions#=">
+              <parameters xsi:type="functions:ResolvedCubeColumnParameter" cubeColumn="#aggregateLoansAndCounterparties:ECB2_ENTITY_LEI"/>
+              <parameters xsi:type="functions:ResolvedCubeColumnParameter" cubeColumn="#rating:ECB2_ENTITY_LEI"/>
+            </joinFunction>
+          </rowFunction>
+        </cubeLogic>
+      </rowTransformations>
+      <rowTransformations usedInSubsets="true">
+        <columnFunctionGroup>
+          <columnFunctions xsi:type="column_transformation_logic:StandardBasicColumnFunction" columnID="enrichedExposures:ECB2_MRKT_VL" cube="../extra/efbt_cubes.cubes#enrichedExposures" usedInSubsets="true" variable="../bird_import/variables.efbt_data_definition#ECB2_MRKT_VL">
+            <basicFunction functionSpec="#CopyColumn">
+              <parameters xsi:type="functions:ResolvedCubeColumnParameter" cubeColumn="#loansCounterpartiesAndRatings:ECB2_MRKT_VL"/>
+            </basicFunction>
+          </columnFunctions>
+          <columnFunctions xsi:type="column_transformation_logic:StandardBasicColumnFunction" columnID="enrichedExposures:CNTRY" cube="../extra/efbt_cubes.cubes#enrichedExposures" usedInSubsets="true" variable="../bird_import/variables.efbt_data_definition#CNTRY">
+            <basicFunction functionSpec="#CopyColumn">
+              <parameters xsi:type="functions:ResolvedCubeColumnParameter" cubeColumn="#loansCounterpartiesAndRatings:CNTRY"/>
+            </basicFunction>
+          </columnFunctions>
+        </columnFunctionGroup>
+        <cubeLogic cube="../extra/efbt_cubes.cubes#enrichedExposures" name="enrichedExposures">
+          <rowFunction xsi:type="cube_transformation_logic:OneToOneRowFunction"/>
+        </cubeLogic>
+      </rowTransformations>
+      <rowTransformations usedInSubsets="true">
+        <columnFunctionGroup>
+          <columnFunctions xsi:type="column_transformation_logic:AggregateColumnFunction" columnID="totalJPMktValue:ECB2_MRKT_VL" cube="../extra/efbt_cubes.cubes#totalJPMktValue" usedInSubsets="true" variable="../bird_import/variables.efbt_data_definition#ECB2_MRKT_VL">
+            <aggregateFunction functionSpec="#SUM">
+              <parameters xsi:type="functions:ResolvedCubeColumnParameter" cubeColumn="#enrichedExposures:ECB2_MRKT_VL"/>
+            </aggregateFunction>
+          </columnFunctions>
+          <columnFunctions xsi:type="column_transformation_logic:AggregateColumnFunction" columnID="totalJPMktValue:CNTRY" cube="../extra/efbt_cubes.cubes#totalJPMktValue" usedInSubsets="true" variable="../bird_import/variables.efbt_data_definition#CNTRY">
+            <aggregateFunction functionSpec="#First">
+              <parameters xsi:type="functions:ResolvedCubeColumnParameter" cubeColumn="#enrichedExposures:CNTRY"/>
+            </aggregateFunction>
+          </columnFunctions>
+        </columnFunctionGroup>
+        <cubeLogic cube="../extra/efbt_cubes.cubes#totalJPMktValue" name="totalJPMktValue_view">
+          <rowFunction xsi:type="cube_transformation_logic:FilterAndGroupToOneRowFunction" groupByVariables="../bird_import/variables.efbt_data_definition#CNTRY">
+            <dependantCubeColumns cubeColumn="#enrichedExposures:CNTRY"/>
+            <filterFunction functionSpec="#//@platformCalls.0/@resultingModel/@specialFunctionSpecs.3">
+              <parameters xsi:type="functions:ResolvedCubeColumnParameter" cubeColumn="#enrichedExposures:CNTRY"/>
+              <parameters xsi:type="functions:MemberParameter" param="../bird_import/members.efbt_data_definition#EBA_GA_EBA_JP"/>
+            </filterFunction>
+          </rowFunction>
+        </cubeLogic>
+      </rowTransformations>
+      <baseSchemas cube="../extra/efbt_cubes.cubes#counterparty" usedInSubsets="true">
+        <columns columnID="counterparty:ECB2_ENTITY_LEI" cube="../extra/efbt_cubes.cubes#counterparty" usedInSubsets="true" variable="../bird_import/variables.efbt_data_definition#ECB2_ENTITY_LEI"/>
+        <columns columnID="counterparty:CNTRY" cube="../extra/efbt_cubes.cubes#counterparty" usedInSubsets="true" variable="../bird_import/variables.efbt_data_definition#CNTRY"/>
+      </baseSchemas>
+      <baseSchemas cube="../extra/efbt_cubes.cubes#rating" usedInSubsets="true">
+        <columns columnID="rating:ECB2_ENTITY_LEI" cube="../extra/efbt_cubes.cubes#rating" usedInSubsets="true" variable="../bird_import/variables.efbt_data_definition#ECB2_ENTITY_LEI"/>
+      </baseSchemas>
+      <baseSchemas cube="../extra/efbt_cubes.cubes#loans" usedInSubsets="true">
+        <columns columnID="loans:ECB2_MRKT_VL" cube="../extra/efbt_cubes.cubes#loans" usedInSubsets="true" variable="../bird_import/variables.efbt_data_definition#ECB2_MRKT_VL"/>
+        <columns columnID="loans:ECB2_ENTITY_LEI" cube="../extra/efbt_cubes.cubes#loans" usedInSubsets="true" variable="../bird_import/variables.efbt_data_definition#ECB2_ENTITY_LEI"/>
+      </baseSchemas>
+      <specialFunctionSpecs xsi:type="functions:BasicFunctionSpec" functionalName="funcs.CopyColumn" name="CopyColumn" sqlName="ID"/>
+      <specialFunctionSpecs xsi:type="functions:AggregateFunctionSpec" functionalName="funcs.First" name="First" sqlName="First"/>
+      <specialFunctionSpecs xsi:type="functions:AggregateFunctionSpec" functionalName="funcs.SUM" name="SUM" sqlName="SUM"/>
+      <specialFunctionSpecs xsi:type="functions:BasicFunctionSpec" functionalName="==" sqlName="=" isInfix="true"/>
+    </resultingModel>
+  </platformCalls>
+</platform_call:PlatformCallModule>

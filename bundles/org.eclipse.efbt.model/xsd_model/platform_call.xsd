@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<xsd:schema xmlns:attribute_lineage="http://www.eclipse.org/attribute_lineage" xmlns:base_cube_data="http://www.eclipse.org/base_cube_data" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:functions="http://www.eclipse.org/functions" xmlns:module_management="http://www.eclipse.org/module_management" xmlns:platform_call="http://www.eclipse.org/platform_call" xmlns:transformation="http://www.eclipse.org/transformation" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="platform_call" ecore:package="platform_call" targetNamespace="http://www.eclipse.org/platform_call">
+<xsd:schema xmlns:attribute_lineage="http://www.eclipse.org/attribute_lineage" xmlns:base_cube_data="http://www.eclipse.org/base_cube_data" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:functions="http://www.eclipse.org/functions" xmlns:module_management="http://www.eclipse.org/module_management" xmlns:platform_call="http://www.eclipse.org/platform_call" xmlns:reports="http://www.eclipse.org/reports" xmlns:transformation="http://www.eclipse.org/transformation" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="platform_call" ecore:package="platform_call" targetNamespace="http://www.eclipse.org/platform_call">
+  <xsd:import namespace="http://www.eclipse.org/reports" schemaLocation="reports.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/functions" schemaLocation="functions.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/transformation" schemaLocation="transformation.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/module_management" schemaLocation="module_management.xsd"/>
@@ -20,6 +21,7 @@ SPDX-License-Identifier: EPL-2.0
  Contributors:
  Neil Mackenzie - initial API and implementation&#13;</xsd:appinfo>
   </xsd:annotation>
+  <xsd:element ecore:ignore="true" name="GetAttributeLineageForOneReportCell" type="platform_call:GetAttributeLineageForOneReportCell"/>
   <xsd:complexType name="ExecuteAttributeLineageModel">
     <xsd:annotation>
       <xsd:documentation>A Platform call, which takes an AttributeLineageModel and creates a set of Scala files to execute that AttributeLineageModel. When it is run a number of Scla files will be available in the output directory specified by outputdir</xsd:documentation>
@@ -111,6 +113,17 @@ SPDX-License-Identifier: EPL-2.0
             <xsd:list itemType="xsd:anyURI"/>
           </xsd:simpleType>
         </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="GetAttributeLineageForOneReportCell">
+    <xsd:complexContent>
+      <xsd:extension base="platform_call:PlatformCall">
+        <xsd:sequence>
+          <xsd:element ecore:resolveProxies="true" minOccurs="0" name="resultingModel" type="attribute_lineage:AttributeLineageModel"/>
+        </xsd:sequence>
+        <xsd:attribute ecore:reference="transformation:VersionedComponentsSet" name="transformationContext" type="xsd:anyURI"/>
+        <xsd:attribute ecore:reference="reports:ReportCell" name="reportCell" type="xsd:anyURI"/>
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>

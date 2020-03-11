@@ -14,8 +14,7 @@ package org.eclipse.efbt.model.platformcalls;
 
 import org.eclipse.efbt.generator.scala.engine.GeneratorConfig;
 import org.eclipse.efbt.generator.scala.engine.GeneratorStandaloneSetup;
-
-import org.eclipse.efbt.model.util.TRLUtil;
+import org.eclipse.efbt.model.util.AttributeLineageUtil;
 import org.eclipse.emf.mwe.utils.DirectoryCleaner;
 import org.eclipse.emf.mwe2.runtime.workflow.IWorkflowContext;
 import org.eclipse.emf.mwe2.runtime.workflow.WorkflowContextImpl;
@@ -23,9 +22,8 @@ import org.eclipse.xtext.generator.GeneratorComponent;
 import org.eclipse.xtext.generator.GeneratorComponent.Outlet;
 import org.eclipse.xtext.mwe.Reader;
 import org.eclipse.xtext.mwe.ResourceLoadingSlotEntry;
-
-
 import platform_call.ExecuteAttributeLineageModel;
+import platform_call.GetAttributeLineageForOneReportCell;
 import platform_call.GetAttributeLineageModel;
 
 import platform_call.PlatformCall;
@@ -39,7 +37,10 @@ public class PlatformCalls {
   public static void executeCall(PlatformCall call) {
 
     if (call instanceof GetAttributeLineageModel)
-      TRLUtil.createAttributeLineageModel((GetAttributeLineageModel) call);
+    	AttributeLineageUtil.createAttributeLineageModel((GetAttributeLineageModel) call);
+    
+    if (call instanceof GetAttributeLineageForOneReportCell)
+    	AttributeLineageUtil.createAttributeLineageModelForOneReportCell((GetAttributeLineageForOneReportCell) call);
   
     
     if (call instanceof ExecuteAttributeLineageModel) {
