@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <base_cube_data:InputDataModule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:base_cube_data="http://www.eclipse.org/base_cube_data" license="Copyright (c) 2020 Bird Software Solutions Ltd&amp;#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&amp;#xA;&amp;#xA;SPDX-License-Identifier: EPL-2.0 &amp;#xA;&amp;#xA; Contributors:&amp;#xA; Neil Mackenzie - initial API and implementation&amp;#xD;">
-  <inputData name="loans_data">
+  <inputData name="loans_data_for_JPY_MktValue">
     <sourceTableData name="loans1" cube="efbt_cubes.cubes#loans">
       <rows rowID="loans_row1">
         <cells xsi:type="base_cube_data:BaseCellWithValue" cellID="loans_row1:ECB2_MRKT_VL" column="../bird_import/variables.efbt_data_definition#ECB2_MRKT_VL" value="5000"/>

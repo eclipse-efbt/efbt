@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <platform_call:PlatformCallModule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:column_transformation_logic="http://www.eclipse.org/column_transformation_logic" xmlns:cube_transformation_logic="http://www.eclipse.org/cube_transformation_logic" xmlns:functions="http://www.eclipse.org/functions" xmlns:platform_call="http://www.eclipse.org/platform_call" license="Copyright (c) 2020 Bird Software Solutions Ltd&amp;#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&amp;#xA;&amp;#xA;SPDX-License-Identifier: EPL-2.0 &amp;#xA;&amp;#xA; Contributors:&amp;#xA; Neil Mackenzie - initial API and implementation&amp;#xD;">
   <platformCalls xsi:type="platform_call:GetAttributeLineageForOneReportCell" name="getAttributeLineageForJustOneCell" reportCell="../extra/reportcell_definitions.trl_report_cell_views#totalJPMktValue" transformationContext="../extra/example_release.transformation#example_release">
-    <resultingModel name="ALMForJPMktValue">
+    <resultingModel name="ALM_JPY_MktValue">
       <rowTransformations usedInSubsets="true">
         <columnFunctionGroup>
           <columnFunctions xsi:type="column_transformation_logic:AggregateColumnFunction" columnID="aggregateLoans:ECB2_MRKT_VL" cube="../extra/efbt_cubes.cubes#aggregateLoans" usedInSubsets="true" variable="../bird_import/variables.efbt_data_definition#ECB2_MRKT_VL">
