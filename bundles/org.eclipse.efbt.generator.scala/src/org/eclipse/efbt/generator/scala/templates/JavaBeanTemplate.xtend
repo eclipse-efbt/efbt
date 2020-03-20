@@ -150,12 +150,12 @@ class JavaBeanTemplate implements IGenerator {
 			«val theSchemaName = sourceTableSchema.cube.cube_name»
 							def  stringFor«theSchemaName»Table(table_«theSchemaName»: RTable«theSchemaName» ) :String = 
 									{				 
-									   "<sourceData name=\"«theSchemaName»\" cube=\"«sourceTableSchema.cube.eResource.URI.toString»#«sourceTableSchema.cube.cube_name»\"> \n" +
+									   "<sourceData name=\"«theSchemaName»\" cube=\"..\\extra\\«sourceTableSchema.cube.eResource.URI.lastSegment»#«sourceTableSchema.cube.cube_name»\"> \n" +
 									   «FOR row:sourceTableSchema.rows»
 									    "<rows rowID=\"«row.rowID»\">\n" +
 									   	«FOR cell: row.cells»
 									   	«val column= cell.column»
-									   	«IF column.usedInSubsetsSchema(test,theSchemaName)»"<cells xsi:type=\"base_cube_data:«IF cell instanceof BaseCellWithEnumeratedValue»BaseCellWithEnumeratedValue«ENDIF»«IF cell instanceof BaseCellWithValue»BaseCellWithValue«ENDIF»\" cellID=\"«cell.cellID»\" column=\"«column.eResource.URI.toString»#«column.variable_id»\" value=\"«IF cell instanceof BaseCellWithEnumeratedValue»«cell.value.eResource.URI.toString»#«cell.value.member_id»«ENDIF»«IF cell instanceof BaseCellWithValue»«cell.value»«ENDIF»\"/>\n" +					   						     					   						     
+									   	«IF column.usedInSubsetsSchema(test,theSchemaName)»"<cells xsi:type=\"base_cube_data:«IF cell instanceof BaseCellWithEnumeratedValue»BaseCellWithEnumeratedValue«ENDIF»«IF cell instanceof BaseCellWithValue»BaseCellWithValue«ENDIF»\" cellID=\"«cell.cellID»\" column=\"..\\bird_import\\«column.eResource.URI.lastSegment»#«column.variable_id»\" value=\"«IF cell instanceof BaseCellWithEnumeratedValue»..\\bird_import\\«cell.value.eResource.URI.lastSegment»#«cell.value.member_id»«ENDIF»«IF cell instanceof BaseCellWithValue»«cell.value»«ENDIF»\"/>\n" +					   						     					   						     
 									   		«ENDIF»								   
 									   	 «ENDFOR»
 									   "</rows>\n" +
@@ -178,7 +178,7 @@ class JavaBeanTemplate implements IGenerator {
 		{
 		   
 		  
-		   "<dataTraceableByCell name=\"«logicName»\" cubeLogic=\"«logic.cubeLogic.eResource.URI.toString»#«logic.cubeLogic.name»\" sourceCubeData=\"«FOR stn:sourceTableNames SEPARATOR ' '»#«stn»«ENDFOR»\" cube=\"«logic.cubeLogic.cube.eResource.URI.toString»#«logic.cubeLogic.cube.cube_name»\"> \n" +
+		   "<dataTraceableByCell name=\"«logicName»\" cubeLogic=\"..\\platform_calls\\«logic.cubeLogic.eResource.URI.lastSegment»#«logic.cubeLogic.name»\" sourceCubeData=\"«FOR stn:sourceTableNames SEPARATOR ' '»#«stn»«ENDFOR»\" cube=\"..\\extra\\«logic.cubeLogic.cube.eResource.URI.lastSegment»#«logic.cubeLogic.cube.cube_name»\"> \n" +
 		   stringFor«logicName»Table2(«logicName»Def.getRRows«logicName»(table_«logicName»)) +   
 		   "</dataTraceableByCell>\n "
 		     
@@ -267,7 +267,7 @@ class JavaBeanTemplate implements IGenerator {
 				  val «column.variable.variable_id.toLowerCase» = «logicName»Def.get«column.variable.variable_id.toLowerCase»(row)
 				  
 				
-				 val «column.variable.variable_id.toLowerCase»Text =	«IF column.usedInSubsets == column.usedInSubsets»"<derivedCells cellID=\"" + rowID + ":«column.variable.variable_id»\" column=\"«column.variable.eResource.URI.toString»#«column.variable.variable_id»\" value=\"" + «column.variable.variable_id.toLowerCase» + "\">\n" +
+				 val «column.variable.variable_id.toLowerCase»Text =	«IF column.usedInSubsets == column.usedInSubsets»"<derivedCells cellID=\"" + rowID + ":«column.variable.variable_id»\" column=\"..\\bird_import\\«column.variable.eResource.URI.lastSegment»#«column.variable.variable_id»\" value=\"" + «column.variable.variable_id.toLowerCase» + "\">\n" +
 				    «IF column instanceof AggregateColumnFunction»
 				    «val aggregateFunction = column.aggregateFunction»
 				    «aggregateFunction.getXMLForAggregateFunctionParameterisedBySourceRowID(logicName)»
@@ -296,7 +296,7 @@ class JavaBeanTemplate implements IGenerator {
 		  val «column.variable.variable_id.toLowerCase» = «logicName»Def.get«column.variable.variable_id.toLowerCase»(row)
 		 
 		
-		 val «column.variable.variable_id.toLowerCase»Text =	«IF column.usedInSubsets == column.usedInSubsets»"<derivedCells cellID=\"" + rowID + ":«column.variable.variable_id»\" column=\"«column.variable.eResource.URI.toString»#«column.variable.variable_id»\" value=\"" + «column.variable.variable_id.toLowerCase» + "\">\n" +
+		 val «column.variable.variable_id.toLowerCase»Text =	«IF column.usedInSubsets == column.usedInSubsets»"<derivedCells cellID=\"" + rowID + ":«column.variable.variable_id»\" column=\"..\\bird_import\\«column.variable.eResource.URI.lastSegment»#«column.variable.variable_id»\" value=\"" + «column.variable.variable_id.toLowerCase» + "\">\n" +
 		    «IF (!(logic.cubeLogic.rowFunction instanceof RowGroupByFunction) && !(logic.cubeLogic.rowFunction instanceof FilterAndGroupToOneRowFunction))»
 		    «IF column instanceof StandardBasicColumnFunction»
 		    «val basicfunction = column.basicFunction»
@@ -351,8 +351,15 @@ class JavaBeanTemplate implements IGenerator {
 	 */
 	def String getXMLForAggregateFunctionParameterisedBySourceRowID(AggregateFunction function, String logicName)
 	{
-		  val List<String> l = new ArrayList<String>();
-		 l.add("\"   <function xsi:type=\\\"functions:AggregateFunction\\\" functionSpec=\\\"" + function.functionSpec.eResource.URI.toString+ "#"+ function.functionSpec.name + "\\\">\\n\" + " )
+		  val List<String> l = new ArrayList<String>()
+		  val uri = function.functionSpec.eResource.URI
+		  val lastSegmentIndex = uri.segmentCount -1
+		  val lastSegment =uri.segment(lastSegmentIndex)
+		  val secondLastSegment = uri.segment(lastSegmentIndex -1)
+		  val prefix = "..\\\\"+secondLastSegment+"\\\\" + lastSegment
+		  
+		
+		 l.add("\"   <function xsi:type=\\\"functions:AggregateFunction\\\" functionSpec=\\\"" + prefix+ "#"+ function.functionSpec.name + "\\\">\\n\" + " )
 		 val params = function.parameters   
 		 params.forEach[
 		 	if(it instanceof ResolvedCubeColumnParameter)
@@ -373,8 +380,17 @@ class JavaBeanTemplate implements IGenerator {
 	def String getXMLForBasicFunctionParameterisedBySourceRowID(BasicFunction function)
 	{
 		 val List<String> l = new ArrayList<String>()
+	
+		  val uri = function.functionSpec.eResource.URI
+		  val lastSegmentIndex = uri.segmentCount -1
+		  val lastSegment =uri.segment(lastSegmentIndex)
+		  val secondLastSegment = uri.segment(lastSegmentIndex -1)
+		  val prefix = "..\\\\"+secondLastSegment+"\\\\" + lastSegment
+		  
+		 
+		
 		 val funcName = function.functionSpec.name 
-		 l.add("\"   <function xsi:type=\\\"functions:BasicFunction\\\" functionSpec=\\\"" + function.functionSpec.eResource.URI.toString+ "#"+ function.functionSpec.name + "\\\">\\n\" + \n" )
+		 l.add("\"   <function xsi:type=\\\"functions:BasicFunction\\\" functionSpec=\\\"" + prefix + "#"+ function.functionSpec.name + "\\\">\\n\" + \n" )
 		 val params = function.parameters   
 		 params.forEach[
 		 	if(it instanceof ResolvedCubeColumnParameter)
