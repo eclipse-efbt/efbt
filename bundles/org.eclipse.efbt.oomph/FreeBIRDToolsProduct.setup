@@ -151,13 +151,7 @@
       <requirement
           name="org.eclipse.emf.ecoretools.design.feature.group"/>
       <requirement
-          name="org.eclipse.emf.ecp.sdk.feature.feature.group"/>
-      <requirement
-          name="org.eclipse.emf.emfstore.sdk.feature.feature.group"/>
-      <requirement
-          name="org.eclipse.emf.parsley.sdk.feature.group"/>
-      <requirement
-          name="org.eclipse.emf.parsley.sdk.source.feature.group"/>
+          name="org.eclipse.emf.ecp.sdk.feature.feature.group"/> 
       <requirement
           name="org.eclipse.emf.query.sdk.feature.group"/>
       <requirement
@@ -199,9 +193,7 @@
       <requirement
           name="org.eclipse.eclemma.feature.feature.group"/>
       <requirement
-          name="net.sf.eclipsecs.feature.group"/>
-      <requirement
-          name="org.eclipse.rap.tools.feature.feature.group"/>
+          name="net.sf.eclipsecs.feature.group"/> 
       <requirement
           name="org.eclipse.pde.api.tools.ee.feature.feature.group"/>
       <requirement
@@ -211,27 +203,9 @@
       <requirement
           name="org.eclipse.m2e.feature.feature.group"/>
       <requirement
-          name="org.eclipse.emf.ecp.view.section.feature.source.feature.group"/>
-      <requirement
-          name="org.eclipse.emf.ecp.view.viewproxy.feature.source.feature.group"/>
-      <requirement
-          name="org.eclipse.emf.ecp.view.indexdmr.feature.source.feature.group"/>
-      <requirement
-          name="org.eclipse.emf.ecp.view.keyattributedmr.feature.source.feature.group"/>
-      <requirement
-          name="org.eclipse.emf.ecp.view.mappingdmr.feature.source.feature.group"/>
-      <requirement
-          name="org.eclipse.emfforms.view.annotation.feature.source.feature.group"/>
-      <requirement
-          name="org.eclipse.emfforms.editor.feature.source.feature.group"/>
-      <requirement
           name="org.eclipse.xtend.sdk.feature.group"/>
       <requirement
-          name="org.eclipse.fx.ide.feature.feature.group"/>
-      <requirement
-          name="org.eclipse.emf.edapt.recorder.feature.feature.group"/>
-      <requirement
-          name="org.eclipse.emf.edapt.runtime.feature.feature.group"/>
+          name="org.eclipse.fx.ide.feature.feature.group"/>    
       <requirement
           name="org.eclipse.cbi.targetplatform-feature.feature.group"/>
       <requirement
@@ -241,17 +215,13 @@
       <requirement
           name="org.eclipse.mylyn.github.feature.feature.group"/>
       <repository
-          url="http://download.eclipse.org/releases/2019-12"/>
+          url="http://download.eclipse.org/releases/2020-03"/>
       <repository
-          url="http://download.eclipse.org/technology/epp/packages/2019-12"/>
+          url="http://download.eclipse.org/technology/epp/packages/2020-03"/>
       <repository
           url="http://download.eclipse.org/rt/rap/tools/3.9"/>
       <repository
-          url="https://checkstyle.github.io/eclipse-cs/update"/>
-      <repository
-          url="https://download.eclipse.org/ecp/releases/releases_target_123/"/>
-      <repository
-          url="http://download.eclipse.org/edapt/releases/14x"/>
+          url="https://checkstyle.github.io/eclipse-cs/update"/>    
       <repository
           url="http://download.eclipse.org/cbi/tpd/3.0.0-SNAPSHOT/"/>
       <repository
