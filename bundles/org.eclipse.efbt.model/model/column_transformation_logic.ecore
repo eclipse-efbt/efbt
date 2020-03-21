@@ -110,4 +110,8 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ColumnFunctionGroup">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="columnFunctions" upperBound="-1"
+        eType="#//ColumnFunction" containment="true"/>
+  </eClassifiers>
 </ecore:EPackage>

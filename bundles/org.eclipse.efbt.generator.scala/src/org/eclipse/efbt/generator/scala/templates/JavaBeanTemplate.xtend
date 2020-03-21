@@ -15,23 +15,23 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
 import org.eclipse.emf.common.util.EList
-import row_transformation_logic.FunctionalRowLogic
+import cube_transformation_logic.CubeTransformationLogic
 import row_transformation_logic.BaseRowStructure
 import base_cube_data.BaseCubeData
 import column_transformation_logic.ColumnFunction
 import org.eclipse.efbt.model.util.ScalaRuntimeUtil
 import column_transformation_logic.StandardBasicColumnFunction
 import base_cube_data.BaseCell
-import cube_transformation_logic.RowJoinFunction
-import cube_transformation_logic.OneToOneRowFunction
+import row_transformation_logic.RowJoinFunction
+import row_transformation_logic.OneToOneRowCreationApproach
 import java.util.List
 import java.util.ArrayList
 import functions.BooleanFunction
-import cube_transformation_logic.RowFilterFunction
+import row_transformation_logic.FilterRowCreationApproach
 import functions.BasicFunction
-import cube_transformation_logic.RowGroupByFunction
+import row_transformation_logic.GroupByRowCreationApproach
 import column_transformation_logic.AggregateColumnFunction
-import cube_transformation_logic.FilterAndGroupToOneRowFunction
+import row_transformation_logic.FilterAndGroupToOneRowCreationApproach
 import functions.ResolvedCubeColumnParameter
 import functions.AggregateFunction
 import trl_sql_views.SQLView
@@ -42,8 +42,9 @@ import core.FACET_VALUE_TYPE
 import cubes.FreeBirdToolsCube
 import platform_call.ExecuteAttributeLineageModel
 import attribute_lineage.AttributeLineageModel
-import cube_transformation_logic.UnionRowFunction
+import row_transformation_logic.UnionRowCreationApproach
 import org.eclipse.efbt.model.util.AttributeLineageUtil
+
 /**
  * Generateor tmplate for generating scala files
  */
@@ -74,9 +75,9 @@ class JavaBeanTemplate implements IGenerator {
 			rowLogicGroup.rowTransformations.forEach[
 			
 			
-					val cubename = it.cubeLogic.cube.cube_name
+					val cubename = it.rowCreationApproachForCube.cube.cube_name
 					
-					val content = generateScalaCodeForRowLogic(it,it.cubeLogic.cube.cube_name,it.getTheDependantCubeeNames, it.getTheDependantCubes)
+					val content = generateScalaCodeForRowLogic(it,it.rowCreationApproachForCube.cube.cube_name,it.getTheDependantCubeeNames, it.getTheDependantCubes)
 					
 				
 					
@@ -122,7 +123,7 @@ class JavaBeanTemplate implements IGenerator {
 				import «schema.cube.cube_name»_data._  
 		«ENDFOR»
 		«FOR logic:test.attributeLineageModel.rowTransformations»
-		import «logic.cubeLogic.cube.cube_name»_def._  
+		import «logic.rowCreationApproachForCube.cube.cube_name»_def._  
 		«ENDFOR»
 		
 		object TheCellModelCreator extends App {
@@ -132,13 +133,13 @@ class JavaBeanTemplate implements IGenerator {
 		«ENDFOR»
 		«val orderedRowTransformation = test.attributeLineageModel.orderedRowTransformations»
 		«FOR logic:orderedRowTransformation»
-		 val t_«logic.cubeLogic.cube.cube_name»: RTable«logic.cubeLogic.cube.cube_name»= RTable«logic.cubeLogic.cube.cube_name»(«FOR sourceTableName:logic.getTheDependantCubeeNames SEPARATOR ','»t_«sourceTableName»«ENDFOR»)				
+		 val t_«logic.rowCreationApproachForCube.cube.cube_name»: RTable«logic.rowCreationApproachForCube.cube.cube_name»= RTable«logic.rowCreationApproachForCube.cube.cube_name»(«FOR sourceTableName:logic.getTheDependantCubeeNames SEPARATOR ','»t_«sourceTableName»«ENDFOR»)				
 		«ENDFOR»
 		
 		def stringForHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "<data_lineage:DataLineageModel xmlns:data_lineage=\"http://www.eclipse.org/data_lineage\" xmlns:base_cube_data=\"http://www.eclipse.org/base_cube_data\" xmlns:functions=\"http://www.eclipse.org/functions\" >\n" 
 						  
 				val stringForFile = stringForHeader + 
-				«FOR logic:test.attributeLineageModel.rowTransformations SEPARATOR "+"»stringFor«logic.cubeLogic.cube.cube_name»Table(t_«logic.cubeLogic.cube.cube_name») «ENDFOR»+ «FOR schema:test.attributeLineageModel.baseSchemas SEPARATOR "+"»stringFor«schema.cube.cube_name»Table(t_«schema.cube.cube_name») «ENDFOR» +stringForEndOfXML()
+				«FOR logic:test.attributeLineageModel.rowTransformations SEPARATOR "+"»stringFor«logic.rowCreationApproachForCube.cube.cube_name»Table(t_«logic.rowCreationApproachForCube.cube.cube_name») «ENDFOR»+ «FOR schema:test.attributeLineageModel.baseSchemas SEPARATOR "+"»stringFor«schema.cube.cube_name»Table(t_«schema.cube.cube_name») «ENDFOR» +stringForEndOfXML()
 				
 					import java.io._
 				    val pw = new PrintWriter(new File("«outputdir»\\«almName»_generated.data_lineage" ))
@@ -171,14 +172,14 @@ class JavaBeanTemplate implements IGenerator {
 		«FOR logic:test.attributeLineageModel.rowTransformations»
 		
 		
-		«val logicName = logic.cubeLogic.cube.cube_name»
+		«val logicName = logic.rowCreationApproachForCube.cube.cube_name»
 		
 		«val sourceTableNames =logic.getTheDependantCubeeNames»
 		def  stringFor«logicName»Table(table_«logicName»: RTable«logicName» ) :String = 
 		{
 		   
 		  
-		   "<dataTraceableByCell name=\"«logicName»\" cubeLogic=\"..\\platform_calls\\«logic.cubeLogic.eResource.URI.lastSegment»#«logic.cubeLogic.name»\" sourceCubeData=\"«FOR stn:sourceTableNames SEPARATOR ' '»#«stn»«ENDFOR»\" cube=\"..\\extra\\«logic.cubeLogic.cube.eResource.URI.lastSegment»#«logic.cubeLogic.cube.cube_name»\"> \n" +
+		   "<dataTraceableByCell name=\"«logicName»\" rowCreationApproachForCube=\"..\\platform_calls\\«logic.rowCreationApproachForCube.eResource.URI.lastSegment»#«logic.rowCreationApproachForCube.name»\" sourceCubeData=\"«FOR stn:sourceTableNames SEPARATOR ' '»#«stn»«ENDFOR»\" cube=\"..\\extra\\«logic.rowCreationApproachForCube.cube.eResource.URI.lastSegment»#«logic.rowCreationApproachForCube.cube.cube_name»\"> \n" +
 		   stringFor«logicName»Table2(«logicName»Def.getRRows«logicName»(table_«logicName»)) +   
 		   "</dataTraceableByCell>\n "
 		     
@@ -199,7 +200,7 @@ class JavaBeanTemplate implements IGenerator {
 		{
 		   val rowID = «logicName»Def.getconciseid(row)
 		  
-		   «IF (!(logic.cubeLogic.rowFunction instanceof RowGroupByFunction) && !(logic.cubeLogic.rowFunction instanceof FilterAndGroupToOneRowFunction) )»
+		   «IF (!(logic.rowCreationApproachForCube.rowCreationApproach instanceof GroupByRowCreationApproach) && !(logic.rowCreationApproachForCube.rowCreationApproach instanceof FilterAndGroupToOneRowCreationApproach) )»
 		   «FOR stn:sourceTableNames»
 		   		  			val sourcerow«stn» = row.«stn»
 		   		  			val sourcerowID«stn» =«stn»Def.getconciseid(sourcerow«stn»)
@@ -219,7 +220,7 @@ class JavaBeanTemplate implements IGenerator {
 		  
 		}
 		
-		 «IF ((logic.cubeLogic.rowFunction instanceof RowGroupByFunction) || (logic.cubeLogic.rowFunction instanceof FilterAndGroupToOneRowFunction))»
+		 «IF ((logic.rowCreationApproachForCube.rowCreationApproach instanceof GroupByRowCreationApproach) || (logic.rowCreationApproachForCube.rowCreationApproach instanceof FilterAndGroupToOneRowCreationApproach))»
 				  
 		def  getListOfIdsforSourceRowsOf«logicName»(row : RRow«logicName» ) :String =
 		{
@@ -234,7 +235,7 @@ class JavaBeanTemplate implements IGenerator {
 					
 				}
 		«ENDIF»
-		 «IF ((logic.cubeLogic.rowFunction instanceof RowGroupByFunction) || (logic.cubeLogic.rowFunction instanceof FilterAndGroupToOneRowFunction))»
+		 «IF ((logic.rowCreationApproachForCube.rowCreationApproach instanceof GroupByRowCreationApproach) || (logic.rowCreationApproachForCube.rowCreationApproach instanceof FilterAndGroupToOneRowCreationApproach))»
 		def getParamsForTheSourceRowsOf«logicName»(«logicName»Row :RRow«logicName», col :String) :String =  {
 		
 		   getParamsForSourceRowsOf«logicName»(«logicName»Row.«sourceTableNames.get(0)», col)
@@ -267,12 +268,12 @@ class JavaBeanTemplate implements IGenerator {
 				  val «column.variable.variable_id.toLowerCase» = «logicName»Def.get«column.variable.variable_id.toLowerCase»(row)
 				  
 				
-				 val «column.variable.variable_id.toLowerCase»Text =	«IF column.usedInSubsets == column.usedInSubsets»"<derivedCells cellID=\"" + rowID + ":«column.variable.variable_id»\" column=\"..\\bird_import\\«column.variable.eResource.URI.lastSegment»#«column.variable.variable_id»\" value=\"" + «column.variable.variable_id.toLowerCase» + "\">\n" +
+				 val «column.variable.variable_id.toLowerCase»Text =	«IF column.usedInSubsets == column.usedInSubsets»"<formulaCells cellID=\"" + rowID + ":«column.variable.variable_id»\" column=\"..\\bird_import\\«column.variable.eResource.URI.lastSegment»#«column.variable.variable_id»\" value=\"" + «column.variable.variable_id.toLowerCase» + "\">\n" +
 				    «IF column instanceof AggregateColumnFunction»
 				    «val aggregateFunction = column.aggregateFunction»
 				    «aggregateFunction.getXMLForAggregateFunctionParameterisedBySourceRowID(logicName)»
 				     «ENDIF»
-	      "   </derivedCells>\n"
+	      "   </formulaCells>\n"
 	      «ENDIF» ««««IF !column.usedInSubsets»""«ENDIF»
 				  «ENDFOR»
 				
@@ -287,7 +288,7 @@ class JavaBeanTemplate implements IGenerator {
 			val rowID = «logicName»Def.getconciseid(row)
 			 
 			 «FOR stn:sourceTableNames»
-			 «IF (!(logic.cubeLogic.rowFunction instanceof RowGroupByFunction) && !(logic.cubeLogic.rowFunction instanceof FilterAndGroupToOneRowFunction))»
+			 «IF (!(logic.rowCreationApproachForCube.rowCreationApproach instanceof GroupByRowCreationApproach) && !(logic.rowCreationApproachForCube.rowCreationApproach instanceof FilterAndGroupToOneRowCreationApproach))»
 			val sourcerow«stn» = row.«stn»
 			val sourcerowID«stn» =«stn»Def.getconciseid(sourcerow«stn»)
 			«ENDIF»
@@ -296,14 +297,14 @@ class JavaBeanTemplate implements IGenerator {
 		  val «column.variable.variable_id.toLowerCase» = «logicName»Def.get«column.variable.variable_id.toLowerCase»(row)
 		 
 		
-		 val «column.variable.variable_id.toLowerCase»Text =	«IF column.usedInSubsets == column.usedInSubsets»"<derivedCells cellID=\"" + rowID + ":«column.variable.variable_id»\" column=\"..\\bird_import\\«column.variable.eResource.URI.lastSegment»#«column.variable.variable_id»\" value=\"" + «column.variable.variable_id.toLowerCase» + "\">\n" +
-		    «IF (!(logic.cubeLogic.rowFunction instanceof RowGroupByFunction) && !(logic.cubeLogic.rowFunction instanceof FilterAndGroupToOneRowFunction))»
+		 val «column.variable.variable_id.toLowerCase»Text =	«IF column.usedInSubsets == column.usedInSubsets»"<formulaCells cellID=\"" + rowID + ":«column.variable.variable_id»\" column=\"..\\bird_import\\«column.variable.eResource.URI.lastSegment»#«column.variable.variable_id»\" value=\"" + «column.variable.variable_id.toLowerCase» + "\">\n" +
+		    «IF (!(logic.rowCreationApproachForCube.rowCreationApproach instanceof GroupByRowCreationApproach) && !(logic.rowCreationApproachForCube.rowCreationApproach instanceof FilterAndGroupToOneRowCreationApproach))»
 		    «IF column instanceof StandardBasicColumnFunction»
 		    «val basicfunction = column.basicFunction»
 		    «basicfunction.getXMLForBasicFunctionParameterisedBySourceRowID()»
 		     «ENDIF»
 		     «ENDIF»
-		     "   </derivedCells>\n"
+		     "   </formulaCells>\n"
 		     «ENDIF»««««IF !column.usedInSubsets»""«ENDIF»
 		  «ENDFOR»
 		
@@ -331,11 +332,11 @@ class JavaBeanTemplate implements IGenerator {
 	}
 	
 	/**
-	 * Get the user FunctionalRowLogic objects form the AttributeLineageUtil in the 
+	 * Get the user CubeTransformationLogic objects form the AttributeLineageUtil in the 
 	 * correct order so that dependencies always come before the FunctionalRowLogics 
 	 * objects that they are dependent upon.
 	 */
-	def EList<FunctionalRowLogic> getOrderedRowTransformations(AttributeLineageModel program)
+	def EList<CubeTransformationLogic> getOrderedRowTransformations(AttributeLineageModel program)
 	{
 		val orderedList =  AttributeLineageUtil.getOrderedRowTransformations(program)			
 		return orderedList;
@@ -492,8 +493,8 @@ class JavaBeanTemplate implements IGenerator {
 	/**
 	 * generate Scala Code For RowLogic
 	 */
-	def generateScalaCodeForRowLogic(FunctionalRowLogic logic,String logicTableName,List<String> sourceTableNames, List<FreeBirdToolsCube> sourceCubes) '''
-	package «logic.cubeLogic.cube.cube_name»_def
+	def generateScalaCodeForRowLogic(CubeTransformationLogic logic,String logicTableName,List<String> sourceTableNames, List<FreeBirdToolsCube> sourceCubes) '''
+	package «logic.rowCreationApproachForCube.cube.cube_name»_def
 	import base_types._ 
 	import funcdefs._ 
 	import customfuncs._
@@ -502,7 +503,7 @@ class JavaBeanTemplate implements IGenerator {
 
 		
 			
-	«IF logic.cubeLogic.rowFunction instanceof OneToOneRowFunction»
+	«IF logic.rowCreationApproachForCube.rowCreationApproach instanceof OneToOneRowCreationApproach»
 
 	
 	import «sourceTableName»_def._  //import each source table for this table
@@ -543,7 +544,7 @@ class JavaBeanTemplate implements IGenerator {
 		
 		
 	«ENDIF»
-	«IF logic.cubeLogic.rowFunction instanceof UnionRowFunction»
+	«IF logic.rowCreationApproachForCube.rowCreationApproach instanceof UnionRowCreationApproach»
 	
 		
 		import «sourceTableName»_def._  //import each source table for this table
@@ -585,7 +586,7 @@ class JavaBeanTemplate implements IGenerator {
 			
 		«ENDIF»
 	
-	«IF logic.cubeLogic.rowFunction instanceof RowJoinFunction»
+	«IF logic.rowCreationApproachForCube.rowCreationApproach instanceof RowJoinFunction»
 	«FOR stn:sourceTableNames»
 	import «stn»_def._  //imprt each source table for this table
 	«ENDFOR»
@@ -602,7 +603,7 @@ class JavaBeanTemplate implements IGenerator {
 	      	«FOR stn:sourceTableNames»
 	     «stn» <- row«stn»List
 «ENDFOR»
-	     if («(logic.cubeLogic.rowFunction as RowJoinFunction).joinFunction.getScalaFunctionString»)
+	     if («(logic.rowCreationApproachForCube.rowCreationApproach as RowJoinFunction).joinFunction.getScalaFunctionString»)
 	   } yield RRow«logicTableName»(«FOR stn:sourceTableNames SEPARATOR ','»«stn»«ENDFOR»))
 	  }
 	
@@ -625,8 +626,8 @@ class JavaBeanTemplate implements IGenerator {
 					 						  }
 	«ENDIF»	
 	
-	«IF logic.cubeLogic.rowFunction instanceof RowGroupByFunction»
-		«val groupbycol1 = ((logic.cubeLogic.rowFunction) as RowGroupByFunction).groupByColumns.get(0).variable_id.toLowerCase»
+	«IF logic.rowCreationApproachForCube.rowCreationApproach instanceof GroupByRowCreationApproach»
+		«val groupbycol1 = ((logic.rowCreationApproachForCube.rowCreationApproach) as GroupByRowCreationApproach).groupByColumns.get(0).variable_id.toLowerCase»
 		
 		
 		import «sourceTableName»_def._  //imprt each source table for this table
@@ -646,20 +647,20 @@ class JavaBeanTemplate implements IGenerator {
 		    
 		
 		    
-		  def getRRow«logicTableName»s2 (ml: Map[(«FOR gbc:((logic.cubeLogic.rowFunction) as RowGroupByFunction).groupByColumns SEPARATOR ','»String«ENDFOR»),List[RRow«sourceTableName»]] , keyset : List [(«FOR gbc:((logic.cubeLogic.rowFunction) as RowGroupByFunction).groupByColumns SEPARATOR ','»String«ENDFOR»)]) : List[RRow«logicTableName»] = keyset match {   
+		  def getRRow«logicTableName»s2 (ml: Map[(«FOR gbc:((logic.rowCreationApproachForCube.rowCreationApproach) as GroupByRowCreationApproach).groupByColumns SEPARATOR ','»String«ENDFOR»),List[RRow«sourceTableName»]] , keyset : List [(«FOR gbc:((logic.rowCreationApproachForCube.rowCreationApproach) as GroupByRowCreationApproach).groupByColumns SEPARATOR ','»String«ENDFOR»)]) : List[RRow«logicTableName»] = keyset match {   
 		   case tail :+  head  =>  getRRow«logicTableName»s2 (ml,tail) :+ RRow«logicTableName»(ml(head))
 		   case List() => List.empty[RRow«logicTableName»] 
 		      
 		 }
 		  
-		  def convertSetToList (xs : Set[(«FOR gbc:((logic.cubeLogic.rowFunction) as RowGroupByFunction).groupByColumns SEPARATOR ','»String«ENDFOR»)]) : List[(«FOR gbc:((logic.cubeLogic.rowFunction) as RowGroupByFunction).groupByColumns SEPARATOR ','»String«ENDFOR»)] = { 
+		  def convertSetToList (xs : Set[(«FOR gbc:((logic.rowCreationApproachForCube.rowCreationApproach) as GroupByRowCreationApproach).groupByColumns SEPARATOR ','»String«ENDFOR»)]) : List[(«FOR gbc:((logic.rowCreationApproachForCube.rowCreationApproach) as GroupByRowCreationApproach).groupByColumns SEPARATOR ','»String«ENDFOR»)] = { 
 		    
-		     val ys:  List[(«FOR gbc:((logic.cubeLogic.rowFunction) as RowGroupByFunction).groupByColumns SEPARATOR ','»String«ENDFOR»)] = (for(x <- xs) yield  x)(collection.breakOut)
+		     val ys:  List[(«FOR gbc:((logic.rowCreationApproachForCube.rowCreationApproach) as GroupByRowCreationApproach).groupByColumns SEPARATOR ','»String«ENDFOR»)] = (for(x <- xs) yield  x)(collection.breakOut)
 		     return ys
 		  }
 		  
-		  def  getRRow«logicTableName»Maps( rl: List[RRow«sourceTableName»]) : Map[(«FOR gbc:((logic.cubeLogic.rowFunction) as RowGroupByFunction).groupByColumns SEPARATOR ','»String«ENDFOR»),List[RRow«sourceTableName»]]  = rl match {
-		    case record =>  rl.groupBy(record => («FOR gbc:((logic.cubeLogic.rowFunction) as RowGroupByFunction).groupByColumns SEPARATOR ','»«sourceTableName»Def.get«gbc.variable_id.toLowerCase»(record)«ENDFOR» ) )
+		  def  getRRow«logicTableName»Maps( rl: List[RRow«sourceTableName»]) : Map[(«FOR gbc:((logic.rowCreationApproachForCube.rowCreationApproach) as GroupByRowCreationApproach).groupByColumns SEPARATOR ','»String«ENDFOR»),List[RRow«sourceTableName»]]  = rl match {
+		    case record =>  rl.groupBy(record => («FOR gbc:((logic.rowCreationApproachForCube.rowCreationApproach) as GroupByRowCreationApproach).groupByColumns SEPARATOR ','»«sourceTableName»Def.get«gbc.variable_id.toLowerCase»(record)«ENDFOR» ) )
 		      
 		  } 
 		  
@@ -711,7 +712,7 @@ class JavaBeanTemplate implements IGenerator {
 						}
  				
 	«ENDIF»	
-	«IF logic.cubeLogic.rowFunction instanceof RowFilterFunction»
+	«IF logic.rowCreationApproachForCube.rowCreationApproach instanceof FilterRowCreationApproach»
 		import «sourceTableName»_def._  //imprt each source table for this table
 		
 		
@@ -725,7 +726,7 @@ class JavaBeanTemplate implements IGenerator {
 		  }
 		  
 		  def getRRows«logicTableName»( rl: List[RRow«sourceTableName»]) : List[RRow«logicTableName»] = rl match {
-		       case  tail :+ «sourceTableName» => if («(logic.cubeLogic.rowFunction as RowFilterFunction).filterFunction.getScalaFunctionString») {getRRows«logicTableName»(tail) :+   RRow«logicTableName»(«sourceTableName») } else getRRows«logicTableName»(tail)
+		       case  tail :+ «sourceTableName» => if («(logic.rowCreationApproachForCube.rowCreationApproach as FilterRowCreationApproach).filterFunction.getScalaFunctionString») {getRRows«logicTableName»(tail) :+   RRow«logicTableName»(«sourceTableName») } else getRRows«logicTableName»(tail)
 		       case List() => List.empty[RRow«logicTableName»]  
 		  }
 		
@@ -777,7 +778,7 @@ class JavaBeanTemplate implements IGenerator {
 			
 		«ENDIF»
 		
-			«IF logic.cubeLogic.rowFunction instanceof FilterAndGroupToOneRowFunction»
+			«IF logic.rowCreationApproachForCube.rowCreationApproach instanceof FilterAndGroupToOneRowCreationApproach»
 				import «sourceTableName»_def._  //imprt each source table for this table
 				
 				case class RTable«logicTableName»(t1: RTable«sourceTableName») extends RTable
@@ -795,25 +796,25 @@ class JavaBeanTemplate implements IGenerator {
 						    
 						
 						    
-						  def getRRow«logicTableName»s2 (ml: Map[(«FOR gbc:((logic.cubeLogic.rowFunction) as FilterAndGroupToOneRowFunction).groupByVariables SEPARATOR ','»String«ENDFOR»),List[RRow«sourceTableName»]] , keyset : List [(«FOR gbc:((logic.cubeLogic.rowFunction) as FilterAndGroupToOneRowFunction).groupByVariables SEPARATOR ','»String«ENDFOR»)]) : List[RRow«logicTableName»] = keyset match {   
+						  def getRRow«logicTableName»s2 (ml: Map[(«FOR gbc:((logic.rowCreationApproachForCube.rowCreationApproach) as FilterAndGroupToOneRowCreationApproach).groupByVariables SEPARATOR ','»String«ENDFOR»),List[RRow«sourceTableName»]] , keyset : List [(«FOR gbc:((logic.rowCreationApproachForCube.rowCreationApproach) as FilterAndGroupToOneRowCreationApproach).groupByVariables SEPARATOR ','»String«ENDFOR»)]) : List[RRow«logicTableName»] = keyset match {   
 						   case tail :+  head  =>  getRRow«logicTableName»s2 (ml,tail) :+ RRow«logicTableName»(ml(head))
 						   case List() => List.empty[RRow«logicTableName»] 
 						      
 						 }
 						  
-						  def convertSetToList (xs : Set[(«FOR gbc:((logic.cubeLogic.rowFunction) as FilterAndGroupToOneRowFunction).groupByVariables SEPARATOR ','»String«ENDFOR»)]) : List[(«FOR gbc:((logic.cubeLogic.rowFunction) as FilterAndGroupToOneRowFunction).groupByVariables SEPARATOR ','»String«ENDFOR»)] = { 
+						  def convertSetToList (xs : Set[(«FOR gbc:((logic.rowCreationApproachForCube.rowCreationApproach) as FilterAndGroupToOneRowCreationApproach).groupByVariables SEPARATOR ','»String«ENDFOR»)]) : List[(«FOR gbc:((logic.rowCreationApproachForCube.rowCreationApproach) as FilterAndGroupToOneRowCreationApproach).groupByVariables SEPARATOR ','»String«ENDFOR»)] = { 
 						    
-						     val ys:  List[(«FOR gbc:((logic.cubeLogic.rowFunction) as FilterAndGroupToOneRowFunction).groupByVariables SEPARATOR ','»String«ENDFOR»)] = (for(x <- xs) yield  x)(collection.breakOut)
+						     val ys:  List[(«FOR gbc:((logic.rowCreationApproachForCube.rowCreationApproach) as FilterAndGroupToOneRowCreationApproach).groupByVariables SEPARATOR ','»String«ENDFOR»)] = (for(x <- xs) yield  x)(collection.breakOut)
 						     return ys
 						  }
 						  
-						  def  getRRow«logicTableName»Maps( rl: List[RRow«sourceTableName»]) : Map[(«FOR gbc:((logic.cubeLogic.rowFunction) as FilterAndGroupToOneRowFunction).groupByVariables SEPARATOR ','»String«ENDFOR»),List[RRow«sourceTableName»]]  = rl match {
-						    case record =>  rl.groupBy(record => («FOR gbc:((logic.cubeLogic.rowFunction) as FilterAndGroupToOneRowFunction).groupByVariables SEPARATOR ','»«sourceTableName»Def.get«gbc.variable_id.toLowerCase»(record)«ENDFOR» ) )
+						  def  getRRow«logicTableName»Maps( rl: List[RRow«sourceTableName»]) : Map[(«FOR gbc:((logic.rowCreationApproachForCube.rowCreationApproach) as FilterAndGroupToOneRowCreationApproach).groupByVariables SEPARATOR ','»String«ENDFOR»),List[RRow«sourceTableName»]]  = rl match {
+						    case record =>  rl.groupBy(record => («FOR gbc:((logic.rowCreationApproachForCube.rowCreationApproach) as FilterAndGroupToOneRowCreationApproach).groupByVariables SEPARATOR ','»«sourceTableName»Def.get«gbc.variable_id.toLowerCase»(record)«ENDFOR» ) )
 						      
 						  } 
 						  
 						    def getFiltered«sourceTableName»( rl: List[RRow«sourceTableName»]) : List[RRow«sourceTableName»] = rl match {						  		       
-						  		       case  tail :+ «sourceTableName» => if («(logic.cubeLogic.rowFunction as FilterAndGroupToOneRowFunction).filterFunction.getScalaFunctionString») {getFiltered«sourceTableName»(tail) :+   «sourceTableName» } else getFiltered«sourceTableName»(tail)
+						  		       case  tail :+ «sourceTableName» => if («(logic.rowCreationApproachForCube.rowCreationApproach as FilterAndGroupToOneRowCreationApproach).filterFunction.getScalaFunctionString») {getFiltered«sourceTableName»(tail) :+   «sourceTableName» } else getFiltered«sourceTableName»(tail)
 						  		       case List() => List.empty[RRow«sourceTableName»]     
 						  		  }
 				
@@ -894,11 +895,11 @@ class JavaBeanTemplate implements IGenerator {
 	/**
 	 * get UltimateSourceName associated with a cube
 	 */
-	def String getUltimateSourceName(FunctionalRowLogic logic) {
+	def String getUltimateSourceName(CubeTransformationLogic logic) {
 		val deprls = AttributeLineageUtil.getTheDependantFunctionalRowLogics(logic)
 
 		if (false)
-			(deprls.get(0).cubeLogic.ultimateCubeSource.cube_name)
+			(deprls.get(0).rowCreationApproachForCube.ultimateCubeSource.cube_name)
 		else
 			null
 
@@ -944,7 +945,7 @@ class JavaBeanTemplate implements IGenerator {
    * @return
    */
 	def String getScalaFunctionString(BooleanFunction function) {
-		return ScalaRuntimeUtil.getRowFunctionText(function)
+		return ScalaRuntimeUtil.getRowCreationApproachText(function)
 
 	} 
 
@@ -952,10 +953,10 @@ class JavaBeanTemplate implements IGenerator {
     * Get the dependent cube names.
     * 
     */
-	def List<String> getGetTheDependantCubeeNames(FunctionalRowLogic logic) {
+	def List<String> getGetTheDependantCubeeNames(CubeTransformationLogic logic) {
 		val List<String> l = new ArrayList<String>();
 		val logicList = AttributeLineageUtil.getTheDependantFunctionalRowLogics(logic);
-		logicList.forEach[l.add(it.cubeLogic.cube.cube_name)]
+		logicList.forEach[l.add(it.rowCreationApproachForCube.cube.cube_name)]
 
 		val schemaList = AttributeLineageUtil.getTheDependantBaseRowStructures(logic);
 		schemaList.forEach[l.add(it.cube.cube_name)]
@@ -967,10 +968,10 @@ class JavaBeanTemplate implements IGenerator {
 	 * Get the dependent cubes.
 	 * 
 	 */
-	def List<FreeBirdToolsCube> getGetTheDependantCubes(FunctionalRowLogic logic) {
+	def List<FreeBirdToolsCube> getGetTheDependantCubes(CubeTransformationLogic logic) {
 		val List<FreeBirdToolsCube> l = new ArrayList<FreeBirdToolsCube>();
 		val logicList = AttributeLineageUtil.getTheDependantFunctionalRowLogics(logic);
-		logicList.forEach[l.add(it.cubeLogic.cube)]
+		logicList.forEach[l.add(it.rowCreationApproachForCube.cube)]
 
 		val schemaList = AttributeLineageUtil.getTheDependantBaseRowStructures(logic);
 		schemaList.forEach[l.add(it.cube)]
@@ -979,11 +980,11 @@ class JavaBeanTemplate implements IGenerator {
 	}
 
 	/**
-	 * Returns the BaseRowStrucures which the functionalRowLogic depends upon.
-	 * @param functionalRowLogic
+	 * Returns the BaseRowStrucures which the cubeTransformationLogic  depends upon.
+	 * @param cubeTransformationLogic 
 	 * @return
 	 */
-	def List<BaseRowStructure> getTheDependantEvaluatedCubeSchemas(FunctionalRowLogic logic) {
+	def List<BaseRowStructure> getTheDependantEvaluatedCubeSchemas(CubeTransformationLogic logic) {
 
 		return AttributeLineageUtil.getTheDependantBaseRowStructures(logic)
 	}

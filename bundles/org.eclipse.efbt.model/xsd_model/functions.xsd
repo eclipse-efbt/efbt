@@ -215,7 +215,7 @@ SPDX-License-Identifier: EPL-2.0
   <xsd:complexType name="SpeculativeCubeColumnParameter">
     <xsd:annotation>
       <xsd:documentation>A Parameter where we are taking a CubeColumn from a cube.
-Note that functions are always part of RowFunctions or cubeColumnFunctions, both of these are associated with derived cubes,  and  we only allow to take  CubeColumns for source cubes of the derived cube.
+Note that functions are always part of RowCreationApproachs or cubeColumnFunctions, both of these are associated with derived cubes,  and  we only allow to take  CubeColumns for source cubes of the derived cube.
  Speculative here relates to the fact that this cubeColumn may or may not actually exist. 
  Note that during development of a program that set of actually existing CubeColumns changes.
  Allowing a specultiveCubeColumnParameter    means that we can develop more quickly, and run checks occasionally to check that all SpeculativeCubeColumnParameters can be resolved  to real CubeColumns.

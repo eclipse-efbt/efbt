@@ -17,7 +17,8 @@
       <details key="kind" value="elementOnly"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rowTransformations" upperBound="-1"
-        eType="ecore:EClass row_transformation_logic.ecore#//FunctionalRowLogic" containment="true">
+        eType="ecore:EClass cube_transformation_logic.ecore#//CubeTransformationLogic"
+        containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The row transformations"/>
       </eAnnotations>

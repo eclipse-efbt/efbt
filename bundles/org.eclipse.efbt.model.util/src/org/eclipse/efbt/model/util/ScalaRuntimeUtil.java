@@ -54,7 +54,7 @@ public class ScalaRuntimeUtil {
    * @param calculation
    * @return
    */
-  public static String getRowFunctionText(BooleanFunction calculation) {
+  public static String getRowCreationApproachText(BooleanFunction calculation) {
 
     return getScalaStringForFunction(calculation, false);
 

@@ -33,13 +33,14 @@ import core.DOMAIN;
 import core.MEMBER;
 import core.VARIABLE;
 import cube_schema.CubeSchema;
-import cube_transformation_logic.FilterAndGroupToOneRowFunction;
-import cube_transformation_logic.FunctionalCubeLogic;
-import cube_transformation_logic.OneToOneRowFunction;
-import cube_transformation_logic.RowFilterFunction;
-import cube_transformation_logic.RowGroupByFunction;
-import cube_transformation_logic.RowJoinFunction;
-import cube_transformation_logic.UnionRowFunction;
+import row_transformation_logic.FilterAndGroupToOneRowCreationApproach;
+import row_transformation_logic.RowCreationApproachForCube;
+import row_transformation_logic.OneToOneRowCreationApproach;
+import row_transformation_logic.FilterRowCreationApproach;
+import row_transformation_logic.GroupByRowCreationApproach;
+import row_transformation_logic.RowJoinFunction;
+import row_transformation_logic.UnionRowCreationApproach;
+import row_transformation_logic.impl.Row_transformation_logicFactoryImpl;
 import cube_transformation_logic.impl.Cube_transformation_logicFactoryImpl;
 import cubes.FreeBirdToolsCube;
 import cubes.DerivedCube;
@@ -56,8 +57,9 @@ import functions.MemberParameter;
 import functions.SpeculativeCubeColumnParameter;
 import navigation_context.NavigationContext;
 import reports.ReportCell;
-import row_transformation_logic.ColumnFunctionGroup;
-import row_transformation_logic.FunctionalRowLogic;
+import column_transformation_logic.ColumnFunctionGroup;
+import cube_transformation_logic.CubeTransformationLogic;
+import cube_transformation_logic.Cube_transformation_logicFactory;
 import row_transformation_logic.Row_transformation_logicFactory;
 
 import transformation.DataSetTransformation;
@@ -88,7 +90,7 @@ public class TRLUtil {
  
 
   /**
-   * Create a FunctionalRowLogic object form an SQLView.
+   * Create a CubeTransformationLogic object form an SQLView.
    * 
    * @param view
    * @param transformationSchemeLogicList
@@ -96,20 +98,20 @@ public class TRLUtil {
    * @param specialFunctions
    * @return
    */
-  public static FunctionalRowLogic translateViewToFunctionalRowLogic(SQLView view,
+  public static CubeTransformationLogic translateViewToFunctionalRowLogic(SQLView view,
       EList<VersionedTransformationSchemeLogic> transformationSchemeLogicList,
       EList<VersionedCubeSchemaModule> cubeSchemaModuleList, 
       SpecialFunctionSpecs specialFunctions) {
 
 
-    FunctionalRowLogic functionalRowLogic = Row_transformation_logicFactory.eINSTANCE.createFunctionalRowLogic();
-    ColumnFunctionGroup cfg = Row_transformation_logicFactory.eINSTANCE.createColumnFunctionGroup();
-    functionalRowLogic.setColumnFunctionGroup(cfg);
+    CubeTransformationLogic cubeTransformationLogic  = Cube_transformation_logicFactory.eINSTANCE.createCubeTransformationLogic();
+    ColumnFunctionGroup cfg = Column_transformation_logicFactory.eINSTANCE.createColumnFunctionGroup();
+    cubeTransformationLogic .setColumnFunctionGroup(cfg);
    
     
     // columns created by row function
     FreeBirdToolsCube derivedCube = view.getCube();
-    setFunctionalCubeLogic(view, functionalRowLogic,
+    setFunctionalCubeLogic(view, cubeTransformationLogic ,
         specialFunctions, transformationSchemeLogicList, cubeSchemaModuleList);
 
     if (view instanceof EnrichmentView) {
@@ -118,7 +120,7 @@ public class TRLUtil {
       Iterator<BasicColumnFunction> calculatedColumnsIter = calculatedColumns.iterator();
       while (calculatedColumnsIter.hasNext()) {
         BasicColumnFunction calculatedColumn = calculatedColumnsIter.next();
-        functionalRowLogic.getColumnFunctionGroup().getColumnFunctions().
+        cubeTransformationLogic .getColumnFunctionGroup().getColumnFunctions().
         add(EcoreUtil.copy(calculatedColumn));
 
       }
@@ -129,7 +131,7 @@ public class TRLUtil {
       Iterator<AggregateColumnFunction> calculatedColumnsIter = calculatedColumns.iterator();
       while (calculatedColumnsIter.hasNext()) {
         AggregateColumnFunction calculatedColumn = calculatedColumnsIter.next();
-        functionalRowLogic.getColumnFunctionGroup().getColumnFunctions().
+        cubeTransformationLogic .getColumnFunctionGroup().getColumnFunctions().
         add(EcoreUtil.copy(calculatedColumn));
 
       }
@@ -172,7 +174,7 @@ public class TRLUtil {
           columnParameter.setCube(dependantView.getCube());
           function.getParameters().add(columnParameter);
           calculatedColumn.setBasicFunction(function);
-          functionalRowLogic.getColumnFunctionGroup().getColumnFunctions().add(calculatedColumn);
+          cubeTransformationLogic .getColumnFunctionGroup().getColumnFunctions().add(calculatedColumn);
         }
       }
 
@@ -198,7 +200,7 @@ public class TRLUtil {
           columnParameter.setCube(dependantSchema.getBaseCube());
           function.getParameters().add(columnParameter);
           calculatedColumn.setBasicFunction(function);
-          functionalRowLogic.getColumnFunctionGroup().getColumnFunctions().add(calculatedColumn);
+          cubeTransformationLogic .getColumnFunctionGroup().getColumnFunctions().add(calculatedColumn);
         }
       }
 
@@ -239,7 +241,7 @@ public class TRLUtil {
           columnParameter.setCube(dependantView.getCube());
           function.getParameters().add(columnParameter);
           calculatedColumn.setAggregateFunction(function);
-          functionalRowLogic.getColumnFunctionGroup().getColumnFunctions().add(calculatedColumn);
+          cubeTransformationLogic .getColumnFunctionGroup().getColumnFunctions().add(calculatedColumn);
 
         }
 
@@ -275,7 +277,7 @@ public class TRLUtil {
             columnParameter.setCube(dependantSchema.getBaseCube());
             function.getParameters().add(columnParameter);
             calculatedColumn.setAggregateFunction(function);
-            functionalRowLogic.getColumnFunctionGroup().getColumnFunctions().add(calculatedColumn);
+            cubeTransformationLogic .getColumnFunctionGroup().getColumnFunctions().add(calculatedColumn);
 
           }
       }
@@ -316,7 +318,7 @@ public class TRLUtil {
             columnParameter.setCube(dependantView.getCube());
             function.getParameters().add(columnParameter);
             calculatedColumn.setBasicFunction(function);
-            functionalRowLogic.getColumnFunctionGroup().
+            cubeTransformationLogic .getColumnFunctionGroup().
               getColumnFunctions().add(calculatedColumn);
           }
         }
@@ -348,7 +350,7 @@ public class TRLUtil {
             columnParameter.setCube(dependantSchema.getBaseCube());
             function.getParameters().add(columnParameter);
             calculatedColumn.setBasicFunction(function);
-            functionalRowLogic.getColumnFunctionGroup().getColumnFunctions().add(calculatedColumn);
+            cubeTransformationLogic .getColumnFunctionGroup().getColumnFunctions().add(calculatedColumn);
           }
         }
       }
@@ -391,13 +393,13 @@ public class TRLUtil {
             BasicFunction function = FunctionsFactory.eINSTANCE.createBasicFunction();
             function.setFunctionSpec(specialFunctions.copyColumnSpec);
             calculatedColumn.setBasicFunction(function);
-            functionalRowLogic.getColumnFunctionGroup().getColumnFunctions().add(calculatedColumn);
+            cubeTransformationLogic .getColumnFunctionGroup().getColumnFunctions().add(calculatedColumn);
           }
           first = false;
         }
 
         Iterator<ColumnFunction> theCalculatedColumns = 
-            functionalRowLogic.getColumnFunctionGroup().getColumnFunctions()
+            cubeTransformationLogic .getColumnFunctionGroup().getColumnFunctions()
             .iterator();
         while (theCalculatedColumns.hasNext()) {
 
@@ -433,13 +435,13 @@ public class TRLUtil {
             BasicFunction function = FunctionsFactory.eINSTANCE.createBasicFunction();
             function.setFunctionSpec(specialFunctions.copyColumnSpec);
             calculatedColumn.setBasicFunction(function);
-            functionalRowLogic.getColumnFunctionGroup().getColumnFunctions().add(calculatedColumn);
+            cubeTransformationLogic .getColumnFunctionGroup().getColumnFunctions().add(calculatedColumn);
           }
           first = false;
         }
 
         Iterator<ColumnFunction> theCalculatedColumns = 
-            functionalRowLogic.getColumnFunctionGroup().getColumnFunctions()
+            cubeTransformationLogic .getColumnFunctionGroup().getColumnFunctions()
             .iterator();
         while (theCalculatedColumns.hasNext()) {
 
@@ -485,7 +487,7 @@ public class TRLUtil {
         function.getParameters().add(columnParameter);
 
         calculatedColumn.setAggregateFunction(function);
-        functionalRowLogic.getColumnFunctionGroup().getColumnFunctions().add(calculatedColumn);
+        cubeTransformationLogic .getColumnFunctionGroup().getColumnFunctions().add(calculatedColumn);
 
         Iterator<COMBINATION_ITEM> dimensions = getDimensionValues(dpView);
         while (dimensions.hasNext()) {
@@ -509,79 +511,79 @@ public class TRLUtil {
           dimensionColumnParameter.setCube(dependantView.getCube());
           functionForDimension.getParameters().add(dimensionColumnParameter);
 
-          functionalRowLogic.getColumnFunctionGroup().
+          cubeTransformationLogic .getColumnFunctionGroup().
             getColumnFunctions().add(calculatedColumnForDimension);
         }
 
       }
     }
 
-    return functionalRowLogic;
+    return cubeTransformationLogic ;
   }
 
   /**
-   * Set the FunctionalCubeLogic of a functionalRowLogic.
+   * Set the RowCreationApproachForCube of a cubeTransformationLogic .
    * 
    * @param view
-   * @param functionalRowLogic
+   * @param cubeTransformationLogic 
    * @param specialFunctions
    * @param transformationSchemeLogicList
    * @param cubeSchemaModuleList
    */
-  private static void setFunctionalCubeLogic(SQLView view, FunctionalRowLogic functionalRowLogic,
+  private static void setFunctionalCubeLogic(SQLView view, CubeTransformationLogic cubeTransformationLogic ,
       SpecialFunctionSpecs specialFunctions, EList<VersionedTransformationSchemeLogic> transformationSchemeLogicList,
       EList<VersionedCubeSchemaModule> cubeSchemaModuleList) {
     
     if ((view instanceof CopyView) || (view instanceof EnrichmentView)) {
-      FunctionalCubeLogic cubeLogic = Cube_transformation_logicFactoryImpl.eINSTANCE.createFunctionalCubeLogic();
-      OneToOneRowFunction oneToOneRowFunction = Cube_transformation_logicFactoryImpl.eINSTANCE
-          .createOneToOneRowFunction();
-      cubeLogic.setRowFunction(oneToOneRowFunction);
-      cubeLogic.setCube(view.getCube());
-      cubeLogic.setName(view.getName());
-      functionalRowLogic.setCubeLogic(cubeLogic);
+      RowCreationApproachForCube rowCreationApproachForCube = Row_transformation_logicFactoryImpl.eINSTANCE.createRowCreationApproachForCube();
+      OneToOneRowCreationApproach oneToOneRowCreationApproach = Row_transformation_logicFactoryImpl.eINSTANCE
+          .createOneToOneRowCreationApproach();
+      rowCreationApproachForCube.setRowCreationApproach(oneToOneRowCreationApproach);
+      rowCreationApproachForCube.setCube(view.getCube());
+      rowCreationApproachForCube.setName(view.getName());
+      cubeTransformationLogic .setRowCreationApproachForCube(rowCreationApproachForCube);
 
     }
     if (view instanceof FilterByConditionView) {
-      FunctionalCubeLogic cubeLogic = Cube_transformation_logicFactoryImpl.eINSTANCE.createFunctionalCubeLogic();
-      RowFilterFunction rowFilterFunction = Cube_transformation_logicFactoryImpl.eINSTANCE.createRowFilterFunction();
+      RowCreationApproachForCube rowCreationApproachForCube = Row_transformation_logicFactoryImpl.eINSTANCE.createRowCreationApproachForCube();
+      FilterRowCreationApproach rowFilterFunction = Row_transformation_logicFactoryImpl.eINSTANCE.createFilterRowCreationApproach();
       rowFilterFunction
       .setFilterFunction(EcoreUtil.copy(((FilterByConditionView) view).getWhereClause().getFunction()));
-      cubeLogic.setRowFunction(rowFilterFunction);
-      cubeLogic.setCube(view.getCube());
-      cubeLogic.setName(view.getName());
-      functionalRowLogic.setCubeLogic(cubeLogic);
+      rowCreationApproachForCube.setRowCreationApproach(rowFilterFunction);
+      rowCreationApproachForCube.setCube(view.getCube());
+      rowCreationApproachForCube.setName(view.getName());
+      cubeTransformationLogic .setRowCreationApproachForCube(rowCreationApproachForCube);
 
     }
 
     if (view instanceof JoinView) {
-      FunctionalCubeLogic cubeLogic = Cube_transformation_logicFactoryImpl.eINSTANCE.createFunctionalCubeLogic();
-      RowJoinFunction rowJoinFunction = Cube_transformation_logicFactoryImpl.eINSTANCE.createRowJoinFunction();
+      RowCreationApproachForCube rowCreationApproachForCube = Row_transformation_logicFactoryImpl.eINSTANCE.createRowCreationApproachForCube();
+      RowJoinFunction rowJoinFunction = Row_transformation_logicFactoryImpl.eINSTANCE.createRowJoinFunction();
       rowJoinFunction.setJoinFunction(EcoreUtil.copy((((JoinView) view).getWhereClause().getFunction())));
-      cubeLogic.setRowFunction(rowJoinFunction);
-      cubeLogic.setCube(view.getCube());
-      cubeLogic.setName(view.getName());
-      functionalRowLogic.setCubeLogic(cubeLogic);
+      rowCreationApproachForCube.setRowCreationApproach(rowJoinFunction);
+      rowCreationApproachForCube.setCube(view.getCube());
+      rowCreationApproachForCube.setName(view.getName());
+      cubeTransformationLogic .setRowCreationApproachForCube(rowCreationApproachForCube);
 
     }
     if (view instanceof AggregateEnrichmentView) {
-      FunctionalCubeLogic cubeLogic = Cube_transformation_logicFactoryImpl.eINSTANCE.createFunctionalCubeLogic();
-      RowGroupByFunction groupByFunction = Cube_transformation_logicFactoryImpl.eINSTANCE.createRowGroupByFunction();
+      RowCreationApproachForCube rowCreationApproachForCube = Row_transformation_logicFactoryImpl.eINSTANCE.createRowCreationApproachForCube();
+      GroupByRowCreationApproach groupByFunction = Row_transformation_logicFactoryImpl.eINSTANCE.createGroupByRowCreationApproach();
       groupByFunction.getGroupByColumns()
       .addAll((((AggregateEnrichmentView) view).getGroupByClause().getGroupByColumns()));
-      cubeLogic.setRowFunction(groupByFunction);
-      cubeLogic.setCube(view.getCube());
-      cubeLogic.setName(view.getName());
-      functionalRowLogic.setCubeLogic(cubeLogic);
+      rowCreationApproachForCube.setRowCreationApproach(groupByFunction);
+      rowCreationApproachForCube.setCube(view.getCube());
+      rowCreationApproachForCube.setName(view.getName());
+      cubeTransformationLogic .setRowCreationApproachForCube(rowCreationApproachForCube);
 
     }
 
     if (view instanceof ReportCellView) {
       // get the dependent view
       SQLView dependantView = getTheDependantViews(view, transformationSchemeLogicList).get(0);
-      FunctionalCubeLogic cubeLogic = Cube_transformation_logicFactoryImpl.eINSTANCE.createFunctionalCubeLogic();
-      FilterAndGroupToOneRowFunction rowFilterAndGroupFunction = Cube_transformation_logicFactoryImpl.eINSTANCE
-          .createFilterAndGroupToOneRowFunction();
+      RowCreationApproachForCube rowCreationApproachForCube = Row_transformation_logicFactoryImpl.eINSTANCE.createRowCreationApproachForCube();
+      FilterAndGroupToOneRowCreationApproach rowFilterAndGroupFunction = Row_transformation_logicFactoryImpl.eINSTANCE
+          .createFilterAndGroupToOneRowCreationApproach();
      
       BooleanFunction bf = FunctionsFactory.eINSTANCE.createBooleanFunction();
       // this is a hack to make it work for 1 dimension, we need
@@ -610,21 +612,21 @@ public class TRLUtil {
 
       }
 
-      cubeLogic.setRowFunction(rowFilterAndGroupFunction);
-      cubeLogic.setCube(view.getCube());
-      cubeLogic.setName(view.getName());
-      functionalRowLogic.setCubeLogic(cubeLogic);
+      rowCreationApproachForCube.setRowCreationApproach(rowFilterAndGroupFunction);
+      rowCreationApproachForCube.setCube(view.getCube());
+      rowCreationApproachForCube.setName(view.getName());
+      cubeTransformationLogic .setRowCreationApproachForCube(rowCreationApproachForCube);
 
     }
 
     if (view instanceof UnionView) {
-      FunctionalCubeLogic cubeLogic = Cube_transformation_logicFactoryImpl.eINSTANCE.createFunctionalCubeLogic();
-      UnionRowFunction urf = Cube_transformation_logicFactoryImpl.eINSTANCE.createUnionRowFunction();
+      RowCreationApproachForCube rowCreationApproachForCube = Row_transformation_logicFactoryImpl.eINSTANCE.createRowCreationApproachForCube();
+      UnionRowCreationApproach urf = Row_transformation_logicFactoryImpl.eINSTANCE.createUnionRowCreationApproach();
 
-      cubeLogic.setRowFunction(urf);
-      cubeLogic.setCube(view.getCube());
-      cubeLogic.setName(view.getName());
-      functionalRowLogic.setCubeLogic(cubeLogic);
+      rowCreationApproachForCube.setRowCreationApproach(urf);
+      rowCreationApproachForCube.setCube(view.getCube());
+      rowCreationApproachForCube.setName(view.getName());
+      cubeTransformationLogic .setRowCreationApproachForCube(rowCreationApproachForCube);
 
     }
 
@@ -641,7 +643,7 @@ public class TRLUtil {
   public static EList<CubeColumn> getColumnsFromSQLView(SQLView view,
       EList<VersionedTransformationSchemeLogic> transformationSchemeLogicList,
       EList<VersionedCubeSchemaModule> cubeSchemaModuleList, SpecialFunctionSpecs specialFunctions) {
-    FunctionalRowLogic rowLogic = translateViewToFunctionalRowLogic(view, transformationSchemeLogicList,
+    CubeTransformationLogic rowLogic = translateViewToFunctionalRowLogic(view, transformationSchemeLogicList,
         cubeSchemaModuleList, specialFunctions);
     return AttributeLineageUtil.getColumnsFromFunctionalRowLogic(rowLogic);
   }

@@ -169,9 +169,9 @@
             </centerLabelStyleDescription>
           </style>
         </edgeMappings>
-        <containerMappings name="FunctionalRowLogicContainer" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='AttributeLineageModel']/@defaultLayer/@toolSections.0/@ownedTools[name='RowFunctions']" semanticCandidatesExpression="aql:self.rowTransformations" domainClass="FunctionalRowLogic" childrenPresentation="HorizontalStack">
-          <subContainerMappings name="CubeColumnContainer" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='AttributeLineageModel']/@defaultLayer/@toolSections.0/@ownedTools[name='ColumnFunctions']" semanticCandidatesExpression="aql:self.columnFunctionGroup.columnFunctions->concat(self.cubeLogic.rowFunction.createdCubeColumns)" domainClass="CubeColumn">
-            <conditionnalStyles predicateExpression="aql:self.eContainer().oclIsKindOf(cube_transformation_logic::RowFunction)">
+        <containerMappings name="FunctionalRowLogicContainer" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='AttributeLineageModel']/@defaultLayer/@toolSections.0/@ownedTools[name='RowCreationApproachs']" semanticCandidatesExpression="aql:self.rowTransformations" domainClass="CubeTransformationLogic" childrenPresentation="HorizontalStack">
+          <subContainerMappings name="CubeColumnContainer" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='AttributeLineageModel']/@defaultLayer/@toolSections.0/@ownedTools[name='ColumnFunctions']" semanticCandidatesExpression="aql:self.columnFunctionGroup.columnFunctions->concat(self.rowCreationApproachForCube.rowCreationApproach.createdCubeColumns)" domainClass="CubeColumn">
+            <conditionnalStyles predicateExpression="aql:self.eContainer().oclIsKindOf(row_transformation_logic::RowCreationApproach)">
               <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelExpression="aql:self.variable.name">
                 <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
                 <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
@@ -179,7 +179,7 @@
                 <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='red']"/>
               </style>
             </conditionnalStyles>
-            <conditionnalStyles predicateExpression="aql:self.eContainer().oclIsKindOf(row_transformation_logic::ColumnFunctionGroup)">
+            <conditionnalStyles predicateExpression="aql:self.eContainer().oclIsKindOf(column_transformation_logic::ColumnFunctionGroup)">
               <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelExpression="aql:self.variable.name">
                 <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
                 <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
@@ -188,16 +188,16 @@
               </style>
             </conditionnalStyles>
           </subContainerMappings>
-          <conditionnalStyles predicateExpression="aql:self.cubeLogic.cube.oclIsKindOf(cubes::TargetCube)">
-            <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelExpression="aql:self.cubeLogic.cube.cube_name">
+          <conditionnalStyles predicateExpression="aql:self.rowCreationApproachForCube.cube.oclIsKindOf(cubes::TargetCube)">
+            <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelExpression="aql:self.rowCreationApproachForCube.cube.cube_name">
               <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
               <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
               <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
               <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='green']"/>
             </style>
           </conditionnalStyles>
-          <conditionnalStyles predicateExpression="aql:self.cubeLogic.cube.oclIsKindOf(cubes::DerivedCube)">
-            <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelExpression="aql:self.cubeLogic.cube.cube_name">
+          <conditionnalStyles predicateExpression="aql:self.rowCreationApproachForCube.cube.oclIsKindOf(cubes::DerivedCube)">
+            <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelExpression="aql:self.rowCreationApproachForCube.cube.cube_name">
               <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
               <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
               <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
@@ -227,7 +227,7 @@
             <containerViewVariable name="containerView"/>
             <representationNameVariable name="diagramName"/>
           </ownedTools>
-          <ownedTools xsi:type="tool:DiagramCreationDescription" name="RowFunctions" label="RowFunctions" precondition="true" browseExpression="service:getTag()" diagramDescription="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowFunctions']">
+          <ownedTools xsi:type="tool:DiagramCreationDescription" name="RowCreationApproachs" label="RowCreationApproachs" precondition="true" browseExpression="service:getTag()" diagramDescription="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowCreationApproachs']">
             <initialOperation/>
             <containerViewVariable name="containerView"/>
             <representationNameVariable name="diagramName"/>
@@ -235,7 +235,7 @@
         </toolSections>
       </defaultLayer>
       <additionalLayers name="CubeToCol" activeByDefault="true">
-        <edgeMappings name="table2col" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='AttributeLineageModel']/@defaultLayer/@containerMappings[name='FunctionalRowLogicContainer']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='AttributeLineageModel']/@defaultLayer/@containerMappings[name='BaseRowStructure']/@subContainerMappings[name='CubeSchemaColumnContainer'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='AttributeLineageModel']/@defaultLayer/@containerMappings[name='FunctionalRowLogicContainer']/@subContainerMappings[name='CubeColumnContainer']" targetFinderExpression="aql:self.cubeLogic.rowFunction.dependantCubeColumns.cubeColumn">
+        <edgeMappings name="table2col" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='AttributeLineageModel']/@defaultLayer/@containerMappings[name='FunctionalRowLogicContainer']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='AttributeLineageModel']/@defaultLayer/@containerMappings[name='BaseRowStructure']/@subContainerMappings[name='CubeSchemaColumnContainer'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='AttributeLineageModel']/@defaultLayer/@containerMappings[name='FunctionalRowLogicContainer']/@subContainerMappings[name='CubeColumnContainer']" targetFinderExpression="aql:self.rowCreationApproachForCube.rowCreationApproach.dependantCubeColumns.cubeColumn">
           <style lineStyle="dash" sizeComputationExpression="2">
             <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
             <centerLabelStyleDescription labelSize="12">
@@ -256,7 +256,7 @@
       </additionalLayers>
       <additionalLayers name="Col2StructItem" activeByDefault="true"/>
       <additionalLayers name="CubeToColStructItem" activeByDefault="true">
-        <edgeMappings name="table2colstructItem" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='AttributeLineageModel']/@defaultLayer/@containerMappings[name='FunctionalRowLogicContainer']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='AttributeLineageModel']/@defaultLayer/@containerMappings[name='BaseRowStructure']/@subContainerMappings[name='CubeSchemaColumnContainer'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='AttributeLineageModel']/@defaultLayer/@containerMappings[name='FunctionalRowLogicContainer']/@subContainerMappings[name='CubeColumnContainer']" targetFinderExpression="aql:self.cubeLogic.rowFunction.dependantStructItemColumns.cubeColumn">
+        <edgeMappings name="table2colstructItem" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='AttributeLineageModel']/@defaultLayer/@containerMappings[name='FunctionalRowLogicContainer']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='AttributeLineageModel']/@defaultLayer/@containerMappings[name='BaseRowStructure']/@subContainerMappings[name='CubeSchemaColumnContainer'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='AttributeLineageModel']/@defaultLayer/@containerMappings[name='FunctionalRowLogicContainer']/@subContainerMappings[name='CubeColumnContainer']" targetFinderExpression="aql:self.rowCreationApproachForCube.rowCreationApproach.dependantStructItemColumns.cubeColumn">
           <style lineStyle="dash" sizeComputationExpression="2">
             <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='blue']"/>
             <centerLabelStyleDescription labelSize="12">
@@ -289,7 +289,7 @@
         </edgeMappings>
         <containerMappings name="DerivedCubeData" semanticCandidatesExpression="feature:dataTraceableByCell" domainClass="DerivedCubeData" childrenPresentation="VerticalStack">
           <subContainerMappings name="DerivedRowData" semanticCandidatesExpression="feature:rows" domainClass="DerivedRowData" childrenPresentation="HorizontalStack">
-            <subContainerMappings name="DerivedCell" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='DataLineageModel']/@defaultLayer/@toolSections.0/@ownedTools[name='CellFunctions']" semanticCandidatesExpression="feature:derivedCells" domainClass="DerivedCell">
+            <subContainerMappings name="FormulaCell" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='DataLineageModel']/@defaultLayer/@toolSections.0/@ownedTools[name='CellFormula']" semanticCandidatesExpression="feature:formulaCells" domainClass="FormulaCell">
               <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelExpression="feature:value" tooltipExpression="aql:self.column.variable_id">
                 <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
                 <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
@@ -336,7 +336,7 @@
           </style>
         </containerMappings>
         <toolSections name="tool1">
-          <ownedTools xsi:type="tool:DiagramCreationDescription" name="CellFunctions" label="CellFunctions" precondition="true" browseExpression="service:getTag()" diagramDescription="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='CellFunctions']">
+          <ownedTools xsi:type="tool:DiagramCreationDescription" name="CellFormula" label="CellFormula" precondition="true" browseExpression="service:getTag()" diagramDescription="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='CellFormula']">
             <initialOperation/>
             <containerViewVariable name="containerView"/>
             <representationNameVariable name="diagramName"/>
@@ -354,7 +354,7 @@
         </edgeMappings>
       </additionalLayers>
       <additionalLayers name="cel2celllinks">
-        <edgeMappings name="cell2cell" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='DataLineageModel']/@defaultLayer/@containerMappings[name='DerivedCubeData']/@subContainerMappings[name='DerivedRowData']/@subContainerMappings[name='DerivedCell']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='DataLineageModel']/@defaultLayer/@containerMappings[name='BaseCubeData']/@subContainerMappings[name='BaseRowData']/@subContainerMappings[name='BaseCell'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='DataLineageModel']/@defaultLayer/@containerMappings[name='DerivedCubeData']/@subContainerMappings[name='DerivedRowData']/@subContainerMappings[name='DerivedCell']" targetFinderExpression="aql:self.eAllContents().cells">
+        <edgeMappings name="cell2cell" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='DataLineageModel']/@defaultLayer/@containerMappings[name='DerivedCubeData']/@subContainerMappings[name='DerivedRowData']/@subContainerMappings[name='FormulaCell']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='DataLineageModel']/@defaultLayer/@containerMappings[name='BaseCubeData']/@subContainerMappings[name='BaseRowData']/@subContainerMappings[name='BaseCell'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='DataLineageModel']/@defaultLayer/@containerMappings[name='DerivedCubeData']/@subContainerMappings[name='DerivedRowData']/@subContainerMappings[name='FormulaCell']" targetFinderExpression="aql:self.eAllContents().cells">
           <style lineStyle="dot" sizeComputationExpression="2">
             <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
             <centerLabelStyleDescription labelSize="12">
@@ -813,7 +813,7 @@
         </toolSections>
       </defaultLayer>
     </ownedRepresentations>
-    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="CellFunctions" domainClass="DerivedCell" enablePopupBars="true">
+    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="CellFormula" domainClass="FormulaCell" enablePopupBars="true">
       <defaultLayer name="Default">
         <nodeMappings name="AggregateFunction" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='ColumnFunctions']/@defaultLayer/@toolSections.0/@ownedTools[name='Fucntion']" semanticCandidatesExpression="aql:self.eAllContents()->filter(functions::AggregateFunction)" domainClass="AggregateFunction">
           <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="aql:self.functionSpec.name" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
@@ -850,7 +850,7 @@
             <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
           </style>
         </nodeMappings>
-        <edgeMappings name="FunctionsToParams" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='CellFunctions']/@defaultLayer/@nodeMappings[name='AggregateFunction'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='CellFunctions']/@defaultLayer/@nodeMappings[name='BasicFunction']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='CellFunctions']/@defaultLayer/@nodeMappings[name='CellsParameter']" targetFinderExpression="feature:parameters">
+        <edgeMappings name="FunctionsToParams" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='CellFormula']/@defaultLayer/@nodeMappings[name='AggregateFunction'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='CellFormula']/@defaultLayer/@nodeMappings[name='BasicFunction']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='CellFormula']/@defaultLayer/@nodeMappings[name='CellsParameter']" targetFinderExpression="feature:parameters">
           <style sizeComputationExpression="2">
             <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
             <centerLabelStyleDescription>
@@ -1172,72 +1172,72 @@
       <ownedLineMappings name="MEMBER" domainClass="MEMBER" semanticCandidatesExpression="service:getMembers()"/>
       <ownedColumnMappings name="name" featureName="name"/>
     </ownedRepresentations>
-    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="RowFunctions" domainClass="FunctionalRowLogic" preconditionExpression="true" enablePopupBars="true">
+    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="RowCreationApproachs" domainClass="CubeTransformationLogic" preconditionExpression="true" enablePopupBars="true">
       <defaultLayer name="Default">
-        <nodeMappings name="RowGroupByFunction" semanticCandidatesExpression="aql:self.cubeLogic.rowFunction" domainClass="RowGroupByFunction">
+        <nodeMappings name="GroupByRowCreationApproach" semanticCandidatesExpression="aql:self.rowCreationApproachForCube.rowCreationApproach" domainClass="GroupByRowCreationApproach">
           <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="aql:self.eClass().name" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW" width="30" height="10">
             <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='red']"/>
           </style>
         </nodeMappings>
-        <nodeMappings name="OneToOneRowFunction" semanticCandidatesExpression="aql:self.cubeLogic.rowFunction" domainClass="OneToOneRowFunction">
+        <nodeMappings name="OneToOneRowCreationApproach" semanticCandidatesExpression="aql:self.rowCreationApproachForCube.rowCreationApproach" domainClass="OneToOneRowCreationApproach">
           <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="aql:self.eClass().name" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW" width="25" height="10">
             <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
           </style>
         </nodeMappings>
-        <nodeMappings name="RowJoinFunction" semanticCandidatesExpression="aql:self.cubeLogic.rowFunction" domainClass="RowJoinFunction">
+        <nodeMappings name="RowJoinFunction" semanticCandidatesExpression="aql:self.rowCreationApproachForCube.rowCreationApproach" domainClass="RowJoinFunction">
           <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="aql:self.eClass().name" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW" width="20" height="10">
             <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_orange']"/>
           </style>
         </nodeMappings>
-        <nodeMappings name="GroupbyCubeColumn" semanticCandidatesExpression="aql:self.cubeLogic.rowFunction.groupByCubeColumns" domainClass="CubeColumn">
+        <nodeMappings name="GroupbyCubeColumn" semanticCandidatesExpression="aql:self.rowCreationApproachForCube.rowCreationApproach.groupByCubeColumns" domainClass="CubeColumn">
           <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="aql:self.columnID" labelPosition="node" resizeKind="NSEW" width="15" height="5">
             <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='green']"/>
           </style>
         </nodeMappings>
-        <nodeMappings name="WhereFunction" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowFunctions']/@defaultLayer/@toolSections.0/@ownedTools[name='WhereClauseFunction']" semanticCandidatesExpression="aql:self.cubeLogic.rowFunction.joinFunction" domainClass="BooleanFunction">
+        <nodeMappings name="WhereFunction" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowCreationApproachs']/@defaultLayer/@toolSections.0/@ownedTools[name='WhereClauseFunction']" semanticCandidatesExpression="aql:self.rowCreationApproachForCube.rowCreationApproach.joinFunction" domainClass="BooleanFunction">
           <style xsi:type="style:EllipseNodeDescription" labelSize="12" labelExpression="&quot;Where Function&quot;" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
             <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
           </style>
         </nodeMappings>
-        <nodeMappings name="FilterAndGroupToOneRowFunction" semanticCandidatesExpression="aql:self.cubeLogic.rowFunction" domainClass="FilterAndGroupToOneRowFunction">
+        <nodeMappings name="FilterAndGroupToOneRowCreationApproach" semanticCandidatesExpression="aql:self.rowCreationApproachForCube.rowCreationApproach" domainClass="FilterAndGroupToOneRowCreationApproach">
           <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="aql:self.eClass().name" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW" width="30" height="10">
             <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='red']"/>
           </style>
         </nodeMappings>
-        <nodeMappings name="FilterFunction" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowFunctions']/@defaultLayer/@toolSections.0/@ownedTools[name='FilterFunction']" semanticCandidatesExpression="aql:self.cubeLogic.rowFunction.filterFunction" domainClass="BooleanFunction">
+        <nodeMappings name="FilterFunction" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowCreationApproachs']/@defaultLayer/@toolSections.0/@ownedTools[name='FilterFunction']" semanticCandidatesExpression="aql:self.rowCreationApproachForCube.rowCreationApproach.filterFunction" domainClass="BooleanFunction">
           <style xsi:type="style:EllipseNodeDescription" labelSize="12" labelExpression="Filter Function" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
             <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
           </style>
         </nodeMappings>
-        <nodeMappings name="GroupbyVariables" semanticCandidatesExpression="aql:self.cubeLogic.rowFunction.groupByVariables" domainClass="VARIABLE">
+        <nodeMappings name="GroupbyVariables" semanticCandidatesExpression="aql:self.rowCreationApproachForCube.rowCreationApproach.groupByVariables" domainClass="VARIABLE">
           <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="aql:self.name " labelPosition="node" resizeKind="NSEW" width="15" height="5">
             <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='green']"/>
           </style>
         </nodeMappings>
-        <nodeMappings name="RowFilterFunction" semanticCandidatesExpression="aql:self.cubeLogic.rowFunction" domainClass="RowFilterFunction">
+        <nodeMappings name="FilterRowCreationApproach" semanticCandidatesExpression="aql:self.rowCreationApproachForCube.rowCreationApproach" domainClass="FilterRowCreationApproach">
           <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="aql:self.eClass().name" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW" width="30" height="10">
             <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='red']"/>
           </style>
         </nodeMappings>
-        <edgeMappings name="RowFunctionToFunctionalCubeLogic" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowFunctions']/@defaultLayer/@nodeMappings[name='RowGroupByFunction'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowFunctions']/@defaultLayer/@nodeMappings[name='RowJoinFunction'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowFunctions']/@defaultLayer/@nodeMappings[name='OneToOneRowFunction']" targetFinderExpression="aql:self.rowFunction">
+        <edgeMappings name="RowCreationApproachToFunctionalCubeLogic" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowCreationApproachs']/@defaultLayer/@nodeMappings[name='GroupByRowCreationApproach'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowCreationApproachs']/@defaultLayer/@nodeMappings[name='RowJoinFunction'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowCreationApproachs']/@defaultLayer/@nodeMappings[name='OneToOneRowCreationApproach']" targetFinderExpression="aql:self.rowCreationApproach">
           <style sizeComputationExpression="2">
             <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
             <centerLabelStyleDescription labelSize="12">
@@ -1245,7 +1245,7 @@
             </centerLabelStyleDescription>
           </style>
         </edgeMappings>
-        <edgeMappings name="GroupByRowFunctionToGroupByCubeColumns" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowFunctions']/@defaultLayer/@nodeMappings[name='RowGroupByFunction']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowFunctions']/@defaultLayer/@nodeMappings[name='GroupbyCubeColumn']" targetFinderExpression="aql:self.groupByCubeColumns">
+        <edgeMappings name="GroupByRowCreationApproachToGroupByCubeColumns" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowCreationApproachs']/@defaultLayer/@nodeMappings[name='GroupByRowCreationApproach']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowCreationApproachs']/@defaultLayer/@nodeMappings[name='GroupbyCubeColumn']" targetFinderExpression="aql:self.groupByCubeColumns">
           <style sizeComputationExpression="2">
             <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
             <centerLabelStyleDescription labelSize="12">
@@ -1253,7 +1253,7 @@
             </centerLabelStyleDescription>
           </style>
         </edgeMappings>
-        <edgeMappings name="JoinRowFunctionToWhereClause" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowFunctions']/@defaultLayer/@nodeMappings[name='RowJoinFunction']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowFunctions']/@defaultLayer/@nodeMappings[name='WhereFunction']" targetFinderExpression="aql:self.joinFunction">
+        <edgeMappings name="JoinRowCreationApproachToWhereClause" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowCreationApproachs']/@defaultLayer/@nodeMappings[name='RowJoinFunction']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowCreationApproachs']/@defaultLayer/@nodeMappings[name='WhereFunction']" targetFinderExpression="aql:self.joinFunction">
           <style sizeComputationExpression="2">
             <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
             <centerLabelStyleDescription labelSize="12">
@@ -1261,7 +1261,7 @@
             </centerLabelStyleDescription>
           </style>
         </edgeMappings>
-        <edgeMappings name="FilterAndGroupFunctionTofilterFunction" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowFunctions']/@defaultLayer/@nodeMappings[name='FilterAndGroupToOneRowFunction'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowFunctions']/@defaultLayer/@nodeMappings[name='RowFilterFunction']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowFunctions']/@defaultLayer/@nodeMappings[name='FilterFunction']" targetFinderExpression="aql:self.filterFunction">
+        <edgeMappings name="FilterAndGroupFunctionTofilterFunction" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowCreationApproachs']/@defaultLayer/@nodeMappings[name='FilterAndGroupToOneRowCreationApproach'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowCreationApproachs']/@defaultLayer/@nodeMappings[name='FilterRowCreationApproach']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowCreationApproachs']/@defaultLayer/@nodeMappings[name='FilterFunction']" targetFinderExpression="aql:self.filterFunction">
           <style sizeComputationExpression="2">
             <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
             <centerLabelStyleDescription labelSize="12">
@@ -1269,7 +1269,7 @@
             </centerLabelStyleDescription>
           </style>
         </edgeMappings>
-        <edgeMappings name="FiterAndGroupToGroupByCubeVariables" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowFunctions']/@defaultLayer/@nodeMappings[name='FilterAndGroupToOneRowFunction']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowFunctions']/@defaultLayer/@nodeMappings[name='GroupbyVariables']" targetFinderExpression="aql:self.groupByVariables">
+        <edgeMappings name="FiterAndGroupToGroupByCubeVariables" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowCreationApproachs']/@defaultLayer/@nodeMappings[name='FilterAndGroupToOneRowCreationApproach']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowCreationApproachs']/@defaultLayer/@nodeMappings[name='GroupbyVariables']" targetFinderExpression="aql:self.groupByVariables">
           <style sizeComputationExpression="2">
             <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
             <centerLabelStyleDescription labelSize="12">

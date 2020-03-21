@@ -16,6 +16,7 @@ SPDX-License-Identifier: EPL-2.0
  Contributors:
  Neil Mackenzie - initial API and implementation&#13;</xsd:appinfo>
   </xsd:annotation>
+  <xsd:element ecore:ignore="true" name="ColumnFunctionGroup" type="column_transformation_logic:ColumnFunctionGroup"/>
   <xsd:complexType name="AggregateColumnFunction">
     <xsd:annotation>
       <xsd:documentation>A ColumnFunction on rows where there is multiple  source row per source cube,such as summing a column from a large set of source rows. </xsd:documentation>
@@ -91,5 +92,10 @@ For example their might be 2 different CubeColumns with the same column. E.g the
         </xsd:sequence>
       </xsd:extension>
     </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="ColumnFunctionGroup">
+    <xsd:sequence>
+      <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="columnFunctions" type="column_transformation_logic:ColumnFunction"/>
+    </xsd:sequence>
   </xsd:complexType>
 </xsd:schema>
