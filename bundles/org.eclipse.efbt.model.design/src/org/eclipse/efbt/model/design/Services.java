@@ -35,7 +35,7 @@ import transformation.TransformationScheme;
 
 
 import platform_call.PlatformCall;
-
+import functions.AggregateFunction;
 import functions.BasicFunction;
 import functions.Function;
 import cubes.FreeBirdToolsCube;
@@ -182,6 +182,14 @@ public class Services {
     	
     	return FunctionTextUtil.getStringForFunction( (BasicFunction) self); 
      }
+    
+public String getStringForAggregateFunction(AggregateFunction self) {
+       
+    	
+    	return FunctionTextUtil.getStringForAggregateFunction(self); 
+     }
+
+
     
     
     public VersionedSQLViewsModule getDefaultSQLViewsModuleForTransformation(TransformationScheme self) {
