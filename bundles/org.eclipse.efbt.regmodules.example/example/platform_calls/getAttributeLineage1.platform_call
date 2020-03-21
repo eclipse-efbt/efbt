@@ -163,7 +163,7 @@
         <cubeLogic cube="../extra/efbt_cubes.cubes#totalJPMktValue" name="totalJPMktValue_view">
           <rowFunction xsi:type="cube_transformation_logic:FilterAndGroupToOneRowFunction" groupByVariables="../bird_import/variables.efbt_data_definition#CNTRY">
             <dependantCubeColumns cubeColumn="#enrichedExposures:CNTRY"/>
-            <filterFunction functionSpec="#//@platformCalls.0/@resultingModel/@specialFunctionSpecs.3">
+            <filterFunction functionSpec="#isEqualTo">
               <parameters xsi:type="functions:ResolvedCubeColumnParameter" cubeColumn="#enrichedExposures:CNTRY"/>
               <parameters xsi:type="functions:MemberParameter" param="../bird_import/members.efbt_data_definition#EBA_GA_EBA_JP"/>
             </filterFunction>
@@ -186,7 +186,7 @@
         <cubeLogic cube="../extra/efbt_cubes.cubes#totalUSNotional" name="totalUSNotional_view">
           <rowFunction xsi:type="cube_transformation_logic:FilterAndGroupToOneRowFunction" groupByVariables="../bird_import/variables.efbt_data_definition#CNTRY">
             <dependantCubeColumns cubeColumn="#enrichedExposures:CNTRY"/>
-            <filterFunction functionSpec="#//@platformCalls.0/@resultingModel/@specialFunctionSpecs.3">
+            <filterFunction functionSpec="#isEqualTo">
               <parameters xsi:type="functions:ResolvedCubeColumnParameter" cubeColumn="#enrichedExposures:CNTRY"/>
               <parameters xsi:type="functions:MemberParameter" param="../bird_import/members.efbt_data_definition#EBA_GA_EBA_US"/>
             </filterFunction>
@@ -209,7 +209,7 @@
         <cubeLogic cube="../extra/efbt_cubes.cubes#notionalOfUS_AAA" name="notionalOfUS_AAA_view">
           <rowFunction xsi:type="cube_transformation_logic:FilterAndGroupToOneRowFunction" groupByVariables="../bird_import/variables.efbt_data_definition#CNTRY">
             <dependantCubeColumns cubeColumn="#enrichedExposures:CNTRY"/>
-            <filterFunction functionSpec="#//@platformCalls.0/@resultingModel/@specialFunctionSpecs.3">
+            <filterFunction functionSpec="#isEqualTo">
               <parameters xsi:type="functions:ResolvedCubeColumnParameter" cubeColumn="#enrichedExposures:CNTRY"/>
               <parameters xsi:type="functions:MemberParameter" param="../bird_import/members.efbt_data_definition#EBA_GA_EBA_US"/>
             </filterFunction>
@@ -233,7 +233,7 @@
       <specialFunctionSpecs xsi:type="functions:BasicFunctionSpec" functionalName="funcs.CopyColumn" name="CopyColumn" sqlName="ID"/>
       <specialFunctionSpecs xsi:type="functions:AggregateFunctionSpec" functionalName="funcs.First" name="First" sqlName="First"/>
       <specialFunctionSpecs xsi:type="functions:AggregateFunctionSpec" functionalName="funcs.SUM" name="SUM" sqlName="SUM"/>
-      <specialFunctionSpecs xsi:type="functions:BasicFunctionSpec" functionalName="==" sqlName="=" isInfix="true"/>
+      <specialFunctionSpecs xsi:type="functions:BasicFunctionSpec" functionalName="==" name="isEqualTo" sqlName="=" isInfix="true"/>
     </resultingModel>
   </platformCalls>
 </platform_call:PlatformCallModule>

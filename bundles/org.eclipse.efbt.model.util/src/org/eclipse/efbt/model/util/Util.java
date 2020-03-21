@@ -109,6 +109,7 @@ public class Util {
     specialFunctions.sumColumnSpec = sumColumnSpec;
 
     BasicFunctionSpec equalsSpec = FunctionsFactory.eINSTANCE.createBasicFunctionSpec();
+    equalsSpec.setName("isEqualTo");
     equalsSpec.setFunctionalName("=");
     equalsSpec.setIsInfix(true);
     equalsSpec.setSqlName("=");

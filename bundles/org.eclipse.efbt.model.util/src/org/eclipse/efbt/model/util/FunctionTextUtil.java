@@ -16,7 +16,9 @@ import java.util.Iterator;
 
 import org.eclipse.emf.common.util.EList;
 
+import functions.AggregateFunction;
 import functions.BasicFunction;
+import functions.CellsParameter;
 import functions.MemberParameter;
 import functions.Parameter;
 import functions.ResolvedCubeColumnParameter;
@@ -28,8 +30,9 @@ import functions.ValueParameter;
  *
  */
 public class FunctionTextUtil {
+	
   /**
-   * Return a string representation of a Function.
+   * Return a string representation of a BasicFunction.
    * @param function
    * @return
    */
@@ -48,6 +51,21 @@ public class FunctionTextUtil {
 
     return str;
   }
+  
+  /**
+   * Return a string representation of an AggregateFunction.
+   * @param function
+   * @return
+   */
+  public static String getStringForAggregateFunction(AggregateFunction function) {
+
+	  
+	  String str = "";
+      str = str + function.getFunctionSpec().getName() + "(" + stringForParameters(function.getParameters()) + ")";
+
+    return str;
+  }
+
 
   /**
    * Return a String representation of a Parameter
@@ -76,8 +94,7 @@ public class FunctionTextUtil {
     if (param instanceof ResolvedCubeColumnParameter) {
       ResolvedCubeColumnParameter rccp = (ResolvedCubeColumnParameter) param;
       str = str + rccp.getCubeColumn().getCube().getCube_name();
-      str = str + "." + rccp.getCubeColumn().getVariable().getVariable_id() + "."
-          + rccp.getCubeColumn().getVariable().getVariable_id();
+      str = str + "." + rccp.getCubeColumn().getVariable().getVariable_id() ;
 
     }
     if (param instanceof MemberParameter) {
@@ -85,6 +102,12 @@ public class FunctionTextUtil {
       str = str + "'" + mp.getParam().getName() + "'";
 
     }
+    if (param instanceof CellsParameter) {
+    	CellsParameter cp = (CellsParameter) param;
+        str = str + "'" + cp.getCells().getCellID() + "'";
+
+    }
+
     return str;
 
   }
