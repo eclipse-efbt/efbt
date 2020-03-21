@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<xsd:schema xmlns:base_cube_data="http://www.eclipse.org/base_cube_data" xmlns:cube_data="http://www.eclipse.org/cube_data" xmlns:cube_transformation_logic="http://www.eclipse.org/cube_transformation_logic" xmlns:cubes="http://www.eclipse.org/cubes" xmlns:data_lineage="http://www.eclipse.org/data_lineage" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:functions="http://www.eclipse.org/functions" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="data_lineage" ecore:package="data_lineage" targetNamespace="http://www.eclipse.org/data_lineage">
-  <xsd:import namespace="http://www.eclipse.org/cube_transformation_logic" schemaLocation="cube_transformation_logic.xsd"/>
-  <xsd:import namespace="http://www.eclipse.org/cubes" schemaLocation="cubes.xsd"/>
-  <xsd:import namespace="http://www.eclipse.org/functions" schemaLocation="functions.xsd"/>
-  <xsd:import namespace="http://www.eclipse.org/cube_data" schemaLocation="cube_data.xsd"/>
+<xsd:schema xmlns:base_cube_data="http://www.eclipse.org/base_cube_data" xmlns:cell_transformation_logic="http://www.eclipse.org/cell_transformation_logic" xmlns:data_lineage="http://www.eclipse.org/data_lineage" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="data_lineage" ecore:package="data_lineage" targetNamespace="http://www.eclipse.org/data_lineage">
   <xsd:import namespace="http://www.eclipse.org/emf/2002/Ecore" schemaLocation="Ecore.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/base_cube_data" schemaLocation="base_cube_data.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/cell_transformation_logic" schemaLocation="cell_transformation_logic.xsd"/>
   <xsd:annotation>
     <xsd:documentation> This package describes the DataLineageModel, DataLineageModels store the actaul lineage between calculated results, and input data, with lineage recorded between all the intermediate datasets which may have been calculated to get to the final results.
 </xsd:documentation>
@@ -25,7 +22,7 @@ SPDX-License-Identifier: EPL-2.0
     and sourceData (where each cell has a value). </xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
-      <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="dataTraceableByCell" type="data_lineage:DerivedCubeData">
+      <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="dataTraceableByCell" type="cell_transformation_logic:DerivedCubeData">
         <xsd:annotation>
           <xsd:documentation>The  Data for derived cubes</xsd:documentation>
         </xsd:annotation>
@@ -41,89 +38,5 @@ SPDX-License-Identifier: EPL-2.0
         <xsd:documentation>The name of the DataLineageModel</xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
-  </xsd:complexType>
-  <xsd:complexType name="DerivedCell">
-    <xsd:annotation>
-      <xsd:documentation> A derived Cell, which contains a function of other cells (much like an Excel cell may have a formula of other cells)</xsd:documentation>
-    </xsd:annotation>
-    <xsd:complexContent>
-      <xsd:extension base="cube_data:Cell">
-        <xsd:sequence>
-          <xsd:element ecore:resolveProxies="true" minOccurs="0" name="function" type="functions:Function">
-            <xsd:annotation>
-              <xsd:documentation>The  Function which derived the cell value.</xsd:documentation>
-            </xsd:annotation>
-          </xsd:element>
-        </xsd:sequence>
-        <xsd:attribute name="value" type="ecore:EString">
-          <xsd:annotation>
-            <xsd:documentation>The Cell Value</xsd:documentation>
-          </xsd:annotation>
-        </xsd:attribute>
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
-  <xsd:complexType name="DerivedCubeData">
-    <xsd:annotation>
-      <xsd:documentation> data for derived cubes </xsd:documentation>
-    </xsd:annotation>
-    <xsd:complexContent>
-      <xsd:extension base="cube_data:CubeData">
-        <xsd:sequence>
-          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="rows" type="data_lineage:DerivedRowData">
-            <xsd:annotation>
-              <xsd:documentation>The  Rows of data</xsd:documentation>
-            </xsd:annotation>
-          </xsd:element>
-        </xsd:sequence>
-        <xsd:attribute ecore:reference="cubes:DerivedCube" name="cube" type="xsd:anyURI">
-          <xsd:annotation>
-            <xsd:documentation>The associated cube</xsd:documentation>
-          </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute ecore:reference="cube_transformation_logic:FunctionalCubeLogic" name="cubeLogic" type="xsd:anyURI">
-          <xsd:annotation>
-            <xsd:documentation>The logic used to create the rows of the cube</xsd:documentation>
-          </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute ecore:reference="cube_data:CubeData" name="sourceCubeData">
-          <xsd:annotation>
-            <xsd:documentation>The cube data</xsd:documentation>
-          </xsd:annotation>
-          <xsd:simpleType>
-            <xsd:list itemType="xsd:anyURI"/>
-          </xsd:simpleType>
-        </xsd:attribute>
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
-  <xsd:complexType name="DerivedRowData">
-    <xsd:annotation>
-      <xsd:documentation> A row of derived data </xsd:documentation>
-    </xsd:annotation>
-    <xsd:complexContent>
-      <xsd:extension base="cube_data:RowData">
-        <xsd:sequence>
-          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="derivedCells" type="data_lineage:DerivedCell">
-            <xsd:annotation>
-              <xsd:documentation>The derived cells</xsd:documentation>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element ecore:resolveProxies="true" minOccurs="0" name="specialDerivedCells" type="data_lineage:DerivedCell">
-            <xsd:annotation>
-              <xsd:documentation>The special DerivedCells, not created by functions which use cells from source rows.</xsd:documentation>
-            </xsd:annotation>
-          </xsd:element>
-        </xsd:sequence>
-        <xsd:attribute ecore:reference="cube_data:RowData" name="sourceRows">
-          <xsd:annotation>
-            <xsd:documentation>source rows of the derived row</xsd:documentation>
-          </xsd:annotation>
-          <xsd:simpleType>
-            <xsd:list itemType="xsd:anyURI"/>
-          </xsd:simpleType>
-        </xsd:attribute>
-      </xsd:extension>
-    </xsd:complexContent>
   </xsd:complexType>
 </xsd:schema>

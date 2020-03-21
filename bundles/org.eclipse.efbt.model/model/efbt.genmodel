@@ -34,6 +34,7 @@
       <details key="http://www.eclipse.org/trl_sql_views" value="trl_sql_views.xsd"/>
       <details key="http://www.eclipse.org/vtl_transformation" value="vtl_transformation.xsd"/>
       <details key="http://www.eclipse.org/emf/2002/Ecore" value="Ecore.xsd"/>
+      <details key="http://www.eclipse.org/cell_transformation_logic" value="cell_transformation_logic.xsd"/>
     </genAnnotations>
     <details key="directoryURI" value="../xsd_model/"/>
   </genAnnotations>
@@ -150,6 +151,9 @@
     </genClasses>
     <genClasses ecoreClass="column_transformation_logic.ecore#//StandardBasicColumnFunction">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference column_transformation_logic.ecore#//StandardBasicColumnFunction/basicFunction"/>
+    </genClasses>
+    <genClasses ecoreClass="column_transformation_logic.ecore#//ColumnFunctionGroup">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference column_transformation_logic.ecore#//ColumnFunctionGroup/columnFunctions"/>
     </genClasses>
   </genPackages>
   <genPackages prefix="Core" resource="XML" disposableProviderFactory="true" ecorePackage="core.ecore#/">
@@ -332,35 +336,11 @@
         <details key="http://www.eclipse.org/emf/2002/Ecore" value="../xsd_model/Ecore.xsd"/>
       </genAnnotations>
     </genAnnotations>
-    <genClasses ecoreClass="cube_transformation_logic.ecore#//CustomRowFunction">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cube_transformation_logic.ecore#//CustomRowFunction/dependantVariables"/>
+    <genClasses ecoreClass="cube_transformation_logic.ecore#//CubeTransformationLogic">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cube_transformation_logic.ecore#//CubeTransformationLogic/columnFunctionGroup"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cube_transformation_logic.ecore#//CubeTransformationLogic/rowCreationApproachForCube"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cube_transformation_logic.ecore#//CubeTransformationLogic/usedInSubsets"/>
     </genClasses>
-    <genClasses ecoreClass="cube_transformation_logic.ecore#//FilterAndGroupToOneRowFunction">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cube_transformation_logic.ecore#//FilterAndGroupToOneRowFunction/filterFunction"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cube_transformation_logic.ecore#//FilterAndGroupToOneRowFunction/groupByVariables"/>
-    </genClasses>
-    <genClasses ecoreClass="cube_transformation_logic.ecore#//FunctionalCubeLogic">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cube_transformation_logic.ecore#//FunctionalCubeLogic/rowFunction"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cube_transformation_logic.ecore#//FunctionalCubeLogic/cube"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cube_transformation_logic.ecore#//FunctionalCubeLogic/name"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cube_transformation_logic.ecore#//FunctionalCubeLogic/ultimateCubeSource"/>
-    </genClasses>
-    <genClasses ecoreClass="cube_transformation_logic.ecore#//OneToOneRowFunction"/>
-    <genClasses ecoreClass="cube_transformation_logic.ecore#//RowFilterFunction">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cube_transformation_logic.ecore#//RowFilterFunction/filterFunction"/>
-    </genClasses>
-    <genClasses ecoreClass="cube_transformation_logic.ecore#//RowFunction">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cube_transformation_logic.ecore#//RowFunction/dependantCubeColumns"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cube_transformation_logic.ecore#//RowFunction/createdCubeColumns"/>
-    </genClasses>
-    <genClasses ecoreClass="cube_transformation_logic.ecore#//RowGroupByFunction">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cube_transformation_logic.ecore#//RowGroupByFunction/groupByColumns"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cube_transformation_logic.ecore#//RowGroupByFunction/groupByCubeColumns"/>
-    </genClasses>
-    <genClasses ecoreClass="cube_transformation_logic.ecore#//RowJoinFunction">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cube_transformation_logic.ecore#//RowJoinFunction/joinFunction"/>
-    </genClasses>
-    <genClasses ecoreClass="cube_transformation_logic.ecore#//UnionRowFunction"/>
   </genPackages>
   <genPackages prefix="Cubes" resource="XML" disposableProviderFactory="true" ecorePackage="cubes.ecore#/">
     <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
@@ -535,21 +515,6 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference data_lineage.ecore#//DataLineageModel/dataTraceableByCell"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference data_lineage.ecore#//DataLineageModel/sourceData"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_lineage.ecore#//DataLineageModel/name"/>
-    </genClasses>
-    <genClasses ecoreClass="data_lineage.ecore#//DerivedCell">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference data_lineage.ecore#//DerivedCell/function"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_lineage.ecore#//DerivedCell/value"/>
-    </genClasses>
-    <genClasses ecoreClass="data_lineage.ecore#//DerivedCubeData">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference data_lineage.ecore#//DerivedCubeData/rows"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_lineage.ecore#//DerivedCubeData/cube"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_lineage.ecore#//DerivedCubeData/cubeLogic"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_lineage.ecore#//DerivedCubeData/sourceCubeData"/>
-    </genClasses>
-    <genClasses ecoreClass="data_lineage.ecore#//DerivedRowData">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference data_lineage.ecore#//DerivedRowData/derivedCells"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference data_lineage.ecore#//DerivedRowData/specialDerivedCells"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_lineage.ecore#//DerivedRowData/sourceRows"/>
     </genClasses>
   </genPackages>
   <genPackages prefix="Efbt_data_definition" resource="XML" disposableProviderFactory="true"
@@ -912,14 +877,35 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//BaseRowStructure/cube"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute row_transformation_logic.ecore#//BaseRowStructure/usedInSubsets"/>
     </genClasses>
-    <genClasses ecoreClass="row_transformation_logic.ecore#//ColumnFunctionGroup">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//ColumnFunctionGroup/columnFunctions"/>
+    <genClasses ecoreClass="row_transformation_logic.ecore#//CustomRowCreationApproach">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//CustomRowCreationApproach/dependantVariables"/>
     </genClasses>
-    <genClasses ecoreClass="row_transformation_logic.ecore#//FunctionalRowLogic">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//FunctionalRowLogic/columnFunctionGroup"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//FunctionalRowLogic/cubeLogic"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute row_transformation_logic.ecore#//FunctionalRowLogic/usedInSubsets"/>
+    <genClasses ecoreClass="row_transformation_logic.ecore#//FilterAndGroupToOneRowCreationApproach">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//FilterAndGroupToOneRowCreationApproach/filterFunction"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//FilterAndGroupToOneRowCreationApproach/groupByVariables"/>
     </genClasses>
+    <genClasses ecoreClass="row_transformation_logic.ecore#//RowCreationApproachForCube">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//RowCreationApproachForCube/rowCreationApproach"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//RowCreationApproachForCube/cube"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute row_transformation_logic.ecore#//RowCreationApproachForCube/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//RowCreationApproachForCube/ultimateCubeSource"/>
+    </genClasses>
+    <genClasses ecoreClass="row_transformation_logic.ecore#//OneToOneRowCreationApproach"/>
+    <genClasses ecoreClass="row_transformation_logic.ecore#//FilterRowCreationApproach">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//FilterRowCreationApproach/filterFunction"/>
+    </genClasses>
+    <genClasses ecoreClass="row_transformation_logic.ecore#//RowCreationApproach">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//RowCreationApproach/dependantCubeColumns"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//RowCreationApproach/createdCubeColumns"/>
+    </genClasses>
+    <genClasses ecoreClass="row_transformation_logic.ecore#//GroupByRowCreationApproach">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//GroupByRowCreationApproach/groupByColumns"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//GroupByRowCreationApproach/groupByCubeColumns"/>
+    </genClasses>
+    <genClasses ecoreClass="row_transformation_logic.ecore#//RowJoinFunction">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//RowJoinFunction/joinFunction"/>
+    </genClasses>
+    <genClasses ecoreClass="row_transformation_logic.ecore#//UnionRowCreationApproach"/>
   </genPackages>
   <genPackages prefix="Transformation" resource="XML" disposableProviderFactory="true"
       ecorePackage="transformation.ecore#/">
@@ -1069,6 +1055,28 @@
     <genClasses ecoreClass="vtl_transformation.ecore#//NODE_RELATIONSHIP">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference vtl_transformation.ecore#//NODE_RELATIONSHIP/sourceNode"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference vtl_transformation.ecore#//NODE_RELATIONSHIP/targetNode"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Cell_transformation_logic" ecorePackage="cell_transformation_logic.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="../xsd_model/cell_transformation_logic.xsd">
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="../xsd_model/Ecore.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genClasses ecoreClass="cell_transformation_logic.ecore#//FormulaCell">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//FormulaCell/function"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cell_transformation_logic.ecore#//FormulaCell/value"/>
+    </genClasses>
+    <genClasses ecoreClass="cell_transformation_logic.ecore#//DerivedCubeData">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//DerivedCubeData/rows"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//DerivedCubeData/cube"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//DerivedCubeData/rowCreationApproachForCube"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//DerivedCubeData/sourceCubeData"/>
+    </genClasses>
+    <genClasses ecoreClass="cell_transformation_logic.ecore#//DerivedRowData">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//DerivedRowData/formulaCells"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//DerivedRowData/specialDerivedCells"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//DerivedRowData/sourceRows"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

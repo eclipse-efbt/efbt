@@ -24,9 +24,7 @@ import attribute_lineage.Attribute_lineageFactory;
 import column_transformation_logic.ColumnFunction;
 import column_transformation_logic.CubeColumn;
 import cube_schema.CubeSchema;
-import cube_transformation_logic.FunctionalCubeLogic;
-import cube_transformation_logic.RowFunction;
-import cube_transformation_logic.UnionRowFunction;
+import cube_transformation_logic.CubeTransformationLogic;
 import cubes.FreeBirdToolsCube;
 import cubes.TargetCube;
 import platform_call.GetAttributeLineageForOneReportCell;
@@ -35,7 +33,9 @@ import platform_call.Platform_callFactory;
 import platform_call.Platform_callPackage;
 import cubes.DerivedCube;
 import row_transformation_logic.BaseRowStructure;
-import row_transformation_logic.FunctionalRowLogic;
+import row_transformation_logic.RowCreationApproach;
+import row_transformation_logic.RowCreationApproachForCube;
+import row_transformation_logic.UnionRowCreationApproach;
 import transformation.VersionedComponentsSet;
 import transformation.VersionedCubeSchemaModule;
 import transformation.VersionedTransformationSchemeLogic;
@@ -53,20 +53,20 @@ public class AttributeLineageUtil {
   
 
   /**
-   * This method finds the FunctionalRowLogic within the attributeLineageModel which
+   * This method finds the CubeTransformationLogic within the attributeLineageModel which
    * is associated with a particular cube.
    * 
    * @param cube
    * @param attributeLineageModel
    * @return
    */
-  static FunctionalRowLogic getFunctionalRowLogicForCube(FreeBirdToolsCube cube, AttributeLineageModel attributeLineageModel) {
+  static CubeTransformationLogic getFunctionalRowLogicForCube(FreeBirdToolsCube cube, AttributeLineageModel attributeLineageModel) {
    
-    Iterator<FunctionalRowLogic> rowLogicIter = attributeLineageModel.getRowTransformations().iterator();
-    FunctionalRowLogic returnFunctionalRowLogic = null;
+    Iterator<CubeTransformationLogic> rowLogicIter = attributeLineageModel.getRowTransformations().iterator();
+    CubeTransformationLogic returnFunctionalRowLogic = null;
     while (rowLogicIter.hasNext()) {
-      FunctionalRowLogic rowLogic = rowLogicIter.next();
-      FreeBirdToolsCube rowlogicCube = rowLogic.getCubeLogic().getCube();
+      CubeTransformationLogic rowLogic = rowLogicIter.next();
+      FreeBirdToolsCube rowlogicCube = rowLogic.getRowCreationApproachForCube().getCube();
       if (rowlogicCube.equals(cube)) {
         returnFunctionalRowLogic = rowLogic;
       }
@@ -97,16 +97,16 @@ public class AttributeLineageUtil {
   }
   
   /**
-   * Returns the BaseRowStrucures which the functionalRowLogic depends upon.
-   * @param functionalRowLogic
+   * Returns the BaseRowStrucures which the cubeTransformationLogic  depends upon.
+   * @param cubeTransformationLogic 
    * @return
    */
-  public static EList<BaseRowStructure> getTheDependantBaseRowStructures(FunctionalRowLogic functionalRowLogic) {
+  public static EList<BaseRowStructure> getTheDependantBaseRowStructures(CubeTransformationLogic cubeTransformationLogic ) {
 
     BasicEList<BaseRowStructure> dependantBaseRowStructures = new BasicEList<BaseRowStructure>();
-    AttributeLineageModel attributeModel = (AttributeLineageModel) functionalRowLogic.eContainer();
+    AttributeLineageModel attributeModel = (AttributeLineageModel) cubeTransformationLogic .eContainer();
    
-    FreeBirdToolsCube cube = functionalRowLogic.getCubeLogic().getCube();
+    FreeBirdToolsCube cube = cubeTransformationLogic.getRowCreationApproachForCube().getCube();
     EList<FreeBirdToolsCube> dependentDerivedCubes = ((DerivedCube) cube).getSourceCubes();
     Iterator<FreeBirdToolsCube> dependantDerivedCubesIter = dependentDerivedCubes.iterator();
     while (dependantDerivedCubesIter.hasNext()) {
@@ -128,28 +128,28 @@ public class AttributeLineageUtil {
   }
   
   /**
-   *  Returns the FunctionalRowLogics which the functionalRowLogic depends upon.
-   * @param functionalRowLogic
+   *  Returns the FunctionalRowLogics which the cubeTransformationLogic  depends upon.
+   * @param cubeTransformationLogic 
    * @return
    */
-  public static EList<FunctionalRowLogic> getTheDependantFunctionalRowLogics(FunctionalRowLogic functionalRowLogic) {
-    BasicEList<FunctionalRowLogic> dependantFunctionalRowLogic = new BasicEList<FunctionalRowLogic>();
-    AttributeLineageModel attributeLineageModel = (AttributeLineageModel) functionalRowLogic.eContainer();
-    boolean isUnionFunction = (functionalRowLogic.getCubeLogic().getRowFunction() instanceof UnionRowFunction);
+  public static EList<CubeTransformationLogic> getTheDependantFunctionalRowLogics(CubeTransformationLogic cubeTransformationLogic ) {
+    BasicEList<CubeTransformationLogic> dependantFunctionalRowLogic = new BasicEList<CubeTransformationLogic>();
+    AttributeLineageModel attributeLineageModel = (AttributeLineageModel) cubeTransformationLogic .eContainer();
+    boolean isUnionFunction = (cubeTransformationLogic .getRowCreationApproachForCube().getRowCreationApproach() instanceof UnionRowCreationApproach);
     boolean oneAdded = false;
 
-    FreeBirdToolsCube derivedCube1 = functionalRowLogic.getCubeLogic().getCube();
+    FreeBirdToolsCube derivedCube1 = cubeTransformationLogic .getRowCreationApproachForCube().getCube();
     EList<FreeBirdToolsCube> dependantCubes = ((DerivedCube) derivedCube1).getSourceCubes();
     Iterator<FreeBirdToolsCube> dependantCubesIter = dependantCubes.iterator();
     
     while (dependantCubesIter.hasNext()) {
       FreeBirdToolsCube cube2 = dependantCubesIter.next();
-      Iterator<FunctionalRowLogic> iter = attributeLineageModel.getRowTransformations().iterator();
+      Iterator<CubeTransformationLogic> iter = attributeLineageModel.getRowTransformations().iterator();
       FreeBirdToolsCube cube3 = null;
       while (iter.hasNext()) {
-        FunctionalRowLogic rowlogic = iter.next();
+        CubeTransformationLogic rowlogic = iter.next();
 
-        cube3 = rowlogic.getCubeLogic().getCube();
+        cube3 = rowlogic.getRowCreationApproachForCube().getCube();
 
         if (cube3.equals(cube2)) {
           if (isUnionFunction) {
@@ -178,9 +178,9 @@ public class AttributeLineageUtil {
    * @param attributeLineageModel
    * @return
    */
-  public static EList<FunctionalRowLogic> getOrderedRowTransformations(AttributeLineageModel attributeLineageModel) {
-    EList<FunctionalRowLogic> list = attributeLineageModel.getRowTransformations();
-    EList<FunctionalRowLogic> orderedList = new BasicEList<FunctionalRowLogic>();
+  public static EList<CubeTransformationLogic> getOrderedRowTransformations(AttributeLineageModel attributeLineageModel) {
+    EList<CubeTransformationLogic> list = attributeLineageModel.getRowTransformations();
+    EList<CubeTransformationLogic> orderedList = new BasicEList<CubeTransformationLogic>();
     int numberAdded = -1;
     while (numberAdded != 0) {
       numberAdded = addItemToOrderedListIfAllOfItsChildrenAreInTheList(list, orderedList);
@@ -199,19 +199,19 @@ public class AttributeLineageUtil {
    * @param orderedList
    * @return the number of functionalrowLogics added to the ordered list.
    */
-  private static int addItemToOrderedListIfAllOfItsChildrenAreInTheList(EList<FunctionalRowLogic> list,
-      EList<FunctionalRowLogic> orderedList) {
+  private static int addItemToOrderedListIfAllOfItsChildrenAreInTheList(EList<CubeTransformationLogic> list,
+      EList<CubeTransformationLogic> orderedList) {
     int added = 0;
 
     for (Iterator iterator = list.iterator(); iterator.hasNext();) {
-      FunctionalRowLogic functionalRowLogic = (FunctionalRowLogic) iterator.next();
-      if (!orderedList.contains(functionalRowLogic)) {
-        EList<FunctionalRowLogic> children = getTheDependantFunctionalRowLogics(functionalRowLogic);
+      CubeTransformationLogic cubeTransformationLogic  = (CubeTransformationLogic) iterator.next();
+      if (!orderedList.contains(cubeTransformationLogic )) {
+        EList<CubeTransformationLogic> children = getTheDependantFunctionalRowLogics(cubeTransformationLogic );
         boolean allChildrenIncluded = true;
 
         
         for (Iterator iterator2 = children.iterator(); iterator2.hasNext();) {
-          FunctionalRowLogic functionalRowLogic2 = (FunctionalRowLogic) iterator2.next();
+          CubeTransformationLogic functionalRowLogic2 = (CubeTransformationLogic) iterator2.next();
           if (!orderedList.contains(functionalRowLogic2)) {
             allChildrenIncluded = false;
           }
@@ -219,7 +219,7 @@ public class AttributeLineageUtil {
         }
 
         if (allChildrenIncluded) {
-          orderedList.add(functionalRowLogic);
+          orderedList.add(cubeTransformationLogic );
           added++;
         }
       }
@@ -282,7 +282,7 @@ public class AttributeLineageUtil {
    * @return
    */
   static ColumnFunction findColumnFunctionInFunctionalRowLogic(ColumnFunction columnFunction,
-      FunctionalRowLogic frl) {
+      CubeTransformationLogic frl) {
    
     EList<ColumnFunction> columnFunctions = frl.getColumnFunctionGroup().getColumnFunctions();
     ColumnFunction returnColFunc = null;
@@ -312,21 +312,21 @@ public class AttributeLineageUtil {
   }
 
   /**
-   * Finds a FunctionalRowLogic in an attributeLineageModel which is equal to the 
+   * Finds a CubeTransformationLogic in an attributeLineageModel which is equal to the 
    * baseRowStructure passed in based on the checkFunctionalRowLogicEquality method.
    * 
-   * @param functionalRowLogic
+   * @param cubeTransformationLogic 
    * @param model
    * @return
    */
-  static FunctionalRowLogic findFunctionalRowLogicInAttributeModel(FunctionalRowLogic functionalRowLogic,
+  static CubeTransformationLogic findFunctionalRowLogicInAttributeModel(CubeTransformationLogic cubeTransformationLogic ,
       AttributeLineageModel model) {
 
-    EList<FunctionalRowLogic> rowTransformations = model.getRowTransformations();
-    FunctionalRowLogic returnFunctionalRowLogic = null;
+    EList<CubeTransformationLogic> rowTransformations = model.getRowTransformations();
+    CubeTransformationLogic returnFunctionalRowLogic = null;
     for (Iterator iterator = rowTransformations.iterator(); iterator.hasNext();) {
-      FunctionalRowLogic functionalRowLogic2 = (FunctionalRowLogic) iterator.next();
-      if (checkFunctionalRowLogicEquality(functionalRowLogic2, functionalRowLogic)) {
+      CubeTransformationLogic functionalRowLogic2 = (CubeTransformationLogic) iterator.next();
+      if (checkFunctionalRowLogicEquality(functionalRowLogic2, cubeTransformationLogic )) {
         returnFunctionalRowLogic = functionalRowLogic2;
       }
 
@@ -343,12 +343,12 @@ public class AttributeLineageUtil {
    * @param functionalRowLogic1
    * @return
    */
-  private static boolean checkFunctionalRowLogicEquality(FunctionalRowLogic functionalRowLogic2,
-      FunctionalRowLogic functionalRowLogic1) {
+  private static boolean checkFunctionalRowLogicEquality(CubeTransformationLogic functionalRowLogic2,
+      CubeTransformationLogic functionalRowLogic1) {
    
     boolean equality = false;
-    String cubeName1 = functionalRowLogic1.getCubeLogic().getCube().getCube_name();
-    String cubeName2 = functionalRowLogic2.getCubeLogic().getCube().getCube_name();
+    String cubeName1 = functionalRowLogic1.getRowCreationApproachForCube().getCube().getCube_name();
+    String cubeName2 = functionalRowLogic2.getRowCreationApproachForCube().getCube().getCube_name();
     // should check equality of source names of derived cubes also? I dont think it is necessery.
     if (cubeName1.equals(cubeName2))
       equality = true;
@@ -357,7 +357,7 @@ public class AttributeLineageUtil {
   }
   
   /**
-   * Finds a FunctionalRowLogic in an attributeLineageModel which is equal to the 
+   * Finds a CubeTransformationLogic in an attributeLineageModel which is equal to the 
    * baseRowStructure passed in based on the checkColumnEquality method.
    * @param column
    * @param baseRowStructure
@@ -390,16 +390,16 @@ public class AttributeLineageUtil {
   }
 
   /**
-   * Gets all columns associated with the FunctionalRowLogic, the make up its
+   * Gets all columns associated with the CubeTransformationLogic, the make up its
    * column structure.
    * 
    * @param rowLogic
    * @return
    */
-  public static EList<CubeColumn> getColumnsFromFunctionalRowLogic(FunctionalRowLogic rowLogic) {
+  public static EList<CubeColumn> getColumnsFromFunctionalRowLogic(CubeTransformationLogic rowLogic) {
    
     Iterator<ColumnFunction> columnFunctionIter = rowLogic.getColumnFunctionGroup().getColumnFunctions().iterator();
-    Iterator<CubeColumn> createdColumnIter = getCreatedColumnsFromFunctionalCubeLogic(rowLogic.getCubeLogic()).iterator();
+    Iterator<CubeColumn> createdColumnIter = getCreatedColumnsFromFunctionalCubeLogic(rowLogic.getRowCreationApproachForCube()).iterator();
 
     
     EList<CubeColumn> returnColumnItems = new BasicEList<CubeColumn>();
@@ -414,14 +414,14 @@ public class AttributeLineageUtil {
   }
 
   /**
-   * Returns the created columns of a FunctionalCubeLogic. It is rare that created columns exist.
+   * Returns the created columns of a RowCreationApproachForCube. It is rare that created columns exist.
    * 
-   * @param cubeLogic
+   * @param rowCreationApproachForCube
    * @return
    */
-  private static EList<CubeColumn> getCreatedColumnsFromFunctionalCubeLogic(FunctionalCubeLogic cubeLogic) {
+  private static EList<CubeColumn> getCreatedColumnsFromFunctionalCubeLogic(RowCreationApproachForCube rowCreationApproachForCube) {
 
-    RowFunction rf = cubeLogic.getRowFunction();
+    RowCreationApproach rf = rowCreationApproachForCube.getRowCreationApproach();
 
     return rf.getCreatedCubeColumns();
   }
@@ -497,9 +497,9 @@ public static void createAttributeLineageModel(GetAttributeLineageModel call) {
     while (viewIter.hasNext()) {
    
       SQLView view = viewIter.next();
-      FunctionalRowLogic rowlogic = TRLUtil.translateViewToFunctionalRowLogic(view, transformationSchemeLogicList,
+      CubeTransformationLogic rowlogic = TRLUtil.translateViewToFunctionalRowLogic(view, transformationSchemeLogicList,
           cubeSchemaModuleList, specialFunctions);
-      if (rowlogic.getCubeLogic() != null) {
+      if (rowlogic.getRowCreationApproachForCube() != null) {
 
         attributeLineageModel.getRowTransformations().add(rowlogic);
       }
@@ -514,9 +514,9 @@ public static void createAttributeLineageModel(GetAttributeLineageModel call) {
     while (reportViewIter.hasNext()) {
      
       SQLView view = reportViewIter.next();
-      FunctionalRowLogic rowlogic = TRLUtil.translateViewToFunctionalRowLogic(view, transformationSchemeLogicList,
+      CubeTransformationLogic rowlogic = TRLUtil.translateViewToFunctionalRowLogic(view, transformationSchemeLogicList,
           cubeSchemaModuleList, specialFunctions);
-      if (rowlogic.getCubeLogic() != null) {
+      if (rowlogic.getRowCreationApproachForCube() != null) {
 
         attributeLineageModel.getRowTransformations().add(rowlogic);
       }

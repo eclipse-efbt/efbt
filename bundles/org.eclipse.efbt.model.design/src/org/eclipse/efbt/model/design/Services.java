@@ -10,7 +10,7 @@
  * Contributors:
  *  Neil Mackenzie - initial API and implementation
  *******************************************************************************/
-package org.eclipse.efbt.model.design;
+package org.eclipse.efbt.model.design; 
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -27,7 +27,7 @@ import org.eclipse.efbt.model.util.CubesAndViewsUtil;
 import org.eclipse.efbt.model.util.Util;
 import org.eclipse.efbt.model.platformcalls.PlatformCalls;
 
-import row_transformation_logic.FunctionalRowLogic;
+import cube_transformation_logic.CubeTransformationLogic;
 import row_transformation_logic.BaseRowStructure;
 
 import transformation.VersionedComponentsSet;
@@ -163,14 +163,14 @@ public class Services {
    }
     
     
-    public  EList<FunctionalRowLogic> getTheDependantFunctionalRowLogics(FunctionalRowLogic self)
+    public  EList<CubeTransformationLogic> getTheDependantFunctionalRowLogics(CubeTransformationLogic self)
     {
 
     	return AttributeLineageUtil.getTheDependantFunctionalRowLogics(self);
     	
     }
     
-    public  EList<BaseRowStructure> getTheDependantEvaluatedTableSchemas(FunctionalRowLogic self)
+    public  EList<BaseRowStructure> getTheDependantEvaluatedTableSchemas(CubeTransformationLogic self)
     {
 
     	return AttributeLineageUtil.getTheDependantBaseRowStructures(self);

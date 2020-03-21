@@ -27,12 +27,12 @@ import column_transformation_logic.Column_transformation_logicFactory;
 import column_transformation_logic.CubeColumn;
 import core.VARIABLE;
 import cube_schema.CubeSchema;
-import cube_transformation_logic.FilterAndGroupToOneRowFunction;
-import cube_transformation_logic.FunctionalCubeLogic;
-import cube_transformation_logic.RowFilterFunction;
-import cube_transformation_logic.RowFunction;
-import cube_transformation_logic.RowGroupByFunction;
-import cube_transformation_logic.RowJoinFunction;
+import row_transformation_logic.FilterAndGroupToOneRowCreationApproach;
+import row_transformation_logic.RowCreationApproachForCube;
+import row_transformation_logic.FilterRowCreationApproach;
+import row_transformation_logic.RowCreationApproach;
+import row_transformation_logic.GroupByRowCreationApproach;
+import row_transformation_logic.RowJoinFunction;
 import cubes.BaseCube;
 import cubes.FreeBirdToolsCube;
 import data_definition.CUBE;
@@ -45,7 +45,7 @@ import functions.FunctionsFactory;
 import functions.ResolvedCubeColumnParameter;
 import functions.SpeculativeCubeColumnParameter;
 import row_transformation_logic.BaseRowStructure;
-import row_transformation_logic.FunctionalRowLogic;
+import cube_transformation_logic.CubeTransformationLogic;
 import row_transformation_logic.Row_transformation_logicFactory;
 import transformation.ReportCellCreationTransformationScheme;
 import transformation.VersionedComponentsSet;
@@ -184,9 +184,9 @@ public class Util {
   public static void replaceSpeculativeColumnReferencesWithResolvedColumnReference(
       AttributeLineageModel attributeLineageModel) {
 
-    Iterator<FunctionalRowLogic> rowlogicIter = attributeLineageModel.getRowTransformations().iterator();
+    Iterator<CubeTransformationLogic> rowlogicIter = attributeLineageModel.getRowTransformations().iterator();
     while (rowlogicIter.hasNext()) {
-      FunctionalRowLogic rowlogic = rowlogicIter.next();
+      CubeTransformationLogic rowlogic = rowlogicIter.next();
       replaceSpeculativeTableLogicWithResolvedTableLogic(rowlogic, attributeLineageModel);
       TreeIterator<EObject> iter = rowlogic.eAllContents();
 
@@ -212,20 +212,20 @@ public class Util {
    * @param rowlogic
    * @param attributeLineageModel
    */
-  private static void replaceSpeculativeTableLogicWithResolvedTableLogic(FunctionalRowLogic rowlogic,
+  private static void replaceSpeculativeTableLogicWithResolvedTableLogic(CubeTransformationLogic rowlogic,
       AttributeLineageModel attributeLineageModel) {
 
-    FunctionalCubeLogic tableLogic = rowlogic.getCubeLogic();
-    RowFunction rf = tableLogic.getRowFunction();
+    RowCreationApproachForCube tableLogic = rowlogic.getRowCreationApproachForCube();
+    RowCreationApproach rf = tableLogic.getRowCreationApproach();
 
-    if (rf instanceof RowGroupByFunction) {
-    	EList<FunctionalRowLogic> dependantRowLogics = AttributeLineageUtil.getTheDependantFunctionalRowLogics(rowlogic);
+    if (rf instanceof GroupByRowCreationApproach) {
+    	EList<CubeTransformationLogic> dependantRowLogics = AttributeLineageUtil.getTheDependantFunctionalRowLogics(rowlogic);
         EList<BaseRowStructure> dependantBaseRowStructures = AttributeLineageUtil.getTheDependantBaseRowStructures(rowlogic);
         
         FreeBirdToolsCube dependantTable = null;
         		
         if(dependantRowLogics.size() > 0)
-         dependantTable = dependantRowLogics.get(0).getCubeLogic().getCube();
+         dependantTable = dependantRowLogics.get(0).getRowCreationApproachForCube().getCube();
         
         if(dependantBaseRowStructures.size() > 0)
             dependantTable = dependantBaseRowStructures.get(0).getCube();
@@ -233,11 +233,11 @@ public class Util {
         
         
           
-      Iterator<VARIABLE> groupByCols = ((RowGroupByFunction) rf).getGroupByColumns().iterator();
+      Iterator<VARIABLE> groupByCols = ((GroupByRowCreationApproach) rf).getGroupByColumns().iterator();
       while (groupByCols.hasNext()) {
         VARIABLE col = groupByCols.next();
         CubeColumn tableColumn = resolveColumnFromRowLogicGroup(col, dependantTable, attributeLineageModel);
-        ((RowGroupByFunction) rf).getGroupByCubeColumns().add(tableColumn);
+        ((GroupByRowCreationApproach) rf).getGroupByCubeColumns().add(tableColumn);
 
         ResolvedCubeColumnParameter linkedColParam = FunctionsFactory.eINSTANCE.createResolvedCubeColumnParameter();
         linkedColParam.setCubeColumn(tableColumn);
@@ -246,7 +246,7 @@ public class Util {
       }
 
     }
-    if (rf instanceof FilterAndGroupToOneRowFunction) {
+    if (rf instanceof FilterAndGroupToOneRowCreationApproach) {
       TreeIterator<EObject> iter = rf.eAllContents();
 
       while (iter.hasNext()) {
@@ -269,7 +269,7 @@ public class Util {
 
     }
 
-    if ((rf instanceof RowJoinFunction) || (rf instanceof RowFilterFunction)) {
+    if ((rf instanceof RowJoinFunction) || (rf instanceof FilterRowCreationApproach)) {
 
       // copy the basic functions,replace speculative with resolved, set onthe
       // rowfunctions
@@ -305,11 +305,11 @@ public class Util {
    */
   private static CubeColumn resolveColumnFromRowLogicGroup(VARIABLE theColumn, FreeBirdToolsCube theCube,
       AttributeLineageModel attributeLineageModel) {
-    EList<FunctionalRowLogic> rowLogicList = attributeLineageModel.getRowTransformations();
-    Iterator<FunctionalRowLogic> rowLogicIter = rowLogicList.iterator();
+    EList<CubeTransformationLogic> rowLogicList = attributeLineageModel.getRowTransformations();
+    Iterator<CubeTransformationLogic> rowLogicIter = rowLogicList.iterator();
     CubeColumn returnCol = null;
     while (rowLogicIter.hasNext()) {
-      FunctionalRowLogic rowLogic = rowLogicIter.next();
+      CubeTransformationLogic rowLogic = rowLogicIter.next();
       EList<ColumnFunction> columnFuncs = rowLogic.getColumnFunctionGroup().getColumnFunctions();
       Iterator<ColumnFunction> columnFuncsIter = columnFuncs.iterator();
 
@@ -322,8 +322,8 @@ public class Util {
 
       }
 
-      FunctionalCubeLogic tl = rowLogic.getCubeLogic();
-      RowFunction rf = tl.getRowFunction();
+      RowCreationApproachForCube tl = rowLogic.getRowCreationApproachForCube();
+      RowCreationApproach rf = tl.getRowCreationApproach();
 
       Iterator<CubeColumn> createdColumnns = rf.getCreatedCubeColumns().iterator();
       while (createdColumnns.hasNext()) {

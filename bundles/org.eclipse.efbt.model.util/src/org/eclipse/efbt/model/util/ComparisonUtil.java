@@ -28,7 +28,7 @@ import column_transformation_logic.ColumnFunction;
 
 import column_transformation_logic.CubeColumn;
 import column_transformation_logic.StandardBasicColumnFunction;
-import cube_transformation_logic.RowFunction;
+import row_transformation_logic.RowCreationApproach;
 import cubes.TargetCube;
 import functions.ResolvedCubeColumnParameter;
 import platform_call.CompareAttributeLineageModels;
@@ -37,8 +37,8 @@ import platform_call.IsNotSubset;
 import platform_call.IsSubset;
 import platform_call.Platform_callFactory;
 import row_transformation_logic.BaseRowStructure;
-import row_transformation_logic.ColumnFunctionGroup;
-import row_transformation_logic.FunctionalRowLogic;
+import column_transformation_logic.ColumnFunctionGroup;
+import cube_transformation_logic.CubeTransformationLogic;
 
 
 /**
@@ -49,7 +49,7 @@ public class ComparisonUtil {
 
 	 /**
 	   * Compares 2 AttributeLineageModels, the call has a firstModel and secondModel attribute
-	   * For for every FunctionalRowLogic, BaseRowStucture and CubeColumn in the first model,
+	   * For for every CubeTransformationLogic, BaseRowStucture and CubeColumn in the first model,
 	   * we find it in the resulting model, and set usedInSubSet for those  items only.
 	   * 
 	   * @param call
@@ -65,18 +65,18 @@ public class ComparisonUtil {
 	    // for everything in first model, find it in the resulting model, and set usedInSubSet
 	    // to be true for that thing, find may need a special compare method.
 	    // if it cannot be found add it to the not included model.
-	    EList<FunctionalRowLogic> rowTransformations = call.getFirstModel().getRowTransformations();
+	    EList<CubeTransformationLogic> rowTransformations = call.getFirstModel().getRowTransformations();
 	    for (Iterator iterator = rowTransformations.iterator(); iterator.hasNext();) {
-	      FunctionalRowLogic functionalRowLogic = (FunctionalRowLogic) iterator.next();
-	      FunctionalRowLogic frl2 = AttributeLineageUtil.findFunctionalRowLogicInAttributeModel(functionalRowLogic, resultingModel);
-	      FunctionalRowLogic frl2Copy = EcoreUtil.copy(frl2);
+	      CubeTransformationLogic cubeTransformationLogic  = (CubeTransformationLogic) iterator.next();
+	      CubeTransformationLogic frl2 = AttributeLineageUtil.findFunctionalRowLogicInAttributeModel(cubeTransformationLogic , resultingModel);
+	      CubeTransformationLogic frl2Copy = EcoreUtil.copy(frl2);
 	      if (frl2 == null) {
-	        notIncludedModel.getRowTransformations().add(EcoreUtil.copy(functionalRowLogic));
+	        notIncludedModel.getRowTransformations().add(EcoreUtil.copy(cubeTransformationLogic ));
 	        isSubset = false;
 	      } else {
 	        frl2.setUsedInSubsets(true);
 	        // set useIntrails for columns in resultingModel which are also in first model
-	        EList<ColumnFunction> columns = functionalRowLogic.getColumnFunctionGroup().getColumnFunctions();
+	        EList<ColumnFunction> columns = cubeTransformationLogic .getColumnFunctionGroup().getColumnFunctions();
 	        for (Iterator iterator2 = columns.iterator(); iterator2.hasNext();) {
 	          ColumnFunction columnFunction = (ColumnFunction) iterator2.next();
 	          ColumnFunction columnFunction2 = AttributeLineageUtil.findColumnFunctionInFunctionalRowLogic(columnFunction, frl2);
@@ -144,17 +144,17 @@ public class ComparisonUtil {
 	  }
 	  
 	  /**
-	   * Set usedInSubset equal to true for every FunctionalRowLogic, BaseRowStucture and CubeColumn
+	   * Set usedInSubset equal to true for every CubeTransformationLogic, BaseRowStucture and CubeColumn
 	   * in the  model 
 	   * @param model
 	   */
 	  private static void setUsedInSubsetToFalseForAll(AttributeLineageModel model) {
 
-	    EList<FunctionalRowLogic> rowTransformations = model.getRowTransformations();
+	    EList<CubeTransformationLogic> rowTransformations = model.getRowTransformations();
 	    for (Iterator iterator = rowTransformations.iterator(); iterator.hasNext();) {
-	      FunctionalRowLogic functionalRowLogic = (FunctionalRowLogic) iterator.next();
-	      functionalRowLogic.setUsedInSubsets(false);
-	      EList<ColumnFunction> columns = functionalRowLogic.getColumnFunctionGroup().getColumnFunctions();
+	      CubeTransformationLogic cubeTransformationLogic  = (CubeTransformationLogic) iterator.next();
+	      cubeTransformationLogic .setUsedInSubsets(false);
+	      EList<ColumnFunction> columns = cubeTransformationLogic .getColumnFunctionGroup().getColumnFunctions();
 	      for (Iterator iterator2 = columns.iterator(); iterator2.hasNext();) {
 	        ColumnFunction columnFunction = (ColumnFunction) iterator2.next();
 	        columnFunction.setUsedInSubsets(false);
@@ -185,7 +185,7 @@ public class ComparisonUtil {
 
     while (targetCubes.hasNext()) {
       TargetCube targetCube = targetCubes.next();
-      FunctionalRowLogic rowLogic = AttributeLineageUtil.getFunctionalRowLogicForCube(targetCube, attributeLineageModel);
+      CubeTransformationLogic rowLogic = AttributeLineageUtil.getFunctionalRowLogicForCube(targetCube, attributeLineageModel);
 
       // get the columns
       Iterator<ColumnFunction> columns = rowLogic.getColumnFunctionGroup().getColumnFunctions().iterator();
@@ -209,14 +209,14 @@ public class ComparisonUtil {
 
     EObject o = column.eContainer();
     column.setUsedInSubsets(true);
-    if (o instanceof RowFunction) {
-      setDependantColsFromRowFunctionAsUsedInSubset((RowFunction) o, attributeLineageModel, call);
+    if (o instanceof RowCreationApproach) {
+      setDependantColsFromRowCreationApproachAsUsedInSubset((RowCreationApproach) o, attributeLineageModel, call);
 
     }
     if (o instanceof ColumnFunctionGroup) {
-      FunctionalRowLogic frl = (FunctionalRowLogic) o.eContainer();
+      CubeTransformationLogic frl = (CubeTransformationLogic) o.eContainer();
       frl.setUsedInSubsets(true);
-      setDependantColsFromRowFunctionAsUsedInSubset(frl.getCubeLogic().getRowFunction(), attributeLineageModel, call);
+      setDependantColsFromRowCreationApproachAsUsedInSubset(frl.getRowCreationApproachForCube().getRowCreationApproach(), attributeLineageModel, call);
       ColumnFunction func = (ColumnFunction) column;
       if (func instanceof StandardBasicColumnFunction) {
 
@@ -255,18 +255,18 @@ public class ComparisonUtil {
   }
   
   /**
-   * Set the DependantCols From a RowFunction As UsedInSubset
+   * Set the DependantCols From a RowCreationApproach As UsedInSubset
    * 
-   * @param rowFunction
+   * @param rowCreationApproach
    * @param attributeLineageModel
    * @param call
    */
-  private static void setDependantColsFromRowFunctionAsUsedInSubset(RowFunction rowFunction, 
+  private static void setDependantColsFromRowCreationApproachAsUsedInSubset(RowCreationApproach rowCreationApproach, 
      
       AttributeLineageModel attributeLineageModel,
       GetAttributeLineageModel call) {
  
-    Iterator<ResolvedCubeColumnParameter> dependantCubeCols = ((RowFunction) rowFunction).getDependantCubeColumns().iterator();
+    Iterator<ResolvedCubeColumnParameter> dependantCubeCols = ((RowCreationApproach) rowCreationApproach).getDependantCubeColumns().iterator();
 
     while (dependantCubeCols.hasNext()) {
       ResolvedCubeColumnParameter tc = dependantCubeCols.next();
@@ -280,7 +280,7 @@ public class ComparisonUtil {
   
 
   /**
-   * Deletes every FunctionalRowLogic, BaseRowStucture and CubeColumn in the 
+   * Deletes every CubeTransformationLogic, BaseRowStucture and CubeColumn in the 
    * attributeLineageModel which does not have usedInSubset equal to  true.
    * @param attributeLineageModel
    */
@@ -307,23 +307,23 @@ public class ComparisonUtil {
     }
     removeBaseRowStructuresFromModel(attributeLineageModel, baseRowStructuresToRemove);
 
-    EList<FunctionalRowLogic> functionalRowLogics = attributeLineageModel.getRowTransformations();
-    BasicEList<FunctionalRowLogic> functionalRowLogicsToRemove = new BasicEList<FunctionalRowLogic>();
+    EList<CubeTransformationLogic> functionalRowLogics = attributeLineageModel.getRowTransformations();
+    BasicEList<CubeTransformationLogic> functionalRowLogicsToRemove = new BasicEList<CubeTransformationLogic>();
     for (Iterator iterator = functionalRowLogics.iterator(); iterator.hasNext();) {
       {
-        FunctionalRowLogic functionalRowLogic = (FunctionalRowLogic) iterator.next();
-        if (!functionalRowLogic.isUsedInSubsets())
-          functionalRowLogicsToRemove.add(functionalRowLogic);
+        CubeTransformationLogic cubeTransformationLogic  = (CubeTransformationLogic) iterator.next();
+        if (!cubeTransformationLogic .isUsedInSubsets())
+          functionalRowLogicsToRemove.add(cubeTransformationLogic );
         else {
           EList<ColumnFunction> columnFuncsToRemove = new BasicEList<ColumnFunction>();
-          EList<ColumnFunction> columnfuncs = functionalRowLogic.getColumnFunctionGroup().getColumnFunctions();
+          EList<ColumnFunction> columnfuncs = cubeTransformationLogic .getColumnFunctionGroup().getColumnFunctions();
           for (Iterator iterator2 = columnfuncs.iterator(); iterator2.hasNext();) {
             ColumnFunction columnFunction = (ColumnFunction) iterator2.next();
             if (!columnFunction.isUsedInSubsets())
               columnFuncsToRemove.add(columnFunction);
 
           }
-          removeColumnfunctionsFromFunctionalRowLogic(functionalRowLogic, columnFuncsToRemove);
+          removeColumnfunctionsFromFunctionalRowLogic(cubeTransformationLogic , columnFuncsToRemove);
         }
       }
     }
@@ -331,33 +331,33 @@ public class ComparisonUtil {
   }
 
   /**
-   * Remove a FunctionalRowLogic from an AttributeModel.
+   * Remove a CubeTransformationLogic from an AttributeModel.
    * 
    * @param attributeLineageModel
    * @param functionalRowLogicsToRemove
    */
   private static void removeFunctionalRowLogicsFromModel(AttributeLineageModel attributeLineageModel,
-      BasicEList<FunctionalRowLogic> functionalRowLogicsToRemove) {
+      BasicEList<CubeTransformationLogic> functionalRowLogicsToRemove) {
 
     for (Iterator iterator = functionalRowLogicsToRemove.iterator(); iterator.hasNext();) {
-      FunctionalRowLogic functionalRowLogic = (FunctionalRowLogic) iterator.next();
-      attributeLineageModel.getRowTransformations().remove(functionalRowLogic);
+      CubeTransformationLogic cubeTransformationLogic  = (CubeTransformationLogic) iterator.next();
+      attributeLineageModel.getRowTransformations().remove(cubeTransformationLogic );
     }
 
   }
 
   /**
-   * Remove  a ColumnFunction from a functionalRowLogic item.
+   * Remove  a ColumnFunction from a cubeTransformationLogic  item.
    * 
-   * @param functionalRowLogic
+   * @param cubeTransformationLogic 
    * @param columnFuncsToRemove
    */
-  private static void removeColumnfunctionsFromFunctionalRowLogic(FunctionalRowLogic functionalRowLogic,
+  private static void removeColumnfunctionsFromFunctionalRowLogic(CubeTransformationLogic cubeTransformationLogic ,
       EList<ColumnFunction> columnFuncsToRemove) {
 
     for (Iterator iterator = columnFuncsToRemove.iterator(); iterator.hasNext();) {
       ColumnFunction columnFunction = (ColumnFunction) iterator.next();
-      functionalRowLogic.getColumnFunctionGroup().getColumnFunctions().remove(columnFunction);
+      cubeTransformationLogic .getColumnFunctionGroup().getColumnFunctions().remove(columnFunction);
 
     }
 
