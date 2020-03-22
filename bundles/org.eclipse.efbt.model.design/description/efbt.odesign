@@ -172,7 +172,7 @@
         <containerMappings name="FunctionalRowLogicContainer" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='AttributeLineageModel']/@defaultLayer/@toolSections.0/@ownedTools[name='RowCreationApproachs']" semanticCandidatesExpression="aql:self.rowTransformations" domainClass="CubeTransformationLogic" childrenPresentation="HorizontalStack">
           <subContainerMappings name="CubeColumnContainer" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='AttributeLineageModel']/@defaultLayer/@toolSections.0/@ownedTools[name='ColumnFunctions']" semanticCandidatesExpression="aql:self.columnFunctionGroup.columnFunctions->concat(self.rowCreationApproachForCube.rowCreationApproach.createdCubeColumns)" domainClass="CubeColumn">
             <conditionnalStyles predicateExpression="aql:self.eContainer().oclIsKindOf(row_transformation_logic::RowCreationApproach)">
-              <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelExpression="aql:self.variable.name">
+              <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelExpression="aql:self.variable.name" tooltipExpression="aql:self.variable.variable_id">
                 <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
                 <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
                 <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
@@ -180,7 +180,7 @@
               </style>
             </conditionnalStyles>
             <conditionnalStyles predicateExpression="aql:self.eContainer().oclIsKindOf(column_transformation_logic::ColumnFunctionGroup)">
-              <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelExpression="aql:self.variable.name">
+              <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelExpression="aql:self.variable.name" tooltipExpression="aql:self.variable.variable_id">
                 <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
                 <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
                 <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
@@ -207,7 +207,7 @@
         </containerMappings>
         <containerMappings name="BaseRowStructure" semanticCandidatesExpression="aql:self.baseSchemas" domainClass="BaseRowStructure" childrenPresentation="HorizontalStack">
           <subContainerMappings name="CubeSchemaColumnContainer" semanticCandidatesExpression="feature:columns" domainClass="CubeColumn">
-            <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelExpression="aql:self.variable.name">
+            <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelExpression="aql:self.variable.name" tooltipExpression="aql:self.variable.variable_id">
               <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
               <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
               <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
@@ -248,25 +248,6 @@
         <edgeMappings name="Col2Col" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='AttributeLineageModel']/@defaultLayer/@containerMappings[name='FunctionalRowLogicContainer']/@subContainerMappings[name='CubeColumnContainer']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='AttributeLineageModel']/@defaultLayer/@containerMappings[name='FunctionalRowLogicContainer']/@subContainerMappings[name='CubeColumnContainer'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='AttributeLineageModel']/@defaultLayer/@containerMappings[name='BaseRowStructure']/@subContainerMappings[name='CubeSchemaColumnContainer']" targetFinderExpression="aql:self.eAllContents()->filter(functions::ResolvedCubeColumnParameter).cubeColumn">
           <style sizeComputationExpression="2">
             <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='red']"/>
-            <centerLabelStyleDescription labelSize="12">
-              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
-            </centerLabelStyleDescription>
-          </style>
-        </edgeMappings>
-      </additionalLayers>
-      <additionalLayers name="Col2StructItem" activeByDefault="true"/>
-      <additionalLayers name="CubeToColStructItem" activeByDefault="true">
-        <edgeMappings name="table2colstructItem" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='AttributeLineageModel']/@defaultLayer/@containerMappings[name='FunctionalRowLogicContainer']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='AttributeLineageModel']/@defaultLayer/@containerMappings[name='BaseRowStructure']/@subContainerMappings[name='CubeSchemaColumnContainer'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='AttributeLineageModel']/@defaultLayer/@containerMappings[name='FunctionalRowLogicContainer']/@subContainerMappings[name='CubeColumnContainer']" targetFinderExpression="aql:self.rowCreationApproachForCube.rowCreationApproach.dependantStructItemColumns.cubeColumn">
-          <style lineStyle="dash" sizeComputationExpression="2">
-            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='blue']"/>
-            <centerLabelStyleDescription labelSize="12">
-              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
-            </centerLabelStyleDescription>
-          </style>
-        </edgeMappings>
-        <edgeMappings name="Col2StructItem" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='AttributeLineageModel']/@defaultLayer/@containerMappings[name='FunctionalRowLogicContainer']/@subContainerMappings[name='CubeColumnContainer']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='AttributeLineageModel']/@defaultLayer/@containerMappings[name='FunctionalRowLogicContainer']/@subContainerMappings[name='CubeColumnContainer'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='AttributeLineageModel']/@defaultLayer/@containerMappings[name='BaseRowStructure']/@subContainerMappings[name='CubeSchemaColumnContainer']" targetFinderExpression="aql:self.eAllContents()->filter(functions::ResolvedStructColumnParameter).cubeColumn">
-          <style sizeComputationExpression="2">
-            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='blue']"/>
             <centerLabelStyleDescription labelSize="12">
               <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             </centerLabelStyleDescription>
