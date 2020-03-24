@@ -47,7 +47,7 @@ import functions.SpeculativeCubeColumnParameter;
 import row_transformation_logic.BaseRowStructure;
 import cube_transformation_logic.CubeTransformationLogic;
 import row_transformation_logic.Row_transformation_logicFactory;
-import transformation.ReportCellCreationTransformationScheme;
+import functional_module.ReportCellCreationTransformationScheme;
 import transformation.VersionedComponentsSet;
 import transformation.VersionedCubeSchemaModule;
 import transformation.VersionedTransformationSchemeLogic;

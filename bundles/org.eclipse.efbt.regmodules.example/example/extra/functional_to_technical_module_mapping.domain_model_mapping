@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain_model_mapping:DomainMappingModule xmlns:domain_model_mapping="http://www.eclipse.org/domain_model_mapping" license="Copyright (c) 2019 Openregtech Ltd&amp;#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&amp;#xA;&amp;#xA;SPDX-License-Identifier: EPL-2.0 &amp;#xA;&amp;#xA; Contributors:&amp;#xA; Neil Mackenzie - initial API and implementation&amp;#xD;" name="functional_to_technical_mapping">
+  <leafModuleToVersionedSQLViewsModules module="data_set_transformations.trl_sql_views#processExampleData" scheme="functional_modules.functional_module#processExampleData"/>
+  <leafModuleToVersionedCubeSchemaModules module="input_layer_cubes.transformation#readInExampleData" scheme="functional_modules.functional_module#readInExampleData"/>
+  <leafModuleToReportCellViewModules module="reportcell_definitions.trl_report_cell_views#createReportCells" scheme="functional_modules.functional_module#createReportCells"/>
+</domain_model_mapping:DomainMappingModule>

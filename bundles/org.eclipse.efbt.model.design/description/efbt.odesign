@@ -355,6 +355,158 @@
         </nodeMappings>
       </defaultLayer>
     </ownedRepresentations>
+     <ownedRepresentations xsi:type="description_1:DiagramDescription" name="TransformationScheme" domainClass="TransformationScheme" enablePopupBars="true">
+      <defaultLayer name="Default">
+        <containerMappings name="TransformationScheme" semanticCandidatesExpression="aql:self" domainClass="TransformationScheme">
+          <subContainerMappings name="SerialTransformationScheme" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='TransformationScheme']/@defaultLayer/@toolSections.0/@ownedTools[name='TransformationTagsAndRequirements']" semanticCandidatesExpression="aql:self.subTransformationsAndSchemes" domainClass="SerialTransformationScheme" reusedContainerMappings="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='TransformationScheme']/@defaultLayer/@containerMappings[name='TransformationScheme']/@subContainerMappings[name='SerialTransformationScheme'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='TransformationScheme']/@defaultLayer/@containerMappings[name='TransformationScheme']/@subContainerMappings[name='ParallelTransformationScheme'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='TransformationScheme']/@defaultLayer/@containerMappings[name='TransformationScheme']/@subContainerMappings[name='ReadDataSourceTransformationScheme'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='TransformationScheme']/@defaultLayer/@containerMappings[name='TransformationScheme']/@subContainerMappings[name='ScenarioSetTransformationScheme'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='TransformationScheme']/@defaultLayer/@containerMappings[name='TransformationScheme']/@subContainerMappings[name='DataSetTransformationTransformationScheme'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='TransformationScheme']/@defaultLayer/@containerMappings[name='TransformationScheme']/@subContainerMappings[name='ReportCellCreationTransformationScheme']">
+            <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="12">
+              <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+              <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='dark_blue']"/>
+            </style>
+          </subContainerMappings>
+          <subContainerMappings name="ParallelTransformationScheme" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='TransformationScheme']/@defaultLayer/@toolSections.0/@ownedTools[name='TransformationTagsAndRequirements']" semanticCandidatesExpression="aql:self.subTransformationsAndSchemes" domainClass="ParallelTransformationScheme" reusedContainerMappings="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='TransformationScheme']/@defaultLayer/@containerMappings[name='TransformationScheme']/@subContainerMappings[name='SerialTransformationScheme'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='TransformationScheme']/@defaultLayer/@containerMappings[name='TransformationScheme']/@subContainerMappings[name='ParallelTransformationScheme'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='TransformationScheme']/@defaultLayer/@containerMappings[name='TransformationScheme']/@subContainerMappings[name='ReadDataSourceTransformationScheme'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='TransformationScheme']/@defaultLayer/@containerMappings[name='TransformationScheme']/@subContainerMappings[name='ScenarioSetTransformationScheme'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='TransformationScheme']/@defaultLayer/@containerMappings[name='TransformationScheme']/@subContainerMappings[name='DataSetTransformationTransformationScheme'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='TransformationScheme']/@defaultLayer/@containerMappings[name='TransformationScheme']/@subContainerMappings[name='ReportCellCreationTransformationScheme']">
+            <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="12">
+              <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+              <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='dark_chocolate']"/>
+            </style>
+          </subContainerMappings>
+          <subContainerMappings name="ReadDataSourceTransformationScheme" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='TransformationScheme']/@defaultLayer/@toolSections.0/@ownedTools[name='TransformationTagsAndRequirements'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='TransformationScheme']/@defaultLayer/@toolSections.0/@ownedTools[name='transformationsDataSetTransformations']" semanticCandidatesExpression="aql:self.subTransformationsAndSchemes" domainClass="ReadDataSourceTransformationScheme">
+            <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="12">
+              <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+              <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
+            </style>
+          </subContainerMappings>
+          <subContainerMappings name="ScenarioSetTransformationScheme" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='TransformationScheme']/@defaultLayer/@toolSections.0/@ownedTools[name='TransformationTagsAndRequirements']" semanticCandidatesExpression="aql:self.subTransformationsAndSchemes" domainClass="ScenarioSetTransformationScheme" reusedContainerMappings="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='TransformationScheme']/@defaultLayer/@containerMappings[name='TransformationScheme']/@subContainerMappings[name='ReadDataSourceTransformationScheme'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='TransformationScheme']/@defaultLayer/@containerMappings[name='TransformationScheme']/@subContainerMappings[name='ParallelTransformationScheme'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='TransformationScheme']/@defaultLayer/@containerMappings[name='TransformationScheme']/@subContainerMappings[name='ScenarioSetTransformationScheme'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='TransformationScheme']/@defaultLayer/@containerMappings[name='TransformationScheme']/@subContainerMappings[name='SerialTransformationScheme'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='TransformationScheme']/@defaultLayer/@containerMappings[name='TransformationScheme']/@subContainerMappings[name='DataSetTransformationTransformationScheme'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='TransformationScheme']/@defaultLayer/@containerMappings[name='TransformationScheme']/@subContainerMappings[name='ReportCellCreationTransformationScheme']">
+            <subContainerMappings name="ScenarioSet" semanticCandidatesExpression="feature:scenarioSet" domainClass="ScenarioSet">
+              <subNodeMappings name="Scenario" semanticCandidatesExpression="feature:scenarios" domainClass="Scenario">
+                <style xsi:type="style:EllipseNodeDescription" labelSize="12" labelPosition="node" resizeKind="NSEW" horizontalDiameterComputationExpression="20" verticalDiameterComputationExpression="4">
+                  <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                  <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                  <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+                </style>
+              </subNodeMappings>
+              <style xsi:type="style:ShapeContainerStyleDescription" borderSizeComputationExpression="1" borderLineStyle="dash" labelSize="12">
+                <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_gray']"/>
+              </style>
+            </subContainerMappings>
+            <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="12">
+              <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+              <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='dark_purple']"/>
+            </style>
+          </subContainerMappings>
+          <subContainerMappings name="DataSetTransformationTransformationScheme" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='TransformationScheme']/@defaultLayer/@toolSections.0/@ownedTools[name='TransformationTagsAndRequirements'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='TransformationScheme']/@defaultLayer/@toolSections.0/@ownedTools[name='transformationsDataSetTransformations']" semanticCandidatesExpression="aql:self.subTransformationsAndSchemes" domainClass="DataSetTransformationTransformationScheme">
+            <borderedNodeMappings name="Scenario" semanticCandidatesExpression="feature:scenario" domainClass="Scenario">
+              <style xsi:type="style:EllipseNodeDescription" labelSize="12" labelPosition="node" resizeKind="NSEW" horizontalDiameterComputationExpression="20" verticalDiameterComputationExpression="4">
+                <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                <forbiddenSides>WEST</forbiddenSides>
+                <forbiddenSides>EAST</forbiddenSides>
+                <forbiddenSides>NORTH</forbiddenSides>
+                <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+              </style>
+            </borderedNodeMappings>
+            <subContainerMappings name="ScenarioSet" semanticCandidatesExpression="feature:scenarioSet" domainClass="ScenarioSet">
+              <subNodeMappings name="Scenario" semanticCandidatesExpression="feature:scenarios" domainClass="Scenario">
+                <style xsi:type="style:EllipseNodeDescription" labelSize="12" labelPosition="node" resizeKind="NSEW" horizontalDiameterComputationExpression="20" verticalDiameterComputationExpression="4">
+                  <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                  <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                  <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+                </style>
+              </subNodeMappings>
+              <style xsi:type="style:ShapeContainerStyleDescription" borderSizeComputationExpression="1" borderLineStyle="dash" labelSize="12">
+                <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_gray']"/>
+              </style>
+            </subContainerMappings>
+            <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="12">
+              <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+              <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='red']"/>
+            </style>
+          </subContainerMappings>
+          <subContainerMappings name="ReportCellCreationTransformationScheme" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='TransformationScheme']/@defaultLayer/@toolSections.0/@ownedTools[name='TransformationTagsAndRequirements'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='TransformationScheme']/@defaultLayer/@toolSections.0/@ownedTools[name='transformationsDataSetTransformations']" semanticCandidatesExpression="aql:self.subTransformationsAndSchemes" domainClass="ReportCellCreationTransformationScheme">
+            <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="12">
+              <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+              <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='green']"/>
+            </style>
+          </subContainerMappings>
+          <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="12">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+            <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_gray']"/>
+          </style>
+        </containerMappings>
+        <toolSections name="tool1">
+          <ownedTools xsi:type="tool:DiagramCreationDescription" name="TransformationTagsAndRequirements" label="TransformationTagsAndRequirements" precondition="true" browseExpression="aql:self" diagramDescription="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='TransformationSchemeWithRequirements']">
+            <initialOperation/>
+            <containerViewVariable name="containerView"/>
+            <representationNameVariable name="diagramName"/>
+          </ownedTools>
+          <ownedTools xsi:type="tool:DiagramCreationDescription" name="transformationsDataSetTransformations" precondition="true" browseExpression="aql:self" diagramDescription="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='TransformationSchemeWithDataSetTransformationModule']">
+            <initialOperation/>
+            <containerViewVariable name="containerView"/>
+            <representationNameVariable name="diagramName"/>
+          </ownedTools>
+        </toolSections>
+      </defaultLayer>
+    </ownedRepresentations>
+      <ownedRepresentations xsi:type="description_1:DiagramDescription" name="TransformationSchemeWithRequirements" domainClass="TransformationScheme" enablePopupBars="true">
+      <defaultLayer name="Default">
+        <nodeMappings name="TransformationScheme" semanticCandidatesExpression="aql:self" domainClass="TransformationScheme">
+          <style xsi:type="style:SquareDescription" labelSize="12" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW" width="20" height="5">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='red']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="TransformationSchemeTag" semanticCandidatesExpression="service:getTransformationTagsFromDefualtTagGroup()" domainClass="TransformationSchemeTag">
+          <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="feature:tagID" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW" width="20" height="5">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="TitledRequirementsSection" semanticCandidatesExpression="service:getTransformationRequirementsFromDefualtTagGroup()" domainClass="TitledRequirementsSection">
+          <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="feature:title" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW" width="20" height="5">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_blue']"/>
+          </style>
+        </nodeMappings>
+        <edgeMappings name="tag2Requirements" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='TransformationSchemeWithRequirements']/@defaultLayer/@nodeMappings[name='TransformationSchemeTag']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='TransformationSchemeWithRequirements']/@defaultLayer/@nodeMappings[name='TitledRequirementsSection']" targetFinderExpression="feature:requirements">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <edgeMappings name="transformation2Tag" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='TransformationSchemeWithRequirements']/@defaultLayer/@nodeMappings[name='TransformationSchemeTag']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='TransformationSchemeWithRequirements']/@defaultLayer/@nodeMappings[name='TransformationScheme']" targetFinderExpression="feature:transformation">
+          <style sourceArrow="InputArrow" targetArrow="NoDecoration" sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+      </defaultLayer>
+    </ownedRepresentations>
+        
     <ownedRepresentations xsi:type="description_1:DiagramDescription" name="Function" domainClass="Function" enablePopupBars="true">
       <defaultLayer name="Default">
         <nodeMappings name="BasicFunction" semanticCandidatesExpression="aql:self->concat(self.eAllContents()->filter(functions::BasicFunction))" domainClass="BasicFunction">

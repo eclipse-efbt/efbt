@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tags:TagGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tags="http://www.eclipse.org/tags" license="Copyright (c) 2019 Openregtech Ltd&amp;#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&amp;#xA;&amp;#xA;SPDX-License-Identifier: EPL-2.0 &amp;#xA;&amp;#xA; Contributors:&amp;#xA; Neil Mackenzie - initial API and implementation&amp;#xD;" name="tags1">
+  <tags xsi:type="tags:TransformationSchemeTag" name="processExampleDataTag" requirements="CRR_RequirementsBundle.requirements_text#Article_325:1(b) CRR_RequirementsBundle.requirements_text#Article_325" transformation="functional_modules.functional_module#processExampleData"/>
+</tags:TagGroup>

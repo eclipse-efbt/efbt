@@ -31,7 +31,8 @@ import cube_transformation_logic.CubeTransformationLogic;
 import row_transformation_logic.BaseRowStructure;
 
 import transformation.VersionedComponentsSet;
-import transformation.TransformationScheme;
+import functional_module.LeafTransformationScheme;
+import functional_module.TransformationScheme;
 
 
 import platform_call.PlatformCall;
@@ -192,13 +193,13 @@ public String getStringForAggregateFunction(AggregateFunction self) {
 
     
     
-    public VersionedSQLViewsModule getDefaultSQLViewsModuleForTransformation(TransformationScheme self) {
+    public VersionedSQLViewsModule getDefaultSQLViewsModuleForTransformation(LeafTransformationScheme self) {
        
     	
     	return TRLUtil.getDefaultSQLViewsModuleForTransformation(  self); 
      }
     
-    public VersionedCubeSchemaModule getDefaultCubeSchemaModuleForTransformationScheme(TransformationScheme self) {
+    public VersionedCubeSchemaModule getDefaultCubeSchemaModuleForTransformationScheme(LeafTransformationScheme self) {
        
     	
     	return TRLUtil.getDefaultCubeSchemaModuleForTransformationScheme(  self); 

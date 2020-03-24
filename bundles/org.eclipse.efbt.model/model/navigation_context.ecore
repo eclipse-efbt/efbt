@@ -6,7 +6,7 @@
     <details key="documentation" value=" This package describes NavigationContext, used to tie together a set of artifacts with tags and requiremnts "/>
   </eAnnotations>
   <eAnnotations source="license">
-    <details key="license" value="Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"/>
+    <details key="license" value="Copyright (c) 2019 Openregtech Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"/>
   </eAnnotations>
   <eClassifiers xsi:type="ecore:EClass" name="NavigationContext">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -16,6 +16,15 @@
       <details key="name" value="NavigationContext"/>
       <details key="kind" value="empty"/>
     </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tags" eType="ecore:EClass tags.ecore#//TagGroup">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The related set of tags"/>
+      </eAnnotations>
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="kind" value="attribute"/>
+        <details key="name" value="tags"/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="transformationContext"
         eType="ecore:EClass transformation.ecore#//VersionedComponentsSet">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -27,7 +36,7 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="transformationsSchemeModule"
-        eType="ecore:EClass transformation.ecore#//TransformationSchemeModule">
+        eType="ecore:EClass functional_module.ecore#//TransformationSchemeModule">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The related Transformation Module"/>
       </eAnnotations>
@@ -38,5 +47,6 @@
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="license" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="birdModel" eType="ecore:EClass bird_model.ecore#//BIRDModel"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="domainModelMapping" eType="ecore:EClass domain_model_mapping.ecore#//DomainMappingModule"/>
   </eClassifiers>
 </ecore:EPackage>

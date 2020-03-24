@@ -41,6 +41,7 @@ import row_transformation_logic.GroupByRowCreationApproach;
 import row_transformation_logic.RowJoinFunction;
 import row_transformation_logic.UnionRowCreationApproach;
 import row_transformation_logic.impl.Row_transformation_logicFactoryImpl;
+import tags.TransformationSchemeTag;
 import cube_transformation_logic.impl.Cube_transformation_logicFactoryImpl;
 import cubes.FreeBirdToolsCube;
 import cubes.DerivedCube;
@@ -49,6 +50,10 @@ import data_definition.COMBINATION_ITEM;
 import data_definition.CUBE;
 import data_definition.CUBE_STRUCTURE;
 import data_definition.CUBE_STRUCTURE_ITEM;
+import domain_model_mapping.DomainMappingModule;
+import domain_model_mapping.LeafModuleToReportCellViewModule;
+import domain_model_mapping.LeafModuleToVersionedCubeSchemaModule;
+import domain_model_mapping.LeafModuleToVersionedSQLViewsModule;
 import functions.AggregateFunction;
 import functions.BasicFunction;
 import functions.BooleanFunction;
@@ -63,10 +68,10 @@ import cube_transformation_logic.Cube_transformation_logicFactory;
 import row_transformation_logic.Row_transformation_logicFactory;
 
 import transformation.DataSetTransformation;
+import functional_module.LeafTransformationScheme;
+import functional_module.ReportCellCreationTransformationScheme;
 
-import transformation.ReportCellCreationTransformationScheme;
-
-import transformation.TransformationScheme;
+import functional_module.TransformationScheme;
 import transformation.VersionedComponentsSet;
 import transformation.VersionedCubeSchemaModule;
 import transformation.VersionedTransformationSchemeLogic;
@@ -744,33 +749,45 @@ public class TRLUtil {
   }
 
   /**
-   * For a TransformationScheme, get the SQLViewsModule associated according to 
-   * the DefaultNavigationContext.
-   * @param transformationScheme
-   * @return
-   */
-  public static VersionedSQLViewsModule getDefaultSQLViewsModuleForTransformation(TransformationScheme transformationScheme) {
+	 * For a TransformationScheme, get the SQLViewsModule associated according to
+	 * the DefaultNavigationContext.
+	 * 
+	 * @param transformationScheme
+	 * @return
+	 */
+	public static VersionedSQLViewsModule getDefaultSQLViewsModuleForTransformation( 
+			LeafTransformationScheme transformationScheme) {
 
-    VersionedSQLViewsModule returnModule = null;
-    
-    NavigationContext nc = NavigationContextUtil.getDefaultNavigationContext(transformationScheme);
-    VersionedComponentsSet context = nc.getTransformationContext();
+		VersionedSQLViewsModule returnModule = null;
+		EList<TransformationSchemeTag> returnlist = new BasicEList<TransformationSchemeTag>();
+		NavigationContext nc = TagUtil.getDefaultNavigationContext(transformationScheme);
+		/**
+		 * VersionedComponentsSet context = nc.getTransformationContext();
+		 * 
+		 * EList<VersionedCubeSchemaModule> sm = context.getCubeSchemaModules();
+		 * EList<ReportCellViewModule> rm = context.getReportCellViewModules();
+		 * EList<VersionedTransformationSchemeLogic> tm =
+		 * context.getDatasetTransformationModules();
+		 * 
+		 * for (Iterator iterator = tm.iterator(); iterator.hasNext();) {
+		 * VersionedTransformationSchemeLogic dataSetTransformationModule =
+		 * (VersionedTransformationSchemeLogic) iterator .next(); if
+		 * (dataSetTransformationModule.getTransformationScheme().equals(transformationScheme))
+		 * { returnModule = (VersionedSQLViewsModule) dataSetTransformationModule; }
+		 * 
+		 * }
+		 **/
+		DomainMappingModule domainMapping = nc.getDomainModelMapping();
+		EList<LeafModuleToVersionedSQLViewsModule> csm = domainMapping.getLeafModuleToVersionedSQLViewsModules();
 
-    EList<VersionedCubeSchemaModule> sm = context.getCubeSchemaModules();
-    EList<ReportCellViewModule> rm = context.getReportCellViewModules();
-    EList<VersionedTransformationSchemeLogic> tm = context.getDatasetTransformationModules();
+		for (LeafModuleToVersionedSQLViewsModule leafModuleToVersionedSQLViewsModule : csm) {
+			if (leafModuleToVersionedSQLViewsModule.getScheme().equals(transformationScheme)) {
+				returnModule = leafModuleToVersionedSQLViewsModule.getModule();
+			}
+		}
 
-    for (Iterator iterator = tm.iterator(); iterator.hasNext();) {
-      VersionedTransformationSchemeLogic dataSetTransformationModule = (VersionedTransformationSchemeLogic) iterator
-          .next();
-      if (dataSetTransformationModule.getTransformationScheme().equals(transformationScheme)) {
-        returnModule = (VersionedSQLViewsModule) dataSetTransformationModule;
-      }
-
-    }
-
-    return returnModule;
-  }
+		return returnModule;
+	}
   
   public static EList<CUBE_STRUCTURE_ITEM> getCubeStructureItemsFromDefaultBIRDModel(CubeSchema schema)
   {
@@ -826,28 +843,7 @@ public class TRLUtil {
 
   }
 
-  /**
-   * For a particular  ReportCellCreationTransformationScheme find the ssociated  ReportCellViewModules
-   * in the context of a VersionedComponentsSet.
-   * @param transformation
-   * @param componentSet
-   * @return
-   */
-  private static EList<ReportCellViewModule> getReportViewModuleList(
-      ReportCellCreationTransformationScheme transformation, VersionedComponentsSet componentSet) {
-  
-    EList<ReportCellViewModule> rvms = componentSet.getReportCellViewModules();
-    EList<ReportCellViewModule> returnRvms = new BasicEList<ReportCellViewModule>();
-    for (Iterator iterator = rvms.iterator(); iterator.hasNext();) {
-      ReportCellViewModule reportCellViewModule = (ReportCellViewModule) iterator.next();
-      if ((reportCellViewModule.getTransformationScheme() != null)
-          && reportCellViewModule.getTransformationScheme().equals(transformation)) {
-        returnRvms.add(reportCellViewModule); // double check this does not remove it from another container.
-      }
-
-    }
-    return returnRvms;
-  }
+ 
 
   /**
    * Return the measure associated with a reportCellView.
@@ -894,33 +890,52 @@ public class TRLUtil {
   }
 
   /**
-   * Return the VersionedCubeSchemaModule asociated with a LeafTransformationScheme.
-   * 
-   * @param transformationScheme
-   * @return
-   */
-  public static VersionedCubeSchemaModule getDefaultCubeSchemaModuleForTransformationScheme(
-      TransformationScheme transformationScheme) {
+	 * Return the VersionedCubeSchemaModule asociated with a
+	 * LeafTransformationScheme.
+	 * 
+	 * @param transformationScheme
+	 * @return
+	 */
+	public static VersionedCubeSchemaModule getDefaultCubeSchemaModuleForTransformationScheme(
+			LeafTransformationScheme transformationScheme) {
 
-    VersionedCubeSchemaModule returnModule = null;
-  
-    NavigationContext nc = NavigationContextUtil.getDefaultNavigationContext(transformationScheme);
-    VersionedComponentsSet context = nc.getTransformationContext();
+		VersionedCubeSchemaModule returnModule = null;
 
-    EList<VersionedCubeSchemaModule> sm = context.getCubeSchemaModules();
-    EList<ReportCellViewModule> rm = context.getReportCellViewModules();
-    EList<VersionedTransformationSchemeLogic> tm = context.getDatasetTransformationModules();
+		EList<TransformationSchemeTag> returnlist = new BasicEList<TransformationSchemeTag>();
+		NavigationContext nc = TagUtil.getDefaultNavigationContext(transformationScheme);
 
-    for (Iterator iterator = sm.iterator(); iterator.hasNext();) {
-      VersionedCubeSchemaModule cubeSchemaModule = (VersionedCubeSchemaModule) iterator.next();
-      if (cubeSchemaModule.getTransformationScheme().equals(transformationScheme)) {
-        returnModule = (VersionedCubeSchemaModule) cubeSchemaModule;
-      }
+		/**
+		 * EList<TransformationSchemeTag> returnlist = new
+		 * BasicEList<TransformationSchemeTag>(); NavigationContext nc =
+		 * TagUtil.getDefaultNavigationContext(transformationScheme);
+		 * VersionedComponentsSet context = nc.getTransformationContext();
+		 * 
+		 * EList<VersionedCubeSchemaModule> sm = context.getCubeSchemaModules();
+		 * EList<ReportCellViewModule> rm = context.getReportCellViewModules();
+		 * EList<VersionedTransformationSchemeLogic> tm =
+		 * context.getDatasetTransformationModules();
+		 * 
+		 * for (Iterator iterator = sm.iterator(); iterator.hasNext();) {
+		 * VersionedCubeSchemaModule cubeSchemaModule = (VersionedCubeSchemaModule)
+		 * iterator.next(); if
+		 * (cubeSchemaModule.getTransformationScheme().equals(transformationScheme)) {
+		 * returnModule = (VersionedCubeSchemaModule) cubeSchemaModule; }
+		 * 
+		 * }
+		 */
 
-    }
+		DomainMappingModule domainMapping = nc.getDomainModelMapping();
+		EList<LeafModuleToVersionedCubeSchemaModule> csm = domainMapping.getLeafModuleToVersionedCubeSchemaModules();
 
-    return returnModule;
-  }
+		for (LeafModuleToVersionedCubeSchemaModule leafModuleToVersionedCubeSchemaModule : csm) {
+			if (leafModuleToVersionedCubeSchemaModule.getScheme().equals(transformationScheme)) {
+				returnModule = leafModuleToVersionedCubeSchemaModule.getModule();
+			}
+		}
+
+		return returnModule;
+	}
+
   
   public static EList<MEMBER> getMembers(
 	      DOMAIN domain) {
@@ -966,31 +981,46 @@ public class TRLUtil {
 
 
   /**
-   * Find the LeafTransformationScheme associated a reportCell in the context of a 
-   * VersionedComponentsSet.
-   * 
-   * @param reportCell
-   * @param context
-   * @return
-   */
-  static TransformationScheme findSchemeForReportCellView
-  (ReportCell reportCell, VersionedComponentsSet context) {
-    // find the scheme with the cell
-    EList<ReportCellViewModule> rcm = context.getReportCellViewModules();
-    TransformationScheme returnScheme = null;
-    for (Iterator iterator = rcm.iterator(); iterator.hasNext();) {
-      ReportCellViewModule reportCellViewModule = (ReportCellViewModule) iterator.next();
-      EList<ReportCellView> rcvm = reportCellViewModule.getReportCellViews();
-      for (Iterator iterator2 = rcvm.iterator(); iterator2.hasNext();) {
-        ReportCellView reportCellView = (ReportCellView) iterator2.next();
-        ReportCell cell = reportCellView.getReportCell();
-        if (cell.equals(reportCell)) {
-          returnScheme = reportCellViewModule.getTransformationScheme();
-        }
+	 * Find the LeafTransformationScheme associated a reportCell in the context of a
+	 * VersionedComponentsSet.
+	 * 
+	 * @param reportCell
+	 * @param context
+	 * @return
+	 */
+	static LeafTransformationScheme findSchemeForReportCellView(ReportCell reportCell, VersionedComponentsSet context, DomainMappingModule mappingModule) {
+		// find the scheme with the cell
+		EList<ReportCellViewModule> rcm = context.getReportCellViewModules();
+		LeafTransformationScheme returnScheme = null;
+		for (Iterator iterator = rcm.iterator(); iterator.hasNext();) {
+			ReportCellViewModule reportCellViewModule = (ReportCellViewModule) iterator.next();
+			EList<ReportCellView> rcvm = reportCellViewModule.getReportCellViews();
+			for (Iterator iterator2 = rcvm.iterator(); iterator2.hasNext();) {
+				ReportCellView reportCellView = (ReportCellView) iterator2.next();
+				ReportCell cell = reportCellView.getReportCell();
+				if (cell.equals(reportCell)) {
+					
+					returnScheme = getTransformationSchemeForReportCellViewModule(reportCellViewModule, mappingModule); 
+				}
 
-      }
-    }
-    return returnScheme;
-  }
+			}
+		}
+		return returnScheme;
+	}
+	
+	private static LeafTransformationScheme getTransformationSchemeForReportCellViewModule(
+			ReportCellViewModule reportCellViewModule, DomainMappingModule mappingModule) {
+		
+		LeafTransformationScheme returnLeafTransformationScheme = null;
+		  EList<LeafModuleToReportCellViewModule> mappings = mappingModule
+				.getLeafModuleToReportCellViewModules();
+		for (LeafModuleToReportCellViewModule leafModuleToReportCellViewModule : mappings) {
+			if (leafModuleToReportCellViewModule.getModule().getName().equals(reportCellViewModule.getName())) {
+				returnLeafTransformationScheme = leafModuleToReportCellViewModule.getScheme();
+			}
+		}
+		return returnLeafTransformationScheme;
+	}
+
 
 }

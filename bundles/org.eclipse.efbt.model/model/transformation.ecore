@@ -36,26 +36,6 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="DataSetTransformationTransformationScheme"
-      eSuperTypes="#//TransformationScheme">
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="DataSetTransformationTransformationScheme"/>
-      <details key="kind" value="elementOnly"/>
-    </eAnnotations>
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A DataSetTransformationTransformationScheme is a set of releted DataSetTransformations.&#xA;Usually they will be groups where the derived cube associated with DataSetTransformation, has source cubes which are associated with other DataSetTransformations in the same group.&#xA;"/>
-    </eAnnotations>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ReadDataSourceTransformationScheme"
-      eSuperTypes="#//TransformationScheme">
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="ReadDataSourceTransformationScheme"/>
-      <details key="kind" value="elementOnly"/>
-    </eAnnotations>
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A TransformationScheme which represents the reading in data from base cubes. Note that the BIRD input layer is made up of BaseCubes."/>
-    </eAnnotations>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Release" eSuperTypes="#//VersionedComponentsSet">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="Release"/>
@@ -71,54 +51,6 @@
       </eAnnotations>
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The version number associated with the release."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ReportCellCreationTransformationScheme"
-      eSuperTypes="#//TransformationScheme">
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="ReportCellCreationTransformationScheme"/>
-      <details key="kind" value="elementOnly"/>
-    </eAnnotations>
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A TransformationScheme which represents the calculation of report cells."/>
-    </eAnnotations>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TransformationScheme">
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="TransformationScheme"/>
-      <details key="kind" value="empty"/>
-    </eAnnotations>
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="TransformationScheme is the super class of ReportCellTransformationScheme,ReadDataSourceTransformationScheme, and DataSetTransformationTransformationScheme.&#xA;It represents a set of processing."/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EString"
-        iD="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The name of the TransformationScheme"/>
-      </eAnnotations>
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="name"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TransformationSchemeModule" eSuperTypes="module_management.ecore#//Module">
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="TransformationSchemeModule"/>
-      <details key="kind" value="elementOnly"/>
-    </eAnnotations>
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A module of TransformationSchemes"/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="transformationSchemes"
-        upperBound="-1" eType="#//TransformationScheme" containment="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The  set of TransformationSchemes "/>
-      </eAnnotations>
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="element"/>
-        <details key="name" value="transformationSchemes"/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
@@ -194,15 +126,6 @@
         <details key="documentation" value="The schemas in the module"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="transformationScheme" eType="#//ReadDataSourceTransformationScheme">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="transformationScheme"/>
-      </eAnnotations>
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The ReadDataSourceTransformationScheme with which this module is associated."/>
-      </eAnnotations>
-    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VersionedTransformationSchemeLogic"
       eSuperTypes="module_management.ecore#//Module">
@@ -213,14 +136,5 @@
       <details key="name" value="VersionedTransformationSchemeLogic"/>
       <details key="kind" value="elementOnly"/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="transformationScheme" eType="#//DataSetTransformationTransformationScheme">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="transformation"/>
-      </eAnnotations>
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The DataSetTransformationTransformationScheme with which this module is associated."/>
-      </eAnnotations>
-    </eStructuralFeatures>
   </eClassifiers>
 </ecore:EPackage>

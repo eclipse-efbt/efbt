@@ -30,7 +30,7 @@ import cubes.BaseCube;
 
 import cubes.TargetCube;
 import transformation.VersionedComponentsSet;
-import transformation.TransformationSchemeModule;
+import functional_module.TransformationSchemeModule;
 
 import trl_report_cell_views.ReportCellViewModule;
 import trl_sql_views.SQLView;
@@ -38,7 +38,7 @@ import trl_sql_views.VersionedSQLViewsModule;
 
 
 import transformation.VersionedTransformationSchemeLogic;
-import transformation.TransformationScheme;
+import functional_module.TransformationScheme;
 
 /**
  * @author Neil Mackenzie

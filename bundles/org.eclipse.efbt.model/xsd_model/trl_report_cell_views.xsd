@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<xsd:schema xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:module_management="http://www.eclipse.org/module_management" xmlns:reports="http://www.eclipse.org/reports" xmlns:transformation="http://www.eclipse.org/transformation" xmlns:trl_report_cell_views="http://www.eclipse.org/trl_report_cell_views" xmlns:trl_sql_views="http://www.eclipse.org/trl_sql_views" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="trl_report_cell_views" ecore:package="trl_report_cell_views" targetNamespace="http://www.eclipse.org/trl_report_cell_views">
-  <xsd:import namespace="http://www.eclipse.org/transformation" schemaLocation="transformation.xsd"/>
+<xsd:schema xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:module_management="http://www.eclipse.org/module_management" xmlns:reports="http://www.eclipse.org/reports" xmlns:trl_report_cell_views="http://www.eclipse.org/trl_report_cell_views" xmlns:trl_sql_views="http://www.eclipse.org/trl_sql_views" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="trl_report_cell_views" ecore:package="trl_report_cell_views" targetNamespace="http://www.eclipse.org/trl_report_cell_views">
   <xsd:import namespace="http://www.eclipse.org/module_management" schemaLocation="module_management.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/reports" schemaLocation="reports.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/trl_sql_views" schemaLocation="trl_sql_views.xsd"/>
@@ -53,7 +52,6 @@ SPDX-License-Identifier: EPL-2.0
             </xsd:annotation>
           </xsd:element>
         </xsd:sequence>
-        <xsd:attribute ecore:reference="transformation:ReportCellCreationTransformationScheme" name="transformationScheme" type="xsd:anyURI"/>
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
