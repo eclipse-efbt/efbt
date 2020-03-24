@@ -47,10 +47,10 @@ import functions.SpeculativeCubeColumnParameter;
 import row_transformation_logic.BaseRowStructure;
 import cube_transformation_logic.CubeTransformationLogic;
 import row_transformation_logic.Row_transformation_logicFactory;
-import transformation.ReportCellCreationTransformationScheme;
+import functional_module.ReportCellCreationFunctionalModule;
 import transformation.VersionedComponentsSet;
 import transformation.VersionedCubeSchemaModule;
-import transformation.VersionedTransformationSchemeLogic;
+import transformation.VersionedFunctionalModuleLogic;
 
 /**
  * @author Neil Mackenzie
@@ -62,12 +62,12 @@ public class Util {
    * Get the list of VersionedCubeSchemaModule associated with a
    * versionedComponentSet.
    * 
-   * @param transformationScheme
+   * @param functionalModule
    * @param versionedComponentSet
    * @return
    */
   private static EList<VersionedCubeSchemaModule> getCubeSchemaModuleList(
-      ReportCellCreationTransformationScheme transformationScheme, VersionedComponentsSet versionedComponentSet) {
+      ReportCellCreationFunctionalModule functionalModule, VersionedComponentsSet versionedComponentSet) {
 
     return null; // TODO need to check why this is null.
   }
@@ -123,16 +123,16 @@ public class Util {
 
   /**
    * Create  a BaseRowStructure from a cubeSchema in the context of a 
-   * transformationSchemeLogicList and a cubeSchemaModuleList.
+   * functionalModuleLogicList and a cubeSchemaModuleList.
    * 
    * @param cubeSchema
-   * @param transformationSchemeLogicList
+   * @param functionalModuleLogicList
    * @param cubeSchemaModuleList
    * @return
    */
   public static BaseRowStructure translateCubeSchemaToBaseRowStructure
      (CubeSchema cubeSchema,
-      EList<VersionedTransformationSchemeLogic> transformationSchemeLogicList,
+      EList<VersionedFunctionalModuleLogic> functionalModuleLogicList,
       EList<VersionedCubeSchemaModule> cubeSchemaModuleList) {
 
     EList<VARIABLE> columnsList = getColumnsFromCubeSchema(cubeSchema);

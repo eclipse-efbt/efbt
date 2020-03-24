@@ -15,7 +15,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="schemes" upperBound="-1"
         eType="ecore:EClass vtl_transformation.ecore#//TRANSFORMATION_SCHEME" containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The TransformationSchemes"/>
+        <details key="documentation" value="The FunctionalModules"/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>

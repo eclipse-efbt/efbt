@@ -29,16 +29,21 @@ import cubes.FreeBirdToolsCube;
 import cubes.TargetCube;
 import platform_call.GetAttributeLineageForOneReportCell;
 import platform_call.GetAttributeLineageModel;
+import platform_call.GetTestLogic;
 import platform_call.Platform_callFactory;
 import platform_call.Platform_callPackage;
+import reports.ReportCell;
 import cubes.DerivedCube;
 import row_transformation_logic.BaseRowStructure;
 import row_transformation_logic.RowCreationApproach;
 import row_transformation_logic.RowCreationApproachForCube;
 import row_transformation_logic.UnionRowCreationApproach;
+import test.TestDefinition;
+import test.TestFactory;
+import test.TestLogic;
 import transformation.VersionedComponentsSet;
 import transformation.VersionedCubeSchemaModule;
-import transformation.VersionedTransformationSchemeLogic;
+import transformation.VersionedFunctionalModuleLogic;
 import trl_report_cell_views.ReportCellView;
 import trl_report_cell_views.ReportCellViewModule;
 import trl_sql_views.SQLView;
@@ -426,9 +431,94 @@ public class AttributeLineageUtil {
     return rf.getCreatedCubeColumns();
   }
 
-  /**
-   * @param call
-   */
+
+
+/**
+ * Creates an attributeLineageModel according to the details of the GetAttributeLineageModel
+ * call, this is then set as the resultingModel field of the call.
+ * 
+ * @param call
+ */
+public static void createAttributeLineageModel(GetAttributeLineageModel call) {
+
+  // delete the old row logic group and build the new one.
+  call.eUnset(call.eClass().getEStructuralFeature(Platform_callPackage.GET_ATTRIBUTE_LINEAGE_MODEL__RESULTING_MODEL));
+  AttributeLineageModel attributeLineageModel = Attribute_lineageFactory.eINSTANCE.createAttributeLineageModel();
+  call.setResultingModel(attributeLineageModel);
+  // we should create the set of useful functions
+  SpecialFunctionSpecs specialFunctions = Util.setSpecialFucntions(attributeLineageModel);
+
+  // loop through each view in each sqlViews modules.
+
+  EList<VersionedFunctionalModuleLogic> functionalModuleLogicList = call.getTransformationContext()
+      .getDatasetTransformationModules();
+  EList<ReportCellViewModule> reportViewModuleList = call.getTransformationContext().getReportCellViewModules();
+  EList<VersionedCubeSchemaModule> cubeSchemaModuleList = call.getTransformationContext().getCubeSchemaModules();
+
+  Iterator<VersionedFunctionalModuleLogic> transformationModuleIter = functionalModuleLogicList.iterator();
+  Iterator<ReportCellViewModule> reportViewModuleIter = reportViewModuleList.iterator();
+  Iterator<VersionedCubeSchemaModule> CubeSchemaModuleIter = cubeSchemaModuleList.iterator();
+
+  while (transformationModuleIter.hasNext()) {
+        VersionedSQLViewsModule viewModules = (VersionedSQLViewsModule) transformationModuleIter.next();
+    EList<SQLView> viewList = viewModules.getSqlViews();
+    Iterator<SQLView> viewIter = viewList.iterator();
+    while (viewIter.hasNext()) {
+   
+      SQLView view = viewIter.next();
+      CubeTransformationLogic rowlogic = TRLUtil.translateViewToFunctionalRowLogic(view, functionalModuleLogicList,
+          cubeSchemaModuleList, specialFunctions);
+      if (rowlogic.getRowCreationApproachForCube() != null) {
+
+        attributeLineageModel.getRowTransformations().add(rowlogic);
+      }
+    }
+
+  }
+  while (reportViewModuleIter.hasNext()) {
+  
+    ReportCellViewModule reportViewModules = reportViewModuleIter.next();
+    EList<ReportCellView> reportCellViewList = reportViewModules.getReportCellViews();
+    Iterator<ReportCellView> reportViewIter = reportCellViewList.iterator();
+    while (reportViewIter.hasNext()) {
+     
+      SQLView view = reportViewIter.next();
+      CubeTransformationLogic rowlogic = TRLUtil.translateViewToFunctionalRowLogic(view, functionalModuleLogicList,
+          cubeSchemaModuleList, specialFunctions);
+      if (rowlogic.getRowCreationApproachForCube() != null) {
+
+        attributeLineageModel.getRowTransformations().add(rowlogic);
+      }
+    }
+
+  }
+
+  while (CubeSchemaModuleIter.hasNext()) {
+   
+    VersionedCubeSchemaModule versionedCubeSchemaModule = CubeSchemaModuleIter.next();
+    EList<CubeSchema> tableSchemaList = versionedCubeSchemaModule.getSchemas();
+    Iterator<CubeSchema> tableSchemaIter = tableSchemaList.iterator();
+    while (tableSchemaIter.hasNext()) {
+    
+      CubeSchema ts = tableSchemaIter.next();
+      BaseRowStructure e = Util.translateCubeSchemaToBaseRowStructure(ts, functionalModuleLogicList,
+          cubeSchemaModuleList);
+
+      attributeLineageModel.getBaseSchemas().add(e);
+
+    }
+
+  }
+
+  Util.replaceSpeculativeColumnReferencesWithResolvedColumnReference(attributeLineageModel);
+
+
+}
+
+
+/**
+ * @param call
+ */
 public static void createAttributeLineageModelForOneReportCell(GetAttributeLineageForOneReportCell call) {
 	
 	 
@@ -464,85 +554,45 @@ public static void createAttributeLineageModelForOneReportCell(GetAttributeLinea
 }
 
 
-/**
- * Creates an attributeLineageModel according to the details of the GetAttributeLineageModel
- * call, this is then set as the resultingModel field of the call.
- * 
- * @param call
- */
-public static void createAttributeLineageModel(GetAttributeLineageModel call) {
+public static void getTestLogic(GetTestLogic call) {
+	// TODO Auto-generated method stub
+	 VersionedComponentsSet finalContext = call.getRelease();
+	 
+	 GetAttributeLineageModel getAttributeLineageModelPlatformCall = Platform_callFactory.eINSTANCE
+		        .createGetAttributeLineageModel();
+		    getAttributeLineageModelPlatformCall.setTransformationContext(finalContext);
+		    createAttributeLineageModel(getAttributeLineageModelPlatformCall);	    
+		    AttributeLineageModel referenceProgram = 
+		        getAttributeLineageModelPlatformCall.getResultingModel();
 
-  // delete the old row logic group and build the new one.
-  call.eUnset(call.eClass().getEStructuralFeature(Platform_callPackage.GET_ATTRIBUTE_LINEAGE_MODEL__RESULTING_MODEL));
-  AttributeLineageModel attributeLineageModel = Attribute_lineageFactory.eINSTANCE.createAttributeLineageModel();
-  call.setResultingModel(attributeLineageModel);
-  // we should create the set of useful functions
-  SpecialFunctionSpecs specialFunctions = Util.setSpecialFucntions(attributeLineageModel);
+		    
+		    
+	 TestDefinition testDef = call.getTestDefinition();
+	 ReportCell reportCell = testDef.getReportCells().get(0);
+	 
+	//create a list of target cubes, for now it will contain just one, we will improve this 
+	    //later so that we can get the attribute lineage model for a set of report cells.
+	    EList<TargetCube> singleTargetCubeList = new BasicEList<TargetCube>();
+	    singleTargetCubeList.add((TargetCube) TRLUtil
+	        .getReportCellViewForCell(reportCell, finalContext).
+	        getCube());
+	    
+	    //make a copy of the result of the platform call, possibly this is not strictly
+	    //necessery as it is not used elsewhere.
+	    AttributeLineageModel p = EcoreUtil.copy(referenceProgram);
+	    //mark each element that the report cell is dependent upon as UsedInSubset
+	    ComparisonUtil.markAttributeLineageComponentsAsUsedInSubSet(p, singleTargetCubeList.iterator(), 
+	        getAttributeLineageModelPlatformCall);
+	    //delete every element that is not marked as usedInSubset.
+	    ComparisonUtil.trimComponentsMarkedInTrail(p);
 
-  // loop through each view in each sqlViews modules.
-
-  EList<VersionedTransformationSchemeLogic> transformationSchemeLogicList = call.getTransformationContext()
-      .getDatasetTransformationModules();
-  EList<ReportCellViewModule> reportViewModuleList = call.getTransformationContext().getReportCellViewModules();
-  EList<VersionedCubeSchemaModule> cubeSchemaModuleList = call.getTransformationContext().getCubeSchemaModules();
-
-  Iterator<VersionedTransformationSchemeLogic> transformationModuleIter = transformationSchemeLogicList.iterator();
-  Iterator<ReportCellViewModule> reportViewModuleIter = reportViewModuleList.iterator();
-  Iterator<VersionedCubeSchemaModule> CubeSchemaModuleIter = cubeSchemaModuleList.iterator();
-
-  while (transformationModuleIter.hasNext()) {
-        VersionedSQLViewsModule viewModules = (VersionedSQLViewsModule) transformationModuleIter.next();
-    EList<SQLView> viewList = viewModules.getSqlViews();
-    Iterator<SQLView> viewIter = viewList.iterator();
-    while (viewIter.hasNext()) {
-   
-      SQLView view = viewIter.next();
-      CubeTransformationLogic rowlogic = TRLUtil.translateViewToFunctionalRowLogic(view, transformationSchemeLogicList,
-          cubeSchemaModuleList, specialFunctions);
-      if (rowlogic.getRowCreationApproachForCube() != null) {
-
-        attributeLineageModel.getRowTransformations().add(rowlogic);
-      }
-    }
-
-  }
-  while (reportViewModuleIter.hasNext()) {
-  
-    ReportCellViewModule reportViewModules = reportViewModuleIter.next();
-    EList<ReportCellView> reportCellViewList = reportViewModules.getReportCellViews();
-    Iterator<ReportCellView> reportViewIter = reportCellViewList.iterator();
-    while (reportViewIter.hasNext()) {
-     
-      SQLView view = reportViewIter.next();
-      CubeTransformationLogic rowlogic = TRLUtil.translateViewToFunctionalRowLogic(view, transformationSchemeLogicList,
-          cubeSchemaModuleList, specialFunctions);
-      if (rowlogic.getRowCreationApproachForCube() != null) {
-
-        attributeLineageModel.getRowTransformations().add(rowlogic);
-      }
-    }
-
-  }
-
-  while (CubeSchemaModuleIter.hasNext()) {
-   
-    VersionedCubeSchemaModule versionedCubeSchemaModule = CubeSchemaModuleIter.next();
-    EList<CubeSchema> tableSchemaList = versionedCubeSchemaModule.getSchemas();
-    Iterator<CubeSchema> tableSchemaIter = tableSchemaList.iterator();
-    while (tableSchemaIter.hasNext()) {
-    
-      CubeSchema ts = tableSchemaIter.next();
-      BaseRowStructure e = Util.translateCubeSchemaToBaseRowStructure(ts, transformationSchemeLogicList,
-          cubeSchemaModuleList);
-
-      attributeLineageModel.getBaseSchemas().add(e);
-
-    }
-
-  }
-
-  Util.replaceSpeculativeColumnReferencesWithResolvedColumnReference(attributeLineageModel);
-
-
+	    TestLogic tl = TestFactory.eINSTANCE.createTestLogic();
+	    tl.setAttributeLineageModel(p);
+	    tl.setTestDefinition(call.getTestDefinition());
+	    call.setTestLogic(tl);
+	    
+	    
+	 
+	 
 }
 }

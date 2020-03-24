@@ -25,7 +25,7 @@ SPDX-License-Identifier: EPL-2.0
         <xsd:sequence>
           <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="schemes" type="vtl_transformation:TRANSFORMATION_SCHEME">
             <xsd:annotation>
-              <xsd:documentation>The TransformationSchemes</xsd:documentation>
+              <xsd:documentation>The FunctionalModules</xsd:documentation>
             </xsd:annotation>
           </xsd:element>
         </xsd:sequence>

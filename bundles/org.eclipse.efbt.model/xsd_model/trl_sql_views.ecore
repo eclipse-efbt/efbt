@@ -318,7 +318,7 @@
       <details key="kind" value="empty"/>
     </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="VersionedSQLViewsModule" eSuperTypes="transformation.ecore#//VersionedTransformationSchemeLogic">
+  <eClassifiers xsi:type="ecore:EClass" name="VersionedSQLViewsModule" eSuperTypes="transformation.ecore#//VersionedFunctionalModuleLogic">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A module of SQLViews with a version number"/>
     </eAnnotations>

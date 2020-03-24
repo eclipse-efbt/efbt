@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:scenarios="http://www.eclipse.org/scenarios" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="scenarios" ecore:package="scenarios" targetNamespace="http://www.eclipse.org/scenarios">
+  <xsd:import namespace="http://www.eclipse.org/emf/2002/Ecore" schemaLocation="Ecore.xsd"/>
+  <xsd:annotation>
+    <xsd:documentation>This package describes Scenarios</xsd:documentation>
+  </xsd:annotation>
+  <xsd:annotation>
+    <xsd:appinfo ecore:key="license" source="license">Copyright (c) 2019 Openregtech Ltd
+ All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html
+
+SPDX-License-Identifier: EPL-2.0 
+
+ Contributors:
+ Neil Mackenzie - initial API and implementation&#13;</xsd:appinfo>
+  </xsd:annotation>
+  <xsd:complexType name="Scenario">
+    <xsd:annotation>
+      <xsd:documentation>A Scenario</xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute ecore:id="true" name="name" type="ecore:EString">
+      <xsd:annotation>
+        <xsd:documentation>The name of the Scenario</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="ScenarioSet">
+    <xsd:annotation>
+      <xsd:documentation>A Set of Scenarios</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="scenarios" type="scenarios:Scenario">
+        <xsd:annotation>
+          <xsd:documentation>The Scenarios in the ScenarioSet</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="name" type="ecore:EString">
+      <xsd:annotation>
+        <xsd:documentation>The name of the ScenarioSet</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+</xsd:schema>

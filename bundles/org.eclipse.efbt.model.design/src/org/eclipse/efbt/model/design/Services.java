@@ -20,21 +20,25 @@ import core.MEMBER;
 
 import org.eclipse.efbt.model.util.FunctionTextUtil;
 import org.eclipse.efbt.model.util.TRLUtil;
-import org.eclipse.efbt.model.util.NavigationContextUtil;
+import org.eclipse.efbt.model.util.TagUtil;
+
 
 import org.eclipse.efbt.model.util.AttributeLineageUtil;
 import org.eclipse.efbt.model.util.CubesAndViewsUtil;
-import org.eclipse.efbt.model.util.Util;
 import org.eclipse.efbt.model.platformcalls.PlatformCalls;
 
 import cube_transformation_logic.CubeTransformationLogic;
 import row_transformation_logic.BaseRowStructure;
-
+import scenarios.Scenario;
+import tags.ScenarioTag;
+import tags.FunctionalModuleTag;
 import transformation.VersionedComponentsSet;
-import transformation.TransformationScheme;
+import functional_module.LeafFunctionalModule;
+import functional_module.FunctionalModule;
 
 
 import platform_call.PlatformCall;
+import requirements_text.TitledRequirementsSection;
 import functions.AggregateFunction;
 import functions.BasicFunction;
 import functions.Function;
@@ -48,8 +52,6 @@ import trl_sql_views.JoinView;
 import trl_sql_views.SQLView;
 import trl_sql_views.VersionedSQLViewsModule;
 
-
-import transformation.DataSetTransformation;
 
 
 
@@ -190,18 +192,42 @@ public String getStringForAggregateFunction(AggregateFunction self) {
      }
 
 
+public EList<FunctionalModuleTag>  getTransformationTagsFromDefualtTagGroup(FunctionalModule self) {
     
+	
+	return TagUtil.getFunctionalModuleTagsFromDefualtTagGroup(  self); 
+ }
+
+public EList<TitledRequirementsSection> getTransformationRequirementsFromDefualtTagGroup(LeafFunctionalModule self) {
     
-    public VersionedSQLViewsModule getDefaultSQLViewsModuleForTransformation(TransformationScheme self) {
+	
+	return TagUtil.getFunctionalModuleRequirementsFromDefualtTagGroup(  self); 
+ }
+
+public EList<ScenarioTag>  getScenarioTagsFromDefualtTagGroup(Scenario self) {
+    
+	
+	return TagUtil.getScenarioTagsFromDefualtTagGroup(  self); 
+ }
+
+public EList<TitledRequirementsSection> getScenarioRequirementsFromDefualtTagGroup(Scenario self) {
+    
+	
+	return TagUtil.getScenarioRequirementsFromDefualtTagGroup(  self);   
+ }
+
+
+    
+    public VersionedSQLViewsModule getDefaultSQLViewsModuleForTransformation(LeafFunctionalModule self) {
        
     	
     	return TRLUtil.getDefaultSQLViewsModuleForTransformation(  self); 
      }
     
-    public VersionedCubeSchemaModule getDefaultCubeSchemaModuleForTransformationScheme(TransformationScheme self) {
+    public VersionedCubeSchemaModule getDefaultCubeSchemaModuleForFunctionalModule(LeafFunctionalModule self) {
        
     	
-    	return TRLUtil.getDefaultCubeSchemaModuleForTransformationScheme(  self); 
+    	return TRLUtil.getDefaultCubeSchemaModuleForFunctionalModule(  self); 
      }
   
   

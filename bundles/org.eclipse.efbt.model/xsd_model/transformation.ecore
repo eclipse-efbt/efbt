@@ -3,7 +3,7 @@
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="transformation" nsURI="http://www.eclipse.org/transformation"
     nsPrefix="transformation">
   <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-    <details key="documentation" value="This package describes DataSetTransformations used to derive DerivedCubes, and the grouping of these DataSetTransformations into Schemes and Modules.&#xA; &#xD;&#xA;This package describes Module Management classes.&#xA;These classes allow items to be grouped together and given a version. For example a FunctionSpecModule will contain a group of Functions.&#xA;Modules can also state which other modules they depend upon, allowing for fine grained dependencies between groups of items.&#xA;&#xD;&#xA; This package describes the schemas of FreeBirdToolsCubes by providing  means to access the relevent the data_definition:CUBE_STRUCTURE    &#xA;&#xD;&#xA; This package describes TRL preport cell views&#xA;&#xD;&#xA;This package describes the classes for storing Report related information&#xA;&#xD;&#xA;This package describes the set of SQLViews, each SQLView represents a DataSetTransformation which transforms&#xA;    data from one DataSet to another in an immutable side-effect free fashion. They use concepts from the well-known SQL StructuredQueryLanguage.&#xA;    &#xA;    The transformed dataset is created just once by the transformation and then never amended (it is immutable)&#xA;    The only data that can be used in the transformation is the data from the source dataset(s), so it cannot use anything else including&#xA;    'global variables' (which do not exist in the compitational model, the only data created by the transformation is the data in the resulting transformed dataset,&#xA;    no other data is created or affected so the transformations are side-effect free.&#xA;&#xA;&#xD;&#xA;This package describes the logic to calculate individual columns &#xD;&#xA;TheFunctions pckage cotain information about functions and their specifications. &#xA;Functions ae used in DataSetTransformations such as the ones for TRL and VTL. &#xA;Functions are also used in AttributeLineageModels an in DataLineageModels.&#xA;&#xD;&#xA; This package describes the FreeBirdToolsCubes of Bird Bench, these are at a slightly different &#xA;    level of abstraction form  the related Cubes from the data_definition package. &#xA; &#xA; "/>
+    <details key="documentation" value="This package describes DataSetTransformations used to derive DerivedCubes, and the grouping of these DataSetTransformations into Schemes and Modules.&#xA; &#xD;&#xA; This package describes the schemas of FreeBirdToolsCubes by providing  means to access the relevent the data_definition:CUBE_STRUCTURE    &#xA;&#xD;&#xA;This package describes Module Management classes.&#xA;These classes allow items to be grouped together and given a version. For example a FunctionSpecModule will contain a group of Functions.&#xA;Modules can also state which other modules they depend upon, allowing for fine grained dependencies between groups of items.&#xA;&#xD;&#xA; This package describes TRL preport cell views&#xA;&#xD;&#xA;This package describes the classes for storing Report related information&#xA;&#xD;&#xA;This package describes the set of SQLViews, each SQLView represents a DataSetTransformation which transforms&#xA;    data from one DataSet to another in an immutable side-effect free fashion. They use concepts from the well-known SQL StructuredQueryLanguage.&#xA;    &#xA;    The transformed dataset is created just once by the transformation and then never amended (it is immutable)&#xA;    The only data that can be used in the transformation is the data from the source dataset(s), so it cannot use anything else including&#xA;    'global variables' (which do not exist in the compitational model, the only data created by the transformation is the data in the resulting transformed dataset,&#xA;    no other data is created or affected so the transformations are side-effect free.&#xA;&#xA;&#xD;&#xA;This package describes the logic to calculate individual columns &#xD;&#xA;TheFunctions pckage cotain information about functions and their specifications. &#xA;Functions ae used in DataSetTransformations such as the ones for TRL and VTL. &#xA;Functions are also used in AttributeLineageModels an in DataLineageModels.&#xA;&#xD;&#xA; This package describes the FreeBirdToolsCubes of Bird Bench, these are at a slightly different &#xA;    level of abstraction form  the related Cubes from the data_definition package. &#xA; &#xA; "/>
   </eAnnotations>
   <eAnnotations source="license">
     <details key="license" value="Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;&#xD;&#xA;Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;&#xD;&#xA;Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;&#xD;&#xA;Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;&#xD;&#xA;Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;&#xD;&#xA;Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;This file contains a representation of the rendering package  of the SMCubes Information Model. The SMCubes Information Model is freely available at https://www.ecb.europa.eu/stats/ecb_statistics/co-operation_and_standards/smcube/html/index.en.html&#xD;&#xA;Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;&#xD;&#xA;Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;&#xD;&#xA;Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;&#xD;&#xA;Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD; This file contains a representation of the core package  of the SMCubes Information Model. The SMCubes Information Model is freely available at https://www.ecb.europa.eu/stats/ecb_statistics/co-operation_and_standards/smcube/html/index.en.html&#xD;&#xA;Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"/>
@@ -36,26 +36,6 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="DataSetTransformationTransformationScheme"
-      eSuperTypes="#//TransformationScheme">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A DataSetTransformationTransformationScheme is a set of releted DataSetTransformations.&#xA;Usually they will be groups where the derived cube associated with DataSetTransformation, has source cubes which are associated with other DataSetTransformations in the same group.&#xA;"/>
-    </eAnnotations>
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="DataSetTransformationTransformationScheme"/>
-      <details key="kind" value="empty"/>
-    </eAnnotations>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ReadDataSourceTransformationScheme"
-      eSuperTypes="#//TransformationScheme">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A TransformationScheme which represents the reading in data from base cubes. Note that the BIRD input layer is made up of BaseCubes."/>
-    </eAnnotations>
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="ReadDataSourceTransformationScheme"/>
-      <details key="kind" value="empty"/>
-    </eAnnotations>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Release" eSuperTypes="#//VersionedComponentsSet">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="a VersionedComponentSet which represents a final release."/>
@@ -74,57 +54,9 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ReportCellCreationTransformationScheme"
-      eSuperTypes="#//TransformationScheme">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A TransformationScheme which represents the calculation of report cells."/>
-    </eAnnotations>
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="ReportCellCreationTransformationScheme"/>
-      <details key="kind" value="empty"/>
-    </eAnnotations>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TransformationScheme">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="TransformationScheme is the super class of ReportCellTransformationScheme,ReadDataSourceTransformationScheme, and DataSetTransformationTransformationScheme.&#xA;It represents a set of processing."/>
-    </eAnnotations>
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="TransformationScheme"/>
-      <details key="kind" value="empty"/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EString"
-        iD="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The name of the TransformationScheme"/>
-      </eAnnotations>
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="name"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TransformationSchemeModule" eSuperTypes="module_management.ecore#//Module">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A module of TransformationSchemes"/>
-    </eAnnotations>
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="TransformationSchemeModule"/>
-      <details key="kind" value="elementOnly"/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="transformationSchemes"
-        upperBound="-1" eType="#//TransformationScheme" containment="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The  set of TransformationSchemes "/>
-      </eAnnotations>
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="element"/>
-        <details key="name" value="transformationSchemes"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VersionedComponentsSet">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="VersionedComponentsSet contains all the information required to translate a TransformationScheme and its dependent TransformationSchemes into an AttributeLineageModel&#xA;It is this component set that contains the cub scehma structures ,and the actual DataSetTransformations."/>
+      <details key="documentation" value="VersionedComponentsSet contains all the information required to translate a FunctionalModule and its dependent FunctionalModules into an AttributeLineageModel&#xA;It is this component set that contains the cub scehma structures ,and the actual DataSetTransformations."/>
     </eAnnotations>
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="VersionedComponentsSet"/>
@@ -133,7 +65,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="cubeSchemaModules" upperBound="-1"
         eType="#//VersionedCubeSchemaModule">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The set of VersionedCubeSchemaModules. Note that VersionedCubeSchemaModules state which ReadDataTransformationScheme they are associated with in the transformationScheme reference."/>
+        <details key="documentation" value="The set of VersionedCubeSchemaModules. Note that VersionedCubeSchemaModules state which ReadDataFunctionalModule they are associated with in the functionalModule reference."/>
       </eAnnotations>
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="attribute"/>
@@ -141,9 +73,9 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="datasetTransformationModules"
-        upperBound="-1" eType="#//VersionedTransformationSchemeLogic">
+        upperBound="-1" eType="#//VersionedFunctionalModuleLogic">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The set of DataSetTransformationModules, note that each DataSetTransformationModule states which  DataSetTransformationTransformationScheme they are associated with in the transformationScheme reference."/>
+        <details key="documentation" value="The set of DataSetTransformationModules, note that each DataSetTransformationModule states which  DataSetTransformationFunctionalModule they are associated with in the functionalModule reference."/>
       </eAnnotations>
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="attribute"/>
@@ -172,7 +104,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="reportCellViewModules"
         upperBound="-1" eType="ecore:EClass trl_report_cell_views.ecore#//ReportCellViewModule">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The set of ReportCellViewModules, note that each ReportCellViewModule states which  ReportCellCreationTransformationScheme they are associated with in the transformationScheme reference."/>
+        <details key="documentation" value="The set of ReportCellViewModules, note that each ReportCellViewModule states which  ReportCellCreationFunctionalModule they are associated with in the functionalModule reference."/>
       </eAnnotations>
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="attribute"/>
@@ -198,33 +130,14 @@
         <details key="name" value="schemas"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="transformationScheme" eType="#//ReadDataSourceTransformationScheme">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The ReadDataSourceTransformationScheme with which this module is associated."/>
-      </eAnnotations>
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="transformationScheme"/>
-      </eAnnotations>
-    </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="VersionedTransformationSchemeLogic"
-      eSuperTypes="module_management.ecore#//Module">
+  <eClassifiers xsi:type="ecore:EClass" name="VersionedFunctionalModuleLogic" eSuperTypes="module_management.ecore#//Module">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value=" A Module containing a set of DataSetTransformations "/>
     </eAnnotations>
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="VersionedTransformationSchemeLogic"/>
+      <details key="name" value="VersionedFunctionalModuleLogic"/>
       <details key="kind" value="elementOnly"/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="transformationScheme" eType="#//DataSetTransformationTransformationScheme">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The DataSetTransformationTransformationScheme with which this module is associated."/>
-      </eAnnotations>
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="transformation"/>
-      </eAnnotations>
-    </eStructuralFeatures>
   </eClassifiers>
 </ecore:EPackage>

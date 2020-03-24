@@ -313,7 +313,7 @@
       <details key="kind" value="empty"/>
     </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="VersionedSQLViewsModule" eSuperTypes="transformation.ecore#//VersionedTransformationSchemeLogic">
+  <eClassifiers xsi:type="ecore:EClass" name="VersionedSQLViewsModule" eSuperTypes="transformation.ecore#//VersionedFunctionalModuleLogic">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="VersionedSQLViewsModule"/>
       <details key="kind" value="elementOnly"/>
