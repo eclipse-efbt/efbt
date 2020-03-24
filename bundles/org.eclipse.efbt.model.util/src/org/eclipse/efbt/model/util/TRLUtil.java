@@ -41,7 +41,7 @@ import row_transformation_logic.GroupByRowCreationApproach;
 import row_transformation_logic.RowJoinFunction;
 import row_transformation_logic.UnionRowCreationApproach;
 import row_transformation_logic.impl.Row_transformation_logicFactoryImpl;
-import tags.TransformationSchemeTag;
+import tags.FunctionalModuleTag;
 import cube_transformation_logic.impl.Cube_transformation_logicFactoryImpl;
 import cubes.FreeBirdToolsCube;
 import cubes.DerivedCube;
@@ -68,13 +68,13 @@ import cube_transformation_logic.Cube_transformation_logicFactory;
 import row_transformation_logic.Row_transformation_logicFactory;
 
 import transformation.DataSetTransformation;
-import functional_module.LeafTransformationScheme;
-import functional_module.ReportCellCreationTransformationScheme;
+import functional_module.LeafFunctionalModule;
+import functional_module.ReportCellCreationFunctionalModule;
 
-import functional_module.TransformationScheme;
+import functional_module.FunctionalModule;
 import transformation.VersionedComponentsSet;
 import transformation.VersionedCubeSchemaModule;
-import transformation.VersionedTransformationSchemeLogic;
+import transformation.VersionedFunctionalModuleLogic;
 import trl_report_cell_views.ReportCellView;
 import trl_report_cell_views.ReportCellViewModule;
 import trl_sql_views.AggregateEnrichmentView;
@@ -98,13 +98,13 @@ public class TRLUtil {
    * Create a CubeTransformationLogic object form an SQLView.
    * 
    * @param view
-   * @param transformationSchemeLogicList
+   * @param functionalModuleLogicList
    * @param cubeSchemaModuleList
    * @param specialFunctions
    * @return
    */
   public static CubeTransformationLogic translateViewToFunctionalRowLogic(SQLView view,
-      EList<VersionedTransformationSchemeLogic> transformationSchemeLogicList,
+      EList<VersionedFunctionalModuleLogic> functionalModuleLogicList,
       EList<VersionedCubeSchemaModule> cubeSchemaModuleList, 
       SpecialFunctionSpecs specialFunctions) {
 
@@ -117,7 +117,7 @@ public class TRLUtil {
     // columns created by row function
     FreeBirdToolsCube derivedCube = view.getCube();
     setFunctionalCubeLogic(view, cubeTransformationLogic ,
-        specialFunctions, transformationSchemeLogicList, cubeSchemaModuleList);
+        specialFunctions, functionalModuleLogicList, cubeSchemaModuleList);
 
     if (view instanceof EnrichmentView) {
 
@@ -149,7 +149,7 @@ public class TRLUtil {
       // create a calculatedColumn using the specialCopycolumn Function.
       // first create the CopyClumn FunctionSpec
 
-      EList<SQLView> dependantViews = getTheDependantViews(view, transformationSchemeLogicList);
+      EList<SQLView> dependantViews = getTheDependantViews(view, functionalModuleLogicList);
       EList<CubeSchema> dependantSourceTables = getAnySourceCubes(view, cubeSchemaModuleList);
 
       Iterator<SQLView> dependantViewsIter = dependantViews.iterator();
@@ -157,7 +157,7 @@ public class TRLUtil {
       while (dependantViewsIter.hasNext()) {
         SQLView dependantView = dependantViewsIter.next();
         EList<CubeColumn> columns = 
-            getColumnsFromSQLView(dependantView, transformationSchemeLogicList, 
+            getColumnsFromSQLView(dependantView, functionalModuleLogicList, 
                 cubeSchemaModuleList, specialFunctions);
         Iterator<CubeColumn> columnIter = columns.iterator();
         while (columnIter.hasNext()) {
@@ -213,7 +213,7 @@ public class TRLUtil {
 
     if (view instanceof AggregateEnrichmentView) {
      
-      EList<SQLView> dependantViews = getTheDependantViews(view, transformationSchemeLogicList);
+      EList<SQLView> dependantViews = getTheDependantViews(view, functionalModuleLogicList);
       Iterator<SQLView> dependantViewsIter = dependantViews.iterator();
       AggregateEnrichmentView aggView = (AggregateEnrichmentView) view;
       
@@ -288,7 +288,7 @@ public class TRLUtil {
       }
     }
     if (view instanceof JoinView) {
-      EList<SQLView> dependantViews = getTheDependantViews(view, transformationSchemeLogicList);
+      EList<SQLView> dependantViews = getTheDependantViews(view, functionalModuleLogicList);
       EList<CubeSchema> dependantSourceCubes = getAnySourceCubes(view, cubeSchemaModuleList);
 
       Iterator<SQLView> dependantViewsIter = dependantViews.iterator();
@@ -296,7 +296,7 @@ public class TRLUtil {
       while (dependantViewsIter.hasNext()) {
         SQLView dependantView = dependantViewsIter.next();
         EList<CubeColumn> columns =
-            getColumnsFromSQLView(dependantView, transformationSchemeLogicList, 
+            getColumnsFromSQLView(dependantView, functionalModuleLogicList, 
                 cubeSchemaModuleList, specialFunctions);
         Iterator<CubeColumn> columnIter = columns.iterator();
         while (columnIter.hasNext()) {
@@ -371,7 +371,7 @@ public class TRLUtil {
       // calculated column for each field,
       // however the we should have a parameter for each dependent cube
 
-      EList<SQLView> dependantViews = getTheDependantViews(view, transformationSchemeLogicList);
+      EList<SQLView> dependantViews = getTheDependantViews(view, functionalModuleLogicList);
       EList<CubeSchema> dependantSourceCubes = getAnySourceCubes(view, cubeSchemaModuleList);
 
       Iterator<SQLView> dependantViewsIter = dependantViews.iterator();
@@ -382,7 +382,7 @@ public class TRLUtil {
         SQLView dependantView = dependantViewsIter.next();
         if (first) {
           EList<CubeColumn> theColumns =
-              getColumnsFromSQLView(dependantView, transformationSchemeLogicList,
+              getColumnsFromSQLView(dependantView, functionalModuleLogicList,
               cubeSchemaModuleList, specialFunctions);
           Iterator<CubeColumn> columnIter = theColumns.iterator();
           while (columnIter.hasNext()) {
@@ -468,7 +468,7 @@ public class TRLUtil {
     if (view instanceof ReportCellView) {
       // we want the groupbycolumns and the agregate column...
       // we just make a plain assumption that the source is a groupby transformation.
-      EList<SQLView> dependantViews = getTheDependantViews(view, transformationSchemeLogicList);
+      EList<SQLView> dependantViews = getTheDependantViews(view, functionalModuleLogicList);
       Iterator<SQLView> dependantViewsIter = dependantViews.iterator();
       ReportCellView dpView = (ReportCellView) view;
       while (dependantViewsIter.hasNext()) {
@@ -532,11 +532,11 @@ public class TRLUtil {
    * @param view
    * @param cubeTransformationLogic 
    * @param specialFunctions
-   * @param transformationSchemeLogicList
+   * @param functionalModuleLogicList
    * @param cubeSchemaModuleList
    */
   private static void setFunctionalCubeLogic(SQLView view, CubeTransformationLogic cubeTransformationLogic ,
-      SpecialFunctionSpecs specialFunctions, EList<VersionedTransformationSchemeLogic> transformationSchemeLogicList,
+      SpecialFunctionSpecs specialFunctions, EList<VersionedFunctionalModuleLogic> functionalModuleLogicList,
       EList<VersionedCubeSchemaModule> cubeSchemaModuleList) {
     
     if ((view instanceof CopyView) || (view instanceof EnrichmentView)) {
@@ -585,7 +585,7 @@ public class TRLUtil {
 
     if (view instanceof ReportCellView) {
       // get the dependent view
-      SQLView dependantView = getTheDependantViews(view, transformationSchemeLogicList).get(0);
+      SQLView dependantView = getTheDependantViews(view, functionalModuleLogicList).get(0);
       RowCreationApproachForCube rowCreationApproachForCube = Row_transformation_logicFactoryImpl.eINSTANCE.createRowCreationApproachForCube();
       FilterAndGroupToOneRowCreationApproach rowFilterAndGroupFunction = Row_transformation_logicFactoryImpl.eINSTANCE
           .createFilterAndGroupToOneRowCreationApproach();
@@ -640,15 +640,15 @@ public class TRLUtil {
   /**
    * Return the columns associated with an SQLView.
    * @param view
-   * @param transformationSchemeLogicList
+   * @param functionalModuleLogicList
    * @param cubeSchemaModuleList
    * @param specialFunctions
    * @return
    */
   public static EList<CubeColumn> getColumnsFromSQLView(SQLView view,
-      EList<VersionedTransformationSchemeLogic> transformationSchemeLogicList,
+      EList<VersionedFunctionalModuleLogic> functionalModuleLogicList,
       EList<VersionedCubeSchemaModule> cubeSchemaModuleList, SpecialFunctionSpecs specialFunctions) {
-    CubeTransformationLogic rowLogic = translateViewToFunctionalRowLogic(view, transformationSchemeLogicList,
+    CubeTransformationLogic rowLogic = translateViewToFunctionalRowLogic(view, functionalModuleLogicList,
         cubeSchemaModuleList, specialFunctions);
     return AttributeLineageUtil.getColumnsFromFunctionalRowLogic(rowLogic);
   }
@@ -656,11 +656,11 @@ public class TRLUtil {
   /**
    * Return the Views dependant upon a view
    * @param view
-   * @param transformationSchemeLogicList
+   * @param functionalModuleLogicList
    * @return
    */
   public static EList<SQLView> getTheDependantViews(SQLView view,
-      EList<VersionedTransformationSchemeLogic> transformationSchemeLogicList) {
+      EList<VersionedFunctionalModuleLogic> functionalModuleLogicList) {
 
     BasicEList<SQLView> dependantViews = new BasicEList<SQLView>();
 
@@ -671,7 +671,7 @@ public class TRLUtil {
     while (dependantCubesIter.hasNext()) {
       FreeBirdToolsCube dtd = dependantCubesIter.next();
    
-      EList<SQLView> viewList = getAllViews(transformationSchemeLogicList);
+      EList<SQLView> viewList = getAllViews(functionalModuleLogicList);
       Iterator<SQLView> iter = viewList.iterator();
       FreeBirdToolsCube cube = null;
       while (iter.hasNext()) {
@@ -691,14 +691,14 @@ public class TRLUtil {
   }
 
   /**
-   * et all the SQLViews associated with a  list of VersionedTransformationSchemeLogics
-   * @param transformationSchemeLogicList
+   * et all the SQLViews associated with a  list of VersionedFunctionalModuleLogics
+   * @param functionalModuleLogicList
    * @return
    */
-  private static EList<SQLView> getAllViews(EList<VersionedTransformationSchemeLogic> transformationSchemeLogicList) {
+  private static EList<SQLView> getAllViews(EList<VersionedFunctionalModuleLogic> functionalModuleLogicList) {
     EList<SQLView> returnList = new BasicEList<SQLView>();
-    for (Iterator iterator = transformationSchemeLogicList.iterator(); iterator.hasNext();) {
-      VersionedTransformationSchemeLogic dataSetTransformationModule = (VersionedTransformationSchemeLogic) iterator
+    for (Iterator iterator = functionalModuleLogicList.iterator(); iterator.hasNext();) {
+      VersionedFunctionalModuleLogic dataSetTransformationModule = (VersionedFunctionalModuleLogic) iterator
           .next();
       EList<SQLView> views = ((VersionedSQLViewsModule) dataSetTransformationModule).getSqlViews();
       for (Iterator iterator2 = views.iterator(); iterator2.hasNext();) {
@@ -749,30 +749,30 @@ public class TRLUtil {
   }
 
   /**
-	 * For a TransformationScheme, get the SQLViewsModule associated according to
+	 * For a FunctionalModule, get the SQLViewsModule associated according to
 	 * the DefaultNavigationContext.
 	 * 
-	 * @param transformationScheme
+	 * @param functionalModule
 	 * @return
 	 */
 	public static VersionedSQLViewsModule getDefaultSQLViewsModuleForTransformation( 
-			LeafTransformationScheme transformationScheme) {
+			LeafFunctionalModule functionalModule) {
 
 		VersionedSQLViewsModule returnModule = null;
-		EList<TransformationSchemeTag> returnlist = new BasicEList<TransformationSchemeTag>();
-		NavigationContext nc = TagUtil.getDefaultNavigationContext(transformationScheme);
+		EList<FunctionalModuleTag> returnlist = new BasicEList<FunctionalModuleTag>();
+		NavigationContext nc = TagUtil.getDefaultNavigationContext(functionalModule);
 		/**
 		 * VersionedComponentsSet context = nc.getTransformationContext();
 		 * 
 		 * EList<VersionedCubeSchemaModule> sm = context.getCubeSchemaModules();
 		 * EList<ReportCellViewModule> rm = context.getReportCellViewModules();
-		 * EList<VersionedTransformationSchemeLogic> tm =
+		 * EList<VersionedFunctionalModuleLogic> tm =
 		 * context.getDatasetTransformationModules();
 		 * 
 		 * for (Iterator iterator = tm.iterator(); iterator.hasNext();) {
-		 * VersionedTransformationSchemeLogic dataSetTransformationModule =
-		 * (VersionedTransformationSchemeLogic) iterator .next(); if
-		 * (dataSetTransformationModule.getTransformationScheme().equals(transformationScheme))
+		 * VersionedFunctionalModuleLogic dataSetTransformationModule =
+		 * (VersionedFunctionalModuleLogic) iterator .next(); if
+		 * (dataSetTransformationModule.getFunctionalModule().equals(functionalModule))
 		 * { returnModule = (VersionedSQLViewsModule) dataSetTransformationModule; }
 		 * 
 		 * }
@@ -781,7 +781,7 @@ public class TRLUtil {
 		EList<LeafModuleToVersionedSQLViewsModule> csm = domainMapping.getLeafModuleToVersionedSQLViewsModules();
 
 		for (LeafModuleToVersionedSQLViewsModule leafModuleToVersionedSQLViewsModule : csm) {
-			if (leafModuleToVersionedSQLViewsModule.getScheme().equals(transformationScheme)) {
+			if (leafModuleToVersionedSQLViewsModule.getScheme().equals(functionalModule)) {
 				returnModule = leafModuleToVersionedSQLViewsModule.getModule();
 			}
 		}
@@ -891,34 +891,34 @@ public class TRLUtil {
 
   /**
 	 * Return the VersionedCubeSchemaModule asociated with a
-	 * LeafTransformationScheme.
+	 * LeafFunctionalModule.
 	 * 
-	 * @param transformationScheme
+	 * @param functionalModule
 	 * @return
 	 */
-	public static VersionedCubeSchemaModule getDefaultCubeSchemaModuleForTransformationScheme(
-			LeafTransformationScheme transformationScheme) {
+	public static VersionedCubeSchemaModule getDefaultCubeSchemaModuleForFunctionalModule(
+			LeafFunctionalModule functionalModule) {
 
 		VersionedCubeSchemaModule returnModule = null;
 
-		EList<TransformationSchemeTag> returnlist = new BasicEList<TransformationSchemeTag>();
-		NavigationContext nc = TagUtil.getDefaultNavigationContext(transformationScheme);
+		EList<FunctionalModuleTag> returnlist = new BasicEList<FunctionalModuleTag>();
+		NavigationContext nc = TagUtil.getDefaultNavigationContext(functionalModule);
 
 		/**
-		 * EList<TransformationSchemeTag> returnlist = new
-		 * BasicEList<TransformationSchemeTag>(); NavigationContext nc =
-		 * TagUtil.getDefaultNavigationContext(transformationScheme);
+		 * EList<FunctionalModuleTag> returnlist = new
+		 * BasicEList<FunctionalModuleTag>(); NavigationContext nc =
+		 * TagUtil.getDefaultNavigationContext(functionalModule);
 		 * VersionedComponentsSet context = nc.getTransformationContext();
 		 * 
 		 * EList<VersionedCubeSchemaModule> sm = context.getCubeSchemaModules();
 		 * EList<ReportCellViewModule> rm = context.getReportCellViewModules();
-		 * EList<VersionedTransformationSchemeLogic> tm =
+		 * EList<VersionedFunctionalModuleLogic> tm =
 		 * context.getDatasetTransformationModules();
 		 * 
 		 * for (Iterator iterator = sm.iterator(); iterator.hasNext();) {
 		 * VersionedCubeSchemaModule cubeSchemaModule = (VersionedCubeSchemaModule)
 		 * iterator.next(); if
-		 * (cubeSchemaModule.getTransformationScheme().equals(transformationScheme)) {
+		 * (cubeSchemaModule.getFunctionalModule().equals(functionalModule)) {
 		 * returnModule = (VersionedCubeSchemaModule) cubeSchemaModule; }
 		 * 
 		 * }
@@ -928,7 +928,7 @@ public class TRLUtil {
 		EList<LeafModuleToVersionedCubeSchemaModule> csm = domainMapping.getLeafModuleToVersionedCubeSchemaModules();
 
 		for (LeafModuleToVersionedCubeSchemaModule leafModuleToVersionedCubeSchemaModule : csm) {
-			if (leafModuleToVersionedCubeSchemaModule.getScheme().equals(transformationScheme)) {
+			if (leafModuleToVersionedCubeSchemaModule.getScheme().equals(functionalModule)) {
 				returnModule = leafModuleToVersionedCubeSchemaModule.getModule();
 			}
 		}
@@ -942,7 +942,7 @@ public class TRLUtil {
 
 	   EList<MEMBER> members = new BasicEList<MEMBER>();
 	   
-	    NavigationContext nc = getDefaultNavigationContext(domain);
+	    NavigationContext nc = TagUtil.getDefaultNavigationContext(domain);
 	   BIRDModel bm = nc.getBirdModel();
 	   EList<MemberModule> birdMemberModules = bm.getMembers();
 	   for (Iterator iterator = birdMemberModules.iterator(); iterator.hasNext();) {
@@ -966,32 +966,22 @@ public class TRLUtil {
   
   
 
-  private static NavigationContext getDefaultNavigationContext(DOMAIN domain) {
-	
-	  ResourceSet rs = domain.eResource().getResourceSet();
-	    String tagsXMLFile = domain.eResource().getURI().trimSegments(1)
-	        + "/defaultNavigationContext.navigation_context";
-	    System.out.println(tagsXMLFile);
-	    File file = new File(tagsXMLFile);
-	    URI uri = file.isFile() ? URI.createFileURI(file.getAbsolutePath()) : URI.createURI(tagsXMLFile);
-	    Resource resource = rs.getResource(uri, true);
-	    return (NavigationContext) resource.getContents().get(0);
-}
+ 
 
 
 
   /**
-	 * Find the LeafTransformationScheme associated a reportCell in the context of a
+	 * Find the LeafFunctionalModule associated a reportCell in the context of a
 	 * VersionedComponentsSet.
 	 * 
 	 * @param reportCell
 	 * @param context
 	 * @return
 	 */
-	static LeafTransformationScheme findSchemeForReportCellView(ReportCell reportCell, VersionedComponentsSet context, DomainMappingModule mappingModule) {
+	static LeafFunctionalModule findSchemeForReportCellView(ReportCell reportCell, VersionedComponentsSet context, DomainMappingModule mappingModule) {
 		// find the scheme with the cell
 		EList<ReportCellViewModule> rcm = context.getReportCellViewModules();
-		LeafTransformationScheme returnScheme = null;
+		LeafFunctionalModule returnScheme = null;
 		for (Iterator iterator = rcm.iterator(); iterator.hasNext();) {
 			ReportCellViewModule reportCellViewModule = (ReportCellViewModule) iterator.next();
 			EList<ReportCellView> rcvm = reportCellViewModule.getReportCellViews();
@@ -1000,7 +990,7 @@ public class TRLUtil {
 				ReportCell cell = reportCellView.getReportCell();
 				if (cell.equals(reportCell)) {
 					
-					returnScheme = getTransformationSchemeForReportCellViewModule(reportCellViewModule, mappingModule); 
+					returnScheme = getFunctionalModuleForReportCellViewModule(reportCellViewModule, mappingModule); 
 				}
 
 			}
@@ -1008,18 +998,18 @@ public class TRLUtil {
 		return returnScheme;
 	}
 	
-	private static LeafTransformationScheme getTransformationSchemeForReportCellViewModule(
+	private static LeafFunctionalModule getFunctionalModuleForReportCellViewModule(
 			ReportCellViewModule reportCellViewModule, DomainMappingModule mappingModule) {
 		
-		LeafTransformationScheme returnLeafTransformationScheme = null;
+		LeafFunctionalModule returnLeafFunctionalModule = null;
 		  EList<LeafModuleToReportCellViewModule> mappings = mappingModule
 				.getLeafModuleToReportCellViewModules();
 		for (LeafModuleToReportCellViewModule leafModuleToReportCellViewModule : mappings) {
 			if (leafModuleToReportCellViewModule.getModule().getName().equals(reportCellViewModule.getName())) {
-				returnLeafTransformationScheme = leafModuleToReportCellViewModule.getScheme();
+				returnLeafFunctionalModule = leafModuleToReportCellViewModule.getScheme();
 			}
 		}
-		return returnLeafTransformationScheme;
+		return returnLeafFunctionalModule;
 	}
 
 

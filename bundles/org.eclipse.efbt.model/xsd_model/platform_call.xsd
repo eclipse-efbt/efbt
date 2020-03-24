@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<xsd:schema xmlns:attribute_lineage="http://www.eclipse.org/attribute_lineage" xmlns:base_cube_data="http://www.eclipse.org/base_cube_data" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:functions="http://www.eclipse.org/functions" xmlns:module_management="http://www.eclipse.org/module_management" xmlns:platform_call="http://www.eclipse.org/platform_call" xmlns:reports="http://www.eclipse.org/reports" xmlns:transformation="http://www.eclipse.org/transformation" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="platform_call" ecore:package="platform_call" targetNamespace="http://www.eclipse.org/platform_call">
+<xsd:schema xmlns:attribute_lineage="http://www.eclipse.org/attribute_lineage" xmlns:base_cube_data="http://www.eclipse.org/base_cube_data" xmlns:domain_model_mapping="http://www.eclipse.org/domain_model_mapping" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:functions="http://www.eclipse.org/functions" xmlns:module_management="http://www.eclipse.org/module_management" xmlns:platform_call="http://www.eclipse.org/platform_call" xmlns:reports="http://www.eclipse.org/reports" xmlns:test="http://www.eclipse.org/test" xmlns:transformation="http://www.eclipse.org/transformation" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="platform_call" ecore:package="platform_call" targetNamespace="http://www.eclipse.org/platform_call">
+  <xsd:import namespace="http://www.eclipse.org/domain_model_mapping" schemaLocation="domain_model_mapping.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/test" schemaLocation="test.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/reports" schemaLocation="reports.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/functions" schemaLocation="functions.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/transformation" schemaLocation="transformation.xsd"/>
@@ -22,6 +24,7 @@ SPDX-License-Identifier: EPL-2.0
  Neil Mackenzie - initial API and implementation&#13;</xsd:appinfo>
   </xsd:annotation>
   <xsd:element ecore:ignore="true" name="GetAttributeLineageForOneReportCell" type="platform_call:GetAttributeLineageForOneReportCell"/>
+  <xsd:element ecore:ignore="true" name="GetTestLogic" type="platform_call:GetTestLogic"/>
   <xsd:complexType name="CompareAttributeLineageModels">
     <xsd:annotation>
       <xsd:documentation>This is a PlatformCall which compares 2 AttributeModels</xsd:documentation>
@@ -159,6 +162,18 @@ SPDX-License-Identifier: EPL-2.0
         </xsd:sequence>
         <xsd:attribute ecore:reference="transformation:VersionedComponentsSet" name="transformationContext" type="xsd:anyURI"/>
         <xsd:attribute ecore:reference="reports:ReportCell" name="reportCell" type="xsd:anyURI"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="GetTestLogic">
+    <xsd:complexContent>
+      <xsd:extension base="platform_call:PlatformCall">
+        <xsd:sequence>
+          <xsd:element ecore:resolveProxies="true" minOccurs="0" name="testLogic" type="test:TestLogic"/>
+        </xsd:sequence>
+        <xsd:attribute ecore:reference="test:TestDefinition" name="testDefinition" type="xsd:anyURI"/>
+        <xsd:attribute ecore:reference="transformation:VersionedComponentsSet" name="release" type="xsd:anyURI"/>
+        <xsd:attribute ecore:reference="domain_model_mapping:DomainMappingModule" name="optionalDomainMapping" type="xsd:anyURI"/>
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>

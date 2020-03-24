@@ -51,20 +51,20 @@ Note that the DataSetTransformations has many subsclasses, currently they repres
   </xsd:complexType>
   <xsd:complexType name="VersionedComponentsSet">
     <xsd:annotation>
-      <xsd:documentation>VersionedComponentsSet contains all the information required to translate a TransformationScheme and its dependent TransformationSchemes into an AttributeLineageModel
+      <xsd:documentation>VersionedComponentsSet contains all the information required to translate a FunctionalModule and its dependent FunctionalModules into an AttributeLineageModel
 It is this component set that contains the cub scehma structures ,and the actual DataSetTransformations.</xsd:documentation>
     </xsd:annotation>
     <xsd:attribute ecore:reference="transformation:VersionedCubeSchemaModule" name="cubeSchemaModules">
       <xsd:annotation>
-        <xsd:documentation>The set of VersionedCubeSchemaModules. Note that VersionedCubeSchemaModules state which ReadDataTransformationScheme they are associated with in the transformationScheme reference.</xsd:documentation>
+        <xsd:documentation>The set of VersionedCubeSchemaModules. Note that VersionedCubeSchemaModules state which ReadDataFunctionalModule they are associated with in the functionalModule reference.</xsd:documentation>
       </xsd:annotation>
       <xsd:simpleType>
         <xsd:list itemType="xsd:anyURI"/>
       </xsd:simpleType>
     </xsd:attribute>
-    <xsd:attribute ecore:reference="transformation:VersionedTransformationSchemeLogic" name="datasetTransformationModules">
+    <xsd:attribute ecore:reference="transformation:VersionedFunctionalModuleLogic" name="datasetTransformationModules">
       <xsd:annotation>
-        <xsd:documentation>The set of DataSetTransformationModules, note that each DataSetTransformationModule states which  DataSetTransformationTransformationScheme they are associated with in the transformationScheme reference.</xsd:documentation>
+        <xsd:documentation>The set of DataSetTransformationModules, note that each DataSetTransformationModule states which  DataSetTransformationFunctionalModule they are associated with in the functionalModule reference.</xsd:documentation>
       </xsd:annotation>
       <xsd:simpleType>
         <xsd:list itemType="xsd:anyURI"/>
@@ -77,7 +77,7 @@ It is this component set that contains the cub scehma structures ,and the actual
     </xsd:attribute>
     <xsd:attribute ecore:reference="trl_report_cell_views:ReportCellViewModule" name="reportCellViewModules">
       <xsd:annotation>
-        <xsd:documentation>The set of ReportCellViewModules, note that each ReportCellViewModule states which  ReportCellCreationTransformationScheme they are associated with in the transformationScheme reference.</xsd:documentation>
+        <xsd:documentation>The set of ReportCellViewModules, note that each ReportCellViewModule states which  ReportCellCreationFunctionalModule they are associated with in the functionalModule reference.</xsd:documentation>
       </xsd:annotation>
       <xsd:simpleType>
         <xsd:list itemType="xsd:anyURI"/>
@@ -105,7 +105,7 @@ It is this component set that contains the cub scehma structures ,and the actual
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
-  <xsd:complexType name="VersionedTransformationSchemeLogic">
+  <xsd:complexType name="VersionedFunctionalModuleLogic">
     <xsd:annotation>
       <xsd:documentation> A Module containing a set of DataSetTransformations </xsd:documentation>
     </xsd:annotation>

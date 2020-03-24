@@ -30,15 +30,15 @@ import cubes.BaseCube;
 
 import cubes.TargetCube;
 import transformation.VersionedComponentsSet;
-import functional_module.TransformationSchemeModule;
+import functional_module.FunctionalModuleModule;
 
 import trl_report_cell_views.ReportCellViewModule;
 import trl_sql_views.SQLView;
 import trl_sql_views.VersionedSQLViewsModule;
 
 
-import transformation.VersionedTransformationSchemeLogic;
-import functional_module.TransformationScheme;
+import transformation.VersionedFunctionalModuleLogic;
+import functional_module.FunctionalModule;
 
 /**
  * @author Neil Mackenzie
@@ -104,11 +104,11 @@ public class CubesAndViewsUtil {
 	}
 
 	/**
-	 * Gets the top level container for a TransformationScheme.
+	 * Gets the top level container for a FunctionalModule.
 	 * @param ts
 	 * @return
 	 */
-	private static TransformationSchemeModule getRootContainer(TransformationScheme ts) {
+	private static FunctionalModuleModule getRootContainer(FunctionalModule ts) {
 	
 		EObject container = ts.eContainer();
 		if(container.eContainer() != null)
@@ -136,7 +136,7 @@ public class CubesAndViewsUtil {
 			}
 		}
 		
-		return (TransformationSchemeModule)container;
+		return (FunctionalModuleModule)container;
 	}
 
 
@@ -177,15 +177,15 @@ public class CubesAndViewsUtil {
 	{
 	
 		EList<FreeBirdToolsCube> returnCubelist = new BasicEList<FreeBirdToolsCube>();
-		 EList<VersionedTransformationSchemeLogic> transformationSchemeLogic = versionedComponentsSet.getDatasetTransformationModules();
+		 EList<VersionedFunctionalModuleLogic> functionalModuleLogic = versionedComponentsSet.getDatasetTransformationModules();
 		 EList<ReportCellViewModule> reportcellmodules = versionedComponentsSet.getReportCellViewModules();
 		EList<VersionedCubeSchemaModule> cubeSchemaModules = versionedComponentsSet.getCubeSchemaModules();
-		Iterator<VersionedTransformationSchemeLogic> transformationSchemeLogicIter = transformationSchemeLogic.iterator();
+		Iterator<VersionedFunctionalModuleLogic> functionalModuleLogicIter = functionalModuleLogic.iterator();
 		Iterator<VersionedCubeSchemaModule> cubeSchemaModulesIter = cubeSchemaModules.iterator();
 		Iterator<ReportCellViewModule> reportcellmodulesIter = reportcellmodules.iterator();
-		while (transformationSchemeLogicIter.hasNext())
+		while (functionalModuleLogicIter.hasNext())
 		{
-			VersionedTransformationSchemeLogic module = transformationSchemeLogicIter.next();
+			VersionedFunctionalModuleLogic module = functionalModuleLogicIter.next();
 			
 			TreeIterator<EObject> moduleContents = module.eAllContents();
 			while(moduleContents.hasNext())
@@ -286,11 +286,11 @@ public class CubesAndViewsUtil {
 	
 		
 		EList<SQLView> returnvalue = new BasicEList<SQLView>();
-		 EList<VersionedTransformationSchemeLogic> transformationSchemeLogics = versionedComponentsSet.getDatasetTransformationModules();
-		Iterator<VersionedTransformationSchemeLogic> transformationSchemeLogicsIter = transformationSchemeLogics.iterator();
-		while (transformationSchemeLogicsIter.hasNext())
+		 EList<VersionedFunctionalModuleLogic> functionalModuleLogics = versionedComponentsSet.getDatasetTransformationModules();
+		Iterator<VersionedFunctionalModuleLogic> functionalModuleLogicsIter = functionalModuleLogics.iterator();
+		while (functionalModuleLogicsIter.hasNext())
 		{
-			VersionedTransformationSchemeLogic module = transformationSchemeLogicsIter.next();
+			VersionedFunctionalModuleLogic module = functionalModuleLogicsIter.next();
 			
 			TreeIterator<EObject> moduleContents = module.eAllContents();
 			while(moduleContents.hasNext())

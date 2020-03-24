@@ -30,7 +30,7 @@ import platform_call.CompareAttributeLineageModels;
 import platform_call.ExecuteAttributeLineageModel;
 import platform_call.GetAttributeLineageForOneReportCell;
 import platform_call.GetAttributeLineageModel;
-
+import platform_call.GetTestLogic;
 import platform_call.PlatformCall;
 
 /**
@@ -49,6 +49,9 @@ public class PlatformCalls {
   
     if (call instanceof CompareAttributeLineageModels)
         ComparisonUtil.compareAttributeLineageModels((CompareAttributeLineageModels) call);
+    
+    if (call instanceof GetTestLogic)
+    	AttributeLineageUtil.getTestLogic((GetTestLogic) call);
     
     if (call instanceof ExecuteAttributeLineageModel) {
 

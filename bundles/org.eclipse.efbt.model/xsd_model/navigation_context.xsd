@@ -35,7 +35,7 @@ SPDX-License-Identifier: EPL-2.0
         <xsd:documentation>The related transformation context</xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
-    <xsd:attribute ecore:reference="functional_module:TransformationSchemeModule" name="transformationsSchemeModule" type="xsd:anyURI">
+    <xsd:attribute ecore:reference="functional_module:FunctionalModuleModule" name="transformationsSchemeModule" type="xsd:anyURI">
       <xsd:annotation>
         <xsd:documentation>The related Transformation Module</xsd:documentation>
       </xsd:annotation>

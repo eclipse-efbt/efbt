@@ -63,7 +63,7 @@ SPDX-License-Identifier: EPL-2.0
         <xsd:list itemType="xsd:anyURI"/>
       </xsd:simpleType>
     </xsd:attribute>
-    <xsd:attribute ecore:reference="efbt_vtl_transformation:TransformationSchemeModule" name="transformationSchemes">
+    <xsd:attribute ecore:reference="efbt_vtl_transformation:TransformationSchemeModule" name="functionalModules">
       <xsd:annotation>
         <xsd:documentation>The Tranformation Schemes and contained Transformations</xsd:documentation>
       </xsd:annotation>

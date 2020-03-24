@@ -145,13 +145,13 @@ SPDX-License-Identifier: EPL-2.0
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
-  <xsd:complexType name="TransformationSchemeTag">
+  <xsd:complexType name="FunctionalModuleTag">
     <xsd:annotation>
       <xsd:documentation> A tag linking a a Transfomration  to requirements  </xsd:documentation>
     </xsd:annotation>
     <xsd:complexContent>
       <xsd:extension base="tags:Tag">
-        <xsd:attribute ecore:reference="functional_module:TransformationScheme" name="transformation" type="xsd:anyURI">
+        <xsd:attribute ecore:reference="functional_module:FunctionalModule" name="transformation" type="xsd:anyURI">
           <xsd:annotation>
             <xsd:documentation>The associated Transformation</xsd:documentation>
           </xsd:annotation>

@@ -130,7 +130,8 @@ public abstract class Importer {
 		birdModel.getDomains().add(domains);
 		birdModel.getMappings().add(mappingDefinitionModule);
 		birdModel.getMembers().add(members);
-		birdModel.getTransformationSchemes().add(transformationSchemes);
+		//must rename this to getTranformationSchemes
+		birdModel.getFunctionalModules().add(transformationSchemes);
 		birdModel.getVariables().add(variables);
 
 	}

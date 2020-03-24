@@ -280,7 +280,7 @@ The resulting cube structure will be a column for each of the  columns in the 2 
       <xsd:documentation>A module of SQLViews with a version number</xsd:documentation>
     </xsd:annotation>
     <xsd:complexContent>
-      <xsd:extension base="transformation:VersionedTransformationSchemeLogic">
+      <xsd:extension base="transformation:VersionedFunctionalModuleLogic">
         <xsd:sequence>
           <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="sqlViews" type="trl_sql_views:SQLView">
             <xsd:annotation>

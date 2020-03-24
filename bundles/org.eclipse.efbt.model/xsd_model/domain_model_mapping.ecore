@@ -121,7 +121,7 @@
         <details key="name" value="module"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="scheme" eType="ecore:EClass functional_module.ecore#//LeafTransformationScheme">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="scheme" eType="ecore:EClass functional_module.ecore#//LeafFunctionalModule">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="attribute"/>
         <details key="name" value="scheme"/>
@@ -139,7 +139,7 @@
         <details key="name" value="module"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="scheme" eType="ecore:EClass functional_module.ecore#//LeafTransformationScheme">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="scheme" eType="ecore:EClass functional_module.ecore#//LeafFunctionalModule">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="attribute"/>
         <details key="name" value="scheme"/>
@@ -157,7 +157,7 @@
         <details key="name" value="module"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="scheme" eType="ecore:EClass functional_module.ecore#//LeafTransformationScheme">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="scheme" eType="ecore:EClass functional_module.ecore#//LeafFunctionalModule">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="attribute"/>
         <details key="name" value="scheme"/>

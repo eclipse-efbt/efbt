@@ -26,14 +26,16 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import functions.Function;
 import navigation_context.NavigationContext;
 import requirements_text.TitledRequirementsSection;
+import scenarios.Scenario;
 import tags.DataSetTransformationTag;
 import tags.FunctionTag;
+import tags.ScenarioTag;
 import tags.Tag;
 import tags.TagGroup;
-import tags.TransformationSchemeTag;
+import tags.FunctionalModuleTag;
 import transformation.DataSetTransformation;
-import functional_module.LeafTransformationScheme;
-import functional_module.TransformationScheme;
+import functional_module.LeafFunctionalModule;
+import functional_module.FunctionalModule;
 
 /**
  * @author Neil Mackenzie
@@ -42,23 +44,23 @@ import functional_module.TransformationScheme;
 public class TagUtil {
 
   /**
-   * get all the TransformationSchemeTags from the DefualtTagGroup.
+   * get all the FunctionalModuleTags from the DefualtTagGroup.
    * 
-   * @param transformationScheme
+   * @param functionalModule
    * @return
    */
-  public static EList<TransformationSchemeTag> getTransformationSchemeTagsFromDefualtTagGroup(
-      TransformationScheme transformationScheme) {
-    EList<TransformationSchemeTag> returnlist = new BasicEList<TransformationSchemeTag>();
-    NavigationContext nc = getDefaultNavigationContext(transformationScheme);
+  public static EList<FunctionalModuleTag> getFunctionalModuleTagsFromDefualtTagGroup(
+      FunctionalModule functionalModule) {
+    EList<FunctionalModuleTag> returnlist = new BasicEList<FunctionalModuleTag>();
+    NavigationContext nc = getDefaultNavigationContext(functionalModule);
     TagGroup tg = nc.getTags();
     EList<Tag> tags = tg.getTags();
     for (Iterator iterator = tags.iterator(); iterator.hasNext();) {
       Tag tag = (Tag) iterator.next();
 
-      if (tag instanceof TransformationSchemeTag) {
-        if (((TransformationSchemeTag) tag).getTransformation().getName().equals(transformationScheme.getName())) {
-          returnlist.add((TransformationSchemeTag) tag);
+      if (tag instanceof FunctionalModuleTag) {
+        if (((FunctionalModuleTag) tag).getTransformation().getName().equals(functionalModule.getName())) {
+          returnlist.add((FunctionalModuleTag) tag);
         }
 
       }
@@ -67,21 +69,65 @@ public class TagUtil {
 
     return returnlist;
   }
+  
+  public static EList<ScenarioTag> getScenarioTagsFromDefualtTagGroup(
+	      Scenario scenario) {
+	    EList<ScenarioTag> returnlist = new BasicEList<ScenarioTag>();
+	    NavigationContext nc = getDefaultNavigationContext(scenario);
+	    TagGroup tg = nc.getTags();
+	    EList<Tag> tags = tg.getTags();
+	    for (Iterator iterator = tags.iterator(); iterator.hasNext();) {
+	      Tag tag = (Tag) iterator.next();
+
+	      if (tag instanceof ScenarioTag) {
+	        if (((ScenarioTag) tag).getScenario().getName().equals(scenario.getName())) {
+	          returnlist.add((ScenarioTag) tag);
+	        }
+
+	      }
+
+	    }
+
+	    return returnlist;
+	  }
 
   /**
    * Get the requirements associated with a Transformationscheme, utilising the 
    * DefaultTagGroup.
    * 
-   * @param transformationScheme
+   * @param functionalModule
    * @return
    */
-  public static EList<TitledRequirementsSection> getTransformationSchemeRequirementsFromDefualtTagGroup(
-      LeafTransformationScheme transformationScheme) {
+  public static EList<TitledRequirementsSection> getFunctionalModuleRequirementsFromDefualtTagGroup(
+      LeafFunctionalModule functionalModule) {
     EList<TitledRequirementsSection> returnlist = new BasicEList<TitledRequirementsSection>();
-    EList<TransformationSchemeTag> tagList = getTransformationSchemeTagsFromDefualtTagGroup(transformationScheme);
+    EList<FunctionalModuleTag> tagList = getFunctionalModuleTagsFromDefualtTagGroup(functionalModule);
     for (Iterator iterator = tagList.iterator(); iterator.hasNext();) {
-      TransformationSchemeTag TransformationTag = (TransformationSchemeTag) iterator.next();
+      FunctionalModuleTag TransformationTag = (FunctionalModuleTag) iterator.next();
       EList<TitledRequirementsSection> requirements = TransformationTag.getRequirements();
+      for (Iterator iterator2 = requirements.iterator(); iterator2.hasNext();) {
+        TitledRequirementsSection titledRequirementsSection = (TitledRequirementsSection) iterator2.next();
+        returnlist.add(titledRequirementsSection);
+      }
+
+    }
+    return returnlist;
+  }
+  
+  /**
+   * Get the requirements associated with a scenario, utilising the 
+   * DefaultTagGroup.
+   * 
+   * @param functionalModule
+   * @return
+   */
+  public static EList<TitledRequirementsSection> getScenarioRequirementsFromDefualtTagGroup(
+		  Scenario scenario) {
+    EList<TitledRequirementsSection> returnlist = new BasicEList<TitledRequirementsSection>();
+    EList<ScenarioTag> tagList = getScenarioTagsFromDefualtTagGroup(scenario);
+    for (Iterator iterator = tagList.iterator(); iterator.hasNext();) {
+    	ScenarioTag scenarioTag = (ScenarioTag) iterator.next();
+      EList<TitledRequirementsSection> requirements = scenarioTag.getRequirements();
       for (Iterator iterator2 = requirements.iterator(); iterator2.hasNext();) {
         TitledRequirementsSection titledRequirementsSection = (TitledRequirementsSection) iterator2.next();
         returnlist.add(titledRequirementsSection);
@@ -202,7 +248,7 @@ public class TagUtil {
   public static NavigationContext getDefaultNavigationContext(EObject o) {
     ResourceSet rs = o.eResource().getResourceSet();
     String tagsXMLFile = o.eResource().getURI().trimSegments(2)
-        + "/navigation_context/defaultNavigationContext.navigation_context";
+        + "/extra/defaultNavigationContext.navigation_context";
     File file = new File(tagsXMLFile);
     URI uri = file.isFile() ? URI.createFileURI(file.getAbsolutePath()) : URI.createURI(tagsXMLFile);
     Resource resource = rs.getResource(uri, true);

@@ -20,15 +20,15 @@
   <xsd:element ecore:ignore="true" name="UnionChoiceCondition" type="domain_model_mapping:UnionChoiceCondition"/>
   <xsd:element ecore:ignore="true" name="DomainMappingModule" type="domain_model_mapping:DomainMappingModule"/>
   <xsd:complexType name="LeafModuleToVersionedSQLViewsModule">
-    <xsd:attribute ecore:reference="functional_module:LeafTransformationScheme" name="scheme" type="xsd:anyURI"/>
+    <xsd:attribute ecore:reference="functional_module:LeafFunctionalModule" name="scheme" type="xsd:anyURI"/>
     <xsd:attribute ecore:reference="trl_sql_views:VersionedSQLViewsModule" name="module" type="xsd:anyURI"/>
   </xsd:complexType>
   <xsd:complexType name="LeafModuleToVersionedCubeSchemaModule">
-    <xsd:attribute ecore:reference="functional_module:LeafTransformationScheme" name="scheme" type="xsd:anyURI"/>
+    <xsd:attribute ecore:reference="functional_module:LeafFunctionalModule" name="scheme" type="xsd:anyURI"/>
     <xsd:attribute ecore:reference="transformation:VersionedCubeSchemaModule" name="module" type="xsd:anyURI"/>
   </xsd:complexType>
   <xsd:complexType name="LeafModuleToReportCellViewModule">
-    <xsd:attribute ecore:reference="functional_module:LeafTransformationScheme" name="scheme" type="xsd:anyURI"/>
+    <xsd:attribute ecore:reference="functional_module:LeafFunctionalModule" name="scheme" type="xsd:anyURI"/>
     <xsd:attribute ecore:reference="trl_report_cell_views:ReportCellViewModule" name="module" type="xsd:anyURI"/>
   </xsd:complexType>
   <xsd:complexType name="ScenarioToCodeConditions">
