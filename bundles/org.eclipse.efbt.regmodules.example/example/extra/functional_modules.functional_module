@@ -8,6 +8,11 @@
         <scenarios name="notAAA"/>
       </scenarioSet>
     </subTransformationsAndSchemes>
-    <subTransformationsAndSchemes xsi:type="functional_module:ReportCellCreationFunctionalModule" name="createReportCells"/>
+    <subTransformationsAndSchemes xsi:type="functional_module:ReportCellCreationFunctionalModule" name="createReportCells">
+      <scenarioSet>
+        <scenarios name="IsUSCountry"/>
+        <scenarios name="isNotUSCountry"/>
+      </scenarioSet>
+    </subTransformationsAndSchemes>
   </functionalModules>
 </functional_module:FunctionalModuleModule>

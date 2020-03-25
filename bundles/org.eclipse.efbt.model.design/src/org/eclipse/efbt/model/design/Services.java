@@ -19,6 +19,7 @@ import core.DOMAIN;
 import core.MEMBER;
 
 import org.eclipse.efbt.model.util.FunctionTextUtil;
+import org.eclipse.efbt.model.util.FunctionalModuleUtil;
 import org.eclipse.efbt.model.util.TRLUtil;
 import org.eclipse.efbt.model.util.TagUtil;
 
@@ -41,9 +42,13 @@ import platform_call.PlatformCall;
 import requirements_text.TitledRequirementsSection;
 import functions.AggregateFunction;
 import functions.BasicFunction;
+import functions.BooleanFunction;
 import functions.Function;
 import cubes.FreeBirdToolsCube;
 import data_definition.CUBE_STRUCTURE_ITEM;
+import domain_model_mapping.CodeCondition;
+import domain_model_mapping.ColumnSettingCondition;
+import domain_model_mapping.DataSetFilterCondition;
 //import functions.LinkedColumnParameter;
 import cube_schema.CubeSchema;
 import transformation.VersionedCubeSchemaModule;
@@ -83,9 +88,17 @@ public class Services {
     	return (self.getName()).replace('_', ' ');
      }
     
+    public EList<FunctionalModule> getPreviousFunctionalModule(FunctionalModule self) {
+
+    	return FunctionalModuleUtil.getPreviousFunctionalModules( self);
+     }
+
     
-    
-    
+    public EList<CodeCondition> getCodeConditionsFromDefualtNavigationContext(Scenario scenario)
+    {
+    	return FunctionalModuleUtil.getCodeConditionsFromDefualtNavigationContext( scenario);
+    	
+    }
    
     
     public EList<FreeBirdToolsCube> getTables(VersionedComponentsSet self) {
@@ -237,5 +250,24 @@ public EList<CUBE_STRUCTURE_ITEM> getCubeStructureItemsFromDefaultBIRDModel(Cube
     	return TRLUtil.getCubeStructureItemsFromDefaultBIRDModel(  self); 
      }
     
+
+public EList<BooleanFunction> getCodeConditionFilterFunctions(Scenario self) {
+    
+	
+	return FunctionalModuleUtil.getCodeConditionFilterFunctions(  self); 
+ }
+
+public EList<DataSetFilterCondition> getDataSetFilterCodeConditionsFromDefualtNavigationContext(Scenario self) {
+    
+	
+	return FunctionalModuleUtil.getDataSetFilterCodeConditionsFromDefualtNavigationContext(  self); 
+ }
+
+public EList<ColumnSettingCondition> getColumnSettingCodeConditionsFromDefualtNavigationContext(Scenario self) {
+    
+	
+	return FunctionalModuleUtil.getColumnSettingCodeConditionsFromDefualtNavigationContext(  self); 
+ }
+
     
 }

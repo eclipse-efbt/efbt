@@ -580,16 +580,13 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference domain_model_mapping.ecore#//ColumnSettingCondition/variable"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference domain_model_mapping.ecore#//ColumnSettingCondition/filterConditions"/>
     </genClasses>
-    <genClasses ecoreClass="domain_model_mapping.ecore#//FilterCondition">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute domain_model_mapping.ecore#//FilterCondition/value"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference domain_model_mapping.ecore#//FilterCondition/cube"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference domain_model_mapping.ecore#//FilterCondition/variable"/>
-    </genClasses>
     <genClasses ecoreClass="domain_model_mapping.ecore#//DataSetFilterCondition">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference domain_model_mapping.ecore#//DataSetFilterCondition/filterConditions"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference domain_model_mapping.ecore#//DataSetFilterCondition/cube"/>
     </genClasses>
     <genClasses ecoreClass="domain_model_mapping.ecore#//UnionChoiceCondition">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference domain_model_mapping.ecore#//UnionChoiceCondition/cube"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference domain_model_mapping.ecore#//UnionChoiceCondition/chosenCubes"/>
     </genClasses>
     <genClasses ecoreClass="domain_model_mapping.ecore#//DomainMappingModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference domain_model_mapping.ecore#//DomainMappingModule/leafModuleToVersionedSQLViewsModules"/>
