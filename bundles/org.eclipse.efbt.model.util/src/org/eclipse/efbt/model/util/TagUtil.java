@@ -118,7 +118,7 @@ public class TagUtil {
    * Get the requirements associated with a scenario, utilising the 
    * DefaultTagGroup.
    * 
-   * @param functionalModule
+   * @param scenario
    * @return
    */
   public static EList<TitledRequirementsSection> getScenarioRequirementsFromDefualtTagGroup(

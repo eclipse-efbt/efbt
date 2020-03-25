@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<xsd:schema xmlns:core="http://www.eclipse.org/core" xmlns:cubes="http://www.eclipse.org/cubes" xmlns:domain_model_mapping="http://www.eclipse.org/domain_model_mapping" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:functional_module="http://www.eclipse.org/functional_module" xmlns:module_management="http://www.eclipse.org/module_management" xmlns:scenarios="http://www.eclipse.org/scenarios" xmlns:transformation="http://www.eclipse.org/transformation" xmlns:trl_report_cell_views="http://www.eclipse.org/trl_report_cell_views" xmlns:trl_sql_views="http://www.eclipse.org/trl_sql_views" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="domain_model_mapping" ecore:package="domain_model_mapping" targetNamespace="http://www.eclipse.org/domain_model_mapping">
+<xsd:schema xmlns:core="http://www.eclipse.org/core" xmlns:cubes="http://www.eclipse.org/cubes" xmlns:domain_model_mapping="http://www.eclipse.org/domain_model_mapping" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:functional_module="http://www.eclipse.org/functional_module" xmlns:functions="http://www.eclipse.org/functions" xmlns:module_management="http://www.eclipse.org/module_management" xmlns:scenarios="http://www.eclipse.org/scenarios" xmlns:transformation="http://www.eclipse.org/transformation" xmlns:trl_report_cell_views="http://www.eclipse.org/trl_report_cell_views" xmlns:trl_sql_views="http://www.eclipse.org/trl_sql_views" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="domain_model_mapping" ecore:package="domain_model_mapping" targetNamespace="http://www.eclipse.org/domain_model_mapping">
   <xsd:import namespace="http://www.eclipse.org/module_management" schemaLocation="module_management.xsd"/>
-  <xsd:import namespace="http://www.eclipse.org/emf/2002/Ecore" schemaLocation="Ecore.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/functions" schemaLocation="functions.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/core" schemaLocation="core.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/cubes" schemaLocation="cubes.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/scenarios" schemaLocation="scenarios.xsd"/>
@@ -15,7 +15,6 @@
   <xsd:element ecore:ignore="true" name="ScenarioToCodeConditions" type="domain_model_mapping:ScenarioToCodeConditions"/>
   <xsd:element ecore:ignore="true" name="CodeCondition" type="domain_model_mapping:CodeCondition"/>
   <xsd:element ecore:ignore="true" name="ColumnSettingCondition" type="domain_model_mapping:ColumnSettingCondition"/>
-  <xsd:element ecore:ignore="true" name="FilterCondition" type="domain_model_mapping:FilterCondition"/>
   <xsd:element ecore:ignore="true" name="DataSetFilterCondition" type="domain_model_mapping:DataSetFilterCondition"/>
   <xsd:element ecore:ignore="true" name="UnionChoiceCondition" type="domain_model_mapping:UnionChoiceCondition"/>
   <xsd:element ecore:ignore="true" name="DomainMappingModule" type="domain_model_mapping:DomainMappingModule"/>
@@ -42,24 +41,20 @@
     <xsd:complexContent>
       <xsd:extension base="domain_model_mapping:CodeCondition">
         <xsd:sequence>
-          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="filterConditions" type="domain_model_mapping:FilterCondition"/>
+          <xsd:element ecore:resolveProxies="true" minOccurs="0" name="filterConditions" type="functions:BooleanFunction"/>
         </xsd:sequence>
         <xsd:attribute ecore:reference="cubes:FreeBirdToolsCube" name="cube" type="xsd:anyURI"/>
         <xsd:attribute ecore:reference="core:VARIABLE" name="variable" type="xsd:anyURI"/>
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
-  <xsd:complexType name="FilterCondition">
-    <xsd:attribute name="value" type="ecore:EString"/>
-    <xsd:attribute ecore:reference="cubes:FreeBirdToolsCube" name="cube" type="xsd:anyURI"/>
-    <xsd:attribute ecore:reference="core:VARIABLE" name="variable" type="xsd:anyURI"/>
-  </xsd:complexType>
   <xsd:complexType name="DataSetFilterCondition">
     <xsd:complexContent>
       <xsd:extension base="domain_model_mapping:CodeCondition">
         <xsd:sequence>
-          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="filterConditions" type="domain_model_mapping:FilterCondition"/>
+          <xsd:element ecore:resolveProxies="true" minOccurs="0" name="filterConditions" type="functions:BooleanFunction"/>
         </xsd:sequence>
+        <xsd:attribute ecore:reference="cubes:FreeBirdToolsCube" name="cube" type="xsd:anyURI"/>
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
@@ -67,6 +62,11 @@
     <xsd:complexContent>
       <xsd:extension base="domain_model_mapping:CodeCondition">
         <xsd:attribute ecore:reference="cubes:FreeBirdToolsCube" name="cube" type="xsd:anyURI"/>
+        <xsd:attribute ecore:reference="cubes:FreeBirdToolsCube" name="chosenCubes">
+          <xsd:simpleType>
+            <xsd:list itemType="xsd:anyURI"/>
+          </xsd:simpleType>
+        </xsd:attribute>
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
