@@ -255,4 +255,11 @@
       <details key="kind" value="elementOnly"/>
     </eAnnotations>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BaseViewIncorporatingDeltasRowFunction"
+      eSuperTypes="#//RowCreationApproach">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ultimateCubeSource" eType="ecore:EClass cubes.ecore#//FreeBirdToolsCube"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DeltaAccumulationRowFunction" eSuperTypes="#//RowCreationApproach">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ultimateCubeSource" eType="ecore:EClass cubes.ecore#//FreeBirdToolsCube"/>
+  </eClassifiers>
 </ecore:EPackage>

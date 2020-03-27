@@ -3,7 +3,7 @@
   <ownedViewpoints name="Modules">
     <ownedRepresentations xsi:type="description_1:DiagramDescription" name="VersionedComponentsSet" label="VersionedComponentsSet" domainClass="VersionedComponentsSet" enablePopupBars="true">
       <defaultLayer name="FreeBirdToolsCube">
-        <nodeMappings name="BaseCube" semanticCandidatesExpression="service:getBaseTables()" domainClass="BaseCube">
+        <nodeMappings name="BaseCube" semanticCandidatesExpression="service:getBaseTablesButNotDeltaTables()" domainClass="BaseCube">
           <style xsi:type="style:SquareDescription" labelExpression="service:getTableDisplayName()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
             <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
@@ -13,7 +13,7 @@
         <nodeMappings name="DerivedCube" semanticCandidatesExpression="service:getDerivedTablesButNotTargetTables()" domainClass="DerivedCube">
           <style xsi:type="style:SquareDescription" labelExpression="service:getTableDisplayName()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
             <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
-            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
             <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='red']"/>
           </style>
         </nodeMappings>
@@ -24,7 +24,21 @@
             <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='green']"/>
           </style>
         </nodeMappings>
-        <edgeMappings name="CubeToCubeEdge" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='DerivedCube'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='TargetCube']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='DerivedCube'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='BaseCube']" targetFinderExpression="feature:sourceCubes">
+        <nodeMappings name="BaseViewCube" semanticCandidatesExpression="service:getBaseViewCubes()" domainClass="BaseViewCube">
+          <style xsi:type="style:SquareDescription" labelExpression="service:getTableDisplayName()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_orange']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="BaseDeltaCube" semanticCandidatesExpression="service:getBaseDeltaCubes()" domainClass="BaseDeltaCube">
+          <style xsi:type="style:SquareDescription" labelExpression="service:getTableDisplayName()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_yellow']"/>
+          </style>
+        </nodeMappings>
+        <edgeMappings name="CubeToCubeEdge" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='DerivedCube'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='TargetCube'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='BaseDeltaCube'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='BaseViewCube']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='DerivedCube'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='BaseCube'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='BaseDeltaCube'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='BaseViewCube']" targetFinderExpression="feature:sourceCubes">
           <style sourceArrow="InputArrow" targetArrow="NoDecoration" sizeComputationExpression="2">
             <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
             <centerLabelStyleDescription>
@@ -86,11 +100,25 @@
         <nodeMappings name="CubeSchema" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@toolSections.0/@ownedTools[name='showSchema']" semanticCandidatesExpression="aql:self.cubeSchemaModules.eContents()" domainClass="CubeSchema">
           <style xsi:type="style:LozengeNodeDescription" labelExpression="service:getSchemaDisplayName()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
             <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
-            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
             <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
           </style>
         </nodeMappings>
-        <edgeMappings name="TransformationToTable" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@nodeMappings[name='AggregateEnrichmentView'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@nodeMappings[name='CopyView'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@nodeMappings[name='EnrichmentView'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@nodeMappings[name='FilterByConditionView'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@nodeMappings[name='GenericView'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@nodeMappings[name='JoinView'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@nodeMappings[name='UnionView']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='TargetCube'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='DerivedCube']" targetFinderExpression="feature:cube">
+        <nodeMappings name="DeltaAccumulation" semanticCandidatesExpression="service:getViews()" domainClass="DeltaAccumulation">
+          <style xsi:type="style:EllipseNodeDescription" labelExpression="service:getViewDisplayName()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='dark_red']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="BaseViewIncorporatingDeltas" semanticCandidatesExpression="service:getViews()" domainClass="BaseViewIncorporatingDeltas">
+          <style xsi:type="style:EllipseNodeDescription" labelExpression="service:getViewDisplayName()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='dark_yellow']"/>
+          </style>
+        </nodeMappings>
+        <edgeMappings name="TransformationToTable" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@nodeMappings[name='AggregateEnrichmentView'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@nodeMappings[name='CopyView'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@nodeMappings[name='EnrichmentView'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@nodeMappings[name='FilterByConditionView'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@nodeMappings[name='GenericView'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@nodeMappings[name='JoinView'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@nodeMappings[name='UnionView'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@nodeMappings[name='BaseViewIncorporatingDeltas'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@nodeMappings[name='DeltaAccumulation']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='TargetCube'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='DerivedCube'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='BaseViewCube']" targetFinderExpression="feature:cube">
           <style sourceArrow="InputArrow" targetArrow="NoDecoration" sizeComputationExpression="2">
             <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
             <centerLabelStyleDescription>
@@ -98,7 +126,7 @@
             </centerLabelStyleDescription>
           </style>
         </edgeMappings>
-        <edgeMappings name="SchemaToTable" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@nodeMappings[name='CubeSchema']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='BaseCube'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='TargetCube']" targetFinderExpression="feature:baseCube">
+        <edgeMappings name="SchemaToTable" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@nodeMappings[name='CubeSchema']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='BaseCube'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='TargetCube'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='BaseDeltaCube'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='BaseViewCube']" targetFinderExpression="feature:baseCube">
           <style sourceArrow="InputArrow" targetArrow="NoDecoration" sizeComputationExpression="2">
             <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
             <centerLabelStyleDescription>
@@ -302,7 +330,7 @@
                 <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='green']"/>
               </style>
             </subContainerMappings>
-            <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelExpression="" tooltipExpression="feature:rowID">
+            <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelExpression="service:getBaseRowID()" tooltipExpression="feature:rowID">
               <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
               <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
               <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>

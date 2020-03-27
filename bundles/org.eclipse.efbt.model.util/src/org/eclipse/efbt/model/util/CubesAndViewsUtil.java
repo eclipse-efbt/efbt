@@ -21,13 +21,15 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 
-
+import base_cube_data.BaseCubeData;
+import base_cube_data.BaseRowData;
 import cube_schema.CubeSchema;
 import transformation.VersionedCubeSchemaModule;
 import cubes.DerivedCube;
 import cubes.FreeBirdToolsCube;
 import cubes.BaseCube;
-
+import cubes.BaseDeltaCube;
+import cubes.BaseViewCube;
 import cubes.TargetCube;
 import transformation.VersionedComponentsSet;
 import functional_module.FunctionalModuleModule;
@@ -57,10 +59,50 @@ public class CubesAndViewsUtil {
 			return "INPUT LAYER CUBE: " + cube.getCube_name().replace('_', ' ');
 		else if  (cube instanceof TargetCube)
 			return "REPORT CELL: " + cube.getCube_name().replace('_', ' ');
+		else if(cube instanceof BaseDeltaCube)
+			return "BASE DELTA CUBE: " + cube.getCube_name().replace('_', ' ');
+		else if  (cube instanceof BaseViewCube)
+			return "BASE VIEW CUBE: " + cube.getCube_name().replace('_', ' ');
 		else 
-			return "TRANSFORATION: " + cube.getCube_name().replace('_', ' ');
+			return "TRANSFORMATION: " + cube.getCube_name().replace('_', ' ');
 	}
-	
+
+	public static String getBaseRowID(BaseRowData row) {
+
+       	
+    	boolean isDelete = row.isIsDelete();
+    	String rowToDelete = row.getRowIDToDelete();
+    	String returnString="";
+    	BaseCubeData baseCubeData = (BaseCubeData) row.eContainer();
+    	
+    	if(baseCubeData.getCube() instanceof BaseDeltaCube)
+    	{
+    	
+	    	if (isDelete)
+	    	{
+	    		returnString = "delete row "+ rowToDelete;
+	    	}
+	    	else
+	    	{
+	    		if ((rowToDelete != null) && (rowToDelete.length() >0) )
+	    		{    			
+	    				returnString = "amend row " + rowToDelete;   		
+	    		}
+	    		else
+	    		{
+	    			returnString = "add row " + row.getRowID();
+	    		}
+	    	}
+	    	
+    	}
+    	else
+    	{
+    		returnString = row.getRowID();
+    	}
+		
+		return returnString;
+   }
+
 	/**
 	 * Privides a UI display name for a CubeSchema.
 	 * 
@@ -96,6 +138,11 @@ public class CubesAndViewsUtil {
 			vn = "UNION TRANFORMATION";
 		if (cn.equals("GenericViewImpl"))
 			vn = "GENERIC TRANFORMATION";
+		if (cn.equals("BaseViewIncorporatingDeltasImpl"))
+			vn = "BASE VIEW";
+		if (cn.equals("DeltaAccumulationImpl"))
+			vn = "DELTA ACCUMULATION";
+		
 		
 		
 		
@@ -164,6 +211,55 @@ public class CubesAndViewsUtil {
 		}
 		return returnCubeList;
 	}
+	
+	public static EList<FreeBirdToolsCube> getBaseTablesButNotDeltaTables ( VersionedComponentsSet context)
+	{
+		
+		EList<FreeBirdToolsCube> tableList = getCubes(context);
+		EList<FreeBirdToolsCube> returnvalue = new BasicEList<FreeBirdToolsCube>();
+		Iterator<FreeBirdToolsCube> tableListIter = tableList.iterator();
+		while (tableListIter.hasNext())
+		{
+			FreeBirdToolsCube t = tableListIter.next();
+			if( (t instanceof BaseCube) && !(t instanceof BaseDeltaCube) && !(t instanceof BaseViewCube))
+				returnvalue.add(t);
+		}
+		return returnvalue;
+	}
+	
+	public static EList<FreeBirdToolsCube> getBaseViewCubes ( VersionedComponentsSet context)
+	{
+		
+		
+			EList<FreeBirdToolsCube> tableList = getCubes(context);
+			EList<FreeBirdToolsCube> returnvalue = new BasicEList<FreeBirdToolsCube>();
+			Iterator<FreeBirdToolsCube> tableListIter = tableList.iterator();
+			while (tableListIter.hasNext())
+			{
+				FreeBirdToolsCube t = tableListIter.next();
+				if( t instanceof BaseViewCube)
+					returnvalue.add(t);
+			}
+			return returnvalue;
+		
+	}
+	
+	public static EList<FreeBirdToolsCube> getBaseDeltaCubes ( VersionedComponentsSet context)
+	{
+		
+		EList<FreeBirdToolsCube> tableList = getCubes(context);
+		EList<FreeBirdToolsCube> returnvalue = new BasicEList<FreeBirdToolsCube>();
+		Iterator<FreeBirdToolsCube> tableListIter = tableList.iterator();
+		while (tableListIter.hasNext())
+		{
+			FreeBirdToolsCube t = tableListIter.next();
+			if( t instanceof BaseDeltaCube)
+				returnvalue.add(t);
+		}
+		return returnvalue;
+	}
+	
+
 	
 	
 	
@@ -243,6 +339,20 @@ public class CubesAndViewsUtil {
 		{
 			FreeBirdToolsCube t = cubeListIter.next();
 			if( (t instanceof DerivedCube) && !(t instanceof TargetCube) )
+				returnvalue.add(t);
+		}
+		return returnvalue;
+	}
+	
+	public static EList<FreeBirdToolsCube> getDerivedTablesButNotTargetOrBaseViewTables ( VersionedComponentsSet context)
+	{
+		EList<FreeBirdToolsCube> tableList = getCubes(context);
+		EList<FreeBirdToolsCube> returnvalue = new BasicEList<FreeBirdToolsCube>();
+		Iterator<FreeBirdToolsCube> tableListIter = tableList.iterator();
+		while (tableListIter.hasNext())
+		{
+			FreeBirdToolsCube t = tableListIter.next();
+			if( (t instanceof DerivedCube) && !(t instanceof TargetCube) && !(t instanceof BaseViewCube))
 				returnvalue.add(t);
 		}
 		return returnvalue;

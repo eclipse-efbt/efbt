@@ -15,6 +15,7 @@ package org.eclipse.efbt.model.design;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
+import base_cube_data.BaseRowData;
 import core.DOMAIN;
 import core.MEMBER;
 
@@ -112,6 +113,23 @@ public class Services {
     	return CubesAndViewsUtil.getBaseCubes( self);
      }
     
+    public EList<FreeBirdToolsCube> getBaseTablesButNotDeltaTables(VersionedComponentsSet self) {
+
+    	return CubesAndViewsUtil.getBaseTablesButNotDeltaTables( self);
+     }
+    
+    public EList<FreeBirdToolsCube> getBaseDeltaCubes(VersionedComponentsSet self) {
+
+    	return CubesAndViewsUtil.getBaseDeltaCubes( self);
+     }
+    
+    public EList<FreeBirdToolsCube> getBaseViewCubes(VersionedComponentsSet self) {
+
+    	return CubesAndViewsUtil.getBaseViewCubes( self);
+     }
+
+
+    
     
     public EList<FreeBirdToolsCube> getTables(VersionedSQLViewsModule self) {
 
@@ -132,7 +150,7 @@ public class Services {
     
     public EList<FreeBirdToolsCube> getDerivedTablesButNotTargetTables(VersionedComponentsSet self) {
 
-    	return CubesAndViewsUtil.getDerivedCubesButNotTargetCubes( self); 
+    	return CubesAndViewsUtil.getDerivedTablesButNotTargetOrBaseViewTables( self);  
      }
         
     
@@ -177,6 +195,11 @@ public class Services {
    	PlatformCalls.executeCall( self);
    }
     
+    public String getBaseRowID(BaseRowData self) {
+
+       	
+    	return CubesAndViewsUtil.getBaseRowID( self); 
+   }
     
     public  EList<CubeTransformationLogic> getTheDependantFunctionalRowLogics(CubeTransformationLogic self)
     {

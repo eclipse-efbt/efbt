@@ -33,6 +33,8 @@ import core.DOMAIN;
 import core.MEMBER;
 import core.VARIABLE;
 import cube_schema.CubeSchema;
+import row_transformation_logic.BaseViewIncorporatingDeltasRowFunction;
+import row_transformation_logic.DeltaAccumulationRowFunction;
 import row_transformation_logic.FilterAndGroupToOneRowCreationApproach;
 import row_transformation_logic.RowCreationApproachForCube;
 import row_transformation_logic.OneToOneRowCreationApproach;
@@ -78,7 +80,9 @@ import transformation.VersionedFunctionalModuleLogic;
 import trl_report_cell_views.ReportCellView;
 import trl_report_cell_views.ReportCellViewModule;
 import trl_sql_views.AggregateEnrichmentView;
+import trl_sql_views.BaseViewIncorporatingDeltas;
 import trl_sql_views.CopyView;
+import trl_sql_views.DeltaAccumulation;
 import trl_sql_views.EnrichmentView;
 
 import trl_sql_views.FilterByConditionView;
@@ -522,6 +526,190 @@ public class TRLUtil {
 
       }
     }
+    
+    if(view instanceof DeltaAccumulation) 
+    {
+    	
+    	EList<CubeSchema> dependantSourceTables =  getAnySourceCubes(view, cubeSchemaModuleList);
+		
+		Iterator<CubeSchema> dependantSourceTablesIter = dependantSourceTables.iterator();
+		boolean first = true;
+		
+		EList<SQLView> dependantViews = getTheDependantViews(view,functionalModuleLogicList);
+		
+		
+		Iterator<SQLView> dependantViewsIter = dependantViews.iterator();
+
+		/**while (dependantViewsIter.hasNext())
+		{
+			SQLView dependantView = dependantViewsIter.next();
+			if (first)
+			{
+				EList<CubeColumn> theColumns = getColumnsFromSQLView(dependantView, functionalModuleLogicList,cubeSchemaModuleList, specialFunctions);
+				 Iterator<CubeColumn>  columnIter  = theColumns.iterator();
+				 while(columnIter.hasNext())
+				 {
+					 CubeColumn column = columnIter.next();
+					 StandardBasicColumnFunction calculatedColumn =  Column_transformation_logicFactory.eINSTANCE.createStandardBasicColumnFunction();
+					 calculatedColumn.setColumnID(view.getCube().getCube_name()  +":" + column.getVariable().getVariable_id()  );
+					 
+					 calculatedColumn.setVariable(column.getVariable());
+					 calculatedColumn.setCube(view.getCube());
+					 BasicFunction function= FunctionsFactory.eINSTANCE.createBasicFunction();
+					 function.setFunctionSpec(specialFunctions.copyColumnSpec);
+					 calculatedColumn.setBasicFunction(function);
+					 cubeTransformationLogic.getColumnFunctionGroup().getColumnFunctions().add(calculatedColumn);	
+				 }
+				 first = false;
+			}
+			 
+			
+			Iterator<ColumnFunction> theCalculatedColumns = cubeTransformationLogic.getColumnFunctionGroup().getColumnFunctions().iterator();
+			while (theCalculatedColumns.hasNext())
+			{
+				
+			//for each calculated column we need to add a dependant column with this table
+				StandardBasicColumnFunction theCalculatedColumn = (StandardBasicColumnFunction) theCalculatedColumns.next();
+				 SpeculativeCubeColumnParameter columnParameter = FunctionsFactory.eINSTANCE.createSpeculativeCubeColumnParameter();
+		
+				 columnParameter.setColumn(theCalculatedColumn.getVariable());
+				 columnParameter.setCube(dependantView.getCube());
+				 theCalculatedColumn.getBasicFunction().getParameters().add(columnParameter);
+				 
+					
+			 }	
+			
+		}**/	
+		while (dependantSourceTablesIter.hasNext())
+		{
+			CubeSchema dependantSchema= dependantSourceTablesIter.next();
+			if (first)
+			{
+				EList<VARIABLE> theColumns = Util.getColumnsFromCubeSchema(dependantSchema);
+				 Iterator<VARIABLE>  columnIter  = theColumns.iterator();
+				 while(columnIter.hasNext())
+				 {
+					 VARIABLE column = columnIter.next();
+					 StandardBasicColumnFunction calculatedColumn = Column_transformation_logicFactory.eINSTANCE.createStandardBasicColumnFunction();
+					 calculatedColumn.setColumnID(view.getCube().getCube_name()  +":" + column.getVariable_id()  );
+					 
+					 calculatedColumn.setVariable(column);
+					 calculatedColumn.setCube(view.getCube());
+					 BasicFunction function= FunctionsFactory.eINSTANCE.createBasicFunction();
+					 function.setFunctionSpec(specialFunctions.copyColumnSpec);
+					 calculatedColumn.setBasicFunction(function);
+					 cubeTransformationLogic.getColumnFunctionGroup().getColumnFunctions().add(calculatedColumn);
+				 }
+				 first = false;
+			}
+			 
+			Iterator<ColumnFunction> theCalculatedColumns = cubeTransformationLogic.getColumnFunctionGroup().getColumnFunctions().iterator();
+			while (theCalculatedColumns.hasNext())
+			{				
+			     //for each calculated column we need to add a dependant column with this table
+				 StandardBasicColumnFunction theCalculatedColumn = (StandardBasicColumnFunction) theCalculatedColumns.next();
+				 SpeculativeCubeColumnParameter columnParameter = FunctionsFactory.eINSTANCE.createSpeculativeCubeColumnParameter();
+		
+				 columnParameter.setColumn(theCalculatedColumn.getVariable());
+				 columnParameter.setCube(dependantSchema.getBaseCube());
+				 theCalculatedColumn.getBasicFunction().getParameters().add(columnParameter);
+			 }	
+			
+		}
+		
+	}
+
+   	
+	if(view instanceof BaseViewIncorporatingDeltas) 
+	{
+		EList<CubeSchema> dependantSourceTables =  getAnySourceCubes(view, cubeSchemaModuleList);
+				
+		Iterator<CubeSchema> dependantSourceTablesIter = dependantSourceTables.iterator();
+		boolean first = true;
+		
+		EList<SQLView> dependantViews = getTheDependantViews(view,functionalModuleLogicList);
+		
+		
+		Iterator<SQLView> dependantViewsIter = dependantViews.iterator();
+
+		/**while (dependantViewsIter.hasNext())
+		{
+			SQLView dependantView = dependantViewsIter.next();
+			if (first)
+			{
+				EList<CubeColumn> theColumns = getColumnsFromSQLView(dependantView, functionalModuleLogicList,cubeSchemaModuleList, specialFunctions);
+				 Iterator<CubeColumn>  columnIter  = theColumns.iterator();
+				 while(columnIter.hasNext())
+				 {
+					 CubeColumn column = columnIter.next();
+					 StandardBasicColumnFunction calculatedColumn =  Column_transformation_logicFactory.eINSTANCE.createStandardBasicColumnFunction();
+					 calculatedColumn.setColumnID(view.getCube().getCube_name()  +":" + column.getVariable().getVariable_id()  );
+					 
+					 calculatedColumn.setVariable(column.getVariable());
+					 calculatedColumn.setCube(view.getCube());
+					 BasicFunction function= FunctionsFactory.eINSTANCE.createBasicFunction();
+					 function.setFunctionSpec(specialFunctions.copyColumnSpec);
+					 calculatedColumn.setBasicFunction(function);
+					 cubeTransformationLogic.getColumnFunctionGroup().getColumnFunctions().add(calculatedColumn);	
+				 }
+				 first = false;
+			}
+			 
+			
+			Iterator<ColumnFunction> theCalculatedColumns = cubeTransformationLogic.getColumnFunctionGroup().getColumnFunctions().iterator();
+			while (theCalculatedColumns.hasNext())
+			{
+				
+			//for each calculated column we need to add a dependant column with this table
+				StandardBasicColumnFunction theCalculatedColumn = (StandardBasicColumnFunction) theCalculatedColumns.next();
+				 SpeculativeCubeColumnParameter columnParameter = FunctionsFactory.eINSTANCE.createSpeculativeCubeColumnParameter();
+		
+				 columnParameter.setColumn(theCalculatedColumn.getVariable());
+				 columnParameter.setCube(dependantView.getCube());
+				 theCalculatedColumn.getBasicFunction().getParameters().add(columnParameter);
+				 
+					
+			 }	
+			
+		}	*/
+		while (dependantSourceTablesIter.hasNext())
+		{
+			CubeSchema dependantSchema= dependantSourceTablesIter.next();
+			if (first)
+			{
+				EList<VARIABLE> theColumns = Util.getColumnsFromCubeSchema(dependantSchema);
+				 Iterator<VARIABLE>  columnIter  = theColumns.iterator();
+				 while(columnIter.hasNext())
+				 {
+					 VARIABLE column = columnIter.next();
+					 StandardBasicColumnFunction calculatedColumn = Column_transformation_logicFactory.eINSTANCE.createStandardBasicColumnFunction();
+					 calculatedColumn.setColumnID(view.getCube().getCube_name()  +":" + column.getVariable_id()  );
+					 
+					 calculatedColumn.setVariable(column);
+					 calculatedColumn.setCube(view.getCube());
+					 BasicFunction function= FunctionsFactory.eINSTANCE.createBasicFunction();
+					 function.setFunctionSpec(specialFunctions.copyColumnSpec);
+					 calculatedColumn.setBasicFunction(function);
+					 cubeTransformationLogic.getColumnFunctionGroup().getColumnFunctions().add(calculatedColumn);
+				 }
+				 first = false;
+			}
+			 
+			Iterator<ColumnFunction> theCalculatedColumns = cubeTransformationLogic.getColumnFunctionGroup().getColumnFunctions().iterator();
+			while (theCalculatedColumns.hasNext())
+			{				
+			     //for each calculated column we need to add a dependant column with this table
+				 StandardBasicColumnFunction theCalculatedColumn = (StandardBasicColumnFunction) theCalculatedColumns.next();
+				 SpeculativeCubeColumnParameter columnParameter = FunctionsFactory.eINSTANCE.createSpeculativeCubeColumnParameter();
+		
+				 columnParameter.setColumn(theCalculatedColumn.getVariable());
+				 columnParameter.setCube(dependantSchema.getBaseCube());
+				 theCalculatedColumn.getBasicFunction().getParameters().add(columnParameter);
+			 }	
+			
+		}
+		
+	}
 
     return cubeTransformationLogic ;
   }
@@ -616,13 +804,38 @@ public class TRLUtil {
         rowFilterAndGroupFunction.setFilterFunction(bf2);
 
       }
-
-      rowCreationApproachForCube.setRowCreationApproach(rowFilterAndGroupFunction);
+           rowCreationApproachForCube.setRowCreationApproach(rowFilterAndGroupFunction);
       rowCreationApproachForCube.setCube(view.getCube());
       rowCreationApproachForCube.setName(view.getName());
       cubeTransformationLogic .setRowCreationApproachForCube(rowCreationApproachForCube);
 
     }
+    if(view instanceof DeltaAccumulation )
+	{
+		RowCreationApproachForCube tableLogic = Row_transformation_logicFactoryImpl.eINSTANCE.createRowCreationApproachForCube();
+		 DeltaAccumulationRowFunction rowDAFunction = Row_transformation_logicFactoryImpl.eINSTANCE.createDeltaAccumulationRowFunction();
+		 rowDAFunction.setUltimateCubeSource(((DeltaAccumulation)view).getUltimateSourceCube());
+		
+		tableLogic.setRowCreationApproach(rowDAFunction);
+		tableLogic.setCube(view.getCube());
+		tableLogic.setUltimateCubeSource(((DeltaAccumulation)view).getUltimateSourceCube());
+		tableLogic.setName(view.getName());
+		cubeTransformationLogic.setRowCreationApproachForCube(tableLogic);
+		
+	}
+	if(view instanceof BaseViewIncorporatingDeltas )
+	{
+		RowCreationApproachForCube tableLogic = Row_transformation_logicFactoryImpl.eINSTANCE.createRowCreationApproachForCube();
+		 BaseViewIncorporatingDeltasRowFunction rowbvFunction = Row_transformation_logicFactoryImpl.eINSTANCE.createBaseViewIncorporatingDeltasRowFunction();
+		 rowbvFunction.setUltimateCubeSource(((BaseViewIncorporatingDeltas)view).getUltimateSourceCube());
+		tableLogic.setRowCreationApproach(rowbvFunction);
+		tableLogic.setCube(view.getCube());
+		tableLogic.setUltimateCubeSource(((BaseViewIncorporatingDeltas)view).getUltimateSourceCube());
+		tableLogic.setName(view.getName());
+		cubeTransformationLogic.setRowCreationApproachForCube(tableLogic);
+		
+	}
+
 
     if (view instanceof UnionView) {
       RowCreationApproachForCube rowCreationApproachForCube = Row_transformation_logicFactoryImpl.eINSTANCE.createRowCreationApproachForCube();
