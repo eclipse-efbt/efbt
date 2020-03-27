@@ -44,6 +44,11 @@ import platform_call.ExecuteAttributeLineageModel
 import attribute_lineage.AttributeLineageModel
 import row_transformation_logic.UnionRowCreationApproach
 import org.eclipse.efbt.model.util.AttributeLineageUtil
+import cubes.DeltaAccumulationCube
+import row_transformation_logic.BaseViewIncorporatingDeltasRowFunction
+import cubes.BaseViewCube
+import cubes.BaseDeltaCube
+import row_transformation_logic.DeltaAccumulationRowFunction
 
 /**
  * Generateor tmplate for generating scala files
@@ -153,7 +158,7 @@ class JavaBeanTemplate implements IGenerator {
 									{				 
 									   "<sourceData name=\"«theSchemaName»\" cube=\"..\\extra\\«sourceTableSchema.cube.eResource.URI.lastSegment»#«sourceTableSchema.cube.cube_name»\"> \n" +
 									   «FOR row:sourceTableSchema.rows»
-									    "<rows rowID=\"«row.rowID»\">\n" +
+									    "<rows rowID=\"«row.rowID»\" isDelete=\"«row.isIsDelete»\" rowIDToDelete=\"«row.rowIDToDelete»\">\n" +
 									   	«FOR cell: row.cells»
 									   	«val column= cell.column»
 									   	«IF column.usedInSubsetsSchema(test,theSchemaName)»"<cells xsi:type=\"base_cube_data:«IF cell instanceof BaseCellWithEnumeratedValue»BaseCellWithEnumeratedValue«ENDIF»«IF cell instanceof BaseCellWithValue»BaseCellWithValue«ENDIF»\" cellID=\"«cell.cellID»\" column=\"..\\bird_import\\«column.eResource.URI.lastSegment»#«column.variable_id»\" value=\"«IF cell instanceof BaseCellWithEnumeratedValue»..\\bird_import\\«cell.value.eResource.URI.lastSegment»#«cell.value.member_id»«ENDIF»«IF cell instanceof BaseCellWithValue»«cell.value»«ENDIF»\"/>\n" +					   						     					   						     
@@ -180,12 +185,12 @@ class JavaBeanTemplate implements IGenerator {
 		   
 		  
 		   "<dataTraceableByCell name=\"«logicName»\" rowCreationApproachForCube=\"..\\platform_calls\\«logic.rowCreationApproachForCube.eResource.URI.lastSegment»#«logic.rowCreationApproachForCube.name»\" sourceCubeData=\"«FOR stn:sourceTableNames SEPARATOR ' '»#«stn»«ENDFOR»\" cube=\"..\\extra\\«logic.rowCreationApproachForCube.cube.eResource.URI.lastSegment»#«logic.rowCreationApproachForCube.cube.cube_name»\"> \n" +
-		   stringFor«logicName»Table2(«logicName»Def.getRRows«logicName»(table_«logicName»)) +   
+		   «IF !(logic.rowCreationApproachForCube.cube instanceof DeltaAccumulationCube)»stringFor«logicName»Table2(«logicName»Def.getRRows«logicName»(table_«logicName»)) +   «ENDIF»
 		   "</dataTraceableByCell>\n "
 		     
 		}
 		
-		
+		«IF !(logic.rowCreationApproachForCube.cube instanceof DeltaAccumulationCube)»
 		def  stringFor«logicName»Table2(rows :  List[RRow«logicName»] ) :String    = rows match
 		{
 		    
@@ -200,7 +205,7 @@ class JavaBeanTemplate implements IGenerator {
 		{
 		   val rowID = «logicName»Def.getconciseid(row)
 		  
-		   «IF (!(logic.rowCreationApproachForCube.rowCreationApproach instanceof GroupByRowCreationApproach) && !(logic.rowCreationApproachForCube.rowCreationApproach instanceof FilterAndGroupToOneRowCreationApproach) )»
+		   «IF (!(logic.rowCreationApproachForCube.rowCreationApproach instanceof GroupByRowCreationApproach) && !(logic.rowCreationApproachForCube.rowCreationApproach instanceof FilterAndGroupToOneRowCreationApproach) && !(logic.rowCreationApproachForCube.rowCreationApproach instanceof BaseViewIncorporatingDeltasRowFunction))»
 		   «FOR stn:sourceTableNames»
 		   		  			val sourcerow«stn» = row.«stn»
 		   		  			val sourcerowID«stn» =«stn»Def.getconciseid(sourcerow«stn»)
@@ -209,7 +214,17 @@ class JavaBeanTemplate implements IGenerator {
 		   		  		stringForRow«logicName»(row)  + 
 		   		  		"</rows>\n" 
 		   
-			  
+		  «ELSEIF  (logic.rowCreationApproachForCube.rowCreationApproach instanceof BaseViewIncorporatingDeltasRowFunction)» 
+		  
+		   «val stn = (logic.rowCreationApproachForCube.rowCreationApproach as  BaseViewIncorporatingDeltasRowFunction).ultimateCubeSource.cube_name»
+		  		   		  			val sourcerow«stn» = row.«stn»
+		  		   		  			val sourcerowID«stn» =«stn»Def.getconciseid(sourcerow«stn»)
+		  		   		  
+		  		   		  		    "<rows rowID=\"" +rowID + "\" sourceRows=\"" +  "#" + sourcerowID«stn»+"\">\n" +
+		  		   		  		stringForRow«logicName»(row)  + 
+		  		   		  		"</rows>\n" 
+		  
+
 		 «ELSE»
 		 
 				    "<rows rowID=\"" +rowID + "\" sourceRows=\"" + getListOfIdsforSourceRowsOf«logicName»(row) + "\">\n" +		  		  
@@ -219,7 +234,7 @@ class JavaBeanTemplate implements IGenerator {
 		  «ENDIF»
 		  
 		}
-		
+«ENDIF»
 		 «IF ((logic.rowCreationApproachForCube.rowCreationApproach instanceof GroupByRowCreationApproach) || (logic.rowCreationApproachForCube.rowCreationApproach instanceof FilterAndGroupToOneRowCreationApproach))»
 				  
 		def  getListOfIdsforSourceRowsOf«logicName»(row : RRow«logicName» ) :String =
@@ -241,9 +256,9 @@ class JavaBeanTemplate implements IGenerator {
 		   getParamsForSourceRowsOf«logicName»(«logicName»Row.«sourceTableNames.get(0)», col)
 		}
 		 «ENDIF»
-		 
-		 
-		 
+		 		 
+		 		 «IF !(logic.rowCreationApproachForCube.cube instanceof DeltaAccumulationCube)»  
+		 		«IF !(logic.rowCreationApproachForCube.cube instanceof BaseViewCube)»
 		def getParamsForSourceRowsOf«logicName»(«sourceTableNames.get(0)»Rows :List[RRow«sourceTableNames.get(0)»], col :String) :String = «sourceTableNames.get(0)»Rows match {
 		  case  tail :+ head => getParamsForSourceRowsOf«logicName»(tail,col) +   getParamForSourceRowOf«logicName»(head,col) 
 		       case List() => "" 
@@ -254,7 +269,20 @@ class JavaBeanTemplate implements IGenerator {
 		  val rowId = «sourceTableNames.get(0)»Def.getconciseid(«sourceTableNames.get(0)»Row)
 		  "     <parameters xsi:type=\"functions:CellsParameter\" cells=\"#" + rowId +":" +col+ "\"/>\n"
 		}
-		
+		«ENDIF»
+		«IF (logic.rowCreationApproachForCube.cube instanceof BaseViewCube)» 
+			«val stn = logic.rowCreationApproachForCube.ultimateCubeSource.cube_name»
+							def getParamsForSourceRowsOf«logicName»(«stn»Rows :List[RRow«stn»], col :String) :String = «stn»Rows match {
+							  case  tail :+ head => getParamsForSourceRowsOf«logicName»(tail,col) +   getParamForSourceRowOf«logicName»(head,col) 
+							       case List() => "" 
+							}
+							
+							def getParamForSourceRowOf«logicName»(«stn»Row :RRow«stn», col :String) :String = {
+							  
+							  val rowId = «stn»Def.getconciseid(«stn»Row)
+							  "     <parameters xsi:type=\"functions:CellsParameter\" cells=\"#" + rowId +":" +col+ "\"/>\n"
+							}
+		«ENDIF»	 
 		
 		
 		def stringForGroupRow«logicName»(row : RRow«logicName») :String     =  { 
@@ -281,7 +309,7 @@ class JavaBeanTemplate implements IGenerator {
 			   
 				} 
 		
-		«IF (true)» 
+		«IF !(logic.rowCreationApproachForCube.cube instanceof BaseViewCube)» 
 		def stringForRow«logicName»(row : RRow«logicName») :String     =  { 
 			
 					 
@@ -313,7 +341,40 @@ class JavaBeanTemplate implements IGenerator {
 		} 
 		«ENDIF»
 		
-		«ENDFOR»
+		«IF (logic.rowCreationApproachForCube.cube instanceof BaseViewCube)» 
+				«val stn = logic.rowCreationApproachForCube.ultimateCubeSource .cube_name»
+						def stringForRow«logicName»(row : RRow«logicName») :String     =  { 
+							
+									 
+							val rowID = «logicName»Def.getconciseid(row)
+							 
+							
+							 «IF (!(logic.rowCreationApproachForCube.rowCreationApproach instanceof GroupByRowCreationApproach) && !(logic.rowCreationApproachForCube.rowCreationApproach instanceof FilterAndGroupToOneRowCreationApproach))»
+							val sourcerow«stn» = row.«stn»
+							val sourcerowID«stn» =«stn»Def.getconciseid(sourcerow«stn»)
+							«ENDIF»
+							 
+						  «FOR column:logic.columnFunctionGroup.columnFunctions»
+						  val «column.variable.variable_id.toLowerCase» = «logicName»Def.get«column.variable.variable_id.toLowerCase»(row)
+						 
+						 
+						 val «column.variable.variable_id.toLowerCase»Text =	«IF column.usedInSubsets == column.usedInSubsets»"<formulaCells cellID=\"" + rowID + ":«column.variable.variable_id»\" column=\"«column.variable.eResource.URI.toString»#«column.variable.variable_id»\" value=\"" + «column.variable.variable_id.toLowerCase» + "\">\n" +
+						    «IF (!(logic.rowCreationApproachForCube.rowCreationApproach instanceof GroupByRowCreationApproach) && !(logic.rowCreationApproachForCube.rowCreationApproach instanceof FilterAndGroupToOneRowCreationApproach))»
+						    «IF column instanceof StandardBasicColumnFunction»
+						    «val basicfunction = column.basicFunction»
+						    «basicfunction.getXMLForBasicFunctionParameterisedBySourceRowID()»
+						     «ENDIF»
+						     «ENDIF»
+						     "   </formulaCells>\n"
+						     «ENDIF»««««IF !column.usedInTrails»""«ENDIF»
+						  «ENDFOR»
+						
+						   «FOR column:logic.columnFunctionGroup.columnFunctions SEPARATOR "+"»«column.variable.variable_id.toLowerCase»Text«ENDFOR»
+					   
+						} 
+						«ENDIF»
+				«ENDIF»
+				«ENDFOR»
 		
 				
 				def stringForEndOfXML() : String = {			
@@ -416,8 +477,23 @@ class JavaBeanTemplate implements IGenerator {
 	package «data.cube.cube_name»_data
 	
 	
-	«IF (false)»
-	
+	«IF data.cube instanceof BaseDeltaCube»
+		«val deltaCubeName = (data.cube as BaseDeltaCube).ultimateBaseCube.cube_name»
+		import base_types._ 
+			import «deltaCubeName»_def._
+			
+			object  «data.cube.cube_name»Data {
+				
+			
+			def initialiseRowList ()  :List[RRow«deltaCubeName»]  = {
+			
+			  val rowlist : List[RRow«deltaCubeName»] = List.empty[RRow«deltaCubeName»] 
+			  «FOR a:data.rows» 
+			     val «a.rowID» : RRow«deltaCubeName» = RRow«deltaCubeName»( "«a.rowIDToDelete»" , «IF a.isDelete»true«ELSE»false «ENDIF», "«a.rowID»" , «FOR b:a.cells SEPARATOR ','» «IF b instanceof BaseCellWithEnumeratedValue»"«b.value.name»"«ENDIF»«IF b instanceof BaseCellWithValue && (b.column.domain_id.data_type == FACET_VALUE_TYPE.STRING)»"«b.value»"«ENDIF»«IF b instanceof BaseCellWithValue && (b.column.domain_id.data_type == FACET_VALUE_TYPE.DOUBLE)»«b.value»«ENDIF»«ENDFOR»)
+			«ENDFOR»
+				 return  rowlist  «FOR a:data.rows» :+ «a.rowID»«ENDFOR»
+				 }
+				}
 	«ELSE»
 	import base_types._ 
 	import «data.cube.cube_name»_def._
@@ -427,9 +503,9 @@ class JavaBeanTemplate implements IGenerator {
 	
 	def initialiseRowList ()  :List[RRow«data.cube.cube_name»]  = {
 	
-	  val rowlist : List[RRow«data.cube.cube_name»] = List.empty[RRow«data.cube.cube_name»] 
+  val rowlist : List[RRow«data.cube.cube_name»] = List.empty[RRow«data.cube.cube_name»] 
 	  «FOR a:data.rows» 
-	     val «a.rowID» : RRow«data.cube.cube_name» = RRow«data.cube.cube_name»( "«a.rowID»" , «FOR b:a.cells SEPARATOR ','» «IF b instanceof BaseCellWithEnumeratedValue»"«b.value.name»"«ENDIF»«IF b instanceof BaseCellWithValue && (b.column.domain_id.data_type == FACET_VALUE_TYPE.STRING)»"«b.value»"«ENDIF»«IF b instanceof BaseCellWithValue && (b.column.domain_id.data_type == FACET_VALUE_TYPE.DOUBLE)»«b.value»«ENDIF»«ENDFOR»)
+	     val «a.rowID» : RRow«data.cube.cube_name» = RRow«data.cube.cube_name»( "«a.rowIDToDelete»" ,«IF a.isDelete»true«ELSE»false «ENDIF» , "«a.rowID»" , «FOR b:a.cells SEPARATOR ','» «IF b instanceof BaseCellWithEnumeratedValue»"«b.value.name»"«ENDIF»«IF b instanceof BaseCellWithValue && (b.column.domain_id.data_type == FACET_VALUE_TYPE.STRING)»"«b.value»"«ENDIF»«IF b instanceof BaseCellWithValue && (b.column.domain_id.data_type == FACET_VALUE_TYPE.DOUBLE)»«b.value»«ENDIF»«ENDFOR»)
 	
 	«ENDFOR»
 	 return  rowlist  «FOR a:data.rows» :+ «a.rowID»«ENDFOR»
@@ -461,34 +537,44 @@ class JavaBeanTemplate implements IGenerator {
 	package «schema.cube.cube_name»_def
 	import base_types._ 
 	
-	«IF (true)»
-	
-	case class RTable«schema.cube.cube_name»(rl : List[RRow«schema.cube.cube_name»])  extends RTable 
-	case class RRow«schema.cube.cube_name» ( conciseid : String, «FOR c:schema.columns SEPARATOR ','»«c.variable.variable_id.toLowerCase» « IF (!c.variable.domain_id.isIs_enumerated && c.variable.domain_id.data_type == FACET_VALUE_TYPE.STRING)» :String «ENDIF»« IF (!c.variable.domain_id.isIs_enumerated && c.variable.domain_id.data_type == FACET_VALUE_TYPE.DOUBLE)» :Double «ENDIF»« IF c.variable.domain_id.isIs_enumerated » :String   «ENDIF» «ENDFOR») extends RRow	
+	«IF !(schema.cube instanceof BaseDeltaCube)»
 		
-	object  «schema.cube.cube_name»Def {	
-	def getRRows«schema.cube.cube_name»( t: RTable«schema.cube.cube_name») : List[RRow«schema.cube.cube_name»] = t match {
-				      case RTable«schema.cube.cube_name»(rl) => rl
-				  
-				  }
-		  «FOR a:schema.columns»
-		 
-		   
-		  def get«a.variable.variable_id.toLowerCase»(r : RRow«schema.cube.cube_name»)«IF (!a.variable.domain_id.isIs_enumerated && a.variable.domain_id.data_type == FACET_VALUE_TYPE.STRING)» :String «ENDIF»« IF (!a.variable.domain_id.isIs_enumerated && a.variable.domain_id.data_type == FACET_VALUE_TYPE.DOUBLE)» :Double «ENDIF»« IF a.variable.domain_id.isIs_enumerated » :String   «ENDIF» = r match {
-		      case RRow«schema.cube.cube_name»(conciseid : String, «FOR b:schema.columns SEPARATOR ','»«b.variable.variable_id.toLowerCase» «IF (!b.variable.domain_id.isIs_enumerated && b.variable.domain_id.data_type == FACET_VALUE_TYPE.STRING)» :String «ENDIF»« IF (!b.variable.domain_id.isIs_enumerated && b.variable.domain_id.data_type == FACET_VALUE_TYPE.DOUBLE)» :Double «ENDIF»« IF b.variable.domain_id.isIs_enumerated » :String   «ENDIF»  «ENDFOR» ) => «a.variable.variable_id.toLowerCase»
-		  }
-				  		
-		«ENDFOR» 
+		case class RTable«schema.cube.cube_name»(rl : List[RRow«schema.cube.cube_name»])  extends RTable 
+		case class RRow«schema.cube.cube_name» ( rowIDToDelete  : String, isDelete : Boolean, conciseid : String, «FOR c:schema.columns SEPARATOR ','»«c.variable.variable_id.toLowerCase» « IF (!c.variable.domain_id.isIs_enumerated && c.variable.domain_id.data_type == FACET_VALUE_TYPE.STRING)» :String «ENDIF»« IF (!c.variable.domain_id.isIs_enumerated && c.variable.domain_id.data_type == FACET_VALUE_TYPE.DOUBLE)» :Double «ENDIF»« IF c.variable.domain_id.isIs_enumerated » :String   «ENDIF» «ENDFOR») extends RRow	
+			
+		object  «schema.cube.cube_name»Def {	
+		def getRRows«schema.cube.cube_name»( t: RTable«schema.cube.cube_name») : List[RRow«schema.cube.cube_name»] = t match {
+					      case RTable«schema.cube.cube_name»(rl) => rl
+					  
+					  }
+			  «FOR a:schema.columns»
+			 
+			   
+			  def get«a.variable.variable_id.toLowerCase»(r : RRow«schema.cube.cube_name»)«IF (!a.variable.domain_id.isIs_enumerated && a.variable.domain_id.data_type == FACET_VALUE_TYPE.STRING)» :String «ENDIF»« IF (!a.variable.domain_id.isIs_enumerated && a.variable.domain_id.data_type == FACET_VALUE_TYPE.DOUBLE)» :Double «ENDIF»« IF a.variable.domain_id.isIs_enumerated » :String   «ENDIF» = r match {
+			      case RRow«schema.cube.cube_name»(rowIDToDelete  : String, isDelete : Boolean, conciseid : String, «FOR b:schema.columns SEPARATOR ','»«b.variable.variable_id.toLowerCase» «IF (!b.variable.domain_id.isIs_enumerated && b.variable.domain_id.data_type == FACET_VALUE_TYPE.STRING)» :String «ENDIF»« IF (!b.variable.domain_id.isIs_enumerated && b.variable.domain_id.data_type == FACET_VALUE_TYPE.DOUBLE)» :Double «ENDIF»« IF b.variable.domain_id.isIs_enumerated » :String   «ENDIF»  «ENDFOR» ) => «a.variable.variable_id.toLowerCase»
+			  }
+					  		
+			«ENDFOR» 
+			
+			  def getconciseid(r : RRow«schema.cube.cube_name») :String  = r match { 
+			 		case RRow«schema.cube.cube_name»( rowIDToDelete  : String, isDelete : Boolean, conciseid : String, «FOR b:schema.columns SEPARATOR ','»«b.variable.variable_id.toLowerCase» «IF (!b.variable.domain_id.isIs_enumerated && b.variable.domain_id.data_type == FACET_VALUE_TYPE.STRING)» :String «ENDIF»« IF (!b.variable.domain_id.isIs_enumerated && b.variable.domain_id.data_type == FACET_VALUE_TYPE.DOUBLE)» :Double «ENDIF»« IF b.variable.domain_id.isIs_enumerated » :String   «ENDIF»  «ENDFOR» ) =>  conciseid : String
+			 		  }	
+			 
 		
-		  def getconciseid(r : RRow«schema.cube.cube_name») :String  = r match { 
-		 		case RRow«schema.cube.cube_name»( conciseid : String, «FOR b:schema.columns SEPARATOR ','»«b.variable.variable_id.toLowerCase» «IF (!b.variable.domain_id.isIs_enumerated && b.variable.domain_id.data_type == FACET_VALUE_TYPE.STRING)» :String «ENDIF»« IF (!b.variable.domain_id.isIs_enumerated && b.variable.domain_id.data_type == FACET_VALUE_TYPE.DOUBLE)» :Double «ENDIF»« IF b.variable.domain_id.isIs_enumerated » :String   «ENDIF»  «ENDFOR» ) =>  conciseid : String
-		 		  }	
-		 
-	
-	}
-	«ENDIF»
-	
-	
+		}
+		«ENDIF»
+		«IF (schema.cube instanceof BaseDeltaCube)»
+			«val ultimateSourceName= (schema.cube as BaseDeltaCube).ultimateBaseCube.cube_name»
+			import 	«ultimateSourceName»_def._ 
+			case class RTable«schema.cube.cube_name»(rl : List[RRow«ultimateSourceName»])  extends RTable 
+			object  «schema.cube.cube_name»Def {	
+			def getRRows«schema.cube.cube_name»( t: RTable«schema.cube.cube_name») : List[RRow«ultimateSourceName»] = t match {
+							      case RTable«schema.cube.cube_name»(rl) => rl
+							  
+							  }
+			}
+			«ENDIF»
+		
 '''
 	/**
 	 * generate Scala Code For RowLogic
@@ -500,7 +586,126 @@ class JavaBeanTemplate implements IGenerator {
 	import customfuncs._
 	«val sourceTableName = sourceTableNames.get(0)»
 	«val sourceCube = sourceCubes.get(0)»
-
+	«IF logic.rowCreationApproachForCube.rowCreationApproach instanceof DeltaAccumulationRowFunction»
+			«FOR stn:sourceTableNames»
+			import «stn»_def._  //import each source table for this table
+			«ENDFOR»
+			«val ultimateSourceName= (logic.rowCreationApproachForCube.rowCreationApproach as DeltaAccumulationRowFunction).ultimateCubeSource.cube_name»
+			import «ultimateSourceName»_def._  //imprt ultimate source table 
+				
+			case class RTable«logicTableName»(«FOR stn:sourceTableNames SEPARATOR ','»«stn»: RTable«stn»«ENDFOR») extends RTable
+			//case class RRow«logicTableName»(«FOR stn:sourceTableNames SEPARATOR ','»«stn»: RRow«stn»«ENDFOR») 
+			object «logicTableName»Def  {
+			def getRRows«logicTableName»(table«logicTableName» : RTable«logicTableName») : List[RRow«ultimateSourceName»] = table«logicTableName» match {
+			      case RTable«logicTableName»(«FOR stn:sourceTableNames SEPARATOR ','»table«stn»«ENDFOR») => getRRows«logicTableName»(«FOR stn:sourceTableNames SEPARATOR ','»«stn»Def.getRRows«stn»(table«stn»)«ENDFOR»)
+			  }
+				  
+			 	def getRRows«logicTableName»(rows«sourceTableNames.get(0)»: List[RRow«ultimateSourceName»]«IF sourceTableNames.size > 1», rows«sourceTableNames.get(1)»: List[RRow«ultimateSourceName»] «ENDIF» ) : List[RRow«ultimateSourceName»]=  {
+			     
+			     «IF sourceTableNames.size > 1»
+			     // if we have an add of something and exists in the previous, then we just want the new add.
+			     // so we can add everything from the real base table, and then everything from the derived 
+			     // detla dtable unless there is an equivalent in the base.
+			     
+			     rows«sourceTableNames.get(1)» ::: filterAdds(rows«sourceTableNames.get(0)», rows«sourceTableNames.get(1)»)
+			     
+			     «ELSE»
+			     rows«sourceTableNames.get(0)»
+			     «ENDIF»
+			     //so here we are replacing adds, and propegating deltas
+			    
+			  }
+			   «IF sourceTableNames.size > 1»
+			def filterAdds(rows«sourceTableNames.get(0)» : List[RRow«ultimateSourceName»] , rows«sourceTableNames.get(1)» : List[RRow«ultimateSourceName»] ) : List[RRow«ultimateSourceName»] =  rows«sourceTableNames.get(0)» match
+			{
+				case  tail :+ head => emptyListIfTailIstoBeRemoved(head,rows«sourceTableNames.get(1)») :::   filterAdds(tail,rows«sourceTableNames.get(1)») 
+			       case List() => List.empty[RRow«ultimateSourceName»]
+				//can we just filter each in turn and append
+			}
+			
+			def emptyListIfTailIstoBeRemoved(item : RRow«ultimateSourceName» , listToCheck : List[RRow«ultimateSourceName»] ) : List[RRow«ultimateSourceName»] =  listToCheck match
+			{
+				case  tail :+ head => if (head.rowIDToDelete.equals(item.conciseid) && !head.isDelete) List.empty[RRow«ultimateSourceName»]  else emptyListIfTailIstoBeRemoved(item,tail)
+			       case List() => List.empty[RRow«ultimateSourceName»] :+  item
+				//can we just filter each in turn and append
+			}
+			   «ENDIF»
+			«ENDIF»	
+			
+		«IF logic.rowCreationApproachForCube.rowCreationApproach instanceof BaseViewIncorporatingDeltasRowFunction»
+				«FOR stn:sourceTableNames»
+				import «stn»_def._  //import each source table for this table
+				«ENDFOR»
+				«val ultimateSourceName= (logic.rowCreationApproachForCube.rowCreationApproach as BaseViewIncorporatingDeltasRowFunction).ultimateCubeSource.cube_name»
+				import 	«ultimateSourceName»_def._ 
+				case class RTable«logicTableName»(«FOR stn:sourceTableNames SEPARATOR ','»«stn»: RTable«stn»«ENDFOR») extends RTable
+				case class RRow«logicTableName»(«ultimateSourceName»: RRow«ultimateSourceName») 
+				object «logicTableName»Def  {
+				def getRRows«logicTableName»(table«logicTableName» : RTable«logicTableName») : List[RRow«logicTableName»] = table«logicTableName» match {
+				      case RTable«logicTableName»(«FOR stn:sourceTableNames SEPARATOR ','»table«stn»«ENDFOR») => getRRows«logicTableName»(«FOR stn:sourceTableNames SEPARATOR ','»«stn»Def.getRRows«stn»(table«stn»)«ENDFOR»)
+				  }
+					def getRRows«logicTableName»(«sourceTableNames.get(0)»: List[RRow«ultimateSourceName»]«IF sourceTableNames.size > 0», «sourceTableNames.get(1)»: List[RRow«ultimateSourceName»] «ENDIF» ) : List[RRow«logicTableName»]=  {
+				  «IF sourceTableNames.size > 1»
+				 		     // if we have an add of something and exists in the previous, then we just want the new add.
+				 		     // so we can add everything from the real base table, and then everything from the derived 
+				 		     // detla dtable unless there is an equivalent in the base.
+				 		     
+				 		     makeNewListWithSources(everythingExceptDeletes(«sourceTableNames.get(0)») ::: filterAddsAndDeletes( «ultimateSourceName»,«sourceTableNames.get(0)»))
+				 		     «ELSE»
+				 		     rows«ultimateSourceName»
+				 		     «ENDIF»
+				 		     //so here we are replacing adds, and aplying deltas
+				 		    
+				 		  }
+				 		   «IF sourceTableNames.size > 1»
+				 		   //all items from table 1 as long as they are not amended or delted in table 2
+				 		def filterAddsAndDeletes(rows«ultimateSourceName» : List[RRow«ultimateSourceName»] , rows«sourceTableNames.get(0)» : List[RRow«ultimateSourceName»] ) : List[RRow«ultimateSourceName»] =  rows«ultimateSourceName» match
+				 		{
+				 			case  tail :+ head => emptyListIfTailIstoBeRemoved(head,rows«sourceTableNames.get(0)») :::   filterAddsAndDeletes(tail,rows«sourceTableNames.get(0)») 
+				 		       case List() => List.empty[RRow«ultimateSourceName»]
+				 			//can we just filter each in turn and append
+				 		}
+				 		
+				 		def everythingExceptDeletes(rows«sourceTableNames.get(0)» : List[RRow«ultimateSourceName»]  ) : List[RRow«ultimateSourceName»] =  rows«sourceTableNames.get(0)» match
+				 					 		{
+				 					 			case  tail :+ head => (if (head.isDelete) List.empty[RRow«ultimateSourceName»]  else (List.empty[RRow«ultimateSourceName»] :+head ) )  ::: everythingExceptDeletes(tail)
+				 					 		       case List() => List.empty[RRow«ultimateSourceName»]
+				 					 			//can we just filter each in turn and append
+				 					 		}
+				 					 		
+				 		def emptyListIfTailIstoBeRemoved(item : RRow«ultimateSourceName» , listToCheck : List[RRow«ultimateSourceName»] ) : List[RRow«ultimateSourceName»] =  listToCheck match
+				 		{
+				 			case  tail :+ head => if (head.rowIDToDelete.equals(item.conciseid)) List.empty[RRow«ultimateSourceName»]  else emptyListIfTailIstoBeRemoved(item,tail)
+				 		       case List() => List.empty[RRow«ultimateSourceName»] :+  item
+				 			//can we just filter each in turn and append
+				 		}
+				 		
+				 		def makeNewListWithSources(list : List[RRow«ultimateSourceName»] )  : List[RRow«logicTableName»] =  list match
+				 		{
+				 			case  tail :+ head =>  makeNewListWithSources(tail) :+  RRow«logicTableName»(head)
+				 						 		       case List() => List.empty[RRow«logicTableName»] 
+				 			
+				 		} «ENDIF»	
+				  //for each col in the schema get the same col from the undelrying row
+				  ///so ge the schema, is there a function on Util to do this?
+				  « val schema = logic.getTheDependantEvaluatedCubeSchemas.get(0)»
+			    «FOR a:schema.columns»	  		 
+				  		   
+				  		  def get«a.variable.variable_id.toLowerCase»(r : RRow«logicTableName»)«IF (!a.variable.domain_id.isIs_enumerated && a.variable.domain_id.data_type == FACET_VALUE_TYPE.STRING)» :String «ENDIF»« IF (!a.variable.domain_id.isIs_enumerated && a.variable.domain_id.data_type == FACET_VALUE_TYPE.DOUBLE)» :Double «ENDIF»« IF a.variable.domain_id.isIs_enumerated » :String   «ENDIF» = r match {
+				  		      case RRow«logicTableName»(sr:RRow«schema.cube.cube_name»)  => «schema.cube.cube_name»Def.get«a.variable.variable_id.toLowerCase»(sr)
+				  		  }
+				  		
+				  		«ENDFOR» 
+				  		
+				  		def gettracingid(r : RRow«logicTableName») :String  =  {
+				  			 						     "«logicTableName»(" + «IF ultimateSourceName !=null»«ultimateSourceName»«ELSE»«sourceTableName»«ENDIF»Def.getconciseid(r.«ultimateSourceName») + ")"
+				  			 						  }
+				  		def getconciseid(r : RRow«logicTableName») :String  = {
+				  			 			 						     "«logicTableName»:" +md5HashString("«logicTableName»(" + «IF ultimateSourceName !=null»«ultimateSourceName»«ELSE»«sourceTableName»«ENDIF»Def.getconciseid(r.«ultimateSourceName») + ")")
+				  			 			 						  }
+	
+				«ENDIF»	
+	
 		
 			
 	«IF logic.rowCreationApproachForCube.rowCreationApproach instanceof OneToOneRowCreationApproach»
@@ -898,7 +1103,7 @@ class JavaBeanTemplate implements IGenerator {
 	def String getUltimateSourceName(CubeTransformationLogic logic) {
 		val deprls = AttributeLineageUtil.getTheDependantFunctionalRowLogics(logic)
 
-		if (false)
+		if( deprls.size > 0 && (deprls.get(0).rowCreationApproachForCube.cube instanceof  BaseViewCube))
 			(deprls.get(0).rowCreationApproachForCube.ultimateCubeSource.cube_name)
 		else
 			null

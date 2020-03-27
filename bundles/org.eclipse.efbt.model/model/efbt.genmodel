@@ -114,6 +114,8 @@
     </genClasses>
     <genClasses ecoreClass="base_cube_data.ecore#//BaseRowData">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference base_cube_data.ecore#//BaseRowData/cells"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute base_cube_data.ecore#//BaseRowData/isDelete"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute base_cube_data.ecore#//BaseRowData/rowIDToDelete"/>
     </genClasses>
     <genClasses ecoreClass="base_cube_data.ecore#//TargetCubeExpectedResultsData">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference base_cube_data.ecore#//TargetCubeExpectedResultsData/rows"/>
@@ -384,16 +386,23 @@
       </genAnnotations>
     </genAnnotations>
     <genClasses ecoreClass="cubes.ecore#//BaseCube"/>
+    <genClasses ecoreClass="cubes.ecore#//DerivedCube">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cubes.ecore#//DerivedCube/sourceCubes"/>
+    </genClasses>
     <genClasses ecoreClass="cubes.ecore#//FreeBirdToolsCube">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cubes.ecore#//FreeBirdToolsCube/cube_name"/>
     </genClasses>
     <genClasses ecoreClass="cubes.ecore#//FreeBirdToolsCubeModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cubes.ecore#//FreeBirdToolsCubeModule/cubes"/>
     </genClasses>
-    <genClasses ecoreClass="cubes.ecore#//DerivedCube">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cubes.ecore#//DerivedCube/sourceCubes"/>
-    </genClasses>
     <genClasses ecoreClass="cubes.ecore#//TargetCube"/>
+    <genClasses ecoreClass="cubes.ecore#//BaseDeltaCube">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cubes.ecore#//BaseDeltaCube/ultimateBaseCube"/>
+    </genClasses>
+    <genClasses ecoreClass="cubes.ecore#//BaseViewCube">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cubes.ecore#//BaseViewCube/ultimateBaseCube"/>
+    </genClasses>
+    <genClasses ecoreClass="cubes.ecore#//DeltaAccumulationCube"/>
   </genPackages>
   <genPackages prefix="Data_definition" resource="XML" disposableProviderFactory="true"
       ecorePackage="data_definition.ecore#/">
@@ -1061,6 +1070,12 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//RowJoinFunction/joinFunction"/>
     </genClasses>
     <genClasses ecoreClass="row_transformation_logic.ecore#//UnionRowCreationApproach"/>
+    <genClasses ecoreClass="row_transformation_logic.ecore#//BaseViewIncorporatingDeltasRowFunction">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//BaseViewIncorporatingDeltasRowFunction/ultimateCubeSource"/>
+    </genClasses>
+    <genClasses ecoreClass="row_transformation_logic.ecore#//DeltaAccumulationRowFunction">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//DeltaAccumulationRowFunction/ultimateCubeSource"/>
+    </genClasses>
   </genPackages>
   <genPackages prefix="Scenarios" resource="XML" disposableProviderFactory="true"
       ecorePackage="scenarios.ecore#/">
@@ -1249,6 +1264,12 @@
     </genClasses>
     <genClasses ecoreClass="trl_sql_views.ecore#//WhereClause">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//WhereClause/function"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_sql_views.ecore#//BaseViewIncorporatingDeltas">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//BaseViewIncorporatingDeltas/ultimateSourceCube"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_sql_views.ecore#//DeltaAccumulation">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//DeltaAccumulation/ultimateSourceCube"/>
     </genClasses>
   </genPackages>
   <genPackages prefix="Vtl_transformation" disposableProviderFactory="true" ecorePackage="vtl_transformation.ecore#/">

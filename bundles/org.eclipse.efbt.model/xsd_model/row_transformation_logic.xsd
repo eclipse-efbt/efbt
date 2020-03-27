@@ -18,6 +18,8 @@ SPDX-License-Identifier: EPL-2.0
  Contributors:
  Neil Mackenzie - initial API and implementation&#13;</xsd:appinfo>
   </xsd:annotation>
+  <xsd:element ecore:ignore="true" name="BaseViewIncorporatingDeltasRowFunction" type="row_transformation_logic:BaseViewIncorporatingDeltasRowFunction"/>
+  <xsd:element ecore:ignore="true" name="DeltaAccumulationRowFunction" type="row_transformation_logic:DeltaAccumulationRowFunction"/>
   <xsd:complexType name="BaseRowStructure">
     <xsd:annotation>
       <xsd:documentation>A set of CubeColumns which make up the structure of a BaseCube row</xsd:documentation>
@@ -208,6 +210,20 @@ In most common cases this field is empty.</xsd:documentation>
     </xsd:annotation>
     <xsd:complexContent>
       <xsd:extension base="row_transformation_logic:RowCreationApproach"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="BaseViewIncorporatingDeltasRowFunction">
+    <xsd:complexContent>
+      <xsd:extension base="row_transformation_logic:RowCreationApproach">
+        <xsd:attribute ecore:reference="cubes:FreeBirdToolsCube" name="ultimateCubeSource" type="xsd:anyURI"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="DeltaAccumulationRowFunction">
+    <xsd:complexContent>
+      <xsd:extension base="row_transformation_logic:RowCreationApproach">
+        <xsd:attribute ecore:reference="cubes:FreeBirdToolsCube" name="ultimateCubeSource" type="xsd:anyURI"/>
+      </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
 </xsd:schema>

@@ -26,6 +26,8 @@ SPDX-License-Identifier: EPL-2.0
  Contributors:
  Neil Mackenzie - initial API and implementation&#13;</xsd:appinfo>
   </xsd:annotation>
+  <xsd:element ecore:ignore="true" name="BaseViewIncorporatingDeltas" type="trl_sql_views:BaseViewIncorporatingDeltas"/>
+  <xsd:element ecore:ignore="true" name="DeltaAccumulation" type="trl_sql_views:DeltaAccumulation"/>
   <xsd:complexType name="AggregateEnrichmentView">
     <xsd:annotation>
       <xsd:documentation>An SQLView which represents a grouping of  rows of the single source table of the associated table, 
@@ -304,5 +306,19 @@ The resulting cube structure will be a column for each of the  columns in the 2 
         </xsd:annotation>
       </xsd:element>
     </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="BaseViewIncorporatingDeltas">
+    <xsd:complexContent>
+      <xsd:extension base="trl_sql_views:SQLView">
+        <xsd:attribute ecore:reference="cubes:FreeBirdToolsCube" name="ultimateSourceCube" type="xsd:anyURI"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="DeltaAccumulation">
+    <xsd:complexContent>
+      <xsd:extension base="trl_sql_views:SQLView">
+        <xsd:attribute ecore:reference="cubes:FreeBirdToolsCube" name="ultimateSourceCube" type="xsd:anyURI"/>
+      </xsd:extension>
+    </xsd:complexContent>
   </xsd:complexType>
 </xsd:schema>

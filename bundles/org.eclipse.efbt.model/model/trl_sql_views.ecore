@@ -351,4 +351,10 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BaseViewIncorporatingDeltas" eSuperTypes="#//SQLView">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ultimateSourceCube" eType="ecore:EClass cubes.ecore#//FreeBirdToolsCube"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DeltaAccumulation" eSuperTypes="#//SQLView">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ultimateSourceCube" eType="ecore:EClass cubes.ecore#//FreeBirdToolsCube"/>
+  </eClassifiers>
 </ecore:EPackage>
