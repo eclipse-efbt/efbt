@@ -19,5 +19,15 @@ object CustomFunctions {
     else 0
   }
   
+  def sqrt( d : Double) : Double=
+  {
+    Math.sqrt(d)
+  }
+  
+  def getCorrelationFactor(d1 : Double, d2 : Double) : Double=
+  {
+   d1*d2
+  }
+  
   
 }
