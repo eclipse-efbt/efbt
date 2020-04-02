@@ -1004,7 +1004,7 @@ public class TRLUtil {
   
   public static EList<CUBE_STRUCTURE_ITEM> getCubeStructureItemsFromDefaultBIRDModel(CubeSchema schema)
   {
-	    NavigationContext nc = NavigationContextUtil.getDefaultNavigationContext(schema);
+	  NavigationContext nc = TagUtil.getDefaultNavigationContext(schema);
 	    BIRDModel birdModel = nc.getBirdModel();
 	    EList<CubeModule> cubeModules = birdModel.getCubes();
 	    CUBE cube = schema.getCube();
