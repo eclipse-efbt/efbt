@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<xsd:schema xmlns:column_transformation_logic="http://www.eclipse.org/column_transformation_logic" xmlns:core="http://www.eclipse.org/core" xmlns:cube_data="http://www.eclipse.org/cube_data" xmlns:cubes="http://www.eclipse.org/cubes" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:functions="http://www.eclipse.org/functions" xmlns:module_management="http://www.eclipse.org/module_management" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="functions" ecore:package="functions" targetNamespace="http://www.eclipse.org/functions">
+<xsd:schema xmlns:core="http://www.eclipse.org/core" xmlns:cube_data="http://www.eclipse.org/cube_data" xmlns:cubes="http://www.eclipse.org/cubes" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:functions="http://www.eclipse.org/functions" xmlns:module_management="http://www.eclipse.org/module_management" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="functions" ecore:package="functions" targetNamespace="http://www.eclipse.org/functions">
   <xsd:import namespace="http://www.eclipse.org/cubes" schemaLocation="cubes.xsd"/>
-  <xsd:import namespace="http://www.eclipse.org/column_transformation_logic" schemaLocation="column_transformation_logic.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/module_management" schemaLocation="module_management.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/core" schemaLocation="core.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/cube_data" schemaLocation="cube_data.xsd"/>
@@ -204,13 +203,40 @@ SPDX-License-Identifier: EPL-2.0
     </xsd:annotation>
     <xsd:complexContent>
       <xsd:extension base="functions:Parameter">
-        <xsd:attribute ecore:reference="column_transformation_logic:CubeColumn" name="cubeColumn" type="xsd:anyURI">
+        <xsd:attribute ecore:reference="functions:CubeColumn" name="cubeColumn" type="xsd:anyURI">
           <xsd:annotation>
             <xsd:documentation>TheCubeColumn this is a reference to a real existing cubeColumn.</xsd:documentation>
           </xsd:annotation>
         </xsd:attribute>
       </xsd:extension>
     </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CubeColumn">
+    <xsd:annotation>
+      <xsd:documentation>A column on a cube.
+Note that this class specifies the column , AND  the cube.
+For example their might be 2 different CubeColumns with the same column. E.g there might be a CubeColumn with cube=Trades and column=Currency, and another CubeColumn with table=Position and column Currency.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute ecore:id="true" name="columnID" type="ecore:EString">
+      <xsd:annotation>
+        <xsd:documentation>The CubeColumn ID.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute ecore:reference="cubes:FreeBirdToolsCube" name="cube" type="xsd:anyURI">
+      <xsd:annotation>
+        <xsd:documentation>The associated Cube.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute ecore:unsettable="false" name="usedInSubsets" type="ecore:EBoolean">
+      <xsd:annotation>
+        <xsd:documentation>The CompareAttributeLineageModels PlatformCall in the platform_call package creates an AttributeLineageModel where items (such as CubeColumns) which are in both models are marked with usedInSubset=true</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute ecore:reference="core:VARIABLE" name="variable" type="xsd:anyURI">
+      <xsd:annotation>
+        <xsd:documentation>The associated Variable.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
   </xsd:complexType>
   <xsd:complexType name="SpeculativeCubeColumnParameter">
     <xsd:annotation>

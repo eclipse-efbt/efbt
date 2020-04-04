@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import attribute_lineage.AttributeLineageModel;
 import attribute_lineage.Attribute_lineageFactory;
 import column_transformation_logic.ColumnFunction;
-import column_transformation_logic.CubeColumn;
+import functions.CubeColumn;
 import cube_schema.CubeSchema;
 import cube_transformation_logic.CubeTransformationLogic;
 import cubes.FreeBirdToolsCube;

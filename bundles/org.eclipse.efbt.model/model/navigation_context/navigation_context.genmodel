@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.model/src" modelPluginID="org.eclipse.efbt.model"
+    modelName="Navigation_context" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="8.0" copyrightFields="false"
+    usedGenPackages="../bird_artefacts/bird_artefacts.genmodel#//bird_model ../bird_artefacts/bird_artefacts.genmodel#//core ../bird_artefacts/bird_artefacts.genmodel#//data_definition ../bird_artefacts/bird_artefacts.genmodel#//efbt_data_definition ../bird_artefacts/bird_artefacts.genmodel#//efbt_mapping ../bird_artefacts/bird_artefacts.genmodel#//efbt_vtl_transformation ../bird_artefacts/bird_artefacts.genmodel#//mapping ../bird_artefacts/bird_artefacts.genmodel#//rendering ../bird_artefacts/bird_artefacts.genmodel#//vtl_transformation ../cube_data/cube_data.genmodel#//cube_data ../cubes/cubes.genmodel#//cube_schema ../cubes/cubes.genmodel#//cubes ../../../org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore ../functions/functions.genmodel#//column_transformation_logic ../functions/functions.genmodel#//functions ../module_management/module_management.genmodel#//module_management ../testing/testing.genmodel#//domain_model_mapping ../testing/testing.genmodel#//functional_module ../testing/testing.genmodel#//requirements_text ../testing/testing.genmodel#//scenarios ../testing/testing.genmodel#//tags ../trl/trl.genmodel#//reports ../trl/trl.genmodel#//transformation ../trl/trl.genmodel#//trl_report_cell_views ../trl/trl.genmodel#//trl_sql_views"
+    operationReflection="true" importOrganizing="true">
+  <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+    <genAnnotations source="selectedPackages">
+      <details key="http://www.eclipse.org/navigation_context" value="navigation_context.xsd"/>
+      <details key="http://www.eclipse.org/bird_model" value="bird_model.xsd"/>
+      <details key="http://www.eclipse.org/core" value="core.xsd"/>
+      <details key="http://www.eclipse.org/data_definition" value="data_definition.xsd"/>
+      <details key="http://www.eclipse.org/efbt_data_definition" value="efbt_data_definition.xsd"/>
+      <details key="http://www.eclipse.org/efbt_mapping" value="efbt_mapping.xsd"/>
+      <details key="http://www.eclipse.org/efbt_vtl_transformation" value="efbt_vtl_transformation.xsd"/>
+      <details key="http://www.eclipse.org/mapping" value="mapping.xsd"/>
+      <details key="http://www.eclipse.org/rendering" value="rendering.xsd"/>
+      <details key="http://www.eclipse.org/vtl_transformation" value="vtl_transformation.xsd"/>
+      <details key="http://www.eclipse.org/cube_data" value="cube_data.xsd"/>
+      <details key="http://www.eclipse.org/cube_schema" value="cube_schema.xsd"/>
+      <details key="http://www.eclipse.org/cubes" value="cubes.xsd"/>
+      <details key="http://www.eclipse.org/emf/2002/Ecore" value="Ecore.xsd"/>
+      <details key="http://www.eclipse.org/column_transformation_logic" value="column_transformation_logic.xsd"/>
+      <details key="http://www.eclipse.org/functions" value="functions.xsd"/>
+      <details key="http://www.eclipse.org/module_management" value="module_management.xsd"/>
+      <details key="http://www.eclipse.org/domain_model_mapping" value="domain_model_mapping.xsd"/>
+      <details key="http://www.eclipse.org/functional_module" value="functional_module.xsd"/>
+      <details key="http://www.eclipse.org/requirements_text" value="requirements_text.xsd"/>
+      <details key="http://www.eclipse.org/scenarios" value="scenarios.xsd"/>
+      <details key="http://www.eclipse.org/tags" value="tags.xsd"/>
+      <details key="http://www.eclipse.org/reports" value="reports.xsd"/>
+      <details key="http://www.eclipse.org/transformation" value="transformation.xsd"/>
+      <details key="http://www.eclipse.org/trl_report_cell_views" value="trl_report_cell_views.xsd"/>
+      <details key="http://www.eclipse.org/trl_sql_views" value="trl_sql_views.xsd"/>
+    </genAnnotations>
+    <details key="directoryURI" value="/resource/org.eclipse.efbt.model/xsd_model/"/>
+  </genAnnotations>
+  <foreignModel>navigation_context.ecore</foreignModel>
+  <genPackages prefix="Navigation_context" resource="XML" disposableProviderFactory="true"
+      ecorePackage="navigation_context.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="/resource/org.eclipse.efbt.model/xsd_model/navigation_context.xsd">
+        <details key="http://www.eclipse.org/functions" value="/resource/org.eclipse.efbt.model/xsd_model/functions.xsd"/>
+        <details key="http://www.eclipse.org/scenarios" value="/resource/org.eclipse.efbt.model/xsd_model/scenarios.xsd"/>
+        <details key="http://www.eclipse.org/trl_sql_views" value="/resource/org.eclipse.efbt.model/xsd_model/trl_sql_views.xsd"/>
+        <details key="http://www.eclipse.org/core" value="/resource/org.eclipse.efbt.model/xsd_model/core.xsd"/>
+        <details key="http://www.eclipse.org/mapping" value="/resource/org.eclipse.efbt.model/xsd_model/mapping.xsd"/>
+        <details key="http://www.eclipse.org/trl_report_cell_views" value="/resource/org.eclipse.efbt.model/xsd_model/trl_report_cell_views.xsd"/>
+        <details key="http://www.eclipse.org/efbt_data_definition" value="/resource/org.eclipse.efbt.model/xsd_model/efbt_data_definition.xsd"/>
+        <details key="http://www.eclipse.org/transformation" value="/resource/org.eclipse.efbt.model/xsd_model/transformation.xsd"/>
+        <details key="http://www.eclipse.org/vtl_transformation" value="/resource/org.eclipse.efbt.model/xsd_model/vtl_transformation.xsd"/>
+        <details key="http://www.eclipse.org/cubes" value="/resource/org.eclipse.efbt.model/xsd_model/cubes.xsd"/>
+        <details key="http://www.eclipse.org/domain_model_mapping" value="/resource/org.eclipse.efbt.model/xsd_model/domain_model_mapping.xsd"/>
+        <details key="http://www.eclipse.org/functional_module" value="/resource/org.eclipse.efbt.model/xsd_model/functional_module.xsd"/>
+        <details key="http://www.eclipse.org/bird_model" value="/resource/org.eclipse.efbt.model/xsd_model/bird_model.xsd"/>
+        <details key="http://www.eclipse.org/reports" value="/resource/org.eclipse.efbt.model/xsd_model/reports.xsd"/>
+        <details key="http://www.eclipse.org/module_management" value="/resource/org.eclipse.efbt.model/xsd_model/module_management.xsd"/>
+        <details key="http://www.eclipse.org/tags" value="/resource/org.eclipse.efbt.model/xsd_model/tags.xsd"/>
+        <details key="http://www.eclipse.org/column_transformation_logic" value="/resource/org.eclipse.efbt.model/xsd_model/column_transformation_logic.xsd"/>
+        <details key="http://www.eclipse.org/efbt_vtl_transformation" value="/resource/org.eclipse.efbt.model/xsd_model/efbt_vtl_transformation.xsd"/>
+        <details key="http://www.eclipse.org/requirements_text" value="/resource/org.eclipse.efbt.model/xsd_model/requirements_text.xsd"/>
+        <details key="http://www.eclipse.org/data_definition" value="/resource/org.eclipse.efbt.model/xsd_model/data_definition.xsd"/>
+        <details key="http://www.eclipse.org/rendering" value="/resource/org.eclipse.efbt.model/xsd_model/rendering.xsd"/>
+        <details key="http://www.eclipse.org/efbt_mapping" value="/resource/org.eclipse.efbt.model/xsd_model/efbt_mapping.xsd"/>
+        <details key="http://www.eclipse.org/cube_data" value="/resource/org.eclipse.efbt.model/xsd_model/cube_data.xsd"/>
+        <details key="http://www.eclipse.org/cube_schema" value="/resource/org.eclipse.efbt.model/xsd_model/cube_schema.xsd"/>
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="/resource/org.eclipse.efbt.model/xsd_model/Ecore.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genClasses ecoreClass="navigation_context.ecore#//NavigationContext">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference navigation_context.ecore#//NavigationContext/tags"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference navigation_context.ecore#//NavigationContext/transformationContext"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference navigation_context.ecore#//NavigationContext/transformationsSchemeModule"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute navigation_context.ecore#//NavigationContext/license"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference navigation_context.ecore#//NavigationContext/birdModel"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference navigation_context.ecore#//NavigationContext/domainModelMapping"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.model/src" modelPluginID="org.eclipse.efbt.model"
+    modelName="Controller" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="8.0" copyrightFields="false"
+    usedGenPackages="../attribute_lineage/attribute_lineage.genmodel#//attribute_lineage ../attribute_lineage/attribute_lineage.genmodel#//cube_transformation_logic ../attribute_lineage/attribute_lineage.genmodel#//row_transformation_logic ../bird_artefacts/bird_artefacts.genmodel#//core ../bird_artefacts/bird_artefacts.genmodel#//data_definition ../bird_artefacts/bird_artefacts.genmodel#//rendering ../cube_data/cube_data.genmodel#//base_cube_data ../cube_data/cube_data.genmodel#//cube_data ../cubes/cubes.genmodel#//cube_schema ../cubes/cubes.genmodel#//cubes ../datalineage/datalineage.genmodel#//cell_transformation_logic ../datalineage/datalineage.genmodel#//data_lineage ../../../org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore ../functions/functions.genmodel#//column_transformation_logic ../functions/functions.genmodel#//functions ../module_management/module_management.genmodel#//module_management ../testing/testing.genmodel#//domain_model_mapping ../testing/testing.genmodel#//functional_module ../testing/testing.genmodel#//scenarios ../testing/testing.genmodel#//test ../trl/trl.genmodel#//reports ../trl/trl.genmodel#//transformation ../trl/trl.genmodel#//trl_report_cell_views ../trl/trl.genmodel#//trl_sql_views"
+    operationReflection="true" importOrganizing="true">
+  <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+    <genAnnotations source="selectedPackages">
+      <details key="http://www.eclipse.org/platform_call" value="platform_call.xsd"/>
+      <details key="http://www.eclipse.org/attribute_lineage" value="attribute_lineage.xsd"/>
+      <details key="http://www.eclipse.org/cube_transformation_logic" value="cube_transformation_logic.xsd"/>
+      <details key="http://www.eclipse.org/row_transformation_logic" value="row_transformation_logic.xsd"/>
+      <details key="http://www.eclipse.org/core" value="core.xsd"/>
+      <details key="http://www.eclipse.org/data_definition" value="data_definition.xsd"/>
+      <details key="http://www.eclipse.org/rendering" value="rendering.xsd"/>
+      <details key="http://www.eclipse.org/base_cube_data" value="base_cube_data.xsd"/>
+      <details key="http://www.eclipse.org/cube_data" value="cube_data.xsd"/>
+      <details key="http://www.eclipse.org/cube_schema" value="cube_schema.xsd"/>
+      <details key="http://www.eclipse.org/cubes" value="cubes.xsd"/>
+      <details key="http://www.eclipse.org/cell_transformation_logic" value="cell_transformation_logic.xsd"/>
+      <details key="http://www.eclipse.org/data_lineage" value="data_lineage.xsd"/>
+      <details key="http://www.eclipse.org/emf/2002/Ecore" value="Ecore.xsd"/>
+      <details key="http://www.eclipse.org/column_transformation_logic" value="column_transformation_logic.xsd"/>
+      <details key="http://www.eclipse.org/functions" value="functions.xsd"/>
+      <details key="http://www.eclipse.org/module_management" value="module_management.xsd"/>
+      <details key="http://www.eclipse.org/domain_model_mapping" value="domain_model_mapping.xsd"/>
+      <details key="http://www.eclipse.org/functional_module" value="functional_module.xsd"/>
+      <details key="http://www.eclipse.org/scenarios" value="scenarios.xsd"/>
+      <details key="http://www.eclipse.org/test" value="test.xsd"/>
+      <details key="http://www.eclipse.org/reports" value="reports.xsd"/>
+      <details key="http://www.eclipse.org/transformation" value="transformation.xsd"/>
+      <details key="http://www.eclipse.org/trl_report_cell_views" value="trl_report_cell_views.xsd"/>
+      <details key="http://www.eclipse.org/trl_sql_views" value="trl_sql_views.xsd"/>
+    </genAnnotations>
+    <details key="directoryURI" value="/resource/org.eclipse.efbt.model/xsd_model/"/>
+  </genAnnotations>
+  <foreignModel>platform_call.ecore</foreignModel>
+  <genPackages prefix="Platform_call" resource="XML" disposableProviderFactory="true"
+      ecorePackage="platform_call.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="/resource/org.eclipse.efbt.model/xsd_model/platform_call.xsd">
+        <details key="http://www.eclipse.org/functions" value="/resource/org.eclipse.efbt.model/xsd_model/functions.xsd"/>
+        <details key="http://www.eclipse.org/base_cube_data" value="/resource/org.eclipse.efbt.model/xsd_model/base_cube_data.xsd"/>
+        <details key="http://www.eclipse.org/cube_transformation_logic" value="/resource/org.eclipse.efbt.model/xsd_model/cube_transformation_logic.xsd"/>
+        <details key="http://www.eclipse.org/scenarios" value="/resource/org.eclipse.efbt.model/xsd_model/scenarios.xsd"/>
+        <details key="http://www.eclipse.org/data_lineage" value="/resource/org.eclipse.efbt.model/xsd_model/data_lineage.xsd"/>
+        <details key="http://www.eclipse.org/row_transformation_logic" value="/resource/org.eclipse.efbt.model/xsd_model/row_transformation_logic.xsd"/>
+        <details key="http://www.eclipse.org/trl_sql_views" value="/resource/org.eclipse.efbt.model/xsd_model/trl_sql_views.xsd"/>
+        <details key="http://www.eclipse.org/core" value="/resource/org.eclipse.efbt.model/xsd_model/core.xsd"/>
+        <details key="http://www.eclipse.org/test" value="/resource/org.eclipse.efbt.model/xsd_model/test.xsd"/>
+        <details key="http://www.eclipse.org/reports" value="/resource/org.eclipse.efbt.model/xsd_model/reports.xsd"/>
+        <details key="http://www.eclipse.org/trl_report_cell_views" value="/resource/org.eclipse.efbt.model/xsd_model/trl_report_cell_views.xsd"/>
+        <details key="http://www.eclipse.org/transformation" value="/resource/org.eclipse.efbt.model/xsd_model/transformation.xsd"/>
+        <details key="http://www.eclipse.org/module_management" value="/resource/org.eclipse.efbt.model/xsd_model/module_management.xsd"/>
+        <details key="http://www.eclipse.org/attribute_lineage" value="/resource/org.eclipse.efbt.model/xsd_model/attribute_lineage.xsd"/>
+        <details key="http://www.eclipse.org/column_transformation_logic" value="/resource/org.eclipse.efbt.model/xsd_model/column_transformation_logic.xsd"/>
+        <details key="http://www.eclipse.org/cubes" value="/resource/org.eclipse.efbt.model/xsd_model/cubes.xsd"/>
+        <details key="http://www.eclipse.org/domain_model_mapping" value="/resource/org.eclipse.efbt.model/xsd_model/domain_model_mapping.xsd"/>
+        <details key="http://www.eclipse.org/functional_module" value="/resource/org.eclipse.efbt.model/xsd_model/functional_module.xsd"/>
+        <details key="http://www.eclipse.org/data_definition" value="/resource/org.eclipse.efbt.model/xsd_model/data_definition.xsd"/>
+        <details key="http://www.eclipse.org/rendering" value="/resource/org.eclipse.efbt.model/xsd_model/rendering.xsd"/>
+        <details key="http://www.eclipse.org/cube_data" value="/resource/org.eclipse.efbt.model/xsd_model/cube_data.xsd"/>
+        <details key="http://www.eclipse.org/cube_schema" value="/resource/org.eclipse.efbt.model/xsd_model/cube_schema.xsd"/>
+        <details key="http://www.eclipse.org/cell_transformation_logic" value="/resource/org.eclipse.efbt.model/xsd_model/cell_transformation_logic.xsd"/>
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="/resource/org.eclipse.efbt.model/xsd_model/Ecore.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genClasses ecoreClass="platform_call.ecore#//CompareAttributeLineageModels">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform_call.ecore#//CompareAttributeLineageModels/resultingModel"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform_call.ecore#//CompareAttributeLineageModels/subsetBoolean"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform_call.ecore#//CompareAttributeLineageModels/notIncludedModel"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform_call.ecore#//CompareAttributeLineageModels/firstModel"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform_call.ecore#//CompareAttributeLineageModels/secondModel"/>
+    </genClasses>
+    <genClasses ecoreClass="platform_call.ecore#//IsNotSubset"/>
+    <genClasses ecoreClass="platform_call.ecore#//IsSubset"/>
+    <genClasses ecoreClass="platform_call.ecore#//SubsetBoolean"/>
+    <genClasses ecoreClass="platform_call.ecore#//ExecuteAttributeLineageModel">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform_call.ecore#//ExecuteAttributeLineageModel/attributeLineageModel"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//ExecuteAttributeLineageModel/inputdir"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//ExecuteAttributeLineageModel/outputdir"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform_call.ecore#//ExecuteAttributeLineageModel/programInputs"/>
+    </genClasses>
+    <genClasses ecoreClass="platform_call.ecore#//PlatformCall">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//PlatformCall/errorMessage"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//PlatformCall/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//PlatformCall/returnStatus"/>
+    </genClasses>
+    <genClasses ecoreClass="platform_call.ecore#//PlatformCallModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform_call.ecore#//PlatformCallModule/platformCalls"/>
+    </genClasses>
+    <genClasses ecoreClass="platform_call.ecore#//GetAttributeLineageModel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform_call.ecore#//GetAttributeLineageModel/resultingModel"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform_call.ecore#//GetAttributeLineageModel/transformationContext"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform_call.ecore#//GetAttributeLineageModel/unresolvedCubeColumnParams"/>
+    </genClasses>
+    <genClasses ecoreClass="platform_call.ecore#//GetAttributeLineageForOneReportCell">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform_call.ecore#//GetAttributeLineageForOneReportCell/transformationContext"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform_call.ecore#//GetAttributeLineageForOneReportCell/reportCell"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform_call.ecore#//GetAttributeLineageForOneReportCell/resultingModel"/>
+    </genClasses>
+    <genClasses ecoreClass="platform_call.ecore#//GetTestLogic">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform_call.ecore#//GetTestLogic/testDefinition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform_call.ecore#//GetTestLogic/testLogic"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform_call.ecore#//GetTestLogic/release"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform_call.ecore#//GetTestLogic/optionalDomainMapping"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<xsd:schema xmlns:column_transformation_logic="http://www.eclipse.org/column_transformation_logic" xmlns:core="http://www.eclipse.org/core" xmlns:cubes="http://www.eclipse.org/cubes" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:functions="http://www.eclipse.org/functions" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="column_transformation_logic" ecore:package="column_transformation_logic" targetNamespace="http://www.eclipse.org/column_transformation_logic">
-  <xsd:import namespace="http://www.eclipse.org/core" schemaLocation="core.xsd"/>
-  <xsd:import namespace="http://www.eclipse.org/cubes" schemaLocation="cubes.xsd"/>
-  <xsd:import namespace="http://www.eclipse.org/emf/2002/Ecore" schemaLocation="Ecore.xsd"/>
+<xsd:schema xmlns:column_transformation_logic="http://www.eclipse.org/column_transformation_logic" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:functions="http://www.eclipse.org/functions" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="column_transformation_logic" ecore:package="column_transformation_logic" targetNamespace="http://www.eclipse.org/column_transformation_logic">
   <xsd:import namespace="http://www.eclipse.org/functions" schemaLocation="functions.xsd"/>
   <xsd:annotation>
     <xsd:documentation>This package describes the logic to calculate individual columns </xsd:documentation>
@@ -47,35 +44,8 @@ SPDX-License-Identifier: EPL-2.0
 This function has available to it the source rows of a row, and the columns or column functions associated with those source rows. </xsd:documentation>
     </xsd:annotation>
     <xsd:complexContent>
-      <xsd:extension base="column_transformation_logic:CubeColumn"/>
+      <xsd:extension base="functions:CubeColumn"/>
     </xsd:complexContent>
-  </xsd:complexType>
-  <xsd:complexType name="CubeColumn">
-    <xsd:annotation>
-      <xsd:documentation>A column on a cube.
-Note that this class specifies the column , AND  the cube.
-For example their might be 2 different CubeColumns with the same column. E.g there might be a CubeColumn with cube=Trades and column=Currency, and another CubeColumn with table=Position and column Currency.</xsd:documentation>
-    </xsd:annotation>
-    <xsd:attribute ecore:id="true" name="columnID" type="ecore:EString">
-      <xsd:annotation>
-        <xsd:documentation>The CubeColumn ID.</xsd:documentation>
-      </xsd:annotation>
-    </xsd:attribute>
-    <xsd:attribute ecore:reference="cubes:FreeBirdToolsCube" name="cube" type="xsd:anyURI">
-      <xsd:annotation>
-        <xsd:documentation>The associated Cube.</xsd:documentation>
-      </xsd:annotation>
-    </xsd:attribute>
-    <xsd:attribute ecore:unsettable="false" name="usedInSubsets" type="ecore:EBoolean">
-      <xsd:annotation>
-        <xsd:documentation>The CompareAttributeLineageModels PlatformCall in the platform_call package creates an AttributeLineageModel where items (such as CubeColumns) which are in both models are marked with usedInSubset=true</xsd:documentation>
-      </xsd:annotation>
-    </xsd:attribute>
-    <xsd:attribute ecore:reference="core:VARIABLE" name="variable" type="xsd:anyURI">
-      <xsd:annotation>
-        <xsd:documentation>The associated Variable.</xsd:documentation>
-      </xsd:annotation>
-    </xsd:attribute>
   </xsd:complexType>
   <xsd:complexType name="StandardBasicColumnFunction">
     <xsd:annotation>

@@ -23,8 +23,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import attribute_lineage.AttributeLineageModel;
 import efbt_data_definition.CubeModule;
 import column_transformation_logic.ColumnFunction;
-import column_transformation_logic.Column_transformation_logicFactory;
-import column_transformation_logic.CubeColumn;
+import functions.CubeColumn;
 import core.VARIABLE;
 import cube_schema.CubeSchema;
 import row_transformation_logic.FilterAndGroupToOneRowCreationApproach;
@@ -143,7 +142,7 @@ public class Util {
 
     while (columnsIter.hasNext()) {
       VARIABLE colitem = columnsIter.next();
-      CubeColumn column = Column_transformation_logicFactory.eINSTANCE.createCubeColumn();
+      CubeColumn column = FunctionsFactory.eINSTANCE.createCubeColumn();
       column.setVariable(colitem);
       column.setCube(cubeSchema.getBaseCube());
       column.setColumnID(cubeSchema.getBaseCube().getCube_name() + ":" + colitem.getVariable_id());

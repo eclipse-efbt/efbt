@@ -26,7 +26,7 @@ import column_transformation_logic.AggregateColumnFunction;
 
 import column_transformation_logic.ColumnFunction;
 
-import column_transformation_logic.CubeColumn;
+import functions.CubeColumn;
 import column_transformation_logic.StandardBasicColumnFunction;
 import row_transformation_logic.RowCreationApproach;
 import cubes.TargetCube;

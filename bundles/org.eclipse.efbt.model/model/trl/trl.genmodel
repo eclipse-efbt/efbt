@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.model/src" modelPluginID="org.eclipse.efbt.model"
+    modelName="Trl" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="8.0" copyrightFields="false"
+    usedGenPackages="../bird_artefacts/bird_artefacts.genmodel#//core ../bird_artefacts/bird_artefacts.genmodel#//data_definition ../bird_artefacts/bird_artefacts.genmodel#//rendering ../cube_data/cube_data.genmodel#//cube_data ../cubes/cubes.genmodel#//cube_schema ../cubes/cubes.genmodel#//cubes ../../../org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore ../functions/functions.genmodel#//column_transformation_logic ../functions/functions.genmodel#//functions ../module_management/module_management.genmodel#//module_management"
+    operationReflection="true" importOrganizing="true">
+  <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+    <genAnnotations source="selectedPackages">
+      <details key="http://www.eclipse.org/reports" value="reports.xsd"/>
+      <details key="http://www.eclipse.org/transformation" value="transformation.xsd"/>
+      <details key="http://www.eclipse.org/trl_report_cell_views" value="trl_report_cell_views.xsd"/>
+      <details key="http://www.eclipse.org/trl_sql_views" value="trl_sql_views.xsd"/>
+      <details key="http://www.eclipse.org/core" value="core.xsd"/>
+      <details key="http://www.eclipse.org/data_definition" value="data_definition.xsd"/>
+      <details key="http://www.eclipse.org/rendering" value="rendering.xsd"/>
+      <details key="http://www.eclipse.org/cube_data" value="cube_data.xsd"/>
+      <details key="http://www.eclipse.org/cube_schema" value="cube_schema.xsd"/>
+      <details key="http://www.eclipse.org/cubes" value="cubes.xsd"/>
+      <details key="http://www.eclipse.org/emf/2002/Ecore" value="Ecore.xsd"/>
+      <details key="http://www.eclipse.org/column_transformation_logic" value="column_transformation_logic.xsd"/>
+      <details key="http://www.eclipse.org/functions" value="functions.xsd"/>
+      <details key="http://www.eclipse.org/module_management" value="module_management.xsd"/>
+    </genAnnotations>
+    <details key="directoryURI" value="/resource/org.eclipse.efbt.model/xsd_model/"/>
+  </genAnnotations>
+  <foreignModel>reports.ecore</foreignModel>
+  <foreignModel>transformation.ecore</foreignModel>
+  <foreignModel>trl_report_cell_views.ecore</foreignModel>
+  <foreignModel>trl_sql_views.ecore</foreignModel>
+  <genPackages prefix="Reports" resource="XML" disposableProviderFactory="true" ecorePackage="reports.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="/resource/org.eclipse.efbt.model/xsd_model/reports.xsd">
+        <details key="http://www.eclipse.org/functions" value="/resource/org.eclipse.efbt.model/xsd_model/functions.xsd"/>
+        <details key="http://www.eclipse.org/module_management" value="/resource/org.eclipse.efbt.model/xsd_model/module_management.xsd"/>
+        <details key="http://www.eclipse.org/column_transformation_logic" value="/resource/org.eclipse.efbt.model/xsd_model/column_transformation_logic.xsd"/>
+        <details key="http://www.eclipse.org/cubes" value="/resource/org.eclipse.efbt.model/xsd_model/cubes.xsd"/>
+        <details key="http://www.eclipse.org/core" value="/resource/org.eclipse.efbt.model/xsd_model/core.xsd"/>
+        <details key="http://www.eclipse.org/data_definition" value="/resource/org.eclipse.efbt.model/xsd_model/data_definition.xsd"/>
+        <details key="http://www.eclipse.org/rendering" value="/resource/org.eclipse.efbt.model/xsd_model/rendering.xsd"/>
+        <details key="http://www.eclipse.org/cube_data" value="/resource/org.eclipse.efbt.model/xsd_model/cube_data.xsd"/>
+        <details key="http://www.eclipse.org/cube_schema" value="/resource/org.eclipse.efbt.model/xsd_model/cube_schema.xsd"/>
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="/resource/org.eclipse.efbt.model/xsd_model/Ecore.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genClasses ecoreClass="reports.ecore#//AxisModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reports.ecore#//AxisModule/axes"/>
+    </genClasses>
+    <genClasses ecoreClass="reports.ecore#//AxisOrdinateModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reports.ecore#//AxisOrdinateModule/axis_ordinates"/>
+    </genClasses>
+    <genClasses ecoreClass="reports.ecore#//CellPositionModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reports.ecore#//CellPositionModule/reportTables"/>
+    </genClasses>
+    <genClasses ecoreClass="reports.ecore#//OrdinateItemModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reports.ecore#//OrdinateItemModule/ordinateItems"/>
+    </genClasses>
+    <genClasses ecoreClass="reports.ecore#//PopulatedReport">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reports.ecore#//PopulatedReport/reportCellValues"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reports.ecore#//PopulatedReport/name"/>
+    </genClasses>
+    <genClasses ecoreClass="reports.ecore#//ReportCell">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference reports.ecore#//ReportCell/combination"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reports.ecore#//ReportCell/name"/>
+    </genClasses>
+    <genClasses ecoreClass="reports.ecore#//ReportCellValue">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference reports.ecore#//ReportCellValue/reportCell"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reports.ecore#//ReportCellValue/value"/>
+    </genClasses>
+    <genClasses ecoreClass="reports.ecore#//ReportTableModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reports.ecore#//ReportTableModule/reportTables"/>
+    </genClasses>
+    <genClasses ecoreClass="reports.ecore#//TableCellModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reports.ecore#//TableCellModule/tableCells"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Transformation" resource="XML" disposableProviderFactory="true"
+      ecorePackage="transformation.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="/resource/org.eclipse.efbt.model/xsd_model/transformation.xsd">
+        <details key="http://www.eclipse.org/functions" value="/resource/org.eclipse.efbt.model/xsd_model/functions.xsd"/>
+        <details key="http://www.eclipse.org/module_management" value="/resource/org.eclipse.efbt.model/xsd_model/module_management.xsd"/>
+        <details key="http://www.eclipse.org/column_transformation_logic" value="/resource/org.eclipse.efbt.model/xsd_model/column_transformation_logic.xsd"/>
+        <details key="http://www.eclipse.org/cubes" value="/resource/org.eclipse.efbt.model/xsd_model/cubes.xsd"/>
+        <details key="http://www.eclipse.org/core" value="/resource/org.eclipse.efbt.model/xsd_model/core.xsd"/>
+        <details key="http://www.eclipse.org/data_definition" value="/resource/org.eclipse.efbt.model/xsd_model/data_definition.xsd"/>
+        <details key="http://www.eclipse.org/rendering" value="/resource/org.eclipse.efbt.model/xsd_model/rendering.xsd"/>
+        <details key="http://www.eclipse.org/cube_data" value="/resource/org.eclipse.efbt.model/xsd_model/cube_data.xsd"/>
+        <details key="http://www.eclipse.org/cube_schema" value="/resource/org.eclipse.efbt.model/xsd_model/cube_schema.xsd"/>
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="/resource/org.eclipse.efbt.model/xsd_model/Ecore.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genClasses ecoreClass="transformation.ecore#//DataSetTransformation">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference transformation.ecore#//DataSetTransformation/cube"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute transformation.ecore#//DataSetTransformation/name"/>
+    </genClasses>
+    <genClasses ecoreClass="transformation.ecore#//Release">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute transformation.ecore#//Release/version"/>
+    </genClasses>
+    <genClasses ecoreClass="transformation.ecore#//VersionedComponentsSet">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference transformation.ecore#//VersionedComponentsSet/cubeSchemaModules"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference transformation.ecore#//VersionedComponentsSet/datasetTransformationModules"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute transformation.ecore#//VersionedComponentsSet/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference transformation.ecore#//VersionedComponentsSet/reportCellViewModules"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute transformation.ecore#//VersionedComponentsSet/license"/>
+    </genClasses>
+    <genClasses ecoreClass="transformation.ecore#//VersionedCubeSchemaModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference transformation.ecore#//VersionedCubeSchemaModule/schemas"/>
+    </genClasses>
+    <genClasses ecoreClass="transformation.ecore#//VersionedFunctionalModuleLogic"/>
+  </genPackages>
+  <genPackages prefix="Trl_report_cell_views" resource="XML" disposableProviderFactory="true"
+      ecorePackage="trl_report_cell_views.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="/resource/org.eclipse.efbt.model/xsd_model/trl_report_cell_views.xsd">
+        <details key="http://www.eclipse.org/functions" value="/resource/org.eclipse.efbt.model/xsd_model/functions.xsd"/>
+        <details key="http://www.eclipse.org/module_management" value="/resource/org.eclipse.efbt.model/xsd_model/module_management.xsd"/>
+        <details key="http://www.eclipse.org/column_transformation_logic" value="/resource/org.eclipse.efbt.model/xsd_model/column_transformation_logic.xsd"/>
+        <details key="http://www.eclipse.org/cubes" value="/resource/org.eclipse.efbt.model/xsd_model/cubes.xsd"/>
+        <details key="http://www.eclipse.org/core" value="/resource/org.eclipse.efbt.model/xsd_model/core.xsd"/>
+        <details key="http://www.eclipse.org/data_definition" value="/resource/org.eclipse.efbt.model/xsd_model/data_definition.xsd"/>
+        <details key="http://www.eclipse.org/rendering" value="/resource/org.eclipse.efbt.model/xsd_model/rendering.xsd"/>
+        <details key="http://www.eclipse.org/cube_data" value="/resource/org.eclipse.efbt.model/xsd_model/cube_data.xsd"/>
+        <details key="http://www.eclipse.org/cube_schema" value="/resource/org.eclipse.efbt.model/xsd_model/cube_schema.xsd"/>
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="/resource/org.eclipse.efbt.model/xsd_model/Ecore.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genClasses ecoreClass="trl_report_cell_views.ecore#//ReportCellView">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_report_cell_views.ecore#//ReportCellView/reportCell"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_report_cell_views.ecore#//ReportCellViewModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_report_cell_views.ecore#//ReportCellViewModule/reportCellViews"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Trl_sql_views" resource="XML" disposableProviderFactory="true"
+      ecorePackage="trl_sql_views.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="/resource/org.eclipse.efbt.model/xsd_model/trl_sql_views.xsd">
+        <details key="http://www.eclipse.org/functions" value="/resource/org.eclipse.efbt.model/xsd_model/functions.xsd"/>
+        <details key="http://www.eclipse.org/module_management" value="/resource/org.eclipse.efbt.model/xsd_model/module_management.xsd"/>
+        <details key="http://www.eclipse.org/column_transformation_logic" value="/resource/org.eclipse.efbt.model/xsd_model/column_transformation_logic.xsd"/>
+        <details key="http://www.eclipse.org/cubes" value="/resource/org.eclipse.efbt.model/xsd_model/cubes.xsd"/>
+        <details key="http://www.eclipse.org/core" value="/resource/org.eclipse.efbt.model/xsd_model/core.xsd"/>
+        <details key="http://www.eclipse.org/data_definition" value="/resource/org.eclipse.efbt.model/xsd_model/data_definition.xsd"/>
+        <details key="http://www.eclipse.org/rendering" value="/resource/org.eclipse.efbt.model/xsd_model/rendering.xsd"/>
+        <details key="http://www.eclipse.org/cube_data" value="/resource/org.eclipse.efbt.model/xsd_model/cube_data.xsd"/>
+        <details key="http://www.eclipse.org/cube_schema" value="/resource/org.eclipse.efbt.model/xsd_model/cube_schema.xsd"/>
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="/resource/org.eclipse.efbt.model/xsd_model/Ecore.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genClasses ecoreClass="trl_sql_views.ecore#//AggregateEnrichmentView">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//AggregateEnrichmentView/functions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//AggregateEnrichmentView/groupByClause"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_sql_views.ecore#//CopyView"/>
+    <genClasses ecoreClass="trl_sql_views.ecore#//EnrichmentView">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//EnrichmentView/functions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//EnrichmentView/renames"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_sql_views.ecore#//FilterByConditionView">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//FilterByConditionView/whereClause"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_sql_views.ecore#//GenericView">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//GenericView/selectClause"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//GenericView/whereClause"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//GenericView/groupByClause"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_sql_views.ecore#//GroupByClause">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//GroupByClause/groupByColumns"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_sql_views.ecore#//IgnoreColumn">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//IgnoreColumn/columnToIgnore"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//IgnoreColumn/cube"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_sql_views.ecore#//JoinView">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//JoinView/whereClause"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//JoinView/renames"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//JoinView/ignores"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_sql_views.ecore#//RenameAs">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//RenameAs/fromCube"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//RenameAs/fromVariable"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//RenameAs/toVariable"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_sql_views.ecore#//SelectClause">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//SelectClause/aggregateFunctions"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//SelectClause/basicFunctions"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//SelectClause/varaibles"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_sql_views.ecore#//SQLView">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute trl_sql_views.ecore#//SQLView/VTL_Code"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_sql_views.ecore#//UnionView"/>
+    <genClasses ecoreClass="trl_sql_views.ecore#//VersionedSQLViewsModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//VersionedSQLViewsModule/sqlViews"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_sql_views.ecore#//WhereClause">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//WhereClause/function"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_sql_views.ecore#//BaseViewIncorporatingDeltas">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//BaseViewIncorporatingDeltas/ultimateSourceCube"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_sql_views.ecore#//DeltaAccumulation">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//DeltaAccumulation/ultimateSourceCube"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

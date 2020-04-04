@@ -27,7 +27,7 @@ import column_transformation_logic.AggregateColumnFunction;
 import column_transformation_logic.BasicColumnFunction;
 import column_transformation_logic.ColumnFunction;
 import column_transformation_logic.Column_transformation_logicFactory;
-import column_transformation_logic.CubeColumn;
+import functions.CubeColumn;
 import column_transformation_logic.StandardBasicColumnFunction;
 import core.DOMAIN;
 import core.MEMBER;

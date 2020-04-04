@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.model/src" modelPluginID="org.eclipse.efbt.model"
+    modelName="Functions" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="8.0" copyrightFields="false"
+    usedGenPackages="../bird_artefacts/bird_artefacts.genmodel#//core ../cube_data/cube_data.genmodel#//cube_data ../cubes/cubes.genmodel#//cubes ../../../org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore ../module_management/module_management.genmodel#//module_management"
+    operationReflection="true" importOrganizing="true">
+  <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+    <genAnnotations source="selectedPackages">
+      <details key="http://www.eclipse.org/column_transformation_logic" value="column_transformation_logic.xsd"/>
+      <details key="http://www.eclipse.org/functions" value="functions.xsd"/>
+      <details key="http://www.eclipse.org/core" value="core.xsd"/>
+      <details key="http://www.eclipse.org/cube_data" value="cube_data.xsd"/>
+      <details key="http://www.eclipse.org/cubes" value="cubes.xsd"/>
+      <details key="http://www.eclipse.org/emf/2002/Ecore" value="Ecore.xsd"/>
+      <details key="http://www.eclipse.org/module_management" value="module_management.xsd"/>
+    </genAnnotations>
+    <details key="directoryURI" value="/resource/org.eclipse.efbt.model/xsd_model/"/>
+  </genAnnotations>
+  <foreignModel>column_transformation_logic.ecore</foreignModel>
+  <foreignModel>functions.ecore</foreignModel>
+  <genPackages prefix="Column_transformation_logic" resource="XML" disposableProviderFactory="true"
+      ecorePackage="column_transformation_logic.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="/resource/org.eclipse.efbt.model/xsd_model/column_transformation_logic.xsd">
+        <details key="http://www.eclipse.org/module_management" value="/resource/org.eclipse.efbt.model/xsd_model/module_management.xsd"/>
+        <details key="http://www.eclipse.org/cubes" value="/resource/org.eclipse.efbt.model/xsd_model/cubes.xsd"/>
+        <details key="http://www.eclipse.org/cube_data" value="/resource/org.eclipse.efbt.model/xsd_model/cube_data.xsd"/>
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="/resource/org.eclipse.efbt.model/xsd_model/Ecore.xsd"/>
+        <details key="http://www.eclipse.org/core" value="/resource/org.eclipse.efbt.model/xsd_model/core.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genClasses ecoreClass="column_transformation_logic.ecore#//AggregateColumnFunction">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference column_transformation_logic.ecore#//AggregateColumnFunction/aggregateFunction"/>
+    </genClasses>
+    <genClasses ecoreClass="column_transformation_logic.ecore#//BasicColumnFunction"/>
+    <genClasses ecoreClass="column_transformation_logic.ecore#//ColumnFunction"/>
+    <genClasses ecoreClass="column_transformation_logic.ecore#//StandardBasicColumnFunction">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference column_transformation_logic.ecore#//StandardBasicColumnFunction/basicFunction"/>
+    </genClasses>
+    <genClasses ecoreClass="column_transformation_logic.ecore#//ColumnFunctionGroup">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference column_transformation_logic.ecore#//ColumnFunctionGroup/columnFunctions"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Functions" resource="XML" disposableProviderFactory="true"
+      ecorePackage="functions.ecore#/">
+    <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+      <genAnnotations source="/resource/org.eclipse.efbt.model/xsd_model/functions.xsd">
+        <details key="http://www.eclipse.org/module_management" value="/resource/org.eclipse.efbt.model/xsd_model/module_management.xsd"/>
+        <details key="http://www.eclipse.org/cubes" value="/resource/org.eclipse.efbt.model/xsd_model/cubes.xsd"/>
+        <details key="http://www.eclipse.org/cube_data" value="/resource/org.eclipse.efbt.model/xsd_model/cube_data.xsd"/>
+        <details key="http://www.eclipse.org/emf/2002/Ecore" value="/resource/org.eclipse.efbt.model/xsd_model/Ecore.xsd"/>
+        <details key="http://www.eclipse.org/core" value="/resource/org.eclipse.efbt.model/xsd_model/core.xsd"/>
+      </genAnnotations>
+    </genAnnotations>
+    <genClasses ecoreClass="functions.ecore#//AggregateFunction">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference functions.ecore#//AggregateFunction/functionSpec"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//AggregateFunctionSpec"/>
+    <genClasses ecoreClass="functions.ecore#//BasicFunction">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference functions.ecore#//BasicFunction/functionSpec"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//BasicFunctionSpec">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//BasicFunctionSpec/isInfix"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//BooleanFunction"/>
+    <genClasses ecoreClass="functions.ecore#//CellsParameter">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference functions.ecore#//CellsParameter/cells"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//Function">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference functions.ecore#//Function/parameters"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//Function/name"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//FunctionSpec">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference functions.ecore#//FunctionSpec/parameterSpecs"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//FunctionSpec/functionalName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//FunctionSpec/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//FunctionSpec/sqlName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//FunctionSpec/type"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//FunctionSpecModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference functions.ecore#//FunctionSpecModule/functionSpecs"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//MemberParameter">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference functions.ecore#//MemberParameter/param"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//ParamaterSpec">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//ParamaterSpec/datatype"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//ParamaterSpec/name"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//Parameter"/>
+    <genClasses ecoreClass="functions.ecore#//ResolvedCubeColumnParameter">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference functions.ecore#//ResolvedCubeColumnParameter/cubeColumn"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//CubeColumn">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//CubeColumn/columnID"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference functions.ecore#//CubeColumn/cube"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//CubeColumn/usedInSubsets"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference functions.ecore#//CubeColumn/variable"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//SpeculativeCubeColumnParameter">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference functions.ecore#//SpeculativeCubeColumnParameter/column"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference functions.ecore#//SpeculativeCubeColumnParameter/cube"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//ValueParameter">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//ValueParameter/dataType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//ValueParameter/value"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

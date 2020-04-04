@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<xsd:schema xmlns:column_transformation_logic="http://www.eclipse.org/column_transformation_logic" xmlns:core="http://www.eclipse.org/core" xmlns:cubes="http://www.eclipse.org/cubes" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:functions="http://www.eclipse.org/functions" xmlns:row_transformation_logic="http://www.eclipse.org/row_transformation_logic" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="row_transformation_logic" ecore:package="row_transformation_logic" targetNamespace="http://www.eclipse.org/row_transformation_logic">
-  <xsd:import namespace="http://www.eclipse.org/functions" schemaLocation="functions.xsd"/>
+<xsd:schema xmlns:core="http://www.eclipse.org/core" xmlns:cubes="http://www.eclipse.org/cubes" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:functions="http://www.eclipse.org/functions" xmlns:row_transformation_logic="http://www.eclipse.org/row_transformation_logic" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="row_transformation_logic" ecore:package="row_transformation_logic" targetNamespace="http://www.eclipse.org/row_transformation_logic">
   <xsd:import namespace="http://www.eclipse.org/core" schemaLocation="core.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/emf/2002/Ecore" schemaLocation="Ecore.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/cubes" schemaLocation="cubes.xsd"/>
-  <xsd:import namespace="http://www.eclipse.org/column_transformation_logic" schemaLocation="column_transformation_logic.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/functions" schemaLocation="functions.xsd"/>
   <xsd:annotation>
     <xsd:documentation>This package describes the classes row transformations
   </xsd:documentation>
@@ -25,7 +24,7 @@ SPDX-License-Identifier: EPL-2.0
       <xsd:documentation>A set of CubeColumns which make up the structure of a BaseCube row</xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
-      <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="columns" type="column_transformation_logic:CubeColumn">
+      <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="columns" type="functions:CubeColumn">
         <xsd:annotation>
           <xsd:documentation>The set of CubeColumns</xsd:documentation>
         </xsd:annotation>
@@ -152,7 +151,7 @@ The end result in this case would still be created rows which link back to the r
             	For example these could  be the CubeColumns used for grouping, or filtering, or joining. </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
-      <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="createdCubeColumns" type="column_transformation_logic:CubeColumn">
+      <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="createdCubeColumns" type="functions:CubeColumn">
         <xsd:annotation>
           <xsd:documentation>Any cubeColumns which are set explicitly by the row function. 
 An example here would be uniquely setting a CubeColumn called index if the row function is responsable for creating multiple rows from one source row.
@@ -176,7 +175,7 @@ In most common cases this field is empty.</xsd:documentation>
             <xsd:list itemType="xsd:anyURI"/>
           </xsd:simpleType>
         </xsd:attribute>
-        <xsd:attribute ecore:reference="column_transformation_logic:CubeColumn" name="groupByCubeColumns">
+        <xsd:attribute ecore:reference="functions:CubeColumn" name="groupByCubeColumns">
           <xsd:annotation>
             <xsd:documentation>The CubeColumns to use to group the source cube by, e.g. grouping a cube by a a column called Currency will lead to one row per unique currency in the source cube rows.</xsd:documentation>
           </xsd:annotation>
