@@ -7,7 +7,7 @@ Bundle-Vendor: Bird Software Solutions
 Automatic-Module-Name: org.eclipse.efbt.model.platformcalls
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.efbt.generator.scala;bundle-version="1.0.0",
- org.eclipse.efbt.model;bundle-version="1.0.0",
+ org.eclipse.efbt.model.controller;bundle-version="1.0.0",
  org.eclipse.efbt.model.util;bundle-version="1.0.0",
  org.eclipse.efbt.generator.scala
 Import-Package: org.eclipse.xtext.generator

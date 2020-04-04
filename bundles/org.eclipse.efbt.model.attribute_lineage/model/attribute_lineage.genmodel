@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.model.attribute_lineage/src"
+    modelPluginID="org.eclipse.efbt.model.attribute_lineage" modelName="Attribute_lineage"
+    rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="8.0" copyrightFields="false" usedGenPackages="../../org.eclipse.efbt.model.bird_artefacts/model/bird_artefact.genmodel#//core ../../org.eclipse.efbt.model.cube_data/model/cube_data.genmodel#//cube_data ../../org.eclipse.efbt.model.cubes/model/cubes.genmodel#//cubes ../../org.eclipse.efbt.model.functions/model/functions.genmodel#//column_transformation_logic ../../org.eclipse.efbt.model.functions/model/functions.genmodel#//functions ../../org.eclipse.efbt.model.module_management/model/module_management.genmodel#//module_management"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>attribute_lineage.ecore</foreignModel>
+  <foreignModel>cube_transformation_logic.ecore</foreignModel>
+  <foreignModel>row_transformation_logic.ecore</foreignModel>
+  <genPackages prefix="Attribute_lineage" resource="XML" disposableProviderFactory="true"
+      ecorePackage="attribute_lineage.ecore#/">
+    <genClasses ecoreClass="attribute_lineage.ecore#//AttributeLineageModel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference attribute_lineage.ecore#//AttributeLineageModel/rowTransformations"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference attribute_lineage.ecore#//AttributeLineageModel/baseSchemas"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference attribute_lineage.ecore#//AttributeLineageModel/specialFunctionSpecs"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute attribute_lineage.ecore#//AttributeLineageModel/name"/>
+    </genClasses>
+    <genClasses ecoreClass="attribute_lineage.ecore#//AttributeLineageModelModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference attribute_lineage.ecore#//AttributeLineageModelModule/attributeLineageModels"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Cube_transformation_logic" resource="XML" disposableProviderFactory="true"
+      ecorePackage="cube_transformation_logic.ecore#/">
+    <genClasses ecoreClass="cube_transformation_logic.ecore#//CubeTransformationLogic">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cube_transformation_logic.ecore#//CubeTransformationLogic/columnFunctionGroup"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cube_transformation_logic.ecore#//CubeTransformationLogic/rowCreationApproachForCube"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cube_transformation_logic.ecore#//CubeTransformationLogic/usedInSubsets"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Row_transformation_logic" resource="XML" disposableProviderFactory="true"
+      ecorePackage="row_transformation_logic.ecore#/">
+    <genClasses ecoreClass="row_transformation_logic.ecore#//BaseRowStructure">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//BaseRowStructure/columns"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//BaseRowStructure/cube"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute row_transformation_logic.ecore#//BaseRowStructure/usedInSubsets"/>
+    </genClasses>
+    <genClasses ecoreClass="row_transformation_logic.ecore#//CustomRowCreationApproach">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//CustomRowCreationApproach/dependantVariables"/>
+    </genClasses>
+    <genClasses ecoreClass="row_transformation_logic.ecore#//FilterAndGroupToOneRowCreationApproach">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//FilterAndGroupToOneRowCreationApproach/filterFunction"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//FilterAndGroupToOneRowCreationApproach/groupByVariables"/>
+    </genClasses>
+    <genClasses ecoreClass="row_transformation_logic.ecore#//RowCreationApproachForCube">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//RowCreationApproachForCube/rowCreationApproach"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//RowCreationApproachForCube/cube"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute row_transformation_logic.ecore#//RowCreationApproachForCube/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//RowCreationApproachForCube/ultimateCubeSource"/>
+    </genClasses>
+    <genClasses ecoreClass="row_transformation_logic.ecore#//OneToOneRowCreationApproach"/>
+    <genClasses ecoreClass="row_transformation_logic.ecore#//FilterRowCreationApproach">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//FilterRowCreationApproach/filterFunction"/>
+    </genClasses>
+    <genClasses ecoreClass="row_transformation_logic.ecore#//RowCreationApproach">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//RowCreationApproach/dependantCubeColumns"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//RowCreationApproach/createdCubeColumns"/>
+    </genClasses>
+    <genClasses ecoreClass="row_transformation_logic.ecore#//GroupByRowCreationApproach">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//GroupByRowCreationApproach/groupByColumns"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//GroupByRowCreationApproach/groupByCubeColumns"/>
+    </genClasses>
+    <genClasses ecoreClass="row_transformation_logic.ecore#//RowJoinFunction">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//RowJoinFunction/joinFunction"/>
+    </genClasses>
+    <genClasses ecoreClass="row_transformation_logic.ecore#//UnionRowCreationApproach"/>
+    <genClasses ecoreClass="row_transformation_logic.ecore#//BaseViewIncorporatingDeltasRowFunction">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//BaseViewIncorporatingDeltasRowFunction/ultimateCubeSource"/>
+    </genClasses>
+    <genClasses ecoreClass="row_transformation_logic.ecore#//DeltaAccumulationRowFunction">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//DeltaAccumulationRowFunction/ultimateCubeSource"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>
