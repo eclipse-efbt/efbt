@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.model.navigation_context/src"
+    modelPluginID="org.eclipse.efbt.model.navigation_context" modelName="Navigation_context"
+    rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="8.0" copyrightFields="false" usedGenPackages="../../org.eclipse.efbt.model.bird_artefacts/model/bird_artefact.genmodel#//bird_model ../../org.eclipse.efbt.model.bird_artefacts/model/bird_artefact.genmodel#//core ../../org.eclipse.efbt.model.bird_artefacts/model/bird_artefact.genmodel#//data_definition ../../org.eclipse.efbt.model.bird_artefacts/model/bird_artefact.genmodel#//efbt_data_definition ../../org.eclipse.efbt.model.bird_artefacts/model/bird_artefact.genmodel#//efbt_mapping ../../org.eclipse.efbt.model.bird_artefacts/model/bird_artefact.genmodel#//efbt_vtl_transformation ../../org.eclipse.efbt.model.bird_artefacts/model/bird_artefact.genmodel#//mapping ../../org.eclipse.efbt.model.bird_artefacts/model/bird_artefact.genmodel#//rendering ../../org.eclipse.efbt.model.bird_artefacts/model/bird_artefact.genmodel#//vtl_transformation ../../org.eclipse.efbt.model.cube_data/model/cube_data.genmodel#//cube_data ../../org.eclipse.efbt.model.cubes/model/cubes.genmodel#//cube_schema ../../org.eclipse.efbt.model.cubes/model/cubes.genmodel#//cubes ../../org.eclipse.efbt.model.functions/model/functions.genmodel#//column_transformation_logic ../../org.eclipse.efbt.model.functions/model/functions.genmodel#//functions ../../org.eclipse.efbt.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.model.testing/model/testing.genmodel#//domain_model_mapping ../../org.eclipse.efbt.model.testing/model/testing.genmodel#//functional_module ../../org.eclipse.efbt.model.testing/model/testing.genmodel#//requirements_text ../../org.eclipse.efbt.model.testing/model/testing.genmodel#//scenarios ../../org.eclipse.efbt.model.testing/model/testing.genmodel#//tags ../../org.eclipse.efbt.model.trl/model/trl.genmodel#//reports ../../org.eclipse.efbt.model.trl/model/trl.genmodel#//transformation ../../org.eclipse.efbt.model.trl/model/trl.genmodel#//trl_report_cell_views ../../org.eclipse.efbt.model.trl/model/trl.genmodel#//trl_sql_views"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>navigation_context.ecore</foreignModel>
+  <genPackages prefix="Navigation_context" resource="XML" disposableProviderFactory="true"
+      ecorePackage="navigation_context.ecore#/">
+    <genClasses ecoreClass="navigation_context.ecore#//NavigationContext">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference navigation_context.ecore#//NavigationContext/tags"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference navigation_context.ecore#//NavigationContext/transformationContext"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference navigation_context.ecore#//NavigationContext/transformationsSchemeModule"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute navigation_context.ecore#//NavigationContext/license"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference navigation_context.ecore#//NavigationContext/birdModel"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference navigation_context.ecore#//NavigationContext/domainModelMapping"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

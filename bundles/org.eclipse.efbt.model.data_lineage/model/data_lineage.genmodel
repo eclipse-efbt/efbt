@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.model.data_lineage/src" modelPluginID="org.eclipse.efbt.model.data_lineage"
+    modelName="Data_lineage" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="8.0" copyrightFields="false"
+    usedGenPackages="../../org.eclipse.efbt.model.attribute_lineage/model/attribute_lineage.genmodel#//row_transformation_logic ../../org.eclipse.efbt.model.bird_artefacts/model/bird_artefact.genmodel#//core ../../org.eclipse.efbt.model.cube_data/model/cube_data.genmodel#//base_cube_data ../../org.eclipse.efbt.model.cube_data/model/cube_data.genmodel#//cube_data ../../org.eclipse.efbt.model.cubes/model/cubes.genmodel#//cubes ../../org.eclipse.efbt.model.functions/model/functions.genmodel#//functions ../../org.eclipse.efbt.model.module_management/model/module_management.genmodel#//module_management"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>cell_transformation_logic.ecore</foreignModel>
+  <foreignModel>data_lineage.ecore</foreignModel>
+  <genPackages prefix="Cell_transformation_logic" resource="XML" disposableProviderFactory="true"
+      ecorePackage="cell_transformation_logic.ecore#/">
+    <genClasses ecoreClass="cell_transformation_logic.ecore#//FormulaCell">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//FormulaCell/function"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cell_transformation_logic.ecore#//FormulaCell/value"/>
+    </genClasses>
+    <genClasses ecoreClass="cell_transformation_logic.ecore#//DerivedCubeData">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//DerivedCubeData/rows"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//DerivedCubeData/cube"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//DerivedCubeData/rowCreationApproachForCube"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//DerivedCubeData/sourceCubeData"/>
+    </genClasses>
+    <genClasses ecoreClass="cell_transformation_logic.ecore#//DerivedRowData">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//DerivedRowData/formulaCells"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//DerivedRowData/specialDerivedCells"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//DerivedRowData/sourceRows"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Data_lineage" resource="XML" disposableProviderFactory="true"
+      ecorePackage="data_lineage.ecore#/">
+    <genClasses ecoreClass="data_lineage.ecore#//DataLineageModel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference data_lineage.ecore#//DataLineageModel/dataTraceableByCell"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference data_lineage.ecore#//DataLineageModel/sourceData"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_lineage.ecore#//DataLineageModel/name"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Vtl
-Bundle-SymbolicName: org.eclipse.efbt.parser.vtl
-Bundle-Version: 1.0.0.qualifier
