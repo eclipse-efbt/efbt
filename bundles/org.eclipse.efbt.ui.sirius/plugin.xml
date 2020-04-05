@@ -15,8 +15,8 @@
 
 <plugin>
   <extension point="org.eclipse.sirius.componentization">
-    <component class="org.eclipse.efbt.model.design.Activator"
-               id="org.eclipse.efbt.model.design"
+    <component class="org.eclipse.efbt.ui.sirius.Activator"
+               id="org.eclipse.efbt.ui.sirius"
 	       name="efbt">
     </component>
   </extension>

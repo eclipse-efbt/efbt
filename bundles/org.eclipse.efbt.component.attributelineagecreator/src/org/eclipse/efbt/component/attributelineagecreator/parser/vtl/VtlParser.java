@@ -10,7 +10,7 @@
  * Contributors:
  *  Neil Mackenzie - initial API and implementation
  *  */
-package org.eclipse.efbt.parser.vtl;
+package org.eclipse.efbt.component.attributelineagecreator.parser.vtl;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;

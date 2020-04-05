@@ -10,7 +10,7 @@
  * Contributors:
  *  Neil Mackenzie - initial API and implementation
  *******************************************************************************/
-package org.eclipse.efbt.model.design; 
+package org.eclipse.efbt.ui.sirius; 
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;

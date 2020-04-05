@@ -1454,6 +1454,6 @@
         </toolSections>
       </defaultLayer>
     </ownedRepresentations>
-    <ownedJavaExtensions qualifiedClassName="org.eclipse.efbt.model.design.Services"/>
+    <ownedJavaExtensions qualifiedClassName="org.eclipse.efbt.ui.sirius.Services"/>
   </ownedViewpoints>
 </description:Group>
