@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="model_registry" nsURI="http://www.eclipse.org/model_registry"
+    nsPrefix="model_registry">
+  <eClassifiers xsi:type="ecore:EClass" name="ModelRegistry">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="birdArtefactList" eType="#//BirdArtefactsList"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attributeLineageModelList"
+        ordered="false" eType="#//AttributeLineageModelList" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="birdandALMList" eType="#//BirdArtefactandAttributeLineageModelPairList"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="fullDataLineageModelList"
+        eType="#//FullDataLineageModelList" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="inputLayerOnlyDLMList"
+        eType="#//InputLayerOnlyDataLineageList" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tripleList" eType="#//DataLineageAndInputDataAndAttributeLineageTripleList"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BirdArtefactsList">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="birdModels" upperBound="-1"
+        eType="ecore:EClass ../../org.eclipse.efbt.model.bird_artefacts/model/bird_model.ecore#//BIRDModel"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BirdArtefactsAndAttributeLineagePair">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bird_model" eType="ecore:EClass ../../org.eclipse.efbt.model.bird_artefacts/model/bird_model.ecore#//BIRDModel"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute_lineage_model"
+        eType="ecore:EClass ../../org.eclipse.efbt.model.attribute_lineage/model/attribute_lineage.ecore#//AttributeLineageModel"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AttributeLineageModelList">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attributeLineageModels"
+        upperBound="-1" eType="ecore:EClass ../../org.eclipse.efbt.model.attribute_lineage/model/attribute_lineage.ecore#//AttributeLineageModel"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BirdArtefactandAttributeLineageModelPairList">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="list" upperBound="-1" eType="#//BirdArtefactandAttributeLineageModelPairList"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FullDataLineageModelList">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="list" upperBound="-1" eType="ecore:EClass ../../org.eclipse.efbt.model.data_lineage/model/data_lineage.ecore#//DataLineageModel"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InputLayerOnlyDataLineageList">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="list" upperBound="-1" eType="ecore:EClass ../../org.eclipse.efbt.model.data_lineage/model/data_lineage.ecore#//DataLineageModel"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DataLineageAndInputDataAndAttributeLineageTriple">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="inputData" eType="ecore:EClass ../../org.eclipse.efbt.model.data_lineage/model/data_lineage.ecore#//DataLineageModel"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resultsData" eType="ecore:EClass ../../org.eclipse.efbt.model.data_lineage/model/data_lineage.ecore#//DataLineageModel"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attributeLineageModel"
+        eType="ecore:EClass ../../org.eclipse.efbt.model.attribute_lineage/model/attribute_lineage.ecore#//AttributeLineageModel"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DataLineageAndInputDataAndAttributeLineageTripleList">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="list" upperBound="-1" eType="#//DataLineageAndInputDataAndAttributeLineageTriple"
+        containment="true"/>
+  </eClassifiers>
+</ecore:EPackage>

@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Common
+Bundle-SymbolicName: org.eclipse.efbt.component.common
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: org.eclipse.efbt.component.common
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
