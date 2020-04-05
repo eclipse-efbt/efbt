@@ -16,8 +16,7 @@ import java.io.File;
 
 import org.eclipse.efbt.component.datalineagecreator.generator.scala.engine.GeneratorConfig;
 import org.eclipse.efbt.component.datalineagecreator.generator.scala.engine.GeneratorStandaloneSetup;
-import org.eclipse.efbt.component.common.util.AttributeLineageUtil;
-import org.eclipse.efbt.component.common.util.ComparisonUtil;
+
 import org.eclipse.emf.mwe.utils.DirectoryCleaner;
 import org.eclipse.emf.mwe2.runtime.workflow.IWorkflowContext;
 import org.eclipse.emf.mwe2.runtime.workflow.WorkflowContextImpl;
@@ -26,18 +25,16 @@ import org.eclipse.xtext.generator.GeneratorComponent.Outlet;
 import org.eclipse.xtext.mwe.Reader;
 import org.eclipse.xtext.mwe.ResourceLoadingSlotEntry;
 
-import platform_call.CompareAttributeLineageModels;
+
 import platform_call.ExecuteAttributeLineageModel;
-import platform_call.GetAttributeLineageForOneReportCell;
-import platform_call.GetAttributeLineageModel;
-import platform_call.GetTestLogic;
+
 import platform_call.PlatformCall;
 
 /**
  * @author Neil Mackenzie
  *
  */
-public class PlatformCalls {
+public class DLMPlatformCalls {
 
   public static void executeCall(PlatformCall call) {
 

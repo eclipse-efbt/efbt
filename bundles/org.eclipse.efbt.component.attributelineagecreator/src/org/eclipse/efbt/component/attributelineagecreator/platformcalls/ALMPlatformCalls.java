@@ -30,7 +30,7 @@ import org.eclipse.efbt.component.common.util.ComparisonUtil;
  * @author Neil Mackenzie
  *
  */
-public class PlatformCalls {
+public class ALMPlatformCalls {
 
   public static void executeCall(PlatformCall call) {
 

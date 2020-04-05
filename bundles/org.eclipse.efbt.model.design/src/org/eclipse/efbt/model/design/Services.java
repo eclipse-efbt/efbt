@@ -19,15 +19,17 @@ import base_cube_data.BaseRowData;
 import core.DOMAIN;
 import core.MEMBER;
 
-import org.eclipse.efbt.model.util.FunctionTextUtil;
-import org.eclipse.efbt.model.util.FunctionalModuleUtil;
-import org.eclipse.efbt.model.util.TRLUtil;
-import org.eclipse.efbt.model.util.TagUtil;
+import org.eclipse.efbt.component.common.util.FunctionTextUtil;
+import org.eclipse.efbt.component.common.util.FunctionalModuleUtil;
+import org.eclipse.efbt.component.common.util.TRLUtil;
+import org.eclipse.efbt.component.common.util.TagUtil;
 
 
-import org.eclipse.efbt.model.util.AttributeLineageUtil;
-import org.eclipse.efbt.model.util.CubesAndViewsUtil;
-import org.eclipse.efbt.model.platformcalls.PlatformCalls;
+import org.eclipse.efbt.component.common.util.AttributeLineageUtil;
+import org.eclipse.efbt.component.common.util.CubesAndViewsUtil;
+import org.eclipse.efbt.component.datalineagecreator.platformcalls.*;
+import org.eclipse.efbt.component.attributelineagecreator.platformcalls.*;
+
 
 import cube_transformation_logic.CubeTransformationLogic;
 import row_transformation_logic.BaseRowStructure;
@@ -37,8 +39,7 @@ import tags.FunctionalModuleTag;
 import transformation.VersionedComponentsSet;
 import functional_module.LeafFunctionalModule;
 import functional_module.FunctionalModule;
-
-
+import platform_call.ExecuteAttributeLineageModel;
 import platform_call.PlatformCall;
 import requirements_text.TitledRequirementsSection;
 import functions.AggregateFunction;
@@ -186,13 +187,19 @@ public class Services {
     public void executePlatformCall(PlatformCall self) {
 
     	
-    	PlatformCalls.executeCall( self);
+    	if(self instanceof ExecuteAttributeLineageModel)
+    		DLMPlatformCalls.executeCall( self);
+    	else
+    		ALMPlatformCalls.executeCall( self);
     }
     
     public void executePlatformCallWithPaths(PlatformCall self,  String str1, String str2) {
 
    	
-   	PlatformCalls.executeCall( self);
+    	if(self instanceof ExecuteAttributeLineageModel)
+    		DLMPlatformCalls.executeCall( self);
+    	else
+    		ALMPlatformCalls.executeCall( self);
    }
     
     public String getBaseRowID(BaseRowData self) {
