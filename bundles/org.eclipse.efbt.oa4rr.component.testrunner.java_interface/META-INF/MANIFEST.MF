@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Implementation
+Bundle-SymbolicName: org.eclipse.efbt.oa4rr.component.testrunner.java_interface
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: org.eclipse.efbt.component.testrunner.java.implementation
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

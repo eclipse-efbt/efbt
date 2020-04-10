@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Birdartefactscreator
+Bundle-SymbolicName: org.eclipse.efbt.bird.component.rules_and_data_structures_manager
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: org.eclipse.efbt.component.birdartefactscreator
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: org.eclipse.efbt.component.birdartefactscreator.importer
+Require-Bundle: org.apache.commons.lang3,
+ org.apache.commons.logging,
+ org.eclipse.xtext.generator;bundle-version="2.19.0",
+ org.eclipse.xtext;bundle-version="2.19.0",
+ org.eclipse.efbt.bird.model.bird_artefacts

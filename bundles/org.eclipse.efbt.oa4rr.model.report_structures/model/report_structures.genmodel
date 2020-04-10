@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel"
+    modelDirectory="/org.eclipse.efbt.oa4rr.model.report_structures/src"
+    modelPluginID="org.eclipse.efbt.oa4rr.model.report_structures" modelName="Report_structures"
+    rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="8.0" copyrightFields="false" operationReflection="true" importOrganizing="true">
+  <foreignModel>report_structures.ecore</foreignModel>
+  <genPackages prefix="Report_structures" resource="XML" disposableProviderFactory="true"
+      ecorePackage="report_structures.ecore#/">
+    <genClasses ecoreClass="report_structures.ecore#//RegReportCell"/>
+    <genClasses ecoreClass="report_structures.ecore#//RegReportCellValue"/>
+  </genPackages>
+</genmodel:GenModel>
