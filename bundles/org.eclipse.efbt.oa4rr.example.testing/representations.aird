@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:diagram="http://www.eclipse.org/sirius/diagram/1.1.0" xmlns:functional_module="http://www.eclipse.org/functional_module" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:scenarios="http://www.eclipse.org/scenarios" xmlns:style="http://www.eclipse.org/sirius/diagram/description/style/1.1.0" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" xsi:schemaLocation="http://www.eclipse.org/sirius/description/1.1.0 http://www.eclipse.org/sirius/1.1.0#//description http://www.eclipse.org/sirius/diagram/description/1.1.0 http://www.eclipse.org/sirius/diagram/1.1.0#//description http://www.eclipse.org/sirius/diagram/description/style/1.1.0 http://www.eclipse.org/sirius/diagram/1.1.0#//description/style">
+  <viewpoint:DAnalysis uid="_8FDqwHsBEeq6HOLh1OWpEA" selectedViews="_AsIQoHsPEeqL6dmrQHtF4g" version="14.3.0.201909031200">
+    <semanticResources>example/extra/functional_modules.functional_module</semanticResources>
+    <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.testing/model/testing.genmodel</semanticResources>
+    <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.column_structured_data/model/column_structured_data.genmodel</semanticResources>
+    <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.column_structures/model/column_structures.genmodel</semanticResources>
+    <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.column_structures/model/column_structures.ecore</semanticResources>
+    <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.module_management/model/module_management.genmodel</semanticResources>
+    <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.module_management/model/module_management.ecore</semanticResources>
+    <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.column_structured_data/model/base_column_structured_data.ecore</semanticResources>
+    <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.column_structured_data/model/column_structured_data.ecore</semanticResources>
+    <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.functions/model/oa4rrfunctions.genmodel</semanticResources>
+    <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.functions/model/oa4rrfunctions.ecore</semanticResources>
+    <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.report_structures/model/report_structures.genmodel</semanticResources>
+    <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.report_structures/model/report_structures.ecore</semanticResources>
+    <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.spreadsheet_lineage/model/spreadsheet_lineage.genmodel</semanticResources>
+    <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.spreadsheet_lineage/model/cell_transformation_logic.ecore</semanticResources>
+    <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.spreadsheet_lineage/model/data_lineage.ecore</semanticResources>
+    <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.testing/model/functional_module.ecore</semanticResources>
+    <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.testing/model/scenarios.ecore</semanticResources>
+    <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.testing/model/requirements_text.ecore</semanticResources>
+    <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.testing/model/tags.ecore</semanticResources>
+    <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.testing/model/test.ecore</semanticResources>
+    <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.testing/model/user.ecore</semanticResources>
+    <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.ui.sirius.testmanager/description/testmanager.odesign</semanticResources>
+    <semanticResources>environment:/viewpoint</semanticResources>
+    <ownedViews xmi:type="viewpoint:DView" uid="_AsIQoHsPEeqL6dmrQHtF4g">
+      <viewpoint xmi:type="description:Viewpoint" href="platform:/resource/org.eclipse.efbt.oa4rr.ui.sirius.testmanager/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']"/>
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_jLfgcHsSEeqL6dmrQHtF4g" name="new FunctionalModule" repPath="#_jLReAHsSEeqL6dmrQHtF4g" changeId="e74d155f-47f0-43bd-9ccb-c4e1fd06773e">
+        <description xmi:type="description_1:DiagramDescription" href="platform:/resource/org.eclipse.efbt.oa4rr.ui.sirius.testmanager/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalModule']"/>
+        <target xmi:type="functional_module:SerialFunctionalModule" href="example/extra/functional_modules.functional_module#example processing"/>
+      </ownedRepresentationDescriptors>
+    </ownedViews>
+  </viewpoint:DAnalysis>
+  <diagram:DSemanticDiagram uid="_jLReAHsSEeqL6dmrQHtF4g">
+    <ownedAnnotationEntries xmi:type="description:AnnotationEntry" uid="_jLeSVXsSEeqL6dmrQHtF4g" source="DANNOTATION_CUSTOMIZATION_KEY">
+      <data xmi:type="diagram:ComputedStyleDescriptionRegistry" uid="_jLeSVnsSEeqL6dmrQHtF4g"/>
+    </ownedAnnotationEntries>
+    <ownedAnnotationEntries xmi:type="description:AnnotationEntry" uid="_jLgHgHsSEeqL6dmrQHtF4g" source="GMF_DIAGRAMS">
+      <data xmi:type="notation:Diagram" xmi:id="_jLgHgXsSEeqL6dmrQHtF4g" type="Sirius" element="_jLReAHsSEeqL6dmrQHtF4g" measurementUnit="Pixel">
+        <children xmi:type="notation:Node" xmi:id="_jLgHg3sSEeqL6dmrQHtF4g" type="2002" element="_jLSsIHsSEeqL6dmrQHtF4g">
+          <children xmi:type="notation:Node" xmi:id="_jLgHhnsSEeqL6dmrQHtF4g" type="5006"/>
+          <children xmi:type="notation:Node" xmi:id="_jLgHh3sSEeqL6dmrQHtF4g" type="7001">
+            <children xmi:type="notation:Node" xmi:id="_jLgukHsSEeqL6dmrQHtF4g" type="3008" element="_jLTTMXsSEeqL6dmrQHtF4g">
+              <children xmi:type="notation:Node" xmi:id="_jLguk3sSEeqL6dmrQHtF4g" type="5005"/>
+              <children xmi:type="notation:Node" xmi:id="_jLgulHsSEeqL6dmrQHtF4g" type="7002">
+                <styles xmi:type="notation:SortingStyle" xmi:id="_jLgulXsSEeqL6dmrQHtF4g"/>
+                <styles xmi:type="notation:FilteringStyle" xmi:id="_jLgulnsSEeqL6dmrQHtF4g"/>
+              </children>
+              <styles xmi:type="notation:ShapeStyle" xmi:id="_jLgukXsSEeqL6dmrQHtF4g" fontName="Segoe UI" fontHeight="12"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_jLguknsSEeqL6dmrQHtF4g" x="30" y="64"/>
+            </children>
+            <children xmi:type="notation:Node" xmi:id="_jLgul3sSEeqL6dmrQHtF4g" type="3008" element="_jLT6QXsSEeqL6dmrQHtF4g">
+              <children xmi:type="notation:Node" xmi:id="_jLgumnsSEeqL6dmrQHtF4g" type="5005"/>
+              <children xmi:type="notation:Node" xmi:id="_jLgum3sSEeqL6dmrQHtF4g" type="7002">
+                <children xmi:type="notation:Node" xmi:id="_jLgupXsSEeqL6dmrQHtF4g" type="3008" element="_jLUhUHsSEeqL6dmrQHtF4g">
+                  <children xmi:type="notation:Node" xmi:id="_jLhVoHsSEeqL6dmrQHtF4g" type="5005"/>
+                  <children xmi:type="notation:Node" xmi:id="_jLhVoXsSEeqL6dmrQHtF4g" type="7002">
+                    <children xmi:type="notation:Node" xmi:id="_jLhVpHsSEeqL6dmrQHtF4g" type="3007" element="_jLVIYHsSEeqL6dmrQHtF4g">
+                      <children xmi:type="notation:Node" xmi:id="_jLhVp3sSEeqL6dmrQHtF4g" type="5003">
+                        <layoutConstraint xmi:type="notation:Location" xmi:id="_jLhVqHsSEeqL6dmrQHtF4g" y="5"/>
+                      </children>
+                      <children xmi:type="notation:Node" xmi:id="_jLhVrnsSEeqL6dmrQHtF4g" type="3016" element="_jLVIYXsSEeqL6dmrQHtF4g">
+                        <styles xmi:type="notation:ShapeStyle" xmi:id="_jLhVr3sSEeqL6dmrQHtF4g" fontName="Segoe UI"/>
+                        <layoutConstraint xmi:type="notation:Bounds" xmi:id="_jLhVsHsSEeqL6dmrQHtF4g"/>
+                      </children>
+                      <styles xmi:type="notation:ShapeStyle" xmi:id="_jLhVpXsSEeqL6dmrQHtF4g" fontName="Segoe UI" fontHeight="12"/>
+                      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_jLhVpnsSEeqL6dmrQHtF4g" x="30" y="29" width="200" height="40"/>
+                    </children>
+                    <children xmi:type="notation:Node" xmi:id="_jLhVqXsSEeqL6dmrQHtF4g" type="3007" element="_jLVvcHsSEeqL6dmrQHtF4g">
+                      <children xmi:type="notation:Node" xmi:id="_jLhVrHsSEeqL6dmrQHtF4g" type="5003">
+                        <layoutConstraint xmi:type="notation:Location" xmi:id="_jLhVrXsSEeqL6dmrQHtF4g" y="5"/>
+                      </children>
+                      <children xmi:type="notation:Node" xmi:id="_jLhVsXsSEeqL6dmrQHtF4g" type="3016" element="_jLVvcXsSEeqL6dmrQHtF4g">
+                        <styles xmi:type="notation:ShapeStyle" xmi:id="_jLhVsnsSEeqL6dmrQHtF4g" fontName="Segoe UI"/>
+                        <layoutConstraint xmi:type="notation:Bounds" xmi:id="_jLhVs3sSEeqL6dmrQHtF4g"/>
+                      </children>
+                      <styles xmi:type="notation:ShapeStyle" xmi:id="_jLhVqnsSEeqL6dmrQHtF4g" fontName="Segoe UI" fontHeight="12"/>
+                      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_jLhVq3sSEeqL6dmrQHtF4g" x="30" y="99" width="200" height="40"/>
+                    </children>
+                    <styles xmi:type="notation:SortingStyle" xmi:id="_jLhVonsSEeqL6dmrQHtF4g"/>
+                    <styles xmi:type="notation:FilteringStyle" xmi:id="_jLhVo3sSEeqL6dmrQHtF4g"/>
+                  </children>
+                  <styles xmi:type="notation:ShapeStyle" xmi:id="_jLgupnsSEeqL6dmrQHtF4g" fontName="Segoe UI" fontHeight="12"/>
+                  <layoutConstraint xmi:type="notation:Bounds" xmi:id="_jLgup3sSEeqL6dmrQHtF4g" x="30" y="29"/>
+                </children>
+                <styles xmi:type="notation:SortingStyle" xmi:id="_jLgunHsSEeqL6dmrQHtF4g"/>
+                <styles xmi:type="notation:FilteringStyle" xmi:id="_jLgunXsSEeqL6dmrQHtF4g"/>
+              </children>
+              <styles xmi:type="notation:ShapeStyle" xmi:id="_jLgumHsSEeqL6dmrQHtF4g" fontName="Segoe UI" fontHeight="12"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_jLgumXsSEeqL6dmrQHtF4g" x="215" y="29"/>
+            </children>
+            <children xmi:type="notation:Node" xmi:id="_jLgunnsSEeqL6dmrQHtF4g" type="3008" element="_jLWWgHsSEeqL6dmrQHtF4g">
+              <children xmi:type="notation:Node" xmi:id="_jLguoXsSEeqL6dmrQHtF4g" type="5005"/>
+              <children xmi:type="notation:Node" xmi:id="_jLguonsSEeqL6dmrQHtF4g" type="7002">
+                <children xmi:type="notation:Node" xmi:id="_jLh8sHsSEeqL6dmrQHtF4g" type="3008" element="_jLXkoHsSEeqL6dmrQHtF4g">
+                  <children xmi:type="notation:Node" xmi:id="_jLh8s3sSEeqL6dmrQHtF4g" type="5005"/>
+                  <children xmi:type="notation:Node" xmi:id="_jLh8tHsSEeqL6dmrQHtF4g" type="7002">
+                    <children xmi:type="notation:Node" xmi:id="_jLh8t3sSEeqL6dmrQHtF4g" type="3007" element="_jLXko3sSEeqL6dmrQHtF4g">
+                      <children xmi:type="notation:Node" xmi:id="_jLh8unsSEeqL6dmrQHtF4g" type="5003">
+                        <layoutConstraint xmi:type="notation:Location" xmi:id="_jLh8u3sSEeqL6dmrQHtF4g" y="5"/>
+                      </children>
+                      <children xmi:type="notation:Node" xmi:id="_jLh8wXsSEeqL6dmrQHtF4g" type="3016" element="_jLXkpHsSEeqL6dmrQHtF4g">
+                        <styles xmi:type="notation:ShapeStyle" xmi:id="_jLh8wnsSEeqL6dmrQHtF4g" fontName="Segoe UI"/>
+                        <layoutConstraint xmi:type="notation:Bounds" xmi:id="_jLh8w3sSEeqL6dmrQHtF4g"/>
+                      </children>
+                      <styles xmi:type="notation:ShapeStyle" xmi:id="_jLh8uHsSEeqL6dmrQHtF4g" fontName="Segoe UI" fontHeight="12"/>
+                      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_jLh8uXsSEeqL6dmrQHtF4g" x="30" y="29" width="200" height="40"/>
+                    </children>
+                    <children xmi:type="notation:Node" xmi:id="_jLh8vHsSEeqL6dmrQHtF4g" type="3007" element="_jLXkpnsSEeqL6dmrQHtF4g">
+                      <children xmi:type="notation:Node" xmi:id="_jLh8v3sSEeqL6dmrQHtF4g" type="5003">
+                        <layoutConstraint xmi:type="notation:Location" xmi:id="_jLh8wHsSEeqL6dmrQHtF4g" y="5"/>
+                      </children>
+                      <children xmi:type="notation:Node" xmi:id="_jLh8xHsSEeqL6dmrQHtF4g" type="3016" element="_jLYLsHsSEeqL6dmrQHtF4g">
+                        <styles xmi:type="notation:ShapeStyle" xmi:id="_jLijwHsSEeqL6dmrQHtF4g" fontName="Segoe UI"/>
+                        <layoutConstraint xmi:type="notation:Bounds" xmi:id="_jLijwXsSEeqL6dmrQHtF4g"/>
+                      </children>
+                      <styles xmi:type="notation:ShapeStyle" xmi:id="_jLh8vXsSEeqL6dmrQHtF4g" fontName="Segoe UI" fontHeight="12"/>
+                      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_jLh8vnsSEeqL6dmrQHtF4g" x="30" y="99" width="200" height="40"/>
+                    </children>
+                    <styles xmi:type="notation:SortingStyle" xmi:id="_jLh8tXsSEeqL6dmrQHtF4g"/>
+                    <styles xmi:type="notation:FilteringStyle" xmi:id="_jLh8tnsSEeqL6dmrQHtF4g"/>
+                  </children>
+                  <styles xmi:type="notation:ShapeStyle" xmi:id="_jLh8sXsSEeqL6dmrQHtF4g" fontName="Segoe UI" fontHeight="12"/>
+                  <layoutConstraint xmi:type="notation:Bounds" xmi:id="_jLh8snsSEeqL6dmrQHtF4g" x="30" y="29"/>
+                </children>
+                <styles xmi:type="notation:SortingStyle" xmi:id="_jLguo3sSEeqL6dmrQHtF4g"/>
+                <styles xmi:type="notation:FilteringStyle" xmi:id="_jLgupHsSEeqL6dmrQHtF4g"/>
+              </children>
+              <styles xmi:type="notation:ShapeStyle" xmi:id="_jLgun3sSEeqL6dmrQHtF4g" fontName="Segoe UI" fontHeight="12"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_jLguoHsSEeqL6dmrQHtF4g" x="565" y="29"/>
+            </children>
+            <styles xmi:type="notation:SortingStyle" xmi:id="_jLgHiHsSEeqL6dmrQHtF4g"/>
+            <styles xmi:type="notation:FilteringStyle" xmi:id="_jLgHiXsSEeqL6dmrQHtF4g"/>
+          </children>
+          <styles xmi:type="notation:ShapeStyle" xmi:id="_jLgHhHsSEeqL6dmrQHtF4g" fontName="Segoe UI" fontHeight="12"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_jLgHhXsSEeqL6dmrQHtF4g"/>
+        </children>
+        <styles xmi:type="notation:DiagramStyle" xmi:id="_jLgHgnsSEeqL6dmrQHtF4g"/>
+        <edges xmi:type="notation:Edge" xmi:id="_jLoDUHsSEeqL6dmrQHtF4g" type="4001" element="_jLcdIHsSEeqL6dmrQHtF4g" source="_jLgul3sSEeqL6dmrQHtF4g" target="_jLgunnsSEeqL6dmrQHtF4g">
+          <children xmi:type="notation:Node" xmi:id="_jLpRcHsSEeqL6dmrQHtF4g" type="6001">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_jLpRcXsSEeqL6dmrQHtF4g" y="-10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_jLp4gHsSEeqL6dmrQHtF4g" type="6002">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_jLp4gXsSEeqL6dmrQHtF4g" y="10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_jLqfkHsSEeqL6dmrQHtF4g" type="6003">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_jLqfkXsSEeqL6dmrQHtF4g" y="10"/>
+          </children>
+          <styles xmi:type="notation:ConnectorStyle" xmi:id="_jLoDUXsSEeqL6dmrQHtF4g"/>
+          <styles xmi:type="notation:FontStyle" xmi:id="_jLoDUnsSEeqL6dmrQHtF4g" fontName="Segoe UI" fontHeight="12"/>
+          <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_jLoDU3sSEeqL6dmrQHtF4g" points="[0, -1, -60, -1]$[60, -1, 0, -1]"/>
+          <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_jLuxAHsSEeqL6dmrQHtF4g" id="(1.0,0.5051546391752577)"/>
+          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_jLuxAXsSEeqL6dmrQHtF4g" id="(0.0,0.5051546391752577)"/>
+        </edges>
+        <edges xmi:type="notation:Edge" xmi:id="_jLuxAnsSEeqL6dmrQHtF4g" type="4001" element="_jLeSUHsSEeqL6dmrQHtF4g" source="_jLgukHsSEeqL6dmrQHtF4g" target="_jLgul3sSEeqL6dmrQHtF4g">
+          <children xmi:type="notation:Node" xmi:id="_jLvYEHsSEeqL6dmrQHtF4g" type="6001">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_jLvYEXsSEeqL6dmrQHtF4g" y="-10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_jLvYEnsSEeqL6dmrQHtF4g" type="6002">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_jLvYE3sSEeqL6dmrQHtF4g" y="10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_jLvYFHsSEeqL6dmrQHtF4g" type="6003">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_jLvYFXsSEeqL6dmrQHtF4g" y="10"/>
+          </children>
+          <styles xmi:type="notation:ConnectorStyle" xmi:id="_jLuxA3sSEeqL6dmrQHtF4g"/>
+          <styles xmi:type="notation:FontStyle" xmi:id="_jLuxBHsSEeqL6dmrQHtF4g" fontName="Segoe UI" fontHeight="12"/>
+          <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_jLuxBXsSEeqL6dmrQHtF4g" points="[0, -1, -60, -1]$[60, -1, 0, -1]"/>
+          <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_jLwmMHsSEeqL6dmrQHtF4g" id="(1.0,0.5147058823529411)"/>
+          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_jLwmMXsSEeqL6dmrQHtF4g" id="(0.0,0.5051546391752577)"/>
+        </edges>
+      </data>
+    </ownedAnnotationEntries>
+    <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_jLSsIHsSEeqL6dmrQHtF4g" name="example processing">
+      <target xmi:type="functional_module:SerialFunctionalModule" href="example/extra/functional_modules.functional_module#example processing"/>
+      <semanticElements xmi:type="functional_module:SerialFunctionalModule" href="example/extra/functional_modules.functional_module#example processing"/>
+      <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_jLSsIXsSEeqL6dmrQHtF4g" labelSize="12" borderSize="1" borderSizeComputationExpression="1">
+        <description xmi:type="style:FlatContainerStyleDescription" href="platform:/resource/org.eclipse.efbt.oa4rr.ui.sirius.testmanager/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalModule']/@defaultLayer/@containerMappings[name='FunctionalModule']/@style"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/resource/org.eclipse.efbt.oa4rr.ui.sirius.testmanager/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalModule']/@defaultLayer/@containerMappings[name='FunctionalModule']"/>
+      <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_jLTTMXsSEeqL6dmrQHtF4g" name="readInExampleData" outgoingEdges="_jLeSUHsSEeqL6dmrQHtF4g">
+        <target xmi:type="functional_module:ReadDataSourceFunctionalModule" href="example/extra/functional_modules.functional_module#readInExampleData"/>
+        <semanticElements xmi:type="functional_module:ReadDataSourceFunctionalModule" href="example/extra/functional_modules.functional_module#readInExampleData"/>
+        <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_jLTTMnsSEeqL6dmrQHtF4g" labelSize="12" borderSize="1" borderSizeComputationExpression="1" foregroundColor="252,233,79">
+          <description xmi:type="style:FlatContainerStyleDescription" href="platform:/resource/org.eclipse.efbt.oa4rr.ui.sirius.testmanager/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalModule']/@defaultLayer/@containerMappings[name='FunctionalModule']/@subContainerMappings[name='ReadDataSourceFunctionalModule']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/resource/org.eclipse.efbt.oa4rr.ui.sirius.testmanager/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalModule']/@defaultLayer/@containerMappings[name='FunctionalModule']/@subContainerMappings[name='ReadDataSourceFunctionalModule']"/>
+      </ownedDiagramElements>
+      <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_jLT6QXsSEeqL6dmrQHtF4g" name="processExampleData" outgoingEdges="_jLcdIHsSEeqL6dmrQHtF4g" incomingEdges="_jLeSUHsSEeqL6dmrQHtF4g">
+        <target xmi:type="functional_module:DataSetTransformationFunctionalModule" href="example/extra/functional_modules.functional_module#processExampleData"/>
+        <semanticElements xmi:type="functional_module:DataSetTransformationFunctionalModule" href="example/extra/functional_modules.functional_module#processExampleData"/>
+        <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_jLT6QnsSEeqL6dmrQHtF4g" labelSize="12" borderSize="1" borderSizeComputationExpression="1" foregroundColor="239,41,41">
+          <description xmi:type="style:FlatContainerStyleDescription" href="platform:/resource/org.eclipse.efbt.oa4rr.ui.sirius.testmanager/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalModule']/@defaultLayer/@containerMappings[name='FunctionalModule']/@subContainerMappings[name='DataSetTransformationFunctionalModule']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/resource/org.eclipse.efbt.oa4rr.ui.sirius.testmanager/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalModule']/@defaultLayer/@containerMappings[name='FunctionalModule']/@subContainerMappings[name='DataSetTransformationFunctionalModule']"/>
+        <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_jLUhUHsSEeqL6dmrQHtF4g" name="scenarioSet1">
+          <target xmi:type="scenarios:ScenarioSet" href="example/extra/functional_modules.functional_module#//@functionalModules.0/@subTransformationsAndSchemes.1/@scenarioSet"/>
+          <semanticElements xmi:type="scenarios:ScenarioSet" href="example/extra/functional_modules.functional_module#//@functionalModules.0/@subTransformationsAndSchemes.1/@scenarioSet"/>
+          <ownedStyle xmi:type="diagram:ShapeContainerStyle" uid="_jLUhUXsSEeqL6dmrQHtF4g" labelSize="12" borderSize="1" borderSizeComputationExpression="1">
+            <description xmi:type="style:ShapeContainerStyleDescription" href="platform:/resource/org.eclipse.efbt.oa4rr.ui.sirius.testmanager/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalModule']/@defaultLayer/@containerMappings[name='FunctionalModule']/@subContainerMappings[name='DataSetTransformationFunctionalModule']/@subContainerMappings[name='ScenarioSet']/@style"/>
+          </ownedStyle>
+          <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/resource/org.eclipse.efbt.oa4rr.ui.sirius.testmanager/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalModule']/@defaultLayer/@containerMappings[name='FunctionalModule']/@subContainerMappings[name='DataSetTransformationFunctionalModule']/@subContainerMappings[name='ScenarioSet']"/>
+          <ownedDiagramElements xmi:type="diagram:DNode" uid="_jLVIYHsSEeqL6dmrQHtF4g" name="AAA" width="20" height="4" resizeKind="NSEW">
+            <target xmi:type="scenarios:Scenario" href="example/extra/functional_modules.functional_module#AAA"/>
+            <semanticElements xmi:type="scenarios:Scenario" href="example/extra/functional_modules.functional_module#AAA"/>
+            <ownedStyle xmi:type="diagram:Ellipse" uid="_jLVIYXsSEeqL6dmrQHtF4g" labelSize="12" labelPosition="node" horizontalDiameter="20" verticalDiameter="4" color="255,255,255">
+              <description xmi:type="style:EllipseNodeDescription" href="platform:/resource/org.eclipse.efbt.oa4rr.ui.sirius.testmanager/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalModule']/@defaultLayer/@containerMappings[name='FunctionalModule']/@subContainerMappings[name='DataSetTransformationFunctionalModule']/@subContainerMappings[name='ScenarioSet']/@subNodeMappings[name='Scenario']/@style"/>
+            </ownedStyle>
+            <actualMapping xmi:type="description_1:NodeMapping" href="platform:/resource/org.eclipse.efbt.oa4rr.ui.sirius.testmanager/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalModule']/@defaultLayer/@containerMappings[name='FunctionalModule']/@subContainerMappings[name='DataSetTransformationFunctionalModule']/@subContainerMappings[name='ScenarioSet']/@subNodeMappings[name='Scenario']"/>
+          </ownedDiagramElements>
+          <ownedDiagramElements xmi:type="diagram:DNode" uid="_jLVvcHsSEeqL6dmrQHtF4g" name="notAAA" width="20" height="4" resizeKind="NSEW">
+            <target xmi:type="scenarios:Scenario" href="example/extra/functional_modules.functional_module#notAAA"/>
+            <semanticElements xmi:type="scenarios:Scenario" href="example/extra/functional_modules.functional_module#notAAA"/>
+            <ownedStyle xmi:type="diagram:Ellipse" uid="_jLVvcXsSEeqL6dmrQHtF4g" labelSize="12" labelPosition="node" horizontalDiameter="20" verticalDiameter="4" color="255,255,255">
+              <description xmi:type="style:EllipseNodeDescription" href="platform:/resource/org.eclipse.efbt.oa4rr.ui.sirius.testmanager/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalModule']/@defaultLayer/@containerMappings[name='FunctionalModule']/@subContainerMappings[name='DataSetTransformationFunctionalModule']/@subContainerMappings[name='ScenarioSet']/@subNodeMappings[name='Scenario']/@style"/>
+            </ownedStyle>
+            <actualMapping xmi:type="description_1:NodeMapping" href="platform:/resource/org.eclipse.efbt.oa4rr.ui.sirius.testmanager/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalModule']/@defaultLayer/@containerMappings[name='FunctionalModule']/@subContainerMappings[name='DataSetTransformationFunctionalModule']/@subContainerMappings[name='ScenarioSet']/@subNodeMappings[name='Scenario']"/>
+          </ownedDiagramElements>
+        </ownedDiagramElements>
+      </ownedDiagramElements>
+      <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_jLWWgHsSEeqL6dmrQHtF4g" name="createReportCells" incomingEdges="_jLcdIHsSEeqL6dmrQHtF4g">
+        <target xmi:type="functional_module:ReportCellCreationFunctionalModule" href="example/extra/functional_modules.functional_module#createReportCells"/>
+        <semanticElements xmi:type="functional_module:ReportCellCreationFunctionalModule" href="example/extra/functional_modules.functional_module#createReportCells"/>
+        <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_jLW9kHsSEeqL6dmrQHtF4g" labelSize="12" borderSize="1" borderSizeComputationExpression="1" foregroundColor="138,226,52">
+          <description xmi:type="style:FlatContainerStyleDescription" href="platform:/resource/org.eclipse.efbt.oa4rr.ui.sirius.testmanager/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalModule']/@defaultLayer/@containerMappings[name='FunctionalModule']/@subContainerMappings[name='ReportCellCreationFunctionalModule']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/resource/org.eclipse.efbt.oa4rr.ui.sirius.testmanager/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalModule']/@defaultLayer/@containerMappings[name='FunctionalModule']/@subContainerMappings[name='ReportCellCreationFunctionalModule']"/>
+        <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_jLXkoHsSEeqL6dmrQHtF4g">
+          <target xmi:type="scenarios:ScenarioSet" href="example/extra/functional_modules.functional_module#//@functionalModules.0/@subTransformationsAndSchemes.2/@scenarioSet"/>
+          <semanticElements xmi:type="scenarios:ScenarioSet" href="example/extra/functional_modules.functional_module#//@functionalModules.0/@subTransformationsAndSchemes.2/@scenarioSet"/>
+          <ownedStyle xmi:type="diagram:ShapeContainerStyle" uid="_jLXkoXsSEeqL6dmrQHtF4g" labelSize="12" borderSize="1" borderSizeComputationExpression="1">
+            <description xmi:type="style:ShapeContainerStyleDescription" href="platform:/resource/org.eclipse.efbt.oa4rr.ui.sirius.testmanager/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalModule']/@defaultLayer/@containerMappings[name='FunctionalModule']/@subContainerMappings[name='ReportCellCreationFunctionalModule']/@subContainerMappings[name='ScenarioSet']/@style"/>
+          </ownedStyle>
+          <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/resource/org.eclipse.efbt.oa4rr.ui.sirius.testmanager/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalModule']/@defaultLayer/@containerMappings[name='FunctionalModule']/@subContainerMappings[name='ReportCellCreationFunctionalModule']/@subContainerMappings[name='ScenarioSet']"/>
+          <ownedDiagramElements xmi:type="diagram:DNode" uid="_jLXko3sSEeqL6dmrQHtF4g" name="IsUSCountry" width="20" height="4" resizeKind="NSEW">
+            <target xmi:type="scenarios:Scenario" href="example/extra/functional_modules.functional_module#IsUSCountry"/>
+            <semanticElements xmi:type="scenarios:Scenario" href="example/extra/functional_modules.functional_module#IsUSCountry"/>
+            <ownedStyle xmi:type="diagram:Ellipse" uid="_jLXkpHsSEeqL6dmrQHtF4g" labelSize="12" labelPosition="node" horizontalDiameter="20" verticalDiameter="4" color="255,255,255">
+              <description xmi:type="style:EllipseNodeDescription" href="platform:/resource/org.eclipse.efbt.oa4rr.ui.sirius.testmanager/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalModule']/@defaultLayer/@containerMappings[name='FunctionalModule']/@subContainerMappings[name='ReportCellCreationFunctionalModule']/@subContainerMappings[name='ScenarioSet']/@subNodeMappings[name='Scenario']/@style"/>
+            </ownedStyle>
+            <actualMapping xmi:type="description_1:NodeMapping" href="platform:/resource/org.eclipse.efbt.oa4rr.ui.sirius.testmanager/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalModule']/@defaultLayer/@containerMappings[name='FunctionalModule']/@subContainerMappings[name='ReportCellCreationFunctionalModule']/@subContainerMappings[name='ScenarioSet']/@subNodeMappings[name='Scenario']"/>
+          </ownedDiagramElements>
+          <ownedDiagramElements xmi:type="diagram:DNode" uid="_jLXkpnsSEeqL6dmrQHtF4g" name="isNotUSCountry" width="20" height="4" resizeKind="NSEW">
+            <target xmi:type="scenarios:Scenario" href="example/extra/functional_modules.functional_module#isNotUSCountry"/>
+            <semanticElements xmi:type="scenarios:Scenario" href="example/extra/functional_modules.functional_module#isNotUSCountry"/>
+            <ownedStyle xmi:type="diagram:Ellipse" uid="_jLYLsHsSEeqL6dmrQHtF4g" labelSize="12" labelPosition="node" horizontalDiameter="20" verticalDiameter="4" color="255,255,255">
+              <description xmi:type="style:EllipseNodeDescription" href="platform:/resource/org.eclipse.efbt.oa4rr.ui.sirius.testmanager/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalModule']/@defaultLayer/@containerMappings[name='FunctionalModule']/@subContainerMappings[name='ReportCellCreationFunctionalModule']/@subContainerMappings[name='ScenarioSet']/@subNodeMappings[name='Scenario']/@style"/>
+            </ownedStyle>
+            <actualMapping xmi:type="description_1:NodeMapping" href="platform:/resource/org.eclipse.efbt.oa4rr.ui.sirius.testmanager/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalModule']/@defaultLayer/@containerMappings[name='FunctionalModule']/@subContainerMappings[name='ReportCellCreationFunctionalModule']/@subContainerMappings[name='ScenarioSet']/@subNodeMappings[name='Scenario']"/>
+          </ownedDiagramElements>
+        </ownedDiagramElements>
+      </ownedDiagramElements>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_jLcdIHsSEeqL6dmrQHtF4g" sourceNode="_jLT6QXsSEeqL6dmrQHtF4g" targetNode="_jLWWgHsSEeqL6dmrQHtF4g">
+      <target xmi:type="functional_module:DataSetTransformationFunctionalModule" href="example/extra/functional_modules.functional_module#processExampleData"/>
+      <ownedStyle xmi:type="diagram:EdgeStyle" uid="_jLdEMHsSEeqL6dmrQHtF4g" targetArrow="InputFillClosedArrow" size="2">
+        <description xmi:type="style:EdgeStyleDescription" href="platform:/resource/org.eclipse.efbt.oa4rr.ui.sirius.testmanager/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalModule']/@additionalLayers[name='links']/@edgeMappings[name='order']/@style"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_jLdEMXsSEeqL6dmrQHtF4g" labelSize="12"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/resource/org.eclipse.efbt.oa4rr.ui.sirius.testmanager/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalModule']/@additionalLayers[name='links']/@edgeMappings[name='order']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_jLeSUHsSEeqL6dmrQHtF4g" sourceNode="_jLTTMXsSEeqL6dmrQHtF4g" targetNode="_jLT6QXsSEeqL6dmrQHtF4g">
+      <target xmi:type="functional_module:ReadDataSourceFunctionalModule" href="example/extra/functional_modules.functional_module#readInExampleData"/>
+      <ownedStyle xmi:type="diagram:EdgeStyle" uid="_jLeSUXsSEeqL6dmrQHtF4g" targetArrow="InputFillClosedArrow" size="2">
+        <description xmi:type="style:EdgeStyleDescription" href="platform:/resource/org.eclipse.efbt.oa4rr.ui.sirius.testmanager/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalModule']/@additionalLayers[name='links']/@edgeMappings[name='order']/@style"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_jLeSUnsSEeqL6dmrQHtF4g" labelSize="12"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/resource/org.eclipse.efbt.oa4rr.ui.sirius.testmanager/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalModule']/@additionalLayers[name='links']/@edgeMappings[name='order']"/>
+    </ownedDiagramElements>
+    <description xmi:type="description_1:DiagramDescription" href="platform:/resource/org.eclipse.efbt.oa4rr.ui.sirius.testmanager/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalModule']"/>
+    <filterVariableHistory xmi:type="diagram:FilterVariableHistory" uid="_jLReAXsSEeqL6dmrQHtF4g"/>
+    <activatedLayers xmi:type="description_1:Layer" href="platform:/resource/org.eclipse.efbt.oa4rr.ui.sirius.testmanager/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalModule']/@defaultLayer"/>
+    <activatedLayers xmi:type="description_1:AdditionalLayer" href="platform:/resource/org.eclipse.efbt.oa4rr.ui.sirius.testmanager/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalModule']/@additionalLayers[name='links']"/>
+    <target xmi:type="functional_module:SerialFunctionalModule" href="example/extra/functional_modules.functional_module#example processing"/>
+  </diagram:DSemanticDiagram>
+</xmi:XMI>
