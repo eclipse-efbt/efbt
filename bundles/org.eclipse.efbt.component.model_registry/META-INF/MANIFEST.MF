@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Model_registry
-Bundle-SymbolicName: org.eclipse.efbt.component.model_registry
-Bundle-Version: 1.0.0.qualifier
-Automatic-Module-Name: org.eclipse.efbt.component.model_registry
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
