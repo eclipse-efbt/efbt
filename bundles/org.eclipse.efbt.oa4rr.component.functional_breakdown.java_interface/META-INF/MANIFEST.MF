@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Java_interface
+Bundle-SymbolicName: org.eclipse.efbt.oa4rr.component.functional_breakdown.java_interface
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: org.eclipse.efbt.oa4rr.component.functional_breakdown.java_interface
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

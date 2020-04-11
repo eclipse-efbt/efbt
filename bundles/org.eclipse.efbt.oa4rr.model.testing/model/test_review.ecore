@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="test_review" nsURI="http://www.eclipse.org/test_review" nsPrefix="test_review">
+  <eClassifiers xsi:type="ecore:EClass" name="User">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="userName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UserModule" eSuperTypes="../../org.eclipse.efbt.oa4rr.model.module_management/model/module_management.ecore#//Module">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="users" upperBound="-1"
+        eType="#//User" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TestReviewModule" eSuperTypes="../../org.eclipse.efbt.oa4rr.model.module_management/model/module_management.ecore#//Module">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="testReviews" upperBound="-1"
+        eType="#//TestReview" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TestReview">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="user" eType="#//User"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="test" eType="ecore:EClass test.ecore#//Test"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TestReviewComments">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="comments" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+</ecore:EPackage>

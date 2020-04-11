@@ -13,6 +13,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute module_management.ecore#//Module/license"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute module_management.ecore#//Module/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute module_management.ecore#//Module/version"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute module_management.ecore#//Module/trial"/>
     </genClasses>
     <genClasses ecoreClass="module_management.ecore#//ModuleDependencies">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference module_management.ecore#//ModuleDependencies/theModules"/>

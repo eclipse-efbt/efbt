@@ -54,4 +54,10 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ScenarioTag" eSuperTypes="../../org.eclipse.efbt.oa4rr.model.regulatory_text/model/requirements_text.ecore#//Tag">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="scenario" eType="#//Scenario"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ScenarioSetTag" eSuperTypes="../../org.eclipse.efbt.oa4rr.model.regulatory_text/model/requirements_text.ecore#//Tag">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="scenarioSet" eType="#//ScenarioSet"/>
+  </eClassifiers>
 </ecore:EPackage>

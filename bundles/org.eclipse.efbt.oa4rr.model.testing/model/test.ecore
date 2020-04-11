@@ -33,15 +33,6 @@
         <details key="name" value="testHasRun"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="programPartsUsed" eType="#//ProgramPart">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="testLogic"/>
-      </eAnnotations>
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The logic of the test that was run."/>
-      </eAnnotations>
-    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="testPassed" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="True if the test run created results which matched the expected results"/>
@@ -51,35 +42,12 @@
         <details key="name" value="testPassed"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="testEnvironmentUsed" eType="#//TestEnvironment"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="testEnvironmentUsed" eType="ecore:EClass ../../org.eclipse.efbt.oa4rr.model.environments/model/environments.ecore#//TestExecutionEnvironment"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="test" eType="#//Test"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="expectedResults" eType="#//TestResult"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="testRun" eType="#//TestRun"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Result"/>
-  <eClassifiers xsi:type="ecore:EClass" name="StructuredFile">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="fileSchema" eType="#//StructuredFileSchema"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="StructuredFileSchema"/>
-  <eClassifiers xsi:type="ecore:EClass" name="InputDataModule" eSuperTypes="../../org.eclipse.efbt.oa4rr.model.module_management/model/module_management.ecore#//Module">
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="InputDataModule"/>
-      <details key="kind" value="elementOnly"/>
-    </eAnnotations>
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A module containeing a set of input data"/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="inputData" upperBound="-1"
-        eType="#//TestInputData" containment="true">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="element"/>
-        <details key="name" value="inputData"/>
-      </eAnnotations>
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The input data that makes up the module"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ReportCellResults" eSuperTypes="#//Result">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="ReportCellExpectedResults"/>
@@ -100,83 +68,6 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TestDefinition">
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="TestDefinition"/>
-      <details key="kind" value="empty"/>
-    </eAnnotations>
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A definiton of  a tests in terms of the report cells it aims to calculate, and the subset of scenarios which are to be executed."/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-        iD="true">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="name"/>
-      </eAnnotations>
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The name of the TestDefinition"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="reportCells" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.efbt.oa4rr.model.report_structures/model/report_structures.ecore#//RegReportCell">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="reportCells"/>
-      </eAnnotations>
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The report cells to be calculated in the TestDefinition"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="scenarios" upperBound="-1"
-        eType="ecore:EClass scenarios.ecore#//Scenario">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="scenarios"/>
-      </eAnnotations>
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The scenarios to be executed by the test definition."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="program" eType="#//Program"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TestDefinitionModule" eSuperTypes="../../org.eclipse.efbt.oa4rr.model.module_management/model/module_management.ecore#//Module">
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="TestDefinitionModule"/>
-      <details key="kind" value="elementOnly"/>
-    </eAnnotations>
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A module containing TestDefinitions"/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="testDefinitions" upperBound="-1"
-        eType="#//TestDefinition" containment="true">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="element"/>
-        <details key="name" value="testDefinitions"/>
-      </eAnnotations>
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The test definitions in the module."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TestLogic">
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="TestLogic"/>
-      <details key="kind" value="elementOnly"/>
-    </eAnnotations>
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="The execution logic of a test. &#xA;Note that the TestDefinition, describing the report cells and scenario names to calculate is a high level , long lived description.&#xA;The actual low level logic for executing the  TestDefinition will change over time as the code base and data structures change.&#xA;This class stores that logic as an AttributeModel (note that AttributeModel are actually what gets executed)&#xA;Storing this TestLogic as an AttributeLineage model, means that as the AtributeLineageModel for an entire release changes,&#xA;we can check if the AttributeLineageModel for the test is still a subset of the release (and therefore still a valid test).&#xA;We can do this check useing the CompareAttributeLineageModels PlatformCall in the platform_call package.&#xA;&#xA;"/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="testDefinition" eType="#//TestDefinition">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="testDefinition"/>
-      </eAnnotations>
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The associated TestDefinition"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TestResult">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="TestResult"/>
@@ -185,17 +76,6 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="This class represents the actual resut of a test, so it can be compared to expected results"/>
     </eAnnotations>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TestReview">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="user" eType="ecore:EClass user.ecore#//User"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="test" eType="#//Test"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TestReviewComments">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="comments" upperBound="-1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="WorkedExample">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="workedExample" eType="ecore:EClass ../../org.eclipse.efbt.oa4rr.model.spreadsheet_lineage/model/data_lineage.ecore#//SpreadsheetLineageModel"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DataSetResults" eSuperTypes="#//Result">
     <eStructuralFeatures xsi:type="ecore:EReference" name="expectedResults" upperBound="-1"
@@ -210,78 +90,20 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TestDefinitionSet">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="testDefinitions" upperBound="-1"
-        eType="#//TestDefinition" containment="true"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Test">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="testDefinition" eType="#//TestDefinition"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="inputData" eType="#//TestInputData"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="programVersion" eType="#//ProgramVersion"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="testDefinition" eType="ecore:EClass ../../org.eclipse.efbt.oa4rr.model.test_definitions/model/test_definition.ecore#//TestDefinition"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="inputData" eType="ecore:EClass test_input_data.ecore#//TestInputData"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="expectedResults" eType="#//TestResult"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="workedExample" eType="#//WorkedExample"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="testExecution" eType="#//TestExecution"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TestPlan"/>
-  <eClassifiers xsi:type="ecore:EClass" name="TestSet"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Program"/>
-  <eClassifiers xsi:type="ecore:EClass" name="ProgramPart"/>
-  <eClassifiers xsi:type="ecore:EClass" name="ProgramVersion">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TestEnvironment">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="programVersion" eType="#//ProgramVersion"/>
+  <eClassifiers xsi:type="ecore:EClass" name="TestModule" eSuperTypes="#//Test ../../org.eclipse.efbt.oa4rr.model.module_management/model/module_management.ecore#//Module">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tests" upperBound="-1"
+        eType="#//Test" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TestExecution">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="testEnvironment" eType="#//TestEnvironment"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="testEnvironment" eType="ecore:EClass ../../org.eclipse.efbt.oa4rr.model.environments/model/environments.ecore#//TestExecutionEnvironment"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="testPlan" eType="#//TestPlan"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="UsefulnputDataSnippets">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="testInputData" eType="#//TestInputData"
-        containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TestInputData">
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="InputData"/>
-      <details key="kind" value="elementOnly"/>
-    </eAnnotations>
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="InputData for a test"/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="name"/>
-      </eAnnotations>
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The name associated with the input data."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ExternalTestData"/>
-  <eClassifiers xsi:type="ecore:EClass" name="TestColumnStructuredData" eSuperTypes="#//TestInputData">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="sourceTableData" ordered="false"
-        upperBound="-1" eType="ecore:EClass ../../org.eclipse.efbt.oa4rr.model.column_structured_data/model/base_column_structured_data.ecore#//BaseColumnStructuredData"
-        containment="true">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="element"/>
-        <details key="name" value="sourceTableData"/>
-      </eAnnotations>
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The set of pupulated BaseCubes that represent the input data."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TestStrucuredFileData" eSuperTypes="#//TestInputData">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="testFileData" upperBound="-1"
-        eType="#//StructuredFile"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TestReviewModule" eSuperTypes="../../org.eclipse.efbt.oa4rr.model.module_management/model/module_management.ecore#//Module">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="testReviews" upperBound="-1"
-        eType="#//TestReview" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="UsefulnputDataSnippetsModule" eSuperTypes="../../org.eclipse.efbt.oa4rr.model.module_management/model/module_management.ecore#//Module">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="snippets" upperBound="-1"
-        eType="#//UsefulnputDataSnippets" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TestRun">
     <eStructuralFeatures xsi:type="ecore:EReference" name="testExecution" eType="#//TestExecution"/>
@@ -298,12 +120,5 @@
   <eClassifiers xsi:type="ecore:EClass" name="TestExecutionModule" eSuperTypes="../../org.eclipse.efbt.oa4rr.model.module_management/model/module_management.ecore#//Module">
     <eStructuralFeatures xsi:type="ecore:EReference" name="testExecutions" upperBound="-1"
         eType="#//TestExecution" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TestEnvironmentModule" eSuperTypes="../../org.eclipse.efbt.oa4rr.model.module_management/model/module_management.ecore#//Module">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="testEnvironments" upperBound="-1"
-        eType="#//TestEnvironment" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ResultsWithLineage">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="resultsWithLineage" eType="ecore:EClass ../../org.eclipse.efbt.oa4rr.model.spreadsheet_lineage/model/data_lineage.ecore#//SpreadsheetLineageModel"/>
   </eClassifiers>
 </ecore:EPackage>
