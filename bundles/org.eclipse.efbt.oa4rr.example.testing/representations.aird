@@ -1,30 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" xsi:schemaLocation="http://www.eclipse.org/sirius/description/1.1.0 http://www.eclipse.org/sirius/1.1.0#//description" uid="_8FDqwHsBEeq6HOLh1OWpEA" selectedViews="_AsIQoHsPEeqL6dmrQHtF4g" version="14.3.0.201909031200">
+<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" xsi:schemaLocation="http://www.eclipse.org/sirius/description/1.1.0 http://www.eclipse.org/sirius/1.1.0#//description" uid="_R_9NIHy1EeqtEe4aB4OwtA" selectedViews="_T1smwHy1EeqtEe4aB4OwtA" version="14.3.0.201909031200">
   <semanticResources>example/extra/functional_modules.functional_module</semanticResources>
-  <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.testing/model/testing.genmodel</semanticResources>
-  <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.column_structured_data/model/column_structured_data.genmodel</semanticResources>
-  <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.column_structures/model/column_structures.genmodel</semanticResources>
-  <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.column_structures/model/column_structures.ecore</semanticResources>
-  <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.module_management/model/module_management.genmodel</semanticResources>
-  <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.module_management/model/module_management.ecore</semanticResources>
-  <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.column_structured_data/model/base_column_structured_data.ecore</semanticResources>
-  <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.column_structured_data/model/column_structured_data.ecore</semanticResources>
-  <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.functions/model/oa4rrfunctions.genmodel</semanticResources>
-  <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.functions/model/oa4rrfunctions.ecore</semanticResources>
-  <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.report_structures/model/report_structures.genmodel</semanticResources>
-  <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.report_structures/model/report_structures.ecore</semanticResources>
-  <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.spreadsheet_lineage/model/spreadsheet_lineage.genmodel</semanticResources>
-  <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.spreadsheet_lineage/model/cell_transformation_logic.ecore</semanticResources>
-  <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.spreadsheet_lineage/model/data_lineage.ecore</semanticResources>
-  <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.testing/model/functional_module.ecore</semanticResources>
-  <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.testing/model/scenarios.ecore</semanticResources>
-  <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.testing/model/requirements_text.ecore</semanticResources>
-  <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.testing/model/tags.ecore</semanticResources>
-  <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.testing/model/test.ecore</semanticResources>
-  <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.model.testing/model/user.ecore</semanticResources>
-  <semanticResources>platform:/resource/org.eclipse.efbt.oa4rr.ui.sirius.testmanager/description/testmanager.odesign</semanticResources>
-  <semanticResources>environment:/viewpoint</semanticResources>
-  <ownedViews xmi:type="viewpoint:DView" uid="_AsIQoHsPEeqL6dmrQHtF4g">
+  <ownedViews xmi:type="viewpoint:DView" uid="_T1smwHy1EeqtEe4aB4OwtA">
     <viewpoint xmi:type="description:Viewpoint" href="platform:/resource/org.eclipse.efbt.oa4rr.ui.sirius.testmanager/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']"/>
   </ownedViews>
 </viewpoint:DAnalysis>

@@ -472,11 +472,9 @@
     </genClasses>
     <genClasses ecoreClass="reports.ecore#//ReportCell">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference reports.ecore#//ReportCell/combination"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reports.ecore#//ReportCell/name"/>
     </genClasses>
     <genClasses ecoreClass="reports.ecore#//ReportCellValue">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference reports.ecore#//ReportCellValue/reportCell"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reports.ecore#//ReportCellValue/value"/>
     </genClasses>
     <genClasses ecoreClass="reports.ecore#//ReportTableModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reports.ecore#//ReportTableModule/reportTables"/>

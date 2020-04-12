@@ -113,4 +113,13 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FunctionTag" eSuperTypes="../../org.eclipse.efbt.oa4rr.model.regulatory_text/model/requirements_text.ecore#//Tag">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="function" eType="ecore:EClass ../../org.eclipse.efbt.oa4rr.model.functions/model/oa4rrfunctions.ecore#//Function"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FormulaCellTag" eSuperTypes="../../org.eclipse.efbt.oa4rr.model.regulatory_text/model/requirements_text.ecore#//Tag">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="formulaCell" eType="#//FormulaCell"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ColumnStructuredDataTag" eSuperTypes="../../org.eclipse.efbt.oa4rr.model.regulatory_text/model/requirements_text.ecore#//Tag">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="columnStructuredData" eType="ecore:EClass ../../org.eclipse.efbt.oa4rr.model.column_structured_data/model/column_structured_data.ecore#//ColumnStructuredData"/>
+  </eClassifiers>
 </ecore:EPackage>
