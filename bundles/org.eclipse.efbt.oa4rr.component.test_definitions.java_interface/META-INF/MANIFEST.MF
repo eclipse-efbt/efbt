@@ -5,3 +5,5 @@ Bundle-SymbolicName: org.eclipse.efbt.oa4rr.component.test_definitions.java_inte
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: org.eclipse.efbt.oa4rr.component.test_definitions.java_interface
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.eclipse.efbt.oa4rr.model.test_definitions;bundle-version="1.0.0"
+Export-Package: org.eclipse.efbt.oa4rr.component.test_definitions.java_interface

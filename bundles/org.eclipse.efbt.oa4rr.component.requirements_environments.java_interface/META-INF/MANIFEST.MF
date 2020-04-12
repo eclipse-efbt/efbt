@@ -5,3 +5,5 @@ Bundle-SymbolicName: org.eclipse.efbt.oa4rr.component.requirements_environments.
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: org.eclipse.efbt.oa4rr.component.requirements_environments.java_interface
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.eclipse.efbt.oa4rr.model.requirements_environments;bundle-version="1.0.0"
+Export-Package: org.eclipse.efbt.oa4rr.component.requirements_environments.java_interface
