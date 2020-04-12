@@ -42,7 +42,7 @@
         <details key="name" value="testPassed"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="testEnvironmentUsed" eType="ecore:EClass ../../org.eclipse.efbt.oa4rr.model.environments/model/environments.ecore#//TestExecutionEnvironment"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="testEnvironmentUsed" eType="ecore:EClass ../../org.eclipse.efbt.oa4rr.model.execution_environments/model/execution_environments.ecore#//TestExecutionEnvironment"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="test" eType="#//Test"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="expectedResults" eType="#//TestResult"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="testRun" eType="#//TestRun"/>
@@ -102,7 +102,7 @@
         eType="#//Test" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TestExecution">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="testEnvironment" eType="ecore:EClass ../../org.eclipse.efbt.oa4rr.model.environments/model/environments.ecore#//TestExecutionEnvironment"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="testEnvironment" eType="ecore:EClass ../../org.eclipse.efbt.oa4rr.model.execution_environments/model/execution_environments.ecore#//TestExecutionEnvironment"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="testPlan" eType="#//TestPlan"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TestRun">
