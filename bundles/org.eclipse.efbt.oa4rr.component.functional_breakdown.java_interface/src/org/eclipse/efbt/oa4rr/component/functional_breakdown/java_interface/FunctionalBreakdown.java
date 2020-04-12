@@ -1,16 +1,12 @@
 package org.eclipse.efbt.oa4rr.component.functional_breakdown.java_interface;
 
-import functional_module.FunctionalModule;
+import org.eclipse.efbt.oa4rr.component.common.java_interface.ModuleSetWithDependency;
+
+import functional_module.FunctionalModuleModule;
 import requirements_text.RequirementsModule;
 
-public interface FunctionalBreakdown {
+public interface FunctionalBreakdown extends ModuleSetWithDependency <FunctionalModuleModule, RequirementsModule> {
 	
-	public FunctionalModule getFunctionalModule(String version);
 	
-	public FunctionalModule createTrialVersion(FunctionalModule oldVersion,
-												RequirementsModule requirementsModule,
-												String version);
-	
-	public void setFunctionalModuleAsFinal(String version);
 
 }

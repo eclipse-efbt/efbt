@@ -1,15 +1,19 @@
 package org.eclipse.efbt.oa4rr.component.requirements_environments.java_interface;
 
+import java.util.List;
+
 import functional_module.FunctionalModule;
-import requirements_environments.TestRequirementsEnvironment;
+
+import requirements_environments.TestRequirementsEnvironmentModule;
 import report_structures.RegReportModule;
 
 public interface RequirementsEnvironments {
 	
-	public void createNewRequirementsEnvironment(FunctionalModule functionalModule,
+	public void createNewRequirementsEnvironmentModule(FunctionalModule functionalModule,
 			RegReportModule rrModule,
 			String version);
 	
-	public TestRequirementsEnvironment getTestRequirementsEnvironment(String version);
+	public TestRequirementsEnvironmentModule getTestRequirementsEnvironment(String version);
+	public List<TestRequirementsEnvironmentModule> getTestRequirementsEnvironmentModules();
 
 }

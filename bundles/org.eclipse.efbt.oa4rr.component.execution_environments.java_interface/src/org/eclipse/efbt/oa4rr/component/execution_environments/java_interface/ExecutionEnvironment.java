@@ -1,5 +1,7 @@
 package org.eclipse.efbt.oa4rr.component.execution_environments.java_interface;
 
+import java.util.List;
+
 import column_structures.ColumnStructureModule;
 import report_structures.RegReportModule;
 import executable_logic.ExecutableLogicModule;
@@ -13,4 +15,6 @@ public interface ExecutionEnvironment {
 			String version);
 	
 	public TestExecutionEnvironment getTestExecutionEnvironment(String version);
+	
+	public List<TestExecutionEnvironment> getTestExecutionEnvironments();
 }

@@ -9,6 +9,6 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TestRequirementsEnvironmentModule" eSuperTypes="../../org.eclipse.efbt.oa4rr.model.module_management/model/module_management.ecore#//Module">
     <eStructuralFeatures xsi:type="ecore:EReference" name="testRequirementEnvironments"
-        upperBound="-1" eType="#//TestRequirementsEnvironment" containment="true"/>
+        eType="#//TestRequirementsEnvironment" containment="true"/>
   </eClassifiers>
 </ecore:EPackage>

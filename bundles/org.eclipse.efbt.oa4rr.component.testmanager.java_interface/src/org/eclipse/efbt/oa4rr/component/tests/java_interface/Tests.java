@@ -1,19 +1,9 @@
 package org.eclipse.efbt.oa4rr.component.tests.java_interface;
 
-
 import test.TestModule;
 import test_definition.TestDefinitionModule;
-import execution_environments.TestExecutionEnvironment;
+import org.eclipse.efbt.oa4rr.component.common.java_interface.ModuleSetWithDependency;
 
-public interface Tests {
-	
-	public TestModule getTestModule(String version);
-
-	public TestModule createTrialVersion(TestModule oldVersion,
-			TestDefinitionModule testDefModule,
-			TestExecutionEnvironment executionEnvironment,
-			String version);
-
-	public void setTestModuleAsFinal(String version);
+public interface Tests extends ModuleSetWithDependency <TestModule, TestDefinitionModule>  {
 
 }
