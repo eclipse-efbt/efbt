@@ -25,7 +25,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="UsefulnputDataSnippets">
+  <eClassifiers xsi:type="ecore:EClass" name="UsefulInputDataSnippets">
     <eStructuralFeatures xsi:type="ecore:EReference" name="testInputData" eType="#//TestInputData"
         containment="true"/>
   </eClassifiers>
@@ -65,8 +65,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="testFileData" upperBound="-1"
         eType="#//StructuredFile"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="UsefulnputDataSnippetsModule" eSuperTypes="../../org.eclipse.efbt.oa4rr.model.module_management/model/module_management.ecore#//Module">
+  <eClassifiers xsi:type="ecore:EClass" name="UsefulInputDataSnippetsModule" eSuperTypes="../../org.eclipse.efbt.oa4rr.model.module_management/model/module_management.ecore#//Module">
     <eStructuralFeatures xsi:type="ecore:EReference" name="snippets" upperBound="-1"
-        eType="#//UsefulnputDataSnippets" containment="true"/>
+        eType="#//UsefulInputDataSnippets" containment="true"/>
   </eClassifiers>
 </ecore:EPackage>

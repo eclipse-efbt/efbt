@@ -41,7 +41,7 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="requiremetnsEnvironment"
-        eType="ecore:EClass ../../org.eclipse.efbt.oa4rr.model.environments/model/environments.ecore#//TestRequirementsEnvironment"/>
+        eType="ecore:EClass ../../org.eclipse.efbt.oa4rr.model.requirements_environments/model/requirements_environments.ecore#//TestRequirementsEnvironment"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TestDefinitionModule" eSuperTypes="../../org.eclipse.efbt.oa4rr.model.module_management/model/module_management.ecore#//Module">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">

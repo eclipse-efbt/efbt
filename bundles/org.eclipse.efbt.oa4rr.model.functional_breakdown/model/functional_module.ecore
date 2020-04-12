@@ -3,10 +3,6 @@
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="functional_module" nsURI="http://www.eclipse.org/functional_module"
     nsPrefix="functional_module">
   <eClassifiers xsi:type="ecore:EClass" name="DataProcessingFunctionalModule" eSuperTypes="#//LeafFunctionalModule">
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="DataSetTransformationFunctionalModule"/>
-      <details key="kind" value="elementOnly"/>
-    </eAnnotations>
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A DataSetTransformationFunctionalModule is a set of releted DataSetTransformations.&#xA;Usually they will be groups where the derived cube associated with DataSetTransformation, has source cubes which are associated with other DataSetTransformations in the same group.&#xA;"/>
     </eAnnotations>
