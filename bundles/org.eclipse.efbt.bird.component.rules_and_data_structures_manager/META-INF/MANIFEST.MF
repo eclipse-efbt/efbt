@@ -12,5 +12,4 @@ Require-Bundle: org.apache.commons.logging,
  org.eclipse.xtext;bundle-version="2.19.0",
  org.eclipse.efbt.oa4rr.component.input_data_structures.java_interface;bundle-version="1.0.0",
  org.eclipse.efbt.oa4rr.component.report_structures.java_interface;bundle-version="1.0.0",
- org.eclipse.efbt.bird.model.bird_artefacts;bundle-version="1.0.0",
- org.eclipse.efbt.oa4rr.component.common.java_interface;bundle-version="1.0.0"
+ org.eclipse.efbt.bird.model.bird_artefacts;bundle-version="1.0.0"

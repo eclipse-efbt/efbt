@@ -1,12 +1,15 @@
 package org.eclipse.efbt.oa4rr.component.input_data_structures.java_interface;
 
-import org.eclipse.efbt.oa4rr.component.common.java_interface.ReadOnlyModuleSet;
+import java.util.List;
+
 
 import column_structures.ColumnStructureModule;
 
 
-public interface InputDataStructures extends ReadOnlyModuleSet<ColumnStructureModule> {
+public interface InputDataStructures  {
 	
-	public ColumnStructureModule getColumnStructureModule(String version);
+	public List<ColumnStructureModule>  getModules();
+	public ColumnStructureModule  getModuleForVerion(String version);
+
 
 }
