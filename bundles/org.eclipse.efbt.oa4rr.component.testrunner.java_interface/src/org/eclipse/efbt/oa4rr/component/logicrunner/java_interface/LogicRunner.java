@@ -1,12 +1,16 @@
 package org.eclipse.efbt.oa4rr.component.logicrunner.java_interface;
 
-import org.eclipse.efbt.oa4rr.component.common.java_interface.ReadOnlyModuleSet;
+import java.util.List;
+
+
 import executable_logic.ExecutableLogicModule;
 import executable_logic.ExecutableLogicProxy;
 import test.TestModule;
 
-public interface LogicRunner extends ReadOnlyModuleSet<ExecutableLogicModule>{
+public interface LogicRunner {
 	
 	public void runTests(TestModule testModule, ExecutableLogicProxy executableLogic);
+	public List<ExecutableLogicModule>  getModules();
+	public ExecutableLogicModule  getModuleForVerion(String version);
 
 }
