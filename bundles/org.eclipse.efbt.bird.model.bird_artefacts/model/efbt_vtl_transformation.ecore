@@ -8,7 +8,7 @@
   <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
     <details key="documentation" value="This Package contains modules for containing the SMCubes Tranformation related artefacts"/>
   </eAnnotations>
-  <eClassifiers xsi:type="ecore:EClass" name="TransformationSchemeModule" eSuperTypes="../../org.eclipse.efbt.oa4rr.model.module_management/model/module_management.ecore#//Module">
+  <eClassifiers xsi:type="ecore:EClass" name="TransformationSchemeModule" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.ecore#//Module">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A Module of Tranformation Schemes"/>
     </eAnnotations>
@@ -19,7 +19,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="NodeRelationshipModule" eSuperTypes="../../org.eclipse.efbt.oa4rr.model.module_management/model/module_management.ecore#//Module">
+  <eClassifiers xsi:type="ecore:EClass" name="NodeRelationshipModule" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.ecore#//Module">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A Module of Tranformation Node Relationships"/>
     </eAnnotations>

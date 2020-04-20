@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" xsi:schemaLocation="http://www.eclipse.org/sirius/description/1.1.0 http://www.eclipse.org/sirius/1.1.0#//description" uid="_R_9NIHy1EeqtEe4aB4OwtA" selectedViews="_T1smwHy1EeqtEe4aB4OwtA" version="14.3.0.201909031200">
-  <semanticResources>example/extra/functional_modules.functional_module</semanticResources>
-  <ownedViews xmi:type="viewpoint:DView" uid="_T1smwHy1EeqtEe4aB4OwtA">
-    <viewpoint xmi:type="description:Viewpoint" href="platform:/resource/org.eclipse.efbt.oa4rr.ui.sirius.testmanager/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']"/>
-  </ownedViews>
-</viewpoint:DAnalysis>

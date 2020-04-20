@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="requirements_environments" nsURI="http://www.eclipse.org/requirements_environments"
+    nsPrefix="requirements_environments">
+  <eClassifiers xsi:type="ecore:EClass" name="TestRequirementsEnvironment">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="functionalModuleModule"
+        eType="ecore:EClass ../../org.eclipse.efbt.oa4rtt.model.functional_breakdown/model/functional_module.ecore#//FunctionalModuleModule"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reportsModule" eType="ecore:EClass ../../org.eclipse.efbt.oa4rtt.model.report_structures/model/report_structures.ecore#//RegReportModule"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TestRequirementsEnvironmentModule" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.ecore#//Module">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="testRequirementEnvironments"
+        eType="#//TestRequirementsEnvironment" containment="true"/>
+  </eClassifiers>
+</ecore:EPackage>

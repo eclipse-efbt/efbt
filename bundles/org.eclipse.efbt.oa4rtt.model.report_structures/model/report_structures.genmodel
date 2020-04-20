@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.oa4rtt.model.report_structures/src"
+    modelPluginID="org.eclipse.efbt.oa4rtt.model.report_structures" modelName="Report_structures"
+    rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="8.0" copyrightFields="false" usedGenPackages="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.genmodel#//module_management"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>report_structures.ecore</foreignModel>
+  <genPackages prefix="Report_structures" resource="XML" disposableProviderFactory="true"
+      ecorePackage="report_structures.ecore#/">
+    <genClasses ecoreClass="report_structures.ecore#//RegReportCell">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute report_structures.ecore#//RegReportCell/name"/>
+    </genClasses>
+    <genClasses ecoreClass="report_structures.ecore#//RegReportCellValue">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute report_structures.ecore#//RegReportCellValue/value"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference report_structures.ecore#//RegReportCellValue/cell"/>
+    </genClasses>
+    <genClasses ecoreClass="report_structures.ecore#//RegReport">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference report_structures.ecore#//RegReport/cells"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute report_structures.ecore#//RegReport/name"/>
+    </genClasses>
+    <genClasses ecoreClass="report_structures.ecore#//RegReportModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference report_structures.ecore#//RegReportModule/regReports"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>
