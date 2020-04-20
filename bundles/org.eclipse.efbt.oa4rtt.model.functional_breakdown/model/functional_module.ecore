@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="functional_module" nsURI="http://www.eclipse.org/functional_module"
+    nsPrefix="functional_module">
+  <eClassifiers xsi:type="ecore:EClass" name="DataProcessingFunctionalModule" eSuperTypes="#//LeafFunctionalModule">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A DataSetTransformationFunctionalModule is a set of releted DataSetTransformations.&#xA;Usually they will be groups where the derived cube associated with DataSetTransformation, has source cubes which are associated with other DataSetTransformations in the same group.&#xA;"/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LeafFunctionalModule" eSuperTypes="#//FunctionalModule">
+    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+      <details key="name" value="LeafFunctionalModule"/>
+      <details key="kind" value="elementOnly"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A  LeafFunctionalModule is a FunctionalModule which does not contain any sub FunctionalModules"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="scenarioSet" eType="ecore:EClass scenarios.ecore#//ScenarioSet"
+        containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Any ScenarioSets associated with the Transformation or FunctionalModule. &#xA;The individual Scenarios in such a ScenarioSet are associated with different behaviour in the FunctionalModule that we would like to test seperately. &#xA;Scenarios can themsleves be linked to parts of the regulatory rulebook, allowing an annotation of the behaviour we wish to test."/>
+      </eAnnotations>
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="kind" value="element"/>
+        <details key="name" value="scenarioSet"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ParallelFunctionalModule" eSuperTypes="#//FunctionalModuleSet">
+    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+      <details key="name" value="ParallelFunctionalModule"/>
+      <details key="kind" value="elementOnly"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A FunctionalModuleSet, where the sub FunctionalModules can be run in parallel , or ain any order, since there is no dependency between them whereby one needs to run before another."/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ScenarioSetFunctionalModule" eSuperTypes="#//FunctionalModuleSet">
+    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+      <details key="name" value="ScenarioSetFunctionalModule"/>
+      <details key="kind" value="elementOnly"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A FunctionalModuleSet whereby it is possible that ony some of the sub Transformation Schemes are executed for a test, dependant upon the Scenarios that are associated with the Test."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="scenarioSet" eType="ecore:EClass scenarios.ecore#//ScenarioSet"
+        containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The associated  ScenarioSet"/>
+      </eAnnotations>
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="kind" value="element"/>
+        <details key="name" value="scenarioSet"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SerialFunctionalModule" eSuperTypes="#//FunctionalModuleSet">
+    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+      <details key="name" value="SerialFunctionalModule"/>
+      <details key="kind" value="elementOnly"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A FunctionalModuleSet, where the sub FunctionalModules are an ordered set which must be executed in order."/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FunctionalModuleSet" eSuperTypes="#//FunctionalModule">
+    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+      <details key="name" value="FunctionalModuleSet"/>
+      <details key="kind" value="elementOnly"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A set of FunctionalModules.&#xA;Note that FunctionalModulesSet is also a subclass of FunctionalModule, so the set can also include FunctionalModulesSets"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="subTransformationsAndSchemes"
+        upperBound="-1" eType="#//FunctionalModule" containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The  contained set FunctionalModules "/>
+      </eAnnotations>
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="kind" value="element"/>
+        <details key="name" value="subTransformationsAndSchemes"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ReadDataSourceFunctionalModule" eSuperTypes="#//LeafFunctionalModule">
+    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+      <details key="name" value="ReadDataSourceFunctionalModule"/>
+      <details key="kind" value="elementOnly"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A FunctionalModule which represents the reading in data from base cubes. Note that the BIRD input layer is made up of BaseCubes."/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ReportCellCreationFunctionalModule"
+      eSuperTypes="#//LeafFunctionalModule">
+    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+      <details key="name" value="ReportCellCreationFunctionalModule"/>
+      <details key="kind" value="elementOnly"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A FunctionalModule which represents the calculation of report cells."/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FunctionalModule">
+    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+      <details key="name" value="FunctionalModule"/>
+      <details key="kind" value="empty"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="FunctionalModule is the super class of ReportCellFunctionalModule,ReadDataSourceFunctionalModule, and DataSetTransformationFunctionalModule.&#xA;It represents a set of processing."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The name of the FunctionalModule"/>
+      </eAnnotations>
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="kind" value="attribute"/>
+        <details key="name" value="name"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="usedTransformationOrScheme"
+        eType="#//FunctionalModule"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="scenario" eType="ecore:EClass scenarios.ecore#//Scenario"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FunctionalModuleModule" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.ecore#//Module">
+    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+      <details key="name" value="FunctionalModuleModule"/>
+      <details key="kind" value="elementOnly"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A module of FunctionalModules"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="functionalModules" upperBound="-1"
+        eType="#//FunctionalModule" containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The  set of FunctionalModules "/>
+      </eAnnotations>
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="kind" value="element"/>
+        <details key="name" value="functionalModules"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FunctionalModuleTag" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.regulatory_text/model/requirements_text.ecore#//Tag">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="functionalModule" eType="#//FunctionalModule"/>
+  </eClassifiers>
+</ecore:EPackage>

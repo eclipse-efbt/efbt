@@ -7,7 +7,7 @@
   <eAnnotations source="license">
     <details key="license" value="Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"/>
   </eAnnotations>
-  <eClassifiers xsi:type="ecore:EClass" name="AxisModule" eSuperTypes="../../org.eclipse.efbt.oa4rr.model.module_management/model/module_management.ecore#//Module">
+  <eClassifiers xsi:type="ecore:EClass" name="AxisModule" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.ecore#//Module">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A Module containing a set of  Axis "/>
     </eAnnotations>
@@ -26,7 +26,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="AxisOrdinateModule" eSuperTypes="../../org.eclipse.efbt.oa4rr.model.module_management/model/module_management.ecore#//Module">
+  <eClassifiers xsi:type="ecore:EClass" name="AxisOrdinateModule" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.ecore#//Module">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A Module containing a set of  AxisOrdinates"/>
     </eAnnotations>
@@ -45,7 +45,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CellPositionModule" eSuperTypes="../../org.eclipse.efbt.oa4rr.model.module_management/model/module_management.ecore#//Module">
+  <eClassifiers xsi:type="ecore:EClass" name="CellPositionModule" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.ecore#//Module">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A Module containing a set of Cell Positions "/>
     </eAnnotations>
@@ -64,7 +64,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="OrdinateItemModule" eSuperTypes="../../org.eclipse.efbt.oa4rr.model.module_management/model/module_management.ecore#//Module">
+  <eClassifiers xsi:type="ecore:EClass" name="OrdinateItemModule" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.ecore#//Module">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A Module containing a set of OrdinateItems "/>
     </eAnnotations>
@@ -112,7 +112,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ReportCell" eSuperTypes="../../org.eclipse.efbt.oa4rr.model.report_structures/model/report_structures.ecore#//RegReportCell">
+  <eClassifiers xsi:type="ecore:EClass" name="ReportCell" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.report_structures/model/report_structures.ecore#//RegReportCell">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A Report Cell"/>
     </eAnnotations>
@@ -130,7 +130,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ReportCellValue" eSuperTypes="../../org.eclipse.efbt.oa4rr.model.report_structures/model/report_structures.ecore#//RegReportCellValue">
+  <eClassifiers xsi:type="ecore:EClass" name="ReportCellValue" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.report_structures/model/report_structures.ecore#//RegReportCellValue">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A ReportCell Value, effectively a populate Report Cell "/>
     </eAnnotations>
@@ -148,7 +148,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ReportTableModule" eSuperTypes="../../org.eclipse.efbt.oa4rr.model.module_management/model/module_management.ecore#//Module">
+  <eClassifiers xsi:type="ecore:EClass" name="ReportTableModule" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.ecore#//Module">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A Module containing a set of ReportTables"/>
     </eAnnotations>
@@ -167,7 +167,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TableCellModule" eSuperTypes="../../org.eclipse.efbt.oa4rr.model.module_management/model/module_management.ecore#//Module">
+  <eClassifiers xsi:type="ecore:EClass" name="TableCellModule" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.ecore#//Module">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A Module containing a set of TableCells "/>
     </eAnnotations>
