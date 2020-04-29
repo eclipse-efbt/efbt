@@ -2,7 +2,7 @@
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="report_structures" nsURI="http://www.eclipse.org/report_structures"
     nsPrefix="report_structures">
-  <eClassifiers xsi:type="ecore:EClass" name="RegReportCell">
+  <eClassifiers xsi:type="ecore:EClass" name="RegReportCell" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.output_data_structures/model/output_data_structures.ecore#//OutputDataStructure">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
   </eClassifiers>
@@ -16,7 +16,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="RegReportModule" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.ecore#//Module">
+  <eClassifiers xsi:type="ecore:EClass" name="RegReportModule" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.output_data_structures/model/output_data_structures.ecore#//OutputDataStructureModule">
     <eStructuralFeatures xsi:type="ecore:EReference" name="regReports" upperBound="-1"
         eType="#//RegReport" containment="true"/>
   </eClassifiers>

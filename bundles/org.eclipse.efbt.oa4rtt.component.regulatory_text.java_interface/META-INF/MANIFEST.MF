@@ -5,5 +5,5 @@ Bundle-SymbolicName: org.eclipse.efbt.oafrr.component.textmanager.java_interface
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: org.eclipse.efbt.oafrr.component.textmanager.java_interface
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Require-Bundle: org.eclipse.efbt.oa4rtt.model.regulatory_text;bundle-version="1.0.0"
+Require-Bundle: org.eclipse.efbt.oa4rtt.model.requirements_text;bundle-version="1.0.0"
 Export-Package: org.eclipse.efbt.oa4rtt.component.regulatory_text.java_interface

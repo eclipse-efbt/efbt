@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.oa4rtt.model.deep_structures/src"
+    modelPluginID="org.eclipse.efbt.oa4rtt.model.deep_structures" modelName="Deep_structures"
+    rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="8.0" copyrightFields="false" usedGenPackages="../../org.eclipse.efbt.oa4rtt.model.input_data_structures/model/input_data_structures.genmodel#//input_data_structures ../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.genmodel#//module_management"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>deep_structures.ecore</foreignModel>
+  <genPackages prefix="Deep_structures" resource="XML" disposableProviderFactory="true"
+      ecorePackage="deep_structures.ecore#/">
+    <genClasses ecoreClass="deep_structures.ecore#//DeepStructureDefinitionProxy">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute deep_structures.ecore#//DeepStructureDefinitionProxy/structureDefinitionID"/>
+    </genClasses>
+    <genClasses ecoreClass="deep_structures.ecore#//DeepStructureDefinitionProxyModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference deep_structures.ecore#//DeepStructureDefinitionProxyModule/structures"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

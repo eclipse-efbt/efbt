@@ -12,7 +12,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="member_id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ColumnStructuredEntity">
+  <eClassifiers xsi:type="ecore:EClass" name="ColumnStructuredEntity" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.input_data_structures/model/input_data_structures.ecore#//InputDataStructure">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="cube_name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="column" upperBound="-1"
@@ -27,7 +27,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="dataType" eType="#//ColumnDataType"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ColumnStructureModule" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.ecore#//Module">
+  <eClassifiers xsi:type="ecore:EClass" name="ColumnStructureModule" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.input_data_structures/model/input_data_structures.ecore#//InputDatastructureModule">
     <eStructuralFeatures xsi:type="ecore:EReference" name="columnStructures" upperBound="-1"
         eType="#//ColumnStructuredEntity" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="columnDomains" upperBound="-1"

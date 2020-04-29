@@ -5,5 +5,5 @@ Bundle-SymbolicName: org.eclipse.efbt.oa4rtt.component.input_data_structures.jav
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: org.eclipse.efbt.oa4rtt.component.rules_and_data_structures_manager.java_interface
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Require-Bundle: org.eclipse.efbt.oa4rtt.model.column_structures;bundle-version="1.0.0"
+Require-Bundle: org.eclipse.efbt.oa4rtt.model.input_data_structures;bundle-version="1.0.0"
 Export-Package: org.eclipse.efbt.oa4rtt.component.input_data_structures.java_interface

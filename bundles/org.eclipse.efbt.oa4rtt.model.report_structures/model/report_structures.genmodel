@@ -3,7 +3,7 @@
     xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.oa4rtt.model.report_structures/src"
     modelPluginID="org.eclipse.efbt.oa4rtt.model.report_structures" modelName="Report_structures"
     rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" importerID="org.eclipse.emf.importer.ecore"
-    complianceLevel="8.0" copyrightFields="false" usedGenPackages="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.genmodel#//module_management"
+    complianceLevel="8.0" copyrightFields="false" usedGenPackages="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.oa4rtt.model.output_data_structures/model/output_data_structures.genmodel#//output_data_structures"
     operationReflection="true" importOrganizing="true">
   <foreignModel>report_structures.ecore</foreignModel>
   <genPackages prefix="Report_structures" resource="XML" disposableProviderFactory="true"

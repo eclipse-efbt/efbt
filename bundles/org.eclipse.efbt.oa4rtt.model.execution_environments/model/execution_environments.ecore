@@ -3,9 +3,9 @@
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="execution_environments" nsURI="http://www.eclipse.org/execution_environments"
     nsPrefix="execution_environments">
   <eClassifiers xsi:type="ecore:EClass" name="TestExecutionEnvironment">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="executableLogic" eType="ecore:EClass ../../org.eclipse.efbt.oa4rtt.model.executablelogic/model/executable_logic.ecore#//ExecutableLogicModule"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="columnStructures" eType="ecore:EClass ../../org.eclipse.efbt.oa4rtt.model.column_structures/model/column_structures.ecore#//ColumnStructureModule"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="reportsModule" eType="ecore:EClass ../../org.eclipse.efbt.oa4rtt.model.report_structures/model/report_structures.ecore#//RegReportModule"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="inputStructures" eType="ecore:EClass ../../org.eclipse.efbt.oa4rtt.model.input_data_structures/model/input_data_structures.ecore#//InputDatastructureModule"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="outputStructuresModule"
+        eType="ecore:EClass ../../org.eclipse.efbt.oa4rtt.model.output_data_structures/model/output_data_structures.ecore#//OutputDataStructureModule"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TestExecutionEnvironmentModule" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.ecore#//Module">
     <eStructuralFeatures xsi:type="ecore:EReference" name="testexecutionEnvironments"

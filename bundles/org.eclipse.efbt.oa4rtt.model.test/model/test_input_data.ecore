@@ -3,9 +3,8 @@
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="test_input_data" nsURI="http://www.eclipse.org/test_input_data"
     nsPrefix="test_input_data">
   <eClassifiers xsi:type="ecore:EClass" name="StructuredFile">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="fileSchema" eType="#//StructuredFileSchema"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="fileLocation" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="StructuredFileSchema"/>
   <eClassifiers xsi:type="ecore:EClass" name="InputDataModule" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.ecore#//Module">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="InputDataModule"/>
@@ -63,7 +62,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TestStrucuredFileData" eSuperTypes="#//TestInputData">
     <eStructuralFeatures xsi:type="ecore:EReference" name="testFileData" upperBound="-1"
-        eType="#//StructuredFile"/>
+        eType="#//StructuredFile" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UsefulInputDataSnippetsModule" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.ecore#//Module">
     <eStructuralFeatures xsi:type="ecore:EReference" name="snippets" upperBound="-1"

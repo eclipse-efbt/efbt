@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="report_based_report_based_functional_domain_breakdown" nsURI="http://www.eclipse.org/report_based_report_based_functional_domain_breakdown"
+    nsPrefix="report_based_report_based_functional_domain_breakdown">
+  <eClassifiers xsi:type="ecore:EClass" name="ReportCellCreationFunctionalityModule"
+      eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.functionality_breakdown/model/functionality_module.ecore#//OutputCreationFunctionalityModule">
+    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+      <details key="name" value="ReportCellCreationFunctionalityModule"/>
+      <details key="kind" value="elementOnly"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A FunctionalityModule which represents the calculation of report cells."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reportCells" upperBound="-1"
+        eType="ecore:EClass ../../org.eclipse.efbt.oa4rtt.model.report_structures/model/report_structures.ecore#//RegReportCell"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ReportBasedFunctionalityModuleModule"
+      eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.functionality_breakdown/model/functionality_module.ecore#//FunctionalityModuleModule"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ReportBasedParallelFunctionalityModule"
+      eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.functionality_breakdown/model/functionality_module.ecore#//ParallelFunctionalityModule"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ReportBasedScenarioSetFunctionalityModule"
+      eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.functionality_breakdown/model/functionality_module.ecore#//ScenarioSetFunctionalityModule"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ReportBasedSerialFunctionalityModule"
+      eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.functionality_breakdown/model/functionality_module.ecore#//SerialFunctionalityModule"/>
+</ecore:EPackage>

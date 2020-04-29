@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Output_data_sets
+Bundle-SymbolicName: org.eclipse.efbt.oa4rtt.model.output_data_sets
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: org.eclipse.efbt.oa4rtt.model.output_data_sets
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

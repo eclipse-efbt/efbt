@@ -2,19 +2,21 @@ package org.eclipse.efbt.oa4rtt.component.execution_environments.java_interface;
 
 import java.util.List;
 
-import column_structures.ColumnStructureModule;
-import report_structures.RegReportModule;
-import executable_logic.ExecutableLogicModule;
-import execution_environments.TestExecutionEnvironment;
+
+
+
+import execution_environments.TestExecutionEnvironmentModule;
+
 
 public interface ExecutionEnvironment {
 	
-	public void createNewExecutionEnvironment(ColumnStructureModule csModule,
-			RegReportModule rrModule,
+	/**public void createNewExecutionEnvironmentModule(InputDatastructureModule idsModule,
+			OutputDataStructureModule odsModule,
 			ExecutableLogicModule elModule,
-			String version);
+			String version);*/
 	
-	public TestExecutionEnvironment getTestExecutionEnvironment(String version);
 	
-	public List<TestExecutionEnvironment> getTestExecutionEnvironments();
+	public TestExecutionEnvironmentModule getTestExecutionEnvironment(String version);
+	
+	public List<TestExecutionEnvironmentModule> getTestExecutionEnvironmentModules();
 }

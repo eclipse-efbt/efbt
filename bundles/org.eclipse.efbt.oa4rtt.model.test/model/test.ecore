@@ -15,7 +15,8 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="This class represents and executed test"/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="actualResults" eType="#//TestResult">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="actualResults" eType="#//Result"
+        containment="true">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="attribute"/>
         <details key="name" value="actualResults"/>
@@ -43,9 +44,9 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="testEnvironmentUsed" eType="ecore:EClass ../../org.eclipse.efbt.oa4rtt.model.execution_environments/model/execution_environments.ecore#//TestExecutionEnvironment"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="test" eType="#//Test"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expectedResults" eType="#//TestResult"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="testRun" eType="#//TestRun"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="test" eType="#//E2ETest"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expectedResults" eType="#//Result"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Result"/>
   <eClassifiers xsi:type="ecore:EClass" name="ReportCellResults" eSuperTypes="#//Result">
@@ -68,15 +69,6 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TestResult">
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="TestResult"/>
-      <details key="kind" value="elementOnly"/>
-    </eAnnotations>
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="This class represents the actual resut of a test, so it can be compared to expected results"/>
-    </eAnnotations>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DataSetResults" eSuperTypes="#//Result">
     <eStructuralFeatures xsi:type="ecore:EReference" name="expectedResults" upperBound="-1"
         eType="ecore:EClass ../../org.eclipse.efbt.oa4rtt.model.column_structured_data/model/column_structured_data.ecore#//ColumnStructuredData"
@@ -90,35 +82,24 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="E2ETest" eSuperTypes="#//Test">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="testDefinition" eType="ecore:EClass ../../org.eclipse.efbt.oa4rtt.model.test_definition/model/test_definition.ecore#//E2ETestDefinition"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="inputData" eType="ecore:EClass test_input_data.ecore#//TestInputData"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expectedResults" eType="#//Result"
+        containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Test">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="testDefinition" eType="ecore:EClass ../../org.eclipse.efbt.oa4rtt.model.test_definitions/model/test_definition.ecore#//TestDefinition"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="inputData" eType="ecore:EClass test_input_data.ecore#//TestInputData"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expectedResults" eType="#//TestResult"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="testExecution" eType="#//TestExecution"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TestPlan"/>
-  <eClassifiers xsi:type="ecore:EClass" name="TestModule" eSuperTypes="#//Test ../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.ecore#//Module">
+  <eClassifiers xsi:type="ecore:EClass" name="TestModule" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.ecore#//Module">
     <eStructuralFeatures xsi:type="ecore:EReference" name="tests" upperBound="-1"
-        eType="#//Test" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TestExecution">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="testEnvironment" eType="ecore:EClass ../../org.eclipse.efbt.oa4rtt.model.execution_environments/model/execution_environments.ecore#//TestExecutionEnvironment"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="testPlan" eType="#//TestPlan"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TestRun">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="testExecution" eType="#//TestExecution"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="timeRun" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TestRunModule" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.ecore#//Module">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="testRuns" upperBound="-1"
-        eType="#//TestRun" containment="true"/>
+        eType="#//E2ETest" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="executionEnvironment" eType="ecore:EClass ../../org.eclipse.efbt.oa4rtt.model.execution_environments/model/execution_environments.ecore#//TestExecutionEnvironment"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ExecutedTestModule" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.ecore#//Module">
     <eStructuralFeatures xsi:type="ecore:EReference" name="executedTests" upperBound="-1"
         eType="#//ExecutedTest" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TestExecutionModule" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.ecore#//Module">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="testExecutions" upperBound="-1"
-        eType="#//TestExecution" containment="true"/>
   </eClassifiers>
 </ecore:EPackage>

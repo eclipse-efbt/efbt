@@ -3,7 +3,7 @@
     xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.oa4rtt.model.test/src" modelPluginID="org.eclipse.efbt.oa4rtt.model.test"
     modelName="Test" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     importerID="org.eclipse.emf.importer.ecore" complianceLevel="8.0" copyrightFields="false"
-    usedGenPackages="../../org.eclipse.efbt.oa4rtt.model.column_structured_data/model/column_structured_data.genmodel#//base_column_structured_data ../../org.eclipse.efbt.oa4rtt.model.column_structured_data/model/column_structured_data.genmodel#//column_structured_data ../../org.eclipse.efbt.oa4rtt.model.column_structures/model/column_structures.genmodel#//column_structures ../../org.eclipse.efbt.oa4rtt.model.executablelogic/model/executable_logic.genmodel#//executable_logic ../../org.eclipse.efbt.oa4rtt.model.execution_environments/model/execution_environments.genmodel#//execution_environments ../../org.eclipse.efbt.oa4rtt.model.functional_breakdown/model/functional_breakdown.genmodel#//functional_module ../../org.eclipse.efbt.oa4rtt.model.functional_breakdown/model/functional_breakdown.genmodel#//scenarios ../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.oa4rtt.model.functions/model/oa4rttfunctions.genmodel#//oa4rttfunctions ../../org.eclipse.efbt.oa4rtt.model.regulatory_text/model/regulatory_text.genmodel#//requirements_text ../../org.eclipse.efbt.oa4rtt.model.report_structures/model/report_structures.genmodel#//report_structures ../../org.eclipse.efbt.oa4rtt.model.requirements_environments/model/requirements_environments.genmodel#//requirements_environments ../../org.eclipse.efbt.oa4rtt.model.spreadsheet_lineage/model/spreadsheet_lineage.genmodel#//cell_transformation_logic ../../org.eclipse.efbt.oa4rtt.model.spreadsheet_lineage/model/spreadsheet_lineage.genmodel#//data_lineage ../../org.eclipse.efbt.oa4rtt.model.test_definitions/model/test_definitions.genmodel#//test_definition"
+    usedGenPackages="../../org.eclipse.efbt.oa4rtt.model.column_structured_data/model/column_structured_data.genmodel#//base_column_structured_data ../../org.eclipse.efbt.oa4rtt.model.column_structured_data/model/column_structured_data.genmodel#//column_structured_data ../../org.eclipse.efbt.oa4rtt.model.column_structures/model/column_structures.genmodel#//column_structures ../../org.eclipse.efbt.oa4rtt.model.execution_environments/model/execution_environments.genmodel#//execution_environments ../../org.eclipse.efbt.oa4rtt.model.input_data_structures/model/input_data_structures.genmodel#//input_data_structures ../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.oa4rtt.model.functions/model/oa4rttfunctions.genmodel#//oa4rttfunctions ../../org.eclipse.efbt.oa4rtt.model.output_data_structures/model/output_data_structures.genmodel#//output_data_structures ../../org.eclipse.efbt.oa4rtt.model.report_structures/model/report_structures.genmodel#//report_structures ../../org.eclipse.efbt.oa4rtt.model.requirements_text/model/requirements_text.genmodel#//requirements_text ../../org.eclipse.efbt.oa4rtt.model.spreadsheet_lineage/model/spreadsheet_lineage.genmodel#//cell_transformation_logic ../../org.eclipse.efbt.oa4rtt.model.spreadsheet_lineage/model/spreadsheet_lineage.genmodel#//data_lineage ../../org.eclipse.efbt.oa4rtt.model.test_definition/model/test_definition.genmodel#//test_definition"
     operationReflection="true" importOrganizing="true">
   <foreignModel>test_input_data.ecore</foreignModel>
   <foreignModel>test_review.ecore</foreignModel>
@@ -12,9 +12,8 @@
   <genPackages prefix="Test_input_data" resource="XML" disposableProviderFactory="true"
       ecorePackage="test_input_data.ecore#/">
     <genClasses ecoreClass="test_input_data.ecore#//StructuredFile">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test_input_data.ecore#//StructuredFile/fileSchema"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute test_input_data.ecore#//StructuredFile/fileLocation"/>
     </genClasses>
-    <genClasses ecoreClass="test_input_data.ecore#//StructuredFileSchema"/>
     <genClasses ecoreClass="test_input_data.ecore#//InputDataModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_input_data.ecore#//InputDataModule/inputData"/>
     </genClasses>
@@ -29,7 +28,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_input_data.ecore#//TestColumnStructuredData/sourceTableData"/>
     </genClasses>
     <genClasses ecoreClass="test_input_data.ecore#//TestStrucuredFileData">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test_input_data.ecore#//TestStrucuredFileData/testFileData"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_input_data.ecore#//TestStrucuredFileData/testFileData"/>
     </genClasses>
     <genClasses ecoreClass="test_input_data.ecore#//UsefulInputDataSnippetsModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_input_data.ecore#//UsefulInputDataSnippetsModule/snippets"/>
@@ -62,48 +61,34 @@
   </genPackages>
   <genPackages prefix="Test" resource="XML" disposableProviderFactory="true" ecorePackage="test.ecore#/">
     <genClasses ecoreClass="test.ecore#//ExecutedTest">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test.ecore#//ExecutedTest/actualResults"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test.ecore#//ExecutedTest/actualResults"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute test.ecore#//ExecutedTest/testCompleted"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute test.ecore#//ExecutedTest/testPassed"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test.ecore#//ExecutedTest/testEnvironmentUsed"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test.ecore#//ExecutedTest/test"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test.ecore#//ExecutedTest/expectedResults"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test.ecore#//ExecutedTest/testRun"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test.ecore#//ExecutedTest/expectedResults"/>
     </genClasses>
     <genClasses ecoreClass="test.ecore#//Result"/>
     <genClasses ecoreClass="test.ecore#//ReportCellResults">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test.ecore#//ReportCellResults/reportCellValues"/>
     </genClasses>
-    <genClasses ecoreClass="test.ecore#//TestResult"/>
     <genClasses ecoreClass="test.ecore#//DataSetResults">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test.ecore#//DataSetResults/expectedResults"/>
     </genClasses>
-    <genClasses ecoreClass="test.ecore#//Test">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test.ecore#//Test/testDefinition"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test.ecore#//Test/inputData"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test.ecore#//Test/expectedResults"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test.ecore#//Test/testExecution"/>
+    <genClasses ecoreClass="test.ecore#//E2ETest">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test.ecore#//E2ETest/testDefinition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test.ecore#//E2ETest/inputData"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test.ecore#//E2ETest/expectedResults"/>
     </genClasses>
-    <genClasses ecoreClass="test.ecore#//TestPlan"/>
+    <genClasses ecoreClass="test.ecore#//Test">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute test.ecore#//Test/name"/>
+    </genClasses>
     <genClasses ecoreClass="test.ecore#//TestModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test.ecore#//TestModule/tests"/>
-    </genClasses>
-    <genClasses ecoreClass="test.ecore#//TestExecution">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test.ecore#//TestExecution/testEnvironment"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test.ecore#//TestExecution/testPlan"/>
-    </genClasses>
-    <genClasses ecoreClass="test.ecore#//TestRun">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test.ecore#//TestRun/testExecution"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute test.ecore#//TestRun/timeRun"/>
-    </genClasses>
-    <genClasses ecoreClass="test.ecore#//TestRunModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test.ecore#//TestRunModule/testRuns"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test.ecore#//TestModule/executionEnvironment"/>
     </genClasses>
     <genClasses ecoreClass="test.ecore#//ExecutedTestModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test.ecore#//ExecutedTestModule/executedTests"/>
-    </genClasses>
-    <genClasses ecoreClass="test.ecore#//TestExecutionModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test.ecore#//TestExecutionModule/testExecutions"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>
