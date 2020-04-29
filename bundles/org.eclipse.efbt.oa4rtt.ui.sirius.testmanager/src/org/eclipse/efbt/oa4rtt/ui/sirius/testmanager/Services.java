@@ -6,9 +6,9 @@ import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
-import functional_module.FunctionalModule;
-import functional_module.ScenarioSetFunctionalModule;
-import functional_module.SerialFunctionalModule;
+import functionality_module.FunctionalityModule;
+import functionality_module.ScenarioSetFunctionalityModule;
+import functionality_module.SerialFunctionalityModule;
 
 /**
  * The services class used by VSM.
@@ -23,15 +23,15 @@ public class Services {
       return self;
     }
     
-    public EList<FunctionalModule> getPreviousFunctionalModule(FunctionalModule self) {
+    public EList<FunctionalityModule> getPreviousFunctionalModule(FunctionalityModule self) {
 
-    	EList<FunctionalModule> list = new BasicEList<FunctionalModule>();
+    	EList<FunctionalityModule> list = new BasicEList<FunctionalityModule>();
         EObject container = self.eContainer();
 
         boolean addIt = false;
         if (container != null
-            && ((container instanceof SerialFunctionalModule) || 
-                container instanceof ScenarioSetFunctionalModule)) 
+            && ((container instanceof SerialFunctionalityModule) || 
+                container instanceof ScenarioSetFunctionalityModule)) 
           //why do we include ScenarioSetFunctionalModule in the if statement, 
           // there may be a good reason but should  check.
         {
@@ -40,7 +40,7 @@ public class Services {
             EObject eObject = (EObject) iterator.next();
 
             if (addIt) {
-              list.add((FunctionalModule) eObject);
+              list.add((FunctionalityModule) eObject);
               addIt = false;
             }
             if (eObject == self)
