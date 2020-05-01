@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Java_interface
+Bundle-SymbolicName: org.eclipse.efbt.aorta.component.technical_specification_breakdown.java_interface
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: org.eclipse.efbt.aorta.component.technical_specification_breakdown.java_interface
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.eclipse.efbt.aorta.model.technical_specification_breakdown;bundle-version="1.0.0",
+ org.eclipse.efbt.aorta.component.output_data_structures.java_interface;bundle-version="1.0.0"
+Export-Package: org.eclipse.efbt.aorta.component.technical_specification_breakdown.java_interface

@@ -7,7 +7,7 @@
   <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
     <details key="documentation" value="This Package contains the Modules comtaining SMCubes Mappings"/>
   </eAnnotations>
-  <eClassifiers xsi:type="ecore:EClass" name="MappingDefinitionModule" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.ecore#//Module">
+  <eClassifiers xsi:type="ecore:EClass" name="MappingDefinitionModule" eSuperTypes="../../org.eclipse.efbt.aorta.model.module_management/model/module_management.ecore#//Module">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A Module containing SMCubes MappingDefintitions"/>
     </eAnnotations>
@@ -18,7 +18,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CubeMappingModule" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.ecore#//Module">
+  <eClassifiers xsi:type="ecore:EClass" name="CubeMappingModule" eSuperTypes="../../org.eclipse.efbt.aorta.model.module_management/model/module_management.ecore#//Module">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A Module containing SMCubes CubeMappings"/>
     </eAnnotations>
@@ -29,7 +29,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="MemberMappingModule" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.ecore#//Module">
+  <eClassifiers xsi:type="ecore:EClass" name="MemberMappingModule" eSuperTypes="../../org.eclipse.efbt.aorta.model.module_management/model/module_management.ecore#//Module">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A Module containing SMCubes MemberMappings"/>
     </eAnnotations>
@@ -40,7 +40,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="VariableMappingModule" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.ecore#//Module">
+  <eClassifiers xsi:type="ecore:EClass" name="VariableMappingModule" eSuperTypes="../../org.eclipse.efbt.aorta.model.module_management/model/module_management.ecore#//Module">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A Module containing SMCubes VariableMappings"/>
     </eAnnotations>

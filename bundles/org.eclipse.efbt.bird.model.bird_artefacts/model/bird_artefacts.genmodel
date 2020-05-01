@@ -3,7 +3,7 @@
     xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.bird.model.bird_artefacts/src"
     modelPluginID="org.eclipse.efbt.bird.model.bird_artefacts" modelName="Bird_artefacts"
     rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" importerID="org.eclipse.emf.importer.ecore"
-    complianceLevel="8.0" copyrightFields="false" usedGenPackages="../../org.eclipse.efbt.oa4rtt.model.column_structures/model/column_structures.genmodel#//column_structures ../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.oa4rtt.model.report_structures/model/report_structures.genmodel#//report_structures ../../org.eclipse.efbt.oa4rtt.model.output_data_structures/model/output_data_structures.genmodel#//output_data_structures ../../org.eclipse.efbt.oa4rtt.model.input_data_structures/model/input_data_structures.genmodel#//input_data_structures"
+    complianceLevel="8.0" copyrightFields="false" usedGenPackages="../../org.eclipse.efbt.aorta.model.column_structures/model/column_structures.genmodel#//column_structures ../../org.eclipse.efbt.aorta.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.aorta.model.report_structures/model/report_structures.genmodel#//report_structures ../../org.eclipse.efbt.aorta.model.output_data_structures/model/output_data_structures.genmodel#//output_data_structures ../../org.eclipse.efbt.aorta.model.input_data_structures/model/input_data_structures.genmodel#//input_data_structures"
     operationReflection="true" importOrganizing="true">
   <foreignModel>bird_model.ecore</foreignModel>
   <foreignModel>core.ecore</foreignModel>
