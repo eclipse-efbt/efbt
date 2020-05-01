@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="report_structures" nsURI="http://www.eclipse.org/report_structures"
+    nsPrefix="report_structures">
+  <eClassifiers xsi:type="ecore:EClass" name="RegReportCell" eSuperTypes="../../org.eclipse.efbt.aorta.model.output_data_structures/model/output_data_structures.ecore#//OutputDataStructure">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RegReportCellValue">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cell" eType="#//RegReportCell"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RegReport">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cells" upperBound="-1"
+        eType="#//RegReportCell" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RegReportModule" eSuperTypes="../../org.eclipse.efbt.aorta.model.output_data_structures/model/output_data_structures.ecore#//OutputDataStructureModule">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="regReports" upperBound="-1"
+        eType="#//RegReport" containment="true"/>
+  </eClassifiers>
+</ecore:EPackage>

@@ -265,7 +265,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="MEMBER" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.column_structures/model/column_structures.ecore#//EnumMember">
+  <eClassifiers xsi:type="ecore:EClass" name="MEMBER" eSuperTypes="../../org.eclipse.efbt.aorta.model.column_structures/model/column_structures.ecore#//EnumMember">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="MEMBER"/>
       <details key="kind" value="empty"/>
@@ -497,7 +497,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="VARIABLE" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.column_structures/model/column_structures.ecore#//Column">
+  <eClassifiers xsi:type="ecore:EClass" name="VARIABLE" eSuperTypes="../../org.eclipse.efbt.aorta.model.column_structures/model/column_structures.ecore#//Column">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="VARIABLE"/>
       <details key="kind" value="empty"/>

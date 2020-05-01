@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="column_structures" nsURI="http://www.eclipse.org/column_structures"
+    nsPrefix="column_structures">
+  <eClassifiers xsi:type="ecore:EClass" name="Column">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="variable_id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="domain" upperBound="-1"
+        eType="#//ColumnDomain"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EnumMember">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="member_id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ColumnStructuredEntity" eSuperTypes="../../org.eclipse.efbt.aorta.model.input_data_structures/model/input_data_structures.ecore#//InputDataStructure">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cube_name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="column" upperBound="-1"
+        eType="#//Column" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ColumnDomain">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="domain_id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="enumMembers" upperBound="-1"
+        eType="#//EnumMember" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isEnumerated" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dataType" eType="#//ColumnDataType"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ColumnStructureModule" eSuperTypes="../../org.eclipse.efbt.aorta.model.input_data_structures/model/input_data_structures.ecore#//InputDatastructureModule">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="columnStructures" upperBound="-1"
+        eType="#//ColumnStructuredEntity" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="columnDomains" upperBound="-1"
+        eType="#//ColumnDomain" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ColumnDataType">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+</ecore:EPackage>

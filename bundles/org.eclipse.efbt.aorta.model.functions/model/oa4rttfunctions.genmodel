@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.aorta.model.functions/src" modelPluginID="org.eclipse.efbt.aorta.model.functions"
+    modelName="aortafunctions" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="8.0" copyrightFields="false"
+    usedGenPackages="../../org.eclipse.efbt.aorta.model.column_structured_data/model/column_structured_data.genmodel#//column_structured_data ../../org.eclipse.efbt.aorta.model.column_structures/model/column_structures.genmodel#//column_structures ../../org.eclipse.efbt.aorta.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.aorta.model.input_data_structures/model/input_data_structures.genmodel#//input_data_structures"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>aortafunctions.ecore</foreignModel>
+  <genPackages prefix="aortafunctions" resource="XML" disposableProviderFactory="true"
+      ecorePackage="aortafunctions.ecore#/">
+    <genClasses ecoreClass="aortafunctions.ecore#//AggregateFunction">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aortafunctions.ecore#//AggregateFunction/functionSpec"/>
+    </genClasses>
+    <genClasses ecoreClass="aortafunctions.ecore#//AggregateFunctionSpec"/>
+    <genClasses ecoreClass="aortafunctions.ecore#//BasicFunction">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aortafunctions.ecore#//BasicFunction/functionSpec"/>
+    </genClasses>
+    <genClasses ecoreClass="aortafunctions.ecore#//BasicFunctionSpec">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aortafunctions.ecore#//BasicFunctionSpec/isInfix"/>
+    </genClasses>
+    <genClasses ecoreClass="aortafunctions.ecore#//BooleanFunction"/>
+    <genClasses ecoreClass="aortafunctions.ecore#//CellsParameter">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aortafunctions.ecore#//CellsParameter/cells"/>
+    </genClasses>
+    <genClasses ecoreClass="aortafunctions.ecore#//Function">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aortafunctions.ecore#//Function/parameters"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aortafunctions.ecore#//Function/name"/>
+    </genClasses>
+    <genClasses ecoreClass="aortafunctions.ecore#//FunctionSpec">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aortafunctions.ecore#//FunctionSpec/parameterSpecs"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aortafunctions.ecore#//FunctionSpec/functionalName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aortafunctions.ecore#//FunctionSpec/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aortafunctions.ecore#//FunctionSpec/sqlName"/>
+    </genClasses>
+    <genClasses ecoreClass="aortafunctions.ecore#//FunctionSpecModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aortafunctions.ecore#//FunctionSpecModule/functionSpecs"/>
+    </genClasses>
+    <genClasses ecoreClass="aortafunctions.ecore#//ParamaterSpec">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aortafunctions.ecore#//ParamaterSpec/name"/>
+    </genClasses>
+    <genClasses ecoreClass="aortafunctions.ecore#//Parameter"/>
+  </genPackages>
+</genmodel:GenModel>

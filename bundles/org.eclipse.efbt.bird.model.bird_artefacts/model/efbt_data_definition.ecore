@@ -8,7 +8,7 @@
   <eAnnotations source="license">
     <details key="license" value="Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"/>
   </eAnnotations>
-  <eClassifiers xsi:type="ecore:EClass" name="CombinationModule" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.ecore#//Module">
+  <eClassifiers xsi:type="ecore:EClass" name="CombinationModule" eSuperTypes="../../org.eclipse.efbt.aorta.model.module_management/model/module_management.ecore#//Module">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A Module storing a list of Combinations, and a list of related Combination Items, and a list of CUBE_TO_COMBINATIONs"/>
     </eAnnotations>
@@ -48,7 +48,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CubeModule" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.ecore#//Module">
+  <eClassifiers xsi:type="ecore:EClass" name="CubeModule" eSuperTypes="../../org.eclipse.efbt.aorta.model.module_management/model/module_management.ecore#//Module">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A Module storing a list of CUBEs and associated CUBE_STRUCTURES and CUBE_STRUCTURE_ITEMS"/>
     </eAnnotations>
@@ -87,7 +87,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="DomainModule" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.ecore#//Module">
+  <eClassifiers xsi:type="ecore:EClass" name="DomainModule" eSuperTypes="../../org.eclipse.efbt.aorta.model.module_management/model/module_management.ecore#//Module">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A Module storing a list of Domains"/>
     </eAnnotations>
@@ -106,7 +106,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="MemberHierarchyModule" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.ecore#//Module">
+  <eClassifiers xsi:type="ecore:EClass" name="MemberHierarchyModule" eSuperTypes="../../org.eclipse.efbt.aorta.model.module_management/model/module_management.ecore#//Module">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A Module storing a list of MemberHierarchies and MemberHierarchiesNodes"/>
     </eAnnotations>
@@ -135,7 +135,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="MemberModule" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.ecore#//Module">
+  <eClassifiers xsi:type="ecore:EClass" name="MemberModule" eSuperTypes="../../org.eclipse.efbt.aorta.model.module_management/model/module_management.ecore#//Module">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A Module storing a list of Members"/>
     </eAnnotations>
@@ -154,7 +154,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="VariableModule" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.ecore#//Module">
+  <eClassifiers xsi:type="ecore:EClass" name="VariableModule" eSuperTypes="../../org.eclipse.efbt.aorta.model.module_management/model/module_management.ecore#//Module">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A Module containing a list of variables"/>
     </eAnnotations>
