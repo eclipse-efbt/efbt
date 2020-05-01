@@ -3,7 +3,7 @@
     xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.oa4rtt.model.functions/src" modelPluginID="org.eclipse.efbt.oa4rtt.model.functions"
     modelName="Oa4rttfunctions" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     importerID="org.eclipse.emf.importer.ecore" complianceLevel="8.0" copyrightFields="false"
-    usedGenPackages="../../org.eclipse.efbt.oa4rtt.model.column_structured_data/model/column_structured_data.genmodel#//column_structured_data ../../org.eclipse.efbt.oa4rtt.model.column_structures/model/column_structures.genmodel#//column_structures ../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.genmodel#//module_management"
+    usedGenPackages="../../org.eclipse.efbt.oa4rtt.model.column_structured_data/model/column_structured_data.genmodel#//column_structured_data ../../org.eclipse.efbt.oa4rtt.model.column_structures/model/column_structures.genmodel#//column_structures ../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.oa4rtt.model.input_data_structures/model/input_data_structures.genmodel#//input_data_structures"
     operationReflection="true" importOrganizing="true">
   <foreignModel>oa4rttfunctions.ecore</foreignModel>
   <genPackages prefix="Oa4rttfunctions" resource="XML" disposableProviderFactory="true"
