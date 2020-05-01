@@ -4,22 +4,23 @@
     nsPrefix="structural_change_test_definitions">
   <eClassifiers xsi:type="ecore:EClass" name="StructuralChangeMapping">
     <eStructuralFeatures xsi:type="ecore:EReference" name="inputStructures" upperBound="-1"
-        eType="#//InputStructureAndSubtypes"/>
+        eType="#//InputStructureSubtypes"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="outputDataStructures" upperBound="-1"
         eType="ecore:EClass ../../org.eclipse.efbt.oa4rtt.model.output_data_structures/model/output_data_structures.ecore#//OutputDataStructure"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="scenarios" eType="ecore:EClass ../../org.eclipse.efbt.oa4rtt.model.functionality_breakdown/model/scenarios.ecore#//ScenarioSet"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="StructuralChangeTestDefinition" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.test_definition/model/test_definition.ecore#//E2ETestDefinition">
     <eStructuralFeatures xsi:type="ecore:EReference" name="structuralChangeMapping"
         eType="#//StructuralChangeMapping"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="scenario" eType="ecore:EClass ../../org.eclipse.efbt.oa4rtt.model.functionality_breakdown/model/scenarios.ecore#//Scenario"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="InputStructureAndSubtypes">
+  <eClassifiers xsi:type="ecore:EClass" name="InputStructureSubtypes">
     <eStructuralFeatures xsi:type="ecore:EReference" name="inputStructure" eType="ecore:EClass ../../org.eclipse.efbt.oa4rtt.model.input_data_structures/model/input_data_structures.ecore#//InputDataStructure"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="subTypes" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.efbt.oa4rtt.model.input_data_structures/model/input_data_structures.ecore#//StructureSubtype"
-        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="subTypeName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="StructuralChangeMappingModule" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.ecore#//Module">
     <eStructuralFeatures xsi:type="ecore:EReference" name="mappings" upperBound="-1"
@@ -30,4 +31,5 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="testDefinitions" upperBound="-1"
         eType="#//StructuralChangeTestDefinition" containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InputStructureSubtypesModule" eSuperTypes="../../org.eclipse.efbt.oa4rtt.model.module_management/model/module_management.ecore#//Module"/>
 </ecore:EPackage>

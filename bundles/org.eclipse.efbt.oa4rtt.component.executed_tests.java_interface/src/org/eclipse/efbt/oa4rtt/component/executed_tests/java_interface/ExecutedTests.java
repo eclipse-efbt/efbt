@@ -15,6 +15,6 @@ public interface ExecutedTests {
 	public ExecutedTestModule  getModuleForTestModuleAndExecutionEnvironment(TestExecutionEnvironmentModule testEnvironment,
 			TestModule testModule);
 	public void createNewExecutedTestsModule(TestExecutionEnvironmentModule testEnvironment,
-			TestModule testModule);
+			TestModule testModule, String version);
 
 }

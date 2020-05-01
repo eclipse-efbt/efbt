@@ -11,6 +11,7 @@
     <genClasses ecoreClass="execution_environments.ecore#//TestExecutionEnvironment">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference execution_environments.ecore#//TestExecutionEnvironment/inputStructures"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference execution_environments.ecore#//TestExecutionEnvironment/outputStructuresModule"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute execution_environments.ecore#//TestExecutionEnvironment/name"/>
     </genClasses>
     <genClasses ecoreClass="execution_environments.ecore#//TestExecutionEnvironmentModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference execution_environments.ecore#//TestExecutionEnvironmentModule/testexecutionEnvironments"/>
