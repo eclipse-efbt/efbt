@@ -97,7 +97,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//MEMBER/description"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference core.ecore#//MEMBER/domain_id"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference core.ecore#//MEMBER/maintenance_agency_id"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//MEMBER/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//MEMBER/member_id"/>
     </genClasses>
     <genClasses ecoreClass="core.ecore#//MEMBER_HIERARCHY">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//MEMBER_HIERARCHY/code"/>
@@ -140,8 +140,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//VARIABLE/description"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference core.ecore#//VARIABLE/domain_id"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference core.ecore#//VARIABLE/maintenance_agency_id"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//VARIABLE/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//VARIABLE/primary_concept"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//VARIABLE/variable_id"/>
     </genClasses>
     <genClasses ecoreClass="core.ecore#//VARIABLE_SET">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//VARIABLE_SET/code"/>

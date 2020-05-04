@@ -2,18 +2,19 @@
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="bdd_test_definitions" nsURI="http://www.eclipse.org/bdd_test_definitions"
     nsPrefix="bdd_test_definitions">
-  <eClassifiers xsi:type="ecore:EClass" name="BDDTestDefinition" eSuperTypes="../../org.eclipse.efbt.aorta.model.test_definition/model/test_definition.ecore#//TestDefinition">
+  <eClassifiers xsi:type="ecore:EClass" name="BDDTestDefinition" eSuperTypes="../../org.eclipse.efbt.aorta.model.test_definition/model/test_definition.ecore#//E2ETestDefinition">
     <eStructuralFeatures xsi:type="ecore:EReference" name="givenClauses" upperBound="-1"
         eType="#//GivenClause" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="whenClauses" upperBound="-1"
         eType="#//WhenClause" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="thenClauses" eType="#//ThenClause"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="thenClauses" eType="#//ThenClause"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GivenClause"/>
   <eClassifiers xsi:type="ecore:EClass" name="WhenClause"/>
   <eClassifiers xsi:type="ecore:EClass" name="ThenClause"/>
   <eClassifiers xsi:type="ecore:EClass" name="GivenInputType" eSuperTypes="#//GivenClause">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="inputType" eType="#//InputType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="inputType" eType="ecore:EClass ../../org.eclipse.efbt.aorta.model.requirements_artefacts/model/requirments_artefacts.ecore#//InputType"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="WhenReportIsRun" eSuperTypes="#//WhenClause">
     <eStructuralFeatures xsi:type="ecore:EReference" name="report" eType="ecore:EClass ../../org.eclipse.efbt.aorta.model.report_structures/model/report_structures.ecore#//RegReport"/>
@@ -25,7 +26,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="regulatoryText" upperBound="-1"
         eType="ecore:EClass ../../org.eclipse.efbt.aorta.model.requirements_text/model/requirements_text.ecore#//TitledRequirementsSection"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="InputType">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  <eClassifiers xsi:type="ecore:EClass" name="BDDTestDefinitionModule" eSuperTypes="../../org.eclipse.efbt.aorta.model.module_management/model/module_management.ecore#//Module">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="testDefinitions" upperBound="-1"
+        eType="#//BDDTestDefinition" containment="true"/>
   </eClassifiers>
 </ecore:EPackage>

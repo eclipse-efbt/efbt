@@ -9,25 +9,27 @@
   <genPackages prefix="Column_structures" resource="XML" disposableProviderFactory="true"
       ecorePackage="column_structures.ecore#/">
     <genClasses ecoreClass="column_structures.ecore#//Column">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_structures.ecore#//Column/variable_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_structures.ecore#//Column/name"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference column_structures.ecore#//Column/domain"/>
     </genClasses>
     <genClasses ecoreClass="column_structures.ecore#//EnumMember">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_structures.ecore#//EnumMember/member_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_structures.ecore#//EnumMember/name"/>
     </genClasses>
     <genClasses ecoreClass="column_structures.ecore#//ColumnStructuredEntity">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_structures.ecore#//ColumnStructuredEntity/cube_name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_structures.ecore#//ColumnStructuredEntity/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference column_structures.ecore#//ColumnStructuredEntity/column"/>
     </genClasses>
     <genClasses ecoreClass="column_structures.ecore#//ColumnDomain">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_structures.ecore#//ColumnDomain/domain_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_structures.ecore#//ColumnDomain/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference column_structures.ecore#//ColumnDomain/enumMembers"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_structures.ecore#//ColumnDomain/isEnumerated"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference column_structures.ecore#//ColumnDomain/dataType"/>
     </genClasses>
     <genClasses ecoreClass="column_structures.ecore#//ColumnStructureModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference column_structures.ecore#//ColumnStructureModule/columnStructures"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference column_structures.ecore#//ColumnStructureModule/columnDomains"/>
+    </genClasses>
+    <genClasses ecoreClass="column_structures.ecore#//ColumnDomainModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference column_structures.ecore#//ColumnDomainModule/columnDomains"/>
     </genClasses>
     <genClasses ecoreClass="column_structures.ecore#//ColumnDataType">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_structures.ecore#//ColumnDataType/name"/>

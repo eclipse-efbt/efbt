@@ -13,7 +13,10 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute module_management.ecore#//Module/license"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute module_management.ecore#//Module/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute module_management.ecore#//Module/version"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute module_management.ecore#//Module/trial"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference module_management.ecore#//Module/longName"/>
+    </genClasses>
+    <genClasses ecoreClass="module_management.ecore#//ModuleLongName">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute module_management.ecore#//ModuleLongName/name"/>
     </genClasses>
     <genClasses ecoreClass="module_management.ecore#//ModuleDependencies">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference module_management.ecore#//ModuleDependencies/theModules"/>
@@ -22,6 +25,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute module_management.ecore#//ModuleDependency/moduleName"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute module_management.ecore#//ModuleDependency/moduleVersion"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference module_management.ecore#//ModuleDependency/theModule"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference module_management.ecore#//ModuleDependency/longName"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>
