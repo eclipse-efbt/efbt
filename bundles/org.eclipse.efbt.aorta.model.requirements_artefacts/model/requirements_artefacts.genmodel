@@ -15,4 +15,4 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirments_artefacts.ecore#//InputType/name"/>
     </genClasses>
   </genPackages>
-</genmodel:GenModel>
+</genmodel:GenModel> 
