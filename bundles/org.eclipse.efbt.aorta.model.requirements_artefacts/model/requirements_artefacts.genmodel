@@ -14,5 +14,14 @@
     <genClasses ecoreClass="requirments_artefacts.ecore#//InputType">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirments_artefacts.ecore#//InputType/name"/>
     </genClasses>
+    <nestedGenPackages prefix="Requirements_artefacts" resource="XML" disposableProviderFactory="true"
+        ecorePackage="requirments_artefacts.ecore#/">
+      <genClasses ecoreClass="requirments_artefacts.ecore#//InputTypeModule">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference requirments_artefacts.ecore#//InputTypeModule/inputTypes"/>
+      </genClasses>
+      <genClasses ecoreClass="requirments_artefacts.ecore#//InputType">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirments_artefacts.ecore#//InputType/name"/>
+      </genClasses>
+    </nestedGenPackages>
   </genPackages>
-</genmodel:GenModel> 
+</genmodel:GenModel>
