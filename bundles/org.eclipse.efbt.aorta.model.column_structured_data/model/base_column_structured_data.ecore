@@ -12,36 +12,20 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Cell data of Rows of BaseCubes"/>
     </eAnnotations>
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="BaseCell"/>
-      <details key="kind" value="empty"/>
-    </eAnnotations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BaseCellWithEnumeratedValue" eSuperTypes="#//BaseCell">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Base Cell data which contains one member of a list of enumerated values (e.g. a currency)"/>
     </eAnnotations>
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="BaseCellWithEnumeratedValue"/>
-      <details key="kind" value="empty"/>
-    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="ecore:EClass ../../org.eclipse.efbt.aorta.model.column_structures/model/column_structures.ecore#//EnumMember">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The member"/>
-      </eAnnotations>
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="value"/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BaseCellWithValue" eSuperTypes="#//BaseCell">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Base Cell data which contains a value (e.g. price)"/>
-    </eAnnotations>
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="BaseCellWithValue"/>
-      <details key="kind" value="empty"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -56,10 +40,6 @@
   <eClassifiers xsi:type="ecore:EClass" name="BaseColumnStructuredData" eSuperTypes="column_structured_data.ecore#//ColumnStructuredData">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Data For BaseCubes as a set of RowData"/>
-    </eAnnotations>
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="BaseColumnStructuredData"/>
-      <details key="kind" value="elementOnly"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rows" upperBound="-1" eType="#//BaseRowData"
         containment="true">
@@ -85,10 +65,6 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Data For Rows of BaseCubes"/>
     </eAnnotations>
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="BaseRowData"/>
-      <details key="kind" value="elementOnly"/>
-    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="cells" upperBound="-1"
         eType="#//BaseCell" containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -103,13 +79,6 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="rowIDToDelete" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="InputData">
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="InputData"/>
-      <details key="kind" value="elementOnly"/>
-    </eAnnotations>
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="InputData for a test"/>
-    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="sourceTableData" ordered="false"
         upperBound="-1" eType="#//BaseColumnStructuredData" containment="true">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">

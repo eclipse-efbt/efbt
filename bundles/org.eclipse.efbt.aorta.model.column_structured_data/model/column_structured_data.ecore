@@ -12,10 +12,6 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Cell data of Rows of Cubes"/>
     </eAnnotations>
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="Cell"/>
-      <details key="kind" value="empty"/>
-    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="cellID" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -40,10 +36,6 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Data For Cubes"/>
     </eAnnotations>
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="ColumnStructuredData"/>
-      <details key="kind" value="empty"/>
-    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -60,9 +52,6 @@
       <details key="name" value="ColumnStructuredDataModule"/>
       <details key="kind" value="elementOnly"/>
     </eAnnotations>
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="a module of ColumnStructuredData"/>
-    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="cubeData" upperBound="-1"
         eType="#//ColumnStructuredData" containment="true">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
@@ -77,10 +66,6 @@
   <eClassifiers xsi:type="ecore:EClass" name="RowData">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Data For Rows of Cubes"/>
-    </eAnnotations>
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="RowData"/>
-      <details key="kind" value="empty"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="rowID" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true">

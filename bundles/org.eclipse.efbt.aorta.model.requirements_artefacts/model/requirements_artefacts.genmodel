@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.aorta.model.requirements_artefacts/src"
+    modelPluginID="org.eclipse.efbt.aorta.model.requirements_artefacts" modelName="Requirements_artefacts"
+    rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="8.0" copyrightFields="false" usedGenPackages="../../org.eclipse.efbt.aorta.model.module_management/model/module_management.genmodel#//module_management"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>requirments_artefacts.ecore</foreignModel>
+  <genPackages prefix="Requirements_artefacts" resource="XML" disposableProviderFactory="true"
+      ecorePackage="requirments_artefacts.ecore#/">
+    <genClasses ecoreClass="requirments_artefacts.ecore#//InputTypeModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference requirments_artefacts.ecore#//InputTypeModule/inputTypes"/>
+    </genClasses>
+    <genClasses ecoreClass="requirments_artefacts.ecore#//InputType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirments_artefacts.ecore#//InputType/name"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

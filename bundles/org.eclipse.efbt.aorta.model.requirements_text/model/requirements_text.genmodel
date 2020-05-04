@@ -16,7 +16,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference requirements_text.ecore#//RequirementsModule/allowedtypes"/>
     </genClasses>
     <genClasses image="false" ecoreClass="requirements_text.ecore#//RequirementsSection">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements_text.ecore#//RequirementsSection/iD"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements_text.ecore#//RequirementsSection/name"/>
     </genClasses>
     <genClasses ecoreClass="requirements_text.ecore#//RequirementsSectionImage">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements_text.ecore#//RequirementsSectionImage/style"/>
@@ -31,7 +31,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements_text.ecore#//RequirementsSectionText/text"/>
     </genClasses>
     <genClasses ecoreClass="requirements_text.ecore#//RequirementType">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements_text.ecore#//RequirementType/requirementType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements_text.ecore#//RequirementType/name"/>
     </genClasses>
     <genClasses ecoreClass="requirements_text.ecore#//TitledRequirementsSection">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference requirements_text.ecore#//TitledRequirementsSection/sections"/>
