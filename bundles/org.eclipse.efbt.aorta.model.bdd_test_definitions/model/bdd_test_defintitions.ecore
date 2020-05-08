@@ -30,4 +30,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="testDefinitions" upperBound="-1"
         eType="#//BDDTestDefinition" containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ThenDataPointsForReportArePopulated"
+      eSuperTypes="#//ThenClause">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="report" eType="ecore:EClass ../../org.eclipse.efbt.aorta.model.report_structures/model/report_structures.ecore#//RegReport"/>
+  </eClassifiers>
 </ecore:EPackage>
