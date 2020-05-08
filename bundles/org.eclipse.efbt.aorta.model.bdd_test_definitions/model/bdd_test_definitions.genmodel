@@ -29,5 +29,8 @@
     <genClasses ecoreClass="bdd_test_defintitions.ecore#//BDDTestDefinitionModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bdd_test_defintitions.ecore#//BDDTestDefinitionModule/testDefinitions"/>
     </genClasses>
+    <genClasses ecoreClass="bdd_test_defintitions.ecore#//ThenDataPointsForReportArePopulated">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bdd_test_defintitions.ecore#//ThenDataPointsForReportArePopulated/report"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>
