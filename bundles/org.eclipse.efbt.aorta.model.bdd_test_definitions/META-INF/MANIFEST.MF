@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Bdd_test_definitions
-Bundle-SymbolicName: org.eclipse.efbt.aorta.model.bdd_test_definitions
-Bundle-Version: 1.0.0.qualifier
-Automatic-Module-Name: org.eclipse.efbt.aorta.model.bdd_test_definitions
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:module_management="http://www.eclipse.org/module_management" xmlns:test="http://www.eclipse.org/test" xmlns:test_review="http://www.eclipse.org/test_review" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="test_review" ecore:package="test_review" targetNamespace="http://www.eclipse.org/test_review">
+  <xsd:import namespace="http://www.eclipse.org/test" schemaLocation="test.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/module_management" schemaLocation="module_management.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/emf/2002/Ecore" schemaLocation="Ecore.xsd"/>
+  <xsd:element ecore:ignore="true" name="User" type="test_review:User"/>
+  <xsd:element ecore:ignore="true" name="UserModule" type="test_review:UserModule"/>
+  <xsd:element ecore:ignore="true" name="TestReviewModule" type="test_review:TestReviewModule"/>
+  <xsd:element ecore:ignore="true" name="TestReview" type="test_review:TestReview"/>
+  <xsd:element ecore:ignore="true" name="TestReviewComments" type="test_review:TestReviewComments"/>
+  <xsd:complexType name="User">
+    <xsd:attribute ecore:id="true" name="userName" type="ecore:EString"/>
+  </xsd:complexType>
+  <xsd:complexType name="UserModule">
+    <xsd:complexContent>
+      <xsd:extension base="module_management:Module">
+        <xsd:sequence>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="users" type="test_review:User"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="TestReviewModule">
+    <xsd:complexContent>
+      <xsd:extension base="module_management:Module">
+        <xsd:sequence>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="testReviews" type="test_review:TestReview"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="TestReview">
+    <xsd:attribute ecore:reference="test_review:User" name="user" type="xsd:anyURI"/>
+    <xsd:attribute ecore:reference="test:Test" name="test" type="xsd:anyURI"/>
+  </xsd:complexType>
+  <xsd:complexType name="TestReviewComments">
+    <xsd:sequence>
+      <xsd:element ecore:unique="true" maxOccurs="unbounded" minOccurs="0" name="comments" nillable="true" type="ecore:EString"/>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>
