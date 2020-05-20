@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:functionality_module="http://www.eclipse.org/functionality_module" xmlns:module_management="http://www.eclipse.org/module_management" xmlns:requirements_based_test_definition="http://www.eclipse.org/requirements_based_test_definition" xmlns:scenarios="http://www.eclipse.org/scenarios" xmlns:test_definition="http://www.eclipse.org/test_definition" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="requirements_based_test_definition" ecore:package="requirements_based_test_definition" targetNamespace="http://www.eclipse.org/requirements_based_test_definition">
+  <xsd:import namespace="http://www.eclipse.org/module_management" schemaLocation="module_management.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/scenarios" schemaLocation="scenarios.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/functionality_module" schemaLocation="functionality_module.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/test_definition" schemaLocation="test_definition.xsd"/>
+  <xsd:element ecore:ignore="true" name="E2ERequirementsBasedTestDefinition" type="requirements_based_test_definition:E2ERequirementsBasedTestDefinition"/>
+  <xsd:element ecore:ignore="true" name="E2ERequirementsBasedTestDefinitionSet" type="requirements_based_test_definition:E2ERequirementsBasedTestDefinitionSet"/>
+  <xsd:element ecore:ignore="true" name="FunctionalRequirementsBasedE2ETestDefinition" type="requirements_based_test_definition:FunctionalRequirementsBasedE2ETestDefinition"/>
+  <xsd:element ecore:ignore="true" name="TechnicalRequirementsBasedE2ETestDefinition" type="requirements_based_test_definition:TechnicalRequirementsBasedE2ETestDefinition"/>
+  <xsd:element ecore:ignore="true" name="TechnicalUnitTestDefinition" type="requirements_based_test_definition:TechnicalUnitTestDefinition"/>
+  <xsd:complexType name="E2ERequirementsBasedTestDefinition">
+    <xsd:complexContent>
+      <xsd:extension base="test_definition:E2ETestDefinition">
+        <xsd:attribute ecore:reference="functionality_module:ReportCellCreationFunctionalityModule" name="outputCreationFunctionalityModule" type="xsd:anyURI"/>
+        <xsd:attribute ecore:reference="functionality_module:ReadDataSourceFunctionalityModule" name="readDataSourceFunctionalityModule" type="xsd:anyURI"/>
+        <xsd:attribute ecore:reference="scenarios:Scenario" name="scenarios">
+          <xsd:annotation>
+            <xsd:documentation>The scenarios to be executed by the test definition.</xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+            <xsd:list itemType="xsd:anyURI"/>
+          </xsd:simpleType>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType ecore:name="E2ERequirementsBasedTestDefinitionModule" name="TestDefinitionModule">
+    <xsd:annotation>
+      <xsd:documentation>A module containing TestDefinitions</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="module_management:Module">
+        <xsd:sequence>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="testDefinitions" type="requirements_based_test_definition:E2ERequirementsBasedTestDefinition">
+            <xsd:annotation>
+              <xsd:documentation>The test definitions in the module.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="E2ERequirementsBasedTestDefinitionSet">
+    <xsd:sequence>
+      <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="testDefinitions" type="requirements_based_test_definition:E2ERequirementsBasedTestDefinition"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="FunctionalRequirementsBasedE2ETestDefinition">
+    <xsd:complexContent>
+      <xsd:extension base="requirements_based_test_definition:E2ERequirementsBasedTestDefinition"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="TechnicalRequirementsBasedE2ETestDefinition">
+    <xsd:complexContent>
+      <xsd:extension base="requirements_based_test_definition:E2ERequirementsBasedTestDefinition"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="TechnicalUnitTestDefinition">
+    <xsd:complexContent>
+      <xsd:extension base="test_definition:UnitTestDefinition">
+        <xsd:attribute ecore:reference="functionality_module:FunctionalityModule" name="functionalityModule" type="xsd:anyURI"/>
+        <xsd:attribute ecore:reference="scenarios:Scenario" name="scenarios">
+          <xsd:simpleType>
+            <xsd:list itemType="xsd:anyURI"/>
+          </xsd:simpleType>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+</xsd:schema>

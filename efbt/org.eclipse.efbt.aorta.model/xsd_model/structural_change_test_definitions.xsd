@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:input_data_structures="http://www.eclipse.org/input_data_structures" xmlns:module_management="http://www.eclipse.org/module_management" xmlns:output_data_structures="http://www.eclipse.org/output_data_structures" xmlns:scenarios="http://www.eclipse.org/scenarios" xmlns:structural_change_test_definitions="http://www.eclipse.org/structural_change_test_definitions" xmlns:test_definition="http://www.eclipse.org/test_definition" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="structural_change_test_definitions" ecore:package="structural_change_test_definitions" targetNamespace="http://www.eclipse.org/structural_change_test_definitions">
+  <xsd:import namespace="http://www.eclipse.org/module_management" schemaLocation="module_management.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/input_data_structures" schemaLocation="input_data_structures.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/test_definition" schemaLocation="test_definition.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/emf/2002/Ecore" schemaLocation="Ecore.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/scenarios" schemaLocation="scenarios.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/output_data_structures" schemaLocation="output_data_structures.xsd"/>
+  <xsd:element ecore:ignore="true" name="StructuralChangeMapping" type="structural_change_test_definitions:StructuralChangeMapping"/>
+  <xsd:element ecore:ignore="true" name="StructuralChangeTestDefinition" type="structural_change_test_definitions:StructuralChangeTestDefinition"/>
+  <xsd:element ecore:ignore="true" name="InputStructureSubtypes" type="structural_change_test_definitions:InputStructureSubtypes"/>
+  <xsd:element ecore:ignore="true" name="StructuralChangeMappingModule" type="structural_change_test_definitions:StructuralChangeMappingModule"/>
+  <xsd:element ecore:ignore="true" name="StructuralChangeTestDefinitionModule" type="structural_change_test_definitions:StructuralChangeTestDefinitionModule"/>
+  <xsd:element ecore:ignore="true" name="InputStructureSubtypesModule" type="structural_change_test_definitions:InputStructureSubtypesModule"/>
+  <xsd:complexType name="StructuralChangeMapping">
+    <xsd:sequence>
+      <xsd:element ecore:resolveProxies="true" minOccurs="0" name="scenarios" type="scenarios:ScenarioSet"/>
+    </xsd:sequence>
+    <xsd:attribute ecore:reference="structural_change_test_definitions:InputStructureSubtypes" name="inputStructures">
+      <xsd:simpleType>
+        <xsd:list itemType="xsd:anyURI"/>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute ecore:reference="output_data_structures:OutputDataStructure" name="outputDataStructures">
+      <xsd:simpleType>
+        <xsd:list itemType="xsd:anyURI"/>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute ecore:id="true" name="name" type="ecore:EString"/>
+  </xsd:complexType>
+  <xsd:complexType name="StructuralChangeTestDefinition">
+    <xsd:complexContent>
+      <xsd:extension base="test_definition:E2ETestDefinition">
+        <xsd:attribute ecore:reference="structural_change_test_definitions:StructuralChangeMapping" name="structuralChangeMapping" type="xsd:anyURI"/>
+        <xsd:attribute ecore:reference="scenarios:Scenario" name="scenario" type="xsd:anyURI"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="InputStructureSubtypes">
+    <xsd:attribute ecore:reference="input_data_structures:InputDataStructure" name="inputStructure" type="xsd:anyURI"/>
+    <xsd:attribute ecore:id="true" name="subTypeName" type="ecore:EString"/>
+  </xsd:complexType>
+  <xsd:complexType name="StructuralChangeMappingModule">
+    <xsd:complexContent>
+      <xsd:extension base="module_management:Module">
+        <xsd:sequence>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="mappings" type="structural_change_test_definitions:StructuralChangeMapping"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="StructuralChangeTestDefinitionModule">
+    <xsd:complexContent>
+      <xsd:extension base="module_management:Module">
+        <xsd:sequence>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="testDefinitions" type="structural_change_test_definitions:StructuralChangeTestDefinition"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="InputStructureSubtypesModule">
+    <xsd:complexContent>
+      <xsd:extension base="module_management:Module"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+</xsd:schema>

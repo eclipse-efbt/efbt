@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:output_data_structures="http://www.eclipse.org/output_data_structures" xmlns:report_structures="http://www.eclipse.org/report_structures" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="report_structures" ecore:package="report_structures" targetNamespace="http://www.eclipse.org/report_structures">
+  <xsd:import namespace="http://www.eclipse.org/emf/2002/Ecore" schemaLocation="Ecore.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/output_data_structures" schemaLocation="output_data_structures.xsd"/>
+  <xsd:element ecore:ignore="true" name="RegReportCell" type="report_structures:RegReportCell"/>
+  <xsd:element ecore:ignore="true" name="RegReportCellValue" type="report_structures:RegReportCellValue"/>
+  <xsd:element ecore:ignore="true" name="RegReport" type="report_structures:RegReport"/>
+  <xsd:element ecore:ignore="true" name="RegReportModule" type="report_structures:RegReportModule"/>
+  <xsd:complexType name="RegReportCell">
+    <xsd:complexContent>
+      <xsd:extension base="output_data_structures:OutputDataStructure">
+        <xsd:attribute ecore:id="true" name="name" type="ecore:EString"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="RegReportCellValue">
+    <xsd:attribute name="value" type="ecore:EString"/>
+    <xsd:attribute ecore:reference="report_structures:RegReportCell" name="cell" type="xsd:anyURI"/>
+  </xsd:complexType>
+  <xsd:complexType name="RegReport">
+    <xsd:sequence>
+      <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="cells" type="report_structures:RegReportCell"/>
+    </xsd:sequence>
+    <xsd:attribute ecore:id="true" name="name" type="ecore:EString"/>
+  </xsd:complexType>
+  <xsd:complexType name="RegReportModule">
+    <xsd:complexContent>
+      <xsd:extension base="output_data_structures:OutputDataStructureModule">
+        <xsd:sequence>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="regReports" type="report_structures:RegReport"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+</xsd:schema>
