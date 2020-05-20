@@ -1,0 +1,19 @@
+dependencies {
+	compile "org.eclipse.emf:org.eclipse.emf.ecore:2.21.0"
+	compile "org.eclipse.emf:org.eclipse.emf.common:2.18.0"
+	compile "org.eclipse.xtext:org.eclipse.xtext:${xtextVersion}"
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['emf-gen']
+        }
+    }
+}
+
+jar {
+	from('.') {
+		include 'plugin.xml', 'plugin.properties'
+	}
+}
