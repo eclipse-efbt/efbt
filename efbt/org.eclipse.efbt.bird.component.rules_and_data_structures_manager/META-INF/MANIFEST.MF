@@ -10,6 +10,4 @@ Export-Package: org.eclipse.efbt.bird.component.rules_and_data_structures_manage
 Require-Bundle: org.apache.commons.logging,
  org.eclipse.xtext.generator;bundle-version="2.19.0",
  org.eclipse.xtext;bundle-version="2.19.0",
- org.eclipse.efbt.aorta.component.input_data_structures.java_interface;bundle-version="1.0.0",
- org.eclipse.efbt.aorta.component.report_structures.java_interface;bundle-version="1.0.0",
- org.eclipse.efbt.bird.model.bird_artefacts;bundle-version="1.0.0"
+ org.eclipse.efbt.bird.model;bundle-version="1.0.0"
