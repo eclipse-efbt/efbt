@@ -17,7 +17,13 @@
         iD="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RegReportModule" eSuperTypes="output_data_structures.ecore#//OutputDataStructureModule">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reportGroups" upperBound="-1"
+        eType="#//ReportGroup" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ReportGroup">
     <eStructuralFeatures xsi:type="ecore:EReference" name="regReports" upperBound="-1"
         eType="#//RegReport" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
   </eClassifiers>
 </ecore:EPackage>

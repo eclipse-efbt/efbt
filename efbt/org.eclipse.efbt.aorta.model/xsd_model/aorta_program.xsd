@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<xsd:schema xmlns:aorta_program="http://www.eclipse.org/aorta_program" xmlns:bdd_test_definitions="http://www.eclipse.org/bdd_test_definitions" xmlns:column_structures="http://www.eclipse.org/column_structures" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:report_structures="http://www.eclipse.org/report_structures" xmlns:requirements_artefacts="http://www.eclipse.org/requirements_artefacts" xmlns:requirements_text="http://www.eclipse.org/requirements_text" xmlns:test="http://www.eclipse.org/test" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="aorta_program" ecore:package="aorta_program" targetNamespace="http://www.eclipse.org/aorta_program">
+<xsd:schema xmlns:aorta_program="http://www.eclipse.org/aorta_program" xmlns:bdd_test_definitions="http://www.eclipse.org/bdd_test_definitions" xmlns:column_structures="http://www.eclipse.org/column_structures" xmlns:coverage="http://www.eclipse.org/coverage" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:report_structures="http://www.eclipse.org/report_structures" xmlns:requirements_artefacts="http://www.eclipse.org/requirements_artefacts" xmlns:requirements_text="http://www.eclipse.org/requirements_text" xmlns:test="http://www.eclipse.org/test" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="aorta_program" ecore:package="aorta_program" targetNamespace="http://www.eclipse.org/aorta_program">
+  <xsd:import namespace="http://www.eclipse.org/coverage" schemaLocation="coverage.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/requirements_artefacts" schemaLocation="requirments_artefacts.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/test" schemaLocation="test.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/bdd_test_definitions" schemaLocation="bdd_test_defintitions.xsd"/>
@@ -16,6 +17,8 @@
       <xsd:element ecore:resolveProxies="true" minOccurs="0" name="testDefinitions" type="bdd_test_definitions:BDDTestDefinitionModule"/>
       <xsd:element ecore:resolveProxies="true" minOccurs="0" name="tests" type="test:TestModule"/>
       <xsd:element ecore:resolveProxies="true" minOccurs="0" name="requirementsArtefacts" type="requirements_artefacts:InputTypeModule"/>
+      <xsd:element ecore:resolveProxies="true" minOccurs="0" name="coverageTypes" type="coverage:CoverageTypeModule"/>
+      <xsd:element ecore:resolveProxies="true" minOccurs="0" name="coverageTestSets" type="coverage:CoverageTestSetModule"/>
     </xsd:sequence>
   </xsd:complexType>
 </xsd:schema>

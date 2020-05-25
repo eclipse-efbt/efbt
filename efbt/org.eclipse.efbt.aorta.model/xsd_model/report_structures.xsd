@@ -6,6 +6,7 @@
   <xsd:element ecore:ignore="true" name="RegReportCellValue" type="report_structures:RegReportCellValue"/>
   <xsd:element ecore:ignore="true" name="RegReport" type="report_structures:RegReport"/>
   <xsd:element ecore:ignore="true" name="RegReportModule" type="report_structures:RegReportModule"/>
+  <xsd:element ecore:ignore="true" name="ReportGroup" type="report_structures:ReportGroup"/>
   <xsd:complexType name="RegReportCell">
     <xsd:complexContent>
       <xsd:extension base="output_data_structures:OutputDataStructure">
@@ -27,9 +28,15 @@
     <xsd:complexContent>
       <xsd:extension base="output_data_structures:OutputDataStructureModule">
         <xsd:sequence>
-          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="regReports" type="report_structures:RegReport"/>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="reportGroups" type="report_structures:ReportGroup"/>
         </xsd:sequence>
       </xsd:extension>
     </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="ReportGroup">
+    <xsd:sequence>
+      <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="regReports" type="report_structures:RegReport"/>
+    </xsd:sequence>
+    <xsd:attribute ecore:id="true" name="name" type="ecore:EString"/>
   </xsd:complexType>
 </xsd:schema>
