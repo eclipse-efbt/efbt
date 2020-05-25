@@ -5,6 +5,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="TestDefinition">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="coverageTestSet" eType="ecore:EClass coverage.ecore#//CoverageTestSet"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="E2ETestDefinition" eSuperTypes="#//TestDefinition"/>
   <eClassifiers xsi:type="ecore:EClass" name="UnitTestDefinition" eSuperTypes="#//TestDefinition"/>

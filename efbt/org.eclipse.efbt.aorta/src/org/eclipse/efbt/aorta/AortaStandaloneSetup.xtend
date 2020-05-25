@@ -34,6 +34,8 @@ import test_input_data.Test_input_dataPackage
 import test_review.Test_reviewPackage
 import test_worked_example.Test_worked_examplePackage
 import test.TestPackage
+import coverage.CoveragePackage
+
 /**
  * Initialization support for running Xtext languages without Equinox extension registry.
  */
@@ -47,7 +49,9 @@ class AortaStandaloneSetup extends AortaStandaloneSetupGenerated {
 		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/aorta_program")) {
 			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/aorta_program", Aorta_programPackage.eINSTANCE);
 		}
-		
+		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/coverage")) {
+			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/coverage", CoveragePackage.eINSTANCE);
+		}
 		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/aortafunctions")) {
 			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/aortafunctions", AortafunctionsPackage.eINSTANCE);
 		}

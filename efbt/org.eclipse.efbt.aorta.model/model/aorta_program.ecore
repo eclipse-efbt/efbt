@@ -17,5 +17,9 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="requirementsArtefacts"
         eType="ecore:EClass requirments_artefacts.ecore#//InputTypeModule" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="coverageTypes" eType="ecore:EClass coverage.ecore#//CoverageTypeModule"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="coverageTestSets" eType="ecore:EClass coverage.ecore#//CoverageTestSetModule"
+        containment="true"/>
   </eClassifiers>
 </ecore:EPackage>

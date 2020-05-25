@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="coverage" nsURI="http://www.eclipse.org/coverage" nsPrefix="coverage">
+  <eClassifiers xsi:type="ecore:EClass" name="CoverageTestSet">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="coverageType" eType="#//CoverageType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="givenParams" eType="#//GivenParams"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="whenParams" eType="#//WhenParams"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="thenParams" eType="#//ThenParams"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CoverageTypeModule" eSuperTypes="module_management.ecore#//Module">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="coverageTypes" upperBound="-1"
+        eType="#//CoverageType" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CoverageType">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="givenText" eType="ecore:EClass bdd_test_defintitions.ecore#//ClauseText"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="whenText" eType="ecore:EClass bdd_test_defintitions.ecore#//ClauseText"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="thenText" eType="ecore:EClass bdd_test_defintitions.ecore#//ClauseText"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="givenParams" eType="#//GivenParams"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="whenParams" eType="#//WhenParams"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="thenParams" eType="#//ThenParams"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CoverageTestSetModule" eSuperTypes="module_management.ecore#//Module">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="coverageTestSets" upperBound="-1"
+        eType="#//CoverageTestSet" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CoverageGrid">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="coverageTestSet" eType="#//CoverageTestSet"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="coverageGridPoints" eType="#//CoverageGridPoint"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CoverageGridPoint">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="count" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="objects" upperBound="-1"
+        eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GivenParams">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="params" upperBound="-1"
+        eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="WhenParams">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="params" upperBound="-1"
+        eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ThenParams">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="params" upperBound="-1"
+        eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+  </eClassifiers>
+</ecore:EPackage>

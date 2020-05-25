@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<xsd:schema xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:test_definition="http://www.eclipse.org/test_definition" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="test_definition" ecore:package="test_definition" targetNamespace="http://www.eclipse.org/test_definition">
+<xsd:schema xmlns:coverage="http://www.eclipse.org/coverage" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:test_definition="http://www.eclipse.org/test_definition" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="test_definition" ecore:package="test_definition" targetNamespace="http://www.eclipse.org/test_definition">
+  <xsd:import namespace="http://www.eclipse.org/coverage" schemaLocation="coverage.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/emf/2002/Ecore" schemaLocation="Ecore.xsd"/>
   <xsd:element ecore:ignore="true" name="TestDefinition" type="test_definition:TestDefinition"/>
   <xsd:element ecore:ignore="true" name="E2ETestDefinition" type="test_definition:E2ETestDefinition"/>
   <xsd:element ecore:ignore="true" name="UnitTestDefinition" type="test_definition:UnitTestDefinition"/>
   <xsd:complexType name="TestDefinition">
     <xsd:attribute ecore:id="true" name="name" type="ecore:EString"/>
+    <xsd:attribute ecore:reference="coverage:CoverageTestSet" name="coverageTestSet" type="xsd:anyURI"/>
   </xsd:complexType>
   <xsd:complexType name="E2ETestDefinition">
     <xsd:complexContent>
