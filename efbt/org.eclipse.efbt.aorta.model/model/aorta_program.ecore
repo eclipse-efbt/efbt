@@ -11,15 +11,15 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="reportStructures" eType="ecore:EClass report_structures.ecore#//RegReportModule"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="testDefinitions" eType="ecore:EClass bdd_test_defintitions.ecore#//BDDTestDefinitionModule"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="testDefinitions" eType="ecore:EClass test_definition.ecore#//TestDefinitionModule"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="tests" eType="ecore:EClass test.ecore#//TestModule"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="requirementsArtefacts"
         eType="ecore:EClass requirments_artefacts.ecore#//InputTypeModule" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="coverageTypes" eType="ecore:EClass coverage.ecore#//CoverageTypeModule"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="testTemplates" eType="ecore:EClass test_definition.ecore#//TestTemplateModule"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="coverageTestSets" eType="ecore:EClass coverage.ecore#//CoverageTestSetModule"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="testConstriants" eType="ecore:EClass test_definition.ecore#//TestContraints"
         containment="true"/>
   </eClassifiers>
 </ecore:EPackage>

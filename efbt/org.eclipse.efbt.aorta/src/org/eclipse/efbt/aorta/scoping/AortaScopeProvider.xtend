@@ -12,12 +12,13 @@ import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.scoping.Scopes
 
 import org.apache.log4j.LogManager
-import bdd_test_definitions.GenericGiven
-import bdd_test_definitions.BDDParam
-import bdd_test_definitions.BDDClause
-import bdd_test_definitions.GenericBDD
-import bdd_test_definitions.GenericWhen
-import bdd_test_definitions.GenericThen
+
+import test_definition.Param
+import test_definition.Clause
+import test_definition.TestDefinition
+import test_definition.Given
+import test_definition.When
+import test_definition.Then
 
 /**
  * This class contains custom scoping description.
@@ -33,78 +34,81 @@ class AortaScopeProvider extends AbstractAortaScopeProvider {
         // We want to define the Scope for the Element's superElement cross-reference
          val LOGGER = LogManager.getLogger(AortaScopeProvider)
      
-         
-         if(context instanceof BDDParam)
+         if ((context.eContainer) instanceof Clause )
          {
-         	val  bddclauseElement = (context.eContainer) as BDDClause
-         	val bddElement = (bddclauseElement.eContainer) as GenericBDD
-         	 val coverageTestSet = bddElement.coverageTestSet
-         	  val coverageTestType = coverageTestSet.coverageType
-         	  
-
-         	//find out index of contianing bddclauseElement
-         	val index = bddclauseElement.params.indexOf(context)
-        
-         if (bddclauseElement instanceof GenericGiven) {
-        	
-        	val size = coverageTestSet.givenParams.params.length
-        	if( index < size)
-        	{
-	        	val templateObject = coverageTestSet.givenParams.params.get(index)
-	        	val templateType = coverageTestType.givenParams.params.get(index)
+	         if(context instanceof Param)
+	         {
+	         	val  bddclauseElement = (context.eContainer) as Clause
+	         	val bddElement = (bddclauseElement.eContainer) as TestDefinition
+	         	 val coverageTestSet = bddElement.testContraints
+	         	  val coverageTestType = coverageTestSet.template
+	         	  
+	
+	         	//find out index of contianing bddclauseElement
+	         	val index = bddclauseElement.params.indexOf(context)
+	        
+	         if (bddclauseElement instanceof Given) {
+	        	
+	        	val size = coverageTestSet.givenParams.length
+	        	if( index < size)
+	        	{
+		        	val templateObject = coverageTestSet.givenParams.get(index).param
+		        	val templateType = coverageTestType.givenParams.get(index).param
+		        	
+		              
+		             System.err.println("given templateObject = " + templateObject)
+		             System.err.println("given templateType = " + templateType)
+		        	
+		        	 val candidates = EcoreUtil2.getAllContentsOfType(templateObject, templateType.class)
+		        	 System.err.println("given candidates = " + candidates)
+		        	 return Scopes.scopeFor(candidates)
+	        	 }
+	        	 
+	         }
+	        	if (bddclauseElement instanceof When) {
+	        	
+	        	val size = coverageTestSet.whenParams.length
+	        	if( index < size)
+	        	{
+		        		val templateObject = coverageTestSet.whenParams.get(index).param
+		        	val templateType = coverageTestType.whenParams.get(index).param
+		        	
+		              
+		             System.err.println("when templateObject = " + templateObject)
+		             System.err.println("when templateType = " + templateType)
+		        	
+		        	 val candidates = EcoreUtil2.getAllContentsOfType(templateObject, templateType.class)
+		        	 
+		        	 return Scopes.scopeFor(candidates)
+	        	 }
+	        	 
+	         }
+	         
+	         if (bddclauseElement instanceof Then) {
+	        	
+	        	val size = coverageTestSet.thenParams.length
+	        	if( index < size)
+	        	{
+	        		
+	        	
+	        	val templateObject = coverageTestSet.thenParams.get(index).param
+	        	val templateType = coverageTestType.thenParams.get(index).param
 	        	
 	              
-	             System.err.println("given templateObject = " + templateObject)
-	             System.err.println("given templateType = " + templateType)
-	        	
-	        	 val candidates = EcoreUtil2.getAllContentsOfType(templateObject, templateType.class)
-	        	 System.err.println("given candidates = " + candidates)
-	        	 return Scopes.scopeFor(candidates)
-        	 }
-        	 
-         }
-        	if (bddclauseElement instanceof GenericWhen) {
-        	
-        	val size = coverageTestSet.whenParams.params.length
-        	if( index < size)
-        	{
-	        		val templateObject = coverageTestSet.whenParams.params.get(index)
-	        	val templateType = coverageTestType.whenParams.params.get(index)
-	        	
-	              
-	             System.err.println("when templateObject = " + templateObject)
-	             System.err.println("when templateType = " + templateType)
+	             System.err.println("then templateObject = " + templateObject)
+	             System.err.println("then templateType = " + templateType)
 	        	
 	        	 val candidates = EcoreUtil2.getAllContentsOfType(templateObject, templateType.class)
 	        	 
 	        	 return Scopes.scopeFor(candidates)
-        	 }
-        	 
-         }
-         
-         if (bddclauseElement instanceof GenericThen) {
-        	
-        	val size = coverageTestSet.thenParams.params.length
-        	if( index < size)
-        	{
-        		
-        	
-        	val templateObject = coverageTestSet.thenParams.params.get(index)
-        	val templateType = coverageTestType.thenParams.params.get(index)
-        	
-              
-             System.err.println("then templateObject = " + templateObject)
-             System.err.println("then templateType = " + templateType)
-        	
-        	 val candidates = EcoreUtil2.getAllContentsOfType(templateObject, templateType.class)
-        	 
-        	 return Scopes.scopeFor(candidates)
-        	 
-        	 }
-         }
-            
-        
-    }
+	        	 
+	        	 }
+	         }
+	            
+	        
+	    }
+	    
+	    }
     return super.getScope(context, reference)
     }
     }
