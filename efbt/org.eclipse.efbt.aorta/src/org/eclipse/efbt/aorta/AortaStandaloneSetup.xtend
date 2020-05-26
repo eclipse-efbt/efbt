@@ -8,7 +8,7 @@ import org.eclipse.emf.ecore.EPackage
 import aorta_program.Aorta_programPackage
 import aortafunctions.AortafunctionsPackage
 import base_column_structured_data.Base_column_structured_dataPackage
-import bdd_test_definitions.Bdd_test_definitionsPackage
+
 import cell_transformation_logic.Cell_transformation_logicPackage
 import column_structured_data.Column_structured_dataPackage 
 import column_structures.Column_structuresPackage
@@ -34,7 +34,7 @@ import test_input_data.Test_input_dataPackage
 import test_review.Test_reviewPackage
 import test_worked_example.Test_worked_examplePackage
 import test.TestPackage
-import coverage.CoveragePackage
+
 
 /**
  * Initialization support for running Xtext languages without Equinox extension registry.
@@ -49,18 +49,14 @@ class AortaStandaloneSetup extends AortaStandaloneSetupGenerated {
 		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/aorta_program")) {
 			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/aorta_program", Aorta_programPackage.eINSTANCE);
 		}
-		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/coverage")) {
-			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/coverage", CoveragePackage.eINSTANCE);
-		}
+
 		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/aortafunctions")) {
 			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/aortafunctions", AortafunctionsPackage.eINSTANCE);
 		}
 		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/base_column_structured_data")) {
 			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/base_column_structured_data", Base_column_structured_dataPackage.eINSTANCE);
 		}
-		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/bdd_test_definitions")) {
-			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/bdd_test_definitions", Bdd_test_definitionsPackage.eINSTANCE);
-		}
+
 		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/cell_transformation_logic")) {
 			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/cell_transformation_logic", Cell_transformation_logicPackage.eINSTANCE);
 		}

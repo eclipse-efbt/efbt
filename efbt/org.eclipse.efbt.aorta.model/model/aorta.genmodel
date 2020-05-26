@@ -6,7 +6,6 @@
     operationReflection="true" importOrganizing="true">
   <foreignModel>aortafunctions.ecore</foreignModel>
   <foreignModel>base_column_structured_data.ecore</foreignModel>
-  <foreignModel>bdd_test_defintitions.ecore</foreignModel>
   <foreignModel>cell_transformation_logic.ecore</foreignModel>
   <foreignModel>column_structured_data.ecore</foreignModel>
   <foreignModel>column_structures.ecore</foreignModel>
@@ -33,7 +32,6 @@
   <foreignModel>test_worked_example.ecore</foreignModel>
   <foreignModel>test.ecore</foreignModel>
   <foreignModel>aorta_program.ecore</foreignModel>
-  <foreignModel>coverage.ecore</foreignModel>
   <genPackages prefix="Aortafunctions" resource="XML" disposableProviderFactory="true"
       ecorePackage="aortafunctions.ecore#/">
     <genClasses ecoreClass="aortafunctions.ecore#//AggregateFunction">
@@ -92,32 +90,6 @@
     </genClasses>
     <genClasses ecoreClass="base_column_structured_data.ecore#//InputDataModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference base_column_structured_data.ecore#//InputDataModule/inputData"/>
-    </genClasses>
-  </genPackages>
-  <genPackages prefix="Bdd_test_definitions" resource="XML" disposableProviderFactory="true"
-      ecorePackage="bdd_test_defintitions.ecore#/">
-    <genClasses ecoreClass="bdd_test_defintitions.ecore#//BDDTestDefinition"/>
-    <genClasses ecoreClass="bdd_test_defintitions.ecore#//BDDTestDefinitionModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bdd_test_defintitions.ecore#//BDDTestDefinitionModule/testDefinitions"/>
-    </genClasses>
-    <genClasses ecoreClass="bdd_test_defintitions.ecore#//GenericBDD">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bdd_test_defintitions.ecore#//GenericBDD/given"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bdd_test_defintitions.ecore#//GenericBDD/when"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bdd_test_defintitions.ecore#//GenericBDD/then"/>
-    </genClasses>
-    <genClasses ecoreClass="bdd_test_defintitions.ecore#//GenericGiven"/>
-    <genClasses ecoreClass="bdd_test_defintitions.ecore#//GenericWhen"/>
-    <genClasses ecoreClass="bdd_test_defintitions.ecore#//GenericThen"/>
-    <genClasses ecoreClass="bdd_test_defintitions.ecore#//ClauseText">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bdd_test_defintitions.ecore#//ClauseText/name"/>
-    </genClasses>
-    <genClasses ecoreClass="bdd_test_defintitions.ecore#//BDDClause">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bdd_test_defintitions.ecore#//BDDClause/regulatoryTextLinks"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bdd_test_defintitions.ecore#//BDDClause/text"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bdd_test_defintitions.ecore#//BDDClause/params"/>
-    </genClasses>
-    <genClasses ecoreClass="bdd_test_defintitions.ecore#//BDDParam">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bdd_test_defintitions.ecore#//BDDParam/param"/>
     </genClasses>
   </genPackages>
   <genPackages prefix="Cell_transformation_logic" resource="XML" disposableProviderFactory="true"
@@ -440,12 +412,63 @@
   </genPackages>
   <genPackages prefix="Test_definition" resource="XML" disposableProviderFactory="true"
       ecorePackage="test_definition.ecore#/">
+    <genClasses ecoreClass="test_definition.ecore#//TestContraints">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestContraints/template"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute test_definition.ecore#//TestContraints/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestContraints/givenParams"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestContraints/whenParams"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestContraints/thenParams"/>
+    </genClasses>
+    <genClasses ecoreClass="test_definition.ecore#//TestTemplateModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestTemplateModule/templates"/>
+    </genClasses>
+    <genClasses ecoreClass="test_definition.ecore#//TestTemplate">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute test_definition.ecore#//TestTemplate/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestTemplate/givenText"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestTemplate/whenText"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestTemplate/thenText"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestTemplate/givenParams"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestTemplate/whenParams"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestTemplate/thenParams"/>
+    </genClasses>
+    <genClasses ecoreClass="test_definition.ecore#//TestConstraintsModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestConstraintsModule/coverageTestSets"/>
+    </genClasses>
     <genClasses ecoreClass="test_definition.ecore#//TestDefinition">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute test_definition.ecore#//TestDefinition/name"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestDefinition/coverageTestSet"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestDefinition/testContraints"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestDefinition/given"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestDefinition/when"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestDefinition/then"/>
     </genClasses>
     <genClasses ecoreClass="test_definition.ecore#//E2ETestDefinition"/>
     <genClasses ecoreClass="test_definition.ecore#//UnitTestDefinition"/>
+    <genClasses ecoreClass="test_definition.ecore#//Clause">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test_definition.ecore#//Clause/text"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//Clause/params"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test_definition.ecore#//Clause/regulatoryTextLinks"/>
+    </genClasses>
+    <genClasses ecoreClass="test_definition.ecore#//Param">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test_definition.ecore#//Param/param"/>
+    </genClasses>
+    <genClasses ecoreClass="test_definition.ecore#//Given"/>
+    <genClasses ecoreClass="test_definition.ecore#//When"/>
+    <genClasses ecoreClass="test_definition.ecore#//Then"/>
+    <genClasses ecoreClass="test_definition.ecore#//ClauseText">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute test_definition.ecore#//ClauseText/name"/>
+    </genClasses>
+    <genClasses ecoreClass="test_definition.ecore#//CoverageGrid">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test_definition.ecore#//CoverageGrid/coverageTestSet"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//CoverageGrid/coverageGridPoints"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute test_definition.ecore#//CoverageGrid/name"/>
+    </genClasses>
+    <genClasses ecoreClass="test_definition.ecore#//CoverageGridPoint">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute test_definition.ecore#//CoverageGridPoint/count"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test_definition.ecore#//CoverageGridPoint/objects"/>
+    </genClasses>
+    <genClasses ecoreClass="test_definition.ecore#//TestDefinitionModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestDefinitionModule/testDefinitions"/>
+    </genClasses>
   </genPackages>
   <genPackages prefix="Test_input_data" resource="XML" disposableProviderFactory="true"
       ecorePackage="test_input_data.ecore#/">
@@ -539,50 +562,8 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aorta_program.ecore#//Program/testDefinitions"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aorta_program.ecore#//Program/tests"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aorta_program.ecore#//Program/requirementsArtefacts"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aorta_program.ecore#//Program/coverageTypes"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aorta_program.ecore#//Program/coverageTestSets"/>
-    </genClasses>
-  </genPackages>
-  <genPackages prefix="Coverage" ecorePackage="coverage.ecore#/">
-    <genClasses ecoreClass="coverage.ecore#//CoverageTestSet">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference coverage.ecore#//CoverageTestSet/coverageType"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute coverage.ecore#//CoverageTestSet/name"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference coverage.ecore#//CoverageTestSet/givenParams"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference coverage.ecore#//CoverageTestSet/whenParams"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference coverage.ecore#//CoverageTestSet/thenParams"/>
-    </genClasses>
-    <genClasses ecoreClass="coverage.ecore#//CoverageTypeModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference coverage.ecore#//CoverageTypeModule/coverageTypes"/>
-    </genClasses>
-    <genClasses ecoreClass="coverage.ecore#//CoverageType">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute coverage.ecore#//CoverageType/name"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference coverage.ecore#//CoverageType/givenText"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference coverage.ecore#//CoverageType/whenText"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference coverage.ecore#//CoverageType/thenText"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference coverage.ecore#//CoverageType/givenParams"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference coverage.ecore#//CoverageType/whenParams"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference coverage.ecore#//CoverageType/thenParams"/>
-    </genClasses>
-    <genClasses ecoreClass="coverage.ecore#//CoverageTestSetModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference coverage.ecore#//CoverageTestSetModule/coverageTestSets"/>
-    </genClasses>
-    <genClasses ecoreClass="coverage.ecore#//CoverageGrid">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference coverage.ecore#//CoverageGrid/coverageTestSet"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference coverage.ecore#//CoverageGrid/coverageGridPoints"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute coverage.ecore#//CoverageGrid/name"/>
-    </genClasses>
-    <genClasses ecoreClass="coverage.ecore#//CoverageGridPoint">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute coverage.ecore#//CoverageGridPoint/count"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference coverage.ecore#//CoverageGridPoint/objects"/>
-    </genClasses>
-    <genClasses ecoreClass="coverage.ecore#//GivenParams">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference coverage.ecore#//GivenParams/params"/>
-    </genClasses>
-    <genClasses ecoreClass="coverage.ecore#//WhenParams">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference coverage.ecore#//WhenParams/params"/>
-    </genClasses>
-    <genClasses ecoreClass="coverage.ecore#//ThenParams">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference coverage.ecore#//ThenParams/params"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aorta_program.ecore#//Program/testTemplates"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aorta_program.ecore#//Program/testConstriants"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>
