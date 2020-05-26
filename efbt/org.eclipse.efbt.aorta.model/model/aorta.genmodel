@@ -139,6 +139,8 @@
     <genClasses ecoreClass="column_structures.ecore#//Column">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_structures.ecore#//Column/name"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference column_structures.ecore#//Column/domain"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_structures.ecore#//Column/isIdentifier"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_structures.ecore#//Column/isMandatory"/>
     </genClasses>
     <genClasses ecoreClass="column_structures.ecore#//EnumMember">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_structures.ecore#//EnumMember/name"/>
