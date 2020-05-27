@@ -13,11 +13,19 @@
 
 package org.eclipse.efbt.component.birdartefactscreator.importer.birdaccessdb;
 
+
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.efbt.component.birdartefactscreator.importer.FreeBirdToolsResourceFactory;
 import org.eclipse.efbt.component.birdartefactscreator.importer.Importer;
@@ -29,10 +37,16 @@ import org.eclipse.emf.ecore.resource.Resource;
 import com.healthmarketscience.jackcess.DatabaseBuilder;
 import com.healthmarketscience.jackcess.Row;
 import com.healthmarketscience.jackcess.Table;
+import com.ibm.icu.text.UTF16;
 
 import aorta_program.Aorta_programFactory;
 
 import aorta_program.Program;
+import base_column_structured_data.BaseCellWithEnumeratedValue;
+import base_column_structured_data.BaseCellWithValue;
+import base_column_structured_data.BaseColumnStructuredData;
+import base_column_structured_data.BaseRowData;
+import base_column_structured_data.Base_column_structured_dataFactory;
 import column_structures.Column;
 import column_structures.ColumnDataType;
 import column_structures.ColumnDomain;
@@ -63,9 +77,31 @@ import mapping.MAPPING_TO_CUBE;
 import mapping.MEMBER_MAPPING;
 import mapping.MappingFactory;
 import mapping.VARIABLE_MAPPING;
-
+import test.E2ETest;
+import test.Test;
+import test.TestFactory;
+import test.TestModule;
+import test_definition.ClauseText;
+import test_definition.Given;
+import test_definition.Param;
+import test_definition.TestConstraintsModule;
+import test_definition.TestContraints;
+import test_definition.TestDefinition;
+import test_definition.TestDefinitionModule;
+import test_definition.TestTemplate;
+import test_definition.TestTemplateModule;
+import test_definition.Test_definitionFactory;
+import test_definition.Then;
+import test_definition.When;
+import test_input_data.TestColumnStructuredData;
+import test_input_data.TestInputData;
+import test_input_data.Test_input_dataFactory;
 import vtl_transformation.TRANSFORMATION_SCHEME;
 import vtl_transformation.Vtl_transformationFactory;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 
 /**
  * @author Neil Mackenzie
@@ -77,7 +113,7 @@ public class BIRDImporter extends Importer {
 	 * The file path of the access database
 	 */
 	private static String filepath ;
-	//private static String testdatafilepath ;
+	private static String testdatafilepath ;
 	
 	public static Program program;
 	
@@ -542,6 +578,7 @@ public class BIRDImporter extends Importer {
 					MEMBER member = findMemberWithID(memberString);
 					item.setMember_id(member);
 				}
+				item.setCube_variable_code(row.getString("CUBE_VARIABLE_CODE"));
 				item.setDescription(row.getString("DESCRIPTION"));
 				try {
 					int order = row.getInt("ORDER");
@@ -657,21 +694,279 @@ public class BIRDImporter extends Importer {
 		BIRDImporter importer = new BIRDImporter();
 		importer.filepath = args[0];
 		importer.outputFilepath = args[1];
-	//	testdatafilepath = args[1];
+		testdatafilepath = args[2];
 		//importer.filepath = "C:\\freebirdtools-master2\\ws\\org.eclipse.efbt.regmodules.bird\\bird\\";
 		importer.doImport();
 		importer.createAortaFiles();
-		//importer.importTestData();
+		importer.importTestData();
+		importer.persistAortaFiles();
 	}
 
-	//private void importTestData() {
-		// TODO get the csv file, use some open source csv library.
-		// create 1 test definition
+	private void importTestData() {
+		//get the csv file, use some open source csv library.
+		//create 1 test definition
 		//create mutliple tests, with that data.
+		TestDefinitionModule definitionModule =   Test_definitionFactory.eINSTANCE.createTestDefinitionModule();
+	//	TestConstraintsModule constraintsModule =   Test_definitionFactory.eINSTANCE.createTestConstraintsModule();
 		
 		
 		
-	//}
+		TestTemplateModule testTemplateModule = Test_definitionFactory.eINSTANCE.createTestTemplateModule();
+		program.setTestTemplates(testTemplateModule);
+		program.setTestDefinitions(definitionModule);
+		
+		TestTemplate testTemplate = Test_definitionFactory.eINSTANCE.createTestTemplate();
+		Param templateparam = Test_definitionFactory.eINSTANCE.createParam();
+		templateparam.setParam(program.getFunctionalityModules().getFunctionalityModules().get(0));		
+		testTemplate.getWhenParams().add(templateparam);
+		testTemplateModule.getTemplates().add(testTemplate);
+		
+
+		ClauseText given_clauseText = Test_definitionFactory.eINSTANCE.createClauseText();
+		given_clauseText.setName("given_test_input_data");
+		testTemplate.setGivenText(given_clauseText);
+		ClauseText when_clauseText = Test_definitionFactory.eINSTANCE.createClauseText();
+		when_clauseText.setName("when_transformation_sheme_is_run");
+		testTemplate.setWhenText(when_clauseText);
+		ClauseText then_clauseText = Test_definitionFactory.eINSTANCE.createClauseText();
+		then_clauseText.setName("then_specific_output_data_is_expected");
+		testTemplate.setGivenText(then_clauseText);
+		testTemplateModule.getTemplates().add(testTemplate);
+		
+		TestContraints contraints = Test_definitionFactory.eINSTANCE.createTestContraints();
+		//constraintsModule.getCoverageTestSets().add(contraints);
+		program.setTestConstriants(contraints);
+		Param contraintsparam = Test_definitionFactory.eINSTANCE.createParam();
+		contraintsparam.setParam(program.getFunctionalityModules().getFunctionalityModules().get(0));		
+		contraints.getWhenParams().add(contraintsparam);
+		
+		TestDefinition definition = Test_definitionFactory.eINSTANCE.createTestDefinition();
+		definitionModule.getTestDefinitions().add(definition);
+		
+		Param defparam = Test_definitionFactory.eINSTANCE.createParam();
+		defparam.setParam(program.getFunctionalityModules().getFunctionalityModules().get(1));	
+		When when = Test_definitionFactory.eINSTANCE.createWhen();
+		Then then = Test_definitionFactory.eINSTANCE.createThen();
+		Given  given = Test_definitionFactory.eINSTANCE.createGiven();
+		definition.setWhen(when);
+		definition.setThen(then);
+		definition.setGiven(given);
+		definition.getWhen().getParams().add(defparam);
+		
+		definition.setTestContraints(contraints);
+		program.setTestDefinitions(definitionModule);
+		TestModule testModule = TestFactory.eINSTANCE.createTestModule();
+		
+		FileReader csvData;
+		try {
+			
+			 csvData = new FileReader(new File (testdatafilepath));
+			 CSVParser parser = CSVParser.parse(csvData,  CSVFormat.EXCEL);
+			
+			 HashMap<String, BaseColumnStructuredData>   tables = new HashMap<String, BaseColumnStructuredData>();
+			 HashMap<String, BaseRowData>   rows = new  HashMap<String, BaseRowData>();
+			 
+			 
+			 for (CSVRecord csvRecord : parser) {
+				 
+				 E2ETest test  = TestFactory.eINSTANCE.createE2ETest();
+				 testModule.getTests().add(test);
+				 TestColumnStructuredData inputData = Test_input_dataFactory.eINSTANCE.createTestColumnStructuredData();
+				 
+				 
+				
+				 
+				 //so we need  a table for each table, then a row for each row, and a cell for each cell.
+				 //so we make ahash map of sorts
+				 
+
+				 test.setInputData(inputData);
+				 String id1 = csvRecord.get(0);
+				 String id2 = csvRecord.get(1);
+				 String record_no = csvRecord.get(2);
+				 String cube = csvRecord.get(3);
+				 String variable = csvRecord.get(4);
+				 String value = csvRecord.get(5);
+				 
+				 test.setName(id1 + ":" + id2);
+				 
+				 BaseColumnStructuredData table = tables.get(cube);
+				 if (table == null)
+				 {
+					 BaseColumnStructuredData structuredData = Base_column_structured_dataFactory.eINSTANCE.createBaseColumnStructuredData();
+					 tables.put(cube,structuredData);
+					 inputData.getSourceTableData().add(structuredData);
+					 table = structuredData;
+					 
+				 }
+				 
+				 BaseRowData rowData = rows.get(cube+"."+record_no);
+				 if (rowData==null)
+				 {
+					 BaseRowData baseRow = Base_column_structured_dataFactory.eINSTANCE.createBaseRowData();
+					 baseRow.setRowID(record_no);
+					 rows.put(cube+"."+record_no,baseRow);
+					 table.getRows().add(baseRow);
+					 rowData = baseRow;
+				 }
+				 
+				 //determine if the associated Variable is enumerated or not.
+				 //if so then get the correct enumerated value, if it does not exist, then put this in the error report.
+				 boolean cubeExists = checkCubeExists(cube);
+				 if(cubeExists)
+				 {
+					 Column theColumn = getColumnFromCube(cube,variable);
+					 
+					 if(theColumn !=null)
+					 {
+						 boolean isEnumeratedColumn = checkIsEnumeratedColumn(cube, variable);
+						 if(isEnumeratedColumn)
+						 {
+							 EnumMember member =  getMember(cube, variable,value);
+							 if(member != null)
+							 {
+								 
+							
+							 
+							 BaseCellWithEnumeratedValue enumcell = Base_column_structured_dataFactory.eINSTANCE.createBaseCellWithEnumeratedValue();
+							 enumcell.setColumn(theColumn);
+							 enumcell.setValue(member);
+							 enumcell.setCellID(theColumn.getName() + ":" + member.getName() );
+							 rowData.getCells().add(enumcell);
+							 
+							 }
+							 else
+							 {
+								 System.out.println("Cannot find member:" + cube + "." + variable + "." + value );
+							 }
+							 
+							 
+						 }
+						 else
+						 {
+							 BaseCellWithValue cellWithValue = Base_column_structured_dataFactory.eINSTANCE.createBaseCellWithValue();
+							 rowData.getCells().add(cellWithValue);
+						 }
+						 
+						 
+						 
+					 }
+					 else
+					 {
+						 System.out.println("Cannot find column:" + cube + "." + variable);
+					 }
+					 
+				 }
+				 else
+				 {
+					 System.out.println("Cannot find cube:" + cube);
+				 }
+				
+			 }
+			
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		 
+		
+		 
+		
+		 
+		
+		
+	}
+
+	private EnumMember getMember(String cube, String variable, String value) {
+		// TODO Auto-generated method stub
+		EList<ColumnStructuredEntity> cubes = program.getInput_structures().getColumnStructures();
+		EnumMember returnedMember = null;
+		for (Iterator iterator = cubes.iterator(); iterator.hasNext();) {
+			ColumnStructuredEntity columnStructuredEntity = (ColumnStructuredEntity) iterator.next();
+			if (columnStructuredEntity.getName().equalsIgnoreCase(cube)) 
+			{
+				EList<Column> columns = columnStructuredEntity.getColumn();
+				for (Iterator iterator2 = columns.iterator(); iterator2.hasNext();) {
+					Column column = (Column) iterator2.next();
+					if(column.getName().equalsIgnoreCase(variable))
+					{
+						 EList<EnumMember> theMembers = column.getDomain().getEnumMembers();
+						 for (Iterator iterator3 = theMembers.iterator(); iterator3.hasNext();) {
+							EnumMember enumMember = (EnumMember) iterator3.next();
+							
+							if(enumMember.getName().equalsIgnoreCase(value))
+								returnedMember = enumMember;
+							
+							
+							
+						}
+					}
+				}
+			}
+				
+			
+		}
+		return returnedMember;
+	}
+
+	private boolean checkIsEnumeratedColumn(String cube, String variable) {
+		// TODO Auto-generated method stub
+		EList<ColumnStructuredEntity> cubes = program.getInput_structures().getColumnStructures();
+		boolean isEnumerated = false;
+		for (Iterator iterator = cubes.iterator(); iterator.hasNext();) {
+			ColumnStructuredEntity columnStructuredEntity = (ColumnStructuredEntity) iterator.next();
+			if (columnStructuredEntity.getName().equalsIgnoreCase(cube)) 
+			{
+				EList<Column> columns = columnStructuredEntity.getColumn();
+				for (Iterator iterator2 = columns.iterator(); iterator2.hasNext();) {
+					Column column = (Column) iterator2.next();
+					if(column.getName().equalsIgnoreCase(variable))
+						isEnumerated = column.getDomain().isIsEnumerated();
+				}
+			}
+				
+			
+		}
+		return isEnumerated;
+	}
+
+	private Column getColumnFromCube(String cube, String variable) {
+		// TODO Auto-generated method stub
+		EList<ColumnStructuredEntity> cubes = program.getInput_structures().getColumnStructures();
+		Column returnedColumn = null;
+		for (Iterator iterator = cubes.iterator(); iterator.hasNext();) {
+			ColumnStructuredEntity columnStructuredEntity = (ColumnStructuredEntity) iterator.next();
+			if (columnStructuredEntity.getName().equalsIgnoreCase(cube)) 
+			{
+				EList<Column> columns = columnStructuredEntity.getColumn();
+				for (Iterator iterator2 = columns.iterator(); iterator2.hasNext();) {
+					Column column = (Column) iterator2.next();
+					if(column.getName().equalsIgnoreCase(variable))
+						returnedColumn = column;
+				}
+			}
+		}
+				
+
+		return returnedColumn;  
+	}
+	
+	private boolean checkCubeExists(String cube) {
+		// TODO Auto-generated method stub
+		EList<ColumnStructuredEntity> cubes = program.getInput_structures().getColumnStructures();
+		boolean exists = false;
+		for (Iterator iterator = cubes.iterator(); iterator.hasNext();) {
+			ColumnStructuredEntity columnStructuredEntity = (ColumnStructuredEntity) iterator.next();
+			if (columnStructuredEntity.getName().equalsIgnoreCase(cube)) 
+				exists = true;
+			
+		}
+		return exists;  
+	}
 
 	public  void createAortaFiles() {
 		//create Aorta Program
@@ -694,7 +989,7 @@ public class BIRDImporter extends Importer {
 		for (Iterator iterator = memberList.iterator(); iterator.hasNext();) {
 			MEMBER member = (MEMBER) iterator.next();
 			EnumMember enumMember = Column_structuresFactory.eINSTANCE.createEnumMember();
-			enumMember.setName(member.getMember_id());
+			enumMember.setName(member.getCode());
 			addEnumMeberToCorrectColumnDomain(enumMember,member.getDomain_id().getDomain_id(),domainModule);
 			
 		}
@@ -711,7 +1006,7 @@ public class BIRDImporter extends Importer {
 			if(validToDate.after(when ) )
 			{
 				ColumnStructuredEntity columnStructuredEntity = Column_structuresFactory.eINSTANCE.createColumnStructuredEntity();
-				columnStructuredEntity.setName(cube_STRUCTURE.getCube_structure_id());
+				columnStructuredEntity.setName(cube_STRUCTURE.getCode());
 				columnStructureModule.getColumnStructures().add(columnStructuredEntity);
 				
 				
@@ -722,11 +1017,11 @@ public class BIRDImporter extends Importer {
 		for (Iterator iterator = cubeStructureItems.iterator(); iterator.hasNext();) {
 			CUBE_STRUCTURE_ITEM cube_STRUCTURE_ITEM = (CUBE_STRUCTURE_ITEM) iterator.next();
 			Column column =  Column_structuresFactory.eINSTANCE.createColumn();
-			column.setName(cube_STRUCTURE_ITEM.getVariable_id().getVariable_id());
+			column.setName(cube_STRUCTURE_ITEM.getCube_variable_code());
 			column.setIsMandatory(cube_STRUCTURE_ITEM.isIs_mandatory());
 			column.setIsIdentifier(cube_STRUCTURE_ITEM.isIsIdentifier());
 			setColumnDomain(column,domainModule,cube_STRUCTURE_ITEM.getVariable_id().getDomain_id().getDomain_id());
-			addColumntoColumnStructuredEntity(column,columnStructureModule,cube_STRUCTURE_ITEM.getCube_structure_id().getCube_structure_id());
+			addColumntoColumnStructuredEntity(column,columnStructureModule,cube_STRUCTURE_ITEM.getCube_structure_id().getCode());
 		}
 		
 		FunctionalityModuleModule functionalityModuleModule = Functionality_moduleFactory.eINSTANCE.createFunctionalityModuleModule();
@@ -741,6 +1036,11 @@ public class BIRDImporter extends Importer {
 			functionalityModuleModule.getFunctionalityModules().add(functionalityModule);
 			
 		}
+		
+		
+	}
+	
+	public void persistAortaFiles() {
 		FreeBirdToolsResourceFactory factory = new FreeBirdToolsResourceFactory();
 		URI aortaURI = URI.createFileURI(outputFilepath + "aorta.aorta_program");
 	
@@ -756,7 +1056,6 @@ public class BIRDImporter extends Importer {
 			
 			e.printStackTrace();
 		}
-		
 	}
 
 	private void addColumntoColumnStructuredEntity(Column column, ColumnStructureModule columnStructureModule, String cube_structure_id) {

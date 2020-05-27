@@ -13,6 +13,8 @@
   <xsd:complexType name="Column">
     <xsd:attribute ecore:id="true" name="name" type="ecore:EString"/>
     <xsd:attribute ecore:reference="column_structures:ColumnDomain" name="domain" type="xsd:anyURI"/>
+    <xsd:attribute ecore:unsettable="false" name="isIdentifier" type="ecore:EBoolean"/>
+    <xsd:attribute ecore:unsettable="false" name="isMandatory" type="ecore:EBoolean"/>
   </xsd:complexType>
   <xsd:complexType name="EnumMember">
     <xsd:attribute ecore:id="true" name="name" type="ecore:EString"/>
