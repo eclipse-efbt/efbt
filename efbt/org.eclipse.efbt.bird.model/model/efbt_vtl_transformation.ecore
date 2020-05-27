@@ -19,15 +19,4 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="NodeRelationshipModule" eSuperTypes="../../org.eclipse.efbt.aorta.model/model/module_management.ecore#//Module">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A Module of Tranformation Node Relationships"/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="relationships" upperBound="-1"
-        eType="ecore:EClass vtl_transformation.ecore#//NODE_RELATIONSHIP" containment="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The Tranformation Node Relationships"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
 </ecore:EPackage>
