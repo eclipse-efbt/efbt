@@ -15,14 +15,32 @@ package org.eclipse.efbt.component.birdartefactscreator.importer.birdaccessdb;
 
 import java.io.File;
 import java.io.IOException;
-
+import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
+
+import org.eclipse.efbt.component.birdartefactscreator.importer.FreeBirdToolsResourceFactory;
 import org.eclipse.efbt.component.birdartefactscreator.importer.Importer;
-import org.eclipse.emf.common.util.BasicEList;
+
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+
 import com.healthmarketscience.jackcess.DatabaseBuilder;
 import com.healthmarketscience.jackcess.Row;
 import com.healthmarketscience.jackcess.Table;
+
+import aorta_program.Aorta_programFactory;
+
+import aorta_program.Program;
+import column_structures.Column;
+import column_structures.ColumnDataType;
+import column_structures.ColumnDomain;
+import column_structures.ColumnDomainModule;
+import column_structures.ColumnStructureModule;
+import column_structures.ColumnStructuredEntity;
+import column_structures.Column_structuresFactory;
+import column_structures.EnumMember;
 import core.CoreFactory;
 import core.DOMAIN;
 import core.FACET_VALUE_TYPE;
@@ -36,14 +54,16 @@ import data_definition.CUBE_STRUCTURE_ITEM;
 import data_definition.Data_definitionFactory;
 import efbt_data_definition.CombinationModule;
 import efbt_data_definition.Efbt_data_definitionFactory;
+import functionality_module.FunctionalityModule;
+import functionality_module.FunctionalityModuleModule;
+import functionality_module.Functionality_moduleFactory;
 import mapping.CUBE_MAPPING;
 import mapping.MAPPING_DEFINITION;
 import mapping.MAPPING_TO_CUBE;
 import mapping.MEMBER_MAPPING;
 import mapping.MappingFactory;
 import mapping.VARIABLE_MAPPING;
-import vtl_transformation.TRANSFORMATION;
-import vtl_transformation.TRANSFORMATION_NODE;
+
 import vtl_transformation.TRANSFORMATION_SCHEME;
 import vtl_transformation.Vtl_transformationFactory;
 
@@ -56,7 +76,11 @@ public class BIRDImporter extends Importer {
 	/**
 	 * The file path of the access database
 	 */
-	private static String filepath = "C:\\Users\\neil\\BIRD_release_5.0\\BIRD_release_5.0.accdb";
+	private static String filepath ;
+	//private static String testdatafilepath ;
+	
+	public static Program program;
+	
 	
 	public static String getFilepath() {
 		return filepath;
@@ -79,13 +103,15 @@ public class BIRDImporter extends Importer {
 				scheme.setDescription(row.getString("DESCRIPTION"));
 				scheme.setMaintenance_agency_id(row.getString("MAINTENANCE_AGENCY_ID"));
 				scheme.setName(row.getString("NAME"));
-				scheme.setType(row.getString("TYPE"));
+				scheme.setValid_to(row.getDate("VALID_TO"));
+				scheme.setValid_from(row.getDate("VALID_FROM"));
+				
 				transformationSchemes.getSchemes().add(scheme);
 				System.out.println("scheme = " + scheme.toString());
 
 			}
 
-			table = DatabaseBuilder.open(new File(filepath)).getTable("TRANSFORMATION");
+			/**table = DatabaseBuilder.open(new File(filepath)).getTable("TRANSFORMATION");
 			for (Row row : table) {
 				System.out.println("Column 'TRANSFORMATION_ID' has value: " + row.getString("TRANSFORMATION_ID"));
 				TRANSFORMATION transformation = Vtl_transformationFactory.eINSTANCE.createTRANSFORMATION();
@@ -132,7 +158,7 @@ public class BIRDImporter extends Importer {
 				nodelist.add(node);
 				System.out.println("node = " + node.toString());
 
-			}
+			}*/
 
 			// get all nodes in a list, add all level 1 nodes, add them in order.
 
@@ -198,9 +224,7 @@ public class BIRDImporter extends Importer {
 			memberMapping.setMaintenance_agency_id(row.getString("MAINTENENCE_AGENCY_ID"));
 			memberMappingModule.getMemberMappings().add(memberMapping);
 	
-					
 
-			//combinationItemsModule.getCombination_items().add(item);
 		}
 		table = DatabaseBuilder.open(new File(filepath)).getTable("VARIABLE_MAPPING");
 		for (Row row : table) {
@@ -212,10 +236,7 @@ public class BIRDImporter extends Importer {
 			variableMapping.setName(row.getString("NAME"));
 			variableMapping.setMaintenance_agency_id(row.getString("MAINTENENCE_AGENCY_ID"));
 			variableMappingModule.getVariableMappings().add(variableMapping);
-	
-					
 
-			//combinationItemsModule.getCombination_items().add(item);
 		}
 		
 		table = DatabaseBuilder.open(new File(filepath)).getTable("MAPPING_DEFINITION");
@@ -479,7 +500,9 @@ public class BIRDImporter extends Importer {
 				cube_structure.setCube_structure_id(row.getString("CUBE_STRUCTURE_ID"));
 				cube_structure.setName(row.getString("NAME"));
 				cube_structure.setDescription("DESCRIPTION");
-				System.out.println("cube_structure = " + cube_structure.toString());
+				cube_structure.setValid_to(row.getDate("VALID_TO"));
+				System.out.println("cube_structure = " + cube_structure.getValid_to());
+				System.out.println("VALID_TO = " + cube_structure.toString());
 				cubeStructuresModule.getCubeStructures().add(cube_structure);
 			}
 
@@ -526,6 +549,11 @@ public class BIRDImporter extends Importer {
 				} catch (NullPointerException e) {
 					System.out.println("null order");
 				}
+				String subdomain = (row.getString("SUBDOMAIN_ID"));
+				if (subdomain != null && subdomain.contains("RSTRCTD" ) && subdomain.contains("ID")  )
+					item.setIsIdentifier(true);
+				else
+					item.setIsIdentifier(false);
 
 				System.out.println("item = " + item.toString());
 
@@ -628,7 +656,143 @@ public class BIRDImporter extends Importer {
 
 		BIRDImporter importer = new BIRDImporter();
 		importer.filepath = args[0];
+		importer.outputFilepath = args[1];
+	//	testdatafilepath = args[1];
 		//importer.filepath = "C:\\freebirdtools-master2\\ws\\org.eclipse.efbt.regmodules.bird\\bird\\";
 		importer.doImport();
+		importer.createAortaFiles();
+		//importer.importTestData();
 	}
-}
+
+	//private void importTestData() {
+		// TODO get the csv file, use some open source csv library.
+		// create 1 test definition
+		//create mutliple tests, with that data.
+		
+		
+		
+	//}
+
+	public  void createAortaFiles() {
+		//create Aorta Program
+		program = Aorta_programFactory.eINSTANCE.createProgram();
+		ColumnDomainModule domainModule = Column_structuresFactory.eINSTANCE.createColumnDomainModule();
+		program.setDomainModule(domainModule);
+		//make a domain for each domain //then attach the correct memebrr
+		EList<DOMAIN> domainList = domains.getDomains();
+		for (Iterator iterator = domainList.iterator(); iterator.hasNext();) {
+			DOMAIN domain = (DOMAIN) iterator.next();
+			ColumnDomain columndomain = Column_structuresFactory.eINSTANCE.createColumnDomain();
+			columndomain.setName(domain.getDomain_id());
+			columndomain.setIsEnumerated(domain.isIs_enumerated());
+			ColumnDataType datatype = Column_structuresFactory.eINSTANCE.createColumnDataType();
+			datatype.setName(domain.getData_type().getName());			
+			columndomain.setDataType(datatype);
+			domainModule.getColumnDomains().add(columndomain);
+		}
+		EList<MEMBER> memberList = members.getMembers();
+		for (Iterator iterator = memberList.iterator(); iterator.hasNext();) {
+			MEMBER member = (MEMBER) iterator.next();
+			EnumMember enumMember = Column_structuresFactory.eINSTANCE.createEnumMember();
+			enumMember.setName(member.getMember_id());
+			addEnumMeberToCorrectColumnDomain(enumMember,member.getDomain_id().getDomain_id(),domainModule);
+			
+		}
+		
+		ColumnStructureModule columnStructureModule = Column_structuresFactory.eINSTANCE.createColumnStructureModule();
+		program.setInput_structures(columnStructureModule);
+		
+					//create a columnstructure entity for each columnstructure
+		EList<CUBE_STRUCTURE> cubeStructures = cubeStructuresModule.getCubeStructures();
+		for (Iterator iterator = cubeStructures.iterator(); iterator.hasNext();) {
+			CUBE_STRUCTURE cube_STRUCTURE = (CUBE_STRUCTURE) iterator.next();
+			Date validToDate = cube_STRUCTURE.getValid_to(); 
+			Date when = new Date(3000,1,1);
+			if(validToDate.after(when ) )
+			{
+				ColumnStructuredEntity columnStructuredEntity = Column_structuresFactory.eINSTANCE.createColumnStructuredEntity();
+				columnStructuredEntity.setName(cube_STRUCTURE.getCube_structure_id());
+				columnStructureModule.getColumnStructures().add(columnStructuredEntity);
+				
+				
+			}
+		}
+
+		EList<CUBE_STRUCTURE_ITEM> cubeStructureItems = cubeStructureItemsModule.getCubeStructureItems();
+		for (Iterator iterator = cubeStructureItems.iterator(); iterator.hasNext();) {
+			CUBE_STRUCTURE_ITEM cube_STRUCTURE_ITEM = (CUBE_STRUCTURE_ITEM) iterator.next();
+			Column column =  Column_structuresFactory.eINSTANCE.createColumn();
+			column.setName(cube_STRUCTURE_ITEM.getVariable_id().getVariable_id());
+			column.setIsMandatory(cube_STRUCTURE_ITEM.isIs_mandatory());
+			column.setIsIdentifier(cube_STRUCTURE_ITEM.isIsIdentifier());
+			setColumnDomain(column,domainModule,cube_STRUCTURE_ITEM.getVariable_id().getDomain_id().getDomain_id());
+			addColumntoColumnStructuredEntity(column,columnStructureModule,cube_STRUCTURE_ITEM.getCube_structure_id().getCube_structure_id());
+		}
+		
+		FunctionalityModuleModule functionalityModuleModule = Functionality_moduleFactory.eINSTANCE.createFunctionalityModuleModule();
+		
+		program.setFunctionalityModules(functionalityModuleModule);
+		
+		EList<TRANSFORMATION_SCHEME> schemes = transformationSchemes.getSchemes();
+		for (Iterator iterator = schemes.iterator(); iterator.hasNext();) {
+			TRANSFORMATION_SCHEME transformation_SCHEME = (TRANSFORMATION_SCHEME) iterator.next();
+			FunctionalityModule functionalityModule = Functionality_moduleFactory.eINSTANCE.createFunctionalityModule();
+			functionalityModule.setName(transformation_SCHEME.getTransformation_scheme_id());
+			functionalityModuleModule.getFunctionalityModules().add(functionalityModule);
+			
+		}
+		FreeBirdToolsResourceFactory factory = new FreeBirdToolsResourceFactory();
+		URI aortaURI = URI.createFileURI(outputFilepath + "aorta.aorta_program");
+	
+		Resource aortaResource = factory.createResource(aortaURI);
+		
+		aortaResource.getContents().add(program);
+		
+
+		try {
+			aortaResource.save(Collections.EMPTY_MAP);
+			
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		}
+		
+	}
+
+	private void addColumntoColumnStructuredEntity(Column column, ColumnStructureModule columnStructureModule, String cube_structure_id) {
+		
+		EList<ColumnStructuredEntity> columnStructures = columnStructureModule.getColumnStructures();
+		for (Iterator iterator = columnStructures.iterator(); iterator.hasNext();) {
+			ColumnStructuredEntity columnStructuredEntity = (ColumnStructuredEntity) iterator.next();
+			if(columnStructuredEntity.getName().equalsIgnoreCase(cube_structure_id))
+				columnStructuredEntity.getColumn().add(column);
+				
+			
+		}
+	}
+
+	private void setColumnDomain(Column column, ColumnDomainModule domainModule, String domainID) {
+		// TODO Auto-generated method stub
+		EList<ColumnDomain> columnDomains = domainModule.getColumnDomains();
+		for (Iterator iterator = columnDomains.iterator(); iterator.hasNext();) {
+			ColumnDomain columnDomain = (ColumnDomain) iterator.next();
+			
+			if(columnDomain.getName().equalsIgnoreCase(domainID))
+				column.setDomain(columnDomain);
+		}
+	}
+
+	private void addEnumMeberToCorrectColumnDomain(EnumMember enumMember, String domainID, ColumnDomainModule domainModule) {
+	
+		EList<ColumnDomain> columnDomains = domainModule.getColumnDomains();
+		for (Iterator iterator = columnDomains.iterator(); iterator.hasNext();) {
+			ColumnDomain columnDomain = (ColumnDomain) iterator.next();
+			
+			if(columnDomain.getName().equalsIgnoreCase(domainID))
+				columnDomain.getEnumMembers().add(enumMember);
+				
+		}
+	}
+		
+	}
+

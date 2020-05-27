@@ -579,6 +579,7 @@
         <details key="name" value="variable_set_id"/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isIdentifier" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CUBE_TO_COMBINATION">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">

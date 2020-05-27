@@ -265,7 +265,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="MEMBER" eSuperTypes="../../org.eclipse.efbt.aorta.model/model/column_structures.ecore#//EnumMember">
+  <eClassifiers xsi:type="ecore:EClass" name="MEMBER">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="MEMBER"/>
       <details key="kind" value="empty"/>
@@ -296,6 +296,7 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="member_id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MEMBER_HIERARCHY">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
@@ -492,7 +493,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="VARIABLE" eSuperTypes="../../org.eclipse.efbt.aorta.model/model/column_structures.ecore#//Column">
+  <eClassifiers xsi:type="ecore:EClass" name="VARIABLE">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="VARIABLE"/>
       <details key="kind" value="empty"/>
@@ -529,6 +530,7 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="variable_id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VARIABLE_SET">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">

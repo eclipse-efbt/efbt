@@ -566,6 +566,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aorta_program.ecore#//Program/requirementsArtefacts"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aorta_program.ecore#//Program/testTemplates"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aorta_program.ecore#//Program/testConstriants"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aorta_program.ecore#//Program/functionalityModules"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

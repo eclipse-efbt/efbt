@@ -21,5 +21,7 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="testConstriants" eType="ecore:EClass test_definition.ecore#//TestContraints"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="functionalityModules" eType="ecore:EClass functionality_module.ecore#//FunctionalityModuleModule"
+        containment="true"/>
   </eClassifiers>
 </ecore:EPackage>
