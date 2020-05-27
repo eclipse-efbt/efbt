@@ -269,7 +269,6 @@
     <genClasses ecoreClass="data_definition.ecore#//CUBE_STRUCTURE_ITEM">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//CUBE_STRUCTURE_ITEM/attribute_associated_variable"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//CUBE_STRUCTURE_ITEM/cube_structure_id"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//CUBE_STRUCTURE_ITEM/cube_variable_code"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_STRUCTURE_ITEM/description"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_STRUCTURE_ITEM/dimension_type"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_STRUCTURE_ITEM/is_flow"/>
@@ -281,6 +280,7 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//CUBE_STRUCTURE_ITEM/variable_id"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//CUBE_STRUCTURE_ITEM/variable_set_id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_STRUCTURE_ITEM/isIdentifier"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_STRUCTURE_ITEM/cube_variable_code"/>
     </genClasses>
     <genClasses ecoreClass="data_definition.ecore#//CUBE_TO_COMBINATION">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//CUBE_TO_COMBINATION/combination_id"/>

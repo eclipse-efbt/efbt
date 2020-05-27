@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<xsd:schema xmlns:aorta_program="http://www.eclipse.org/aorta_program" xmlns:column_structures="http://www.eclipse.org/column_structures" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:report_structures="http://www.eclipse.org/report_structures" xmlns:requirements_artefacts="http://www.eclipse.org/requirements_artefacts" xmlns:requirements_text="http://www.eclipse.org/requirements_text" xmlns:test="http://www.eclipse.org/test" xmlns:test_definition="http://www.eclipse.org/test_definition" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="aorta_program" ecore:package="aorta_program" targetNamespace="http://www.eclipse.org/aorta_program">
+<xsd:schema xmlns:aorta_program="http://www.eclipse.org/aorta_program" xmlns:column_structures="http://www.eclipse.org/column_structures" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:functionality_module="http://www.eclipse.org/functionality_module" xmlns:report_structures="http://www.eclipse.org/report_structures" xmlns:requirements_artefacts="http://www.eclipse.org/requirements_artefacts" xmlns:requirements_text="http://www.eclipse.org/requirements_text" xmlns:test="http://www.eclipse.org/test" xmlns:test_definition="http://www.eclipse.org/test_definition" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="aorta_program" ecore:package="aorta_program" targetNamespace="http://www.eclipse.org/aorta_program">
+  <xsd:import namespace="http://www.eclipse.org/functionality_module" schemaLocation="functionality_module.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/requirements_artefacts" schemaLocation="requirments_artefacts.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/test" schemaLocation="test.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/test_definition" schemaLocation="test_definition.xsd"/>
@@ -18,6 +19,7 @@
       <xsd:element ecore:resolveProxies="true" minOccurs="0" name="requirementsArtefacts" type="requirements_artefacts:InputTypeModule"/>
       <xsd:element ecore:resolveProxies="true" minOccurs="0" name="testTemplates" type="test_definition:TestTemplateModule"/>
       <xsd:element ecore:resolveProxies="true" minOccurs="0" name="testConstriants" type="test_definition:TestContraints"/>
+      <xsd:element ecore:resolveProxies="true" minOccurs="0" name="functionalityModules" type="functionality_module:FunctionalityModuleModule"/>
     </xsd:sequence>
   </xsd:complexType>
 </xsd:schema>
