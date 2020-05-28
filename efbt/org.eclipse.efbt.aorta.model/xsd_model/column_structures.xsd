@@ -18,6 +18,7 @@
   </xsd:complexType>
   <xsd:complexType name="EnumMember">
     <xsd:attribute ecore:id="true" name="name" type="ecore:EString"/>
+    <xsd:attribute name="code" type="ecore:EString"/>
   </xsd:complexType>
   <xsd:complexType name="ColumnStructuredEntity">
     <xsd:complexContent>

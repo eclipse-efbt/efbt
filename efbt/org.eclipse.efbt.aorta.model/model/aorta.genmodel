@@ -144,6 +144,7 @@
     </genClasses>
     <genClasses ecoreClass="column_structures.ecore#//EnumMember">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_structures.ecore#//EnumMember/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_structures.ecore#//EnumMember/code"/>
     </genClasses>
     <genClasses ecoreClass="column_structures.ecore#//ColumnStructuredEntity">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_structures.ecore#//ColumnStructuredEntity/name"/>
