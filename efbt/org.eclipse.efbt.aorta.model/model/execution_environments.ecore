@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="execution_environments" nsURI="http://www.eclipse.org/execution_environments"
+    nsPrefix="execution_environments">
+  <eClassifiers xsi:type="ecore:EClass" name="TestExecutionEnvironment">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="inputStructures" eType="ecore:EClass input_data_structures.ecore#//InputDatastructureModule"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="outputStructuresModule"
+        eType="ecore:EClass output_data_structures.ecore#//OutputDataStructureModule"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TestExecutionEnvironmentModule" eSuperTypes="module_management.ecore#//Module">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="testexecutionEnvironments"
+        eType="#//TestExecutionEnvironment" containment="true"/>
+  </eClassifiers>
+</ecore:EPackage>

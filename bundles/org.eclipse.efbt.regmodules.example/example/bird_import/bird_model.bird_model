@@ -1,2 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<bird_model:BIRDModel xmlns:bird_model="http://www.eclipse.org/bird_model" cubes="cube_structure_items.efbt_data_definition#example_cube_structure_item_module cube_structures.efbt_data_definition#example_cube_structure_module cubes.efbt_data_definition#example_cube_module" members="members.efbt_data_definition#exampleMembers" name="bidmodel"/>

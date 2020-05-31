@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" xsi:schemaLocation="http://www.eclipse.org/sirius/description/1.1.0 http://www.eclipse.org/sirius/1.1.0#//description" uid="_Yk3EkHy1EeqtEe4aB4OwtA" selectedViews="_aZaycHy1EeqtEe4aB4OwtA" version="14.3.0.201909031200">
+  <semanticResources>example/bird_import/bird_model.bird_model</semanticResources>
+  <semanticResources>example/bird_import/domains.efbt_data_definition</semanticResources>
+  <semanticResources>example/bird_import/members.efbt_data_definition</semanticResources>
+  <semanticResources>example/bird_import/variables.efbt_data_definition</semanticResources>
+  <semanticResources>example/bird_import/cube_structure_items.efbt_data_definition</semanticResources>
+  <semanticResources>example/bird_import/cube_structures.efbt_data_definition</semanticResources>
+  <semanticResources>example/bird_import/cubes.efbt_data_definition</semanticResources>
+  <semanticResources>example/bird_import/combinations.efbt_data_definition</semanticResources>
+  <ownedViews xmi:type="viewpoint:DView" uid="_aZaycHy1EeqtEe4aB4OwtA">
+    <viewpoint xmi:type="description:Viewpoint" href="platform:/resource/org.eclipse.efbt.bird.ui.sirius/description/bird.odesign#//@ownedViewpoints[name='BIRDViewpoint']"/>
+  </ownedViews>
+</viewpoint:DAnalysis>
