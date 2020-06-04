@@ -113,8 +113,8 @@ public class BIRDImporter extends Importer {
 	/**
 	 * The file path of the access database
 	 */
-	private static String filepath ;
-	private static String testdatafilepath ;
+	public static String filepath ;
+	public static String testdatafilepath ;
 	
 	public static Program testDefinitionProgram;
 	public static Program testTemplateProgram;
@@ -706,10 +706,12 @@ public class BIRDImporter extends Importer {
 		importer.doImport();
 		importer.createAortaFiles();
 		importer.importTestData();
+		
+		
 		importer.persistAortaFiles();
 	}
 
-	private void importTestData() {
+	public void importTestData() {
 		//get the csv file, use some open source csv library.
 		//create 1 test definition
 		//create mutliple tests, with that data.
@@ -817,6 +819,7 @@ public class BIRDImporter extends Importer {
 				 if (table == null)
 				 {
 					 BaseColumnStructuredData structuredData = Base_column_structured_dataFactory.eINSTANCE.createBaseColumnStructuredData();
+					 structuredData.setCube(getCubeForCubeName(cube));
 					 tables.put(id1 + ":" + id2 + ":" + cube,structuredData);
 					 inputData.getSourceTableData().add(structuredData);
 					 table = structuredData;
@@ -905,6 +908,18 @@ public class BIRDImporter extends Importer {
 		 
 		
 		
+	}
+
+	private ColumnStructuredEntity getCubeForCubeName(String cube) {
+		// TODO Auto-generated method stub
+		EList<ColumnStructuredEntity> column_structured_entities = 
+				iputDataStructuresProgram.getInput_structures().getColumnStructures();
+		for (Iterator iterator = column_structured_entities.iterator(); iterator.hasNext();) {
+			ColumnStructuredEntity columnStructuredEntity = (ColumnStructuredEntity) iterator.next();
+			if (columnStructuredEntity.getName().equalsIgnoreCase(cube))
+				return columnStructuredEntity;
+		}
+		return null;
 	}
 
 	private EnumMember getMember(String cube, String variable, String value) {
