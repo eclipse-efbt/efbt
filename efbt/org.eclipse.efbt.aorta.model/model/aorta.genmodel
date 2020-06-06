@@ -20,11 +20,9 @@
   <foreignModel>output_data_structures.ecore</foreignModel>
   <foreignModel>report_based_functional_domain_breakdown.ecore</foreignModel>
   <foreignModel>report_structures.ecore</foreignModel>
-  <foreignModel>requirements_based_test_definition.ecore</foreignModel>
   <foreignModel>requirements_text.ecore</foreignModel>
   <foreignModel>requirments_artefacts.ecore</foreignModel>
   <foreignModel>scenarios.ecore</foreignModel>
-  <foreignModel>structural_change_test_definitions.ecore</foreignModel>
   <foreignModel>technical_specification_breakdown.ecore</foreignModel>
   <foreignModel>test_definition.ecore</foreignModel>
   <foreignModel>test_input_data.ecore</foreignModel>
@@ -296,26 +294,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute report_structures.ecore#//ReportGroup/name"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Requirements_based_test_definition" resource="XML" disposableProviderFactory="true"
-      ecorePackage="requirements_based_test_definition.ecore#/">
-    <genClasses ecoreClass="requirements_based_test_definition.ecore#//E2ERequirementsBasedTestDefinition">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference requirements_based_test_definition.ecore#//E2ERequirementsBasedTestDefinition/outputCreationFunctionalityModule"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference requirements_based_test_definition.ecore#//E2ERequirementsBasedTestDefinition/readDataSourceFunctionalityModule"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference requirements_based_test_definition.ecore#//E2ERequirementsBasedTestDefinition/scenarios"/>
-    </genClasses>
-    <genClasses ecoreClass="requirements_based_test_definition.ecore#//E2ERequirementsBasedTestDefinitionModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference requirements_based_test_definition.ecore#//E2ERequirementsBasedTestDefinitionModule/testDefinitions"/>
-    </genClasses>
-    <genClasses ecoreClass="requirements_based_test_definition.ecore#//E2ERequirementsBasedTestDefinitionSet">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference requirements_based_test_definition.ecore#//E2ERequirementsBasedTestDefinitionSet/testDefinitions"/>
-    </genClasses>
-    <genClasses ecoreClass="requirements_based_test_definition.ecore#//FunctionalRequirementsBasedE2ETestDefinition"/>
-    <genClasses ecoreClass="requirements_based_test_definition.ecore#//TechnicalRequirementsBasedE2ETestDefinition"/>
-    <genClasses ecoreClass="requirements_based_test_definition.ecore#//TechnicalUnitTestDefinition">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference requirements_based_test_definition.ecore#//TechnicalUnitTestDefinition/functionalityModule"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference requirements_based_test_definition.ecore#//TechnicalUnitTestDefinition/scenarios"/>
-    </genClasses>
-  </genPackages>
   <genPackages prefix="Requirements_text" resource="XML" disposableProviderFactory="true"
       ecorePackage="requirements_text.ecore#/">
     <genClasses ecoreClass="requirements_text.ecore#//AllowedTypes">
@@ -382,30 +360,6 @@
     <genClasses ecoreClass="scenarios.ecore#//ScenarioSetTag">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference scenarios.ecore#//ScenarioSetTag/scenarioSet"/>
     </genClasses>
-  </genPackages>
-  <genPackages prefix="Structural_change_test_definitions" resource="XML" disposableProviderFactory="true"
-      ecorePackage="structural_change_test_definitions.ecore#/">
-    <genClasses ecoreClass="structural_change_test_definitions.ecore#//StructuralChangeMapping">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference structural_change_test_definitions.ecore#//StructuralChangeMapping/inputStructures"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference structural_change_test_definitions.ecore#//StructuralChangeMapping/outputDataStructures"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference structural_change_test_definitions.ecore#//StructuralChangeMapping/scenarios"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute structural_change_test_definitions.ecore#//StructuralChangeMapping/name"/>
-    </genClasses>
-    <genClasses ecoreClass="structural_change_test_definitions.ecore#//StructuralChangeTestDefinition">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference structural_change_test_definitions.ecore#//StructuralChangeTestDefinition/structuralChangeMapping"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference structural_change_test_definitions.ecore#//StructuralChangeTestDefinition/scenario"/>
-    </genClasses>
-    <genClasses ecoreClass="structural_change_test_definitions.ecore#//InputStructureSubtypes">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference structural_change_test_definitions.ecore#//InputStructureSubtypes/inputStructure"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute structural_change_test_definitions.ecore#//InputStructureSubtypes/subTypeName"/>
-    </genClasses>
-    <genClasses ecoreClass="structural_change_test_definitions.ecore#//StructuralChangeMappingModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference structural_change_test_definitions.ecore#//StructuralChangeMappingModule/mappings"/>
-    </genClasses>
-    <genClasses ecoreClass="structural_change_test_definitions.ecore#//StructuralChangeTestDefinitionModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference structural_change_test_definitions.ecore#//StructuralChangeTestDefinitionModule/testDefinitions"/>
-    </genClasses>
-    <genClasses ecoreClass="structural_change_test_definitions.ecore#//InputStructureSubtypesModule"/>
   </genPackages>
   <genPackages prefix="Technical_specification_breakdown" resource="XML" disposableProviderFactory="true"
       ecorePackage="technical_specification_breakdown.ecore#/">
