@@ -138,8 +138,8 @@ public class BIRDImporter extends Importer {
 		try {
 			table = DatabaseBuilder.open(new File(filepath)).getTable("TRANSFORMATION_SCHEME");
 			for (Row row : table) {
-				System.out
-						.println("Column 'TRANSFORMATION_SCHEME_ID' has value: " + row.get("TRANSFORMATION_SCHEME_ID"));
+				//System.out
+				//		.println("Column 'TRANSFORMATION_SCHEME_ID' has value: " + row.get("TRANSFORMATION_SCHEME_ID"));
 				TRANSFORMATION_SCHEME scheme = Vtl_transformationFactory.eINSTANCE.createTRANSFORMATION_SCHEME();
 				scheme.setCode(row.getString("CODE"));
 				scheme.setTransformation_scheme_id(row.getString("TRANSFORMATION_SCHEME_ID"));
@@ -150,7 +150,7 @@ public class BIRDImporter extends Importer {
 				scheme.setValid_from(row.getDate("VALID_FROM"));
 				
 				transformationSchemes.getSchemes().add(scheme);
-				System.out.println("scheme = " + scheme.toString());
+			//	System.out.println("scheme = " + scheme.toString());
 
 			}
 
@@ -258,7 +258,7 @@ public class BIRDImporter extends Importer {
 
 		table = DatabaseBuilder.open(new File(filepath)).getTable("MEMBER_MAPPING");
 		for (Row row : table) {
-			System.out.println("Column2 'MEMBER_MAPPING_ID' has value: " + row.get("MEMBER_MAPPING_ID"));
+		
 			MEMBER_MAPPING memberMapping = MappingFactory.eINSTANCE.createMEMBER_MAPPING();			
 			
 			memberMapping.setMember_mapping_id(row.getString("MEMBER_MAPPING_ID"));
@@ -271,7 +271,7 @@ public class BIRDImporter extends Importer {
 		}
 		table = DatabaseBuilder.open(new File(filepath)).getTable("VARIABLE_MAPPING");
 		for (Row row : table) {
-			System.out.println("Column2 'VARIABLE_MAPPING_ID' has value: " + row.get("VARIABLE_MAPPING_ID"));
+			
 			VARIABLE_MAPPING variableMapping = MappingFactory.eINSTANCE.createVARIABLE_MAPPING();			
 			
 			variableMapping.setVariable_mapping_id(row.getString("VARIABLE_MAPPING_ID"));
@@ -286,7 +286,7 @@ public class BIRDImporter extends Importer {
 
 		for (Row row : table) {
 
-			System.out.println("Column 'MAPPING_DEFINITION_ID' has value: " + row.get("MAPPING_DEFINITION_ID"));
+		//	System.out.println("Column 'MAPPING_DEFINITION_ID' has value: " + row.get("MAPPING_DEFINITION_ID"));
 			MAPPING_DEFINITION mapping = MappingFactory.eINSTANCE.createMAPPING_DEFINITION();
 			mapping.setCode(row.getString("CODE"));
 			mapping.setMapping_id(row.getString("MAPPING_ID"));
@@ -305,7 +305,7 @@ public class BIRDImporter extends Importer {
 				mapping.setVariableMapping(findVariableMappingWithID(variableMappingString));
 			}
 			
-			System.out.println("mapping = " + mapping.toString());
+		//	System.out.println("mapping = " + mapping.toString());
 			mappingDefinitionModule.getMappings().add(mapping);
 		}
 		
@@ -315,7 +315,7 @@ public class BIRDImporter extends Importer {
 		table = DatabaseBuilder.open(new File(filepath)).getTable("CUBE_MAPPING");
 		for (Row row : table) {
 
-			System.out.println("Column 'CUBE_MAPPING_ID' has value: " + row.get("CUBE_MAPPING_ID"));
+		//	System.out.println("Column 'CUBE_MAPPING_ID' has value: " + row.get("CUBE_MAPPING_ID"));
 			CUBE_MAPPING mapping = MappingFactory.eINSTANCE.createCUBE_MAPPING();
 			mapping.setCode(row.getString("CODE"));
 			mapping.setCube_mapping_id(row.getString("CUBE_MAPPING_ID"));
@@ -330,13 +330,13 @@ public class BIRDImporter extends Importer {
 			mapping.setTarget_cube(findCubeWithID(destinationCubeString));
 			cubeMappingModule.getCubeMappings().add(mapping);
 			
-			System.out.println("mapping2 = " + mapping.toString());
+		//	System.out.println("mapping2 = " + mapping.toString());
 		}
 		
 		table = DatabaseBuilder.open(new File(filepath)).getTable("MAPPING_TO_CUBE");
 		for (Row row : table) {
 
-			System.out.println("Column2 'MAPPING_TO_CUBE' has value: " + row.get("CUBE_MAPPING_ID"));
+			
 			MAPPING_TO_CUBE mapping = MappingFactory.eINSTANCE.createMAPPING_TO_CUBE();
 			
 			
@@ -349,7 +349,7 @@ public class BIRDImporter extends Importer {
 			cube_mapping.getMappingsToCube().add(mapping);
 			
 			
-			System.out.println("mapping2 = " + mapping.toString());
+			//System.out.println("mapping2 = " + mapping.toString());
 		}
 		
 		
@@ -421,7 +421,7 @@ public class BIRDImporter extends Importer {
 		try {
 			table = DatabaseBuilder.open(new File(filepath)).getTable("DOMAIN");
 			for (Row row : table) {
-				System.out.println("Column 'DOMAIN_ID' has value: " + row.get("DOMAIN_ID"));
+			//	System.out.println("Column 'DOMAIN_ID' has value: " + row.get("DOMAIN_ID"));
 				DOMAIN domain = CoreFactory.eINSTANCE.createDOMAIN();
 				domain.setCode(row.getString("CODE"));
 				domain.setDomain_id(row.getString("DOMAIN_ID"));
@@ -461,7 +461,7 @@ public class BIRDImporter extends Importer {
 				domain.setIs_enumerated(is_enumerated);
 
 				domains.getDomains().add(domain);
-				System.out.println("domain = " + domain.toString());
+			//	System.out.println("domain = " + domain.toString());
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -475,7 +475,7 @@ public class BIRDImporter extends Importer {
 		try {
 			table = DatabaseBuilder.open(new File(filepath)).getTable("MEMBER");
 			for (Row row : table) {
-				System.out.println("Column 'MEMBER_ID' has value: " + row.get("MEMBER_ID"));
+				//System.out.println("Column 'MEMBER_ID' has value: " + row.get("MEMBER_ID"));
 				MEMBER member = CoreFactory.eINSTANCE.createMEMBER();
 				member.setCode(row.getString("CODE"));
 				member.setMember_id(row.getString("MEMBER_ID"));
@@ -486,7 +486,7 @@ public class BIRDImporter extends Importer {
 				member.setDomain_id(domain);
 
 				members.getMembers().add(member);
-				System.out.println("member = " + member.toString());
+			//	System.out.println("member = " + member.toString());
 			}
 		} catch (IOException e) {
 
@@ -512,7 +512,7 @@ public class BIRDImporter extends Importer {
 		try {
 			table = DatabaseBuilder.open(new File(filepath)).getTable("VARIABLE");
 			for (Row row : table) {
-				System.out.println("Column 'VARIABLE_ID' has value: " + row.get("VARIABLE_ID"));
+		//		System.out.println("Column 'VARIABLE_ID' has value: " + row.get("VARIABLE_ID"));
 				VARIABLE variable = CoreFactory.eINSTANCE.createVARIABLE();
 				variable.setCode(row.getString("CODE"));
 				variable.setVariable_id(row.getString("VARIABLE_ID"));
@@ -523,7 +523,7 @@ public class BIRDImporter extends Importer {
 				variable.setDomain_id(domain);
 
 				variables.getVariables().add(variable);
-				System.out.println("variable = " + variable.toString());
+		//		System.out.println("variable = " + variable.toString());
 			}
 		} catch (IOException e) {
 
@@ -537,21 +537,21 @@ public class BIRDImporter extends Importer {
 
 			table = DatabaseBuilder.open(new File(filepath)).getTable("CUBE_STRUCTURE");
 			for (Row row : table) {
-				System.out.println("Column 'CUBE_STRUCTURE_ID' has value: " + row.get("CUBE_STRUCTURE_ID"));
+			//	System.out.println("Column 'CUBE_STRUCTURE_ID' has value: " + row.get("CUBE_STRUCTURE_ID"));
 				CUBE_STRUCTURE cube_structure = Data_definitionFactory.eINSTANCE.createCUBE_STRUCTURE();
 				cube_structure.setCode(row.getString("CODE"));
 				cube_structure.setCube_structure_id(row.getString("CUBE_STRUCTURE_ID"));
 				cube_structure.setName(row.getString("NAME"));
 				cube_structure.setDescription("DESCRIPTION");
 				cube_structure.setValid_to(row.getDate("VALID_TO"));
-				System.out.println("cube_structure = " + cube_structure.getValid_to());
-				System.out.println("VALID_TO = " + cube_structure.toString());
+				//System.out.println("cube_structure = " + cube_structure.getValid_to());
+				//System.out.println("VALID_TO = " + cube_structure.toString());
 				cubeStructuresModule.getCubeStructures().add(cube_structure);
 			}
 
 			table = DatabaseBuilder.open(new File(filepath)).getTable("CUBE");
 			for (Row row : table) {
-				System.out.println("Column 'CUBE_ID' has value: " + row.get("CUBE_ID"));
+			//	System.out.println("Column 'CUBE_ID' has value: " + row.get("CUBE_ID"));
 				CUBE cube = Data_definitionFactory.eINSTANCE.createCUBE();
 				cube.setCode(row.getString("CODE"));
 				cube.setCube_id(row.getString("CUBE_ID"));
@@ -562,13 +562,13 @@ public class BIRDImporter extends Importer {
 				CUBE_STRUCTURE structure = findCubeStructureWithID(cubeStructureString);
 				cube.setCube_structure_id(structure);
 
-				System.out.println("cube = " + cube.toString());
+				
 				cubesModule.getCubes().add(cube);
 			}
 
 			table = DatabaseBuilder.open(new File(filepath)).getTable("CUBE_STRUCTURE_ITEM");
 			for (Row row : table) {
-				System.out.println("Column2 'CUBE_STRUCTURE_ID' has value: " + row.get("CUBE_STRUCTURE_ID"));
+				
 				CUBE_STRUCTURE_ITEM item = Data_definitionFactory.eINSTANCE.createCUBE_STRUCTURE_ITEM();
 				String structureString = (row.getString("CUBE_STRUCTURE_ID"));
 
@@ -591,7 +591,7 @@ public class BIRDImporter extends Importer {
 					int order = row.getInt("ORDER");
 					item.setOrder(order);
 				} catch (NullPointerException e) {
-					System.out.println("null order");
+					//System.out.println("null order");
 				}
 				String subdomain = (row.getString("SUBDOMAIN_ID"));
 				if (subdomain != null && subdomain.contains("RSTRCTD" ) && subdomain.contains("ID")  )
@@ -599,7 +599,7 @@ public class BIRDImporter extends Importer {
 				else
 					item.setIsIdentifier(false);
 
-				System.out.println("item = " + item.toString());
+				
 
 				cubeStructureItemsModule.getCubeStructureItems().add(item);
 			}
@@ -640,18 +640,18 @@ public class BIRDImporter extends Importer {
 				if (counter == 100)
 					counter = 0;
 
-				System.out.println("Column 'COMBINATION_ID' has value: " + row.get("COMBINATION_ID"));
+				//System.out.println("Column 'COMBINATION_ID' has value: " + row.get("COMBINATION_ID"));
 				COMBINATION comb = Data_definitionFactory.eINSTANCE.createCOMBINATION();
 				comb.setCode(row.getString("CODE"));
 				comb.setCombination_id(row.getString("COMBINATION_ID"));
 				comb.setName(row.getString("NAME"));
-				System.out.println("comb = " + comb.toString());
+				//System.out.println("comb = " + comb.toString());
 				combinationsModule.getCombinations().add(comb);
 			}
 
 			table = DatabaseBuilder.open(new File(filepath)).getTable("COMBINATION_ITEM");
 			for (Row row : table) {
-				System.out.println("Column2 'COMBINATION_ID' has value: " + row.get("COMBINATION_ID"));
+				
 				COMBINATION_ITEM item = Data_definitionFactory.eINSTANCE.createCOMBINATION_ITEM();
 				String combinationString = (row.getString("COMBINATION_ID"));
 				String variableString = (row.getString("VARIABLE_ID"));
@@ -716,11 +716,12 @@ public class BIRDImporter extends Importer {
 		//create 1 test definition
 		//create mutliple tests, with that data.
 		TestDefinitionModule definitionModule =   Test_definitionFactory.eINSTANCE.createTestDefinitionModule();
+		definitionModule.setName("testDefinitionsModule");
 	//	TestConstraintsModule constraintsModule =   Test_definitionFactory.eINSTANCE.createTestConstraintsModule();
 		
-		
-		
+
 		TestTemplateModule testTemplateModule = Test_definitionFactory.eINSTANCE.createTestTemplateModule();
+		testTemplateModule.setName("testTemplateModule");
 		testTemplateProgram.setTestTemplates(testTemplateModule);
 		testDefinitionProgram.setTestDefinitions(definitionModule);
 		
@@ -743,6 +744,7 @@ public class BIRDImporter extends Importer {
 		testTemplateModule.getTemplates().add(testTemplate);
 		
 		TestContraints contraints = Test_definitionFactory.eINSTANCE.createTestContraints();
+		contraints.setName("constraints");
 		//constraintsModule.getCoverageTestSets().add(contraints);
 		testConstraintsProgram.setTestConstriants(contraints);
 		Param contraintsparam = Test_definitionFactory.eINSTANCE.createParam();
@@ -863,7 +865,7 @@ public class BIRDImporter extends Importer {
 							 }
 							 else
 							 {
-								 System.out.println("Cannot find member:" + cube + "." + variable + "." + value );
+								 System.out.println("Cannot find member:" + id1 + ":" + id2 + ":" +cube+":"+record_no + ":" + variable + ":" + value );
 							 }
 							 
 							 
@@ -882,13 +884,13 @@ public class BIRDImporter extends Importer {
 					 }
 					 else
 					 {
-						 System.out.println("Cannot find column:" + cube + "." + variable);
+						 System.out.println("Cannot find column:" + id1 + ":" + id2 + ":" +cube+":"+record_no + ":" + variable);
 					 }
 					 
 				 }
 				 else
 				 {
-					 System.out.println("Cannot find cube:" + cube);
+					 System.out.println("Cannot find cube:" + id1 + ":" + id2 + ":" +cube);
 				 }
 				
 			 }
@@ -1021,6 +1023,7 @@ public class BIRDImporter extends Importer {
 		testPrograms = new BasicEList<Program>();
 		
 		ColumnDomainModule domainModule = Column_structuresFactory.eINSTANCE.createColumnDomainModule();
+		domainModule.setName("domainsModule");
 		domainsProgram.setDomainModule(domainModule);
 		//make a domain for each domain //then attach the correct memebrr
 		EList<DOMAIN> domainList = domains.getDomains();
@@ -1045,6 +1048,7 @@ public class BIRDImporter extends Importer {
 		}
 		
 		ColumnStructureModule columnStructureModule = Column_structuresFactory.eINSTANCE.createColumnStructureModule();
+		columnStructureModule.setName("columnStructureModule");
 		iputDataStructuresProgram.setInput_structures(columnStructureModule);
 		
 					//create a columnstructure entity for each columnstructure
@@ -1075,6 +1079,7 @@ public class BIRDImporter extends Importer {
 		}
 		
 		FunctionalityModuleModule functionalityModuleModule = Functionality_moduleFactory.eINSTANCE.createFunctionalityModuleModule();
+		functionalityModuleModule.setName("functionalityModule");
 		
 		functionalityModulesProgram.setFunctionalityModules(functionalityModuleModule);
 		

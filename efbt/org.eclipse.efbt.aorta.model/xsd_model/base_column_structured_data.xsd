@@ -93,8 +93,6 @@ SPDX-License-Identifier: EPL-2.0
             </xsd:annotation>
           </xsd:element>
         </xsd:sequence>
-        <xsd:attribute ecore:unsettable="false" name="isDelete" type="ecore:EBoolean"/>
-        <xsd:attribute name="rowIDToDelete" type="ecore:EString"/>
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
