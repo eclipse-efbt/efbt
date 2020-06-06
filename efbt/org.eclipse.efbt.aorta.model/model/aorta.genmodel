@@ -81,8 +81,6 @@
     </genClasses>
     <genClasses ecoreClass="base_column_structured_data.ecore#//BaseRowData">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference base_column_structured_data.ecore#//BaseRowData/cells"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute base_column_structured_data.ecore#//BaseRowData/isDelete"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute base_column_structured_data.ecore#//BaseRowData/rowIDToDelete"/>
     </genClasses>
     <genClasses ecoreClass="base_column_structured_data.ecore#//InputData">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference base_column_structured_data.ecore#//InputData/sourceTableData"/>

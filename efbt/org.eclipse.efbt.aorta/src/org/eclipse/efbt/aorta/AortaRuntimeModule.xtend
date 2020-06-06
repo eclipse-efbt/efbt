@@ -12,8 +12,5 @@ import org.eclipse.xtext.naming.SimpleNameProvider
  */
 class AortaRuntimeModule extends AbstractAortaRuntimeModule {
 	
-	// contributed by org.eclipse.xtext.xtext.generator.exporting.QualifiedNamesFragment2
-	//override Class<? extends IQualifiedNameProvider> bindIQualifiedNameProvider() {
-	//	return typeof(SimpleNameProvider)
-	//}
+	
 }
