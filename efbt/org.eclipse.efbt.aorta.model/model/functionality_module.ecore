@@ -81,7 +81,8 @@
       <details key="documentation" value="A FunctionalityModule which represents the reading in data from base cubes. Note that the BIRD input layer is made up of BaseCubes."/>
     </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="OutputCreationFunctionalityModule" eSuperTypes="#//LeafFunctionalityModule">
+  <eClassifiers xsi:type="ecore:EClass" name="OutputCreationFunctionalityModule" abstract="true"
+      interface="true" eSuperTypes="#//LeafFunctionalityModule">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="ReportCellCreationFunctionalityModule"/>
       <details key="kind" value="elementOnly"/>
@@ -90,7 +91,7 @@
       <details key="documentation" value="A FunctionalityModule which represents the calculation of report cells."/>
     </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="FunctionalityModule">
+  <eClassifiers xsi:type="ecore:EClass" name="FunctionalityModule" abstract="true">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="FunctionalityModule"/>
       <details key="kind" value="empty"/>
