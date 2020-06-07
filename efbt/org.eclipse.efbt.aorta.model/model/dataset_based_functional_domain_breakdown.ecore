@@ -15,5 +15,9 @@
         eType="ecore:EClass report_structures.ecore#//RegReportCell"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DatasetBasedFunctionalityModuleModule"
-      eSuperTypes="functionality_module.ecore#//FunctionalityModuleModule"/>
+      eSuperTypes="functionality_module.ecore#//FunctionalityModuleModule">
+    <eAnnotations source="http://www.obeo.fr/dsl/dnc/archetype">
+      <details key="archetype" value="Description"/>
+    </eAnnotations>
+  </eClassifiers>
 </ecore:EPackage>
