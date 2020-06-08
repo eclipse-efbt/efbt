@@ -82,7 +82,7 @@ Note that FunctionalityModulesSet is also a subclass of FunctionalityModule, so 
       <xsd:extension base="functionality_module:LeafFunctionalityModule"/>
     </xsd:complexContent>
   </xsd:complexType>
-  <xsd:complexType ecore:name="OutputCreationFunctionalityModule" name="ReportCellCreationFunctionalityModule">
+  <xsd:complexType abstract="true" ecore:interface="true" ecore:name="OutputCreationFunctionalityModule" name="ReportCellCreationFunctionalityModule">
     <xsd:annotation>
       <xsd:documentation>A FunctionalityModule which represents the calculation of report cells.</xsd:documentation>
     </xsd:annotation>
@@ -90,7 +90,7 @@ Note that FunctionalityModulesSet is also a subclass of FunctionalityModule, so 
       <xsd:extension base="functionality_module:LeafFunctionalityModule"/>
     </xsd:complexContent>
   </xsd:complexType>
-  <xsd:complexType name="FunctionalityModule">
+  <xsd:complexType abstract="true" name="FunctionalityModule">
     <xsd:annotation>
       <xsd:documentation>FunctionalityModule is the super class of ReportCellFunctionalityModule,ReadDataSourceFunctionalityModule, and DataSetTransformationFunctionalityModule.
 It represents a set of processing.</xsd:documentation>
