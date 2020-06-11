@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature id="org.eclipse.efbt.aorta.feature"
+	label="Aorta Feature "
+	version="1.0.0.qualifier">
+	<plugin
+			id="org.eclipse.efbt.aorta"
+			download-size="0"
+			install-size="0"
+			version="0.0.0"
+			unpack="false"/>
+	<plugin
+			id="org.eclipse.efbt.aorta.ide"
+			download-size="0"
+			install-size="0"
+			version="0.0.0"
+			unpack="false"/>
+	<plugin
+			id="org.eclipse.efbt.aorta.ui"
+			download-size="0"
+			install-size="0"
+			version="0.0.0"
+			unpack="false"/>
+	<plugin
+			id="org.eclipse.efbt.aorta.component.exporter"
+			download-size="0"
+			install-size="0"
+			version="0.0.0"
+			unpack="false"/>
+	<plugin
+			id="org.eclipse.efbt.aorta.ui.sirius.testmanager"
+			download-size="0"
+			install-size="0"
+			version="0.0.0"
+			unpack="false"/>
+	
+	
+	
+	
+			
+	
+</feature>
