@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Exporter
+Bundle-SymbolicName: org.eclipse.efbt.aorta.component.exporter
+Bundle-Version: 1.0.0.qualifier
+Export-Package: org.eclipse.efbt.aorta.component.exporter
+Require-Bundle: org.eclipse.efbt.aorta;bundle-version="1.0.0",
+ org.eclipse.xtext,
+ org.eclipse.emf.ecore
+Import-Package: org.eclipse.efbt.aorta
+
+

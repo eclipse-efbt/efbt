@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated aorta -->
+      <package
+            uri="http://www.eclipse.org/aortafunctions"
+            class="aortafunctions.AortafunctionsPackage"
+            genModel="model/aorta.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated aorta -->
+      <parser
+            type="aortafunctions"
+            class="aortafunctions.util.AortafunctionsResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated aorta -->
+      <package
+            uri="http://www.eclipse.org/base_column_structured_data"
+            class="base_column_structured_data.Base_column_structured_dataPackage"
+            genModel="model/aorta.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated aorta -->
+      <parser
+            type="base_column_structured_data"
+            class="base_column_structured_data.util.Base_column_structured_dataResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated aorta -->
+      <package
+            uri="http://www.eclipse.org/cell_transformation_logic"
+            class="cell_transformation_logic.Cell_transformation_logicPackage"
+            genModel="model/aorta.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated aorta -->
+      <parser
+            type="cell_transformation_logic"
+            class="cell_transformation_logic.util.Cell_transformation_logicResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated aorta -->
+      <package
+            uri="http://www.eclipse.org/column_structured_data"
+            class="column_structured_data.Column_structured_dataPackage"
+            genModel="model/aorta.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated aorta -->
+      <parser
+            type="column_structured_data"
+            class="column_structured_data.util.Column_structured_dataResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated aorta -->
+      <package
+            uri="http://www.eclipse.org/column_structures"
+            class="column_structures.Column_structuresPackage"
+            genModel="model/aorta.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated aorta -->
+      <parser
+            type="column_structures"
+            class="column_structures.util.Column_structuresResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated aorta -->
+      <package
+            uri="http://www.eclipse.org/data_lineage"
+            class="data_lineage.Data_lineagePackage"
+            genModel="model/aorta.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated aorta -->
+      <parser
+            type="data_lineage"
+            class="data_lineage.util.Data_lineageResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated aorta -->
+      <package
+            uri="http://www.eclipse.org/dataset_based_functional_domain_breakdown"
+            class="dataset_based_functional_domain_breakdown.Dataset_based_functional_domain_breakdownPackage"
+            genModel="model/aorta.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated aorta -->
+      <parser
+            type="dataset_based_functional_domain_breakdown"
+            class="dataset_based_functional_domain_breakdown.util.Dataset_based_functional_domain_breakdownResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated aorta -->
+      <package
+            uri="http://www.eclipse.org/deep_structures"
+            class="deep_structures.Deep_structuresPackage"
+            genModel="model/aorta.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated aorta -->
+      <parser
+            type="deep_structures"
+            class="deep_structures.util.Deep_structuresResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated aorta -->
+      <package
+            uri="http://www.eclipse.org/execution_environments"
+            class="execution_environments.Execution_environmentsPackage"
+            genModel="model/aorta.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated aorta -->
+      <parser
+            type="execution_environments"
+            class="execution_environments.util.Execution_environmentsResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated aorta -->
+      <package
+            uri="http://www.eclipse.org/functionality_module"
+            class="functionality_module.Functionality_modulePackage"
+            genModel="model/aorta.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated aorta -->
+      <parser
+            type="functionality_module"
+            class="functionality_module.util.Functionality_moduleResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated aorta -->
+      <package
+            uri="http://www.eclipse.org/input_data_structures"
+            class="input_data_structures.Input_data_structuresPackage"
+            genModel="model/aorta.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated aorta -->
+      <parser
+            type="input_data_structures"
+            class="input_data_structures.util.Input_data_structuresResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated aorta -->
+      <package
+            uri="http://www.eclipse.org/module_management"
+            class="module_management.Module_managementPackage"
+            genModel="model/aorta.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated aorta -->
+      <parser
+            type="module_management"
+            class="module_management.util.Module_managementResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated aorta -->
+      <package
+            uri="http://www.eclipse.org/output_data_sets"
+            class="output_data_sets.Output_data_setsPackage"
+            genModel="model/aorta.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated aorta -->
+      <parser
+            type="output_data_sets"
+            class="output_data_sets.util.Output_data_setsResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated aorta -->
+      <package
+            uri="http://www.eclipse.org/output_data_structures"
+            class="output_data_structures.Output_data_structuresPackage"
+            genModel="model/aorta.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated aorta -->
+      <parser
+            type="output_data_structures"
+            class="output_data_structures.util.Output_data_structuresResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated aorta -->
+      <package
+            uri="http://www.eclipse.org/report_based_report_based_functional_domain_breakdown"
+            class="report_based_report_based_functional_domain_breakdown.Report_based_report_based_functional_domain_breakdownPackage"
+            genModel="model/aorta.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated aorta -->
+      <parser
+            type="report_based_report_based_functional_domain_breakdown"
+            class="report_based_report_based_functional_domain_breakdown.util.Report_based_report_based_functional_domain_breakdownResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated aorta -->
+      <package
+            uri="http://www.eclipse.org/report_structures"
+            class="report_structures.Report_structuresPackage"
+            genModel="model/aorta.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated aorta -->
+      <parser
+            type="report_structures"
+            class="report_structures.util.Report_structuresResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated aorta -->
+      <package
+            uri="http://www.eclipse.org/requirements_text"
+            class="requirements_text.Requirements_textPackage"
+            genModel="model/aorta.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated aorta -->
+      <parser
+            type="requirements_text"
+            class="requirements_text.util.Requirements_textResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated aorta -->
+      <package
+            uri="http://www.eclipse.org/requirements_artefacts"
+            class="requirements_artefacts.Requirements_artefactsPackage"
+            genModel="model/aorta.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated aorta -->
+      <parser
+            type="requirements_artefacts"
+            class="requirements_artefacts.util.Requirements_artefactsResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated aorta -->
+      <package
+            uri="http://www.eclipse.org/scenarios"
+            class="scenarios.ScenariosPackage"
+            genModel="model/aorta.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated aorta -->
+      <parser
+            type="scenarios"
+            class="scenarios.util.ScenariosResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated aorta -->
+      <package
+            uri="http://www.eclipse.org/technical_specification_breakdown"
+            class="technical_specification_breakdown.Technical_specification_breakdownPackage"
+            genModel="model/aorta.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated aorta -->
+      <parser
+            type="technical_specification_breakdown"
+            class="technical_specification_breakdown.util.Technical_specification_breakdownResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated aorta -->
+      <package
+            uri="http://www.eclipse.org/test_definition"
+            class="test_definition.Test_definitionPackage"
+            genModel="model/aorta.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated aorta -->
+      <parser
+            type="test_definition"
+            class="test_definition.util.Test_definitionResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated aorta -->
+      <package
+            uri="http://www.eclipse.org/test_input_data"
+            class="test_input_data.Test_input_dataPackage"
+            genModel="model/aorta.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated aorta -->
+      <parser
+            type="test_input_data"
+            class="test_input_data.util.Test_input_dataResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated aorta -->
+      <package
+            uri="http://www.eclipse.org/test_review"
+            class="test_review.Test_reviewPackage"
+            genModel="model/aorta.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated aorta -->
+      <parser
+            type="test_review"
+            class="test_review.util.Test_reviewResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated aorta -->
+      <package
+            uri="http://www.eclipse.org/test_worked_example"
+            class="test_worked_example.Test_worked_examplePackage"
+            genModel="model/aorta.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated aorta -->
+      <parser
+            type="test_worked_example"
+            class="test_worked_example.util.Test_worked_exampleResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated aorta -->
+      <package
+            uri="http://www.eclipse.org/test"
+            class="test.TestPackage"
+            genModel="model/aorta.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated aorta -->
+      <parser
+            type="test"
+            class="test.util.TestResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated aorta -->
+      <package
+            uri="http://www.eclipse.org/aorta_program"
+            class="aorta_program.Aorta_programPackage"
+            genModel="model/aorta.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated aorta -->
+      <parser
+            type="aorta_program"
+            class="aorta_program.util.Aorta_programResourceFactoryImpl"/>
+   </extension>
+
+</plugin>

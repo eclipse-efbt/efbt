@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="aorta_program" nsURI="http://www.eclipse.org/aorta_program"
+    nsPrefix="aorta_program">
+  <eClassifiers xsi:type="ecore:EClass" name="Program">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="domainModule" eType="ecore:EClass column_structures.ecore#//ColumnDomainModule"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="requirements" eType="ecore:EClass requirements_text.ecore#//RequirementsModule"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="input_structures" eType="ecore:EClass column_structures.ecore#//ColumnStructureModule"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reportStructures" eType="ecore:EClass report_structures.ecore#//RegReportModule"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="testDefinitions" eType="ecore:EClass test_definition.ecore#//TestDefinitionModule"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tests" eType="ecore:EClass test.ecore#//TestModule"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="requirementsArtefacts"
+        eType="ecore:EClass requirments_artefacts.ecore#//InputTypeModule" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="testTemplates" eType="ecore:EClass test_definition.ecore#//TestTemplateModule"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="testConstriants" eType="ecore:EClass test_definition.ecore#//TestContraints"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="functionalityModules" eType="ecore:EClass functionality_module.ecore#//FunctionalityModuleModule"
+        containment="true"/>
+  </eClassifiers>
+</ecore:EPackage>

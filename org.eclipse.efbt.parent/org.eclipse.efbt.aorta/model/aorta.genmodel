@@ -1,0 +1,527 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.aorta/emf-gen" editDirectory="/org.eclipse.efbt.aorta.edit/src"
+    editorDirectory="/org.eclipse.efbt.aorta.editor/src" modelPluginID="org.eclipse.efbt.aorta"
+    modelName="Aorta" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="8.0" copyrightFields="false"
+    editPluginID="org.eclipse.efbt.aorta.edit" editorPluginID="org.eclipse.efbt.aorta.editor"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>aortafunctions.ecore</foreignModel>
+  <foreignModel>base_column_structured_data.ecore</foreignModel>
+  <foreignModel>cell_transformation_logic.ecore</foreignModel>
+  <foreignModel>column_structured_data.ecore</foreignModel>
+  <foreignModel>column_structures.ecore</foreignModel>
+  <foreignModel>data_lineage.ecore</foreignModel>
+  <foreignModel>dataset_based_functional_domain_breakdown.ecore</foreignModel>
+  <foreignModel>deep_structures.ecore</foreignModel>
+  <foreignModel>execution_environments.ecore</foreignModel>
+  <foreignModel>functionality_module.ecore</foreignModel>
+  <foreignModel>input_data_structures.ecore</foreignModel>
+  <foreignModel>module_management.ecore</foreignModel>
+  <foreignModel>output_data_sets.ecore</foreignModel>
+  <foreignModel>output_data_structures.ecore</foreignModel>
+  <foreignModel>report_based_functional_domain_breakdown.ecore</foreignModel>
+  <foreignModel>report_structures.ecore</foreignModel>
+  <foreignModel>requirements_text.ecore</foreignModel>
+  <foreignModel>requirments_artefacts.ecore</foreignModel>
+  <foreignModel>scenarios.ecore</foreignModel>
+  <foreignModel>technical_specification_breakdown.ecore</foreignModel>
+  <foreignModel>test_definition.ecore</foreignModel>
+  <foreignModel>test_input_data.ecore</foreignModel>
+  <foreignModel>test_review.ecore</foreignModel>
+  <foreignModel>test_worked_example.ecore</foreignModel>
+  <foreignModel>test.ecore</foreignModel>
+  <foreignModel>aorta_program.ecore</foreignModel>
+  <genPackages prefix="Aortafunctions" resource="XML" disposableProviderFactory="true"
+      ecorePackage="aortafunctions.ecore#/">
+    <genClasses ecoreClass="aortafunctions.ecore#//AggregateFunction">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aortafunctions.ecore#//AggregateFunction/functionSpec"/>
+    </genClasses>
+    <genClasses ecoreClass="aortafunctions.ecore#//AggregateFunctionSpec"/>
+    <genClasses ecoreClass="aortafunctions.ecore#//BasicFunction">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aortafunctions.ecore#//BasicFunction/functionSpec"/>
+    </genClasses>
+    <genClasses ecoreClass="aortafunctions.ecore#//BasicFunctionSpec">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aortafunctions.ecore#//BasicFunctionSpec/isInfix"/>
+    </genClasses>
+    <genClasses ecoreClass="aortafunctions.ecore#//BooleanFunction"/>
+    <genClasses ecoreClass="aortafunctions.ecore#//CellsParameter">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aortafunctions.ecore#//CellsParameter/cells"/>
+    </genClasses>
+    <genClasses ecoreClass="aortafunctions.ecore#//Function">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aortafunctions.ecore#//Function/parameters"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aortafunctions.ecore#//Function/name"/>
+    </genClasses>
+    <genClasses ecoreClass="aortafunctions.ecore#//FunctionSpec">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aortafunctions.ecore#//FunctionSpec/parameterSpecs"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aortafunctions.ecore#//FunctionSpec/functionalName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aortafunctions.ecore#//FunctionSpec/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aortafunctions.ecore#//FunctionSpec/sqlName"/>
+    </genClasses>
+    <genClasses ecoreClass="aortafunctions.ecore#//FunctionSpecModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aortafunctions.ecore#//FunctionSpecModule/functionSpecs"/>
+    </genClasses>
+    <genClasses ecoreClass="aortafunctions.ecore#//ParamaterSpec">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aortafunctions.ecore#//ParamaterSpec/name"/>
+    </genClasses>
+    <genClasses ecoreClass="aortafunctions.ecore#//Parameter"/>
+  </genPackages>
+  <genPackages prefix="Base_column_structured_data" resource="XML" disposableProviderFactory="true"
+      ecorePackage="base_column_structured_data.ecore#/">
+    <genClasses image="false" ecoreClass="base_column_structured_data.ecore#//BaseCell"/>
+    <genClasses ecoreClass="base_column_structured_data.ecore#//BaseCellWithEnumeratedValue">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference base_column_structured_data.ecore#//BaseCellWithEnumeratedValue/value"/>
+    </genClasses>
+    <genClasses ecoreClass="base_column_structured_data.ecore#//BaseCellWithValue">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute base_column_structured_data.ecore#//BaseCellWithValue/value"/>
+    </genClasses>
+    <genClasses ecoreClass="base_column_structured_data.ecore#//BaseColumnStructuredData">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference base_column_structured_data.ecore#//BaseColumnStructuredData/rows"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference base_column_structured_data.ecore#//BaseColumnStructuredData/cube"/>
+    </genClasses>
+    <genClasses ecoreClass="base_column_structured_data.ecore#//BaseRowData">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference base_column_structured_data.ecore#//BaseRowData/cells"/>
+    </genClasses>
+    <genClasses ecoreClass="base_column_structured_data.ecore#//InputData">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference base_column_structured_data.ecore#//InputData/sourceTableData"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute base_column_structured_data.ecore#//InputData/name"/>
+    </genClasses>
+    <genClasses ecoreClass="base_column_structured_data.ecore#//InputDataModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference base_column_structured_data.ecore#//InputDataModule/inputData"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Cell_transformation_logic" resource="XML" disposableProviderFactory="true"
+      ecorePackage="cell_transformation_logic.ecore#/">
+    <genClasses ecoreClass="cell_transformation_logic.ecore#//FormulaCell">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//FormulaCell/function"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cell_transformation_logic.ecore#//FormulaCell/value"/>
+    </genClasses>
+    <genClasses ecoreClass="cell_transformation_logic.ecore#//DerivedColumnStructuredData">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//DerivedColumnStructuredData/rows"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//DerivedColumnStructuredData/cube"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//DerivedColumnStructuredData/sourceColumnStructuredData"/>
+    </genClasses>
+    <genClasses ecoreClass="cell_transformation_logic.ecore#//DerivedRowData">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//DerivedRowData/formulaCells"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//DerivedRowData/specialDerivedCells"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//DerivedRowData/sourceRows"/>
+    </genClasses>
+    <genClasses ecoreClass="cell_transformation_logic.ecore#//FunctionTag">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//FunctionTag/function"/>
+    </genClasses>
+    <genClasses ecoreClass="cell_transformation_logic.ecore#//FormulaCellTag">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//FormulaCellTag/formulaCell"/>
+    </genClasses>
+    <genClasses ecoreClass="cell_transformation_logic.ecore#//ColumnStructuredDataTag">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//ColumnStructuredDataTag/columnStructuredData"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Column_structured_data" resource="XML" disposableProviderFactory="true"
+      ecorePackage="column_structured_data.ecore#/">
+    <genClasses ecoreClass="column_structured_data.ecore#//Cell">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_structured_data.ecore#//Cell/cellID"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference column_structured_data.ecore#//Cell/column"/>
+    </genClasses>
+    <genClasses ecoreClass="column_structured_data.ecore#//ColumnStructuredData">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_structured_data.ecore#//ColumnStructuredData/name"/>
+    </genClasses>
+    <genClasses ecoreClass="column_structured_data.ecore#//ColumnStructuredDataModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference column_structured_data.ecore#//ColumnStructuredDataModule/cubeData"/>
+    </genClasses>
+    <genClasses ecoreClass="column_structured_data.ecore#//RowData">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_structured_data.ecore#//RowData/rowID"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Column_structures" resource="XML" disposableProviderFactory="true"
+      ecorePackage="column_structures.ecore#/">
+    <genClasses ecoreClass="column_structures.ecore#//Column">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_structures.ecore#//Column/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference column_structures.ecore#//Column/domain"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_structures.ecore#//Column/isIdentifier"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_structures.ecore#//Column/isMandatory"/>
+    </genClasses>
+    <genClasses ecoreClass="column_structures.ecore#//EnumMember">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_structures.ecore#//EnumMember/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_structures.ecore#//EnumMember/code"/>
+    </genClasses>
+    <genClasses ecoreClass="column_structures.ecore#//ColumnStructuredEntity">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_structures.ecore#//ColumnStructuredEntity/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference column_structures.ecore#//ColumnStructuredEntity/column"/>
+    </genClasses>
+    <genClasses ecoreClass="column_structures.ecore#//ColumnDomain">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_structures.ecore#//ColumnDomain/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference column_structures.ecore#//ColumnDomain/enumMembers"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_structures.ecore#//ColumnDomain/isEnumerated"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference column_structures.ecore#//ColumnDomain/dataType"/>
+    </genClasses>
+    <genClasses ecoreClass="column_structures.ecore#//ColumnStructureModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference column_structures.ecore#//ColumnStructureModule/columnStructures"/>
+    </genClasses>
+    <genClasses ecoreClass="column_structures.ecore#//ColumnDomainModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference column_structures.ecore#//ColumnDomainModule/columnDomains"/>
+    </genClasses>
+    <genClasses ecoreClass="column_structures.ecore#//ColumnDataType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_structures.ecore#//ColumnDataType/name"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Data_lineage" resource="XML" disposableProviderFactory="true"
+      ecorePackage="data_lineage.ecore#/">
+    <genClasses ecoreClass="data_lineage.ecore#//SpreadsheetLineageModel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference data_lineage.ecore#//SpreadsheetLineageModel/dataTraceableByCell"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference data_lineage.ecore#//SpreadsheetLineageModel/sourceData"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_lineage.ecore#//SpreadsheetLineageModel/name"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Dataset_based_functional_domain_breakdown" resource="XML" disposableProviderFactory="true"
+      ecorePackage="dataset_based_functional_domain_breakdown.ecore#/">
+    <genClasses ecoreClass="dataset_based_functional_domain_breakdown.ecore#//DataSetCreationFunctionalityModule">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dataset_based_functional_domain_breakdown.ecore#//DataSetCreationFunctionalityModule/reportCells"/>
+    </genClasses>
+    <genClasses ecoreClass="dataset_based_functional_domain_breakdown.ecore#//DatasetBasedFunctionalityModuleModule"/>
+  </genPackages>
+  <genPackages prefix="Deep_structures" resource="XML" disposableProviderFactory="true"
+      ecorePackage="deep_structures.ecore#/">
+    <genClasses ecoreClass="deep_structures.ecore#//DeepStructureDefinitionProxy">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute deep_structures.ecore#//DeepStructureDefinitionProxy/structureDefinitionID"/>
+    </genClasses>
+    <genClasses ecoreClass="deep_structures.ecore#//DeepStructureDefinitionProxyModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference deep_structures.ecore#//DeepStructureDefinitionProxyModule/structures"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Execution_environments" resource="XML" disposableProviderFactory="true"
+      ecorePackage="execution_environments.ecore#/">
+    <genClasses ecoreClass="execution_environments.ecore#//TestExecutionEnvironment">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference execution_environments.ecore#//TestExecutionEnvironment/inputStructures"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference execution_environments.ecore#//TestExecutionEnvironment/outputStructuresModule"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute execution_environments.ecore#//TestExecutionEnvironment/name"/>
+    </genClasses>
+    <genClasses ecoreClass="execution_environments.ecore#//TestExecutionEnvironmentModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference execution_environments.ecore#//TestExecutionEnvironmentModule/testexecutionEnvironments"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Functionality_module" resource="XML" disposableProviderFactory="true"
+      ecorePackage="functionality_module.ecore#/">
+    <genClasses ecoreClass="functionality_module.ecore#//DataProcessingFunctionalityModule"/>
+    <genClasses ecoreClass="functionality_module.ecore#//LeafFunctionalityModule"/>
+    <genClasses ecoreClass="functionality_module.ecore#//ParallelFunctionalityModule"/>
+    <genClasses ecoreClass="functionality_module.ecore#//ScenarioSetFunctionalityModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference functionality_module.ecore#//ScenarioSetFunctionalityModule/scenarioSetChoice"/>
+    </genClasses>
+    <genClasses ecoreClass="functionality_module.ecore#//SerialFunctionalityModule"/>
+    <genClasses ecoreClass="functionality_module.ecore#//FunctionalityModuleSet">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference functionality_module.ecore#//FunctionalityModuleSet/subTransformationsAndSchemes"/>
+    </genClasses>
+    <genClasses ecoreClass="functionality_module.ecore#//ReadDataSourceFunctionalityModule"/>
+    <genClasses ecoreClass="functionality_module.ecore#//OutputCreationFunctionalityModule"/>
+    <genClasses ecoreClass="functionality_module.ecore#//FunctionalityModule">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functionality_module.ecore#//FunctionalityModule/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference functionality_module.ecore#//FunctionalityModule/usedTransformationOrScheme"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference functionality_module.ecore#//FunctionalityModule/scenario"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference functionality_module.ecore#//FunctionalityModule/scenarioSet"/>
+    </genClasses>
+    <genClasses ecoreClass="functionality_module.ecore#//FunctionalityModuleModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference functionality_module.ecore#//FunctionalityModuleModule/FunctionalityModules"/>
+    </genClasses>
+    <genClasses ecoreClass="functionality_module.ecore#//FunctionalityModuleTag">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference functionality_module.ecore#//FunctionalityModuleTag/FunctionalityModule"/>
+    </genClasses>
+    <genClasses ecoreClass="functionality_module.ecore#//ValidationFunctionalityModule"/>
+  </genPackages>
+  <genPackages prefix="Input_data_structures" resource="XML" disposableProviderFactory="true"
+      ecorePackage="input_data_structures.ecore#/">
+    <genClasses ecoreClass="input_data_structures.ecore#//InputDatastructureModule"/>
+    <genClasses ecoreClass="input_data_structures.ecore#//InputDataStructure"/>
+  </genPackages>
+  <genPackages prefix="Module_management" resource="XML" disposableProviderFactory="true"
+      ecorePackage="module_management.ecore#/">
+    <genClasses image="false" ecoreClass="module_management.ecore#//Module">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference module_management.ecore#//Module/dependencies"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute module_management.ecore#//Module/theDescription"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute module_management.ecore#//Module/license"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute module_management.ecore#//Module/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute module_management.ecore#//Module/version"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference module_management.ecore#//Module/longName"/>
+    </genClasses>
+    <genClasses ecoreClass="module_management.ecore#//ModuleLongName">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute module_management.ecore#//ModuleLongName/name"/>
+    </genClasses>
+    <genClasses ecoreClass="module_management.ecore#//ModuleDependencies">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference module_management.ecore#//ModuleDependencies/theModules"/>
+    </genClasses>
+    <genClasses ecoreClass="module_management.ecore#//ModuleDependency">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute module_management.ecore#//ModuleDependency/moduleName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute module_management.ecore#//ModuleDependency/moduleVersion"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference module_management.ecore#//ModuleDependency/theModule"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference module_management.ecore#//ModuleDependency/longName"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Output_data_sets" resource="XML" disposableProviderFactory="true"
+      ecorePackage="output_data_sets.ecore#/">
+    <genClasses ecoreClass="output_data_sets.ecore#//DataSetModule"/>
+    <genClasses ecoreClass="output_data_sets.ecore#//OutputDataSet"/>
+  </genPackages>
+  <genPackages prefix="Output_data_structures" resource="XML" disposableProviderFactory="true"
+      ecorePackage="output_data_structures.ecore#/">
+    <genClasses ecoreClass="output_data_structures.ecore#//OutputDataStructureModule"/>
+    <genClasses ecoreClass="output_data_structures.ecore#//OutputDataStructure"/>
+  </genPackages>
+  <genPackages prefix="Report_based_report_based_functional_domain_breakdown" resource="XML"
+      disposableProviderFactory="true" ecorePackage="report_based_functional_domain_breakdown.ecore#/">
+    <genClasses ecoreClass="report_based_functional_domain_breakdown.ecore#//ReportCellCreationFunctionalityModule">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference report_based_functional_domain_breakdown.ecore#//ReportCellCreationFunctionalityModule/reportCells"/>
+    </genClasses>
+    <genClasses ecoreClass="report_based_functional_domain_breakdown.ecore#//ReportBasedFunctionalityModuleModule"/>
+    <genClasses ecoreClass="report_based_functional_domain_breakdown.ecore#//ReportBasedParallelFunctionalityModule"/>
+    <genClasses ecoreClass="report_based_functional_domain_breakdown.ecore#//ReportBasedScenarioSetFunctionalityModule"/>
+    <genClasses ecoreClass="report_based_functional_domain_breakdown.ecore#//ReportBasedSerialFunctionalityModule"/>
+  </genPackages>
+  <genPackages prefix="Report_structures" resource="XML" disposableProviderFactory="true"
+      ecorePackage="report_structures.ecore#/">
+    <genClasses ecoreClass="report_structures.ecore#//RegReportCell">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute report_structures.ecore#//RegReportCell/name"/>
+    </genClasses>
+    <genClasses ecoreClass="report_structures.ecore#//RegReportCellValue">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute report_structures.ecore#//RegReportCellValue/value"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference report_structures.ecore#//RegReportCellValue/cell"/>
+    </genClasses>
+    <genClasses ecoreClass="report_structures.ecore#//RegReport">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference report_structures.ecore#//RegReport/cells"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute report_structures.ecore#//RegReport/name"/>
+    </genClasses>
+    <genClasses ecoreClass="report_structures.ecore#//RegReportModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference report_structures.ecore#//RegReportModule/reportGroups"/>
+    </genClasses>
+    <genClasses ecoreClass="report_structures.ecore#//ReportGroup">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference report_structures.ecore#//ReportGroup/regReports"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute report_structures.ecore#//ReportGroup/name"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Requirements_text" resource="XML" disposableProviderFactory="true"
+      ecorePackage="requirements_text.ecore#/">
+    <genClasses ecoreClass="requirements_text.ecore#//AllowedTypes">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference requirements_text.ecore#//AllowedTypes/allowedTypes"/>
+    </genClasses>
+    <genClasses ecoreClass="requirements_text.ecore#//RequirementsModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference requirements_text.ecore#//RequirementsModule/rules"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference requirements_text.ecore#//RequirementsModule/allowedtypes"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="requirements_text.ecore#//RequirementsSection">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements_text.ecore#//RequirementsSection/name"/>
+    </genClasses>
+    <genClasses ecoreClass="requirements_text.ecore#//RequirementsSectionImage">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements_text.ecore#//RequirementsSectionImage/style"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements_text.ecore#//RequirementsSectionImage/uri"/>
+    </genClasses>
+    <genClasses ecoreClass="requirements_text.ecore#//RequirementsSectionLinkWithText">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference requirements_text.ecore#//RequirementsSectionLinkWithText/linkedRuleSection"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements_text.ecore#//RequirementsSectionLinkWithText/linkText"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements_text.ecore#//RequirementsSectionLinkWithText/subsection"/>
+    </genClasses>
+    <genClasses ecoreClass="requirements_text.ecore#//RequirementsSectionText">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements_text.ecore#//RequirementsSectionText/text"/>
+    </genClasses>
+    <genClasses ecoreClass="requirements_text.ecore#//RequirementType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements_text.ecore#//RequirementType/name"/>
+    </genClasses>
+    <genClasses ecoreClass="requirements_text.ecore#//TitledRequirementsSection">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference requirements_text.ecore#//TitledRequirementsSection/sections"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference requirements_text.ecore#//TitledRequirementsSection/referencingSections"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference requirements_text.ecore#//TitledRequirementsSection/requirementsType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements_text.ecore#//TitledRequirementsSection/title"/>
+    </genClasses>
+    <genClasses ecoreClass="requirements_text.ecore#//Tag">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements_text.ecore#//Tag/tagID"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements_text.ecore#//Tag/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference requirements_text.ecore#//Tag/requirements"/>
+    </genClasses>
+    <genClasses ecoreClass="requirements_text.ecore#//TagGroup">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference requirements_text.ecore#//TagGroup/tags"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Requirements_artefacts" resource="XML" disposableProviderFactory="true"
+      ecorePackage="requirments_artefacts.ecore#/">
+    <genClasses ecoreClass="requirments_artefacts.ecore#//InputTypeModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference requirments_artefacts.ecore#//InputTypeModule/inputTypes"/>
+    </genClasses>
+    <genClasses ecoreClass="requirments_artefacts.ecore#//InputType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirments_artefacts.ecore#//InputType/name"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Scenarios" resource="XML" disposableProviderFactory="true"
+      ecorePackage="scenarios.ecore#/">
+    <genClasses ecoreClass="scenarios.ecore#//Scenario">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute scenarios.ecore#//Scenario/name"/>
+    </genClasses>
+    <genClasses ecoreClass="scenarios.ecore#//ScenarioSet">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference scenarios.ecore#//ScenarioSet/scenarios"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute scenarios.ecore#//ScenarioSet/name"/>
+    </genClasses>
+    <genClasses ecoreClass="scenarios.ecore#//ScenarioTag">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference scenarios.ecore#//ScenarioTag/scenario"/>
+    </genClasses>
+    <genClasses ecoreClass="scenarios.ecore#//ScenarioSetTag">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference scenarios.ecore#//ScenarioSetTag/scenarioSet"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Technical_specification_breakdown" resource="XML" disposableProviderFactory="true"
+      ecorePackage="technical_specification_breakdown.ecore#/">
+    <genClasses ecoreClass="technical_specification_breakdown.ecore#//TechnicalSpecificationFunctionalityModuleModule"/>
+  </genPackages>
+  <genPackages prefix="Test_definition" resource="XML" disposableProviderFactory="true"
+      ecorePackage="test_definition.ecore#/">
+    <genClasses ecoreClass="test_definition.ecore#//TestContraints">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestContraints/template"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute test_definition.ecore#//TestContraints/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestContraints/givenParams"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestContraints/whenParams"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestContraints/thenParams"/>
+    </genClasses>
+    <genClasses ecoreClass="test_definition.ecore#//TestTemplateModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestTemplateModule/templates"/>
+    </genClasses>
+    <genClasses ecoreClass="test_definition.ecore#//TestTemplate">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute test_definition.ecore#//TestTemplate/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestTemplate/givenText"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestTemplate/whenText"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestTemplate/thenText"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestTemplate/givenParams"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestTemplate/whenParams"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestTemplate/thenParams"/>
+    </genClasses>
+    <genClasses ecoreClass="test_definition.ecore#//TestConstraintsModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestConstraintsModule/coverageTestSets"/>
+    </genClasses>
+    <genClasses ecoreClass="test_definition.ecore#//TestDefinition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute test_definition.ecore#//TestDefinition/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestDefinition/testContraints"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestDefinition/given"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestDefinition/when"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestDefinition/then"/>
+    </genClasses>
+    <genClasses ecoreClass="test_definition.ecore#//E2ETestDefinition"/>
+    <genClasses ecoreClass="test_definition.ecore#//UnitTestDefinition"/>
+    <genClasses ecoreClass="test_definition.ecore#//Clause">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test_definition.ecore#//Clause/text"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//Clause/params"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test_definition.ecore#//Clause/regulatoryTextLinks"/>
+    </genClasses>
+    <genClasses ecoreClass="test_definition.ecore#//Param">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test_definition.ecore#//Param/param"/>
+    </genClasses>
+    <genClasses ecoreClass="test_definition.ecore#//Given"/>
+    <genClasses ecoreClass="test_definition.ecore#//When"/>
+    <genClasses ecoreClass="test_definition.ecore#//Then"/>
+    <genClasses ecoreClass="test_definition.ecore#//ClauseText">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute test_definition.ecore#//ClauseText/name"/>
+    </genClasses>
+    <genClasses ecoreClass="test_definition.ecore#//CoverageGrid">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test_definition.ecore#//CoverageGrid/coverageTestSet"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//CoverageGrid/coverageGridPoints"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute test_definition.ecore#//CoverageGrid/name"/>
+    </genClasses>
+    <genClasses ecoreClass="test_definition.ecore#//CoverageGridPoint">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute test_definition.ecore#//CoverageGridPoint/count"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test_definition.ecore#//CoverageGridPoint/objects"/>
+    </genClasses>
+    <genClasses ecoreClass="test_definition.ecore#//TestDefinitionModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestDefinitionModule/testDefinitions"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Test_input_data" resource="XML" disposableProviderFactory="true"
+      ecorePackage="test_input_data.ecore#/">
+    <genClasses ecoreClass="test_input_data.ecore#//StructuredFile">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute test_input_data.ecore#//StructuredFile/fileLocation"/>
+    </genClasses>
+    <genClasses ecoreClass="test_input_data.ecore#//InputDataModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_input_data.ecore#//InputDataModule/inputData"/>
+    </genClasses>
+    <genClasses ecoreClass="test_input_data.ecore#//UsefulInputDataSnippets">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_input_data.ecore#//UsefulInputDataSnippets/testInputData"/>
+    </genClasses>
+    <genClasses ecoreClass="test_input_data.ecore#//TestInputData">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute test_input_data.ecore#//TestInputData/name"/>
+    </genClasses>
+    <genClasses ecoreClass="test_input_data.ecore#//ExternalTestData"/>
+    <genClasses ecoreClass="test_input_data.ecore#//TestColumnStructuredData">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_input_data.ecore#//TestColumnStructuredData/sourceTableData"/>
+    </genClasses>
+    <genClasses ecoreClass="test_input_data.ecore#//TestStrucuredFileData">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_input_data.ecore#//TestStrucuredFileData/testFileData"/>
+    </genClasses>
+    <genClasses ecoreClass="test_input_data.ecore#//UsefulInputDataSnippetsModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_input_data.ecore#//UsefulInputDataSnippetsModule/snippets"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Test_review" resource="XML" disposableProviderFactory="true"
+      ecorePackage="test_review.ecore#/">
+    <genClasses ecoreClass="test_review.ecore#//User">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute test_review.ecore#//User/userName"/>
+    </genClasses>
+    <genClasses ecoreClass="test_review.ecore#//UserModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_review.ecore#//UserModule/users"/>
+    </genClasses>
+    <genClasses ecoreClass="test_review.ecore#//TestReviewModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_review.ecore#//TestReviewModule/testReviews"/>
+    </genClasses>
+    <genClasses ecoreClass="test_review.ecore#//TestReview">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test_review.ecore#//TestReview/user"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test_review.ecore#//TestReview/test"/>
+    </genClasses>
+    <genClasses ecoreClass="test_review.ecore#//TestReviewComments">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute test_review.ecore#//TestReviewComments/comments"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Test_worked_example" resource="XML" disposableProviderFactory="true"
+      ecorePackage="test_worked_example.ecore#/">
+    <genClasses ecoreClass="test_worked_example.ecore#//TestWithWorkedExample">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test_worked_example.ecore#//TestWithWorkedExample/workedExample"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Test" resource="XML" disposableProviderFactory="true" ecorePackage="test.ecore#/">
+    <genClasses ecoreClass="test.ecore#//ExecutedTest">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test.ecore#//ExecutedTest/actualResults"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute test.ecore#//ExecutedTest/testCompleted"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute test.ecore#//ExecutedTest/testPassed"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test.ecore#//ExecutedTest/testEnvironmentUsed"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test.ecore#//ExecutedTest/test"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test.ecore#//ExecutedTest/expectedResults"/>
+    </genClasses>
+    <genClasses ecoreClass="test.ecore#//Result"/>
+    <genClasses ecoreClass="test.ecore#//ReportCellResults">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test.ecore#//ReportCellResults/reportCellValues"/>
+    </genClasses>
+    <genClasses ecoreClass="test.ecore#//DataSetResults">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test.ecore#//DataSetResults/expectedResults"/>
+    </genClasses>
+    <genClasses ecoreClass="test.ecore#//E2ETest">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test.ecore#//E2ETest/testDefinition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test.ecore#//E2ETest/inputData"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test.ecore#//E2ETest/expectedResults"/>
+    </genClasses>
+    <genClasses ecoreClass="test.ecore#//Test">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute test.ecore#//Test/name"/>
+    </genClasses>
+    <genClasses ecoreClass="test.ecore#//TestModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test.ecore#//TestModule/tests"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test.ecore#//TestModule/executionEnvironment"/>
+    </genClasses>
+    <genClasses ecoreClass="test.ecore#//ExecutedTestModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test.ecore#//ExecutedTestModule/executedTests"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Aorta_program" resource="XML" disposableProviderFactory="true"
+      ecorePackage="aorta_program.ecore#/">
+    <genClasses ecoreClass="aorta_program.ecore#//Program">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aorta_program.ecore#//Program/domainModule"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aorta_program.ecore#//Program/requirements"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aorta_program.ecore#//Program/input_structures"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aorta_program.ecore#//Program/reportStructures"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aorta_program.ecore#//Program/testDefinitions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aorta_program.ecore#//Program/tests"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aorta_program.ecore#//Program/requirementsArtefacts"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aorta_program.ecore#//Program/testTemplates"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aorta_program.ecore#//Program/testConstriants"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aorta_program.ecore#//Program/functionalityModules"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>
