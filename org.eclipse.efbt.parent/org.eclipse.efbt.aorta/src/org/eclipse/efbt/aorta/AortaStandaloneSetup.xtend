@@ -29,7 +29,6 @@ import scenarios.ScenariosPackage
 import technical_specification_breakdown.Technical_specification_breakdownPackage
 import test_definition.Test_definitionPackage
 import test_input_data.Test_input_dataPackage
-import test_review.Test_reviewPackage
 import test_worked_example.Test_worked_examplePackage
 import test.TestPackage
 
@@ -117,9 +116,7 @@ class AortaStandaloneSetup extends AortaStandaloneSetupGenerated {
 		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/test_input_data")) {
 			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/test_input_data", Test_input_dataPackage.eINSTANCE);
 		}
-		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/test_review")) {
-			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/test_review", Test_reviewPackage.eINSTANCE);
-		}
+
 		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/test_worked_example")) {
 			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/test_worked_example", Test_worked_examplePackage.eINSTANCE);
 		}

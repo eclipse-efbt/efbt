@@ -28,7 +28,6 @@
   <foreignModel>technical_specification_breakdown.ecore</foreignModel>
   <foreignModel>test_definition.ecore</foreignModel>
   <foreignModel>test_input_data.ecore</foreignModel>
-  <foreignModel>test_review.ecore</foreignModel>
   <foreignModel>test_worked_example.ecore</foreignModel>
   <foreignModel>test.ecore</foreignModel>
   <foreignModel>aorta_program.ecore</foreignModel>
@@ -450,25 +449,6 @@
     </genClasses>
     <genClasses ecoreClass="test_input_data.ecore#//UsefulInputDataSnippetsModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_input_data.ecore#//UsefulInputDataSnippetsModule/snippets"/>
-    </genClasses>
-  </genPackages>
-  <genPackages prefix="Test_review" resource="XML" disposableProviderFactory="true"
-      ecorePackage="test_review.ecore#/">
-    <genClasses ecoreClass="test_review.ecore#//User">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute test_review.ecore#//User/userName"/>
-    </genClasses>
-    <genClasses ecoreClass="test_review.ecore#//UserModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_review.ecore#//UserModule/users"/>
-    </genClasses>
-    <genClasses ecoreClass="test_review.ecore#//TestReviewModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_review.ecore#//TestReviewModule/testReviews"/>
-    </genClasses>
-    <genClasses ecoreClass="test_review.ecore#//TestReview">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test_review.ecore#//TestReview/user"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test_review.ecore#//TestReview/test"/>
-    </genClasses>
-    <genClasses ecoreClass="test_review.ecore#//TestReviewComments">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute test_review.ecore#//TestReviewComments/comments"/>
     </genClasses>
   </genPackages>
   <genPackages prefix="Test_worked_example" resource="XML" disposableProviderFactory="true"

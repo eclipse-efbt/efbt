@@ -17,7 +17,6 @@ import "http://www.eclipse.org/requirements_artefacts" as requirements_artefacts
 import "http://www.eclipse.org/functionality_module" as functionality_module
 import "http://www.eclipse.org/technical_specification_breakdown" as technical_specification_breakdown
 import "http://www.eclipse.org/dataset_based_functional_domain_breakdown" as dataset_based_functional_domain_breakdown
-import "http://www.eclipse.org/test_review" as test_review
 import "http://www.eclipse.org/base_column_structured_data" as base_column_structured_data
 import "http://www.eclipse.org/test_input_data" as test_input_data
 import "http://www.eclipse.org/execution_environments" as execution_environments
