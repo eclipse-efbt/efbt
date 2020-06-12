@@ -3,7 +3,7 @@
     xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.bird.model/emf-gen" modelPluginID="org.eclipse.efbt.bird.model"
     modelName="Bird_artefacts" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     importerID="org.eclipse.emf.importer.ecore" complianceLevel="8.0" copyrightFields="false"
-    usedGenPackages="../../org.eclipse.efbt.aorta.model/model/aorta.genmodel#//module_management ../../org.eclipse.efbt.aorta.model/model/aorta.genmodel#//output_data_structures ../../org.eclipse.efbt.aorta.model/model/aorta.genmodel#//report_structures"
+    usedGenPackages="../../org.eclipse.efbt.aorta/model/aorta.genmodel#//module_management ../../org.eclipse.efbt.aorta/model/aorta.genmodel#//output_data_structures ../../org.eclipse.efbt.aorta/model/aorta.genmodel#//report_structures"
     operationReflection="true" importOrganizing="true">
   <foreignModel>bird_model.ecore</foreignModel>
   <foreignModel>core.ecore</foreignModel>
