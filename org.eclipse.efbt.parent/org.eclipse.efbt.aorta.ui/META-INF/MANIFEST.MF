@@ -8,7 +8,6 @@ Bundle-SymbolicName: org.eclipse.efbt.aorta.ui; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.efbt.aorta,
  org.eclipse.efbt.aorta.ide,
- org.eclipse.efbt.aorta.model,
  org.eclipse.xtext.ui,
  org.eclipse.xtext.ui.shared,
  org.eclipse.xtext.ui.codetemplates.ui,
