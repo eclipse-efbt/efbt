@@ -6,9 +6,9 @@ import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
-import functionality_module.FunctionalityModule;
-import functionality_module.ScenarioSetFunctionalityModule;
-import functionality_module.SerialFunctionalityModule;
+import org.eclipse.efbt.aorta.functionality_module.FunctionalityModule;
+import org.eclipse.efbt.aorta.functionality_module.ScenarioSetFunctionalityModule;
+import org.eclipse.efbt.aorta.functionality_module.SerialFunctionalityModule;
 
 /**
  * The services class used by VSM.

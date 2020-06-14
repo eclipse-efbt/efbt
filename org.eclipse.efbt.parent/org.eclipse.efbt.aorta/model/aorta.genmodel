@@ -31,8 +31,8 @@
   <foreignModel>test_worked_example.ecore</foreignModel>
   <foreignModel>test.ecore</foreignModel>
   <foreignModel>aorta_program.ecore</foreignModel>
-  <genPackages prefix="Aortafunctions" resource="XML" disposableProviderFactory="true"
-      ecorePackage="aortafunctions.ecore#/">
+  <genPackages prefix="Aortafunctions" basePackage="org.eclipse.efbt.aorta" resource="XML"
+      disposableProviderFactory="true" ecorePackage="aortafunctions.ecore#/">
     <genClasses ecoreClass="aortafunctions.ecore#//AggregateFunction">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aortafunctions.ecore#//AggregateFunction/functionSpec"/>
     </genClasses>
@@ -65,8 +65,8 @@
     </genClasses>
     <genClasses ecoreClass="aortafunctions.ecore#//Parameter"/>
   </genPackages>
-  <genPackages prefix="Base_column_structured_data" resource="XML" disposableProviderFactory="true"
-      ecorePackage="base_column_structured_data.ecore#/">
+  <genPackages prefix="Base_column_structured_data" basePackage="org.eclipse.efbt.aorta"
+      resource="XML" disposableProviderFactory="true" ecorePackage="base_column_structured_data.ecore#/">
     <genClasses image="false" ecoreClass="base_column_structured_data.ecore#//BaseCell"/>
     <genClasses ecoreClass="base_column_structured_data.ecore#//BaseCellWithEnumeratedValue">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference base_column_structured_data.ecore#//BaseCellWithEnumeratedValue/value"/>
@@ -89,8 +89,8 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference base_column_structured_data.ecore#//InputDataModule/inputData"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Cell_transformation_logic" resource="XML" disposableProviderFactory="true"
-      ecorePackage="cell_transformation_logic.ecore#/">
+  <genPackages prefix="Cell_transformation_logic" basePackage="org.eclipse.efbt.aorta"
+      resource="XML" disposableProviderFactory="true" ecorePackage="cell_transformation_logic.ecore#/">
     <genClasses ecoreClass="cell_transformation_logic.ecore#//FormulaCell">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//FormulaCell/function"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cell_transformation_logic.ecore#//FormulaCell/value"/>
@@ -115,8 +115,8 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//ColumnStructuredDataTag/columnStructuredData"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Column_structured_data" resource="XML" disposableProviderFactory="true"
-      ecorePackage="column_structured_data.ecore#/">
+  <genPackages prefix="Column_structured_data" basePackage="org.eclipse.efbt.aorta"
+      resource="XML" disposableProviderFactory="true" ecorePackage="column_structured_data.ecore#/">
     <genClasses ecoreClass="column_structured_data.ecore#//Cell">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_structured_data.ecore#//Cell/cellID"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference column_structured_data.ecore#//Cell/column"/>
@@ -131,8 +131,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_structured_data.ecore#//RowData/rowID"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Column_structures" resource="XML" disposableProviderFactory="true"
-      ecorePackage="column_structures.ecore#/">
+  <genPackages prefix="Column_structures" basePackage="org.eclipse.efbt.aorta" resource="XML"
+      disposableProviderFactory="true" ecorePackage="column_structures.ecore#/">
     <genClasses ecoreClass="column_structures.ecore#//Column">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_structures.ecore#//Column/name"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference column_structures.ecore#//Column/domain"/>
@@ -163,23 +163,23 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_structures.ecore#//ColumnDataType/name"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Data_lineage" resource="XML" disposableProviderFactory="true"
-      ecorePackage="data_lineage.ecore#/">
+  <genPackages prefix="Data_lineage" basePackage="org.eclipse.efbt.aorta" resource="XML"
+      disposableProviderFactory="true" ecorePackage="data_lineage.ecore#/">
     <genClasses ecoreClass="data_lineage.ecore#//SpreadsheetLineageModel">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference data_lineage.ecore#//SpreadsheetLineageModel/dataTraceableByCell"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference data_lineage.ecore#//SpreadsheetLineageModel/sourceData"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_lineage.ecore#//SpreadsheetLineageModel/name"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Dataset_based_functional_domain_breakdown" resource="XML" disposableProviderFactory="true"
-      ecorePackage="dataset_based_functional_domain_breakdown.ecore#/">
+  <genPackages prefix="Dataset_based_functional_domain_breakdown" basePackage="org.eclipse.efbt.aorta"
+      resource="XML" disposableProviderFactory="true" ecorePackage="dataset_based_functional_domain_breakdown.ecore#/">
     <genClasses ecoreClass="dataset_based_functional_domain_breakdown.ecore#//DataSetCreationFunctionalityModule">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dataset_based_functional_domain_breakdown.ecore#//DataSetCreationFunctionalityModule/reportCells"/>
     </genClasses>
     <genClasses ecoreClass="dataset_based_functional_domain_breakdown.ecore#//DatasetBasedFunctionalityModuleModule"/>
   </genPackages>
-  <genPackages prefix="Deep_structures" resource="XML" disposableProviderFactory="true"
-      ecorePackage="deep_structures.ecore#/">
+  <genPackages prefix="Deep_structures" basePackage="org.eclipse.efbt.aorta" resource="XML"
+      disposableProviderFactory="true" ecorePackage="deep_structures.ecore#/">
     <genClasses ecoreClass="deep_structures.ecore#//DeepStructureDefinitionProxy">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute deep_structures.ecore#//DeepStructureDefinitionProxy/structureDefinitionID"/>
     </genClasses>
@@ -187,8 +187,8 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference deep_structures.ecore#//DeepStructureDefinitionProxyModule/structures"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Execution_environments" resource="XML" disposableProviderFactory="true"
-      ecorePackage="execution_environments.ecore#/">
+  <genPackages prefix="Execution_environments" basePackage="org.eclipse.efbt.aorta"
+      resource="XML" disposableProviderFactory="true" ecorePackage="execution_environments.ecore#/">
     <genClasses ecoreClass="execution_environments.ecore#//TestExecutionEnvironment">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference execution_environments.ecore#//TestExecutionEnvironment/inputStructures"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference execution_environments.ecore#//TestExecutionEnvironment/outputStructuresModule"/>
@@ -198,8 +198,8 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference execution_environments.ecore#//TestExecutionEnvironmentModule/testexecutionEnvironments"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Functionality_module" resource="XML" disposableProviderFactory="true"
-      ecorePackage="functionality_module.ecore#/">
+  <genPackages prefix="Functionality_module" basePackage="org.eclipse.efbt.aorta"
+      resource="XML" disposableProviderFactory="true" ecorePackage="functionality_module.ecore#/">
     <genClasses ecoreClass="functionality_module.ecore#//DataProcessingFunctionalityModule"/>
     <genClasses ecoreClass="functionality_module.ecore#//LeafFunctionalityModule"/>
     <genClasses ecoreClass="functionality_module.ecore#//ParallelFunctionalityModule"/>
@@ -226,13 +226,13 @@
     </genClasses>
     <genClasses ecoreClass="functionality_module.ecore#//ValidationFunctionalityModule"/>
   </genPackages>
-  <genPackages prefix="Input_data_structures" resource="XML" disposableProviderFactory="true"
-      ecorePackage="input_data_structures.ecore#/">
+  <genPackages prefix="Input_data_structures" basePackage="org.eclipse.efbt.aorta"
+      resource="XML" disposableProviderFactory="true" ecorePackage="input_data_structures.ecore#/">
     <genClasses ecoreClass="input_data_structures.ecore#//InputDatastructureModule"/>
     <genClasses ecoreClass="input_data_structures.ecore#//InputDataStructure"/>
   </genPackages>
-  <genPackages prefix="Module_management" resource="XML" disposableProviderFactory="true"
-      ecorePackage="module_management.ecore#/">
+  <genPackages prefix="Module_management" basePackage="org.eclipse.efbt.aorta" resource="XML"
+      disposableProviderFactory="true" ecorePackage="module_management.ecore#/">
     <genClasses image="false" ecoreClass="module_management.ecore#//Module">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference module_management.ecore#//Module/dependencies"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute module_management.ecore#//Module/theDescription"/>
@@ -254,18 +254,23 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference module_management.ecore#//ModuleDependency/longName"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Output_data_sets" resource="XML" disposableProviderFactory="true"
-      ecorePackage="output_data_sets.ecore#/">
+  <genPackages prefix="Output_data_sets" basePackage="org.eclipse.efbt.aorta" resource="XML"
+      disposableProviderFactory="true" ecorePackage="output_data_sets.ecore#/">
     <genClasses ecoreClass="output_data_sets.ecore#//DataSetModule"/>
     <genClasses ecoreClass="output_data_sets.ecore#//OutputDataSet"/>
+    <nestedGenPackages prefix="Output_data_sets" resource="XML" disposableProviderFactory="true"
+        ecorePackage="output_data_sets.ecore#/">
+      <genClasses ecoreClass="output_data_sets.ecore#//DataSetModule"/>
+      <genClasses ecoreClass="output_data_sets.ecore#//OutputDataSet"/>
+    </nestedGenPackages>
   </genPackages>
-  <genPackages prefix="Output_data_structures" resource="XML" disposableProviderFactory="true"
-      ecorePackage="output_data_structures.ecore#/">
+  <genPackages prefix="Output_data_structures" basePackage="org.eclipse.efbt.aorta"
+      resource="XML" disposableProviderFactory="true" ecorePackage="output_data_structures.ecore#/">
     <genClasses ecoreClass="output_data_structures.ecore#//OutputDataStructureModule"/>
     <genClasses ecoreClass="output_data_structures.ecore#//OutputDataStructure"/>
   </genPackages>
-  <genPackages prefix="Report_based_report_based_functional_domain_breakdown" resource="XML"
-      disposableProviderFactory="true" ecorePackage="report_based_functional_domain_breakdown.ecore#/">
+  <genPackages prefix="Report_based_report_based_functional_domain_breakdown" basePackage="org.eclipse.efbt.aorta"
+      resource="XML" disposableProviderFactory="true" ecorePackage="report_based_functional_domain_breakdown.ecore#/">
     <genClasses ecoreClass="report_based_functional_domain_breakdown.ecore#//ReportCellCreationFunctionalityModule">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference report_based_functional_domain_breakdown.ecore#//ReportCellCreationFunctionalityModule/reportCells"/>
     </genClasses>
@@ -274,8 +279,8 @@
     <genClasses ecoreClass="report_based_functional_domain_breakdown.ecore#//ReportBasedScenarioSetFunctionalityModule"/>
     <genClasses ecoreClass="report_based_functional_domain_breakdown.ecore#//ReportBasedSerialFunctionalityModule"/>
   </genPackages>
-  <genPackages prefix="Report_structures" resource="XML" disposableProviderFactory="true"
-      ecorePackage="report_structures.ecore#/">
+  <genPackages prefix="Report_structures" basePackage="org.eclipse.efbt.aorta" resource="XML"
+      disposableProviderFactory="true" ecorePackage="report_structures.ecore#/">
     <genClasses ecoreClass="report_structures.ecore#//RegReportCell">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute report_structures.ecore#//RegReportCell/name"/>
     </genClasses>
@@ -295,8 +300,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute report_structures.ecore#//ReportGroup/name"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Requirements_text" resource="XML" disposableProviderFactory="true"
-      ecorePackage="requirements_text.ecore#/">
+  <genPackages prefix="Requirements_text" basePackage="org.eclipse.efbt.aorta" resource="XML"
+      disposableProviderFactory="true" ecorePackage="requirements_text.ecore#/">
     <genClasses ecoreClass="requirements_text.ecore#//AllowedTypes">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference requirements_text.ecore#//AllowedTypes/allowedTypes"/>
     </genClasses>
@@ -337,8 +342,8 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference requirements_text.ecore#//TagGroup/tags"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Requirements_artefacts" resource="XML" disposableProviderFactory="true"
-      ecorePackage="requirments_artefacts.ecore#/">
+  <genPackages prefix="Requirements_artefacts" basePackage="org.eclipse.efbt.aorta"
+      resource="XML" disposableProviderFactory="true" ecorePackage="requirments_artefacts.ecore#/">
     <genClasses ecoreClass="requirments_artefacts.ecore#//InputTypeModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference requirments_artefacts.ecore#//InputTypeModule/inputTypes"/>
     </genClasses>
@@ -346,8 +351,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirments_artefacts.ecore#//InputType/name"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Scenarios" resource="XML" disposableProviderFactory="true"
-      ecorePackage="scenarios.ecore#/">
+  <genPackages prefix="Scenarios" basePackage="org.eclipse.efbt.aorta" resource="XML"
+      disposableProviderFactory="true" ecorePackage="scenarios.ecore#/">
     <genClasses ecoreClass="scenarios.ecore#//Scenario">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute scenarios.ecore#//Scenario/name"/>
     </genClasses>
@@ -362,12 +367,12 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference scenarios.ecore#//ScenarioSetTag/scenarioSet"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Technical_specification_breakdown" resource="XML" disposableProviderFactory="true"
-      ecorePackage="technical_specification_breakdown.ecore#/">
+  <genPackages prefix="Technical_specification_breakdown" basePackage="org.eclipse.efbt.aorta"
+      resource="XML" disposableProviderFactory="true" ecorePackage="technical_specification_breakdown.ecore#/">
     <genClasses ecoreClass="technical_specification_breakdown.ecore#//TechnicalSpecificationFunctionalityModuleModule"/>
   </genPackages>
-  <genPackages prefix="Test_definition" resource="XML" disposableProviderFactory="true"
-      ecorePackage="test_definition.ecore#/">
+  <genPackages prefix="Test_definition" basePackage="org.eclipse.efbt.aorta" resource="XML"
+      disposableProviderFactory="true" ecorePackage="test_definition.ecore#/">
     <genClasses ecoreClass="test_definition.ecore#//TestContraints">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestContraints/template"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute test_definition.ecore#//TestContraints/name"/>
@@ -426,8 +431,8 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestDefinitionModule/testDefinitions"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Test_input_data" resource="XML" disposableProviderFactory="true"
-      ecorePackage="test_input_data.ecore#/">
+  <genPackages prefix="Test_input_data" basePackage="org.eclipse.efbt.aorta" resource="XML"
+      disposableProviderFactory="true" ecorePackage="test_input_data.ecore#/">
     <genClasses ecoreClass="test_input_data.ecore#//StructuredFile">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute test_input_data.ecore#//StructuredFile/fileLocation"/>
     </genClasses>
@@ -451,21 +456,14 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_input_data.ecore#//UsefulInputDataSnippetsModule/snippets"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Test_worked_example" resource="XML" disposableProviderFactory="true"
-      ecorePackage="test_worked_example.ecore#/">
+  <genPackages prefix="Test_worked_example" basePackage="org.eclipse.efbt.aorta" resource="XML"
+      disposableProviderFactory="true" ecorePackage="test_worked_example.ecore#/">
     <genClasses ecoreClass="test_worked_example.ecore#//TestWithWorkedExample">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test_worked_example.ecore#//TestWithWorkedExample/workedExample"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Test" resource="XML" disposableProviderFactory="true" ecorePackage="test.ecore#/">
-    <genClasses ecoreClass="test.ecore#//ExecutedTest">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test.ecore#//ExecutedTest/actualResults"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute test.ecore#//ExecutedTest/testCompleted"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute test.ecore#//ExecutedTest/testPassed"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test.ecore#//ExecutedTest/testEnvironmentUsed"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test.ecore#//ExecutedTest/test"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test.ecore#//ExecutedTest/expectedResults"/>
-    </genClasses>
+  <genPackages prefix="Test" basePackage="org.eclipse.efbt.aorta" resource="XML" disposableProviderFactory="true"
+      ecorePackage="test.ecore#/">
     <genClasses ecoreClass="test.ecore#//Result"/>
     <genClasses ecoreClass="test.ecore#//ReportCellResults">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test.ecore#//ReportCellResults/reportCellValues"/>
@@ -485,12 +483,9 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test.ecore#//TestModule/tests"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test.ecore#//TestModule/executionEnvironment"/>
     </genClasses>
-    <genClasses ecoreClass="test.ecore#//ExecutedTestModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test.ecore#//ExecutedTestModule/executedTests"/>
-    </genClasses>
   </genPackages>
-  <genPackages prefix="Aorta_program" resource="XML" disposableProviderFactory="true"
-      ecorePackage="aorta_program.ecore#/">
+  <genPackages prefix="Aorta_program" basePackage="org.eclipse.efbt.aorta" resource="XML"
+      disposableProviderFactory="true" ecorePackage="aorta_program.ecore#/">
     <genClasses ecoreClass="aorta_program.ecore#//Program">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aorta_program.ecore#//Program/domainModule"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aorta_program.ecore#//Program/requirements"/>

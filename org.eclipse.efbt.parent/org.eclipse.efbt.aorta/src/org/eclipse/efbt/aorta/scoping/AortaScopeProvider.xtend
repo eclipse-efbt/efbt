@@ -13,12 +13,12 @@ import org.eclipse.xtext.scoping.Scopes
 
 import org.apache.log4j.LogManager
 
-import test_definition.Param
-import test_definition.Clause
-import test_definition.TestDefinition
-import test_definition.Given
-import test_definition.When
-import test_definition.Then
+import org.eclipse.efbt.aorta.test_definition.Param
+import org.eclipse.efbt.aorta.test_definition.Clause
+import org.eclipse.efbt.aorta.test_definition.TestDefinition
+import org.eclipse.efbt.aorta.test_definition.Given
+import org.eclipse.efbt.aorta.test_definition.When
+import org.eclipse.efbt.aorta.test_definition.Then
 
 /**
  * This class contains custom scoping description.

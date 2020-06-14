@@ -7,7 +7,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
-import bird_model.BIRDModel;
+import org.eclipse.efbt.bird.bird_model.BIRDModel;
 
 public class Util {
 

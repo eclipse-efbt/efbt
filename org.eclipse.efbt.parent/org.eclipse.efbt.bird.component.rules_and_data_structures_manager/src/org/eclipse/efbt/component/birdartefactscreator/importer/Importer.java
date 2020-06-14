@@ -12,19 +12,19 @@
  *  */
 package org.eclipse.efbt.component.birdartefactscreator.importer;
 
-import efbt_data_definition.CombinationModule;
-import efbt_data_definition.CubeModule;
-import efbt_data_definition.DomainModule;
-import efbt_data_definition.Efbt_data_definitionFactory;
-import efbt_data_definition.MemberModule;
-import efbt_data_definition.VariableModule;
-import efbt_mapping.CubeMappingModule;
-import efbt_mapping.Efbt_mappingFactory;
-import efbt_mapping.MappingDefinitionModule;
-import efbt_mapping.MemberMappingModule;
-import efbt_mapping.VariableMappingModule;
-import efbt_vtl_transformation.Efbt_vtl_transformationFactory;
-import efbt_vtl_transformation.TransformationSchemeModule;
+import org.eclipse.efbt.bird.efbt_data_definition.CombinationModule;
+import org.eclipse.efbt.bird.efbt_data_definition.CubeModule;
+import org.eclipse.efbt.bird.efbt_data_definition.DomainModule;
+import org.eclipse.efbt.bird.efbt_data_definition.Efbt_data_definitionFactory;
+import org.eclipse.efbt.bird.efbt_data_definition.MemberModule;
+import org.eclipse.efbt.bird.efbt_data_definition.VariableModule;
+import org.eclipse.efbt.bird.efbt_mapping.CubeMappingModule;
+import org.eclipse.efbt.bird.efbt_mapping.Efbt_mappingFactory;
+import org.eclipse.efbt.bird.efbt_mapping.MappingDefinitionModule;
+import org.eclipse.efbt.bird.efbt_mapping.MemberMappingModule;
+import org.eclipse.efbt.bird.efbt_mapping.VariableMappingModule;
+import org.eclipse.efbt.bird.efbt_vtl_transformation.Efbt_vtl_transformationFactory;
+import org.eclipse.efbt.bird.efbt_vtl_transformation.TransformationSchemeModule;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -36,8 +36,8 @@ import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 
-import bird_model.BIRDModel;
-import bird_model.Bird_modelFactory;
+import org.eclipse.efbt.bird.bird_model.BIRDModel;
+import org.eclipse.efbt.bird.bird_model.Bird_modelFactory;
 
 /**
  * @author Neil Mackenzie Import SMCubes Artefacts into EMF Model instances
