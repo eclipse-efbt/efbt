@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<xsd:schema xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:module_management="http://www.eclipse.org/module_management" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="module_management" ecore:package="module_management" targetNamespace="http://www.eclipse.org/module_management">
+<xsd:schema xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:module_management="http://www.eclipse.org/module_management" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="module_management" ecore:package="org.eclipse.efbt.aorta.module_management" targetNamespace="http://www.eclipse.org/module_management">
   <xsd:import namespace="http://www.eclipse.org/emf/2002/Ecore" schemaLocation="Ecore.xsd"/>
   <xsd:annotation>
     <xsd:documentation>This package describes Module Management classes.

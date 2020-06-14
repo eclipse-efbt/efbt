@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<xsd:schema xmlns:column_structured_data="http://www.eclipse.org/column_structured_data" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:execution_environments="http://www.eclipse.org/execution_environments" xmlns:module_management="http://www.eclipse.org/module_management" xmlns:report_structures="http://www.eclipse.org/report_structures" xmlns:test="http://www.eclipse.org/test" xmlns:test_definition="http://www.eclipse.org/test_definition" xmlns:test_input_data="http://www.eclipse.org/test_input_data" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="test" ecore:package="test" targetNamespace="http://www.eclipse.org/test">
+<xsd:schema xmlns:column_structured_data="http://www.eclipse.org/column_structured_data" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:execution_environments="http://www.eclipse.org/execution_environments" xmlns:module_management="http://www.eclipse.org/module_management" xmlns:report_structures="http://www.eclipse.org/report_structures" xmlns:test="http://www.eclipse.org/test" xmlns:test_definition="http://www.eclipse.org/test_definition" xmlns:test_input_data="http://www.eclipse.org/test_input_data" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="test" ecore:package="org.eclipse.efbt.aorta.test" targetNamespace="http://www.eclipse.org/test">
+  <xsd:import namespace="http://www.eclipse.org/execution_environments" schemaLocation="execution_environments.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/module_management" schemaLocation="module_management.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/emf/2002/Ecore" schemaLocation="Ecore.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/test_input_data" schemaLocation="test_input_data.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/test_definition" schemaLocation="test_definition.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/column_structured_data" schemaLocation="column_structured_data.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/report_structures" schemaLocation="report_structures.xsd"/>
-  <xsd:import namespace="http://www.eclipse.org/execution_environments" schemaLocation="execution_environments.xsd"/>
-  <xsd:import namespace="http://www.eclipse.org/emf/2002/Ecore" schemaLocation="Ecore.xsd"/>
   <xsd:annotation>
     <xsd:documentation> This package describes the test package of FreeBIRDTools</xsd:documentation>
   </xsd:annotation>
@@ -24,32 +24,6 @@ SPDX-License-Identifier: EPL-2.0
   <xsd:element ecore:ignore="true" name="E2ETest" type="test:E2ETest"/>
   <xsd:element ecore:ignore="true" name="Test" type="test:Test"/>
   <xsd:element ecore:ignore="true" name="TestModule" type="test:TestModule"/>
-  <xsd:element ecore:ignore="true" name="ExecutedTestModule" type="test:ExecutedTestModule"/>
-  <xsd:complexType name="ExecutedTest">
-    <xsd:annotation>
-      <xsd:documentation>This class represents and executed test</xsd:documentation>
-    </xsd:annotation>
-    <xsd:sequence>
-      <xsd:element ecore:resolveProxies="true" minOccurs="0" name="expectedResults" type="test:Result"/>
-    </xsd:sequence>
-    <xsd:attribute ecore:reference="test:Result" name="actualResults" type="xsd:anyURI">
-      <xsd:annotation>
-        <xsd:documentation>The actaul results of the exucuted test</xsd:documentation>
-      </xsd:annotation>
-    </xsd:attribute>
-    <xsd:attribute ecore:name="testCompleted" ecore:unsettable="false" name="testHasRun" type="ecore:EBoolean">
-      <xsd:annotation>
-        <xsd:documentation>True if a test has run</xsd:documentation>
-      </xsd:annotation>
-    </xsd:attribute>
-    <xsd:attribute ecore:unsettable="false" name="testPassed" type="ecore:EBoolean">
-      <xsd:annotation>
-        <xsd:documentation>True if the test run created results which matched the expected results</xsd:documentation>
-      </xsd:annotation>
-    </xsd:attribute>
-    <xsd:attribute ecore:reference="execution_environments:TestExecutionEnvironment" name="testEnvironmentUsed" type="xsd:anyURI"/>
-    <xsd:attribute ecore:reference="test:E2ETest" name="test" type="xsd:anyURI"/>
-  </xsd:complexType>
   <xsd:complexType name="Result"/>
   <xsd:complexType ecore:name="ReportCellResults" name="ReportCellExpectedResults">
     <xsd:annotation>
@@ -101,15 +75,6 @@ SPDX-License-Identifier: EPL-2.0
           <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="tests" type="test:E2ETest"/>
         </xsd:sequence>
         <xsd:attribute ecore:reference="execution_environments:TestExecutionEnvironment" name="executionEnvironment" type="xsd:anyURI"/>
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
-  <xsd:complexType name="ExecutedTestModule">
-    <xsd:complexContent>
-      <xsd:extension base="module_management:Module">
-        <xsd:sequence>
-          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="executedTests" type="test:ExecutedTest"/>
-        </xsd:sequence>
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
