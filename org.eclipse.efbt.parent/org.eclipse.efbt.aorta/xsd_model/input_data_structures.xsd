@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<xsd:schema xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:input_data_structures="http://www.eclipse.org/input_data_structures" xmlns:module_management="http://www.eclipse.org/module_management" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="input_data_structures" ecore:package="input_data_structures" targetNamespace="http://www.eclipse.org/input_data_structures">
+<xsd:schema xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:input_data_structures="http://www.eclipse.org/input_data_structures" xmlns:module_management="http://www.eclipse.org/module_management" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="input_data_structures" ecore:package="org.eclipse.efbt.aorta.input_data_structures" targetNamespace="http://www.eclipse.org/input_data_structures">
   <xsd:import namespace="http://www.eclipse.org/module_management" schemaLocation="module_management.xsd"/>
   <xsd:element ecore:ignore="true" name="InputDatastructureModule" type="input_data_structures:InputDatastructureModule"/>
   <xsd:element ecore:ignore="true" name="InputDataStructure" type="input_data_structures:InputDataStructure"/>

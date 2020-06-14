@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<xsd:schema xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:requirements_text="http://www.eclipse.org/requirements_text" xmlns:scenarios="http://www.eclipse.org/scenarios" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="scenarios" ecore:package="scenarios" targetNamespace="http://www.eclipse.org/scenarios">
+<xsd:schema xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:requirements_text="http://www.eclipse.org/requirements_text" xmlns:scenarios="http://www.eclipse.org/scenarios" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="scenarios" ecore:package="org.eclipse.efbt.aorta.scenarios" targetNamespace="http://www.eclipse.org/scenarios">
   <xsd:import namespace="http://www.eclipse.org/requirements_text" schemaLocation="requirements_text.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/emf/2002/Ecore" schemaLocation="Ecore.xsd"/>
   <xsd:annotation>

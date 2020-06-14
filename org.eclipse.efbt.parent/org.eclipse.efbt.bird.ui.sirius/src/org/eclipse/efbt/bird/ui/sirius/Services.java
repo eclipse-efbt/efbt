@@ -4,8 +4,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.efbt.bird.component.modelquery.CustomQuery;
 
-import core.DOMAIN;
-import core.MEMBER;
+import org.eclipse.efbt.bird.core.DOMAIN;
+import org.eclipse.efbt.bird.core.MEMBER;
 
 /**
  * The services class used by VSM.

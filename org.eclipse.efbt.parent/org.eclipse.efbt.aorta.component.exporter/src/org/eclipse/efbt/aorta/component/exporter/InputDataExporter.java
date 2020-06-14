@@ -13,19 +13,19 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 
-import aorta_program.Program;
-import base_column_structured_data.BaseCell;
-import base_column_structured_data.BaseCellWithEnumeratedValue;
-import base_column_structured_data.BaseCellWithValue;
-import base_column_structured_data.BaseColumnStructuredData;
-import base_column_structured_data.BaseRowData;
-import column_structures.Column;
-import column_structures.ColumnStructuredEntity;
-import test.E2ETest;
+import org.eclipse.efbt.aorta.aorta_program.Program;
+import org.eclipse.efbt.aorta.base_column_structured_data.BaseCell;
+import org.eclipse.efbt.aorta.base_column_structured_data.BaseCellWithEnumeratedValue;
+import org.eclipse.efbt.aorta.base_column_structured_data.BaseCellWithValue;
+import org.eclipse.efbt.aorta.base_column_structured_data.BaseColumnStructuredData;
+import org.eclipse.efbt.aorta.base_column_structured_data.BaseRowData;
+import org.eclipse.efbt.aorta.column_structures.Column;
+import org.eclipse.efbt.aorta.column_structures.ColumnStructuredEntity;
+import org.eclipse.efbt.aorta.test.E2ETest;
 
-import test.TestModule;
-import test_input_data.TestColumnStructuredData;
-import test_input_data.TestInputData;
+import org.eclipse.efbt.aorta.test.TestModule;
+import org.eclipse.efbt.aorta.test_input_data.TestColumnStructuredData;
+import org.eclipse.efbt.aorta.test_input_data.TestInputData;
 
 public class InputDataExporter {
 	

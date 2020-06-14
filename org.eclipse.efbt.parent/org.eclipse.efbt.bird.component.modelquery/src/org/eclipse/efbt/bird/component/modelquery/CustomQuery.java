@@ -5,10 +5,10 @@ import java.util.Iterator;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 
-import bird_model.BIRDModel;
-import core.DOMAIN;
-import core.MEMBER;
-import efbt_data_definition.MemberModule;
+import org.eclipse.efbt.bird.bird_model.BIRDModel;
+import org.eclipse.efbt.bird.core.DOMAIN;
+import org.eclipse.efbt.bird.core.MEMBER;
+import org.eclipse.efbt.bird.efbt_data_definition.MemberModule;
 
 public class CustomQuery {
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<xsd:schema xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:output_data_structures="http://www.eclipse.org/output_data_structures" xmlns:report_structures="http://www.eclipse.org/report_structures" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="report_structures" ecore:package="report_structures" targetNamespace="http://www.eclipse.org/report_structures">
+<xsd:schema xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:output_data_structures="http://www.eclipse.org/output_data_structures" xmlns:report_structures="http://www.eclipse.org/report_structures" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="report_structures" ecore:package="org.eclipse.efbt.aorta.report_structures" targetNamespace="http://www.eclipse.org/report_structures">
   <xsd:import namespace="http://www.eclipse.org/emf/2002/Ecore" schemaLocation="Ecore.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/output_data_structures" schemaLocation="output_data_structures.xsd"/>
   <xsd:element ecore:ignore="true" name="RegReportCell" type="report_structures:RegReportCell"/>

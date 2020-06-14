@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<xsd:schema xmlns:aortafunctions="http://www.eclipse.org/aortafunctions" xmlns:column_structured_data="http://www.eclipse.org/column_structured_data" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:module_management="http://www.eclipse.org/module_management" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="aortafunctions" ecore:package="aortafunctions" targetNamespace="http://www.eclipse.org/aortafunctions">
+<xsd:schema xmlns:aortafunctions="http://www.eclipse.org/aortafunctions" xmlns:column_structured_data="http://www.eclipse.org/column_structured_data" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:module_management="http://www.eclipse.org/module_management" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="aortafunctions" ecore:package="org.eclipse.efbt.aorta.aortafunctions" targetNamespace="http://www.eclipse.org/aortafunctions">
   <xsd:import namespace="http://www.eclipse.org/module_management" schemaLocation="module_management.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/column_structured_data" schemaLocation="column_structured_data.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/emf/2002/Ecore" schemaLocation="Ecore.xsd"/>
