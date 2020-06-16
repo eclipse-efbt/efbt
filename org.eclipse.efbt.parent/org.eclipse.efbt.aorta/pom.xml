@@ -78,19 +78,7 @@
 							<includes>
 								<include>**/*</include>
 							</includes>
-						</fileset>
-						<fileset>
-							<directory>${basedir}/../org.eclipse.efbt.aorta/emf-gen/</directory>
-							<includes>
-								<include>**/*</include>
-							</includes>
-						</fileset>
-						<fileset>
-							<directory>${basedir}/../org.eclipse.efbt.aorta.tests/src-gen/</directory>
-							<includes>
-								<include>**/*</include>
-							</includes>
-						</fileset>
+						</fileset>											
 						<fileset>
 							<directory>${basedir}/../org.eclipse.efbt.aorta.ide/src-gen/</directory>
 							<includes>
@@ -103,12 +91,7 @@
 								<include>**/*</include>
 							</includes>
 						</fileset>
-						<fileset>
-							<directory>${basedir}/../org.eclipse.efbt.aorta.ui.tests/src-gen/</directory>
-							<includes>
-								<include>**/*</include>
-							</includes>
-						</fileset>
+						
 						
 					</filesets>
 				</configuration>
