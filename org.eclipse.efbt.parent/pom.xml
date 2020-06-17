@@ -30,11 +30,11 @@
 		 <module>org.eclipse.efbt.aorta.component.exporter</module>
 		<module>org.eclipse.efbt.aorta.example.testing</module>
 		<module>org.eclipse.efbt.aorta.ui.sirius.testmanager</module>
-		<!--<module>org.eclipse.efbt.bird.component.modelquery</module>-->
+		<module>org.eclipse.efbt.bird.component.modelquery</module>
 		<!--<module>org.eclipse.efbt.bird.component.rules_and_data_structures_manager</module>-->
 		<!--<module>org.eclipse.efbt.bird.example</module>-->
-		<!--<module>org.eclipse.efbt.bird.model</module>-->
-		<!-- <module>org.eclipse.efbt.bird.ui.sirius</module>-->
+		<module>org.eclipse.efbt.bird.model</module>
+		<module>org.eclipse.efbt.bird.ui.sirius</module>
 		
 	</modules>
 	<dependencyManagement>

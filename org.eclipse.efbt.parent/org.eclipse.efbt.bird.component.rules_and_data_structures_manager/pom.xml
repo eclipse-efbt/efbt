@@ -9,13 +9,13 @@
 	<artifactId>org.eclipse.efbt.bird.component.rules_and_data_structures_manager</artifactId>
 	<packaging>eclipse-plugin</packaging>
 
-<dependencyManagement>
+
 		<dependencies>
 			<dependency>
 				<groupId>com.healthmarketscience.jackcess</groupId>
 				<artifactId>jackcess</artifactId>
 				<version>3.0.1</version>
-				<type>compile</type>			
+			
 			</dependency>	
 			<dependency>
     			<groupId>org.apache.commons</groupId>
@@ -23,6 +23,6 @@
     			<version>1.5</version>
 			</dependency>		
 		</dependencies>
-	</dependencyManagement>
+
 
 </project>
