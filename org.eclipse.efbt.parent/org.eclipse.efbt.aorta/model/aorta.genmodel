@@ -258,11 +258,6 @@
       disposableProviderFactory="true" ecorePackage="output_data_sets.ecore#/">
     <genClasses ecoreClass="output_data_sets.ecore#//DataSetModule"/>
     <genClasses ecoreClass="output_data_sets.ecore#//OutputDataSet"/>
-    <nestedGenPackages prefix="Output_data_sets" resource="XML" disposableProviderFactory="true"
-        ecorePackage="output_data_sets.ecore#/">
-      <genClasses ecoreClass="output_data_sets.ecore#//DataSetModule"/>
-      <genClasses ecoreClass="output_data_sets.ecore#//OutputDataSet"/>
-    </nestedGenPackages>
   </genPackages>
   <genPackages prefix="Output_data_structures" basePackage="org.eclipse.efbt.aorta"
       resource="XML" disposableProviderFactory="true" ecorePackage="output_data_structures.ecore#/">

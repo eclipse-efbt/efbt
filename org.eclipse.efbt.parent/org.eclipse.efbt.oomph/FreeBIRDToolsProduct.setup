@@ -207,9 +207,9 @@
       <requirement
           name="org.eclipse.buildship.feature.group"/>
       <repository
-          url="http://download.eclipse.org/releases/2020-03"/>
+          url="http://download.eclipse.org/releases/2020-06"/>
       <repository
-          url="http://download.eclipse.org/technology/epp/packages/2020-03"/>
+          url="http://download.eclipse.org/technology/epp/packages/2020-06"/>
       <repository
           url="https://checkstyle.github.io/eclipse-cs/update"/>
       <repository

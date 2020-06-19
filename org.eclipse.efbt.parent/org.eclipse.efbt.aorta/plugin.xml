@@ -204,21 +204,6 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated aorta -->
       <package
-            uri="http://www.eclipse.org/output_data_sets"
-            class="org.eclipse.efbt.aorta.output_data_sets.output_data_sets.Output_data_setsPackage"
-            genModel="model/aorta.genmodel"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.extension_parser">
-      <!-- @generated aorta -->
-      <parser
-            type="output_data_sets"
-            class="org.eclipse.efbt.aorta.output_data_sets.output_data_sets.util.Output_data_setsResourceFactoryImpl"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated aorta -->
-      <package
             uri="http://www.eclipse.org/output_data_structures"
             class="org.eclipse.efbt.aorta.output_data_structures.Output_data_structuresPackage"
             genModel="model/aorta.genmodel"/>
