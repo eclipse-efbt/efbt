@@ -29,14 +29,18 @@ import java.util.List;
 
 import org.eclipse.efbt.component.birdartefactscreator.importer.FreeBirdToolsResourceFactory;
 import org.eclipse.efbt.component.birdartefactscreator.importer.Importer;
+import org.eclipse.efbt.util.access.provider.AccessUtilProvider;
+import org.eclipse.efbt.util.accessdb.AccessRow;
+import org.eclipse.efbt.util.accessdb.AccessUtils;
+import org.eclipse.efbt.util.csv.CSVRow;
+import org.eclipse.efbt.util.csv.CSVUtils;
+import org.eclipse.efbt.util.csv.provider.CSVUtilsProvider;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 
-import com.healthmarketscience.jackcess.DatabaseBuilder;
-import com.healthmarketscience.jackcess.Row;
-import com.healthmarketscience.jackcess.Table;
+
 import com.ibm.icu.text.UTF16;
 
 import org.eclipse.efbt.aorta.aorta_program.Aorta_programFactory;
@@ -100,9 +104,7 @@ import org.eclipse.efbt.aorta.test_input_data.Test_input_dataFactory;
 import org.eclipse.efbt.bird.vtl_transformation.TRANSFORMATION_SCHEME;
 import org.eclipse.efbt.bird.vtl_transformation.Vtl_transformationFactory;
 
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
+
 
 /**
  * @author Neil Mackenzie
@@ -134,10 +136,14 @@ public class BIRDImporter extends Importer {
 	}
 
 	public void createAllTransformationSchemes() {
-		Table table;
+		
 		try {
-			table = DatabaseBuilder.open(new File(filepath)).getTable("TRANSFORMATION_SCHEME");
-			for (Row row : table) {
+			
+			AccessUtils accessUtils = AccessUtilProvider.getAccessUtils();
+			List<AccessRow>  list = accessUtils.getRowsForTable(filepath, "TRANSFORMATION_SCHEME");
+			
+			
+			for (AccessRow row : list) {
 				//System.out
 				//		.println("Column 'TRANSFORMATION_SCHEME_ID' has value: " + row.get("TRANSFORMATION_SCHEME_ID"));
 				TRANSFORMATION_SCHEME scheme = Vtl_transformationFactory.eINSTANCE.createTRANSFORMATION_SCHEME();
@@ -252,12 +258,16 @@ public class BIRDImporter extends Importer {
 		//creat4e all mapping defintions
 		//attach all memebr mapping and variable maapings
 		//create cubemapping module and link to created mapping defintions
-		Table table;
+	
 		try {
 		
 
-		table = DatabaseBuilder.open(new File(filepath)).getTable("MEMBER_MAPPING");
-		for (Row row : table) {
+			AccessUtils accessUtils = AccessUtilProvider.getAccessUtils();
+			List<AccessRow>  list = accessUtils.getRowsForTable(filepath, "TRANSFORMATION_SCHEME");
+			
+			
+			for (AccessRow row : list) {
+		
 		
 			MEMBER_MAPPING memberMapping = MappingFactory.eINSTANCE.createMEMBER_MAPPING();			
 			
@@ -268,9 +278,11 @@ public class BIRDImporter extends Importer {
 			memberMappingModule.getMemberMappings().add(memberMapping);
 	
 
-		}
-		table = DatabaseBuilder.open(new File(filepath)).getTable("VARIABLE_MAPPING");
-		for (Row row : table) {
+			}
+			list = accessUtils.getRowsForTable(filepath, "VARIABLE_MAPPING");
+			
+			
+			for (AccessRow row : list) {
 			
 			VARIABLE_MAPPING variableMapping = MappingFactory.eINSTANCE.createVARIABLE_MAPPING();			
 			
@@ -281,10 +293,12 @@ public class BIRDImporter extends Importer {
 			variableMappingModule.getVariableMappings().add(variableMapping);
 
 		}
-		
-		table = DatabaseBuilder.open(new File(filepath)).getTable("MAPPING_DEFINITION");
 
-		for (Row row : table) {
+			list = accessUtils.getRowsForTable(filepath, "MAPPING_DEFINITION");
+			
+			
+			for (AccessRow row : list) {
+	
 
 		//	System.out.println("Column 'MAPPING_DEFINITION_ID' has value: " + row.get("MAPPING_DEFINITION_ID"));
 			MAPPING_DEFINITION mapping = MappingFactory.eINSTANCE.createMAPPING_DEFINITION();
@@ -312,8 +326,11 @@ public class BIRDImporter extends Importer {
 		//create the cubeMappings add them to the module
 		//create the mapping to cube, link them by reference to the mapping defintions
 		//then add them by containment to the cubeMapping
-		table = DatabaseBuilder.open(new File(filepath)).getTable("CUBE_MAPPING");
-		for (Row row : table) {
+		
+		list = accessUtils.getRowsForTable(filepath, "CUBE_MAPPING");
+		
+		
+		for (AccessRow row : list) {
 
 		//	System.out.println("Column 'CUBE_MAPPING_ID' has value: " + row.get("CUBE_MAPPING_ID"));
 			CUBE_MAPPING mapping = MappingFactory.eINSTANCE.createCUBE_MAPPING();
@@ -333,8 +350,11 @@ public class BIRDImporter extends Importer {
 		//	System.out.println("mapping2 = " + mapping.toString());
 		}
 		
-		table = DatabaseBuilder.open(new File(filepath)).getTable("MAPPING_TO_CUBE");
-		for (Row row : table) {
+		
+		list = accessUtils.getRowsForTable(filepath, "MAPPING_TO_CUBE");
+		
+		
+		for (AccessRow row : list) {
 
 			
 			MAPPING_TO_CUBE mapping = MappingFactory.eINSTANCE.createMAPPING_TO_CUBE();
@@ -417,10 +437,12 @@ public class BIRDImporter extends Importer {
 	}
 
 	public void createAllDomains() {
-		Table table;
+		AccessUtils accessUtils = AccessUtilProvider.getAccessUtils();
+		
 		try {
-			table = DatabaseBuilder.open(new File(filepath)).getTable("DOMAIN");
-			for (Row row : table) {
+		
+			List<AccessRow>  list = accessUtils.getRowsForTable(filepath, "DOMAIN");			
+			for (AccessRow row : list) {
 			//	System.out.println("Column 'DOMAIN_ID' has value: " + row.get("DOMAIN_ID"));
 				DOMAIN domain = CoreFactory.eINSTANCE.createDOMAIN();
 				domain.setCode(row.getString("CODE"));
@@ -471,10 +493,13 @@ public class BIRDImporter extends Importer {
 	}
 
 	public void createAllMembers() {
-		Table table;
+		
+AccessUtils accessUtils = AccessUtilProvider.getAccessUtils();
+		
 		try {
-			table = DatabaseBuilder.open(new File(filepath)).getTable("MEMBER");
-			for (Row row : table) {
+		
+			List<AccessRow>  list = accessUtils.getRowsForTable(filepath, "MEMBER");	
+			for (AccessRow row : list) {
 				//System.out.println("Column 'MEMBER_ID' has value: " + row.get("MEMBER_ID"));
 				MEMBER member = CoreFactory.eINSTANCE.createMEMBER();
 				member.setCode(row.getString("CODE"));
@@ -508,10 +533,13 @@ public class BIRDImporter extends Importer {
 	}
 
 	public void createAllVariables() {
-		Table table;
+AccessUtils accessUtils = AccessUtilProvider.getAccessUtils();
+		
 		try {
-			table = DatabaseBuilder.open(new File(filepath)).getTable("VARIABLE");
-			for (Row row : table) {
+		
+			List<AccessRow>  list = accessUtils.getRowsForTable(filepath, "VARIABLE");	
+			
+			for (AccessRow row : list) {
 		//		System.out.println("Column 'VARIABLE_ID' has value: " + row.get("VARIABLE_ID"));
 				VARIABLE variable = CoreFactory.eINSTANCE.createVARIABLE();
 				variable.setCode(row.getString("CODE"));
@@ -532,11 +560,11 @@ public class BIRDImporter extends Importer {
 	}
 
 	public void createAllCubes() {
-		Table table;
+		AccessUtils accessUtils = AccessUtilProvider.getAccessUtils();
 		try {
-
-			table = DatabaseBuilder.open(new File(filepath)).getTable("CUBE_STRUCTURE");
-			for (Row row : table) {
+			List<AccessRow>  list = accessUtils.getRowsForTable(filepath, "CUBE_STRUCTURE");
+			
+			for (AccessRow row : list) {
 			//	System.out.println("Column 'CUBE_STRUCTURE_ID' has value: " + row.get("CUBE_STRUCTURE_ID"));
 				CUBE_STRUCTURE cube_structure = Data_definitionFactory.eINSTANCE.createCUBE_STRUCTURE();
 				cube_structure.setCode(row.getString("CODE"));
@@ -548,9 +576,8 @@ public class BIRDImporter extends Importer {
 				//System.out.println("VALID_TO = " + cube_structure.toString());
 				cubeStructuresModule.getCubeStructures().add(cube_structure);
 			}
-
-			table = DatabaseBuilder.open(new File(filepath)).getTable("CUBE");
-			for (Row row : table) {
+			  list = accessUtils.getRowsForTable(filepath, "CUBE");
+			for (AccessRow row : list) {
 			//	System.out.println("Column 'CUBE_ID' has value: " + row.get("CUBE_ID"));
 				CUBE cube = Data_definitionFactory.eINSTANCE.createCUBE();
 				cube.setCode(row.getString("CODE"));
@@ -566,8 +593,8 @@ public class BIRDImporter extends Importer {
 				cubesModule.getCubes().add(cube);
 			}
 
-			table = DatabaseBuilder.open(new File(filepath)).getTable("CUBE_STRUCTURE_ITEM");
-			for (Row row : table) {
+			  list = accessUtils.getRowsForTable(filepath, "CUBE");
+			  for (AccessRow row : list) {
 				
 				CUBE_STRUCTURE_ITEM item = Data_definitionFactory.eINSTANCE.createCUBE_STRUCTURE_ITEM();
 				String structureString = (row.getString("CUBE_STRUCTURE_ID"));
@@ -622,14 +649,13 @@ public class BIRDImporter extends Importer {
 	}
 
 	public void createAllCombinations() {
-		Table table;
-		int counter = 0;
-		CombinationModule combinationsModule = null;
+		AccessUtils accessUtils = AccessUtilProvider.getAccessUtils();
 		try {
-			table = DatabaseBuilder.open(new File(filepath)).getTable("COMBINATION");
-
-			for (Row row : table) {
-
+			List<AccessRow>  list = accessUtils.getRowsForTable(filepath, "COMBINATION");
+			int counter = 0;
+			CombinationModule combinationsModule = null;
+			for (AccessRow row : list) {
+		
 				if (counter == 0) {
 					combinationsModule = Efbt_data_definitionFactory.eINSTANCE.createCombinationModule();
 					combinationsModules.add(combinationsModule);
@@ -649,8 +675,8 @@ public class BIRDImporter extends Importer {
 				combinationsModule.getCombinations().add(comb);
 			}
 
-			table = DatabaseBuilder.open(new File(filepath)).getTable("COMBINATION_ITEM");
-			for (Row row : table) {
+			list = accessUtils.getRowsForTable(filepath, "COMBINATION_ITEM");
+			for (AccessRow row : list) {
 				
 				COMBINATION_ITEM item = Data_definitionFactory.eINSTANCE.createCOMBINATION_ITEM();
 				String combinationString = (row.getString("COMBINATION_ID"));
@@ -774,14 +800,17 @@ public class BIRDImporter extends Importer {
 		try {
 			
 			 csvData = new FileReader(new File (testdatafilepath));
-			 CSVParser parser = CSVParser.parse(csvData,  CSVFormat.EXCEL);
+			 
+			 CSVUtils csvUtils = CSVUtilsProvider.getCSVUtils();
+			 List<CSVRow> list = csvUtils.getCSVRowsFromFile(testdatafilepath);
+			
 			
 			 HashMap<String, E2ETest>   tests = new HashMap<String, E2ETest>();
 			 HashMap<String, BaseColumnStructuredData>   tables = new HashMap<String, BaseColumnStructuredData>();
 			 HashMap<String, BaseRowData>   rows = new  HashMap<String, BaseRowData>();
 			 
 			 
-			 for (CSVRecord csvRecord : parser) {
+			 for (CSVRow csvRecord : list) {
 				 
 				
 				 String id1 = csvRecord.get(0);
