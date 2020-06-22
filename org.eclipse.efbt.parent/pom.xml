@@ -5,7 +5,9 @@
 	<version>1.0.0-SNAPSHOT</version>
 	<artifactId>org.eclipse.efbt.parent</artifactId>
 	<packaging>pom</packaging>
-
+<prerequisites>
+    <maven>3.0</maven>
+  </prerequisites>
 	<properties>
 		<xtextVersion>2.22.0</xtextVersion>
 		<mwe2Version>2.11.3</mwe2Version>
@@ -31,10 +33,16 @@
 		<module>org.eclipse.efbt.aorta.example.testing</module>
 		<module>org.eclipse.efbt.aorta.ui.sirius.testmanager</module>
 		<module>org.eclipse.efbt.bird.component.modelquery</module>
-		<!--<module>org.eclipse.efbt.bird.component.rules_and_data_structures_manager</module>-->
+		<module>org.eclipse.efbt.bird.component.rules_and_data_structures_manager</module>
 		<!--<module>org.eclipse.efbt.bird.example</module>-->
 		<module>org.eclipse.efbt.bird.model</module>
 		<module>org.eclipse.efbt.bird.ui.sirius</module>
+		<module>org.eclipse.efbt.util.access.interface</module>
+		<module>org.eclipse.efbt.util.access.provider</module>
+		<module>org.eclipse.efbt.util.access.impl.jackcess</module>
+		<module>org.eclipse.efbt.util.csv.interface</module>
+		<module>org.eclipse.efbt.util.csv.provider</module>
+		<module>org.eclipse.efbt.util.csv.impl.apachecsv</module>
 		
 	</modules>
 	<dependencyManagement>
@@ -46,6 +54,26 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+			 <dependency>
+      <groupId>org.eclipse.efbt.dependencies</groupId>
+      <artifactId>org.eclipse.efbt.util.access.impl.jackess</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.efbt.dependencies</groupId>
+      <artifactId>pomfirst-thirdparty</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+     <dependency>
+      <groupId>org.eclipse.efbt.dependencies</groupId>
+      <artifactId>org.eclipse.efbt.util.csv.impl.apachecsv2</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.efbt.dependencies</groupId>
+      <artifactId>pomfirst-thirdparty2</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
 			
 				
 		
@@ -105,6 +133,7 @@
 				<artifactId>target-platform-configuration</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
+				  <pomDependencies>consider</pomDependencies>
 					<target>
 						<artifact>
 							<groupId>org.eclipse.efbt.aorta</groupId>
@@ -146,6 +175,7 @@
 							</requirement>
 						</extraRequirements>
 					</dependency-resolution>
+					<pomDependencies>consider</pomDependencies>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -341,5 +371,26 @@
 	</profiles>
 
 	<dependencies>
-	</dependencies>
+    <dependency>
+      <groupId>org.eclipse.efbt.dependencies</groupId>
+      <artifactId>org.eclipse.efbt.util.access.impl.jackess</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.efbt.dependencies</groupId>
+      <artifactId>pomfirst-thirdparty</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+  
+  <dependency>
+      <groupId>org.eclipse.efbt.dependencies</groupId>
+      <artifactId>org.eclipse.efbt.util.csv.impl.apachecsv2</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.efbt.dependencies</groupId>
+      <artifactId>pomfirst-thirdparty2</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+  </dependencies>
 </project>

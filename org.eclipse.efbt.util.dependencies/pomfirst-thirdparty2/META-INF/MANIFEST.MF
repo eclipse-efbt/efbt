@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-SymbolicName: org.eclipse.efbt.dependencies.pomfirst-thirdparty
+ 2
+Embed-Directory: jars
+Built-By: Neil
+Bundle-ManifestVersion: 2
+Bnd-LastModified: 1592840154461
+Embed-Dependency: commons-csv
+Import-Package: org.apache.commons.csv;version="1.5"
+Tool: Bnd-0.0.357
+Export-Package: org.apache.commons.csv;version="1.5"
+Bundle-Version: 1.0.0.SNAPSHOT
+Bundle-Name: pomfirst-thirdparty2
+Bundle-ClassPath: jars/commons-csv-1.5.jar
+Embed-Transitive: true
+Created-By: Apache Maven Bundle Plugin
+Build-Jdk: 1.8.0_192
+

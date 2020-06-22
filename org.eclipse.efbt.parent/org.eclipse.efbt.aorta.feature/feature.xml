@@ -50,6 +50,49 @@
 			install-size="0"
 			version="0.0.0"
 			unpack="false"/>
+	<plugin
+			id="org.eclipse.efbt.util.access.interface"
+			download-size="0"
+			install-size="0"
+			version="0.0.0"
+			unpack="false"/>
+	<plugin
+			id="org.eclipse.efbt.util.access.impl.jackcess"
+			download-size="0"
+			install-size="0"
+			version="0.0.0"
+			unpack="false"/>
+	<plugin
+			id="org.eclipse.efbt.util.access.provider"
+			download-size="0"
+			install-size="0"
+			version="0.0.0"
+			unpack="false"/>
+	<plugin
+			id="org.eclipse.efbt.util.csv.interface"
+			download-size="0"
+			install-size="0"
+			version="0.0.0"
+			unpack="false"/>
+	<plugin
+			id="org.eclipse.efbt.util.csv.impl.apachecsv"
+			download-size="0"
+			install-size="0"
+			version="0.0.0"
+			unpack="false"/>
+	<plugin
+			id="org.eclipse.efbt.util.csv.provider"
+			download-size="0"
+			install-size="0"
+			version="0.0.0"
+			unpack="false"/>
+	<plugin
+			id="org.eclipse.efbt.bird.component.rules_and_data_structures_manager"
+			download-size="0"
+			install-size="0"
+			version="0.0.0"
+			unpack="false"/>
+
 	
 	
 	

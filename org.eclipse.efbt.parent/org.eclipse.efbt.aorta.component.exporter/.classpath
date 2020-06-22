@@ -4,6 +4,5 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="/org.eclipse.efbt.aorta"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="lib" path="C:/Users/Neil/output3"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
