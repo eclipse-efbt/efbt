@@ -286,6 +286,8 @@
     <genClasses ecoreClass="report_structures.ecore#//RegReport">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference report_structures.ecore#//RegReport/cells"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute report_structures.ecore#//RegReport/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference report_structures.ecore#//RegReport/rows"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference report_structures.ecore#//RegReport/columns"/>
     </genClasses>
     <genClasses ecoreClass="report_structures.ecore#//RegReportModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference report_structures.ecore#//RegReportModule/reportGroups"/>
@@ -293,6 +295,18 @@
     <genClasses ecoreClass="report_structures.ecore#//ReportGroup">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference report_structures.ecore#//ReportGroup/regReports"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute report_structures.ecore#//ReportGroup/name"/>
+    </genClasses>
+    <genClasses ecoreClass="report_structures.ecore#//RegReportColumn">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute report_structures.ecore#//RegReportColumn/name"/>
+    </genClasses>
+    <genClasses ecoreClass="report_structures.ecore#//RegReportRow">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute report_structures.ecore#//RegReportRow/name"/>
+    </genClasses>
+    <genClasses ecoreClass="report_structures.ecore#//ReportLinkedRequirement">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference report_structures.ecore#//ReportLinkedRequirement/row"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference report_structures.ecore#//ReportLinkedRequirement/column"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference report_structures.ecore#//ReportLinkedRequirement/cell"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute report_structures.ecore#//ReportLinkedRequirement/text"/>
     </genClasses>
   </genPackages>
   <genPackages prefix="Requirements_text" basePackage="org.eclipse.efbt.aorta" resource="XML"
