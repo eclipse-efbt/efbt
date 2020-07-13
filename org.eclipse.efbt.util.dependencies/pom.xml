@@ -20,8 +20,6 @@
 
   <modules>
     <module>org.eclipse.efbt.util.access.impl.jackess</module>
-    <module>org.eclipse.efbt.util.csv.impl.apachecsv2</module>
-    <module>pomfirst-thirdparty2</module>
     <module>pomfirst-thirdparty</module>
 
   </modules>

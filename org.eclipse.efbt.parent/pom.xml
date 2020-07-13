@@ -30,7 +30,7 @@
 		<module>org.eclipse.efbt.aorta.feature</module>
 		<module>org.eclipse.efbt.aorta.repository</module>
 		 <module>org.eclipse.efbt.aorta.component.exporter</module>
-		<module>org.eclipse.efbt.aorta.example.testing</module>
+		<!--<module>org.eclipse.efbt.aorta.example.testing</module>-->
 		<module>org.eclipse.efbt.aorta.ui.sirius.testmanager</module>
 		<module>org.eclipse.efbt.bird.component.modelquery</module>
 		<module>org.eclipse.efbt.bird.component.rules_and_data_structures_manager</module>
@@ -43,6 +43,7 @@
 		<module>org.eclipse.efbt.util.csv.interface</module>
 		<module>org.eclipse.efbt.util.csv.provider</module>
 		<module>org.eclipse.efbt.util.csv.impl.apachecsv</module>
+		<module>org.eclipse.efbt.ldmtools.sqldevconvertor</module>
 		
 	</modules>
 	<dependencyManagement>

@@ -10,7 +10,7 @@ import java.util.List;
 import org.apache.commons.csv.CSVRecord;
 import org.eclipse.efbt.util.csv.CSVRow;
 import org.eclipse.efbt.util.csv.CSVUtils;
-import org.eclipse.efbt.util.csv.impl.apachecsv2.ApacheCSVUtil;
+
 
 public class ApacheCSVUtils implements CSVUtils{
 
