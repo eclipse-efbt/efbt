@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<xsd:schema xmlns:base_column_structured_data="http://www.eclipse.org/base_column_structured_data" xmlns:cell_transformation_logic="http://www.eclipse.org/cell_transformation_logic" xmlns:data_lineage="http://www.eclipse.org/data_lineage" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="data_lineage" ecore:package="data_lineage" targetNamespace="http://www.eclipse.org/data_lineage">
+<xsd:schema xmlns:base_column_structured_data="http://www.eclipse.org/base_column_structured_data" xmlns:cell_transformation_logic="http://www.eclipse.org/cell_transformation_logic" xmlns:data_lineage="http://www.eclipse.org/data_lineage" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="data_lineage" ecore:package="org.eclipse.efbt.aorta.data_lineage" targetNamespace="http://www.eclipse.org/data_lineage">
   <xsd:import namespace="http://www.eclipse.org/emf/2002/Ecore" schemaLocation="Ecore.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/base_column_structured_data" schemaLocation="base_column_structured_data.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/cell_transformation_logic" schemaLocation="cell_transformation_logic.xsd"/>

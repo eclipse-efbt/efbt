@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.bird.model/emf-gen" modelPluginID="org.eclipse.efbt.bird.model"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.bird.model/src-gen" modelPluginID="org.eclipse.efbt.bird.model"
     modelName="Bird_artefacts" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     importerID="org.eclipse.emf.importer.ecore" complianceLevel="8.0" copyrightFields="false"
     usedGenPackages="../../org.eclipse.efbt.aorta/model/aorta.genmodel#//module_management ../../org.eclipse.efbt.aorta/model/aorta.genmodel#//output_data_structures ../../org.eclipse.efbt.aorta/model/aorta.genmodel#//report_structures"
@@ -15,8 +15,8 @@
   <foreignModel>rendering.ecore</foreignModel>
   <foreignModel>reports.ecore</foreignModel>
   <foreignModel>vtl_transformation.ecore</foreignModel>
-  <genPackages prefix="Bird_model" resource="XML" disposableProviderFactory="true"
-      ecorePackage="bird_model.ecore#/">
+  <genPackages prefix="Bird_model" basePackage="org.eclipse.efbt.bird" resource="XML"
+      disposableProviderFactory="true" ecorePackage="bird_model.ecore#/">
     <genClasses ecoreClass="bird_model.ecore#//BIRDModel">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bird_model.ecore#//BIRDModel/domains"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bird_model.ecore#//BIRDModel/members"/>
@@ -28,7 +28,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bird_model.ecore#//BIRDModel/name"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Core" resource="XML" disposableProviderFactory="true" ecorePackage="core.ecore#/">
+  <genPackages prefix="Core" basePackage="org.eclipse.efbt.bird" resource="XML" disposableProviderFactory="true"
+      ecorePackage="core.ecore#/">
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="core.ecore#//FACET_VALUE_TYPE">
       <genEnumLiterals ecoreEnumLiteral="core.ecore#//FACET_VALUE_TYPE/BigInteger"/>
       <genEnumLiterals ecoreEnumLiteral="core.ecore#//FACET_VALUE_TYPE/Boolean"/>
@@ -162,8 +163,8 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference core.ecore#//VARIABLE_SET_ENUMERATION/variable_set_id"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Data_definition" resource="XML" disposableProviderFactory="true"
-      ecorePackage="data_definition.ecore#/">
+  <genPackages prefix="Data_definition" basePackage="org.eclipse.efbt.bird" resource="XML"
+      disposableProviderFactory="true" ecorePackage="data_definition.ecore#/">
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="data_definition.ecore#//TYP_DMNSN">
       <genEnumLiterals ecoreEnumLiteral="data_definition.ecore#//TYP_DMNSN/B"/>
       <genEnumLiterals ecoreEnumLiteral="data_definition.ecore#//TYP_DMNSN/M"/>
@@ -302,8 +303,8 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//FRAMEWORK_VARIABLE_SET/variable_set_id"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Efbt_data_definition" resource="XML" disposableProviderFactory="true"
-      ecorePackage="efbt_data_definition.ecore#/">
+  <genPackages prefix="Efbt_data_definition" basePackage="org.eclipse.efbt.bird" resource="XML"
+      disposableProviderFactory="true" ecorePackage="efbt_data_definition.ecore#/">
     <genClasses ecoreClass="efbt_data_definition.ecore#//CombinationModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_data_definition.ecore#//CombinationModule/combinations"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_data_definition.ecore#//CombinationModule/combination_items"/>
@@ -328,8 +329,8 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_data_definition.ecore#//VariableModule/variables"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Efbt_mapping" resource="XML" disposableProviderFactory="true"
-      ecorePackage="efbt_mapping.ecore#/">
+  <genPackages prefix="Efbt_mapping" basePackage="org.eclipse.efbt.bird" resource="XML"
+      disposableProviderFactory="true" ecorePackage="efbt_mapping.ecore#/">
     <genClasses ecoreClass="efbt_mapping.ecore#//MappingDefinitionModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_mapping.ecore#//MappingDefinitionModule/mappings"/>
     </genClasses>
@@ -343,13 +344,14 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_mapping.ecore#//VariableMappingModule/variableMappings"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Efbt_vtl_transformation" resource="XML" disposableProviderFactory="true"
-      ecorePackage="efbt_vtl_transformation.ecore#/">
+  <genPackages prefix="Efbt_vtl_transformation" basePackage="org.eclipse.efbt.bird"
+      resource="XML" disposableProviderFactory="true" ecorePackage="efbt_vtl_transformation.ecore#/">
     <genClasses ecoreClass="efbt_vtl_transformation.ecore#//TransformationSchemeModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_vtl_transformation.ecore#//TransformationSchemeModule/schemes"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Mapping" resource="XML" disposableProviderFactory="true" ecorePackage="mapping.ecore#/">
+  <genPackages prefix="Mapping" basePackage="org.eclipse.efbt.bird" resource="XML"
+      disposableProviderFactory="true" ecorePackage="mapping.ecore#/">
     <genClasses ecoreClass="mapping.ecore#//CUBE_MAPPING">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mapping.ecore#//CUBE_MAPPING/cube_mapping_id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mapping.ecore#//CUBE_MAPPING/description"/>
@@ -400,8 +402,8 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mapping.ecore#//MAPPING_DEFINITION/variableMapping"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Rendering" resource="XML" disposableProviderFactory="true"
-      ecorePackage="rendering.ecore#/">
+  <genPackages prefix="Rendering" basePackage="org.eclipse.efbt.bird" resource="XML"
+      disposableProviderFactory="true" ecorePackage="rendering.ecore#/">
     <genClasses ecoreClass="rendering.ecore#//AXIS">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rendering.ecore#//AXIS/axis_id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rendering.ecore#//AXIS/code"/>
@@ -453,7 +455,8 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference rendering.ecore#//TABLE_CELL/table_id"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Reports" resource="XML" disposableProviderFactory="true" ecorePackage="reports.ecore#/">
+  <genPackages prefix="Reports" basePackage="org.eclipse.efbt.bird" resource="XML"
+      disposableProviderFactory="true" ecorePackage="reports.ecore#/">
     <genClasses ecoreClass="reports.ecore#//AxisModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reports.ecore#//AxisModule/axes"/>
     </genClasses>
@@ -483,8 +486,8 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reports.ecore#//TableCellModule/tableCells"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Vtl_transformation" resource="XML" disposableProviderFactory="true"
-      ecorePackage="vtl_transformation.ecore#/">
+  <genPackages prefix="Vtl_transformation" basePackage="org.eclipse.efbt.bird" resource="XML"
+      disposableProviderFactory="true" ecorePackage="vtl_transformation.ecore#/">
     <genClasses ecoreClass="vtl_transformation.ecore#//TRANSFORMATION_SCHEME">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute vtl_transformation.ecore#//TRANSFORMATION_SCHEME/transformation_scheme_id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute vtl_transformation.ecore#//TRANSFORMATION_SCHEME/description"/>

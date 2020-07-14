@@ -6,16 +6,10 @@
 		<artifactId>org.eclipse.efbt.parent</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
+	
 	<artifactId>org.eclipse.efbt.bird.ui.sirius</artifactId>
 	<packaging>eclipse-plugin</packaging>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.eclipse.xtend</groupId>
-				<artifactId>xtend-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
+	
 
 </project>

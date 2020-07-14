@@ -15,6 +15,10 @@
         eType="#//RegReportCell" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rows" upperBound="-1" eType="#//RegReportRow"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="columns" upperBound="-1"
+        eType="#//RegReportColumn" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RegReportModule" eSuperTypes="output_data_structures.ecore#//OutputDataStructureModule">
     <eStructuralFeatures xsi:type="ecore:EReference" name="reportGroups" upperBound="-1"
@@ -25,5 +29,19 @@
         eType="#//RegReport" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RegReportColumn">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RegReportRow">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ReportLinkedRequirement" eSuperTypes="requirements_text.ecore#//RequirementsSection">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="row" eType="#//RegReportRow"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="column" eType="#//RegReportColumn"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cell" eType="#//RegReportCell"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
 </ecore:EPackage>

@@ -10,140 +10,149 @@
       <!-- @generated bird_artefacts -->
       <package
             uri="http://www.eclipse.org/bird_model"
-            class="bird_model.Bird_modelPackage"/>
+            class="org.eclipse.efbt.bird.bird_model.Bird_modelPackage"
+            genModel="model/bird_artefacts.genmodel"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.extension_parser">
       <!-- @generated bird_artefacts -->
       <parser
             type="bird_model"
-            class="bird_model.util.Bird_modelResourceFactoryImpl"/>
+            class="org.eclipse.efbt.bird.bird_model.util.Bird_modelResourceFactoryImpl"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated bird_artefacts -->
       <package
             uri="http://www.eclipse.org/core"
-            class="core.CorePackage"/>
+            class="org.eclipse.efbt.bird.core.CorePackage"
+            genModel="model/bird_artefacts.genmodel"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.extension_parser">
       <!-- @generated bird_artefacts -->
       <parser
             type="core"
-            class="core.util.CoreResourceFactoryImpl"/>
+            class="org.eclipse.efbt.bird.core.util.CoreResourceFactoryImpl"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated bird_artefacts -->
       <package
             uri="http://www.eclipse.org/data_definition"
-            class="data_definition.Data_definitionPackage"/>
+            class="org.eclipse.efbt.bird.data_definition.Data_definitionPackage"
+            genModel="model/bird_artefacts.genmodel"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.extension_parser">
       <!-- @generated bird_artefacts -->
       <parser
             type="data_definition"
-            class="data_definition.util.Data_definitionResourceFactoryImpl"/>
+            class="org.eclipse.efbt.bird.data_definition.util.Data_definitionResourceFactoryImpl"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated bird_artefacts -->
       <package
             uri="http://www.eclipse.org/efbt_data_definition"
-            class="efbt_data_definition.Efbt_data_definitionPackage"/>
+            class="org.eclipse.efbt.bird.efbt_data_definition.Efbt_data_definitionPackage"
+            genModel="model/bird_artefacts.genmodel"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.extension_parser">
       <!-- @generated bird_artefacts -->
       <parser
             type="efbt_data_definition"
-            class="efbt_data_definition.util.Efbt_data_definitionResourceFactoryImpl"/>
+            class="org.eclipse.efbt.bird.efbt_data_definition.util.Efbt_data_definitionResourceFactoryImpl"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated bird_artefacts -->
       <package
             uri="http://www.eclipse.org/efbt_mapping"
-            class="efbt_mapping.Efbt_mappingPackage"/>
+            class="org.eclipse.efbt.bird.efbt_mapping.Efbt_mappingPackage"
+            genModel="model/bird_artefacts.genmodel"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.extension_parser">
       <!-- @generated bird_artefacts -->
       <parser
             type="efbt_mapping"
-            class="efbt_mapping.util.Efbt_mappingResourceFactoryImpl"/>
+            class="org.eclipse.efbt.bird.efbt_mapping.util.Efbt_mappingResourceFactoryImpl"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated bird_artefacts -->
       <package
             uri="http://www.eclipse.org/efbt_vtl_transformation"
-            class="efbt_vtl_transformation.Efbt_vtl_transformationPackage"/>
+            class="org.eclipse.efbt.bird.efbt_vtl_transformation.Efbt_vtl_transformationPackage"
+            genModel="model/bird_artefacts.genmodel"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.extension_parser">
       <!-- @generated bird_artefacts -->
       <parser
             type="efbt_vtl_transformation"
-            class="efbt_vtl_transformation.util.Efbt_vtl_transformationResourceFactoryImpl"/>
+            class="org.eclipse.efbt.bird.efbt_vtl_transformation.util.Efbt_vtl_transformationResourceFactoryImpl"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated bird_artefacts -->
       <package
             uri="http://www.eclipse.org/mapping"
-            class="mapping.MappingPackage"/>
+            class="org.eclipse.efbt.bird.mapping.MappingPackage"
+            genModel="model/bird_artefacts.genmodel"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.extension_parser">
       <!-- @generated bird_artefacts -->
       <parser
             type="mapping"
-            class="mapping.util.MappingResourceFactoryImpl"/>
+            class="org.eclipse.efbt.bird.mapping.util.MappingResourceFactoryImpl"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated bird_artefacts -->
       <package
             uri="http://www.eclipse.org/rendering"
-            class="rendering.RenderingPackage"/>
+            class="org.eclipse.efbt.bird.rendering.RenderingPackage"
+            genModel="model/bird_artefacts.genmodel"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.extension_parser">
       <!-- @generated bird_artefacts -->
       <parser
             type="rendering"
-            class="rendering.util.RenderingResourceFactoryImpl"/>
+            class="org.eclipse.efbt.bird.rendering.util.RenderingResourceFactoryImpl"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated bird_artefacts -->
       <package
             uri="http://www.eclipse.org/reports"
-            class="reports.ReportsPackage"/>
+            class="org.eclipse.efbt.bird.reports.ReportsPackage"
+            genModel="model/bird_artefacts.genmodel"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.extension_parser">
       <!-- @generated bird_artefacts -->
       <parser
             type="reports"
-            class="reports.util.ReportsResourceFactoryImpl"/>
+            class="org.eclipse.efbt.bird.reports.util.ReportsResourceFactoryImpl"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated bird_artefacts -->
       <package
             uri="http://www.eclipse.org/vtl_transformation"
-            class="vtl_transformation.Vtl_transformationPackage"/>
+            class="org.eclipse.efbt.bird.vtl_transformation.Vtl_transformationPackage"
+            genModel="model/bird_artefacts.genmodel"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.extension_parser">
       <!-- @generated bird_artefacts -->
       <parser
             type="vtl_transformation"
-            class="vtl_transformation.util.Vtl_transformationResourceFactoryImpl"/>
+            class="org.eclipse.efbt.bird.vtl_transformation.util.Vtl_transformationResourceFactoryImpl"/>
    </extension>
-
 </plugin>

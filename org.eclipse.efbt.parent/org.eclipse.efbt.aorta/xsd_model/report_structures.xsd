@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<xsd:schema xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:output_data_structures="http://www.eclipse.org/output_data_structures" xmlns:report_structures="http://www.eclipse.org/report_structures" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="report_structures" ecore:package="report_structures" targetNamespace="http://www.eclipse.org/report_structures">
+<xsd:schema xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:output_data_structures="http://www.eclipse.org/output_data_structures" xmlns:report_structures="http://www.eclipse.org/report_structures" xmlns:requirements_text="http://www.eclipse.org/requirements_text" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="report_structures" ecore:package="org.eclipse.efbt.aorta.report_structures" targetNamespace="http://www.eclipse.org/report_structures">
+  <xsd:import namespace="http://www.eclipse.org/requirements_text" schemaLocation="requirements_text.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/emf/2002/Ecore" schemaLocation="Ecore.xsd"/>
   <xsd:import namespace="http://www.eclipse.org/output_data_structures" schemaLocation="output_data_structures.xsd"/>
   <xsd:element ecore:ignore="true" name="RegReportCell" type="report_structures:RegReportCell"/>
@@ -7,6 +8,9 @@
   <xsd:element ecore:ignore="true" name="RegReport" type="report_structures:RegReport"/>
   <xsd:element ecore:ignore="true" name="RegReportModule" type="report_structures:RegReportModule"/>
   <xsd:element ecore:ignore="true" name="ReportGroup" type="report_structures:ReportGroup"/>
+  <xsd:element ecore:ignore="true" name="RegReportColumn" type="report_structures:RegReportColumn"/>
+  <xsd:element ecore:ignore="true" name="RegReportRow" type="report_structures:RegReportRow"/>
+  <xsd:element ecore:ignore="true" name="ReportLinkedRequirement" type="report_structures:ReportLinkedRequirement"/>
   <xsd:complexType name="RegReportCell">
     <xsd:complexContent>
       <xsd:extension base="output_data_structures:OutputDataStructure">
@@ -21,6 +25,8 @@
   <xsd:complexType name="RegReport">
     <xsd:sequence>
       <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="cells" type="report_structures:RegReportCell"/>
+      <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="rows" type="report_structures:RegReportRow"/>
+      <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="columns" type="report_structures:RegReportColumn"/>
     </xsd:sequence>
     <xsd:attribute ecore:id="true" name="name" type="ecore:EString"/>
   </xsd:complexType>
@@ -38,5 +44,21 @@
       <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="regReports" type="report_structures:RegReport"/>
     </xsd:sequence>
     <xsd:attribute ecore:id="true" name="name" type="ecore:EString"/>
+  </xsd:complexType>
+  <xsd:complexType name="RegReportColumn">
+    <xsd:attribute ecore:id="true" name="name" type="ecore:EString"/>
+  </xsd:complexType>
+  <xsd:complexType name="RegReportRow">
+    <xsd:attribute ecore:id="true" name="name" type="ecore:EString"/>
+  </xsd:complexType>
+  <xsd:complexType name="ReportLinkedRequirement">
+    <xsd:complexContent>
+      <xsd:extension base="requirements_text:RequirementsSection">
+        <xsd:attribute ecore:reference="report_structures:RegReportRow" name="row" type="xsd:anyURI"/>
+        <xsd:attribute ecore:reference="report_structures:RegReportColumn" name="column" type="xsd:anyURI"/>
+        <xsd:attribute ecore:reference="report_structures:RegReportCell" name="cell" type="xsd:anyURI"/>
+        <xsd:attribute name="text" type="ecore:EString"/>
+      </xsd:extension>
+    </xsd:complexContent>
   </xsd:complexType>
 </xsd:schema>

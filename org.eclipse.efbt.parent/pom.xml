@@ -5,15 +5,17 @@
 	<version>1.0.0-SNAPSHOT</version>
 	<artifactId>org.eclipse.efbt.parent</artifactId>
 	<packaging>pom</packaging>
-
+<prerequisites>
+    <maven>3.0</maven>
+  </prerequisites>
 	<properties>
-		<xtextVersion>2.21.0</xtextVersion>
-		<mwe2Version>2.11.2</mwe2Version>
+		<xtextVersion>2.22.0</xtextVersion>
+		<mwe2Version>2.11.3</mwe2Version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<!-- Tycho settings -->
-		<tycho-version>1.6.0</tycho-version>
+		<tycho-version>1.7.0</tycho-version>
 		<!-- Define overridable properties for tycho-surefire-plugin -->
 		<platformSystemProperties></platformSystemProperties>
 		<moduleProperties></moduleProperties>
@@ -28,13 +30,20 @@
 		<module>org.eclipse.efbt.aorta.feature</module>
 		<module>org.eclipse.efbt.aorta.repository</module>
 		 <module>org.eclipse.efbt.aorta.component.exporter</module>
-		<module>org.eclipse.efbt.aorta.example.testing</module>
+		<!--<module>org.eclipse.efbt.aorta.example.testing</module>-->
 		<module>org.eclipse.efbt.aorta.ui.sirius.testmanager</module>
-		<!--<module>org.eclipse.efbt.bird.component.modelquery</module>-->
-		<!--<module>org.eclipse.efbt.bird.component.rules_and_data_structures_manager</module>-->
+		<module>org.eclipse.efbt.bird.component.modelquery</module>
+		<module>org.eclipse.efbt.bird.component.rules_and_data_structures_manager</module>
 		<!--<module>org.eclipse.efbt.bird.example</module>-->
-		<!--<module>org.eclipse.efbt.bird.model</module>-->
-		<!-- <module>org.eclipse.efbt.bird.ui.sirius</module>-->
+		<module>org.eclipse.efbt.bird.model</module>
+		<module>org.eclipse.efbt.bird.ui.sirius</module>
+		<module>org.eclipse.efbt.util.access.interface</module>
+		<module>org.eclipse.efbt.util.access.provider</module>
+		<module>org.eclipse.efbt.util.access.impl.jackcess</module>
+		<module>org.eclipse.efbt.util.csv.interface</module>
+		<module>org.eclipse.efbt.util.csv.provider</module>
+		<module>org.eclipse.efbt.util.csv.impl.apachecsv</module>
+		<module>org.eclipse.efbt.ldmtools.sqldevconvertor</module>
 		
 	</modules>
 	<dependencyManagement>
@@ -46,6 +55,17 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+			 <dependency>
+      <groupId>org.eclipse.efbt.dependencies</groupId>
+      <artifactId>org.eclipse.efbt.util.access.impl.jackess</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.efbt.dependencies</groupId>
+      <artifactId>pomfirst-thirdparty</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+    
 			
 				
 		
@@ -90,6 +110,7 @@
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-p2-plugin</artifactId>
 				<version>${tycho-version}</version>
+				
 				<executions>
 					<execution>
 						<id>attach-p2-metadata</id>
@@ -100,11 +121,21 @@
 					</execution>
 				</executions>
 			</plugin>
+			 <plugin>
+         <groupId>org.eclipse.tycho</groupId>
+         <artifactId>tycho-p2-repository-plugin</artifactId>
+         <version>${tycho-version}</version>
+         <configuration>
+            <includeAllDependencies>true</includeAllDependencies>
+         </configuration>
+      </plugin>
+			
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>target-platform-configuration</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
+				  <pomDependencies>consider</pomDependencies>
 					<target>
 						<artifact>
 							<groupId>org.eclipse.efbt.aorta</groupId>
@@ -146,6 +177,7 @@
 							</requirement>
 						</extraRequirements>
 					</dependency-resolution>
+					<pomDependencies>consider</pomDependencies>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -341,5 +373,17 @@
 	</profiles>
 
 	<dependencies>
-	</dependencies>
+    <dependency>
+      <groupId>org.eclipse.efbt.dependencies</groupId>
+      <artifactId>org.eclipse.efbt.util.access.impl.jackess</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.efbt.dependencies</groupId>
+      <artifactId>pomfirst-thirdparty</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+  
+  
+  </dependencies>
 </project>

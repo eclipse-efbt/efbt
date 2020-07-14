@@ -43,7 +43,7 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
-import aorta_program.Aorta_programPackage;
+import org.eclipse.efbt.aorta.aorta_program.Aorta_programPackage;
 
 public class XMLToXTextConverter {
 
