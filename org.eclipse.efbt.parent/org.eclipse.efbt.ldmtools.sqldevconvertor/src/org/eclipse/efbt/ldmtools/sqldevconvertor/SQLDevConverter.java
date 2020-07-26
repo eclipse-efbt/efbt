@@ -2,30 +2,39 @@ package org.eclipse.efbt.ldmtools.sqldevconvertor;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.eclipse.efbt.util.csv.CSVRow;
 import org.eclipse.efbt.util.csv.CSVUtils;
 import org.eclipse.efbt.util.csv.provider.CSVUtilsProvider;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcoreFactory;
+import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 public class SQLDevConverter {
 	
 	public static void convert(String fileDirectory) {
-		// get the csv files
-		//File attributesFile = new File(fileDirectory+"\\DM_Attributes.csv");
-		//File entitiesFile = new File(fileDirectory+"\\DM_Entities.csv");
-		//File relationshipsFile = new File(fileDirectory+"\\DM_Relations.csv");
-		//File domainsFile = new File(fileDirectory+"\\DM_Domain_AVT.csv");
+		
+		
 		
 		// for each entity make an Ecore EClass
 		CSVUtils csvUtils = CSVUtilsProvider.getCSVUtils();
@@ -62,7 +71,8 @@ public class SQLDevConverter {
 					
 				}
 			}
-			//now set all the super classes
+			
+			// for each inheritance relationship, add the inheritence 
 			rows = csvUtils.getCSVRowsFromFile(fileDirectory+"\\DM_Entities.csv");
 			
 			headerSkipped = false;
@@ -131,8 +141,7 @@ public class SQLDevConverter {
 		
 		
 		///for each domain add the enum literals
-		
-				
+
 				
 				try {
 					List<CSVRow> rows = csvUtils.getCSVRowsFromFile(fileDirectory+"\\DM_Domain_AVT.csv");
@@ -158,10 +167,14 @@ public class SQLDevConverter {
 								
 							}
 							EList<EEnumLiteral> literals = theEnumeration.getELiterals();
-							EEnumLiteral literal = EcoreFactory.eINSTANCE.createEEnumLiteral();
-							literal.setName(adaptedValue);
-							literal.setValue(counter);
-							literals.add(literal);
+							//if the literal does not exist already, then add it
+							if(!containsLiteral(literals,adaptedValue))
+							{
+								EEnumLiteral literal = EcoreFactory.eINSTANCE.createEEnumLiteral();
+								literal.setName(adaptedValue);
+								literal.setValue(counter);
+								literals.add(literal);
+							}
 						
 						}
 					}
@@ -172,6 +185,7 @@ public class SQLDevConverter {
 				
 				///for each logicalDatatype for orcle 12c, make a Datatype if we have an equivalient
 				HashMap<String,EDataType> datatypeMap = new HashMap<String,EDataType>();
+				EcorePackage ecorePackage = EcoreFactory.eINSTANCE.getEcorePackage();
 				try {
 					boolean headerSkipped = false;
 					List<CSVRow> rows = csvUtils.getCSVRowsFromFile(fileDirectory+"\\DM_Logical_To_Native.csv");
@@ -187,47 +201,35 @@ public class SQLDevConverter {
 							if(rdbms_Type.trim().equalsIgnoreCase("Oracle Database") && rdbms_Version.trim().equalsIgnoreCase("12cR2"))
 							{
 								String native_type= csvRow.get(2);
-								EDataType datatype = EcoreFactory.eINSTANCE.createEDataType();
+					
 								if(native_type.trim().equals("VARCHAR"))
 								{
-									datatype.setName("EString");
-									datatype.setInstanceClassName("String");
-									datatype.setInstanceClass(String.class);
-									datatypeMap.put(dataTypeID,datatype);
+								
+									datatypeMap.put(dataTypeID,ecorePackage.getEString());
 								}
 								if(native_type.trim().equals("VARCHAR2"))
 								{
-									datatype.setName("EString");
-									datatype.setInstanceClassName("String");
-									datatype.setInstanceClass(String.class);
-									datatypeMap.put(dataTypeID,datatype);
+									
+									datatypeMap.put(dataTypeID,ecorePackage.getEString());
 								}
 								if(native_type.trim().equals("INTEGER"))
 								{
-									datatype.setName("EInt");
-									datatype.setInstanceClassName("Integer");
-									datatype.setInstanceClass(Integer.class);
-									datatypeMap.put(dataTypeID,datatype);
+									
+									datatypeMap.put(dataTypeID,ecorePackage.getEInt());
 								}
 								if(native_type.trim().equals("DATE"))
 								{
-									datatype.setName("EDate");
-									datatype.setInstanceClassName("Date");
-									datatype.setInstanceClass(Date.class);
-									datatypeMap.put(dataTypeID,datatype);
+									
+									datatypeMap.put(dataTypeID,ecorePackage.getEDate());
 								}if(native_type.trim().equals("NUMBER"))
 								{
-									datatype.setName("EDouble");
-									datatype.setInstanceClassName("Double");
-									datatype.setInstanceClass(Double.class);
-									datatypeMap.put(dataTypeID,datatype);
+									
+									datatypeMap.put(dataTypeID,ecorePackage.getEDouble());
 								}
 								if(native_type.trim().equals("UNKNOWN"))
 								{
-									datatype.setName("EString");
-									datatype.setInstanceClassName("String");
-									datatype.setInstanceClass(Integer.class);
-									datatypeMap.put(dataTypeID,datatype);
+									
+									datatypeMap.put(dataTypeID,ecorePackage.getEString());
 								}
 								
 								
@@ -241,7 +243,7 @@ public class SQLDevConverter {
 				}
 				
 		// for each attribute add an attribute to the correct Entity
-
+				// the attribute should have the correct type, which may be a specific enumeration
 			try {
 				boolean headerSkipped = false;
 				List<CSVRow> rows = csvUtils.getCSVRowsFromFile(fileDirectory+"\\DM_Attributes.csv");
@@ -257,10 +259,7 @@ public class SQLDevConverter {
 						attribute.setName(amendedAttributeName);
 						
 							
-						//check the data type, or a domain type
-						//if data_type_kind is DOMAIN, set the correct enumeration type
-						//if data_type_kind is DOMAIN, and DOMAIN type is unknown, set to special UNKNOWN domain
-						//id ata type is Logical_type, get the Logical Type.
+					
 						if(attributeKind.equalsIgnoreCase("Domain"))
 						{
 							String domainID = csvRow.get(12);
@@ -301,20 +300,147 @@ public class SQLDevConverter {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			// remove any attributes that already exist in superclass.
+			
+			Set<Entry<String, EClass>> classes = classesMap.entrySet();
+			
+			for (Iterator iterator = classes.iterator(); iterator.hasNext();) {
+				Entry<String, EClass> entry = (Entry<String, EClass>) iterator.next();
+				EClass theClass = entry.getValue();
+				EList<EClass> superclasses = theClass.getEAllSuperTypes();
+				if(superclasses.size()>0)
+				{
+					EClass theSuperClass = superclasses.get(0);
+					EList<EStructuralFeature> features = theClass.getEStructuralFeatures();
+					List<EStructuralFeature> featuresToDelete = new ArrayList<EStructuralFeature>();
+					for (Iterator iterator2 = features.iterator(); iterator2.hasNext();) {
+						EStructuralFeature eStructuralFeature = (EStructuralFeature) iterator2.next();
+						if(superclassContainsFeature(theSuperClass,eStructuralFeature))
+							featuresToDelete.add(eStructuralFeature);
+							
+					}
+					for (Iterator iterator2 = featuresToDelete.iterator(); iterator2.hasNext();) {
+						EStructuralFeature eStructuralFeature = (EStructuralFeature) iterator2.next();
+						features.remove(eStructuralFeature);
+					}
+				}
+			}
+			// for each relationship add a reference
+			try {
+				boolean headerSkipped = false;
+				List<CSVRow> rows = csvUtils.getCSVRowsFromFile(fileDirectory+"\\DM_Relations.csv");
+				for (CSVRow csvRow : rows) {
+					if (!headerSkipped)
+						headerSkipped = true;
+					else
+					{
+						String sourceID= csvRow.get(16);
+						String targetID = csvRow.get(18);
+						String sourceTo_Target_Cardinality = csvRow.get(10);
+						String targetTo_Source_Cardinality = csvRow.get(11);
+						String targetClassName = csvRow.get(7);
+						String source_Optional = csvRow.get(12);
+						String target_Optional  = csvRow.get(13);
+						String attributeKind = csvRow.get(7).trim();
+						String referenceID = csvRow.get(4).trim();
+						EReference reference = EcoreFactory.eINSTANCE.createEReference();
+						String referenceName = "the" +replaceSpaceWithUnderscore(targetClassName);
+						if(target_Optional.trim().equals("Y"))
+							reference.setLowerBound(0);
+						else
+							reference.setLowerBound(1);
+						
+						if(sourceTo_Target_Cardinality.trim().equals("*"))
+						{
+							reference.setUpperBound(-1);
+							referenceName = referenceName + "s";
+						}
+						else 
+							reference.setUpperBound(1);
+
+						referenceName = referenceName + referenceID;
+						reference.setName(referenceName);
+					
+						
+						EClass theClass = classesMap.get(sourceID);
+						EClass targetClass = classesMap.get(targetID);
+						if(theClass != null)
+						{
+							theClass.getEStructuralFeatures().add(reference);
+						}
+						else
+						{
+							System.out.println("missing class: " + sourceID );
+						}
+						if(targetClass != null)
+						{
+							
+							reference.setEType(targetClass);
+						}
+						else
+						{
+							System.out.println("missing target class: " + sourceID );
+						}
+						
+					}
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 		
-		// the attribute should have the correct type, which may be a specific enumeration
-		// for each inheritance relationship, add the inheritence 
-		// for each relationship, add a non-containment relationship with the correct cardinality.
-		///for each domain make an enumeration
-			System.out.println("birdPackage = " + birdpackage.toString());
-		
-		
+		//create a resource and save it 
+			ResourceFactoryImpl resourceFactory = new XMIResourceFactoryImpl();
+			URI modelURI= URI.createFileURI(fileDirectory + "\\ldm.ecore");
+
+			Resource ldmResource = resourceFactory.createResource(modelURI);
+			ldmResource.getContents().add(birdpackage);
+			try {
+				ldmResource.save(Collections.EMPTY_MAP);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 	}
 	
-	private static String replaceSpaceWithUnderscore(String className) {
+	private static boolean superclassContainsFeature(EClass theSuperClass, EStructuralFeature eStructuralFeature) {
 		// TODO Auto-generated method stub
-		return className.replace(' ', '_');
+		EList<EStructuralFeature> features = theSuperClass.getEAllStructuralFeatures();
+		boolean contains = false;
+		for (EStructuralFeature eStructuralFeature2 : features) {
+			if(eStructuralFeature2.getName().equals(eStructuralFeature.getName()))
+				contains = true;
+			
+		}
+		return contains;
+	}
+
+	private static boolean containsLiteral(EList<EEnumLiteral> literals, String adaptedValue) {
+		boolean contains = false;
+		for  (Iterator iterator = literals.iterator(); iterator.hasNext();) {
+			EEnumLiteral eEnumLiteral = (EEnumLiteral) iterator.next();
+			if(eEnumLiteral.getName().equals(adaptedValue))
+			{
+				contains = true;
+			}
+		}
+		
+		return contains;
+			
+	}
+
+	private static String replaceSpaceWithUnderscore(String className) {
+		//replace spaces and apostrophes commas and brackets with underscores
+		return className.replace(' ', '_').replace((char)65533, '_').replace(')', '_').
+				replace('(', '_').replace(',', '_').replace('\\', '_').replace('/', '_')
+				.replace('-', '_').replace(':', '_').replace('+', '_').replace('.', '_')
+				.replace('?', '_').replace('\'', '_').replace('>', '_').replace('&', '_')
+				.replace('%', '_').replace('[', '_').replace(']', '_').replace((char) 0x2019,'_' )
+				.replace((char) 0x2018, '_').replace((char) 0x0060, '_').replace((char) 0x00B4, '_');
+		
+
 	}
 
 	public static void main(String[] args)

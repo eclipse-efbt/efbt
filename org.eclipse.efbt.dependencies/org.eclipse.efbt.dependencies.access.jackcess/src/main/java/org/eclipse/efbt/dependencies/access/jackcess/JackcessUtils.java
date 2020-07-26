@@ -1,4 +1,4 @@
-package org.eclipse.efbt.util.access.impl.jackess; 
+package org.eclipse.efbt.dependencies.access.jackcess; 
 
 import java.io.File;
 import java.io.IOException;

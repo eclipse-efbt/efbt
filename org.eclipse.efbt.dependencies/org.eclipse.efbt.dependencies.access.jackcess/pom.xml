@@ -9,7 +9,7 @@
   		<version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>org.eclipse.efbt.util.access.impl.jackess</artifactId>
+  <artifactId>org.eclipse.efbt.dependencies.access.jackcess</artifactId>
   
   <dependencies>
      <dependency>
