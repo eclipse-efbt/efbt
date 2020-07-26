@@ -19,7 +19,7 @@
   </properties>
 
   <modules>
-    <module>org.eclipse.efbt.util.access.impl.jackess</module>
+    <module>org.eclipse.efbt.dependencies.access.jackcess</module>
     <module>pomfirst-thirdparty</module>
 
   </modules>
@@ -31,11 +31,7 @@
     <artifactId>jackcess</artifactId>
     <version>3.0.1</version>
 </dependency>
-<dependency>
-    			<groupId>org.apache.commons</groupId>
-    			<artifactId>commons-csv</artifactId>
-    			<version>1.5</version>
-			</dependency>		
+	
     </dependencies>
   </dependencyManagement>
 
