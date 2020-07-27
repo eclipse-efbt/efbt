@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.efbt.util.access.impl.jackess.JackcessUtils;
+import org.eclipse.efbt.dependencies.access.jackcess.JackcessUtils;
 import org.eclipse.efbt.util.accessdb.AccessRow;
 import org.eclipse.efbt.util.accessdb.AccessUtils;
 

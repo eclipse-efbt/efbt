@@ -9,10 +9,24 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 
 import org.eclipse.efbt.bird.bird_model.BIRDModel;
 
+/**
+ * This class is responsible for  getting the default BIRD model associated 
+ * with any object 
+ * 
+ * @author Neil Mackenzie
+ *
+ */
 public class Util {
 
+	/**
+	 * Tet the default BIRD model associated with any object. This relies on 
+	 * the  file layout convention being follwoed correcty.
+	 *  
+	 * @param o
+	 * @return
+	 */
 	public static BIRDModel getDefaultBirdModel(EObject o) {
-		// TODO Auto-generated method stub
+	
 		  ResourceSet rs = o.eResource().getResourceSet();
 		    String birdModelXMLFile = o.eResource().getURI().trimSegments(1)
 		        + "/bird_model.bird_model";

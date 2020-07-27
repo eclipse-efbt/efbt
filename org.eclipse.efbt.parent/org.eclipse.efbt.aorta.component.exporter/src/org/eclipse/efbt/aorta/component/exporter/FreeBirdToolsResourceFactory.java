@@ -7,6 +7,8 @@ import org.eclipse.emf.ecore.xmi.impl.XMLResourceFactoryImpl;
 import org.eclipse.xtext.resource.IResourceFactory;
 
 /**
+ * This class is an Resource Factory which uses XML, and a specific set of load/save options.
+ * 
  * @author Neil Mackenzie
  *
  */
@@ -16,9 +18,9 @@ public class FreeBirdToolsResourceFactory extends XMLResourceFactoryImpl impleme
 
 	/**
 	 * Creates an instance of the resource. we set the defaultSaveOptions
-	 * and defaultLoadOptions also to be the sam as we use elsewhere.
+	 * and defaultLoadOptions also to be the same as we use elsewhere.
 	 * 
-	 * 
+	 *  @param uri 
 	 */
 	@Override
 	public Resource createResource(URI uri) {
