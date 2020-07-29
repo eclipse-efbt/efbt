@@ -12,13 +12,24 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
-
+/**
+ * This class is responsable for access to CSV files using the 
+ * Apache Commons CSV library.
+ * 
+ * @author Neil Mackenzie
+ *
+ */
 public class ApacheCSVUtil {
 
-
+	/**
+	 * Gets CSVRecords form a file.
+	 * 
+	 * @param fileName
+	 * @return
+	 * @throws IOException
+	 */
 	public List<CSVRecord> getCSVRowsFromFile(String fileName) throws IOException {
-		// TODO Auto-generated method stub
-		// FileReader csvData = new FileReader(new File (fileName));
+	
 		File csvData = new File (fileName);
 		 CSVParser parser = CSVParser.parse(csvData,StandardCharsets.UTF_8, CSVFormat.EXCEL);
 		 List<CSVRecord> list = new ArrayList<CSVRecord>();

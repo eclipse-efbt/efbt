@@ -14,33 +14,39 @@ import com.healthmarketscience.jackcess.Row;
 import com.healthmarketscience.jackcess.Table;
 import com.healthmarketscience.jackcess.DatabaseBuilder;
 
-
-
+/**
+ * A Utils class for accessing access databases using Jackess. Implements the
+ * AccessUtils interface.
+ * 
+ * @author Neil Mackenzie
+ *
+ */
 public class JackcessUtil implements AccessUtils {
 
-	
-	public List<AccessRow> getRowsForTable(String accessDB, String tableName) throws IOException {
-		
+	/**
+	 * Gets rows from the access database for a particulr table
+	 * 
+	 * @param accessDB
+	 * @param tableName
+	 */
+	public List<AccessRow> getRowsForTable(String accessDB, String tableName) 
+			throws IOException {
+
 		JackcessUtils ju = new JackcessUtils();
-		List<Row> a = ju.getRowsForTable(accessDB,tableName);
-		
-		
+		List<Row> a = ju.getRowsForTable(accessDB, tableName);
+
 		List<AccessRow> list = new ArrayList<AccessRow>();
-		
+
 		for (Iterator iterator = a.iterator(); iterator.hasNext();) {
 			Row row = (Row) iterator.next();
-			
-		
-					AccessRow accessRow = new JackcessRow(row);
-					list.add(accessRow);
-			
-					
-			
+
+			AccessRow accessRow = new JackcessRow(row);
+			list.add(accessRow);
+
 		}
-		
+
 		return list;
-					
-				
+
 	}
 
 }
