@@ -34,8 +34,8 @@ Workflow {
 			fragment = ecore2xtext.Ecore2XtextValueConverterServiceFragment2 auto-inject {}
 
 			formatter = {
-				generateStub = true
-				generateXtendStub = true
+			
+				generateXtendStub = false
 			}
 
 			serializer = {
@@ -47,7 +47,7 @@ Workflow {
 				generateDeprecationValidation = true
 			}
 			generator = {
-				generateXtendStub = true
+				generateXtendStub = false
 			}
 			junitSupport = {
 				junitVersion = "5"

@@ -41,5 +41,9 @@ Export-Package: org.eclipse.efbt.bird.bird_model,
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.emf.ecore.xmi;visibility:=reexport,
- org.eclipse.efbt.aorta;visibility:=reexport
+ org.eclipse.efbt.aorta;visibility:=reexport,
+  org.eclipse.emf.mwe.core,
+ org.eclipse.emf.mwe.utils,
+ org.eclipse.emf.mwe2.lib,
+ org.eclipse.emf.mwe2.runtime
 Bundle-ActivationPolicy: lazy
