@@ -40,15 +40,16 @@ import org.eclipse.efbt.bird.bird_model.BIRDModel;
 import org.eclipse.efbt.bird.bird_model.Bird_modelFactory;
 
 /**
- * @author Neil Mackenzie Import SMCubes Artefacts into EMF Model instances
+ * Import SMCubes Artefacts into EMF Model instances
+ * 
+ * @author Neil Mackenzie
  */
 public abstract class Importer {
 
-	
 	/**
-	 * The file location to output the SMCubes artefacts 
+	 * The file location to output the SMCubes artefacts
 	 */
-	public static String outputFilepath; 
+	public static String outputFilepath;
 
 	/**
 	 * The transformationSchemes
@@ -102,19 +103,19 @@ public abstract class Importer {
 	public static VariableMappingModule variableMappingModule;
 
 	/**
-	 *  The birdModel
+	 * The birdModel
 	 */
 	public static BIRDModel birdModel;
 
 	/**
-	 *  Constructor
+	 * Constructor
 	 */
 	public Importer() {
 		transformationSchemes = Efbt_vtl_transformationFactory.eINSTANCE.createTransformationSchemeModule();
 		domains = Efbt_data_definitionFactory.eINSTANCE.createDomainModule();
 		variables = Efbt_data_definitionFactory.eINSTANCE.createVariableModule();
 		members = Efbt_data_definitionFactory.eINSTANCE.createMemberModule();
-		
+
 		cubesModule = Efbt_data_definitionFactory.eINSTANCE.createCubeModule();
 		cubeStructuresModule = Efbt_data_definitionFactory.eINSTANCE.createCubeModule();
 		cubeStructureItemsModule = Efbt_data_definitionFactory.eINSTANCE.createCubeModule();
@@ -130,7 +131,7 @@ public abstract class Importer {
 		birdModel.getDomains().add(domains);
 		birdModel.getMappings().add(mappingDefinitionModule);
 		birdModel.getMembers().add(members);
-		//must rename this to getTranformationSchemes
+		// must rename this to getTranformationSchemes
 		birdModel.getFunctionalModules().add(transformationSchemes);
 		birdModel.getVariables().add(variables);
 
@@ -181,9 +182,10 @@ public abstract class Importer {
 		createAllCubes();
 		createAllCombinations();
 		createAllTransformationSchemes();
-	//	createAllMappings();
+		// createAllMappings();
 		saveArtifacts();
 	}
+
 	/**
 	 * Serialize all the EObjects to files.
 	 */
@@ -195,12 +197,17 @@ public abstract class Importer {
 		URI cubesURI = URI.createFileURI(outputFilepath + "cubes.efbt_data_definition");
 		URI cubestructuresURI = URI.createFileURI(outputFilepath + "cube_structures.efbt_data_definition");
 		URI cubestructureitemsURI = URI.createFileURI(outputFilepath + "cube_structure_items.efbt_data_definition");
-	//	URI transformationsURI = URI.createFileURI(outputFilepath + "transformations.efbt_vtl_transformation");
+		// URI transformationsURI = URI.createFileURI(outputFilepath +
+		// "transformations.efbt_vtl_transformation");
 
-	//	URI cubeMappingURI = URI.createFileURI(outputFilepath + "cube_mapping.efbt_mapping");
-	//	URI mappingDefinitionURI = URI.createFileURI(outputFilepath + "mapping_definition.efbt_mapping");
-	//	URI memberMappingURI = URI.createFileURI(outputFilepath + "member_mapping.efbt_mapping");
-	//	URI variableMappingURI = URI.createFileURI(outputFilepath + "variable_mapping.efbt_mapping");
+		// URI cubeMappingURI = URI.createFileURI(outputFilepath +
+		// "cube_mapping.efbt_mapping");
+		// URI mappingDefinitionURI = URI.createFileURI(outputFilepath +
+		// "mapping_definition.efbt_mapping");
+		// URI memberMappingURI = URI.createFileURI(outputFilepath +
+		// "member_mapping.efbt_mapping");
+		// URI variableMappingURI = URI.createFileURI(outputFilepath +
+		// "variable_mapping.efbt_mapping");
 
 		URI birdURI = URI.createFileURI(outputFilepath + "bird.bird_model");
 
@@ -210,12 +217,15 @@ public abstract class Importer {
 		Resource cubesResource = factory.createResource(cubesURI);
 		Resource cubestructuresResource = factory.createResource(cubestructuresURI);
 		Resource cubestructureitemsResource = factory.createResource(cubestructureitemsURI);
-		//Resource transformationsResource = factory.createResource(transformationsURI);
+		// Resource transformationsResource =
+		// factory.createResource(transformationsURI);
 
-	//	Resource cubeMappingResource = factory.createResource(cubeMappingURI);
-	//	Resource mappingDefinitionResource = factory.createResource(mappingDefinitionURI);
-	//	Resource memberMappingResource = factory.createResource(memberMappingURI);
-	//	Resource variableMappingResource = factory.createResource(variableMappingURI);
+		// Resource cubeMappingResource = factory.createResource(cubeMappingURI);
+		// Resource mappingDefinitionResource =
+		// factory.createResource(mappingDefinitionURI);
+		// Resource memberMappingResource = factory.createResource(memberMappingURI);
+		// Resource variableMappingResource =
+		// factory.createResource(variableMappingURI);
 
 		// Resource birdResource = factory.createResource(birdURI);
 
@@ -225,12 +235,12 @@ public abstract class Importer {
 		cubesResource.getContents().add(cubesModule);
 		cubestructuresResource.getContents().add(cubeStructuresModule);
 		cubestructureitemsResource.getContents().add(cubeStructureItemsModule);
-		//transformationsResource.getContents().add(transformationSchemes);
+		// transformationsResource.getContents().add(transformationSchemes);
 
-	//	cubeMappingResource.getContents().add(cubeMappingModule);
-	//	mappingDefinitionResource.getContents().add(mappingDefinitionModule);
-	//	memberMappingResource.getContents().add(memberMappingModule);
-	//	variableMappingResource.getContents().add(variableMappingModule);
+		// cubeMappingResource.getContents().add(cubeMappingModule);
+		// mappingDefinitionResource.getContents().add(mappingDefinitionModule);
+		// memberMappingResource.getContents().add(memberMappingModule);
+		// variableMappingResource.getContents().add(variableMappingModule);
 
 		// birdResource.getContents().add(birdModel);
 
@@ -241,15 +251,15 @@ public abstract class Importer {
 			cubesResource.save(Collections.EMPTY_MAP);
 			cubestructuresResource.save(Collections.EMPTY_MAP);
 			cubestructureitemsResource.save(Collections.EMPTY_MAP);
-		//	transformationsResource.save(Collections.EMPTY_MAP);
-		//	cubeMappingResource.save(Collections.EMPTY_MAP);
-		//	mappingDefinitionResource.save(Collections.EMPTY_MAP);
-		//	memberMappingResource.save(Collections.EMPTY_MAP);
-		//	variableMappingResource.save(Collections.EMPTY_MAP);
+			// transformationsResource.save(Collections.EMPTY_MAP);
+			// cubeMappingResource.save(Collections.EMPTY_MAP);
+			// mappingDefinitionResource.save(Collections.EMPTY_MAP);
+			// memberMappingResource.save(Collections.EMPTY_MAP);
+			// variableMappingResource.save(Collections.EMPTY_MAP);
 			// birdResource.save(Collections.EMPTY_MAP);
 
 		} catch (IOException e) {
-			
+
 			e.printStackTrace();
 		}
 		int counter = 0;
@@ -264,7 +274,7 @@ public abstract class Importer {
 			try {
 				combinationsResource.save(Collections.EMPTY_MAP);
 			} catch (IOException e) {
-				
+
 				e.printStackTrace();
 			}
 

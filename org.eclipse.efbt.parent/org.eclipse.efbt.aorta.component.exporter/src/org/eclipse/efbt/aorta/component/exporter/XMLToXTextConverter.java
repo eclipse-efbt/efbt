@@ -1,3 +1,4 @@
+
 package org.eclipse.efbt.aorta.component.exporter;
 
 import java.io.FileOutputStream;
@@ -45,10 +46,29 @@ import com.google.inject.Injector;
 
 import org.eclipse.efbt.aorta.aorta_program.Aorta_programPackage;
 
+/**
+ * XMLToXTextConverter is responsible for taking an ecore model instance
+ * representing a 'Program', which has been serialised to XML format, and
+ * creating an XText representation of this according to the grammar defined in
+ * the Aorta XText grammar.
+ * 
+ * Note that the Aorta XText grammar is generated from the Ecore model
+ * representing 'Program' s.
+ * 
+ * @author Neil Mackenzie
+ *
+ *
+ */
 public class XMLToXTextConverter {
 
-
-
+	/**
+	 * Convert from xml files on the outpath to new xtext files on the output path.
+	 * For no we limit this to domains and input data structures
+	 * 
+	 * @param inputpath
+	 * @param outputPath
+	 * @throws IOException
+	 */
 	public void convertXMLToXtext(String inputpath, String outputPath) throws IOException {
 		// load the set of files into a resource set.
 		// persist the files as a set of xtext files
@@ -60,93 +80,70 @@ public class XMLToXTextConverter {
 		Map<String, Object> m = reg.getExtensionToFactoryMap();
 		m.put("aorta_program", factory);
 
-	
 		AortaStandaloneSetup setup = new AortaStandaloneSetup();
 		Injector i = setup.createInjectorAndDoEMFRegistration();
+		
+		//load the xml files into a resource, using the FreeBirdToolsResourceFactory
 		ResourceSet resSet = i.getInstance(ResourceSet.class);
 
-		// now pesist these as XText files
+		
+		URI domainsProgramURI = URI.createFileURI(
+				inputpath + "domains.aorta_program");
+		URI inputDataStructuresProgramURI = URI.createFileURI(
+				inputpath + "inputDataStructures.aorta_program");
 
-		URI domainsProgramURI = URI.createFileURI(inputpath + "domains.aorta_program");
-		URI inputDataStructuresProgramURI = URI.createFileURI(inputpath + "inputDataStructures.aorta_program");
-
-
-		Resource domainsResource = resSet.createResource(domainsProgramURI);
-		Resource inputDataStructuresResource = resSet.createResource(inputDataStructuresProgramURI);
-
-	
+		Resource domainsResource = resSet.
+				createResource(domainsProgramURI);
+		Resource inputDataStructuresResource = resSet.
+				createResource(inputDataStructuresProgramURI);
 
 		domainsResource.load(Collections.EMPTY_MAP);
 		inputDataStructuresResource.load(Collections.EMPTY_MAP);
 
+		//make sure we resolve all proxies or we have problems.
 		EcoreUtil.resolveAll(resSet);
 
 		EObject domainsRoot = domainsResource.getContents().get(0);
-		EObject inputDataStructuresRoot = inputDataStructuresResource.getContents().get(0);
+		EObject inputDataStructuresRoot = 
+				inputDataStructuresResource.getContents().get(0);
 
+		// now create an xtext resource from the resource
 		XtextResourceSet xrs = i.getInstance(XtextResourceSet.class);
 
 		URI trgtURI = URI.createFileURI("C:/Users/Neil/output3/domains.dsl");
 
-		URI trgtURI2 = URI.createFileURI("C:/Users/Neil/output3/inputDataStructures.dsl");
+		URI trgtURI2 = URI.
+				createFileURI("C:/Users/Neil/output3/inputDataStructures.dsl");
 
 		Resource domainsResource2 = xrs.createResource(trgtURI);
 		Resource inputDataStructuresResource2 = xrs.createResource(trgtURI2);
 
 		domainsResource2.getContents().add(domainsRoot);
 
-		inputDataStructuresResource2.getContents().add(inputDataStructuresRoot);
+		inputDataStructuresResource2.getContents().
+						add(inputDataStructuresRoot);
 
 		EcoreUtil.resolveAll(xrs);
-
-		/**IQualifiedNameConverter converter = i.getInstance(IQualifiedNameConverter.class);
-		Registry rspr = IResourceServiceProvider.Registry.INSTANCE;
-		IResourceServiceProvider resServiceProvider = rspr.getResourceServiceProvider(trgtURI);
-
-		Manager manager = resServiceProvider.getResourceDescriptionManager();
-
-		IResourceDescription description = manager.getResourceDescription(domainsResource2);
-		Iterable<IEObjectDescription> eods = description.getExportedObjects();
-		for (IEObjectDescription ieObjectDescription : eods) {
-			System.out.println(converter.toString(ieObjectDescription.getQualifiedName()));
-		}
-
-		IContainer.Manager manager2 = i.getInstance(IContainer.Manager.class);
-		System.out.println("manager2 = " + manager2);
-		ResourceDescriptionsProvider rdp = i.getInstance(ResourceDescriptionsProvider.class);
-
-		System.out.println("rdp = " + rdp);
-
-		IResourceDescriptions rds1 = rdp.getResourceDescriptions(inputDataStructuresResource2);
-		System.out.println("rds1 = " + rds1);
-
-		IResourceDescription descr = rds1.getResourceDescription(trgtURI2);
-		List<IContainer> visconts = manager2.getVisibleContainers(descr, rds1);
-		for (IContainer iContainer : visconts) {
-			Iterable<IResourceDescription> abcd = iContainer.getResourceDescriptions();
-			for (IResourceDescription abc : abcd) {
-				System.out.println("abc = " + abc.getURI());
-			}
-
-		}*/
-
-//		Serializer serializer = i.getInstance(Serializer.class);
 		
+		//save the xtext representation of the model
 		domainsResource2.save(Collections.EMPTY_MAP);
 		inputDataStructuresResource2.save(Collections.EMPTY_MAP);
-		
 
 	}
 
-	
-
+	/**
+	 * main method to retrieve the input and output file paths as argumanets
+	 * and call the conversion.
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		XMLToXTextConverter converter = new XMLToXTextConverter();
 		try {
-			//converter.convertXMLToXtext("C:/Users/Neil/output/", "C:/Users/Neil/output3/");
-			converter.convertXMLToXtext(args[0],args[1]);
+			
+			converter.convertXMLToXtext(args[0], args[1]);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		
 			e.printStackTrace();
 		}
 

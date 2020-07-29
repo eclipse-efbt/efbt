@@ -27,94 +27,90 @@ import org.eclipse.efbt.aorta.test_definition.Then;
 /**
  * This class contains custom scoping description.
  * 
- * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#scoping
+ * See
+ * https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#scoping
  * on how and when to use it.
+ * 
+ * @author Neil Mackenzie
  */
 public class AortaScopeProvider extends AbstractAortaScopeProvider {
 
-    
-	
-	public   IScope getScope(EObject context, EReference reference) {
-        // We want to define the Scope for the Element's superElement cross-reference
-          Object LOGGER = LogManager.getLogger(AortaScopeProvider.class);
-     
-         if ((context.eContainer()) instanceof Clause )
-         {
-	         if(context instanceof Param)
-	         {
-	         	  Clause bddclauseElement = (Clause) (context.eContainer());
-	         	 TestDefinition bddElement = (TestDefinition) (bddclauseElement.eContainer());
-	         	   TestContraints coverageTestSet = bddElement.getTestContraints();
-	         	   TestTemplate coverageTestType = coverageTestSet.getTemplate();
-	         	  
-	
-	         	//find out index of contianing bddclauseElement
-	         	  int index = bddclauseElement.getParams().indexOf(context);
-	        
-	         if (bddclauseElement instanceof Given) {
-	        	
-	        	   int size = coverageTestSet.getGivenParams().size();
-	        	if( index < size)
-	        	{
-		        	 EObject templateObject = coverageTestSet.getGivenParams().get(index).getParam();
-		        	 EObject templateType = coverageTestType.getGivenParams().get(index).getParam();
-		        	
-		              
-		             System.err.println("given templateObject = " + templateObject);
-		             System.err.println("given templateType = " + templateType);
-		        	
-		        	 List<? extends EObject> candidates = EcoreUtil2.getAllContentsOfType(templateObject, templateType.getClass());
-		        	 System.err.println("given candidates = " + candidates);
-		        	 return Scopes.scopeFor(candidates);
-	        	 }
-	        	 
-	         }
-	        
-				if (bddclauseElement instanceof When) {
-	        	
-	        	int size = coverageTestSet.getWhenParams().size();
-	        	if( index < size)
-	        	{
-		        		 EObject templateObject = coverageTestSet.getWhenParams().get(index).getParam();
-		        		 EObject templateType = coverageTestType.getWhenParams().get(index).getParam();
-		        	
-		              
-		             System.err.println("when templateObject = " + templateObject);
-		             System.err.println("when templateType = " + templateType);
-		        	
-		        	  List<? extends EObject> candidates = EcoreUtil2.getAllContentsOfType(templateObject, templateType.getClass());
-		        	 
-		        	 return Scopes.scopeFor(candidates);
-	        	 }
-	        	 
-	         }
-	         
-	         if (bddclauseElement instanceof Then) {
-	        	
-	        	 int size = coverageTestSet.getThenParams().size();
-	        	if( index < size)
-	        	{
-	        		
-	        	
-	        	 EObject templateObject = coverageTestSet.getThenParams().get(index).getParam();
-	        	 EObject templateType = coverageTestType.getThenParams().get(index).getParam();
-	        	
-	              
-	             System.err.println("then templateObject = " + templateObject);
-	             System.err.println("then templateType = " + templateType);
-	        	
-	        	  List<? extends EObject> candidates = EcoreUtil2.getAllContentsOfType(templateObject, templateType.getClass());
-	        	 
-	        	 return Scopes.scopeFor(candidates);
-	        	 
-	        	 }
-	         }
-	            
-	        
-	    }
-	    
-	    }
-    return super.getScope(context, reference);
-    }
-    }
+	/**
+	 * We hae specialized the getScope method so that it gives special scoping rules
+	 * for how we may choose the parameters for Given, When and Then clauses.
+	 * 
+	 * The parameters must be of the correct type defined by the test definition
+	 * and must exist under the root defined in the test template.
+	 * 
+	 * 
+	 * @param context
+	 * @param reference
+	 * @return
+	 */
+	public IScope getScope(EObject context, EReference reference) {
+		
+		
+		Object LOGGER = LogManager.getLogger(AortaScopeProvider.class);
 
+		if ((context.eContainer()) instanceof Clause) {
+			if (context instanceof Param) {
+				Clause bddclauseElement = (Clause) (context.eContainer());
+				TestDefinition bddElement = (TestDefinition) (bddclauseElement.eContainer());
+				TestContraints coverageTestSet = bddElement.getTestContraints();
+				TestTemplate coverageTestType = coverageTestSet.getTemplate();
+
+				// find out index of containing bddclauseElement
+				int index = bddclauseElement.getParams().indexOf(context);
+
+				if (bddclauseElement instanceof Given) {
+
+					int size = coverageTestSet.getGivenParams().size();
+					if (index < size) {
+						EObject templateObject = coverageTestSet.getGivenParams().get(index).getParam();
+						EObject templateType = coverageTestType.getGivenParams().get(index).getParam();
+
+						List<? extends EObject> candidates = EcoreUtil2.getAllContentsOfType(templateObject,
+								templateType.getClass());
+
+						return Scopes.scopeFor(candidates);
+					}
+
+				}
+
+				if (bddclauseElement instanceof When) {
+
+					int size = coverageTestSet.getWhenParams().size();
+					if (index < size) {
+						EObject templateObject = coverageTestSet.getWhenParams().get(index).getParam();
+						EObject templateType = coverageTestType.getWhenParams().get(index).getParam();
+
+						List<? extends EObject> candidates = EcoreUtil2.getAllContentsOfType(templateObject,
+								templateType.getClass());
+
+						return Scopes.scopeFor(candidates);
+					}
+
+				}
+
+				if (bddclauseElement instanceof Then) {
+
+					int size = coverageTestSet.getThenParams().size();
+					if (index < size) {
+
+						EObject templateObject = coverageTestSet.getThenParams().get(index).getParam();
+						EObject templateType = coverageTestType.getThenParams().get(index).getParam();
+
+						List<? extends EObject> candidates = EcoreUtil2.getAllContentsOfType(templateObject,
+								templateType.getClass());
+
+						return Scopes.scopeFor(candidates);
+
+					}
+				}
+
+			}
+
+		}
+		return super.getScope(context, reference);
+	}
+}

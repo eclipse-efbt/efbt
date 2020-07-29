@@ -9,6 +9,8 @@ import org.eclipse.efbt.bird.core.MEMBER;
 
 /**
  * The services class used by VSM.
+ * 
+ * @author Neil Mackenzie
  */
 public class Services {
     

@@ -10,14 +10,27 @@ import org.eclipse.efbt.bird.core.DOMAIN;
 import org.eclipse.efbt.bird.core.MEMBER;
 import org.eclipse.efbt.bird.efbt_data_definition.MemberModule;
 
+/**
+ * This class is responsable for storing any custom queries required in the
+ * BIRD navigation tool.
+ * 
+ * @author Neil Mackenzie
+ *
+ */
 public class CustomQuery {
 
+	/**
+	 * Given a domain, return a list of the members of the domain
+	 * @param domain
+	 * @return
+	 */
 	public static EList<MEMBER> getMembers(DOMAIN domain) {
 
 		EList<MEMBER> members = new BasicEList<MEMBER>();
 
 		BIRDModel bm = Util.getDefaultBirdModel(domain);
 		EList<MemberModule> birdMemberModules = bm.getMembers();
+		
 		for (Iterator iterator = birdMemberModules.iterator(); iterator.hasNext();) {
 			MemberModule memberModule = (MemberModule) iterator.next();
 
