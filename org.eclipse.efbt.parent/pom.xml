@@ -11,11 +11,13 @@
 	<properties>
 		<xtextVersion>2.22.0</xtextVersion>
 		<mwe2Version>2.11.3</mwe2Version>
+		<junit-version>5.0.3</junit-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<!-- Tycho settings -->
 		<tycho-version>1.7.0</tycho-version>
+		<junit.jupiter.version>5.6.2</junit.jupiter.version>
 		<!-- Define overridable properties for tycho-surefire-plugin -->
 		<platformSystemProperties></platformSystemProperties>
 		<moduleProperties></moduleProperties>
@@ -44,6 +46,7 @@
 		<module>org.eclipse.efbt.util.csv.provider</module>
 		<module>org.eclipse.efbt.util.csv.impl.apachecsv</module>
 		<module>org.eclipse.efbt.ldmtools.sqldevconvertor</module>
+		<module>org.eclipse.efbt.ldmtools.sqldevconvertor.test</module>
 		
 	</modules>
 	<dependencyManagement>
@@ -65,6 +68,8 @@
       <artifactId>pomfirst-thirdparty</artifactId>
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
+    
+	  
     
 			
 				
@@ -312,13 +317,31 @@
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-surefire-plugin</artifactId>
 					<version>${tycho-version}</version>
-					<configuration>
-						<!-- THE FOLLOWING LINE MUST NOT BE BROKEN BY AUTOFORMATTING -->
-						<argLine>${platformSystemProperties} ${systemProperties} ${moduleProperties} ${additionalTestArguments}</argLine>
-						<failIfNoTests>false</failIfNoTests>
-						<useUIHarness>false</useUIHarness>
-					</configuration>
+				 <dependencies>
+       	        <dependency>
+
+            <groupId>org.junit.platform</groupId>
+
+            <artifactId>junit-platform-surefire-provider</artifactId>
+
+            <version>1.1.0</version>
+            
+            
+
+        </dependency>
+                   <!--       <dependency>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                    <version>5.4.0</version>
+                </dependency> -->
+					</dependencies> 
 				</plugin>
+			 <!--	  <plugin>-->
+     <!--  <artifactId>maven-surefire-plugin</artifactId>  -->
+      <!-- latest version (2.20.1) does not work well with JUnit5 -->
+   <!--    <version>2.22.2</version> -->
+      
+    <!-- </plugin> -->
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -383,7 +406,17 @@
       <artifactId>pomfirst-thirdparty</artifactId>
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
-  
+
+    <!-- ... -->
+   <dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>${junit.jupiter.version}</version>
+			<scope>test</scope>
+		</dependency>
+    <!-- ... -->
+
+   
   
   </dependencies>
 </project>

@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.eclipse.efbt.ldmtools.sqldevconvertor.test
+Bundle-SymbolicName: org.eclipse.efbt.ldmtools.sqldevconvertor.test
+Bundle-Name: Test
+Bundle-Version: 1.0.0.202008021145
+Require-Bundle: org.eclipse.efbt.ldmtools.sqldevconvertor;bundle-versi
+ on="1.0.0"
+Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: org.junit;version="4.13.0",org.junit.jupiter.api;versi
+ on="5.6.0"
+
