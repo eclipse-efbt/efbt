@@ -9,3 +9,4 @@ Require-Bundle: org.eclipse.efbt.util.csv.provider,
  org.eclipse.efbt.util.csv.interface,
  org.eclipse.emf.ecore;bundle-version="2.22.0",
  org.eclipse.emf.ecore.xmi;bundle-version="2.16.0"
+Export-Package: org.eclipse.efbt.ldmtools.sqldevconvertor
