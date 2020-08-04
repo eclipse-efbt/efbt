@@ -12,6 +12,7 @@ pipeline {
                     mvn -v
                     cd org.eclipse.efbt.dependencies
                     mvn install
+                    cd ..
                     cd org.eclipse.efbt.parent
                     mvn install
                 '''
