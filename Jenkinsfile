@@ -15,9 +15,22 @@ pipeline {
                     cd ..
                     cd org.eclipse.efbt.parent
                     mvn install
+                    cd ..
                 '''
             }
         }
+        stage('Deploy') {
+	      steps {
+	        sshagent ( ['projects-storage.eclipse.org-bot-ssh']) {
+	          sh '''
+	            ssh genie.efbt@projects-storage.eclipse.org rm -rf /home/data/httpd/download.eclipse.org/efbt/snapshots
+	            ssh genie.efbt@projects-storage.eclipse.org mkdir -p /home/data/httpd/download.eclipse.org/efbt/snapshots
+	            cd org.eclipse.efbt.parent	            	          
+	            scp -r org.eclipse.efbt.aorta.repository/target/repository/* genie.efbt@projects-storage.eclipse.org:/home/data/httpd/download.eclipse.org/efbt/snapshots
+	          '''
+	        }
+	      }
+    }
     }
     post {
         // send a mail on unsuccessful and fixed builds
