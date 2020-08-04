@@ -10,6 +10,10 @@ pipeline {
                 sh '''
                     java -version
                     mvn -v
+                    cd org.eclipse.efbt.dependencies
+                    mvn install
+                    cd org.eclipse.efbt.parent
+                    mvn install
                 '''
             }
         }
