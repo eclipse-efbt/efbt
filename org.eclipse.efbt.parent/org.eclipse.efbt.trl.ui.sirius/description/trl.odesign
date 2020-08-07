@@ -1,0 +1,755 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<description:Group xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:style="http://www.eclipse.org/sirius/diagram/description/style/1.1.0" xmlns:tool="http://www.eclipse.org/sirius/diagram/description/tool/1.1.0" name="trl" version="12.0.0.2017041100">
+  <ownedViewpoints name="Modules">
+    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="VersionedComponentsSet" label="VersionedComponentsSet" domainClass="VersionedComponentsSet" enablePopupBars="true">
+      <metamodel href="../../org.eclipse.efbt.trl.model.trl/model/domain_model_mapping.ecore#/"/>
+      <metamodel href="../../org.eclipse.efbt.trl.model.trl/model/transformation.ecore#/"/>
+      <metamodel href="../../org.eclipse.efbt.trl.model.trl/model/trl_report_cell_views.ecore#/"/>
+      <metamodel href="../../org.eclipse.efbt.trl.model.trl/model/trl_sql_views.ecore#/"/>
+      <metamodel href="../../org.eclipse.efbt.aorta/model/scenarios.ecore#/"/>
+      <metamodel href="../../org.eclipse.efbt.almengine.model.cubes/model/cube_schema.ecore#/"/>
+      <metamodel href="../../org.eclipse.efbt.almengine.model.cubes/model/cubes.ecore#/"/>
+      <metamodel href="../../org.eclipse.efbt.aorta/model/column_structures.ecore#/"/>
+      <defaultLayer name="FreeBirdToolsCube">
+        <nodeMappings name="BaseCube" semanticCandidatesExpression="service:getBaseTablesButNotDeltaTables()" domainClass="BaseCube">
+          <style xsi:type="style:SquareDescription" labelExpression="service:getTableDisplayName()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="DerivedCube" semanticCandidatesExpression="service:getDerivedTablesButNotTargetTables()" domainClass="DerivedCube">
+          <style xsi:type="style:SquareDescription" labelExpression="service:getTableDisplayName()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='red']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="TargetCube" semanticCandidatesExpression="service:getTargetTables()" domainClass="TargetCube">
+          <style xsi:type="style:SquareDescription" labelExpression="service:getTableDisplayName()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='green']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="BaseViewCube" semanticCandidatesExpression="service:getBaseViewCubes()" domainClass="BaseViewCube">
+          <style xsi:type="style:SquareDescription" labelExpression="service:getTableDisplayName()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_orange']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="BaseDeltaCube" semanticCandidatesExpression="service:getBaseDeltaCubes()" domainClass="BaseDeltaCube">
+          <style xsi:type="style:SquareDescription" labelExpression="service:getTableDisplayName()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_yellow']"/>
+          </style>
+        </nodeMappings>
+        <edgeMappings name="CubeToCubeEdge" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='DerivedCube'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='TargetCube'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='BaseDeltaCube'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='BaseViewCube']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='DerivedCube'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='BaseCube'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='BaseDeltaCube'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='BaseViewCube']" targetFinderExpression="feature:sourceCubes">
+          <style sourceArrow="InputArrow" targetArrow="NoDecoration" sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription>
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+      </defaultLayer>
+      <additionalLayers name="Views" activeByDefault="true">
+        <nodeMappings name="JoinView" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@toolSections.0/@ownedTools[name='showDataSetTranformationTagsAndRequirements'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@toolSections.0/@ownedTools[name='showJoinView']" semanticCandidatesExpression="service:getViews()" domainClass="JoinView">
+          <style xsi:type="style:EllipseNodeDescription" labelExpression="service:getViewDisplayName()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='blue']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="EnrichmentView" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@toolSections.0/@ownedTools[name='showDataSetTranformationTagsAndRequirements'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@toolSections.0/@ownedTools[name='showEnrichmentView']" semanticCandidatesExpression="service:getViews()" domainClass="EnrichmentView">
+          <style xsi:type="style:EllipseNodeDescription" labelExpression="service:getViewDisplayName()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='chocolate']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="FilterByConditionView" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@toolSections.0/@ownedTools[name='showDataSetTranformationTagsAndRequirements']" semanticCandidatesExpression="service:getViews()" domainClass="FilterByConditionView">
+          <style xsi:type="style:EllipseNodeDescription" labelExpression="service:getViewDisplayName()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="AggregateEnrichmentView" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@toolSections.0/@ownedTools[name='showDataSetTranformationTagsAndRequirements']" semanticCandidatesExpression="service:getViews()" domainClass="AggregateEnrichmentView">
+          <style xsi:type="style:EllipseNodeDescription" labelExpression="service:getViewDisplayName()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='green']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="CopyView" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@toolSections.0/@ownedTools[name='showDataSetTranformationTagsAndRequirements']" semanticCandidatesExpression="service:getViews()" domainClass="CopyView">
+          <style xsi:type="style:EllipseNodeDescription" labelExpression="service:getViewDisplayName()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='orange']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="UnionView" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@toolSections.0/@ownedTools[name='showDataSetTranformationTagsAndRequirements']" semanticCandidatesExpression="service:getViews()" domainClass="UnionView">
+          <style xsi:type="style:EllipseNodeDescription" labelExpression="service:getViewDisplayName()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='purple']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="GenericView" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@toolSections.0/@ownedTools[name='showDataSetTranformationTagsAndRequirements']" semanticCandidatesExpression="service:getViews()" domainClass="GenericView">
+          <style xsi:type="style:EllipseNodeDescription" labelExpression="service:getViewDisplayName()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='red']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="CubeSchema" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@toolSections.0/@ownedTools[name='showSchema']" semanticCandidatesExpression="aql:self.cubeSchemaModules.eContents()" domainClass="CubeSchema">
+          <style xsi:type="style:LozengeNodeDescription" labelExpression="service:getSchemaDisplayName()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="DeltaAccumulation" semanticCandidatesExpression="service:getViews()" domainClass="DeltaAccumulation">
+          <style xsi:type="style:EllipseNodeDescription" labelExpression="service:getViewDisplayName()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='dark_red']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="BaseViewIncorporatingDeltas" semanticCandidatesExpression="service:getViews()" domainClass="BaseViewIncorporatingDeltas">
+          <style xsi:type="style:EllipseNodeDescription" labelExpression="service:getViewDisplayName()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='dark_yellow']"/>
+          </style>
+        </nodeMappings>
+        <edgeMappings name="TransformationToTable" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@nodeMappings[name='AggregateEnrichmentView'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@nodeMappings[name='CopyView'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@nodeMappings[name='EnrichmentView'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@nodeMappings[name='FilterByConditionView'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@nodeMappings[name='GenericView'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@nodeMappings[name='JoinView'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@nodeMappings[name='UnionView'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@nodeMappings[name='BaseViewIncorporatingDeltas'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@nodeMappings[name='DeltaAccumulation']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='TargetCube'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='DerivedCube'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='BaseViewCube']" targetFinderExpression="feature:cube">
+          <style sourceArrow="InputArrow" targetArrow="NoDecoration" sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription>
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <edgeMappings name="SchemaToTable" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@nodeMappings[name='CubeSchema']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='BaseCube'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='TargetCube'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='BaseDeltaCube'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer/@nodeMappings[name='BaseViewCube']" targetFinderExpression="feature:baseCube">
+          <style sourceArrow="InputArrow" targetArrow="NoDecoration" sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription>
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <toolSections name="tool1">
+          <ownedTools xsi:type="tool:DiagramCreationDescription" name="showJoinView" label="showJoinView" precondition="true" browseExpression="service:getTag()" diagramDescription="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='JoinView']">
+            <initialOperation/>
+            <containerViewVariable name="containerView"/>
+            <representationNameVariable name="diagramName"/>
+          </ownedTools>
+          <ownedTools xsi:type="tool:DiagramCreationDescription" name="showDataSetTranformationTagsAndRequirements" label="showDataSetTranformationTagsAndRequirements" precondition="true" browseExpression="service:getTag()" diagramDescription="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='DataSetTansformationWithTagsAndRequirements']">
+            <initialOperation/>
+            <containerViewVariable name="containerView"/>
+            <representationNameVariable name="diagramName"/>
+          </ownedTools>
+          <ownedTools xsi:type="tool:DiagramCreationDescription" name="showSchema" label="showSchema" precondition="true" browseExpression="service:getTag()" diagramDescription="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='CubeSchema']">
+            <initialOperation/>
+            <containerViewVariable name="containerView"/>
+            <representationNameVariable name="diagramName"/>
+          </ownedTools>
+          <ownedTools xsi:type="tool:DiagramCreationDescription" name="showEnrichmentView" label="showEnrichmentView" precondition="true" browseExpression="service:getTag()" diagramDescription="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='EnrichmentView']">
+            <initialOperation/>
+            <containerViewVariable name="containerView"/>
+            <representationNameVariable name="diagramName"/>
+          </ownedTools>
+        </toolSections>
+      </additionalLayers>
+      <additionalLayers name="Scenarios" activeByDefault="true">
+        <nodeMappings name="Scenario" semanticCandidatesExpression="aql:self.datasetTransformationModules.sqlViews.functions.functionScenarios.scenario" domainClass="Scenario">
+          <style xsi:type="style:DotDescription" sizeComputationExpression="9" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_yellow']"/>
+          </style>
+        </nodeMappings>
+        <edgeMappings name="EnrichmentTransformationToSceanrio" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@nodeMappings[name='EnrichmentView']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Scenarios']/@nodeMappings[name='Scenario']" targetFinderExpression="aql:self.functions.eAllContents().scenario">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+      </additionalLayers>
+    </ownedRepresentations>
+    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="Function" domainClass="Function" enablePopupBars="true">
+      <defaultLayer name="Default">
+        <nodeMappings name="BasicFunction" semanticCandidatesExpression="aql:self->concat(self.eAllContents()->filter(functions::BasicFunction))" domainClass="BasicFunction">
+          <style xsi:type="style:SquareDescription" labelExpression="aql:self.functionSpec.name" sizeComputationExpression="4" labelPosition="node" resizeKind="NSEW" width="15" height="4">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="ResolvedCubeColumnParameter" semanticCandidatesExpression="aql:self.eAllContents()->filter(functions::ResolvedCubeColumnParameter)" domainClass="ResolvedCubeColumnParameter">
+          <style xsi:type="style:SquareDescription" labelExpression="aql:self.cubeColumn.cube.cube_name.concat(' : ').concat(self.cubeColumn.variable.variable_id))" labelPosition="node" resizeKind="NSEW" width="15" height="5">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="MemberParameter" semanticCandidatesExpression="aql:self.eAllContents()->filter(functions::MemberParameter)" domainClass="MemberParameter">
+          <style xsi:type="style:SquareDescription" labelExpression="aql:self.param.name" sizeComputationExpression="5" labelPosition="node" resizeKind="NSEW" width="15" height="5">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='purple']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="FunctionText" semanticCandidatesExpression="aql:self" domainClass="BasicFunction">
+          <style xsi:type="style:SquareDescription" labelExpression="service:getStringForFunction()" labelPosition="node" resizeKind="NSEW" width="40" height="20">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_red']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="SpeculativeCubeColumnParameter" semanticCandidatesExpression="aql:self.eAllContents()->filter(functions::SpeculativeCubeColumnParameter)" domainClass="SpeculativeCubeColumnParameter">
+          <style xsi:type="style:SquareDescription" labelExpression="aql:self.cube.cube_name.concat(' : ').concat(self.column.name))" labelPosition="node" resizeKind="NSEW" width="20" height="5">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="CellsParameter" semanticCandidatesExpression="aql:self.eAllContents()->filter(functions::CellsParameter)" domainClass="CellsParameter">
+          <style xsi:type="style:SquareDescription" labelExpression="aql:self.cells.cellID" labelPosition="node" resizeKind="NSEW" width="20" height="5">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="ValueParameter" semanticCandidatesExpression="aql:self.eAllContents()->filter(functions::ValueParameter)" domainClass="ValueParameter">
+          <style xsi:type="style:SquareDescription" labelExpression="aql:self.value" sizeComputationExpression="5" labelPosition="node" resizeKind="NSEW" width="15" height="5">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='purple']"/>
+          </style>
+        </nodeMappings>
+        <edgeMappings name="FunctionsToParams" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='Function']/@defaultLayer/@nodeMappings[name='BasicFunction']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='Function']/@defaultLayer/@nodeMappings[name='BasicFunction'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='Function']/@defaultLayer/@nodeMappings[name='MemberParameter'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='Function']/@defaultLayer/@nodeMappings[name='ResolvedCubeColumnParameter'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='Function']/@defaultLayer/@nodeMappings[name='SpeculativeCubeColumnParameter'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='Function']/@defaultLayer/@nodeMappings[name='CellsParameter'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='Function']/@defaultLayer/@nodeMappings[name='ValueParameter']" targetFinderExpression="feature:parameters">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription>
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+      </defaultLayer>
+    </ownedRepresentations>
+    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="VersionedSQLViewsModule" domainClass="VersionedSQLViewsModule" enablePopupBars="true">
+      <defaultLayer name="PLCube">
+        <nodeMappings name="DerivedCube" semanticCandidatesExpression="aql:self.sqlViews.cube" domainClass="DerivedCube">
+          <style xsi:type="style:SquareDescription" labelExpression="service:getTableDisplayName()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='red']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="TargetCube" semanticCandidatesExpression="aql:self.sqlViews.cube" domainClass="TargetCube">
+          <style xsi:type="style:SquareDescription" labelExpression="service:getTableDisplayName()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='green']"/>
+          </style>
+        </nodeMappings>
+        <edgeMappings name="CubeToCubeEdge" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedSQLViewsModule']/@defaultLayer/@nodeMappings[name='DerivedCube'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedSQLViewsModule']/@defaultLayer/@nodeMappings[name='TargetCube']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedSQLViewsModule']/@defaultLayer/@nodeMappings[name='DerivedCube']" targetFinderExpression="feature:sourceCubes">
+          <style sourceArrow="InputArrow" targetArrow="NoDecoration" sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription>
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+      </defaultLayer>
+      <additionalLayers name="Views" activeByDefault="true">
+        <nodeMappings name="JoinView" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedSQLViewsModule']/@additionalLayers[name='Views']/@toolSections.0/@ownedTools[name='showJoinView']" semanticCandidatesExpression="feature:sqlViews" domainClass="JoinView">
+          <style xsi:type="style:EllipseNodeDescription" labelExpression="service:getViewDisplayName()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='blue']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="EnrichmentView" semanticCandidatesExpression="feature:sqlViews" domainClass="EnrichmentView">
+          <style xsi:type="style:EllipseNodeDescription" labelExpression="service:getViewDisplayName()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='chocolate']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="FilterByConditionView" semanticCandidatesExpression="feature:sqlViews" domainClass="FilterByConditionView">
+          <style xsi:type="style:EllipseNodeDescription" labelExpression="service:getViewDisplayName()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="AggregateEnrichmentView" semanticCandidatesExpression="feature:sqlViews" domainClass="AggregateEnrichmentView">
+          <style xsi:type="style:EllipseNodeDescription" labelExpression="service:getViewDisplayName()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='green']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="CopyView" semanticCandidatesExpression="feature:sqlViews" domainClass="CopyView">
+          <style xsi:type="style:EllipseNodeDescription" labelExpression="service:getViewDisplayName()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='orange']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="UnionView" semanticCandidatesExpression="feature:sqlViews" domainClass="UnionView">
+          <style xsi:type="style:EllipseNodeDescription" labelExpression="service:getViewDisplayName()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='purple']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="GenericView" semanticCandidatesExpression="feature:sqlViews" domainClass="GenericView">
+          <style xsi:type="style:EllipseNodeDescription" labelExpression="service:getViewDisplayName()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='red']"/>
+          </style>
+        </nodeMappings>
+        <edgeMappings name="TransformationToTable" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedSQLViewsModule']/@additionalLayers[name='Views']/@nodeMappings[name='AggregateEnrichmentView'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedSQLViewsModule']/@additionalLayers[name='Views']/@nodeMappings[name='CopyView'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedSQLViewsModule']/@additionalLayers[name='Views']/@nodeMappings[name='EnrichmentView'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedSQLViewsModule']/@additionalLayers[name='Views']/@nodeMappings[name='FilterByConditionView'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedSQLViewsModule']/@additionalLayers[name='Views']/@nodeMappings[name='GenericView'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedSQLViewsModule']/@additionalLayers[name='Views']/@nodeMappings[name='JoinView'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedSQLViewsModule']/@additionalLayers[name='Views']/@nodeMappings[name='UnionView']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedSQLViewsModule']/@defaultLayer/@nodeMappings[name='DerivedCube'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedSQLViewsModule']/@defaultLayer/@nodeMappings[name='TargetCube']" targetFinderExpression="feature:cube">
+          <style sourceArrow="InputArrow" targetArrow="NoDecoration" sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription>
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <toolSections name="tool1">
+          <ownedTools xsi:type="tool:DiagramCreationDescription" name="showJoinView" label="showJoinView" precondition="true" browseExpression="service:getTag()" diagramDescription="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='JoinView']">
+            <initialOperation/>
+            <containerViewVariable name="containerView"/>
+            <representationNameVariable name="diagramName"/>
+          </ownedTools>
+        </toolSections>
+      </additionalLayers>
+      <additionalLayers name="Scenarios" activeByDefault="true">
+        <nodeMappings name="Scenario" semanticCandidatesExpression="service:getScenarios()" domainClass="Scenario">
+          <style xsi:type="style:DotDescription" sizeComputationExpression="9" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_yellow']"/>
+          </style>
+        </nodeMappings>
+        <edgeMappings name="EnrichmentTransformationToSceanrio" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']/@nodeMappings[name='EnrichmentView']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedSQLViewsModule']/@additionalLayers[name='Scenarios']/@nodeMappings[name='Scenario']" targetFinderExpression="aql:self.functions.eAllContents().scenario">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+      </additionalLayers>
+    </ownedRepresentations>
+    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="JoinView" domainClass="JoinView" enablePopupBars="true">
+      <defaultLayer name="Default">
+        <nodeMappings name="JoinView" semanticCandidatesExpression="aql:self" domainClass="JoinView">
+          <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="service:replaceUnderscoreWithSpace()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='green']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="WhereClause" semanticCandidatesExpression="feature:whereClause" domainClass="WhereClause">
+          <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="WHERE CLAUSE" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='orange']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="Function" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='JoinView']/@defaultLayer/@toolSections.0/@ownedTools[name='ShowFunctionStructure'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='JoinView']/@defaultLayer/@toolSections.0/@ownedTools[name='ShowFunctionTagsAndRequirements']" semanticCandidatesExpression="aql:self.whereClause.function" domainClass="Function">
+          <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="FUNCTION" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='red']"/>
+          </style>
+        </nodeMappings>
+        <edgeMappings name="view2whereclause" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='JoinView']/@defaultLayer/@nodeMappings[name='JoinView']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='JoinView']/@defaultLayer/@nodeMappings[name='WhereClause']" targetFinderExpression="feature:whereClause">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <edgeMappings name="wherClause2Function" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='JoinView']/@defaultLayer/@nodeMappings[name='WhereClause']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='JoinView']/@defaultLayer/@nodeMappings[name='Function']" targetFinderExpression="feature:function">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <toolSections name="tool1">
+          <ownedTools xsi:type="tool:DiagramCreationDescription" name="ShowFunctionStructure" label="ShowFunctionStructure" precondition="true" browseExpression="service:getTag()" diagramDescription="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='Function']">
+            <initialOperation/>
+            <containerViewVariable name="containerView"/>
+            <representationNameVariable name="diagramName"/>
+          </ownedTools>
+          <ownedTools xsi:type="tool:DiagramCreationDescription" name="ShowFunctionTagsAndRequirements" label="ShowFunctionTagsAndRequirements" precondition="true" browseExpression="service:getTag()">
+            <initialOperation/>
+            <containerViewVariable name="containerView"/>
+            <representationNameVariable name="diagramName"/>
+          </ownedTools>
+        </toolSections>
+      </defaultLayer>
+    </ownedRepresentations>
+    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="DataSetTansformationWithTagsAndRequirements" domainClass="DataSetTransformation" enablePopupBars="true">
+      <defaultLayer name="Default">
+        <nodeMappings name="DataSetTransformation" semanticCandidatesExpression="aql:self" domainClass="DataSetTransformation">
+          <style xsi:type="style:SquareDescription" labelSize="12" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW" width="20" height="5">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='red']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="DataSetTransformationTag" semanticCandidatesExpression="service:getDataSetTransformationTagsFromDefaultTagGroup" domainClass="DataSetTransformationTag">
+          <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="feature:tagID" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW" width="20" height="5">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="TitledRequirementsSection" semanticCandidatesExpression="service:getDataSetTransactionRequirementsFromDefaultTagGroup" domainClass="TitledRequirementsSection">
+          <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="feature:title" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW" width="20" height="5">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_blue']"/>
+          </style>
+        </nodeMappings>
+        <edgeMappings name="datsettransformation2tag" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='DataSetTansformationWithTagsAndRequirements']/@defaultLayer/@nodeMappings[name='DataSetTransformationTag']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='DataSetTansformationWithTagsAndRequirements']/@defaultLayer/@nodeMappings[name='DataSetTransformation']" targetFinderExpression="feature:datasetTransformation">
+          <style sourceArrow="InputArrow" targetArrow="NoDecoration" sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <edgeMappings name="tagToReq" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='DataSetTansformationWithTagsAndRequirements']/@defaultLayer/@nodeMappings[name='DataSetTransformationTag']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='DataSetTansformationWithTagsAndRequirements']/@defaultLayer/@nodeMappings[name='TitledRequirementsSection']" targetFinderExpression="feature:requirements">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+      </defaultLayer>
+    </ownedRepresentations>
+    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="CubeSchema" domainClass="CubeSchema" enablePopupBars="true">
+      <defaultLayer name="Default">
+        <containerMappings name="CubeSchema" semanticCandidatesExpression="aql:self" domainClass="CubeSchema" childrenPresentation="HorizontalStack">
+          <subContainerMappings name="CUBE_STRUCTURE_ITEM" semanticCandidatesExpression="service:getCubeStructureItemsFromDefaultBIRDModel()" domainClass="CUBE_STRUCTURE_ITEM">
+            <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="12" labelExpression="aql:self.variable_id.name">
+              <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+              <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
+            </style>
+          </subContainerMappings>
+          <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="12">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+            <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
+          </style>
+        </containerMappings>
+      </defaultLayer>
+    </ownedRepresentations>
+    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="EnrichmentView" domainClass="EnrichmentView" enablePopupBars="true">
+      <defaultLayer name="Default">
+        <nodeMappings name="EnrichmentView" semanticCandidatesExpression="aql:self" domainClass="EnrichmentView">
+          <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="service:replaceUnderscoreWithSpace()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='green']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="StandardBasicColumnFunction" semanticCandidatesExpression="feature:functions" domainClass="StandardBasicColumnFunction">
+          <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="aql:self.variable.name" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='orange']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="StandardBasicColumnFunctionFunction" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='EnrichmentView']/@defaultLayer/@toolSections.0/@ownedTools[name='ShowFunctionTagsAndRequirements'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='EnrichmentView']/@defaultLayer/@toolSections.0/@ownedTools[name='ShowFunctionStructure']" semanticCandidatesExpression="aql:self.functions.basicFunction" domainClass="BasicFunction">
+          <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="FUNCTION" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='red']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="BasicColumnFunctionWithScenarios" semanticCandidatesExpression="feature:functions" domainClass="BasicColumnFunctionWithScenarios">
+          <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="aql:self.variable.name" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="ColumnFunctionScenario" label="ColumnFunctionScenario" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='EnrichmentView']/@defaultLayer/@toolSections.0/@ownedTools[name='ShowFunctionTagsAndRequirements']" semanticCandidatesExpression="aql:self.functions.functionScenarios" domainClass="ColumnFunctionScenario">
+          <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="Column Function Scenario" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='red']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="Scenario" semanticCandidatesExpression="aql:self.functions.functionScenarios.scenario  " domainClass="Scenario">
+          <style xsi:type="style:DotDescription" sizeComputationExpression="9" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_yellow']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="CalcFunctionForScenario" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='EnrichmentView']/@defaultLayer/@toolSections.0/@ownedTools[name='ShowFunctionStructure']" semanticCandidatesExpression="aql:self.functions.functionScenarios.function" domainClass="BasicFunction">
+          <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="Calculation Function" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_chocolate']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="FilterFunctionForScenario" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='EnrichmentView']/@defaultLayer/@toolSections.0/@ownedTools[name='ShowFunctionStructure']" semanticCandidatesExpression="aql:self.functions.functionScenarios.filterFunction" domainClass="BooleanFunction">
+          <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="Filter Function" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_gray']"/>
+          </style>
+        </nodeMappings>
+        <edgeMappings name="ColumnFunction2Function" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='EnrichmentView']/@defaultLayer/@nodeMappings[name='StandardBasicColumnFunction']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='EnrichmentView']/@defaultLayer/@nodeMappings[name='StandardBasicColumnFunctionFunction']" targetFinderExpression="feature:basicFunction">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <edgeMappings name="EnrichmentView2Columnfunction" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='EnrichmentView']/@defaultLayer/@nodeMappings[name='EnrichmentView']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='EnrichmentView']/@defaultLayer/@nodeMappings[name='StandardBasicColumnFunction']" targetFinderExpression="feature:functions">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <edgeMappings name="EnrichmentView2BCFWithScenarios" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='EnrichmentView']/@defaultLayer/@nodeMappings[name='EnrichmentView']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='EnrichmentView']/@defaultLayer/@nodeMappings[name='BasicColumnFunctionWithScenarios']" targetFinderExpression="feature:functions">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <edgeMappings name="BCFWithScenarios2Scenario" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='EnrichmentView']/@defaultLayer/@nodeMappings[name='BasicColumnFunctionWithScenarios']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='EnrichmentView']/@defaultLayer/@nodeMappings[name='ColumnFunctionScenario']" targetFinderExpression="feature:functionScenarios">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <edgeMappings name="ColumnFunctionScenario2Scenario" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='EnrichmentView']/@defaultLayer/@nodeMappings[name='ColumnFunctionScenario']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='EnrichmentView']/@defaultLayer/@nodeMappings[name='Scenario']" targetFinderExpression="feature:scenario">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <edgeMappings name="ColumnFunctionScenario2CalcFunction" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='EnrichmentView']/@defaultLayer/@nodeMappings[name='ColumnFunctionScenario']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='EnrichmentView']/@defaultLayer/@nodeMappings[name='CalcFunctionForScenario']" targetFinderExpression="feature:function">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <edgeMappings name="ColumnFunctionScenario2FilterFunction" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='EnrichmentView']/@defaultLayer/@nodeMappings[name='ColumnFunctionScenario']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='EnrichmentView']/@defaultLayer/@nodeMappings[name='FilterFunctionForScenario']" targetFinderExpression="feature:filterFunction">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <toolSections name="tool1">
+          <ownedTools xsi:type="tool:DiagramCreationDescription" name="ShowFunctionStructure" label="ShowFunctionStructure" precondition="true" browseExpression="service:getTag()" diagramDescription="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='Function']">
+            <initialOperation/>
+            <containerViewVariable name="containerView"/>
+            <representationNameVariable name="diagramName"/>
+          </ownedTools>
+          <ownedTools xsi:type="tool:DiagramCreationDescription" name="ShowFunctionTagsAndRequirements" label="ShowFunctionTagsAndRequirements" precondition="true" browseExpression="service:getTag()">
+            <initialOperation/>
+            <containerViewVariable name="containerView"/>
+            <representationNameVariable name="diagramName"/>
+          </ownedTools>
+        </toolSections>
+      </defaultLayer>
+    </ownedRepresentations>
+    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="VersionedCubeSchemaModule" domainClass="VersionedCubeSchemaModule" enablePopupBars="true">
+      <defaultLayer name="Default">
+        <nodeMappings name="FreeBirdToolsCube " semanticCandidatesExpression="aql:self.schemas.baseCube" domainClass="FreeBirdToolsCube ">
+          <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="feature:cube_name" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
+          </style>
+        </nodeMappings>
+      </defaultLayer>
+    </ownedRepresentations>
+    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="VersionedComponentsSet_WithVersions" domainClass="VersionedComponentsSet" enablePopupBars="true">
+      <defaultLayer name="Default">
+        <nodeMappings name="VersionedCubeSchemaModule" semanticCandidatesExpression="feature:cubeSchemaModules" domainClass="VersionedCubeSchemaModule">
+          <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="aql:   self.name + ' VERSION_' + self.version" sizeComputationExpression="15" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="VersionedFunctionalModuleLogic" semanticCandidatesExpression="feature:datasetTransformationModules" domainClass="VersionedFunctionalModuleLogic">
+          <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="aql:   self.name + ' VERSION_' + self.version" sizeComputationExpression="15" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='red']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="ReportCellViewModule" semanticCandidatesExpression="feature:reportCellViewModules" domainClass="ReportCellViewModule">
+          <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="aql:   self.name + ' VERSION_' + self.version" sizeComputationExpression="15" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='green']"/>
+          </style>
+        </nodeMappings>
+      </defaultLayer>
+    </ownedRepresentations>
+    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="RowCreationApproachs" domainClass="CubeTransformationLogic" preconditionExpression="true" enablePopupBars="true">
+      <defaultLayer name="Default">
+        <nodeMappings name="GroupByRowCreationApproach" semanticCandidatesExpression="aql:self.rowCreationApproachForCube.rowCreationApproach" domainClass="GroupByRowCreationApproach">
+          <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="aql:self.eClass().name" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW" width="30" height="10">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='red']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="OneToOneRowCreationApproach" semanticCandidatesExpression="aql:self.rowCreationApproachForCube.rowCreationApproach" domainClass="OneToOneRowCreationApproach">
+          <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="aql:self.eClass().name" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW" width="25" height="10">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="RowJoinFunction" semanticCandidatesExpression="aql:self.rowCreationApproachForCube.rowCreationApproach" domainClass="RowJoinFunction">
+          <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="aql:self.eClass().name" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW" width="20" height="10">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_orange']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="GroupbyCubeColumn" semanticCandidatesExpression="aql:self.rowCreationApproachForCube.rowCreationApproach.groupByCubeColumns" domainClass="CubeColumn">
+          <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="aql:self.columnID" labelPosition="node" resizeKind="NSEW" width="15" height="5">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='green']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="WhereFunction" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowCreationApproachs']/@defaultLayer/@toolSections.0/@ownedTools[name='WhereClauseFunction']" semanticCandidatesExpression="aql:self.rowCreationApproachForCube.rowCreationApproach.joinFunction" domainClass="BooleanFunction">
+          <style xsi:type="style:EllipseNodeDescription" labelSize="12" labelExpression="&quot;Where Function&quot;" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="FilterAndGroupToOneRowCreationApproach" semanticCandidatesExpression="aql:self.rowCreationApproachForCube.rowCreationApproach" domainClass="FilterAndGroupToOneRowCreationApproach">
+          <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="aql:self.eClass().name" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW" width="30" height="10">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='red']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="FilterFunction" detailDescriptions="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowCreationApproachs']/@defaultLayer/@toolSections.0/@ownedTools[name='FilterFunction']" semanticCandidatesExpression="aql:self.rowCreationApproachForCube.rowCreationApproach.filterFunction" domainClass="BooleanFunction">
+          <style xsi:type="style:EllipseNodeDescription" labelSize="12" labelExpression="Filter Function" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="GroupbyVariables" semanticCandidatesExpression="aql:self.rowCreationApproachForCube.rowCreationApproach.groupByVariables" domainClass="VARIABLE">
+          <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="aql:self.name " labelPosition="node" resizeKind="NSEW" width="15" height="5">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='green']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="FilterRowCreationApproach" semanticCandidatesExpression="aql:self.rowCreationApproachForCube.rowCreationApproach" domainClass="FilterRowCreationApproach">
+          <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="aql:self.eClass().name" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW" width="30" height="10">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='red']"/>
+          </style>
+        </nodeMappings>
+        <edgeMappings name="RowCreationApproachToFunctionalCubeLogic" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowCreationApproachs']/@defaultLayer/@nodeMappings[name='GroupByRowCreationApproach'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowCreationApproachs']/@defaultLayer/@nodeMappings[name='RowJoinFunction'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowCreationApproachs']/@defaultLayer/@nodeMappings[name='OneToOneRowCreationApproach']" targetFinderExpression="aql:self.rowCreationApproach">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <edgeMappings name="GroupByRowCreationApproachToGroupByCubeColumns" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowCreationApproachs']/@defaultLayer/@nodeMappings[name='GroupByRowCreationApproach']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowCreationApproachs']/@defaultLayer/@nodeMappings[name='GroupbyCubeColumn']" targetFinderExpression="aql:self.groupByCubeColumns">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <edgeMappings name="JoinRowCreationApproachToWhereClause" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowCreationApproachs']/@defaultLayer/@nodeMappings[name='RowJoinFunction']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowCreationApproachs']/@defaultLayer/@nodeMappings[name='WhereFunction']" targetFinderExpression="aql:self.joinFunction">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <edgeMappings name="FilterAndGroupFunctionTofilterFunction" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowCreationApproachs']/@defaultLayer/@nodeMappings[name='FilterAndGroupToOneRowCreationApproach'] //@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowCreationApproachs']/@defaultLayer/@nodeMappings[name='FilterRowCreationApproach']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowCreationApproachs']/@defaultLayer/@nodeMappings[name='FilterFunction']" targetFinderExpression="aql:self.filterFunction">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <edgeMappings name="FiterAndGroupToGroupByCubeVariables" sourceMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowCreationApproachs']/@defaultLayer/@nodeMappings[name='FilterAndGroupToOneRowCreationApproach']" targetMapping="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='RowCreationApproachs']/@defaultLayer/@nodeMappings[name='GroupbyVariables']" targetFinderExpression="aql:self.groupByVariables">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <toolSections name="tool1">
+          <ownedTools xsi:type="tool:DiagramCreationDescription" name="WhereClauseFunction" label="WhereClauseFunction" precondition="true" browseExpression="service:getTag()" diagramDescription="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='Function']">
+            <initialOperation/>
+            <containerViewVariable name="containerView"/>
+            <representationNameVariable name="diagramName"/>
+          </ownedTools>
+          <ownedTools xsi:type="tool:DiagramCreationDescription" name="FilterFunction" label="FilterFunction" precondition="true" browseExpression="service:getTag()" diagramDescription="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='Function']">
+            <initialOperation/>
+            <containerViewVariable name="containerView"/>
+            <representationNameVariable name="diagramName"/>
+          </ownedTools>
+        </toolSections>
+      </defaultLayer>
+    </ownedRepresentations>
+    <ownedJavaExtensions qualifiedClassName="org.eclipse.efbt.ui.sirius.Services"/>
+  </ownedViewpoints>
+</description:Group>

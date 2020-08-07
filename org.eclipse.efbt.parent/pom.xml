@@ -52,9 +52,13 @@
 		<module>org.eclipse.efbt.almengine.model.functions</module>
 		<module>org.eclipse.efbt.trl.model.trl</module>
 		<module>org.eclipse.efbt.controller.model</module>
+		<module>org.eclipse.efbt.controller.component</module>
+		<module>org.eclipse.efbt.controller.ui.sirius</module>
 		<module>org.eclipse.efbt.navigation_context.model</module>
 		<module>org.eclipse.efbt.trl.component.translator</module>
 		<module>org.eclipse.efbt.trl.component.translator.test</module>
+		<module>org.eclipse.efbt.trl.component.modelquery</module>
+		<module>org.eclipse.efbt.trl.ui.sirius</module>
 		
 
 	</modules>
