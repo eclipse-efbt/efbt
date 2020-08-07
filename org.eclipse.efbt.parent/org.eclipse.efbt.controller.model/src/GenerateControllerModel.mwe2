@@ -1,0 +1,24 @@
+module org.eclipse.efbt.controller.model
+
+import org.eclipse.xtext.xtext.generator.*
+import org.eclipse.xtext.xtext.generator.model.project.*
+
+var rootPath = ".."
+
+Workflow {
+
+	bean = org.eclipse.emf.mwe.utils.StandaloneSetup {
+		platformUri = "${rootPath}"
+		scanClassPath = true
+		registerGenModelFile = "platform:/resource/org.eclipse.efbt.controller.model/model/controller.genmodel"
+	}
+
+	component = org.eclipse.emf.mwe2.ecore.EcoreGenerator {
+
+		genModel = "platform:/resource/org.eclipse.efbt.controller.model/model/controller.genmodel"
+		srcPath = "platform:/resource/org.eclipse.efbt.controller.model/src-gen"
+	}
+
+}
+		
+	

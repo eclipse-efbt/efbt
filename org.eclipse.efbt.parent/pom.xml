@@ -51,6 +51,7 @@
 		<module>org.eclipse.efbt.almengine.model.attribute_lineage</module>
 		<module>org.eclipse.efbt.almengine.model.functions</module>
 		<module>org.eclipse.efbt.trl.model.trl</module>
+		<module>org.eclipse.efbt.controller.model</module>
 		
 		
 		
