@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Translator
+Bundle-SymbolicName: org.eclipse.efbt.trl.component.translator
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: org.eclipse.efbt.controller.model;bundle-version="1.0.0",
+ org.eclipse.efbt.aorta;bundle-version="1.0.0",
+ org.eclipse.efbt.almengine.model.attribute_lineage,
+ org.eclipse.efbt.trl.model.trl,
+ org.eclipse.efbt.almengine.model.cubes,
+ org.eclipse.emf.common,
+ org.eclipse.efbt.almengine.model.functions,
+ org.eclipse.efbt.navigation_context.model;bundle-version="1.0.0"
+Export-Package: org.eclipse.efbt.trl.component.translator
