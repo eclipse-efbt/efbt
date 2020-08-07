@@ -47,6 +47,11 @@
 		<module>org.eclipse.efbt.util.csv.impl.apachecsv</module>
 		<module>org.eclipse.efbt.ldmtools.sqldevconvertor</module>
 		<module>org.eclipse.efbt.ldmtools.sqldevconvertor.test</module>
+		<module>org.eclipse.efbt.almengine.model.cubes</module>
+		<module>org.eclipse.efbt.almengine.model.attribute_lineage</module>
+		<module>org.eclipse.efbt.almengine.model.functions</module>
+		
+		
 		
 	</modules>
 	<dependencyManagement>

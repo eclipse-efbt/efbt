@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated cubes -->
+      <package
+            uri="http://www.eclipse.org/cube_schema"
+            class="org.eclipse.efbt.almengine.model.cubes.cube_schema.Cube_schemaPackage"
+            genModel="model/cubes.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated cubes -->
+      <parser
+            type="cube_schema"
+            class="org.eclipse.efbt.almengine.model.cubes.cube_schema.util.Cube_schemaResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated cubes -->
+      <package
+            uri="http://www.eclipse.org/cubes"
+            class="org.eclipse.efbt.almengine.model.cubes.cubes.CubesPackage"
+            genModel="model/cubes.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated cubes -->
+      <parser
+            type="cubes"
+            class="org.eclipse.efbt.almengine.model.cubes.cubes.util.CubesResourceFactoryImpl"/>
+   </extension>
+
+</plugin>
