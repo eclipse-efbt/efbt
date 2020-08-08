@@ -51,6 +51,12 @@
 			version="0.0.0"
 			unpack="false"/>
 	<plugin
+			id="org.eclipse.efbt.bird.component.rules_and_data_structures_manager"
+			download-size="0"
+			install-size="0"
+			version="0.0.0"
+			unpack="false"/>
+	<plugin
 			id="org.eclipse.efbt.util.access.interface"
 			download-size="0"
 			install-size="0"
@@ -87,16 +93,77 @@
 			version="0.0.0"
 			unpack="false"/>
 	<plugin
-			id="org.eclipse.efbt.bird.component.rules_and_data_structures_manager"
+			id="org.eclipse.efbt.ldmtools.sqldevconvertor"
 			download-size="0"
 			install-size="0"
 			version="0.0.0"
 			unpack="false"/>
-
-	
-	
-	
-	
+	<plugin
+			id="org.eclipse.efbt.almengine.model.cubes"
+			download-size="0"
+			install-size="0"
+			version="0.0.0"
+			unpack="false"/>
+	<plugin
+			id="org.eclipse.efbt.almengine.model.attribute_lineage"
+			download-size="0"
+			install-size="0"
+			version="0.0.0"
+			unpack="false"/>
+	<plugin
+			id="org.eclipse.efbt.almengine.model.functions"
+			download-size="0"
+			install-size="0"
+			version="0.0.0"
+			unpack="false"/>
+	<plugin
+			id="org.eclipse.efbt.trl.model.trl"
+			download-size="0"
+			install-size="0"
+			version="0.0.0"
+			unpack="false"/>
+	<plugin
+			id="org.eclipse.efbt.controller.model"
+			download-size="0"
+			install-size="0"
+			version="0.0.0"
+			unpack="false"/>
+	<plugin
+			id="org.eclipse.efbt.controller.ui.sirius"
+			download-size="0"
+			install-size="0"
+			version="0.0.0"
+			unpack="false"/>
+	<plugin
+			id="org.eclipse.efbt.navigation_context.model"
+			download-size="0"
+			install-size="0"
+			version="0.0.0"
+			unpack="false"/>
+	<plugin
+			id="org.eclipse.efbt.trl.component.translator"
+			download-size="0"
+			install-size="0"
+			version="0.0.0"
+			unpack="false"/>
+	<plugin
+			id="org.eclipse.efbt.trl.component.modelquery"
+			download-size="0"
+			install-size="0"
+			version="0.0.0"
+			unpack="false"/>
+	<plugin
+			id="org.eclipse.efbt.almengine.component.modelquery"
+			download-size="0"
+			install-size="0"
+			version="0.0.0"
+			unpack="false"/>
+	<plugin
+			id="org.eclipse.efbt.almengine.ui.sirius"
+			download-size="0"
+			install-size="0"
+			version="0.0.0"
+			unpack="false"/>
 			
 	
 </feature>

@@ -32,28 +32,13 @@ import org.eclipse.efbt.trl.model.trl.trl_sql_views.VersionedSQLViewsModule;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
-
-
-
-
-
-
-
-
-
-
-
-
 /**
  * The services class used by VSM.
  */
 public class Services {
     
    
-    public EObject myService(EObject self, String arg) {
-      
-      return self;
-    }
+   
     
     public String replaceUnderscoreWithSpace(JoinView self) {
 

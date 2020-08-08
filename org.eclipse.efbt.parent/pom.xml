@@ -59,7 +59,8 @@
 		<module>org.eclipse.efbt.trl.component.translator.test</module>
 		<module>org.eclipse.efbt.trl.component.modelquery</module>
 		<module>org.eclipse.efbt.trl.ui.sirius</module>
-		
+		<module>org.eclipse.efbt.almengine.component.modelquery</module>
+		<module>org.eclipse.efbt.almengine.ui.sirius</module>
 
 	</modules>
 	<dependencyManagement>
