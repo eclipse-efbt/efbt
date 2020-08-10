@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aortafunctions:FunctionSpecModule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aortafunctions="http://www.eclipse.org/aortafunctions" license="Copyright (c) 2020 Bird Software Solutions Ltd&amp;#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&amp;#xA;&amp;#xA;SPDX-License-Identifier: EPL-2.0 &amp;#xA;&amp;#xA; Contributors:&amp;#xA; Neil Mackenzie - initial API and implementation&amp;#xD;" name="ccommonFunctions">
+  <functionSpecs xsi:type="aortafunctions:BasicFunctionSpec" functionalName="&amp;&amp;" name="AND" sqlName="AND"  isInfix="true"/>
+  <functionSpecs xsi:type="aortafunctions:BasicFunctionSpec" functionalName="-" name="-" sqlName="-"  isInfix="true"/>
+  <functionSpecs xsi:type="aortafunctions:BasicFunctionSpec" functionalName="==" name="=" sqlName="="  isInfix="true"/>
+  <functionSpecs xsi:type="aortafunctions:BasicFunctionSpec" functionalName="||" name="OR" sqlName="OR"  isInfix="true"/>
+  <functionSpecs xsi:type="aortafunctions:BasicFunctionSpec" functionalName="+" name="+" sqlName="+"  isInfix="true"/>
+  <functionSpecs xsi:type="aortafunctions:AggregateFunctionSpec" functionalName="funcs.SUM" name="SUM" sqlName="SUM" />
+  <functionSpecs xsi:type="aortafunctions:BasicFunctionSpec" functionalName="CustomFunctions.sqrt" name="sqrt" sqlName="sqrt" />
+  <functionSpecs xsi:type="aortafunctions:BasicFunctionSpec" functionalName="Math.max" name="max" sqlName="max" />
+  <functionSpecs xsi:type="aortafunctions:BasicFunctionSpec" functionalName="*" name="*" sqlName="*"  isInfix="true"/>
+  <functionSpecs xsi:type="aortafunctions:BasicFunctionSpec" functionalName=">" name=">" sqlName=">"  isInfix="true"/>
+  <functionSpecs xsi:type="aortafunctions:BasicFunctionSpec" functionalName="Math.pow" name="exp" sqlName="exp" />
+  <functionSpecs xsi:type="aortafunctions:BasicFunctionSpec" functionalName="Math.min" name="min" sqlName="min" />
+  <functionSpecs xsi:type="aortafunctions:BasicFunctionSpec" functionalName="!=" name="!=" sqlName="!="  isInfix="true"/>
+  <functionSpecs xsi:type="aortafunctions:BasicFunctionSpec" functionalName="equals" name="equals" sqlName="="  isInfix="true"/>
+  <functionSpecs xsi:type="aortafunctions:BasicFunctionSpec" functionalName="funcs.CopyColumn" name="CopyColumn" sqlName="ID" />
+  <functionSpecs xsi:type="aortafunctions:AggregateFunctionSpec" functionalName="funcs.First" name="First" sqlName="First" />
+  <functionSpecs xsi:type="aortafunctions:BasicFunctionSpec" functionalName="CustomFunctions.trippleA_NotionaAmount" name="trippleA_NotionaAmount" sqlName="trippleA_NotionaAmount" />
+</aortafunctions:FunctionSpecModule>

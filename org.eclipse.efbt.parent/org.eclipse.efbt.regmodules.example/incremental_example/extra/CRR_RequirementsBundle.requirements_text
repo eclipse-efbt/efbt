@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<requirements_text:RequirementsModule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:requirements_text="http://www.eclipse.org/requirements_text" license="Copyright (c) 2019 Openregtech Ltd&amp;#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&amp;#xA;&amp;#xA;SPDX-License-Identifier: EPL-2.0 &amp;#xA;&amp;#xA; Contributors:&amp;#xA; Neil Mackenzie - initial API and implementation&amp;#xD;" name="CRR_RequirementsModule" version="2.0">
+  <rules iD="CRR_Rulebook" requirementsType="#RuleBook" title="CRR Rulebook">
+    <sections xsi:type="requirements_text:TitledRequirementsSection" iD="Title_IV" requirementsType="#Title" title="Title IV">
+      <sections xsi:type="requirements_text:TitledRequirementsSection" iD="Title_IV;Chapter_1_General_Provisions" requirementsType="#Chapter" title="Chapter 1 General Provisions">
+        <sections xsi:type="requirements_text:TitledRequirementsSection" iD="Article_325" requirementsType="#Article" title="Article 325: Approaches for calculating the own funds requirements_text for market risks">
+          <sections xsi:type="requirements_text:TitledRequirementsSection" iD="Article_325;1" requirementsType="#NumericParagraph" title="Article_325;1">
+            <sections xsi:type="requirements_text:RequirementsSectionText" iD="Article_325;1;text1" text="reg text"/>
+            <sections xsi:type="requirements_text:TitledRequirementsSection" iD="Article_325:1(a)" requirementsType="#LetterParagraph" title="Article 325: 1(a)">
+              <sections xsi:type="requirements_text:RequirementsSectionText" iD="Article_325:1(a):text1" text="reg text"/>
+            </sections>
+            <sections xsi:type="requirements_text:TitledRequirementsSection" iD="Article_325:1(b)" requirementsType="#LetterParagraph" title="Article 325: 1(b)">
+              <sections xsi:type="requirements_text:RequirementsSectionText" iD="Article_325:1(b):text1" text="reg text"/>
+            </sections>
+          </sections>
+        </sections>
+        <sections xsi:type="requirements_text:TitledRequirementsSection" iD="Article_325a" requirementsType="#Article" title="Article 325a: Conditions for using the Simplified Standardised Approach">
+          <sections xsi:type="requirements_text:TitledRequirementsSection" iD="Article_325a:1" requirementsType="#Article" title="Article 325a: 1"/>
+          <sections xsi:type="requirements_text:TitledRequirementsSection" iD="Article_325a:2" requirementsType="#Article" title="Article 325a: 2">
+            <sections xsi:type="requirements_text:RequirementsSectionImage" iD="cvrk" uri="uri"/>
+            <sections xsi:type="requirements_text:RequirementsSectionImage" iD="bucketedcvrk" uri="uri"/>
+          </sections>
+        </sections>
+      </sections>
+    </sections>
+  </rules>
+  <allowedtypes>
+    <allowedTypes requirementType="Chapter"/>
+    <allowedTypes requirementType="Section"/>
+    <allowedTypes requirementType="Article"/>
+    <allowedTypes requirementType="NumericParagraph"/>
+    <allowedTypes requirementType="LetterParagraph"/>
+    <allowedTypes requirementType="RomanNumeralParagraph"/>
+    <allowedTypes requirementType="RuleBook"/>
+    <allowedTypes requirementType="Title"/>
+    <allowedTypes requirementType="SubSection"/>
+  </allowedtypes>
+</requirements_text:RequirementsModule>

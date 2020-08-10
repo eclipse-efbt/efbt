@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data_lineage:SpreadsheetLineageModel xmlns:data_lineage="http://www.eclipse.org/data_lineage" xmlns:base_column_structured_data="http://www.eclipse.org/base_column_structured_data" xmlns:functions="http://www.eclipse.org/functions" >
+<dataTraceableByCell name="aggregateLoans" rowCreationApproachForCube="..\platform_calls\getAttributeLineageForJustOneCell.platform_call#aggregateLoans" sourceColumnStructuredData="#loans" cube="..\extra\efbt_cubes.cubes#aggregateLoans"> 
+<rows rowID="aggregateLoans:4b9c32385dbb4161489aa6f901f5ee31" sourceRows="#loans_row3">
+<formulaCells cellID="aggregateLoans:4b9c32385dbb4161489aa6f901f5ee31:ECB2_MRKT_VL" column="..\bird_import\variables.efbt_data_definition#ECB2_MRKT_VL" value="15000.0">
+   <function xsi:type="functions:AggregateFunction" functionSpec="..\extra\commonFunctions.functions#SUM">
+     <parameters xsi:type="functions:CellsParameter" cells="#loans_row3:ECB2_MRKT_VL"/>
+   </function>
+   </formulaCells>
+<formulaCells cellID="aggregateLoans:4b9c32385dbb4161489aa6f901f5ee31:ECB2_ENTITY_LEI" column="..\bird_import\variables.efbt_data_definition#ECB2_ENTITY_LEI" value="Citibank">
+   <function xsi:type="functions:AggregateFunction" functionSpec="..\platform_calls\getAttributeLineageForJustOneCell.platform_call#First">
+     <parameters xsi:type="functions:CellsParameter" cells="#loans_row3:ECB2_ENTITY_LEI"/>
+   </function>
+   </formulaCells>
+</rows>
+<rows rowID="aggregateLoans:cf031455d7bbeb50c829db75ad687623" sourceRows="#loans_row2 #loans_row1">
+<formulaCells cellID="aggregateLoans:cf031455d7bbeb50c829db75ad687623:ECB2_MRKT_VL" column="..\bird_import\variables.efbt_data_definition#ECB2_MRKT_VL" value="14000.0">
+   <function xsi:type="functions:AggregateFunction" functionSpec="..\extra\commonFunctions.functions#SUM">
+     <parameters xsi:type="functions:CellsParameter" cells="#loans_row1:ECB2_MRKT_VL"/>
+     <parameters xsi:type="functions:CellsParameter" cells="#loans_row2:ECB2_MRKT_VL"/>
+   </function>
+   </formulaCells>
+<formulaCells cellID="aggregateLoans:cf031455d7bbeb50c829db75ad687623:ECB2_ENTITY_LEI" column="..\bird_import\variables.efbt_data_definition#ECB2_ENTITY_LEI" value="Mizuho">
+   <function xsi:type="functions:AggregateFunction" functionSpec="..\platform_calls\getAttributeLineageForJustOneCell.platform_call#First">
+     <parameters xsi:type="functions:CellsParameter" cells="#loans_row1:ECB2_ENTITY_LEI"/>
+     <parameters xsi:type="functions:CellsParameter" cells="#loans_row2:ECB2_ENTITY_LEI"/>
+   </function>
+   </formulaCells>
+</rows>
+</dataTraceableByCell>
+ <dataTraceableByCell name="aggregateLoansAndCounterparties" rowCreationApproachForCube="..\platform_calls\getAttributeLineageForJustOneCell.platform_call#aggregateLoansAndCounterparties" sourceColumnStructuredData="#aggregateLoans #counterparty" cube="..\extra\efbt_cubes.cubes#aggregateLoansAndCounterparties"> 
+<rows rowID="aggregateLoansAndCounterparties:81f5e66ba63bdaee7e77d5088e23d9ae" sourceRows="#aggregateLoans:4b9c32385dbb4161489aa6f901f5ee31 #counterparty_row1">
+<formulaCells cellID="aggregateLoansAndCounterparties:81f5e66ba63bdaee7e77d5088e23d9ae:ECB2_MRKT_VL" column="..\bird_import\variables.efbt_data_definition#ECB2_MRKT_VL" value="15000.0">
+   <function xsi:type="functions:BasicFunction" functionSpec="..\platform_calls\getAttributeLineageForJustOneCell.platform_call#CopyColumn">
+     <parameters xsi:type="functions:CellsParameter" cells="#aggregateLoans:4b9c32385dbb4161489aa6f901f5ee31:ECB2_MRKT_VL"/>
+   </function>
+   </formulaCells>
+<formulaCells cellID="aggregateLoansAndCounterparties:81f5e66ba63bdaee7e77d5088e23d9ae:ECB2_ENTITY_LEI" column="..\bird_import\variables.efbt_data_definition#ECB2_ENTITY_LEI" value="Citibank">
+   <function xsi:type="functions:BasicFunction" functionSpec="..\platform_calls\getAttributeLineageForJustOneCell.platform_call#CopyColumn">
+     <parameters xsi:type="functions:CellsParameter" cells="#counterparty_row1:ECB2_ENTITY_LEI"/>
+   </function>
+   </formulaCells>
+<formulaCells cellID="aggregateLoansAndCounterparties:81f5e66ba63bdaee7e77d5088e23d9ae:CNTRY" column="..\bird_import\variables.efbt_data_definition#CNTRY" value="UNITED STATES">
+   <function xsi:type="functions:BasicFunction" functionSpec="..\platform_calls\getAttributeLineageForJustOneCell.platform_call#CopyColumn">
+     <parameters xsi:type="functions:CellsParameter" cells="#counterparty_row1:CNTRY"/>
+   </function>
+   </formulaCells>
+</rows>
+<rows rowID="aggregateLoansAndCounterparties:318664c8a3bd6b5be870f15b134cb752" sourceRows="#aggregateLoans:cf031455d7bbeb50c829db75ad687623 #counterparty_row2">
+<formulaCells cellID="aggregateLoansAndCounterparties:318664c8a3bd6b5be870f15b134cb752:ECB2_MRKT_VL" column="..\bird_import\variables.efbt_data_definition#ECB2_MRKT_VL" value="14000.0">
+   <function xsi:type="functions:BasicFunction" functionSpec="..\platform_calls\getAttributeLineageForJustOneCell.platform_call#CopyColumn">
+     <parameters xsi:type="functions:CellsParameter" cells="#aggregateLoans:cf031455d7bbeb50c829db75ad687623:ECB2_MRKT_VL"/>
+   </function>
+   </formulaCells>
+<formulaCells cellID="aggregateLoansAndCounterparties:318664c8a3bd6b5be870f15b134cb752:ECB2_ENTITY_LEI" column="..\bird_import\variables.efbt_data_definition#ECB2_ENTITY_LEI" value="Mizuho">
+   <function xsi:type="functions:BasicFunction" functionSpec="..\platform_calls\getAttributeLineageForJustOneCell.platform_call#CopyColumn">
+     <parameters xsi:type="functions:CellsParameter" cells="#counterparty_row2:ECB2_ENTITY_LEI"/>
+   </function>
+   </formulaCells>
+<formulaCells cellID="aggregateLoansAndCounterparties:318664c8a3bd6b5be870f15b134cb752:CNTRY" column="..\bird_import\variables.efbt_data_definition#CNTRY" value="JAPAN">
+   <function xsi:type="functions:BasicFunction" functionSpec="..\platform_calls\getAttributeLineageForJustOneCell.platform_call#CopyColumn">
+     <parameters xsi:type="functions:CellsParameter" cells="#counterparty_row2:CNTRY"/>
+   </function>
+   </formulaCells>
+</rows>
+</dataTraceableByCell>
+ <dataTraceableByCell name="loansCounterpartiesAndRatings" rowCreationApproachForCube="..\platform_calls\getAttributeLineageForJustOneCell.platform_call#loansCounterpartiesAndRatings" sourceColumnStructuredData="#aggregateLoansAndCounterparties #rating" cube="..\extra\efbt_cubes.cubes#loansCounterpartiesAndRatings"> 
+<rows rowID="loansCounterpartiesAndRatings:caa12d10c8555c5dd8bd7ae541b7ed9a" sourceRows="#aggregateLoansAndCounterparties:81f5e66ba63bdaee7e77d5088e23d9ae #rating_row1">
+<formulaCells cellID="loansCounterpartiesAndRatings:caa12d10c8555c5dd8bd7ae541b7ed9a:ECB2_MRKT_VL" column="..\bird_import\variables.efbt_data_definition#ECB2_MRKT_VL" value="15000.0">
+   <function xsi:type="functions:BasicFunction" functionSpec="..\platform_calls\getAttributeLineageForJustOneCell.platform_call#CopyColumn">
+     <parameters xsi:type="functions:CellsParameter" cells="#aggregateLoansAndCounterparties:81f5e66ba63bdaee7e77d5088e23d9ae:ECB2_MRKT_VL"/>
+   </function>
+   </formulaCells>
+<formulaCells cellID="loansCounterpartiesAndRatings:caa12d10c8555c5dd8bd7ae541b7ed9a:CNTRY" column="..\bird_import\variables.efbt_data_definition#CNTRY" value="UNITED STATES">
+   <function xsi:type="functions:BasicFunction" functionSpec="..\platform_calls\getAttributeLineageForJustOneCell.platform_call#CopyColumn">
+     <parameters xsi:type="functions:CellsParameter" cells="#aggregateLoansAndCounterparties:81f5e66ba63bdaee7e77d5088e23d9ae:CNTRY"/>
+   </function>
+   </formulaCells>
+</rows>
+<rows rowID="loansCounterpartiesAndRatings:cbce936304d501df4ad466e96fe33938" sourceRows="#aggregateLoansAndCounterparties:318664c8a3bd6b5be870f15b134cb752 #rating_row2">
+<formulaCells cellID="loansCounterpartiesAndRatings:cbce936304d501df4ad466e96fe33938:ECB2_MRKT_VL" column="..\bird_import\variables.efbt_data_definition#ECB2_MRKT_VL" value="14000.0">
+   <function xsi:type="functions:BasicFunction" functionSpec="..\platform_calls\getAttributeLineageForJustOneCell.platform_call#CopyColumn">
+     <parameters xsi:type="functions:CellsParameter" cells="#aggregateLoansAndCounterparties:318664c8a3bd6b5be870f15b134cb752:ECB2_MRKT_VL"/>
+   </function>
+   </formulaCells>
+<formulaCells cellID="loansCounterpartiesAndRatings:cbce936304d501df4ad466e96fe33938:CNTRY" column="..\bird_import\variables.efbt_data_definition#CNTRY" value="JAPAN">
+   <function xsi:type="functions:BasicFunction" functionSpec="..\platform_calls\getAttributeLineageForJustOneCell.platform_call#CopyColumn">
+     <parameters xsi:type="functions:CellsParameter" cells="#aggregateLoansAndCounterparties:318664c8a3bd6b5be870f15b134cb752:CNTRY"/>
+   </function>
+   </formulaCells>
+</rows>
+</dataTraceableByCell>
+ <dataTraceableByCell name="enrichedExposures" rowCreationApproachForCube="..\platform_calls\getAttributeLineageForJustOneCell.platform_call#enrichedExposures" sourceColumnStructuredData="#loansCounterpartiesAndRatings" cube="..\extra\efbt_cubes.cubes#enrichedExposures"> 
+<rows rowID="enrichedExposures:62541ed437b38866d2bcf016c0cfad1e" sourceRows="#loansCounterpartiesAndRatings:caa12d10c8555c5dd8bd7ae541b7ed9a">
+<formulaCells cellID="enrichedExposures:62541ed437b38866d2bcf016c0cfad1e:ECB2_MRKT_VL" column="..\bird_import\variables.efbt_data_definition#ECB2_MRKT_VL" value="15000.0">
+   <function xsi:type="functions:BasicFunction" functionSpec="..\platform_calls\getAttributeLineageForJustOneCell.platform_call#CopyColumn">
+     <parameters xsi:type="functions:CellsParameter" cells="#loansCounterpartiesAndRatings:caa12d10c8555c5dd8bd7ae541b7ed9a:ECB2_MRKT_VL"/>
+   </function>
+   </formulaCells>
+<formulaCells cellID="enrichedExposures:62541ed437b38866d2bcf016c0cfad1e:CNTRY" column="..\bird_import\variables.efbt_data_definition#CNTRY" value="UNITED STATES">
+   <function xsi:type="functions:BasicFunction" functionSpec="..\platform_calls\getAttributeLineageForJustOneCell.platform_call#CopyColumn">
+     <parameters xsi:type="functions:CellsParameter" cells="#loansCounterpartiesAndRatings:caa12d10c8555c5dd8bd7ae541b7ed9a:CNTRY"/>
+   </function>
+   </formulaCells>
+</rows>
+<rows rowID="enrichedExposures:c82aee153103e20efd09e3e40c19554f" sourceRows="#loansCounterpartiesAndRatings:cbce936304d501df4ad466e96fe33938">
+<formulaCells cellID="enrichedExposures:c82aee153103e20efd09e3e40c19554f:ECB2_MRKT_VL" column="..\bird_import\variables.efbt_data_definition#ECB2_MRKT_VL" value="14000.0">
+   <function xsi:type="functions:BasicFunction" functionSpec="..\platform_calls\getAttributeLineageForJustOneCell.platform_call#CopyColumn">
+     <parameters xsi:type="functions:CellsParameter" cells="#loansCounterpartiesAndRatings:cbce936304d501df4ad466e96fe33938:ECB2_MRKT_VL"/>
+   </function>
+   </formulaCells>
+<formulaCells cellID="enrichedExposures:c82aee153103e20efd09e3e40c19554f:CNTRY" column="..\bird_import\variables.efbt_data_definition#CNTRY" value="JAPAN">
+   <function xsi:type="functions:BasicFunction" functionSpec="..\platform_calls\getAttributeLineageForJustOneCell.platform_call#CopyColumn">
+     <parameters xsi:type="functions:CellsParameter" cells="#loansCounterpartiesAndRatings:cbce936304d501df4ad466e96fe33938:CNTRY"/>
+   </function>
+   </formulaCells>
+</rows>
+</dataTraceableByCell>
+ <dataTraceableByCell name="totalJPMktValue" rowCreationApproachForCube="..\platform_calls\getAttributeLineageForJustOneCell.platform_call#totalJPMktValue_view" sourceColumnStructuredData="#enrichedExposures" cube="..\extra\efbt_cubes.cubes#totalJPMktValue"> 
+<rows rowID="totalJPMktValue:d9404bf96836ca6dc473d5b66cba120c" sourceRows="#enrichedExposures:c82aee153103e20efd09e3e40c19554f">
+<formulaCells cellID="totalJPMktValue:d9404bf96836ca6dc473d5b66cba120c:ECB2_MRKT_VL" column="..\bird_import\variables.efbt_data_definition#ECB2_MRKT_VL" value="14000.0">
+   <function xsi:type="functions:AggregateFunction" functionSpec="..\platform_calls\getAttributeLineageForJustOneCell.platform_call#SUM">
+     <parameters xsi:type="functions:CellsParameter" cells="#enrichedExposures:c82aee153103e20efd09e3e40c19554f:ECB2_MRKT_VL"/>
+   </function>
+   </formulaCells>
+<formulaCells cellID="totalJPMktValue:d9404bf96836ca6dc473d5b66cba120c:CNTRY" column="..\bird_import\variables.efbt_data_definition#CNTRY" value="JAPAN">
+   <function xsi:type="functions:AggregateFunction" functionSpec="..\platform_calls\getAttributeLineageForJustOneCell.platform_call#First">
+     <parameters xsi:type="functions:CellsParameter" cells="#enrichedExposures:c82aee153103e20efd09e3e40c19554f:CNTRY"/>
+   </function>
+   </formulaCells>
+</rows>
+</dataTraceableByCell>
+ <sourceData name="counterparty" cube="..\extra\efbt_cubes.cubes#counterparty"> 
+<rows rowID="counterparty_row1" isDelete="false" rowIDToDelete="">
+<cells xsi:type="base_column_structured_data:BaseCellWithValue" cellID="counterparty_row1:ECB2_ENTITY_LEI" column="..\bird_import\variables.efbt_data_definition#ECB2_ENTITY_LEI" value="Citibank"/>
+<cells xsi:type="base_column_structured_data:BaseCellWithEnumeratedValue" cellID="counterparty_row1:CNTRY" column="..\bird_import\variables.efbt_data_definition#CNTRY" value="..\bird_import\members.efbt_data_definition#EBA_GA_EBA_US"/>
+</rows>
+<rows rowID="counterparty_row2" isDelete="false" rowIDToDelete="">
+<cells xsi:type="base_column_structured_data:BaseCellWithValue" cellID="counterparty_row2:ECB2_ENTITY_LEI" column="..\bird_import\variables.efbt_data_definition#ECB2_ENTITY_LEI" value="Mizuho"/>
+<cells xsi:type="base_column_structured_data:BaseCellWithEnumeratedValue" cellID="counterparty_row2:CNTRY" column="..\bird_import\variables.efbt_data_definition#CNTRY" value="..\bird_import\members.efbt_data_definition#EBA_GA_EBA_JP"/>
+</rows>
+</sourceData>
+ <sourceData name="rating" cube="..\extra\efbt_cubes.cubes#rating"> 
+<rows rowID="rating_row1" isDelete="false" rowIDToDelete="">
+<cells xsi:type="base_column_structured_data:BaseCellWithValue" cellID="rating_row1:ECB2_ENTITY_LEI" column="..\bird_import\variables.efbt_data_definition#ECB2_ENTITY_LEI" value="Citibank"/>
+</rows>
+<rows rowID="rating_row2" isDelete="false" rowIDToDelete="">
+<cells xsi:type="base_column_structured_data:BaseCellWithValue" cellID="rating_row2:ECB2_ENTITY_LEI" column="..\bird_import\variables.efbt_data_definition#ECB2_ENTITY_LEI" value="Mizuho"/>
+</rows>
+</sourceData>
+ <sourceData name="loans" cube="..\extra\efbt_cubes.cubes#loans"> 
+<rows rowID="loans_row1" isDelete="false" rowIDToDelete="">
+<cells xsi:type="base_column_structured_data:BaseCellWithValue" cellID="loans_row1:ECB2_MRKT_VL" column="..\bird_import\variables.efbt_data_definition#ECB2_MRKT_VL" value="5000"/>
+<cells xsi:type="base_column_structured_data:BaseCellWithValue" cellID="loans_row1:ECB2_ENTITY_LEI" column="..\bird_import\variables.efbt_data_definition#ECB2_ENTITY_LEI" value="Mizuho"/>
+</rows>
+<rows rowID="loans_row2" isDelete="false" rowIDToDelete="">
+<cells xsi:type="base_column_structured_data:BaseCellWithValue" cellID="loans_row2:ECB2_MRKT_VL" column="..\bird_import\variables.efbt_data_definition#ECB2_MRKT_VL" value="9000"/>
+<cells xsi:type="base_column_structured_data:BaseCellWithValue" cellID="loans_row2:ECB2_ENTITY_LEI" column="..\bird_import\variables.efbt_data_definition#ECB2_ENTITY_LEI" value="Mizuho"/>
+</rows>
+<rows rowID="loans_row3" isDelete="false" rowIDToDelete="">
+<cells xsi:type="base_column_structured_data:BaseCellWithValue" cellID="loans_row3:ECB2_MRKT_VL" column="..\bird_import\variables.efbt_data_definition#ECB2_MRKT_VL" value="15000"/>
+<cells xsi:type="base_column_structured_data:BaseCellWithValue" cellID="loans_row3:ECB2_ENTITY_LEI" column="..\bird_import\variables.efbt_data_definition#ECB2_ENTITY_LEI" value="Citibank"/>
+</rows>
+</sourceData>
+ </data_lineage:SpreadsheetLineageModel>

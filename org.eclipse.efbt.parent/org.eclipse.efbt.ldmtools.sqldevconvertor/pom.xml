@@ -9,7 +9,4 @@
 	<artifactId>org.eclipse.efbt.ldmtools.sqldevconvertor</artifactId>
 	<packaging>eclipse-plugin</packaging>
 
-
-
-
 </project>

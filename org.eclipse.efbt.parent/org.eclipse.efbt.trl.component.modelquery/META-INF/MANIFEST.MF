@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Modelquery
+Bundle-SymbolicName: org.eclipse.efbt.trl.component.modelquery
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: org.eclipse.efbt.trl.modelquery
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.eclipse.emf.common,
+ org.eclipse.emf.ecore,
+ org.eclipse.efbt.almengine.model.cubes,
+ org.eclipse.efbt.trl.model.trl,
+ org.eclipse.efbt.navigation_context.model,
+ org.eclipse.efbt.aorta,
+ org.eclipse.efbt.almengine.model.functions
+Export-Package: org.eclipse.efbt.trl.component.modelquery
+Import-Package: org.eclipse.efbt.trl.component.translator
