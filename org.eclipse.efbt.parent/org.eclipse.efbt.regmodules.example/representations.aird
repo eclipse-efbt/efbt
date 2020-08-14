@@ -79,7 +79,7 @@
     <semanticResources>incremental_example/results/..\extra\efbt_cubes.cubes</semanticResources>
     <semanticResources>incremental_example/results/..\bird_import\variables.efbt_data_definition</semanticResources>
     <semanticResources>incremental_example/results/..\bird_import\members.efbt_data_definition</semanticResources>
-    <semanticResources>example/extra/commonFunctions.aortafunctions</semanticResources>
+    <semanticResources>example/extra/commonFunctions.chirpfunctions</semanticResources>
     <ownedViews xmi:type="viewpoint:DView" uid="_2HvrAHcgEeqLPKqj8HodCA">
       <viewpoint xmi:type="description:Viewpoint" href="platform:/resource/org.eclipse.efbt.ui.sirius/description/efbt.odesign#//@ownedViewpoints[name='Modules']"/>
       <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_5E4xkHcgEeqLPKqj8HodCA" name="new VersionedComponentsSet" repPath="#_5Eeh4HcgEeqLPKqj8HodCA" changeId="2a38e9bb-c689-4d1d-986d-9a0631ce28bf">

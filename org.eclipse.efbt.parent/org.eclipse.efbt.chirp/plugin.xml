@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated chirp -->
+      <package
+            uri="http://www.eclipse.org/chirp_program"
+            class="org.eclipse.efbt.chirp.chirp_program.Chirp_programPackage"
+            genModel="model/chirp.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated chirp -->
+      <parser
+            type="chirp_program"
+            class="org.eclipse.efbt.chirp.chirp_program.util.Chirp_programResourceFactoryImpl"/>
+   </extension>
+
+</plugin>

@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.eclipse.efbt.lineage.common.modelquery.line
+ agefunctions
+Bundle-SymbolicName: org.eclipse.efbt.lineage.common.modelquery.lineag
+ efunctions
+Export-Package: org.eclipse.efbt.lineage.common.modelquery.lineagefunc
+ tions
+Bundle-Name: Lineagefunctions
+Bundle-Version: 1.0.0.202008131258
+Require-Bundle: org.eclipse.efbt.common.model.functions,org.eclipse.ef
+ bt.lineage.common.model.lineagefunctions,org.eclipse.efbt.data_struct
+ ures.smcubes.model.core
+Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+

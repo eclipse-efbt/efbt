@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.eclipse.efbt.language.trl.modelquery.core
+Bundle-SymbolicName: org.eclipse.efbt.language.trl.modelquery.core
+Export-Package: org.eclipse.efbt.language.trl.modelquery.core
+Bundle-Name: Modelquery
+Bundle-Version: 1.0.0.202008141126
+Require-Bundle: org.eclipse.emf.common,org.eclipse.emf.ecore,org.eclip
+ se.efbt.lineage.common.model.lineagecubes,org.eclipse.efbt.language.t
+ rl.model.core,org.eclipse.efbt.lineage.common.model.lineagefunctions,
+ org.eclipse.efbt.lineage.common.model.lineagecubes,org.eclipse.efbt.l
+ anguage.trl.model.core
+Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: org.eclipse.efbt.language.trl.component.translator
+

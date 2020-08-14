@@ -1,5 +1,0 @@
--------------------------------------------------------------------------------
-Test set: org.eclipse.efbt.ldmtools.sqldevconverter.test.SQLDevConverter_Test
--------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.117 s - in org.eclipse.efbt.ldmtools.sqldevconverter.test.SQLDevConverter_Test
-exampleTest  Time elapsed: 0.109 s

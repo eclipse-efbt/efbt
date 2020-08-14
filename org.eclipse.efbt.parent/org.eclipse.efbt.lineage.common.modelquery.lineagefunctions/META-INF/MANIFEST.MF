@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Lineagefunctions
+Bundle-SymbolicName: org.eclipse.efbt.lineage.common.modelquery.lineagefunctions
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: org.eclipse.efbt.lineage.common.modelquery.lineagefunctions
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.eclipse.efbt.common.model.functions,
+ org.eclipse.efbt.lineage.common.model.lineagefunctions,
+ org.eclipse.efbt.data_structures.smcubes.model.core
+Export-Package: org.eclipse.efbt.lineage.common.modelquery.lineagefunctions
+ 

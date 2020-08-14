@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.eclipse.efbt.aorta</groupId>
+	<groupId>org.eclipse.efbt.chirp</groupId>
 	<version>1.0.0-SNAPSHOT</version>
 	<artifactId>org.eclipse.efbt.parent</artifactId>
 	<packaging>pom</packaging>
@@ -25,42 +25,47 @@
 		<additionalTestArguments></additionalTestArguments>
 	</properties>
 	<modules>
-		<module>org.eclipse.efbt.aorta</module>
-		<module>org.eclipse.efbt.aorta.ide</module>
-		<module>org.eclipse.efbt.aorta.ui</module>
-		<module>org.eclipse.efbt.aorta.target</module>
-		<module>org.eclipse.efbt.aorta.feature</module>
-		<module>org.eclipse.efbt.aorta.repository</module>
-		 <module>org.eclipse.efbt.aorta.component.exporter</module>
-		<!--<module>org.eclipse.efbt.aorta.example.testing</module>-->
-		<module>org.eclipse.efbt.aorta.ui.sirius.testmanager</module>
-		<module>org.eclipse.efbt.bird.component.modelquery</module>
-		<module>org.eclipse.efbt.bird.component.rules_and_data_structures_manager</module>
-		<!--<module>org.eclipse.efbt.bird.example</module>-->
-		<module>org.eclipse.efbt.bird.model</module>
-		<module>org.eclipse.efbt.bird.ui.sirius</module>
+		<module>org.eclipse.efbt.chirp</module>
+		<module>org.eclipse.efbt.chirp.ide</module>
+		<module>org.eclipse.efbt.chirp.ui</module>
+		<module>org.eclipse.efbt.chirp.target</module>
+		<module>org.eclipse.efbt.chirp.feature</module>
+		<module>org.eclipse.efbt.chirp.repository</module>
+		 <module>org.eclipse.efbt.chirp.component.exporter</module>
+		<module>org.eclipse.efbt.chirp.ui.sirius.testmanager</module>
+		<module>org.eclipse.efbt.data_structures.smcubes.modelquery.core</module>
+		<module>org.eclipse.efbt.data_structures.smcubes.component.importexport.impl</module>
+		<module>org.eclipse.efbt.data_structures.smcubes.ui.sirius</module>
+		<module>org.eclipse.efbt.data_structures.smcubes.model.core</module>
 		<module>org.eclipse.efbt.util.access.interface</module>
 		<module>org.eclipse.efbt.util.access.provider</module>
 		<module>org.eclipse.efbt.util.access.impl.jackcess</module>
 		<module>org.eclipse.efbt.util.csv.interface</module>
 		<module>org.eclipse.efbt.util.csv.provider</module>
 		<module>org.eclipse.efbt.util.csv.impl.apachecsv</module>
-		<module>org.eclipse.efbt.ldmtools.sqldevconvertor</module>
-		<module>org.eclipse.efbt.ldmtools.sqldevconvertor.test</module>
-		<module>org.eclipse.efbt.almengine.model.cubes</module>
-		<module>org.eclipse.efbt.almengine.model.attribute_lineage</module>
-		<module>org.eclipse.efbt.almengine.model.functions</module>
-		<module>org.eclipse.efbt.trl.model.trl</module>
-		<module>org.eclipse.efbt.controller.model</module>
-		<module>org.eclipse.efbt.controller.component</module>
-		<module>org.eclipse.efbt.controller.ui.sirius</module>
-		<module>org.eclipse.efbt.navigation_context.model</module>
-		<module>org.eclipse.efbt.trl.component.translator</module>
-		<module>org.eclipse.efbt.trl.component.translator.test</module>
-		<module>org.eclipse.efbt.trl.component.modelquery</module>
-		<module>org.eclipse.efbt.trl.ui.sirius</module>
-		<module>org.eclipse.efbt.almengine.component.modelquery</module>
-		<module>org.eclipse.efbt.almengine.ui.sirius</module>
+		<module>org.eclipse.efbt.datastructures.ldm.component.sqldevconvertor</module>
+		<module>org.eclipse.efbt.datastructures.ldm.component.sqldevconvertor.test</module>
+		<module>org.eclipse.efbt.lineage.attributelineage.model.attribute_lineage</module>
+		<module>org.eclipse.efbt.lineage.common.model.lineagecubes</module>
+		<module>org.eclipse.efbt.lineage.common.model.lineagefunctions</module>
+		<module>org.eclipse.efbt.lineage.common.modelquery.lineagefunctions</module>
+		<module>org.eclipse.efbt.lineage.attributelineage.ui.sirius.core</module>
+		<module>org.eclipse.efbt.lineage.attributelineage.modelquery.core</module>
+		<module>org.eclipse.efbt.language.trl.ui.sirius.core</module>
+		<module>org.eclipse.efbt.language.trl.component.translator</module>
+		<module>org.eclipse.efbt.language.trl.model.core</module>
+		<module>org.eclipse.efbt.language.trl.modelquery.core</module>
+		<module>org.eclipse.efbt.controller.core.model.core</module>
+		<module>org.eclipse.efbt.controller.core.component.core</module>
+		<module>org.eclipse.efbt.controller.core.ui.sirius.core</module>
+		<module>org.eclipse.efbt.common.model.module_management</module>
+		<module>org.eclipse.efbt.requirements.core.model.requirements_text</module>
+		<module>org.eclipse.efbt.functional_design.core.model.functionality_module</module>
+		<module>org.eclipse.efbt.input_data.smcubes.model.core</module>
+		<module>org.eclipse.efbt.common.model.functions</module>
+		<module>org.eclipse.efbt.testing.common.model.core</module>
+		
+		
 
 	</modules>
 	<dependencyManagement>
@@ -157,8 +162,8 @@
 				  <pomDependencies>consider</pomDependencies>
 					<target>
 						<artifact>
-							<groupId>org.eclipse.efbt.aorta</groupId>
-							<artifactId>org.eclipse.efbt.aorta.target</artifactId>
+							<groupId>org.eclipse.efbt.chirp</groupId>
+							<artifactId>org.eclipse.efbt.chirp.target</artifactId>
 							<version>${project.version}</version>
 						</artifact>
 					</target>

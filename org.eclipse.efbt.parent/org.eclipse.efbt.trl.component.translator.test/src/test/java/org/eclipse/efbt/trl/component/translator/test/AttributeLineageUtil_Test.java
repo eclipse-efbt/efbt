@@ -1,10 +1,10 @@
-package test.java.org.eclipse.efbt.trl.component.translator.test;
+package org.eclipse.efbt.trl.component.translator.test;
 
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.eclipse.efbt.trl.component.translator.AttributeLineageUtil;
+import org.eclipse.efbt.language.trl.component.translator.AttributeLineageUtil;
 
 public class AttributeLineageUtil_Test {
 

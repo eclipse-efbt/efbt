@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:chirp_program="http://www.eclipse.org/chirp_program" xmlns:column_structures="http://www.eclipse.org/column_structures" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:functionality_module="http://www.eclipse.org/functionality_module" xmlns:report_structures="http://www.eclipse.org/report_structures" xmlns:requirements_artefacts="http://www.eclipse.org/requirements_artefacts" xmlns:requirements_text="http://www.eclipse.org/requirements_text" xmlns:test="http://www.eclipse.org/test" xmlns:test_definition="http://www.eclipse.org/test_definition" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="chirp_program" ecore:package="org.eclipse.efbt.chirp.chirp_program" targetNamespace="http://www.eclipse.org/chirp_program">
+  <xsd:import namespace="http://www.eclipse.org/functionality_module" schemaLocation="functionality_module.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/requirements_artefacts" schemaLocation="requirments_artefacts.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/test" schemaLocation="test.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/test_definition" schemaLocation="test_definition.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/report_structures" schemaLocation="report_structures.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/requirements_text" schemaLocation="requirements_text.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/column_structures" schemaLocation="column_structures.xsd"/>
+  <xsd:element ecore:ignore="true" name="Program" type="chirp_program:Program"/>
+  <xsd:complexType name="Program">
+    <xsd:sequence>
+      <xsd:element ecore:resolveProxies="true" minOccurs="0" name="domainModule" type="column_structures:ColumnDomainModule"/>
+      <xsd:element ecore:resolveProxies="true" minOccurs="0" name="requirements" type="requirements_text:RequirementsModule"/>
+      <xsd:element ecore:name="input_structures" ecore:resolveProxies="true" minOccurs="0" name="input_structures" type="column_structures:ColumnStructureModule"/>
+      <xsd:element ecore:resolveProxies="true" minOccurs="0" name="reportStructures" type="report_structures:RegReportModule"/>
+      <xsd:element ecore:resolveProxies="true" minOccurs="0" name="testDefinitions" type="test_definition:TestDefinitionModule"/>
+      <xsd:element ecore:resolveProxies="true" minOccurs="0" name="tests" type="test:TestModule"/>
+      <xsd:element ecore:resolveProxies="true" minOccurs="0" name="requirementsArtefacts" type="requirements_artefacts:InputTypeModule"/>
+      <xsd:element ecore:resolveProxies="true" minOccurs="0" name="testTemplates" type="test_definition:TestTemplateModule"/>
+      <xsd:element ecore:resolveProxies="true" minOccurs="0" name="testConstriants" type="test_definition:TestContraints"/>
+      <xsd:element ecore:resolveProxies="true" minOccurs="0" name="functionalityModules" type="functionality_module:FunctionalityModuleModule"/>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

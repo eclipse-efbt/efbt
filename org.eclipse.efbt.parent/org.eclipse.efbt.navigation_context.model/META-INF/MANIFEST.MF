@@ -19,9 +19,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.mwe2.lib,
  org.eclipse.emf.mwe2.runtime,
  org.eclipse.emf.mwe2.launch,
- org.eclipse.efbt.aorta;visibility:=reexport,
- org.eclipse.efbt.bird.model;visibility:=reexport,
- org.eclipse.efbt.almengine.model.cubes,
- org.eclipse.efbt.almengine.model.functions,
- org.eclipse.efbt.trl.model.trl 
+ org.eclipse.efbt.chirp;visibility:=reexport,
+ org.eclipse.efbt.data_structures.smcubes.model.core;visibility:=reexport,
+ org.eclipse.efbt.lineage.attributelineage.model.cubes,
+ org.eclipse.efbt.lineage.common.model.lineagefunctions,
+ org.eclipse.efbt.language.trl.model.core
 Bundle-ActivationPolicy: lazy
