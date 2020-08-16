@@ -178,7 +178,13 @@
 			version="0.0.0"
 			unpack="false"/>
 		<plugin
-			id="org.eclipse.efbt.language.trl.component.translator"
+			id="org.eclipse.efbt.language.trl.component.translator.api"
+			download-size="0"
+			install-size="0"
+			version="0.0.0"
+			unpack="false"/>
+		<plugin
+			id="org.eclipse.efbt.language.trl.component.translator.impl"
 			download-size="0"
 			install-size="0"
 			version="0.0.0"

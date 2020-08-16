@@ -23,7 +23,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="ColumnSettingCondition" eSuperTypes="#//CodeCondition">
     <eStructuralFeatures xsi:type="ecore:EReference" name="cube" eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/cubes.ecore#//FreeBirdToolsCube"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="variable" eType="ecore:EClass ../../org.eclipse.efbt.data_structures.smcubes.model.core/model/core.ecore#//VARIABLE"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="filterConditions" eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/cubes.ecore#//FreeBirdToolsCube"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="filterConditions" eType="ecore:EClass ../../org.eclipse.efbt.common.model.functions/model/functions.ecore#//BasicFunction"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DataSetFilterCondition" eSuperTypes="#//CodeCondition">

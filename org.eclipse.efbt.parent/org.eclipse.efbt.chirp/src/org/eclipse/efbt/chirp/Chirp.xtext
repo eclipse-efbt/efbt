@@ -38,22 +38,6 @@ rogram returns chirp_program::Program:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 TestDefinition returns test_definition::TestDefinition:
 	TestDefinition_Impl | E2ETestDefinition | UnitTestDefinition;
 
@@ -833,8 +817,7 @@ ValidationFunctionalityModule returns functionality_module::ValidationFunctional
 		('scenario' scenario=[scenarios::Scenario|QualifiedName])?
 		('scenarioSet' scenarioSet=ScenarioSet)?
 	'}';
-	
-	
+
 
 	QualifiedName:
     ID ('.' ID)*;
