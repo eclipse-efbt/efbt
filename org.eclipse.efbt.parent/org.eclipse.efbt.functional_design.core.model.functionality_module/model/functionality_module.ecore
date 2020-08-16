@@ -82,7 +82,7 @@
     </eAnnotations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ReportCellCreationFunctionalityModule"
-      abstract="true" interface="true" eSuperTypes="#//LeafFunctionalityModule">
+      interface="true" eSuperTypes="#//LeafFunctionalityModule">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="ReportCellCreationFunctionalityModule"/>
       <details key="kind" value="elementOnly"/>

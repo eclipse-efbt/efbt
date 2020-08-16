@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<smcubes_model:SmcubesModel xmlns:smcubes_model="http://www.eclipse.org/smcubes_model" combinations="combinations.efbt_data_definition#combinations" cubes="cube_structure_items.efbt_data_definition#example_cube_structure_item_module cube_structures.efbt_data_definition#example_cube_structure_module cubes.efbt_data_definition#example_cube_module" domains="domains.efbt_data_definition#domains" members="members.efbt_data_definition#exampleMembers" name="bidmodel" variables="variables.efbt_data_definition#variables"/>

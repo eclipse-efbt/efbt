@@ -52,7 +52,8 @@
 		<module>org.eclipse.efbt.lineage.attributelineage.ui.sirius.core</module>
 		<module>org.eclipse.efbt.lineage.attributelineage.modelquery.core</module>
 		<module>org.eclipse.efbt.language.trl.ui.sirius.core</module>
-		<module>org.eclipse.efbt.language.trl.component.translator</module>
+		<module>org.eclipse.efbt.language.trl.component.translator.api</module>
+		<module>org.eclipse.efbt.language.trl.component.translator.impl</module>
 		<module>org.eclipse.efbt.language.trl.model.core</module>
 		<module>org.eclipse.efbt.language.trl.modelquery.core</module>
 		<module>org.eclipse.efbt.controller.core.model.core</module>

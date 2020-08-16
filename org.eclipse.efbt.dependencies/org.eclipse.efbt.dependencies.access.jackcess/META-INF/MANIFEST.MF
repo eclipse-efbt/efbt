@@ -6,7 +6,7 @@ Bundle-SymbolicName: org.eclipse.efbt.dependencies.org.eclipse.efbt.de
 Bundle-Name: org.eclipse.efbt.dependencies.access.jackcess
 Bundle-Version: 1.0.0.SNAPSHOT
 Bundle-ManifestVersion: 2
-Bnd-LastModified: 1597239241602
+Bnd-LastModified: 1597421562400
 Import-Package: com.healthmarketscience.jackcess;version="3.0",org.ecl
  ipse.efbt.dependencies.access.jackcess;version="1.0"
 Created-By: 1.8.0_102 (Oracle Corporation)

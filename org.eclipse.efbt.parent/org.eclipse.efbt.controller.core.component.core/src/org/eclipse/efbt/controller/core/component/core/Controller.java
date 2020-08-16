@@ -4,7 +4,8 @@ package org.eclipse.efbt.controller.core.component.core;
 import org.eclipse.efbt.controller.core.model.platform_call.GetAttributeLineageModel;
 import org.eclipse.efbt.controller.core.model.platform_call.PlatformCall;
 import org.eclipse.efbt.controller.core.model.platform_call.Platform_callPackage;
-import org.eclipse.efbt.language.trl.component.translator.AttributeLineageUtil;
+import org.eclipse.efbt.language.trl.component.translator.api.AttributeLineageUtil;
+import org.eclipse.efbt.language.trl.component.translator.impl.AttributeLineageUtilImpl;
 import org.eclipse.efbt.language.trl.model.transformation.VersionedComponentsSet;
 
 public class Controller {
@@ -27,7 +28,8 @@ public class Controller {
 		 call.eUnset(call.eClass().getEStructuralFeature(Platform_callPackage.GET_ATTRIBUTE_LINEAGE_MODEL__RESULTING_MODEL));
 		 
 		 VersionedComponentsSet vcs = call.getTransformationContext();
-		 call.setResultingModel(AttributeLineageUtil.createAttributeLineageModel(vcs));
+		 AttributeLineageUtil alu = new AttributeLineageUtilImpl();
+		 call.setResultingModel(alu.createAttributeLineageModel(vcs));
 	}
 
 
