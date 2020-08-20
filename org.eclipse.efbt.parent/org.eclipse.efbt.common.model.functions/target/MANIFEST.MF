@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.eclipse.efbt.common.model.functions
+Bundle-SymbolicName: org.eclipse.efbt.common.model.functions;singleton
+ :=true
+Require-Bundle: org.eclipse.core.runtime,org.eclipse.emf.ecore;visibil
+ ity:=reexport,org.eclipse.emf.ecore.xmi;visibility:=reexport,org.ecli
+ pse.emf.mwe.core,org.eclipse.emf.mwe.utils,org.eclipse.emf.mwe2.lib,o
+ rg.eclipse.emf.mwe2.runtime,org.eclipse.emf.mwe2.launch,org.eclipse.e
+ fbt.common.model.module_management;bundle-version="1.0.0";visibility:
+ =reexport
+Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Bundle-Vendor: %providerName
+Export-Package: org.eclipse.efbt.common.model.functions,org.eclipse.ef
+ bt.common.model.functions.impl,org.eclipse.efbt.common.model.function
+ s.util
+Bundle-Name: %pluginName
+Bundle-Version: 1.0.0.202008121805
+Bundle-ClassPath: .
+Bundle-Localization: plugin
+

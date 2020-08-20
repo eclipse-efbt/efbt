@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" uid="_r5j18N49Eeqsj_9hiB7xcg" version="14.3.1.202003261200">
+  <semanticResources>example/bird_import/combinations.efbt_data_definition</semanticResources>
+  <semanticResources>example/bird_import/members.efbt_data_definition</semanticResources>
+  <semanticResources>example/bird_import/variables.efbt_data_definition</semanticResources>
+  <semanticResources>example/bird_import/cube_structure_items.efbt_data_definition</semanticResources>
+  <semanticResources>example/bird_import/cube_structures.efbt_data_definition</semanticResources>
+  <semanticResources>example/bird_import/cubes.efbt_data_definition</semanticResources>
+  <semanticResources>example/bird_import/domains.efbt_data_definition</semanticResources>
+  <semanticResources>example/extra/CRR_RequirementsBundle.requirements_text</semanticResources>
+  <semanticResources>example/extra/commonFunctions.functions</semanticResources>
+  <semanticResources>example/extra/input_layer_cubes.transformation</semanticResources>
+  <semanticResources>example/extra/smcubes_model.smcubes_model</semanticResources>
+  <semanticResources>example/platform_calls/compare_attribute_lineage_models.platform_call</semanticResources>
+  <semanticResources>example/platform_calls/getAttributeLineage1.platform_call</semanticResources>
+  <semanticResources>example/platform_calls/executeAttributeLineageForJustOneCell.platform_call</semanticResources>
+  <semanticResources>example/platform_calls/executeAttributeLineageModel1.platform_call</semanticResources>
+  <semanticResources>example/platform_calls/getAttributeLineageForJustOneCell.platform_call</semanticResources>
+  <semanticResources>incremental_example/bird_import/combinations.efbt_data_definition</semanticResources>
+  <semanticResources>incremental_example/bird_import/variables.efbt_data_definition</semanticResources>
+  <semanticResources>incremental_example/bird_import/cube_structure_items.efbt_data_definition</semanticResources>
+  <semanticResources>incremental_example/bird_import/cube_structures.efbt_data_definition</semanticResources>
+  <semanticResources>incremental_example/bird_import/cubes.efbt_data_definition</semanticResources>
+  <semanticResources>incremental_example/bird_import/domains.efbt_data_definition</semanticResources>
+  <semanticResources>incremental_example/bird_import/members.efbt_data_definition</semanticResources>
+  <semanticResources>incremental_example/extra/CRR_RequirementsBundle.requirements_text</semanticResources>
+  <semanticResources>incremental_example/extra/example_release.transformation</semanticResources>
+  <semanticResources>incremental_example/extra/input_layer_cubes.transformation</semanticResources>
+  <semanticResources>incremental_example/extra/data_set_transformations.trl_sql_views</semanticResources>
+  <semanticResources>incremental_example/extra/commonFunctions.functions</semanticResources>
+  <semanticResources>incremental_example/extra/reportcell_definitions.trl_report_cell_views</semanticResources>
+  <semanticResources>incremental_example/platform_calls/executeAttributeLineageModel1.platform_call</semanticResources>
+  <semanticResources>incremental_example/platform_calls/getAttributeLineage1.platform_call</semanticResources>
+  <semanticResources>example/extra/data_set_transformations.trl_sql_views</semanticResources>
+  <semanticResources>example/extra/efbt_cubes.cubes</semanticResources>
+  <semanticResources>example/extra/reportcell_definitions.trl_report_cell_views</semanticResources>
+  <semanticResources>incremental_example/extra/efbt_cubes.cubes</semanticResources>
+  <semanticResources>example/extra/functional_to_technical_module_mapping.domain_model_mapping</semanticResources>
+  <semanticResources>example/extra/functional_modules.functionality_module</semanticResources>
+</viewpoint:DAnalysis>

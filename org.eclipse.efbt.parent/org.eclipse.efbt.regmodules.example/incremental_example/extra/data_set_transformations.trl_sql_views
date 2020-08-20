@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trl_sql_views:VersionedSQLViewsModule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:column_transformation_logic="http://www.eclipse.org/column_transformation_logic" xmlns:functions="http://www.eclipse.org/functions" xmlns:trl_sql_views="http://www.eclipse.org/trl_sql_views" license="Copyright (c) 2020 Bird Software Solutions Ltd&amp;#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&amp;#xA;&amp;#xA;SPDX-License-Identifier: EPL-2.0 &amp;#xA;&amp;#xA; Contributors:&amp;#xA; Neil Mackenzie - initial API and implementation&amp;#xD;" name="processExampleData" version="1.0">
+  <sqlViews xsi:type="trl_sql_views:AggregateEnrichmentView" cube="efbt_cubes.cubes#aggregateLoans" name="aggregateLoans" VTL_Code="aggregateLoans := loans [ aggr ECB2_MRKT_VL := sum(ECB2_MRKT_VL)  , aggr NTNL_AMNT:= sum(NTNL_AMNT) group by ECB2_ENTITY_LEI]">
+    <functions columnID="aggregateLoans:ECB2_MRKT_VL" cube="efbt_cubes.cubes#aggregateLoans" variable="../bird_import/variables.efbt_data_definition#ECB2_MRKT_VL">
+      <aggregateFunction name="sum" functionSpec="commonFunctions.functions#SUM">
+        <parameters xsi:type="functions:SpeculativeCubeColumnParameter" column="../bird_import/variables.efbt_data_definition#ECB2_MRKT_VL" cube="efbt_cubes.cubes#loansView"/>
+      </aggregateFunction>
+    </functions>
+    <functions columnID="aggregateLoans:NTNL_AMNT" cube="efbt_cubes.cubes#aggregateLoans" variable="../bird_import/variables.efbt_data_definition#NTNL_AMNT">
+      <aggregateFunction name="summation" functionSpec="commonFunctions.functions#SUM">
+        <parameters xsi:type="functions:SpeculativeCubeColumnParameter" column="../bird_import/variables.efbt_data_definition#NTNL_AMNT" cube="efbt_cubes.cubes#loansView"/>
+      </aggregateFunction>
+    </functions>
+    <groupByClause groupByColumns="../bird_import/variables.efbt_data_definition#ECB2_ENTITY_LEI"/>
+  </sqlViews>
+  <sqlViews xsi:type="trl_sql_views:JoinView" cube="efbt_cubes.cubes#aggregateLoansAndCounterparties" name="aggregateLoansAndCounterparties" VTL_Code="aggregateLoansAndCounterparties := inner_join(aggregateLoans as A, counterparty as B using ECB2_ENTITY_LEI keep B#ALL_VARIABLES, A#ECB2_MRKT_VL, A#NTNL_AMNT)">
+    <whereClause>
+      <function name="=" functionSpec="commonFunctions.functions#=">
+        <parameters xsi:type="functions:SpeculativeCubeColumnParameter" column="../bird_import/variables.efbt_data_definition#ECB2_ENTITY_LEI" cube="efbt_cubes.cubes#aggregateLoans"/>
+        <parameters xsi:type="functions:SpeculativeCubeColumnParameter" column="../bird_import/variables.efbt_data_definition#ECB2_ENTITY_LEI" cube="efbt_cubes.cubes#counterparty"/>
+      </function>
+    </whereClause>
+    <ignores columnToIgnore="../bird_import/variables.efbt_data_definition#ECB2_ENTITY_LEI" cube="efbt_cubes.cubes#aggregateLoans"/>
+  </sqlViews>
+  <sqlViews xsi:type="trl_sql_views:JoinView" cube="efbt_cubes.cubes#loansCounterpartiesAndRatings" name="loansCounterpartiesAndRatings" VTL_Code="loansCounterpartiesAndRatings := inner_join ( aggregateLoansAndCounterparties as A, rating as B using ECB2_ENTITY_LEI keep A#ALL_VARIABLES, B#CRDT_RTNG_AGNCY, A#RTNG_SCL_CD)">
+    <whereClause>
+      <function name="==" functionSpec="commonFunctions.functions#=">
+        <parameters xsi:type="functions:SpeculativeCubeColumnParameter" column="../bird_import/variables.efbt_data_definition#ECB2_ENTITY_LEI" cube="efbt_cubes.cubes#aggregateLoansAndCounterparties"/>
+        <parameters xsi:type="functions:SpeculativeCubeColumnParameter" column="../bird_import/variables.efbt_data_definition#ECB2_ENTITY_LEI" cube="efbt_cubes.cubes#rating"/>
+      </function>
+    </whereClause>
+    <ignores columnToIgnore="../bird_import/variables.efbt_data_definition#ECB2_ENTITY_LEI" cube="efbt_cubes.cubes#rating"/>
+  </sqlViews>
+  <sqlViews xsi:type="trl_sql_views:EnrichmentView" cube="efbt_cubes.cubes#enrichedExposures" name="enrichedExposures" VTL_Code="enrichedExposures:= loansCounterpartiesAndRating [calc measure tripleANotionaAmount:= tripleANotionaAmount(RTNG_SCL_CD,NTNL_AMNT)]">
+    <functions xsi:type="column_transformation_logic:StandardBasicColumnFunction" columnID="enrichedExposures:trippleA_NotionaAmount" cube="efbt_cubes.cubes#enrichedExposures" variable="../bird_import/variables.efbt_data_definition#trippleA_NotionaAmount">
+      <basicFunction name="trippleA_NotionalAmount" functionSpec="commonFunctions.functions#trippleA_NotionaAmount">
+        <parameters xsi:type="functions:SpeculativeCubeColumnParameter" column="../bird_import/variables.efbt_data_definition#RTNG_SCL_CD" cube="efbt_cubes.cubes#loansCounterpartiesAndRatings"/>
+        <parameters xsi:type="functions:SpeculativeCubeColumnParameter" column="../bird_import/variables.efbt_data_definition#NTNL_AMNT" cube="efbt_cubes.cubes#loansCounterpartiesAndRatings"/>
+      </basicFunction>
+    </functions>
+  </sqlViews>
+  <sqlViews xsi:type="trl_sql_views:BaseViewIncorporatingDeltas" cube="efbt_cubes.cubes#loansView" name="theLoansView" ultimateSourceCube="efbt_cubes.cubes#loans"/>
+  <sqlViews xsi:type="trl_sql_views:DeltaAccumulation" cube="efbt_cubes.cubes#loansDeltaAccumulation2" name="theLoansDeltaAccumulation2" ultimateSourceCube="efbt_cubes.cubes#loans"/>
+  <sqlViews xsi:type="trl_sql_views:DeltaAccumulation" cube="efbt_cubes.cubes#loansDeltaAccumulation1" name="theLoansDeltaAccumulation1" ultimateSourceCube="efbt_cubes.cubes#loans"/>
+</trl_sql_views:VersionedSQLViewsModule>

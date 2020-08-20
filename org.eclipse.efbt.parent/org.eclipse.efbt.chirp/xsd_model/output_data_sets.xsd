@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:output_data_sets="http://www.eclipse.org/output_data_sets" xmlns:output_data_structures="http://www.eclipse.org/output_data_structures" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="output_data_sets" ecore:package="org.eclipse.efbt.chirp.output_data_sets" targetNamespace="http://www.eclipse.org/output_data_sets">
+  <xsd:import namespace="http://www.eclipse.org/output_data_structures" schemaLocation="output_data_structures.xsd"/>
+  <xsd:element ecore:ignore="true" name="DataSetModule" type="output_data_sets:DataSetModule"/>
+  <xsd:element ecore:ignore="true" name="OutputDataSet" type="output_data_sets:OutputDataSet"/>
+  <xsd:complexType name="DataSetModule">
+    <xsd:complexContent>
+      <xsd:extension base="output_data_structures:OutputDataStructureModule"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="OutputDataSet">
+    <xsd:complexContent>
+      <xsd:extension base="output_data_structures:OutputDataStructure"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+</xsd:schema>

@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.eclipse.efbt.util.csv.interface
+Bundle-SymbolicName: org.eclipse.efbt.util.csv.interface
+Export-Package: org.eclipse.efbt.util.csv
+Bundle-Name: Interface
+Bundle-Version: 1.0.0.202008121805
+Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+

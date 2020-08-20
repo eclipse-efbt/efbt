@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Modelquery
+Bundle-SymbolicName: org.eclipse.efbt.data_structures.smcubes.modelquery.core
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: org.eclipse.efbt.data_structures.smcubes.modelquery.core
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: org.eclipse.efbt.data_structures.smcubes.modelquery.core
+Require-Bundle: org.eclipse.emf.common,
+ org.eclipse.efbt.data_structures.smcubes.model.core;bundle-version="1.0.0"

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:chirpfunctions="http://www.eclipse.org/chirpfunctions" xmlns:cell_transformation_logic="http://www.eclipse.org/cell_transformation_logic" xmlns:column_structured_data="http://www.eclipse.org/column_structured_data" xmlns:column_structures="http://www.eclipse.org/column_structures" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:requirements_text="http://www.eclipse.org/requirements_text" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="cell_transformation_logic" ecore:package="org.eclipse.efbt.chirp.cell_transformation_logic" targetNamespace="http://www.eclipse.org/cell_transformation_logic">
+  <xsd:import namespace="http://www.eclipse.org/requirements_text" schemaLocation="requirements_text.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/column_structures" schemaLocation="column_structures.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/emf/2002/Ecore" schemaLocation="Ecore.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/chirpfunctions" schemaLocation="chirpfunctions.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/column_structured_data" schemaLocation="column_structured_data.xsd"/>
+  <xsd:annotation>
+    <xsd:documentation> This package describes the SpreadsheetLineageModel, SpreadsheetLineageModels store the actaul lineage between calculated results, and input data, with lineage recorded between all the intermediate datasets which may have been calculated to get to the final results.
+</xsd:documentation>
+  </xsd:annotation>
+  <xsd:annotation>
+    <xsd:appinfo ecore:key="license" source="license">Copyright (c) 2020 Bird Software Solutions Ltd
+ All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html
+
+SPDX-License-Identifier: EPL-2.0 
+
+ Contributors:
+ Neil Mackenzie - initial API and implementation&#13;</xsd:appinfo>
+  </xsd:annotation>
+  <xsd:element ecore:ignore="true" name="FunctionTag" type="cell_transformation_logic:FunctionTag"/>
+  <xsd:element ecore:ignore="true" name="FormulaCellTag" type="cell_transformation_logic:FormulaCellTag"/>
+  <xsd:element ecore:ignore="true" name="ColumnStructuredDataTag" type="cell_transformation_logic:ColumnStructuredDataTag"/>
+  <xsd:complexType name="FormulaCell">
+    <xsd:annotation>
+      <xsd:documentation> A derived Cell, which contains a function of other cells (much like an Excel cell may have a formula of other cells)</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="column_structured_data:Cell">
+        <xsd:sequence>
+          <xsd:element ecore:resolveProxies="true" minOccurs="0" name="function" type="chirpfunctions:Function">
+            <xsd:annotation>
+              <xsd:documentation>The  Function which derived the cell value.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="value" type="ecore:EString">
+          <xsd:annotation>
+            <xsd:documentation>The Cell Value</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="DerivedColumnStructuredData">
+    <xsd:annotation>
+      <xsd:documentation> data for derived cubes </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="column_structured_data:ColumnStructuredData">
+        <xsd:sequence>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="rows" type="cell_transformation_logic:DerivedRowData">
+            <xsd:annotation>
+              <xsd:documentation>The  Rows of data</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute ecore:reference="column_structures:ColumnStructuredEntity" name="cube" type="xsd:anyURI">
+          <xsd:annotation>
+            <xsd:documentation>The associated cube</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute ecore:reference="column_structured_data:ColumnStructuredData" name="sourceColumnStructuredData">
+          <xsd:annotation>
+            <xsd:documentation>The cube data</xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+            <xsd:list itemType="xsd:anyURI"/>
+          </xsd:simpleType>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="DerivedRowData">
+    <xsd:annotation>
+      <xsd:documentation> A row of derived data </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="column_structured_data:RowData">
+        <xsd:sequence>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="formulaCells" type="cell_transformation_logic:FormulaCell">
+            <xsd:annotation>
+              <xsd:documentation>The derived cells</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element ecore:resolveProxies="true" minOccurs="0" name="specialDerivedCells" type="cell_transformation_logic:FormulaCell">
+            <xsd:annotation>
+              <xsd:documentation>The special DerivedCells, not created by functions which use cells from source rows.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute ecore:reference="column_structured_data:RowData" name="sourceRows">
+          <xsd:annotation>
+            <xsd:documentation>source rows of the derived row</xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+            <xsd:list itemType="xsd:anyURI"/>
+          </xsd:simpleType>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="FunctionTag">
+    <xsd:complexContent>
+      <xsd:extension base="requirements_text:Tag">
+        <xsd:attribute ecore:reference="chirpfunctions:Function" name="function" type="xsd:anyURI"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="FormulaCellTag">
+    <xsd:complexContent>
+      <xsd:extension base="requirements_text:Tag">
+        <xsd:attribute ecore:reference="cell_transformation_logic:FormulaCell" name="formulaCell" type="xsd:anyURI"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="ColumnStructuredDataTag">
+    <xsd:complexContent>
+      <xsd:extension base="requirements_text:Tag">
+        <xsd:attribute ecore:reference="column_structured_data:ColumnStructuredData" name="columnStructuredData" type="xsd:anyURI"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+</xsd:schema>

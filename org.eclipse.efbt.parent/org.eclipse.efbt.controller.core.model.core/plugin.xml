@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated controller -->
+      <package
+            uri="http://www.eclipse.org/platform_call"
+            class="org.eclipse.efbt.controller.core.model.platform_call.Platform_callPackage"
+            genModel="model/controller.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated controller -->
+      <parser
+            type="platform_call"
+            class="org.eclipse.efbt.controller.core.model.platform_call.util.Platform_callResourceFactoryImpl"/>
+   </extension>
+</plugin>

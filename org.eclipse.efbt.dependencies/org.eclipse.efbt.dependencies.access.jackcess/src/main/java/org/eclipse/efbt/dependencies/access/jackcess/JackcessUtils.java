@@ -1,37 +1,44 @@
-package org.eclipse.efbt.dependencies.access.jackcess; 
+package org.eclipse.efbt.dependencies.access.jackcess;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-
-//import org.eclipse.efbt.util.accessdb.AccessRow;
-//import org.eclipse.efbt.util.accessdb.AccessUtils;
-
 import com.healthmarketscience.jackcess.*;
 
-public class JackcessUtils  {
+/**
+ * class responsable for using the Jackcess library to read in data from an
+ * access database
+ * 
+ * @author Neil Mackenzie
+ *
+ */
+public class JackcessUtils {
 
-	
+	/**
+	 * Get the Rows from a Table in an access database
+	 * 
+	 * @param accessDB
+	 * @param tableName
+	 * @return
+	 * @throws IOException
+	 */
 	public List<Row> getRowsForTable(String accessDB, String tableName) throws IOException {
-		// TODO Auto-generated method stub
+
 		List<Row> list = new ArrayList<Row>();
 		{
 			Table table;
-			
-				table = DatabaseBuilder.open(new File(accessDB)).getTable(tableName);
-				for (Row row : table) {
-					
-					//AccessRow accessRow = new JackcessRow(row);
-					list.add(row);
-				}
-			
+
+			table = DatabaseBuilder.open(new File(accessDB)).getTable(tableName);
+			for (Row row : table) {
+
+				list.add(row);
+			}
+
 		}
-		
+
 		return list;
-					
-				
+
 	}
 
 }

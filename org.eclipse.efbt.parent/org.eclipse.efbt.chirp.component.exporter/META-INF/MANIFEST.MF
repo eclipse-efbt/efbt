@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Exporter
+Bundle-SymbolicName: org.eclipse.efbt.chirp.component.exporter
+Bundle-Version: 1.0.0.qualifier
+Export-Package: org.eclipse.efbt.chirp.component.exporter
+Require-Bundle: org.eclipse.efbt.chirp;bundle-version="1.0.0",
+ org.eclipse.xtext,
+ org.eclipse.emf.ecore,
+ org.eclipse.efbt.input_data.smcubes.model.core,
+ org.eclipse.efbt.testing.common.model.core
+Import-Package: org.eclipse.efbt.chirp,
+ org.eclipse.efbt.testing.common.model.test
+
+

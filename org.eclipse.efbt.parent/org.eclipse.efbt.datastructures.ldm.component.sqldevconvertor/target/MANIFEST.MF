@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.eclipse.efbt.datastructures.ldm.component.s
+ qldevconvertor
+Bundle-SymbolicName: org.eclipse.efbt.datastructures.ldm.component.sql
+ devconvertor
+Export-Package: org.eclipse.efbt.datastructures.ldm.component.sqldevco
+ nvertor
+Bundle-Name: Sqldevconvertor
+Bundle-Version: 1.0.0.202008141126
+Require-Bundle: org.eclipse.efbt.util.csv.provider,org.eclipse.efbt.ut
+ il.csv.interface,org.eclipse.emf.ecore;bundle-version="2.22.0",org.ec
+ lipse.emf.ecore.xmi;bundle-version="2.16.0"
+Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+

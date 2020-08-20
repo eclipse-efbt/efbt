@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:execution_environments="http://www.eclipse.org/execution_environments" xmlns:input_data_structures="http://www.eclipse.org/input_data_structures" xmlns:module_management="http://www.eclipse.org/module_management" xmlns:output_data_structures="http://www.eclipse.org/output_data_structures" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="execution_environments" ecore:package="org.eclipse.efbt.chirp.execution_environments" targetNamespace="http://www.eclipse.org/execution_environments">
+  <xsd:import namespace="http://www.eclipse.org/module_management" schemaLocation="module_management.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/emf/2002/Ecore" schemaLocation="Ecore.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/output_data_structures" schemaLocation="output_data_structures.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/input_data_structures" schemaLocation="input_data_structures.xsd"/>
+  <xsd:element ecore:ignore="true" name="TestExecutionEnvironment" type="execution_environments:TestExecutionEnvironment"/>
+  <xsd:element ecore:ignore="true" name="TestExecutionEnvironmentModule" type="execution_environments:TestExecutionEnvironmentModule"/>
+  <xsd:complexType name="TestExecutionEnvironment">
+    <xsd:attribute ecore:reference="input_data_structures:InputDatastructureModule" name="inputStructures" type="xsd:anyURI"/>
+    <xsd:attribute ecore:reference="output_data_structures:OutputDataStructureModule" name="outputStructuresModule" type="xsd:anyURI"/>
+    <xsd:attribute ecore:id="true" name="name" type="ecore:EString"/>
+  </xsd:complexType>
+  <xsd:complexType name="TestExecutionEnvironmentModule">
+    <xsd:complexContent>
+      <xsd:extension base="module_management:Module">
+        <xsd:sequence>
+          <xsd:element ecore:resolveProxies="true" minOccurs="0" name="testexecutionEnvironments" type="execution_environments:TestExecutionEnvironment"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+</xsd:schema>

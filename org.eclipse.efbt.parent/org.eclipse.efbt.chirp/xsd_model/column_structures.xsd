@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:column_structures="http://www.eclipse.org/column_structures" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:input_data_structures="http://www.eclipse.org/input_data_structures" xmlns:module_management="http://www.eclipse.org/module_management" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="column_structures" ecore:package="org.eclipse.efbt.chirp.column_structures" targetNamespace="http://www.eclipse.org/column_structures">
+  <xsd:import namespace="http://www.eclipse.org/module_management" schemaLocation="module_management.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/input_data_structures" schemaLocation="input_data_structures.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/emf/2002/Ecore" schemaLocation="Ecore.xsd"/>
+  <xsd:element ecore:ignore="true" name="Column" type="column_structures:Column"/>
+  <xsd:element ecore:ignore="true" name="EnumMember" type="column_structures:EnumMember"/>
+  <xsd:element ecore:ignore="true" name="ColumnStructuredEntity" type="column_structures:ColumnStructuredEntity"/>
+  <xsd:element ecore:ignore="true" name="ColumnDomain" type="column_structures:ColumnDomain"/>
+  <xsd:element ecore:ignore="true" name="ColumnStructureModule" type="column_structures:ColumnStructureModule"/>
+  <xsd:element ecore:ignore="true" name="ColumnDomainModule" type="column_structures:ColumnDomainModule"/>
+  <xsd:element ecore:ignore="true" name="ColumnDataType" type="column_structures:ColumnDataType"/>
+  <xsd:complexType name="Column">
+    <xsd:attribute ecore:id="true" name="name" type="ecore:EString"/>
+    <xsd:attribute ecore:reference="column_structures:ColumnDomain" name="domain" type="xsd:anyURI"/>
+    <xsd:attribute ecore:unsettable="false" name="isIdentifier" type="ecore:EBoolean"/>
+    <xsd:attribute ecore:unsettable="false" name="isMandatory" type="ecore:EBoolean"/>
+  </xsd:complexType>
+  <xsd:complexType name="EnumMember">
+    <xsd:attribute ecore:id="true" name="name" type="ecore:EString"/>
+    <xsd:attribute name="code" type="ecore:EString"/>
+  </xsd:complexType>
+  <xsd:complexType name="ColumnStructuredEntity">
+    <xsd:complexContent>
+      <xsd:extension base="input_data_structures:InputDataStructure">
+        <xsd:sequence>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="column" type="column_structures:Column"/>
+        </xsd:sequence>
+        <xsd:attribute ecore:id="true" name="name" type="ecore:EString"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="ColumnDomain">
+    <xsd:sequence>
+      <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="enumMembers" type="column_structures:EnumMember"/>
+      <xsd:element ecore:resolveProxies="true" minOccurs="0" name="dataType" type="column_structures:ColumnDataType"/>
+    </xsd:sequence>
+    <xsd:attribute ecore:id="true" name="name" type="ecore:EString"/>
+    <xsd:attribute ecore:unsettable="false" name="isEnumerated" type="ecore:EBoolean"/>
+  </xsd:complexType>
+  <xsd:complexType name="ColumnStructureModule">
+    <xsd:complexContent>
+      <xsd:extension base="input_data_structures:InputDatastructureModule">
+        <xsd:sequence>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="columnStructures" type="column_structures:ColumnStructuredEntity"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="ColumnDomainModule">
+    <xsd:complexContent>
+      <xsd:extension base="module_management:Module">
+        <xsd:sequence>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="columnDomains" type="column_structures:ColumnDomain"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="ColumnDataType">
+    <xsd:attribute ecore:id="true" name="name" type="ecore:EString"/>
+  </xsd:complexType>
+</xsd:schema>

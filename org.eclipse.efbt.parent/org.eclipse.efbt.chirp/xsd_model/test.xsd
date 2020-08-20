@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:column_structured_data="http://www.eclipse.org/column_structured_data" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:execution_environments="http://www.eclipse.org/execution_environments" xmlns:module_management="http://www.eclipse.org/module_management" xmlns:report_structures="http://www.eclipse.org/report_structures" xmlns:test="http://www.eclipse.org/test" xmlns:test_definition="http://www.eclipse.org/test_definition" xmlns:test_input_data="http://www.eclipse.org/test_input_data" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="test" ecore:package="org.eclipse.efbt.chirp.test" targetNamespace="http://www.eclipse.org/test">
+  <xsd:import namespace="http://www.eclipse.org/execution_environments" schemaLocation="execution_environments.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/module_management" schemaLocation="module_management.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/emf/2002/Ecore" schemaLocation="Ecore.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/test_input_data" schemaLocation="test_input_data.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/test_definition" schemaLocation="test_definition.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/column_structured_data" schemaLocation="column_structured_data.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/report_structures" schemaLocation="report_structures.xsd"/>
+  <xsd:annotation>
+    <xsd:documentation> This package describes the test package of FreeBIRDTools</xsd:documentation>
+  </xsd:annotation>
+  <xsd:annotation>
+    <xsd:appinfo ecore:key="license" source="license">Copyright (c) 2019 Openregtech Ltd
+ All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html
+
+SPDX-License-Identifier: EPL-2.0 
+
+ Contributors:
+ Neil Mackenzie - initial API and implementation&#13;</xsd:appinfo>
+  </xsd:annotation>
+  <xsd:element ecore:ignore="true" name="Result" type="test:Result"/>
+  <xsd:element ecore:ignore="true" name="DataSetResults" type="test:DataSetResults"/>
+  <xsd:element ecore:ignore="true" name="E2ETest" type="test:E2ETest"/>
+  <xsd:element ecore:ignore="true" name="Test" type="test:Test"/>
+  <xsd:element ecore:ignore="true" name="TestModule" type="test:TestModule"/>
+  <xsd:complexType name="Result"/>
+  <xsd:complexType ecore:name="ReportCellResults" name="ReportCellExpectedResults">
+    <xsd:annotation>
+      <xsd:documentation>ExpectedResults as a set of report cell values</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="test:Result">
+        <xsd:sequence>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="reportCellValues" type="report_structures:RegReportCellValue">
+            <xsd:annotation>
+              <xsd:documentation>This set of report cell values.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="DataSetResults">
+    <xsd:complexContent>
+      <xsd:extension base="test:Result">
+        <xsd:sequence>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="expectedResults" type="column_structured_data:ColumnStructuredData">
+            <xsd:annotation>
+              <xsd:documentation>The expected results data</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="E2ETest">
+    <xsd:complexContent>
+      <xsd:extension base="test:Test">
+        <xsd:sequence>
+          <xsd:element ecore:resolveProxies="true" minOccurs="0" name="inputData" type="test_input_data:InputData"/>
+          <xsd:element ecore:resolveProxies="true" minOccurs="0" name="expectedResults" type="test:Result"/>
+        </xsd:sequence>
+        <xsd:attribute ecore:reference="test_definition:E2ETestDefinition" name="testDefinition" type="xsd:anyURI"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Test">
+    <xsd:attribute ecore:id="true" name="name" type="ecore:EString"/>
+  </xsd:complexType>
+  <xsd:complexType name="TestModule">
+    <xsd:complexContent>
+      <xsd:extension base="module_management:Module">
+        <xsd:sequence>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="tests" type="test:E2ETest"/>
+        </xsd:sequence>
+        <xsd:attribute ecore:reference="execution_environments:TestExecutionEnvironment" name="executionEnvironment" type="xsd:anyURI"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+</xsd:schema>

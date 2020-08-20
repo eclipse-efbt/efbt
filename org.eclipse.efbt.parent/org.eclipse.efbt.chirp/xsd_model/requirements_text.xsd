@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:module_management="http://www.eclipse.org/module_management" xmlns:requirements_text="http://www.eclipse.org/requirements_text" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="requirements_text" ecore:package="org.eclipse.efbt.chirp.requirements_text" targetNamespace="http://www.eclipse.org/requirements_text">
+  <xsd:import namespace="http://www.eclipse.org/emf/2002/Ecore" schemaLocation="Ecore.xsd"/>
+  <xsd:import namespace="http://www.eclipse.org/module_management" schemaLocation="module_management.xsd"/>
+  <xsd:annotation>
+    <xsd:documentation>This package describes the classes for storing Structured Requirements text
+ </xsd:documentation>
+  </xsd:annotation>
+  <xsd:annotation>
+    <xsd:appinfo ecore:key="license" source="license">Copyright (c) 2019 Openregtech Ltd
+ All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html
+
+SPDX-License-Identifier: EPL-2.0 
+
+ Contributors:
+ Neil Mackenzie - initial API and implementation&#13;</xsd:appinfo>
+  </xsd:annotation>
+  <xsd:element ecore:ignore="true" name="Tag" type="requirements_text:Tag"/>
+  <xsd:element ecore:ignore="true" name="TagGroup" type="requirements_text:TagGroup"/>
+  <xsd:complexType name="AllowedTypes">
+    <xsd:annotation>
+      <xsd:documentation>Allowed Types  like article, chapter, rulebook</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="allowedTypes" type="requirements_text:RequirementType">
+        <xsd:annotation>
+          <xsd:documentation>A set of Allowed types, like article, chapter, rulebook</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="RequirementsModule">
+    <xsd:annotation>
+      <xsd:documentation>A Module containing a Set of Requirements</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="module_management:Module">
+        <xsd:sequence>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="rules" type="requirements_text:TitledRequirementsSection">
+            <xsd:annotation>
+              <xsd:documentation>A set of top level titled requirement sections</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element ecore:resolveProxies="true" minOccurs="0" name="allowedtypes" type="requirements_text:AllowedTypes">
+            <xsd:annotation>
+              <xsd:documentation>a set of Allowed types, like article, chapter, rulebook</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType abstract="true" name="RequirementsSection">
+    <xsd:annotation>
+      <xsd:documentation>A Requirements Section</xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute ecore:id="true" ecore:name="name" name="iD" type="ecore:EString"/>
+  </xsd:complexType>
+  <xsd:complexType name="RequirementsSectionImage">
+    <xsd:annotation>
+      <xsd:documentation>A Requirements Section represented by an image</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="requirements_text:RequirementsSection">
+        <xsd:attribute name="style" type="ecore:EString">
+          <xsd:annotation>
+            <xsd:documentation>the style string including width and height</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="uri" type="ecore:EString">
+          <xsd:annotation>
+            <xsd:documentation>the location of the image file</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="RequirementsSectionLinkWithText">
+    <xsd:annotation>
+      <xsd:documentation>This is similar to the HTML idea of a HyperLink. It contains some text to be shown as part of the Requirement,
+      and contains a link to another TitledRequirementsSection in the Requirements. This helps natural navigation of
+      A requirements document which has  multiple cross references between sections</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="requirements_text:RequirementsSection">
+        <xsd:attribute ecore:opposite="referencingSections" ecore:reference="requirements_text:TitledRequirementsSection" name="linkedRuleSection" type="xsd:anyURI">
+          <xsd:annotation>
+            <xsd:documentation>The linked  titled requirements section</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="linkText" type="ecore:EString">
+          <xsd:annotation>
+            <xsd:documentation>The text that refers to the linked RequirementsSection, like "Article 321" </xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="subsection" type="ecore:EString">
+          <xsd:annotation>
+            <xsd:documentation>Other Text</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="RequirementsSectionText">
+    <xsd:annotation>
+      <xsd:documentation>A section of text</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="requirements_text:RequirementsSection">
+        <xsd:attribute name="text" type="ecore:EString">
+          <xsd:annotation>
+            <xsd:documentation>The text</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="RequirementType">
+    <xsd:annotation>
+      <xsd:documentation>A requirement type such as Article, Chapter, Rulebook</xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute ecore:id="true" ecore:name="name" name="requirementType" type="ecore:EString" use="required">
+      <xsd:annotation>
+        <xsd:documentation>the name of the requirement type</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="TitledRequirementsSection">
+    <xsd:annotation>
+      <xsd:documentation>A Requirements Section which has a title, such as an Article 321 or  Chapter 5.
+       Note that this contains other requirements sections, which could in turn be other TitledRequirementsSections </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="requirements_text:RequirementsSection">
+        <xsd:sequence>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="sections" type="requirements_text:RequirementsSection">
+            <xsd:annotation>
+              <xsd:documentation>The sections contained in the titled section</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute ecore:opposite="linkedRuleSection" ecore:reference="requirements_text:RequirementsSectionLinkWithText" name="referencingSections" type="xsd:anyURI">
+          <xsd:annotation>
+            <xsd:documentation> other requirement sections that link to this one (Optional)</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute ecore:reference="requirements_text:RequirementType" name="requirementsType" type="xsd:anyURI" use="required">
+          <xsd:annotation>
+            <xsd:documentation>The type, from allowed types, such as Article, Chapter,Rulebook etc</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="title" type="ecore:EString">
+          <xsd:annotation>
+            <xsd:documentation>the title of the requirements section</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Tag">
+    <xsd:attribute ecore:id="true" name="tagID" type="ecore:EString"/>
+    <xsd:attribute name="name" type="ecore:EString"/>
+    <xsd:attribute ecore:reference="requirements_text:TitledRequirementsSection" name="requirements">
+      <xsd:simpleType>
+        <xsd:list itemType="xsd:anyURI"/>
+      </xsd:simpleType>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="TagGroup">
+    <xsd:complexContent>
+      <xsd:extension base="module_management:Module">
+        <xsd:sequence>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="tags" type="requirements_text:Tag"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+</xsd:schema>

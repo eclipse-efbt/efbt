@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain_model_mapping:DomainMappingModule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:domain_model_mapping="http://www.eclipse.org/domain_model_mapping" xmlns:functions="http://www.eclipse.org/functions" license="Copyright (c) 2019 Openregtech Ltd&amp;#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&amp;#xA;&amp;#xA;SPDX-License-Identifier: EPL-2.0 &amp;#xA;&amp;#xA; Contributors:&amp;#xA; Neil Mackenzie - initial API and implementation&amp;#xD;" name="functional_to_technical_mapping">
+  <leafModuleToVersionedSQLViewsModules module="data_set_transformations.trl_sql_views#processExampleData" scheme="functional_modules.functional_module#processExampleData"/>
+  <leafModuleToVersionedCubeSchemaModules module="input_layer_cubes.transformation#readInExampleData" scheme="functional_modules.functional_module#readInExampleData"/>
+  <leafModuleToReportCellViewModules module="reportcell_definitions.trl_report_cell_views#createReportCells" scheme="functional_modules.functional_module#createReportCells"/>
+  <scenarioToCodeConditions scenario="functional_modules.functional_module#AAA">
+    <codeConditions xsi:type="domain_model_mapping:ColumnSettingCondition" cube="efbt_cubes.cubes#enrichedExposures" variable="../bird_import/variables.efbt_data_definition#trippleA_NotionaAmount">
+      <filterConditions name="istrippleA" functionSpec="commonFunctions.functions#=">
+        <parameters xsi:type="functions:SpeculativeCubeColumnParameter" column="../bird_import/variables.efbt_data_definition#RTNG_SCL_CD" cube="efbt_cubes.cubes#loansCounterpartiesAndRatings"/>
+        <parameters xsi:type="functions:ValueParameter" dataType="String" value="AAA"/>
+      </filterConditions>
+    </codeConditions>
+  </scenarioToCodeConditions>
+  <scenarioToCodeConditions scenario="functional_modules.functional_module#notAAA">
+    <codeConditions xsi:type="domain_model_mapping:ColumnSettingCondition" cube="efbt_cubes.cubes#enrichedExposures" variable="../bird_import/variables.efbt_data_definition#trippleA_NotionaAmount">
+      <filterConditions name="isNottrippleA" functionSpec="commonFunctions.functions#!=">
+        <parameters xsi:type="functions:SpeculativeCubeColumnParameter" column="../bird_import/variables.efbt_data_definition#RTNG_SCL_CD" cube="efbt_cubes.cubes#loansCounterpartiesAndRatings"/>
+        <parameters xsi:type="functions:ValueParameter" dataType="String" value="AAA"/>
+      </filterConditions>
+    </codeConditions>
+  </scenarioToCodeConditions>
+  <scenarioToCodeConditions scenario="functional_modules.functional_module#IsUSCountry">
+    <codeConditions xsi:type="domain_model_mapping:DataSetFilterCondition" cube="efbt_cubes.cubes#totalUSNotional">
+      <filterConditions name="isUSCountry" functionSpec="commonFunctions.functions#=">
+        <parameters xsi:type="functions:SpeculativeCubeColumnParameter" column="../bird_import/variables.efbt_data_definition#CNTRY" cube="efbt_cubes.cubes#enrichedExposures"/>
+        <parameters xsi:type="functions:ValueParameter" dataType="String" value="AAA"/>
+      </filterConditions>
+    </codeConditions>
+  </scenarioToCodeConditions>
+</domain_model_mapping:DomainMappingModule>
