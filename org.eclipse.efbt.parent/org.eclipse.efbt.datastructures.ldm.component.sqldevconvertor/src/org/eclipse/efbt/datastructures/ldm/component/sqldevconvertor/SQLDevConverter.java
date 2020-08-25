@@ -343,7 +343,7 @@ public class SQLDevConverter {
 					EClass theClass = classesMap.get(sourceID);
 					EClass targetClass = classesMap.get(targetID);
 					
-					int numOfRelations = numberofRelationShipsToThisClass(theClass,theClass);
+					int numOfRelations = numberofRelationShipsToThisClass(theClass,targetClass);
 					if(numOfRelations>0)
 						referenceName = referenceName + numOfRelations;
 					
@@ -389,13 +389,24 @@ public class SQLDevConverter {
 		// TODO Auto-generated method stub
 		EList<EStructuralFeature> features = sourceClass.getEStructuralFeatures();
 		int counter = 0;
+		System.out.println("sourceClass : " + sourceClass);
+		System.out.println("targetClass : " + targetClass);
 		for (EStructuralFeature eStructuralFeature : features) {
 			EClassifier sourceFeatureType = eStructuralFeature.getEType();
+			System.out.println("sourceFeatureType : " + sourceFeatureType);
 			if (sourceFeatureType.equals(targetClass))
+			{
+				System.out.println("match");
 				counter++;
+			}
+			else
+			{
+				System.out.println("no match");
+			}
+			}
 			
 			
-		}
+		
 		return counter;
 	}
 
