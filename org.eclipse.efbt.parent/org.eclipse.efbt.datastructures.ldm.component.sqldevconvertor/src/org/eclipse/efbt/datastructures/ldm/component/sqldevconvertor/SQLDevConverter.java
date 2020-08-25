@@ -15,6 +15,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EEnumLiteral;
@@ -334,12 +335,22 @@ public class SQLDevConverter {
 						referenceName = referenceName + "s";
 					} else
 						reference.setUpperBound(1);
-
-					referenceName = referenceName + referenceID;
-					reference.setName(referenceName);
+					// if the reference name already exists on this EClass
+					// then add a number  the end like 2 if there is already 1 reference
+					// or 3 if there already exists 2 other references to this class
+					
 
 					EClass theClass = classesMap.get(sourceID);
 					EClass targetClass = classesMap.get(targetID);
+					
+					int numOfRelations = numberofRelationShipsToThisClass(theClass,theClass);
+					if(numOfRelations>0)
+						referenceName = referenceName + numOfRelations;
+					
+					//referenceName = referenceName + referenceID;
+					reference.setName(referenceName);
+					
+					
 					if (theClass != null) {
 						theClass.getEStructuralFeatures().add(reference);
 					} else {
@@ -372,6 +383,20 @@ public class SQLDevConverter {
 			e.printStackTrace();
 		}
 
+	}
+
+	private static int numberofRelationShipsToThisClass(EClass sourceClass, EClass targetClass) {
+		// TODO Auto-generated method stub
+		EList<EStructuralFeature> features = sourceClass.getEStructuralFeatures();
+		int counter = 0;
+		for (EStructuralFeature eStructuralFeature : features) {
+			EClassifier sourceFeatureType = eStructuralFeature.getEType();
+			if (sourceFeatureType.equals(targetClass))
+				counter++;
+			
+			
+		}
+		return counter;
 	}
 
 	/**
