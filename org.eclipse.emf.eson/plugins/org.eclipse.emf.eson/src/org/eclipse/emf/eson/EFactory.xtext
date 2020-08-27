@@ -1,0 +1,115 @@
+grammar org.eclipse.emf.eson.EFactory with org.eclipse.xtext.common.Terminals
+	// TODO remove with Terminals, directly use hidden(WS, ML_COMMENT, SL_COMMENT) 
+	// Because we don't want to have the INT terminal (see below at the end); this avoids the warn during generation.
+
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
+generate eFactory "http://www.eclipse.org/emf/eson/EFactory"
+
+Factory:
+	(imports += NamespaceImport)*
+	(ePackages += PackageImport)*
+	(annotations += Annotation)*
+	root = NewObject;
+	
+PackageImport:
+'use' ePackage = [ecore::EPackage|StringOrQualifiedNameWithWildcard];
+
+NamespaceImport:
+	'import' importedNamespace = QualifiedNameWithWildcard	
+	// TODO Content Assist for EPackage .. but one COULD also import other named NewObject / EObject, instead of EPackages.. hm. As EPackage will be much more common, just support that.	
+;
+
+Annotation:
+	CustomNameMapping;
+
+// TODO further consider if name mapping is best put in-line into objects.. it would have to repeat in every file..
+// logically this rather belongs into an external mapping, like HUTN's Configuration (HutnConfig), or even better directly into an Xcore as annotations 
+
+CustomNameMapping:
+	"@Name" "{" eClass=[ecore::EClass|QualifiedName] "=" nameFeature=[ecore::EAttribute|QualifiedName] "}" ;
+
+Feature:
+	eFeature=[ecore::EStructuralFeature|QualifiedName] ":" (value=Value)? ;
+	// Re. use of QualifiedName, see SimplestWeiredNameTest (we want to permit EAttribute name to have dots; strange yes, but due to a particular requirement in an in-house closed source product)
+	// Also value isn't really optional semantically of course
+	// but because it may be missing while typing, this works out much better in practice like this
+	// the EFactoryJavaValidator flags it up if it's really missing
+	// without this, there are confusing parsing errors, the proposal provider doesn't work as it should, etc.
+	
+NewObject: // Note that this is also in-lined below; if making changes, adapt below too
+	eClass=[ecore::EClass|QualifiedName] (name=ValidID)? "{"
+		(features += Feature)*
+	"}";
+
+Value:
+	MultiValue
+	| Attribute | ( // Following is an in-lined NewObject, if making changes, adapt above too
+		=>({NewObject} (eClass=[ecore::EClass|QualifiedName])? (name=ValidID)? "{")
+			(features += Feature)*
+		"}"
+		{Containment.value=current}
+	)
+	// The Syntactic Predicate => is needed here to solve "Decision can match input such as "RULE_ID '.' RULE_ID {RULE_STRING..RULE_DATE, '}', '['..'false'}" using multiple alternatives: 3, 4"
+	| => Reference;
+
+MultiValue:
+	{MultiValue} "[" (values += Value)* "]" ;
+
+Reference:
+	// NOTE we ref. an EObject, and not an [NewObject].. this EObject is always the
+	// respective "real" EObject, in the derived state if its a reference to something
+	// in an EFactory resource, or a reference to an existing non-EFactory EObject, 
+	// e.g. in an integration scenario with other Xtext grammars.
+	value = [ecore::EObject|QualifiedName];
+
+Attribute: (EnumAttribute | StringAttribute | IntegerAttribute | BooleanAttribute | DoubleAttribute | DateAttribute | NullAttribute);
+
+EnumAttribute: ":" value = [ecore::EEnumLiteral|QualifiedName];
+
+
+// TODO Attribute Types should later not be hard-coded here anymore.. Grammar should be more open & generic.
+
+StringAttribute:  value = STRING;
+
+IntegerAttribute: value = Long;
+
+DoubleAttribute:  value = Double;
+
+DateAttribute:    value = Date;
+
+NullAttribute:    value = "NULL";
+
+BooleanAttribute: value = Boolean;
+
+StringOrQualifiedNameWithWildcard: STRING | QualifiedNameWithWildcard;
+QualifiedNameWithWildcard: QualifiedName '.*'? ;
+QualifiedName: ValidID (=>'.' ValidID)*;
+ValidID: ID | LONG_ID | LONG_UNSIGNED; // This is needed so that IDs consisting only of digit/numbers work, including in QualifiedName (DS-8268).
+
+// Double and Date are Xtext data types instead of terminals, because if they are terminals there is some confusion about the '.' in them vs. the QualifiedName dot in case a QualifiedName has parts consisting only of numbers  
+Boolean returns ecore::EBoolean : "true" | "false";
+Long returns ecore::ELong : ('-')? LONG_UNSIGNED;
+Double returns ecore::EDouble: Long '.' LONG_UNSIGNED;
+Date returns ecore::EDate : LONG_UNSIGNED '.' LONG_UNSIGNED '.' LONG_UNSIGNED;
+// TODO Date and other attribute values syntax should later not be hard-coded here anymore at all.. Grammar should be more open & generic.
+
+terminal LONG_ID: LONG_UNSIGNED ID;
+terminal LONG_UNSIGNED returns ecore::ELong : ('0'..'9')+;
+
+// Due to historic reasons in a closed source an in-house product which uses ESON
+// we need to add ',' and '-' to be allowed in IDs.  We also permit ID starting with digits, via the ValidID: ID | LONG above.
+// (NOTE: This terminal must be named 'ID' as well, not some new ID2 - unless you write a new ValueConverter for it.)
+terminal ID: '^'? ('a'..'z'|'A'..'Z'|'_'|','|'-') ('a'..'z'|'A'..'Z'|'_'|','|'-'|'0'..'9')*;
+
+// PS: Order of terminals appears to matter - ID needs to come last (at least it used to matter; perhaps no longer after grammar changes which made attribute value data type rules instead of terminals)
+
+
+// TODO copy/paste org.eclipse.xtext.common.Terminals 
+//terminal STRING	: 
+//			'"' ( '\\' . /* 'b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\' */ | !('\\'|'"') )* '"' |
+//			"'" ( '\\' . /* 'b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\' */ | !('\\'|"'") )* "'" ; 
+//terminal ML_COMMENT	: '/*' -> '*/';
+//terminal SL_COMMENT : '//' !('\n'|'\r')* ('\r'? '\n')?;
+//
+//terminal WS			: (' '|'\t'|'\r'|'\n')+;

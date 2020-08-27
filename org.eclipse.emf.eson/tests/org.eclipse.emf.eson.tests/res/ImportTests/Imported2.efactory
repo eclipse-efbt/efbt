@@ -1,0 +1,5 @@
+use testmodel.* 
+
+TestModel ImportedTestModel2 {
+	singleRequired: SingleRequired { }	
+}

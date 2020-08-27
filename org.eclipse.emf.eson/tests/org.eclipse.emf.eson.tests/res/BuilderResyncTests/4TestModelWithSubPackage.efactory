@@ -1,0 +1,8 @@
+use testmodel.* 
+use testmodel.testsubmodel.* 
+
+TestModel {
+	name: "test"
+	singleRequired: SingleRequired { }
+	sub: TestInnerModel { }
+}

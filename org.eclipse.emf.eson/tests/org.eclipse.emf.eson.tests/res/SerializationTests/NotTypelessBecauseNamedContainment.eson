@@ -1,0 +1,11 @@
+use testmodel.*
+
+TestModel testModelName {
+
+  // Note that because singleOptional's base/default type is SingleOptional, which SingleRequired extends, the type declaration is significant here:
+  singleOptional: SingleRequired { parentAttribute: false }
+
+  // whereas here it could be inferred, but because it's named its written anyway (for now?)
+  singleRequired: SingleRequired name2 { parentAttribute: false }	
+
+}

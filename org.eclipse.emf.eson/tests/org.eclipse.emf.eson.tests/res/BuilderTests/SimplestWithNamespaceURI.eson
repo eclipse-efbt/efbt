@@ -1,0 +1,4 @@
+use "http://testmodel/subWithTraditionalURI/1.0"
+ 
+TestInnerModelInPackageWithTraditionalURI def {
+} 

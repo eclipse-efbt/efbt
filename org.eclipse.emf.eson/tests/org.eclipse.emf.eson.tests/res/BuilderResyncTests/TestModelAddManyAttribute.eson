@@ -1,0 +1,13 @@
+use testmodel
+
+TestModel testModelName {
+    singleRequired: {
+        parentAttribute: false
+    }
+    attributeTest: [
+        {
+            oneInt: 1
+        }
+    ]
+
+}

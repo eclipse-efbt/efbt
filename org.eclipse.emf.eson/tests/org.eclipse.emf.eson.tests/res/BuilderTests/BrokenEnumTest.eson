@@ -1,0 +1,15 @@
+use testmodel.* 
+ 
+TestModel testModelName {
+	singleRequired: SingleRequired { }	
+	
+	attributeTest: [ AttributeTestContainer {
+
+		oneEnum: :Sample2
+		manyEnums: [ :Sample :IAMBrokenBadBoy :Sample2 ]
+		
+	} ]
+	    
+}   
+   
+              

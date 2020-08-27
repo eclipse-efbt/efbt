@@ -1,0 +1,37 @@
+
+use testmodel.*
+
+TestModel testModelName {
+
+	// For the SerializationTest.testReferenceTest() the order of things
+	// listed here matters very much; it HAS to be Attributes/Containment/References/isMany,
+	// because that's the order in which NewObjectBuilder.build(EObject) rebuilds
+	// it.  Property order cannot not be "preserved", the way the SerializationTest
+	// works (intentionally) - from Factory to EObject and back to Factory, to compare.
+
+  singleRequired: { parentAttribute: false }	
+  attributeTest: [ {
+    oneInt: 1
+    oneInteger: 1
+    oneBool: true
+    oneDouble: 1.1
+//    oneBigDecimal: 123798234.223940293480923842
+    oneBigDecimal: 1.0
+    oneBigInteger: 1
+    oneEnum: :Sample2
+    oneShort: 4
+    oneDate: 09.11.1979
+    
+    manyInt: [ 1 2 3 ]
+    manyBool: [ true false ]
+    manyDouble: [ 1.1 2.2 3.3 ]
+    manyBigDecimal: [ 1.1 ] 
+//    manyBigInteger: [ 1230820834928349283498234 ]
+	manyBigInteger: [ 1 2 ]
+    manyEnums: [ :Sample :Sample2 ]
+    manyShorts: [ 1 2 ]
+    manyDates: [ 09.11.1979 08.10.0868 ]
+    
+  } ]
+
+}

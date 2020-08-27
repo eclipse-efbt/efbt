@@ -1,0 +1,38 @@
+use org.eclipse.emf.eson.example.library
+
+use org.eclipse.emf.eson.example.library.subpackage
+
+Library ESONLibrary {
+
+    books: [
+        {
+            pages: 10
+            category: :None
+            details: [
+                {
+                    description: "Working with Multiple File Extensions"
+                }
+            ] //added this to show case the reference from other writer2.eson
+            author: Girish
+            name: "EsonFileExtension"
+        }
+
+
+        {
+            pages: 0
+            category: :None
+            author: ESONLibrary.Michael
+            name: "Understanding ESON"
+            details: [
+                {
+                    description: "Introduction to ESON"
+                }
+            ]
+        }
+    ]
+    writers: [
+        {
+            name: "Michael"
+        }
+    ]
+}

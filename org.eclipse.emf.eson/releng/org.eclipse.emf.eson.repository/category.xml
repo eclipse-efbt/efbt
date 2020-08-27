@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature id="org.eclipse.emf.eson.feature" version="0.0.0">
+      <category name="ESON"/>
+   </feature>
+   <feature id="org.eclipse.emf.eson.ui.feature" version="0.0.0">
+      <category name="ESON"/>
+   </feature>
+   <feature id="org.eclipse.emf.eson.tests.feature" version="0.0.0">
+      <category name="ESON"/>
+   </feature>
+   <category-def name="ESON" label="ESON"/>
+</site>

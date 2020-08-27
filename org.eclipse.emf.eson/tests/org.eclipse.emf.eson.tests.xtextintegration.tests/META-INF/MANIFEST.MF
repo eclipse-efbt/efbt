@@ -1,0 +1,24 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ESON with Xtext Model Integration Tests
+Bundle-Vendor: Michael Vorburger
+Bundle-Version: 0.10.0.qualifier
+Bundle-SymbolicName: org.eclipse.emf.eson.tests.xtextintegration.tests;singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.emf.eson.tests.xtextintegration,
+ org.eclipse.emf.eson.tests.xtextintegration.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.xtext.junit4,
+ org.eclipse.ui.workbench;resolution:=optional,
+ org.eclipse.emf.eson,
+ org.objectweb.asm;resolution:=optional
+Import-Package: org.apache.log4j,
+ org.junit,
+ org.junit.runner,
+ org.junit.runner.manipulation,
+ org.junit.runner.notification,
+ org.junit.runners,
+ org.junit.runners.model,
+ org.hamcrest.core
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.eclipse.emf.eson.xtextintegration

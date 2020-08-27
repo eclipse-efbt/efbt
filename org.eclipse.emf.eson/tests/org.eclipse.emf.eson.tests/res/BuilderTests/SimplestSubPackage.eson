@@ -1,0 +1,5 @@
+use testmodel.testsubmodel.* 
+// Note that this is the nsURI (Namespace URI) of the sub/child EPackage, and not it's name 
+ 
+TestInnerModel {
+} 
