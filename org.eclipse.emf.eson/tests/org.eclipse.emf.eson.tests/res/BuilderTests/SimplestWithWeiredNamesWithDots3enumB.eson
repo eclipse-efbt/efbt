@@ -1,0 +1,5 @@
+import testmodelWithDotInNames.*
+
+NormallyNamed {
+	STRANGE.ENUM: :weird.literal
+}

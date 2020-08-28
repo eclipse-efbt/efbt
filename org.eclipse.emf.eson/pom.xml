@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<groupId>org.eclipse.emf.eson</groupId>
+	<artifactId>eson</artifactId>
+	<version>0.10.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>ESON</name>
+	<description>ESON is the EMF (Eclipse Modeling Framework) Simple Object Notation</description>
+	<url>http://git.eclipse.org/c/emf/org.eclipse.emf.eson.git/</url>
+	<inceptionYear>2009</inceptionYear>
+	
+	<organization>
+	    <name>Michael Vorburger</name>
+	    <url>http://www.vorburger.ch</url>
+    </organization>
+
+	<properties>
+		<tycho-version>0.24.0</tycho-version>
+		<!-- <xtext-version>2.5.3</xtext-version> -->
+		<!-- <fornax-version>3.4.0</fornax-version> -->
+		<!-- There is test which doesn't work on Windows, and this serves to exclude it -->
+		<tycho.surefire.excludes>NADA</tycho.surefire.excludes>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<profiles>
+		<profile>
+			<id>win</id>
+			<properties>
+				<tycho.surefire.excludes>**/FormatterTest.java</tycho.surefire.excludes>
+			</properties>
+			<activation>
+				<os>
+					<family>Windows</family>
+				</os>
+			</activation>
+		</profile>
+		<profile>
+			<id>only-eclipse</id>
+			<!-- https://bugs.eclipse.org/bugs/show_bug.cgi?id=367870 -->
+			<activation>
+				<property>
+					<name>m2e.version</name>
+				</property>
+			</activation>
+			<build>
+				<pluginManagement>
+					<plugins>
+						<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+						<plugin>
+							<groupId>org.eclipse.m2e</groupId>
+							<artifactId>lifecycle-mapping</artifactId>
+							<version>1.0.0</version>
+							<configuration>
+								<lifecycleMappingMetadata>
+									<pluginExecutions>
+										<pluginExecution>
+											<pluginExecutionFilter>
+												<groupId>
+													org.fornax.toolsupport
+												</groupId>
+												<artifactId>
+													fornax-oaw-m2-plugin
+												</artifactId>
+												<versionRange>
+													[3.4.0,)
+												</versionRange>
+												<goals>
+													<goal>run-workflow</goal>
+												</goals>
+											</pluginExecutionFilter>
+											<action>
+												<ignore></ignore>
+											</action>
+										</pluginExecution>
+										<pluginExecution>
+											<pluginExecutionFilter>
+												<groupId>
+													org.codehaus.mojo
+												</groupId>
+												<artifactId>
+													build-helper-maven-plugin
+												</artifactId>
+												<versionRange>
+													[1.8,)
+												</versionRange>
+												<goals>
+													<goal>add-source</goal>
+												</goals>
+											</pluginExecutionFilter>
+											<action>
+												<ignore></ignore>
+											</action>
+										</pluginExecution>
+									</pluginExecutions>
+								</lifecycleMappingMetadata>
+							</configuration>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+			</build>
+		</profile>
+	</profiles>
+ 
+	<!-- Repository to resolve fornax-oaw-m2-plugin
+	<pluginRepositories>
+		<pluginRepository>
+			<id>fornax-releases</id>
+			<url>http://fornax.itemis.de/nexus/content/repositories/public/</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>  -->
+	
+	<modules>
+		<module>releng/org.eclipse.emf.eson.releng</module>
+
+		<module>plugins/org.eclipse.emf.eson</module>
+		<module>features/org.eclipse.emf.eson.feature</module>
+		<module>plugins/org.eclipse.emf.eson.ui</module>
+		<module>features/org.eclipse.emf.eson.ui.feature</module>
+		<module>tests/org.eclipse.emf.eson.tests</module>
+
+		<module>tests/org.eclipse.emf.eson.tests.xtextintegration</module>
+		<module>tests/org.eclipse.emf.eson.tests.xtextintegration.tests</module>
+		<module>tests/org.eclipse.emf.eson.tests.xtextintegration.ui</module>
+
+		<module>features/org.eclipse.emf.eson.tests.feature</module>
+		<module>releng/org.eclipse.emf.eson.repository</module>
+	</modules>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<extensions>true</extensions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-source-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<executions>
+					<execution>
+						<id>plugin-source</id>
+						<goals>
+							<goal>plugin-source</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho.extras</groupId>
+				<artifactId>tycho-source-feature-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<executions>
+					<execution>
+						<id>source-feature</id>
+						<phase>package</phase>
+						<goals>
+							<goal>source-feature</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<excludes>
+						<plugin id="org.eclipse.emf.eson.help" />
+					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-p2-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<executions>
+					<execution>
+						<id>attach-p2-metadata</id>
+						<phase>package</phase>
+						<goals>
+							<goal>p2-metadata</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<target>
+						<artifact>
+							<groupId>${project.groupId}</groupId>
+							<artifactId>org.eclipse.emf.eson.releng</artifactId>
+							<version>${project.version}</version>
+						</artifact>
+					</target>
+					<environments>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>x86</arch>
+						</environment>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>win32</os>
+							<ws>win32</ws>
+							<arch>x86</arch>
+						</environment>
+						<environment>
+							<os>win32</os>
+							<ws>win32</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>macosx</os>
+							<ws>cocoa</ws>
+							<arch>x86_64</arch>
+						</environment>
+					</environments>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>src-gen</source>
+								<source>xtend-gen</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>1.8</version>
+				<configuration>
+					<licenseName>epl_only_v1</licenseName>
+					<addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
+					<failOnMissingHeader>true</failOnMissingHeader>
+					<failOnNotUptodateHeader>true</failOnNotUptodateHeader>
+					<roots>
+						<root>src</root>
+					</roots>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>check-file-header</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-surefire-plugin</artifactId>
+					<version>${tycho-version}</version>
+					<configuration>
+						<runOrder>reversealphabetical</runOrder> <!-- http://blog2.vorburger.ch/2015/09/noclassdeffounderror-s-in-eclipse.html -->
+						<useUIHarness>true</useUIHarness> <!-- https://bugs.eclipse.org/bugs/show_bug.cgi?id=437425 -->
+						<useUIThread>true</useUIThread>   <!-- org.eclipse.swt.SWTException: Invalid thread access -->
+						<argLine>-Xms40m -Xmx512m</argLine>
+						<!-- see documentation in <properties> re. what this is all about -->
+						<excludes><exclude>${tycho.surefire.excludes}</exclude></excludes>
+					</configuration>
+				</plugin>
+	
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>2.5</version>
+				</plugin>
+<!--				
+				<plugin>
+					<groupId>org.eclipse.xtend</groupId>
+					<artifactId>xtend-maven-plugin</artifactId>
+					<version>${xtext-version}</version>
+					<configuration>
+						<encoding>UTF-8</encoding>
+					</configuration>
+					<executions>
+						<execution>
+							<goals>
+								<goal>compile</goal>
+								<goal>testCompile</goal>
+							</goals>
+							<configuration>
+					< ! - - need to prefix by basedir to generate to currently built module - - >
+								<outputDirectory>${basedir}/xtend-gen</outputDirectory>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+
+				<plugin>
+					<groupId>org.fornax.toolsupport</groupId>
+					<artifactId>fornax-oaw-m2-plugin</artifactId>
+					<version>${fornax-version}</version>
+					<executions>
+						<execution>
+							<phase>generate-sources</phase>
+							<goals>
+								<goal>run-workflow</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+ -->				
+			</plugins>
+		</pluginManagement>
+	</build>
+</project>

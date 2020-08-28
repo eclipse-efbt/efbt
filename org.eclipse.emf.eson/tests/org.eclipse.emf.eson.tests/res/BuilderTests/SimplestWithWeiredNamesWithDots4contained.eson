@@ -1,0 +1,7 @@
+import testmodelWithDotInNames.*
+
+NormallyNamed {
+	WEIRDO.CONTAINER: WEIRDO.NAMED {
+		STRANGE.NAME: "saluton"
+	}
+}

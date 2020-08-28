@@ -1,0 +1,37 @@
+use testmodel.* 
+ 
+TestModel testModelName {
+	singleRequired: SingleRequired { }	
+	
+	attributeTest: [ AttributeTestContainer {
+		
+		oneBool: true
+		manyBool: [ true true ]
+		
+		oneInt: 1
+		oneInteger: 1
+		manyInt: [ 1 2 3 ]
+		 
+		oneDouble: 1.1
+		manyDouble: [ 1.1 2.2 3.3 ]  
+		  
+		oneEnum: :Sample2
+		manyEnums: [ :Sample :Sample2 ]
+	
+		oneBigDecimal: 1.0 // 23798234.223940293480923842
+		manyBigDecimal: [ 1.1 ]  
+		
+		oneShort: 4
+		manyShorts: [ 1 2 ]
+		
+		oneBigInteger: 1 // 230820834928349283498234
+		manyBigInteger: [ 1 2 ]
+		  
+		oneDate: 09.11.1979
+		manyDates: [ 09.11.1979 08.10.0868 ]
+		
+	} ]
+	    
+}   
+   
+              

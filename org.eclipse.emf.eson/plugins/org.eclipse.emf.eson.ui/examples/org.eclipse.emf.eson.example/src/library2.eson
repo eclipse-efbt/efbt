@@ -1,0 +1,16 @@
+// https://wiki.eclipse.org/ESON
+
+use org.eclipse.emf.eson.example.library
+
+Library lunar {
+    books: [
+        Book Gucky {
+            author: WalterErnsting
+        }
+    ]
+    
+    writers: [
+        Writer loony {
+        }
+    ]
+}

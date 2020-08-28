@@ -1,0 +1,142 @@
+module org.eclipse.emf.eson.GenerateEFactory
+
+import org.eclipse.emf.mwe.utils.*
+import org.eclipse.xtext.generator.*
+import org.eclipse.xtext.ui.generator.*
+
+var grammarURI = "classpath:/org/eclipse/emf/eson/EFactory.xtext"
+var file.extensions = "efactory,eson"
+var projectName = "org.eclipse.emf.eson"
+var runtimeProject = "../${projectName}"
+var testProject = "../../tests/${projectName}.tests"
+
+Workflow {
+    bean = StandaloneSetup {
+        scanClassPath = true
+        platformUri = "${runtimeProject}/.."
+    }
+
+    component = DirectoryCleaner {
+        directory = "${runtimeProject}/src-gen"
+    	exclude = ".gitempty-src-gen"
+    	exclude = ".gitempty-xtend-gen"
+    }
+
+    component = DirectoryCleaner {
+        directory = "${runtimeProject}.ui/src-gen"
+    	exclude = ".gitempty-src-gen"
+    	exclude = ".gitempty-xtend-gen"
+    }
+
+    component = DirectoryCleaner {
+        directory = "${testProject}/src-gen"
+    	exclude = ".gitempty-src-gen"
+    	exclude = ".gitempty-xtend-gen"
+    }
+
+    component = Generator {
+        pathRtProject = runtimeProject
+        pathUiProject = "${runtimeProject}.ui"
+        pathTestProject = "${testProject}"
+        projectNameRt = projectName
+        projectNameUi = "${projectName}.ui"
+        language = {
+            uri = grammarURI
+            fileExtensions = file.extensions
+
+            // Java API to access grammar elements (required by several other fragments)
+            fragment = grammarAccess.GrammarAccessFragment {}
+
+            // generates Java API for the generated EPackages
+            fragment = ecore.EcoreGeneratorFragment {
+            // referencedGenModels = "
+            //  platform:/resource/org.eclipse.xtext.xbase/model/Xbase.genmodel,
+            //  platform:/resource/org.eclipse.xtext.common.types/model/JavaVMTypes.genmodel
+            // "
+            }
+
+            // Serializer 2.0
+            fragment = serializer.SerializerFragment {
+            	generateStub = false
+            }
+            
+            // the old serialization component (1.0) which does not work for the AbstractSerializationTest
+            // fragment = parseTreeConstructor.ParseTreeConstructorFragment {}
+
+            // a custom ResourceFactory for use with EMF
+            fragment = resourceFactory.ResourceFactoryFragment {
+                fileExtensions = file.extensions
+            }
+
+            // The antlr parser generator fragment.
+            fragment = parser.antlr.XtextAntlrGeneratorFragment {
+            //  options = {
+            //      backtrack = true
+            //  }
+            }
+
+            // java-based API for validation
+            // TODO use new ValidatorFragment instead of JavaValidatorFragment?
+            fragment = validation.JavaValidatorFragment {
+            //    composedCheck = "org.eclipse.xtext.validation.ImportUriValidator"
+            //    composedCheck = "org.eclipse.xtext.validation.NamesAreUniqueValidator"
+            }
+
+            // old scoping and exporting API
+            // fragment = scoping.ImportURIScopingFragment {}
+            // fragment = exporting.SimpleNamesFragment {}
+
+            // scoping and exporting API
+            fragment = scoping.ImportNamespacesScopingFragment {}
+            fragment = exporting.QualifiedNamesFragment {}
+            fragment = builder.BuilderIntegrationFragment {}
+
+            // generator API
+/*            
+            fragment = generator.GeneratorFragment {
+                generateMwe = false
+                generateJavaMain = false
+            }
+ */
+            // formatter API
+            fragment = formatting.FormatterFragment {}
+
+            // labeling API
+            fragment = labeling.LabelProviderFragment {}
+
+            // outline API
+            fragment = outline.OutlineTreeProviderFragment {}
+            fragment = outline.QuickOutlineFragment {}
+
+            // quickfix API
+            fragment = quickfix.QuickfixProviderFragment {}
+
+            // content assist API
+            	// TODO use new ContentAssistFragment instead of JavaBasedContentAssistFragment?
+            fragment = contentAssist.JavaBasedContentAssistFragment {}
+
+            // generates a more lightweight Antlr parser and lexer tailored for content assist
+            fragment = parser.antlr.XtextAntlrUiGeneratorFragment {}
+
+            // generates junit test support classes into Generator#pathTestProject
+            fragment = junit.Junit4Fragment {}
+
+//             fragment = projectWizard.SimpleProjectWizardFragment {
+//                  generatorProjectName = "${projectName}"
+//                  modelFileExtension = file.extensions
+//            }
+
+            // rename refactoring
+            fragment = refactoring.RefactorElementNameFragment {}
+
+            // provides a preference page for template proposals
+            fragment = templates.CodetemplatesGeneratorFragment {}
+
+            // provides a compare view
+            fragment = compare.CompareFragment {
+                 fileExtensions = file.extensions
+            }
+
+        }
+    }
+}

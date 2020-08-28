@@ -1,0 +1,18 @@
+use org.eclipse.emf.eson.example.library
+
+Library library5 {
+
+    staff: [
+        Librarian Georg {
+            expertiseCategories: [
+                :Mystery
+                :SciFi
+            ]
+        }
+        Facilitator Rose {
+            servicesOffered: [
+                "BookSearch"
+            ]
+        }
+    ]
+}

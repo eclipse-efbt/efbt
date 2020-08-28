@@ -1,0 +1,4 @@
+use testmodel.* 
+
+TestModel ImportedTestModel {
+}

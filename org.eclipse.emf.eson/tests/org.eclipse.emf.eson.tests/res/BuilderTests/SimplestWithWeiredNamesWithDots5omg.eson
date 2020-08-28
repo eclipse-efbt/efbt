@@ -1,0 +1,6 @@
+// NO import testmodelWithDotInNames.*
+
+// OMG, "testmodelWithDotIn" is the EPackage, "WEIRDO.NAMED" is the EClass, the dot separation is confusing, yet it still works! ;-)
+testmodelWithDotInNames.WEIRDO.NAMED {
+	STRANGE.NAME: "hello"
+}
