@@ -74,6 +74,7 @@ public class DateAttributeImpl extends AttributeImpl implements DateAttribute
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Date getValue()
   {
     return value;
@@ -84,6 +85,7 @@ public class DateAttributeImpl extends AttributeImpl implements DateAttribute
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setValue(Date newValue)
   {
     Date oldValue = value;
@@ -168,7 +170,7 @@ public class DateAttributeImpl extends AttributeImpl implements DateAttribute
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (value: ");
     result.append(value);
     result.append(')');

@@ -37,6 +37,7 @@ Export-Package: org.eclipse.emf.eson.ui,
  org.eclipse.emf.eson.ui.internal,
  org.eclipse.emf.eson.ui.labeling,
  org.eclipse.emf.eson.ui.outline,
- org.eclipse.emf.eson.ui.quickfix
+ org.eclipse.emf.eson.ui.quickfix,
+ org.eclipse.emf.eson.ui.contentassist.antlr.internal
 Bundle-Activator: org.eclipse.emf.eson.ui.internal.EFactoryActivator
 Import-Package: org.apache.log4j

@@ -64,6 +64,7 @@ public class ReferenceImpl extends ValueImpl implements Reference
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EObject getValue()
   {
     if (value != null && value.eIsProxy())
@@ -94,6 +95,7 @@ public class ReferenceImpl extends ValueImpl implements Reference
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setValue(EObject newValue)
   {
     EObject oldValue = value;

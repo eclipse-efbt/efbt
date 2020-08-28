@@ -109,6 +109,7 @@ public class FactoryImpl extends MinimalEObjectImpl.Container implements Factory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<NamespaceImport> getImports()
   {
     if (imports == null)
@@ -123,6 +124,7 @@ public class FactoryImpl extends MinimalEObjectImpl.Container implements Factory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<PackageImport> getEPackages()
   {
     if (ePackages == null)
@@ -137,6 +139,7 @@ public class FactoryImpl extends MinimalEObjectImpl.Container implements Factory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<Annotation> getAnnotations()
   {
     if (annotations == null)
@@ -151,6 +154,7 @@ public class FactoryImpl extends MinimalEObjectImpl.Container implements Factory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public NewObject getRoot()
   {
     return root;
@@ -178,6 +182,7 @@ public class FactoryImpl extends MinimalEObjectImpl.Container implements Factory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setRoot(NewObject newRoot)
   {
     if (newRoot != root)

@@ -93,6 +93,7 @@ public class EFactoryFactoryImpl extends EFactoryImpl implements EFactoryFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Factory createFactory()
   {
     FactoryImpl factory = new FactoryImpl();
@@ -104,6 +105,7 @@ public class EFactoryFactoryImpl extends EFactoryImpl implements EFactoryFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public PackageImport createPackageImport()
   {
     PackageImportImpl packageImport = new PackageImportImpl();
@@ -115,6 +117,7 @@ public class EFactoryFactoryImpl extends EFactoryImpl implements EFactoryFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public NamespaceImport createNamespaceImport()
   {
     NamespaceImportImpl namespaceImport = new NamespaceImportImpl();
@@ -126,6 +129,7 @@ public class EFactoryFactoryImpl extends EFactoryImpl implements EFactoryFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Annotation createAnnotation()
   {
     AnnotationImpl annotation = new AnnotationImpl();
@@ -137,6 +141,7 @@ public class EFactoryFactoryImpl extends EFactoryImpl implements EFactoryFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public CustomNameMapping createCustomNameMapping()
   {
     CustomNameMappingImpl customNameMapping = new CustomNameMappingImpl();
@@ -148,6 +153,7 @@ public class EFactoryFactoryImpl extends EFactoryImpl implements EFactoryFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Feature createFeature()
   {
     FeatureImpl feature = new FeatureImpl();
@@ -159,6 +165,7 @@ public class EFactoryFactoryImpl extends EFactoryImpl implements EFactoryFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public NewObject createNewObject()
   {
     NewObjectImpl newObject = new NewObjectImpl();
@@ -170,6 +177,7 @@ public class EFactoryFactoryImpl extends EFactoryImpl implements EFactoryFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Value createValue()
   {
     ValueImpl value = new ValueImpl();
@@ -181,6 +189,7 @@ public class EFactoryFactoryImpl extends EFactoryImpl implements EFactoryFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public MultiValue createMultiValue()
   {
     MultiValueImpl multiValue = new MultiValueImpl();
@@ -192,6 +201,7 @@ public class EFactoryFactoryImpl extends EFactoryImpl implements EFactoryFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Reference createReference()
   {
     ReferenceImpl reference = new ReferenceImpl();
@@ -203,6 +213,7 @@ public class EFactoryFactoryImpl extends EFactoryImpl implements EFactoryFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Attribute createAttribute()
   {
     AttributeImpl attribute = new AttributeImpl();
@@ -214,6 +225,7 @@ public class EFactoryFactoryImpl extends EFactoryImpl implements EFactoryFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EnumAttribute createEnumAttribute()
   {
     EnumAttributeImpl enumAttribute = new EnumAttributeImpl();
@@ -225,6 +237,7 @@ public class EFactoryFactoryImpl extends EFactoryImpl implements EFactoryFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public StringAttribute createStringAttribute()
   {
     StringAttributeImpl stringAttribute = new StringAttributeImpl();
@@ -236,6 +249,7 @@ public class EFactoryFactoryImpl extends EFactoryImpl implements EFactoryFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public IntegerAttribute createIntegerAttribute()
   {
     IntegerAttributeImpl integerAttribute = new IntegerAttributeImpl();
@@ -247,6 +261,7 @@ public class EFactoryFactoryImpl extends EFactoryImpl implements EFactoryFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public DoubleAttribute createDoubleAttribute()
   {
     DoubleAttributeImpl doubleAttribute = new DoubleAttributeImpl();
@@ -258,6 +273,7 @@ public class EFactoryFactoryImpl extends EFactoryImpl implements EFactoryFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public DateAttribute createDateAttribute()
   {
     DateAttributeImpl dateAttribute = new DateAttributeImpl();
@@ -269,6 +285,7 @@ public class EFactoryFactoryImpl extends EFactoryImpl implements EFactoryFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public NullAttribute createNullAttribute()
   {
     NullAttributeImpl nullAttribute = new NullAttributeImpl();
@@ -280,6 +297,7 @@ public class EFactoryFactoryImpl extends EFactoryImpl implements EFactoryFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public BooleanAttribute createBooleanAttribute()
   {
     BooleanAttributeImpl booleanAttribute = new BooleanAttributeImpl();
@@ -291,6 +309,7 @@ public class EFactoryFactoryImpl extends EFactoryImpl implements EFactoryFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Containment createContainment()
   {
     ContainmentImpl containment = new ContainmentImpl();
@@ -302,6 +321,7 @@ public class EFactoryFactoryImpl extends EFactoryImpl implements EFactoryFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EFactoryPackage getEFactoryPackage()
   {
     return (EFactoryPackage)getEPackage();

@@ -64,6 +64,7 @@ public class EnumAttributeImpl extends AttributeImpl implements EnumAttribute
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EEnumLiteral getValue()
   {
     if (value != null && value.eIsProxy())
@@ -94,6 +95,7 @@ public class EnumAttributeImpl extends AttributeImpl implements EnumAttribute
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setValue(EEnumLiteral newValue)
   {
     EEnumLiteral oldValue = value;

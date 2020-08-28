@@ -3,16 +3,16 @@
  */
 package org.eclipse.emf.eson;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.eclipse.xtext.junit4.GlobalRegistries;
 import org.eclipse.xtext.junit4.GlobalRegistries.GlobalStateMemento;
 import org.eclipse.xtext.junit4.IInjectorProvider;
 import org.eclipse.xtext.junit4.IRegistryConfigurator;
 
-import com.google.inject.Injector;
-
 public class EFactoryInjectorProvider implements IInjectorProvider, IRegistryConfigurator {
-	
-    protected GlobalStateMemento stateBeforeInjectorCreation;
+
+	protected GlobalStateMemento stateBeforeInjectorCreation;
 	protected GlobalStateMemento stateAfterInjectorCreation;
 	protected Injector injector;
 
@@ -30,9 +30,26 @@ public class EFactoryInjectorProvider implements IInjectorProvider, IRegistryCon
 		}
 		return injector;
 	}
-	
+
 	protected Injector internalCreateInjector() {
-	    return new EFactoryStandaloneSetup().createInjectorAndDoEMFRegistration();
+		return new EFactoryStandaloneSetup() {
+			@Override
+			public Injector createInjector() {
+				return Guice.createInjector(createRuntimeModule());
+			}
+		}.createInjectorAndDoEMFRegistration();
+	}
+
+	protected EFactoryRuntimeModule createRuntimeModule() {
+		// make it work also with Maven/Tycho and OSGI
+		// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=493672
+		return new EFactoryRuntimeModule() {
+			@Override
+			public ClassLoader bindClassLoaderToInstance() {
+				return EFactoryInjectorProvider.class
+						.getClassLoader();
+			}
+		};
 	}
 
 	@Override

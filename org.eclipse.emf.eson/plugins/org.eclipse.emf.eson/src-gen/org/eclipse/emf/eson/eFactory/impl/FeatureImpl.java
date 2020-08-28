@@ -78,6 +78,7 @@ public class FeatureImpl extends MinimalEObjectImpl.Container implements Feature
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EStructuralFeature getEFeature()
   {
     if (eFeature != null && eFeature.eIsProxy())
@@ -108,6 +109,7 @@ public class FeatureImpl extends MinimalEObjectImpl.Container implements Feature
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setEFeature(EStructuralFeature newEFeature)
   {
     EStructuralFeature oldEFeature = eFeature;
@@ -121,6 +123,7 @@ public class FeatureImpl extends MinimalEObjectImpl.Container implements Feature
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Value getValue()
   {
     return value;
@@ -148,6 +151,7 @@ public class FeatureImpl extends MinimalEObjectImpl.Container implements Feature
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setValue(Value newValue)
   {
     if (newValue != value)

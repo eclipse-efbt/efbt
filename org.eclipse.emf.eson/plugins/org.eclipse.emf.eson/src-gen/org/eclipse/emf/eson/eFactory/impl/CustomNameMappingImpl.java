@@ -75,6 +75,7 @@ public class CustomNameMappingImpl extends AnnotationImpl implements CustomNameM
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getEClass()
   {
     if (eClass != null && eClass.eIsProxy())
@@ -105,6 +106,7 @@ public class CustomNameMappingImpl extends AnnotationImpl implements CustomNameM
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setEClass(EClass newEClass)
   {
     EClass oldEClass = eClass;
@@ -118,6 +120,7 @@ public class CustomNameMappingImpl extends AnnotationImpl implements CustomNameM
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getNameFeature()
   {
     if (nameFeature != null && nameFeature.eIsProxy())
@@ -148,6 +151,7 @@ public class CustomNameMappingImpl extends AnnotationImpl implements CustomNameM
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setNameFeature(EAttribute newNameFeature)
   {
     EAttribute oldNameFeature = nameFeature;

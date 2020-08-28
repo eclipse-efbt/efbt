@@ -27,10 +27,6 @@ public interface CustomNameMapping extends Annotation
   /**
    * Returns the value of the '<em><b>EClass</b></em>' reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>EClass</em>' reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>EClass</em>' reference.
    * @see #setEClass(EClass)
@@ -53,10 +49,6 @@ public interface CustomNameMapping extends Annotation
   /**
    * Returns the value of the '<em><b>Name Feature</b></em>' reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Name Feature</em>' reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Name Feature</em>' reference.
    * @see #setNameFeature(EAttribute)

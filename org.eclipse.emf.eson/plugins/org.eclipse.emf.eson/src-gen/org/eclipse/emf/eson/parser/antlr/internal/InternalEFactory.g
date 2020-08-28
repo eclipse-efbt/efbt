@@ -90,7 +90,7 @@ ruleFactory returns [EObject current=null]
        			$current, 
        			"imports",
         		lv_imports_0_0, 
-        		"NamespaceImport");
+        		"org.eclipse.emf.eson.EFactory.NamespaceImport");
 	        afterParserOrEnumRuleCall();
 	    }
 
@@ -108,7 +108,7 @@ ruleFactory returns [EObject current=null]
        			$current, 
        			"ePackages",
         		lv_ePackages_1_0, 
-        		"PackageImport");
+        		"org.eclipse.emf.eson.EFactory.PackageImport");
 	        afterParserOrEnumRuleCall();
 	    }
 
@@ -126,7 +126,7 @@ ruleFactory returns [EObject current=null]
        			$current, 
        			"annotations",
         		lv_annotations_2_0, 
-        		"Annotation");
+        		"org.eclipse.emf.eson.EFactory.Annotation");
 	        afterParserOrEnumRuleCall();
 	    }
 
@@ -144,7 +144,7 @@ ruleFactory returns [EObject current=null]
        			$current, 
        			"root",
         		lv_root_3_0, 
-        		"NewObject");
+        		"org.eclipse.emf.eson.EFactory.NewObject");
 	        afterParserOrEnumRuleCall();
 	    }
 
@@ -227,7 +227,7 @@ ruleNamespaceImport returns [EObject current=null]
        			$current, 
        			"importedNamespace",
         		lv_importedNamespace_1_0, 
-        		"QualifiedNameWithWildcard");
+        		"org.eclipse.emf.eson.EFactory.QualifiedNameWithWildcard");
 	        afterParserOrEnumRuleCall();
 	    }
 
@@ -382,7 +382,7 @@ ruleFeature returns [EObject current=null]
        			$current, 
        			"value",
         		lv_value_2_0, 
-        		"Value");
+        		"org.eclipse.emf.eson.EFactory.Value");
 	        afterParserOrEnumRuleCall();
 	    }
 
@@ -436,7 +436,7 @@ ruleNewObject returns [EObject current=null]
        			$current, 
        			"name",
         		lv_name_1_0, 
-        		"ValidID");
+        		"org.eclipse.emf.eson.EFactory.ValidID");
 	        afterParserOrEnumRuleCall();
 	    }
 
@@ -458,7 +458,7 @@ ruleNewObject returns [EObject current=null]
        			$current, 
        			"features",
         		lv_features_3_0, 
-        		"Feature");
+        		"org.eclipse.emf.eson.EFactory.Feature");
 	        afterParserOrEnumRuleCall();
 	    }
 
@@ -552,7 +552,7 @@ ruleValidID
        			$current, 
        			"name",
         		lv_name_4_0, 
-        		"ValidID");
+        		"org.eclipse.emf.eson.EFactory.ValidID");
 	        afterParserOrEnumRuleCall();
 	    }
 
@@ -574,7 +574,7 @@ ruleValidID
        			$current, 
        			"features",
         		lv_features_6_0, 
-        		"Feature");
+        		"org.eclipse.emf.eson.EFactory.Feature");
 	        afterParserOrEnumRuleCall();
 	    }
 
@@ -643,7 +643,7 @@ ruleMultiValue returns [EObject current=null]
        			$current, 
        			"values",
         		lv_values_2_0, 
-        		"Value");
+        		"org.eclipse.emf.eson.EFactory.Value");
 	        afterParserOrEnumRuleCall();
 	    }
 
@@ -853,7 +853,7 @@ ruleStringAttribute returns [EObject current=null]
        			$current, 
        			"value",
         		lv_value_0_0, 
-        		"STRING");
+        		"org.eclipse.xtext.common.Terminals.STRING");
 	    }
 
 )
@@ -891,7 +891,7 @@ ruleIntegerAttribute returns [EObject current=null]
        			$current, 
        			"value",
         		lv_value_0_0, 
-        		"Long");
+        		"org.eclipse.emf.eson.EFactory.Long");
 	        afterParserOrEnumRuleCall();
 	    }
 
@@ -930,7 +930,7 @@ ruleDoubleAttribute returns [EObject current=null]
        			$current, 
        			"value",
         		lv_value_0_0, 
-        		"Double");
+        		"org.eclipse.emf.eson.EFactory.Double");
 	        afterParserOrEnumRuleCall();
 	    }
 
@@ -969,7 +969,7 @@ ruleDateAttribute returns [EObject current=null]
        			$current, 
        			"value",
         		lv_value_0_0, 
-        		"Date");
+        		"org.eclipse.emf.eson.EFactory.Date");
 	        afterParserOrEnumRuleCall();
 	    }
 
@@ -1044,7 +1044,7 @@ ruleBooleanAttribute returns [EObject current=null]
        			$current, 
        			"value",
         		lv_value_0_0, 
-        		"Boolean");
+        		"org.eclipse.emf.eson.EFactory.Boolean");
 	        afterParserOrEnumRuleCall();
 	    }
 

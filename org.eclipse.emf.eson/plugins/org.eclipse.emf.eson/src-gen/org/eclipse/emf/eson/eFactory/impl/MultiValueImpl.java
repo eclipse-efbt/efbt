@@ -69,6 +69,7 @@ public class MultiValueImpl extends ValueImpl implements MultiValue
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<Value> getValues()
   {
     if (values == null)

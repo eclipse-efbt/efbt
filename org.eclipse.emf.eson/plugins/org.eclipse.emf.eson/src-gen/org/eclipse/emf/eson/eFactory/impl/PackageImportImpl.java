@@ -65,6 +65,7 @@ public class PackageImportImpl extends MinimalEObjectImpl.Container implements P
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EPackage getEPackage()
   {
     if (ePackage != null && ePackage.eIsProxy())
@@ -95,6 +96,7 @@ public class PackageImportImpl extends MinimalEObjectImpl.Container implements P
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setEPackage(EPackage newEPackage)
   {
     EPackage oldEPackage = ePackage;

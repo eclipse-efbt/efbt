@@ -26,10 +26,6 @@ public interface PackageImport extends EObject
   /**
    * Returns the value of the '<em><b>EPackage</b></em>' reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>EPackage</em>' reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>EPackage</em>' reference.
    * @see #setEPackage(EPackage)

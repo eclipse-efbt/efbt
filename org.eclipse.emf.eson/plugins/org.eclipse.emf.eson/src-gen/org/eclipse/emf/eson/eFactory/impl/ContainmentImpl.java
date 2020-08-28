@@ -65,6 +65,7 @@ public class ContainmentImpl extends ValueImpl implements Containment
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public NewObject getValue()
   {
     return value;
@@ -92,6 +93,7 @@ public class ContainmentImpl extends ValueImpl implements Containment
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setValue(NewObject newValue)
   {
     if (newValue != value)

@@ -72,6 +72,7 @@ public class BooleanAttributeImpl extends AttributeImpl implements BooleanAttrib
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public boolean isValue()
   {
     return value;
@@ -82,6 +83,7 @@ public class BooleanAttributeImpl extends AttributeImpl implements BooleanAttrib
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setValue(boolean newValue)
   {
     boolean oldValue = value;
@@ -166,7 +168,7 @@ public class BooleanAttributeImpl extends AttributeImpl implements BooleanAttrib
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (value: ");
     result.append(value);
     result.append(')');

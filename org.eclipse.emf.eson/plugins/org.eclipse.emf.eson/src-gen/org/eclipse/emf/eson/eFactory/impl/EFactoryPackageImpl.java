@@ -201,7 +201,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
 
   /**
    * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-   * 
+   *
    * <p>This method is used to initialize {@link EFactoryPackage#eINSTANCE} when that field is accessed.
    * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
    * <!-- begin-user-doc -->
@@ -216,7 +216,8 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
     if (isInited) return (EFactoryPackage)EPackage.Registry.INSTANCE.getEPackage(EFactoryPackage.eNS_URI);
 
     // Obtain or create and register package
-    EFactoryPackageImpl theEFactoryPackage = (EFactoryPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof EFactoryPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new EFactoryPackageImpl());
+    Object registeredEFactoryPackage = EPackage.Registry.INSTANCE.get(eNS_URI);
+    EFactoryPackageImpl theEFactoryPackage = registeredEFactoryPackage instanceof EFactoryPackageImpl ? (EFactoryPackageImpl)registeredEFactoryPackage : new EFactoryPackageImpl();
 
     isInited = true;
 
@@ -229,7 +230,6 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
     // Mark meta-data to indicate it can't be changed
     theEFactoryPackage.freeze();
 
-  
     // Update the registry and return the package
     EPackage.Registry.INSTANCE.put(EFactoryPackage.eNS_URI, theEFactoryPackage);
     return theEFactoryPackage;
@@ -240,6 +240,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getFactory()
   {
     return factoryEClass;
@@ -250,6 +251,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getFactory_Imports()
   {
     return (EReference)factoryEClass.getEStructuralFeatures().get(0);
@@ -260,6 +262,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getFactory_EPackages()
   {
     return (EReference)factoryEClass.getEStructuralFeatures().get(1);
@@ -270,6 +273,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getFactory_Annotations()
   {
     return (EReference)factoryEClass.getEStructuralFeatures().get(2);
@@ -280,6 +284,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getFactory_Root()
   {
     return (EReference)factoryEClass.getEStructuralFeatures().get(3);
@@ -290,6 +295,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getPackageImport()
   {
     return packageImportEClass;
@@ -300,6 +306,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getPackageImport_EPackage()
   {
     return (EReference)packageImportEClass.getEStructuralFeatures().get(0);
@@ -310,6 +317,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getNamespaceImport()
   {
     return namespaceImportEClass;
@@ -320,6 +328,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getNamespaceImport_ImportedNamespace()
   {
     return (EAttribute)namespaceImportEClass.getEStructuralFeatures().get(0);
@@ -330,6 +339,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getAnnotation()
   {
     return annotationEClass;
@@ -340,6 +350,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getCustomNameMapping()
   {
     return customNameMappingEClass;
@@ -350,6 +361,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getCustomNameMapping_EClass()
   {
     return (EReference)customNameMappingEClass.getEStructuralFeatures().get(0);
@@ -360,6 +372,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getCustomNameMapping_NameFeature()
   {
     return (EReference)customNameMappingEClass.getEStructuralFeatures().get(1);
@@ -370,6 +383,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getFeature()
   {
     return featureEClass;
@@ -380,6 +394,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getFeature_EFeature()
   {
     return (EReference)featureEClass.getEStructuralFeatures().get(0);
@@ -390,6 +405,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getFeature_Value()
   {
     return (EReference)featureEClass.getEStructuralFeatures().get(1);
@@ -400,6 +416,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getNewObject()
   {
     return newObjectEClass;
@@ -410,6 +427,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getNewObject_EClass()
   {
     return (EReference)newObjectEClass.getEStructuralFeatures().get(0);
@@ -420,6 +438,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getNewObject_Name()
   {
     return (EAttribute)newObjectEClass.getEStructuralFeatures().get(1);
@@ -430,6 +449,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getNewObject_Features()
   {
     return (EReference)newObjectEClass.getEStructuralFeatures().get(2);
@@ -440,6 +460,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getValue()
   {
     return valueEClass;
@@ -450,6 +471,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getMultiValue()
   {
     return multiValueEClass;
@@ -460,6 +482,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getMultiValue_Values()
   {
     return (EReference)multiValueEClass.getEStructuralFeatures().get(0);
@@ -470,6 +493,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getReference()
   {
     return referenceEClass;
@@ -480,6 +504,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getReference_Value()
   {
     return (EReference)referenceEClass.getEStructuralFeatures().get(0);
@@ -490,6 +515,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getAttribute()
   {
     return attributeEClass;
@@ -500,6 +526,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getEnumAttribute()
   {
     return enumAttributeEClass;
@@ -510,6 +537,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getEnumAttribute_Value()
   {
     return (EReference)enumAttributeEClass.getEStructuralFeatures().get(0);
@@ -520,6 +548,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getStringAttribute()
   {
     return stringAttributeEClass;
@@ -530,6 +559,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getStringAttribute_Value()
   {
     return (EAttribute)stringAttributeEClass.getEStructuralFeatures().get(0);
@@ -540,6 +570,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getIntegerAttribute()
   {
     return integerAttributeEClass;
@@ -550,6 +581,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getIntegerAttribute_Value()
   {
     return (EAttribute)integerAttributeEClass.getEStructuralFeatures().get(0);
@@ -560,6 +592,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getDoubleAttribute()
   {
     return doubleAttributeEClass;
@@ -570,6 +603,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getDoubleAttribute_Value()
   {
     return (EAttribute)doubleAttributeEClass.getEStructuralFeatures().get(0);
@@ -580,6 +614,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getDateAttribute()
   {
     return dateAttributeEClass;
@@ -590,6 +625,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getDateAttribute_Value()
   {
     return (EAttribute)dateAttributeEClass.getEStructuralFeatures().get(0);
@@ -600,6 +636,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getNullAttribute()
   {
     return nullAttributeEClass;
@@ -610,6 +647,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getNullAttribute_Value()
   {
     return (EAttribute)nullAttributeEClass.getEStructuralFeatures().get(0);
@@ -620,6 +658,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getBooleanAttribute()
   {
     return booleanAttributeEClass;
@@ -630,6 +669,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getBooleanAttribute_Value()
   {
     return (EAttribute)booleanAttributeEClass.getEStructuralFeatures().get(0);
@@ -640,6 +680,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getContainment()
   {
     return containmentEClass;
@@ -650,6 +691,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getContainment_Value()
   {
     return (EReference)containmentEClass.getEStructuralFeatures().get(0);
@@ -660,6 +702,7 @@ public class EFactoryPackageImpl extends EPackageImpl implements EFactoryPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EFactoryFactory getEFactoryFactory()
   {
     return (EFactoryFactory)getEFactoryInstance();

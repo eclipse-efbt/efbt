@@ -4,8 +4,9 @@
 package org.eclipse.emf.eson.serializer;
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
+import java.util.Set;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.eson.eFactory.BooleanAttribute;
 import org.eclipse.emf.eson.eFactory.Containment;
 import org.eclipse.emf.eson.eFactory.CustomNameMapping;
@@ -24,15 +25,12 @@ import org.eclipse.emf.eson.eFactory.PackageImport;
 import org.eclipse.emf.eson.eFactory.Reference;
 import org.eclipse.emf.eson.eFactory.StringAttribute;
 import org.eclipse.emf.eson.services.EFactoryGrammarAccess;
-import org.eclipse.xtext.serializer.acceptor.ISemanticSequenceAcceptor;
+import org.eclipse.xtext.Action;
+import org.eclipse.xtext.Parameter;
+import org.eclipse.xtext.ParserRule;
+import org.eclipse.xtext.serializer.ISerializationContext;
 import org.eclipse.xtext.serializer.acceptor.SequenceFeeder;
-import org.eclipse.xtext.serializer.diagnostic.ISemanticSequencerDiagnosticProvider;
-import org.eclipse.xtext.serializer.diagnostic.ISerializationDiagnostic.Acceptor;
 import org.eclipse.xtext.serializer.sequencer.AbstractDelegatingSemanticSequencer;
-import org.eclipse.xtext.serializer.sequencer.GenericSequencer;
-import org.eclipse.xtext.serializer.sequencer.ISemanticNodeProvider.INodesForEObjectProvider;
-import org.eclipse.xtext.serializer.sequencer.ISemanticSequencer;
-import org.eclipse.xtext.serializer.sequencer.ITransientValueService;
 import org.eclipse.xtext.serializer.sequencer.ITransientValueService.ValueTransient;
 
 @SuppressWarnings("all")
@@ -42,8 +40,13 @@ public class EFactorySemanticSequencer extends AbstractDelegatingSemanticSequenc
 	private EFactoryGrammarAccess grammarAccess;
 	
 	@Override
-	public void createSequence(EObject context, EObject semanticObject) {
-		if(semanticObject.eClass().getEPackage() == EFactoryPackage.eINSTANCE) switch(semanticObject.eClass().getClassifierID()) {
+	public void sequence(ISerializationContext context, EObject semanticObject) {
+		EPackage epackage = semanticObject.eClass().getEPackage();
+		ParserRule rule = context.getParserRule();
+		Action action = context.getAssignedAction();
+		Set<Parameter> parameters = context.getEnabledBooleanParameters();
+		if (epackage == EFactoryPackage.eINSTANCE)
+			switch (semanticObject.eClass().getClassifierID()) {
 			case EFactoryPackage.BOOLEAN_ATTRIBUTE:
 				sequence_BooleanAttribute(context, (BooleanAttribute) semanticObject); 
 				return; 
@@ -78,11 +81,11 @@ public class EFactorySemanticSequencer extends AbstractDelegatingSemanticSequenc
 				sequence_NamespaceImport(context, (NamespaceImport) semanticObject); 
 				return; 
 			case EFactoryPackage.NEW_OBJECT:
-				if(context == grammarAccess.getNewObjectRule()) {
+				if (rule == grammarAccess.getNewObjectRule()) {
 					sequence_NewObject(context, (NewObject) semanticObject); 
 					return; 
 				}
-				else if(context == grammarAccess.getValueAccess().getContainmentValueAction_2_3()) {
+				else if (action == grammarAccess.getValueAccess().getContainmentValueAction_2_3()) {
 					sequence_Value_Containment_2_3(context, (NewObject) semanticObject); 
 					return; 
 				}
@@ -100,245 +103,304 @@ public class EFactorySemanticSequencer extends AbstractDelegatingSemanticSequenc
 				sequence_StringAttribute(context, (StringAttribute) semanticObject); 
 				return; 
 			}
-		if (errorAcceptor != null) errorAcceptor.accept(diagnosticProvider.createInvalidContextOrTypeDiagnostic(semanticObject, context));
+		if (errorAcceptor != null)
+			errorAcceptor.accept(diagnosticProvider.createInvalidContextOrTypeDiagnostic(semanticObject, context));
 	}
 	
 	/**
+	 * Contexts:
+	 *     Value returns BooleanAttribute
+	 *     Attribute returns BooleanAttribute
+	 *     BooleanAttribute returns BooleanAttribute
+	 *
 	 * Constraint:
 	 *     value=Boolean
 	 */
-	protected void sequence_BooleanAttribute(EObject context, BooleanAttribute semanticObject) {
-		if(errorAcceptor != null) {
-			if(transientValues.isValueTransient(semanticObject, EFactoryPackage.Literals.BOOLEAN_ATTRIBUTE__VALUE) == ValueTransient.YES)
+	protected void sequence_BooleanAttribute(ISerializationContext context, BooleanAttribute semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, EFactoryPackage.Literals.BOOLEAN_ATTRIBUTE__VALUE) == ValueTransient.YES)
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, EFactoryPackage.Literals.BOOLEAN_ATTRIBUTE__VALUE));
 		}
-		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
-		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getBooleanAttributeAccess().getValueBooleanParserRuleCall_0(), semanticObject.isValue());
 		feeder.finish();
 	}
 	
 	
 	/**
+	 * Contexts:
+	 *     Annotation returns CustomNameMapping
+	 *     CustomNameMapping returns CustomNameMapping
+	 *
 	 * Constraint:
 	 *     (eClass=[EClass|QualifiedName] nameFeature=[EAttribute|QualifiedName])
 	 */
-	protected void sequence_CustomNameMapping(EObject context, CustomNameMapping semanticObject) {
-		if(errorAcceptor != null) {
-			if(transientValues.isValueTransient(semanticObject, EFactoryPackage.Literals.CUSTOM_NAME_MAPPING__ECLASS) == ValueTransient.YES)
+	protected void sequence_CustomNameMapping(ISerializationContext context, CustomNameMapping semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, EFactoryPackage.Literals.CUSTOM_NAME_MAPPING__ECLASS) == ValueTransient.YES)
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, EFactoryPackage.Literals.CUSTOM_NAME_MAPPING__ECLASS));
-			if(transientValues.isValueTransient(semanticObject, EFactoryPackage.Literals.CUSTOM_NAME_MAPPING__NAME_FEATURE) == ValueTransient.YES)
+			if (transientValues.isValueTransient(semanticObject, EFactoryPackage.Literals.CUSTOM_NAME_MAPPING__NAME_FEATURE) == ValueTransient.YES)
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, EFactoryPackage.Literals.CUSTOM_NAME_MAPPING__NAME_FEATURE));
 		}
-		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
-		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
-		feeder.accept(grammarAccess.getCustomNameMappingAccess().getEClassEClassQualifiedNameParserRuleCall_2_0_1(), semanticObject.getEClass());
-		feeder.accept(grammarAccess.getCustomNameMappingAccess().getNameFeatureEAttributeQualifiedNameParserRuleCall_4_0_1(), semanticObject.getNameFeature());
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getCustomNameMappingAccess().getEClassEClassQualifiedNameParserRuleCall_2_0_1(), semanticObject.eGet(EFactoryPackage.Literals.CUSTOM_NAME_MAPPING__ECLASS, false));
+		feeder.accept(grammarAccess.getCustomNameMappingAccess().getNameFeatureEAttributeQualifiedNameParserRuleCall_4_0_1(), semanticObject.eGet(EFactoryPackage.Literals.CUSTOM_NAME_MAPPING__NAME_FEATURE, false));
 		feeder.finish();
 	}
 	
 	
 	/**
+	 * Contexts:
+	 *     Value returns DateAttribute
+	 *     Attribute returns DateAttribute
+	 *     DateAttribute returns DateAttribute
+	 *
 	 * Constraint:
 	 *     value=Date
 	 */
-	protected void sequence_DateAttribute(EObject context, DateAttribute semanticObject) {
-		if(errorAcceptor != null) {
-			if(transientValues.isValueTransient(semanticObject, EFactoryPackage.Literals.DATE_ATTRIBUTE__VALUE) == ValueTransient.YES)
+	protected void sequence_DateAttribute(ISerializationContext context, DateAttribute semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, EFactoryPackage.Literals.DATE_ATTRIBUTE__VALUE) == ValueTransient.YES)
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, EFactoryPackage.Literals.DATE_ATTRIBUTE__VALUE));
 		}
-		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
-		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getDateAttributeAccess().getValueDateParserRuleCall_0(), semanticObject.getValue());
 		feeder.finish();
 	}
 	
 	
 	/**
+	 * Contexts:
+	 *     Value returns DoubleAttribute
+	 *     Attribute returns DoubleAttribute
+	 *     DoubleAttribute returns DoubleAttribute
+	 *
 	 * Constraint:
 	 *     value=Double
 	 */
-	protected void sequence_DoubleAttribute(EObject context, DoubleAttribute semanticObject) {
-		if(errorAcceptor != null) {
-			if(transientValues.isValueTransient(semanticObject, EFactoryPackage.Literals.DOUBLE_ATTRIBUTE__VALUE) == ValueTransient.YES)
+	protected void sequence_DoubleAttribute(ISerializationContext context, DoubleAttribute semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, EFactoryPackage.Literals.DOUBLE_ATTRIBUTE__VALUE) == ValueTransient.YES)
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, EFactoryPackage.Literals.DOUBLE_ATTRIBUTE__VALUE));
 		}
-		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
-		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getDoubleAttributeAccess().getValueDoubleParserRuleCall_0(), semanticObject.getValue());
 		feeder.finish();
 	}
 	
 	
 	/**
+	 * Contexts:
+	 *     Value returns EnumAttribute
+	 *     Attribute returns EnumAttribute
+	 *     EnumAttribute returns EnumAttribute
+	 *
 	 * Constraint:
 	 *     value=[EEnumLiteral|QualifiedName]
 	 */
-	protected void sequence_EnumAttribute(EObject context, EnumAttribute semanticObject) {
-		if(errorAcceptor != null) {
-			if(transientValues.isValueTransient(semanticObject, EFactoryPackage.Literals.ENUM_ATTRIBUTE__VALUE) == ValueTransient.YES)
+	protected void sequence_EnumAttribute(ISerializationContext context, EnumAttribute semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, EFactoryPackage.Literals.ENUM_ATTRIBUTE__VALUE) == ValueTransient.YES)
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, EFactoryPackage.Literals.ENUM_ATTRIBUTE__VALUE));
 		}
-		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
-		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
-		feeder.accept(grammarAccess.getEnumAttributeAccess().getValueEEnumLiteralQualifiedNameParserRuleCall_1_0_1(), semanticObject.getValue());
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getEnumAttributeAccess().getValueEEnumLiteralQualifiedNameParserRuleCall_1_0_1(), semanticObject.eGet(EFactoryPackage.Literals.ENUM_ATTRIBUTE__VALUE, false));
 		feeder.finish();
 	}
 	
 	
 	/**
+	 * Contexts:
+	 *     Factory returns Factory
+	 *
 	 * Constraint:
 	 *     (imports+=NamespaceImport* ePackages+=PackageImport* annotations+=Annotation* root=NewObject)
 	 */
-	protected void sequence_Factory(EObject context, Factory semanticObject) {
+	protected void sequence_Factory(ISerializationContext context, Factory semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
 	/**
+	 * Contexts:
+	 *     Feature returns Feature
+	 *
 	 * Constraint:
 	 *     (eFeature=[EStructuralFeature|QualifiedName] value=Value?)
 	 */
-	protected void sequence_Feature(EObject context, Feature semanticObject) {
+	protected void sequence_Feature(ISerializationContext context, Feature semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
 	/**
+	 * Contexts:
+	 *     Value returns IntegerAttribute
+	 *     Attribute returns IntegerAttribute
+	 *     IntegerAttribute returns IntegerAttribute
+	 *
 	 * Constraint:
 	 *     value=Long
 	 */
-	protected void sequence_IntegerAttribute(EObject context, IntegerAttribute semanticObject) {
-		if(errorAcceptor != null) {
-			if(transientValues.isValueTransient(semanticObject, EFactoryPackage.Literals.INTEGER_ATTRIBUTE__VALUE) == ValueTransient.YES)
+	protected void sequence_IntegerAttribute(ISerializationContext context, IntegerAttribute semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, EFactoryPackage.Literals.INTEGER_ATTRIBUTE__VALUE) == ValueTransient.YES)
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, EFactoryPackage.Literals.INTEGER_ATTRIBUTE__VALUE));
 		}
-		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
-		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getIntegerAttributeAccess().getValueLongParserRuleCall_0(), semanticObject.getValue());
 		feeder.finish();
 	}
 	
 	
 	/**
+	 * Contexts:
+	 *     Value returns MultiValue
+	 *     MultiValue returns MultiValue
+	 *
 	 * Constraint:
-	 *     (values+=Value*)
+	 *     values+=Value*
 	 */
-	protected void sequence_MultiValue(EObject context, MultiValue semanticObject) {
+	protected void sequence_MultiValue(ISerializationContext context, MultiValue semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
 	/**
+	 * Contexts:
+	 *     NamespaceImport returns NamespaceImport
+	 *
 	 * Constraint:
 	 *     importedNamespace=QualifiedNameWithWildcard
 	 */
-	protected void sequence_NamespaceImport(EObject context, NamespaceImport semanticObject) {
-		if(errorAcceptor != null) {
-			if(transientValues.isValueTransient(semanticObject, EFactoryPackage.Literals.NAMESPACE_IMPORT__IMPORTED_NAMESPACE) == ValueTransient.YES)
+	protected void sequence_NamespaceImport(ISerializationContext context, NamespaceImport semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, EFactoryPackage.Literals.NAMESPACE_IMPORT__IMPORTED_NAMESPACE) == ValueTransient.YES)
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, EFactoryPackage.Literals.NAMESPACE_IMPORT__IMPORTED_NAMESPACE));
 		}
-		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
-		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getNamespaceImportAccess().getImportedNamespaceQualifiedNameWithWildcardParserRuleCall_1_0(), semanticObject.getImportedNamespace());
 		feeder.finish();
 	}
 	
 	
 	/**
+	 * Contexts:
+	 *     NewObject returns NewObject
+	 *
 	 * Constraint:
 	 *     (eClass=[EClass|QualifiedName] name=ValidID? features+=Feature*)
 	 */
-	protected void sequence_NewObject(EObject context, NewObject semanticObject) {
+	protected void sequence_NewObject(ISerializationContext context, NewObject semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
 	/**
+	 * Contexts:
+	 *     Value returns NullAttribute
+	 *     Attribute returns NullAttribute
+	 *     NullAttribute returns NullAttribute
+	 *
 	 * Constraint:
 	 *     value='NULL'
 	 */
-	protected void sequence_NullAttribute(EObject context, NullAttribute semanticObject) {
-		if(errorAcceptor != null) {
-			if(transientValues.isValueTransient(semanticObject, EFactoryPackage.Literals.NULL_ATTRIBUTE__VALUE) == ValueTransient.YES)
+	protected void sequence_NullAttribute(ISerializationContext context, NullAttribute semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, EFactoryPackage.Literals.NULL_ATTRIBUTE__VALUE) == ValueTransient.YES)
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, EFactoryPackage.Literals.NULL_ATTRIBUTE__VALUE));
 		}
-		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
-		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getNullAttributeAccess().getValueNULLKeyword_0(), semanticObject.getValue());
 		feeder.finish();
 	}
 	
 	
 	/**
+	 * Contexts:
+	 *     PackageImport returns PackageImport
+	 *
 	 * Constraint:
 	 *     ePackage=[EPackage|StringOrQualifiedNameWithWildcard]
 	 */
-	protected void sequence_PackageImport(EObject context, PackageImport semanticObject) {
-		if(errorAcceptor != null) {
-			if(transientValues.isValueTransient(semanticObject, EFactoryPackage.Literals.PACKAGE_IMPORT__EPACKAGE) == ValueTransient.YES)
+	protected void sequence_PackageImport(ISerializationContext context, PackageImport semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, EFactoryPackage.Literals.PACKAGE_IMPORT__EPACKAGE) == ValueTransient.YES)
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, EFactoryPackage.Literals.PACKAGE_IMPORT__EPACKAGE));
 		}
-		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
-		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
-		feeder.accept(grammarAccess.getPackageImportAccess().getEPackageEPackageStringOrQualifiedNameWithWildcardParserRuleCall_1_0_1(), semanticObject.getEPackage());
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getPackageImportAccess().getEPackageEPackageStringOrQualifiedNameWithWildcardParserRuleCall_1_0_1(), semanticObject.eGet(EFactoryPackage.Literals.PACKAGE_IMPORT__EPACKAGE, false));
 		feeder.finish();
 	}
 	
 	
 	/**
+	 * Contexts:
+	 *     Value returns Reference
+	 *     Reference returns Reference
+	 *
 	 * Constraint:
 	 *     value=[EObject|QualifiedName]
 	 */
-	protected void sequence_Reference(EObject context, Reference semanticObject) {
-		if(errorAcceptor != null) {
-			if(transientValues.isValueTransient(semanticObject, EFactoryPackage.Literals.REFERENCE__VALUE) == ValueTransient.YES)
+	protected void sequence_Reference(ISerializationContext context, Reference semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, EFactoryPackage.Literals.REFERENCE__VALUE) == ValueTransient.YES)
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, EFactoryPackage.Literals.REFERENCE__VALUE));
 		}
-		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
-		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
-		feeder.accept(grammarAccess.getReferenceAccess().getValueEObjectQualifiedNameParserRuleCall_0_1(), semanticObject.getValue());
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getReferenceAccess().getValueEObjectQualifiedNameParserRuleCall_0_1(), semanticObject.eGet(EFactoryPackage.Literals.REFERENCE__VALUE, false));
 		feeder.finish();
 	}
 	
 	
 	/**
+	 * Contexts:
+	 *     Value returns StringAttribute
+	 *     Attribute returns StringAttribute
+	 *     StringAttribute returns StringAttribute
+	 *
 	 * Constraint:
 	 *     value=STRING
 	 */
-	protected void sequence_StringAttribute(EObject context, StringAttribute semanticObject) {
-		if(errorAcceptor != null) {
-			if(transientValues.isValueTransient(semanticObject, EFactoryPackage.Literals.STRING_ATTRIBUTE__VALUE) == ValueTransient.YES)
+	protected void sequence_StringAttribute(ISerializationContext context, StringAttribute semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, EFactoryPackage.Literals.STRING_ATTRIBUTE__VALUE) == ValueTransient.YES)
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, EFactoryPackage.Literals.STRING_ATTRIBUTE__VALUE));
 		}
-		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
-		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getStringAttributeAccess().getValueSTRINGTerminalRuleCall_0(), semanticObject.getValue());
 		feeder.finish();
 	}
 	
 	
 	/**
+	 * Contexts:
+	 *     Value returns Containment
+	 *
 	 * Constraint:
 	 *     value=Value_Containment_2_3
 	 */
-	protected void sequence_Value(EObject context, Containment semanticObject) {
-		if(errorAcceptor != null) {
-			if(transientValues.isValueTransient(semanticObject, EFactoryPackage.Literals.CONTAINMENT__VALUE) == ValueTransient.YES)
+	protected void sequence_Value(ISerializationContext context, Containment semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, EFactoryPackage.Literals.CONTAINMENT__VALUE) == ValueTransient.YES)
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, EFactoryPackage.Literals.CONTAINMENT__VALUE));
 		}
-		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
-		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getValueAccess().getContainmentValueAction_2_3(), semanticObject.getValue());
 		feeder.finish();
 	}
 	
 	
 	/**
+	 * Contexts:
+	 *     Value.Containment_2_3 returns NewObject
+	 *
 	 * Constraint:
 	 *     (eClass=[EClass|QualifiedName]? name=ValidID? features+=Feature*)
 	 */
-	protected void sequence_Value_Containment_2_3(EObject context, NewObject semanticObject) {
+	protected void sequence_Value_Containment_2_3(ISerializationContext context, NewObject semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
+	
+	
 }

@@ -3,8 +3,8 @@
     xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.emf.eson/src-gen" editDirectory="/org.eclipse.emf.eson.edit/src"
     editorDirectory="/org.eclipse.emf.eson.editor/src" modelPluginID="org.eclipse.emf.eson"
     forceOverwrite="true" modelName="EFactory" updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
-    complianceLevel="6.0" copyrightFields="false" editPluginID="org.eclipse.emf.eson.edit"
-    editorPluginID="org.eclipse.emf.eson.editor" runtimeVersion="2.11">
+    complianceLevel="8.0" copyrightFields="false" editPluginID="org.eclipse.emf.eson.edit"
+    editorPluginID="org.eclipse.emf.eson.editor" runtimeVersion="2.20">
   <genPackages prefix="EFactory" basePackage="org.eclipse.emf.eson" disposableProviderFactory="true"
       ecorePackage="EFactory.ecore#/">
     <genClasses ecoreClass="EFactory.ecore#//Factory">

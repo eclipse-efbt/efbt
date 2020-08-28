@@ -31,10 +31,6 @@ public interface Factory extends EObject
    * Returns the value of the '<em><b>Imports</b></em>' containment reference list.
    * The list contents are of type {@link org.eclipse.emf.eson.eFactory.NamespaceImport}.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Imports</em>' containment reference list isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Imports</em>' containment reference list.
    * @see org.eclipse.emf.eson.eFactory.EFactoryPackage#getFactory_Imports()
@@ -47,10 +43,6 @@ public interface Factory extends EObject
    * Returns the value of the '<em><b>EPackages</b></em>' containment reference list.
    * The list contents are of type {@link org.eclipse.emf.eson.eFactory.PackageImport}.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>EPackages</em>' containment reference list isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>EPackages</em>' containment reference list.
    * @see org.eclipse.emf.eson.eFactory.EFactoryPackage#getFactory_EPackages()
@@ -63,10 +55,6 @@ public interface Factory extends EObject
    * Returns the value of the '<em><b>Annotations</b></em>' containment reference list.
    * The list contents are of type {@link org.eclipse.emf.eson.eFactory.Annotation}.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Annotations</em>' containment reference list isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Annotations</em>' containment reference list.
    * @see org.eclipse.emf.eson.eFactory.EFactoryPackage#getFactory_Annotations()
@@ -78,10 +66,6 @@ public interface Factory extends EObject
   /**
    * Returns the value of the '<em><b>Root</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Root</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Root</em>' containment reference.
    * @see #setRoot(NewObject)
