@@ -19,8 +19,8 @@
     </organization>
 
 	<properties>
-		<tycho-version>0.24.0</tycho-version>
-		<!-- <xtext-version>2.5.3</xtext-version> -->
+		<tycho-version>1.7.0</tycho-version>
+		<!-- <xtext-version>2.22.0</xtext-version> -->
 		<!-- <fornax-version>3.4.0</fornax-version> -->
 		<!-- There is test which doesn't work on Windows, and this serves to exclude it -->
 		<tycho.surefire.excludes>NADA</tycho.surefire.excludes>
@@ -201,31 +201,13 @@
 						</artifact>
 					</target>
 					<environments>
-						<environment>
-							<os>linux</os>
-							<ws>gtk</ws>
-							<arch>x86</arch>
-						</environment>
-						<environment>
-							<os>linux</os>
-							<ws>gtk</ws>
-							<arch>x86_64</arch>
-						</environment>
-						<environment>
-							<os>win32</os>
-							<ws>win32</ws>
-							<arch>x86</arch>
-						</environment>
+					
 						<environment>
 							<os>win32</os>
 							<ws>win32</ws>
 							<arch>x86_64</arch>
 						</environment>
-						<environment>
-							<os>macosx</os>
-							<ws>cocoa</ws>
-							<arch>x86_64</arch>
-						</environment>
+						
 					</environments>
 				</configuration>
 			</plugin>

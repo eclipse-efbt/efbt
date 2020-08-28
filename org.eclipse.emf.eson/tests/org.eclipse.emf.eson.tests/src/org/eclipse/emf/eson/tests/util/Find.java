@@ -51,7 +51,9 @@ public final class Find {
 	}
 
 	private static Iterator<EObject> getResourceSetIterator(EObject context) {
-		Iterator<EObject> result = Iterators.emptyIterator();
+		//Iterator<EObject> result = Iterators.emptyIterator();
+		//temporary change , since google guava version now does not expose the emptyIterator mehtod as public
+		Iterator<EObject> result = null; 
 		Resource resource = context.eResource();
 		if (resource == null) {
 			result = getRootObjectIterator(context);
@@ -63,7 +65,9 @@ public final class Find {
 		return result;
 	}
 	private static Iterator<EObject> getResourceSetIterator(ResourceSet resourceSet) {
-		Iterator<EObject> result = Iterators.emptyIterator();
+		//Iterator<EObject> result = Iterators.emptyIterator();
+		//temporary change , since google guava version now does not expose the emptyIterator mehtod as public
+				Iterator<EObject> result = null; 
 		for (Resource resource : resourceSet.getResources()) {
 			result = Iterators.concat(result, resource.getAllContents());
 		}
