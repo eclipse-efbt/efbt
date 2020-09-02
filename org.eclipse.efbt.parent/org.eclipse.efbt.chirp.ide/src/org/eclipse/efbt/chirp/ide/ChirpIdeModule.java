@@ -3,7 +3,6 @@
  */
 package org.eclipse.efbt.chirp.ide;
 
-import org.eclipse.efbt.chirp.ide.AbstractChirpIdeModule;
 
 /**
  * Use this class to register ide components.
