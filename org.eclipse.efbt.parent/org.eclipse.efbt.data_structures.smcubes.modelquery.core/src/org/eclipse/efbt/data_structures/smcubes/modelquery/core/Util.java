@@ -28,13 +28,13 @@ public class Util {
 	 */
 	public static SmcubesModel getDefaultBirdModel(EObject o) {
 	
-		  ResourceSet rs = o.eResource().getResourceSet();
+		/**ResourceSet rs = o.eResource().getResourceSet();
 		    String birdModelXMLFile = o.eResource().getURI().trimSegments(1)
 		        + "/smcubes_model.smcubes_model";
 		    File file = new File(birdModelXMLFile);
 		    URI uri = file.isFile() ? URI.createFileURI(file.getAbsolutePath()) : URI.createURI(birdModelXMLFile);
-		    Resource resource = rs.getResource(uri, true);
-		    return (SmcubesModel) resource.getContents().get(0);
+		    Resource resource = rs.getResource(uri, true);*/
+		    return (SmcubesModel) o.eResource().getContents().get(1);
 	}
 
 }
