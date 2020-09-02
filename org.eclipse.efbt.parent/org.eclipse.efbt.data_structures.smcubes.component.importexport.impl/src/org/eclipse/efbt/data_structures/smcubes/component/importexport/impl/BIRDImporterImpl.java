@@ -551,7 +551,8 @@ public class BIRDImporterImpl extends Importer {
 				variable.setCode(row.getString("CODE"));
 				variable.setVariable_id(row.getString("VARIABLE_ID"));
 				variable.setDescription(row.getString("DESCRIPTION"));
-				variable.setName(row.getString("NAME"));
+				variable.setName(row.getString("VARIABLE_ID"));
+				variable.setDisplayName(row.getString("NAME"));
 				String domainIDString = (row.getString("DOMAIN_ID"));
 				DOMAIN domain = getDomainWithID(domainIDString);
 				variable.setDomain_id(domain);

@@ -31,6 +31,6 @@
       <ownedLineMappings name="MEMBER" domainClass="MEMBER" semanticCandidatesExpression="service:getMembers()"/>
       <ownedColumnMappings name="name" featureName="name"/>
     </ownedRepresentations>
-    <ownedJavaExtensions qualifiedClassName="org.eclipse.efbt.bird.ui.sirius.Services"/>
+    <ownedJavaExtensions qualifiedClassName="org.eclipse.efbt.data_structures.smcubes.ui.sirius.Services"/>
   </ownedViewpoints>
 </description:Group>
