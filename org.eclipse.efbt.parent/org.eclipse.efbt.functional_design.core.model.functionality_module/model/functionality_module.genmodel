@@ -21,7 +21,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference functionality_module.ecore#//FunctionalityModuleSet/subTransformationsAndSchemes"/>
     </genClasses>
     <genClasses ecoreClass="functionality_module.ecore#//ReadDataSourceFunctionalityModule"/>
-    <genClasses image="false" ecoreClass="functionality_module.ecore#//OutputCreationFunctionalityModule"/>
+    <genClasses ecoreClass="functionality_module.ecore#//ReportCellCreationFunctionalityModule"/>
     <genClasses image="false" ecoreClass="functionality_module.ecore#//FunctionalityModule">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functionality_module.ecore#//FunctionalityModule/name"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference functionality_module.ecore#//FunctionalityModule/usedTransformationOrScheme"/>

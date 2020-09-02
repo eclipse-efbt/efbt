@@ -34,7 +34,9 @@
 		 <module>org.eclipse.efbt.chirp.component.exporter</module>
 		<module>org.eclipse.efbt.chirp.ui.sirius.testmanager</module>
 		<module>org.eclipse.efbt.data_structures.smcubes.modelquery.core</module>
+		<module>org.eclipse.efbt.data_structures.smcubes.component.importexport.api</module>
 		<module>org.eclipse.efbt.data_structures.smcubes.component.importexport.impl</module>
+		<module>org.eclipse.efbt.data_structures.smcubes.component.importexport.test</module>
 		<module>org.eclipse.efbt.data_structures.smcubes.ui.sirius</module>
 		<module>org.eclipse.efbt.data_structures.smcubes.model.core</module>
 		<module>org.eclipse.efbt.util.access.interface</module>

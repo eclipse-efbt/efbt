@@ -22,7 +22,7 @@ import "http://www.eclipse.org/test_input_data" as test_input_data
 import "http://www.eclipse.org/vtl_transformation" as vtl_transformation
 
 
-rogram returns chirp_program::Program:
+Program returns  chirp_program::Program:
 	{chirp_program::Program}
 	'Program'
 	'{'
@@ -45,7 +45,7 @@ TestDefinition returns test_definition::TestDefinition:
 
 
 FunctionalityModule returns functionality_module::FunctionalityModule:
-	DataProcessingFunctionalityModule | LeafFunctionalityModule_Impl | ParallelFunctionalityModule | ScenarioSetFunctionalityModule | SerialFunctionalityModule | FunctionalityModuleSet_Impl | ReadDataSourceFunctionalityModule | ValidationFunctionalityModule;
+	DataProcessingFunctionalityModule | LeafFunctionalityModule_Impl | ParallelFunctionalityModule | ScenarioSetFunctionalityModule | SerialFunctionalityModule | FunctionalityModuleSet_Impl | ReadDataSourceFunctionalityModule | ReportCellCreationFunctionalityModule | ValidationFunctionalityModule;
 
 
 
@@ -296,6 +296,7 @@ DOMAIN returns core::DOMAIN:
 		('data_type' data_type=FACET_VALUE_TYPE)?
 		('description' description=EString)?
 		('domain_id' domain_id=EString)?
+		('displayName' displayName=EString)?
 		('facet_id' facet_id=[core::FACET_COLLECTION|QualifiedName])?
 		('maintenance_agency_id' maintenance_agency_id=[core::MAINTENANCE_AGENCY|QualifiedName])?
 	'}';
@@ -344,6 +345,7 @@ MEMBER returns core::MEMBER:
 		('code' code=EString)?
 		('description' description=EString)?
 		('member_id' member_id=EString)?
+		('displayName' displayName=EString)?
 		('domain_id' domain_id=[core::DOMAIN|QualifiedName])?
 		('maintenance_agency_id' maintenance_agency_id=[core::MAINTENANCE_AGENCY|QualifiedName])?
 	'}';
@@ -357,6 +359,7 @@ VARIABLE returns core::VARIABLE:
 		('description' description=EString)?
 		('primary_concept' primary_concept=EString)?
 		('variable_id' variable_id=EString)?
+		('displayName' displayName=EString)?
 		('domain_id' domain_id=[core::DOMAIN|QualifiedName])?
 		('maintenance_agency_id' maintenance_agency_id=[core::MAINTENANCE_AGENCY|QualifiedName])?
 	'}';
@@ -366,15 +369,16 @@ CUBE returns data_definition::CUBE:
 	(is_allowed?='is_allowed')?
 	(published?='published')?
 	'CUBE'
-	cube_id=EString
+	name=EString
 	'{'
 		('code' code=EString)?
+		('cube_id' cube_id=EString)?
 		('cube_type' cube_type=EString)?
 		('description' description=EString)?
-		('name' name=EString)?
 		('valid_from' valid_from=EDate)?
 		('valid_to' valid_to=EDate)?
 		('version' version=EString)?
+		('displayName' displayName=EString)?
 		('cube_structure_id' cube_structure_id=[data_definition::CUBE_STRUCTURE|QualifiedName])?
 		('framework_id' framework_id=[data_definition::FRAMEWORK|QualifiedName])?
 		('maintenance_agency_id' maintenance_agency_id=[core::MAINTENANCE_AGENCY|QualifiedName])?
@@ -383,14 +387,15 @@ CUBE returns data_definition::CUBE:
 CUBE_STRUCTURE returns data_definition::CUBE_STRUCTURE:
 	{data_definition::CUBE_STRUCTURE}
 	'CUBE_STRUCTURE'
-	cube_structure_id=EString
+	name=EString
 	'{'
 		('code' code=EString)?
+		('cube_structure_id' cube_structure_id=EString)?
 		('description' description=EString)?
-		('name' name=EString)?
 		('valid_from' valid_from=EDate)?
 		('valid_to' valid_to=EDate)?
 		('version' version=EString)?
+		('displayName' displayName=EString)?
 		('maintenance_agency_id' maintenance_agency_id=[core::MAINTENANCE_AGENCY|QualifiedName])?
 	'}';
 
@@ -808,6 +813,16 @@ ReadDataSourceFunctionalityModule returns functionality_module::ReadDataSourceFu
 		('scenarioSet' scenarioSet=ScenarioSet)?
 	'}';
 
+ReportCellCreationFunctionalityModule returns functionality_module::ReportCellCreationFunctionalityModule:
+	{functionality_module::ReportCellCreationFunctionalityModule}
+	'ReportCellCreationFunctionalityModule'
+	name=EString
+	'{'
+		('usedTransformationOrScheme' usedTransformationOrScheme=[functionality_module::FunctionalityModule|QualifiedName])?
+		('scenario' scenario=[scenarios::Scenario|QualifiedName])?
+		('scenarioSet' scenarioSet=ScenarioSet)?
+	'}';
+
 ValidationFunctionalityModule returns functionality_module::ValidationFunctionalityModule:
 	{functionality_module::ValidationFunctionalityModule}
 	'ValidationFunctionalityModule'
@@ -817,7 +832,6 @@ ValidationFunctionalityModule returns functionality_module::ValidationFunctional
 		('scenario' scenario=[scenarios::Scenario|QualifiedName])?
 		('scenarioSet' scenarioSet=ScenarioSet)?
 	'}';
-
 
 	QualifiedName:
     ID ('.' ID)*;

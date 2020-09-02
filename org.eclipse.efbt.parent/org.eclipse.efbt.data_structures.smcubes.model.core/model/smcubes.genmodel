@@ -47,6 +47,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//DOMAIN/is_reference"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference core.ecore#//DOMAIN/maintenance_agency_id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//DOMAIN/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//DOMAIN/displayName"/>
     </genClasses>
     <genClasses ecoreClass="core.ecore#//FACET_COLLECTION">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//FACET_COLLECTION/code"/>
@@ -87,6 +88,7 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference core.ecore#//MEMBER/maintenance_agency_id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//MEMBER/member_id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//MEMBER/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//MEMBER/displayName"/>
     </genClasses>
     <genClasses ecoreClass="core.ecore#//MEMBER_HIERARCHY">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//MEMBER_HIERARCHY/code"/>
@@ -132,6 +134,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//VARIABLE/primary_concept"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//VARIABLE/variable_id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//VARIABLE/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//VARIABLE/displayName"/>
     </genClasses>
     <genClasses ecoreClass="core.ecore#//VARIABLE_SET">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//VARIABLE_SET/code"/>
@@ -195,6 +198,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE/valid_from"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE/valid_to"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE/version"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE/displayName"/>
     </genClasses>
     <genClasses ecoreClass="data_definition.ecore#//CUBE_GROUP">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_GROUP/code"/>
@@ -253,6 +257,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_STRUCTURE/valid_from"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_STRUCTURE/valid_to"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_STRUCTURE/version"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_definition.ecore#//CUBE_STRUCTURE/displayName"/>
     </genClasses>
     <genClasses ecoreClass="data_definition.ecore#//CUBE_STRUCTURE_ITEM">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//CUBE_STRUCTURE_ITEM/attribute_associated_variable"/>
@@ -462,6 +467,7 @@
     </genClasses>
     <genClasses ecoreClass="reports.ecore#//ReportCell">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference reports.ecore#//ReportCell/combination"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reports.ecore#//ReportCell/name"/>
     </genClasses>
     <genClasses ecoreClass="reports.ecore#//ReportCellValue">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference reports.ecore#//ReportCellValue/reportCell"/>

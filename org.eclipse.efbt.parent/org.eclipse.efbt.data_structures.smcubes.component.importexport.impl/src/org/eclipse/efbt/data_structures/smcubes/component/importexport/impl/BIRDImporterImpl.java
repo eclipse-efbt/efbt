@@ -13,16 +13,7 @@
 
 package org.eclipse.efbt.data_structures.smcubes.component.importexport.impl;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CharsetEncoder;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -50,15 +41,7 @@ import org.eclipse.efbt.data_structures.smcubes.model.vtl_transformation.Vtl_tra
 import org.eclipse.efbt.util.access.provider.AccessUtilProvider;
 import org.eclipse.efbt.util.accessdb.AccessRow;
 import org.eclipse.efbt.util.accessdb.AccessUtils;
-import org.eclipse.efbt.util.csv.CSVRow;
-import org.eclipse.efbt.util.csv.CSVUtils;
-import org.eclipse.efbt.util.csv.provider.CSVUtilsProvider;
-import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
-
-import com.ibm.icu.text.UTF16;
 
 
 
@@ -70,32 +53,40 @@ import com.ibm.icu.text.UTF16;
  * @author Neil Mackenzie
  *
  */
-public class BIRDImporter extends Importer {
+public class BIRDImporterImpl extends Importer {
 
-	/**
-	 * The file path of the access database
-	 */
-	public static String filepath;
-	/**
-	 * The file path of the input test data
-	 */
-	public static String testdatafilepath;
+	
 
+   public BIRDImporterImpl()
+   {
+	   super();
+   }
 
-
+   public void doImport(String filepath6, String outputFilepath26, String testdatafilepath6)
+	{
+	
+   super.doImport(filepath6, outputFilepath26, testdatafilepath6);
+	}
+   
+   
+   public void sayHello2()
+	{
+	
+ System.out.println("hello2");
+	}
 	/**
 	 * Returns the file path of the access database
 	 * @return
 	 */
-	public static String getFilepath() {
+	public  String getFilepath() {
 		return filepath;
 	}
 	/**
 	 * Sets the file path of the access database
 	 * 
 	 */
-	public static void setFilepath(String filepath) {
-		BIRDImporter.filepath = filepath;
+	public  void setFilepath(String filepath) {
+		this.filepath = filepath;
 	}
 
 	/** 
@@ -181,7 +172,7 @@ public class BIRDImporter extends Importer {
 	 * @param elementID
 	 * @return
 	 */
-	private static MEMBER findMemberWithID(String elementID) {
+	private  MEMBER findMemberWithID(String elementID) {
 		EList<MEMBER> memberList = members.getMembers();
 		MEMBER returnMember = null;
 		for (Iterator iterator = memberList.iterator(); iterator.hasNext();) {
@@ -200,7 +191,7 @@ public class BIRDImporter extends Importer {
 	 * @param elementID
 	 * @return
 	 */
-	private static VARIABLE findVariableWithID(String elementID) {
+	private  VARIABLE findVariableWithID(String elementID) {
 		EList<VARIABLE> variableList = variables.getVariables();
 		VARIABLE returnVariable = null;
 		for (Iterator iterator = variableList.iterator(); iterator.hasNext();) {
@@ -219,7 +210,7 @@ public class BIRDImporter extends Importer {
 	 * @param scheme_id
 	 * @return
 	 */
-	private static TRANSFORMATION_SCHEME getTransformationScheme(String scheme_id) {
+	private  TRANSFORMATION_SCHEME getTransformationScheme(String scheme_id) {
 		
 		EList<TRANSFORMATION_SCHEME> schemes = transformationSchemes.getSchemes();
 		TRANSFORMATION_SCHEME returnScheme = null;
@@ -476,8 +467,8 @@ public class BIRDImporter extends Importer {
 					}
 				}
 
-				
-				domain.setName(row.getString("NAME"));
+				domain.setName(row.getString("DOMAIN_ID"));
+				domain.setDisplayName(row.getString("NAME"));
 				boolean is_enumerated = false;
 				if (row.getBoolean("IS_ENUMERATED"))
 					is_enumerated = true;
@@ -508,7 +499,8 @@ public class BIRDImporter extends Importer {
 				member.setCode(row.getString("CODE"));
 				member.setMember_id(row.getString("MEMBER_ID"));
 				member.setDescription(row.getString("DESCRIPTION"));
-				member.setName(row.getString("NAME"));
+				member.setName(row.getString("MEMBER_ID"));
+				member.setDisplayName(row.getString("NAME"));
 				String domainIDString = (row.getString("DOMAIN_ID"));
 				DOMAIN domain = getDomainWithID(domainIDString);
 				member.setDomain_id(domain);
@@ -530,7 +522,7 @@ public class BIRDImporter extends Importer {
 	 * @param domainIDString
 	 * @return
 	 */
-	private static DOMAIN getDomainWithID(String domainIDString) {
+	private  DOMAIN getDomainWithID(String domainIDString) {
 
 		EList<DOMAIN> domainList = domains.getDomains();
 		DOMAIN returnDomain = null;
@@ -587,7 +579,8 @@ public class BIRDImporter extends Importer {
 				CUBE_STRUCTURE cube_structure = Data_definitionFactory.eINSTANCE.createCUBE_STRUCTURE();
 				cube_structure.setCode(row.getString("CODE"));
 				cube_structure.setCube_structure_id(row.getString("CUBE_STRUCTURE_ID"));
-				cube_structure.setName(row.getString("NAME"));
+				cube_structure.setName(row.getString("CUBE_STRUCTURE_ID"));
+				cube_structure.setDisplayName(row.getString("NAME"));
 				cube_structure.setDescription("DESCRIPTION");
 				cube_structure.setValid_to(row.getDate("VALID_TO"));
 				
@@ -599,7 +592,8 @@ public class BIRDImporter extends Importer {
 				CUBE cube = Data_definitionFactory.eINSTANCE.createCUBE();
 				cube.setCode(row.getString("CODE"));
 				cube.setCube_id(row.getString("CUBE_ID"));
-				cube.setName(row.getString("NAME"));
+				cube.setName(row.getString("CUBE_ID"));
+				cube.setDisplayName(row.getString("NAME"));
 				cube.setCube_type(row.getString("CUBE_TYPE"));
 				cube.setDescription("DESCRIPTION");
 				String cubeStructureString = row.getString("CUBE_STRUCTURE_ID");
@@ -609,7 +603,7 @@ public class BIRDImporter extends Importer {
 				cubesModule.getCubes().add(cube);
 			}
 
-			list = accessUtils.getRowsForTable(filepath, "CUBE");
+			list = accessUtils.getRowsForTable(filepath, "CUBE_STRUCTURE_ITEM");
 			for (AccessRow row : list) {
 
 				CUBE_STRUCTURE_ITEM item = Data_definitionFactory.eINSTANCE.createCUBE_STRUCTURE_ITEM();
@@ -658,7 +652,7 @@ public class BIRDImporter extends Importer {
 	 * @param elementID
 	 * @return
 	 */
-	private static CUBE_STRUCTURE findCubeStructureWithID(String elementID) {
+	private  CUBE_STRUCTURE findCubeStructureWithID(String elementID) {
 		EList<CUBE_STRUCTURE> structureList = cubeStructuresModule.getCubeStructures();
 		CUBE_STRUCTURE returnStructure = null;
 		for (Iterator iterator = structureList.iterator(); iterator.hasNext();) {
@@ -734,7 +728,7 @@ public class BIRDImporter extends Importer {
 	 * @param elementID
 	 * @return
 	 */
-	private static COMBINATION findCombinationWithID(String elementID) {
+	private  COMBINATION findCombinationWithID(String elementID) {
 		COMBINATION returnCombination = null;
 		for (Iterator iterator = combinationsModules.iterator(); iterator.hasNext();) {
 			CombinationModule combinationModule = (CombinationModule) iterator.next();
@@ -955,12 +949,12 @@ public class BIRDImporter extends Importer {
 	 */
 	public static void main(String[] args) {
 
-		BIRDImporter importer = new BIRDImporter();
-		importer.filepath = args[0];
-		importer.outputFilepath = args[1];
-		testdatafilepath = args[2];
+		BIRDImporterImpl importer = new BIRDImporterImpl();
 		
-		importer.doImport();
+		String filepath = args[0];
+		String outputFilepath = args[1];
+		String testdatafilepath = args[2];
+		importer.doImport(filepath,outputFilepath,testdatafilepath);
 		
 	}
 
