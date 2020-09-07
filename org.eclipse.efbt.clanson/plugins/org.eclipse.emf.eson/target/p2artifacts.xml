@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?artifactRepository version='1.1.0'?>
+<artifacts size='2'>
+  <artifact classifier='osgi.bundle' id='org.eclipse.emf.eson' version='0.10.0.202009071043'>
+    <properties size='5'>
+      <property name='artifact.size' value='282665'/>
+      <property name='download.size' value='282665'/>
+      <property name='maven-groupId' value='org.eclipse.efbt.clanson'/>
+      <property name='maven-artifactId' value='org.eclipse.emf.eson'/>
+      <property name='maven-version' value='0.10.0-SNAPSHOT'/>
+    </properties>
+  </artifact>
+  <artifact classifier='osgi.bundle' id='org.eclipse.emf.eson.source' version='0.10.0.202009071043'>
+    <properties size='6'>
+      <property name='artifact.size' value='185038'/>
+      <property name='download.size' value='185038'/>
+      <property name='maven-groupId' value='org.eclipse.efbt.clanson'/>
+      <property name='maven-artifactId' value='org.eclipse.emf.eson'/>
+      <property name='maven-version' value='0.10.0-SNAPSHOT'/>
+      <property name='maven-classifier' value='sources'/>
+    </properties>
+  </artifact>
+</artifacts>
