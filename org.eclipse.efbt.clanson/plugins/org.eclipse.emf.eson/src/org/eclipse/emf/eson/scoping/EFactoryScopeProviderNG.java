@@ -215,46 +215,44 @@ public class EFactoryScopeProviderNG extends AbstractDeclarativeScopeProvider {
 	}
 
 	private boolean isTestDefinitionParam(Feature feature) {
-		
+
 		boolean returnValue = false;
 		EStructuralFeature theEFeature = feature.getEFeature();
-		
-		if(theEFeature.eClass().getName().equalsIgnoreCase("Param"))
-		{
-		
-		if (theEFeature.getFeatureID() == Test_definitionPackage.PARAM__PARAM)
-		{
-			 EObject otherFeature = feature.eContainer().eContainer().eContainer().eContainer().eContainer().eContainer().eContainer().eContainer()
-					.eContainer().eContainer().eContainer();
-			 
-			 if(otherFeature instanceof Feature)
-			 {
-				 
-			
-			if(otherFeature != null)
-			{
-				if (((Feature) otherFeature).getEFeature() != null)
-				{
-					if (((Feature) otherFeature).getEFeature().getFeatureID() == Test_definitionPackage.TEST_DEFINITION )
-					{
-						returnValue =  true;
+
+		if (theEFeature.getName().equalsIgnoreCase("param")) {
+
+			if (theEFeature
+					.getFeatureID() == Test_definitionPackage.PARAM__PARAM) {
+				EObject temp = feature.eContainer().eContainer().eContainer()
+						.eContainer().eContainer().eContainer().eContainer()
+						.eContainer().eContainer().eContainer();
+				if (temp != null) {
+					EObject otherFeature = temp.eContainer();
+					if (otherFeature instanceof Feature) {
+
+						if (otherFeature != null) {
+							if (((Feature) otherFeature)
+									.getEFeature() != null) {
+								if (((Feature) otherFeature).getEFeature()
+										.getName()
+										.equalsIgnoreCase("testDefinitions")) {
+									returnValue = true;
+								}
+							}
+						}
 					}
 				}
 			}
 		}
-		}
-		}
 		return returnValue;
-		
-		
-	
-		
+
 	}
 
 	private Param getParameterFromTestDefinition(
 			Feature feature) {
 		//get the NewObject
-		NewObject testDefintionNewObject = (NewObject)feature.eContainer().eContainer().eContainer().eContainer().eContainer().eContainer().eContainer().eContainer();
+		NewObject testDefintionNewObject = (NewObject)feature.eContainer().eContainer().
+				eContainer().eContainer().eContainer().eContainer().eContainer().eContainer();
 		//get the name  Attribute For the object.
 		
 		
@@ -293,13 +291,13 @@ public class EFactoryScopeProviderNG extends AbstractDeclarativeScopeProvider {
 		
 		Clause theClause = null;
 		
-		if(clauseType == Test_definitionPackage.GIVEN )
+		if(clauseType == Test_definitionPackage.TEST_DEFINITION__GIVEN )
 			theClause = definition.getGiven();
 		
-		if(clauseType == Test_definitionPackage.WHEN )
+		if(clauseType == Test_definitionPackage.TEST_DEFINITION__WHEN )
 			theClause = definition.getWhen();
 		
-		if(clauseType == Test_definitionPackage.THEN )
+		if(clauseType == Test_definitionPackage.TEST_DEFINITION__THEN )
 			theClause = definition.getThen();
 		
 		Param param = null;
