@@ -256,13 +256,13 @@ public abstract class Importer implements BirdImporter {
 	
 		// createAllMappings();
 		//saveArtifactsAsXML();
-		saveArtifactsAsEson();
+		saveArtifactsAsEson(birdModel);
 		
 	}
 	
-	public void saveArtifactsAsEson() {
+	public void saveArtifactsAsEson(EObject testModel) {
 		//get the birdModel , walk through it and add the features to a text file.
-		EObject testModel = birdModel;
+		
 		//Factory expected = ((EFactoryResource) testModel.eResource()).getEFactoryFactory();
 		
 		
