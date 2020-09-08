@@ -1,0 +1,25 @@
+module org.eclipse.efbt.input_data.smcubes.model.core
+
+import org.eclipse.xtext.xtext.generator.*
+import org.eclipse.xtext.xtext.generator.model.project.*
+
+var rootPath = ".."
+
+Workflow {
+
+	bean = org.eclipse.emf.mwe.utils.StandaloneSetup {
+		platformUri = "${rootPath}"
+		scanClassPath = true
+	
+		registerGenModelFile = "platform:/resource/org.eclipse.efbt.cocamo.core.model.testing/model/testing.genmodel"
+	}
+
+	component = org.eclipse.emf.mwe2.ecore.EcoreGenerator {
+
+		genModel = "platform:/resource/org.eclipse.efbt.cocamo.core.model.testing/model/testing.genmodel"
+		srcPath = "platform:/resource/org.eclipse.efbt.cocamo.core.model.testing/src-gen"
+	}
+
+}
+	
+	

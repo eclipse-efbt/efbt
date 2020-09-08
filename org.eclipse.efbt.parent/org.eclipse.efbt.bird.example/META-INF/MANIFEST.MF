@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Example
-Bundle-SymbolicName: org.eclipse.efbt.bird.example
-Bundle-Version: 1.0.0.qualifier

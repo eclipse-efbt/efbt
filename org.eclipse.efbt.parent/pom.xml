@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.eclipse.efbt.clan</groupId>
+	<groupId>org.eclipse.efbt.cocamo</groupId>
 	<version>1.0.0-SNAPSHOT</version>
 	<artifactId>org.eclipse.efbt.parent</artifactId>
 	<packaging>pom</packaging>
@@ -25,12 +25,12 @@
 		<additionalTestArguments></additionalTestArguments>
 	</properties>
 	<modules>
-		<module>org.eclipse.efbt.clan.model</module>
-		<module>org.eclipse.efbt.clan.target</module>
-		<module>org.eclipse.efbt.clan.feature</module>
-		<module>org.eclipse.efbt.clan.repository</module>
-		<module>org.eclipse.efbt.clan.component.exporter</module>
-		<module>org.eclipse.efbt.clan.ui.sirius.testmanager</module>
+		<module>org.eclipse.efbt.cocamo.model</module>
+		<module>org.eclipse.efbt.cocamo.target</module>
+		<module>org.eclipse.efbt.cocamo.feature</module>
+		<module>org.eclipse.efbt.cocamo.repository</module>
+		<module>org.eclipse.efbt.cocamo.component.exporter</module>
+		<module>org.eclipse.efbt.cocamo.core.ui.sirius</module>
 		<module>org.eclipse.efbt.data_structures.smcubes.modelquery.core</module>
 		<module>org.eclipse.efbt.data_structures.smcubes.component.importexport.api</module>
 		<module>org.eclipse.efbt.data_structures.smcubes.component.importexport.impl</module>
@@ -59,12 +59,12 @@
 		<module>org.eclipse.efbt.controller.core.model.core</module>
 		<module>org.eclipse.efbt.controller.core.component.core</module>
 		<module>org.eclipse.efbt.controller.core.ui.sirius.core</module>
-		<module>org.eclipse.efbt.common.model.module_management</module>
+		<module>org.eclipse.efbt.cocamo.core.model.module_management</module>
 		<module>org.eclipse.efbt.requirements.core.model.requirements_text</module>
-		<module>org.eclipse.efbt.functional_design.core.model.functionality_module</module>
+		<module>org.eclipse.efbt.cocamo.core.model.functionality_module</module>
 		<module>org.eclipse.efbt.input_data.smcubes.model.core</module>
-		<module>org.eclipse.efbt.common.model.functions</module>
-		<module>org.eclipse.efbt.testing.common.model.core</module>
+		<module>org.eclipse.efbt.cocamo.core.model.functions</module>
+		<module>org.eclipse.efbt.cocamo.core.model.testing</module>
 		
 		
 
@@ -163,8 +163,8 @@
 				  <pomDependencies>consider</pomDependencies>
 					<target>
 						<artifact>
-							<groupId>org.eclipse.efbt.clan</groupId>
-							<artifactId>org.eclipse.efbt.clan.target</artifactId>
+							<groupId>org.eclipse.efbt.cocamo</groupId>
+							<artifactId>org.eclipse.efbt.cocamo.target</artifactId>
 							<version>${project.version}</version>
 						</artifact>
 					</target>

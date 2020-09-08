@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Modelquery
+Bundle-SymbolicName: org.eclipse.efbt.cocamo.trl.query.core
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: org.eclipse.efbt.language.trl.modelquery.core
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.eclipse.emf.common,
+ org.eclipse.emf.ecore,
+ org.eclipse.efbt.cocamo.lineage.model.lineagecubes,
+ org.eclipse.efbt.cocamo.trl.model.core,
+ org.eclipse.efbt.cocamo.lineage.model.lineagefunctions,
+ org.eclipse.efbt.cocamo.lineage.model.lineagecubes,
+ org.eclipse.efbt.cocamo.trl.model.core
+Export-Package: org.eclipse.efbt.cocamo.trl.query.core
+Import-Package: org.eclipse.efbt.language.trl.component.translator

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature id="org.eclipse.efbt.cocamo.feature.source" version="1.0.0.202009071551" label="cocamo Feature  Developer Resources">
+  <includes id="org.eclipse.efbt.cocamo.feature" version="1.0.0.202009071551"/>
+  <plugin id="org.eclipse.efbt.cocamo.model.source" version="1.0.0.202009071551" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.efbt.cocamo.component.exporter.source" version="1.0.0.202009071551" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.efbt.cocamo.core.ui.sirius.source" version="1.0.0.202009071551" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.efbt.data_structures.smcubes.model.core.source" version="1.0.0.202009071551" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.efbt.data_structures.smcubes.modelquery.source" version="1.0.0.202008111452" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.efbt.data_structures.smcubes.ui.sirius.source" version="1.0.0.202009071551" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.efbt.data_structures.smcubes.component.importexport.impl.source" version="1.0.0.202009071551" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.efbt.util.access.interface.source" version="1.0.0.202009071551" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.efbt.util.access.impl.jackcess.source" version="1.0.0.202009071551" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.efbt.util.access.provider.source" version="1.0.0.202009071551" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.efbt.util.csv.interface.source" version="1.0.0.202009071551" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.efbt.util.csv.impl.apachecsv.source" version="1.0.0.202009071551" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.efbt.util.csv.provider.source" version="1.0.0.202009071551" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.efbt.datastructures.ldm.component.sqldevconvertor.source" version="1.0.0.202009071551" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.efbt.cocamo.core.model.module_management.source" version="1.0.0.202009071551" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.efbt.requirements.core.model.requirements_text.source" version="1.0.0.202009071551" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.efbt.cocamo.core.model.functionality_module.source" version="1.0.0.202009071551" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.efbt.input_data.smcubes.model.core.source" version="1.0.0.202009071551" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.efbt.cocamo.core.model.functions.source" version="1.0.0.202009071551" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.efbt.cocamo.core.model.testing.source" version="1.0.0.202009071551" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.efbt.lineage.attributelineage.model.attribute_lineage.source" version="1.0.0.202009071551" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.efbt.lineage.common.model.lineagecubes.source" version="1.0.0.202009071551" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.efbt.lineage.common.model.lineagefunctions.source" version="1.0.0.202009071551" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.efbt.lineage.common.modelquery.lineagefunctions.source" version="1.0.0.202009071551" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.efbt.lineage.attributelineage.ui.sirius.core.source" version="1.0.0.202009071551" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.efbt.lineage.attributelineage.modelquery.core.source" version="1.0.0.202009071551" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.efbt.language.trl.ui.sirius.core.source" version="1.0.0.202009071551" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.efbt.language.trl.component.translator.api.source" version="1.0.0.202009071551" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.efbt.language.trl.component.translator.impl.source" version="1.0.0.202009071551" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.efbt.language.trl.model.core.source" version="1.0.0.202009071551" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.efbt.language.trl.modelquery.core.source" version="1.0.0.202009071551" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.efbt.controller.core.model.core.source" version="1.0.0.202009071551" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.efbt.controller.core.component.core.source" version="1.0.0.202009071551" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.efbt.controller.core.ui.sirius.core.source" version="1.0.0.202009071551" download-size="0" install-size="0" unpack="false"/>
+</feature>

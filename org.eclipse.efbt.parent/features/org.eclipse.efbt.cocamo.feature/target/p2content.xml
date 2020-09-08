@@ -1,0 +1,170 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<units size='4'>
+  <unit id='org.eclipse.efbt.cocamo.feature.feature.group' version='1.0.0.202009071551' singleton='false'>
+    <update id='org.eclipse.efbt.cocamo.feature.feature.group' range='[0.0.0,1.0.0.202009071551)' severity='0'/>
+    <properties size='5'>
+      <property name='org.eclipse.equinox.p2.name' value='cocamo Feature '/>
+      <property name='org.eclipse.equinox.p2.type.group' value='true'/>
+      <property name='maven-groupId' value='org.eclipse.efbt.cocamo'/>
+      <property name='maven-artifactId' value='org.eclipse.efbt.cocamo.feature'/>
+      <property name='maven-version' value='1.0.0-SNAPSHOT'/>
+    </properties>
+    <provides size='1'>
+      <provided namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.cocamo.feature.feature.group' version='1.0.0.202009071551'/>
+    </provides>
+    <requires size='35'>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.cocamo.model' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.cocamo.component.exporter' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.cocamo.core.ui.sirius' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.data_structures.smcubes.model.core' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.data_structures.smcubes.modelquery' range='[1.0.0.202008111452,1.0.0.202008111452]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.data_structures.smcubes.ui.sirius' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.data_structures.smcubes.component.importexport.impl' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.util.access.interface' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.util.access.impl.jackcess' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.util.access.provider' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.util.csv.interface' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.util.csv.impl.apachecsv' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.util.csv.provider' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.datastructures.ldm.component.sqldevconvertor' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.cocamo.core.model.module_management' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.requirements.core.model.requirements_text' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.cocamo.core.model.functionality_module' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.input_data.smcubes.model.core' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.cocamo.core.model.functions' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.cocamo.core.model.testing' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.lineage.attributelineage.model.attribute_lineage' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.lineage.common.model.lineagecubes' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.lineage.common.model.lineagefunctions' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.lineage.common.modelquery.lineagefunctions' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.lineage.attributelineage.ui.sirius.core' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.lineage.attributelineage.modelquery.core' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.language.trl.ui.sirius.core' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.language.trl.component.translator.api' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.language.trl.component.translator.impl' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.language.trl.model.core' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.language.trl.modelquery.core' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.controller.core.model.core' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.controller.core.component.core' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.controller.core.ui.sirius.core' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.cocamo.feature.feature.jar' range='[1.0.0.202009071551,1.0.0.202009071551]'>
+        <filter>
+          (org.eclipse.update.install.features=true)
+        </filter>
+      </required>
+    </requires>
+    <touchpoint id='null' version='0.0.0'/>
+  </unit>
+  <unit id='org.eclipse.efbt.cocamo.feature.feature.jar' version='1.0.0.202009071551'>
+    <properties size='4'>
+      <property name='org.eclipse.equinox.p2.name' value='cocamo Feature '/>
+      <property name='maven-groupId' value='org.eclipse.efbt.cocamo'/>
+      <property name='maven-artifactId' value='org.eclipse.efbt.cocamo.feature'/>
+      <property name='maven-version' value='1.0.0-SNAPSHOT'/>
+    </properties>
+    <provides size='3'>
+      <provided namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.cocamo.feature.feature.jar' version='1.0.0.202009071551'/>
+      <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='feature' version='1.0.0'/>
+      <provided namespace='org.eclipse.update.feature' name='org.eclipse.efbt.cocamo.feature' version='1.0.0.202009071551'/>
+    </provides>
+    <filter>
+      (org.eclipse.update.install.features=true)
+    </filter>
+    <artifacts size='1'>
+      <artifact classifier='org.eclipse.update.feature' id='org.eclipse.efbt.cocamo.feature' version='1.0.0.202009071551'/>
+    </artifacts>
+    <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+    <touchpointData size='1'>
+      <instructions size='1'>
+        <instruction key='zipped'>
+          true
+        </instruction>
+      </instructions>
+    </touchpointData>
+  </unit>
+  <unit id='org.eclipse.efbt.cocamo.feature.source.feature.group' version='1.0.0.202009071551' singleton='false'>
+    <update id='org.eclipse.efbt.cocamo.feature.source.feature.group' range='[0.0.0,1.0.0.202009071551)' severity='0'/>
+    <properties size='6'>
+      <property name='org.eclipse.equinox.p2.name' value='cocamo Feature  Developer Resources'/>
+      <property name='org.eclipse.equinox.p2.type.group' value='true'/>
+      <property name='maven-groupId' value='org.eclipse.efbt.cocamo'/>
+      <property name='maven-artifactId' value='org.eclipse.efbt.cocamo.feature'/>
+      <property name='maven-version' value='1.0.0-SNAPSHOT'/>
+      <property name='maven-classifier' value='sources-feature'/>
+    </properties>
+    <provides size='1'>
+      <provided namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.cocamo.feature.source.feature.group' version='1.0.0.202009071551'/>
+    </provides>
+    <requires size='36'>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.cocamo.feature.feature.group' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.cocamo.model.source' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.cocamo.component.exporter.source' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.cocamo.core.ui.sirius.source' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.data_structures.smcubes.model.core.source' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.data_structures.smcubes.modelquery.source' range='[1.0.0.202008111452,1.0.0.202008111452]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.data_structures.smcubes.ui.sirius.source' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.data_structures.smcubes.component.importexport.impl.source' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.util.access.interface.source' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.util.access.impl.jackcess.source' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.util.access.provider.source' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.util.csv.interface.source' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.util.csv.impl.apachecsv.source' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.util.csv.provider.source' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.datastructures.ldm.component.sqldevconvertor.source' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.cocamo.core.model.module_management.source' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.requirements.core.model.requirements_text.source' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.cocamo.core.model.functionality_module.source' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.input_data.smcubes.model.core.source' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.cocamo.core.model.functions.source' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.cocamo.core.model.testing.source' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.lineage.attributelineage.model.attribute_lineage.source' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.lineage.common.model.lineagecubes.source' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.lineage.common.model.lineagefunctions.source' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.lineage.common.modelquery.lineagefunctions.source' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.lineage.attributelineage.ui.sirius.core.source' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.lineage.attributelineage.modelquery.core.source' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.language.trl.ui.sirius.core.source' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.language.trl.component.translator.api.source' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.language.trl.component.translator.impl.source' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.language.trl.model.core.source' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.language.trl.modelquery.core.source' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.controller.core.model.core.source' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.controller.core.component.core.source' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.controller.core.ui.sirius.core.source' range='[1.0.0.202009071551,1.0.0.202009071551]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.cocamo.feature.source.feature.jar' range='[1.0.0.202009071551,1.0.0.202009071551]'>
+        <filter>
+          (org.eclipse.update.install.features=true)
+        </filter>
+      </required>
+    </requires>
+    <touchpoint id='null' version='0.0.0'/>
+  </unit>
+  <unit id='org.eclipse.efbt.cocamo.feature.source.feature.jar' version='1.0.0.202009071551'>
+    <properties size='5'>
+      <property name='org.eclipse.equinox.p2.name' value='cocamo Feature  Developer Resources'/>
+      <property name='maven-groupId' value='org.eclipse.efbt.cocamo'/>
+      <property name='maven-artifactId' value='org.eclipse.efbt.cocamo.feature'/>
+      <property name='maven-version' value='1.0.0-SNAPSHOT'/>
+      <property name='maven-classifier' value='sources-feature'/>
+    </properties>
+    <provides size='3'>
+      <provided namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.efbt.cocamo.feature.source.feature.jar' version='1.0.0.202009071551'/>
+      <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='feature' version='1.0.0'/>
+      <provided namespace='org.eclipse.update.feature' name='org.eclipse.efbt.cocamo.feature.source' version='1.0.0.202009071551'/>
+    </provides>
+    <filter>
+      (org.eclipse.update.install.features=true)
+    </filter>
+    <artifacts size='1'>
+      <artifact classifier='org.eclipse.update.feature' id='org.eclipse.efbt.cocamo.feature.source' version='1.0.0.202009071551'/>
+    </artifacts>
+    <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+    <touchpointData size='1'>
+      <instructions size='1'>
+        <instruction key='zipped'>
+          true
+        </instruction>
+      </instructions>
+    </touchpointData>
+  </unit>
+</units>
