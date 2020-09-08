@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.eclipse.efbt.chirp</groupId>
+	<groupId>org.eclipse.efbt.clan</groupId>
 	<version>1.0.0-SNAPSHOT</version>
 	<artifactId>org.eclipse.efbt.parent</artifactId>
 	<packaging>pom</packaging>
@@ -25,14 +25,12 @@
 		<additionalTestArguments></additionalTestArguments>
 	</properties>
 	<modules>
-		<module>org.eclipse.efbt.chirp</module>
-		<module>org.eclipse.efbt.chirp.ide</module>
-		<module>org.eclipse.efbt.chirp.ui</module>
-		<module>org.eclipse.efbt.chirp.target</module>
-		<module>org.eclipse.efbt.chirp.feature</module>
-		<module>org.eclipse.efbt.chirp.repository</module>
-		 <module>org.eclipse.efbt.chirp.component.exporter</module>
-		<module>org.eclipse.efbt.chirp.ui.sirius.testmanager</module>
+		<module>org.eclipse.efbt.clan.model</module>
+		<module>org.eclipse.efbt.clan.target</module>
+		<module>org.eclipse.efbt.clan.feature</module>
+		<module>org.eclipse.efbt.clan.repository</module>
+		<module>org.eclipse.efbt.clan.component.exporter</module>
+		<module>org.eclipse.efbt.clan.ui.sirius.testmanager</module>
 		<module>org.eclipse.efbt.data_structures.smcubes.modelquery.core</module>
 		<module>org.eclipse.efbt.data_structures.smcubes.component.importexport.api</module>
 		<module>org.eclipse.efbt.data_structures.smcubes.component.importexport.impl</module>
@@ -165,8 +163,8 @@
 				  <pomDependencies>consider</pomDependencies>
 					<target>
 						<artifact>
-							<groupId>org.eclipse.efbt.chirp</groupId>
-							<artifactId>org.eclipse.efbt.chirp.target</artifactId>
+							<groupId>org.eclipse.efbt.clan</groupId>
+							<artifactId>org.eclipse.efbt.clan.target</artifactId>
 							<version>${project.version}</version>
 						</artifact>
 					</target>

@@ -1,0 +1,26 @@
+module org.eclipse.efbt.clan.model
+
+import org.eclipse.xtext.xtext.generator.*
+import org.eclipse.xtext.xtext.generator.model.project.*
+
+var rootPath = ".."
+
+Workflow {
+
+	bean = org.eclipse.emf.mwe.utils.StandaloneSetup {
+		platformUri = "${rootPath}"
+		scanClassPath = true
+	
+		registerGenModelFile = "platform:/resource/org.eclipse.efbt.clan.model/model/clan.genmodel"
+	}
+
+	component = org.eclipse.emf.mwe2.ecore.EcoreGenerator {
+
+		genModel = "platform:/resource/org.eclipse.efbt.clan.model/model/clan.genmodel"
+		srcPath = "platform:/resource/org.eclipse.efbt.clan.model/src-gen"
+	}
+
+}
+	
+	
+

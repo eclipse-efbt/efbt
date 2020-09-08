@@ -48,7 +48,7 @@ import org.eclipse.emf.common.util.EList;
 /**
  * This class is respnsable for structure data taking data from the BIRD
  * Access Database and also data in CSV defining Test data, and creates 
- * instances of the Chirp Program model.
+ * instances of the clan Program model.
  *  
  * @author Neil Mackenzie
  *

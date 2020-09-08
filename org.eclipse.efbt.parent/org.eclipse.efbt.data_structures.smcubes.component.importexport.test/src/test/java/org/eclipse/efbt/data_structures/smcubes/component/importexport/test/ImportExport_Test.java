@@ -2,11 +2,11 @@ package org.eclipse.efbt.data_structures.smcubes.component.importexport.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.eclipse.efbt.chirp.ChirpStandaloneSetup;
+//import org.eclipse.efbt.clan.clanStandaloneSetup;
 import org.eclipse.efbt.data_structures.smcubes.component.importexport.api.BirdImporter;
 import org.eclipse.efbt.data_structures.smcubes.component.importexport.impl.BIRDImporterImpl;
 import org.eclipse.efbt.data_structures.smcubes.component.importexport.impl.EFactoryInjectorProvider;
-import org.eclipse.efbt.data_structures.smcubes.component.importexport.impl.ESONWithChirpmodelInjectorProvider;
+import org.eclipse.efbt.data_structures.smcubes.component.importexport.impl.ESONWithClanmodelInjectorProvider;
 import org.eclipse.emf.eson.EFactoryStandaloneSetup;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;

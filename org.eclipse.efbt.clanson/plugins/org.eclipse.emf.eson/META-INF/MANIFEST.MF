@@ -22,7 +22,7 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.objectweb.asm;resolution:=optional,
  org.eclipse.core.runtime,
  org.eclipse.efbt.testing.common.model.core,
- org.eclipse.efbt.chirp
+ org.eclipse.efbt.clan.model
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.eclipse.emf.eson,
  org.eclipse.emf.eson.building,

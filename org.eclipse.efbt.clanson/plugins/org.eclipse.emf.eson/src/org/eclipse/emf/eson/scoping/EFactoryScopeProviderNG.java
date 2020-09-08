@@ -14,7 +14,7 @@ package org.eclipse.emf.eson.scoping;
 
 import java.util.List;
 
-import org.eclipse.efbt.chirp.chirp_program.Program;
+import org.eclipse.efbt.clan.model.clan.Program;
 import org.eclipse.efbt.testing.common.model.test_definition.Clause;
 import org.eclipse.efbt.testing.common.model.test_definition.Given;
 import org.eclipse.efbt.testing.common.model.test_definition.Param;

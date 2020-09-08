@@ -20,7 +20,7 @@
               variable="../bird_import/variables.efbt_data_definition#ECB2_MRKT_VL">
             <aggregateFunction
                 name="sum"
-                functionSpec="../extra/commonFunctions.chirpfunctions#SUM">
+                functionSpec="../extra/commonFunctions.clanfunctions#SUM">
               <parameters
                   xsi:type="functions:ResolvedCubeColumnParameter"
                   cubeColumn="#loans:ECB2_MRKT_VL"/>
@@ -33,7 +33,7 @@
               variable="../bird_import/variables.efbt_data_definition#NTNL_AMNT">
             <aggregateFunction
                 name="summation"
-                functionSpec="../extra/commonFunctions.chirpfunctions#SUM">
+                functionSpec="../extra/commonFunctions.clanfunctions#SUM">
               <parameters
                   xsi:type="functions:ResolvedCubeColumnParameter"
                   cubeColumn="#loans:NTNL_AMNT"/>
@@ -121,7 +121,7 @@
                 cubeColumn="#counterparty:ECB2_ENTITY_LEI"/>
             <joinFunction
                 name="="
-                functionSpec="../extra/commonFunctions.chirpfunctions#=">
+                functionSpec="../extra/commonFunctions.clanfunctions#=">
               <parameters
                   xsi:type="functions:ResolvedCubeColumnParameter"
                   cubeColumn="#aggregateLoans:ECB2_ENTITY_LEI"/>
@@ -212,7 +212,7 @@
                 cubeColumn="#rating:ECB2_ENTITY_LEI"/>
             <joinFunction
                 name="=="
-                functionSpec="../extra/commonFunctions.chirpfunctions#=">
+                functionSpec="../extra/commonFunctions.clanfunctions#=">
               <parameters
                   xsi:type="functions:ResolvedCubeColumnParameter"
                   cubeColumn="#aggregateLoansAndCounterparties:ECB2_ENTITY_LEI"/>
@@ -232,7 +232,7 @@
               variable="../bird_import/variables.efbt_data_definition#trippleA_NotionaAmount">
             <basicFunction
                 name="trippleA_NotionalAmount"
-                functionSpec="../extra/commonFunctions.chirpfunctions#trippleA_NotionaAmount">
+                functionSpec="../extra/commonFunctions.clanfunctions#trippleA_NotionaAmount">
               <parameters
                   xsi:type="functions:ResolvedCubeColumnParameter"
                   cubeColumn="#loansCounterpartiesAndRatings:RTNG_SCL_CD"/>

@@ -22,8 +22,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.eclipse.efbt.chirp.ChirpStandaloneSetup;
-import org.eclipse.efbt.chirp.chirp_program.Chirp_programPackage;
+import org.eclipse.efbt.clan.model.clan.ClanPackage;
 import org.eclipse.efbt.common.model.module_management.Module_managementPackage;
 import org.eclipse.efbt.data_structures.smcubes.component.importexport.api.BirdImporter;
 import org.eclipse.efbt.data_structures.smcubes.model.core.CorePackage;
@@ -267,9 +266,9 @@ public abstract class Importer implements BirdImporter {
 		
 		
 		
-		//ChirpStandaloneSetup.doSetup();  
+		//clanStandaloneSetup.doSetup();  
 		//EFactoryStandaloneSetup.doSetup();
-		ESONWithChirpmodelInjectorProvider eip = new ESONWithChirpmodelInjectorProvider();
+		ESONWithClanmodelInjectorProvider eip = new ESONWithClanmodelInjectorProvider();
 		Injector injector = eip.getInjector();
 		
 		EFactoryServiceProvider serviceProvider = injector.getInstance(EFactoryServiceProvider.class);
@@ -280,9 +279,9 @@ public abstract class Importer implements BirdImporter {
 		Factory actual = builder.buildFactory(testModel);
 		// it looks like we only add one package in the builder, the package of the 
 		// rootbuilder, we are going to add all teh packages here to work around this.
-		PackageImport Chirp_programPackagePI = EFactoryFactory.eINSTANCE.createPackageImport();
-		Chirp_programPackagePI.setEPackage(Chirp_programPackage.eINSTANCE);		
-		actual.getEPackages().add(Chirp_programPackagePI);
+		PackageImport clan_programPackagePI = EFactoryFactory.eINSTANCE.createPackageImport();
+		clan_programPackagePI.setEPackage(ClanPackage.eINSTANCE);		
+		actual.getEPackages().add(clan_programPackagePI);
 		
 		PackageImport corePI = EFactoryFactory.eINSTANCE.createPackageImport();
 		corePI.setEPackage(CorePackage.eINSTANCE);		
@@ -417,7 +416,7 @@ public abstract class Importer implements BirdImporter {
 
 				Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
 				Map<String, Object> m = reg.getExtensionToFactoryMap();
-				m.put("chirp_program", factory);
+				m.put("clan_program", factory);
 
 				EFactoryStandaloneSetup setup = new EFactoryStandaloneSetup();
 				Injector i = setup.createInjectorAndDoEMFRegistration();

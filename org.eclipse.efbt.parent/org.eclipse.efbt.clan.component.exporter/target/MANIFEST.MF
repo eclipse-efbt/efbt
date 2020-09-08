@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-SymbolicName: org.eclipse.efbt.clan.component.exporter
+Export-Package: org.eclipse.efbt.clan.component.exporter
+Bundle-Name: Exporter
+Bundle-Version: 1.0.0.202009071551
+Require-Bundle: org.eclipse.efbt.clan.model;bundle-version="1.0.0",org
+ .eclipse.xtext,org.eclipse.emf.ecore,org.eclipse.efbt.input_data.smcu
+ bes.model.core,org.eclipse.efbt.testing.common.model.core
+Bundle-ManifestVersion: 2
+Import-Package: org.eclipse.efbt.clan.model.clan,org.eclipse.efbt.test
+ ing.common.model.test
+

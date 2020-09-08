@@ -14,13 +14,13 @@
             genModel="model/testing.genmodel"/>
    </extension>
 
+
    <extension point="org.eclipse.emf.ecore.extension_parser">
       <!-- @generated testing -->
       <parser
             type="test_definition"
             class="org.eclipse.efbt.testing.common.model.test_definition.util.Test_definitionResourceFactoryImpl"/>
    </extension>
-
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated testing -->
       <package
