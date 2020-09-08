@@ -6,10 +6,10 @@
       <metamodel href="../../org.eclipse.efbt.trl.model.trl/model/transformation.ecore#/"/>
       <metamodel href="../../org.eclipse.efbt.trl.model.trl/model/trl_report_cell_views.ecore#/"/>
       <metamodel href="../../org.eclipse.efbt.trl.model.trl/model/trl_sql_views.ecore#/"/>
-      <metamodel href="../../org.eclipse.efbt.chirp/model/scenarios.ecore#/"/>
+      <metamodel href="../../org.eclipse.efbt.clan/model/scenarios.ecore#/"/>
       <metamodel href="../../org.eclipse.efbt.almengine.model.cubes/model/cube_schema.ecore#/"/>
       <metamodel href="../../org.eclipse.efbt.almengine.model.cubes/model/cubes.ecore#/"/>
-      <metamodel href="../../org.eclipse.efbt.chirp/model/column_structures.ecore#/"/>
+      <metamodel href="../../org.eclipse.efbt.clan/model/column_structures.ecore#/"/>
       <defaultLayer name="FreeBirdToolsCube">
         <nodeMappings name="BaseCube" semanticCandidatesExpression="service:getBaseTablesButNotDeltaTables()" domainClass="BaseCube">
           <style xsi:type="style:SquareDescription" labelExpression="service:getTableDisplayName()" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
