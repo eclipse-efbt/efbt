@@ -147,7 +147,7 @@ public class Services {
     	return LineageFunctionsModelQuery.getStringForFunction( (BasicFunction) self); 
      }
     
-public String getStringForAggregateFunction(AggregateFunction self) {
+public String getStringForAggregateFunction(AggregateFunction self) { 
        
     	
     	return LineageFunctionsModelQuery.getStringForAggregateFunction(self); 
