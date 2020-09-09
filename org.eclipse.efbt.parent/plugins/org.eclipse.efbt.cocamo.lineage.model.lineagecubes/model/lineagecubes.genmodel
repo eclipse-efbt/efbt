@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.lineage.common.model.lineagecubes/src-gen"
-    modelPluginID="org.eclipse.efbt.lineage.common.model.lineagecubes" modelName="Lineagecubes"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.cocamo.lineage.model.lineagecubes/src-gen"
+    modelPluginID="org.eclipse.efbt.cocamo.lineage.model.lineagecubes" modelName="Lineagecubes"
     rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" importerID="org.eclipse.emf.importer.ecore"
-    complianceLevel="8.0" copyrightFields="false" usedGenPackages="../../org.eclipse.efbt.cocamo.core.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.data_structures.smcubes.model.core/model/smcubes.genmodel#//core ../../org.eclipse.efbt.data_structures.smcubes.model.core/model/smcubes.genmodel#//data_definition"
+    complianceLevel="8.0" copyrightFields="false" usedGenPackages="../../org.eclipse.efbt.cocamo.core.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//core ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//data_definition"
     operationReflection="true" importOrganizing="true">
   <foreignModel>cube_schema.ecore</foreignModel>
   <foreignModel>cubes.ecore</foreignModel>
-  <genPackages prefix="Cube_schema" basePackage="org.eclipse.efbt.lineage.common.model"
+  <genPackages prefix="Cube_schema" basePackage="org.eclipse.efbt.cocamo.lineage.model"
       resource="XML" disposableProviderFactory="true" ecorePackage="cube_schema.ecore#/">
     <genClasses ecoreClass="cube_schema.ecore#//CubeSchema">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cube_schema.ecore#//CubeSchema/cube"/>
@@ -15,7 +15,7 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cube_schema.ecore#//CubeSchema/baseCube"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Cubes" basePackage="org.eclipse.efbt.lineage.common.model"
+  <genPackages prefix="Cubes" basePackage="org.eclipse.efbt.cocamo.lineage.model"
       resource="XML" disposableProviderFactory="true" ecorePackage="cubes.ecore#/">
     <genClasses ecoreClass="cubes.ecore#//BaseCube"/>
     <genClasses ecoreClass="cubes.ecore#//DerivedCube">

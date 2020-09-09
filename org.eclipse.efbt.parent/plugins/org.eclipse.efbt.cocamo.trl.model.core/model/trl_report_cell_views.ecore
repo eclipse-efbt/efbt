@@ -16,7 +16,7 @@
       <details key="name" value="ReportCellView"/>
       <details key="kind" value="elementOnly"/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="reportCell" eType="ecore:EClass ../../org.eclipse.efbt.data_structures.smcubes.model.core/model/reports.ecore#//ReportCell"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reportCell" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/reports.ecore#//ReportCell"
         containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The report cell"/>

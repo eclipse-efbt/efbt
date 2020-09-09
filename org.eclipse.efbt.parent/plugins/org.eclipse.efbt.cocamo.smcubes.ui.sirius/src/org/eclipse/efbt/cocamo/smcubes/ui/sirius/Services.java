@@ -3,8 +3,8 @@ package org.eclipse.efbt.cocamo.smcubes.ui.sirius;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.efbt.cocamo.smcubes.query.core.CustomQuery;
-import org.eclipse.efbt.data_structures.smcubes.model.core.DOMAIN;
-import org.eclipse.efbt.data_structures.smcubes.model.core.MEMBER;
+import org.eclipse.efbt.cocamo.smcubes.model.core.DOMAIN;
+import org.eclipse.efbt.cocamo.smcubes.model.core.MEMBER;
 
 /**
  * The services class used by VSM.

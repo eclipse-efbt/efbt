@@ -16,16 +16,17 @@ package org.eclipse.efbt.cocamo.trl.ui.sirius.core;
 import org.eclipse.efbt.cocamo.core.model.functions.AggregateFunction;
 import org.eclipse.efbt.cocamo.core.model.functions.BasicFunction;
 import org.eclipse.efbt.cocamo.core.model.functions.Function;
+import org.eclipse.efbt.cocamo.lineage.model.cube_schema.CubeSchema;
+import org.eclipse.efbt.cocamo.lineage.model.cubes.FreeBirdToolsCube;
 import org.eclipse.efbt.cocamo.lineage.query.lineagefunctions.LineageFunctionsModelQuery;
+import org.eclipse.efbt.cocamo.trl.model.transformation.VersionedComponentsSet;
+import org.eclipse.efbt.cocamo.trl.model.transformation.VersionedCubeSchemaModule;
+import org.eclipse.efbt.cocamo.trl.model.trl_sql_views.EnrichmentView;
+import org.eclipse.efbt.cocamo.trl.model.trl_sql_views.JoinView;
+import org.eclipse.efbt.cocamo.trl.model.trl_sql_views.SQLView;
+import org.eclipse.efbt.cocamo.trl.model.trl_sql_views.VersionedSQLViewsModule;
 import org.eclipse.efbt.cocamo.trl.query.core.CubesAndViewsUtil;
-import org.eclipse.efbt.language.trl.model.transformation.VersionedComponentsSet;
-import org.eclipse.efbt.language.trl.model.transformation.VersionedCubeSchemaModule;
-import org.eclipse.efbt.language.trl.model.trl_sql_views.EnrichmentView;
-import org.eclipse.efbt.language.trl.model.trl_sql_views.JoinView;
-import org.eclipse.efbt.language.trl.model.trl_sql_views.SQLView;
-import org.eclipse.efbt.language.trl.model.trl_sql_views.VersionedSQLViewsModule;
-import org.eclipse.efbt.lineage.common.model.cube_schema.CubeSchema;
-import org.eclipse.efbt.lineage.common.model.cubes.FreeBirdToolsCube;
+
 import org.eclipse.emf.common.util.EList;
 
 

@@ -14,12 +14,12 @@ package org.eclipse.efbt.cocamo.trl.component.translator.util;
 
 import java.util.Iterator;
 
-import org.eclipse.efbt.language.trl.model.trl_sql_views.IgnoreColumn;
-import org.eclipse.efbt.language.trl.model.trl_sql_views.JoinView;
-import org.eclipse.efbt.language.trl.model.trl_sql_views.RenameAs;
-import org.eclipse.efbt.language.trl.model.trl_sql_views.SQLView;
-import org.eclipse.efbt.lineage.common.model.cubes.FreeBirdToolsCube;
-import org.eclipse.efbt.data_structures.smcubes.model.core.VARIABLE;
+import org.eclipse.efbt.cocamo.lineage.model.cubes.FreeBirdToolsCube;
+import org.eclipse.efbt.cocamo.smcubes.model.core.VARIABLE;
+import org.eclipse.efbt.cocamo.trl.model.trl_sql_views.IgnoreColumn;
+import org.eclipse.efbt.cocamo.trl.model.trl_sql_views.JoinView;
+import org.eclipse.efbt.cocamo.trl.model.trl_sql_views.RenameAs;
+import org.eclipse.efbt.cocamo.trl.model.trl_sql_views.SQLView;
 
 
 

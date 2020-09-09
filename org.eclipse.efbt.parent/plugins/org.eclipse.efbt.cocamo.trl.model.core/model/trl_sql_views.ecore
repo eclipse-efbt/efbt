@@ -17,7 +17,7 @@
       <details key="kind" value="elementOnly"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="functions" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagefunctions/model/column_transformation_logic.ecore#//AggregateColumnFunction"
+        eType="ecore:EClass ../../org.eclipse.efbt.cocamo.lineage.model.lineagefunctions/model/column_transformation_logic.ecore#//AggregateColumnFunction"
         containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Aggregated ColumnFunctions"/>
@@ -56,7 +56,7 @@
       <details key="kind" value="elementOnly"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="functions" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagefunctions/model/column_transformation_logic.ecore#//BasicColumnFunction"
+        eType="ecore:EClass ../../org.eclipse.efbt.cocamo.lineage.model.lineagefunctions/model/column_transformation_logic.ecore#//BasicColumnFunction"
         containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The ColumnFunctions describing how to derive the new columns. Note that their will be a  one to &#xA;              one relationship between the rows in the resulting view and the rows in the source row. So the column function could  &#xA;              represent the  addition of 2 columns in the source row for example."/>
@@ -144,7 +144,7 @@
       <details key="kind" value="empty"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="groupByColumns" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.efbt.data_structures.smcubes.model.core/model/core.ecore#//VARIABLE">
+        eType="ecore:EClass ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/core.ecore#//VARIABLE">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="the columns to group by "/>
       </eAnnotations>
@@ -162,7 +162,7 @@
       <details key="name" value="IgnoreColumn"/>
       <details key="kind" value="empty"/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="columnToIgnore" eType="ecore:EClass ../../org.eclipse.efbt.data_structures.smcubes.model.core/model/core.ecore#//VARIABLE">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="columnToIgnore" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/core.ecore#//VARIABLE">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="the column to Ignore"/>
       </eAnnotations>
@@ -171,7 +171,7 @@
         <details key="name" value="columnToIgnore"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="cube" eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/cubes.ecore#//FreeBirdToolsCube">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cube" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.lineage.model.lineagecubes/model/cubes.ecore#//FreeBirdToolsCube">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="the cube with the column to ignore."/>
       </eAnnotations>
@@ -228,7 +228,7 @@
       <details key="name" value="RenameAs"/>
       <details key="kind" value="empty"/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="fromCube" eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/cubes.ecore#//FreeBirdToolsCube">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="fromCube" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.lineage.model.lineagecubes/model/cubes.ecore#//FreeBirdToolsCube">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The source cube containing the Column"/>
       </eAnnotations>
@@ -237,7 +237,7 @@
         <details key="name" value="fromCube"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="fromVariable" eType="ecore:EClass ../../org.eclipse.efbt.data_structures.smcubes.model.core/model/core.ecore#//VARIABLE">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="fromVariable" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/core.ecore#//VARIABLE">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="the Column from the source cube that we choose  to Rename in the resulting View"/>
       </eAnnotations>
@@ -246,7 +246,7 @@
         <details key="name" value="fromVariable"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="toVariable" eType="ecore:EClass ../../org.eclipse.efbt.data_structures.smcubes.model.core/model/core.ecore#//VARIABLE">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="toVariable" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/core.ecore#//VARIABLE">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="What Column would we like to use instead."/>
       </eAnnotations>
@@ -284,7 +284,7 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="varaibles" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.efbt.data_structures.smcubes.model.core/model/core.ecore#//VARIABLE">
+        eType="ecore:EClass ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/core.ecore#//VARIABLE">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Column"/>
       </eAnnotations>
@@ -352,9 +352,9 @@
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BaseViewIncorporatingDeltas" eSuperTypes="#//SQLView">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="ultimateSourceCube" eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/cubes.ecore#//FreeBirdToolsCube"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ultimateSourceCube" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.lineage.model.lineagecubes/model/cubes.ecore#//FreeBirdToolsCube"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DeltaAccumulation" eSuperTypes="#//SQLView">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="ultimateSourceCube" eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/cubes.ecore#//FreeBirdToolsCube"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ultimateSourceCube" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.lineage.model.lineagecubes/model/cubes.ecore#//FreeBirdToolsCube"/>
   </eClassifiers>
 </ecore:EPackage>

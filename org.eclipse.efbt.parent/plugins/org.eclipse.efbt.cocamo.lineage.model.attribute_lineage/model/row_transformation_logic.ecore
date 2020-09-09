@@ -17,7 +17,7 @@
       <details key="kind" value="elementOnly"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="columns" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagefunctions/model/lineagefunctions.ecore#//CubeColumn"
+        eType="ecore:EClass ../../org.eclipse.efbt.cocamo.lineage.model.lineagefunctions/model/lineagefunctions.ecore#//CubeColumn"
         containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The set of CubeColumns"/>
@@ -27,7 +27,7 @@
         <details key="name" value="columns"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="cube" eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/cubes.ecore#//BaseCube">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cube" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.lineage.model.lineagecubes/model/cubes.ecore#//BaseCube">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The associated BaseCube"/>
       </eAnnotations>
@@ -55,7 +55,7 @@
       <details key="kind" value="elementOnly"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="dependantVariables" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.efbt.data_structures.smcubes.model.core/model/core.ecore#//VARIABLE">
+        eType="ecore:EClass ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/core.ecore#//VARIABLE">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The Columns from the source cubes which are used to determine how to create and link the created rows. &#xA;            &#x9; "/>
       </eAnnotations>
@@ -85,7 +85,7 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="groupByVariables" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.efbt.data_structures.smcubes.model.core/model/core.ecore#//VARIABLE">
+        eType="ecore:EClass ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/core.ecore#//VARIABLE">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The columns to use to group the source cube by, e.g. grouping a cube by a a column called Currency will lead to one row per unique currency in the source cube rows."/>
       </eAnnotations>
@@ -113,7 +113,7 @@
         <details key="name" value="rowCreationApproach"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="cube" eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/cubes.ecore#//FreeBirdToolsCube">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cube" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.lineage.model.lineagecubes/model/cubes.ecore#//FreeBirdToolsCube">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="attribute"/>
         <details key="name" value="cube"/>
@@ -132,7 +132,7 @@
         <details key="name" value="name"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="ultimateCubeSource" eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/cubes.ecore#//FreeBirdToolsCube">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ultimateCubeSource" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.lineage.model.lineagecubes/model/cubes.ecore#//FreeBirdToolsCube">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="attribute"/>
         <details key="name" value="ultimateCubeSource"/>
@@ -179,7 +179,7 @@
       <details key="kind" value="elementOnly"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="dependantCubeColumns" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagefunctions/model/lineagefunctions.ecore#//ResolvedCubeColumnParameter"
+        eType="ecore:EClass ../../org.eclipse.efbt.cocamo.lineage.model.lineagefunctions/model/lineagefunctions.ecore#//ResolvedCubeColumnParameter"
         containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The parameters (from functions) which contain the CubeColumns from the source which are used to determine how to create and link the created rows. &#xA;            &#x9;For example these could  be the CubeColumns used for grouping, or filtering, or joining. "/>
@@ -190,7 +190,7 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="createdCubeColumns" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagefunctions/model/lineagefunctions.ecore#//CubeColumn"
+        eType="ecore:EClass ../../org.eclipse.efbt.cocamo.lineage.model.lineagefunctions/model/lineagefunctions.ecore#//CubeColumn"
         containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Any cubeColumns which are set explicitly by the row function. &#xA;An example here would be uniquely setting a CubeColumn called index if the row function is responsable for creating multiple rows from one source row.&#xA;Another example would be setting a field called index if the row is responsable for ordering a set of rows and setting index to indicate ordering position.&#xA;In most common cases this field is empty."/>
@@ -210,7 +210,7 @@
       <details key="kind" value="elementOnly"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="groupByColumns" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.efbt.data_structures.smcubes.model.core/model/core.ecore#//VARIABLE">
+        eType="ecore:EClass ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/core.ecore#//VARIABLE">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The columns to use to group the source cube by, e.g. grouping a  cube by a a column called Currency will lead to one row per unique currency in the source cube rows."/>
       </eAnnotations>
@@ -220,7 +220,7 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="groupByCubeColumns" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagefunctions/model/lineagefunctions.ecore#//CubeColumn">
+        eType="ecore:EClass ../../org.eclipse.efbt.cocamo.lineage.model.lineagefunctions/model/lineagefunctions.ecore#//CubeColumn">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The CubeColumns to use to group the source cube by, e.g. grouping a cube by a a column called Currency will lead to one row per unique currency in the source cube rows."/>
       </eAnnotations>
@@ -260,9 +260,9 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BaseViewIncorporatingDeltasRowFunction"
       eSuperTypes="#//RowCreationApproach">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="ultimateCubeSource" eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/cubes.ecore#//FreeBirdToolsCube"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ultimateCubeSource" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.lineage.model.lineagecubes/model/cubes.ecore#//FreeBirdToolsCube"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DeltaAccumulationRowFunction" eSuperTypes="#//RowCreationApproach">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="ultimateCubeSource" eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/cubes.ecore#//FreeBirdToolsCube"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ultimateCubeSource" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.lineage.model.lineagecubes/model/cubes.ecore#//FreeBirdToolsCube"/>
   </eClassifiers>
 </ecore:EPackage>

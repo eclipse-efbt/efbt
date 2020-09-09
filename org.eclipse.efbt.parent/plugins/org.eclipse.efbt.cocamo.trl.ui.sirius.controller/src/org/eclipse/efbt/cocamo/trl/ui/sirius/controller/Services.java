@@ -2,7 +2,8 @@ package org.eclipse.efbt.cocamo.trl.ui.sirius.controller;
 
 
 import org.eclipse.efbt.cocamo.core.component.core.Controller;
-import org.eclipse.efbt.controller.core.model.platform_call.PlatformCall;
+import org.eclipse.efbt.cocamo.trl.model.platform_call.PlatformCall;
+
 
 
 

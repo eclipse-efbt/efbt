@@ -2,10 +2,10 @@ package org.eclipse.efbt.cocamo.smcubes.query.core;
 
 import java.util.Iterator;
 
-import org.eclipse.efbt.data_structures.smcubes.model.core.DOMAIN;
-import org.eclipse.efbt.data_structures.smcubes.model.core.MEMBER;
-import org.eclipse.efbt.data_structures.smcubes.model.efbt_data_definition.MemberModule;
-import org.eclipse.efbt.data_structures.smcubes.model.smcubes_model.SmcubesModel;
+import org.eclipse.efbt.cocamo.smcubes.model.core.DOMAIN;
+import org.eclipse.efbt.cocamo.smcubes.model.core.MEMBER;
+import org.eclipse.efbt.cocamo.smcubes.model.efbt_data_definition.MemberModule;
+import org.eclipse.efbt.cocamo.smcubes.model.smcubes_model.SmcubesModel;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 

@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.eclipse.efbt.cocamo.smcubes.component.importexport.impl
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: org.eclipse.efbt.component.birdartefactscreator
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Export-Package: pse.efbt.cocamo.smcubes.component.importexport.impl
+Export-Package: org.eclipse.efbt.cocamo.smcubes.component.importexport.impl
 Require-Bundle: org.apache.commons.logging,
  org.eclipse.xtext.generator;bundle-version="2.19.0",
  org.eclipse.xtext;bundle-version="2.19.0",
@@ -18,7 +18,6 @@ Require-Bundle: org.apache.commons.logging,
  org.eclipse.efbt.cocamo.smcubes.component.importexport.api,
  org.eclipse.emf.eson.ui,
  org.eclipse.xtext.junit4,
- org.eclipse.efbt.cocamo.model,
  org.eclipse.efbt.cocamo.smcubes.model.input_data,
  org.eclipse.efbt.cocamo.core.model.functionality_module,
  org.eclipse.efbt.cocamo.core.model.requirements_text,

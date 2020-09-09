@@ -6,5 +6,6 @@ Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: org.eclipse.efbt.lineage.attributelineage.modelquery.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.efbt.cocamo.lineage.model.attribute_lineage,
- org.eclipse.efbt.cocamo.lineage.model.lineagecubes
+ org.eclipse.efbt.cocamo.lineage.model.lineagecubes,
+ org.eclipse.efbt.lineage.common.model.lineagecubes
 Export-Package: org.eclipse.efbt.cocamo.lineage.query.attributelineage

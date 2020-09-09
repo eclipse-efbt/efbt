@@ -9,7 +9,7 @@
     <details key="license" value="Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"/>
   </eAnnotations>
   <eClassifiers xsi:type="ecore:EClass" name="CubeTransformationLogic">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="columnFunctionGroup" eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagefunctions/model/column_transformation_logic.ecore#//ColumnFunctionGroup"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="columnFunctionGroup" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.lineage.model.lineagefunctions/model/column_transformation_logic.ecore#//ColumnFunctionGroup"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rowCreationApproachForCube"
         eType="ecore:EClass row_transformation_logic.ecore#//RowCreationApproachForCube"

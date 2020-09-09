@@ -2,22 +2,17 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.efbt.cocamo.core.model.requirements_text;singleton:=true
+Automatic-Module-Name: org.eclipse.efbt.cocamo.core.model.requirements_text
 Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Automatic-Module-Name: org.eclipse.efbt.requirements.core.model.requirements_text
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Export-Package: org.eclipse.efbt.requirements.core.model.requirements_text,
- org.eclipse.efbt.requirements.core.model.requirements_text.impl,
- org.eclipse.efbt.requirements.core.model.requirements_text.util
+Export-Package: org.eclipse.efbt.cocamo.core.model.requirements_text,
+ org.eclipse.efbt.cocamo.core.model.requirements_text.impl,
+ org.eclipse.efbt.cocamo.core.model.requirements_text.util
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.emf.ecore.xmi;visibility:=reexport,
- org.eclipse.emf.mwe.core,
- org.eclipse.emf.mwe.utils,
- org.eclipse.emf.mwe2.lib,
- org.eclipse.emf.mwe2.runtime,
- org.eclipse.emf.mwe2.launch,
- org.eclipse.efbt.cocamo.core.model.module_management;bundle-version="1.0.0"
+ org.eclipse.efbt.cocamo.core.model.module_management;visibility:=reexport
 Bundle-ActivationPolicy: lazy

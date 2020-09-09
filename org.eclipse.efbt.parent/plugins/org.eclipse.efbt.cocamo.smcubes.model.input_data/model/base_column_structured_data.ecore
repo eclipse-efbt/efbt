@@ -17,7 +17,7 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Base Cell data which contains one member of a list of enumerated values (e.g. a currency)"/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="ecore:EClass ../../org.eclipse.efbt.data_structures.smcubes.model.core/model/core.ecore#//MEMBER">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/core.ecore#//MEMBER">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The member"/>
       </eAnnotations>
@@ -51,7 +51,7 @@
         <details key="name" value="rows"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="cube" eType="ecore:EClass ../../org.eclipse.efbt.data_structures.smcubes.model.core/model/data_definition.ecore#//CUBE">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cube" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/data_definition.ecore#//CUBE">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The cube with which the data is associated"/>
       </eAnnotations>

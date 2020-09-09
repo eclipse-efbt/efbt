@@ -142,7 +142,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="FunctionalityModuleTag" eSuperTypes="../../org.eclipse.efbt.requirements.core.model.requirements_text/model/requirements_text.ecore#//Tag">
+  <eClassifiers xsi:type="ecore:EClass" name="FunctionalityModuleTag" eSuperTypes="../../org.eclipse.efbt.cocamo.core.model.requirements_text/model/requirements_text.ecore#//Tag">
     <eStructuralFeatures xsi:type="ecore:EReference" name="FunctionalityModule" eType="#//FunctionalityModule"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ValidationFunctionalityModule" eSuperTypes="#//LeafFunctionalityModule"/>

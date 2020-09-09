@@ -10,7 +10,7 @@
       <!-- @generated lineagecubes -->
       <package
             uri="http://www.eclipse.org/cube_schema"
-            class="org.eclipse.efbt.lineage.common.model.cube_schema.Cube_schemaPackage"
+            class="org.eclipse.efbt.cocamo.lineage.model.cube_schema.Cube_schemaPackage"
             genModel="model/lineagecubes.genmodel"/>
    </extension>
 
@@ -18,14 +18,14 @@
       <!-- @generated lineagecubes -->
       <parser
             type="cube_schema"
-            class="org.eclipse.efbt.lineage.common.model.cube_schema.util.Cube_schemaResourceFactoryImpl"/>
+            class="org.eclipse.efbt.cocamo.lineage.model.cube_schema.util.Cube_schemaResourceFactoryImpl"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated lineagecubes -->
       <package
             uri="http://www.eclipse.org/cubes"
-            class="org.eclipse.efbt.lineage.common.model.cubes.CubesPackage"
+            class="org.eclipse.efbt.cocamo.lineage.model.cubes.CubesPackage"
             genModel="model/lineagecubes.genmodel"/>
    </extension>
 
@@ -33,7 +33,7 @@
       <!-- @generated lineagecubes -->
       <parser
             type="cubes"
-            class="org.eclipse.efbt.lineage.common.model.cubes.util.CubesResourceFactoryImpl"/>
+            class="org.eclipse.efbt.cocamo.lineage.model.cubes.util.CubesResourceFactoryImpl"/>
    </extension>
 
 </plugin>

@@ -4,9 +4,9 @@
 	<parent>
 		<groupId>org.eclipse.efbt.cocamo</groupId>
 		<artifactId>org.eclipse.efbt.parent</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
+		<version>1.0.0-SNAPSHOT</version>  <relativePath>../../pom.xml</relativePath>
 	</parent>
-	<artifactId>org.eclipse.efbt.datastructures.ldm.component.sqldevconvertor</artifactId>
+	<artifactId>org.eclipse.efbt.cocamo.ldm.component.sqldevconvertor</artifactId>
 	<packaging>eclipse-plugin</packaging>
 
 </project>

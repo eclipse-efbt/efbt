@@ -10,7 +10,7 @@
       <!-- @generated requirements_text -->
       <package
             uri="http://www.eclipse.org/requirements_text"
-            class="org.eclipse.efbt.requirements.core.model.requirements_text.Requirements_textPackage"
+            class="org.eclipse.efbt.cocamo.core.model.requirements_text.Requirements_textPackage"
             genModel="model/requirements_text.genmodel"/>
    </extension>
 
@@ -18,7 +18,7 @@
       <!-- @generated requirements_text -->
       <parser
             type="requirements_text"
-            class="org.eclipse.efbt.requirements.core.model.requirements_text.util.Requirements_textResourceFactoryImpl"/>
+            class="org.eclipse.efbt.cocamo.core.model.requirements_text.util.Requirements_textResourceFactoryImpl"/>
    </extension>
 
 </plugin>

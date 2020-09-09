@@ -21,20 +21,20 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CodeCondition"/>
   <eClassifiers xsi:type="ecore:EClass" name="ColumnSettingCondition" eSuperTypes="#//CodeCondition">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="cube" eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/cubes.ecore#//FreeBirdToolsCube"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="variable" eType="ecore:EClass ../../org.eclipse.efbt.data_structures.smcubes.model.core/model/core.ecore#//VARIABLE"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cube" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.lineage.model.lineagecubes/model/cubes.ecore#//FreeBirdToolsCube"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="variable" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/core.ecore#//VARIABLE"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="filterConditions" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.core.model.functions/model/functions.ecore#//BasicFunction"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DataSetFilterCondition" eSuperTypes="#//CodeCondition">
     <eStructuralFeatures xsi:type="ecore:EReference" name="filterConditions" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.core.model.functions/model/functions.ecore#//BooleanFunction"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="cube" eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/cubes.ecore#//FreeBirdToolsCube"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cube" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.lineage.model.lineagecubes/model/cubes.ecore#//FreeBirdToolsCube"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UnionChoiceCondition" eSuperTypes="#//CodeCondition">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="cube" eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/cubes.ecore#//FreeBirdToolsCube"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cube" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.lineage.model.lineagecubes/model/cubes.ecore#//FreeBirdToolsCube"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="chosenCubes" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/cubes.ecore#//FreeBirdToolsCube"/>
+        eType="ecore:EClass ../../org.eclipse.efbt.cocamo.lineage.model.lineagecubes/model/cubes.ecore#//FreeBirdToolsCube"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DomainMappingModule" eSuperTypes="../../org.eclipse.efbt.cocamo.core.model.module_management/model/module_management.ecore#//Module">
     <eStructuralFeatures xsi:type="ecore:EReference" name="leafModuleToVersionedSQLViewsModules"

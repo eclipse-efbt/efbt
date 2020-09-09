@@ -2,7 +2,7 @@ package org.eclipse.efbt.cocamo.smcubes.query.core;
 
 import java.io.File;
 
-import org.eclipse.efbt.data_structures.smcubes.model.smcubes_model.SmcubesModel;
+import org.eclipse.efbt.cocamo.smcubes.model.smcubes_model.SmcubesModel;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;

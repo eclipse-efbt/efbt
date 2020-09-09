@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.lineage.attributelineage.model.attribute_lineage/src-gen"
-    modelPluginID="org.eclipse.efbt.lineage.attributelineage.model.attribute_lineage"
-    modelName="Attribute_lineage" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
-    importerID="org.eclipse.emf.importer.ecore" complianceLevel="8.0" copyrightFields="false"
-    usedGenPackages="../../org.eclipse.efbt.cocamo.core.model.functions/model/functions.genmodel#//functions ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/lineagecubes.genmodel#//cubes ../../org.eclipse.efbt.lineage.common.model.lineagefunctions/model/lineagefunctions.genmodel#//column_transformation_logic ../../org.eclipse.efbt.lineage.common.model.lineagefunctions/model/lineagefunctions.genmodel#//lineagefunctions ../../org.eclipse.efbt.cocamo.core.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.data_structures.smcubes.model.core/model/smcubes.genmodel#//core"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.cocamo.lineage.model.attribute_lineage/src-gen"
+    modelPluginID="org.eclipse.efbt.cocamo.lineage.model.attribute_lineage" modelName="Attribute_lineage"
+    rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="8.0" copyrightFields="false" usedGenPackages="../../org.eclipse.efbt.cocamo.core.model.functions/model/functions.genmodel#//functions ../../org.eclipse.efbt.cocamo.lineage.model.lineagecubes/model/lineagecubes.genmodel#//cubes ../../org.eclipse.efbt.cocamo.lineage.model.lineagefunctions/model/lineagefunctions.genmodel#//column_transformation_logic ../../org.eclipse.efbt.cocamo.lineage.model.lineagefunctions/model/lineagefunctions.genmodel#//lineagefunctions ../../org.eclipse.efbt.cocamo.core.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//core"
     operationReflection="true" importOrganizing="true">
   <foreignModel>attribute_lineage.ecore</foreignModel>
   <foreignModel>cube_transformation_logic.ecore</foreignModel>
   <foreignModel>row_transformation_logic.ecore</foreignModel>
-  <genPackages prefix="Attribute_lineage" basePackage="org.eclipse.efbt.lineage.attributelineage.model"
+  <genPackages prefix="Attribute_lineage" basePackage="org.eclipse.efbt.cocamo.lineage.model"
       resource="XML" disposableProviderFactory="true" ecorePackage="attribute_lineage.ecore#/">
     <genClasses ecoreClass="attribute_lineage.ecore#//AttributeLineageModel">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference attribute_lineage.ecore#//AttributeLineageModel/rowTransformations"/>
@@ -21,7 +20,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference attribute_lineage.ecore#//AttributeLineageModelModule/attributeLineageModels"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Cube_transformation_logic" basePackage="org.eclipse.efbt.lineage.attributelineage.model"
+  <genPackages prefix="Cube_transformation_logic" basePackage="org.eclipse.efbt.cocamo.lineage.model"
       disposableProviderFactory="true" ecorePackage="cube_transformation_logic.ecore#/">
     <genClasses ecoreClass="cube_transformation_logic.ecore#//CubeTransformationLogic">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cube_transformation_logic.ecore#//CubeTransformationLogic/columnFunctionGroup"/>
@@ -29,7 +28,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cube_transformation_logic.ecore#//CubeTransformationLogic/usedInSubsets"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Row_transformation_logic" basePackage="org.eclipse.efbt.lineage.attributelineage.model"
+  <genPackages prefix="Row_transformation_logic" basePackage="org.eclipse.efbt.cocamo.lineage.model"
       resource="XML" disposableProviderFactory="true" ecorePackage="row_transformation_logic.ecore#/">
     <genClasses ecoreClass="row_transformation_logic.ecore#//BaseRowStructure">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//BaseRowStructure/columns"/>

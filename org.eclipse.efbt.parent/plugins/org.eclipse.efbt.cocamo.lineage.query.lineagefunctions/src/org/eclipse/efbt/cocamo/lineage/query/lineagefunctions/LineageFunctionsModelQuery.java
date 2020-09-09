@@ -9,8 +9,8 @@ import org.eclipse.efbt.cocamo.lineage.model.lineagefunctions.MemberParameter;
 import org.eclipse.efbt.cocamo.lineage.model.lineagefunctions.ResolvedCubeColumnParameter;
 import org.eclipse.efbt.cocamo.lineage.model.lineagefunctions.SpeculativeCubeColumnParameter;
 import org.eclipse.efbt.cocamo.lineage.model.lineagefunctions.ValueParameter;
-//import org.eclipse.efbt.data_structures.smcubes.model.core.VARIABLE;
-//import org.eclipse.efbt.data_structures.smcubes.model.core.MEMBER;
+//import org.eclipse.efbt.cocamo.smcubes.model.core.VARIABLE;
+//import org.eclipse.efbt.cocamo.smcubes.model.core.MEMBER;
 import org.eclipse.emf.common.util.EList;
 
 

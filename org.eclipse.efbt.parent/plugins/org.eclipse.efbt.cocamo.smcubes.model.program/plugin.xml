@@ -10,7 +10,7 @@
       <!-- @generated cocamo -->
       <package
             uri="http://www.eclipse.org/cocamo"
-            class="org.eclipse.efbt.cocamo.model.cocamo.cocamoPackage"
+            class="org.eclipse.efbt.cocamo.smcubes.model.cocamo.CocamoPackage"
             genModel="model/cocamo.genmodel"/>
    </extension>
 

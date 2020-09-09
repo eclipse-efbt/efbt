@@ -6,6 +6,6 @@
 		<artifactId>org.eclipse.efbt.parent</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>org.eclipse.efbt.language.trl.component.translator.test</artifactId>
+	<artifactId>org.eclipse.efbt.cocamo.trl.component.translator.test</artifactId>
 	<packaging>eclipse-test-plugin</packaging>
 </project>

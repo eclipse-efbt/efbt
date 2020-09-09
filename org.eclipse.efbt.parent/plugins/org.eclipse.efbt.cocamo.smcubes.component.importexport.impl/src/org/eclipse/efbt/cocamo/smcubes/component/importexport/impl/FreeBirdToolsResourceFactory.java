@@ -11,7 +11,7 @@
  *  Neil Mackenzie - initial API and implementation
  *  */
 
-package pse.efbt.cocamo.smcubes.component.importexport.impl;
+package org.eclipse.efbt.cocamo.smcubes.component.importexport.impl;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;

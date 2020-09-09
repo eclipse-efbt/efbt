@@ -15,7 +15,8 @@
 package org.eclipse.efbt.cocamo.trl.component.translator.api;
 
 import org.eclipse.efbt.cocamo.lineage.model.attribute_lineage.AttributeLineageModel;
-import org.eclipse.efbt.language.trl.model.transformation.VersionedComponentsSet;
+import org.eclipse.efbt.cocamo.trl.model.transformation.VersionedComponentsSet;
+
 
 
 

@@ -1,4 +1,4 @@
-module org.eclipse.efbt.lineage.common.model.lineagefunctions
+module org.eclipse.efbt.cocamo.lineage.model.lineagefunctions
 
 import org.eclipse.xtext.xtext.generator.*
 import org.eclipse.xtext.xtext.generator.model.project.*
@@ -11,13 +11,13 @@ Workflow {
 		platformUri = "${rootPath}"
 		scanClassPath = true
 		
-		registerGenModelFile = "platform:/resource/org.eclipse.efbt.lineage.common.model.lineagefunctions/model/lineagefunctions.genmodel"
+		registerGenModelFile = "platform:/resource/org.eclipse.efbt.cocamo.lineage.model.lineagefunctions/model/lineagefunctions.genmodel"
 	}
 
 	component = org.eclipse.emf.mwe2.ecore.EcoreGenerator {
 
-		genModel = "platform:/resource/org.eclipse.efbt.lineage.common.model.lineagefunctions/model/lineagefunctions.genmodel"
-		srcPath = "platform:/resource/org.eclipse.efbt.lineage.common.model.lineagefunctions/src-gen"
+		genModel = "platform:/resource/org.eclipse.efbt.cocamo.lineage.model.lineagefunctions/model/lineagefunctions.genmodel"
+		srcPath = "platform:/resource/org.eclipse.efbt.cocamo.lineage.model.lineagefunctions/src-gen"
 	}
 
 }

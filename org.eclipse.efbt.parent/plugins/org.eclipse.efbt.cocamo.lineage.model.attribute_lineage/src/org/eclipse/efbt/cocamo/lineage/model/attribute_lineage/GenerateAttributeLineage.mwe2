@@ -1,4 +1,4 @@
-module org.eclipse.efbt.lineage.attributelineage.model.attribute_lineage
+module org.eclipse.efbt.cocamo.lineage.model.attribute_lineage
 
 import org.eclipse.xtext.xtext.generator.*
 import org.eclipse.xtext.xtext.generator.model.project.*
@@ -10,13 +10,13 @@ Workflow {
 	bean = org.eclipse.emf.mwe.utils.StandaloneSetup {
 		platformUri = "${rootPath}"
 		scanClassPath = true
-		registerGenModelFile = "platform:/resource/org.eclipse.efbt.lineage.attributelineage.model.attribute_lineage/model/attribute_lineage.genmodel"
+		registerGenModelFile = "platform:/resource/org.eclipse.efbt.cocamo.lineage.model.attribute_lineage/model/attribute_lineage.genmodel"
 	}
 
 	component = org.eclipse.emf.mwe2.ecore.EcoreGenerator {
 
-		genModel = "platform:/resource/org.eclipse.efbt.lineage.attributelineage.model.attribute_lineage/model/attribute_lineage.genmodel"
-		srcPath = "platform:/resource/org.eclipse.efbt.lineage.attributelineage.model.attribute_lineage/src-gen"
+		genModel = "platform:/resource/org.eclipse.efbt.cocamo.lineage.model.attribute_lineage/model/attribute_lineage.genmodel"
+		srcPath = "platform:/resource/org.eclipse.efbt.cocamo.lineage.model.attribute_lineage/src-gen"
 	}
 
 }

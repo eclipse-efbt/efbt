@@ -3,13 +3,12 @@ package eclipse.efbt.cocamo.smcubes.component.importexport.test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.eclipse.efbt.cocamo.smcubes.component.importexport.api.BirdImporter;
+import org.eclipse.efbt.cocamo.smcubes.component.importexport.impl.BIRDImporterImpl;
+import org.eclipse.efbt.cocamo.smcubes.component.importexport.impl.EFactoryInjectorProvider;
+import org.eclipse.efbt.cocamo.smcubes.component.importexport.impl.ESONWithcocamomodelInjectorProvider;
 import org.eclipse.emf.eson.EFactoryStandaloneSetup;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-
-import pse.efbt.cocamo.smcubes.component.importexport.impl.BIRDImporterImpl;
-import pse.efbt.cocamo.smcubes.component.importexport.impl.EFactoryInjectorProvider;
-import pse.efbt.cocamo.smcubes.component.importexport.impl.ESONWithcocamomodelInjectorProvider;
 
 
 

@@ -10,7 +10,7 @@
       <!-- @generated smcubes -->
       <package
             uri="http://www.eclipse.org/core"
-            class="org.eclipse.efbt.data_structures.smcubes.model.core.CorePackage"
+            class="org.eclipse.efbt.cocamo.smcubes.model.core.CorePackage"
             genModel="model/smcubes.genmodel"/>
    </extension>
 
@@ -18,14 +18,14 @@
       <!-- @generated smcubes -->
       <parser
             type="core"
-            class="org.eclipse.efbt.data_structures.smcubes.model.core.util.CoreResourceFactoryImpl"/>
+            class="org.eclipse.efbt.cocamo.smcubes.model.core.util.CoreResourceFactoryImpl"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated smcubes -->
       <package
             uri="http://www.eclipse.org/data_definition"
-            class="org.eclipse.efbt.data_structures.smcubes.model.data_definition.Data_definitionPackage"
+            class="org.eclipse.efbt.cocamo.smcubes.model.data_definition.Data_definitionPackage"
             genModel="model/smcubes.genmodel"/>
    </extension>
 
@@ -33,14 +33,14 @@
       <!-- @generated smcubes -->
       <parser
             type="data_definition"
-            class="org.eclipse.efbt.data_structures.smcubes.model.data_definition.util.Data_definitionResourceFactoryImpl"/>
+            class="org.eclipse.efbt.cocamo.smcubes.model.data_definition.util.Data_definitionResourceFactoryImpl"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated smcubes -->
       <package
             uri="http://www.eclipse.org/efbt_data_definition"
-            class="org.eclipse.efbt.data_structures.smcubes.model.efbt_data_definition.Efbt_data_definitionPackage"
+            class="org.eclipse.efbt.cocamo.smcubes.model.efbt_data_definition.Efbt_data_definitionPackage"
             genModel="model/smcubes.genmodel"/>
    </extension>
 
@@ -48,14 +48,14 @@
       <!-- @generated smcubes -->
       <parser
             type="efbt_data_definition"
-            class="org.eclipse.efbt.data_structures.smcubes.model.efbt_data_definition.util.Efbt_data_definitionResourceFactoryImpl"/>
+            class="org.eclipse.efbt.cocamo.smcubes.model.efbt_data_definition.util.Efbt_data_definitionResourceFactoryImpl"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated smcubes -->
       <package
             uri="http://www.eclipse.org/efbt_mapping"
-            class="org.eclipse.efbt.data_structures.smcubes.model.efbt_mapping.Efbt_mappingPackage"
+            class="org.eclipse.efbt.cocamo.smcubes.model.efbt_mapping.Efbt_mappingPackage"
             genModel="model/smcubes.genmodel"/>
    </extension>
 
@@ -63,14 +63,14 @@
       <!-- @generated smcubes -->
       <parser
             type="efbt_mapping"
-            class="org.eclipse.efbt.data_structures.smcubes.model.efbt_mapping.util.Efbt_mappingResourceFactoryImpl"/>
+            class="org.eclipse.efbt.cocamo.smcubes.model.efbt_mapping.util.Efbt_mappingResourceFactoryImpl"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated smcubes -->
       <package
             uri="http://www.eclipse.org/efbt_vtl_transformation"
-            class="org.eclipse.efbt.data_structures.smcubes.model.efbt_vtl_transformation.Efbt_vtl_transformationPackage"
+            class="org.eclipse.efbt.cocamo.smcubes.model.efbt_vtl_transformation.Efbt_vtl_transformationPackage"
             genModel="model/smcubes.genmodel"/>
    </extension>
 
@@ -78,14 +78,14 @@
       <!-- @generated smcubes -->
       <parser
             type="efbt_vtl_transformation"
-            class="org.eclipse.efbt.data_structures.smcubes.model.efbt_vtl_transformation.util.Efbt_vtl_transformationResourceFactoryImpl"/>
+            class="org.eclipse.efbt.cocamo.smcubes.model.efbt_vtl_transformation.util.Efbt_vtl_transformationResourceFactoryImpl"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated smcubes -->
       <package
             uri="http://www.eclipse.org/mapping"
-            class="org.eclipse.efbt.data_structures.smcubes.model.mapping.MappingPackage"
+            class="org.eclipse.efbt.cocamo.smcubes.model.mapping.MappingPackage"
             genModel="model/smcubes.genmodel"/>
    </extension>
 
@@ -93,14 +93,14 @@
       <!-- @generated smcubes -->
       <parser
             type="mapping"
-            class="org.eclipse.efbt.data_structures.smcubes.model.mapping.util.MappingResourceFactoryImpl"/>
+            class="org.eclipse.efbt.cocamo.smcubes.model.mapping.util.MappingResourceFactoryImpl"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated smcubes -->
       <package
             uri="http://www.eclipse.org/rendering"
-            class="org.eclipse.efbt.data_structures.smcubes.model.rendering.RenderingPackage"
+            class="org.eclipse.efbt.cocamo.smcubes.model.rendering.RenderingPackage"
             genModel="model/smcubes.genmodel"/>
    </extension>
 
@@ -108,14 +108,14 @@
       <!-- @generated smcubes -->
       <parser
             type="rendering"
-            class="org.eclipse.efbt.data_structures.smcubes.model.rendering.util.RenderingResourceFactoryImpl"/>
+            class="org.eclipse.efbt.cocamo.smcubes.model.rendering.util.RenderingResourceFactoryImpl"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated smcubes -->
       <package
             uri="http://www.eclipse.org/reports"
-            class="org.eclipse.efbt.data_structures.smcubes.model.reports.ReportsPackage"
+            class="org.eclipse.efbt.cocamo.smcubes.model.reports.ReportsPackage"
             genModel="model/smcubes.genmodel"/>
    </extension>
 
@@ -123,14 +123,14 @@
       <!-- @generated smcubes -->
       <parser
             type="reports"
-            class="org.eclipse.efbt.data_structures.smcubes.model.reports.util.ReportsResourceFactoryImpl"/>
+            class="org.eclipse.efbt.cocamo.smcubes.model.reports.util.ReportsResourceFactoryImpl"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated smcubes -->
       <package
             uri="http://www.eclipse.org/smcubes_model"
-            class="org.eclipse.efbt.data_structures.smcubes.model.smcubes_model.Smcubes_modelPackage"
+            class="org.eclipse.efbt.cocamo.smcubes.model.smcubes_model.Smcubes_modelPackage"
             genModel="model/smcubes.genmodel"/>
    </extension>
 
@@ -138,14 +138,14 @@
       <!-- @generated smcubes -->
       <parser
             type="smcubes_model"
-            class="org.eclipse.efbt.data_structures.smcubes.model.smcubes_model.util.Smcubes_modelResourceFactoryImpl"/>
+            class="org.eclipse.efbt.cocamo.smcubes.model.smcubes_model.util.Smcubes_modelResourceFactoryImpl"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated smcubes -->
       <package
             uri="http://www.eclipse.org/vtl_transformation"
-            class="org.eclipse.efbt.data_structures.smcubes.model.vtl_transformation.Vtl_transformationPackage"
+            class="org.eclipse.efbt.cocamo.smcubes.model.vtl_transformation.Vtl_transformationPackage"
             genModel="model/smcubes.genmodel"/>
    </extension>
 
@@ -153,7 +153,7 @@
       <!-- @generated smcubes -->
       <parser
             type="vtl_transformation"
-            class="org.eclipse.efbt.data_structures.smcubes.model.vtl_transformation.util.Vtl_transformationResourceFactoryImpl"/>
+            class="org.eclipse.efbt.cocamo.smcubes.model.vtl_transformation.util.Vtl_transformationResourceFactoryImpl"/>
    </extension>
 
 </plugin>

@@ -15,30 +15,33 @@ package org.eclipse.efbt.cocamo.trl.component.translator.impl;
 
 import java.util.Iterator;
 
-import org.eclipse.efbt.lineage.attributelineage.model.cube_transformation_logic.CubeTransformationLogic;
-import org.eclipse.efbt.lineage.attributelineage.model.row_transformation_logic.BaseRowStructure;
-import org.eclipse.efbt.lineage.attributelineage.model.row_transformation_logic.RowCreationApproach;
-import org.eclipse.efbt.lineage.attributelineage.model.row_transformation_logic.RowCreationApproachForCube;
-import org.eclipse.efbt.lineage.common.model.column_transformation_logic.ColumnFunction;
-import org.eclipse.efbt.lineage.common.model.cube_schema.CubeSchema;
-import org.eclipse.efbt.lineage.common.model.cubes.FreeBirdToolsCube;
+
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.efbt.cocamo.lineage.model.attribute_lineage.AttributeLineageModel;
 import org.eclipse.efbt.cocamo.lineage.model.attribute_lineage.Attribute_lineageFactory;
+import org.eclipse.efbt.cocamo.lineage.model.column_transformation_logic.ColumnFunction;
+import org.eclipse.efbt.cocamo.lineage.model.cube_schema.CubeSchema;
+import org.eclipse.efbt.cocamo.lineage.model.cube_transformation_logic.CubeTransformationLogic;
+import org.eclipse.efbt.cocamo.lineage.model.cubes.FreeBirdToolsCube;
 import org.eclipse.efbt.cocamo.lineage.model.lineagefunctions.CubeColumn;
+import org.eclipse.efbt.cocamo.lineage.model.row_transformation_logic.BaseRowStructure;
+import org.eclipse.efbt.cocamo.lineage.model.row_transformation_logic.RowCreationApproach;
+import org.eclipse.efbt.cocamo.lineage.model.row_transformation_logic.RowCreationApproachForCube;
 import org.eclipse.efbt.cocamo.lineage.query.attributelineage.AttributeLineageModelQuery;
 import org.eclipse.efbt.cocamo.trl.component.translator.api.AttributeLineageUtil;
 import org.eclipse.efbt.cocamo.trl.component.translator.util.SpecialFunctionSpecs;
 import org.eclipse.efbt.cocamo.trl.component.translator.util.TRLUtil;
 import org.eclipse.efbt.cocamo.trl.component.translator.util.Util;
-import org.eclipse.efbt.language.trl.model.transformation.VersionedComponentsSet;
-import org.eclipse.efbt.language.trl.model.transformation.VersionedCubeSchemaModule;
-import org.eclipse.efbt.language.trl.model.transformation.VersionedFunctionalModuleLogic;
-import org.eclipse.efbt.language.trl.model.trl_report_cell_views.ReportCellView;
-import org.eclipse.efbt.language.trl.model.trl_report_cell_views.ReportCellViewModule;
-import org.eclipse.efbt.language.trl.model.trl_sql_views.SQLView;
-import org.eclipse.efbt.language.trl.model.trl_sql_views.VersionedSQLViewsModule;
+import org.eclipse.efbt.cocamo.trl.model.transformation.VersionedComponentsSet;
+import org.eclipse.efbt.cocamo.trl.model.transformation.VersionedCubeSchemaModule;
+import org.eclipse.efbt.cocamo.trl.model.transformation.VersionedFunctionalModuleLogic;
+import org.eclipse.efbt.cocamo.trl.model.trl_report_cell_views.ReportCellView;
+import org.eclipse.efbt.cocamo.trl.model.trl_report_cell_views.ReportCellViewModule;
+import org.eclipse.efbt.cocamo.trl.model.trl_sql_views.SQLView;
+import org.eclipse.efbt.cocamo.trl.model.trl_sql_views.VersionedSQLViewsModule;
+
+
 
 
 /**
@@ -359,6 +362,7 @@ public class AttributeLineageUtilImpl implements AttributeLineageUtil {
  * 
  * @param vcs
  */
+
 public  AttributeLineageModel createAttributeLineageModel(VersionedComponentsSet vcs
 		) {
 	
@@ -436,6 +440,8 @@ public  AttributeLineageModel createAttributeLineageModel(VersionedComponentsSet
  return attributeLineageModel;
 
 }
+
+
 
 
 

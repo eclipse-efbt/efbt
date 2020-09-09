@@ -15,7 +15,7 @@
       <details key="name" value="CubeSchema"/>
       <details key="kind" value="empty"/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="cube" eType="ecore:EClass ../../org.eclipse.efbt.data_structures.smcubes.model.core/model/data_definition.ecore#//CUBE">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cube" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/data_definition.ecore#//CUBE">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="the associated data_definition:CUBE"/>
       </eAnnotations>

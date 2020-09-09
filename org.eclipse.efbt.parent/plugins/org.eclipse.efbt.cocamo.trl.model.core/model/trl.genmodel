@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.language.trl.model.core/src-gen"
-    modelPluginID="org.eclipse.efbt.language.trl.model.core" modelName="Trl" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.cocamo.trl.model.core/src-gen"
+    modelPluginID="org.eclipse.efbt.cocamo.trl.model.core" modelName="Trl" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     importerID="org.eclipse.emf.importer.ecore" complianceLevel="8.0" copyrightFields="false"
-    usedGenPackages="../../org.eclipse.efbt.cocamo.core.model.functionality_module/model/functionality_module.genmodel#//functionality_module ../../org.eclipse.efbt.cocamo.core.model.functionality_module/model/functionality_module.genmodel#//scenarios ../../org.eclipse.efbt.cocamo.core.model.functions/model/functions.genmodel#//functions ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/lineagecubes.genmodel#//cube_schema ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/lineagecubes.genmodel#//cubes ../../org.eclipse.efbt.lineage.common.model.lineagefunctions/model/lineagefunctions.genmodel#//column_transformation_logic ../../org.eclipse.efbt.lineage.common.model.lineagefunctions/model/lineagefunctions.genmodel#//lineagefunctions ../../org.eclipse.efbt.cocamo.core.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.requirements.core.model.requirements_text/model/requirements_text.genmodel#//requirements_text ../../org.eclipse.efbt.data_structures.smcubes.model.core/model/smcubes.genmodel#//core ../../org.eclipse.efbt.data_structures.smcubes.model.core/model/smcubes.genmodel#//data_definition ../../org.eclipse.efbt.data_structures.smcubes.model.core/model/smcubes.genmodel#//rendering ../../org.eclipse.efbt.data_structures.smcubes.model.core/model/smcubes.genmodel#//reports"
+    usedGenPackages="../../org.eclipse.efbt.cocamo.core.model.functionality_module/model/functionality_module.genmodel#//functionality_module ../../org.eclipse.efbt.cocamo.core.model.functionality_module/model/functionality_module.genmodel#//scenarios ../../org.eclipse.efbt.cocamo.core.model.functions/model/functions.genmodel#//functions ../../org.eclipse.efbt.cocamo.lineage.model.lineagecubes/model/lineagecubes.genmodel#//cube_schema ../../org.eclipse.efbt.cocamo.lineage.model.lineagecubes/model/lineagecubes.genmodel#//cubes ../../org.eclipse.efbt.cocamo.lineage.model.lineagefunctions/model/lineagefunctions.genmodel#//column_transformation_logic ../../org.eclipse.efbt.cocamo.lineage.model.lineagefunctions/model/lineagefunctions.genmodel#//lineagefunctions ../../org.eclipse.efbt.cocamo.core.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.cocamo.core.model.requirements_text/model/requirements_text.genmodel#//requirements_text ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//core ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//data_definition ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//rendering ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//reports"
     operationReflection="true" importOrganizing="true">
   <foreignModel>domain_model_mapping.ecore</foreignModel>
   <foreignModel>transformation.ecore</foreignModel>
   <foreignModel>trl_report_cell_views.ecore</foreignModel>
   <foreignModel>trl_sql_views.ecore</foreignModel>
-  <genPackages prefix="Domain_model_mapping" basePackage="org.eclipse.efbt.language.trl.model"
-      resource="XML" disposableProviderFactory="true" ecorePackage="domain_model_mapping.ecore#/">
+  <genPackages prefix="Domain_model_mapping" basePackage="org.eclipse.efbt.cocamo.trl.model"
+      disposableProviderFactory="true" ecorePackage="domain_model_mapping.ecore#/">
     <genClasses ecoreClass="domain_model_mapping.ecore#//LeafModuleToVersionedSQLViewsModule">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference domain_model_mapping.ecore#//LeafModuleToVersionedSQLViewsModule/scheme"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference domain_model_mapping.ecore#//LeafModuleToVersionedSQLViewsModule/module"/>
@@ -48,7 +48,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference domain_model_mapping.ecore#//DomainMappingModule/scenarioToCodeConditions"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Transformation" basePackage="org.eclipse.efbt.language.trl.model"
+  <genPackages prefix="Transformation" basePackage="org.eclipse.efbt.cocamo.trl.model"
       resource="XML" disposableProviderFactory="true" ecorePackage="transformation.ecore#/">
     <genClasses ecoreClass="transformation.ecore#//DataSetTransformation">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference transformation.ecore#//DataSetTransformation/cube"/>
@@ -69,7 +69,7 @@
     </genClasses>
     <genClasses ecoreClass="transformation.ecore#//VersionedFunctionalModuleLogic"/>
   </genPackages>
-  <genPackages prefix="Trl_report_cell_views" basePackage="org.eclipse.efbt.language.trl.model"
+  <genPackages prefix="Trl_report_cell_views" basePackage="org.eclipse.efbt.cocamo.trl.model"
       resource="XML" disposableProviderFactory="true" ecorePackage="trl_report_cell_views.ecore#/">
     <genClasses ecoreClass="trl_report_cell_views.ecore#//ReportCellView">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_report_cell_views.ecore#//ReportCellView/reportCell"/>
@@ -78,7 +78,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_report_cell_views.ecore#//ReportCellViewModule/reportCellViews"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Trl_sql_views" basePackage="org.eclipse.efbt.language.trl.model"
+  <genPackages prefix="Trl_sql_views" basePackage="org.eclipse.efbt.cocamo.trl.model"
       resource="XML" disposableProviderFactory="true" ecorePackage="trl_sql_views.ecore#/">
     <genClasses ecoreClass="trl_sql_views.ecore#//AggregateEnrichmentView">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//AggregateEnrichmentView/functions"/>

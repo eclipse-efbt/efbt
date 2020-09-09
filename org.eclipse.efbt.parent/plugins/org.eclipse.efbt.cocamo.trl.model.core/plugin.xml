@@ -10,22 +10,15 @@
       <!-- @generated trl -->
       <package
             uri="http://www.eclipse.org/domain_model_mapping"
-            class="org.eclipse.efbt.language.trl.model.domain_model_mapping.Domain_model_mappingPackage"
+            class="org.eclipse.efbt.cocamo.trl.model.domain_model_mapping.Domain_model_mappingPackage"
             genModel="model/trl.genmodel"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.extension_parser">
-      <!-- @generated trl -->
-      <parser
-            type="domain_model_mapping"
-            class="org.eclipse.efbt.language.trl.model.domain_model_mapping.util.Domain_model_mappingResourceFactoryImpl"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated trl -->
       <package
             uri="http://www.eclipse.org/transformation"
-            class="org.eclipse.efbt.language.trl.model.transformation.TransformationPackage"
+            class="org.eclipse.efbt.cocamo.trl.model.transformation.TransformationPackage"
             genModel="model/trl.genmodel"/>
    </extension>
 
@@ -33,14 +26,14 @@
       <!-- @generated trl -->
       <parser
             type="transformation"
-            class="org.eclipse.efbt.language.trl.model.transformation.util.TransformationResourceFactoryImpl"/>
+            class="org.eclipse.efbt.cocamo.trl.model.transformation.util.TransformationResourceFactoryImpl"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated trl -->
       <package
             uri="http://www.eclipse.org/trl_report_cell_views"
-            class="org.eclipse.efbt.language.trl.model.trl_report_cell_views.Trl_report_cell_viewsPackage"
+            class="org.eclipse.efbt.cocamo.trl.model.trl_report_cell_views.Trl_report_cell_viewsPackage"
             genModel="model/trl.genmodel"/>
    </extension>
 
@@ -48,14 +41,14 @@
       <!-- @generated trl -->
       <parser
             type="trl_report_cell_views"
-            class="org.eclipse.efbt.language.trl.model.trl_report_cell_views.util.Trl_report_cell_viewsResourceFactoryImpl"/>
+            class="org.eclipse.efbt.cocamo.trl.model.trl_report_cell_views.util.Trl_report_cell_viewsResourceFactoryImpl"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated trl -->
       <package
             uri="http://www.eclipse.org/trl_sql_views"
-            class="org.eclipse.efbt.language.trl.model.trl_sql_views.Trl_sql_viewsPackage"
+            class="org.eclipse.efbt.cocamo.trl.model.trl_sql_views.Trl_sql_viewsPackage"
             genModel="model/trl.genmodel"/>
    </extension>
 
@@ -63,6 +56,7 @@
       <!-- @generated trl -->
       <parser
             type="trl_sql_views"
-            class="org.eclipse.efbt.language.trl.model.trl_sql_views.util.Trl_sql_viewsResourceFactoryImpl"/>
+            class="org.eclipse.efbt.cocamo.trl.model.trl_sql_views.util.Trl_sql_viewsResourceFactoryImpl"/>
    </extension>
+
 </plugin>

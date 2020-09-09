@@ -4,9 +4,9 @@
 	<parent>
 		<groupId>org.eclipse.efbt.cocamo</groupId>
 		<artifactId>org.eclipse.efbt.parent</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
+		<version>1.0.0-SNAPSHOT</version>  <relativePath>../../pom.xml</relativePath>
 	</parent>
-	<artifactId>org.eclipse.efbt.lineage.attributelineage.model.attribute_lineage</artifactId>
+	<artifactId>org.eclipse.efbt.cocamo.lineage.model.attribute_lineage</artifactId>
 	<packaging>eclipse-plugin</packaging>
 
 	<build>
@@ -27,7 +27,7 @@
 				<configuration>
 					<mainClass>org.eclipse.emf.mwe2.launch.runtime.Mwe2Launcher</mainClass>
 					<arguments>
-						<argument>/${project.basedir}/src/org/eclipse/efbt/lineage/attributelineage/model/attribute_lineage/GenerateAttributeLineage.mwe2</argument>
+						<argument>/${project.basedir}/src/org/eclipse/efbt/cocamo/lineage/model/attribute_lineage/GenerateAttributeLineage.mwe2</argument>
 						<argument>-p</argument>
 						<argument>rootPath=/${project.basedir}/..</argument>
 					</arguments>
@@ -76,7 +76,7 @@
 				<configuration>
 					<filesets combine.children="append">
 						<fileset>
-							<directory>${basedir}/../org.eclipse.efbt.lineage.attributelineage.model.attribute_lineage/src-gen/</directory>
+							<directory>${basedir}/../org.eclipse.efbt.cocamo.lineage.model.attribute_lineage/src-gen/</directory>
 							<includes>
 								<include>**/*</include>
 							</includes>

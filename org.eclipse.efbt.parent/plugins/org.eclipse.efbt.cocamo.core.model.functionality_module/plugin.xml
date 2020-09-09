@@ -25,7 +25,7 @@
       <!-- @generated functionality_module -->
       <package
             uri="http://www.eclipse.org/scenarios"
-            class="org.eclipse.efbt.functional_design.core.model.scenarios.ScenariosPackage"
+            class="org.eclipse.efbt.cocamo.core.model.scenarios.ScenariosPackage"
             genModel="model/functionality_module.genmodel"/>
    </extension>
 
@@ -33,7 +33,7 @@
       <!-- @generated functionality_module -->
       <parser
             type="scenarios"
-            class="org.eclipse.efbt.functional_design.core.model.scenarios.util.ScenariosResourceFactoryImpl"/>
+            class="org.eclipse.efbt.cocamo.core.model.scenarios.util.ScenariosResourceFactoryImpl"/>
    </extension>
 
 </plugin>

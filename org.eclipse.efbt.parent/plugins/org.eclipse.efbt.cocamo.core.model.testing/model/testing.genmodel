@@ -3,12 +3,12 @@
     xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.cocamo.core.model.testing/src-gen"
     modelPluginID="org.eclipse.efbt.cocamo.core.model.testing" modelName="Testing"
     rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" importerID="org.eclipse.emf.importer.ecore"
-    complianceLevel="8.0" copyrightFields="false" usedGenPackages="../../org.eclipse.efbt.cocamo.core.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.requirements.core.model.requirements_text/model/requirements_text.genmodel#//requirements_text"
+    complianceLevel="8.0" copyrightFields="false" usedGenPackages="../../org.eclipse.efbt.cocamo.core.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.cocamo.core.model.requirements_text/model/requirements_text.genmodel#//requirements_text"
     operationReflection="true" importOrganizing="true">
   <foreignModel>test_definition.ecore</foreignModel>
   <foreignModel>test_input_data.ecore</foreignModel>
   <foreignModel>test.ecore</foreignModel>
-  <genPackages prefix="Test_definition" basePackage="org.eclipse.efbt.testing.common.model"
+  <genPackages prefix="Test_definition" basePackage="org.eclipse.efbt.cocamo.core.model"
       resource="XML" disposableProviderFactory="true" ecorePackage="test_definition.ecore#/">
     <genClasses ecoreClass="test_definition.ecore#//TestContraints">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestContraints/template"/>
@@ -68,7 +68,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//TestDefinitionModule/testDefinitions"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Test_input_data" basePackage="org.eclipse.efbt.testing.common.model"
+  <genPackages prefix="Test_input_data" basePackage="org.eclipse.efbt.cocamo.core.model"
       resource="XML" disposableProviderFactory="true" ecorePackage="test_input_data.ecore#/">
     <genClasses ecoreClass="test_input_data.ecore#//InputDataModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_input_data.ecore#//InputDataModule/inputData"/>
@@ -84,7 +84,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_input_data.ecore#//UsefulInputDataSnippetsModule/snippets"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Test" basePackage="org.eclipse.efbt.testing.common.model" resource="XML"
+  <genPackages prefix="Test" basePackage="org.eclipse.efbt.cocamo.core.model" resource="XML"
       disposableProviderFactory="true" ecorePackage="test.ecore#/">
     <genClasses ecoreClass="test.ecore#//Result"/>
     <genClasses ecoreClass="test.ecore#//E2ETest">

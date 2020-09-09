@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Modelquery
 Bundle-SymbolicName: org.eclipse.efbt.cocamo.smcubes.query.core
 Bundle-Version: 1.0.0.qualifier
-Automatic-Module-Name: org.eclipse.efbt.data_structures.smcubes.modelquery.core
+Automatic-Module-Name: org.eclipse.efbt.cocamo.smcubes.modelquery.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.eclipse.efbt.cocamo.smcubes.query.core
 Require-Bundle: org.eclipse.emf.common,

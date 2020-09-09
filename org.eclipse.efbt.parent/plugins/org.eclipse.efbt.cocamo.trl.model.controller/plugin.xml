@@ -10,7 +10,7 @@
       <!-- @generated controller -->
       <package
             uri="http://www.eclipse.org/platform_call"
-            class="org.eclipse.efbt.controller.core.model.platform_call.Platform_callPackage"
+            class="org.eclipse.efbt.cocamo.trl.model.platform_call.Platform_callPackage"
             genModel="model/controller.genmodel"/>
    </extension>
 
@@ -18,6 +18,7 @@
       <!-- @generated controller -->
       <parser
             type="platform_call"
-            class="org.eclipse.efbt.controller.core.model.platform_call.util.Platform_callResourceFactoryImpl"/>
+            class="org.eclipse.efbt.cocamo.trl.model.platform_call.util.Platform_callResourceFactoryImpl"/>
    </extension>
+
 </plugin>

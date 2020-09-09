@@ -1,4 +1,4 @@
-module org.eclipse.efbt.input_data.smcubes.model.core
+module org.eclipse.efbt.cocamo.core.model.testing
 
 import org.eclipse.xtext.xtext.generator.*
 import org.eclipse.xtext.xtext.generator.model.project.*

@@ -11,7 +11,7 @@
  *  Neil Mackenzie - initial API and implementation
  *  */
 
-package pse.efbt.cocamo.smcubes.component.importexport.impl;
+package org.eclipse.efbt.cocamo.smcubes.component.importexport.impl;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -20,27 +20,27 @@ import java.util.List;
 import org.eclipse.efbt.cocamo.smcubes.component.access.api.AccessRow;
 import org.eclipse.efbt.cocamo.smcubes.component.access.api.AccessUtils;
 import org.eclipse.efbt.cocamo.smcubes.component.access.provider.AccessUtilProvider;
-import org.eclipse.efbt.data_structures.smcubes.model.core.CoreFactory;
-import org.eclipse.efbt.data_structures.smcubes.model.core.DOMAIN;
-import org.eclipse.efbt.data_structures.smcubes.model.core.FACET_VALUE_TYPE;
-import org.eclipse.efbt.data_structures.smcubes.model.core.MEMBER;
-import org.eclipse.efbt.data_structures.smcubes.model.core.VARIABLE;
-import org.eclipse.efbt.data_structures.smcubes.model.data_definition.COMBINATION;
-import org.eclipse.efbt.data_structures.smcubes.model.data_definition.COMBINATION_ITEM;
-import org.eclipse.efbt.data_structures.smcubes.model.data_definition.CUBE;
-import org.eclipse.efbt.data_structures.smcubes.model.data_definition.CUBE_STRUCTURE;
-import org.eclipse.efbt.data_structures.smcubes.model.data_definition.CUBE_STRUCTURE_ITEM;
-import org.eclipse.efbt.data_structures.smcubes.model.data_definition.Data_definitionFactory;
-import org.eclipse.efbt.data_structures.smcubes.model.efbt_data_definition.CombinationModule;
-import org.eclipse.efbt.data_structures.smcubes.model.efbt_data_definition.Efbt_data_definitionFactory;
-import org.eclipse.efbt.data_structures.smcubes.model.mapping.CUBE_MAPPING;
-import org.eclipse.efbt.data_structures.smcubes.model.mapping.MAPPING_DEFINITION;
-import org.eclipse.efbt.data_structures.smcubes.model.mapping.MAPPING_TO_CUBE;
-import org.eclipse.efbt.data_structures.smcubes.model.mapping.MEMBER_MAPPING;
-import org.eclipse.efbt.data_structures.smcubes.model.mapping.MappingFactory;
-import org.eclipse.efbt.data_structures.smcubes.model.mapping.VARIABLE_MAPPING;
-import org.eclipse.efbt.data_structures.smcubes.model.vtl_transformation.TRANSFORMATION_SCHEME;
-import org.eclipse.efbt.data_structures.smcubes.model.vtl_transformation.Vtl_transformationFactory;
+import org.eclipse.efbt.cocamo.smcubes.model.core.CoreFactory;
+import org.eclipse.efbt.cocamo.smcubes.model.core.DOMAIN;
+import org.eclipse.efbt.cocamo.smcubes.model.core.FACET_VALUE_TYPE;
+import org.eclipse.efbt.cocamo.smcubes.model.core.MEMBER;
+import org.eclipse.efbt.cocamo.smcubes.model.core.VARIABLE;
+import org.eclipse.efbt.cocamo.smcubes.model.data_definition.COMBINATION;
+import org.eclipse.efbt.cocamo.smcubes.model.data_definition.COMBINATION_ITEM;
+import org.eclipse.efbt.cocamo.smcubes.model.data_definition.CUBE;
+import org.eclipse.efbt.cocamo.smcubes.model.data_definition.CUBE_STRUCTURE;
+import org.eclipse.efbt.cocamo.smcubes.model.data_definition.CUBE_STRUCTURE_ITEM;
+import org.eclipse.efbt.cocamo.smcubes.model.data_definition.Data_definitionFactory;
+import org.eclipse.efbt.cocamo.smcubes.model.efbt_data_definition.CombinationModule;
+import org.eclipse.efbt.cocamo.smcubes.model.efbt_data_definition.Efbt_data_definitionFactory;
+import org.eclipse.efbt.cocamo.smcubes.model.mapping.CUBE_MAPPING;
+import org.eclipse.efbt.cocamo.smcubes.model.mapping.MAPPING_DEFINITION;
+import org.eclipse.efbt.cocamo.smcubes.model.mapping.MAPPING_TO_CUBE;
+import org.eclipse.efbt.cocamo.smcubes.model.mapping.MEMBER_MAPPING;
+import org.eclipse.efbt.cocamo.smcubes.model.mapping.MappingFactory;
+import org.eclipse.efbt.cocamo.smcubes.model.mapping.VARIABLE_MAPPING;
+import org.eclipse.efbt.cocamo.smcubes.model.vtl_transformation.TRANSFORMATION_SCHEME;
+import org.eclipse.efbt.cocamo.smcubes.model.vtl_transformation.Vtl_transformationFactory;
 import org.eclipse.emf.common.util.EList;
 
 

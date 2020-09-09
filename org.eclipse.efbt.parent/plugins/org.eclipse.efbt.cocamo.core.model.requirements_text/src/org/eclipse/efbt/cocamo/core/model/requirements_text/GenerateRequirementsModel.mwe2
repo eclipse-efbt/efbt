@@ -1,4 +1,4 @@
-module org.eclipse.efbt.requirements.core.model.requirements_text
+module org.eclipse.efbt.cocamo.core.model.requirements_text
 
 import org.eclipse.xtext.xtext.generator.*
 import org.eclipse.xtext.xtext.generator.model.project.*
@@ -12,13 +12,13 @@ Workflow {
         platformUri = "${rootPath}"
         scanClassPath = true
        // registerGeneratedEPackage = "org.eclipse.efbt.bird.bird_model.Bird_modelPackage"
-        registerGenModelFile = "platform:/resource/org.eclipse.efbt.requirements.core.model.requirements_text/model/requirements_text.genmodel"
+        registerGenModelFile = "platform:/resource/org.eclipse.efbt.cocamo.core.model.requirements_text/model/requirements_text.genmodel"
     }
     
 	component = org.eclipse.emf.mwe2.ecore.EcoreGenerator {
 		
-		genModel = "platform:/resource/org.eclipse.efbt.requirements.core.model.requirements_text/model/requirements_text.genmodel"
-		srcPath = "platform:/resource/org.eclipse.efbt.requirements.core.model.requirements_text/src-gen"
+		genModel = "platform:/resource/org.eclipse.efbt.cocamo.core.model.requirements_text/model/requirements_text.genmodel"
+		srcPath = "platform:/resource/org.eclipse.efbt.cocamo.core.model.requirements_text/src-gen"
 		}
 	
 	

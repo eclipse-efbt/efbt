@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.requirements.core.model.requirements_text/src-gen"
-    modelPluginID="org.eclipse.efbt.requirements.core.model.requirements_text" modelName="Requirements_text"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.cocamo.core.model.requirements_text/src-gen"
+    modelPluginID="org.eclipse.efbt.cocamo.core.model.requirements_text" modelName="Requirements_text"
     rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" importerID="org.eclipse.emf.importer.ecore"
     complianceLevel="8.0" copyrightFields="false" usedGenPackages="../../org.eclipse.efbt.cocamo.core.model.module_management/model/module_management.genmodel#//module_management"
     operationReflection="true" importOrganizing="true">
   <foreignModel>requirements_text.ecore</foreignModel>
-  <genPackages prefix="Requirements_text" basePackage="org.eclipse.efbt.requirements.core.model"
+  <genPackages prefix="Requirements_text" basePackage="org.eclipse.efbt.cocamo.core.model"
       resource="XML" disposableProviderFactory="true" ecorePackage="requirements_text.ecore#/">
     <genClasses ecoreClass="requirements_text.ecore#//AllowedTypes">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference requirements_text.ecore#//AllowedTypes/allowedTypes"/>

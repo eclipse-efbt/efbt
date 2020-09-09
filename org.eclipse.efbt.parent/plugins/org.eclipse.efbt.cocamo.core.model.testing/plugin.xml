@@ -10,22 +10,22 @@
       <!-- @generated testing -->
       <package
             uri="http://www.eclipse.org/test_definition"
-            class="org.eclipse.efbt.testing.common.model.test_definition.Test_definitionPackage"
+            class="org.eclipse.efbt.cocamo.core.model.test_definition.Test_definitionPackage"
             genModel="model/testing.genmodel"/>
    </extension>
-
 
    <extension point="org.eclipse.emf.ecore.extension_parser">
       <!-- @generated testing -->
       <parser
             type="test_definition"
-            class="org.eclipse.efbt.testing.common.model.test_definition.util.Test_definitionResourceFactoryImpl"/>
+            class="org.eclipse.efbt.cocamo.core.model.test_definition.util.Test_definitionResourceFactoryImpl"/>
    </extension>
+
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated testing -->
       <package
             uri="http://www.eclipse.org/test_input_data"
-            class="org.eclipse.efbt.testing.common.model.test_input_data.Test_input_dataPackage"
+            class="org.eclipse.efbt.cocamo.core.model.test_input_data.Test_input_dataPackage"
             genModel="model/testing.genmodel"/>
    </extension>
 
@@ -33,14 +33,14 @@
       <!-- @generated testing -->
       <parser
             type="test_input_data"
-            class="org.eclipse.efbt.testing.common.model.test_input_data.util.Test_input_dataResourceFactoryImpl"/>
+            class="org.eclipse.efbt.cocamo.core.model.test_input_data.util.Test_input_dataResourceFactoryImpl"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated testing -->
       <package
             uri="http://www.eclipse.org/test"
-            class="org.eclipse.efbt.testing.common.model.test.TestPackage"
+            class="org.eclipse.efbt.cocamo.core.model.test.TestPackage"
             genModel="model/testing.genmodel"/>
    </extension>
 
@@ -48,7 +48,7 @@
       <!-- @generated testing -->
       <parser
             type="test"
-            class="org.eclipse.efbt.testing.common.model.test.util.TestResourceFactoryImpl"/>
+            class="org.eclipse.efbt.cocamo.core.model.test.util.TestResourceFactoryImpl"/>
    </extension>
 
 </plugin>

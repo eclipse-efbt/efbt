@@ -54,10 +54,10 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ScenarioTag" eSuperTypes="../../org.eclipse.efbt.requirements.core.model.requirements_text/model/requirements_text.ecore#//Tag">
+  <eClassifiers xsi:type="ecore:EClass" name="ScenarioTag" eSuperTypes="../../org.eclipse.efbt.cocamo.core.model.requirements_text/model/requirements_text.ecore#//Tag">
     <eStructuralFeatures xsi:type="ecore:EReference" name="scenario" eType="#//Scenario"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ScenarioSetTag" eSuperTypes="../../org.eclipse.efbt.requirements.core.model.requirements_text/model/requirements_text.ecore#//Tag">
+  <eClassifiers xsi:type="ecore:EClass" name="ScenarioSetTag" eSuperTypes="../../org.eclipse.efbt.cocamo.core.model.requirements_text/model/requirements_text.ecore#//Tag">
     <eStructuralFeatures xsi:type="ecore:EReference" name="scenarioSet" eType="#//ScenarioSet"/>
   </eClassifiers>
 </ecore:EPackage>

@@ -3,10 +3,11 @@ package org.eclipse.efbt.cocamo.core.component.core;
 
 import org.eclipse.efbt.cocamo.trl.component.translator.api.AttributeLineageUtil;
 import org.eclipse.efbt.cocamo.trl.component.translator.impl.AttributeLineageUtilImpl;
-import org.eclipse.efbt.controller.core.model.platform_call.GetAttributeLineageModel;
-import org.eclipse.efbt.controller.core.model.platform_call.PlatformCall;
-import org.eclipse.efbt.controller.core.model.platform_call.Platform_callPackage;
-import org.eclipse.efbt.language.trl.model.transformation.VersionedComponentsSet;
+import org.eclipse.efbt.cocamo.trl.model.platform_call.GetAttributeLineageModel;
+import org.eclipse.efbt.cocamo.trl.model.platform_call.PlatformCall;
+import org.eclipse.efbt.cocamo.trl.model.platform_call.Platform_callPackage;
+import org.eclipse.efbt.cocamo.trl.model.transformation.VersionedComponentsSet;
+
 
 public class Controller {
 	

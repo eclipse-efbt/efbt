@@ -2,14 +2,16 @@ package org.eclipse.efbt.cocamo.lineage.query.attributelineage;
 
 import java.util.Iterator;
 
-import org.eclipse.efbt.lineage.common.model.cubes.FreeBirdToolsCube;
+
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.efbt.cocamo.lineage.model.attribute_lineage.AttributeLineageModel;
-import org.eclipse.efbt.lineage.attributelineage.model.cube_transformation_logic.CubeTransformationLogic;
-import org.eclipse.efbt.lineage.attributelineage.model.row_transformation_logic.BaseRowStructure;
-import org.eclipse.efbt.lineage.attributelineage.model.row_transformation_logic.UnionRowCreationApproach;
-import org.eclipse.efbt.lineage.common.model.cubes.DerivedCube;
+import org.eclipse.efbt.cocamo.lineage.model.cube_transformation_logic.CubeTransformationLogic;
+import org.eclipse.efbt.cocamo.lineage.model.cubes.FreeBirdToolsCube;
+import org.eclipse.efbt.cocamo.lineage.model.cubes.DerivedCube;
+import org.eclipse.efbt.cocamo.lineage.model.row_transformation_logic.BaseRowStructure;
+import org.eclipse.efbt.cocamo.lineage.model.row_transformation_logic.UnionRowCreationApproach;
+
 
 public class AttributeLineageModelQuery {
 
