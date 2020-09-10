@@ -9,7 +9,7 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated attribute_lineage -->
       <package
-            uri="http://www.eclipse.org/attribute_lineage"
+            uri="http://www.eclipse.org/efbt/attribute_lineage"
             class="org.eclipse.efbt.cocamo.lineage.model.attribute_lineage.Attribute_lineagePackage"
             genModel="model/attribute_lineage.genmodel"/>
    </extension>
@@ -24,7 +24,7 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated attribute_lineage -->
       <package
-            uri="http://www.eclipse.org/cube_transformation_logic"
+            uri="http://www.eclipse.org/efbt/cube_transformation_logic"
             class="org.eclipse.efbt.cocamo.lineage.model.cube_transformation_logic.Cube_transformation_logicPackage"
             genModel="model/attribute_lineage.genmodel"/>
    </extension>
@@ -32,7 +32,7 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated attribute_lineage -->
       <package
-            uri="http://www.eclipse.org/row_transformation_logic"
+            uri="http://www.eclipse.org/efbt/row_transformation_logic"
             class="org.eclipse.efbt.cocamo.lineage.model.row_transformation_logic.Row_transformation_logicPackage"
             genModel="model/attribute_lineage.genmodel"/>
    </extension>

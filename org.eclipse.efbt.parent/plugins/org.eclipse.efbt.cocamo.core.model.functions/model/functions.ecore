@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="functions" nsURI="http://www.eclipse.org/functions" nsPrefix="functions">
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="functions" nsURI="http://www.eclipse.org/efbt/functions" nsPrefix="functions">
   <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
     <details key="documentation" value="TheFunctions pckage cotain information about functions and their specifications. &#xA;Functions ae used in DataSetTransformations such as the ones for TRL and VTL. &#xA;Functions are also used in AttributeLineageModels an in SpreadsheetLineageModels.&#xA;"/>
   </eAnnotations>

@@ -31,7 +31,7 @@ public class XMLToXTextConverter {
 		// load the set of files into a resource set.
 		// persist the files as a set of xtext files
 
-		/**EPackage.Registry.INSTANCE.put("http://www.eclipse.org/cocamo_program", cocamo_programPackage.eINSTANCE);
+		/**EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/cocamo_program", cocamo_programPackage.eINSTANCE);
 		FreeBirdToolsResourceFactory factory = new FreeBirdToolsResourceFactory();
 
 		Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;

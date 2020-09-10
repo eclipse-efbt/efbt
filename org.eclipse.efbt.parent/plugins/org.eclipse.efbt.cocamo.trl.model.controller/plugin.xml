@@ -9,7 +9,7 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated controller -->
       <package
-            uri="http://www.eclipse.org/platform_call"
+            uri="http://www.eclipse.org/efbt/platform_call"
             class="org.eclipse.efbt.cocamo.trl.model.platform_call.Platform_callPackage"
             genModel="model/controller.genmodel"/>
    </extension>

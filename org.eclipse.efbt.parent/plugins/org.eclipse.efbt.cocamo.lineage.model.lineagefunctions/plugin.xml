@@ -9,7 +9,7 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated lineagefunctions -->
       <package
-            uri="http://www.eclipse.org/column_transformation_logic"
+            uri="http://www.eclipse.org/efbt/column_transformation_logic"
             class="org.eclipse.efbt.cocamo.lineage.model.column_transformation_logic.Column_transformation_logicPackage"
             genModel="model/lineagefunctions.genmodel"/>
    </extension>
@@ -24,7 +24,7 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated lineagefunctions -->
       <package
-            uri="http://www.eclipse.org/lineagefunctions"
+            uri="http://www.eclipse.org/efbt/lineagefunctions"
             class="org.eclipse.efbt.cocamo.lineage.model.lineagefunctions.LineagefunctionsPackage"
             genModel="model/lineagefunctions.genmodel"/>
    </extension>

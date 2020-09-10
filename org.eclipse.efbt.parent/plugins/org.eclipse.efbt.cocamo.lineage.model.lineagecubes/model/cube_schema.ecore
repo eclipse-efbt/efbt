@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="cube_schema" nsURI="http://www.eclipse.org/cube_schema" nsPrefix="cube_schema">
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="cube_schema" nsURI="http://www.eclipse.org/efbt/cube_schema" nsPrefix="cube_schema">
   <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
     <details key="documentation" value=" This package describes the schemas of FreeBirdToolsCubes by providing  means to access the relevent the data_definition:CUBE_STRUCTURE    &#xA;"/>
   </eAnnotations>

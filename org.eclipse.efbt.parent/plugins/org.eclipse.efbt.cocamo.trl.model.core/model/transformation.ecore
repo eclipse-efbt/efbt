@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="transformation" nsURI="http://www.eclipse.org/transformation"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="transformation" nsURI="http://www.eclipse.org/efbt/transformation"
     nsPrefix="transformation">
   <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
     <details key="documentation" value="This package describes DataSetTransformations used to derive DerivedCubes, and the grouping of these DataSetTransformations into Schemes and Modules.&#xA; "/>

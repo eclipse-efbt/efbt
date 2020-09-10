@@ -9,7 +9,7 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated functions -->
       <package
-            uri="http://www.eclipse.org/functions"
+            uri="http://www.eclipse.org/efbt/functions"
             class="org.eclipse.efbt.cocamo.core.model.functions.FunctionsPackage"
             genModel="model/functions.genmodel"/>
    </extension>

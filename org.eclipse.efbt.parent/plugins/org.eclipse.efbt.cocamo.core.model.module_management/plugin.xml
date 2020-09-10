@@ -9,7 +9,7 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated module_management -->
       <package
-            uri="http://www.eclipse.org/module_management"
+            uri="http://www.eclipse.org/efbt/module_management"
             class="org.eclipse.efbt.cocamo.core.model.module_management.Module_managementPackage"
             genModel="model/module_management.genmodel"/>
    </extension>
