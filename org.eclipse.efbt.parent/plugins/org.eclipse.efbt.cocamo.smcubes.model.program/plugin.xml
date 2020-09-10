@@ -9,7 +9,7 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated cocamo -->
       <package
-            uri="http://www.eclipse.org/cocamo"
+            uri="http://www.eclipse.org/efbt/cocamo"
             class="org.eclipse.efbt.cocamo.smcubes.model.cocamo.CocamoPackage"
             genModel="model/cocamo.genmodel"/>
    </extension>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="module_management" nsURI="http://www.eclipse.org/module_management"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="module_management" nsURI="http://www.eclipse.org/efbt/module_management"
     nsPrefix="module_management">
   <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
     <details key="documentation" value="This package describes Module Management classes.&#xA;These classes allow items to be grouped together and given a version. For example a FunctionSpecModule will contain a group of Functions.&#xA;Modules can also state which other modules they depend upon, allowing for fine grained dependencies between groups of items.&#xA;"/>

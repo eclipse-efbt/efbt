@@ -9,7 +9,7 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated functionality_module -->
       <package
-            uri="http://www.eclipse.org/functionality_module"
+            uri="http://www.eclipse.org/efbt/functionality_module"
             class="org.eclipse.efbt.cocamo.core.model.functionality_module.Functionality_modulePackage"
             genModel="model/functionality_module.genmodel"/>
    </extension>
@@ -24,7 +24,7 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated functionality_module -->
       <package
-            uri="http://www.eclipse.org/scenarios"
+            uri="http://www.eclipse.org/efbt/scenarios"
             class="org.eclipse.efbt.cocamo.core.model.scenarios.ScenariosPackage"
             genModel="model/functionality_module.genmodel"/>
    </extension>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="trl_sql_views" nsURI="http://www.eclipse.org/trl_sql_views"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="trl_sql_views" nsURI="http://www.eclipse.org/efbt/trl_sql_views"
     nsPrefix="trl_sql_views">
   <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
     <details key="documentation" value="This package describes the set of SQLViews, each SQLView represents a DataSetTransformation which transforms&#xA;    data from one DataSet to another in an immutable side-effect free fashion. They use concepts from the well-known SQL StructuredQueryLanguage.&#xA;    &#xA;    The transformed dataset is created just once by the transformation and then never amended (it is immutable)&#xA;    The only data that can be used in the transformation is the data from the source dataset(s), so it cannot use anything else including&#xA;    'global variables' (which do not exist in the compitational model, the only data created by the transformation is the data in the resulting transformed dataset,&#xA;    no other data is created or affected so the transformations are side-effect free.&#xA;&#xA;"/>

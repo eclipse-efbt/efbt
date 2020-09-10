@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="test_input_data" nsURI="http://www.eclipse.org/test_input_data"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="test_input_data" nsURI="http://www.eclipse.org/efbt/test_input_data"
     nsPrefix="test_input_data">
   <eClassifiers xsi:type="ecore:EClass" name="InputDataModule" eSuperTypes="../../org.eclipse.efbt.cocamo.core.model.module_management/model/module_management.ecore#//Module">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">

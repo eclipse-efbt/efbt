@@ -9,5 +9,5 @@
    <feature id="org.eclipse.efbt.cocason.tests.feature" version="0.0.0">
       <category name="cocason"/>
    </feature>
-   <category-def name="cocason" label="cocason"/>
+   <category-def name="cocason" label="CoCaSon"/>
 </site>

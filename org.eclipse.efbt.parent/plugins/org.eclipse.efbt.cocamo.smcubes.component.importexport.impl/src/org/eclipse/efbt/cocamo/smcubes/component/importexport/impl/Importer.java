@@ -317,55 +317,55 @@ public abstract class Importer implements BirdImporter {
 		
 		
 /**		
-		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/base_column_structured_data")) {
-			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/base_column_structured_data",
+		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/base_column_structured_data")) {
+			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/base_column_structured_data",
 					Base_column_structured_dataPackage.eINSTANCE);
 		}
 		
-		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/smcubes_model")) {
-			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/smcubes_model",
+		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/smcubes_model")) {
+			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/smcubes_model",
 					Smcubes_modelPackage.eINSTANCE);
 		}
 
-		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/functionality_module")) {
-			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/functionality_module",
+		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/functionality_module")) {
+			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/functionality_module",
 					Functionality_modulePackage.eINSTANCE);
 		}
 		
-		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/reports")) {
-			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/reports",
+		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/reports")) {
+			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/reports",
 					ReportsPackage.eINSTANCE);
 		}
 		
 		
 
-		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/requirements_text")) {
-			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/requirements_text",
+		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/requirements_text")) {
+			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/requirements_text",
 					Requirements_textPackage.eINSTANCE);
 		}
 	
-		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/scenarios")) {
-			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/scenarios", ScenariosPackage.eINSTANCE);
+		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/scenarios")) {
+			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/scenarios", ScenariosPackage.eINSTANCE);
 		}
 
 		
-		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/test_definition")) {
-			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/test_definition", Test_definitionPackage.eINSTANCE);
+		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/test_definition")) {
+			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/test_definition", Test_definitionPackage.eINSTANCE);
 		}
-		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/test_input_data")) {
-			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/test_input_data", Test_input_dataPackage.eINSTANCE);
+		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/test_input_data")) {
+			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/test_input_data", Test_input_dataPackage.eINSTANCE);
 		}
 
 		
-		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/test")) {
-			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/test", TestPackage.eINSTANCE);
+		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/test")) {
+			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/test", TestPackage.eINSTANCE);
 		}
 		
 	
 	
 		
-		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/rendering")) {
-			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/rendering", RenderingPackage.eINSTANCE);
+		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/rendering")) {
+			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/rendering", RenderingPackage.eINSTANCE);
 		}
 		
 		*/

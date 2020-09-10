@@ -9,7 +9,7 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated smcubes_input_data -->
       <package
-            uri="http://www.eclipse.org/base_column_structured_data"
+            uri="http://www.eclipse.org/efbt/base_column_structured_data"
             class="org.eclipse.efbt.cocamo.smcubes.model.base_column_structured_data.Base_column_structured_dataPackage"
             genModel="model/smcubes_input_data.genmodel"/>
    </extension>
@@ -24,7 +24,7 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated smcubes_input_data -->
       <package
-            uri="http://www.eclipse.org/column_structured_data"
+            uri="http://www.eclipse.org/efbt/column_structured_data"
             class="org.eclipse.efbt.cocamo.smcubes.model.column_structured_data.Column_structured_dataPackage"
             genModel="model/smcubes_input_data.genmodel"/>
    </extension>

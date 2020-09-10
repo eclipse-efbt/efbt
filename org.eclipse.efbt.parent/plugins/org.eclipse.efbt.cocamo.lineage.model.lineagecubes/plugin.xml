@@ -9,7 +9,7 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated lineagecubes -->
       <package
-            uri="http://www.eclipse.org/cube_schema"
+            uri="http://www.eclipse.org/efbt/cube_schema"
             class="org.eclipse.efbt.cocamo.lineage.model.cube_schema.Cube_schemaPackage"
             genModel="model/lineagecubes.genmodel"/>
    </extension>
@@ -24,7 +24,7 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated lineagecubes -->
       <package
-            uri="http://www.eclipse.org/cubes"
+            uri="http://www.eclipse.org/efbt/cubes"
             class="org.eclipse.efbt.cocamo.lineage.model.cubes.CubesPackage"
             genModel="model/lineagecubes.genmodel"/>
    </extension>

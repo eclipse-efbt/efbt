@@ -9,7 +9,7 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated smcubes -->
       <package
-            uri="http://www.eclipse.org/core"
+            uri="http://www.eclipse.org/efbt/core"
             class="org.eclipse.efbt.cocamo.smcubes.model.core.CorePackage"
             genModel="model/smcubes.genmodel"/>
    </extension>
@@ -24,7 +24,7 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated smcubes -->
       <package
-            uri="http://www.eclipse.org/data_definition"
+            uri="http://www.eclipse.org/efbt/data_definition"
             class="org.eclipse.efbt.cocamo.smcubes.model.data_definition.Data_definitionPackage"
             genModel="model/smcubes.genmodel"/>
    </extension>
@@ -39,7 +39,7 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated smcubes -->
       <package
-            uri="http://www.eclipse.org/efbt_data_definition"
+            uri="http://www.eclipse.org/efbt/efbt_data_definition"
             class="org.eclipse.efbt.cocamo.smcubes.model.efbt_data_definition.Efbt_data_definitionPackage"
             genModel="model/smcubes.genmodel"/>
    </extension>
@@ -54,7 +54,7 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated smcubes -->
       <package
-            uri="http://www.eclipse.org/efbt_mapping"
+            uri="http://www.eclipse.org/efbt/efbt_mapping"
             class="org.eclipse.efbt.cocamo.smcubes.model.efbt_mapping.Efbt_mappingPackage"
             genModel="model/smcubes.genmodel"/>
    </extension>
@@ -69,7 +69,7 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated smcubes -->
       <package
-            uri="http://www.eclipse.org/efbt_vtl_transformation"
+            uri="http://www.eclipse.org/efbt/efbt_vtl_transformation"
             class="org.eclipse.efbt.cocamo.smcubes.model.efbt_vtl_transformation.Efbt_vtl_transformationPackage"
             genModel="model/smcubes.genmodel"/>
    </extension>
@@ -84,7 +84,7 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated smcubes -->
       <package
-            uri="http://www.eclipse.org/mapping"
+            uri="http://www.eclipse.org/efbt/mapping"
             class="org.eclipse.efbt.cocamo.smcubes.model.mapping.MappingPackage"
             genModel="model/smcubes.genmodel"/>
    </extension>
@@ -99,7 +99,7 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated smcubes -->
       <package
-            uri="http://www.eclipse.org/rendering"
+            uri="http://www.eclipse.org/efbt/rendering"
             class="org.eclipse.efbt.cocamo.smcubes.model.rendering.RenderingPackage"
             genModel="model/smcubes.genmodel"/>
    </extension>
@@ -114,7 +114,7 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated smcubes -->
       <package
-            uri="http://www.eclipse.org/reports"
+            uri="http://www.eclipse.org/efbt/reports"
             class="org.eclipse.efbt.cocamo.smcubes.model.reports.ReportsPackage"
             genModel="model/smcubes.genmodel"/>
    </extension>
@@ -129,7 +129,7 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated smcubes -->
       <package
-            uri="http://www.eclipse.org/smcubes_model"
+            uri="http://www.eclipse.org/efbt/smcubes_model"
             class="org.eclipse.efbt.cocamo.smcubes.model.smcubes_model.Smcubes_modelPackage"
             genModel="model/smcubes.genmodel"/>
    </extension>
@@ -144,7 +144,7 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated smcubes -->
       <package
-            uri="http://www.eclipse.org/vtl_transformation"
+            uri="http://www.eclipse.org/efbt/vtl_transformation"
             class="org.eclipse.efbt.cocamo.smcubes.model.vtl_transformation.Vtl_transformationPackage"
             genModel="model/smcubes.genmodel"/>
    </extension>
