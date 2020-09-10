@@ -8,11 +8,8 @@ Require-Bundle: org.eclipse.efbt.cocamo.smcubes.model.core,
  org.eclipse.efbt.cocamo.lineage.model.attribute_lineage,
  org.eclipse.efbt.cocamo.trl.model.core,
  org.eclipse.efbt.cocamo.lineage.model.lineagecubes,
- org.eclipse.emf.common,
  org.eclipse.efbt.cocamo.lineage.model.lineagefunctions,
  org.eclipse.efbt.cocamo.lineage.query.attributelineage,
- org.eclipse.emf.common,
  org.eclipse.efbt.cocamo.core.model.functions,
- org.eclipse.efbt.cocamo.core.model.functionality_module,
- org.eclipse.efbt.language.trl.model.core
+ org.eclipse.efbt.cocamo.core.model.functionality_module
 Export-Package: org.eclipse.efbt.cocamo.trl.component.translator.api

@@ -49,6 +49,7 @@
 		<module>plugins/org.eclipse.efbt.cocamo.smcubes.component.csv.provider</module>
 		<module>plugins/org.eclipse.efbt.cocamo.smcubes.component.exporter</module>
 		<module>plugins/org.eclipse.efbt.cocamo.smcubes.component.importexport.api</module>
+		
 
 		<module>plugins/org.eclipse.efbt.cocamo.smcubes.model.core</module>
 		<module>plugins/org.eclipse.efbt.cocamo.smcubes.model.example</module>
@@ -64,6 +65,24 @@
 		<module>plugins/org.eclipse.efbt.cocamo.trl.query.core</module>
 		<module>plugins/org.eclipse.efbt.cocamo.trl.ui.sirius.controller</module>
 		<module>plugins/org.eclipse.efbt.cocamo.trl.ui.sirius.core</module>
+		<module>features/org.eclipse.efbt.cocamo.core.model.feature</module>
+		<module>features/org.eclipse.efbt.cocamo.core.query.feature</module>
+		<module>features/org.eclipse.efbt.cocamo.core.ui.sirius.feature</module>
+		<module>features/org.eclipse.efbt.cocamo.ldm.component.feature</module>
+		<module>features/org.eclipse.efbt.cocamo.lineage.model.feature</module>
+		<module>features/org.eclipse.efbt.cocamo.lineage.query.feature</module>
+		<module>features/org.eclipse.efbt.cocamo.lineage.ui.sirius.feature</module>
+		<module>features/org.eclipse.efbt.cocamo.smcubes.component.feature</module>
+		<module>features/org.eclipse.efbt.cocamo.smcubes.model.feature</module>
+		<module>features/org.eclipse.efbt.cocamo.smcubes.query.feature</module>
+		<module>features/org.eclipse.efbt.cocamo.smcubes.ui.sirius.feature</module>
+		<module>features/org.eclipse.efbt.cocamo.trl.component.feature</module>
+		<module>features/org.eclipse.efbt.cocamo.trl.model.feature</module>
+		<module>features/org.eclipse.efbt.cocamo.trl.query.feature</module>
+		<module>features/org.eclipse.efbt.cocamo.trl.ui.sirius.feature</module>
+		<module>releng/org.eclipse.efbt.cocamo.repository</module>
+		
+
 		
 		
 		

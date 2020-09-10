@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature id="org.eclipse.efbt.cocamo.core.model.feature"/>
+   <feature id="org.eclipse.efbt.cocamo.core.query.feature"/>
+   <feature id="org.eclipse.efbt.cocamo.core.ui.sirius.feature"/>
+   <feature id="org.eclipse.efbt.cocamo.ldm.component.feature"/>
+   <feature id="org.eclipse.efbt.cocamo.lineage.model.feature"/>
+   <feature id="org.eclipse.efbt.cocamo.lineage.query.feature"/>
+   <feature id="org.eclipse.efbt.cocamo.lineage.ui.sirius.feature"/>
+   <feature id="org.eclipse.efbt.cocamo.smcubes.component.feature"/>
+   <feature id="org.eclipse.efbt.cocamo.smcubes.ui.sirius.feature"/>
+    <feature id="org.eclipse.efbt.cocamo.smcubes.model.feature"/>
+     <feature id="org.eclipse.efbt.cocamo.smcubes.query.feature"/>
+   <feature id="org.eclipse.efbt.cocamo.trl.model.feature"/>
+   <feature id="org.eclipse.efbt.cocamo.trl.query.feature"/>
+   <feature id="org.eclipse.efbt.cocamo.trl.ui.sirius.feature"/>
+   <feature id="org.eclipse.efbt.cocamo.trl.component.feature"/>
+
+	
+		
+   <category-def name="cocamo.smcubes.trl" label="CoCaMo With SMCubes and TRL"/>
+</site>

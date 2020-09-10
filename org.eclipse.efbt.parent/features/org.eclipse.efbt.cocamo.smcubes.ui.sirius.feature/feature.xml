@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.eclipse.efbt.cocamo.model.core.feature"
-      label="cocamo Model Core"
+      id="org.eclipse.efbt.cocamo.smcubes.ui.sirius.feature"
+      label="CoCaMo"
       version="1.0.0.qualifier"
       provider-name="Bird Software Solutions">
 
@@ -18,21 +18,7 @@
    </license>
 
    <plugin
-         id="org.eclipse.efbt.cocamo.core.model.testing"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.efbt.requirements.core.model.requirements_text"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.efbt.cocamo.core.model.functionality_module"
+         id="org.eclipse.efbt.cocamo.smcubes.ui.sirius"
          download-size="0"
          install-size="0"
          version="0.0.0"

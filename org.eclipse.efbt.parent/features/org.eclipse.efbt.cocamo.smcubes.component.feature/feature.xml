@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.eclipse.efbt.cocamo.model.core.feature"
-      label="cocamo Model Core"
+      id="org.eclipse.efbt.cocamo.smcubes.component.feature"
+      label="CoCaMo SMCubes Component"
       version="1.0.0.qualifier"
       provider-name="Bird Software Solutions">
 
@@ -18,21 +18,56 @@
    </license>
 
    <plugin
-         id="org.eclipse.efbt.cocamo.core.model.testing"
+         id="org.eclipse.efbt.cocamo.smcubes.component.access.api"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.efbt.requirements.core.model.requirements_text"
+         id="org.eclipse.efbt.cocamo.smcubes.component.access.jackcess.impl"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.efbt.cocamo.core.model.functionality_module"
+         id="org.eclipse.efbt.cocamo.smcubes.component.access.provider"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.efbt.cocamo.smcubes.component.csv.apachecsv.impl"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.efbt.cocamo.smcubes.component.csv.api"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.efbt.cocamo.smcubes.component.csv.provider"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.efbt.cocamo.smcubes.component.exporter"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.efbt.cocamo.smcubes.component.importexport.api"
          download-size="0"
          install-size="0"
          version="0.0.0"
