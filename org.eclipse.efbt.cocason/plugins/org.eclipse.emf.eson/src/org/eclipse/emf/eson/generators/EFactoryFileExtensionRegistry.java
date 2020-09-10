@@ -64,7 +64,7 @@ public class EFactoryFileExtensionRegistry {
 	public Set<String> getAssociateFileExtensionsWithDefaults() {
 		HashSet<String> hashSet = new HashSet<String>(
 				getAssociateFileExtensions());
-		hashSet.add("eson");
+		hashSet.add("coca");
 		hashSet.add("efactory");
 		return hashSet;
 	}

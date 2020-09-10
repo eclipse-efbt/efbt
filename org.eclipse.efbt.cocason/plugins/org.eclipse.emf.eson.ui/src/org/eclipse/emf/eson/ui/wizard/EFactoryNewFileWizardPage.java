@@ -165,7 +165,7 @@ public class EFactoryNewFileWizardPage extends WizardPage {
 
 	private void initPackageUri(IFile file) {
 		String fileExtension = file.getFileExtension().toLowerCase();
-		if (fileExtension.equals("eson")) {
+		if (fileExtension.equals("coca")) {
 			Resource resource = loadResource(file);
 			if (resource != null && !resource.getContents().isEmpty()) {
 				initPackageUri(resource.getContents().get(0));
@@ -243,7 +243,7 @@ public class EFactoryNewFileWizardPage extends WizardPage {
 		int dotLoc = fileName.lastIndexOf('.');
 		if (dotLoc != -1) {
 			String ext = fileName.substring(dotLoc + 1);
-			if (ext.equalsIgnoreCase("eson") == false) {
+			if (ext.equalsIgnoreCase("coca") == false) {
 				updateStatus("File extension must be \"eson\"");
 				return;
 			}
