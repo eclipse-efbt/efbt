@@ -12,7 +12,7 @@
             class="org.eclipse.emf.eson.ui.EFactoryExecutableExtensionFactory:org.eclipse.emf.eson.ui.editor.tree.EFactoryWithTreeEditor"
             contributorClass="org.eclipse.emf.eson.ui.editor.tree.ActionBarContributor"
             default="true"
-            extensions="efactory,eson">
+            extensions="efactory,coca">
         </editor>
     </extension>
 
@@ -24,7 +24,7 @@
             class="org.eclipse.emf.eson.ui.EFactoryExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
             contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
             default="false"
-            extensions="efactory,eson">
+            extensions="efactory,coca">
         </editor>
     </extension>
     
@@ -244,13 +244,13 @@
 		point="org.eclipse.emf.ecore.extension_parser">
 		<parser
 			class="org.eclipse.emf.eson.ui.EFactoryExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
-			type="eson">
+			type="coca">
 		</parser>
 	</extension>
 	<extension point="org.eclipse.xtext.extension_resourceServiceProvider">
         <resourceServiceProvider
             class="org.eclipse.emf.eson.ui.EFactoryExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
-            uriExtension="eson">
+            uriExtension="coca">
         </resourceServiceProvider>
     </extension>
 
@@ -377,19 +377,19 @@
   <extension point="org.eclipse.compare.contentViewers">
     <viewer id="org.eclipse.emf.eson.EFactory.compare.contentViewers"
             class="org.eclipse.emf.eson.ui.EFactoryExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
-            extensions="efactory,eson">
+            extensions="efactory,coca">
     </viewer>
   </extension>
   <extension point="org.eclipse.compare.contentMergeViewers">
     <viewer id="org.eclipse.emf.eson.EFactory.compare.contentMergeViewers"
             class="org.eclipse.emf.eson.ui.EFactoryExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
-            extensions="efactory,eson" label="ESON Compare">
+            extensions="efactory,coca" label="ESON Compare">
      </viewer>
   </extension>
   <extension point="org.eclipse.ui.editors.documentProviders">
     <provider id="org.eclipse.emf.eson.EFactory.editors.documentProviders"
             class="org.eclipse.emf.eson.ui.EFactoryExecutableExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
-            extensions="efactory,eson">
+            extensions="efactory,coca">
     </provider>
   </extension>
   <extension point="org.eclipse.team.core.fileTypes">
@@ -398,7 +398,7 @@
             type="text">
     </fileTypes>
     <fileTypes
-            extension="eson"
+            extension="coca"
             type="text">
     </fileTypes>
   </extension>
