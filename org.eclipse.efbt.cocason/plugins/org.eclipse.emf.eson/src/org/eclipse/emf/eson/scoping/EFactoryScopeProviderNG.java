@@ -14,17 +14,17 @@ package org.eclipse.emf.eson.scoping;
 
 import java.util.List;
 
-import org.eclipse.efbt.cocamo.model.cocamo.Program;
-import org.eclipse.efbt.testing.common.model.test_definition.Clause;
-import org.eclipse.efbt.testing.common.model.test_definition.Given;
-import org.eclipse.efbt.testing.common.model.test_definition.Param;
-import org.eclipse.efbt.testing.common.model.test_definition.TestContraints;
-import org.eclipse.efbt.testing.common.model.test_definition.TestDefinition;
-import org.eclipse.efbt.testing.common.model.test_definition.TestDefinitionModule;
-import org.eclipse.efbt.testing.common.model.test_definition.TestTemplate;
-import org.eclipse.efbt.testing.common.model.test_definition.Test_definitionPackage;
-import org.eclipse.efbt.testing.common.model.test_definition.Then;
-import org.eclipse.efbt.testing.common.model.test_definition.When;
+import org.eclipse.efbt.cocamo.core.model.test_definition.Clause;
+import org.eclipse.efbt.cocamo.core.model.test_definition.Given;
+import org.eclipse.efbt.cocamo.core.model.test_definition.Param;
+import org.eclipse.efbt.cocamo.core.model.test_definition.TestContraints;
+import org.eclipse.efbt.cocamo.core.model.test_definition.TestDefinition;
+import org.eclipse.efbt.cocamo.core.model.test_definition.TestDefinitionModule;
+import org.eclipse.efbt.cocamo.core.model.test_definition.TestTemplate;
+import org.eclipse.efbt.cocamo.core.model.test_definition.Test_definitionPackage;
+import org.eclipse.efbt.cocamo.core.model.test_definition.Then;
+import org.eclipse.efbt.cocamo.core.model.test_definition.When;
+import org.eclipse.efbt.cocamo.smcubes.model.cocamo.Program;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;

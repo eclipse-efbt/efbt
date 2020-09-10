@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.eclipse.efbt.cocamo.lineage.model.featue"
+      id="org.eclipse.efbt.cocamo.lineage.model.feature"
       label="CoCaMo Lineage Model"
       version="1.0.0.qualifier"
       provider-name="Bird Software Solutions">

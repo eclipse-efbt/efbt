@@ -22,7 +22,7 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.objectweb.asm;resolution:=optional,
  org.eclipse.core.runtime,
  org.eclipse.efbt.cocamo.core.model.testing,
- org.eclipse.efbt.cocamo.model
+ org.eclipse.efbt.cocamo.smcubes.model.program
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.eclipse.emf.eson,
  org.eclipse.emf.eson.building,
