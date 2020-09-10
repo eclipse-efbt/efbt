@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated lineagefunctions -->
+      <package
+            uri="http://www.eclipse.org/efbt/column_transformation_logic"
+            class="org.eclipse.efbt.cocamo.lineage.model.column_transformation_logic.Column_transformation_logicPackage"
+            genModel="model/lineagefunctions.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated lineagefunctions -->
+      <parser
+            type="column_transformation_logic"
+            class="org.eclipse.efbt.cocamo.lineage.model.column_transformation_logic.util.Column_transformation_logicResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated lineagefunctions -->
+      <package
+            uri="http://www.eclipse.org/efbt/lineagefunctions"
+            class="org.eclipse.efbt.cocamo.lineage.model.lineagefunctions.LineagefunctionsPackage"
+            genModel="model/lineagefunctions.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated lineagefunctions -->
+      <parser
+            type="lineagefunctions"
+            class="org.eclipse.efbt.cocamo.lineage.model.lineagefunctions.util.LineagefunctionsResourceFactoryImpl"/>
+   </extension>
+
+</plugin>

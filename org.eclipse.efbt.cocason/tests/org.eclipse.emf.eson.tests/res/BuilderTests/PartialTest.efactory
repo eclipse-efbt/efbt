@@ -1,0 +1,6 @@
+use testmodel.*
+
+TestModel {
+	name: "Hi"
+	singleRequired // missing ": ..." is invalid, of course - but should still not lead to exception! 
+}

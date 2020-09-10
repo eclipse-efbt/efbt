@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.efbt.cocamo.smcubes.component.feature"
+      label="CoCaMo SMCubes Component"
+      version="1.0.0.202009100801"
+      provider-name="Bird Software Solutions">
+
+   <description url="http://www.example.com/description">
+      [Enter Feature Description here.]
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <plugin
+         id="org.eclipse.efbt.cocamo.smcubes.component.access.api"
+         download-size="3"
+         install-size="1"
+         version="1.0.0.202009100801"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.efbt.cocamo.smcubes.component.access.jackcess.impl"
+         download-size="5"
+         install-size="4"
+         version="1.0.0.202009100801"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.efbt.cocamo.smcubes.component.access.provider"
+         download-size="3"
+         install-size="1"
+         version="1.0.0.202009100801"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.efbt.cocamo.smcubes.component.csv.apachecsv.impl"
+         download-size="5"
+         install-size="5"
+         version="1.0.0.202009100801"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.efbt.cocamo.smcubes.component.csv.api"
+         download-size="3"
+         install-size="1"
+         version="1.0.0.202009100801"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.efbt.cocamo.smcubes.component.csv.provider"
+         download-size="3"
+         install-size="1"
+         version="1.0.0.202009100801"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.efbt.cocamo.smcubes.component.exporter"
+         download-size="13"
+         install-size="23"
+         version="1.0.0.202009100801"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.efbt.cocamo.smcubes.component.importexport.api"
+         download-size="3"
+         install-size="1"
+         version="1.0.0.202009100801"
+         unpack="false"/>
+
+</feature>

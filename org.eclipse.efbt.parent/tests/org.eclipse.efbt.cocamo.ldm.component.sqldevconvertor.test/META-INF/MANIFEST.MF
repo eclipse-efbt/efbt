@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Test
+Bundle-SymbolicName: org.eclipse.efbt.cocamo.ldm.component.sqldevconvertor.test
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: org.eclipse.efbt.datastructures.ldm.component.sqldevconvertor.test
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.eclipse.efbt.cocamo.ldm.component.sqldevconvertor;bundle-version="1.0.0"
+Import-Package: org.junit;version="4.13.0",
+ org.junit.jupiter.api;version="5.6.0"

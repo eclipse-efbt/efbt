@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature id="org.eclipse.efbt.cocason.feature" version="0.0.0">
+      <category name="cocason"/>
+   </feature>
+   <feature id="org.eclipse.efbt.cocason.ui.feature" version="0.0.0">
+      <category name="cocason"/>
+   </feature>
+   <feature id="org.eclipse.efbt.cocason.tests.feature" version="0.0.0">
+      <category name="cocason"/>
+   </feature>
+   <category-def name="cocason" label="CoCaSon"/>
+</site>

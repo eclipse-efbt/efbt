@@ -1,0 +1,7 @@
+// https://wiki.eclipse.org/Xcore
+
+package org.eclipse.emf.eson.example.library.subpackage
+
+class Details {
+    String description  
+}

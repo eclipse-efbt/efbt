@@ -1,0 +1,8 @@
+use testmodel.* 
+ 
+TestModel 1a-b,c {
+	
+	singleRequired: SingleRequired { }
+} 
+
+ 

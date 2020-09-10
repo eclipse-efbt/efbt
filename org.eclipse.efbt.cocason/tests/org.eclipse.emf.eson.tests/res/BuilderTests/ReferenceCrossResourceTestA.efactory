@@ -1,0 +1,40 @@
+use testmodel.* 
+
+// The object names here deliberately cover a variety of name and digit combinations (DS-8268):
+//   (1) a:  Only chars, normal Xtext ID
+//   (2) a3: Chars followed by digit, normal Xtext ID
+//   (3) 3a: ID starting with a digit (PITA)
+//   (4) 3:  Only digit (PITA)
+ 
+TestModel testModelNameA {
+	
+	referenceTestContainer: [ 
+		ReferenceTestContainer test1 {
+			containments: [
+				ReferenceTarget 1-target,1 {} // NOTE "1-target" is deliberately named like that, to make sure that ID are not restrictive, and can e.g. start with a digit and contain hyphens
+				ReferenceTarget target2 {}
+				ReferenceTarget target3 {}
+				ReferenceTarget 4 { }          // NOTE target is deliberately named '4' (only digit); see also NameOneDigitOnlyTest
+				ReferenceTarget 4abc { }       // NOTE target is deliberately named '4abc' (start with digit, then letters); see also NameOneDigitOnlyTest
+			]
+		}
+		ReferenceTestContainer test2 {
+			containments: [
+				ReferenceTarget target21 {}
+				ReferenceTarget target22 {}
+				ReferenceTargetSubclass target23 {}
+			]
+		}
+		
+		ReferenceTestContainer 3 {             //  NOTE target is deliberately named '3' (only digit; DS-8268) 
+			containments: [
+				ReferenceTarget target31 {}
+			]
+		}
+		
+	]
+	
+	singleRequired: SingleRequired { }
+} 
+
+ 

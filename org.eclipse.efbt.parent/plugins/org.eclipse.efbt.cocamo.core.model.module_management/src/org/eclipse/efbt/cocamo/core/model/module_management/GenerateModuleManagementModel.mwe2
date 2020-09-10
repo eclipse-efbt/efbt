@@ -1,0 +1,28 @@
+module org.eclipse.efbt.cocamo.core.model.module_management
+
+import org.eclipse.xtext.xtext.generator.*
+import org.eclipse.xtext.xtext.generator.model.project.*
+
+var rootPath = ".."
+
+Workflow {
+	
+	
+	bean = org.eclipse.emf.mwe.utils.StandaloneSetup {
+        platformUri = "${rootPath}"
+        scanClassPath = true
+       // registerGeneratedEPackage = "org.eclipse.efbt.bird.bird_model.Bird_modelPackage"
+        registerGenModelFile = "platform:/resource/org.eclipse.efbt.cocamo.core.model.module_management/model/module_management.genmodel"
+    }
+    
+	component = org.eclipse.emf.mwe2.ecore.EcoreGenerator {
+		
+		genModel = "platform:/resource/org.eclipse.efbt.cocamo.core.model.module_management/model/module_management.genmodel"
+		srcPath = "platform:/resource/org.eclipse.efbt.cocamo.core.model.module_management/src-gen"
+		}
+	
+	
+		}
+	
+	
+

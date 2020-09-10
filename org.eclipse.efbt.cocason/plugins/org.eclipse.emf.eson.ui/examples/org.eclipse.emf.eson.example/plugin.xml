@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
+      <propertyContributor
+            contributorId="org.eclipse.emf.eson.ui.editor.tree.EFactoryWithTreeEditor">
+         <propertyCategory
+               category="esontestproperty"></propertyCategory>
+      </propertyContributor>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.views.properties.tabbed.propertyTabs">
+      <propertyTabs
+            contributorId="org.eclipse.emf.eson.ui.editor.tree.EFactoryWithTreeEditor">
+         <propertyTab
+               category="esontestproperty"
+               id="TESTPROPERTY"
+               label="TESTPROPERTY">
+         </propertyTab>
+      </propertyTabs>
+   </extension>
+  
+   <extension
+         point="org.eclipse.emf.eson.ui.properties">
+      <filterBasicPropertySection
+            eClass="library.Library">
+      </filterBasicPropertySection>
+   </extension> 
+   
+   <extension
+         point="org.eclipse.ui.views.properties.tabbed.propertySections">
+      <propertySections
+            contributorId="org.eclipse.emf.eson.ui.editor.tree.EFactoryWithTreeEditor">
+         <propertySection
+               class="org.eclipse.emf.eson.example.properties.ExamplePropertySection"
+               filter="org.eclipse.emf.eson.example.properties.ExamplePropertyFilter"
+               id="org.eclipse.emf.eson.ui.testpropertySection"
+               tab="TESTPROPERTY">
+         </propertySection>
+      </propertySections>
+    </extension>
+    <!-- Customization of Associating different file Extensions STARTS-->
+   <extension
+         point="org.eclipse.emf.eson.file">
+      <additionalFileExtension
+            extensions="library">
+      </additionalFileExtension>
+   </extension>
+   
+       <extension
+        point="org.eclipse.emf.ecore.extension_parser">
+        <parser
+            class="org.eclipse.emf.eson.ui.EFactoryExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
+            type="library">
+        </parser>
+    </extension>
+    <extension point="org.eclipse.xtext.extension_resourceServiceProvider">
+        <resourceServiceProvider
+            class="org.eclipse.emf.eson.ui.EFactoryExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
+            uriExtension="library">
+        </resourceServiceProvider>
+    </extension>
+      <extension point="org.eclipse.compare.contentViewers">
+    <viewer id="org.eclipse.emf.eson.EFactory.compare.contentViewers"
+            class="org.eclipse.emf.eson.ui.EFactoryExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
+            extensions="library">
+    </viewer>
+  </extension>
+  <extension point="org.eclipse.compare.contentMergeViewers">
+    <viewer id="org.eclipse.emf.eson.EFactory.compare.contentMergeViewers"
+            class="org.eclipse.emf.eson.ui.EFactoryExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
+            extensions="library" label="ESON Compare">
+     </viewer>
+  </extension>
+  <extension point="org.eclipse.ui.editors.documentProviders">
+    <provider id="org.eclipse.emf.eson.EFactory.editors.documentProviders"
+            class="org.eclipse.emf.eson.ui.EFactoryExecutableExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
+            extensions="library">
+    </provider>
+  </extension>
+      <extension point="org.eclipse.ui.editors">
+        <editor
+            id="org.eclipse.emf.eson.ui.editor.tree.EFactoryWithTreeEditor"
+            name="ESON Editor (with Tree)"
+            class="org.eclipse.emf.eson.ui.EFactoryExecutableExtensionFactory:org.eclipse.emf.eson.ui.editor.tree.EFactoryWithTreeEditor"
+            contributorClass="org.eclipse.emf.eson.ui.editor.tree.ActionBarContributor"
+            default="true"
+            extensions="library">
+        </editor>
+    </extension>
+    <!-- Customization of Associating different file Extensions ENDS-->
+</plugin>

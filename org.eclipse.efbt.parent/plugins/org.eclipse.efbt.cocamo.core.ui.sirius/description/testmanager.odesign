@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<description:Group xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:style="http://www.eclipse.org/sirius/diagram/description/style/1.1.0" name="testmanager" version="12.0.0.2017041100">
+  <ownedViewpoints name="TestingViewpoint">
+    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="FunctionalityModule" domainClass="FunctionalityModule" enablePopupBars="true">
+      <layout xsi:type="description_1:CompositeLayout" direction="LeftToRight"/>
+      <defaultLayer name="Default">
+        <containerMappings name="FunctionalityModule" semanticCandidatesExpression="aql:self" domainClass="FunctionalityModule">
+          <subContainerMappings name="SerialFunctionalityModule" semanticCandidatesExpression="aql:self.subTransformationsAndSchemes" domainClass="SerialFunctionalityModule" reusedContainerMappings="//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='DataProcessingFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='ParallelFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='ReadDataSourceFunctionalModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='ReportCellCreationFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='ScenarioSetFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='SerialFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='OutputCreationFunctionalityModule']">
+            <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="12">
+              <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+              <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='dark_blue']"/>
+            </style>
+          </subContainerMappings>
+          <subContainerMappings name="ParallelFunctionalityModule" semanticCandidatesExpression="aql:self.subTransformationsAndSchemes" domainClass="ParallelFunctionalityModule" reusedContainerMappings="//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='DataProcessingFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='ParallelFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='ReadDataSourceFunctionalModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='ReportCellCreationFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='ScenarioSetFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='SerialFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='OutputCreationFunctionalityModule']">
+            <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="12">
+              <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+              <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='dark_chocolate']"/>
+            </style>
+          </subContainerMappings>
+          <subContainerMappings name="ReadDataSourceFunctionalModule" semanticCandidatesExpression="aql:self.subTransformationsAndSchemes" domainClass="ReadDataSourceFunctionalityModule">
+            <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="12">
+              <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+              <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
+            </style>
+          </subContainerMappings>
+          <subContainerMappings name="ScenarioSetFunctionalityModule" semanticCandidatesExpression="aql:self.subTransformationsAndSchemes" domainClass="ScenarioSetFunctionalityModule" reusedContainerMappings="//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='DataProcessingFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='ParallelFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='ReadDataSourceFunctionalModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='ReportCellCreationFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='ScenarioSetFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='SerialFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='OutputCreationFunctionalityModule']">
+            <subContainerMappings name="ScenarioSet" semanticCandidatesExpression="feature:scenarioSet" domainClass="ScenarioSet">
+              <subNodeMappings name="Scenario" semanticCandidatesExpression="feature:scenarios" domainClass="Scenario">
+                <style xsi:type="style:EllipseNodeDescription" labelSize="12" labelPosition="node" resizeKind="NSEW" horizontalDiameterComputationExpression="20" verticalDiameterComputationExpression="4">
+                  <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                  <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                  <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+                </style>
+              </subNodeMappings>
+              <style xsi:type="style:ShapeContainerStyleDescription" borderSizeComputationExpression="1" labelSize="12">
+                <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_gray']"/>
+              </style>
+            </subContainerMappings>
+            <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="12">
+              <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+              <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='dark_purple']"/>
+            </style>
+          </subContainerMappings>
+          <subContainerMappings name="DataProcessingFunctionalityModule" semanticCandidatesExpression="aql:self.subTransformationsAndSchemes" domainClass="DataProcessingFunctionalityModule">
+            <borderedNodeMappings name="Scenario" semanticCandidatesExpression="feature:scenario" domainClass="Scenario">
+              <style xsi:type="style:EllipseNodeDescription" labelSize="12" labelPosition="node" resizeKind="NSEW">
+                <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+              </style>
+            </borderedNodeMappings>
+            <subContainerMappings name="ScenarioSet" semanticCandidatesExpression="feature:scenarioSet" domainClass="ScenarioSet">
+              <subNodeMappings name="Scenario" semanticCandidatesExpression="feature:scenarios" domainClass="Scenario">
+                <style xsi:type="style:EllipseNodeDescription" labelSize="12" labelPosition="node" resizeKind="NSEW" horizontalDiameterComputationExpression="20" verticalDiameterComputationExpression="4">
+                  <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                  <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                  <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+                </style>
+              </subNodeMappings>
+              <style xsi:type="style:ShapeContainerStyleDescription" borderSizeComputationExpression="1" labelSize="12">
+                <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_gray']"/>
+              </style>
+            </subContainerMappings>
+            <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="12">
+              <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+              <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='red']"/>
+            </style>
+          </subContainerMappings>
+          <subContainerMappings name="ReportCellCreationFunctionalityModule" semanticCandidatesExpression="aql:self.subTransformationsAndSchemes" domainClass="ReportCellCreationFunctionalityModule">
+            <subContainerMappings name="ScenarioSet" semanticCandidatesExpression="feature:scenarioSet" domainClass="ScenarioSet">
+              <subNodeMappings name="Scenario" semanticCandidatesExpression="feature:scenarios" domainClass="Scenario">
+                <style xsi:type="style:EllipseNodeDescription" labelSize="12" labelPosition="node" resizeKind="NSEW" horizontalDiameterComputationExpression="20" verticalDiameterComputationExpression="4">
+                  <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                  <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                  <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+                </style>
+              </subNodeMappings>
+              <style xsi:type="style:ShapeContainerStyleDescription" borderSizeComputationExpression="1" labelSize="12">
+                <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_gray']"/>
+              </style>
+            </subContainerMappings>
+            <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="12">
+              <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+              <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='green']"/>
+            </style>
+          </subContainerMappings>
+          <subContainerMappings name="OutputCreationFunctionalityModule" semanticCandidatesExpression="aql:self.subTransformationsAndSchemes" domainClass="OutputCreationFunctionalityModule">
+            <subContainerMappings name="ScenarioSet" semanticCandidatesExpression="feature:scenarioSet" domainClass="ScenarioSet">
+              <subNodeMappings name="Scenario" semanticCandidatesExpression="feature:scenarios" domainClass="Scenario">
+                <style xsi:type="style:EllipseNodeDescription" labelSize="12" labelPosition="node" resizeKind="NSEW" horizontalDiameterComputationExpression="20" verticalDiameterComputationExpression="4">
+                  <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                  <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                  <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+                </style>
+              </subNodeMappings>
+              <style xsi:type="style:ShapeContainerStyleDescription" borderSizeComputationExpression="1" labelSize="12">
+                <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_gray']"/>
+              </style>
+            </subContainerMappings>
+            <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="12">
+              <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+              <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='green']"/>
+            </style>
+          </subContainerMappings>
+          <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="12">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+            <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_gray']"/>
+          </style>
+        </containerMappings>
+        <toolSections name="tool1"/>
+      </defaultLayer>
+      <additionalLayers name="links" activeByDefault="true">
+        <edgeMappings name="order" sourceMapping="//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='DataProcessingFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='ParallelFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='ReadDataSourceFunctionalModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='ReportCellCreationFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='ScenarioSetFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='SerialFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='OutputCreationFunctionalityModule']" targetMapping="//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='DataProcessingFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='ParallelFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='ReadDataSourceFunctionalModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='ReportCellCreationFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='ScenarioSetFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='SerialFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='OutputCreationFunctionalityModule']" targetFinderExpression="service:getPreviousFunctionalModule()">
+          <style targetArrow="InputFillClosedArrow" sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+      </additionalLayers>
+    </ownedRepresentations>
+    <ownedJavaExtensions qualifiedClassName="org.eclipse.efbt.cocamo.core.ui.sirius.Services"/>
+  </ownedViewpoints>
+</description:Group>
