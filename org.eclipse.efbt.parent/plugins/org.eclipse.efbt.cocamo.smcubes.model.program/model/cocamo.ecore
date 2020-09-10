@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="cocamo" nsURI="http://www.eclipse.org/cocamo" nsPrefix="cocamo">
+  <eClassifiers xsi:type="ecore:EClass" name="Program">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="smCubesModel" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes_model.ecore#//SmcubesModel"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="requirements" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.core.model.requirements_text/model/requirements_text.ecore#//RequirementsModule"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="testDefinitions" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.core.model.testing/model/test_definition.ecore#//TestDefinitionModule"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tests" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.core.model.testing/model/test.ecore#//TestModule"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="testTemplates" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.core.model.testing/model/test_definition.ecore#//TestTemplateModule"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="testConstriants" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.core.model.testing/model/test_definition.ecore#//TestContraints"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="functionalityModules" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.core.model.functionality_module/model/functionality_module.ecore#//FunctionalityModuleModule"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SMCubesTestInputData" eSuperTypes="../../org.eclipse.efbt.cocamo.core.model.testing/model/test_input_data.ecore#//TestInputData">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="smcubes_inputdata" upperBound="-1"
+        eType="ecore:EClass ../../org.eclipse.efbt.cocamo.smcubes.model.input_data/model/base_column_structured_data.ecore#//BaseColumnStructuredData"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SMCubesReportResults" eSuperTypes="../../org.eclipse.efbt.cocamo.core.model.testing/model/test.ecore#//Result">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reportCells" upperBound="-1"
+        eType="ecore:EClass ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/reports.ecore#//ReportCellValue"
+        containment="true"/>
+  </eClassifiers>
+</ecore:EPackage>

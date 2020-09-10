@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated module_management -->
+      <package
+            uri="http://www.eclipse.org/module_management"
+            class="org.eclipse.efbt.cocamo.core.model.module_management.Module_managementPackage"
+            genModel="model/module_management.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated module_management -->
+      <parser
+            type="module_management"
+            class="org.eclipse.efbt.cocamo.core.model.module_management.util.Module_managementResourceFactoryImpl"/>
+   </extension>
+
+</plugin>

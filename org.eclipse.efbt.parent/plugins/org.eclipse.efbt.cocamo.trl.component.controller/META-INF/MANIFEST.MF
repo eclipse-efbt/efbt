@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Component
+Bundle-SymbolicName: org.eclipse.efbt.cocamo.trl.component.controller
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: org.eclipse.efbt.controller.core.component.core
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.eclipse.efbt.cocamo.trl.model.controller;bundle-version="1.0.0",
+ org.eclipse.efbt.cocamo.trl.component.translator.impl;bundle-version="1.0.0",
+ org.eclipse.efbt.cocamo.trl.component.translator.api
+Export-Package: org.eclipse.efbt.cocamo.core.component.core

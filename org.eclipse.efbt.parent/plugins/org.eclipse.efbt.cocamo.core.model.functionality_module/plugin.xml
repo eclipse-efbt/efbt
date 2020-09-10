@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated functionality_module -->
+      <package
+            uri="http://www.eclipse.org/functionality_module"
+            class="org.eclipse.efbt.cocamo.core.model.functionality_module.Functionality_modulePackage"
+            genModel="model/functionality_module.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated functionality_module -->
+      <parser
+            type="functionality_module"
+            class="org.eclipse.efbt.cocamo.core.model.functionality_module.util.Functionality_moduleResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated functionality_module -->
+      <package
+            uri="http://www.eclipse.org/scenarios"
+            class="org.eclipse.efbt.cocamo.core.model.scenarios.ScenariosPackage"
+            genModel="model/functionality_module.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated functionality_module -->
+      <parser
+            type="scenarios"
+            class="org.eclipse.efbt.cocamo.core.model.scenarios.util.ScenariosResourceFactoryImpl"/>
+   </extension>
+
+</plugin>

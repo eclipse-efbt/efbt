@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated requirements_text -->
+      <package
+            uri="http://www.eclipse.org/requirements_text"
+            class="org.eclipse.efbt.cocamo.core.model.requirements_text.Requirements_textPackage"
+            genModel="model/requirements_text.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated requirements_text -->
+      <parser
+            type="requirements_text"
+            class="org.eclipse.efbt.cocamo.core.model.requirements_text.util.Requirements_textResourceFactoryImpl"/>
+   </extension>
+
+</plugin>

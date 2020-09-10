@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Exporter
+Bundle-SymbolicName: org.eclipse.efbt.cocamo.smcubes.component.exporter
+Bundle-Version: 1.0.0.qualifier
+Export-Package: org.eclipse.efbt.cocamo.smcubes.component.exporter
+Require-Bundle: org.eclipse.efbt.cocamo.smcubes.model.program;bundle-version="1.0.0",
+ org.eclipse.xtext,
+ org.eclipse.emf.ecore,
+ org.eclipse.efbt.cocamo.smcubes.model.input_data,
+ org.eclipse.efbt.cocamo.core.model.testing
+
+

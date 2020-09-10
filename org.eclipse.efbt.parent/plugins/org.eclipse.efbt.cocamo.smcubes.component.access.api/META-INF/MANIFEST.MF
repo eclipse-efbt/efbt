@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Accessdb
+Bundle-SymbolicName: org.eclipse.efbt.cocamo.smcubes.component.access.api
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: org.eclipse.efbt.util.accessdb
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: org.eclipse.efbt.cocamo.smcubes.component.access.api
