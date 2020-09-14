@@ -6,7 +6,7 @@
 		<artifactId>org.eclipse.efbt.parent</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>org.eclipse.efbt.datastructures.ldm.component.sqldevconvertor.test</artifactId>
+	<artifactId>org.eclipse.efbt.cocamo.ldm.component.sqldevconvertor.test</artifactId>
 	<packaging>eclipse-test-plugin</packaging>
 
 </project>

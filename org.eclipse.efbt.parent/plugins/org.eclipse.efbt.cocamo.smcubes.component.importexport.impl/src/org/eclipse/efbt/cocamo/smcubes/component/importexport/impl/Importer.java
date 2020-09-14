@@ -22,52 +22,29 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.eclipse.efbt.cocamo.model.cocamo.cocamoPackage;
 import org.eclipse.efbt.cocamo.smcubes.component.importexport.api.BirdImporter;
-import org.eclipse.efbt.cocamo.core.model.module_management.Module_managementPackage;
-import org.eclipse.efbt.cocamo.core.model.requirements_text.Requirements_textPackage;
-import org.eclipse.efbt.cocamo.smcubes.model.core.CorePackage;
-import org.eclipse.efbt.cocamo.smcubes.model.data_definition.Data_definitionPackage;
 import org.eclipse.efbt.cocamo.smcubes.model.efbt_data_definition.CombinationModule;
 import org.eclipse.efbt.cocamo.smcubes.model.efbt_data_definition.CubeModule;
 import org.eclipse.efbt.cocamo.smcubes.model.efbt_data_definition.DomainModule;
 import org.eclipse.efbt.cocamo.smcubes.model.efbt_data_definition.Efbt_data_definitionFactory;
-import org.eclipse.efbt.cocamo.smcubes.model.efbt_data_definition.Efbt_data_definitionPackage;
 import org.eclipse.efbt.cocamo.smcubes.model.efbt_data_definition.MemberModule;
 import org.eclipse.efbt.cocamo.smcubes.model.efbt_data_definition.VariableModule;
 import org.eclipse.efbt.cocamo.smcubes.model.efbt_mapping.CubeMappingModule;
 import org.eclipse.efbt.cocamo.smcubes.model.efbt_mapping.Efbt_mappingFactory;
-import org.eclipse.efbt.cocamo.smcubes.model.efbt_mapping.Efbt_mappingPackage;
 import org.eclipse.efbt.cocamo.smcubes.model.efbt_mapping.MappingDefinitionModule;
 import org.eclipse.efbt.cocamo.smcubes.model.efbt_mapping.MemberMappingModule;
 import org.eclipse.efbt.cocamo.smcubes.model.efbt_mapping.VariableMappingModule;
 import org.eclipse.efbt.cocamo.smcubes.model.efbt_vtl_transformation.Efbt_vtl_transformationFactory;
-import org.eclipse.efbt.cocamo.smcubes.model.efbt_vtl_transformation.Efbt_vtl_transformationPackage;
 import org.eclipse.efbt.cocamo.smcubes.model.efbt_vtl_transformation.TransformationSchemeModule;
-import org.eclipse.efbt.cocamo.smcubes.model.mapping.MappingPackage;
-import org.eclipse.efbt.cocamo.smcubes.model.rendering.RenderingPackage;
-import org.eclipse.efbt.cocamo.smcubes.model.reports.ReportsPackage;
 import org.eclipse.efbt.cocamo.smcubes.model.smcubes_model.SmcubesModel;
 import org.eclipse.efbt.cocamo.smcubes.model.smcubes_model.Smcubes_modelFactory;
-import org.eclipse.efbt.cocamo.smcubes.model.smcubes_model.Smcubes_modelPackage;
-import org.eclipse.efbt.cocamo.smcubes.model.vtl_transformation.Vtl_transformationPackage;
-import org.eclipse.efbt.cocamo.core.model.functionality_module.Functionality_modulePackage;
-import org.eclipse.efbt.functional_design.core.model.scenarios.ScenariosPackage;
-import org.eclipse.efbt.input_data.smcubes.model.base_column_structured_data.Base_column_structured_dataPackage;
-import org.eclipse.efbt.testing.common.model.test.TestPackage;
-import org.eclipse.efbt.testing.common.model.test_definition.Test_definitionPackage;
-import org.eclipse.efbt.testing.common.model.test_input_data.Test_input_dataPackage;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.eson.EFactoryServiceProvider;
-import org.eclipse.emf.eson.eFactory.EFactoryFactory;
-import org.eclipse.emf.eson.eFactory.Factory;
-import org.eclipse.emf.eson.eFactory.PackageImport;
-import org.eclipse.emf.eson.serialization.FactoryBuilder;
+
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.XtextResourceSet;
@@ -260,6 +237,7 @@ public abstract class Importer implements BirdImporter {
 	}
 	
 	public void saveArtifactsAsEson(EObject testModel) {
+		/**
 		//get the birdModel , walk through it and add the features to a text file.
 		
 		//Factory expected = ((EFactoryResource) testModel.eResource()).getEFactoryFactory();
@@ -370,7 +348,7 @@ public abstract class Importer implements BirdImporter {
 		
 		*/
 		
-
+/**
 		
 		//XtextResourceSet xrs = injector.getInstance(XtextResourceSet.class);
 		XtextResourceSet xrs = new XtextResourceSet();
@@ -397,12 +375,12 @@ public abstract class Importer implements BirdImporter {
 			}
 			OutputStream outputStream = new ByteArrayOutputStream();
 			smcubesResource.save(outputStream, null);
-			System.out.println("outputStream.toString()" + outputStream.toString());*/
+			System.out.println("outputStream.toString()" + outputStream.toString());
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 	

@@ -12,25 +12,7 @@
  */
 package org.eclipse.efbt.cocamo.smcubes.component.importexport.impl;
 
-import org.eclipse.efbt.cocamo.model.cocamo.cocamoPackage;
-import org.eclipse.efbt.cocamo.core.model.module_management.Module_managementPackage;
-import org.eclipse.efbt.cocamo.core.model.requirements_text.Requirements_textPackage;
-import org.eclipse.efbt.cocamo.smcubes.model.core.CorePackage;
-import org.eclipse.efbt.cocamo.smcubes.model.data_definition.Data_definitionPackage;
-import org.eclipse.efbt.cocamo.smcubes.model.efbt_data_definition.Efbt_data_definitionPackage;
-import org.eclipse.efbt.cocamo.smcubes.model.efbt_mapping.Efbt_mappingPackage;
-import org.eclipse.efbt.cocamo.smcubes.model.efbt_vtl_transformation.Efbt_vtl_transformationPackage;
-import org.eclipse.efbt.cocamo.smcubes.model.mapping.MappingPackage;
-import org.eclipse.efbt.cocamo.smcubes.model.rendering.RenderingPackage;
-import org.eclipse.efbt.cocamo.smcubes.model.reports.ReportsPackage;
-import org.eclipse.efbt.cocamo.smcubes.model.smcubes_model.Smcubes_modelPackage;
-import org.eclipse.efbt.cocamo.smcubes.model.vtl_transformation.Vtl_transformationPackage;
-import org.eclipse.efbt.cocamo.core.model.functionality_module.Functionality_modulePackage;
-import org.eclipse.efbt.functional_design.core.model.scenarios.ScenariosPackage;
-import org.eclipse.efbt.input_data.smcubes.model.base_column_structured_data.Base_column_structured_dataPackage;
-import org.eclipse.efbt.testing.common.model.test.TestPackage;
-import org.eclipse.efbt.testing.common.model.test_definition.Test_definitionPackage;
-import org.eclipse.efbt.testing.common.model.test_input_data.Test_input_dataPackage;
+
 import org.eclipse.emf.ecore.EPackage;
 
 
@@ -51,10 +33,12 @@ import com.google.inject.Injector;
  * 
  * @author Michael Vorburger, based on advise from Sven Efftinge & Anton Kosyakov
  */
-public class ESONWithcocamomodelInjectorProvider extends EFactoryInjectorProvider {
+public class ESONWithcocamomodelInjectorProvider {// extends EFactoryInjectorProvider {
 
-	@Override
+	//@Override
 	protected Injector internalCreateInjector() {
+		/**
+		
 	    // Needed because.. XtextRunner & *InjectorProvider & *StandaloneSetup
 	    // stuff due to GlobalStateMemento in restoreGlobalState() will cause a
 	    // confusing mess with hard-to-reproduce test failures if we don't do this.  
@@ -175,7 +159,8 @@ public class ESONWithcocamomodelInjectorProvider extends EFactoryInjectorProvide
 		// NORMALLY TestmodelPackage.eINSTANCE.getTestModel(); // NOT TestmodelPackageImpl.init();
 	    //  ^^^^^ but this doesn't really work reliably, so needs above
 
-		return super.internalCreateInjector();
+		return super.internalCreateInjector();*/
+		return null;
 	}
 
 }
