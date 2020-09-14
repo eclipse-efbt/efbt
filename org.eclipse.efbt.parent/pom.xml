@@ -49,6 +49,7 @@
 		<module>plugins/org.eclipse.efbt.cocamo.smcubes.component.csv.provider</module>
 		<module>plugins/org.eclipse.efbt.cocamo.smcubes.component.exporter</module>
 		<module>plugins/org.eclipse.efbt.cocamo.smcubes.component.importexport.api</module>
+		<module>plugins/org.eclipse.efbt.cocamo.smcubes.component.importexport.impl</module>
 		
 
 		<module>plugins/org.eclipse.efbt.cocamo.smcubes.model.core</module>
@@ -81,6 +82,10 @@
 		<module>features/org.eclipse.efbt.cocamo.trl.query.feature</module>
 		<module>features/org.eclipse.efbt.cocamo.trl.ui.sirius.feature</module>
 		<module>releng/org.eclipse.efbt.cocamo.repository</module>
+		<module>tests/org.eclipse.efbt.cocamo.ldm.component.sqldevconvertor.test</module>
+		<module>tests/org.eclipse.efbt.cocamo.smcubes.component.importexport.test</module>
+		<module>tests/org.eclipse.efbt.cocamo.trl.component.translator.test</module>
+		
 		
 
 		

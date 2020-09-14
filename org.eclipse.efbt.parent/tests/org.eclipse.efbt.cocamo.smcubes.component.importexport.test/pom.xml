@@ -6,7 +6,7 @@
 		<artifactId>org.eclipse.efbt.parent</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>org.eclipse.efbt.data_structures.smcubes.component.importexport.test</artifactId>
+	<artifactId>org.eclipse.efbt.cocamo.smcubes.component.importexport.test</artifactId>
 	<packaging>eclipse-test-plugin</packaging>
 
 </project>
