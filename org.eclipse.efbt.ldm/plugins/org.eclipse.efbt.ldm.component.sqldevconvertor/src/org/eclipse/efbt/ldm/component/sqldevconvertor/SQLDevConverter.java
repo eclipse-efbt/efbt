@@ -1,6 +1,8 @@
 package org.eclipse.efbt.ldm.component.sqldevconvertor;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,9 +11,6 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.eclipse.efbt.cocamo.smcubes.component.csv.api.CSVRow;
-import org.eclipse.efbt.cocamo.smcubes.component.csv.api.CSVUtils;
-import org.eclipse.efbt.cocamo.smcubes.component.csv.provider.CSVUtilsProvider;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EAttribute;
@@ -28,6 +27,10 @@ import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 
 /**
  * This class is responsible for taking logical models defined in the free
@@ -50,7 +53,7 @@ public class SQLDevConverter {
 	public static void convert(String fileDirectory) {
 
 		// for each entity make an Ecore EClass
-		CSVUtils csvUtils = CSVUtilsProvider.getCSVUtils();
+		
 
 		EPackage birdpackage = EcoreFactory.eINSTANCE.createEPackage();
 		birdpackage.setName("bird");
@@ -61,10 +64,10 @@ public class SQLDevConverter {
 
 		// for each entity make an Eclass
 		try {
-			List<CSVRow> rows = csvUtils.getCSVRowsFromFile(fileDirectory + "\\DM_Entities.csv");
+			List<CSVRecord> rows = getCSVRowsFromFile(fileDirectory + "\\DM_Entities.csv");
 
 			boolean headerSkipped = false;
-			for (CSVRow csvRow : rows) {
+			for (CSVRecord csvRow : rows) {
 
 				// skip the first line which is the header.
 				if (!headerSkipped)
@@ -85,10 +88,10 @@ public class SQLDevConverter {
 			}
 
 			// for each inheritance relationship, add the inheritence
-			rows = csvUtils.getCSVRowsFromFile(fileDirectory + "\\DM_Entities.csv");
+			rows = getCSVRowsFromFile(fileDirectory + "\\DM_Entities.csv");
 
 			headerSkipped = false;
-			for (CSVRow csvRow : rows) {
+			for (CSVRecord csvRow : rows) {
 				// skip the first line which is the header.
 				if (!headerSkipped)
 					headerSkipped = true;
@@ -116,12 +119,12 @@ public class SQLDevConverter {
 		HashMap<String, EEnum> enumMap = new HashMap<String, EEnum>();
 
 		try {
-			List<CSVRow> rows = csvUtils.getCSVRowsFromFile(fileDirectory + "\\DM_Domains.csv");
+			List<CSVRecord> rows = getCSVRowsFromFile(fileDirectory + "\\DM_Domains.csv");
 
 			int counter = 0;
 			boolean headerSkipped = false;
 
-			for (CSVRow csvRow : rows) {
+			for (CSVRecord csvRow : rows) {
 				if (!headerSkipped)
 					headerSkipped = true;
 				else {
@@ -147,11 +150,11 @@ public class SQLDevConverter {
 		// for each domain add the enum literals
 
 		try {
-			List<CSVRow> rows = csvUtils.getCSVRowsFromFile(fileDirectory + "\\DM_Domain_AVT.csv");
+			List<CSVRecord> rows = getCSVRowsFromFile(fileDirectory + "\\DM_Domain_AVT.csv");
 
 			int counter = 0;
 			boolean headerSkipped = false;
-			for (CSVRow csvRow : rows) {
+			for (CSVRecord csvRow : rows) {
 
 				if (!headerSkipped)
 					headerSkipped = true;
@@ -189,8 +192,8 @@ public class SQLDevConverter {
 		EcorePackage ecorePackage = EcoreFactory.eINSTANCE.getEcorePackage();
 		try {
 			boolean headerSkipped = false;
-			List<CSVRow> rows = csvUtils.getCSVRowsFromFile(fileDirectory + "\\DM_Logical_To_Native.csv");
-			for (CSVRow csvRow : rows) {
+			List<CSVRecord> rows = getCSVRowsFromFile(fileDirectory + "\\DM_Logical_To_Native.csv");
+			for (CSVRecord csvRow : rows) {
 
 				if (!headerSkipped)
 					headerSkipped = true;
@@ -240,8 +243,8 @@ public class SQLDevConverter {
 		// enumeration
 		try {
 			boolean headerSkipped = false;
-			List<CSVRow> rows = csvUtils.getCSVRowsFromFile(fileDirectory + "\\DM_Attributes.csv");
-			for (CSVRow csvRow : rows) {
+			List<CSVRecord> rows = getCSVRowsFromFile(fileDirectory + "\\DM_Attributes.csv");
+			for (CSVRecord csvRow : rows) {
 				if (!headerSkipped)
 					headerSkipped = true;
 				else {
@@ -310,8 +313,8 @@ public class SQLDevConverter {
 		// for each relationship add a reference
 		try {
 			boolean headerSkipped = false;
-			List<CSVRow> rows = csvUtils.getCSVRowsFromFile(fileDirectory + "\\DM_Relations.csv");
-			for (CSVRow csvRow : rows) {
+			List<CSVRecord> rows = getCSVRowsFromFile(fileDirectory + "\\DM_Relations.csv");
+			for (CSVRecord csvRow : rows) {
 				if (!headerSkipped)
 					headerSkipped = true;
 				else {
@@ -384,6 +387,18 @@ public class SQLDevConverter {
 			e.printStackTrace();
 		}
 
+	}
+
+	private static List<CSVRecord> getCSVRowsFromFile(String fileName) throws IOException  {
+		// TODO Auto-generated method stub
+		File csvData = new File (fileName);
+		 CSVParser parser = CSVParser.parse(csvData,StandardCharsets.UTF_8, CSVFormat.EXCEL);
+		 List<CSVRecord> list = new ArrayList<CSVRecord>();
+		 for (CSVRecord csvRecord : parser) {
+			
+			 list.add(csvRecord);
+		 }
+		 return list;
 	}
 
 	private static int numberofRelationShipsToThisClass(EClass sourceClass, EClass targetClass) {
