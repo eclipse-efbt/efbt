@@ -13,14 +13,10 @@
 package org.eclipse.efbt.cocamo.smcubes.component.importexport.impl;
 
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.inject.Inject;
 
 import org.eclipse.efbt.cocamo.smcubes.component.importexport.api.BirdImporter;
 import org.eclipse.efbt.cocamo.smcubes.model.efbt_data_definition.CombinationModule;
@@ -41,15 +37,7 @@ import org.eclipse.efbt.cocamo.smcubes.model.smcubes_model.Smcubes_modelFactory;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-
-import org.eclipse.xtext.resource.IEObjectDescription;
-import org.eclipse.xtext.resource.IResourceDescription;
-import org.eclipse.xtext.resource.XtextResourceSet;
-
-import com.google.inject.Injector;
 
 
 

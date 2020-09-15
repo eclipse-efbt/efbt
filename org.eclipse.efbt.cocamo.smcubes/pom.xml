@@ -29,9 +29,6 @@
 		<module>plugins/org.eclipse.efbt.cocamo.smcubes.component.access.api</module>
 		<module>plugins/org.eclipse.efbt.cocamo.smcubes.component.access.jackcess.impl</module>
 		<module>plugins/org.eclipse.efbt.cocamo.smcubes.component.access.provider</module>
-		<module>plugins/org.eclipse.efbt.cocamo.smcubes.component.csv.apachecsv.impl</module>
-		<module>plugins/org.eclipse.efbt.cocamo.smcubes.component.csv.api</module>
-		<module>plugins/org.eclipse.efbt.cocamo.smcubes.component.csv.provider</module>
 		<module>plugins/org.eclipse.efbt.cocamo.smcubes.component.exporter</module>
 		<module>plugins/org.eclipse.efbt.cocamo.smcubes.component.importexport.api</module>
 		<module>plugins/org.eclipse.efbt.cocamo.smcubes.component.importexport.impl</module>		
