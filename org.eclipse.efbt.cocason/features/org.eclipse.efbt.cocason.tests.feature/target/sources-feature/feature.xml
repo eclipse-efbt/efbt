@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<feature id="org.eclipse.efbt.cocason.tests.feature.source" version="0.10.0.202009101004" label="CoCaSon Tests Developer Resources">
+<feature id="org.eclipse.efbt.cocason.tests.feature.source" version="0.10.0.202009151123" label="CoCaSon Tests Developer Resources">
   <description url="https://github.com/eclipse/efbt">
       The cocason Tests feature.
    </description>
@@ -100,6 +100,6 @@ Everyone is permitted to copy and distribute copies of this Agreement, but in or
 
 This Agreement is governed by the laws of the State of New York and the intellectual property laws of the United States of America. No party to this Agreement will bring a legal action under this Agreement more than one year after the cause of action arose. Each party waives its rights to a jury trial in any resulting litigation.
    </license>
-  <includes id="org.eclipse.efbt.cocason.tests.feature" version="0.10.0.202009101004"/>
-  <plugin id="org.eclipse.emf.eson.tests.source" version="0.10.0.202009101004" download-size="0" install-size="0" unpack="false"/>
+  <includes id="org.eclipse.efbt.cocason.tests.feature" version="0.10.0.202009151123"/>
+  <plugin id="org.eclipse.emf.eson.tests.source" version="0.10.0.202009151123" download-size="0" install-size="0" unpack="false"/>
 </feature>

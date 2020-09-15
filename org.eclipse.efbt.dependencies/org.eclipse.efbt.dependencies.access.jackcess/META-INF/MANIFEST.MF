@@ -1,12 +1,12 @@
 Manifest-Version: 1.0
 Export-Package: org.eclipse.efbt.dependencies.access.jackcess;uses:="c
  om.healthmarketscience.jackcess";version="1.0.0.SNAPSHOT"
-Bundle-SymbolicName: org.eclipse.efbt.dependencies.org.eclipse.efbt.de
- pendencies.access.jackcess
+Bundle-SymbolicName: org.eclipse.efbt.dependencies.accessdb.org.eclips
+ e.efbt.dependencies.access.jackcess
 Bundle-Name: org.eclipse.efbt.dependencies.access.jackcess
 Bundle-Version: 1.0.0.SNAPSHOT
 Bundle-ManifestVersion: 2
-Bnd-LastModified: 1599728521353
+Bnd-LastModified: 1600168173116
 Import-Package: com.healthmarketscience.jackcess;version="3.0",org.ecl
  ipse.efbt.dependencies.access.jackcess;version="1.0"
 Created-By: 1.8.0_102 (Oracle Corporation)

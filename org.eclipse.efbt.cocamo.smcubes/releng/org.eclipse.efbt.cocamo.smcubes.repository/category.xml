@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature id="org.eclipse.efbt.cocamo.core.model.feature">
+      <category name="cocamo.smcubes"/>
+   </feature>
+   <feature id="org.eclipse.efbt.cocamo.core.query.feature">
+      <category name="cocamo.smcubes"/>
+   </feature>
+   <feature id="org.eclipse.efbt.cocamo.core.ui.sirius.feature">
+      <category name="cocamo.smcubes"/>
+   </feature>
+   <feature id="org.eclipse.efbt.cocamo.smcubes.component.feature">
+      <category name="cocamo.smcubes"/>
+   </feature>
+   <feature id="org.eclipse.efbt.cocamo.smcubes.ui.sirius.feature">
+      <category name="cocamo.smcubes"/>
+   </feature>
+   <feature id="org.eclipse.efbt.cocamo.smcubes.model.feature">
+      <category name="cocamo.smcubes"/>
+   </feature>
+   <feature id="org.eclipse.efbt.cocamo.smcubes.query.feature">
+      <category name="cocamo.smcubes"/>
+   </feature>
+   <category-def name="cocamo.smcubes" label="CoCaMo With SMCubes"/>
+</site>
