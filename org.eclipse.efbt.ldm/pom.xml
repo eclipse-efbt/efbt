@@ -26,9 +26,10 @@
 	</properties>
 	<modules>
 		<module>releng/org.eclipse.efbt.ldm.target</module>	
-		<module>plugins/org.eclipse.efbt.cocamo.ldm.component.sqldevconvertor</module>
-		<module>features/org.eclipse.efbt.cocamo.ldm.component.feature</module>		
-		<module>tests/org.eclipse.efbt.cocamo.ldm.component.sqldevconvertor.test</module>
+		<module>releng/org.eclipse.efbt.ldm.repository</module>
+		<module>plugins/org.eclipse.efbt.ldm.component.sqldevconvertor</module>
+		<module>features/org.eclipse.efbt.ldm.component.feature</module>		
+		<module>tests/org.eclipse.efbt.ldm.component.sqldevconvertor.test</module>
 
 	</modules>
 
