@@ -10,10 +10,19 @@ pipeline {
                 sh '''
                     java -version
                     mvn -v
-                    cd org.eclipse.efbt.dependencies
+                    cd org.eclipse.efbt.cocamo.core
                     mvn install
                     cd ..
-                    cd org.eclipse.efbt.parent
+                    cd org.eclipse.efbt.dependencies.accessdb
+                    mvn install
+                    cd ..
+                    cd org.eclipse.efbt.cocamo.smcubes
+                    mvn install
+                    cd ..
+                    cd org.eclipse.efbt.cocason
+                    mvn install -DskipTests
+                    cd ..
+                    cd org.eclipse.efbt.ldm
                     mvn install
                     cd ..
                 '''
