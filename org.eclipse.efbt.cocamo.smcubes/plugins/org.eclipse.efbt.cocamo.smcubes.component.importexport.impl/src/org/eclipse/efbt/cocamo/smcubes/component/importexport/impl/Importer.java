@@ -59,63 +59,70 @@ public abstract class Importer implements BirdImporter {
 	/**
 	 * The file location to output the SMCubes artefacts
 	 */
-	public String outputFilepath;
+	protected String outputFilepath;
 
 	/**
 	 * The transformationSchemes
 	 */
-	public TransformationSchemeModule transformationSchemes;
+	protected TransformationSchemeModule transformationSchemes;
 
 	/**
 	 * The domains
 	 */
-	public DomainModule domains;
+	protected DomainModule domains;
 
 	/**
 	 * The variables
 	 */
-	public VariableModule variables;
+	protected VariableModule variables;
 	/**
 	 * The members
 	 */
-	public MemberModule members;
+	protected MemberModule members;
 	/**
 	 * The combinationsModules
 	 */
-	public List<CombinationModule> combinationsModules;
+	protected List<CombinationModule> combinationsModules;
 	/**
 	 * The cubesModule
 	 */
-	public CubeModule cubesModule;
+	protected CubeModule cubesModule;
 	/**
 	 * The cubeStructuresModule
 	 */
-	public CubeModule cubeStructuresModule;
+	protected CubeModule cubeStructuresModule;
 	/**
 	 * The cubeStructureItemsModule
 	 */
-	public CubeModule cubeStructureItemsModule;
+	protected CubeModule cubeStructureItemsModule;
 	/**
 	 * The cubeMappingModule
 	 */
-	public CubeMappingModule cubeMappingModule;
+	protected CubeMappingModule cubeMappingModule;
 	/**
 	 * The mappingDefinitionModule
 	 */
-	public MappingDefinitionModule mappingDefinitionModule;
+	protected MappingDefinitionModule mappingDefinitionModule;
 	/**
 	 * The memberMappingModule
 	 */
-	public MemberMappingModule memberMappingModule;
+	protected MemberMappingModule memberMappingModule;
 	/**
 	 * The variableMappingModule
 	 */
-	public VariableMappingModule variableMappingModule;
+	protected VariableMappingModule variableMappingModule;
 
 	/**
 	 * The birdModel
 	 */
-	public SmcubesModel birdModel;
+	protected SmcubesModel birdModel;
+
+	public SmcubesModel getBirdModel() {
+		return birdModel;
+	}
+
+
+
 
 	/**
 	 * The file path of the access database
@@ -202,235 +209,25 @@ public abstract class Importer implements BirdImporter {
 	 * @param filepath 
 	 */
 	
-	public void doImport(String filepath6, String outputFilepath26, String testdatafilepath6)
+	public void doImport(String theFilepath, String theOutputFilepath, String theTestdatafilepath)
 	{
 		
-		filepath = filepath6;
-		outputFilepath = outputFilepath26;
-		testdatafilepath = testdatafilepath6;
+		filepath = theFilepath;
+		outputFilepath = theOutputFilepath;
+		testdatafilepath = theTestdatafilepath;
 		
 		createAllDomains();  
 		createAllMembers();
 		createAllVariables();
-		createAllCubes();
-	
-		createAllCombinations();
-		
+		createAllCubes();	
+		createAllCombinations();		
 		createAllTransformationSchemes();
 	
-		// createAllMappings();
-		//saveArtifactsAsXML();
-		saveArtifactsAsEson(birdModel);
+		
 		
 	}
 	
-	public void saveArtifactsAsEson(EObject testModel) {
-		/**
-		//get the birdModel , walk through it and add the features to a text file.
-		
-		//Factory expected = ((EFactoryResource) testModel.eResource()).getEFactoryFactory();
-		
-		
-		
-		//cocamoStandaloneSetup.doSetup();  
-		//EFactoryStandaloneSetup.doSetup();
-		ESONWithcocamomodelInjectorProvider eip = new ESONWithcocamomodelInjectorProvider();
-		Injector injector = eip.getInjector();
-		
-		EFactoryServiceProvider serviceProvider = injector.getInstance(EFactoryServiceProvider.class);
-		
 	
-		FactoryBuilder builder = new FactoryBuilder(serviceProvider);
-	
-		Factory actual = builder.buildFactory(testModel);
-		// it looks like we only add one package in the builder, the package of the 
-		// rootbuilder, we are going to add all teh packages here to work around this.
-		PackageImport cocamo_programPackagePI = EFactoryFactory.eINSTANCE.createPackageImport();
-		cocamo_programPackagePI.setEPackage(cocamoPackage.eINSTANCE);		
-		actual.getEPackages().add(cocamo_programPackagePI);
-		
-		PackageImport corePI = EFactoryFactory.eINSTANCE.createPackageImport();
-		corePI.setEPackage(CorePackage.eINSTANCE);		
-		actual.getEPackages().add(corePI);
-		
-		PackageImport Efbt_vtl_transformationPackagePI = EFactoryFactory.eINSTANCE.createPackageImport();
-		Efbt_vtl_transformationPackagePI.setEPackage(Efbt_vtl_transformationPackage.eINSTANCE);		
-		actual.getEPackages().add(Efbt_vtl_transformationPackagePI);
-		
-		PackageImport Efbt_mappingPackagePI = EFactoryFactory.eINSTANCE.createPackageImport();
-		Efbt_mappingPackagePI.setEPackage(Efbt_mappingPackage.eINSTANCE);		
-		actual.getEPackages().add(Efbt_mappingPackagePI);
-		
-		PackageImport Data_definitionPackagePI = EFactoryFactory.eINSTANCE.createPackageImport();
-		Data_definitionPackagePI.setEPackage(Data_definitionPackage.eINSTANCE);		
-		actual.getEPackages().add(Data_definitionPackagePI);
-		
-		PackageImport Module_managementPackagePI = EFactoryFactory.eINSTANCE.createPackageImport();
-		Module_managementPackagePI.setEPackage(Module_managementPackage.eINSTANCE);		
-		actual.getEPackages().add(Module_managementPackagePI);
-		
-		PackageImport Efbt_data_definitionPackagePI = EFactoryFactory.eINSTANCE.createPackageImport();
-		Efbt_data_definitionPackagePI.setEPackage(Efbt_data_definitionPackage.eINSTANCE);		
-		actual.getEPackages().add(Efbt_data_definitionPackagePI);
-		
-		PackageImport MappingPackagePI = EFactoryFactory.eINSTANCE.createPackageImport();
-		MappingPackagePI.setEPackage(MappingPackage.eINSTANCE);		
-		actual.getEPackages().add(MappingPackagePI);
-		
-		PackageImport Vtl_transformationPackagePI = EFactoryFactory.eINSTANCE.createPackageImport();
-		Vtl_transformationPackagePI.setEPackage(Vtl_transformationPackage.eINSTANCE);		
-		actual.getEPackages().add(Vtl_transformationPackagePI);
-		
-		
-/**		
-		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/base_column_structured_data")) {
-			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/base_column_structured_data",
-					Base_column_structured_dataPackage.eINSTANCE);
-		}
-		
-		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/smcubes_model")) {
-			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/smcubes_model",
-					Smcubes_modelPackage.eINSTANCE);
-		}
-
-		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/functionality_module")) {
-			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/functionality_module",
-					Functionality_modulePackage.eINSTANCE);
-		}
-		
-		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/reports")) {
-			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/reports",
-					ReportsPackage.eINSTANCE);
-		}
-		
-		
-
-		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/requirements_text")) {
-			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/requirements_text",
-					Requirements_textPackage.eINSTANCE);
-		}
-	
-		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/scenarios")) {
-			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/scenarios", ScenariosPackage.eINSTANCE);
-		}
-
-		
-		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/test_definition")) {
-			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/test_definition", Test_definitionPackage.eINSTANCE);
-		}
-		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/test_input_data")) {
-			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/test_input_data", Test_input_dataPackage.eINSTANCE);
-		}
-
-		
-		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/test")) {
-			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/test", TestPackage.eINSTANCE);
-		}
-		
-	
-	
-		
-		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/rendering")) {
-			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/rendering", RenderingPackage.eINSTANCE);
-		}
-		
-		*/
-		
-/**
-		
-		//XtextResourceSet xrs = injector.getInstance(XtextResourceSet.class);
-		XtextResourceSet xrs = new XtextResourceSet();
-		
-
-		URI smcubesURI = URI.createFileURI(outputFilepath + "//smcubesURI.eson");
-		Resource smcubesResource = xrs.createResource(smcubesURI);
-		smcubesResource.getContents().add(actual);
-		smcubesResource.getContents().add(testModel);
-		
-		//URI modelURI = URI.createFileURI(outputFilepath + "modelURI.smcubes_model");
-		//Resource modelResource = xrs.createResource(modelURI);
-		//modelResource.getContents().add(testModel);
-		
-		//smcubesResource.getContents().add(testModel);
-		//smcubesResource.getContents().get(1);
-		//EcoreUtil.resolveAll(xrs);
-		try {
-			smcubesResource.save(Collections.EMPTY_MAP);
-			/**IResourceDescription.Manager resourceDescriptionManager = injector.getInstance(IResourceDescription.Manager.class);
-			Iterable<IEObjectDescription> eods = resourceDescriptionManager.getResourceDescription(smcubesResource).getExportedObjects();
-			for (IEObjectDescription eod : eods) {
-				System.out.println("\t" + eod.getQualifiedName() + " - " + eod.getClass().getName() );
-			}
-			OutputStream outputStream = new ByteArrayOutputStream();
-			smcubesResource.save(outputStream, null);
-			System.out.println("outputStream.toString()" + outputStream.toString());
-			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-	}
-
-	
-	
-
-	/**private void saveArtifactsAsEson2() {
-		// persist the files as a set of xtext files
-
-				EPackage.Registry.INSTANCE.put("http://www.eclipse.org/emf/eson/EFactory", EFactoryPackage.eINSTANCE);
-				FreeBirdToolsResourceFactory factory = new FreeBirdToolsResourceFactory();
-
-				Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
-				Map<String, Object> m = reg.getExtensionToFactoryMap();
-				m.put("cocamo_program", factory);
-
-				EFactoryStandaloneSetup setup = new EFactoryStandaloneSetup();
-				Injector i = setup.createInjectorAndDoEMFRegistration();
-				
-				//load the xml files into a resource, using the FreeBirdToolsResourceFactory
-				XtextResourceSet xrs = i.getInstance(XtextResourceSet.class);
-				
-				
-		
-				URI domainsURI = URI.createFileURI(outputFilepath + "domains.eson");
-				URI membersURI = URI.createFileURI(outputFilepath + "members.eson");
-				URI variablesURI = URI.createFileURI(outputFilepath + "variables.eson");
-				URI cubesURI = URI.createFileURI(outputFilepath + "cubes.eson");
-				URI cubestructuresURI = URI.createFileURI(outputFilepath + "cube_structures.eson");
-				URI cubestructureitemsURI = URI.createFileURI(outputFilepath + "cube_structure_items.eson");
-			
-				URI birdURI = URI.createFileURI(outputFilepath + "bird.eson");
-
-				Resource domainsResource = xrs.createResource(domainsURI);
-				Resource membersResource = xrs.createResource(membersURI);
-				Resource variablesResource = xrs.createResource(variablesURI);
-				Resource cubesResource = xrs.createResource(cubesURI);
-				Resource cubestructuresResource = xrs.createResource(cubestructuresURI);
-				Resource cubestructureitemsResource = xrs.createResource(cubestructureitemsURI);
-		
-
-				domainsResource.getContents().add(domains);
-				membersResource.getContents().add(members);
-				variablesResource.getContents().add(variables);
-				cubesResource.getContents().add(cubesModule);
-				cubestructuresResource.getContents().add(cubeStructuresModule);
-				cubestructureitemsResource.getContents().add(cubeStructureItemsModule);
-		
-				EcoreUtil.resolveAll(xrs);
-				
-				//save the xtext representation of the model
-				try {
-					domainsResource.save(Collections.EMPTY_MAP);
-					variablesResource.save(Collections.EMPTY_MAP);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-
-		
-	}*/
-
 	/**
 	 * Serialize all the EObjects to files.
 	 */

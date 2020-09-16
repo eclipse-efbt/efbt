@@ -4,7 +4,7 @@ Bundle-SymbolicName: org.eclipse.efbt.dependencies.accessdb.pomfirst-t
 Embed-Directory: jars
 Built-By: neil
 Bundle-ManifestVersion: 2
-Bnd-LastModified: 1600177282341
+Bnd-LastModified: 1600260109463
 Embed-Dependency: jackcess
 Import-Package: com.healthmarketscience.jackcess;version="3.0",com.hea
  lthmarketscience.jackcess.complex;version="3.0",com.healthmarketscien
