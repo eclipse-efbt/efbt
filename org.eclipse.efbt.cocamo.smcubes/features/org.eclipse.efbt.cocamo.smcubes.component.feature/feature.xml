@@ -39,27 +39,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.efbt.cocamo.smcubes.component.csv.apachecsv.impl"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.efbt.cocamo.smcubes.component.csv.api"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.efbt.cocamo.smcubes.component.csv.provider"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.efbt.cocamo.smcubes.component.exporter"
          download-size="0"
          install-size="0"
