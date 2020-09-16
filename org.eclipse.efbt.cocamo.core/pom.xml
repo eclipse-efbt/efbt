@@ -364,16 +364,7 @@
 	</profiles>
 
 	<dependencies>
-    <dependency>
-      <groupId>org.eclipse.efbt.dependencies.accessdb</groupId>
-      <artifactId>org.eclipse.efbt.dependencies.access.jackcess</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.efbt.dependencies.accessdb</groupId>
-      <artifactId>pomfirst-thirdparty</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-    </dependency>
+  
 
     <!-- ... -->
    <dependency>

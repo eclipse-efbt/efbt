@@ -1,13 +1,14 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.eclipse.efbt.cocamo.smcubes</groupId>
 	<version>1.0.0-SNAPSHOT</version>
 	<artifactId>org.eclipse.efbt.cocamo.smcubes</artifactId>
 	<packaging>pom</packaging>
-<prerequisites>
-    <maven>3.0</maven>
-  </prerequisites>
+	<prerequisites>
+		<maven>3.0</maven>
+	</prerequisites>
 	<properties>
 		<xtextVersion>2.22.0</xtextVersion>
 		<mwe2Version>2.11.3</mwe2Version>
@@ -25,27 +26,25 @@
 		<additionalTestArguments></additionalTestArguments>
 	</properties>
 	<modules>
-		<module>releng/org.eclipse.efbt.cocamo.smcubes.target</module>	
+		<module>releng/org.eclipse.efbt.cocamo.smcubes.target</module>
 		<module>plugins/org.eclipse.efbt.cocamo.smcubes.component.access.api</module>
 		<module>plugins/org.eclipse.efbt.cocamo.smcubes.component.access.jackcess.impl</module>
 		<module>plugins/org.eclipse.efbt.cocamo.smcubes.component.access.provider</module>
 		<module>plugins/org.eclipse.efbt.cocamo.smcubes.component.exporter</module>
 		<module>plugins/org.eclipse.efbt.cocamo.smcubes.component.importexport.api</module>
-		<module>plugins/org.eclipse.efbt.cocamo.smcubes.component.importexport.impl</module>		
+		<module>plugins/org.eclipse.efbt.cocamo.smcubes.component.importexport.impl</module>
 		<module>plugins/org.eclipse.efbt.cocamo.smcubes.model.core</module>
 		<module>plugins/org.eclipse.efbt.cocamo.smcubes.model.example</module>
 		<module>plugins/org.eclipse.efbt.cocamo.smcubes.model.input_data</module>
 		<module>plugins/org.eclipse.efbt.cocamo.smcubes.model.program</module>
 		<module>plugins/org.eclipse.efbt.cocamo.smcubes.query.core</module>
-		<module>plugins/org.eclipse.efbt.cocamo.smcubes.ui.sirius</module>		
+		<module>plugins/org.eclipse.efbt.cocamo.smcubes.ui.sirius</module>
 		<module>features/org.eclipse.efbt.cocamo.smcubes.component.feature</module>
 		<module>features/org.eclipse.efbt.cocamo.smcubes.model.feature</module>
 		<module>features/org.eclipse.efbt.cocamo.smcubes.query.feature</module>
 		<module>features/org.eclipse.efbt.cocamo.smcubes.ui.sirius.feature</module>
 		<module>releng/org.eclipse.efbt.cocamo.smcubes.repository</module>
 		<module>tests/org.eclipse.efbt.cocamo.smcubes.component.importexport.test</module>
-
-
 	</modules>
 	<dependencyManagement>
 		<dependencies>
@@ -56,22 +55,17 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
-			 <dependency>
-      <groupId>org.eclipse.efbt.dependencies</groupId>
-      <artifactId>org.eclipse.efbt.dependencies.access.jackcess</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.efbt.dependencies</groupId>
-      <artifactId>pomfirst-thirdparty</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-    </dependency>
-    
-	  
-    
-			
-				
-		
+			<dependency>
+				<groupId>org.eclipse.efbt.dependencies.accessdb</groupId>
+				<artifactId>org.eclipse.efbt.dependencies.access.jackcess</artifactId>
+				<version>1.0.0-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.efbt.dependencies.accessdb</groupId>
+				<artifactId>pomfirst-thirdparty</artifactId>
+				<version>1.0.0-SNAPSHOT</version>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 	<build>
@@ -113,7 +107,7 @@
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-p2-plugin</artifactId>
 				<version>${tycho-version}</version>
-				
+
 				<executions>
 					<execution>
 						<id>attach-p2-metadata</id>
@@ -124,21 +118,21 @@
 					</execution>
 				</executions>
 			</plugin>
-			 <plugin>
-         <groupId>org.eclipse.tycho</groupId>
-         <artifactId>tycho-p2-repository-plugin</artifactId>
-         <version>${tycho-version}</version>
-         <configuration>
-            <includeAllDependencies>true</includeAllDependencies>
-         </configuration>
-      </plugin>
-			
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-p2-repository-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<includeAllDependencies>true</includeAllDependencies>
+				</configuration>
+			</plugin>
+
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>target-platform-configuration</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
-				  <pomDependencies>consider</pomDependencies>
+					<pomDependencies>consider</pomDependencies>
 					<target>
 						<artifact>
 							<groupId>org.eclipse.efbt.cocamo.smcubes</groupId>
@@ -170,8 +164,8 @@
 								<id>org.eclipse.xtext.logging</id>
 								<versionRange>1.2.15</versionRange>
 							</requirement>
-							<!-- to get the org.eclipse.osgi.compatibility.state plugin if the target 
-								platform is Luna or later. (backward compatible with kepler and previous 
+							<!-- to get the org.eclipse.osgi.compatibility.state plugin if the 
+								target platform is Luna or later. (backward compatible with kepler and previous 
 								versions) see https://bugs.eclipse.org/bugs/show_bug.cgi?id=492149 -->
 							<requirement>
 								<type>eclipse-feature</type>
@@ -295,10 +289,7 @@
 					</configuration>
 				</plugin>
 				<plugin>
-					<!-- 
-						Can be removed after first generator execution
-						https://bugs.eclipse.org/bugs/show_bug.cgi?id=480097
-					-->
+					<!-- Can be removed after first generator execution https://bugs.eclipse.org/bugs/show_bug.cgi?id=480097 -->
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-compiler-plugin</artifactId>
 					<version>${tycho-version}</version>
@@ -307,39 +298,35 @@
 						<useProjectSettings>false</useProjectSettings>
 					</configuration>
 				</plugin>
-				<!-- to skip running (and compiling) tests use commandline flag: -Dmaven.test.skip
-					To skip tests, but still compile them, use: -DskipTests
-					To allow all tests in a pom to pass/fail, use commandline flag: -fae (fail
-					at end) -->
+				<!-- to skip running (and compiling) tests use commandline flag: -Dmaven.test.skip 
+					To skip tests, but still compile them, use: -DskipTests To allow all tests 
+					in a pom to pass/fail, use commandline flag: -fae (fail at end) -->
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-surefire-plugin</artifactId>
 					<version>${tycho-version}</version>
-				 <dependencies>
-       	        <dependency>
+					<dependencies>
+						<dependency>
 
-            <groupId>org.junit.platform</groupId>
+							<groupId>org.junit.platform</groupId>
 
-            <artifactId>junit-platform-surefire-provider</artifactId>
+							<artifactId>junit-platform-surefire-provider</artifactId>
 
-            <version>1.1.0</version>
-            
-            
+							<version>1.1.0</version>
 
-        </dependency>
-                   <!--       <dependency>
-                    <groupId>org.junit.vintage</groupId>
-                    <artifactId>junit-vintage-engine</artifactId>
-                    <version>5.4.0</version>
-                </dependency> -->
-					</dependencies> 
+
+
+						</dependency>
+						<!-- <dependency> <groupId>org.junit.vintage</groupId> <artifactId>junit-vintage-engine</artifactId> 
+							<version>5.4.0</version> </dependency> -->
+					</dependencies>
 				</plugin>
-			 <!--	  <plugin>-->
-     <!--  <artifactId>maven-surefire-plugin</artifactId>  -->
-      <!-- latest version (2.20.1) does not work well with JUnit5 -->
-   <!--    <version>2.22.2</version> -->
-      
-    <!-- </plugin> -->
+				<!-- <plugin> -->
+				<!-- <artifactId>maven-surefire-plugin</artifactId> -->
+				<!-- latest version (2.20.1) does not work well with JUnit5 -->
+				<!-- <version>2.22.2</version> -->
+
+				<!-- </plugin> -->
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -394,27 +381,27 @@
 	</profiles>
 
 	<dependencies>
-    <dependency>
-      <groupId>org.eclipse.efbt.dependencies</groupId>
-      <artifactId>org.eclipse.efbt.dependencies.access.jackcess</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.efbt.dependencies</groupId>
-      <artifactId>pomfirst-thirdparty</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-    </dependency>
+		<dependency>
+			<groupId>org.eclipse.efbt.dependencies.accessdb</groupId>
+			<artifactId>org.eclipse.efbt.dependencies.access.jackcess</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.efbt.dependencies.accessdb</groupId>
+			<artifactId>pomfirst-thirdparty</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
 
-    <!-- ... -->
-   <dependency>
+		<!-- ... -->
+		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
 			<version>${junit.jupiter.version}</version>
 			<scope>test</scope>
 		</dependency>
-    <!-- ... -->
+		<!-- ... -->
 
-   
-  
-  </dependencies>
+
+
+	</dependencies>
 </project>
