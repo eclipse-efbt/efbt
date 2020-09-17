@@ -15,7 +15,7 @@ public class ImportExport_Test {
     public void exampleTest() {
 		
 		
-		BIRDImporterImpl tester = new BIRDImporterImpl(); // BirdImporter is tested
+	//	BIRDImporterImpl tester = new BIRDImporterImpl(); // BirdImporter is tested
 
 
 		

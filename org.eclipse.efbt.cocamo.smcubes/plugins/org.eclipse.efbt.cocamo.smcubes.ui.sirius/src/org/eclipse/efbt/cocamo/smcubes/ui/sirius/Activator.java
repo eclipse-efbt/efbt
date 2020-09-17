@@ -13,7 +13,7 @@ import org.osgi.framework.BundleContext;
  */
 public class Activator extends AbstractUIPlugin {
     // The plug-in ID
-    public static final String PLUGIN_ID = "org.eclipse.efbt.data_structures.smcubes.ui.sirius";
+    public static final String PLUGIN_ID = "org.eclipse.efbt.cocamo.smcubes.ui.sirius";
 
     // The shared instance
     private static Activator plugin;
