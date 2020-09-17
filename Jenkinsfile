@@ -7,10 +7,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh '''
-                    java -version
-                    mvn -v
-                    cd org.eclipse.efbt.dependencies.accessdb
+                sh '''                  
                     mvn install
                     mvn -v
                     cd org.eclipse.efbt.cocamo.core
