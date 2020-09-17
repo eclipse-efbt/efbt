@@ -3,7 +3,7 @@
 <plugin>
   <extension point="org.eclipse.sirius.componentization">
     <component class="org.eclipse.efbt.cocamo.smcubes.ui.sirius.Activator"
-               id="org.eclipse.efbt.data_structures.smcubes.ui.sirius"
+               id="org.eclipse.efbt.cocamo.smcubes.ui.sirius"
 	       name="bird">
     </component>
   </extension>
