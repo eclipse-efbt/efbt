@@ -7,9 +7,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh '''                  
-                    mvn install
-                    mvn -v
+                sh '''                                     
                     cd org.eclipse.efbt.cocamo.core
                     mvn install
                     cd ..
