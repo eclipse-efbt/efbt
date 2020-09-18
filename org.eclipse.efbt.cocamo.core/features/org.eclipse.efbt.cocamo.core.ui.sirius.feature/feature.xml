@@ -111,16 +111,28 @@ Exhibit A – Form of Secondary Licenses Notice
    <includes
          id="org.eclipse.sirius.properties.feature"
          version="6.3.4"/>
+
    <includes
          id="org.eclipse.sirius.runtime"
          version="0.0.0"/>
+
    <includes
          id="org.eclipse.sirius.runtime.aql"
-         version="0.0.0"/>      
-	<includes
+         version="0.0.0"/>
+
+   <includes
          id="org.eclipse.sirius.runtime.ide.ui"
          version="0.0.0"/>
-         
+
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.sirius" version="6.3.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.sirius.common.acceleo.aql"/>
+      <import plugin="org.eclipse.efbt.cocamo.core.model.functionality_module" version="1.0.0" match="greaterOrEqual"/>
+   </requires>
+
    <plugin
          id="org.eclipse.efbt.cocamo.core.ui.sirius"
          download-size="0"

@@ -108,47 +108,12 @@ Exhibit A – Form of Secondary Licenses Notice
     You may add additional accurate notices of copyright ownership.
    </license>
 
-   <includes
-         id="org.eclipse.mylyn.commons.identity"
-         version="1.17.2"/>
-	<includes
-         id="org.eclipse.mylyn.commons.notifications"
-         version="1.17.2"/>
-	<includes
-         id="org.eclipse.mylyn.discovery"
-         version="3.25.2"/>
-	<includes
-         id="org.eclipse.mylyn.commons"
-         version="3.25.2"/>
-	<includes
-         id="org.eclipse.mylyn.commons.repositories"
-         version="1.17.2"/>
-	<includes
-         id="org.eclipse.mylyn.monitor"
-         version="3.25.2"/>
-	<includes
-         id="org.eclipse.mylyn.ide_feature"
-         version="3.25.2"/>
-	<includes
-         id="org.eclipse.mylyn.team_feature"
-         version="3.25.2"/>
-	<includes
-         id="org.eclipse.mylyn.context_feature"
-         version="3.25.2"/>
-	<includes
-         id="org.eclipse.mylyn_feature"
-         version="3.25.2"/>
-	<includes
-         id="org.eclipse.mylyn.tasks.ide"
-         version="3.25.2"/>
-	<includes
-         id="org.eclipse.mylyn.wikitext_feature"
-         version="3.0.38"/>
-	<includes
-         id="org.eclipse.mylyn.wikitext.editors_feature"
-         version="3.0.38"/>
-	
-	
+   <requires>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.emf.ecore"/>
+      <import plugin="org.eclipse.emf.ecore.xmi"/>
+   </requires>
+
    <plugin
          id="org.eclipse.efbt.cocamo.core.model.testing"
          download-size="0"
