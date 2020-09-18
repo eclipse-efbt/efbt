@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature id="org.eclipse.efbt.ldm.component.feature">
+      <category name="efbt"/>
+   </feature>
+   <feature id="org.eclipse.efbt.cocamo.core.model.feature">
+      <category name="efbt"/>
+   </feature>
+   <feature id="org.eclipse.efbt.cocamo.core.query.feature">
+      <category name="efbt"/>
+   </feature>
+   <feature id="org.eclipse.efbt.cocamo.core.ui.sirius.feature">
+      <category name="efbt"/>
+   </feature>
+   <feature id="org.eclipse.efbt.cocamo.smcubes.component.feature">
+      <category name="efbt"/>
+   </feature>
+   <feature id="org.eclipse.efbt.cocamo.smcubes.model.feature">
+      <category name="efbt"/>
+   </feature>
+   <feature id="org.eclipse.efbt.cocamo.smcubes.query.feature">
+      <category name="efbt"/>
+   </feature>
+   <feature id="org.eclipse.efbt.cocamo.smcubes.ui.sirius.feature">
+      <category name="efbt"/>
+   </feature>
+   <feature id="org.eclipse.efbt.cocason.feature">
+      <category name="efbt"/>
+   </feature>
+   <feature id="org.eclipse.efbt.cocason.ui.feature">
+      <category name="efbt"/>
+   </feature>
+   <category-def name="efbt" label="Complete EFBT Repository"/>
+</site>
