@@ -9,7 +9,7 @@
 			<unit id="org.eclipse.draw2d.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.emf.ecoretools.design.feature.group" version="0.0.0"/>
-			<repository location="https://download.eclipse.org/releases/2020-06"/>
+			<repository location="https://download.eclipse.org/releases/2020-09"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<unit id="org.eclipse.emf.mwe2.launcher.feature.group" version="0.0.0"/>
@@ -29,7 +29,7 @@
 			<unit id="org.junit.platform.launcher" version="1.6.0.v20200203-2009"/>
 			<unit id="org.junit.platform.runner" version="1.6.0.v20200203-2009"/>
 			<unit id="org.opentest4j" version="1.2.0.v20190826-0900"/>						  
-			<repository location="https://download.eclipse.org/tools/orbit/downloads/2020-06"/>
+			<repository location="https://download.eclipse.org/tools/orbit/downloads/2020-09"/>
 		</location>
 	</locations>
 </target>
