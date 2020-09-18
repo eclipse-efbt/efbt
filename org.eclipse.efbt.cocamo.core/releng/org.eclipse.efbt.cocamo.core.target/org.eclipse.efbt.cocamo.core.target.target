@@ -9,6 +9,9 @@
 			<unit id="org.eclipse.draw2d.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.emf.ecoretools.design.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.mylyn.context_feature.feature.group" version="3.25.2.v20200828-1617"/>
+			<unit id="org.eclipse.mylyn.ide_feature.feature.group" version="3.25.2.v20200828-1617"/>
+			<unit id="org.eclipse.mylyn.github.feature.feature.group" version="5.9.0.202009080501-r"/>
 			<repository location="https://download.eclipse.org/releases/2020-09"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
