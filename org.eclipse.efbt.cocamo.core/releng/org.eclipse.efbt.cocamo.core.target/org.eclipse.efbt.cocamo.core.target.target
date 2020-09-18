@@ -14,6 +14,15 @@
 			<unit id="org.eclipse.mylyn.github.feature.feature.group" version="5.9.0.202009080501-r"/>
 			<unit id="org.eclipse.mylyn.wikitext_feature.feature.group" version="3.0.38.202008172112"/>
 			<unit id="org.eclipse.mylyn_feature.feature.group" version="3.25.2.v20200814-0512"/>
+			<unit id="org.eclipse.mylyn.team_feature.feature.group" version="3.25.2.v20200828-1617"/>
+			<unit id="org.eclipse.mylyn.commons.feature.group" version="3.25.2.v20200813-0821"/>
+			<unit id="org.eclipse.mylyn.commons.identity.feature.group" version="1.17.2.v20200813-0821"/>
+			<unit id="org.eclipse.mylyn.commons.notifications.feature.group" version="1.17.2.v20200813-0821"/>
+			<unit id="org.eclipse.mylyn.commons.repositories.feature.group" version="1.17.2.v20200813-0821"/>
+			<unit id="org.eclipse.mylyn.discovery.feature.group" version="3.25.2.v20200813-0821"/>
+			<unit id="org.eclipse.mylyn.monitor.feature.group" version="3.25.2.v20200813-0821"/>
+			<unit id="org.eclipse.mylyn.tasks.ide.feature.group" version="3.25.2.v20200814-0512"/>
+			<unit id="org.eclipse.mylyn.wikitext.editors_feature.feature.group" version="3.0.38.202008172112"/>
 			<repository location="https://download.eclipse.org/releases/2020-09"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">

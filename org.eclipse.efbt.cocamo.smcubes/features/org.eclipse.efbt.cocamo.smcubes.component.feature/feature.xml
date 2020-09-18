@@ -9,7 +9,7 @@
       [Enter Feature Description here.]
    </description>
 
-  <copyright>
+   <copyright>
       Copyright (c) 2020 Bird Software Solutions Ltd
  All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html
 
@@ -107,6 +107,17 @@ Exhibit A – Form of Secondary Licenses Notice
 
     You may add additional accurate notices of copyright ownership.
    </license>
+
+   <requires>
+      <import plugin="org.eclipse.efbt.cocamo.smcubes.component.access.api" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.efbt.dependencies.accessdb.org.eclipse.efbt.dependencies.access.jackcess"/>
+      <import plugin="org.eclipse.efbt.dependencies.accessdb.pomfirst-thirdparty"/>
+      <import plugin="org.eclipse.efbt.cocamo.smcubes.model.program" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.xtext"/>
+      <import plugin="org.eclipse.emf.ecore"/>
+      <import plugin="org.eclipse.efbt.cocamo.smcubes.model.input_data"/>
+      <import plugin="org.eclipse.efbt.cocamo.core.model.testing"/>
+   </requires>
 
    <plugin
          id="org.eclipse.efbt.cocamo.smcubes.component.access.api"
