@@ -8,10 +8,6 @@
       The cocason UI feature.
    </description>
 
-   <copyright>
-   
-   </copyright>
-
    <license url="http://www.eclipse.org/legal/epl-v10.html">
       Eclipse Public License - v 1.0
 
@@ -108,10 +104,6 @@ This Agreement is governed by the laws of the State of New York and the intellec
       <import plugin="org.eclipse.ui.editors"/>
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.jdt.core"/>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.core.resources"/>
-      <import plugin="org.eclipse.ui.workbench.texteditor"/>
       <import plugin="org.eclipse.xtext.ui.shared"/>
       <import plugin="org.eclipse.xtext.builder"/>
       <import plugin="org.eclipse.xtext.common.types.shared"/>
@@ -119,8 +111,15 @@ This Agreement is governed by the laws of the State of New York and the intellec
       <import plugin="org.eclipse.xtext.ui.codetemplates"/>
       <import plugin="org.eclipse.xtext.ui.codetemplates.ui"/>
       <import plugin="org.eclipse.compare"/>
+      <import plugin="org.eclipse.ui"/>
       <import plugin="org.antlr.runtime"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor"/>
       <import plugin="org.eclipse.emf.ecore.editor"/>
+      <import plugin="org.eclipse.xtend.core"/>
+      <import plugin="org.eclipse.xtend.ide"/>
+      <import plugin="org.eclipse.ui.views.properties.tabbed"/>
       <import plugin="org.apache.log4j"/>
       <import plugin="org.hamcrest.core"/>
       <import plugin="org.junit"/>

@@ -231,7 +231,7 @@ public abstract class Importer implements BirdImporter {
 	/**
 	 * Serialize all the EObjects to files.
 	 */
-	public void saveArtifactsAsXML() {
+	/**public void saveArtifactsAsXML() {
 		FreeBirdToolsResourceFactory factory = new FreeBirdToolsResourceFactory();
 		URI domainsURI = URI.createFileURI(outputFilepath + "domains.efbt_data_definition");
 		URI membersURI = URI.createFileURI(outputFilepath + "members.efbt_data_definition");
@@ -322,6 +322,6 @@ public abstract class Importer implements BirdImporter {
 
 		}
 
-	}
+	}*/
 
 }

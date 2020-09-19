@@ -108,6 +108,16 @@ Exhibit A – Form of Secondary Licenses Notice
     You may add additional accurate notices of copyright ownership.
    </license>
 
+   <requires>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.emf.ecore"/>
+      <import plugin="org.eclipse.emf.ecore.xmi"/>
+      <import plugin="org.eclipse.efbt.cocamo.core.model.module_management"/>
+      <import plugin="org.eclipse.efbt.cocamo.core.model.functionality_module"/>
+      <import plugin="org.eclipse.efbt.cocamo.core.model.requirements_text"/>
+      <import plugin="org.eclipse.efbt.cocamo.core.model.testing"/>
+   </requires>
+
    <plugin
          id="org.eclipse.efbt.cocamo.smcubes.model.core"
          download-size="0"

@@ -8,10 +8,6 @@
       The cocason Tests feature.
    </description>
 
-   <copyright>
-      
-   </copyright>
-
    <license url="http://www.eclipse.org/legal/epl-v10.html">
       Eclipse Public License - v 1.0
 
@@ -103,27 +99,9 @@ This Agreement is governed by the laws of the State of New York and the intellec
    </license>
 
    <requires>
-      <import plugin="org.eclipse.ui.editors"/>
-      <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.xtext.ui"/>
-      <import plugin="org.eclipse.xtext.ui.shared"/>
-      <import plugin="org.eclipse.emf.eson"/>
-      <import plugin="org.eclipse.emf.eson.ui"/>
       <import plugin="org.junit"/>
-      <import plugin="org.antlr.runtime"/>
-      <import plugin="org.eclipse.xtext"/>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.emf.ecore"/>
-      <import plugin="org.eclipse.xtext.common.types.ui"/>
-      <import plugin="org.eclipse.emf.compare"/>
-      <import plugin="org.eclipse.xtext.junit4"/>
-      <import plugin="org.eclipse.emf.ecore.xcore"/>
-      <import plugin="org.eclipse.xtext.xbase"/>
-      <import plugin="org.eclipse.xtext.xbase.lib"/>
-      <import plugin="org.eclipse.xtext.ecore"/>
-      <import plugin="org.eclipse.emf.codegen"/>
-      <import plugin="org.eclipse.emf.codegen.ecore"/>
+      <import plugin="org.eclipse.efbt.cocason.component.export_smcubes"/>
+      <import plugin="org.junit.jupiter.api"/>
    </requires>
 
    <plugin
