@@ -26,11 +26,13 @@ public class ImportExportSMCubesTest {
 		
 		ImportAndExportSMCubes tester = new ImportAndExportSMCubes(); // BirdImporter is tested
 
-		String filepath = "C:\\Users\\neil\\BIRD_5.0.2\\BIRD_5_0_2.accdb";
+	/**	
+	// need to move this to resources
+	   String filepath = "C:\\Users\\neil\\BIRD_5.0.2\\BIRD_5_0_2.accdb";
 		String outputFilepath = "C:\\Users\\neil\\output1";
 		String testdatafilepath = "C:\\Users\\neil\\tests";
 		
-	    tester.importAndExportSMCubes(filepath,outputFilepath,testdatafilepath);
+	    tester.importAndExportSMCubes(filepath,outputFilepath,testdatafilepath); */
         // assert statements
         assertEquals(0, 0, "zero equals zero");
       
