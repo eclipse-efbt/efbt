@@ -13,9 +13,6 @@
 package org.eclipse.efbt.cocamo.smcubes.component.importexport.impl;
 
 
-import org.eclipse.emf.ecore.EPackage;
-
-
 import com.google.inject.Injector;
 
 /**
