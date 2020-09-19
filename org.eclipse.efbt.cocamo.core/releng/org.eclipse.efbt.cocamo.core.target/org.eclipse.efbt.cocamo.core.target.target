@@ -23,6 +23,7 @@
 			<unit id="org.eclipse.mylyn.monitor.feature.group" version="3.25.2.v20200813-0821"/>
 			<unit id="org.eclipse.mylyn.tasks.ide.feature.group" version="3.25.2.v20200814-0512"/>
 			<unit id="org.eclipse.mylyn.wikitext.editors_feature.feature.group" version="3.0.38.202008172112"/>
+			<unit id="org.eclipse.egit.feature.group" version="5.9.0.202009080501-r"/>
 			<repository location="https://download.eclipse.org/releases/2020-09"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">

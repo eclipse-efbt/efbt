@@ -7,4 +7,12 @@
 	       name="bird">
     </component>
   </extension>
+  <extension
+        id="efbt"
+        point="org.eclipse.core.runtime.products">
+     <product
+           application="org.eclipse.ant.core.antRunner"
+           name="EFBT">
+     </product>
+  </extension>
 </plugin>
