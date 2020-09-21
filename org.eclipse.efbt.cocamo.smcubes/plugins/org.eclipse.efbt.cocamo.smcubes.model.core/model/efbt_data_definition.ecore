@@ -10,7 +10,7 @@
   </eAnnotations>
   <eClassifiers xsi:type="ecore:EClass" name="CombinationModule" eSuperTypes="../../org.eclipse.efbt.cocamo.core.model.module_management/model/module_management.ecore#//Module">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A Module storing a list of Combinations, and a list of related Combination Items, and a list of CUBE_TO_COMBINATIONs"/>
+      <details key="documentation" value="A module storing a list of Combinations, and a list of related Combination Items, and a list of CUBE_TO_COMBINATIONs"/>
     </eAnnotations>
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="CombinationModule"/>
@@ -50,7 +50,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CubeModule" eSuperTypes="../../org.eclipse.efbt.cocamo.core.model.module_management/model/module_management.ecore#//Module">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A Module storing a list of CUBEs and associated CUBE_STRUCTURES and CUBE_STRUCTURE_ITEMS"/>
+      <details key="documentation" value="A Module storing a list of CUBEs and a list of CUBE_STRUCTURES and a list of CUBE_STRUCTURE_ITEMS"/>
     </eAnnotations>
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="CubeModule"/>
@@ -59,7 +59,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="cubes" upperBound="-1"
         eType="ecore:EClass data_definition.ecore#//CUBE" containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The list of CUBE_TO_COMBINATIONs providing links between the cubes and combinations"/>
+        <details key="documentation" value="The list of CUBEs"/>
       </eAnnotations>
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="element"/>
