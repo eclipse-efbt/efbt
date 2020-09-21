@@ -1,0 +1,71 @@
+use "http://www.eclipse.org/efbt/smcubes_model"
+
+use "http://www.eclipse.org/efbt/cocamo"
+
+use "http://www.eclipse.org/efbt/core"
+
+use "http://www.eclipse.org/efbt/data_definition"
+
+use "http://www.eclipse.org/efbt/module_management"
+
+use "http://www.eclipse.org/efbt/efbt_data_definition"
+
+
+
+SmcubesModel {
+variables: [
+		{
+			variables: [
+			 VARIABLE CCY {
+					code: "ACCOUNTING_FRAMEWORK"
+					description: "Currency"
+					variable_id: "ACCOUNTING_FRAMEWORK"
+					displayName: "Currency"
+					domain_id: ACCOUNTING_FRAMEWORK
+				}
+				VARIABLE ACCOUNTING_FRAMEWORK {
+					code: "ACCOUNTING_FRAMEWORK"
+					description:
+					"Accounting portfolio where the instrument is recorded in accordance with the accounting standard – IFRS or national GAAP –under Regulation (EU) 2015/534 (ECB/2015/13) applied by the observed agent\'s legal entity."
+					variable_id: "ACCOUNTING_FRAMEWORK"
+					displayName: "Accounting classification"
+					domain_id: ACCOUNTING_FRAMEWORK
+				}
+				VARIABLE COUNTRY_OF_ORIGIN {
+					code: "COUNTRY"
+					description: "The Country of Origin"
+					variable_id: "COUNTRY"
+					displayName: "Country"
+					domain_id: COUNTRY
+				}
+				VARIABLE AMOUNT {
+					code: "AMOUNT"
+					description: "The Country of Origin"
+					variable_id: "AMOUNT"
+					displayName: "Amount"
+					domain_id: MONETARY
+				}
+				VARIABLE  LOAN_ID
+				{
+					code: "LOAN_ID"
+					description: "The loan Identifier"
+					variable_id: "LOAN_ID"
+					displayName: "Loan Identifier"
+					domain_id: STRING_ID
+				}
+				VARIABLE  SECURITIES_ID
+				{
+					code: "SECURITIES_ID"
+					description: "The Securities Identifier"
+					variable_id: "SECURITIES_ID"
+					displayName: "Securities Identifier"
+					domain_id: STRING_ID
+				}
+				
+				
+				
+			
+			]
+		}
+	]
+	}
