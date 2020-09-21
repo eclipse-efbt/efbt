@@ -1,0 +1,118 @@
+use "http://www.eclipse.org/efbt/smcubes_model"
+
+use "http://www.eclipse.org/efbt/cocamo"
+
+use "http://www.eclipse.org/efbt/core"
+
+use "http://www.eclipse.org/efbt/data_definition"
+
+use "http://www.eclipse.org/efbt/module_management"
+
+use "http://www.eclipse.org/efbt/efbt_data_definition"
+
+
+
+SmcubesModel {
+
+	members: [
+		{
+			members: [
+				
+			MEMBER CCY_USD {
+					code: "USD"
+					description:"United States Dollar"
+					member_id: "CCY_USD"
+					displayName: "USD"
+					domain_id: CCY
+					
+				}
+			
+			MEMBER CCY_GBP {
+					code: "GBP"
+					description:"Pound Sterling"
+					member_id: "CCY_GBP"
+					displayName: "GBP"
+					domain_id: CCY					
+				}
+			
+			MEMBER CCY_JPY {
+					code: "JPY"
+					description: "Japanese Yen"
+					member_id: "CCY_JPY"
+					displayName: "JPY"
+					domain_id: CCY
+					
+				}
+				
+				MEMBER COUNTRY_JP {
+					code: "JP"
+					description: "Japan"
+					member_id: "COUNTRY_JP"
+					displayName: "JP"
+					domain_id: COUNTRY
+					
+				}
+				
+				MEMBER COUNTRY_US {
+					code: "JP"
+					description: "United States of America"
+					member_id: "COUNTRY_US"
+					displayName: "US"
+					domain_id: COUNTRY
+					
+				}
+				
+				MEMBER COUNTRY_GB {
+					code: "GB"
+					description: "Great Britain"
+					member_id: "COUNTRY_GB"
+					displayName: "GB"
+					domain_id: COUNTRY
+					
+				}
+				
+			
+			
+				MEMBER ACCNTNG_FRMWRK_1 {
+					code: "1"
+					description:
+					"National accounting frameworks developed under Council Directive 86/635/EEC not applying IFRS criteria for the instruments."
+					member_id: "ACCNTNG_FRMWRK_1"
+					displayName: "National GAAP not consistent with IFRS"
+					domain_id: ACCOUNTING_FRAMEWORK
+				}
+				MEMBER ACCNTNG_FRMWRK_2 {
+					code: "2"
+					description:
+					"International Financial Reporting Standards (IFRS), as applicable under Regulation (EC) No 1606/2002 of the European Parliament and of the Council."
+					member_id: "ACCNTNG_FRMWRK_2"
+					displayName: "IFRS"
+					domain_id: ACCOUNTING_FRAMEWORK
+				}
+				MEMBER ACCNTNG_FRMWRK_3 {
+					code: "3"
+					description:
+					"National accounting frameworks developed under Council Directive 86/635/EEC applying IFRS criteria for the instruments."
+					member_id: "ACCNTNG_FRMWRK_3"
+					displayName: "National GAAP consistent with IFRS"
+					domain_id: ACCOUNTING_FRAMEWORK
+				}
+				MEMBER ACCNTNG_FRMWRK_4 {
+					code: "4"
+					member_id: "ACCNTNG_FRMWRK_4"
+					displayName: "nGAAP(consistent or not consistent with IFRS)"
+					domain_id: ACCOUNTING_FRAMEWORK
+				}
+				MEMBER ACCNTNG_FRMWRK_-99 {
+					code: "-99"
+					description: "Technical member to represent the null value"
+					member_id: "ACCNTNG_FRMWRK_-99"
+					displayName: "Technical null"
+					domain_id: ACCOUNTING_FRAMEWORK
+				}
+			
+			]
+		}
+	]
+
+}

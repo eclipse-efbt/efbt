@@ -444,15 +444,15 @@
     <extension
           point="org.eclipse.ui.newWizards">
        <category 
-            id="org.eclipse.emf.eson.ui.Examples"
-            name="ESON"
+            id="org.eclipse.efbt.cocason.ui.Examples"
+            name="C"
             parentCategory="org.eclipse.ui.Examples" />
        <wizard
-             category="org.eclipse.ui.Examples/org.eclipse.emf.eson.ui.Examples"
+             category="org.eclipse.ui.Examples/org.eclipse.efbt.cocason.ui.Examples"
              class="org.eclipse.emf.common.ui.wizard.ExampleInstallerWizard"
              icon="icons/EObject.gif"
-             id="org.eclipse.emf.eson.ui.wizard.NewLibraryExampleWizard"
-             name="ESON Library Example"
+             id="org.eclipse.efbt.cocason.ui.wizard.CocasonExampleWizard"
+             name="CoCaSon Example"
              project="true">
        </wizard>
        <wizard
@@ -463,17 +463,9 @@
        </wizard>
     </extension>
    <extension point="org.eclipse.emf.common.ui.examples">
-        <example wizardID="org.eclipse.emf.eson.ui.wizard.NewLibraryExampleWizard" pageImage="icons/genproject.gif">
-            <projectDescriptor name="org.eclipse.emf.eson.example.xcore" contentURI="examples/org.eclipse.emf.eson.example.xcore/" description="Xcore Library"/>
-            <projectDescriptor name="org.eclipse.emf.eson.example" contentURI="examples/org.eclipse.emf.eson.example/" description="ESON Model"/>
-            <fileToOpen location="org.eclipse.emf.eson.example.xcore/model/library.xcore"/>
-            <fileToOpen location="org.eclipse.emf.eson.example/model/library.eson"/>
- <!-- Adding these additional 4x fileToOpen leads to a weird problem, probably a bug in org.eclipse.emf.common.ui.wizard.ExampleInstallerWizard, it keeps wanting to delete the example projects - huh?  
-            <fileToOpen location="org.eclipse.emf.eson.example/src/META-INF/services/org.eclipse.xtext.generator.IGenerator"/>
-            <fileToOpen location="org.eclipse.emf.eson.example/src/org/eclipse/emf/eson/example/generator/Generator.java"/>
-            <fileToOpen location="org.eclipse.emf.eson.example/gen/model/library.xml"/>
-            <fileToOpen location="org.eclipse.emf.eson.example/gen/model/library.json"/>
- -->
+        <example wizardID="org.eclipse.efbt.cocason.ui.wizard.CocasonExampleWizard" pageImage="icons/genproject.gif">
+            <projectDescriptor name="org.eclipse.efbt.cocason.example.example1" contentURI="examples/org.eclipse.efbt.cocason.example.example1/" description="CoCaSon Example"/>           
+            <fileToOpen location="org.eclipse.emf.eson.example.example1/src/members.coca"/>           
         </example>
     </extension>
 
