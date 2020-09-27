@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature id="org.eclipse.emf.eson.feature.source" version="1.0.0.202009271528" label="EFactory Feature  Developer Resources">
+  <includes id="org.eclipse.emf.eson.feature" version="1.0.0.202009271528"/>
+  <plugin id="org.eclipse.emf.eson.source" version="1.0.0.202009271528" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.emf.eson.ide.source" version="1.0.0.202009271528" download-size="0" install-size="0" unpack="false"/>
+  <plugin id="org.eclipse.emf.eson.ui.source" version="1.0.0.202009271528" download-size="0" install-size="0" unpack="false"/>
+</feature>
