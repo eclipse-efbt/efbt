@@ -21,7 +21,7 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.xtext.xbase,
  org.objectweb.asm;resolution:=optional,
  org.eclipse.core.runtime
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.eclipse.emf.eson,
  org.eclipse.emf.eson.building,
  org.eclipse.emf.eson.conversion,
