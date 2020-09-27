@@ -18,7 +18,6 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.eson.eFactory.Containment;
 import org.eclipse.emf.eson.eFactory.Feature;
 import org.eclipse.emf.eson.eFactory.MultiValue;
@@ -117,18 +116,19 @@ public class EFactoryProposalProvider extends AbstractEFactoryProposalProvider {
 
 	@Override
 	public void completeNewObject_EClass(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
-		super.completeNewObject_EClass(model, assignment, context, acceptor);
+		// NOOP override, to prevent default implementation from kicking in
+		// for first model arg for anything else than NewObject. 
+		// We want ours, below, only.
 	}
 	public void completeNewObject_EClass(MultiValue multiValue, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
 		super.completeNewObject_EClass(multiValue, assignment, context, acceptor);
 	}
 	public void completeNewObject_EClass(Feature feature, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
 		// TODO needed? If yes, create missing non-reg. test!! if (EcoreUtil3.isEContainment(feature.getEFeature())) {
-		if (!feature.getEFeature().isMany()) {
+		if (!feature.getEFeature().isMany())
 			// This is needed to avoid EClass proposal BEFORE the [ in a MultiValue
 			// The one INSIDE the [] is offered below by completeMultiValue_Values
 			super.completeNewObject_EClass(feature, assignment, context, acceptor);
-		}
 	}
 	
 	@Override
@@ -267,18 +267,4 @@ public class EFactoryProposalProvider extends AbstractEFactoryProposalProvider {
 		return false;
 	}
 
-	/**
-	 * For the EPackage nsURI in the "use" the default super getDisplayString()
-	 * displays something weired because URI get chopped up as QualifiedName
-	 * when they should better just be shown as-is.
-	 */
-	@Override
-	protected String getDisplayString(EObject element, String qualifiedNameAsString, String shortName) {
-		if (!element.eClass().equals(EcorePackage.Literals.EPACKAGE)) {
-			return super.getDisplayString(element, qualifiedNameAsString, shortName);
-		} else {
-			return qualifiedNameAsString;
-		}
-	}
-	
 }

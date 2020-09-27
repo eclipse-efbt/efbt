@@ -12,7 +12,7 @@
             class="org.eclipse.emf.eson.ui.EFactoryExecutableExtensionFactory:org.eclipse.emf.eson.ui.editor.tree.EFactoryWithTreeEditor"
             contributorClass="org.eclipse.emf.eson.ui.editor.tree.ActionBarContributor"
             default="true"
-            extensions="efactory,coca">
+            extensions="efactory,eson">
         </editor>
     </extension>
 
@@ -24,7 +24,7 @@
             class="org.eclipse.emf.eson.ui.EFactoryExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
             contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
             default="false"
-            extensions="efactory,coca">
+            extensions="efactory,eson">
         </editor>
     </extension>
     
@@ -244,13 +244,13 @@
 		point="org.eclipse.emf.ecore.extension_parser">
 		<parser
 			class="org.eclipse.emf.eson.ui.EFactoryExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
-			type="coca">
+			type="eson">
 		</parser>
 	</extension>
 	<extension point="org.eclipse.xtext.extension_resourceServiceProvider">
         <resourceServiceProvider
             class="org.eclipse.emf.eson.ui.EFactoryExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
-            uriExtension="coca">
+            uriExtension="eson">
         </resourceServiceProvider>
     </extension>
 
@@ -377,31 +377,22 @@
   <extension point="org.eclipse.compare.contentViewers">
     <viewer id="org.eclipse.emf.eson.EFactory.compare.contentViewers"
             class="org.eclipse.emf.eson.ui.EFactoryExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
-            extensions="efactory,coca">
+            extensions="efactory,eson">
     </viewer>
   </extension>
   <extension point="org.eclipse.compare.contentMergeViewers">
     <viewer id="org.eclipse.emf.eson.EFactory.compare.contentMergeViewers"
             class="org.eclipse.emf.eson.ui.EFactoryExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
-            extensions="efactory,coca" label="ESON Compare">
+            extensions="efactory,eson" label="ESON Compare">
      </viewer>
   </extension>
   <extension point="org.eclipse.ui.editors.documentProviders">
     <provider id="org.eclipse.emf.eson.EFactory.editors.documentProviders"
             class="org.eclipse.emf.eson.ui.EFactoryExecutableExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
-            extensions="efactory,coca">
+            extensions="efactory,eson">
     </provider>
   </extension>
-  <extension point="org.eclipse.team.core.fileTypes">
-    <fileTypes
-            extension="efactory"
-            type="text">
-    </fileTypes>
-    <fileTypes
-            extension="coca"
-            type="text">
-    </fileTypes>
-  </extension>
+
    <!-- Builder here is hand-written, not from plug.xml_gen
         Normally this is autoamtically available (from.. where?) and just works OOB - I had to add it - maybe because EFactory isn't Xbase derrived?!
         Never mind what the cause - it works now (it needed this, plus registring the EFactoryGenerator in the EFactoryRuntimeModule) 
@@ -444,28 +435,29 @@
     <extension
           point="org.eclipse.ui.newWizards">
        <category 
-            id="org.eclipse.efbt.cocason.ui.Examples"
-            name="C"
+            id="org.eclipse.emf.eson.ui.Examples"
+            name="ESON"
             parentCategory="org.eclipse.ui.Examples" />
        <wizard
-             category="org.eclipse.ui.Examples/org.eclipse.efbt.cocason.ui.Examples"
+             category="org.eclipse.ui.Examples/org.eclipse.emf.eson.ui.Examples"
              class="org.eclipse.emf.common.ui.wizard.ExampleInstallerWizard"
              icon="icons/EObject.gif"
-             id="org.eclipse.efbt.cocason.ui.wizard.CocasonExampleWizard"
-             name="CoCaSon Example"
-             project="true">
-       </wizard>
-       <wizard
-             class="org.eclipse.emf.eson.ui.wizard.EFactoryNewFileWizard"
-             icon="icons/EObject.gif"
-             id="org.eclipse.emf.eson.ui.wizard.EFactoryNewFileWizard"
-             name="New ESON File">
+             id="org.eclipse.emf.eson.ui.wizard.NewLibraryExampleWizard"
+             name="ESON Library Example">
        </wizard>
     </extension>
    <extension point="org.eclipse.emf.common.ui.examples">
-        <example wizardID="org.eclipse.efbt.cocason.ui.wizard.CocasonExampleWizard" pageImage="icons/genproject.gif">
-            <projectDescriptor name="org.eclipse.efbt.cocason.example.example1" contentURI="examples/org.eclipse.efbt.cocason.example.example1/" description="CoCaSon Example"/>           
-            <fileToOpen location="org.eclipse.emf.eson.example.example1/src/members.coca"/>           
+        <example wizardID="org.eclipse.emf.eson.ui.wizard.NewLibraryExampleWizard" pageImage="icons/genproject.gif">
+            <projectDescriptor name="org.eclipse.emf.eson.example.xcore" contentURI="examples/org.eclipse.emf.eson.example.xcore/" description="Xcore Library"/>
+            <projectDescriptor name="org.eclipse.emf.eson.example" contentURI="examples/org.eclipse.emf.eson.example/" description="ESON Model"/>
+            <fileToOpen location="org.eclipse.emf.eson.example.xcore/model/library.xcore"/>
+            <fileToOpen location="org.eclipse.emf.eson.example/model/library.eson"/>
+ <!-- Adding these additional 4x fileToOpen leads to a weird problem, probably a bug in org.eclipse.emf.common.ui.wizard.ExampleInstallerWizard, it keeps wanting to delete the example projects - huh?  
+            <fileToOpen location="org.eclipse.emf.eson.example/src/META-INF/services/org.eclipse.xtext.generator.IGenerator"/>
+            <fileToOpen location="org.eclipse.emf.eson.example/src/org/eclipse/emf/eson/example/generator/Generator.java"/>
+            <fileToOpen location="org.eclipse.emf.eson.example/gen/model/library.xml"/>
+            <fileToOpen location="org.eclipse.emf.eson.example/gen/model/library.json"/>
+ -->
         </example>
     </extension>
 

@@ -56,11 +56,6 @@ public final class EcoreUtil3 {
 		if (eClass == potentialSubclass) {
 			return true;
 		}
-		//we are saying that everything is a sublclass of EObject 
-		//if (eClass.equals(EcoreFactory.eINSTANCE.createEObject().eClass())) {
-		//	return true;
-		//}
-		
 		for (EClass superType : potentialSubclass.getEAllSuperTypes()) {
 			if (eClass == superType) {
 				return true;

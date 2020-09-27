@@ -29,15 +29,14 @@ import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.ui.viewer.ColumnViewerInformationControlToolTipSupport;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.plugin.EcorePlugin;
 import org.eclipse.emf.ecore.presentation.EcoreEditorPlugin;
 import org.eclipse.emf.ecore.provider.EcoreItemProviderAdapterFactory;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.CommandParameter;
-import org.eclipse.emf.edit.command.CreateChildCommand;
 import org.eclipse.emf.edit.command.DeleteCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
@@ -54,10 +53,7 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.emf.edit.ui.provider.DecoratingColumLabelProvider;
 import org.eclipse.emf.edit.ui.provider.DiagnosticDecorator;
 import org.eclipse.emf.edit.ui.provider.UnwrappingSelectionProvider;
-import org.eclipse.emf.eson.eFactory.EFactoryFactory;
-import org.eclipse.emf.eson.eFactory.Factory;
 import org.eclipse.emf.eson.eFactory.NewObject;
-import org.eclipse.emf.eson.eFactory.PackageImport;
 import org.eclipse.emf.eson.eFactory.impl.FactoryImpl;
 import org.eclipse.emf.eson.resource.EFactoryResource;
 import org.eclipse.jface.action.IMenuListener;
@@ -104,8 +100,6 @@ import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.model.IXtextDocument;
 import org.eclipse.xtext.util.ITextRegion;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
-import org.eclipse.xtext.xbase.lib.Functions.Function1;
-import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.base.Throwables;
 
@@ -137,28 +131,6 @@ public class EFactoryWithTreeEditor extends XtextEditor implements IEditingDomai
 				document.modify(new IUnitOfWork.Void<XtextResource>() {
 					@Override public void process(XtextResource state) throws Exception {
 						EFactoryCommandStack.super.execute(command);
-						if(command instanceof CreateChildCommand){
-						    Object child = IterableExtensions.head(command.getAffectedObjects());
-                            if(child != null && child instanceof EObject){
-                                EObject childEObject = (EObject) child;
-                                final EPackage ePackage = childEObject.eClass().getEPackage();
-                                Factory factoryObj = (Factory) state.getContents().get(0);
-                                
-                                Function1<PackageImport, Boolean> predicate = new Function1<PackageImport, Boolean>() {
-
-                                    @Override
-                                    public Boolean apply(PackageImport p) {
-                                        return p.getEPackage().equals(ePackage);
-                                    }
-                                };
-                                
-                                if(!IterableExtensions.exists(factoryObj.getEPackages(), predicate)){
-                                    PackageImport createPackageImport = EFactoryFactory.eINSTANCE.createPackageImport();
-                                    createPackageImport.setEPackage(ePackage);
-                                    factoryObj.getEPackages().add(createPackageImport);
-                                }
-                            }
-						}
 					}
 				});
 				getContainer().getDisplay().asyncExec(new Runnable() {
@@ -223,14 +195,7 @@ public class EFactoryWithTreeEditor extends XtextEditor implements IEditingDomai
 			}
 		};
 		resourceSet.eAdapters().add(new EditingDomainProvider());
-		
-		// PERFORMANCE: EcorePlugin.computePlatformURIMap has been found via
-		// Profiler to be relatively expensive, and cause a noticeable/
-		// significant delay during first-time start-up of the ESON Editor. As
-		// this is probably not critical, don't do this (after all both tests
-		// and the pure Xtext/DSL only/no tree editor do not do this either).
-		//
-		// resourceSet.getURIConverter().getURIMap().putAll(EcorePlugin.computePlatformURIMap(true));
+		resourceSet.getURIConverter().getURIMap().putAll(EcorePlugin.computePlatformURIMap(true));
 	}
 
 	protected void updateTreeView(final URI uri, final boolean ignoreSelection) {

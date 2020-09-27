@@ -21,7 +21,7 @@ import org.eclipse.xtext.ui.editor.contentassist.ConfigurableCompletionProposal;
  * ConfigurableCompletionProposal which exposes its
  * additionalProposalInfo as Object instead of String.
  * 
- * @see https://bugs.eclipse.org/bugs/show_bug.cgi?id=359548, but even though that's closed and pointing to getAdditionalData() that's not sufficient, because existing Xtext code still sets setAdditionalProposalInfo.
+ * @see https://bugs.eclipse.org/bugs/show_bug.cgi?id=359548
  * 
  * @author Michael Vorburger
  */

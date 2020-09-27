@@ -28,7 +28,6 @@ import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
-import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.PropertyDescriptor;
 import org.eclipse.emf.eson.ui.editor.tree.EFactoryWithTreeEditor;
 import org.eclipse.emf.eson.ui.editor.tree.URIBasedPropertySource;
@@ -44,7 +43,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.tabbed.AdvancedPropertySection;
-import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.ui.editor.model.IXtextDocument;
 import org.eclipse.xtext.ui.label.GlobalDescriptionLabelProvider;
@@ -78,13 +76,6 @@ public class ESONBasicPropertySection extends AdvancedPropertySection {
         adapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
         adapterFactory.addAdapterFactory(new EcoreItemProviderAdapterFactory());
         adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
-    }
-    
-    @Override
-    public void createControls(Composite parent, TabbedPropertySheetPage atabbedPropertySheetPage) {
-        super.createControls(parent, atabbedPropertySheetPage);
-        // In case of normal PropertySheetPage, this is set by EMF
-        page.setPropertySourceProvider(new AdapterFactoryContentProvider(adapterFactory));
     }
 
     @Override

@@ -81,7 +81,7 @@ public interface EPackageRegistry {
 
 		protected Iterable<String> getNsURIs(EPackage.Registry registry) {
 			Iterable<String> packageURIsIterable = registry.keySet();
-			// Hah! org.eclipse.emf.ecore.impl.EPackageRegistryImpl actually behaves some weird/unexpectedly:
+			// hah! org.eclipse.emf.ecore.impl.EPackageRegistryImpl actually behaves some weired/unexpectly:
 			// Whereas for getEPackage() it delegates to its delegateRegistry, for keySet() etc. it does not!
 			// So we have to compensate for that here ourselves:
 			if (!delegate.equals(registry)) 

@@ -1,7 +1,0 @@
-use testmodel.*
-
-TestModel {
-	name: "Hi"
-	singleRequired: SingleRequired
-	 // this is missing "{ }" of course, so invalid - but it should still not lead to ClassCastException from EFactoryDerivedStateComputer, during editing!  Just not validate.
-}

@@ -1,6 +1,0 @@
-import testmodel.* 
- 
-TestModel abc {
-	
-	singleRequired: SingleRequired { }
-} 

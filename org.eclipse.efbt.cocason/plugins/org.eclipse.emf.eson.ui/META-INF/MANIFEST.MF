@@ -29,15 +29,13 @@ Require-Bundle: org.eclipse.emf.eson;visibility:=reexport,
  org.eclipse.xtend.core,
  org.eclipse.xtend.ide;visibility:=reexport,
  org.eclipse.ui.views.properties.tabbed
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.eclipse.emf.eson.ui,
  org.eclipse.emf.eson.ui.contentassist,
  org.eclipse.emf.eson.ui.contentassist.antlr,
- org.eclipse.emf.eson.ui.editor.tree,
  org.eclipse.emf.eson.ui.internal,
  org.eclipse.emf.eson.ui.labeling,
  org.eclipse.emf.eson.ui.outline,
- org.eclipse.emf.eson.ui.quickfix,
- org.eclipse.emf.eson.ui.contentassist.antlr.internal
+ org.eclipse.emf.eson.ui.quickfix
 Bundle-Activator: org.eclipse.emf.eson.ui.internal.EFactoryActivator
 Import-Package: org.apache.log4j
