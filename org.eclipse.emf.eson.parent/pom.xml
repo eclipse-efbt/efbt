@@ -27,8 +27,7 @@
 		<module>org.eclipse.emf.eson.target</module>
 		<module>org.eclipse.emf.eson.feature</module>
 		<module>org.eclipse.emf.eson.repository</module>
-		<module>org.eclipse.emf.eson.tests</module>
-		<module>org.eclipse.emf.eson.ui.tests</module>
+		<module>org.eclipse.emf.eson.tests</module>	
 	</modules>
 	<dependencyManagement>
 		<dependencies>
