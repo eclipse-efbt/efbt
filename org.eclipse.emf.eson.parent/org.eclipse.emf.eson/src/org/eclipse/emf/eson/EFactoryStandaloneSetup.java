@@ -12,15 +12,38 @@
  */
 package org.eclipse.emf.eson;
 
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.eson.generators.EFactoryFileExtensionRegistry;
+
+import com.google.inject.Injector;
+
 /**
- * Initialization support for running Xtext languages 
- * without equinox extension registry
+ * Initialization support for running Xtext languages without equinox extension
+ * registry
  */
 public class EFactoryStandaloneSetup extends EFactoryStandaloneSetupGenerated {
 
 	// TODO move this helper class into new TBD *.standalone project
-	
+
 	public static void doSetup() {
 		new EFactoryStandaloneSetup().createInjectorAndDoEMFRegistration();
+	}
+
+	@Override
+	public void register(Injector injector) {
+		super.register(injector);
+
+		org.eclipse.xtext.resource.IResourceFactory resourceFactory = injector
+				.getInstance(org.eclipse.xtext.resource.IResourceFactory.class);
+		org.eclipse.xtext.resource.IResourceServiceProvider serviceProvider = injector
+				.getInstance(org.eclipse.xtext.resource.IResourceServiceProvider.class);
+
+		for (String ext : EFactoryFileExtensionRegistry.getRegistry()
+				.getAssociateFileExtensions()) {
+			Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(
+					ext, resourceFactory);
+			org.eclipse.xtext.resource.IResourceServiceProvider.Registry.INSTANCE
+					.getExtensionToFactoryMap().put(ext, serviceProvider);
+		}
 	}
 }

@@ -23,6 +23,11 @@ import org.eclipse.xtext.scoping.impl.SimpleScope;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
+/**
+ * IScope with special handling for EPackage.
+ *
+ * @author Michael Vorburger
+ */
 public class SimpleEPackageScope extends SimpleScope implements IScope {
 
 	public SimpleEPackageScope(IScope parent, Iterable<IEObjectDescription> transform) {
@@ -38,7 +43,8 @@ public class SimpleEPackageScope extends SimpleScope implements IScope {
 			result = Iterables.filter(localElements, new Predicate<IEObjectDescription>() {
 				@Override
 				public boolean apply(IEObjectDescription input) {
-					return input.getQualifiedName().getFirstSegment().equals(ePackage.getNsURI());
+					// NS URI must exactly match for handling subpackages with different namespaces
+					return input.getQualifiedName().toString(".").equals(ePackage.getNsURI());
 				}
 			});
 		}

@@ -28,7 +28,7 @@ Workflow {
 		}
 		language = StandardLanguage {
 			name = "org.eclipse.emf.eson.EFactory"
-			fileExtensions = "eson,efactory"
+			fileExtensions = "coca"
 
 			serializer = {
 				generateStub = false

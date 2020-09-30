@@ -86,9 +86,10 @@ public class EFactoryExtensionRegistry {
 					Optional<T> instance = get(element);
 					if (!instance.isPresent()) {
 						result = false;
+					} else {
+						extensionClassToInstance.put(className, instance.get());
+						result = true;
 					}
-					extensionClassToInstance.put(className, instance.get());
-					result = true;
 				} else {
 					extensionClassToInstance.remove(className);
 					result = true;
