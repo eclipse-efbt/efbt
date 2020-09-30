@@ -15,7 +15,8 @@ Require-Bundle: org.eclipse.emf.eson,
  org.eclipse.ui.ide;bundle-version="3.5.0",
  org.eclipse.ui,
  org.eclipse.compare,
- org.eclipse.xtext.builder
+ org.eclipse.xtext.builder,
+ org.eclipse.jdt.core
 Import-Package: org.apache.log4j
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.eclipse.emf.eson.ui.quickfix,
