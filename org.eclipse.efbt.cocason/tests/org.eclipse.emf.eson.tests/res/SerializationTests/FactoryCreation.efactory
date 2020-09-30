@@ -1,5 +1,0 @@
-use testmodel.* 
- 
-TestModel testModelName {
-	singleRequired: { parentAttribute: false }	
-}

@@ -1,5 +1,0 @@
-use "http://testModelWithXtextReference/1.0"
-
-TestModelWithXtextReference {
-	model: gr1	
-}

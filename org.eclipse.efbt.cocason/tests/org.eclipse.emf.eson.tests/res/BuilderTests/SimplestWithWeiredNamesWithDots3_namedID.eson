@@ -1,7 +1,0 @@
-import testmodelWithDotInNames.*
-
-@Name { WEIRDO.NAMED = STRANGE.NAME }
-
-WEIRDO.NAMED 1234 {
-	// instead of: STRANGE.NAME: "1234"
-}

@@ -1,7 +1,0 @@
-use testmodel.* 
-
-TestModel abc {
-
-	// Keep {} without a space between the braces, for the BuilderResyncTest testNewFeaturesAreNotGluedToEachOther
-	singleRequired: SingleRequired {}
-} 
