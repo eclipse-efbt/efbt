@@ -17,8 +17,11 @@ pipeline {
                     cd org.eclipse.efbt.cocamo.smcubes
                     mvn install
                     cd ..
+                    cd org.eclipse.emf.eson.parent
+                    mvn install
+                    cd ..
                     cd org.eclipse.efbt.cocason
-                    mvn install -DskipTests
+                    mvn install 
                     cd ..
                     cd org.eclipse.efbt.ldm
                     mvn install
