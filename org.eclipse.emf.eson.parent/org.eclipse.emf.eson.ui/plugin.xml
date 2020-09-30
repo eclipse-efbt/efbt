@@ -7,9 +7,9 @@
 			class="org.eclipse.emf.eson.ui.EFactoryExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
 			contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
 			default="true"
-			extensions="eson,efactory"
+			extensions="coca"
 			id="org.eclipse.emf.eson.EFactory"
-			name="EFactory Editor">
+			name="Cocason Editor">
 		</editor>
 	</extension>
 	<extension
@@ -207,9 +207,9 @@
 	<extension point="org.eclipse.core.contenttype.contentTypes">
 		<content-type
 			base-type="org.eclipse.core.runtime.text"
-			file-extensions="eson,efactory"
+			file-extensions="coca"
 			id="org.eclipse.emf.eson.EFactory.contenttype"
-			name="EFactory File"
+			name="CoCaSon File"
 			priority="normal">
 		</content-type>
 	</extension>
@@ -218,26 +218,26 @@
 		point="org.eclipse.emf.ecore.extension_parser">
 		<parser
 			class="org.eclipse.emf.eson.ui.EFactoryExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
-			type="eson">
+			type="coca">
 		</parser>
 	</extension>
 	<extension point="org.eclipse.xtext.extension_resourceServiceProvider">
 		<resourceServiceProvider
 			class="org.eclipse.emf.eson.ui.EFactoryExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
-			uriExtension="eson">
+			uriExtension="coca">
 		</resourceServiceProvider>
 	</extension>
 	<extension
 		point="org.eclipse.emf.ecore.extension_parser">
 		<parser
 			class="org.eclipse.emf.eson.ui.EFactoryExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
-			type="efactory">
+			type="coca">
 		</parser>
 	</extension>
 	<extension point="org.eclipse.xtext.extension_resourceServiceProvider">
 		<resourceServiceProvider
 			class="org.eclipse.emf.eson.ui.EFactoryExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
-			uriExtension="efactory">
+			uriExtension="coca">
 		</resourceServiceProvider>
 	</extension>
 	<!-- marker definitions for org.eclipse.emf.eson.EFactory -->
@@ -274,7 +274,7 @@
 	<extension point="org.eclipse.xtext.builder.participant">
 		<participant
 			class="org.eclipse.emf.eson.ui.EFactoryExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant"
-			fileExtensions="eson,efactory"/>
+			fileExtensions="coca"/>
 	</extension>
 	<extension point="org.eclipse.ui.preferencePages">
 		<page
@@ -417,7 +417,7 @@
 	<extension point="org.eclipse.compare.contentViewers">
 		<viewer id="org.eclipse.emf.eson.EFactory.compare.contentViewers"
 			class="org.eclipse.emf.eson.ui.EFactoryExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
-			extensions="eson,efactory">
+			extensions="coca">
 		</viewer>
 		<contentTypeBinding
 			contentTypeId="org.eclipse.emf.eson.EFactory.contenttype"
@@ -426,7 +426,7 @@
 	<extension point="org.eclipse.compare.contentMergeViewers">
 		<viewer id="org.eclipse.emf.eson.EFactory.compare.contentMergeViewers"
 			class="org.eclipse.emf.eson.ui.EFactoryExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
-			extensions="eson,efactory" label="EFactory Compare">
+			extensions="coca" label="EFactory Compare">
 		</viewer>
 		<contentTypeBinding
 			contentTypeId="org.eclipse.emf.eson.EFactory.contenttype"
@@ -435,17 +435,42 @@
 	<extension point="org.eclipse.ui.editors.documentProviders">
 		<provider id="org.eclipse.emf.eson.EFactory.editors.documentProviders"
 			class="org.eclipse.emf.eson.ui.EFactoryExecutableExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
-			extensions="eson,efactory">
+			extensions="coca">
 		</provider>
 	</extension>
 	<extension point="org.eclipse.team.core.fileTypes">
 		<fileTypes
-			extension="eson"
+			extension="coca"
 			type="text">
 		</fileTypes>
-		<fileTypes
-			extension="efactory"
-			type="text">
-		</fileTypes>
+		
 	</extension>
+	<extension
+          point="org.eclipse.ui.newWizards">
+       <category 
+            id="org.eclipse.efbt.cocason.ui.Examples"
+            name="C"
+            parentCategory="org.eclipse.ui.Examples" />
+       <wizard
+             category="org.eclipse.ui.Examples/org.eclipse.efbt.cocason.ui.Examples"
+             class="org.eclipse.emf.common.ui.wizard.ExampleInstallerWizard"
+             icon="icons/EObject.gif"
+             id="org.eclipse.efbt.cocason.ui.wizard.CocasonExampleWizard"
+             name="CoCaSon Example"
+             project="true">
+       </wizard>
+       <wizard
+             class="org.eclipse.emf.eson.ui.wizard.EFactoryNewFileWizard"
+             icon="icons/EObject.gif"
+             id="org.eclipse.emf.eson.ui.wizard.EFactoryNewFileWizard"
+             name="New CoCaSon File">
+       </wizard>
+    </extension>
+   <extension point="org.eclipse.emf.common.ui.examples">
+        <example wizardID="org.eclipse.efbt.cocason.ui.wizard.CocasonExampleWizard" pageImage="icons/genproject.gif">
+            <projectDescriptor name="org.eclipse.efbt.cocason.example.example1" contentURI="examples/org.eclipse.efbt.cocason.example.example1/" description="CoCaSon Example"/>           
+            <fileToOpen location="org.eclipse.emf.eson.example.example1/src/members.coca"/>           
+        </example>
+    </extension>
+	
 </plugin>
