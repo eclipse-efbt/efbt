@@ -1,5 +1,0 @@
-use testmodel.* 
-
-TestModel test {
-	singleRequired: SingleRequired { }	
-}

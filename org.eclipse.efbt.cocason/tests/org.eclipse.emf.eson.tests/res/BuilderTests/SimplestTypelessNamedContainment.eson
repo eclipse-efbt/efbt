@@ -1,5 +1,0 @@
-use testmodel.* 
- 
-TestModel abc {
-	singleRequired: d { }
-} 

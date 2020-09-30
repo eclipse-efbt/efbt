@@ -20,7 +20,7 @@
 
 	<properties>
 		<tycho-version>1.7.0</tycho-version>
-		<!-- <xtext-version>2.22.0</xtext-version> -->
+		<!-- <xtext-version>2.23.0</xtext-version> -->
 		<!-- <fornax-version>3.4.0</fornax-version> -->
 		<!-- There is test which doesn't work on Windows, and this serves to exclude it -->
 		<tycho.surefire.excludes>NADA</tycho.surefire.excludes>
@@ -119,14 +119,9 @@
 	
 	<modules>
 		<module>releng/org.eclipse.efbt.cocason.releng</module>
-
-		<module>plugins/org.eclipse.emf.eson</module>
 		<module>features/org.eclipse.efbt.cocason.feature</module>
-		<module>plugins/org.eclipse.emf.eson.ui</module>
 		<module>plugins/org.eclipse.efbt.cocason.component.export_smcubes</module>
-		<module>features/org.eclipse.efbt.cocason.ui.feature</module>
 		<module>tests/org.eclipse.efbt.cocason.component.export_smcubes.test</module>		
-		<module>features/org.eclipse.efbt.cocason.tests.feature</module>
 		<module>releng/org.eclipse.efbt.cocason.repository</module>
 	</modules>
 	

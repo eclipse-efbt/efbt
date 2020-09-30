@@ -1,5 +1,0 @@
-import testmodelWithDotInNames.*
-
-NormallyNamed { // OR: testmodelWithDotInNames.NormallyNamed {
-	STRANGE.NAME: "hello"
-}

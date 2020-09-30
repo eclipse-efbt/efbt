@@ -1,7 +1,0 @@
-package test.model2
-
-class Thing {
-    String name
-	int age
-	refers Thing thing
-}

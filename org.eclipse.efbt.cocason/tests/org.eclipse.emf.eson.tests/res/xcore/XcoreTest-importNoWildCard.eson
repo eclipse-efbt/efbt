@@ -1,3 +1,0 @@
-import test.model2.Thing
-
-Thing { age: 99 }

@@ -1,5 +1,0 @@
-import testmodelWithDotInNames.*
-
-WEIRDO.NAMED {
-	STRANGE.NAME: "hello"
-}

@@ -1,0 +1,14 @@
+grammar org.eclipse.efbt.cocason.eclipse_plugin.CoCaSon with org.eclipse.emf.eson.EFactory
+
+import "http://www.eclipse.org/emf/eson/EFactory" as eFactory
+
+
+
+generate coCaSon "http://www.eclipse.org/efbt/cocason/eclipse_plugin/CoCaSon"
+
+Model:
+    greetings+=Greeting*;
+  
+Greeting:
+    'Hello' name=ID '!';
+	
