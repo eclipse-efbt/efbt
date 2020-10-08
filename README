@@ -1,1 +1,12 @@
 README
+
+Please have a look at the to Eclipse Free BIRD Tools Wiki, by clicking the Wiki tab at https://github.com/eclipse/efbt/ .
+
+This wiki has technical details of building and installing and using the application.
+
+The Eclipse Free BIRD Tools website is at https://www.eclipse.org/efbt/index.html
+
+Governance information and project stats are available at https://projects.eclipse.org/projects/technology.efbt
+
+At the core of Eclipse Free BIRD Tools is a set of UML models, these are documented at https://www.eclipse.org/efbt/model_documentation.html
+
