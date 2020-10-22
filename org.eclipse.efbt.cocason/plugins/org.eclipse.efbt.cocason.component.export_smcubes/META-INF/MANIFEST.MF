@@ -4,7 +4,7 @@ Bundle-Name: Export_smcubes
 Bundle-SymbolicName: org.eclipse.efbt.cocason.component.export_smcubes
 Bundle-Version: 0.10.0.qualifier
 Automatic-Module-Name: org.eclipse.efbt.cocason.component.export.smcubes
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.emf.ecore,
  org.eclipse.emf.eson.ui,
  org.eclipse.xtext.junit4,

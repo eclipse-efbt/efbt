@@ -14,8 +14,8 @@
 		<mwe2Version>2.11.3</mwe2Version>
 		<junit-version>5.0.3</junit-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
 		<!-- Tycho settings -->
 		<tycho-version>1.7.0</tycho-version>
 		<junit.jupiter.version>5.6.2</junit.jupiter.version>

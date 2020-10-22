@@ -4,5 +4,5 @@ Bundle-Name: Functions
 Bundle-SymbolicName: org.eclipse.efbt.cocamo.core.query.functions
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: org.eclipse.efbt.cocamo.core.query.functions
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.efbt.cocamo.core.query.functions

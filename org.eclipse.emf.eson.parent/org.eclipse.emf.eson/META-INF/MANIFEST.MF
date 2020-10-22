@@ -19,7 +19,7 @@ Require-Bundle: org.eclipse.xtext,
  org.eclipse.core.runtime,
  org.eclipse.efbt.cocamo.core.model.testing,
  org.eclipse.efbt.cocamo.smcubes.model.program
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.emf.eson,
  org.eclipse.emf.eson.eFactory,
  org.eclipse.emf.eson.eFactory.impl,

@@ -7,7 +7,7 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.efbt.cocamo.core.model.functionality_module,
  org.eclipse.efbt.cocamo.core.model.functionality_module.impl,
  org.eclipse.efbt.cocamo.core.model.functionality_module.util,
