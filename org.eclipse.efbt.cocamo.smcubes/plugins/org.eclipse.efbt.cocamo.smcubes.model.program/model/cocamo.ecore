@@ -8,7 +8,7 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="testDefinitions" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.core.model.testing/model/test_definition.ecore#//TestDefinitionModule"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="tests" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.core.model.testing/model/test.ecore#//TestModule"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tests" eType="#//SMCubesTestModule"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="testTemplates" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.core.model.testing/model/test_definition.ecore#//TestTemplateModule"
         containment="true"/>
@@ -26,5 +26,14 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="reportCells" upperBound="-1"
         eType="ecore:EClass ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/reports.ecore#//ReportCellValue"
         containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SMCubesTest" eSuperTypes="../../org.eclipse.efbt.cocamo.core.model.testing/model/test.ecore#//E2ETest">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="inputData" eType="#//SMCubesTestInputData"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expectedResults" eType="#//SMCubesReportResults"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SMCubesTestModule" eSuperTypes="../../org.eclipse.efbt.cocamo.core.model.testing/model/test.ecore#//TestModule">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tests" upperBound="-1"
+        eType="#//SMCubesTest" containment="true"/>
   </eClassifiers>
 </ecore:EPackage>
