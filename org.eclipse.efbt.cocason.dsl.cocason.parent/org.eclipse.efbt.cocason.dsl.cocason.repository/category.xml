@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+	<feature id="org.eclipse.efbt.cocason.dsl.cocason.feature" version="0.0.0">
+		<category name="main"/>
+	</feature>
+	<feature id="org.eclipse.efbt.cocason.dsl.cocason.feature.source" version="0.0.0">
+		<category name="main.source"/>
+	</feature>
+	<category-def name="main" label="CoCaSon"/>
+	<category-def name="main.source" label="CoCaSon (Sources)"/>
+</site>

@@ -15,5 +15,7 @@ Require-Bundle: org.apache.commons.logging,
  org.eclipse.efbt.cocamo.core.model.functionality_module,
  org.eclipse.efbt.cocamo.core.model.requirements_text,
  org.eclipse.efbt.cocamo.core.model.testing,
- com.google.inject
+ com.google.inject,
+ org.eclipse.efbt.cocamo.smcubes.model.program,
+ org.apache.commons.csv
 

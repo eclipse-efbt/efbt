@@ -9,15 +9,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.efbt.cocamo.core.model.test.E2ETest;
-import org.eclipse.efbt.cocamo.core.model.test.TestModule;
+
 import org.eclipse.efbt.cocamo.smcubes.model.base_column_structured_data.BaseCell;
 import org.eclipse.efbt.cocamo.smcubes.model.base_column_structured_data.BaseCellWithEnumeratedValue;
 import org.eclipse.efbt.cocamo.smcubes.model.base_column_structured_data.BaseCellWithValue;
 import org.eclipse.efbt.cocamo.smcubes.model.base_column_structured_data.BaseColumnStructuredData;
 import org.eclipse.efbt.cocamo.smcubes.model.base_column_structured_data.BaseRowData;
 import org.eclipse.efbt.cocamo.smcubes.model.cocamo.Program;
+import org.eclipse.efbt.cocamo.smcubes.model.cocamo.SMCubesTest;
 import org.eclipse.efbt.cocamo.smcubes.model.cocamo.SMCubesTestInputData;
+import org.eclipse.efbt.cocamo.smcubes.model.cocamo.SMCubesTestModule;
 import org.eclipse.efbt.cocamo.smcubes.model.data_definition.CUBE;
 import org.eclipse.efbt.cocamo.smcubes.model.data_definition.CUBE_STRUCTURE_ITEM;
 
@@ -49,12 +50,12 @@ public class InputDataExporter {
 	 */
 	public void exportInputData(Program program, String outputfileDirectory) {
 
-		TestModule testModule = program.getTests();
-		EList<E2ETest> tests = testModule.getTests();
+		 SMCubesTestModule testModule = program.getTests();
+		EList<SMCubesTest> tests = testModule.getTests();
 
 		// for each test, export the input data, the input daa may be in multiple tables
 		for (Iterator iterator = tests.iterator(); iterator.hasNext();) {
-			E2ETest e2eTest = (E2ETest) iterator.next();
+			SMCubesTest e2eTest = (SMCubesTest) iterator.next();
 
 			SMCubesTestInputData inputData = (SMCubesTestInputData) e2eTest.getInputData();
 			EList<BaseColumnStructuredData> tables = inputData.getSmcubes_inputdata();

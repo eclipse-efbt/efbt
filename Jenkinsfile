@@ -17,7 +17,7 @@ pipeline {
                     cd org.eclipse.efbt.cocamo.smcubes
                     mvn install
                     cd ..
-                    cd org.eclipse.emf.eson.parent
+                    cd org.eclipse.efbt.cocason.dsl.cocason.parent
                     mvn install
                     cd ..
                     cd org.eclipse.efbt.cocason
