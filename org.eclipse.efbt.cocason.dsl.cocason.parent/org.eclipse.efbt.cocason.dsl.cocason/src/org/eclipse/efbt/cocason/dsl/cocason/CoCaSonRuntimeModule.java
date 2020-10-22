@@ -4,7 +4,7 @@
 package org.eclipse.efbt.cocason.dsl.cocason;
 
 import org.eclipse.efbt.cocason.dsl.cocason.conversion.DATEValueConverter;
-import org.eclipse.emf.mwe2.language.scoping.QualifiedNameProvider;
+
 import org.eclipse.xtext.conversion.IValueConverterService;
 
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
