@@ -89,14 +89,10 @@
     <genClasses ecoreClass="test.ecore#//Result"/>
     <genClasses ecoreClass="test.ecore#//E2ETest">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test.ecore#//E2ETest/testDefinition"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test.ecore#//E2ETest/inputData"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test.ecore#//E2ETest/expectedResults"/>
     </genClasses>
     <genClasses ecoreClass="test.ecore#//Test">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute test.ecore#//Test/name"/>
     </genClasses>
-    <genClasses ecoreClass="test.ecore#//TestModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test.ecore#//TestModule/tests"/>
-    </genClasses>
+    <genClasses ecoreClass="test.ecore#//TestModule"/>
   </genPackages>
 </genmodel:GenModel>
