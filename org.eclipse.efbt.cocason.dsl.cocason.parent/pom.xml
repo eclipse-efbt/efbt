@@ -28,7 +28,7 @@
 		<module>org.eclipse.efbt.cocason.dsl.cocason.feature</module>
 		<module>org.eclipse.efbt.cocason.dsl.cocason.repository</module>
 		<module>org.eclipse.efbt.cocason.dsl.cocason.tests</module>
-		<module>org.eclipse.efbt.cocason.dsl.cocason.ui.tests</module>
+	
 	</modules>
 	<dependencyManagement>
 		<dependencies>
