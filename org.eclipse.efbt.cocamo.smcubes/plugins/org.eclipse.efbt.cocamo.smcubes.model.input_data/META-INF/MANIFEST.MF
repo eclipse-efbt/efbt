@@ -7,7 +7,7 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.efbt.cocamo.smcubes.model.base_column_structured_data,
  org.eclipse.efbt.cocamo.smcubes.model.base_column_structured_data.impl,
  org.eclipse.efbt.cocamo.smcubes.model.base_column_structured_data.util,

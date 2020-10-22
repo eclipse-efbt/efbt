@@ -18,7 +18,7 @@ Require-Bundle: org.eclipse.emf.eson,
  org.eclipse.xtext.builder,
  org.eclipse.jdt.core
 Import-Package: org.apache.log4j
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.emf.eson.ui.quickfix,
  org.eclipse.emf.eson.ui.contentassist,
  org.eclipse.emf.eson.ui.internal
