@@ -26,9 +26,6 @@ pipeline {
                     cd org.eclipse.efbt.ldm
                     mvn install
                     cd ..
-                    cd org.eclipse.emf.eson.parent
-                    mvn install
-                    cd ..
                     cd org.eclipse.efbt.controller
                     mvn install
                     cd ..
