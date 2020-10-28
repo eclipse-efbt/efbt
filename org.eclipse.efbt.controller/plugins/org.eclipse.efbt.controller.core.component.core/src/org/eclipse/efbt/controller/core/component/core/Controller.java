@@ -32,20 +32,7 @@ public class Controller {
 
 
 
-	/**
-	 * Creates an attributeLineageModel according to the details of the GetAttributeLineageModel
-	 * call, this is then set as the resultingModel field of the call.
-	 * 
-	 * @param call
-	 */
-	public static void createAttributeLineageModel(GetAttributeLineageModel call) {
-		 call.eUnset(call.eClass().getEStructuralFeature(Platform_callPackage.GET_ATTRIBUTE_LINEAGE_MODEL__RESULTING_MODEL));
-		 
-		 VersionedComponentsSet vcs = call.getTransformationContext();
-		 AttributeLineageUtil alu = new AttributeLineageUtilImpl();
-		 call.setResultingModel(alu.createAttributeLineageModel(vcs));
-	}
-
+	
 
 
 }
