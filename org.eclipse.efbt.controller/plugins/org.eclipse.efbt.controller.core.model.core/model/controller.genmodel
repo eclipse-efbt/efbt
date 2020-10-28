@@ -3,21 +3,11 @@
     xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.controller.core.model.core/src-gen"
     modelPluginID="org.eclipse.efbt.controller.core.model.core" modelName="Controller"
     rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" importerID="org.eclipse.emf.importer.ecore"
-    complianceLevel="8.0" copyrightFields="false" usedGenPackages="../../org.eclipse.efbt.lineage.attributelineage.model.attribute_lineage/model/attribute_lineage.genmodel#//attribute_lineage ../../org.eclipse.efbt.lineage.attributelineage.model.attribute_lineage/model/attribute_lineage.genmodel#//cube_transformation_logic ../../org.eclipse.efbt.lineage.attributelineage.model.attribute_lineage/model/attribute_lineage.genmodel#//row_transformation_logic ../../org.eclipse.efbt.cocamo.core.model.functions/model/functions.genmodel#//functions ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/lineagecubes.genmodel#//cube_schema ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/lineagecubes.genmodel#//cubes ../../org.eclipse.efbt.lineage.common.model.lineagefunctions/model/lineagefunctions.genmodel#//column_transformation_logic ../../org.eclipse.efbt.lineage.common.model.lineagefunctions/model/lineagefunctions.genmodel#//lineagefunctions ../../org.eclipse.efbt.cocamo.core.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//core ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//data_definition ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//rendering ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//reports ../../org.eclipse.efbt.language.trl.model.core/model/trl.genmodel#//transformation ../../org.eclipse.efbt.language.trl.model.core/model/trl.genmodel#//trl_report_cell_views ../../org.eclipse.efbt.language.trl.model.core/model/trl.genmodel#//trl_sql_views ../../org.eclipse.efbt.cocamo.smcubes.model.program/model/cocamo.genmodel#//cocamo ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//smcubes_model ../../org.eclipse.efbt.cocamo.core.model.requirements_text/model/requirements_text.genmodel#//requirements_text ../../org.eclipse.efbt.cocamo.core.model.testing/model/testing.genmodel#//test_definition ../../org.eclipse.efbt.cocamo.core.model.testing/model/testing.genmodel#//test ../../org.eclipse.efbt.cocamo.core.model.functionality_module/model/functionality_module.genmodel#//functionality_module ../../org.eclipse.efbt.cocamo.core.model.testing/model/testing.genmodel#//test_input_data ../../org.eclipse.efbt.cocamo.smcubes.model.input_data/model/smcubes_input_data.genmodel#//base_column_structured_data ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//efbt_data_definition ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//efbt_vtl_transformation ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//efbt_mapping ../../org.eclipse.efbt.cocamo.core.model.functionality_module/model/functionality_module.genmodel#//scenarios ../../org.eclipse.efbt.cocamo.smcubes.model.input_data/model/smcubes_input_data.genmodel#//column_structured_data ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//vtl_transformation ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//mapping"
+    complianceLevel="8.0" copyrightFields="false" usedGenPackages="../../org.eclipse.efbt.cocamo.core.model.module_management/model/module_management.genmodel#//module_management"
     operationReflection="true" importOrganizing="true">
   <foreignModel>platform_call.ecore</foreignModel>
   <genPackages prefix="Platform_call" basePackage="org.eclipse.efbt.controller.core.model"
       resource="XML" disposableProviderFactory="true" ecorePackage="platform_call.ecore#/">
-    <genClasses ecoreClass="platform_call.ecore#//CompareAttributeLineageModels">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform_call.ecore#//CompareAttributeLineageModels/resultingModel"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform_call.ecore#//CompareAttributeLineageModels/subsetBoolean"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform_call.ecore#//CompareAttributeLineageModels/notIncludedModel"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform_call.ecore#//CompareAttributeLineageModels/firstModel"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform_call.ecore#//CompareAttributeLineageModels/secondModel"/>
-    </genClasses>
-    <genClasses ecoreClass="platform_call.ecore#//IsNotSubset"/>
-    <genClasses ecoreClass="platform_call.ecore#//IsSubset"/>
-    <genClasses ecoreClass="platform_call.ecore#//SubsetBoolean"/>
     <genClasses ecoreClass="platform_call.ecore#//PlatformCall">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//PlatformCall/errorMessage"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//PlatformCall/name"/>
@@ -25,20 +15,6 @@
     </genClasses>
     <genClasses ecoreClass="platform_call.ecore#//PlatformCallModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform_call.ecore#//PlatformCallModule/platformCalls"/>
-    </genClasses>
-    <genClasses ecoreClass="platform_call.ecore#//GetAttributeLineageModel">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform_call.ecore#//GetAttributeLineageModel/resultingModel"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform_call.ecore#//GetAttributeLineageModel/transformationContext"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform_call.ecore#//GetAttributeLineageModel/unresolvedCubeColumnParams"/>
-    </genClasses>
-    <genClasses ecoreClass="platform_call.ecore#//GetAttributeLineageForOneReportCell">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform_call.ecore#//GetAttributeLineageForOneReportCell/transformationContext"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform_call.ecore#//GetAttributeLineageForOneReportCell/reportCell"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform_call.ecore#//GetAttributeLineageForOneReportCell/resultingModel"/>
-    </genClasses>
-    <genClasses ecoreClass="platform_call.ecore#//TranslateXMLToCocason">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//TranslateXMLToCocason/inputDirectory"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//TranslateXMLToCocason/outputDirectory"/>
     </genClasses>
     <genClasses ecoreClass="platform_call.ecore#//TranslateBIRDToCocason">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//TranslateBIRDToCocason/inputDirectory"/>
