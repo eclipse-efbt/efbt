@@ -121,26 +121,26 @@ public class ImportAndExportSMCubesToNewCocason {
 		Injector i = setup.createInjectorAndDoEMFRegistration();
 		ResourceSet xrs = i.getInstance(ResourceSet.class);
 		
-		saveArtifactsAsCoCaSon(tsRootProgram, outputFilepath + "tsRoot.cocason",xrs);
-		saveArtifactsAsCoCaSon(domainsRootProgram, outputFilepath + "domainsRoot.cocason",xrs);
-		saveArtifactsAsCoCaSon(membersRootProgram, outputFilepath + "membersRoot.cocason",xrs);
-		saveArtifactsAsCoCaSon(variablesRootProgram, outputFilepath + "variablesRoot.cocason",xrs);
-		saveArtifactsAsCoCaSon(cube_structuresRootProgram, outputFilepath + "cube_structuresRoot.cocason",xrs);
-		//saveArtifactsAsCoCaSon(combinationsRoot, outputFilepath + "combinationsRoot.cocason",xrs);
-		saveArtifactsAsCoCaSon(cubesRootProgram, outputFilepath + "cubesRoot.cocason",xrs);		
-		saveArtifactsAsCoCaSon(cube_structure_itemsRootProgram, outputFilepath + "cube_structure_itemsRoot.cocason",xrs);
-		saveArtifactsAsCoCaSon(importer.functionalityModulesProgram, outputFilepath + "functionalityModulesProgram.cocason",xrs);
+		saveArtifactsAsCoCaSon(tsRootProgram, outputFilepath + "tsRoot.coca",xrs);
+		saveArtifactsAsCoCaSon(domainsRootProgram, outputFilepath + "domainsRoot.coca",xrs);
+		saveArtifactsAsCoCaSon(membersRootProgram, outputFilepath + "membersRoot.coca",xrs);
+		saveArtifactsAsCoCaSon(variablesRootProgram, outputFilepath + "variablesRoot.coca",xrs);
+		saveArtifactsAsCoCaSon(cube_structuresRootProgram, outputFilepath + "cube_structuresRoot.coca",xrs);
+		//saveArtifactsAsCoCaSon(combinationsRoot, outputFilepath + "combinationsRoot.coca",xrs);
+		saveArtifactsAsCoCaSon(cubesRootProgram, outputFilepath + "cubesRoot.coca",xrs);		
+		saveArtifactsAsCoCaSon(cube_structure_itemsRootProgram, outputFilepath + "cube_structure_itemsRoot.coca",xrs);
+		saveArtifactsAsCoCaSon(importer.functionalityModulesProgram, outputFilepath + "functionalityModulesProgram.coca",xrs);
 		
-		saveArtifactsAsCoCaSon(importer.testTemplateProgram, outputFilepath + "testTemplateProgram.cocason",xrs);
-		saveArtifactsAsCoCaSon(importer.testConstraintsProgram, outputFilepath + "testConstraintsProgram.cocason",xrs);
-		saveArtifactsAsCoCaSon(importer.testDefinitionProgram, outputFilepath + "testDefinitionProgram.cocason",xrs);
+		saveArtifactsAsCoCaSon(importer.testTemplateProgram, outputFilepath + "testTemplateProgram.coca",xrs);
+		saveArtifactsAsCoCaSon(importer.testConstraintsProgram, outputFilepath + "testConstraintsProgram.coca",xrs);
+		saveArtifactsAsCoCaSon(importer.testDefinitionProgram, outputFilepath + "testDefinitionProgram.coca",xrs);
 		
 		
 		List<Program> tests = importer.testPrograms;
 		int counter=0;
 		for (Program program : tests) {
 			counter++;
-			saveArtifactsAsCoCaSon(program, outputFilepath + "testProgram" + counter + ".cocason",xrs);
+			saveArtifactsAsCoCaSon(program, outputFilepath + "testProgram" + counter + ".coca",xrs);
 		}
 		
 	}
