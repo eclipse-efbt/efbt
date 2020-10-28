@@ -11,10 +11,7 @@ public class Controller {
 	
 	public static void executPlatfromCall (PlatformCall call)
 	{
-		if (call instanceof GetAttributeLineageModel)
-		{
-			createAttributeLineageModel((GetAttributeLineageModel) call);
-		}
+		
 		if (call instanceof TranslateBIRDToCocason)
 		{
 			translateBIRDToCocason((TranslateBIRDToCocason) call);
