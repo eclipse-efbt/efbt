@@ -29,6 +29,9 @@ pipeline {
                     cd org.eclipse.efbt.controller
                     mvn install
                     cd ..
+                    cd org.eclipse.efbt.complete_repo
+                    mvn install
+                    cd ..
                 '''
             }
         }
