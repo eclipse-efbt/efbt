@@ -500,7 +500,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute vtl_transformation.ecore#//TRANSFORMATION_SCHEME/description"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute vtl_transformation.ecore#//TRANSFORMATION_SCHEME/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute vtl_transformation.ecore#//TRANSFORMATION_SCHEME/code"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute vtl_transformation.ecore#//TRANSFORMATION_SCHEME/maintenance_agency_id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute vtl_transformation.ecore#//TRANSFORMATION_SCHEME/version"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute vtl_transformation.ecore#//TRANSFORMATION_SCHEME/valid_to"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute vtl_transformation.ecore#//TRANSFORMATION_SCHEME/valid_from"/>
