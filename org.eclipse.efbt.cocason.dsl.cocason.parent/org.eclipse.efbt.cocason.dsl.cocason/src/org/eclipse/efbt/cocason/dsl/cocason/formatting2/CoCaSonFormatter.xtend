@@ -44,6 +44,7 @@ import org.eclipse.efbt.cocamo.smcubes.model.base_column_structured_data.BaseCel
 import org.eclipse.efbt.cocamo.core.model.test_definition.TestTemplateModule
 import org.eclipse.efbt.cocamo.core.model.test_definition.TestTemplate
 import org.eclipse.efbt.cocamo.core.model.test_definition.ClauseText
+import org.eclipse.efbt.cocamo.smcubes.model.vtl_transformation.TRANSFORMATION_SCHEME
 
 class CoCaSonFormatter extends AbstractFormatter2 {
 
@@ -585,6 +586,23 @@ def dispatch void format(FunctionalityModuleModule fmModule, extension IFormatta
 
 		}
 	}
+	
+	def dispatch void format(TRANSFORMATION_SCHEME transformationScheme,
+		extension IFormattableDocument document) {
+		interior(
+			transformationScheme.regionFor.keyword('{').append[newLine],
+			transformationScheme.regionFor.keyword('}'),
+			[indent]
+		)
+		transformationScheme.regionFor.assignment(TRANSFORMATION_SCHEMEAccess.codeAssignment_6_2).append[newLine]
+		transformationScheme.regionFor.assignment(TRANSFORMATION_SCHEMEAccess.descriptionAssignment_4_2).append[newLine]
+		transformationScheme.regionFor.assignment(TRANSFORMATION_SCHEMEAccess.displayNameAssignment_7_2).append[newLine]
+		transformationScheme.regionFor.assignment(TRANSFORMATION_SCHEMEAccess.transformation_scheme_idAssignment_5_2).append[newLine]
+		transformationScheme.regionFor.assignment(TRANSFORMATION_SCHEMEAccess.valid_fromAssignment_10_2).append[newLine]
+		transformationScheme.regionFor.assignment(TRANSFORMATION_SCHEMEAccess.valid_toAssignment_9_2).append[newLine]
+		
+	}
+	
 
 	def dispatch void format(MappingDefinitionModule mappingDefinitionModule, extension IFormattableDocument document) {
 		interior(

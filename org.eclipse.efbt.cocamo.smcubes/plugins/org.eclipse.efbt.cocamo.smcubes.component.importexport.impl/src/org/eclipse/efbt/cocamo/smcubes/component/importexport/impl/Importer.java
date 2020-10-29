@@ -13,10 +13,7 @@
 package org.eclipse.efbt.cocamo.smcubes.component.importexport.impl;
 
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.efbt.cocamo.core.model.functionality_module.FunctionalityModule;
@@ -41,9 +38,6 @@ import org.eclipse.efbt.cocamo.smcubes.model.efbt_vtl_transformation.Transformat
 import org.eclipse.efbt.cocamo.smcubes.model.smcubes_model.SmcubesModel;
 import org.eclipse.efbt.cocamo.smcubes.model.smcubes_model.Smcubes_modelFactory;
 import org.eclipse.emf.common.util.BasicEList;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 
 
 

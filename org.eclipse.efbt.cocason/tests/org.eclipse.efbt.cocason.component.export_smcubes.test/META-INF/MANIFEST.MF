@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Test
-Bundle-SymbolicName: org.eclipse.efbt.cocason.component.export_smcubes.test
-Bundle-Version: 0.10.0.qualifier
+Bundle-SymbolicName: org.eclipse.efbt.cocason.component.export_smcubes.test;singleton:=true
+Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: org.eclipse.efbt.cocason.component.export.smcubes.test
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.efbt.cocason.component.export_smcubes,

@@ -532,7 +532,6 @@ TRANSFORMATION_SCHEME returns vtl_transformation::TRANSFORMATION_SCHEME:
 		('transformation_scheme_id' ':' transformation_scheme_id=EString)?
 		('code' ':' code=EString)?
 		('displayName' ':' displayName=EString)?
-		('maintenance_agency_id' ':' maintenance_agency_id=EString)?
 		('version' ':' version=EString)?
 		('valid_to' ':' valid_to=EDate)?
 		('valid_from' ':' valid_from=EDate)?

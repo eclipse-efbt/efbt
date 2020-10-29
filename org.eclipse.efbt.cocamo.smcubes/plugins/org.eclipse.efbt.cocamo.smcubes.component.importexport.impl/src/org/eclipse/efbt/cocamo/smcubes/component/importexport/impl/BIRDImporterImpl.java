@@ -132,7 +132,6 @@ public class BIRDImporterImpl extends Importer {
 				scheme.setTransformation_scheme_id(row.getString("TRANSFORMATION_SCHEME_ID"));
 				scheme.setName(replaceDots(row.getString("TRANSFORMATION_SCHEME_ID")));
 				scheme.setDescription(row.getString("DESCRIPTION"));
-				scheme.setMaintenance_agency_id(row.getString("MAINTENANCE_AGENCY_ID"));
 				scheme.setDisplayName(row.getString("NAME"));
 				scheme.setValid_to(row.getDate("VALID_TO"));
 				scheme.setValid_from(row.getDate("VALID_FROM"));
@@ -461,7 +460,7 @@ public class BIRDImporterImpl extends Importer {
 
 			List<AccessRow> list = accessUtils.getRowsForTable(filepath, "DOMAIN");
 			for (AccessRow row : list) {
-				// System.out.println("Column 'DOMAIN_ID' has value: " + row.get("DOMAIN_ID"));
+				
 				DOMAIN domain = CoreFactory.eINSTANCE.createDOMAIN();
 				domain.setCode(row.getString("CODE"));
 				domain.setDomain_id(row.getString("DOMAIN_ID"));
