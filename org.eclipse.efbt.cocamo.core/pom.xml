@@ -26,9 +26,7 @@
 	</properties>
 	<modules>
 		<module>releng/org.eclipse.efbt.cocamo.core.target</module>
-		<module>plugins/org.eclipse.efbt.cocamo.core.model.example</module>
-		<module>plugins/org.eclipse.efbt.cocamo.core.model.functionality_module</module>
-		<module>plugins/org.eclipse.efbt.cocamo.core.model.functions</module>
+		<module>plugins/org.eclipse.efbt.cocamo.core.model.functionality_module</module>		
 		<module>plugins/org.eclipse.efbt.cocamo.core.model.module_management</module>
 		<module>plugins/org.eclipse.efbt.cocamo.core.model.requirements_text</module>
 		<module>plugins/org.eclipse.efbt.cocamo.core.model.testing</module>
