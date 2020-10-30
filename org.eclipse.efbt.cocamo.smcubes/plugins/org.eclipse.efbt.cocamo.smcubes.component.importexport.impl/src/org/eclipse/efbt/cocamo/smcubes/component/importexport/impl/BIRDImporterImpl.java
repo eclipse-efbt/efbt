@@ -129,7 +129,7 @@ public class BIRDImporterImpl extends Importer {
 
 				TRANSFORMATION_SCHEME scheme = Vtl_transformationFactory.eINSTANCE.createTRANSFORMATION_SCHEME();
 				scheme.setCode(row.getString("CODE"));
-				scheme.setTransformation_scheme_id(row.getString("TRANSFORMATION_SCHEME_ID"));
+				scheme.setTransformation_scheme_id(replaceDots(row.getString("TRANSFORMATION_SCHEME_ID")));
 				scheme.setName(replaceDots(row.getString("TRANSFORMATION_SCHEME_ID")));
 				scheme.setDescription(row.getString("DESCRIPTION"));
 				scheme.setDisplayName(row.getString("NAME"));
@@ -272,7 +272,7 @@ public class BIRDImporterImpl extends Importer {
 
 				MEMBER_MAPPING memberMapping = MappingFactory.eINSTANCE.createMEMBER_MAPPING();
 
-				memberMapping.setMember_mapping_id(row.getString("MEMBER_MAPPING_ID"));
+				memberMapping.setMember_mapping_id(replaceDots(row.getString("MEMBER_MAPPING_ID")));
 				memberMapping.setCode(row.getString("CODE"));
 				memberMapping.setName(replaceDots(row.getString("NAME")));
 				memberMapping.setMaintenance_agency_id(row.getString("MAINTENENCE_AGENCY_ID"));
@@ -285,7 +285,7 @@ public class BIRDImporterImpl extends Importer {
 
 				VARIABLE_MAPPING variableMapping = MappingFactory.eINSTANCE.createVARIABLE_MAPPING();
 
-				variableMapping.setVariable_mapping_id(row.getString("VARIABLE_MAPPING_ID"));
+				variableMapping.setVariable_mapping_id(replaceDots(row.getString("VARIABLE_MAPPING_ID")));
 				variableMapping.setCode(row.getString("CODE"));
 				variableMapping.setName(replaceDots(row.getString("NAME")));
 				variableMapping.setMaintenance_agency_id(row.getString("MAINTENENCE_AGENCY_ID"));
@@ -299,7 +299,7 @@ public class BIRDImporterImpl extends Importer {
 
 				MAPPING_DEFINITION mapping = MappingFactory.eINSTANCE.createMAPPING_DEFINITION();
 				mapping.setCode(row.getString("CODE"));
-				mapping.setMapping_id(row.getString("MAPPING_ID"));
+				mapping.setMapping_id(replaceDots(row.getString("MAPPING_ID")));
 				mapping.setName(replaceDots(row.getString("NAME")));
 				mapping.setMapping_type((row.getString("MAPPING_TYPE")));
 				String memberMappingString = (row.getString("MEMBER_MAPPING_ID"));
@@ -326,7 +326,7 @@ public class BIRDImporterImpl extends Importer {
 
 				CUBE_MAPPING mapping = MappingFactory.eINSTANCE.createCUBE_MAPPING();
 				mapping.setCode(row.getString("CODE"));
-				mapping.setCube_mapping_id(row.getString("CUBE_MAPPING_ID"));
+				mapping.setCube_mapping_id(replaceDots(row.getString("CUBE_MAPPING_ID")));
 				mapping.setName(replaceDots(row.getString("NAME")));
 				mapping.setDescription(row.getString("DESCRIPTION"));
 				mapping.setMaintenance_agency_id(row.getString("MAINTENENCE_AGENCY_ID"));
@@ -463,7 +463,7 @@ public class BIRDImporterImpl extends Importer {
 				
 				DOMAIN domain = CoreFactory.eINSTANCE.createDOMAIN();
 				domain.setCode(row.getString("CODE"));
-				domain.setDomain_id(row.getString("DOMAIN_ID"));
+				domain.setDomain_id(replaceDots(row.getString("DOMAIN_ID")));
 				domain.setDescription(row.getString("DESCRIPTION"));
 				FACET_VALUE_TYPE valueType;
 				String dataTypeString = row.getString("DATA_TYPE");
@@ -521,7 +521,7 @@ public class BIRDImporterImpl extends Importer {
 
 				MEMBER member = CoreFactory.eINSTANCE.createMEMBER();
 				member.setCode(row.getString("CODE"));
-				member.setMember_id(row.getString("MEMBER_ID"));
+				member.setMember_id(replaceDots(row.getString("MEMBER_ID")));
 				member.setDescription(row.getString("DESCRIPTION"));
 				member.setName(replaceDots(row.getString("MEMBER_ID")));
 				member.setDisplayName(row.getString("NAME"));
@@ -571,7 +571,7 @@ public class BIRDImporterImpl extends Importer {
 
 				VARIABLE variable = CoreFactory.eINSTANCE.createVARIABLE();
 				variable.setCode(row.getString("CODE"));
-				variable.setVariable_id(row.getString("VARIABLE_ID"));
+				variable.setVariable_id(replaceDots(row.getString("VARIABLE_ID")));
 				variable.setDescription(row.getString("DESCRIPTION"));
 				variable.setName(replaceDots(row.getString("VARIABLE_ID")));
 				variable.setDisplayName(row.getString("NAME"));
@@ -601,7 +601,7 @@ public class BIRDImporterImpl extends Importer {
 
 				CUBE_STRUCTURE cube_structure = Data_definitionFactory.eINSTANCE.createCUBE_STRUCTURE();
 				cube_structure.setCode(row.getString("CODE"));
-				cube_structure.setCube_structure_id(row.getString("CUBE_STRUCTURE_ID"));
+				cube_structure.setCube_structure_id(replaceDots(row.getString("CUBE_STRUCTURE_ID")));
 				cube_structure.setName(replaceDots(row.getString("CUBE_STRUCTURE_ID")));
 				cube_structure.setDisplayName(row.getString("NAME"));
 				cube_structure.setDescription("DESCRIPTION");
@@ -614,7 +614,7 @@ public class BIRDImporterImpl extends Importer {
 
 				CUBE cube = Data_definitionFactory.eINSTANCE.createCUBE();
 				cube.setCode(row.getString("CODE"));
-				cube.setCube_id(row.getString("CUBE_ID"));
+				cube.setCube_id(replaceDots(row.getString("CUBE_ID")));
 				cube.setName(replaceDots(row.getString("CUBE_ID")));
 				cube.setDisplayName(row.getString("NAME"));
 				cube.setCube_type(row.getString("CUBE_TYPE"));
@@ -709,7 +709,7 @@ public class BIRDImporterImpl extends Importer {
 
 				COMBINATION comb = Data_definitionFactory.eINSTANCE.createCOMBINATION();
 				comb.setCode(row.getString("CODE"));
-				comb.setCombination_id(row.getString("COMBINATION_ID"));
+				comb.setCombination_id(replaceDots(row.getString("COMBINATION_ID")));
 				comb.setName(replaceDots(row.getString("NAME")));
 
 				combinationsModule.getCombinations().add(comb);

@@ -1,0 +1,8 @@
+Program {
+	testDefinitions : TestDefinitionModule testDefinitionsModule {
+		testDefinitions : [ E2ETestDefinition standard_test {
+			testContraints : constraints given : Given {
+			} when : When {
+				params : [ Param {
+					param : ECB_BIRD_SHS_5_0_2_1 } ] } then : Then {
+			} } ] } }
