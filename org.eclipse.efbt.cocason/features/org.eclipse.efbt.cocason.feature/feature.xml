@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.efbt.cocason.feature"
       label="CoCaSon Core"
-      version="0.10.0.qualifier">
+      version="1.0.0.qualifier">
 
    <description url="https://github.com/eclipse/efbt">
       The cocason runtime feature.
