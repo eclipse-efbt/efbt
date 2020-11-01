@@ -449,7 +449,7 @@
    <extension point="org.eclipse.emf.common.ui.examples">
         <example wizardID="org.eclipse.efbt.cocason.dsl.cocason.ui.wizard.CocasonExampleWizard" pageImage="icons/genproject.gif">
             <projectDescriptor name="org.eclipse.efbt.cocason.example" contentURI="examples/org.eclipse.efbt.cocason.example/" description="CoCaSon Example"/>           
-            <fileToOpen location="org.eclipse.emf.eson.example/variablesRoot.coca"/>           
+            <fileToOpen location="org.eclipse.efbt.cocason.example/variablesRoot.coca"/>           
         </example>
     </extension>
 </plugin>
