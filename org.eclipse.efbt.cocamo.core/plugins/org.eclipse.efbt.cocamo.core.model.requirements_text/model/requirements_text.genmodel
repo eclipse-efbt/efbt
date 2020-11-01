@@ -40,7 +40,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements_text.ecore#//TitledRequirementsSection/title"/>
     </genClasses>
     <genClasses ecoreClass="requirements_text.ecore#//Tag">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements_text.ecore#//Tag/tagID"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements_text.ecore#//Tag/displayName"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements_text.ecore#//Tag/name"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference requirements_text.ecore#//Tag/requirements"/>
     </genClasses>

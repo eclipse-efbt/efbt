@@ -5,7 +5,7 @@
     <details key="documentation" value="This package describes Scenarios"/>
   </eAnnotations>
   <eAnnotations source="license">
-    <details key="license" value="Copyright (c) 2019 Openregtech Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"/>
+    <details key="license" value="Copyright (c) 2019 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"/>
   </eAnnotations>
   <eClassifiers xsi:type="ecore:EClass" name="Scenario">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -55,9 +55,23 @@
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ScenarioTag" eSuperTypes="../../org.eclipse.efbt.cocamo.core.model.requirements_text/model/requirements_text.ecore#//Tag">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="scenario" eType="#//Scenario"/>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A Tag which tags a Scenario in order to link it with requirements."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="scenario" eType="#//Scenario">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The tagged Scenario."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ScenarioSetTag" eSuperTypes="../../org.eclipse.efbt.cocamo.core.model.requirements_text/model/requirements_text.ecore#//Tag">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="scenarioSet" eType="#//ScenarioSet"/>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A Tag which tags a ScenarioSet in order to link it with requirements."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="scenarioSet" eType="#//ScenarioSet">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The tagged ScenarioSet"/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
 </ecore:EPackage>
