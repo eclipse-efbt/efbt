@@ -1,0 +1,302 @@
+<!-- This file was created using the HTML documentation generator. -->
+<!-- Creation date: Sun Nov 01 11:32:39 GMT 2020-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+      	<title>Metamodel Documentation (platform:/resource/org.eclipse.efbt.cocamo.core/plugins/org.eclipse.efbt.cocamo.core.model.functionality_module/model/functionality_module.ecore)</title>
+    	<script type="text/javascript">
+//<![CDATA[				    	
+// TOC script based on code taken from http://www.quirksmode.org/dom/toc.html
+function makeTOC() {
+	
+	var toc = document.createElement('div')				
+	toc.id = "toc";
+	toc.innerHTML = "Table of Contents"				
+	document.body.appendChild(toc);
+				
+	var innertocDiv = createTOC()				
+	toc.appendChild(innertocDiv);
+}
+
+
+function createTOC() {
+	var y = document.createElement('div');
+	y.id = 'innertoc';
+	//var a = y.appendChild(document.createElement('span'));
+	//a.onclick = showhideTOC;
+	//a.id = 'contentheader';
+	//a.innerHTML = 'Show Table of Contents';
+	var z = y.appendChild(document.createElement('div'));
+	//z.onclick = showhideTOC;
+	var toBeTOCced = getElementsByTagNames('h1,h2,h3');
+	if (toBeTOCced.length < 2) return false;
+	var hCount = 0;
+	var hhCount = 0;
+	var hhhCount = 0;
+	for (var i=0;i<toBeTOCced.length;i++) {
+	var tmp = document.createElement('a');
+	tmp.className = 'page';
+	var text;
+	var textPre;
+	if (toBeTOCced[i].nodeName == 'h2'){
+		tmp.className += ' indent';
+		textPre = hCount + "."+ ++hhCount + ". "; 
+	}
+	else if (toBeTOCced[i].nodeName == 'h3'){
+		tmp.className += ' extraindent';
+		textPre = hCount + "."+ hhCount + "."+ ++hhhCount +". "; 
+	}
+	else {
+		textPre = ++hCount + ". "; 
+		hhCount = 0;
+		hhhCount = 0;
+	}
+	text = textPre + toBeTOCced[i].textContent;
+	toBeTOCced[i].innerHTML = textPre + toBeTOCced[i].innerHTML;
+	
+	tmp.innerHTML = text; 
+	z.appendChild(tmp);
+	var headerId = toBeTOCced[i].id || 'link' + i;
+	tmp.href = '#' + headerId;
+	toBeTOCced[i].id = headerId;
+	}
+	return y;
+}
+
+function getElementsByTagNames(list,obj) {
+	if (!obj) var obj = document;
+	var tagNames = list.split(',');
+	var resultArray = new Array();
+	for (var i=0;i<tagNames.length;i++) {
+		var tags = obj.getElementsByTagName(tagNames[i]);
+		for (var j=0;j<tags.length;j++) {
+			resultArray.push(tags[j]);
+		}
+	}
+	var testNode = resultArray[0];
+	if (!testNode) return [];
+	if (testNode.sourceIndex) {
+		resultArray.sort(function (a,b) {
+				return a.sourceIndex - b.sourceIndex;
+		});
+	}
+	else if (testNode.compareDocumentPosition) {
+		resultArray.sort(function (a,b) {
+				return 3 - (a.compareDocumentPosition(b) & 6);
+		});
+	}
+	return resultArray;
+}
+	    	
+//]]>				    	
+	    	</script>
+	    	<link rel="stylesheet" type="text/css" href="https://raw.github.com/necolas/normalize.css/master/normalize.css" /> 
+	    	<style>
+#toc {
+	position: fixed;
+	  right: 0;
+	  top: 0;
+	  background-color:#eee;
+	  overflow: scroll;
+	  border: 1px dashed;
+}
+
+#toc #innertoc { 
+	display: none;
+	height: 500px;
+} /* Hide the full TOC by default */
+
+#toc:hover #innertoc{
+	display: block; /* Show it on hover */
+}
+	td {
+	border: 1px solid;
+	}
+	.page{
+	display:table-row;
+	}
+	.indent {
+	text-indent:12pt;
+	}
+	.extraindent {
+	text-indent:14pt;
+	}
+
+	    	</style>
+	    	<link rel="stylesheet" type="text/css" href="style.css" />
+	</head>
+	<body onload="makeTOC();">
+<h1 id="functionalitymodule"><a href="#functionalitymodule"><span class="packageName">functionality_module</span> package</a></h1>
+
+<p>The functionality_module package describes FunctionalityModules which are sued to describe the functional breakdown and sceanrios of behaviour understood by a domain expert.</p>
+<div class="">EPackage properties:</div>
+<div class="keyValue"><span class="label">Namespace Prefix: </span><span class="teletype">functionality_module</span></div>
+<div class="keyValue"><span class="label">Namespace URI: </span><span class="teletype">http://www.eclipse.org/efbt/functionality_module</span></div>
+<h2 id="functionalitymoduleDataProcessingFunctionalityModule"><a href="#functionalitymoduleDataProcessingFunctionalityModule"><a href="#functionalitymoduleDataProcessingFunctionalityModule">DataProcessingFunctionalityModule</a></a></h2>
+
+<p>A DataSetTransformationFunctionalityModule is a Functionality Module related to processing of data.</p>
+<h4><b>Supertype:</b><a href="#functionalitymoduleLeafFunctionalityModule">LeafFunctionalityModule</a></h4><h2 id="functionalitymoduleFunctionalityModule"><a href="#functionalitymoduleFunctionalityModule"><a href="#functionalitymoduleFunctionalityModule">FunctionalityModule</a></a></h2>
+
+<p>FunctionalityModule is the super class of ReportCellFunctionalityModule,ReadDataSourceFunctionalityModule, and DataSetTransformationFunctionalityModule.
+It represents a set of processing.</p>
+<div class="eclassProps">EClass properties:<div class="eclassPropList"><span class="label">Abstract</span></div></div><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">Attributes</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="functionalitymoduleFunctionalityModule.name" class="teletype">name</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EString</span></div>
+<div class="label">Cardinality: [0..1]</div>
+<div class="label">Identifier</div>
+ </td> <td><p>The name of the FunctionalityModule</p>
+</td>
+		</tr></table>
+<a href="#functionality_module.FunctionalityModule.attr"></a>
+<table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="functionalitymoduleFunctionalityModule.scenario" class="teletype">scenario</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#scenariosScenario">Scenario</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+</td> 
+<td> <p>A Particular Scenario if the FunctionalityModule is assocuiated with a particular Scenario.</p>
+</td>
+		</tr><tr>	<td><div id="functionalitymoduleFunctionalityModule.scenarioSet" class="teletype">scenarioSet</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#scenariosScenarioSet">ScenarioSet</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+<div class="label">Containment</div>
+</td> 
+<td> <p>Any ScenarioSets associated with the  FunctionalityModule. 
+The individual Scenarios in such a ScenarioSet are associated with different behaviour in the FunctionalityModule that we would like to test seperately. 
+Scenarios can themsleves be linked to parts of the regulatory rulebook, allowing an annotation of the behaviour we wish to test.</p>
+</td>
+		</tr><tr>	<td><div id="functionalitymoduleFunctionalityModule.usedTransformationOrScheme" class="teletype">usedTransformationOrScheme</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#functionalitymoduleFunctionalityModule">FunctionalityModule</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+</td> 
+<td> <p>We can specify a dependency upon another Functional Module here if we wish. Normally the dependencies are not set but can be derived from where the Functionality Module exists within a set of Serial and Parallel FunctionalityModuleSets</p>
+</td>
+		</tr></table>
+<a href="#functionality_module.FunctionalityModule.ref"></a>
+<h2 id="functionalitymoduleFunctionalityModuleModule"><a href="#functionalitymoduleFunctionalityModuleModule"><a href="#functionalitymoduleFunctionalityModuleModule">FunctionalityModuleModule</a></a></h2>
+
+<p>A module of FunctionalityModules</p>
+<h4><b>Supertype:</b><a href="#modulemanagementModule">Module</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="functionalitymoduleFunctionalityModuleModule.FunctionalityModules" class="teletype">FunctionalityModules</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#functionalitymoduleFunctionalityModule">FunctionalityModule</a></span></div>
+<div class="label">Cardinality: [0..*]</div>
+<div class="label">Containment</div>
+</td> 
+<td> <p>The  set of FunctionalityModules </p>
+</td>
+		</tr></table>
+<a href="#functionality_module.FunctionalityModuleModule.ref"></a>
+<h2 id="functionalitymoduleFunctionalityModuleSet"><a href="#functionalitymoduleFunctionalityModuleSet"><a href="#functionalitymoduleFunctionalityModuleSet">FunctionalityModuleSet</a></a></h2>
+
+<p>A set of FunctionalityModules.
+Note that FunctionalityModulesSet is also a subclass of FunctionalityModule, so the set can also include FunctionalityModulesSets</p>
+<h4><b>Supertype:</b><a href="#functionalitymoduleFunctionalityModule">FunctionalityModule</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="functionalitymoduleFunctionalityModuleSet.subTransformationsAndSchemes" class="teletype">subTransformationsAndSchemes</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#functionalitymoduleFunctionalityModule">FunctionalityModule</a></span></div>
+<div class="label">Cardinality: [0..*]</div>
+<div class="label">Containment</div>
+</td> 
+<td> <p>The  contained set FunctionalityModules </p>
+</td>
+		</tr></table>
+<a href="#functionality_module.FunctionalityModuleSet.ref"></a>
+<h2 id="functionalitymoduleFunctionalityModuleTag"><a href="#functionalitymoduleFunctionalityModuleTag"><a href="#functionalitymoduleFunctionalityModuleTag">FunctionalityModuleTag</a></a></h2>
+
+<p>A Tag which tags a FunctionalityModule in order to link it with requirements.</p>
+<h4><b>Supertype:</b><a href="#requirementstextTag">Tag</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="functionalitymoduleFunctionalityModuleTag.FunctionalityModule" class="teletype">FunctionalityModule</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#functionalitymoduleFunctionalityModule">FunctionalityModule</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+</td> 
+<td> <p>The tagged FunctionalityModule.</p>
+</td>
+		</tr></table>
+<a href="#functionality_module.FunctionalityModuleTag.ref"></a>
+<h2 id="functionalitymoduleLeafFunctionalityModule"><a href="#functionalitymoduleLeafFunctionalityModule"><a href="#functionalitymoduleLeafFunctionalityModule">LeafFunctionalityModule</a></a></h2>
+
+<p>A  LeafFunctionalityModule is a FunctionalityModule which does not contain any sub FunctionalityModules</p>
+<h4><b>Supertype:</b><a href="#functionalitymoduleFunctionalityModule">FunctionalityModule</a></h4><h2 id="functionalitymoduleParallelFunctionalityModule"><a href="#functionalitymoduleParallelFunctionalityModule"><a href="#functionalitymoduleParallelFunctionalityModule">ParallelFunctionalityModule</a></a></h2>
+
+<p>A FunctionalityModuleSet, where the sub FunctionalityModules can be run in parallel , or in any order, since there is no dependency between them whereby one needs to run before another.</p>
+<h4><b>Supertype:</b><a href="#functionalitymoduleFunctionalityModuleSet">FunctionalityModuleSet</a></h4><h2 id="functionalitymoduleReadDataSourceFunctionalityModule"><a href="#functionalitymoduleReadDataSourceFunctionalityModule"><a href="#functionalitymoduleReadDataSourceFunctionalityModule">ReadDataSourceFunctionalityModule</a></a></h2>
+
+<p>A FunctionalityModule which represents the reading in of data.</p>
+<h4><b>Supertype:</b><a href="#functionalitymoduleLeafFunctionalityModule">LeafFunctionalityModule</a></h4><h2 id="functionalitymoduleReportCellCreationFunctionalityModule"><a href="#functionalitymoduleReportCellCreationFunctionalityModule"><a href="#functionalitymoduleReportCellCreationFunctionalityModule">ReportCellCreationFunctionalityModule</a></a></h2>
+
+<p>A FunctionalityModule which represents the calculation of report cells.</p>
+<h4><b>Supertype:</b><a href="#functionalitymoduleLeafFunctionalityModule">LeafFunctionalityModule</a></h4><h2 id="functionalitymoduleScenarioSetFunctionalityModule"><a href="#functionalitymoduleScenarioSetFunctionalityModule"><a href="#functionalitymoduleScenarioSetFunctionalityModule">ScenarioSetFunctionalityModule</a></a></h2>
+
+<p>A FunctionalityModuleSet whereby it is possible that ony some of the sub Transformation Schemes are executed for a test, dependant upon the Scenarios that are associated with the Test.</p>
+<h4><b>Supertype:</b><a href="#functionalitymoduleFunctionalityModuleSet">FunctionalityModuleSet</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="functionalitymoduleScenarioSetFunctionalityModule.scenarioSetChoice" class="teletype">scenarioSetChoice</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#scenariosScenarioSet">ScenarioSet</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+<div class="label">Containment</div>
+</td> 
+<td> <p>The associated  ScenarioSet</p>
+</td>
+		</tr></table>
+<a href="#functionality_module.ScenarioSetFunctionalityModule.ref"></a>
+<h2 id="functionalitymoduleSerialFunctionalityModule"><a href="#functionalitymoduleSerialFunctionalityModule"><a href="#functionalitymoduleSerialFunctionalityModule">SerialFunctionalityModule</a></a></h2>
+
+<p>A FunctionalityModuleSet, where the sub FunctionalityModules are an ordered set which must be executed in order.</p>
+<h4><b>Supertype:</b><a href="#functionalitymoduleFunctionalityModuleSet">FunctionalityModuleSet</a></h4><h2 id="functionalitymoduleValidationFunctionalityModule"><a href="#functionalitymoduleValidationFunctionalityModule"><a href="#functionalitymoduleValidationFunctionalityModule">ValidationFunctionalityModule</a></a></h2>
+
+<p>A FunctionalityModule which represents a validation of Report cells.</p>
+<h4><b>Supertype:</b><a href="#functionalitymoduleLeafFunctionalityModule">LeafFunctionalityModule</a></h4></body>
+</html>

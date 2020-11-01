@@ -23,5 +23,12 @@
     <genClasses ecoreClass="cocamo.ecore#//SMCubesReportResults">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesReportResults/reportCells"/>
     </genClasses>
+    <genClasses ecoreClass="cocamo.ecore#//SMCubesTest">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesTest/inputData"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesTest/expectedResults"/>
+    </genClasses>
+    <genClasses ecoreClass="cocamo.ecore#//SMCubesTestModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesTestModule/tests"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>

@@ -1,0 +1,54 @@
+Program {
+	smCubesModel : SmcubesModel membersModel {
+		members : [ MemberModule membersModule {
+			members : [
+				
+				MEMBER IMPRMNT_ASSSSMNT_MTHD_0 {
+				code : "0"
+				description : None
+				member_id : IMPRMNT_ASSSSMNT_MTHD_0
+				displayName : "Not applicable"
+				domain_id : "domainsModel.domainsModule.IMPRMNT_ASSSSMNT_MTHD"
+			}
+			MEMBER IMPRMNT_ASSSSMNT_MTHD_1 {
+				code : "1"
+				description : "To be used if the instrument is subject to impairment in accordance with an applied accounting standard and is collectively assessed for impairment by being grouped together with instruments with similar credit risk characteristics."
+				member_id : IMPRMNT_ASSSSMNT_MTHD_1
+				displayName : "Collectively assessed"
+				domain_id : "domainsModel.domainsModule.IMPRMNT_ASSSSMNT_MTHD"
+			}
+			MEMBER IMPRMNT_ASSSSMNT_MTHD_2 {
+				code : "2"
+				description : "To be used if the instrument is subject to impairment in accordance with an applied accounting standard and is individually assessed for impairment."
+				member_id : IMPRMNT_ASSSSMNT_MTHD_2
+				displayName : "Individually assessed"
+				domain_id : "domainsModel.domainsModule.IMPRMNT_ASSSSMNT_MTHD"
+			}
+			MEMBER CRDT_QLTY_0 {
+				code : "0"
+				description : None
+				member_id : CRDT_QLTY_0
+				displayName : "Not applicable"
+				domain_id : "domainsModel.domainsModule.CRDT_QLTY"
+			}
+			MEMBER CRDT_QLTY_1 {
+				code : "1"
+				member_id : CRDT_QLTY_1
+				displayName : "Non-performing"
+				domain_id : "domainsModel.domainsModule.CRDT_QLTY"
+			}
+			MEMBER CRDT_QLTY_11 {
+				code : "11"
+				member_id : CRDT_QLTY_11
+				displayName : Performing
+				domain_id : "domainsModel.domainsModule.CRDT_QLTY"
+			}
+			MEMBER CRDT_QLTY_12 {
+				code : "12"
+				description : "Non-performing exposures. Defaulted"
+				member_id : CRDT_QLTY_12
+				displayName : "Non-performing exposures. Defaulted"
+				domain_id : "domainsModel.domainsModule.CRDT_QLTY"
+			}
+			
+			] } ] } }

@@ -27,7 +27,16 @@
    <feature id="org.eclipse.efbt.cocason.feature">
       <category name="efbt"/>
    </feature>
-   <feature id="org.eclipse.emf.eson.feature">
+   <feature id="org.eclipse.efbt.cocason.dsl.cocason.feature">
+      <category name="efbt"/>
+   </feature>
+    <feature id="org.eclipse.efbt.controller.component.feature">
+      <category name="efbt"/>
+   </feature>
+   <feature id="org.eclipse.efbt.controller.model.feature">
+      <category name="efbt"/>
+   </feature>
+   <feature id="org.eclipse.efbt.controller.ui.sirius.feature">
       <category name="efbt"/>
    </feature>
    <category-def name="efbt" label="Complete EFBT Repository"/>

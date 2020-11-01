@@ -405,19 +405,18 @@ public class SQLDevConverter {
 		// TODO Auto-generated method stub
 		EList<EStructuralFeature> features = sourceClass.getEStructuralFeatures();
 		int counter = 0;
-		System.out.println("sourceClass : " + sourceClass);
-		System.out.println("targetClass : " + targetClass);
+		
 		for (EStructuralFeature eStructuralFeature : features) {
 			EClassifier sourceFeatureType = eStructuralFeature.getEType();
-			System.out.println("sourceFeatureType : " + sourceFeatureType);
+			
 			if (sourceFeatureType.equals(targetClass))
 			{
-				System.out.println("match");
+				
 				counter++;
 			}
 			else
 			{
-				System.out.println("no match");
+				
 			}
 			}
 			

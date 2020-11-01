@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.controller.core.model.core/src-gen"
+    modelPluginID="org.eclipse.efbt.controller.core.model.core" modelName="Controller"
+    rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="8.0" copyrightFields="false" usedGenPackages="../../org.eclipse.efbt.cocamo.core.model.module_management/model/module_management.genmodel#//module_management"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>platform_call.ecore</foreignModel>
+  <genPackages prefix="Platform_call" basePackage="org.eclipse.efbt.controller.core.model"
+      resource="XML" disposableProviderFactory="true" ecorePackage="platform_call.ecore#/">
+    <genClasses ecoreClass="platform_call.ecore#//PlatformCall">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//PlatformCall/errorMessage"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//PlatformCall/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//PlatformCall/returnStatus"/>
+    </genClasses>
+    <genClasses ecoreClass="platform_call.ecore#//PlatformCallModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform_call.ecore#//PlatformCallModule/platformCalls"/>
+    </genClasses>
+    <genClasses ecoreClass="platform_call.ecore#//TranslateBIRDToCocason">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//TranslateBIRDToCocason/inputDirectory"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//TranslateBIRDToCocason/outputDirectory"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//TranslateBIRDToCocason/testDirectory"/>
+    </genClasses>
+    <genClasses ecoreClass="platform_call.ecore#//ConvertSQLDeveloperModelToEcore">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//ConvertSQLDeveloperModelToEcore/inputDirectory"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

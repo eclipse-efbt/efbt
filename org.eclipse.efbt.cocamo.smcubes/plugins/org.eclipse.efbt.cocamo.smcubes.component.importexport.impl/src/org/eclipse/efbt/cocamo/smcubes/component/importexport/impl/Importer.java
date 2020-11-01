@@ -13,12 +13,15 @@
 package org.eclipse.efbt.cocamo.smcubes.component.importexport.impl;
 
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.efbt.cocamo.core.model.functionality_module.FunctionalityModule;
+import org.eclipse.efbt.cocamo.core.model.functionality_module.FunctionalityModuleModule;
+import org.eclipse.efbt.cocamo.core.model.functionality_module.Functionality_moduleFactory;
 import org.eclipse.efbt.cocamo.smcubes.component.importexport.api.BirdImporter;
+import org.eclipse.efbt.cocamo.smcubes.model.cocamo.CocamoFactory;
+import org.eclipse.efbt.cocamo.smcubes.model.cocamo.Program;
 import org.eclipse.efbt.cocamo.smcubes.model.efbt_data_definition.CombinationModule;
 import org.eclipse.efbt.cocamo.smcubes.model.efbt_data_definition.CubeModule;
 import org.eclipse.efbt.cocamo.smcubes.model.efbt_data_definition.DomainModule;
@@ -35,9 +38,7 @@ import org.eclipse.efbt.cocamo.smcubes.model.efbt_vtl_transformation.Transformat
 import org.eclipse.efbt.cocamo.smcubes.model.smcubes_model.SmcubesModel;
 import org.eclipse.efbt.cocamo.smcubes.model.smcubes_model.Smcubes_modelFactory;
 import org.eclipse.emf.common.util.BasicEList;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
+
 
 
 
@@ -60,6 +61,31 @@ public abstract class Importer implements BirdImporter {
 	 * The file location to output the SMCubes artefacts
 	 */
 	protected String outputFilepath;
+	
+	/**
+	 * A Program instance which contains just TestDefinitions
+	 */
+	public static Program testDefinitionProgram;
+	/**
+	 * A Program instance which contains just TestTemplates,
+	 * note that the testTemplates can refer to TestDefintions 
+	 * in testDefinitionProgram
+	 */
+	public static Program testTemplateProgram;
+	/**
+	 * A Program instance which contains just TestConstriants
+	 */
+	public static Program testConstraintsProgram;
+	
+	
+	/**
+	 * A Program instance which contains just functionality Modules
+	 */
+	public static Program functionalityModulesProgram;
+	/**
+	 * A list of programs, each of which contains only Tests
+	 */
+	public static List<Program> testPrograms;
 
 	/**
 	 * The transformationSchemes
@@ -111,6 +137,8 @@ public abstract class Importer implements BirdImporter {
 	 * The variableMappingModule
 	 */
 	protected VariableMappingModule variableMappingModule;
+	
+	
 
 	/**
 	 * The birdModel
@@ -138,13 +166,20 @@ public abstract class Importer implements BirdImporter {
 	 */
 	public Importer() {
 		transformationSchemes = Efbt_vtl_transformationFactory.eINSTANCE.createTransformationSchemeModule();
+		transformationSchemes.setName("TransformationSchemesModule");
 		domains = Efbt_data_definitionFactory.eINSTANCE.createDomainModule();
+		domains.setName("domainsModule");
 		variables = Efbt_data_definitionFactory.eINSTANCE.createVariableModule();
+		variables.setName("variablesModule");
 		members = Efbt_data_definitionFactory.eINSTANCE.createMemberModule();
+		members.setName("membersModule");
 
 		cubesModule = Efbt_data_definitionFactory.eINSTANCE.createCubeModule();
+		cubesModule.setName("cubesModule");
 		cubeStructuresModule = Efbt_data_definitionFactory.eINSTANCE.createCubeModule();
+		cubeStructuresModule.setName("cubeStructuresModule");
 		cubeStructureItemsModule = Efbt_data_definitionFactory.eINSTANCE.createCubeModule();
+		cubeStructureItemsModule.setName("cubeStructureItemsModule");
 		combinationsModules = new BasicEList<CombinationModule>();
 		cubeMappingModule = Efbt_mappingFactory.eINSTANCE.createCubeMappingModule();
 		mappingDefinitionModule = Efbt_mappingFactory.eINSTANCE.createMappingDefinitionModule();
@@ -163,6 +198,21 @@ public abstract class Importer implements BirdImporter {
 		// must rename this to getTranformationSchemes
 		birdModel.getFunctionalModules().add(transformationSchemes);
 		birdModel.getVariables().add(variables);
+		
+		testDefinitionProgram = CocamoFactory.eINSTANCE.createProgram();
+		testTemplateProgram = CocamoFactory.eINSTANCE.createProgram();
+		testConstraintsProgram = CocamoFactory.eINSTANCE.createProgram();
+		functionalityModulesProgram = CocamoFactory.eINSTANCE.createProgram();
+		FunctionalityModuleModule fmm = Functionality_moduleFactory.eINSTANCE.createFunctionalityModuleModule();
+		fmm.setName("functionalityModuleModule");
+		FunctionalityModule fm = Functionality_moduleFactory.eINSTANCE.createDataProcessingFunctionalityModule();
+		fm.setName("functionalityModule");
+		fmm.getFunctionalityModules().add(fm);
+		functionalityModulesProgram.setFunctionalityModules(fmm);
+		
+		testPrograms = new ArrayList<Program>();
+	
+		 
 
 		
 	}
@@ -323,5 +373,7 @@ public abstract class Importer implements BirdImporter {
 		}
 
 	}*/
+	
+	public void importTestData() { }
 
 }

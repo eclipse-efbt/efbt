@@ -10,16 +10,47 @@
  * Contributors:
  *  Neil Mackenzie - initial API and implementation
  *  */
-
 package org.eclipse.efbt.cocamo.smcubes.component.importexport.impl;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.efbt.cocamo.core.model.test.E2ETest;
+import org.eclipse.efbt.cocamo.core.model.test.TestFactory;
+import org.eclipse.efbt.cocamo.core.model.test.TestModule;
+import org.eclipse.efbt.cocamo.core.model.test_definition.ClauseText;
+import org.eclipse.efbt.cocamo.core.model.test_definition.E2ETestDefinition;
+import org.eclipse.efbt.cocamo.core.model.test_definition.Given;
+import org.eclipse.efbt.cocamo.core.model.test_definition.Param;
+import org.eclipse.efbt.cocamo.core.model.test_definition.TestContraints;
+import org.eclipse.efbt.cocamo.core.model.test_definition.TestDefinitionModule;
+import org.eclipse.efbt.cocamo.core.model.test_definition.TestTemplate;
+import org.eclipse.efbt.cocamo.core.model.test_definition.TestTemplateModule;
+import org.eclipse.efbt.cocamo.core.model.test_definition.Test_definitionFactory;
+import org.eclipse.efbt.cocamo.core.model.test_definition.Then;
+import org.eclipse.efbt.cocamo.core.model.test_definition.When;
+import org.eclipse.efbt.cocamo.core.model.test_input_data.TestInputData;
+import org.eclipse.efbt.cocamo.core.model.test_input_data.Test_input_dataFactory;
 import org.eclipse.efbt.cocamo.smcubes.component.access.api.AccessRow;
 import org.eclipse.efbt.cocamo.smcubes.component.access.api.AccessUtils;
 import org.eclipse.efbt.cocamo.smcubes.component.access.provider.AccessUtilProvider;
+import org.eclipse.efbt.cocamo.smcubes.model.base_column_structured_data.BaseCellWithEnumeratedValue;
+import org.eclipse.efbt.cocamo.smcubes.model.base_column_structured_data.BaseCellWithValue;
+import org.eclipse.efbt.cocamo.smcubes.model.base_column_structured_data.BaseColumnStructuredData;
+import org.eclipse.efbt.cocamo.smcubes.model.base_column_structured_data.BaseRowData;
+import org.eclipse.efbt.cocamo.smcubes.model.base_column_structured_data.Base_column_structured_dataFactory;
+import org.eclipse.efbt.cocamo.smcubes.model.cocamo.CocamoFactory;
+import org.eclipse.efbt.cocamo.smcubes.model.cocamo.Program;
+import org.eclipse.efbt.cocamo.smcubes.model.cocamo.SMCubesTest;
+import org.eclipse.efbt.cocamo.smcubes.model.cocamo.SMCubesTestInputData;
+import org.eclipse.efbt.cocamo.smcubes.model.cocamo.SMCubesTestModule;
 import org.eclipse.efbt.cocamo.smcubes.model.core.CoreFactory;
 import org.eclipse.efbt.cocamo.smcubes.model.core.DOMAIN;
 import org.eclipse.efbt.cocamo.smcubes.model.core.FACET_VALUE_TYPE;
@@ -41,7 +72,11 @@ import org.eclipse.efbt.cocamo.smcubes.model.mapping.MappingFactory;
 import org.eclipse.efbt.cocamo.smcubes.model.mapping.VARIABLE_MAPPING;
 import org.eclipse.efbt.cocamo.smcubes.model.vtl_transformation.TRANSFORMATION_SCHEME;
 import org.eclipse.efbt.cocamo.smcubes.model.vtl_transformation.Vtl_transformationFactory;
+import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 
 /**
  * This class is respnsable for structure data taking data from the BIRD Access
@@ -94,10 +129,10 @@ public class BIRDImporterImpl extends Importer {
 
 				TRANSFORMATION_SCHEME scheme = Vtl_transformationFactory.eINSTANCE.createTRANSFORMATION_SCHEME();
 				scheme.setCode(row.getString("CODE"));
-				scheme.setTransformation_scheme_id(row.getString("TRANSFORMATION_SCHEME_ID"));
+				scheme.setTransformation_scheme_id(replaceDots(row.getString("TRANSFORMATION_SCHEME_ID")));
+				scheme.setName(replaceDots(row.getString("TRANSFORMATION_SCHEME_ID")));
 				scheme.setDescription(row.getString("DESCRIPTION"));
-				scheme.setMaintenance_agency_id(row.getString("MAINTENANCE_AGENCY_ID"));
-				scheme.setName(row.getString("NAME"));
+				scheme.setDisplayName(row.getString("NAME"));
 				scheme.setValid_to(row.getDate("VALID_TO"));
 				scheme.setValid_from(row.getDate("VALID_FROM"));
 
@@ -156,6 +191,11 @@ public class BIRDImporterImpl extends Importer {
 			e.printStackTrace();
 		}
 
+	}
+
+	private String replaceDots(String string) {
+		// TODO Auto-generated method stub
+		return string.replace('.','_');
 	}
 
 	/**
@@ -232,9 +272,9 @@ public class BIRDImporterImpl extends Importer {
 
 				MEMBER_MAPPING memberMapping = MappingFactory.eINSTANCE.createMEMBER_MAPPING();
 
-				memberMapping.setMember_mapping_id(row.getString("MEMBER_MAPPING_ID"));
+				memberMapping.setMember_mapping_id(replaceDots(row.getString("MEMBER_MAPPING_ID")));
 				memberMapping.setCode(row.getString("CODE"));
-				memberMapping.setName(row.getString("NAME"));
+				memberMapping.setName(replaceDots(row.getString("NAME")));
 				memberMapping.setMaintenance_agency_id(row.getString("MAINTENENCE_AGENCY_ID"));
 				memberMappingModule.getMemberMappings().add(memberMapping);
 
@@ -245,9 +285,9 @@ public class BIRDImporterImpl extends Importer {
 
 				VARIABLE_MAPPING variableMapping = MappingFactory.eINSTANCE.createVARIABLE_MAPPING();
 
-				variableMapping.setVariable_mapping_id(row.getString("VARIABLE_MAPPING_ID"));
+				variableMapping.setVariable_mapping_id(replaceDots(row.getString("VARIABLE_MAPPING_ID")));
 				variableMapping.setCode(row.getString("CODE"));
-				variableMapping.setName(row.getString("NAME"));
+				variableMapping.setName(replaceDots(row.getString("NAME")));
 				variableMapping.setMaintenance_agency_id(row.getString("MAINTENENCE_AGENCY_ID"));
 				variableMappingModule.getVariableMappings().add(variableMapping);
 
@@ -259,8 +299,8 @@ public class BIRDImporterImpl extends Importer {
 
 				MAPPING_DEFINITION mapping = MappingFactory.eINSTANCE.createMAPPING_DEFINITION();
 				mapping.setCode(row.getString("CODE"));
-				mapping.setMapping_id(row.getString("MAPPING_ID"));
-				mapping.setName(row.getString("NAME"));
+				mapping.setMapping_id(replaceDots(row.getString("MAPPING_ID")));
+				mapping.setName(replaceDots(row.getString("NAME")));
 				mapping.setMapping_type((row.getString("MAPPING_TYPE")));
 				String memberMappingString = (row.getString("MEMBER_MAPPING_ID"));
 
@@ -286,8 +326,8 @@ public class BIRDImporterImpl extends Importer {
 
 				CUBE_MAPPING mapping = MappingFactory.eINSTANCE.createCUBE_MAPPING();
 				mapping.setCode(row.getString("CODE"));
-				mapping.setCube_mapping_id(row.getString("CUBE_MAPPING_ID"));
-				mapping.setName(row.getString("NAME"));
+				mapping.setCube_mapping_id(replaceDots(row.getString("CUBE_MAPPING_ID")));
+				mapping.setName(replaceDots(row.getString("NAME")));
 				mapping.setDescription(row.getString("DESCRIPTION"));
 				mapping.setMaintenance_agency_id(row.getString("MAINTENENCE_AGENCY_ID"));
 				String sourceCubeString = row.getString("SOURCE_CUBE_ID");
@@ -420,10 +460,10 @@ public class BIRDImporterImpl extends Importer {
 
 			List<AccessRow> list = accessUtils.getRowsForTable(filepath, "DOMAIN");
 			for (AccessRow row : list) {
-				// System.out.println("Column 'DOMAIN_ID' has value: " + row.get("DOMAIN_ID"));
+				
 				DOMAIN domain = CoreFactory.eINSTANCE.createDOMAIN();
 				domain.setCode(row.getString("CODE"));
-				domain.setDomain_id(row.getString("DOMAIN_ID"));
+				domain.setDomain_id(replaceDots(row.getString("DOMAIN_ID")));
 				domain.setDescription(row.getString("DESCRIPTION"));
 				FACET_VALUE_TYPE valueType;
 				String dataTypeString = row.getString("DATA_TYPE");
@@ -450,7 +490,7 @@ public class BIRDImporterImpl extends Importer {
 					}
 				}
 
-				domain.setName(row.getString("DOMAIN_ID"));
+				domain.setName(replaceDots(row.getString("DOMAIN_ID")));
 				domain.setDisplayName(row.getString("NAME"));
 				boolean is_enumerated = false;
 				if (row.getBoolean("IS_ENUMERATED"))
@@ -481,9 +521,9 @@ public class BIRDImporterImpl extends Importer {
 
 				MEMBER member = CoreFactory.eINSTANCE.createMEMBER();
 				member.setCode(row.getString("CODE"));
-				member.setMember_id(row.getString("MEMBER_ID"));
+				member.setMember_id(replaceDots(row.getString("MEMBER_ID")));
 				member.setDescription(row.getString("DESCRIPTION"));
-				member.setName(row.getString("MEMBER_ID"));
+				member.setName(replaceDots(row.getString("MEMBER_ID")));
 				member.setDisplayName(row.getString("NAME"));
 				String domainIDString = (row.getString("DOMAIN_ID"));
 				DOMAIN domain = getDomainWithID(domainIDString);
@@ -531,9 +571,9 @@ public class BIRDImporterImpl extends Importer {
 
 				VARIABLE variable = CoreFactory.eINSTANCE.createVARIABLE();
 				variable.setCode(row.getString("CODE"));
-				variable.setVariable_id(row.getString("VARIABLE_ID"));
+				variable.setVariable_id(replaceDots(row.getString("VARIABLE_ID")));
 				variable.setDescription(row.getString("DESCRIPTION"));
-				variable.setName(row.getString("VARIABLE_ID"));
+				variable.setName(replaceDots(row.getString("VARIABLE_ID")));
 				variable.setDisplayName(row.getString("NAME"));
 				String domainIDString = (row.getString("DOMAIN_ID"));
 				DOMAIN domain = getDomainWithID(domainIDString);
@@ -561,8 +601,8 @@ public class BIRDImporterImpl extends Importer {
 
 				CUBE_STRUCTURE cube_structure = Data_definitionFactory.eINSTANCE.createCUBE_STRUCTURE();
 				cube_structure.setCode(row.getString("CODE"));
-				cube_structure.setCube_structure_id(row.getString("CUBE_STRUCTURE_ID"));
-				cube_structure.setName(row.getString("CUBE_STRUCTURE_ID"));
+				cube_structure.setCube_structure_id(replaceDots(row.getString("CUBE_STRUCTURE_ID")));
+				cube_structure.setName(replaceDots(row.getString("CUBE_STRUCTURE_ID")));
 				cube_structure.setDisplayName(row.getString("NAME"));
 				cube_structure.setDescription("DESCRIPTION");
 				cube_structure.setValid_to(row.getDate("VALID_TO"));
@@ -574,8 +614,8 @@ public class BIRDImporterImpl extends Importer {
 
 				CUBE cube = Data_definitionFactory.eINSTANCE.createCUBE();
 				cube.setCode(row.getString("CODE"));
-				cube.setCube_id(row.getString("CUBE_ID"));
-				cube.setName(row.getString("CUBE_ID"));
+				cube.setCube_id(replaceDots(row.getString("CUBE_ID")));
+				cube.setName(replaceDots(row.getString("CUBE_ID")));
 				cube.setDisplayName(row.getString("NAME"));
 				cube.setCube_type(row.getString("CUBE_TYPE"));
 				cube.setDescription("DESCRIPTION");
@@ -669,8 +709,8 @@ public class BIRDImporterImpl extends Importer {
 
 				COMBINATION comb = Data_definitionFactory.eINSTANCE.createCOMBINATION();
 				comb.setCode(row.getString("CODE"));
-				comb.setCombination_id(row.getString("COMBINATION_ID"));
-				comb.setName(row.getString("NAME"));
+				comb.setCombination_id(replaceDots(row.getString("COMBINATION_ID")));
+				comb.setName(replaceDots(row.getString("NAME")));
 
 				combinationsModule.getCombinations().add(comb);
 			}
@@ -908,6 +948,404 @@ public class BIRDImporterImpl extends Importer {
 	 * } }
 	 */
 
+	
+	/**
+	 * from Test data sored in CSV format , create all the model instances of
+	 * Test and Store them in the list of  testPrograms. Note that to do this
+	 * we will create instances of TestDefintions TestConstraints, 
+	 * and TestTemplates which the Test instance will refer to.
+	 */
+	@Override
+	public void importTestData() {
+		// get the csv file, use an open source csv library.
+		// create 1 test definition
+		// create mutliple tests, with that data.
+		
+		//create the TestDefintion Module to hold the different TestDefinitions
+		TestDefinitionModule definitionModule = Test_definitionFactory.eINSTANCE.
+				createTestDefinitionModule();
+		definitionModule.setName("testDefinitionsModule");
+		
+		//create the TestTemplateModule to hold the different TestDefinitions
+		TestTemplateModule testTemplateModule = Test_definitionFactory.eINSTANCE.
+				createTestTemplateModule();
+		testTemplateModule.setName("testTemplateModule");
+		testTemplateProgram.setTestTemplates(testTemplateModule);
+		testDefinitionProgram.setTestDefinitions(definitionModule);
+
+		//create a TestTemplate and add it to the Test Template Module,
+		// all our tests are going to use the same template
+		TestTemplate testTemplate = 
+				Test_definitionFactory.eINSTANCE.createTestTemplate();
+		testTemplate.setName("testTemplate1");
+		Param templateparam = Test_definitionFactory.eINSTANCE.createParam();
+		templateparam.setParam(transformationSchemes.getSchemes().get(0)
+				);
+		testTemplate.getWhenParams().add(templateparam);
+		testTemplateModule.getTemplates().add(testTemplate);
+
+		//Set the given when then clauses of the Test Definition, all our 
+		//tests are going to use the same TestDefintion
+		ClauseText given_clauseText = 
+				Test_definitionFactory.eINSTANCE.createClauseText();
+		given_clauseText.setName("given_test_input_data");
+		testTemplate.setGivenText(given_clauseText);
+		ClauseText when_clauseText = 
+				Test_definitionFactory.eINSTANCE.createClauseText();
+		when_clauseText.setName("when_transformation_sheme_is_run");
+		testTemplate.setWhenText(when_clauseText);
+		ClauseText then_clauseText = 
+				Test_definitionFactory.eINSTANCE.createClauseText();
+		then_clauseText.setName("then_specific_output_data_is_expected");
+		testTemplate.setGivenText(then_clauseText);
+		testTemplateModule.getTemplates().add(testTemplate);
+		//create a TestConstraint and add it to the Test Constrinats Module,
+		// all our tests are going to use the same constriant
+		TestContraints contraints = 
+				Test_definitionFactory.eINSTANCE.createTestContraints();
+		contraints.setName("constraints");
+		
+		contraints.setTemplate(testTemplate);
+		// constraintsModule.getCoverageTestSets().add(contraints);
+		testConstraintsProgram.setTestConstriants(contraints);
+		
+		
+		Param contraintsparam = Test_definitionFactory.eINSTANCE.createParam();
+		contraintsparam
+				.setParam(transformationSchemes);
+		contraints.getWhenParams().add(contraintsparam);
+
+		E2ETestDefinition definition =
+					Test_definitionFactory.eINSTANCE.createE2ETestDefinition();
+		definition.setName("standard_test");
+		definitionModule.getTestDefinitions().add(definition);
+
+		Param defparam = Test_definitionFactory.eINSTANCE.createParam();
+		defparam.setParam(
+				transformationSchemes.getSchemes().get(1));
+		
+		When when = Test_definitionFactory.eINSTANCE.createWhen();
+		Then then = Test_definitionFactory.eINSTANCE.createThen();
+		Given given = Test_definitionFactory.eINSTANCE.createGiven();
+		definition.setWhen(when);
+		definition.setThen(then);
+		definition.setGiven(given);
+		definition.getWhen().getParams().add(defparam);
+
+		definition.setTestContraints(contraints);
+		testDefinitionProgram.setTestDefinitions(definitionModule);
+
+		//create the Test model instances from the CSV test data
+				
+		FileReader csvData;
+		try {
+
+			csvData = new FileReader(new File(testdatafilepath));
+
+			
+			
+			List<CSVRecord> list = getCSVRowsFromFile(testdatafilepath);
+
+			HashMap<String, SMCubesTest> tests = new HashMap<String, SMCubesTest>();
+			HashMap<String, BaseColumnStructuredData> tables = new HashMap<String, BaseColumnStructuredData>();
+			HashMap<String, BaseRowData> rows = new HashMap<String, BaseRowData>();
+			int nameCounter = 0;
+			for (CSVRecord csvRecord : list) {
+				nameCounter++;
+				//get a row of data which wil relate to the value of one column
+				//in a cube
+				String id1 = csvRecord.get(0);
+				String id2 = csvRecord.get(1);
+				String record_no = csvRecord.get(2);
+				String cube = csvRecord.get(3);
+				String variable = csvRecord.get(4);
+				String value = csvRecord.get(5);
+				//check whhich test this value is for, and see 
+				//if we already have created a Test for that test
+				SMCubesTest test = tests.get(id1 + ":" + id2);
+				if (test == null) {
+					//if we dont have aTest for this item of Test data, then 
+					//we create one and add it to the list of tests
+					Program testProgram = CocamoFactory.eINSTANCE.createProgram();
+					testPrograms.add(testProgram);
+					SMCubesTestModule testModule = CocamoFactory.eINSTANCE.createSMCubesTestModule();
+					testModule.setName("TestModule" + nameCounter);
+					testProgram.setTests(testModule);
+					test = CocamoFactory.eINSTANCE.createSMCubesTest();
+					test.setName(id1 + ":" + id2);
+					test.setTestDefinition(definition);
+					testModule.getTests().add(test);
+					tests.put(id1 + ":" + id2, test);
+					SMCubesTestInputData inputData2 = CocamoFactory.eINSTANCE
+							.createSMCubesTestInputData();
+					inputData2.setName(id1 + ":" + id2 + ":Data");
+					test.setInputData(inputData2);
+				}
+				SMCubesTestInputData inputData = (SMCubesTestInputData) test.getInputData();
+				
+
+				// so we need a table for each table, then a row for each row, and a cell for
+				// each cell.
+				// so we make a hash map of sorts
+
+				BaseColumnStructuredData table = tables.get(id1 + ":" + id2 + ":" + cube);
+				if (table == null) {
+					BaseColumnStructuredData structuredData = Base_column_structured_dataFactory.eINSTANCE
+							.createBaseColumnStructuredData();
+					structuredData.setName(id1 + ":" + id2 + ":" + cube +":CubeData" );
+					structuredData.setCube(getCubeForCubeName(cube));
+					tables.put(id1 + ":" + id2 + ":" + cube, structuredData);
+					inputData.getSmcubes_inputdata().add(structuredData);
+					table = structuredData;
+
+				}
+
+				BaseRowData rowData = rows.get(id1 + ":" + id2 + ":" + cube + ":" + record_no);
+				if (rowData == null) {
+					BaseRowData baseRow = Base_column_structured_dataFactory.eINSTANCE.createBaseRowData();
+					baseRow.setRowID(id1 + ":" + id2 + ":" + cube + ":" + record_no);
+					rows.put(id1 + ":" + id2 + ":" + cube + ":" + record_no, baseRow);
+					table.getRows().add(baseRow);
+					rowData = baseRow;
+				}
+
+				// determine if the associated Variable is enumerated or not.
+				// if so then get the correct enumerated value, if it does not exist, then put
+				// this in the error report.
+				
+				boolean cubeExists = checkCubeExists(cube);
+				if (cubeExists) {
+					VARIABLE theColumn = getColumnFromCube(cube, variable);
+
+					if (theColumn != null) {
+						boolean isEnumeratedColumn = checkIsEnumeratedColumn(cube, variable);
+						if (isEnumeratedColumn) {
+							MEMBER member = getMember(cube, variable, value);
+							if (member != null) {
+
+								BaseCellWithEnumeratedValue enumcell = Base_column_structured_dataFactory.eINSTANCE
+										.createBaseCellWithEnumeratedValue();
+								enumcell.setColumn(theColumn);
+								enumcell.setValue(member);
+								enumcell.setCellID(id1 + ":" + id2 + ":" + cube + ":"
+										+ record_no + ":" +  variable);
+								rowData.getCells().add(enumcell);
+
+							} else {
+								System.out.println("Cannot find member:" + id1 + ":" + id2 + ":" + cube + ":"
+										+ record_no + ":" + variable + ":" + value);
+							}
+
+						} else {
+							BaseCellWithValue cellWithValue = Base_column_structured_dataFactory.eINSTANCE
+									.createBaseCellWithValue();
+							cellWithValue.setValue(value);
+							cellWithValue.setColumn(theColumn);
+							cellWithValue.setCellID(id1 + ":" + id2 + ":" + cube + ":"
+									+ record_no + ":" +  variable);
+							rowData.getCells().add(cellWithValue);
+						}
+
+					} else {
+						System.out.println("Cannot find column:" + id1 + ":" + id2 + ":" + cube + ":" + record_no + ":"
+								+ variable);
+					}
+
+				} else {
+					System.out.println("Cannot find cube:" + id1 + ":" + id2 + ":" + cube);
+				}
+
+			}
+
+		} catch (FileNotFoundException e) {
+			
+			e.printStackTrace();
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		}
+
+	}
+	
+	/**
+	 * Get the related EnumMeber
+	 * 
+	 * @param cube
+	 * @param variable
+	 * @param value
+	 * @return
+	 */
+	private MEMBER getMember(String cube, String variable, String value) {
+		
+		EList<CUBE> cubes = cubesModule.getCubes();
+			
+		MEMBER returnedMember = null;
+		for (Iterator iterator = cubes.iterator(); iterator.hasNext();) 
+		{
+			CUBE columnStructuredEntity = 
+					(CUBE) iterator.next();
+			if (columnStructuredEntity.getCode().equalsIgnoreCase(cube)) 
+			{
+				
+				
+				EList<CUBE_STRUCTURE_ITEM> columns = getColumnsForCube(columnStructuredEntity);
+				for (Iterator iterator2 = columns.iterator(); iterator2.hasNext();) 
+				{
+					CUBE_STRUCTURE_ITEM column = (CUBE_STRUCTURE_ITEM) iterator2.next();
+					if (column.getCube_variable_code().equalsIgnoreCase(variable)) 
+					{
+						EList<MEMBER> theMembers = getDomainMembers(column.getVariable_id().getDomain_id());
+						for (Iterator iterator3 = theMembers.iterator(); iterator3.hasNext();) 
+						{
+							MEMBER enumMember = (MEMBER) iterator3.next();
+
+							if (enumMember.getCode().equalsIgnoreCase(value))
+								returnedMember = enumMember;
+
+						}
+					}
+				}
+			}
+
+		}
+		return returnedMember;
+	}
+
+	
+	private EList<MEMBER> getDomainMembers(DOMAIN domain) {
+
+		EList<MEMBER> returnMembers = new BasicEList<MEMBER>();	
+		EList<MEMBER> allMembers = members.getMembers();
+		for (MEMBER member : allMembers) {
+			if(member.getDomain_id().equals(domain));
+			returnMembers.add(member);
+		}
+		return returnMembers;
+	}
+
+	private EList<CUBE_STRUCTURE_ITEM> getColumnsForCube(CUBE columnStructuredEntity) {
+		// TODO Auto-generated method stub
+		EList<CUBE_STRUCTURE_ITEM> returnItems = new BasicEList<CUBE_STRUCTURE_ITEM>();
+		CUBE_STRUCTURE cs = columnStructuredEntity.getCube_structure_id();
+		EList<CUBE_STRUCTURE_ITEM> csi = cubeStructureItemsModule.getCubeStructureItems();
+		for (Iterator iterator = csi.iterator(); iterator.hasNext();) {
+			CUBE_STRUCTURE_ITEM cube_STRUCTURE_ITEM = (CUBE_STRUCTURE_ITEM) iterator.next();
+			
+			if(cube_STRUCTURE_ITEM.getCube_structure_id().equals(cs))
+			{
+				returnItems.add(cube_STRUCTURE_ITEM);
+			}
+		}
+		return returnItems;
+	}
+
+	/**
+	 * Return true if the variable for a cube is an enumberated varaible
+	 * otherwise return false.
+	 * 
+	 * @param cube
+	 * @param variable
+	 * @return
+	 */
+	private boolean checkIsEnumeratedColumn(String cube, String variable) {
+	
+		EList<CUBE> cubes = cubesModule.getCubes();
+		boolean isEnumerated = false;
+		for (Iterator iterator = cubes.iterator(); iterator.hasNext();) {
+			CUBE columnStructuredEntity = (CUBE) iterator.next();
+			if (columnStructuredEntity.getCode().equalsIgnoreCase(cube)) {
+				
+				 EList<CUBE_STRUCTURE_ITEM> columns = getColumnsForCube(columnStructuredEntity);
+				for (Iterator iterator2 = columns.iterator(); iterator2.hasNext();) {
+					CUBE_STRUCTURE_ITEM column = (CUBE_STRUCTURE_ITEM) iterator2.next();
+					if (column.getCube_variable_code().equalsIgnoreCase(variable))
+						isEnumerated = column.getVariable_id().getDomain_id().isIs_enumerated();
+				}
+			}
+
+		}
+		return isEnumerated;
+	}
+
+	
+	/**
+	 * Get the Column instance for a particular cube, 
+	 * which is for a particular Varaible
+	 * @param cube
+	 * @param variable
+	 * @return
+	 */
+	private VARIABLE getColumnFromCube(String cube, String variable) {
+		
+		EList<CUBE> cubes = cubesModule.getCubes();
+		VARIABLE returnedColumn = null;
+		for (Iterator iterator = cubes.iterator(); iterator.hasNext();) {
+			CUBE columnStructuredEntity = (CUBE) iterator.next();
+			if (columnStructuredEntity.getCode().equalsIgnoreCase(cube) ) {
+				
+				 EList<CUBE_STRUCTURE_ITEM> columns = getColumnsForCube(columnStructuredEntity);
+				for (Iterator iterator2 = columns.iterator(); iterator2.hasNext();) {
+					CUBE_STRUCTURE_ITEM column = (CUBE_STRUCTURE_ITEM) iterator2.next();
+					if (column.getCube_variable_code().equalsIgnoreCase(variable))
+						returnedColumn = column.getVariable_id();
+				}
+			}
+		}
+
+		return returnedColumn;
+	}
+
+
+	/**
+	 * Return true if the cube exists, otherwise return false.
+	 * 
+	 * @param cube
+	 * @return
+	 */
+	private boolean checkCubeExists(String cube) {
+		
+		EList<CUBE> cubes = cubesModule.getCubes();
+		boolean exists = false;
+		for (Iterator iterator = cubes.iterator(); iterator.hasNext();) {
+			CUBE columnStructuredEntity = (CUBE) iterator.next();
+			if (columnStructuredEntity.getCode().equalsIgnoreCase(cube))
+				exists = true;
+
+		}
+		return exists;
+	}
+	
+	private static List<CSVRecord> getCSVRowsFromFile(String fileName) throws IOException  {
+		// TODO Auto-generated method stub
+		File csvData = new File (fileName);
+		 CSVParser parser = CSVParser.parse(csvData,StandardCharsets.UTF_8, CSVFormat.EXCEL);
+		 List<CSVRecord> list = new ArrayList<CSVRecord>();
+		 for (CSVRecord csvRecord : parser) {
+			
+			 list.add(csvRecord);
+		 }
+		 return list;
+	}
+	
+	/**
+	 * Get the ColumnStructuredEntity for a String cube ID.
+	 * @param cube
+	 * @return
+	 */
+	private CUBE getCubeForCubeName(String cube) {
+		
+		EList<CUBE> column_structured_entities =
+				cubesModule.getCubes();
+		for (Iterator iterator = 
+				column_structured_entities.iterator(); iterator.hasNext();) {
+			CUBE columnStructuredEntity =
+					(CUBE) iterator.next();
+			if (columnStructuredEntity.getCode().equalsIgnoreCase(cube))
+				return columnStructuredEntity;
+		}
+		return null;
+	}
+	
 	/**
 	 * A main method for initial test.
 	 * 

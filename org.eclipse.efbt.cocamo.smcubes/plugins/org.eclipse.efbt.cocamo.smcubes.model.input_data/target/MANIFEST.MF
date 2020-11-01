@@ -8,7 +8,7 @@ Require-Bundle: org.eclipse.core.runtime,org.eclipse.emf.ecore;visibil
  pse.efbt.cocamo.core.model.module_management;visibility:=reexport,org
  .eclipse.efbt.cocamo.smcubes.model.core;visibility:=reexport
 Bundle-ManifestVersion: 2
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: %providerName
 Export-Package: org.eclipse.efbt.cocamo.smcubes.model.base_column_stru

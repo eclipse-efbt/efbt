@@ -2,7 +2,7 @@ pipeline {
     agent any
     tools {
         maven 'apache-maven-latest'
-        jdk 'adoptopenjdk-hotspot-jdk8-latest'
+        jdk 'adoptopenjdk-openj9-jdk11-latest'
     }
     stages {
         stage('Build') {
@@ -17,13 +17,16 @@ pipeline {
                     cd org.eclipse.efbt.cocamo.smcubes
                     mvn install
                     cd ..
-                    cd org.eclipse.emf.eson.parent
+                    cd org.eclipse.efbt.cocason.dsl.cocason.parent -DskipTests
                     mvn install
                     cd ..
                     cd org.eclipse.efbt.cocason
                     mvn install 
                     cd ..
                     cd org.eclipse.efbt.ldm
+                    mvn install
+                    cd ..
+                    cd org.eclipse.efbt.controller
                     mvn install
                     cd ..
                     cd org.eclipse.efbt.complete_repo

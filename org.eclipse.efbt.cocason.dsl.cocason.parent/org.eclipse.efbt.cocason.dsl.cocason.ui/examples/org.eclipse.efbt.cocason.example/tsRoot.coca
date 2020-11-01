@@ -1,0 +1,22 @@
+Program {
+	smCubesModel : SmcubesModel TransformationSchemesModel {
+		functionalModules : [ TransformationSchemeModule TransformationSchemesModule {
+			schemes : [ TRANSFORMATION_SCHEME ECB_BIRD_AnaCredit_5_0_2_1 {
+				transformation_scheme_id : ECB_BIRD_AnaCredit_5_0_2_1
+				code : AnaCredit
+				displayName : AnaCredit
+				valid_to : 12.31.9999
+				valid_from : 10.02.2020
+			} TRANSFORMATION_SCHEME ECB_BIRD_SHS_5_0_2_1 {
+				transformation_scheme_id : ECB_BIRD_SHS_5_0_2_1
+				code : SHS
+				displayName : "Securities Holding Statistics"
+				valid_to : 12.31.9999
+				valid_from : 10.02.2020
+			} TRANSFORMATION_SCHEME ECB_BIRD_IL_EIL_5_0_2_1 {
+				transformation_scheme_id : ECB_BIRD_IL_EIL_5_0_2_1
+				code : IL_EIL
+				displayName : "Input layer to Enriched input layer"
+				valid_to : 12.31.9999
+				valid_from : 10.02.2020
+			} ] } ] } }

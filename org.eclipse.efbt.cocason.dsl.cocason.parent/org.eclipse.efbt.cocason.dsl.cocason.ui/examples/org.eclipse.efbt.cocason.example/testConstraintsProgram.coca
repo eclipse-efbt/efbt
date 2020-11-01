@@ -1,0 +1,4 @@
+Program {
+	testConstriants : TestContraints constraints {
+		template : "testTemplateModule.testTemplate1" whenParams : [ Param {
+			param : "TransformationSchemesModel.TransformationSchemesModule" } ] } }

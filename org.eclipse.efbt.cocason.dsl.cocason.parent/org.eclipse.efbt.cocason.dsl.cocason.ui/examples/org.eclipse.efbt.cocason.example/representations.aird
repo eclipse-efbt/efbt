@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" uid="_xnMsQBqYEeuXytOStp_A5Q" version="14.3.1.202003261200">
+  <semanticResources>cube_structure_itemsRoot.coca</semanticResources>
+  <semanticResources>cube_structuresRoot.coca</semanticResources>
+  <semanticResources>variablesRoot.coca</semanticResources>
+  <semanticResources>domainsRoot.coca</semanticResources>
+  <semanticResources>cubesRoot.coca</semanticResources>
+  <semanticResources>functionalityModulesProgram.coca</semanticResources>
+  <semanticResources>membersRoot.coca</semanticResources>
+  <semanticResources>platform_calls.platform_call</semanticResources>
+  <semanticResources>testConstraintsProgram.coca</semanticResources>
+  <semanticResources>testTemplateProgram.coca</semanticResources>
+  <semanticResources>tsRoot.coca</semanticResources>
+  <semanticResources>testDefinitionProgram.coca</semanticResources>
+  <semanticResources>testProgram10.coca</semanticResources>
+</viewpoint:DAnalysis>

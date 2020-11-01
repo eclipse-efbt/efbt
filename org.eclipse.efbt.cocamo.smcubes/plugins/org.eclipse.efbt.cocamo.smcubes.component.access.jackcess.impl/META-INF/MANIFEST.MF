@@ -4,7 +4,7 @@ Bundle-Name: Jackcess
 Bundle-SymbolicName: org.eclipse.efbt.cocamo.smcubes.component.access.jackcess.impl
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: org.eclipse.efbt.util.access.impl.jackcess
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.efbt.cocamo.smcubes.component.access.api;bundle-version="1.0.0"
 Export-Package: org.eclipse.efbt.cocamo.smcubes.component.access.jackcess.impl
 Import-Package: org.eclipse.efbt.dependencies.access.jackcess,

@@ -3,5 +3,5 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Repository
 Bundle-SymbolicName: org.eclipse.efbt.repository
 Bundle-Version: 1.0.0.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: org.eclipse.efbt.repository

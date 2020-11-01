@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Component
+Bundle-SymbolicName: org.eclipse.efbt.controller.core.component.core
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: org.eclipse.efbt.controller.core.component.core
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Require-Bundle: org.eclipse.efbt.controller.core.model.core;bundle-version="1.0.0",
+ org.eclipse.efbt.cocason.component.export_smcubes,
+ org.eclipse.efbt.ldm.component.sqldevconvertor
+Export-Package: org.eclipse.efbt.controller.core.component.core
