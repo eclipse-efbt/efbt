@@ -431,4 +431,25 @@
 			type="text">
 		</fileTypes>
 	</extension>
+	<extension
+          point="org.eclipse.ui.newWizards">
+       <category 
+            id="org.eclipse.efbt.cocason.dsl.cocason.ui.Examples"
+            name="C"
+            parentCategory="org.eclipse.ui.Examples" />
+       <wizard
+             category="org.eclipse.ui.Examples/org.eclipse.efbt.cocason.dsl.cocason.ui.Examples"
+             class="org.eclipse.emf.common.ui.wizard.ExampleInstallerWizard"
+             icon="icons/EObject.gif"
+             id="org.eclipse.efbt.cocason.dsl.cocason.ui.wizard.CocasonExampleWizard"
+             name="CoCaSon Example"
+             project="true">
+       </wizard>      
+    </extension>
+   <extension point="org.eclipse.emf.common.ui.examples">
+        <example wizardID="org.eclipse.efbt.cocason.dsl.cocason.ui.wizard.CocasonExampleWizard" pageImage="icons/genproject.gif">
+            <projectDescriptor name="org.eclipse.efbt.cocason.example" contentURI="examples/org.eclipse.efbt.cocason.example/" description="CoCaSon Example"/>           
+            <fileToOpen location="org.eclipse.efbt.cocason.example/variablesRoot.coca"/>           
+        </example>
+    </extension>
 </plugin>
