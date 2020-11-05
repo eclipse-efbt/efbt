@@ -311,8 +311,8 @@ DOMAIN returns core::DOMAIN:
 		('data_type' ':' data_type=FACET_VALUE_TYPE)?
 		('description' ':' description=EString)?
 		('domain_id' ':' domain_id=EString)?
-		('is_enumerated' ':' is_enumerated= EBoolean)?
-		('is_reference' ':' is_reference= EBoolean)?
+		('is_enumerated' ':' is_enumerated= EBoolean)
+		('is_reference' ':' is_reference= EBoolean)
 		('displayName' ':' displayName=EString)?
 		('facet_id' ':' facet_id=[core::FACET_COLLECTION|EString])?
 		('maintenance_agency_id' ':' maintenance_agency_id=[core::MAINTENANCE_AGENCY|EString])?
