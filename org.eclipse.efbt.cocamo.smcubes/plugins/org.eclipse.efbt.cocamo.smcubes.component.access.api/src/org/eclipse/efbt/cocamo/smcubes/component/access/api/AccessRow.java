@@ -39,6 +39,6 @@ public interface AccessRow {
 	 * @param columnName
 	 * @return
 	 */
-	public boolean getBoolean(String columnName);
+	public Boolean getBoolean(String columnName);
 
 }

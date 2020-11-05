@@ -497,9 +497,14 @@ public class BIRDImporterImpl extends Importer {
 				domain.setName(replaceDots(row.getString("DOMAIN_ID")));
 				domain.setDisplayName(row.getString("NAME"));
 				boolean is_enumerated = false;
-				if (row.getBoolean("IS_ENUMERATED"))
+				if (row.getBoolean("IS_ENUMERATED").booleanValue())
 					is_enumerated = true;
 				domain.setIs_enumerated(is_enumerated);
+				
+				boolean is_referenced = false;
+				if (row.getBoolean("IS_REFERENCE").booleanValue())
+					is_referenced = true;
+				domain.setIs_reference(is_referenced);
 
 				domains.getDomains().add(domain);
 
