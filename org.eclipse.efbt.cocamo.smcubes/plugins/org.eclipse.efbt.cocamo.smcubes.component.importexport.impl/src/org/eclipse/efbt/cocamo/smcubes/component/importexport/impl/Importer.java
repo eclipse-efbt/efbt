@@ -374,6 +374,19 @@ public abstract class Importer implements BirdImporter {
 
 	}*/
 	
-	public void importTestData() { }
+	public void importTestDataWithNewTestFormat() { }
+	
+	
+
+	/**
+	 * from Test data sored in CSV format , create all the model instances of
+	 * Test and Store them in the list of  testPrograms. Note that to do this
+	 * we will create instances of TestDefintions TestConstraints, 
+	 * and TestTemplates which the Test instance will refer to.
+	 */
+	public void importTestDataWithOldTestFormat(String fileLocation) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
