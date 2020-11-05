@@ -24,5 +24,10 @@
     <genClasses ecoreClass="platform_call.ecore#//ConvertSQLDeveloperModelToEcore">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//ConvertSQLDeveloperModelToEcore/inputDirectory"/>
     </genClasses>
+    <genClasses ecoreClass="platform_call.ecore#//TranslateBIRDWithNewTestFormatToCocason">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//TranslateBIRDWithNewTestFormatToCocason/inputDirectory"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//TranslateBIRDWithNewTestFormatToCocason/outputDirectory"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//TranslateBIRDWithNewTestFormatToCocason/testDirectory"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>
