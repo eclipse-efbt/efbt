@@ -12,13 +12,66 @@ import org.eclipse.xtext.scoping.IScope
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
 
+
 class CoCaSonScopeProvider extends AbstractCoCaSonScopeProvider{
 	
 	
+	
+	
 	override  IScope getScope(EObject context, EReference reference) {
+		
         // We want to define the Scope for the Element's superElement cross-reference
         // val LOGGER = LogManager.getLogger(AortaScopeProvider)
-     
+ 
+ /**
+     	if ((context instanceof BaseCellWithEnumeratedValue ) && reference.equals(Base_column_structured_dataPackage.Literals.BASE_CELL_WITH_ENUMERATED_VALUE__VALUE))
+     	{
+     		val cell = context as BaseCellWithEnumeratedValue
+     	
+     		//can we llok up the index to get stuff...how was this done n eson?
+     		
+     		val variable = cell.column
+     		
+     		val resolvedVariable = EcoreUtil2.resolve(variable,  cell)
+     		
+     		val domain = (resolvedVariable as VARIABLE).domain_id
+     		
+     		val resolvedDomain =  EcoreUtil2.resolve(domain,  resolvedVariable)
+     		
+     		val superScope = super.getScope(context, reference)
+     		return new FilteringScope(superScope,
+			new Predicate<IEObjectDescription>() {
+				
+				
+				override apply(IEObjectDescription input) {
+					
+					val o = input.EObjectOrProxy 
+					//EcoreUtil2.resolve(o,  null as EObject)
+				    if (o instanceof MEMBER)
+				    {
+				    	val mem = o  as MEMBER
+						
+						
+						val resolvedMember =  EcoreUtil2.resolve(mem, null as ResourceSet)
+						
+						val domain1 =  (resolvedMember as MEMBER).domain_id
+						
+						val domainName1 = domain1.name
+						
+						return domainName1.equals((resolvedDomain as DOMAIN).name)
+					}
+					else 
+						return false
+				
+				}
+				
+			});
+			
+     		 
+     		
+     	}
+     */    
+    
         if ((context.eContainer) instanceof Clause )
          {
 	         if(context instanceof Param)
