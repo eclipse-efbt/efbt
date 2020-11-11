@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="efbt_advanced_data_definition" nsURI="http://www.eclipse.org/efbt/efbt_advanced_data_definition"
+    nsPrefix="efbt_advanced_data_definition">
+  <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+    <details key="documentation" value=" This package describes various modules which define groups of structures from the data_definiton package&#xA; &#xD;&#xA;"/>
+  </eAnnotations>
+  <eAnnotations source="license">
+    <details key="license" value="Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"/>
+  </eAnnotations>
+  <eClassifiers xsi:type="ecore:EClass" name="AdvancedTypedVariable" eSuperTypes="../../org.eclipse.efbt.cocamo.smcubes.model.core/model/core.ecore#//VARIABLE"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ArrayTypedVariable" eSuperTypes="#//AdvancedTypedVariable">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cubeType" eType="ecore:EClass cubes.ecore#//FreeBirdToolsCube"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ArrayTypedVariableModule" eSuperTypes="../../org.eclipse.efbt.cocamo.core.model.module_management/model/module_management.ecore#//Module">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="arrayTypedVariables" upperBound="-1"
+        eType="#//ArrayTypedVariable" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="StructTypedVariable" eSuperTypes="#//AdvancedTypedVariable">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cubeType" eType="ecore:EClass cubes.ecore#//FreeBirdToolsCube"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="StructTypedVariablesModule" eSuperTypes="../../org.eclipse.efbt.cocamo.core.model.module_management/model/module_management.ecore#//Module">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="structTypeVariables" upperBound="-1"
+        eType="#//StructTypedVariable" containment="true"/>
+  </eClassifiers>
+</ecore:EPackage>

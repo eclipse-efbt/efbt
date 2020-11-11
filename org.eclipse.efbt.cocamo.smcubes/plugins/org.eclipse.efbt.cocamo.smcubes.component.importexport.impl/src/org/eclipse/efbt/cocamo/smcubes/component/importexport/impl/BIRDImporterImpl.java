@@ -1300,7 +1300,7 @@ public class BIRDImporterImpl extends Importer {
 		EList<MEMBER> returnMembers = new BasicEList<MEMBER>();	
 		EList<MEMBER> allMembers = members.getMembers();
 		for (MEMBER member : allMembers) {
-			if(member.getDomain_id().equals(domain));
+			if(member.getDomain_id().equals(domain))
 			returnMembers.add(member);
 		}
 		return returnMembers;

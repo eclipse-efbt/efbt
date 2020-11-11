@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="incremental_cubes" nsURI="http://www.eclipse.org/efbt/incremental_cubes"
+    nsPrefix="incremental_cubes">
+  <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+    <details key="documentation" value=" This package describes the incremental FreeBirdToolsCubes , these are at a slightly different &#xA;    level of abstraction form  the related Cubes from the data_definition package. &#xA; &#xA; "/>
+  </eAnnotations>
+  <eAnnotations source="license">
+    <details key="license" value="Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;&#xD;&#xA;Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"/>
+  </eAnnotations>
+  <eClassifiers xsi:type="ecore:EClass" name="BaseDeltaCube" eSuperTypes="cubes.ecore#//BaseCube">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ultimateBaseCube" eType="ecore:EClass cubes.ecore#//BaseCube"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BaseViewCube" eSuperTypes="cubes.ecore#//DerivedCube">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ultimateBaseCube" eType="ecore:EClass cubes.ecore#//BaseCube"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DeltaAccumulationCube" eSuperTypes="cubes.ecore#//BaseCube"/>
+</ecore:EPackage>

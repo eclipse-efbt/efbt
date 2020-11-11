@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature id="org.eclipse.efbt.cocamo.lineage_core.model.feature">
+      <category name="cocamo.lineage_core"/>
+   </feature>
+   <feature id="org.eclipse.efbt.cocamo.lineage_core.query.feature">
+      <category name="cocamo.lineage_core"/>
+   </feature>
+   <category-def name="cocamo.lineage_core" label="CoCaMo Lineage Core"/>
+</site>

@@ -17,6 +17,15 @@ pipeline {
                     cd org.eclipse.efbt.cocamo.smcubes
                     mvn install
                     cd ..
+                     cd org.eclipse.efbt.cocamo.functions
+                    mvn install
+                    cd ..
+                     cd org.eclipse.efbt.cocamo.lineage_core
+                    mvn install
+                    cd ..
+                    cd org.eclipse.efbt.cocamo.attributelineage
+                    mvn install
+                    cd ..
                     cd org.eclipse.efbt.cocason.dsl.cocason.parent -DskipTests
                     mvn install
                     cd ..
