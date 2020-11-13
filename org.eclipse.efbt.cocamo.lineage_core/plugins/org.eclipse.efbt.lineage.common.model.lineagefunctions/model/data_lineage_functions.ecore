@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="data_lineage_functions" nsURI="http://www.eclipse.org/efbt/data_lineage_functions"
+    nsPrefix="data_lineage_functions">
+  <eClassifiers xsi:type="ecore:EClass" name="CellsParameter" eSuperTypes="../../org.eclipse.efbt.cocamo.functions.model.core/model/functions.ecore#//Parameter"/>
+</ecore:EPackage>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.cocamo.functions.model.core/src-gen"
+    modelPluginID="org.eclipse.efbt.cocamo.functions.model.core" modelName="Functions"
+    rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="5.0" copyrightFields="false" usedGenPackages="../../org.eclipse.efbt.cocamo.core.model.module_management/model/module_management.genmodel#//module_management"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>functions.ecore</foreignModel>
+  <genPackages prefix="Functions" basePackage="org.eclipse.efbt.cocamo.functions.model"
+      resource="XML" disposableProviderFactory="true" ecorePackage="functions.ecore#/">
+    <genClasses ecoreClass="functions.ecore#//AggregateFunction">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference functions.ecore#//AggregateFunction/functionSpec"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//AggregateFunctionSpec"/>
+    <genClasses ecoreClass="functions.ecore#//BasicFunction">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference functions.ecore#//BasicFunction/functionSpec"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//BasicFunctionSpec">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//BasicFunctionSpec/isInfix"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//BooleanFunction"/>
+    <genClasses ecoreClass="functions.ecore#//Function">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference functions.ecore#//Function/parameters"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//Function/name"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//FunctionSpec">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference functions.ecore#//FunctionSpec/parameterSpecs"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//FunctionSpec/functionalName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//FunctionSpec/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//FunctionSpec/sqlName"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//FunctionSpecModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference functions.ecore#//FunctionSpecModule/functionSpecs"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//ParamaterSpec">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//ParamaterSpec/name"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//Parameter"/>
+  </genPackages>
+</genmodel:GenModel>

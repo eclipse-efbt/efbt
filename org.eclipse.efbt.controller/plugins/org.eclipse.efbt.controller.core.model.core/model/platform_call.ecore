@@ -64,12 +64,19 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TranslateBIRDToCocason" eSuperTypes="#//PlatformCall">
+  <eClassifiers xsi:type="ecore:EClass" name="TranslateBIRDWithOldTestFormatToCocason"
+      eSuperTypes="#//PlatformCall">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="inputDirectory" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="outputDirectory" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="testDirectory" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ConvertSQLDeveloperModelToEcore" eSuperTypes="#//PlatformCall">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="inputDirectory" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TranslateBIRDWithNewTestFormatToCocason"
+      eSuperTypes="#//PlatformCall">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="inputDirectory" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="outputDirectory" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="testDirectory" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
 </ecore:EPackage>

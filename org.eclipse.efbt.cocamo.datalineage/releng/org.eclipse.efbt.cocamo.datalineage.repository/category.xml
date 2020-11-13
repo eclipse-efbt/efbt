@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature id="org.eclipse.efbt.cocamo.datalineage.model.feature">
+      <category name="cocamo.datalineage"/>
+   </feature>
+   <feature id="org.eclipse.efbt.cocamo.datalineage.query.feature">
+      <category name="cocamo.datalineage"/>
+   </feature>
+   <feature id="org.eclipse.efbt.cocamo.datalineage.ui.sirius.feature">
+      <category name="cocamo.datalineage"/>
+   </feature>
+   <category-def name="cocamo.datalineage" label="CoCaMo Data Lineage"/>
+</site>

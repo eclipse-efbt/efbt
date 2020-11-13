@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated datalineage -->
+      <package
+            uri="http://www.eclipse.org/efbt/cell_transformation_logic"
+            class="org.eclipse.efbt.lineage.datalineage.model.cell_transformation_logic.Cell_transformation_logicPackage"
+            genModel="model/datalineage.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated datalineage -->
+      <parser
+            type="cell_transformation_logic"
+            class="org.eclipse.efbt.lineage.datalineage.model.cell_transformation_logic.util.Cell_transformation_logicResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated datalineage -->
+      <package
+            uri="http://www.eclipse.org/efbt/data_lineage"
+            class="org.eclipse.efbt.lineage.datalineage.model.data_lineage.Data_lineagePackage"
+            genModel="model/datalineage.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated datalineage -->
+      <parser
+            type="data_lineage"
+            class="org.eclipse.efbt.lineage.datalineage.model.data_lineage.util.Data_lineageResourceFactoryImpl"/>
+   </extension>
+
+</plugin>

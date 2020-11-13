@@ -63,9 +63,9 @@ public class JackcessRow  implements AccessRow{
 	 * 
 	 * @param columnName
 	 */
-	public boolean getBoolean(String columnName) {
+	public Boolean getBoolean(String columnName) {
 		
-		return false;
+		return underlyingRow.getBoolean(columnName);
 	}
 
 }

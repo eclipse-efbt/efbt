@@ -15,12 +15,16 @@ package org.eclipse.efbt.cocamo.smcubes.component.importexport.impl;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.eclipse.efbt.cocamo.core.model.test.E2ETest;
 import org.eclipse.efbt.cocamo.core.model.test.TestFactory;
@@ -493,9 +497,14 @@ public class BIRDImporterImpl extends Importer {
 				domain.setName(replaceDots(row.getString("DOMAIN_ID")));
 				domain.setDisplayName(row.getString("NAME"));
 				boolean is_enumerated = false;
-				if (row.getBoolean("IS_ENUMERATED"))
+				if (row.getBoolean("IS_ENUMERATED").booleanValue())
 					is_enumerated = true;
 				domain.setIs_enumerated(is_enumerated);
+				
+				boolean is_referenced = false;
+				if (row.getBoolean("IS_REFERENCE").booleanValue())
+					is_referenced = true;
+				domain.setIs_reference(is_referenced);
 
 				domains.getDomains().add(domain);
 
@@ -956,95 +965,18 @@ public class BIRDImporterImpl extends Importer {
 	 * and TestTemplates which the Test instance will refer to.
 	 */
 	@Override
-	public void importTestData() {
-		// get the csv file, use an open source csv library.
-		// create 1 test definition
-		// create mutliple tests, with that data.
+	public void importTestDataWithOldTestFormat(String fileLocation) {
 		
-		//create the TestDefintion Module to hold the different TestDefinitions
-		TestDefinitionModule definitionModule = Test_definitionFactory.eINSTANCE.
-				createTestDefinitionModule();
-		definitionModule.setName("testDefinitionsModule");
+		prepareTestData();
 		
-		//create the TestTemplateModule to hold the different TestDefinitions
-		TestTemplateModule testTemplateModule = Test_definitionFactory.eINSTANCE.
-				createTestTemplateModule();
-		testTemplateModule.setName("testTemplateModule");
-		testTemplateProgram.setTestTemplates(testTemplateModule);
-		testDefinitionProgram.setTestDefinitions(definitionModule);
-
-		//create a TestTemplate and add it to the Test Template Module,
-		// all our tests are going to use the same template
-		TestTemplate testTemplate = 
-				Test_definitionFactory.eINSTANCE.createTestTemplate();
-		testTemplate.setName("testTemplate1");
-		Param templateparam = Test_definitionFactory.eINSTANCE.createParam();
-		templateparam.setParam(transformationSchemes.getSchemes().get(0)
-				);
-		testTemplate.getWhenParams().add(templateparam);
-		testTemplateModule.getTemplates().add(testTemplate);
-
-		//Set the given when then clauses of the Test Definition, all our 
-		//tests are going to use the same TestDefintion
-		ClauseText given_clauseText = 
-				Test_definitionFactory.eINSTANCE.createClauseText();
-		given_clauseText.setName("given_test_input_data");
-		testTemplate.setGivenText(given_clauseText);
-		ClauseText when_clauseText = 
-				Test_definitionFactory.eINSTANCE.createClauseText();
-		when_clauseText.setName("when_transformation_sheme_is_run");
-		testTemplate.setWhenText(when_clauseText);
-		ClauseText then_clauseText = 
-				Test_definitionFactory.eINSTANCE.createClauseText();
-		then_clauseText.setName("then_specific_output_data_is_expected");
-		testTemplate.setGivenText(then_clauseText);
-		testTemplateModule.getTemplates().add(testTemplate);
-		//create a TestConstraint and add it to the Test Constrinats Module,
-		// all our tests are going to use the same constriant
-		TestContraints contraints = 
-				Test_definitionFactory.eINSTANCE.createTestContraints();
-		contraints.setName("constraints");
-		
-		contraints.setTemplate(testTemplate);
-		// constraintsModule.getCoverageTestSets().add(contraints);
-		testConstraintsProgram.setTestConstriants(contraints);
-		
-		
-		Param contraintsparam = Test_definitionFactory.eINSTANCE.createParam();
-		contraintsparam
-				.setParam(transformationSchemes);
-		contraints.getWhenParams().add(contraintsparam);
-
-		E2ETestDefinition definition =
-					Test_definitionFactory.eINSTANCE.createE2ETestDefinition();
-		definition.setName("standard_test");
-		definitionModule.getTestDefinitions().add(definition);
-
-		Param defparam = Test_definitionFactory.eINSTANCE.createParam();
-		defparam.setParam(
-				transformationSchemes.getSchemes().get(1));
-		
-		When when = Test_definitionFactory.eINSTANCE.createWhen();
-		Then then = Test_definitionFactory.eINSTANCE.createThen();
-		Given given = Test_definitionFactory.eINSTANCE.createGiven();
-		definition.setWhen(when);
-		definition.setThen(then);
-		definition.setGiven(given);
-		definition.getWhen().getParams().add(defparam);
-
-		definition.setTestContraints(contraints);
-		testDefinitionProgram.setTestDefinitions(definitionModule);
-
-		//create the Test model instances from the CSV test data
-				
 		FileReader csvData;
 		try {
 
-			csvData = new FileReader(new File(testdatafilepath));
+			csvData = new FileReader(new File(fileLocation));
 
 			
 			
-			List<CSVRecord> list = getCSVRowsFromFile(testdatafilepath);
+			List<CSVRecord> list = getCSVRowsFromFile(fileLocation);
 
 			HashMap<String, SMCubesTest> tests = new HashMap<String, SMCubesTest>();
 			HashMap<String, BaseColumnStructuredData> tables = new HashMap<String, BaseColumnStructuredData>();
@@ -1054,8 +986,8 @@ public class BIRDImporterImpl extends Importer {
 				nameCounter++;
 				//get a row of data which wil relate to the value of one column
 				//in a cube
-				String id1 = csvRecord.get(0);
-				String id2 = csvRecord.get(1);
+				String id1 = csvRecord.get(0).trim();
+				String id2 = csvRecord.get(1).trim();
 				String record_no = csvRecord.get(2);
 				String cube = csvRecord.get(3);
 				String variable = csvRecord.get(4);
@@ -1073,7 +1005,7 @@ public class BIRDImporterImpl extends Importer {
 					testProgram.setTests(testModule);
 					test = CocamoFactory.eINSTANCE.createSMCubesTest();
 					test.setName(id1 + ":" + id2);
-					test.setTestDefinition(definition);
+					test.setTestDefinition((E2ETestDefinition) testDefinitionProgram.getTestDefinitions().getTestDefinitions().get(0)); 
 					testModule.getTests().add(test);
 					tests.put(id1 + ":" + id2, test);
 					SMCubesTestInputData inputData2 = CocamoFactory.eINSTANCE
@@ -1167,6 +1099,157 @@ public class BIRDImporterImpl extends Importer {
 
 	}
 	
+	public void prepareTestData()
+	{
+		// get the csv file, use an open source csv library.
+		// create 1 test definition
+		// create mutliple tests, with that data.
+		
+		//create the TestDefintion Module to hold the different TestDefinitions
+		TestDefinitionModule definitionModule = Test_definitionFactory.eINSTANCE.
+				createTestDefinitionModule();
+		definitionModule.setName("testDefinitionsModule");
+		
+		//create the TestTemplateModule to hold the different TestDefinitions
+		TestTemplateModule testTemplateModule = Test_definitionFactory.eINSTANCE.
+				createTestTemplateModule();
+		testTemplateModule.setName("testTemplateModule");
+		testTemplateProgram.setTestTemplates(testTemplateModule);
+		testDefinitionProgram.setTestDefinitions(definitionModule);
+
+		//create a TestTemplate and add it to the Test Template Module,
+		// all our tests are going to use the same template
+		TestTemplate testTemplate = 
+				Test_definitionFactory.eINSTANCE.createTestTemplate();
+		testTemplate.setName("testTemplate1");
+		Param templateparam = Test_definitionFactory.eINSTANCE.createParam();
+		templateparam.setParam(transformationSchemes.getSchemes().get(0)
+				);
+		testTemplate.getWhenParams().add(templateparam);
+		testTemplateModule.getTemplates().add(testTemplate);
+
+		//Set the given when then clauses of the Test Definition, all our 
+		//tests are going to use the same TestDefintion
+		ClauseText given_clauseText = 
+				Test_definitionFactory.eINSTANCE.createClauseText();
+		given_clauseText.setName("given_test_input_data");
+		testTemplate.setGivenText(given_clauseText);
+		ClauseText when_clauseText = 
+				Test_definitionFactory.eINSTANCE.createClauseText();
+		when_clauseText.setName("when_transformation_sheme_is_run");
+		testTemplate.setWhenText(when_clauseText);
+		ClauseText then_clauseText = 
+				Test_definitionFactory.eINSTANCE.createClauseText();
+		then_clauseText.setName("then_specific_output_data_is_expected");
+		testTemplate.setGivenText(then_clauseText);
+		testTemplateModule.getTemplates().add(testTemplate);
+		//create a TestConstraint and add it to the Test Constrinats Module,
+		// all our tests are going to use the same constriant
+		TestContraints contraints = 
+				Test_definitionFactory.eINSTANCE.createTestContraints();
+		contraints.setName("constraints");
+		
+		contraints.setTemplate(testTemplate);
+		// constraintsModule.getCoverageTestSets().add(contraints);
+		testConstraintsProgram.setTestConstriants(contraints);
+		
+		
+		Param contraintsparam = Test_definitionFactory.eINSTANCE.createParam();
+		contraintsparam
+				.setParam(transformationSchemes);
+		contraints.getWhenParams().add(contraintsparam);
+
+		E2ETestDefinition definition =
+					Test_definitionFactory.eINSTANCE.createE2ETestDefinition();
+		definition.setName("standard_test");
+		definitionModule.getTestDefinitions().add(definition);
+
+		Param defparam = Test_definitionFactory.eINSTANCE.createParam();
+		defparam.setParam(
+				transformationSchemes.getSchemes().get(1));
+		
+		When when = Test_definitionFactory.eINSTANCE.createWhen();
+		Then then = Test_definitionFactory.eINSTANCE.createThen();
+		Given given = Test_definitionFactory.eINSTANCE.createGiven();
+		definition.setWhen(when);
+		definition.setThen(then);
+		definition.setGiven(given);
+		definition.getWhen().getParams().add(defparam);
+
+		definition.setTestContraints(contraints);
+		testDefinitionProgram.setTestDefinitions(definitionModule);
+
+		//create the Test model instances from the CSV test data
+				
+	}
+	/**
+	 * from Test data sored in CSV format , create all the model instances of
+	 * Test and Store them in the list of  testPrograms. Note that to do this
+	 * we will create instances of TestDefintions TestConstraints, 
+	 * and TestTemplates which the Test instance will refer to.
+	 */
+	@Override
+	public void importTestDataWithNewTestFormat() {
+		
+		prepareTestData();
+		//for each file. run through it, and we should create the old style tests data, and then load it in.
+		try {
+			convertTestDataFromNewFormatToOldFormat();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		importTestDataWithOldTestFormat(outputFilepath + "/testsInOldFormat.csv");
+		
+		
+	}
+	
+	private void convertTestDataFromNewFormatToOldFormat() throws IOException {
+		
+		//create initial file
+		FileWriter testsInOldFormat = new FileWriter(outputFilepath + "/testsInOldFormat.csv",true);
+		
+		//for each import file, get its name and the columns, and export if there is a value.
+		File dir = new File(testdatafilepath);
+		  File[] directoryListing = dir.listFiles();
+		  if (directoryListing != null) {
+		    for (File child : directoryListing) {
+		    	
+		    	 StringBuffer sb = new StringBuffer();
+				 CSVParser parser = CSVParser.parse(child,StandardCharsets.UTF_8, CSVFormat.EXCEL.withFirstRecordAsHeader());
+				 boolean isHeader = true;
+				 for (CSVRecord csvRecord : parser) {
+					 if(!isHeader)
+					 {
+						 String testCaseID = csvRecord.get(0);
+					 
+						 String rowdID = csvRecord.get(1);
+						 Map<String, String> map = csvRecord.toMap();
+						 Set<Entry<String, String>> entrySet = map.entrySet();
+						 
+						 for (Iterator iterator = entrySet.iterator(); iterator.hasNext();) {
+							Entry<String, String> entry = (Entry<String, String>) iterator.next();
+							if(entry.getValue() != null && !entry.getValue().trim().equals("")
+									&& !entry.getKey().equals("TestCaseID") && !entry.getKey().equals("RowdID"))
+							{
+								//System.out.println(testCaseID + "," + rowdID  +"," + child.getName().substring(0,child.getName().length()-4) + "," + entry.getKey() + "," + entry.getValue() +'\n');
+								sb = sb.append( testCaseID.substring(0,testCaseID.indexOf(':')) + "," + testCaseID.substring(testCaseID.indexOf(':') +1,testCaseID.length()) + "," + rowdID  +"," + child.getName().substring(0,child.getName().length()-4) + "," + entry.getKey() + "," + entry.getValue() +'\n');
+
+							}
+						}
+					 }
+					 else
+						 isHeader = false;
+					
+				 }
+				 testsInOldFormat.append(sb).flush();
+
+		    }
+		  } else {
+		    // log an error if it is not a directory.
+		  }
+	}
+
 	/**
 	 * Get the related EnumMeber
 	 * 
@@ -1217,7 +1300,7 @@ public class BIRDImporterImpl extends Importer {
 		EList<MEMBER> returnMembers = new BasicEList<MEMBER>();	
 		EList<MEMBER> allMembers = members.getMembers();
 		for (MEMBER member : allMembers) {
-			if(member.getDomain_id().equals(domain));
+			if(member.getDomain_id().equals(domain))
 			returnMembers.add(member);
 		}
 		return returnMembers;

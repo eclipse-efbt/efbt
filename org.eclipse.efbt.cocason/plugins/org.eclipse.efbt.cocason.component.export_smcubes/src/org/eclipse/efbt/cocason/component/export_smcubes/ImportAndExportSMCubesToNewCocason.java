@@ -49,11 +49,28 @@ public class ImportAndExportSMCubesToNewCocason {
 		//persister.saveArtifactsAsCoCaSon(birdModel, outputFilepath,xrs);
 	}
 	
-	public static void importAndExportSMCubes2(String filepath, String outputFilepath, String testdatafilepath)
+	public static void translateBIRDWithNewTestFormatToCocason(String filepath, String outputFilepath, String testdatafilepath)
 	{
 		Importer  importer = new BIRDImporterImpl(); 
 		importer.doImport(filepath,outputFilepath,testdatafilepath);
-		importer.importTestData();
+		importer.importTestDataWithNewTestFormat();
+		persistModel(importer,  outputFilepath);
+	}
+	
+	
+	public static void translateBIRDWithOldTestFormatToCocason(String filepath, String outputFilepath, String testdatafilepath)
+	{
+		
+		Importer  importer = new BIRDImporterImpl(); 
+		importer.doImport(filepath,outputFilepath,testdatafilepath);
+		importer.importTestDataWithOldTestFormat(testdatafilepath);
+		persistModel(importer,  outputFilepath);
+	}
+	
+	public static void persistModel(Importer  importer, String outputFilepath)
+	{
+		
+	
 		SmcubesModel birdModel = importer.getBirdModel();
 		
 		
