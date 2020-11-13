@@ -26,6 +26,9 @@ pipeline {
                     cd org.eclipse.efbt.cocamo.attributelineage
                     mvn install
                     cd ..
+                    cd org.eclipse.efbt.cocamo.datalineage
+                    mvn install
+                    cd ..
                     cd org.eclipse.efbt.cocason.dsl.cocason.parent -DskipTests
                     mvn install
                     cd ..
