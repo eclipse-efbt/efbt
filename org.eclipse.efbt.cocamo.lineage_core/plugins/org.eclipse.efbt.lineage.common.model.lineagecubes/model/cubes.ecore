@@ -2,7 +2,7 @@
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="cubes" nsURI="http://www.eclipse.org/efbt/cubes" nsPrefix="cubes">
   <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-    <details key="documentation" value=" This package describes the FreeBirdToolsCubes of Bird Bench, these are at a slightly different &#xA;    level of abstraction form  the related Cubes from the data_definition package. &#xA; &#xA; &#xD;&#xA;This package describes Module Management classes.&#xA;These classes allow items to be grouped together and given a version. For example a FunctionSpecModule will contain a group of Functions.&#xA;Modules can also state which other modules they depend upon, allowing for fine grained dependencies between groups of items.&#xA;"/>
+    <details key="documentation" value="This package describes the FreeBirdToolsCubes.&#xA;DataStructure Approaches such as SMCubes allow us to define an input layer a the start of computation as a set of input Layer cubes (which are represented in this package as BaseCubes.&#xA;For languages such as VTL which create a chain of transformations of cubes, we can consider the inetrmediate datasets created as derived cubes, and the end results as Target Cubes.&#xA;This package allows us to represent these ideas at a high level, and show the lineage between target, derived and base cubes.&#xA;"/>
   </eAnnotations>
   <eAnnotations source="license">
     <details key="license" value="Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;&#xD;&#xA;Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"/>
@@ -18,7 +18,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DerivedCube" eSuperTypes="#//FreeBirdToolsCube">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="This is a cube which can contain data which is derived from BaseCubes, and other DerivedCubes. DeriveCubes are different from BaseCubes which can contain actual base data &#xA;The DerivedCube class is a lightweight class which effectively just has a name, and the set of source cubes which it is derived from, this allows us to define a very high level outline of the relationships between cubes.&#xA;The DataSetTransformation class in the tranformation package links the DerivedCube to the logic which is used to derive the cubes structure from the structure of its source cubes, and to derive its data from populated source cubes.&#xA;Note that the DataSetTransformations has many subsclasses, currently they represent structures from the TraceableReportingLanguage (TRL), and soon these will be replaced by subclasses which represent structures from VTL.&#xA;When we create AttributeLineageModels, The ColumnFunctionGroup from the row_transformation_logic package shows the structure of the DerivedCube as a set of Columns each with a formula deriving data from columns of source cubes.&#xA;The SpreadsheetLineageModel class from the data_lineage package shows tha actual derived data for a derived cube, supplemented with the formula used to calculate each piece of data from data in populated source cubes."/>
+      <details key="documentation" value="This is a cube which can contain data which is derived from BaseCubes, and other DerivedCubes. DeriveCubes are different from BaseCubes which can contain actual base data &#xA;The DerivedCube class is a lightweight class which effectively just has a name, and the set of source cubes which it is derived from, this allows us to define a very high level outline of the relationships between cubes.&#xA;"/>
     </eAnnotations>
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="DerivedCube"/>
@@ -37,14 +37,18 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FreeBirdToolsCube">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value=" A cube of the FreeBIRDTools platform&#xA;The FreeBirdToolsCube class is a lightweight class which effectively just has a name, which allows us to define a very high level outline of the relationships between cubes."/>
+      <details key="documentation" value="A cube of the Eclipse Free BIRD Tools platform.&#xA;The FreeBirdToolsCube class is a lightweight class which effectively just has a name, which allows us to define a very high level outline of the relationships between cubes."/>
     </eAnnotations>
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="FreeBirdToolsCube"/>
       <details key="kind" value="empty"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-        iD="true"/>
+        iD="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The name, and ID, of the Cube"/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FreeBirdToolsCubeModule" eSuperTypes="../../org.eclipse.efbt.cocamo.core.model.module_management/model/module_management.ecore#//Module">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">

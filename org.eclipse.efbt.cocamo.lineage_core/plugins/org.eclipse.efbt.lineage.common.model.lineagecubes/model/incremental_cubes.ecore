@@ -3,16 +3,34 @@
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="incremental_cubes" nsURI="http://www.eclipse.org/efbt/incremental_cubes"
     nsPrefix="incremental_cubes">
   <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-    <details key="documentation" value=" This package describes the incremental FreeBirdToolsCubes , these are at a slightly different &#xA;    level of abstraction form  the related Cubes from the data_definition package. &#xA; &#xA; "/>
+    <details key="documentation" value=" This package describes the incremental FreeBirdToolsCubes , these assist in lineage of incremental processing."/>
   </eAnnotations>
   <eAnnotations source="license">
     <details key="license" value="Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;&#xD;&#xA;Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"/>
   </eAnnotations>
   <eClassifiers xsi:type="ecore:EClass" name="BaseDeltaCube" eSuperTypes="cubes.ecore#//BaseCube">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="ultimateBaseCube" eType="ecore:EClass cubes.ecore#//BaseCube"/>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Base Delta Cube represetns a cube holding Delta information, this is rows to be added, or deleted or amended to a cube.&#xA;It has an associated BaseCube to show the type of cube it is amending.&#xA;Multiple Deltas are accumulated using a Delta Accumulation Cube"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ultimateBaseCube" eType="ecore:EClass cubes.ecore#//BaseCube">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The type of cube that is being amended"/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BaseViewCube" eSuperTypes="cubes.ecore#//DerivedCube">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="ultimateBaseCube" eType="ecore:EClass cubes.ecore#//BaseCube"/>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="BaseViewCube will represents the application of compounded Deltas to a BaseCube.&#xA;Its structure will be the same as the associated BaseCube.&#xA;BaseViewCube is a kind of DerivedCube. Th source cubes of a BaseViewCube are OneBaseCube, and one DeltaAccumulationCube.&#xA;BaseViewCube is the source of further Derived Cubes which apply the relevant busines logic for useful calculations, all detla accumulation for the BaseCube will already have been done in the source of the BaseViewCube.&#xA;&#xA;"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ultimateBaseCube" eType="ecore:EClass cubes.ecore#//BaseCube">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The related BaseCube"/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="DeltaAccumulationCube" eSuperTypes="cubes.ecore#//BaseCube"/>
+  <eClassifiers xsi:type="ecore:EClass" name="DeltaAccumulationCube" eSuperTypes="cubes.ecore#//DerivedCube">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="DeltaAccumulationCube accumulates a set of Deltas. It is a kind of DerivedCube, its source cubes will always be iether a single BaseDeltaCube, or A BaseDeltaCube and anotherDeltaAccumulationCube.&#xA;By following the trail of source DeltaAccumulationCubes, we can see the set of compounded BaseDeltas that are to be applied to a BaseCube. The BaseViewCube will represents the application of these compounded Deltas to a BaseCube.&#xA;"/>
+    </eAnnotations>
+  </eClassifiers>
 </ecore:EPackage>
