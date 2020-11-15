@@ -14,13 +14,13 @@
             genModel="model/lineagefunctions.genmodel"/>
    </extension>
 
-
    <extension point="org.eclipse.emf.ecore.extension_parser">
       <!-- @generated lineagefunctions -->
       <parser
             type="advanced_variable_lineagefunctions"
             class="org.eclipse.efbt.lineage.common.model.advanced_variable_lineagefunctions.util.Advanced_variable_lineagefunctionsResourceFactoryImpl"/>
    </extension>
+
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated lineagefunctions -->
       <package
@@ -39,7 +39,7 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated lineagefunctions -->
       <package
-            uri="http://www.eclipse.org/data_lineage_functions"
+            uri="http://www.eclipse.org/efbt/data_lineage_functions"
             class="org.eclipse.efbt.lineage.common.model.data_lineage_functions.Data_lineage_functionsPackage"
             genModel="model/lineagefunctions.genmodel"/>
    </extension>
@@ -54,16 +54,16 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated lineagefunctions -->
       <package
-            uri="http://www.eclipse.org/efbt/lineagefunctions"
-            class="org.eclipse.efbt.lineage.common.model.lineagefunctions.LineagefunctionsPackage"
+            uri="http://www.eclipse.org/efbt/smcubes_functions"
+            class="org.eclipse.efbt.lineage.common.model.smcubes_functions.Smcubes_functionsPackage"
             genModel="model/lineagefunctions.genmodel"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.extension_parser">
       <!-- @generated lineagefunctions -->
       <parser
-            type="lineagefunctions"
-            class="org.eclipse.efbt.lineage.common.model.lineagefunctions.util.LineagefunctionsResourceFactoryImpl"/>
+            type="smcubes_functions"
+            class="org.eclipse.efbt.lineage.common.model.smcubes_functions.util.Smcubes_functionsResourceFactoryImpl"/>
    </extension>
 
 </plugin>

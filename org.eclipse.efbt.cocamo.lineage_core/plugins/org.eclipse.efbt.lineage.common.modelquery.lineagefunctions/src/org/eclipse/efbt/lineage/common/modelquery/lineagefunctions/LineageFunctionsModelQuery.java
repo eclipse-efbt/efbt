@@ -5,8 +5,7 @@ import java.util.Iterator;
 import org.eclipse.efbt.cocamo.functions.model.functions.AggregateFunction;
 import org.eclipse.efbt.cocamo.functions.model.functions.BasicFunction;
 import org.eclipse.efbt.cocamo.functions.model.functions.Parameter;
-import org.eclipse.efbt.lineage.common.model.lineagefunctions.ValueParameter;
-
+import org.eclipse.efbt.lineage.common.model.smcubes_functions.ValueParameter;
 import org.eclipse.emf.common.util.EList;
 
 
@@ -116,7 +115,7 @@ public class LineageFunctionsModelQuery {
 	  }
 
 	  /**
-	   * Get a strin representation of a function which represents a filter function
+	   * Get a string representation of a function which represents a filter function
 	   * @param function
 	   * @return
 	   */

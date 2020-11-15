@@ -32,6 +32,21 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated attribute_lineage -->
       <package
+            uri="http://www.eclipse.org/efbt/incremental_row_transformation_logic"
+            class="org.eclipse.efbt.lineage.attributelineage.model.incremental_row_transformation_logic.Incremental_row_transformation_logicPackage"
+            genModel="model/attribute_lineage.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated attribute_lineage -->
+      <parser
+            type="incremental_row_transformation_logic"
+            class="org.eclipse.efbt.lineage.attributelineage.model.incremental_row_transformation_logic.util.Incremental_row_transformation_logicResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated attribute_lineage -->
+      <package
             uri="http://www.eclipse.org/efbt/row_transformation_logic"
             class="org.eclipse.efbt.lineage.attributelineage.model.row_transformation_logic.Row_transformation_logicPackage"
             genModel="model/attribute_lineage.genmodel"/>
