@@ -261,7 +261,7 @@ def dispatch void format(FunctionalityModuleModule fmModule, extension IFormatta
 			[indent]
 		)
 		
-		test.regionFor.crossRef(SMCubesTestAccess.testDefinitionE2ETestDefinitionCrossReference_4_1_0).append[newLine]
+		test.regionFor.crossRef(SMCubesTestAccess.testDefinitionE2ETestDefinitionCrossReference_5_2_0).append[newLine]
 		
 		
 		test.inputData.format
@@ -323,9 +323,9 @@ def dispatch void format(FunctionalityModuleModule fmModule, extension IFormatta
 		)
 		
 		cell.regionFor.assignment(baseCellWithEnumeratedValueAccess.cellIDAssignment_2).append[newLine]
-		cell.regionFor.assignment(baseCellWithEnumeratedValueAccess.columnAssignment_4_1).append[newLine]
-		cell.regionFor.crossRef(baseCellWithEnumeratedValueAccess.columnVARIABLECrossReference_4_1_0).append[newLine]
-		cell.regionFor.crossRef(baseCellWithEnumeratedValueAccess.valueMEMBERCrossReference_5_1_0).append[newLine]
+		cell.regionFor.assignment(baseCellWithEnumeratedValueAccess.columnAssignment_5_2).append[newLine]
+		cell.regionFor.crossRef(baseCellWithEnumeratedValueAccess.columnVARIABLECrossReference_5_2_0).append[newLine]
+		cell.regionFor.crossRef(baseCellWithEnumeratedValueAccess.valueMEMBERCrossReference_6_2_0).append[newLine]
 		
 		
 	}
@@ -338,9 +338,9 @@ def dispatch void format(FunctionalityModuleModule fmModule, extension IFormatta
 		)
 		
 		cell.regionFor.assignment(baseCellWithValueAccess.cellIDAssignment_2).append[newLine]
-		cell.regionFor.assignment(baseCellWithValueAccess.columnAssignment_5_1).append[newLine]
-		cell.regionFor.crossRef(baseCellWithValueAccess.columnVARIABLECrossReference_5_1_0).append[newLine]
-		cell.regionFor.assignment(baseCellWithValueAccess.valueAssignment_4_1).append[newLine]
+		cell.regionFor.assignment(baseCellWithValueAccess.columnAssignment_6_2).append[newLine]
+		cell.regionFor.crossRef(baseCellWithValueAccess.columnVARIABLECrossReference_6_2_0).append[newLine]
+		cell.regionFor.assignment(baseCellWithValueAccess.valueAssignment_5_2).append[newLine]
 
 		
 	}
@@ -396,15 +396,15 @@ def dispatch void format(FunctionalityModuleModule fmModule, extension IFormatta
 		)
 		
 		
-		domain.regionFor.assignment(DOMAINAccess.codeAssignment_6_1).append[newLine]
-		domain.regionFor.assignment(DOMAINAccess.domain_idAssignment_9_1).append[newLine]
-		domain.regionFor.assignment(DOMAINAccess.data_typeAssignment_7_1).append[newLine]
-		domain.regionFor.assignment(DOMAINAccess.descriptionAssignment_8_1).append[newLine]
-		domain.regionFor.assignment(DOMAINAccess.displayNameAssignment_10_1).append[newLine]
-		domain.regionFor.assignment(DOMAINAccess.facet_idAssignment_11_1).append[newLine]
-		domain.regionFor.assignment(DOMAINAccess.is_enumeratedAssignment_1).append[newLine]
-		domain.regionFor.assignment(DOMAINAccess.is_referenceAssignment_2).append[newLine]
-		domain.regionFor.assignment(DOMAINAccess.maintenance_agency_idAssignment_12_1).append[newLine]
+		domain.regionFor.assignment(DOMAINAccess.codeAssignment_5_2).append[newLine]
+		domain.regionFor.assignment(DOMAINAccess.domain_idAssignment_8_2).append[newLine]
+		domain.regionFor.assignment(DOMAINAccess.data_typeAssignment_6_2).append[newLine]
+		domain.regionFor.assignment(DOMAINAccess.descriptionAssignment_7_2).append[newLine]
+		domain.regionFor.assignment(DOMAINAccess.displayNameAssignment_11_2).append[newLine]
+		domain.regionFor.assignment(DOMAINAccess.facet_idAssignment_12_2).append[newLine]
+		domain.regionFor.assignment(DOMAINAccess.is_enumeratedAssignment_9_2).append[newLine]
+		domain.regionFor.assignment(DOMAINAccess.is_referenceAssignment_10_2).append[newLine]
+		domain.regionFor.assignment(DOMAINAccess.maintenance_agency_idAssignment_13_2).append[newLine]
 		
 	}
 
@@ -426,12 +426,12 @@ def dispatch void format(FunctionalityModuleModule fmModule, extension IFormatta
 			member.regionFor.keyword('}').append[newLine],
 			[indent]
 		)
-		member.regionFor.assignment(MEMBERAccess.codeAssignment_4_1).append[newLine]
-		member.regionFor.assignment(MEMBERAccess.descriptionAssignment_5_1).append[newLine]
-		member.regionFor.assignment(MEMBERAccess.displayNameAssignment_7_1).append[newLine]
-		member.regionFor.crossRef(MEMBERAccess.domain_idDOMAINCrossReference_8_1_0).append[newLine]
-		member.regionFor.assignment(MEMBERAccess.maintenance_agency_idAssignment_9_1).append[newLine]
-		member.regionFor.assignment(MEMBERAccess.member_idAssignment_6_1).append[newLine]
+		member.regionFor.assignment(MEMBERAccess.codeAssignment_5_2).append[newLine]
+		member.regionFor.assignment(MEMBERAccess.descriptionAssignment_6_2).append[newLine]
+		member.regionFor.assignment(MEMBERAccess.displayNameAssignment_8_2).append[newLine]
+		member.regionFor.crossRef(MEMBERAccess.domain_idDOMAINCrossReference_9_2_0).append[newLine]
+		member.regionFor.assignment(MEMBERAccess.maintenance_agency_idAssignment_10_2).append[newLine]
+		member.regionFor.assignment(MEMBERAccess.member_idAssignment_7_2).append[newLine]
 		member.regionFor.keyword(',').append[newLine]
 
 	}
@@ -456,13 +456,13 @@ def dispatch void format(FunctionalityModuleModule fmModule, extension IFormatta
 			variable.regionFor.keyword('}').append[newLine],
 			[indent]
 		)
-		variable.regionFor.assignment(VARIABLEAccess.codeAssignment_4_1).append[newLine]
-		variable.regionFor.assignment(VARIABLEAccess.descriptionAssignment_5_1).append[newLine]
-		variable.regionFor.assignment(VARIABLEAccess.displayNameAssignment_8_1).append[newLine]
-		variable.regionFor.crossRef(VARIABLEAccess.domain_idDOMAINCrossReference_9_1_0).append[newLine]
-		variable.regionFor.assignment(VARIABLEAccess.maintenance_agency_idAssignment_10_1).append[newLine]
-		variable.regionFor.assignment(VARIABLEAccess.primary_conceptAssignment_6_1).append[newLine]
-		variable.regionFor.assignment(VARIABLEAccess.variable_idAssignment_7_1).append[newLine]
+		variable.regionFor.assignment(VARIABLEAccess.codeAssignment_5_2).append[newLine]
+		variable.regionFor.assignment(VARIABLEAccess.descriptionAssignment_6_2).append[newLine]
+		variable.regionFor.assignment(VARIABLEAccess.displayNameAssignment_9_2).append[newLine]
+		variable.regionFor.crossRef(VARIABLEAccess.domain_idDOMAINCrossReference_10_2_0).append[newLine]
+		variable.regionFor.assignment(VARIABLEAccess.maintenance_agency_idAssignment_11_2).append[newLine]
+		variable.regionFor.assignment(VARIABLEAccess.primary_conceptAssignment_7_2).append[newLine]
+		variable.regionFor.assignment(VARIABLEAccess.variable_idAssignment_8_2).append[newLine]
 
 		
 
@@ -494,18 +494,18 @@ def dispatch void format(FunctionalityModuleModule fmModule, extension IFormatta
 			cube.regionFor.keyword('}').append[newLine],
 			[indent]
 		)
-		cube.regionFor.assignment(CUBEAccess.codeAssignment_6_1).append[newLine]
-		cube.regionFor.crossRef(CUBEAccess.cube_structure_idCUBE_STRUCTURECrossReference_14_1_0).append[newLine]
-		cube.regionFor.assignment(CUBEAccess.cube_idAssignment_7_1).append[newLine]
-		cube.regionFor.assignment(CUBEAccess.cube_typeAssignment_8_1).append[newLine]
-		cube.regionFor.assignment(CUBEAccess.descriptionAssignment_9_1).append[newLine]
-		cube.regionFor.assignment(CUBEAccess.displayNameAssignment_13_1).append[newLine]
-		cube.regionFor.assignment(CUBEAccess.framework_idAssignment_15_1).append[newLine]
-		cube.regionFor.assignment(CUBEAccess.is_allowedAssignment_1).append[newLine]
-		cube.regionFor.assignment(CUBEAccess.maintenance_agency_idAssignment_16_1).append[newLine]
-		cube.regionFor.assignment(CUBEAccess.valid_fromAssignment_10_1).append[newLine]
-		cube.regionFor.assignment(CUBEAccess.valid_toAssignment_11_1).append[newLine]
-		cube.regionFor.assignment(CUBEAccess.versionAssignment_12_1).append[newLine]
+		cube.regionFor.assignment(CUBEAccess.codeAssignment_5_2).append[newLine]
+		cube.regionFor.crossRef(CUBEAccess.cube_structure_idCUBE_STRUCTURECrossReference_15_2_0).append[newLine]
+		cube.regionFor.assignment(CUBEAccess.cube_idAssignment_6_2).append[newLine]
+		cube.regionFor.assignment(CUBEAccess.cube_typeAssignment_7_2).append[newLine]
+		cube.regionFor.assignment(CUBEAccess.descriptionAssignment_8_2).append[newLine]
+		cube.regionFor.assignment(CUBEAccess.displayNameAssignment_14_2).append[newLine]
+		cube.regionFor.assignment(CUBEAccess.framework_idAssignment_16_2).append[newLine]
+		cube.regionFor.assignment(CUBEAccess.is_allowedAssignment_9_2).append[newLine]
+		cube.regionFor.assignment(CUBEAccess.maintenance_agency_idAssignment_17_2).append[newLine]
+		cube.regionFor.assignment(CUBEAccess.valid_fromAssignment_11_2).append[newLine]
+		cube.regionFor.assignment(CUBEAccess.valid_toAssignment_12_2).append[newLine]
+		cube.regionFor.assignment(CUBEAccess.versionAssignment_13_2).append[newLine]
 
 		
 
@@ -518,25 +518,25 @@ def dispatch void format(FunctionalityModuleModule fmModule, extension IFormatta
 			[indent]
 		)
 		cube_structure_item.regionFor.crossRef(
-			CUBE_STRUCTURE_ITEMAccess.attribute_associated_variableVARIABLECrossReference_11_1_0).append[newLine]
+			CUBE_STRUCTURE_ITEMAccess.attribute_associated_variableVARIABLECrossReference_12_2_0).append[newLine]
 		cube_structure_item.regionFor.crossRef(
-			CUBE_STRUCTURE_ITEMAccess.cube_structure_idCUBE_STRUCTURECrossReference_12_1_0).append[newLine]
-		cube_structure_item.regionFor.assignment(CUBE_STRUCTURE_ITEMAccess.cube_variable_codeAssignment_10_1).append [
+			CUBE_STRUCTURE_ITEMAccess.cube_structure_idCUBE_STRUCTURECrossReference_13_2_0).append[newLine]
+		cube_structure_item.regionFor.assignment(CUBE_STRUCTURE_ITEMAccess.cube_variable_codeAssignment_11_2).append [
 			newLine
 		]
-		cube_structure_item.regionFor.assignment(CUBE_STRUCTURE_ITEMAccess.descriptionAssignment_6_1).append[newLine]
-		cube_structure_item.regionFor.assignment(CUBE_STRUCTURE_ITEMAccess.dimension_typeAssignment_7_1).append[newLine]
-		cube_structure_item.regionFor.assignment(CUBE_STRUCTURE_ITEMAccess.is_flowAssignment_1).append[newLine]
-		cube_structure_item.regionFor.assignment(CUBE_STRUCTURE_ITEMAccess.is_mandatoryAssignment_2).append[newLine]
-		cube_structure_item.regionFor.assignment(CUBE_STRUCTURE_ITEMAccess.isIdentifierAssignment_3).append[newLine]
-		cube_structure_item.regionFor.assignment(CUBE_STRUCTURE_ITEMAccess.member_idAssignment_13_1).append[newLine]
-		cube_structure_item.regionFor.assignment(CUBE_STRUCTURE_ITEMAccess.orderAssignment_8_1).append[newLine]
-		cube_structure_item.regionFor.assignment(CUBE_STRUCTURE_ITEMAccess.roleAssignment_9_1).append[newLine]
-		cube_structure_item.regionFor.assignment(CUBE_STRUCTURE_ITEMAccess.subdomain_idAssignment_14_1).append[newLine]
-		cube_structure_item.regionFor.crossRef(CUBE_STRUCTURE_ITEMAccess.variable_idVARIABLECrossReference_15_1_0).
+		cube_structure_item.regionFor.assignment(CUBE_STRUCTURE_ITEMAccess.descriptionAssignment_4_2).append[newLine]
+		cube_structure_item.regionFor.assignment(CUBE_STRUCTURE_ITEMAccess.dimension_typeAssignment_5_2).append[newLine]
+		cube_structure_item.regionFor.assignment(CUBE_STRUCTURE_ITEMAccess.is_flowAssignment_6_2).append[newLine]
+		cube_structure_item.regionFor.assignment(CUBE_STRUCTURE_ITEMAccess.is_mandatoryAssignment_7_2).append[newLine]
+		cube_structure_item.regionFor.assignment(CUBE_STRUCTURE_ITEMAccess.isIdentifierAssignment_10_2).append[newLine]
+		cube_structure_item.regionFor.assignment(CUBE_STRUCTURE_ITEMAccess.member_idAssignment_14_2).append[newLine]
+		cube_structure_item.regionFor.assignment(CUBE_STRUCTURE_ITEMAccess.orderAssignment_8_2).append[newLine]
+		cube_structure_item.regionFor.assignment(CUBE_STRUCTURE_ITEMAccess.roleAssignment_9_2).append[newLine]
+		cube_structure_item.regionFor.assignment(CUBE_STRUCTURE_ITEMAccess.subdomain_idAssignment_15_2).append[newLine]
+		cube_structure_item.regionFor.crossRef(CUBE_STRUCTURE_ITEMAccess.variable_idVARIABLECrossReference_16_2_0).
 			append[newLine]
 		cube_structure_item.regionFor.crossRef(
-			CUBE_STRUCTURE_ITEMAccess.variable_set_idVARIABLE_SETCrossReference_16_1_0).append[newLine]
+			CUBE_STRUCTURE_ITEMAccess.variable_set_idVARIABLE_SETCrossReference_17_2_0).append[newLine]
 
 	
 
@@ -549,14 +549,14 @@ def dispatch void format(FunctionalityModuleModule fmModule, extension IFormatta
 			[indent]
 		)
 
-		cube_structure.regionFor.assignment(CUBE_STRUCTUREAccess.codeAssignment_4_1).append[newLine]
-		cube_structure.regionFor.assignment(CUBE_STRUCTUREAccess.cube_structure_idAssignment_5_1).append[newLine]
-		cube_structure.regionFor.assignment(CUBE_STRUCTUREAccess.descriptionAssignment_6_1).append[newLine]
-		cube_structure.regionFor.assignment(CUBE_STRUCTUREAccess.displayNameAssignment_10_1).append[newLine]
-		cube_structure.regionFor.assignment(CUBE_STRUCTUREAccess.maintenance_agency_idAssignment_11_1).append[newLine]
-		cube_structure.regionFor.assignment(CUBE_STRUCTUREAccess.valid_fromAssignment_7_1).append[newLine]
-		cube_structure.regionFor.assignment(CUBE_STRUCTUREAccess.valid_toAssignment_8_1).append[newLine]
-		cube_structure.regionFor.assignment(CUBE_STRUCTUREAccess.versionAssignment_9_1).append[newLine]
+		cube_structure.regionFor.assignment(CUBE_STRUCTUREAccess.codeAssignment_5_2).append[newLine]
+		cube_structure.regionFor.assignment(CUBE_STRUCTUREAccess.cube_structure_idAssignment_6_2).append[newLine]
+		cube_structure.regionFor.assignment(CUBE_STRUCTUREAccess.descriptionAssignment_7_2).append[newLine]
+		cube_structure.regionFor.assignment(CUBE_STRUCTUREAccess.displayNameAssignment_11_2).append[newLine]
+		cube_structure.regionFor.assignment(CUBE_STRUCTUREAccess.maintenance_agency_idAssignment_12_2).append[newLine]
+		cube_structure.regionFor.assignment(CUBE_STRUCTUREAccess.valid_fromAssignment_8_2).append[newLine]
+		cube_structure.regionFor.assignment(CUBE_STRUCTUREAccess.valid_toAssignment_9_2).append[newLine]
+		cube_structure.regionFor.assignment(CUBE_STRUCTUREAccess.versionAssignment_10_2).append[newLine]
 
 		
 
@@ -595,12 +595,12 @@ def dispatch void format(FunctionalityModuleModule fmModule, extension IFormatta
 			transformationScheme.regionFor.keyword('}'),
 			[indent]
 		)
-		transformationScheme.regionFor.assignment(TRANSFORMATION_SCHEMEAccess.codeAssignment_6_1).append[newLine]
-		transformationScheme.regionFor.assignment(TRANSFORMATION_SCHEMEAccess.descriptionAssignment_5_1).append[newLine]
-		transformationScheme.regionFor.assignment(TRANSFORMATION_SCHEMEAccess.displayNameAssignment_10_1).append[newLine]
-		transformationScheme.regionFor.assignment(TRANSFORMATION_SCHEMEAccess.transformation_scheme_idAssignment_4_1).append[newLine]
-		transformationScheme.regionFor.assignment(TRANSFORMATION_SCHEMEAccess.valid_fromAssignment_9_1).append[newLine]
-		transformationScheme.regionFor.assignment(TRANSFORMATION_SCHEMEAccess.valid_toAssignment_8_1).append[newLine]
+		transformationScheme.regionFor.assignment(TRANSFORMATION_SCHEMEAccess.codeAssignment_7_2).append[newLine]
+		transformationScheme.regionFor.assignment(TRANSFORMATION_SCHEMEAccess.descriptionAssignment_6_2).append[newLine]
+		transformationScheme.regionFor.assignment(TRANSFORMATION_SCHEMEAccess.displayNameAssignment_11_2).append[newLine]
+		transformationScheme.regionFor.assignment(TRANSFORMATION_SCHEMEAccess.transformation_scheme_idAssignment_5_2).append[newLine]
+		transformationScheme.regionFor.assignment(TRANSFORMATION_SCHEMEAccess.valid_fromAssignment_10_2).append[newLine]
+		transformationScheme.regionFor.assignment(TRANSFORMATION_SCHEMEAccess.valid_toAssignment_9_2).append[newLine]
 		
 	}
 	
