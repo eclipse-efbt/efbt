@@ -8,14 +8,14 @@
   <foreignModel>cocamo.ecore</foreignModel>
   <genPackages prefix="Cocamo" basePackage="org.eclipse.efbt.cocamo.smcubes.model"
       disposableProviderFactory="true" ecorePackage="cocamo.ecore#/">
-    <genClasses ecoreClass="cocamo.ecore#//Program">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//Program/smCubesModel"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//Program/requirements"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//Program/testDefinitions"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//Program/tests"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//Program/testTemplates"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//Program/testConstriants"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//Program/functionalityModules"/>
+    <genClasses ecoreClass="cocamo.ecore#//SMCubesStaticModel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesStaticModel/smCubesModel"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesStaticModel/requirements"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesStaticModel/testDefinitions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesStaticModel/tests"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesStaticModel/testTemplates"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesStaticModel/testConstriants"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesStaticModel/functionalityModules"/>
     </genClasses>
     <genClasses ecoreClass="cocamo.ecore#//SMCubesTestInputData">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesTestInputData/smcubes_inputdata"/>
@@ -29,6 +29,9 @@
     </genClasses>
     <genClasses ecoreClass="cocamo.ecore#//SMCubesTestModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesTestModule/tests"/>
+    </genClasses>
+    <genClasses ecoreClass="cocamo.ecore#//StaticModel">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cocamo.ecore#//StaticModel/name"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

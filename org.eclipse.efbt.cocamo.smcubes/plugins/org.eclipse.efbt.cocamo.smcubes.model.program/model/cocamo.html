@@ -1,5 +1,5 @@
 <!-- This file was created using the HTML documentation generator. -->
-<!-- Creation date: Sun Nov 01 10:49:41 GMT 2020-->
+<!-- Creation date: Tue Nov 24 09:48:19 GMT 2020-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -133,76 +133,6 @@ A program relates to the group of artifacts, and we allow the contents of  Progr
 <div class="">EPackage properties:</div>
 <div class="keyValue"><span class="label">Namespace Prefix: </span><span class="teletype">cocamo</span></div>
 <div class="keyValue"><span class="label">Namespace URI: </span><span class="teletype">http://www.eclipse.org/efbt/cocamo</span></div>
-<h2 id="cocamoProgram"><a href="#cocamoProgram"><a href="#cocamoProgram">Program</a></a></h2>
-
-<p>A program relates to the group of artifacts, and we allow the contents of  Programs to reference other programs.</p>
-<table>
-<tr>
-	<th colspan="3"><div class="tableHeader">References</div></th>
-</tr>
-<tr>
-	<th><div class="columnHeader">Name</div></th>
-	<th><div class="columnHeader">Properties</div></th>
-	<th><div class="columnHeader">Documentation</div></th>
-</tr>
-<tr>	<td><div id="cocamoProgram.functionalityModules" class="teletype">functionalityModules</div>
-	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#functionalitymoduleFunctionalityModuleModule">FunctionalityModuleModule</a></span></div>
-<div class="label">Cardinality: [0..1]</div>
-<div class="label">Containment</div>
-</td> 
-<td> <p>The FunctionaltyModules associated with the program, these will be refrence by FunctionalityModules</p>
-</td>
-		</tr><tr>	<td><div id="cocamoProgram.requirements" class="teletype">requirements</div>
-	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#requirementstextRequirementsModule">RequirementsModule</a></span></div>
-<div class="label">Cardinality: [0..1]</div>
-<div class="label">Containment</div>
-</td> 
-<td> <p>The requirements associated with the program, these will be refrence by FunctionalityModules</p>
-</td>
-		</tr><tr>	<td><div id="cocamoProgram.smCubesModel" class="teletype">smCubesModel</div>
-	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#smcubesmodelSmcubesModel">SmcubesModel</a></span></div>
-<div class="label">Cardinality: [0..1]</div>
-<div class="label">Containment</div>
-</td> 
-<td> <p>The SMCubes Model associated with the Program</p>
-</td>
-		</tr><tr>	<td><div id="cocamoProgram.testConstriants" class="teletype">testConstriants</div>
-	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#testdefinitionTestContraints">TestContraints</a></span></div>
-<div class="label">Cardinality: [0..1]</div>
-<div class="label">Containment</div>
-</td> 
-<td> <p>The TestConstraints associated with the program, these will be refrence by FunctionalityModules</p>
-</td>
-		</tr><tr>	<td><div id="cocamoProgram.testDefinitions" class="teletype">testDefinitions</div>
-	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#testdefinitionTestDefinitionModule">TestDefinitionModule</a></span></div>
-<div class="label">Cardinality: [0..1]</div>
-<div class="label">Containment</div>
-</td> 
-<td> <p>The TestDefinitions associated with the program, these will be refrence by FunctionalityModules</p>
-</td>
-		</tr><tr>	<td><div id="cocamoProgram.testTemplates" class="teletype">testTemplates</div>
-	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#testdefinitionTestTemplateModule">TestTemplateModule</a></span></div>
-<div class="label">Cardinality: [0..1]</div>
-<div class="label">Containment</div>
-</td> 
-<td> <p>The TestTemplates associated with the program, these will be refrence by FunctionalityModules</p>
-</td>
-		</tr><tr>	<td><div id="cocamoProgram.tests" class="teletype">tests</div>
-	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#cocamoSMCubesTestModule">SMCubesTestModule</a></span></div>
-<div class="label">Cardinality: [0..1]</div>
-<div class="label">Containment</div>
-</td> 
-<td> <p>The Tests associated with the program, these will be refrence by FunctionalityModules</p>
-</td>
-		</tr></table>
-<a href="#cocamo.Program.ref"></a>
 <h2 id="cocamoSMCubesReportResults"><a href="#cocamoSMCubesReportResults"><a href="#cocamoSMCubesReportResults">SMCubesReportResults</a></a></h2>
 
 <p>Expected results which follwo the way that SMCubes represents Report Celss (As COMBINATIONs)</p>
@@ -225,6 +155,76 @@ A program relates to the group of artifacts, and we allow the contents of  Progr
 </td>
 		</tr></table>
 <a href="#cocamo.SMCubesReportResults.ref"></a>
+<h2 id="cocamoSMCubesStaticModel"><a href="#cocamoSMCubesStaticModel"><a href="#cocamoSMCubesStaticModel">SMCubesStaticModel</a></a></h2>
+
+<p>An SMCubesRegulatoryModel relates to the group of artifacts, and we allow the contents of  a SMCubesRegulatoryModel  to reference other SMCubesRegulatoryModels.</p>
+<h4><b>Supertype:</b><a href="#cocamoStaticModel">StaticModel</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="cocamoSMCubesStaticModel.functionalityModules" class="teletype">functionalityModules</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#functionalitymoduleFunctionalityModuleModule">FunctionalityModuleModule</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+<div class="label">Containment</div>
+</td> 
+<td> <p>The FunctionaltyModules associated with the program, these will be refrence by FunctionalityModules</p>
+</td>
+		</tr><tr>	<td><div id="cocamoSMCubesStaticModel.requirements" class="teletype">requirements</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#requirementstextRequirementsModule">RequirementsModule</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+<div class="label">Containment</div>
+</td> 
+<td> <p>The requirements associated with the program, these will be refrence by FunctionalityModules</p>
+</td>
+		</tr><tr>	<td><div id="cocamoSMCubesStaticModel.smCubesModel" class="teletype">smCubesModel</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#smcubesmodelSmcubesModel">SmcubesModel</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+<div class="label">Containment</div>
+</td> 
+<td> <p>The SMCubes Model associated with the Program</p>
+</td>
+		</tr><tr>	<td><div id="cocamoSMCubesStaticModel.testConstriants" class="teletype">testConstriants</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#testdefinitionTestContraints">TestContraints</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+<div class="label">Containment</div>
+</td> 
+<td> <p>The TestConstraints associated with the program, these will be refrence by FunctionalityModules</p>
+</td>
+		</tr><tr>	<td><div id="cocamoSMCubesStaticModel.testDefinitions" class="teletype">testDefinitions</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#testdefinitionTestDefinitionModule">TestDefinitionModule</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+<div class="label">Containment</div>
+</td> 
+<td> <p>The TestDefinitions associated with the program, these will be refrence by FunctionalityModules</p>
+</td>
+		</tr><tr>	<td><div id="cocamoSMCubesStaticModel.testTemplates" class="teletype">testTemplates</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#testdefinitionTestTemplateModule">TestTemplateModule</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+<div class="label">Containment</div>
+</td> 
+<td> <p>The TestTemplates associated with the program, these will be refrence by FunctionalityModules</p>
+</td>
+		</tr><tr>	<td><div id="cocamoSMCubesStaticModel.tests" class="teletype">tests</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#cocamoSMCubesTestModule">SMCubesTestModule</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+<div class="label">Containment</div>
+</td> 
+<td> <p>The Tests associated with the program, these will be refrence by FunctionalityModules</p>
+</td>
+		</tr></table>
+<a href="#cocamo.SMCubesStaticModel.ref"></a>
 <h2 id="cocamoSMCubesTest"><a href="#cocamoSMCubesTest"><a href="#cocamoSMCubesTest">SMCubesTest</a></a></h2>
 
 <p>A test specific to the SMCubes methodolgy of describing Input Data structures and Output DataStructures (As cubes of typically COMBINATIONS representing report cells)</p>
@@ -298,5 +298,25 @@ A program relates to the group of artifacts, and we allow the contents of  Progr
 </td>
 		</tr></table>
 <a href="#cocamo.SMCubesTestModule.ref"></a>
+<h2 id="cocamoStaticModel"><a href="#cocamoStaticModel"><a href="#cocamoStaticModel">StaticModel</a></a></h2>
+
+<p>A RegulatoryModel relates to the group of artifacts, and we allow the contents of  a RegulatoryModel  to reference other sRegulatoryModels.</p>
+<table>
+<tr>
+	<th colspan="3"><div class="tableHeader">Attributes</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="cocamoStaticModel.name" class="teletype">name</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EString</span></div>
+<div class="label">Cardinality: [0..1]</div>
+<div class="label">Identifier</div>
+ </td> <td></td>
+		</tr></table>
+<a href="#cocamo.StaticModel.attr"></a>
 </body>
 </html>

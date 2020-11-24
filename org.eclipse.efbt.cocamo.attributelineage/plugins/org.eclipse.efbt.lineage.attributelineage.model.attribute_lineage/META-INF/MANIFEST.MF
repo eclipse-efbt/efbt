@@ -14,13 +14,12 @@ Export-Package: org.eclipse.efbt.lineage.attributelineage.model.attribute_lineag
  org.eclipse.efbt.lineage.attributelineage.model.cube_transformation_logic,
  org.eclipse.efbt.lineage.attributelineage.model.cube_transformation_logic.impl,
  org.eclipse.efbt.lineage.attributelineage.model.cube_transformation_logic.util,
+ org.eclipse.efbt.lineage.attributelineage.model.incremental_row_transformation_logic,
+ org.eclipse.efbt.lineage.attributelineage.model.incremental_row_transformation_logic.impl,
+ org.eclipse.efbt.lineage.attributelineage.model.incremental_row_transformation_logic.util,
  org.eclipse.efbt.lineage.attributelineage.model.row_transformation_logic,
  org.eclipse.efbt.lineage.attributelineage.model.row_transformation_logic.impl,
  org.eclipse.efbt.lineage.attributelineage.model.row_transformation_logic.util
-Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.emf.ecore;visibility:=reexport,
- org.eclipse.emf.ecore.xmi;visibility:=reexport
-Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.emf.ecore.xmi;visibility:=reexport,
