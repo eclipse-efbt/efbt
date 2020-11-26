@@ -79,4 +79,22 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="outputDirectory" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="testDirectory" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CreateAttributeLineageModel" eSuperTypes="#//PlatformCall">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resultingALM" eType="ecore:EClass ../../org.eclipse.efbt.lineage.attributelineage.model.attribute_lineage/model/attribute_lineage.ecore#//AttributeLineageModel"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CreateDataLineageModel" eSuperTypes="#//PlatformCall">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="inputALM" eType="ecore:EClass ../../org.eclipse.efbt.lineage.attributelineage.model.attribute_lineage/model/attribute_lineage.ecore#//AttributeLineageModel"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resultingDLM" eType="ecore:EClass ../../org.eclipse.efbt.lineage.datalineage.model.datalineage/model/data_lineage.ecore#//DataLineageModel"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SMCubesProgram">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="smcubesStaticModel" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.smcubes.model.program/model/cocamo.ecore#//SMCubesStaticModel"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="platformCalls" eType="#//PlatformCallModule"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="executableLogic" eType="#//ExecutableLogic"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ExecutableLogic"/>
 </ecore:EPackage>

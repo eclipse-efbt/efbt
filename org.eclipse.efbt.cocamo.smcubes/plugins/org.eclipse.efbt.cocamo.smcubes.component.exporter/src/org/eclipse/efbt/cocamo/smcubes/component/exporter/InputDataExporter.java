@@ -15,7 +15,7 @@ import org.eclipse.efbt.cocamo.smcubes.model.base_column_structured_data.BaseCel
 import org.eclipse.efbt.cocamo.smcubes.model.base_column_structured_data.BaseCellWithValue;
 import org.eclipse.efbt.cocamo.smcubes.model.base_column_structured_data.BaseColumnStructuredData;
 import org.eclipse.efbt.cocamo.smcubes.model.base_column_structured_data.BaseRowData;
-import org.eclipse.efbt.cocamo.smcubes.model.cocamo.Program;
+import org.eclipse.efbt.cocamo.smcubes.model.cocamo.SMCubesStaticModel;
 import org.eclipse.efbt.cocamo.smcubes.model.cocamo.SMCubesTest;
 import org.eclipse.efbt.cocamo.smcubes.model.cocamo.SMCubesTestInputData;
 import org.eclipse.efbt.cocamo.smcubes.model.cocamo.SMCubesTestModule;
@@ -48,7 +48,7 @@ public class InputDataExporter {
 	 * @param program
 	 * @param outputfileDirectory
 	 */
-	public void exportInputData(Program program, String outputfileDirectory) {
+	public void exportInputData(SMCubesStaticModel program, String outputfileDirectory) {
 
 		 SMCubesTestModule testModule = program.getTests();
 		EList<SMCubesTest> tests = testModule.getTests();

@@ -51,7 +51,7 @@ import org.eclipse.efbt.cocamo.smcubes.model.base_column_structured_data.BaseCol
 import org.eclipse.efbt.cocamo.smcubes.model.base_column_structured_data.BaseRowData;
 import org.eclipse.efbt.cocamo.smcubes.model.base_column_structured_data.Base_column_structured_dataFactory;
 import org.eclipse.efbt.cocamo.smcubes.model.cocamo.CocamoFactory;
-import org.eclipse.efbt.cocamo.smcubes.model.cocamo.Program;
+import org.eclipse.efbt.cocamo.smcubes.model.cocamo.SMCubesStaticModel;
 import org.eclipse.efbt.cocamo.smcubes.model.cocamo.SMCubesTest;
 import org.eclipse.efbt.cocamo.smcubes.model.cocamo.SMCubesTestInputData;
 import org.eclipse.efbt.cocamo.smcubes.model.cocamo.SMCubesTestModule;
@@ -85,7 +85,7 @@ import org.apache.commons.csv.CSVRecord;
 /**
  * This class is respnsable for structure data taking data from the BIRD Access
  * Database and also data in CSV defining Test data, and creates instances of
- * the cocamo Program model.
+ * the cocamo SMCubesStaticModel model.
  * 
  * @author Neil Mackenzie
  *
@@ -998,7 +998,7 @@ public class BIRDImporterImpl extends Importer {
 				if (test == null) {
 					//if we dont have aTest for this item of Test data, then 
 					//we create one and add it to the list of tests
-					Program testProgram = CocamoFactory.eINSTANCE.createProgram();
+					SMCubesStaticModel testProgram = CocamoFactory.eINSTANCE.createSMCubesStaticModel();
 					testPrograms.add(testProgram);
 					SMCubesTestModule testModule = CocamoFactory.eINSTANCE.createSMCubesTestModule();
 					testModule.setName("TestModule" + nameCounter);

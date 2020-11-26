@@ -1,20 +1,19 @@
-Program {
-	smCubesModel : SmcubesModel cubesModel {
-		cubes : [ CubeModule cubesModule {
-			cubes : [ CUBE ANCRDT_ACCNTNG_C_1 {
+SMCubesProgram : { smcubesStaticModel : SMCubesStaticModel cubesStaticModel : { smCubesModel : SmcubesModel cubesModel : {
+		cubes : [ CubeModule cubesModule :{
+			cubes : [ CUBE ANCRDT_ACCNTNG_C_1 :{
 				code : ANCRDT_ACCNTNG_C
 				cube_id : ANCRDT_ACCNTNG_C_1
 				cube_type : C
 				description : DESCRIPTION
 				displayName : Accounting
-				cube_structure_id : "cubeStructuresModel.cubeStructuresModule.ANCRDT_ACCNTNG_C_1"
-			}
-			CUBE ANCRDT_ENTTY_DFLT_C_1 {
+				cube_structure_id : "cubeStructuresStaticModel.cubeStructuresModel.cubeStructuresModule.ANCRDT_ACCNTNG_C_1"
+			},
+			CUBE ANCRDT_ENTTY_DFLT_C_1 : {
 				code : ANCRDT_ENTTY_DFLT_C
 				cube_id : ANCRDT_ENTTY_DFLT_C_1
 				cube_type : C
 				description : DESCRIPTION
 				displayName : "Counterparty default"
-				cube_structure_id : "cubeStructuresModel.cubeStructuresModule.ANCRDT_ENTTY_DFLT_C_1"
+				cube_structure_id : "cubeStructuresStaticModel.cubeStructuresModel.cubeStructuresModule.ANCRDT_ENTTY_DFLT_C_1"
 			}			
-			] } ] } }
+			] } ] } } }

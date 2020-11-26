@@ -9,7 +9,7 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated lineagefunctions -->
       <package
-            uri="http://www.eclipse.org/advanced_variable_lineagefunctions"
+            uri="http://www.eclipse.org/efbt/advanced_variable_lineagefunctions"
             class="org.eclipse.efbt.lineage.common.model.advanced_variable_lineagefunctions.Advanced_variable_lineagefunctionsPackage"
             genModel="model/lineagefunctions.genmodel"/>
    </extension>

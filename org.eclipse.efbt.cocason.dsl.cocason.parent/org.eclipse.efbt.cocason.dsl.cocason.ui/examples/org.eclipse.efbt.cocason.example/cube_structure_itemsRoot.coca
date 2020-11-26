@@ -1,49 +1,48 @@
-Program {
-	smCubesModel : SmcubesModel cubeStructureItemsModel {
-		cubes : [ CubeModule cubeStructureItemsModule {
+SMCubesProgram : { smcubesStaticModel : SMCubesStaticModel cubeStructureItemsStaticModel : { smCubesModel : SmcubesModel cubeStructureItemsModel : { 
+		cubes : [ CubeModule cubeStructureItemsModule : {
 			cubeStructureItems : [ 
-			CUBE_STRUCTURE_ITEM {
+			CUBE_STRUCTURE_ITEM :  {
 				description : "The method by which the impairment is assessed, if the instrument is subject to impairment in accordance with applied accounting standards. Collective and individual methods are distinguished."
 				order : 10
 				cube_variable_code : IMPRMNT_ASSSSMNT_MTHD
-				cube_structure_id : "cubeStructuresModel.cubeStructuresModule.ANCRDT_ACCNTNG_C_1"
-				variable_id : "variablesModel.variablesModule.IMPRMNT_ASSSSMNT_MTHD"
-			}
-			CUBE_STRUCTURE_ITEM {
+				cube_structure_id : "cubeStructuresStaticModel.cubeStructuresModel.cubeStructuresModule.ANCRDT_ACCNTNG_C_1"
+				variable_id : "variablesStaticModel.variablesModel.variablesModule.IMPRMNT_ASSSSMNT_MTHD"
+			},
+			CUBE_STRUCTURE_ITEM :  {
 				description : "Type of Impairment."
 				order : 9
 				cube_variable_code : IMPRMNT_STTS
-				cube_structure_id : "cubeStructuresModel.cubeStructuresModule.ANCRDT_ACCNTNG_C_1"
-				variable_id : "variablesModel.variablesModule.IMPRMNT_STTS"
-			}
-			CUBE_STRUCTURE_ITEM {
+				cube_structure_id : "cubeStructuresStaticModel.cubeStructuresModel.cubeStructuresModule.ANCRDT_ACCNTNG_C_1"
+				variable_id : "variablesStaticModel.variablesModel.variablesModule.IMPRMNT_STTS"
+			},
+			CUBE_STRUCTURE_ITEM :  {
 				description : "The amount of provisions for off-balance-sheet amounts."
 				order : 15
 				cube_variable_code : PRVSNS_OFF_BLNC_SHT
-				cube_structure_id : "cubeStructuresModel.cubeStructuresModule.ANCRDT_ACCNTNG_C_1"
-				variable_id : "variablesModel.variablesModule.PRVSNS_OFF_BLNC_SHT"
-			}
-			CUBE_STRUCTURE_ITEM {
+				cube_structure_id : "cubeStructuresStaticModel.cubeStructuresModel.cubeStructuresModule.ANCRDT_ACCNTNG_C_1"
+				variable_id : "variablesStaticModel.variablesModel.variablesModule.PRVSNS_OFF_BLNC_SHT"
+			},
+			CUBE_STRUCTURE_ITEM :  {
 				description : "The instrument is to be classified on the reporting reference date under one of the following categories: i) non-performing; ii) performing."
 				order : 13
 				cube_variable_code : PRFRMNG_STTS
-				cube_structure_id : "cubeStructuresModel.cubeStructuresModule.ANCRDT_ACCNTNG_C_1"
-				variable_id : "variablesModel.variablesModule.PRFRMNG_STTS"
-			}
+				cube_structure_id : "cubeStructuresStaticModel.cubeStructuresModel.cubeStructuresModule.ANCRDT_ACCNTNG_C_1"
+				variable_id : "variablesStaticModel.variablesModel.variablesModule.PRFRMNG_STTS"
+			},
 			
-			CUBE_STRUCTURE_ITEM {
+			CUBE_STRUCTURE_ITEM :  {
 				order : 2
 				cube_variable_code : DT_RFRNC
-				cube_structure_id : "cubeStructuresModel.cubeStructuresModule.ANCRDT_ENTTY_DFLT_C_1"
-				variable_id : "variablesModel.variablesModule.DT_RFRNC"
-			}
-			CUBE_STRUCTURE_ITEM {
+				cube_structure_id : "cubeStructuresStaticModel.cubeStructuresModel.cubeStructuresModule.ANCRDT_ACCNTNG_C_1"
+				variable_id : "variablesStaticModel.variablesModel.variablesModule.DT_RFRNC"
+			},
+			CUBE_STRUCTURE_ITEM :  {
 				description : "The date on which the default status, as reported in the data attribute \'Default status\', is considered to have arisen."
 				order : 6
 				cube_variable_code : DT_DFLT_STTS
-				cube_structure_id : "cubeStructuresModel.cubeStructuresModule.ANCRDT_ENTTY_DFLT_C_1"
-				variable_id : "variablesModel.variablesModule.DT_DFLT_STTS"
+				cube_structure_id : "cubeStructuresStaticModel.cubeStructuresModel.cubeStructuresModule.ANCRDT_ACCNTNG_C_1"
+				variable_id : "variablesStaticModel.variablesModel.variablesModule.DT_DFLT_STTS"
 			}
 			
 			
-			] } ] } }
+			] } ] } } }

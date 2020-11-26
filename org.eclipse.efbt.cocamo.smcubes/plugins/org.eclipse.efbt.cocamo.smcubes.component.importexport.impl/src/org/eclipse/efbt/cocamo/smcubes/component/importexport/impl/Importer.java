@@ -21,7 +21,7 @@ import org.eclipse.efbt.cocamo.core.model.functionality_module.FunctionalityModu
 import org.eclipse.efbt.cocamo.core.model.functionality_module.Functionality_moduleFactory;
 import org.eclipse.efbt.cocamo.smcubes.component.importexport.api.BirdImporter;
 import org.eclipse.efbt.cocamo.smcubes.model.cocamo.CocamoFactory;
-import org.eclipse.efbt.cocamo.smcubes.model.cocamo.Program;
+import org.eclipse.efbt.cocamo.smcubes.model.cocamo.SMCubesStaticModel;
 import org.eclipse.efbt.cocamo.smcubes.model.efbt_data_definition.CombinationModule;
 import org.eclipse.efbt.cocamo.smcubes.model.efbt_data_definition.CubeModule;
 import org.eclipse.efbt.cocamo.smcubes.model.efbt_data_definition.DomainModule;
@@ -63,29 +63,29 @@ public abstract class Importer implements BirdImporter {
 	protected String outputFilepath;
 	
 	/**
-	 * A Program instance which contains just TestDefinitions
+	 * A SMCubesStaticModel instance which contains just TestDefinitions
 	 */
-	public static Program testDefinitionProgram;
+	public static SMCubesStaticModel testDefinitionProgram;
 	/**
-	 * A Program instance which contains just TestTemplates,
+	 * A SMCubesStaticModel instance which contains just TestTemplates,
 	 * note that the testTemplates can refer to TestDefintions 
 	 * in testDefinitionProgram
 	 */
-	public static Program testTemplateProgram;
+	public static SMCubesStaticModel testTemplateProgram;
 	/**
-	 * A Program instance which contains just TestConstriants
+	 * A SMCubesStaticModel instance which contains just TestConstriants
 	 */
-	public static Program testConstraintsProgram;
+	public static SMCubesStaticModel testConstraintsProgram;
 	
 	
 	/**
-	 * A Program instance which contains just functionality Modules
+	 * A SMCubesStaticModel instance which contains just functionality Modules
 	 */
-	public static Program functionalityModulesProgram;
+	public static SMCubesStaticModel functionalityModulesProgram;
 	/**
 	 * A list of programs, each of which contains only Tests
 	 */
-	public static List<Program> testPrograms;
+	public static List<SMCubesStaticModel> testPrograms;
 
 	/**
 	 * The transformationSchemes
@@ -199,10 +199,10 @@ public abstract class Importer implements BirdImporter {
 		birdModel.getFunctionalModules().add(transformationSchemes);
 		birdModel.getVariables().add(variables);
 		
-		testDefinitionProgram = CocamoFactory.eINSTANCE.createProgram();
-		testTemplateProgram = CocamoFactory.eINSTANCE.createProgram();
-		testConstraintsProgram = CocamoFactory.eINSTANCE.createProgram();
-		functionalityModulesProgram = CocamoFactory.eINSTANCE.createProgram();
+		testDefinitionProgram = CocamoFactory.eINSTANCE.createSMCubesStaticModel();
+		testTemplateProgram = CocamoFactory.eINSTANCE.createSMCubesStaticModel();
+		testConstraintsProgram = CocamoFactory.eINSTANCE.createSMCubesStaticModel();
+		functionalityModulesProgram = CocamoFactory.eINSTANCE.createSMCubesStaticModel();
 		FunctionalityModuleModule fmm = Functionality_moduleFactory.eINSTANCE.createFunctionalityModuleModule();
 		fmm.setName("functionalityModuleModule");
 		FunctionalityModule fm = Functionality_moduleFactory.eINSTANCE.createDataProcessingFunctionalityModule();
@@ -210,7 +210,7 @@ public abstract class Importer implements BirdImporter {
 		fmm.getFunctionalityModules().add(fm);
 		functionalityModulesProgram.setFunctionalityModules(fmm);
 		
-		testPrograms = new ArrayList<Program>();
+		testPrograms = new ArrayList<SMCubesStaticModel>();
 	
 		 
 
