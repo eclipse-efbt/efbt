@@ -70,7 +70,7 @@ class CoCaSonScopeProvider extends AbstractCoCaSonScopeProvider{
      		 
      		
      	}
-     */    
+    
     
         if ((context.eContainer) instanceof Clause )
          {
@@ -147,6 +147,8 @@ class CoCaSonScopeProvider extends AbstractCoCaSonScopeProvider{
 	    }
 	    
 	    }
+	    * 
+	    */
     return super.getScope(context, reference)
     }
 }

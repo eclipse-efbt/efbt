@@ -1,4 +1,4 @@
-Program {
-	testConstriants : TestContraints constraints {
-		template : "testTemplateModule.testTemplate1" whenParams : [ Param {
-			param : "TransformationSchemesModel.TransformationSchemesModule" } ] } }
+SMCubesProgram : { smcubesStaticModel : SMCubesStaticModel testConstraintsStaticModel : {
+	testConstriants : TestContraints constraints : {
+		template : "testTemplateStaticModel.testTemplateModule.testTemplate1" whenParams : [ Param : {
+			param : "membersStaticModel.TransformationSchemesModel.TransformationSchemesModule" } ] } } }

@@ -28,7 +28,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements_text.ecore#//RequirementsSectionLinkWithText/subsection"/>
     </genClasses>
     <genClasses ecoreClass="requirements_text.ecore#//RequirementsSectionText">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements_text.ecore#//RequirementsSectionText/text"/>
+      <genFeatures createChild="false" propertyMultiLine="true" ecoreFeature="ecore:EAttribute requirements_text.ecore#//RequirementsSectionText/text"/>
     </genClasses>
     <genClasses ecoreClass="requirements_text.ecore#//RequirementType">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements_text.ecore#//RequirementType/name"/>

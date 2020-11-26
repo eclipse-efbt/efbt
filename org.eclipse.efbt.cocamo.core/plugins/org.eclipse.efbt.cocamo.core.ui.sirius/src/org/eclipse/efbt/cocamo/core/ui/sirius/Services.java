@@ -3,11 +3,16 @@ package org.eclipse.efbt.cocamo.core.ui.sirius;
 import java.util.Iterator;
 
 import org.eclipse.efbt.cocamo.core.model.functionality_module.FunctionalityModule;
+import org.eclipse.efbt.cocamo.core.model.functionality_module.FunctionalityModuleTag;
 import org.eclipse.efbt.cocamo.core.model.functionality_module.ScenarioSetFunctionalityModule;
 import org.eclipse.efbt.cocamo.core.model.functionality_module.SerialFunctionalityModule;
+import org.eclipse.efbt.cocamo.core.model.scenarios.Scenario;
+import org.eclipse.efbt.cocamo.core.model.scenarios.ScenarioTag;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 
 
@@ -61,5 +66,45 @@ public class Services {
 		}
 		return list;
 	}
+	
+	public FunctionalityModuleTag getFunctionalityModuleTag(FunctionalityModule self) {
+
+		
+		EObject root = EcoreUtil.getRootContainer(self);
+		TreeIterator<EObject> contents = root.eAllContents();
+		while (contents.hasNext() )
+		{
+			EObject o = contents.next();
+			if (o instanceof FunctionalityModuleTag)
+			{
+				if (((FunctionalityModuleTag) o).getFunctionalityModule().equals(self))
+					return (FunctionalityModuleTag) o;
+			}
+		}
+		return null;
+		
+	}
+	
+public ScenarioTag getScenarioTag(Scenario self) {
+
+		
+		EObject root = EcoreUtil.getRootContainer(self);
+		TreeIterator<EObject> contents = root.eAllContents();
+		while (contents.hasNext() )
+		{
+			EObject o = contents.next();
+			if (o instanceof ScenarioTag)
+			{
+				if (((ScenarioTag) o).getScenario().equals(self))
+					return (ScenarioTag) o;
+			}
+		}
+		return null;
+		
+	}
+	
+	
+	
+	
 
 }

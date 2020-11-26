@@ -1,7 +1,7 @@
-Program {
-	testTemplates : TestTemplateModule testTemplateModule {
-		templates [ TestTemplate testTemplate1 {
+SMCubesProgram : { smcubesStaticModel : SMCubesStaticModel testTemplateStaticModel : {
+	testTemplates  : TestTemplateModule testTemplateModule : {
+		templates : [ TestTemplate testTemplate1 : {
 			givenText : ClauseText then_specific_output_data_is_expected
 			whenText : ClauseText when_transformation_sheme_is_run
-			whenParams : [ Param {
-				param : "TransformationSchemesModel.TransformationSchemesModule.ECB_BIRD_AnaCredit_5_0_2_1" } ] } ] } }
+			whenParams :  { Param : {
+				param : "membersStaticModel.TransformationSchemesModel.TransformationSchemesModule.ECB_BIRD_AnaCredit_5_0_2_1" } } } ] } } }

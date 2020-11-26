@@ -287,7 +287,30 @@ FunctionalityModuleModule returns functionality_module::FunctionalityModuleModul
 		('dependencies' ':' dependencies=ModuleDependencies )?
 		('longName' ':' longName=ModuleLongName )?
 		('FunctionalityModules' ':' '[' FunctionalityModules+=FunctionalityModule ( "," FunctionalityModules+=FunctionalityModule)* ']' )?
+		('functionalityModuleTags' ':' '[' functionalityModuleTags+=FunctionalityModuleTag ( "," functionalityModuleTags+=FunctionalityModuleTag)* ']' )?
+		('SceanrioTags' ':' '[' SceanrioTags+=ScenarioTag ( "," SceanrioTags+=ScenarioTag)* ']' )?
 	'}';
+	
+FunctionalityModuleTag returns functionality_module::FunctionalityModuleTag:
+	{functionality_module::FunctionalityModuleTag}
+	'FunctionalityModuleTag'
+	name=EString ':'
+	'{'
+		('displayName'  ':'displayName=EString)?
+		('requirements'  ':' '[' requirements+=[requirements_text::TitledRequirementsSection|EString] ( "," requirements+=[requirements_text::TitledRequirementsSection|EString])* ']' )?
+		('FunctionalityModule' ':' FunctionalityModule=[functionality_module::FunctionalityModule|EString])?
+	'}';
+
+ScenarioTag returns scenarios::ScenarioTag:
+	{scenarios::ScenarioTag}
+	'ScenarioTag'
+	name=EString ':'
+	'{'
+		('displayName'  ':' displayName=EString)?
+		('requirements'  ':' '[' requirements+=[requirements_text::TitledRequirementsSection|EString] ( "," requirements+=[requirements_text::TitledRequirementsSection|EString])* ']' )?
+		('scenario'  ':' scenario=[scenarios::Scenario|EString])?
+	'}';
+
 
 DomainModule returns efbt_data_definition::DomainModule:
 	{efbt_data_definition::DomainModule}
@@ -405,8 +428,8 @@ DOMAIN returns core::DOMAIN:
 		('data_type' ':' data_type=FACET_VALUE_TYPE )?
 		('description' ':' description=EString )?
 		('domain_id' ':' domain_id=EString )?
-		('is_enumerated' ':' is_enumerated= EBoolean)
-		('is_reference' ':' is_reference= EBoolean)
+		('is_enumerated' ':' is_enumerated= EBoolean)?
+		('is_reference' ':' is_reference= EBoolean)?
 		('displayName' ':' displayName=EString )?
 		('facet_id' ':' facet_id=[core::FACET_COLLECTION|EString] )?
 		('maintenance_agency_id' ':' maintenance_agency_id=[core::MAINTENANCE_AGENCY|EString])?
@@ -423,7 +446,7 @@ ModuleDependency returns module_management::ModuleDependency:
 	'}';
 
 enum FACET_VALUE_TYPE returns core::FACET_VALUE_TYPE:
-				BigInteger = 'BigInteger' | Boolean = 'Boolean' | DateTime = 'DateTime' | DayMonthDayMonth = 'DayMonthDayMonth' | Decimal = 'Decimal' | Double = 'Double' | Duration = 'Duration' | Float = 'Float' | GregorianDay = 'GregorianDay' | GregorianMonth = 'GregorianMonth' | GregorianYear = 'GregorianYear' | Integer = 'Integer' | Long = 'Long' | Short = 'Short' | String = 'String' | Time = 'Time' | URI = 'URI';
+				BigInteger = ':BigInteger' | Boolean = ':Boolean' | DateTime = ':DateTime' | DayMonthDayMonth = ':DayMonthDayMonth' | Decimal = ':Decimal' | Double = ':Double' | Duration = ':Duration' | Float = ':Float' | GregorianDay = ':GregorianDay' | GregorianMonth = ':GregorianMonth' | GregorianYear = ':GregorianYear' | Integer = ':Integer' | Long = ':Long' | Short = ':Short' | String = ':String' | Time = ':Time' | URI = ':URI';
 
 FACET_COLLECTION returns core::FACET_COLLECTION:
 	{core::FACET_COLLECTION}

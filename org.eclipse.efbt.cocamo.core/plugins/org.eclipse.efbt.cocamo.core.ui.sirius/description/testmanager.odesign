@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<description:Group xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:style="http://www.eclipse.org/sirius/diagram/description/style/1.1.0" name="testmanager" version="12.0.0.2017041100">
+<description:Group xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:style="http://www.eclipse.org/sirius/diagram/description/style/1.1.0" xmlns:tool="http://www.eclipse.org/sirius/diagram/description/tool/1.1.0" name="testmanager" version="12.0.0.2017041100">
   <ownedViewpoints name="TestingViewpoint">
     <ownedRepresentations xsi:type="description_1:DiagramDescription" name="FunctionalityModule" domainClass="FunctionalityModule" enablePopupBars="true">
       <layout xsi:type="description_1:CompositeLayout" direction="LeftToRight"/>
@@ -51,7 +51,7 @@
               <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='dark_purple']"/>
             </style>
           </subContainerMappings>
-          <subContainerMappings name="DataProcessingFunctionalityModule" semanticCandidatesExpression="aql:self.subTransformationsAndSchemes" domainClass="DataProcessingFunctionalityModule">
+          <subContainerMappings name="DataProcessingFunctionalityModule" detailDescriptions="//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@toolSections.0/@ownedTools[name='NavigateToFunctionalityModuleTag']" semanticCandidatesExpression="aql:self.subTransformationsAndSchemes" domainClass="DataProcessingFunctionalityModule">
             <borderedNodeMappings name="Scenario" semanticCandidatesExpression="feature:scenario" domainClass="Scenario">
               <style xsi:type="style:EllipseNodeDescription" labelSize="12" labelPosition="node" resizeKind="NSEW">
                 <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
@@ -60,7 +60,7 @@
               </style>
             </borderedNodeMappings>
             <subContainerMappings name="ScenarioSet" semanticCandidatesExpression="feature:scenarioSet" domainClass="ScenarioSet">
-              <subNodeMappings name="Scenario" semanticCandidatesExpression="feature:scenarios" domainClass="Scenario">
+              <subNodeMappings name="Scenario" detailDescriptions="//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@toolSections.0/@ownedTools[name='ScenarioTagNavigation']" semanticCandidatesExpression="feature:scenarios" domainClass="Scenario">
                 <style xsi:type="style:EllipseNodeDescription" labelSize="12" labelPosition="node" resizeKind="NSEW" horizontalDiameterComputationExpression="20" verticalDiameterComputationExpression="4">
                   <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
                   <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
@@ -131,7 +131,18 @@
             <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_gray']"/>
           </style>
         </containerMappings>
-        <toolSections name="tool1"/>
+        <toolSections name="tool1">
+          <ownedTools xsi:type="tool:DiagramCreationDescription" name="ScenarioTagNavigation" precondition="true" browseExpression="service:getScenarioTag()" diagramDescription="//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='ScenarioTag']">
+            <initialOperation/>
+            <containerViewVariable name="containerView"/>
+            <representationNameVariable name="diagramName"/>
+          </ownedTools>
+          <ownedTools xsi:type="tool:DiagramCreationDescription" name="NavigateToFunctionalityModuleTag" precondition="true" browseExpression="service:getFunctionalityModuleTag()" diagramDescription="//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModuleTag']">
+            <initialOperation/>
+            <containerViewVariable name="containerView"/>
+            <representationNameVariable name="diagramName"/>
+          </ownedTools>
+        </toolSections>
       </defaultLayer>
       <additionalLayers name="links" activeByDefault="true">
         <edgeMappings name="order" sourceMapping="//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='DataProcessingFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='ParallelFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='ReadDataSourceFunctionalModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='ReportCellCreationFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='ScenarioSetFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='SerialFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='OutputCreationFunctionalityModule']" targetMapping="//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='DataProcessingFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='ParallelFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='ReadDataSourceFunctionalModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='ReportCellCreationFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='ScenarioSetFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='SerialFunctionalityModule'] //@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModule']/@defaultLayer/@containerMappings[name='FunctionalityModule']/@subContainerMappings[name='OutputCreationFunctionalityModule']" targetFinderExpression="service:getPreviousFunctionalModule()">
@@ -143,6 +154,58 @@
           </style>
         </edgeMappings>
       </additionalLayers>
+    </ownedRepresentations>
+    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="FunctionalityModuleTag" domainClass="FunctionalityModuleTag" enablePopupBars="true">
+      <defaultLayer name="Default">
+        <nodeMappings name="FunctionalityModuleTag" semanticCandidatesExpression="aql:self" domainClass="functionality_module::FunctionalityModuleTag">
+          <style xsi:type="style:SquareDescription" labelSize="12" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW" width="20" height="5">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_orange']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="TitledRequirementsSection" semanticCandidatesExpression="feature:requirements" domainClass="TitledRequirementsSection">
+          <style xsi:type="style:SquareDescription" labelSize="12" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW" width="20" height="5">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
+          </style>
+        </nodeMappings>
+        <edgeMappings name="TagLinks" sourceMapping="//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModuleTag']/@defaultLayer/@nodeMappings[name='FunctionalityModuleTag']" targetMapping="//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='FunctionalityModuleTag']/@defaultLayer/@nodeMappings[name='TitledRequirementsSection']" targetFinderExpression="feature:requirements">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+      </defaultLayer>
+    </ownedRepresentations>
+    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="ScenarioTag" domainClass="ScenarioTag" enablePopupBars="true">
+      <defaultLayer name="Default">
+        <nodeMappings name="ScenarioTag" semanticCandidatesExpression="aql:self" domainClass="ScenarioTag">
+          <style xsi:type="style:SquareDescription" labelSize="12" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW" width="20" height="5">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_orange']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="TitledRequirementsSection" semanticCandidatesExpression="feature:requirements" domainClass="TitledRequirementsSection">
+          <style xsi:type="style:SquareDescription" labelSize="12" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW" width="20" height="5">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
+          </style>
+        </nodeMappings>
+        <edgeMappings name="TagLinks" sourceMapping="//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='ScenarioTag']/@defaultLayer/@nodeMappings[name='ScenarioTag']" targetMapping="//@ownedViewpoints[name='TestingViewpoint']/@ownedRepresentations[name='ScenarioTag']/@defaultLayer/@nodeMappings[name='TitledRequirementsSection']" targetFinderExpression="feature:requirements">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+      </defaultLayer>
     </ownedRepresentations>
     <ownedJavaExtensions qualifiedClassName="org.eclipse.efbt.cocamo.core.ui.sirius.Services"/>
   </ownedViewpoints>
