@@ -112,16 +112,18 @@ Exhibit A – Form of Secondary Licenses Notice
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.emf.ecore"/>
       <import plugin="org.eclipse.emf.ecore.xmi"/>
+      <import plugin="org.eclipse.efbt.lineage.attributelineage.model.attribute_lineage"/>
+      <import plugin="org.eclipse.efbt.cocamo.functions.model.core"/>
+      <import plugin="org.eclipse.efbt.lineage.common.model.lineagecubes"/>
+      <import plugin="org.eclipse.efbt.lineage.common.model.lineagefunctions"/>
+      <import plugin="org.eclipse.efbt.cocamo.core.model.module_management" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.efbt.cocamo.smcubes.model.input_data"/>
+      <import plugin="org.eclipse.efbt.cocamo.smcubes.model.core"/>
       <import plugin="org.eclipse.emf.mwe.core"/>
       <import plugin="org.eclipse.emf.mwe.utils"/>
       <import plugin="org.eclipse.emf.mwe2.lib"/>
       <import plugin="org.eclipse.emf.mwe2.runtime"/>
       <import plugin="org.eclipse.emf.mwe2.launch"/>
-      <import plugin="org.eclipse.efbt.cocamo.smcubes.model.core"/>
-      <import plugin="org.eclipse.efbt.lineage.common.model.lineagecubes"/>
-      <import plugin="org.eclipse.efbt.cocamo.functions.model.core"/>
-      <import plugin="org.eclipse.efbt.cocamo.core.model.module_management" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.efbt.lineage.common.model.lineagefunctions"/>
    </requires>
 
    <plugin

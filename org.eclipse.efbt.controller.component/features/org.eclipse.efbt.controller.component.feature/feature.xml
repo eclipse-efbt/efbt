@@ -111,6 +111,7 @@ Exhibit A – Form of Secondary Licenses Notice
    <requires>
       <import plugin="org.eclipse.efbt.controller.core.model.core" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.efbt.cocason.component.export_smcubes"/>
+      <import plugin="org.eclipse.efbt.ldm.component.sqldevconvertor"/>
    </requires>
 
    <plugin

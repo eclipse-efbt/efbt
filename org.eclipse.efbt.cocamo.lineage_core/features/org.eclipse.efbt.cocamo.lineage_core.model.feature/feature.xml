@@ -120,6 +120,7 @@ Exhibit A – Form of Secondary Licenses Notice
       <import plugin="org.eclipse.efbt.cocamo.core.model.module_management" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.efbt.cocamo.smcubes.model.core"/>
       <import plugin="org.eclipse.efbt.cocamo.functions.model.core"/>
+      <import plugin="org.eclipse.efbt.cocamo.smcubes.model.input_data"/>
    </requires>
 
    <plugin

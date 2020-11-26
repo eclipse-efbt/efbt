@@ -108,11 +108,6 @@ Exhibit A – Form of Secondary Licenses Notice
     You may add additional accurate notices of copyright ownership.
    </license>
 
-   <requires>
-      <import plugin="org.eclipse.efbt.lineage.datalineage.model.datalineage"/>
-      <import plugin="org.eclipse.efbt.lineage.common.model.lineagecubes"/>
-   </requires>
-
    <plugin
          id="org.eclipse.efbt.lineage.datalineage.modelquery.core"
          download-size="0"
