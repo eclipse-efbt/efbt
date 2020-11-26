@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature id="org.eclipse.efbt.controller.ui.sirius.feature">
+      <category name="efbt.controller"/>
+   </feature>
+   <feature id="org.eclipse.efbt.controller.model.feature">
+      <category name="efbt.controller"/>
+   </feature>
+   <category-def name="efbt.controller" label="EFBT Controller"/>
+</site>
