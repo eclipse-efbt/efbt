@@ -27,9 +27,12 @@
 	<modules>
 		<module>releng/org.eclipse.efbt.controller.component.target</module>	
 		<module>plugins/org.eclipse.efbt.controller.core.component.core</module>
+		<module>plugins/org.eclipse.efbt.controller.core.ui.sirius.core</module>	
 		<module>features/org.eclipse.efbt.controller.component.feature</module>
+		<module>features/org.eclipse.efbt.controller.ui.sirius.feature</module>	
 		<module>releng/org.eclipse.efbt.controller.component.repository</module>
-
+		
+		
 	</modules>
 	
 	<build>

@@ -27,9 +27,7 @@
 	<modules>
 		<module>releng/org.eclipse.efbt.controller.model.target</module>	
 		<module>plugins/org.eclipse.efbt.controller.core.model.core</module>
-		<module>plugins/org.eclipse.efbt.controller.core.ui.sirius.core</module>
 		<module>features/org.eclipse.efbt.controller.model.feature</module>
-		<module>features/org.eclipse.efbt.controller.ui.sirius.feature</module>	
 		<module>releng/org.eclipse.efbt.controller.model.repository</module>
 
 	</modules>
