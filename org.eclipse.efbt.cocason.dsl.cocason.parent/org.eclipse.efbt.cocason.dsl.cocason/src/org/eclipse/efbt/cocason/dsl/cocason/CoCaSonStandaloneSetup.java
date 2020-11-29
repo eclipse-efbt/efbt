@@ -10,6 +10,7 @@ import org.eclipse.efbt.cocamo.core.model.scenarios.ScenariosPackage;
 import org.eclipse.efbt.cocamo.core.model.test.TestPackage;
 import org.eclipse.efbt.cocamo.core.model.test_definition.Test_definitionPackage;
 import org.eclipse.efbt.cocamo.core.model.test_input_data.Test_input_dataPackage;
+import org.eclipse.efbt.cocamo.functions.model.functions.FunctionsPackage;
 import org.eclipse.efbt.cocamo.smcubes.model.base_column_structured_data.Base_column_structured_dataPackage;
 import org.eclipse.efbt.cocamo.smcubes.model.cocamo.CocamoPackage;
 import org.eclipse.efbt.cocamo.smcubes.model.column_structured_data.Column_structured_dataPackage;
@@ -23,6 +24,14 @@ import org.eclipse.efbt.cocamo.smcubes.model.rendering.RenderingPackage;
 import org.eclipse.efbt.cocamo.smcubes.model.reports.ReportsPackage;
 import org.eclipse.efbt.cocamo.smcubes.model.smcubes_model.Smcubes_modelPackage;
 import org.eclipse.efbt.cocamo.smcubes.model.vtl_transformation.Vtl_transformationPackage;
+import org.eclipse.efbt.lineage.attributelineage.model.attribute_lineage.Attribute_lineagePackage;
+import org.eclipse.efbt.lineage.attributelineage.model.cube_transformation_logic.Cube_transformation_logicPackage;
+import org.eclipse.efbt.lineage.attributelineage.model.row_transformation_logic.Row_transformation_logicPackage;
+import org.eclipse.efbt.lineage.common.model.advanced_variable_lineagefunctions.Advanced_variable_lineagefunctionsPackage;
+import org.eclipse.efbt.lineage.common.model.column_transformation_logic.Column_transformation_logicPackage;
+import org.eclipse.efbt.lineage.common.model.lineagecubes.cubes.CubesPackage;
+import org.eclipse.efbt.lineage.datalineage.model.cell_transformation_logic.Cell_transformation_logicPackage;
+import org.eclipse.efbt.lineage.datalineage.model.data_lineage.Data_lineagePackage;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;
 
@@ -138,6 +147,34 @@ public class CoCaSonStandaloneSetup extends CoCaSonStandaloneSetupGenerated {
 		
 		if (!EPackage.Registry.INSTANCE.containsKey(EcorePackage.eNS_URI))
 		    EPackage.Registry.INSTANCE.put(EcorePackage.eNS_URI, EcorePackage.eINSTANCE);
+		
+		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/attribute_lineage")) {
+			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/attribute_lineage", Attribute_lineagePackage.eINSTANCE);
+		}
+		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/data_lineage")) {
+			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/data_lineage", Data_lineagePackage.eINSTANCE);
+		}
+		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/functions")) {
+			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/functions", FunctionsPackage.eINSTANCE);
+		}
+		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/column_transformation_logic")) {
+			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/column_transformation_logic", Column_transformation_logicPackage.eINSTANCE);
+		}
+		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/row_transformation_logic")) {
+			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/row_transformation_logic", Row_transformation_logicPackage.eINSTANCE);
+		}
+		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/cubes")) {
+			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/cubes", CubesPackage.eINSTANCE);
+		}
+		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/cube_transformation_logic")) {
+			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/cube_transformation_logic", Cube_transformation_logicPackage.eINSTANCE);
+		}
+		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/cell_transformation_logic")) {
+			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/cell_transformation_logic", Cell_transformation_logicPackage.eINSTANCE);
+		}
+		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/advanced_variable_lineagefunctions")) {
+			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/advanced_variable_lineagefunctions", Advanced_variable_lineagefunctionsPackage.eINSTANCE);
+		}
 		
 		super.register(injector);
 	}

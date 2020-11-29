@@ -1,33 +1,36 @@
-Program {
-	smCubesModel : SmcubesModel domainsModel {
-		domains : [ DomainModule domainsModule {
+SMCubesProgram : { smcubesStaticModel : SMCubesStaticModel domainsStaticModel : {
+	smCubesModel : SmcubesModel domainsModel : {
+		domains : [ DomainModule domainsModule : {
 			domains : [ 
 				
-			DOMAIN IMPRMNT_ASSSSMNT_MTHD {
+			DOMAIN IMPRMNT_ASSSSMNT_MTHD : {
 				code : IMPRMNT_ASSSSMNT_MTHD
 				description : "The method by which the impairment is assessed, if the instrument is subject to impairment in accordance with applied accounting standards. Collective and individual methods are distinguished."
 				domain_id : IMPRMNT_ASSSSMNT_MTHD
+				is_enumerated : true 				
 				displayName : "Impairment assessment method"
-			}
-			DOMAIN CRDT_QLTY {
+			},
+			DOMAIN CRDT_QLTY : {
 				code : CRDT_QLTY
 				description : None
 				domain_id : CRDT_QLTY
 				displayName : "Credit quality"
-			}
+			},
 			
-			DOMAIN MNTRY {
+			DOMAIN MNTRY : {
 				code : MNTRY
 				data_type : :Decimal
 				description : None
 				domain_id : MNTRY
+				is_enumerated : false 	
+				
 				displayName : Monetary
-			}
-			DOMAIN DT {
+			},
+			DOMAIN DT : {
 				code : DT
 				data_type : :DateTime
 				description : None
 				domain_id : DT
 				displayName : Date
 			}
-			] } ] } }
+			] } ] } } }

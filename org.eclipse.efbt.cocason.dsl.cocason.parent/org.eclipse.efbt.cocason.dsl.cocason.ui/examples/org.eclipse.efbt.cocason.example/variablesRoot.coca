@@ -1,49 +1,49 @@
-Program {
-	smCubesModel : SmcubesModel variablesModel {
-		variables : [ VariableModule variablesModule {
+SMCubesProgram : { smcubesStaticModel : SMCubesStaticModel variablesStaticModel : {
+	smCubesModel : SmcubesModel variablesModel : {
+		variables : [ VariableModule variablesModule : {
 			variables : [ 
 				
-			VARIABLE IMPRMNT_ASSSSMNT_MTHD {
+			VARIABLE IMPRMNT_ASSSSMNT_MTHD : {
 				code : IMPRMNT_ASSSSMNT_MTHD
 				description : "The method by which the impairment is assessed, if the instrument is subject to impairment in accordance with applied accounting standards. Collective and individual methods are distinguished."
 				variable_id : IMPRMNT_ASSSSMNT_MTHD
 				displayName : "Impairment assessment method"
-				domain_id : "domainsModel.domainsModule.IMPRMNT_ASSSSMNT_MTHD"
-			}
-			VARIABLE IMPRMNT_STTS {
+				domain_id : "domainsStaticModel.domainsModel.domainsModule.IMPRMNT_ASSSSMNT_MTHD"
+			},
+			VARIABLE IMPRMNT_STTS : {
 				code : IMPRMNT_STTS
 				description : "Type of impairment."
 				variable_id : IMPRMNT_STTS
 				displayName : "Impairment status"
-				domain_id : "domainsModel.domainsModule.CRDT_QLTY"
-			}
-			VARIABLE PRVSNS_OFF_BLNC_SHT {
+				domain_id : "domainsStaticModel.domainsModel.domainsModule.CRDT_QLTY"
+			},
+			VARIABLE PRVSNS_OFF_BLNC_SHT : {
 				code : PRVSNS_OFF_BLNC_SHT
 				description : "The amount of provisions for off-balance sheet amounts."
 				variable_id : PRVSNS_OFF_BLNC_SHT
 				displayName : "Provisions associated with off-balance sheet exposures"
-				domain_id : "domainsModel.domainsModule.MNTRY"
-			}
-			VARIABLE PRFRMNG_STTS {
+				domain_id : "domainsStaticModel.domainsModel.domainsModule.MNTRY"
+			},
+			VARIABLE PRFRMNG_STTS : {
 				code : PRFRMNG_STTS
 				description : "Performing status in accordance with Implementing Regulation (EU) No 680/2014."
 				variable_id : PRFRMNG_STTS
 				displayName : "Performing status"
-				domain_id : "domainsModel.domainsModule.CRDT_QLTY"
-			}
-			VARIABLE DT_RFRNC {
+				domain_id : "domainsStaticModel.domainsModel.domainsModule.CRDT_QLTY"
+			},
+			VARIABLE DT_RFRNC : {
 				code : DT_RFRNC
 				variable_id : DT_RFRNC
 				displayName : "Reference date"
-				domain_id : "domainsModel.domainsModule.DT"
-			}
-			VARIABLE DT_DFLT_STTS {
+				domain_id : "domainsStaticModel.domainsModel.domainsModule.DT"
+			},
+			VARIABLE DT_DFLT_STTS : {
 				code : DT_DFLT_STTS
 				description : "The date on which the default status, as reported in the data attribute \'Default status of the counterparty\', is considered to have arisen."
 				variable_id : DT_DFLT_STTS
 				displayName : "Date of default status"
-				domain_id : "domainsModel.domainsModule.DT"
+				domain_id : "domainsStaticModel.domainsModel.domainsModule.DT"
 			}
 			
 			
-			] } ] } }
+			] } ] } } } 

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature id="org.eclipse.efbt.controller.model.feature">
+      <category name="efbt.controller.model"/>
+   </feature>
+   <category-def name="efbt.controller.model" label="EFBT Controller Model"/>
+</site>

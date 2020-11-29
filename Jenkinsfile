@@ -28,17 +28,23 @@ pipeline {
                     cd ..
                     cd org.eclipse.efbt.cocamo.datalineage
                     mvn install
-                    cd ..
-                    cd org.eclipse.efbt.cocason.dsl.cocason.parent -DskipTests
-                    mvn install
-                    cd ..
-                    cd org.eclipse.efbt.cocason
-                    mvn install 
-                    cd ..
+                    cd ..                    
                     cd org.eclipse.efbt.ldm
                     mvn install
                     cd ..
-                    cd org.eclipse.efbt.controller
+                    cd org.eclipse.efbt.controller.model
+                    mvn install
+                    cd ..
+                    cd org.eclipse.efbt.cocamo.trl
+                    mvn install
+                    cd ..
+                    cd org.eclipse.efbt.cocason.dsl.cocason.parent -DskipTests
+                    mvn install
+                    cd ..                    
+                    cd org.eclipse.efbt.cocason
+                    mvn install 
+                    cd ..
+                    cd org.eclipse.efbt.controller.component
                     mvn install
                     cd ..
                     cd org.eclipse.efbt.complete_repo

@@ -7,9 +7,9 @@
   <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
     <details key="documentation" value="This Package describes the grouping of artifacts for CoCaMo for SMCubes into a Program. &#xA;A program relates to the group of artifacts, and we allow the contents of  Programs to reference other programs.&#xA;"/>
   </eAnnotations>
-  <eClassifiers xsi:type="ecore:EClass" name="Program">
+  <eClassifiers xsi:type="ecore:EClass" name="SMCubesStaticModel" eSuperTypes="#//StaticModel">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A program relates to the group of artifacts, and we allow the contents of  Programs to reference other programs.&#xA;"/>
+      <details key="documentation" value="An SMCubesStaticModel  relates to the group of artifacts, and we allow the contents of  a SMCubesStaticModel  to reference other SMCubesStaticModels.&#xA;"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="smCubesModel" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes_model.ecore#//SmcubesModel"
         containment="true">
@@ -104,5 +104,12 @@
         <details key="documentation" value="The tests"/>
       </eAnnotations>
     </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="StaticModel">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A StaticModel relates to the group of artifacts, and we allow the contents of  a StaticModel to reference other StaticModels.&#xA;"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
   </eClassifiers>
 </ecore:EPackage>

@@ -1,15 +1,15 @@
-Program {
-	smCubesModel : SmcubesModel cubeStructuresModel {
-		cubes : [ CubeModule cubeStructuresModule {
+SMCubesProgram : { smcubesStaticModel : SMCubesStaticModel cubeStructuresStaticModel : {
+	smCubesModel : SmcubesModel cubeStructuresModel :{
+		cubes : [ CubeModule cubeStructuresModule : {
 			cubeStructures : [
-			CUBE_STRUCTURE ANCRDT_ACCNTNG_C_1 {
+			CUBE_STRUCTURE ANCRDT_ACCNTNG_C_1 : {
 				code : ANCRDT_ACCNTNG_C
 				cube_structure_id : ANCRDT_ACCNTNG_C_1
 				description : DESCRIPTION
 				valid_to : 12.31.9999
 				displayName : "Accounting data  - ECB Collection"
-			}
-			CUBE_STRUCTURE ANCRDT_ENTTY_DFLT_C_1 {
+			},
+			CUBE_STRUCTURE ANCRDT_ENTTY_DFLT_C_1 : {
 				code : ANCRDT_ENTTY_DFLT_C
 				cube_structure_id : ANCRDT_ENTTY_DFLT_C_1
 				description : DESCRIPTION
@@ -17,4 +17,4 @@ Program {
 				displayName : "Counterparty default data  - ECB Collection"
 			}
 			
-			] } ] } } 
+			] } ] } } }
