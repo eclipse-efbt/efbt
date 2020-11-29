@@ -109,15 +109,15 @@ Exhibit A – Form of Secondary Licenses Notice
    </license>
 
    <requires>
-      <import plugin="org.eclipse.efbt.language.trl.model.core"/>
-      <import plugin="org.eclipse.efbt.lineage.common.model.lineagecubes"/>
-      <import plugin="org.eclipse.emf.common"/>
       <import plugin="org.eclipse.efbt.cocamo.smcubes.model.core"/>
+      <import plugin="org.eclipse.efbt.language.trl.model.core"/>
       <import plugin="org.eclipse.efbt.cocamo.core.model.functionality_module"/>
       <import plugin="org.eclipse.efbt.lineage.attributelineage.model.attribute_lineage"/>
+      <import plugin="org.eclipse.efbt.lineage.common.model.lineagecubes"/>
+      <import plugin="org.eclipse.emf.common"/>
       <import plugin="org.eclipse.efbt.lineage.common.model.lineagefunctions"/>
       <import plugin="org.eclipse.efbt.lineage.attributelineage.modelquery.core"/>
-      <import plugin="org.eclipse.efbt.cocamo.core.model.functions"/>
+      <import plugin="org.eclipse.efbt.cocamo.functions.model.core"/>
    </requires>
 
    <plugin
