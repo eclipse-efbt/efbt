@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright (c) 2020 Bird Software Solutions Ltd
+    This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License 2.0
+    which accompanies this distribution, and is available at
+    https://www.eclipse.org/legal/epl-2.0/
+   
+    SPDX-License-Identifier: EPL-2.0
+   
+    Contributors:
+       Neil Mackenzie - initial API and implementation
+ -->
 <site>
    <feature id="org.eclipse.efbt.ldm.component.feature">
       <category name="efbt"/>
@@ -64,6 +76,18 @@
       <category name="efbt"/>
    </feature>
    <feature id="org.eclipse.efbt.cocamo.lineage_core.query.feature">
+      <category name="efbt"/>
+   </feature>
+   <feature id="org.eclipse.efbt.cocamo.trl.component.feature">
+      <category name="efbt"/>
+   </feature>
+   <feature id="org.eclipse.efbt.cocamo.trl.model.feature">
+      <category name="efbt"/>
+   </feature>
+   <feature id="org.eclipse.efbt.cocamo.trl.query.feature">
+      <category name="efbt"/>
+   </feature>
+   <feature id="org.eclipse.efbt.cocamo.trl.ui.sirius.feature">
       <category name="efbt"/>
    </feature>
    <category-def name="efbt" label="Complete EFBT Repository"/>

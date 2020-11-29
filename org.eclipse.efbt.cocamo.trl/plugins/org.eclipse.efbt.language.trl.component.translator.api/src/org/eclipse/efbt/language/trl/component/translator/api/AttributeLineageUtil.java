@@ -9,8 +9,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *  Neil Mackenzie - initial API and interfaceementation
- *  */
+ *    Neil Mackenzie - initial API and implementation
+ *******************************************************************************/
 
 package org.eclipse.efbt.language.trl.component.translator.api;
 
