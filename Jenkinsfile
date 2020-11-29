@@ -35,6 +35,9 @@ pipeline {
                     cd org.eclipse.efbt.controller.model
                     mvn install
                     cd ..
+                    cd org.eclipse.efbt.cocamo.trl
+                    mvn install
+                    cd ..
                     cd org.eclipse.efbt.cocason.dsl.cocason.parent -DskipTests
                     mvn install
                     cd ..                    
