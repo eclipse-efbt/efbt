@@ -1,4 +1,4 @@
-SMCubesProgram : { smcubesStaticModel : SMCubesStaticModel testDefinitionsStaticModel : {
+TRLProgram : { smcubesStaticModel : SMCubesStaticModel testDefinitionsStaticModel : {
 	testDefinitions : TestDefinitionModule testDefinitionsModule : {
 		testDefinitions : [ E2ETestDefinition standard_test : {
 			testContraints : "testConstraintsStaticModel.constraints" given : Given  :{

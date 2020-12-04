@@ -19,7 +19,8 @@ Require-Bundle:
  org.eclipse.efbt.lineage.attributelineage.model.attribute_lineage,
  org.eclipse.efbt.lineage.datalineage.model.datalineage,
  org.eclipse.efbt.lineage.common.model.lineagefunctions,
- org.eclipse.efbt.cocamo.functions.model.core
+ org.eclipse.efbt.cocamo.functions.model.core,
+ org.eclipse.efbt.language.trl.model.core
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.efbt.cocason.dsl.cocason.validation,
  org.eclipse.efbt.cocason.dsl.cocason.services,

@@ -1,4 +1,4 @@
-SMCubesProgram : { smcubesStaticModel : SMCubesStaticModel testTemplateStaticModel : {
+TRLProgram : { smcubesStaticModel : SMCubesStaticModel testTemplateStaticModel : {
 	testTemplates  : TestTemplateModule testTemplateModule : {
 		templates : [ TestTemplate testTemplate1 : {
 			givenText : ClauseText then_specific_output_data_is_expected

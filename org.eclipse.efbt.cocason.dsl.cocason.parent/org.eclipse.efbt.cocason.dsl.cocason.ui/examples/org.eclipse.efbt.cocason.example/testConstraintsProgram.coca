@@ -1,4 +1,4 @@
-SMCubesProgram : { smcubesStaticModel : SMCubesStaticModel testConstraintsStaticModel : {
+TRLProgram : { smcubesStaticModel : SMCubesStaticModel testConstraintsStaticModel : {
 	testConstriants : TestContraints constraints : {
 		template : "testTemplateStaticModel.testTemplateModule.testTemplate1" whenParams : [ Param : {
 			param : "membersStaticModel.TransformationSchemesModel.TransformationSchemesModule" } ] } } }

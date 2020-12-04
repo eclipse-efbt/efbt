@@ -82,6 +82,18 @@
   <eClassifiers xsi:type="ecore:EClass" name="CreateAttributeLineageModel" eSuperTypes="#//PlatformCall">
     <eStructuralFeatures xsi:type="ecore:EReference" name="resultingALM" eType="ecore:EClass ../../org.eclipse.efbt.lineage.attributelineage.model.attribute_lineage/model/attribute_lineage.ecore#//AttributeLineageModel"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="executableLogic" eType="#//ExecutableLogic"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="unresolvedCubeColumnParams"
+        upperBound="-1" eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagefunctions/model/column_transformation_logic.ecore#//SpeculativeCubeColumnParameter">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="If the VersionedComponentsSet includes DataSetTranformation which contains SpeculativeCubeColumnParameter which cannot be resolved then we list them here"/>
+      </eAnnotations>
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="kind" value="attribute"/>
+        <details key="name" value="unresolvedCubeColumnParams"/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CreateDataLineageModel" eSuperTypes="#//PlatformCall">
     <eStructuralFeatures xsi:type="ecore:EReference" name="inputALM" eType="ecore:EClass ../../org.eclipse.efbt.lineage.attributelineage.model.attribute_lineage/model/attribute_lineage.ecore#//AttributeLineageModel"/>
@@ -92,8 +104,6 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="smcubesStaticModel" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.smcubes.model.program/model/cocamo.ecore#//SMCubesStaticModel"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="platformCalls" eType="#//PlatformCallModule"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="executableLogic" eType="#//ExecutableLogic"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ExecutableLogic"/>

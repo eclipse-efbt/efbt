@@ -28,7 +28,8 @@ import org.eclipse.efbt.cocamo.smcubes.model.smcubes_model.SmcubesModel;
 import org.eclipse.efbt.cocamo.smcubes.model.smcubes_model.Smcubes_modelFactory;
 import org.eclipse.efbt.cocason.dsl.cocason.CoCaSonStandaloneSetup;
 import org.eclipse.efbt.controller.core.model.platform_call.Platform_callFactory;
-import org.eclipse.efbt.controller.core.model.platform_call.SMCubesProgram;
+import org.eclipse.efbt.language.trl.model.transformation.TRLProgram;
+import org.eclipse.efbt.language.trl.model.transformation.TransformationFactory;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -85,7 +86,7 @@ public class ImportAndExportSMCubesToNewCocason {
 		 SMCubesStaticModel tsRootProgram = CocamoFactory.eINSTANCE.createSMCubesStaticModel();
 		 tsRootProgram.setSmCubesModel(tsRootModel);
 		 tsRootProgram.setName("TransformationSchemesStaticModel");		 
-		 SMCubesProgram tsProgram =  Platform_callFactory.eINSTANCE.createSMCubesProgram();	
+		 TRLProgram tsProgram =  TransformationFactory.eINSTANCE.createTRLProgram();	
 		 tsProgram.setSmcubesStaticModel(tsRootProgram);
 		 
 		 EList<DomainModule> domainsRoot = birdModel.getDomains();
@@ -96,7 +97,7 @@ public class ImportAndExportSMCubesToNewCocason {
 		 SMCubesStaticModel domainsRootProgram = CocamoFactory.eINSTANCE.createSMCubesStaticModel();
 		 domainsRootProgram.setSmCubesModel(domainsRootModel);
 		 domainsRootProgram.setName("domainsStaticModel");		 
-		 SMCubesProgram domainsProgram =  Platform_callFactory.eINSTANCE.createSMCubesProgram();	
+		 TRLProgram domainsProgram =  TransformationFactory.eINSTANCE.createTRLProgram();	
 		 domainsProgram.setSmcubesStaticModel(domainsRootProgram);
 		
 		 EList<MemberModule> membersRoot = birdModel.getMembers();
@@ -106,7 +107,7 @@ public class ImportAndExportSMCubesToNewCocason {
 		SMCubesStaticModel membersRootProgram = CocamoFactory.eINSTANCE.createSMCubesStaticModel();
 		membersRootProgram.setSmCubesModel(membersRootModel);
 		membersRootProgram.setName("membersStaticModel");		 
-		 SMCubesProgram membersProgram =  Platform_callFactory.eINSTANCE.createSMCubesProgram();	
+		 TRLProgram membersProgram =  TransformationFactory.eINSTANCE.createTRLProgram();	
 		 membersProgram.setSmcubesStaticModel(membersRootProgram);
 		
 		 EList<VariableModule> variablesRoot = birdModel.getVariables();
@@ -116,7 +117,7 @@ public class ImportAndExportSMCubesToNewCocason {
 			SMCubesStaticModel variablesRootProgram = CocamoFactory.eINSTANCE.createSMCubesStaticModel();
 			variablesRootProgram.setSmCubesModel(variablesRootModel);
 			variablesRootProgram.setName("variablesStaticModel");		 
-			 SMCubesProgram variablesProgram =  Platform_callFactory.eINSTANCE.createSMCubesProgram();	
+			 TRLProgram variablesProgram =  TransformationFactory.eINSTANCE.createTRLProgram();	
 			 variablesProgram.setSmcubesStaticModel(variablesRootProgram);
 		//EObject combinationsRoot = (EObject) birdModel.getCombinations();
 		 EList<CubeModule> cubesRoot = birdModel.getCubes();
@@ -130,7 +131,7 @@ public class ImportAndExportSMCubesToNewCocason {
 		 SMCubesStaticModel cubesRootProgram = CocamoFactory.eINSTANCE.createSMCubesStaticModel();
 		 cubesRootProgram.setSmCubesModel(cubesRootModel);
 		 cubesRootProgram.setName("cubesStaticModel");		 
-		 SMCubesProgram cubesProgram =  Platform_callFactory.eINSTANCE.createSMCubesProgram();	
+		 TRLProgram cubesProgram =  TransformationFactory.eINSTANCE.createTRLProgram();	
 		 cubesProgram.setSmcubesStaticModel(cubesRootProgram);
 		 
 		 SmcubesModel cube_structuresRootModel = Smcubes_modelFactory.eINSTANCE.createSmcubesModel();
@@ -139,7 +140,7 @@ public class ImportAndExportSMCubesToNewCocason {
 		 SMCubesStaticModel cube_structuresRootProgram = CocamoFactory.eINSTANCE.createSMCubesStaticModel();
 		 cube_structuresRootProgram.setSmCubesModel(cube_structuresRootModel);
 		 cube_structuresRootProgram.setName("cube_structuresStaticModel");		 
-		 SMCubesProgram cube_structuresProgram =  Platform_callFactory.eINSTANCE.createSMCubesProgram();	
+		 TRLProgram cube_structuresProgram =  TransformationFactory.eINSTANCE.createTRLProgram();	
 		 cube_structuresProgram.setSmcubesStaticModel(cube_structuresRootProgram);
 		 
 		 SmcubesModel cube_structure_itemsRootModel = Smcubes_modelFactory.eINSTANCE.createSmcubesModel();
@@ -148,24 +149,24 @@ public class ImportAndExportSMCubesToNewCocason {
 		 SMCubesStaticModel cube_structure_itemsRootProgram = CocamoFactory.eINSTANCE.createSMCubesStaticModel();
 		 cube_structure_itemsRootProgram.setSmCubesModel(cube_structure_itemsRootModel);
 		 cube_structure_itemsRootProgram.setName("cube_structure_itemsStaticModel");		 
-		 SMCubesProgram cube_structure_itemsProgram =  Platform_callFactory.eINSTANCE.createSMCubesProgram();	
+		 TRLProgram cube_structure_itemsProgram =  TransformationFactory.eINSTANCE.createTRLProgram();	
 		 cube_structure_itemsProgram.setSmcubesStaticModel(cube_structure_itemsRootProgram);
 		 
 		 
 		 importer.functionalityModulesProgram.setName("functionalityStaticModel");	 
-		 SMCubesProgram functionalityProgram =  Platform_callFactory.eINSTANCE.createSMCubesProgram();	
+		 TRLProgram functionalityProgram =  TransformationFactory.eINSTANCE.createTRLProgram();	
 		 functionalityProgram.setSmcubesStaticModel(importer.functionalityModulesProgram);
 		
 		 importer.testTemplateProgram.setName("testTemplateStaticModel");	
-		 SMCubesProgram ttProgram =  Platform_callFactory.eINSTANCE.createSMCubesProgram();	
+		 TRLProgram ttProgram =  TransformationFactory.eINSTANCE.createTRLProgram();	
 		 ttProgram.setSmcubesStaticModel(importer.testTemplateProgram);
 		 
 		 importer.testConstraintsProgram.setName("testConstraintsStaticModel");
-		 SMCubesProgram tcProgram =  Platform_callFactory.eINSTANCE.createSMCubesProgram();	
+		 TRLProgram tcProgram =  TransformationFactory.eINSTANCE.createTRLProgram();	
 		 tcProgram.setSmcubesStaticModel(importer.testConstraintsProgram);
 		 
 		 importer.testDefinitionProgram.setName("testDefinitionsStaticModel");
-		 SMCubesProgram tdProgram =  Platform_callFactory.eINSTANCE.createSMCubesProgram();	
+		 TRLProgram tdProgram =  TransformationFactory.eINSTANCE.createTRLProgram();	
 		 tdProgram.setSmcubesStaticModel(importer.testDefinitionProgram);
 		 
 		 
@@ -196,7 +197,7 @@ public class ImportAndExportSMCubesToNewCocason {
 			counter++;
 			
 			program.setName("TestStaticModel"+ counter);
-			 SMCubesProgram testProgram =  Platform_callFactory.eINSTANCE.createSMCubesProgram();	
+			 TRLProgram  testProgram = TransformationFactory.eINSTANCE.createTRLProgram();	
 			 testProgram.setSmcubesStaticModel(program);
 			saveArtifactsAsCoCaSon(testProgram, outputFilepath + "testProgram" + counter + ".coca",xrs);
 		}

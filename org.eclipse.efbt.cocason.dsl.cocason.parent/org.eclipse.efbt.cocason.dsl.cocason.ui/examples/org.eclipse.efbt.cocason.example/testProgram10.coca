@@ -1,10 +1,10 @@
-SMCubesProgram :  { smcubesStaticModel : SMCubesStaticModel TestStaticModel1058 : {
+TRLProgram :  { smcubesStaticModel : SMCubesStaticModel TestStaticModel1058 : {
 	tests  : SMCubesTestModule TestModule1058 : {
 		tests : [ SMCubesTest "21:AC004" : {
 			testDefinition : "testDefinitionsStaticModel.testDefinitionsModule.standard_test"
 			inputData : SMCubesTestInputData "21:AC004:Data" : {
 				smcubes_inputdata : [ BaseColumnStructuredData "21:AC004:ANCRDT_ACCNTNG_C_1:CubeData" : {
-					cube : "cubesStaticModel.cubesModel.cubesModule.ANCRDT_ACCNTNG_C_1" rows : [ BaseRowData "21:AC004:ANCRDT_ACCNTNG_C_1:1" : {
+					cube : "cubesStaticModel.cubesModel.cubesModule1.ANCRDT_ACCNTNG_C_1" rows : [ BaseRowData "21:AC004:ANCRDT_ACCNTNG_C_1:1" : {
 						cells : [ 
 						
 						BaseCellWithValue "21:AC004:ANCRDT_ACCNTNG_C_1:1:IMPRMNT_ASSSSMNT_MTHD"
@@ -61,7 +61,7 @@ SMCubesProgram :  { smcubesStaticModel : SMCubesStaticModel TestStaticModel1058 
 						]
 						}, 
 						BaseColumnStructuredData "21:AC004:ANCRDT_ENTTY_DFLT_C_1:CubeData" : {
-					cube : "cubesStaticModel.cubesModel.cubesModule.ANCRDT_ENTTY_DFLT_C_1" rows : [ BaseRowData "21:AC004:ANCRDT_ENTTY_DFLT_C_1:1" : {
+					cube : "cubesStaticModel.cubesModel.cubesModule1.ANCRDT_ACCNTNG_C_1" rows : [ BaseRowData "21:AC004:ANCRDT_ENTTY_DFLT_C_1:1" : {
 						cells : [ 
 						BaseCellWithValue "21:AC004:ANCRDT_ACCNTNG_C_1:1:DT_DFLT_STTS"
 						: {

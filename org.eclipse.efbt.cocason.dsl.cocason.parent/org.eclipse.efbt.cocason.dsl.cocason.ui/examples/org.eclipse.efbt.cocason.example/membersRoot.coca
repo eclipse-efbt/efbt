@@ -1,4 +1,4 @@
-SMCubesProgram :  { smcubesStaticModel : SMCubesStaticModel membersStaticModel :  {
+TRLProgram :  { smcubesStaticModel : SMCubesStaticModel membersStaticModel :  {
 	smCubesModel : SmcubesModel membersModel : {
 		members : [ MemberModule membersModule : {
 			members : [

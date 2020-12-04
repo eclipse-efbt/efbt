@@ -126,10 +126,14 @@
       <details key="kind" value="elementOnly"/>
     </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TRLProgram" eSuperTypes="../../org.eclipse.efbt.controller.core.model.core/model/platform_call.ecore#//ExecutableLogic">
+  <eClassifiers xsi:type="ecore:EClass" name="TRLExecutableLogic" eSuperTypes="../../org.eclipse.efbt.controller.core.model.core/model/platform_call.ecore#//ExecutableLogic">
     <eStructuralFeatures xsi:type="ecore:EReference" name="componentSet" eType="#//VersionedComponentsSet"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="cubesModule" eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/cubes.ecore#//FreeBirdToolsCubeModule"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TRLProgram" eSuperTypes="../../org.eclipse.efbt.controller.core.model.core/model/platform_call.ecore#//SMCubesProgram">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="executableLogic" eType="#//TRLExecutableLogic"
         containment="true"/>
   </eClassifiers>
 </ecore:EPackage>

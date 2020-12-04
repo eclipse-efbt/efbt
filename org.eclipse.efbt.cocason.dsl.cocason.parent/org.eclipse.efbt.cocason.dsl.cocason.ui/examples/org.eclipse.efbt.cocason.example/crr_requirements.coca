@@ -1,4 +1,4 @@
-SMCubesProgram : { smcubesStaticModel : SMCubesStaticModel CRRRequirementsStaticModel : { 
+TRLProgram : { smcubesStaticModel : SMCubesStaticModel CRRRequirementsStaticModel : { 
 	requirements : RequirementsModule CRRRequirementsModel : {
 		
 	rules : [  TitledRequirementsSection CRRRuleBook : { title CRRRuleBook

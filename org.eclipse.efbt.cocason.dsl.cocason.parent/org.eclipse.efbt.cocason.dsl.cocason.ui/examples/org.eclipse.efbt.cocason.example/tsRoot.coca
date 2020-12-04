@@ -1,4 +1,4 @@
-SMCubesProgram :  { smcubesStaticModel : SMCubesStaticModel membersStaticModel :  {
+TRLProgram :  { smcubesStaticModel : SMCubesStaticModel membersStaticModel :  {
 	smCubesModel : SmcubesModel TransformationSchemesModel : {
 		functionalModules : [ TransformationSchemeModule TransformationSchemesModule : {
 			schemes : [ TRANSFORMATION_SCHEME ECB_BIRD_AnaCredit_5_0_2_1 : {

@@ -68,9 +68,12 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference transformation.ecore#//VersionedCubeSchemaModule/schemas"/>
     </genClasses>
     <genClasses ecoreClass="transformation.ecore#//VersionedFunctionalModuleLogic"/>
+    <genClasses ecoreClass="transformation.ecore#//TRLExecutableLogic">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference transformation.ecore#//TRLExecutableLogic/componentSet"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference transformation.ecore#//TRLExecutableLogic/cubesModule"/>
+    </genClasses>
     <genClasses ecoreClass="transformation.ecore#//TRLProgram">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference transformation.ecore#//TRLProgram/componentSet"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference transformation.ecore#//TRLProgram/cubesModule"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference transformation.ecore#//TRLProgram/executableLogic"/>
     </genClasses>
   </genPackages>
   <genPackages prefix="Trl_report_cell_views" basePackage="org.eclipse.efbt.language.trl.model"

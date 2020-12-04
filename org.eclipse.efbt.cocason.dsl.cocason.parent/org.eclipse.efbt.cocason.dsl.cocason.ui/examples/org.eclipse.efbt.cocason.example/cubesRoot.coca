@@ -1,5 +1,5 @@
-SMCubesProgram : { smcubesStaticModel : SMCubesStaticModel cubesStaticModel : { smCubesModel : SmcubesModel cubesModel : {
-		cubes : [ CubeModule cubesModule :{
+TRLProgram : { smcubesStaticModel : SMCubesStaticModel cubesStaticModel : { smCubesModel : SmcubesModel cubesModel : {
+		cubes : [ CubeModule cubesModule1 :{
 			cubes : [ CUBE ANCRDT_ACCNTNG_C_1 :{
 				code : ANCRDT_ACCNTNG_C
 				cube_id : ANCRDT_ACCNTNG_C_1

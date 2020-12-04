@@ -1,4 +1,4 @@
-SMCubesProgram : { smcubesStaticModel : SMCubesStaticModel cubeStructuresStaticModel : {
+TRLProgram : { smcubesStaticModel : SMCubesStaticModel cubeStructuresStaticModel : {
 	smCubesModel : SmcubesModel cubeStructuresModel :{
 		cubes : [ CubeModule cubeStructuresModule : {
 			cubeStructures : [

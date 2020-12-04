@@ -1,4 +1,4 @@
-SMCubesProgram : { smcubesStaticModel : SMCubesStaticModel domainsStaticModel : {
+TRLProgram : { smcubesStaticModel : SMCubesStaticModel domainsStaticModel : {
 	smCubesModel : SmcubesModel domainsModel : {
 		domains : [ DomainModule domainsModule : {
 			domains : [ 

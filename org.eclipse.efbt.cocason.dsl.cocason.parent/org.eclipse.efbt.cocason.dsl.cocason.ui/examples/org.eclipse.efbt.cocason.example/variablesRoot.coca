@@ -1,4 +1,4 @@
-SMCubesProgram : { smcubesStaticModel : SMCubesStaticModel variablesStaticModel : {
+TRLProgram : { smcubesStaticModel : SMCubesStaticModel variablesStaticModel : {
 	smCubesModel : SmcubesModel variablesModel : {
 		variables : [ VariableModule variablesModule : {
 			variables : [ 
