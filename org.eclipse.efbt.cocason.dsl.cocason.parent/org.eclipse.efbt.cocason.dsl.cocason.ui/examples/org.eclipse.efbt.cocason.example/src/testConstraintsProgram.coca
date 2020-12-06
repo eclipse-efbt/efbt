@@ -1,0 +1,4 @@
+ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStaticModel testConstraintsStaticModel : {
+	testConstriants : TestContraints constraints : {
+		template : "testTemplateStaticModel.testTemplateModule.testTemplate1" whenParams : [ Param : {
+			param : "abc.functionalityModules1.example_processing.processExampleData.scenarioSet1"} ] } } } }

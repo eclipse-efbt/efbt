@@ -1,0 +1,84 @@
+ProgramAndCalls : { program : TRLProgram :  {
+	executableLogic : TRLExecutableLogic trl_executable_logic1 : { 
+		componentSet : VersionedComponentsSet  Relase1 : {
+			 cubeSchemaModules : [  VersionedCubeSchemaModule  readInExampleData : {schemas : [ 
+			 	CubeSchema counterparty :{ cube : "smcubesStaticCubesModel.smcubesCubesModel.cubesModel.counterparty" baseCube : "trl_executable_logic2.freeBirdToolsCubeModule.counterparty" },
+			 	CubeSchema rating : { cube : "smcubesStaticCubesModel.smcubesCubesModel.cubesModel.rating" baseCube : "trl_executable_logic2.freeBirdToolsCubeModule.rating" } , 
+			 	CubeSchema loans: { cube : "smcubesStaticCubesModel.smcubesCubesModel.cubesModel.loans" baseCube : "trl_executable_logic2.freeBirdToolsCubeModule.loans" }
+			 ] } ] 
+			 datasetTransformationModules : [ VersionedSQLViewsModule   processExampleData : { 
+			 	sqlViews : [ AggregateEnrichmentView aggregateLoans : {
+			 		VTL_Code : "aggregateLoans := loans [ aggr ECB2_MRKT_VL := sum(ECB2_MRKT_VL)  , aggr NTNL_AMNT:= sum(NTNL_AMNT) group by ECB2_ENTITY_LEI]" 
+			 		cube : "trl_executable_logic2.freeBirdToolsCubeModule.aggregateLoans" 
+			 		functions : [ AggregateColumnFunction  aggregateLoans_ECB2_MRKT_VL:   { 
+			 			variable  : "smcubesStaticModel1.smcubesModel1.variablesModule.ECB2_MRKT_VL"
+			 			 aggregateFunction : AggregateFunction sum  : { 
+			 			 	functionSpec : "trl_executable_logic3.functionSpecModule1.SUM" parameters : 
+			 			 	[ SpeculativeCubeColumnParameter  : { column  : "smcubesStaticModel1.smcubesModel1.variablesModule.ECB2_MRKT_VL" cube  :"trl_executable_logic2.freeBirdToolsCubeModule.loans" } ]
+			 			 } 
+			 			 usedInSubsets : false			 			
+			 		}  ,  AggregateColumnFunction aggregateLoans_NTNL_AMNT:  
+			 		{ cube : "trl_executable_logic2.freeBirdToolsCubeModule.aggregateLoans" variable : "smcubesStaticModel1.smcubesModel1.variablesModule.NTNL_AMNT"
+			 			  aggregateFunction : AggregateFunction summation : { functionSpec : "trl_executable_logic3.functionSpecModule1.SUM"  parameters : [ SpeculativeCubeColumnParameter : { column  : "smcubesStaticModel1.smcubesModel1.variablesModule.NTNL_AMNT" cube  :"trl_executable_logic2.freeBirdToolsCubeModule.loans" } ] } 
+			 			usedInSubsets : false  
+			 		} ]  
+			 
+			 		 
+			 		groupByClause : GroupByClause  : {  groupByColumns : [ "smcubesStaticModel1.smcubesModel1.variablesModule.ECB2_ENTITY_LEI" ] }
+			 		
+			 		  } ,
+			 		   JoinView aggregateLoansAndCounterparties : { 
+			 		   	VTL_Code : "aggregateLoansAndCounterparties := inner_join(aggregateLoans as A, counterparty as B using ECB2_ENTITY_LEI keep B#ALL_VARIABLES, A#ECB2_MRKT_VL, A#NTNL_AMNT)" 
+			 		   	cube : "trl_executable_logic2.freeBirdToolsCubeModule.aggregateLoansAndCounterparties"
+			 		   	
+			 		   	whereClause : WhereClause : { function : BooleanFunction equals :{ 
+			 		   		functionSpec : "trl_executable_logic3.functionSpecModule1.equality" parameters : [ 
+			 		   			SpeculativeCubeColumnParameter  : { column : "smcubesStaticModel1.smcubesModel1.variablesModule.ECB2_ENTITY_LEI" cube  :"trl_executable_logic2.freeBirdToolsCubeModule.aggregateLoans" } ,
+			 		   			SpeculativeCubeColumnParameter  : { column : "smcubesStaticModel1.smcubesModel1.variablesModule.ECB2_ENTITY_LEI" cube  :"trl_executable_logic2.freeBirdToolsCubeModule.counterparty"}
+			 		   		]
+			 		   	} } ignores : [IgnoreColumn : { columnToIgnore : "smcubesStaticModel1.smcubesModel1.variablesModule.ECB2_ENTITY_LEI" cube : "trl_executable_logic2.freeBirdToolsCubeModule.aggregateLoans"  } ]
+			 		   } ,
+			 		    JoinView loansCounterpartiesAndRatings : {  VTL_Code : "loansCounterpartiesAndRatings := inner_join ( aggregateLoansAndCounterparties as A, rating as B using ECB2_ENTITY_LEI keep A#ALL_VARIABLES, B#CRDT_RTNG_AGNCY, A#RTNG_SCL_CD)" 
+			 		    	cube : "trl_executable_logic2.freeBirdToolsCubeModule.loansCounterpartiesAndRatings"
+			 		    	whereClause : WhereClause : { function : BooleanFunction equality  : { 
+			 		    		functionSpec : "trl_executable_logic3.functionSpecModule1.equality" parameters : [ 
+			 		    			SpeculativeCubeColumnParameter  :{ column  : "smcubesStaticModel1.smcubesModel1.variablesModule.ECB2_ENTITY_LEI" cube :  "trl_executable_logic2.freeBirdToolsCubeModule.aggregateLoansAndCounterparties" }, 
+			 		    			SpeculativeCubeColumnParameter  :{ column : "smcubesStaticModel1.smcubesModel1.variablesModule.ECB2_ENTITY_LEI" cube : "trl_executable_logic2.freeBirdToolsCubeModule.rating"}
+			 		    		]
+			 		    	} }  ignores : [ IgnoreColumn : { columnToIgnore : "smcubesStaticModel1.smcubesModel1.variablesModule.ECB2_ENTITY_LEI" cube : "trl_executable_logic2.freeBirdToolsCubeModule.rating" } ]
+			 		    } , 
+			 		    EnrichmentView enrichedExposures:  { 
+			 		    	VTL_Code : "enrichedExposures:= loansCounterpartiesAndRating [calc measure tripleANotionaAmount:= tripleANotionaAmount(RTNG_SCL_CD,NTNL_AMNT)]" 
+			 		    	cube : "trl_executable_logic2.freeBirdToolsCubeModule.enrichedExposures" 
+			 		    	functions : [ BasicColumnFunction enrichedExposures_trippleA_NotionaAmount : { 
+			 		    		cube : "trl_executable_logic2.freeBirdToolsCubeModule.enrichedExposures" 
+			 		    		 variable : "smcubesStaticModel1.smcubesModel1.variablesModule.trippleA_NotionaAmount"
+			 		    		 basicFunction : BasicFunction trippleA_NotionalAmount : { functionSpec : "trl_executable_logic3.functionSpecModule1.trippleA_NotionaAmount" parameters : [
+			 		    		 	SpeculativeCubeColumnParameter  :{ 
+			 		    		 		column : "smcubesStaticModel1.smcubesModel1.variablesModule.RTNG_SCL_CD" 
+			 		    		 		cube : "trl_executable_logic2.freeBirdToolsCubeModule.loansCounterpartiesAndRatings"
+			 		    		 	}, 
+			 		    		 	SpeculativeCubeColumnParameter  :
+			 		    		 	{ column :"smcubesStaticModel1.smcubesModel1.variablesModule.NTNL_AMNT"
+			 		    		 		cube : "trl_executable_logic2.freeBirdToolsCubeModule.loansCounterpartiesAndRatings"
+			 		    		 	}
+			 		    		 ] } 
+			 		    		 usedInSubsets : false
+			 		    		 
+			 		    	} ]
+			 		    } ] } ] 
+			
+			 reportCellViewModules : [ReportCellViewModule reportsModule1 : {   reportCellViews  [ 
+			 	ReportCellView totalJPMktValue_view  : { 
+			 		cube : "trl_executable_logic2.freeBirdToolsCubeModule.totalJPMktValue"
+			 		 reportCell : ReportCell totalJPMktValue : { 
+			 		 	combination :  "smcubesStaticCubesModel.smcubesCubesModel.combinationModule.totalJPMktValue"  } 
+			 		  } ,
+			 		  ReportCellView totalUSNotional_view : { 
+			 		  	cube : "trl_executable_logic2.freeBirdToolsCubeModule.totalUSNotional"  			 		
+			 		  	reportCell : ReportCell totalUSNotional : { combination : "smcubesStaticCubesModel.smcubesCubesModel.combinationModule.totalUSNotional" } 
+			 		  	} ,
+			 		  ReportCellView notionalOfUS_AAA_view : {  
+			 		  	cube : "trl_executable_logic2.freeBirdToolsCubeModule.notionalOfUS_AAA"
+			 		  	reportCell : ReportCell notionalOfUS_AAA : { 
+			 		  		combination : "smcubesStaticCubesModel.smcubesCubesModel.combinationModule.notionalOfUS_AAA"} } ] } ] } } } } 

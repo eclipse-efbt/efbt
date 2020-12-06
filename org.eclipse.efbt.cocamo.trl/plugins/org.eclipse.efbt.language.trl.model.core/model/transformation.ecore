@@ -69,7 +69,8 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="datasetTransformationModules"
-        upperBound="-1" eType="#//VersionedFunctionalModuleLogic" containment="true">
+        upperBound="-1" eType="ecore:EClass trl_sql_views.ecore#//VersionedSQLViewsModule"
+        containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The set of DataSetTransformationModules, note that each DataSetTransformationModule states which  DataSetTransformationFunctionalModule they are associated with in the functionalModule reference."/>
       </eAnnotations>
@@ -126,10 +127,20 @@
       <details key="kind" value="elementOnly"/>
     </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TRLProgram" eSuperTypes="../../org.eclipse.efbt.controller.core.model.core/model/platform_call.ecore#//ExecutableLogic">
+  <eClassifiers xsi:type="ecore:EClass" name="TRLExecutableLogic">
     <eStructuralFeatures xsi:type="ecore:EReference" name="componentSet" eType="#//VersionedComponentsSet"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="cubesModule" eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/cubes.ecore#//FreeBirdToolsCubeModule"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="functionSpecModule" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.functions.model.core/model/functions.ecore#//FunctionSpecModule"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TRLProgram">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="executableLogic" eType="#//TRLExecutableLogic"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="smcubesStaticModel" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.smcubes.model.program/model/cocamo.ecore#//SMCubesStaticModel"
         containment="true"/>
   </eClassifiers>
 </ecore:EPackage>

@@ -4,7 +4,6 @@
 package org.eclipse.efbt.cocason.dsl.cocason.formatting2
 
 import com.google.inject.Inject
-import org.eclipse.efbt.controller.core.model.platform_call.SMCubesProgram
 import org.eclipse.efbt.cocamo.smcubes.model.smcubes_model.SmcubesModel
 import org.eclipse.efbt.cocason.dsl.cocason.services.CoCaSonGrammarAccess
 import org.eclipse.xtext.formatting2.AbstractFormatter2

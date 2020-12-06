@@ -27,6 +27,7 @@ import org.eclipse.efbt.cocamo.smcubes.model.efbt_data_definition.CubeModule;
 import org.eclipse.efbt.language.trl.model.transformation.VersionedComponentsSet;
 import org.eclipse.efbt.language.trl.model.transformation.VersionedCubeSchemaModule;
 import org.eclipse.efbt.language.trl.model.transformation.VersionedFunctionalModuleLogic;
+import org.eclipse.efbt.language.trl.model.trl_sql_views.VersionedSQLViewsModule;
 import org.eclipse.efbt.lineage.attributelineage.model.attribute_lineage.AttributeLineageModel;
 import org.eclipse.efbt.lineage.attributelineage.model.cube_transformation_logic.CubeTransformationLogic;
 import org.eclipse.efbt.lineage.attributelineage.model.row_transformation_logic.BaseRowStructure;
@@ -133,7 +134,7 @@ public class Util {
    */
   public static BaseRowStructure translateCubeSchemaToBaseRowStructure
      (CubeSchema cubeSchema,
-      EList<VersionedFunctionalModuleLogic> functionalModuleLogicList,
+      EList<VersionedSQLViewsModule> functionalModuleLogicList,
       EList<VersionedCubeSchemaModule> cubeSchemaModuleList) {
 
     EList<VARIABLE> columnsList = getColumnsFromCubeSchema(cubeSchema);

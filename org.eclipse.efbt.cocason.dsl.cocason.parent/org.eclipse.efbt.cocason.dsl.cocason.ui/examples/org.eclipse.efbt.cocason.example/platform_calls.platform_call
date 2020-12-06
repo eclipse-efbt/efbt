@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<platform_call:PlatformCallModule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:platform_call="http://www.eclipse.org/efbt/platform_call" license="Copyright (c) 2020 Bird Software Solutions Ltd&amp;#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&amp;#xA;&amp;#xA;SPDX-License-Identifier: EPL-2.0 &amp;#xA;&amp;#xA; Contributors:&amp;#xA; Neil Mackenzie - initial API and implementation&amp;#xD;" name="compare_attribute_lineage_models">
-  <platformCalls xsi:type="platform_call:TranslateBIRDWithNewTestFormatToCocason" name="abcd" inputDirectory="C:\Users\neil\BIRD_5.0.2.1\BIRD_5_0_2_1.accdb" outputDirectory="C:\Users\neil\outputcocason\" testDirectory="C:\Users\neil\Dropbox\neil\bss\newAnacredit_tests"/>
-  <platformCalls xsi:type="platform_call:ConvertSQLDeveloperModelToEcore" inputDirectory="C:\Users\neil\ldm_structure\"/>
-</platform_call:PlatformCallModule>

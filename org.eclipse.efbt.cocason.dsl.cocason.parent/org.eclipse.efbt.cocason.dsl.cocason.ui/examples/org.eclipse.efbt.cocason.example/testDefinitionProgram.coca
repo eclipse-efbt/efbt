@@ -1,8 +1,0 @@
-SMCubesProgram : { smcubesStaticModel : SMCubesStaticModel testDefinitionsStaticModel : {
-	testDefinitions : TestDefinitionModule testDefinitionsModule : {
-		testDefinitions : [ E2ETestDefinition standard_test : {
-			testContraints : "testConstraintsStaticModel.constraints" given : Given  :{
-			} when : When : {
-				params : [ Param :{
-					param : "membersStaticModel.TransformationSchemesModel.TransformationSchemesModule.ECB_BIRD_SHS_5_0_2_1" } ] } then : Then :{
-			} } ] } } }
