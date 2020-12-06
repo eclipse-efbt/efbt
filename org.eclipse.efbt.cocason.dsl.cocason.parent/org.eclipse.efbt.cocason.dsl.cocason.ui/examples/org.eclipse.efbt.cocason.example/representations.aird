@@ -18,4 +18,6 @@
   <semanticResources>src/testTemplateProgram.coca</semanticResources>
   <semanticResources>src/testDefinitionProgram.coca</semanticResources>
   <semanticResources>src/testProgram1.coca</semanticResources>
+  <semanticResources>src/FRTB_functionalityModulesProgram.coca</semanticResources>
+  <semanticResources>src/FRTB_requirements.coca</semanticResources>
 </viewpoint:DAnalysis>
