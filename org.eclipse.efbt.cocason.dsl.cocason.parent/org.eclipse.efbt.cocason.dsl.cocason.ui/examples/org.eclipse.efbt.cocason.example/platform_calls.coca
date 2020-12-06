@@ -1,0 +1,14 @@
+ProgramAndCalls : {platformCalls : PlatformCallModule platfromCallsModule1 : { 
+	platformCalls : [ 
+		CreateAttributeLineageModel almcall1 : { 
+		executableLogic : trl_executable_logic1 
+		}  ,
+		TranslateBIRDWithNewTestFormatToCocason loadBirdCall :{
+			inputDirectory : "C:\\Users\\neil\\BIRD_5.0.2.1\\BIRD_5_0_2_1.accdb" 
+			outputDirectory : "C:\\Users\\neil\\outputcocason\\" 
+			testDirectory : "C:\\Users\\neil\\Dropbox\\neil\\bss\\newAnacredit_tests"
+		},
+		ConvertSQLDeveloperModelToEcore cobverLDMCall : {
+			inputDirectory : "C:\\Users\\neil\\ldm_structure\\"
+		}
+] } } 

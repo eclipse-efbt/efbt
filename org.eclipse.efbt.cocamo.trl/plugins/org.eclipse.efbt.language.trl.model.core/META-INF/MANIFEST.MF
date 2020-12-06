@@ -37,6 +37,5 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.efbt.cocamo.core.model.requirements_text;visibility:=reexport,
  org.eclipse.efbt.cocamo.smcubes.model.input_data;visibility:=reexport,
  org.eclipse.efbt.cocamo.core.model.functionality_module;visibility:=reexport,
- org.eclipse.efbt.cocamo.functions.model.core;visibility:=reexport,
- org.eclipse.efbt.controller.core.model.core;visibility:=reexport
+ org.eclipse.efbt.cocamo.functions.model.core;visibility:=reexport
 Bundle-ActivationPolicy: lazy

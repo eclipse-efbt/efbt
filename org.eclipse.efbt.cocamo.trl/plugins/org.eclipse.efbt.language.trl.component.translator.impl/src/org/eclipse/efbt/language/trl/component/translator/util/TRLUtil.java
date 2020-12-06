@@ -102,7 +102,7 @@ public class TRLUtil {
    * @return
    */
   public static CubeTransformationLogic translateViewToFunctionalRowLogic(SQLView view,
-      EList<VersionedFunctionalModuleLogic> functionalModuleLogicList,
+      EList<VersionedSQLViewsModule> functionalModuleLogicList,
       EList<VersionedCubeSchemaModule> cubeSchemaModuleList, 
       SpecialFunctionSpecs specialFunctions) {
 
@@ -718,7 +718,7 @@ public class TRLUtil {
    * @param cubeSchemaModuleList
    */
   private static void setFunctionalCubeLogic(SQLView view, CubeTransformationLogic cubeTransformationLogic ,
-      SpecialFunctionSpecs specialFunctions, EList<VersionedFunctionalModuleLogic> functionalModuleLogicList,
+      SpecialFunctionSpecs specialFunctions, EList<VersionedSQLViewsModule> functionalModuleLogicList,
       EList<VersionedCubeSchemaModule> cubeSchemaModuleList) {
     
     if ((view instanceof CopyView) || (view instanceof EnrichmentView)) {
@@ -853,7 +853,7 @@ public class TRLUtil {
    * @return
    */
   public static EList<CubeColumn> getColumnsFromSQLView(SQLView view,
-      EList<VersionedFunctionalModuleLogic> functionalModuleLogicList,
+      EList<VersionedSQLViewsModule> functionalModuleLogicList,
       EList<VersionedCubeSchemaModule> cubeSchemaModuleList, SpecialFunctionSpecs specialFunctions) {
     CubeTransformationLogic rowLogic = translateViewToFunctionalRowLogic(view, functionalModuleLogicList,
         cubeSchemaModuleList, specialFunctions);
@@ -867,7 +867,7 @@ public class TRLUtil {
    * @return
    */
   public static EList<SQLView> getTheDependantViews(SQLView view,
-      EList<VersionedFunctionalModuleLogic> functionalModuleLogicList) {
+      EList<VersionedSQLViewsModule> functionalModuleLogicList) {
 
     BasicEList<SQLView> dependantViews = new BasicEList<SQLView>();
 
@@ -902,7 +902,7 @@ public class TRLUtil {
    * @param functionalModuleLogicList
    * @return
    */
-  private static EList<SQLView> getAllViews(EList<VersionedFunctionalModuleLogic> functionalModuleLogicList) {
+  private static EList<SQLView> getAllViews(EList<VersionedSQLViewsModule> functionalModuleLogicList) {
     EList<SQLView> returnList = new BasicEList<SQLView>();
     for (Iterator iterator = functionalModuleLogicList.iterator(); iterator.hasNext();) {
       VersionedFunctionalModuleLogic dataSetTransformationModule = (VersionedFunctionalModuleLogic) iterator

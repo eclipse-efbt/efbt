@@ -1,49 +1,63 @@
-TRLProgram : { smcubesStaticModel : SMCubesStaticModel variablesStaticModel : {
-	smCubesModel : SmcubesModel variablesModel : {
-		variables : [ VariableModule variablesModule : {
+ProgramAndCalls : { program :  TRLProgram :  {
+	smcubesStaticModel : SMCubesStaticModel smcubesStaticModel1 : {
+	smCubesModel : SmcubesModel  smcubesModel1  : {
+		variables :  [ VariableModule variablesModule :  
+				{
 			variables : [ 
-				
-			VARIABLE IMPRMNT_ASSSSMNT_MTHD : {
-				code : IMPRMNT_ASSSSMNT_MTHD
-				description : "The method by which the impairment is assessed, if the instrument is subject to impairment in accordance with applied accounting standards. Collective and individual methods are distinguished."
-				variable_id : IMPRMNT_ASSSSMNT_MTHD
-				displayName : "Impairment assessment method"
-				domain_id : "domainsStaticModel.domainsModel.domainsModule.IMPRMNT_ASSSSMNT_MTHD"
-			},
-			VARIABLE IMPRMNT_STTS : {
-				code : IMPRMNT_STTS
-				description : "Type of impairment."
-				variable_id : IMPRMNT_STTS
-				displayName : "Impairment status"
-				domain_id : "domainsStaticModel.domainsModel.domainsModule.CRDT_QLTY"
-			},
-			VARIABLE PRVSNS_OFF_BLNC_SHT : {
-				code : PRVSNS_OFF_BLNC_SHT
-				description : "The amount of provisions for off-balance sheet amounts."
-				variable_id : PRVSNS_OFF_BLNC_SHT
-				displayName : "Provisions associated with off-balance sheet exposures"
-				domain_id : "domainsStaticModel.domainsModel.domainsModule.MNTRY"
-			},
-			VARIABLE PRFRMNG_STTS : {
-				code : PRFRMNG_STTS
-				description : "Performing status in accordance with Implementing Regulation (EU) No 680/2014."
-				variable_id : PRFRMNG_STTS
-				displayName : "Performing status"
-				domain_id : "domainsStaticModel.domainsModel.domainsModule.CRDT_QLTY"
-			},
-			VARIABLE DT_RFRNC : {
-				code : DT_RFRNC
-				variable_id : DT_RFRNC
-				displayName : "Reference date"
-				domain_id : "domainsStaticModel.domainsModel.domainsModule.DT"
-			},
-			VARIABLE DT_DFLT_STTS : {
-				code : DT_DFLT_STTS
-				description : "The date on which the default status, as reported in the data attribute \'Default status of the counterparty\', is considered to have arisen."
-				variable_id : DT_DFLT_STTS
-				displayName : "Date of default status"
-				domain_id : "domainsStaticModel.domainsModel.domainsModule.DT"
+			VARIABLE ECB2_MRKT_VL : {
+				code : "MRKT_VL"
+				description : "Market Value"
+				variable_id : "ECB2_MRKT_VL"
+				domain_id : "smcubesDomainsStaticModel.smcubesDomainsModel.domainsModule.ECB2_MNTRY"
 			}
-			
-			
-			] } ] } } } 
+			,
+			VARIABLE DT_NXT_INTRST_RT_RST : {
+				code : "DT_NXT_INTRST_RT_RST"
+				description : "The date that the next interest rate reset, as defined in Part 3 of Annex I to Regulation (EU) No 1071/2013 (ECB/2013/33), takes place. If the instrument is not subject to a future interest rate reset, its legal final maturity date will be reported."
+				variable_id : "DT_NXT_INTRST_RT_RST"
+				domain_id : "smcubesDomainsStaticModel.smcubesDomainsModel.domainsModule.DT"
+			}
+			,
+			VARIABLE ECB2_ENTITY_LEI : {
+				code : "ENTITY_LEI"
+				description : "Entity LEI"
+				variable_id : "ECB2_ENTITY_LEI"
+				domain_id : "smcubesDomainsStaticModel.smcubesDomainsModel.domainsModule.EBA_String"
+			}
+			,
+						 		 VARIABLE NTNL_AMNT : {
+				code : "NTNL_AMNT"
+				description : "The notional amount on a financial instrument is the nominal or face amount that is used to calculate payments made on that instrument."
+				variable_id : "NTNL_AMNT"
+				domain_id : "smcubesDomainsStaticModel.smcubesDomainsModel.domainsModule.ECB2_MNTRY"
+			}
+			,
+			VARIABLE CNTRY : {
+				code : "CNTRY"
+				description : "Counterparty’s country."
+				variable_id : "CNTRY"
+				domain_id : "smcubesDomainsStaticModel.smcubesDomainsModel.domainsModule.GGRPHCL_ARS"
+			}
+			,
+			VARIABLE CRDT_RTNG_AGNCY: {
+				code : "CRDT_RTNG_AGNCY"
+				description : "Credit rating agency used in Asset encumbrance.\nSee EBA ITS on Asset encumbrance, 5.2.3. Instructions concerning specific columns, External credit rating on covered bond (090-140), As per credit rating agencies\' methodology to maintain current external credit rating on covered bond (230-250)."
+				variable_id : "CRDT_RTNG_AGNCY"
+				domain_id : "smcubesDomainsStaticModel.smcubesDomainsModel.domainsModule.CRDT_RTNG_AGNCY"
+			}
+			,
+			VARIABLE RTNG_SCL_CD : {
+				code : "RTNG_SCL_CD"
+				description : "It refers to the code of the Rating Scale of a certain ECA or ECAI"
+				variable_id : "RTNG_SCL_CD"
+				domain_id : "smcubesDomainsStaticModel.smcubesDomainsModel.domainsModule.EBA_String"
+			}
+			, 
+			VARIABLE trippleA_NotionaAmount : {
+				code : "trippleA_NotionaAmount"
+				description : "trippleA_NotionaAmount"
+				variable_id : "trippleA_NotionaAmount"
+				domain_id : "smcubesDomainsStaticModel.smcubesDomainsModel.domainsModule.ECB2_MNTRY"
+			}
+			] } ] } } } }
+				

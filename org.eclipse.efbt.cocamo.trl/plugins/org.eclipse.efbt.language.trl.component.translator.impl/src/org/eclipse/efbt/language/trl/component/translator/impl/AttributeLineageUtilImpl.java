@@ -363,7 +363,7 @@ public  AttributeLineageModel createAttributeLineageModel(VersionedComponentsSet
 		) {
 	
   // delete the old row logic group and build the new one.
-  EList<VersionedFunctionalModuleLogic> functionalModuleLogicList = vcs
+  EList<VersionedSQLViewsModule> functionalModuleLogicList = vcs
 		      .getDatasetTransformationModules();
   AttributeLineageModel attributeLineageModel = Attribute_lineageFactory.eINSTANCE.createAttributeLineageModel();
   
@@ -376,7 +376,7 @@ public  AttributeLineageModel createAttributeLineageModel(VersionedComponentsSet
   EList<ReportCellViewModule> reportViewModuleList = vcs.getReportCellViewModules();
   EList<VersionedCubeSchemaModule> cubeSchemaModuleList = vcs.getCubeSchemaModules();
 
-  Iterator<VersionedFunctionalModuleLogic> transformationModuleIter = functionalModuleLogicList.iterator();
+  Iterator<VersionedSQLViewsModule> transformationModuleIter = functionalModuleLogicList.iterator();
   Iterator<ReportCellViewModule> reportViewModuleIter = reportViewModuleList.iterator();
   Iterator<VersionedCubeSchemaModule> CubeSchemaModuleIter = cubeSchemaModuleList.iterator();
 

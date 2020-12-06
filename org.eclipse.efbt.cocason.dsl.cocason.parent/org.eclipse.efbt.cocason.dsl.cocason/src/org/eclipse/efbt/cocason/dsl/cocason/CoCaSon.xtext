@@ -23,35 +23,57 @@ import "http://www.eclipse.org/efbt/base_column_structured_data" as base_column_
 import "http://www.eclipse.org/efbt/test_input_data" as test_input_data
 import "http://www.eclipse.org/efbt/column_structured_data" as column_structured_data
 import "http://www.eclipse.org/efbt/attribute_lineage" as attribute_lineage
-import "http://www.eclipse.org/efbt/data_lineage" as data_lineage
 import "http://www.eclipse.org/efbt/functions" as functions
 import "http://www.eclipse.org/efbt/column_transformation_logic" as column_transformation_logic
 import "http://www.eclipse.org/efbt/row_transformation_logic" as row_transformation_logic
 import "http://www.eclipse.org/efbt/cubes" as cubes
 import "http://www.eclipse.org/efbt/cube_transformation_logic" as cube_transformation_logic 
-import "http://www.eclipse.org/efbt/cell_transformation_logic" as cell_transformation_logic
 import "http://www.eclipse.org/efbt/transformation" as transformation
 import "http://www.eclipse.org/efbt/cube_schema" as cube_schema
 import "http://www.eclipse.org/efbt/trl_sql_views" as trl_sql_views
 import "http://www.eclipse.org/efbt/trl_report_cell_views" as trl_report_cell_views
 
 
+ProgramAndCalls returns platform_call::ProgramAndCalls:
+	{platform_call::ProgramAndCalls}
+	'ProgramAndCalls' ':'
+	'{'
+		('platformCalls' ':' platformCalls=PlatformCallModule)?
+		('program' ':' program=TRLProgram)?
+	'}';
+
+
 TRLProgram returns transformation::TRLProgram:
 	{transformation::TRLProgram}
 	'TRLProgram' ':'
 	'{'
-		('smcubesStaticModel' ':' smcubesStaticModel=SMCubesStaticModel)?
-		('platformCalls' ':' platformCalls=PlatformCallModule)?
+		('smcubesStaticModel' ':' smcubesStaticModel=SMCubesStaticModel)?		
 		('executableLogic' ':' executableLogic=TRLExecutableLogic)?
 	'}';
 
 TRLExecutableLogic returns transformation::TRLExecutableLogic:
 	{transformation::TRLExecutableLogic}
-	'TRLExecutableLogic' ':'
+	'TRLExecutableLogic'
+	name=EString ':'
 	'{'
 		('componentSet' ':' componentSet=VersionedComponentsSet)?
 		('cubesModule' ':' cubesModule=FreeBirdToolsCubeModule)?
+		('functionSpecModule' ':' functionSpecModule=FunctionSpecModule)?
 	'}';
+	
+FunctionSpecModule returns functions::FunctionSpecModule:
+	{functions::FunctionSpecModule}
+	'FunctionSpecModule'
+	name=EString ':'
+	'{'
+		('theDescription' ':' theDescription=EString)?
+		('license' ':' license=EString)?
+		('version' ':' version=EString)?
+		('dependencies' ':' dependencies=ModuleDependencies)?
+		('longName' ':' longName=ModuleLongName)?
+		('functionSpecs' ':' '[' functionSpecs+=FunctionSpec ( "," functionSpecs+=FunctionSpec)* ']' )?
+	'}';
+	
 	
 VersionedComponentsSet returns transformation::VersionedComponentsSet:
 	VersionedComponentsSet_Impl | Release;
@@ -64,7 +86,7 @@ VersionedComponentsSet_Impl returns transformation::VersionedComponentsSet:
 	'{'
 		('license' ':' license=EString)?
 		('cubeSchemaModules' ':' '[' cubeSchemaModules+=VersionedCubeSchemaModule ( "," cubeSchemaModules+=VersionedCubeSchemaModule)* ']' )?
-		('datasetTransformationModules' ':' '{' datasetTransformationModules+=VersionedFunctionalModuleLogic ( "," datasetTransformationModules+=VersionedFunctionalModuleLogic)* '}' )?
+		('datasetTransformationModules' ':' '[' datasetTransformationModules+=VersionedSQLViewsModule ( "," datasetTransformationModules+=VersionedSQLViewsModule)* ']' )?
 		('reportCellViewModules' ':' '[' reportCellViewModules+=ReportCellViewModule ( "," reportCellViewModules+=ReportCellViewModule)* ']' )?
 	'}';
 	
@@ -127,10 +149,170 @@ Release returns transformation::Release:
 		('license' ':' license=EString)?
 		('version' ':' version=EString)?
 		('cubeSchemaModules' ':' '[' cubeSchemaModules+=VersionedCubeSchemaModule ( "," cubeSchemaModules+=VersionedCubeSchemaModule)* ']' )?
-		('datasetTransformationModules' ':' '[' datasetTransformationModules+=VersionedFunctionalModuleLogic ( "," datasetTransformationModules+=VersionedFunctionalModuleLogic)* ']' )?
+		('datasetTransformationModules' ':' '[' datasetTransformationModules+=VersionedSQLViewsModule ( "," datasetTransformationModules+=VersionedSQLViewsModule)* ']' )?
 		('reportCellViewModules' ':' '[' reportCellViewModules+=ReportCellViewModule ( "," reportCellViewModules+=ReportCellViewModule)* ']' )?
 	'}';
 
+VersionedSQLViewsModule returns trl_sql_views::VersionedSQLViewsModule:
+	{trl_sql_views::VersionedSQLViewsModule}
+	'VersionedSQLViewsModule'
+	name=EString ':'
+	'{'
+		('theDescription' ':' theDescription=EString)?
+		('license' ':' license=EString)?
+		('version' ':' version=EString)?
+		('dependencies' ':' dependencies=ModuleDependencies)?
+		('longName' ':' longName=ModuleLongName)?
+		('sqlViews' ':' '[' sqlViews+=SQLView ( "," sqlViews+=SQLView)* ']' )?
+	'}';
+	
+SQLView returns trl_sql_views::SQLView:
+	SQLView_Impl | AggregateEnrichmentView | CopyView | EnrichmentView | FilterByConditionView | GenericView | JoinView | UnionView | BaseViewIncorporatingDeltas | DeltaAccumulation;
+
+SQLView_Impl returns trl_sql_views::SQLView:
+	{trl_sql_views::SQLView}
+	'SQLView'
+	name=EString ':'
+	'{'
+		('VTL_Code' ':' VTL_Code=EString)?
+		('cube' ':' cube=[cubes::DerivedCube|EString])?
+	'}';
+
+AggregateEnrichmentView returns trl_sql_views::AggregateEnrichmentView:
+	{trl_sql_views::AggregateEnrichmentView}
+	'AggregateEnrichmentView'
+	name=EString ':'
+	'{'
+		('VTL_Code' ':' VTL_Code=EString)?
+		('cube' ':' cube=[cubes::DerivedCube|EString])?
+		('functions' ':' '[' functions+=AggregateColumnFunction ( "," functions+=AggregateColumnFunction)* ']' )?
+		('groupByClause' ':' groupByClause=GroupByClause)?
+	'}';
+
+CopyView returns trl_sql_views::CopyView:
+	{trl_sql_views::CopyView}
+	'CopyView'
+	name=EString ':'
+	'{'
+		('VTL_Code' ':' VTL_Code=EString)?
+		('cube' ':' cube=[cubes::DerivedCube|EString])?
+	'}';
+
+EnrichmentView returns trl_sql_views::EnrichmentView:
+	{trl_sql_views::EnrichmentView}
+	'EnrichmentView'
+	name=EString ':'
+	'{'
+		('VTL_Code' ':' VTL_Code=EString)?
+		('cube' ':' cube=[cubes::DerivedCube|EString])?
+		('functions' ':' '[' functions+=BasicColumnFunction ( "," functions+=BasicColumnFunction)* ']' )?
+		('renames' ':' '[' renames+=RenameAs ( "," renames+=RenameAs)* ']' )?
+	'}';
+
+FilterByConditionView returns trl_sql_views::FilterByConditionView:
+	{trl_sql_views::FilterByConditionView}
+	'FilterByConditionView'
+	name=EString ':'
+	'{'
+		('VTL_Code' ':' VTL_Code=EString)?
+		('cube' ':' cube=[cubes::DerivedCube|EString])?
+		('whereClause' ':' whereClause=WhereClause)?
+	'}';
+
+GenericView returns trl_sql_views::GenericView:
+	{trl_sql_views::GenericView}
+	'GenericView'
+	name=EString ':'
+	'{'
+		('VTL_Code' ':' VTL_Code=EString)?
+		('cube' ':' cube=[cubes::DerivedCube|EString])?
+		('selectClause' ':' selectClause=SelectClause)?
+		('whereClause' ':' whereClause=WhereClause)?
+		('groupByClause' ':' groupByClause=GroupByClause)?
+	'}';
+
+JoinView returns trl_sql_views::JoinView:
+	{trl_sql_views::JoinView}
+	'JoinView'
+	name=EString ':'
+	'{'
+		('VTL_Code' ':' VTL_Code=EString)?
+		('cube' ':' cube=[cubes::DerivedCube|EString])?
+		('whereClause' ':' whereClause=WhereClause)?
+		('renames' ':' '[' renames+=RenameAs ( "," renames+=RenameAs)* ']' )?
+		('ignores' ':' '[' ignores+=IgnoreColumn ( "," ignores+=IgnoreColumn)* ']' )?
+	'}';
+
+UnionView returns trl_sql_views::UnionView:
+	{trl_sql_views::UnionView}
+	'UnionView'
+	name=EString ':'
+	'{'
+		('VTL_Code' ':' VTL_Code=EString)?
+		('cube' ':' cube=[cubes::DerivedCube|EString])?
+	'}';
+
+BaseViewIncorporatingDeltas returns trl_sql_views::BaseViewIncorporatingDeltas:
+	{trl_sql_views::BaseViewIncorporatingDeltas}
+	'BaseViewIncorporatingDeltas'
+	name=EString ':'
+	'{'
+		('VTL_Code' ':' VTL_Code=EString)?
+		('cube' ':' cube=[cubes::DerivedCube|EString])?
+		('ultimateSourceCube' ':' ultimateSourceCube=[cubes::FreeBirdToolsCube|EString])?
+	'}';
+
+DeltaAccumulation returns trl_sql_views::DeltaAccumulation:
+	{trl_sql_views::DeltaAccumulation}
+	'DeltaAccumulation'
+	name=EString ':'
+	'{'
+		('VTL_Code' ':' VTL_Code=EString)?
+		('cube' ':' cube=[cubes::DerivedCube|EString])?
+		('ultimateSourceCube' ':' ultimateSourceCube=[cubes::FreeBirdToolsCube|EString])?
+	'}';
+
+GroupByClause returns trl_sql_views::GroupByClause:
+	{trl_sql_views::GroupByClause}
+	'GroupByClause' ':'
+	'{'
+		('groupByColumns' ':' '[' groupByColumns+=[core::VARIABLE|EString] ( "," groupByColumns+=[core::VARIABLE|EString])* ']' )?
+	'}';
+
+RenameAs returns trl_sql_views::RenameAs:
+	{trl_sql_views::RenameAs}
+	'RenameAs' ':'
+	'{'
+		('fromCube' ':' fromCube=[cubes::FreeBirdToolsCube|EString])?
+		('fromVariable' ':' fromVariable=[core::VARIABLE|EString])?
+		('toVariable' ':' toVariable=[core::VARIABLE|EString])?
+	'}';
+
+WhereClause returns trl_sql_views::WhereClause:
+	{trl_sql_views::WhereClause}
+	'WhereClause' ':'
+	'{'
+		('function' ':' function=BooleanFunction)?
+	'}';
+
+SelectClause returns trl_sql_views::SelectClause:
+	{trl_sql_views::SelectClause}
+	'SelectClause' ':'
+	'{'
+		('aggregateFunctions' ':' '(' aggregateFunctions+=[functions::AggregateFunction|EString] ( "," aggregateFunctions+=[functions::AggregateFunction|EString])* ')' )?
+		('basicFunctions' ':' basicFunctions=[functions::BasicFunction|EString])?
+		('varaibles' ':' '(' varaibles+=[core::VARIABLE|EString] ( "," varaibles+=[core::VARIABLE|EString])* ')' )?
+	'}';
+
+IgnoreColumn returns trl_sql_views::IgnoreColumn:
+	{trl_sql_views::IgnoreColumn}
+	'IgnoreColumn' ':'
+	'{'
+		('columnToIgnore' ':' columnToIgnore=[core::VARIABLE|EString])?
+		('cube' ':' cube=[cubes::FreeBirdToolsCube|EString])?
+	'}';
+	
+		
 CubeSchema returns cube_schema::CubeSchema:
 	{cube_schema::CubeSchema}
 	'CubeSchema'
@@ -162,7 +344,7 @@ ReportCellView returns trl_report_cell_views::ReportCellView:
 
 
 PlatformCall returns platform_call::PlatformCall:
-	PlatformCall_Impl | TranslateBIRDWithOldTestFormatToCocason | ConvertSQLDeveloperModelToEcore | TranslateBIRDWithNewTestFormatToCocason | CreateAttributeLineageModel | CreateDataLineageModel;
+	PlatformCall_Impl | TranslateBIRDWithOldTestFormatToCocason | ConvertSQLDeveloperModelToEcore | TranslateBIRDWithNewTestFormatToCocason | CreateAttributeLineageModel ;
 
 
 
@@ -254,10 +436,16 @@ BasicFunction returns functions::BasicFunction:
 	BasicFunction_Impl | BooleanFunction;
 
 Parameter returns functions::Parameter:
-	Parameter_Impl | AggregateFunction | BasicFunction_Impl | BooleanFunction | Function_Impl;
+	Parameter_Impl | AggregateFunction | BasicFunction_Impl | BooleanFunction | SpeculativeCubeColumnParameter |Function_Impl;
 
 
-
+SpeculativeCubeColumnParameter returns column_transformation_logic::SpeculativeCubeColumnParameter:
+	{column_transformation_logic::SpeculativeCubeColumnParameter}
+	'SpeculativeCubeColumnParameter' ':'
+	'{'
+		('column' ':' column=[core::VARIABLE|EString])?
+		('cube' ':' cube=[cubes::FreeBirdToolsCube|EString])?
+	'}';
 
 
 
@@ -1174,21 +1362,13 @@ CreateAttributeLineageModel returns platform_call::CreateAttributeLineageModel:
 	'CreateAttributeLineageModel'
 	name=EString ':'
 	'{'
-		('errorMessage' ':' errorMessage=EString )?
-		('returnStatus' ':' returnStatus=EInt )?
+		('errorMessage' ':' errorMessage=EString)?
+		('returnStatus' ':' returnStatus=EInt)?
+		('executableLogic' ':' executableLogic=[transformation::TRLExecutableLogic|EString])?
+		('unresolvedCubeColumnParams' ':' '[' unresolvedCubeColumnParams+=[column_transformation_logic::SpeculativeCubeColumnParameter|EString] ( "," unresolvedCubeColumnParams+=[column_transformation_logic::SpeculativeCubeColumnParameter|EString])* ']' )?
 		('resultingALM' ':' resultingALM=AttributeLineageModel)?
 	'}';
 
-CreateDataLineageModel returns platform_call::CreateDataLineageModel:
-	{platform_call::CreateDataLineageModel}
-	'CreateDataLineageModel'
-	name=EString ':'
-	'{'
-		('errorMessage' ':' errorMessage=EString )?
-		('returnStatus' ':' returnStatus=EInt )?
-		('inputALM' ':' inputALM=[attribute_lineage::AttributeLineageModel|EString] )?
-		('resultingDLM' ':' resultingDLM=DataLineageModel)?
-	'}';
 
 AttributeLineageModel returns attribute_lineage::AttributeLineageModel:
 	{attribute_lineage::AttributeLineageModel}
@@ -1458,50 +1638,14 @@ UnionRowCreationApproach returns row_transformation_logic::UnionRowCreationAppro
 		('createdCubeColumns' ':' '[' createdCubeColumns+=CubeColumn ( "," createdCubeColumns+=CubeColumn)* ']' )?
 	'}';
 
-DataLineageModel returns data_lineage::DataLineageModel:
-	{data_lineage::DataLineageModel}
-	'DataLineageModel'
-	name=EString ':'
-	'{'
-		('dataTraceableByCell' ':' '[' dataTraceableByCell+=DerivedCubeData ( "," dataTraceableByCell+=DerivedCubeData)* ']' )?
-		('sourceData' ':' '[' sourceData+=BaseColumnStructuredData ( "," sourceData+=BaseColumnStructuredData)* ']' )?
-	'}';
 
-DerivedCubeData returns cell_transformation_logic::DerivedCubeData:
-	{cell_transformation_logic::DerivedCubeData}
-	'DerivedCubeData'
-	name=EString ':'
-	'{'
-		('cube' ':' cube=[cubes::DerivedCube|EString] )?
-		('rowCreationApproachForCube' ':' rowCreationApproachForCube=[row_transformation_logic::RowCreationApproachForCube|EString] )?
-		('sourceCubeData' ':' '[' sourceCubeData+=[column_structured_data::ColumnStructuredData|EString] ( "," sourceCubeData+=[column_structured_data::ColumnStructuredData|EString])* ']' )?
-		('rows' ':' '[' rows+=DerivedRowData ( "," rows+=DerivedRowData)* ']' )?
-	'}';
-
-DerivedRowData returns cell_transformation_logic::DerivedRowData:
-	{cell_transformation_logic::DerivedRowData}
-	'DerivedRowData'
-	rowID=EString ':'
-	'{'
-		('sourceRows' ':' '[' sourceRows+=[column_structured_data::RowData|EString] ( "," sourceRows+=[column_structured_data::RowData|EString])* ']' )?
-		('formulaCells' ':' '[' formulaCells+=FormulaCell ( "," formulaCells+=FormulaCell)* ']' )?
-		('specialDerivedCells' ':' specialDerivedCells=FormulaCell)?
-	'}';
 
 ColumnStructuredData returns column_structured_data::ColumnStructuredData:
 	{column_structured_data::ColumnStructuredData}
 	'ColumnStructuredData'
 	name=EString;
 
-FormulaCell returns cell_transformation_logic::FormulaCell:
-	{cell_transformation_logic::FormulaCell}
-	'FormulaCell'
-	cellID=EString ':'
-	'{'
-		('value' ':' value=EString )?
-		('column' ':' column=[core::VARIABLE|EString] )?
-		('function' ':' function=Function)?
-	'}';
+
 
 RowData returns column_structured_data::RowData:
 	{column_structured_data::RowData}

@@ -1,0 +1,10 @@
+ProgramAndCalls : { program : TRLProgram : { smcubesStaticModel : SMCubesStaticModel abc: { functionalityModules : FunctionalityModuleModule functionalityModules1 : 
+	{  FunctionalityModules : 
+		[ SerialFunctionalityModule example_processing : { 
+			subTransformationsAndSchemes : [ 
+				ReadDataSourceFunctionalityModule readInExampleData :{ } , 
+				DataProcessingFunctionalityModule processExampleData : { 
+					scenarioSet : ScenarioSet scenarioSet1 : { 
+						scenarios : [ Scenario AAA , Scenario notAAA] } } ,
+				ReportCellCreationFunctionalityModule createReportCells : { scenarioSet : ScenarioSet scenarioSet2 : { scenarios : [ Scenario IsUSCountry ,Scenario isNotUSCountry ] } }
+			] } ] } } } }

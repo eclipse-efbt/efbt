@@ -199,10 +199,10 @@ public class CubesAndViewsUtil {
 	{
 	
 		EList<FreeBirdToolsCube> returnCubelist = new BasicEList<FreeBirdToolsCube>();
-		 EList<VersionedFunctionalModuleLogic> functionalModuleLogic = versionedComponentsSet.getDatasetTransformationModules();
+		 EList<VersionedSQLViewsModule> functionalModuleLogic = versionedComponentsSet.getDatasetTransformationModules();
 		 EList<ReportCellViewModule> reportcellmodules = versionedComponentsSet.getReportCellViewModules();
 		EList<VersionedCubeSchemaModule> cubeSchemaModules = versionedComponentsSet.getCubeSchemaModules();
-		Iterator<VersionedFunctionalModuleLogic> functionalModuleLogicIter = functionalModuleLogic.iterator();
+		Iterator<VersionedSQLViewsModule> functionalModuleLogicIter = functionalModuleLogic.iterator();
 		Iterator<VersionedCubeSchemaModule> cubeSchemaModulesIter = cubeSchemaModules.iterator();
 		Iterator<ReportCellViewModule> reportcellmodulesIter = reportcellmodules.iterator();
 		while (functionalModuleLogicIter.hasNext())
@@ -322,8 +322,8 @@ public class CubesAndViewsUtil {
 	
 		
 		EList<SQLView> returnvalue = new BasicEList<SQLView>();
-		 EList<VersionedFunctionalModuleLogic> functionalModuleLogics = versionedComponentsSet.getDatasetTransformationModules();
-		Iterator<VersionedFunctionalModuleLogic> functionalModuleLogicsIter = functionalModuleLogics.iterator();
+		 EList<VersionedSQLViewsModule> functionalModuleLogics = versionedComponentsSet.getDatasetTransformationModules();
+		Iterator<VersionedSQLViewsModule> functionalModuleLogicsIter = functionalModuleLogics.iterator();
 		while (functionalModuleLogicsIter.hasNext())
 		{
 			VersionedFunctionalModuleLogic module = functionalModuleLogicsIter.next();
