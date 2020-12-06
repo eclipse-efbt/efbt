@@ -7,5 +7,8 @@ Automatic-Module-Name: org.eclipse.efbt.controller.core.component.core
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.efbt.controller.core.model.core;bundle-version="1.0.0",
  org.eclipse.efbt.cocason.component.export_smcubes,
- org.eclipse.efbt.ldm.component.sqldevconvertor
+ org.eclipse.efbt.ldm.component.sqldevconvertor,
+ org.eclipse.efbt.language.trl.component.translator.api;bundle-version="1.0.0",
+ org.eclipse.efbt.language.trl.component.translator.impl;bundle-version="1.0.0",
+ org.eclipse.efbt.language.trl.model.core;bundle-version="1.0.0"
 Export-Package: org.eclipse.efbt.controller.core.component.core

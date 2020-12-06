@@ -1,0 +1,26 @@
+ProgramAndCalls : { program : TRLProgram :  {
+	smcubesStaticModel : SMCubesStaticModel smcubesStaticCubesModel : { 
+		smCubesModel  : SmcubesModel smcubesCubesModel: {    combinations  : [
+			CombinationModule combinationModule : { combinations : [
+				COMBINATION totalJPMktValue : { 
+					code : "totalJPMktValue" 
+					combination_id : "totalJPMktValue" 
+					combination_items : { 
+						COMBINATION_ITEM : { 
+							member_id : "smcubesStaticCubesModel.smcubesCubesModel.membersModule.EBA_GA_EBA_JP"
+							 variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.CNTRY" } , 
+							 COMBINATION_ITEM : { variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.ECB2_MRKT_VL" } } } , 
+							 
+				 COMBINATION totalUSNotional : { 
+				 	code : "totalUSNotional" 
+				 	combination_id : "totalUSNotional" 
+				 	combination_items : { COMBINATION_ITEM : 
+				 		{ member_id : "smcubesStaticCubesModel.smcubesCubesModel.membersModule.EBA_GA_EBA_US" 
+				 			variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.CNTRY" } , 
+				 			COMBINATION_ITEM : { variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.NTNL_AMNT" } } } , 
+				 COMBINATION notionalOfUS_AAA : { 
+				 	code : "notionalOfUS_AAA" 
+				 	combination_id : "notionalOfUS_AAA" 
+				 	combination_items : {COMBINATION_ITEM :  { member_id : "smcubesStaticCubesModel.smcubesCubesModel.membersModule.EBA_GA_EBA_US" 
+				 		variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.CNTRY" } ,
+				 		COMBINATION_ITEM :  { variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.trippleA_NotionaAmount" }   } } ] } ] } } } }

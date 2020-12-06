@@ -1,20 +1,8 @@
-SMCubesProgram : { smcubesStaticModel : SMCubesStaticModel cubeStructuresStaticModel : {
-	smCubesModel : SmcubesModel cubeStructuresModel :{
-		cubes : [ CubeModule cubeStructuresModule : {
-			cubeStructures : [
-			CUBE_STRUCTURE ANCRDT_ACCNTNG_C_1 : {
-				code : ANCRDT_ACCNTNG_C
-				cube_structure_id : ANCRDT_ACCNTNG_C_1
-				description : DESCRIPTION
-				valid_to : 12.31.9999
-				displayName : "Accounting data  - ECB Collection"
-			},
-			CUBE_STRUCTURE ANCRDT_ENTTY_DFLT_C_1 : {
-				code : ANCRDT_ENTTY_DFLT_C
-				cube_structure_id : ANCRDT_ENTTY_DFLT_C_1
-				description : DESCRIPTION
-				valid_to : 12.31.9999
-				displayName : "Counterparty default data  - ECB Collection"
-			}
-			
-			] } ] } } }
+ProgramAndCalls : { program : TRLProgram : { smcubesStaticModel : SMCubesStaticModel smcubesCubeStructuresStaticModel : {
+	 smCubesModel : SmcubesModel smcubesCubeStructuresModel  : 
+	 { cubes : [ CubeModule  cubeStructures_model : { 
+	 	cubeStructures : [ 
+	 		CUBE_STRUCTURE Loans :{ code : "Loans" cube_structure_id : "Loans" description : "Loans" },
+	 		 CUBE_STRUCTURE Counterparty :  { code : "Counterparty" cube_structure_id : "Counterparty" description : "Counterparty" },
+	 		  CUBE_STRUCTURE Rating  : { code : "Rating" cube_structure_id : "Rating" description : "Rating" }
+	 	] } ] } } } } 
