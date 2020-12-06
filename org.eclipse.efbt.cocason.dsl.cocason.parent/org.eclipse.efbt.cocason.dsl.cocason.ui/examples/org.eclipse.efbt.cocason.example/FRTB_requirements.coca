@@ -1,4 +1,4 @@
-TRLProgram : { smcubesStaticModel : SMCubesStaticModel CRRRequirementsStaticModel : { 
+ProgramAndCalls : { program : TRLProgram : { smcubesStaticModel : SMCubesStaticModel CRRRequirementsStaticModel : { 
 	requirements : RequirementsModule CRRRequirementsModel : {
 		
 	rules : [  TitledRequirementsSection CRRRuleBook : { title CRRRuleBook
@@ -15,5 +15,5 @@ TRLProgram : { smcubesStaticModel : SMCubesStaticModel CRRRequirementsStaticMode
     			 RequirementType LetterParagraph,
     			 RequirementType RomanNumeralParagraph
 				 ]
-				 }  } }  }
+				 }  } }  } }
 				
