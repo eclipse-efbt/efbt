@@ -54,6 +54,7 @@ public class Controller {
 		AttributeLineageUtil almUtil = new AttributeLineageUtilImpl();
 		TRLExecutableLogic trlExecutableLogic = (TRLExecutableLogic) call.getExecutableLogic();
 		AttributeLineageModel alm = almUtil.createAttributeLineageModel(trlExecutableLogic.getComponentSet());
+		alm.setName("ALM_" + call.getName());
 		call.setResultingALM(alm);
 		
 		

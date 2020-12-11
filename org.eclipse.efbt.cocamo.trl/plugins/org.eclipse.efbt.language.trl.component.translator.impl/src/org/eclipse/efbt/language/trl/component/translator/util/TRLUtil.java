@@ -16,6 +16,8 @@ package org.eclipse.efbt.language.trl.component.translator.util;
 import java.util.Iterator;
 
 import org.eclipse.efbt.cocamo.core.model.functionality_module.LeafFunctionalityModule;
+import org.eclipse.efbt.cocamo.core.model.module_management.Module;
+import org.eclipse.efbt.cocamo.core.model.module_management.ModuleDependency;
 import org.eclipse.efbt.cocamo.functions.model.functions.AggregateFunction;
 import org.eclipse.efbt.cocamo.functions.model.functions.BasicFunction;
 import org.eclipse.efbt.cocamo.functions.model.functions.BooleanFunction;
@@ -163,7 +165,7 @@ public class TRLUtil {
           BasicColumnFunction calculatedColumn =
               Column_transformation_logicFactory.eINSTANCE
               .createBasicColumnFunction();
-          calculatedColumn.setColumnID(view.getCube().getName() + 
+          calculatedColumn.setName(view.getCube().getName() + 
               ":" + column.getVariable().getVariable_id());
 
           calculatedColumn.setVariable(column.getVariable());
@@ -190,7 +192,7 @@ public class TRLUtil {
           BasicColumnFunction calculatedColumn = 
               Column_transformation_logicFactory.eINSTANCE
               .createBasicColumnFunction();
-          calculatedColumn.setColumnID(view.getCube().getName() + 
+          calculatedColumn.setName(view.getCube().getName() + 
               ":" + column.getVariable_id());
           calculatedColumn.setVariable(column);
           calculatedColumn.setCube(view.getCube());
@@ -230,7 +232,7 @@ public class TRLUtil {
           VARIABLE column = groupByColumnnTypedItemsIter.next();
           AggregateColumnFunction calculatedColumn = Column_transformation_logicFactory.eINSTANCE
               .createAggregateColumnFunction();
-          calculatedColumn.setColumnID(view.getCube().getName() +
+          calculatedColumn.setName(view.getCube().getName() +
               ":" + column.getVariable_id());
           calculatedColumn.setVariable(column);
           calculatedColumn.setCube(view.getCube());
@@ -266,7 +268,7 @@ public class TRLUtil {
             VARIABLE column = groupByColumnnTypedItemsIter.next();
             AggregateColumnFunction calculatedColumn = Column_transformation_logicFactory.eINSTANCE
                 .createAggregateColumnFunction();
-            calculatedColumn.setColumnID(view.getCube().getName() +
+            calculatedColumn.setName(view.getCube().getName() +
                 ":" + column.getVariable_id());
             calculatedColumn.setVariable(column);
             calculatedColumn.setCube(view.getCube());
@@ -307,7 +309,7 @@ public class TRLUtil {
             BasicColumnFunction calculatedColumn = 
                 Column_transformation_logicFactory.eINSTANCE
                 .createBasicColumnFunction();
-            calculatedColumn.setColumnID(view.getCube().getName() + 
+            calculatedColumn.setName(view.getCube().getName() + 
                 ":" + replacedColumn.getVariable_id());
 
             calculatedColumn.setVariable(replacedColumn);
@@ -340,7 +342,7 @@ public class TRLUtil {
             BasicColumnFunction calculatedColumn =
                 Column_transformation_logicFactory.eINSTANCE
                 .createBasicColumnFunction();
-            calculatedColumn.setColumnID(view.getCube().getName() +
+            calculatedColumn.setName(view.getCube().getName() +
                 ":" + replacedColumn.getVariable_id());
             calculatedColumn.setVariable(replacedColumn);
             calculatedColumn.setCube(view.getCube());
@@ -388,7 +390,7 @@ public class TRLUtil {
             BasicColumnFunction calculatedColumn =
                 Column_transformation_logicFactory.eINSTANCE
                 .createBasicColumnFunction();
-            calculatedColumn.setColumnID(view.getCube().getName() +
+            calculatedColumn.setName(view.getCube().getName() +
                 ":" + column.getVariable().getVariable_id());
 
             calculatedColumn.setVariable(column.getVariable());
@@ -430,7 +432,7 @@ public class TRLUtil {
             BasicColumnFunction calculatedColumn = 
                 Column_transformation_logicFactory.eINSTANCE
                 .createBasicColumnFunction();
-            calculatedColumn.setColumnID(
+            calculatedColumn.setName(
                 view.getCube().getName() + ":" + column.getVariable_id());
 
             calculatedColumn.setVariable(column);
@@ -476,7 +478,7 @@ public class TRLUtil {
 
         AggregateColumnFunction calculatedColumn = Column_transformation_logicFactory.eINSTANCE
             .createAggregateColumnFunction();
-        calculatedColumn.setColumnID(view.getCube().getName() + 
+        calculatedColumn.setName(view.getCube().getName() + 
             ":" + measure.getVariable_id());
         calculatedColumn.setVariable(measure);
         calculatedColumn.setCube(view.getCube());
@@ -499,7 +501,7 @@ public class TRLUtil {
           AggregateColumnFunction calculatedColumnForDimension =
               Column_transformation_logicFactory.eINSTANCE
               .createAggregateColumnFunction();
-          calculatedColumnForDimension.setColumnID(view.getCube().getName() + 
+          calculatedColumnForDimension.setName(view.getCube().getName() + 
               ":" + dimension.getVariable_id());
           calculatedColumnForDimension.setVariable(dimension);
           calculatedColumnForDimension.setCube(view.getCube());
@@ -545,7 +547,7 @@ public class TRLUtil {
 				 {
 					 CubeColumn column = columnIter.next();
 					 BasicColumnFunction calculatedColumn =  Column_transformation_logicFactory.eINSTANCE.createBasicColumnFunction();
-					 calculatedColumn.setColumnID(view.getCube().getCube_name()  +":" + column.getVariable().getVariable_id()  );
+					 calculatedColumn.setName(view.getCube().getCube_name()  +":" + column.getVariable().getVariable_id()  );
 					 
 					 calculatedColumn.setVariable(column.getVariable());
 					 calculatedColumn.setCube(view.getCube());
@@ -585,7 +587,7 @@ public class TRLUtil {
 				 {
 					 VARIABLE column = columnIter.next();
 					 BasicColumnFunction calculatedColumn = Column_transformation_logicFactory.eINSTANCE.createBasicColumnFunction();
-					 calculatedColumn.setColumnID(view.getCube().getName()  +":" + column.getVariable_id()  );
+					 calculatedColumn.setName(view.getCube().getName()  +":" + column.getVariable_id()  );
 					 
 					 calculatedColumn.setVariable(column);
 					 calculatedColumn.setCube(view.getCube());
@@ -637,7 +639,7 @@ public class TRLUtil {
 				 {
 					 CubeColumn column = columnIter.next();
 					 BasicColumnFunction calculatedColumn =  Column_transformation_logicFactory.eINSTANCE.createBasicColumnFunction();
-					 calculatedColumn.setColumnID(view.getCube().getCube_name()  +":" + column.getVariable().getVariable_id()  );
+					 calculatedColumn.setName(view.getCube().getCube_name()  +":" + column.getVariable().getVariable_id()  );
 					 
 					 calculatedColumn.setVariable(column.getVariable());
 					 calculatedColumn.setCube(view.getCube());
@@ -677,7 +679,7 @@ public class TRLUtil {
 				 {
 					 VARIABLE column = columnIter.next();
 					 BasicColumnFunction calculatedColumn = Column_transformation_logicFactory.eINSTANCE.createBasicColumnFunction();
-					 calculatedColumn.setColumnID(view.getCube().getName()  +":" + column.getVariable_id()  );
+					 calculatedColumn.setName(view.getCube().getName()  +":" + column.getVariable_id()  );
 					 
 					 calculatedColumn.setVariable(column);
 					 calculatedColumn.setCube(view.getCube());
@@ -962,8 +964,8 @@ public class TRLUtil {
 	   * @param o
 	   * @return
 	   */
-	  public static SmcubesModel getSmcubesModelContainingObject(EObject o) {
-	    return (SmcubesModel) o.eContainer().eContainer();
+	  public static EList<ModuleDependency> getDependantModules( EObject o) {
+	    return  ((Module) o.eContainer()).getDependencies().getTheModules();
 
 	  }
   
@@ -971,24 +973,28 @@ public class TRLUtil {
   {
 	  CUBE cube = schema.getCube();
 	 
-	    SmcubesModel birdModel = getSmcubesModelContainingObject(cube);
-	    EList<CubeModule> cubeModules = birdModel.getCubes();
 	    
 	    CUBE_STRUCTURE cubeStructure = cube.getCube_structure_id();
+	    EList<ModuleDependency> dependantModules = getDependantModules(cubeStructure);
+	     
 	    EList<CUBE_STRUCTURE_ITEM> returnlist = new BasicEList<CUBE_STRUCTURE_ITEM>();
-	    for (Iterator iterator = cubeModules.iterator(); iterator.hasNext();) {
-			CubeModule cubeModule = (CubeModule) iterator.next();
-			EList<CUBE_STRUCTURE_ITEM> items = cubeModule.getCubeStructureItems();
-			for (Iterator iterator2 = items.iterator(); iterator2.hasNext();) {
-				CUBE_STRUCTURE_ITEM cube_STRUCTURE_ITEM = (CUBE_STRUCTURE_ITEM) iterator2.next();
-				if(cube_STRUCTURE_ITEM.getCube_structure_id().equals(cubeStructure))
-				{
-					returnlist.add(cube_STRUCTURE_ITEM);
+	    for (ModuleDependency moduleDependency : dependantModules) {
+	    	Module module = moduleDependency.getTheModule();
+	    	if (module instanceof CubeModule)
+	    	{
+	    		CubeModule cubeModule = (CubeModule) module;
+				EList<CUBE_STRUCTURE_ITEM> items = cubeModule.getCubeStructureItems();
+				for (Iterator iterator2 = items.iterator(); iterator2.hasNext();) {
+					CUBE_STRUCTURE_ITEM cube_STRUCTURE_ITEM = (CUBE_STRUCTURE_ITEM) iterator2.next();
+					if(cube_STRUCTURE_ITEM.getCube_structure_id().equals(cubeStructure))
+					{
+						returnlist.add(cube_STRUCTURE_ITEM);
+					}
+					
 				}
-				
-			}
-			
-		}
+	    	}
+	    }
+	    
 	    return returnlist;
   }
 
@@ -1104,22 +1110,30 @@ public class TRLUtil {
 	   EList<MEMBER> members = new BasicEList<MEMBER>();
 	   
 	  
-	   SmcubesModel bm = getSmcubesModelContainingObject(domain);
-	   EList<MemberModule> birdMemberModules = bm.getMembers();
-	   for (Iterator iterator = birdMemberModules.iterator(); iterator.hasNext();) {
-		MemberModule memberModule = (MemberModule) iterator.next();
+	   EList<ModuleDependency> dependentModules = getDependantModules(domain);
+	   
+	  
+	for (ModuleDependency moduleDependency : dependentModules) {
 		
-		 EList<MEMBER> birdMembers = memberModule.getMembers();
-		 for (Iterator iterator2 = birdMembers.iterator(); iterator2.hasNext();) {
-			MEMBER member = (MEMBER) iterator2.next();
-			
-			if (member.getDomain_id().equals(domain))
-				members.add(member);
-			
-		}
-		
-		
-	}
+		   Module module = moduleDependency.getTheModule();
+		   if(module instanceof MemberModule)
+		   {
+			   MemberModule memberModule = (MemberModule) module; 
+			  
+			   EList<MEMBER> birdMembers = memberModule.getMembers();
+			   
+			   for (Iterator iterator2 = birdMembers.iterator(); iterator2.hasNext();) {
+					MEMBER member = (MEMBER) iterator2.next();
+					
+					if (member.getDomain_id().equals(domain))
+						members.add(member);
+					
+				}
+		   }
+	
+	   }
+	    
+	  
 	   
 	   return members;
 	   

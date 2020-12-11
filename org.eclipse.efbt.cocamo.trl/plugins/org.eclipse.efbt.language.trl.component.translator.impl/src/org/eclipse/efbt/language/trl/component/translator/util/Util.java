@@ -148,7 +148,7 @@ public class Util {
       CubeColumn column = Column_transformation_logicFactory.eINSTANCE.createCubeColumn();
       column.setVariable(colitem);
       column.setCube(cubeSchema.getBaseCube());
-      column.setColumnID(cubeSchema.getBaseCube().getName() + ":" + colitem.getVariable_id());
+      column.setName(cubeSchema.getBaseCube().getName() + ":" + colitem.getVariable_id());
       baseRowStructure.getColumns().add(column);
     }
 

@@ -229,8 +229,8 @@ public class AttributeLineageUtilImpl implements AttributeLineageUtil {
   private static boolean checkColumnFunctionEquality(ColumnFunction columnFunction2, ColumnFunction columnFunction1) {
   
     boolean equality = false;
-    String colFuncID1 = columnFunction1.getColumnID();
-    String colFuncID2 = columnFunction2.getColumnID();
+    String colFuncID1 = columnFunction1.getName();
+    String colFuncID2 = columnFunction2.getName();
     if (colFuncID1.equals(colFuncID2))
       equality = true;
     return equality;
@@ -311,7 +311,7 @@ public class AttributeLineageUtilImpl implements AttributeLineageUtil {
    */
   private static boolean checkColumnEquality(CubeColumn column2, CubeColumn column) {
 
-    return (column2.getColumnID().equals(column.getColumnID()));
+    return (column2.getName().equals(column.getName()));
   }
 
   /**
