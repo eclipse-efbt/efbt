@@ -1427,7 +1427,7 @@ RowCreationApproachForCube returns row_transformation_logic::RowCreationApproach
 ColumnFunction_Impl returns column_transformation_logic::ColumnFunction:
 	{column_transformation_logic::ColumnFunction}	
 	'ColumnFunction'
-	columnID=EString ':'
+	name=EString ':'
 	'{'
 		('cube' ':' cube=[cubes::FreeBirdToolsCube|EString] )?
 		('variable' ':' variable=[core::VARIABLE|EString] )?
@@ -1442,7 +1442,7 @@ FreeBirdToolsCube_Impl returns cubes::FreeBirdToolsCube:
 AggregateColumnFunction returns column_transformation_logic::AggregateColumnFunction:
 	{column_transformation_logic::AggregateColumnFunction}	
 	'AggregateColumnFunction'
-	columnID=EString ':'
+	name=EString ':'
 	'{'
 		('cube' ':' cube=[cubes::FreeBirdToolsCube|EString] )?
 		('variable' ':' variable=[core::VARIABLE|EString] )?
@@ -1454,7 +1454,7 @@ BasicColumnFunction returns column_transformation_logic::BasicColumnFunction:
 	{column_transformation_logic::BasicColumnFunction}
 	
 	'BasicColumnFunction'
-	columnID=EString ':'
+	name=EString ':'
 	'{'
 		('cube' ':' cube=[cubes::FreeBirdToolsCube|EString] )?
 		('variable' ':' variable=[core::VARIABLE|EString] )?
@@ -1568,7 +1568,7 @@ ResolvedCubeColumnParameter returns column_transformation_logic::ResolvedCubeCol
 CubeColumn_Impl returns column_transformation_logic::CubeColumn:
 	{column_transformation_logic::CubeColumn}	
 	'CubeColumn'
-	columnID=EString ':'
+	name=EString ':'
 	'{'
 		('cube' ':' cube=[cubes::FreeBirdToolsCube|EString] )?
 		('variable' ':' variable=[core::VARIABLE|EString] )?

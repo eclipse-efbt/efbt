@@ -1,7 +1,7 @@
 ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStaticModel smcubesDomainsStaticModel : {
 	 smCubesModel : SmcubesModel smcubesDomainsModel  : { 
 		domains :   [ DomainModule domainsModule : {
-			 domains : [ 
+			 dependencies : ModuleDependencies : { theModules : [ ModuleDependency : { theModule : "smcubesStaticCubesModel.smcubesCubesModel.membersModule" } ] } domains : [ 
 			 	DOMAIN CRRNCY: {
 			 	 code : "CRRNCY" data_type ::String 
 			 	 domain_id : "CRRNCY" 
