@@ -14,12 +14,16 @@ package org.eclipse.efbt.controller.core.component.core;
 
 
 
+import org.eclipse.efbt.controller.core.model.platform_call.CompareAttributeLineageModels;
 import org.eclipse.efbt.controller.core.model.platform_call.ConvertSQLDeveloperModelToEcore;
+import org.eclipse.efbt.controller.core.model.platform_call.CreateAttributeLineageForOneReportCell;
 import org.eclipse.efbt.controller.core.model.platform_call.CreateAttributeLineageModel;
 import org.eclipse.efbt.controller.core.model.platform_call.PlatformCall;
 import org.eclipse.efbt.controller.core.model.platform_call.TranslateBIRDWithOldTestFormatToCocason;
 import org.eclipse.efbt.language.trl.component.translator.api.AttributeLineageUtil;
 import org.eclipse.efbt.language.trl.component.translator.impl.AttributeLineageUtilImpl;
+import org.eclipse.efbt.language.trl.component.translator.util.ALMComparisonTuple;
+import org.eclipse.efbt.language.trl.component.translator.util.ComparisonUtil;
 import org.eclipse.efbt.language.trl.model.transformation.TRLExecutableLogic;
 import org.eclipse.efbt.controller.core.model.platform_call.TranslateBIRDWithNewTestFormatToCocason;
 import org.eclipse.efbt.ldm.component.sqldevconvertor.SQLDevConverter;
@@ -47,6 +51,14 @@ public class Controller {
 		{
 			createAttributeLineageModel((CreateAttributeLineageModel) call);
 		}
+		if (call instanceof CreateAttributeLineageForOneReportCell)
+		{
+			createAttributeLineageForOneReportCell((CreateAttributeLineageForOneReportCell) call);
+		}
+		if (call instanceof CompareAttributeLineageModels)
+		{
+			compareAttributeLineageModels((CompareAttributeLineageModels) call);
+		}
 		
 	}
 	
@@ -54,6 +66,30 @@ public class Controller {
 		AttributeLineageUtil almUtil = new AttributeLineageUtilImpl();
 		TRLExecutableLogic trlExecutableLogic = (TRLExecutableLogic) call.getExecutableLogic();
 		AttributeLineageModel alm = almUtil.createAttributeLineageModel(trlExecutableLogic.getComponentSet());
+		alm.setName("ALM_" + call.getName());
+		call.setResultingALM(alm);
+		
+		
+	}
+	
+	private static void compareAttributeLineageModels(CompareAttributeLineageModels call) {
+		ComparisonUtil compUtil = new ComparisonUtil();
+		AttributeLineageModel firstModel =  call.getFirstModel();
+		AttributeLineageModel secondModel =  call.getSecondModel();
+		 ALMComparisonTuple result = compUtil.compareAttributeLineageModels(firstModel,secondModel);
+		result.notIncludedModel.setName("ALM_NotIncluded_" + call.getName());
+		result.resultingALM.setName("Result_ALM_" + call.getName());
+		call.setResultingModel(result.resultingALM);
+		call.setNotIncludedModel(result.notIncludedModel);
+		call.setSubsetBoolean(result.subsetBoolean);
+		
+		
+	}
+	
+	private static void createAttributeLineageForOneReportCell(CreateAttributeLineageForOneReportCell call) {
+		AttributeLineageUtil almUtil = new AttributeLineageUtilImpl();
+		TRLExecutableLogic trlExecutableLogic = (TRLExecutableLogic) call.getExecutableLogic();
+		AttributeLineageModel alm = almUtil.createAttributeLineageModelForOneReportCell(trlExecutableLogic.getComponentSet(), call.getReportCell());
 		alm.setName("ALM_" + call.getName());
 		call.setResultingALM(alm);
 		

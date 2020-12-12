@@ -21,6 +21,9 @@
     <genClasses ecoreClass="attribute_lineage.ecore#//AttributeLineageModelModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference attribute_lineage.ecore#//AttributeLineageModelModule/attributeLineageModels"/>
     </genClasses>
+    <genClasses ecoreClass="attribute_lineage.ecore#//IsNotSubset"/>
+    <genClasses ecoreClass="attribute_lineage.ecore#//IsSubset"/>
+    <genClasses ecoreClass="attribute_lineage.ecore#//SubsetBoolean"/>
   </genPackages>
   <genPackages prefix="Cube_transformation_logic" basePackage="org.eclipse.efbt.lineage.attributelineage.model"
       disposableProviderFactory="true" ecorePackage="cube_transformation_logic.ecore#/">

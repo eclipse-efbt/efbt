@@ -1008,7 +1008,7 @@ public class TRLUtil {
    * @param componentSet
    * @return
    */
-  static DataSetTransformation getReportCellViewForCell(ReportCell reportCell, VersionedComponentsSet componentSet) {
+  public static DataSetTransformation getReportCellViewForCell(ReportCell reportCell, VersionedComponentsSet componentSet) {
 
     EList<ReportCellViewModule> rcm = componentSet.getReportCellViewModules();
     ReportCellView returnView = null;

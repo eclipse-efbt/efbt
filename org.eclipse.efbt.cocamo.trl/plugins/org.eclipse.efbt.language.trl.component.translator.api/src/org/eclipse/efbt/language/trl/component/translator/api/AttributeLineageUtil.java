@@ -14,8 +14,10 @@
 
 package org.eclipse.efbt.language.trl.component.translator.api;
 
+import org.eclipse.efbt.cocamo.smcubes.model.reports.ReportCell;
 import org.eclipse.efbt.language.trl.model.transformation.VersionedComponentsSet;
 import org.eclipse.efbt.lineage.attributelineage.model.attribute_lineage.AttributeLineageModel;
+import org.eclipse.efbt.lineage.attributelineage.model.cube_transformation_logic.CubeTransformationLogic;
 
 
 
@@ -34,6 +36,10 @@ public interface AttributeLineageUtil {
  * @param vcs
  */
 public  AttributeLineageModel createAttributeLineageModel(VersionedComponentsSet vcs );
+
+public AttributeLineageModel createAttributeLineageModelForOneReportCell(VersionedComponentsSet finalContext,
+		ReportCell reportCell);
+
 
 
 }

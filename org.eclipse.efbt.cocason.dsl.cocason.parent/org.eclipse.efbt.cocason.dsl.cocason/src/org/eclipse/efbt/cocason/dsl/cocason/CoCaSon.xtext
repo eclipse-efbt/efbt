@@ -344,9 +344,21 @@ ReportCellView returns trl_report_cell_views::ReportCellView:
 
 
 PlatformCall returns platform_call::PlatformCall:
-	PlatformCall_Impl | TranslateBIRDWithOldTestFormatToCocason | ConvertSQLDeveloperModelToEcore | TranslateBIRDWithNewTestFormatToCocason | CreateAttributeLineageModel ;
+	PlatformCall_Impl | CompareAttributeLineageModels | TranslateBIRDWithOldTestFormatToCocason | ConvertSQLDeveloperModelToEcore | TranslateBIRDWithNewTestFormatToCocason | CreateAttributeLineageModel | CreateAttributeLineageForOneReportCell;
 
 
+CreateAttributeLineageForOneReportCell returns platform_call::CreateAttributeLineageForOneReportCell:
+	{platform_call::CreateAttributeLineageForOneReportCell}
+	'CreateAttributeLineageForOneReportCell'
+	name=EString ':'
+	'{'
+		('errorMessage' ':' errorMessage=EString)?
+		('returnStatus' ':' returnStatus=EInt)?
+		('executableLogic' ':' executableLogic=[transformation::TRLExecutableLogic|EString])?
+		('unresolvedCubeColumnParams' ':' '(' unresolvedCubeColumnParams+=[column_transformation_logic::SpeculativeCubeColumnParameter|EString] ( "," unresolvedCubeColumnParams+=[column_transformation_logic::SpeculativeCubeColumnParameter|EString])* ')' )?
+		('reportCell' ':' reportCell=[reports::ReportCell|EString])?
+		('resultingALM' ':' resultingALM=AttributeLineageModel)?
+	'}';
 
 
 
@@ -865,6 +877,38 @@ enum TYP_DMNSN returns data_definition::TYP_DMNSN:
 EInt returns ecore::EInt:
 	'-'? INT;
 
+CompareAttributeLineageModels returns platform_call::CompareAttributeLineageModels:
+	{platform_call::CompareAttributeLineageModels}
+	'CompareAttributeLineageModels'
+	name=EString ':'
+	'{'
+		('errorMessage' ':' errorMessage=EString)?
+		('returnStatus' ':' returnStatus=EInt)?
+		('firstModel' ':' firstModel=[attribute_lineage::AttributeLineageModel|EString])?
+		('secondModel' ':' secondModel=[attribute_lineage::AttributeLineageModel|EString])?
+		('resultingModel' ':' resultingModel=AttributeLineageModel)?
+		('subsetBoolean' ':' subsetBoolean=SubsetBoolean)?
+		('notIncludedModel' ':' notIncludedModel=AttributeLineageModel)?
+	'}';
+	
+SubsetBoolean returns attribute_lineage::SubsetBoolean:
+	SubsetBoolean_Impl | IsNotSubset | IsSubset;
+	
+IsNotSubset returns attribute_lineage::IsNotSubset:
+	{attribute_lineage::IsNotSubset}
+	'IsNotSubset'
+	;
+
+IsSubset returns attribute_lineage::IsSubset:
+	{attribute_lineage::IsSubset}
+	'IsSubset'
+	;
+		
+SubsetBoolean_Impl returns attribute_lineage::SubsetBoolean:
+	{attribute_lineage::SubsetBoolean}
+	'SubsetBoolean'
+	;
+	
 enum TYP_RL returns data_definition::TYP_RL:
 				O = ':O' | A = ':A' | D = ':D';
 
