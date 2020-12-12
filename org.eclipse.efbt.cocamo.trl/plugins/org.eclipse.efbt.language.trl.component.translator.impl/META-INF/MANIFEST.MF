@@ -13,4 +13,5 @@ Require-Bundle: org.eclipse.efbt.cocamo.smcubes.model.core,
  org.eclipse.efbt.cocamo.functions.model.core,
  org.eclipse.efbt.cocamo.core.model.functionality_module,
  org.eclipse.efbt.language.trl.component.translator.api
-Export-Package: org.eclipse.efbt.language.trl.component.translator.impl
+Export-Package: org.eclipse.efbt.language.trl.component.translator.impl,
+ org.eclipse.efbt.language.trl.component.translator.util

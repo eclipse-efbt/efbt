@@ -11,6 +11,7 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		VTL_Code : "aggregateLoans := loans [ aggr ECB2_MRKT_VL := sum(ECB2_MRKT_VL)  , aggr NTNL_AMNT:= sum(NTNL_AMNT) group by ECB2_ENTITY_LEI]" 
 			 		cube : "trl_executable_logic2.freeBirdToolsCubeModule.aggregateLoans" 
 			 		functions : [ AggregateColumnFunction  aggregateLoans_ECB2_MRKT_VL:   { 
+			 			cube : "trl_executable_logic2.freeBirdToolsCubeModule.aggregateLoans"
 			 			variable  : "smcubesStaticModel1.smcubesModel1.variablesModule.ECB2_MRKT_VL"
 			 			 aggregateFunction : AggregateFunction sum  : { 
 			 			 	functionSpec : "trl_executable_logic3.functionSpecModule1.SUM" parameters : 

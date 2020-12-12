@@ -24,10 +24,13 @@ import org.eclipse.efbt.lineage.attributelineage.model.row_transformation_logic.
 import org.eclipse.efbt.lineage.common.model.column_transformation_logic.ColumnFunction;
 import org.eclipse.efbt.lineage.common.model.lineagecubes.cube_schema.CubeSchema;
 import org.eclipse.efbt.lineage.common.model.lineagecubes.cubes.FreeBirdToolsCube;
+import org.eclipse.efbt.lineage.common.model.lineagecubes.cubes.TargetCube;
 import org.eclipse.efbt.lineage.common.model.column_transformation_logic.CubeColumn;
 import  org.eclipse.efbt.lineage.attributelineage.modelquery.core.AttributeLineageModelQuery;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.efbt.language.trl.component.translator.util.ComparisonUtil;
 import org.eclipse.efbt.language.trl.component.translator.util.SpecialFunctionSpecs;
 import org.eclipse.efbt.language.trl.component.translator.util.TRLUtil;
 import org.eclipse.efbt.language.trl.component.translator.util.Util;
@@ -38,6 +41,7 @@ import org.eclipse.efbt.language.trl.model.trl_report_cell_views.ReportCellView;
 import org.eclipse.efbt.language.trl.model.trl_report_cell_views.ReportCellViewModule;
 import org.eclipse.efbt.language.trl.model.trl_sql_views.SQLView;
 import org.eclipse.efbt.language.trl.model.trl_sql_views.VersionedSQLViewsModule;
+import org.eclipse.efbt.cocamo.smcubes.model.reports.ReportCell;
 import org.eclipse.efbt.language.trl.component.translator.api.AttributeLineageUtil;
 
 
@@ -57,7 +61,7 @@ public class AttributeLineageUtilImpl implements AttributeLineageUtil {
    * @param attributeLineageModel
    * @return
    */
-  static CubeTransformationLogic getFunctionalRowLogicForCube(FreeBirdToolsCube cube, AttributeLineageModel attributeLineageModel) {
+  public static CubeTransformationLogic getFunctionalRowLogicForCube(FreeBirdToolsCube cube, AttributeLineageModel attributeLineageModel) {
    
     Iterator<CubeTransformationLogic> rowLogicIter = attributeLineageModel.getRowTransformations().iterator();
     CubeTransformationLogic returnFunctionalRowLogic = null;
@@ -163,7 +167,7 @@ public class AttributeLineageUtilImpl implements AttributeLineageUtil {
    * @param model
    * @return
    */
-  static BaseRowStructure findBaseRowStructureInAttributeModel(BaseRowStructure baseRowStructure,
+  public static BaseRowStructure findBaseRowStructureInAttributeModel(BaseRowStructure baseRowStructure,
       AttributeLineageModel model) {
     EList<BaseRowStructure> baseRowStructures = model.getBaseSchemas();
     BaseRowStructure returnRowStructure = null;
@@ -206,7 +210,7 @@ public class AttributeLineageUtilImpl implements AttributeLineageUtil {
    * @param frl
    * @return
    */
-  static ColumnFunction findColumnFunctionInFunctionalRowLogic(ColumnFunction columnFunction,
+  public static ColumnFunction findColumnFunctionInFunctionalRowLogic(ColumnFunction columnFunction,
       CubeTransformationLogic frl) {
    
     EList<ColumnFunction> columnFunctions = frl.getColumnFunctionGroup().getColumnFunctions();
@@ -244,7 +248,7 @@ public class AttributeLineageUtilImpl implements AttributeLineageUtil {
    * @param model
    * @return
    */
-  static CubeTransformationLogic findFunctionalRowLogicInAttributeModel(CubeTransformationLogic cubeTransformationLogic ,
+  public static CubeTransformationLogic findFunctionalRowLogicInAttributeModel(CubeTransformationLogic cubeTransformationLogic ,
       AttributeLineageModel model) {
 
     EList<CubeTransformationLogic> rowTransformations = model.getRowTransformations();
@@ -288,7 +292,7 @@ public class AttributeLineageUtilImpl implements AttributeLineageUtil {
    * @param baseRowStructure
    * @return
    */
-  static CubeColumn findColumninSchema(CubeColumn column, BaseRowStructure baseRowStructure) {
+  public static CubeColumn findColumninSchema(CubeColumn column, BaseRowStructure baseRowStructure) {
 
     EList<CubeColumn> columns = baseRowStructure.getColumns();
     CubeColumn returnCol = null;
@@ -436,6 +440,39 @@ public  AttributeLineageModel createAttributeLineageModel(VersionedComponentsSet
  return attributeLineageModel;
 
 }
+
+public AttributeLineageModel createAttributeLineageModelForOneReportCell(VersionedComponentsSet finalContext,
+																ReportCell reportCell) {
+	
+	 
+    
+    //create a full Attribute lineage model, ny making a platfrom call
+    
+    
+    AttributeLineageModel referenceProgram =createAttributeLineageModel(finalContext);	    
+   
+
+    //create a list of target cubes, for now it will contain just one, we will improve this 
+    //later so that we can get the attribute lineage model for a set of report cells.
+    EList<TargetCube> singleTargetCubeList = new BasicEList<TargetCube>();
+    singleTargetCubeList.add((TargetCube) TRLUtil
+        .getReportCellViewForCell(reportCell, finalContext).
+        getCube());
+
+    //make a copy of the result of the platform call, possibly this is not strictly
+    //necessery as it is not used elsewhere.
+    AttributeLineageModel p = EcoreUtil.copy(referenceProgram);
+    //mark each element that the report cell is dependent upon as UsedInSubset
+    ComparisonUtil.markAttributeLineageComponentsAsUsedInSubSet(p, singleTargetCubeList.iterator());
+    //delete every element that is not marked as usedInSubset.
+    ComparisonUtil.trimComponentsMarkedInTrail(p);
+
+    
+    
+    return p;
+
+}
+
 
 
 
