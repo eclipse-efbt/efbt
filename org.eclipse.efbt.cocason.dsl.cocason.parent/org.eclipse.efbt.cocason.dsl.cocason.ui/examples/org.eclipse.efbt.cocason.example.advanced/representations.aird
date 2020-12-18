@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:diagram="http://www.eclipse.org/sirius/diagram/1.1.0" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.3/notation" xmlns:platform_call="http://www.eclipse.org/efbt/platform_call" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" xsi:schemaLocation="http://www.eclipse.org/sirius/description/1.1.0 http://www.eclipse.org/sirius/1.1.0#//description http://www.eclipse.org/sirius/diagram/description/1.1.0 http://www.eclipse.org/sirius/diagram/1.1.0#//description">
+  <viewpoint:DAnalysis uid="_xoZX0EE0EeuCia-UM5QoVw" selectedViews="_57yKUEE0EeuCia-UM5QoVw" version="14.3.1.202003261200">
+    <semanticResources>src/CRR_RequirementsBundleRoot.coca</semanticResources>
+    <semanticResources>src/combinationsRoot.coca</semanticResources>
+    <semanticResources>src/membersRoot.coca</semanticResources>
+    <semanticResources>src/domainsRoot.coca</semanticResources>
+    <semanticResources>src/variablesRoot.coca</semanticResources>
+    <semanticResources>src/commonFunctionsRoot.coca</semanticResources>
+    <semanticResources>src/cube_structure_itemsRoot.coca</semanticResources>
+    <semanticResources>src/cube_structuresRoot.coca</semanticResources>
+    <semanticResources>src/cubesRoot.coca</semanticResources>
+    <semanticResources>src/efbt_cubesRoot.coca</semanticResources>
+    <semanticResources>src/example_release.coca</semanticResources>
+    <semanticResources>src/example_release2.coca</semanticResources>
+    <semanticResources>src/platform_calls.coca</semanticResources>
+    <ownedViews xmi:type="viewpoint:DView" uid="_57yKUEE0EeuCia-UM5QoVw">
+      <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.efbt.controller.core.ui.sirius.core/description/controller.odesign#//@ownedViewpoints[name='Modules']"/>
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_6K8AoEE0EeuCia-UM5QoVw" name="new PlatformCall" repPath="#_6KqT0EE0EeuCia-UM5QoVw" changeId="a99f1583-144e-4473-8efd-97d9da1b7b68">
+        <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.efbt.controller.core.ui.sirius.core/description/controller.odesign#//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='PlatformCall']"/>
+        <target xmi:type="platform_call:CreateAttributeLineageModel" href="src/platform_calls.coca#almcall1"/>
+      </ownedRepresentationDescriptors>
+    </ownedViews>
+  </viewpoint:DAnalysis>
+  <diagram:DSemanticDiagram uid="_6KqT0EE0EeuCia-UM5QoVw">
+    <ownedAnnotationEntries xmi:type="description:AnnotationEntry" uid="_6LYFgEE0EeuCia-UM5QoVw" source="GMF_DIAGRAMS">
+      <data xmi:type="notation:Diagram" xmi:id="_6LYFgUE0EeuCia-UM5QoVw" type="Sirius" element="_6KqT0EE0EeuCia-UM5QoVw" measurementUnit="Pixel">
+        <styles xmi:type="notation:DiagramStyle" xmi:id="_6LYFgkE0EeuCia-UM5QoVw"/>
+      </data>
+    </ownedAnnotationEntries>
+    <ownedAnnotationEntries xmi:type="description:AnnotationEntry" uid="_6LezMEE0EeuCia-UM5QoVw" source="DANNOTATION_CUSTOMIZATION_KEY">
+      <data xmi:type="diagram:ComputedStyleDescriptionRegistry" uid="_6LfaQEE0EeuCia-UM5QoVw"/>
+    </ownedAnnotationEntries>
+    <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.efbt.controller.core.ui.sirius.core/description/controller.odesign#//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='PlatformCall']"/>
+    <filterVariableHistory xmi:type="diagram:FilterVariableHistory" uid="_6Ky2sEE0EeuCia-UM5QoVw"/>
+    <activatedLayers xmi:type="description_1:Layer" href="platform:/plugin/org.eclipse.efbt.controller.core.ui.sirius.core/description/controller.odesign#//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='PlatformCall']/@defaultLayer"/>
+    <target xmi:type="platform_call:CreateAttributeLineageModel" href="src/platform_calls.coca#almcall1"/>
+  </diagram:DSemanticDiagram>
+</xmi:XMI>
