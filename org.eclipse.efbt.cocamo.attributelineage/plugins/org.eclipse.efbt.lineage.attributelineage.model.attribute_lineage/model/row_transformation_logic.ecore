@@ -191,6 +191,17 @@
         <details key="name" value="createdCubeColumns"/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dependantStructItemColumns"
+        upperBound="-1" eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagefunctions/model/advanced_variable_lineagefunctions.ecore#//ResolvedStructColumnParameter"
+        containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The parameters (from functions) which contain the CubeColumns from the source which are used to determine how to create and link the created rows. &#xA;            &#x9;For example these could  be the CubeColumns used for grouping, or filtering, or joining. "/>
+      </eAnnotations>
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="kind" value="element"/>
+        <details key="name" value="dependantCubeColumns"/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GroupByRowCreationApproach" eSuperTypes="#//RowCreationApproach">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">

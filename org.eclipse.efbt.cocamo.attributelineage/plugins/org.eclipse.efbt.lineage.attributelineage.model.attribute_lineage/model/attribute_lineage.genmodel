@@ -4,12 +4,13 @@
     modelPluginID="org.eclipse.efbt.lineage.attributelineage.model.attribute_lineage"
     modelName="Attribute_lineage" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     importerID="org.eclipse.emf.importer.ecore" complianceLevel="8.0" copyrightFields="false"
-    usedGenPackages="../../org.eclipse.efbt.cocamo.functions.model.core/model/functions.genmodel#//functions ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/lineagecubes.genmodel#//cubes ../../org.eclipse.efbt.lineage.common.model.lineagefunctions/model/lineagefunctions.genmodel#//column_transformation_logic ../../org.eclipse.efbt.cocamo.core.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//core"
+    usedGenPackages="../../org.eclipse.efbt.cocamo.functions.model.core/model/functions.genmodel#//functions ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/lineagecubes.genmodel#//cubes ../../org.eclipse.efbt.lineage.common.model.lineagefunctions/model/lineagefunctions.genmodel#//column_transformation_logic ../../org.eclipse.efbt.cocamo.core.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//core ../../org.eclipse.efbt.lineage.common.model.lineagefunctions/model/lineagefunctions.genmodel#//advanced_variable_lineagefunctions ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/lineagecubes.genmodel#//efbt_advanced_data_definition"
     operationReflection="true" importOrganizing="true">
   <foreignModel>attribute_lineage.ecore</foreignModel>
   <foreignModel>cube_transformation_logic.ecore</foreignModel>
   <foreignModel>incremental_row_transformation_logic.ecore</foreignModel>
   <foreignModel>row_transformation_logic.ecore</foreignModel>
+  <foreignModel>advanced_row_transformation_logic.ecore</foreignModel>
   <genPackages prefix="Attribute_lineage" basePackage="org.eclipse.efbt.lineage.attributelineage.model"
       resource="XML" disposableProviderFactory="true" ecorePackage="attribute_lineage.ecore#/">
     <genClasses ecoreClass="attribute_lineage.ecore#//AttributeLineageModel">
@@ -68,6 +69,7 @@
     <genClasses ecoreClass="row_transformation_logic.ecore#//RowCreationApproach">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//RowCreationApproach/dependantCubeColumns"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//RowCreationApproach/createdCubeColumns"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//RowCreationApproach/dependantStructItemColumns"/>
     </genClasses>
     <genClasses ecoreClass="row_transformation_logic.ecore#//GroupByRowCreationApproach">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//GroupByRowCreationApproach/groupByColumns"/>
@@ -77,5 +79,11 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference row_transformation_logic.ecore#//RowJoinFunction/joinFunction"/>
     </genClasses>
     <genClasses ecoreClass="row_transformation_logic.ecore#//UnionRowCreationApproach"/>
+  </genPackages>
+  <genPackages prefix="Advanced_row_transformation_logic" basePackage="org.eclipse.efbt.lineage.attributelineage.model"
+      resource="XML" disposableProviderFactory="true" ecorePackage="advanced_row_transformation_logic.ecore#/">
+    <genClasses ecoreClass="advanced_row_transformation_logic.ecore#//ExplodeArrayOfStructsRowFunction">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference advanced_row_transformation_logic.ecore#//ExplodeArrayOfStructsRowFunction/arraySourceVariable"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>

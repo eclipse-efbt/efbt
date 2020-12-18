@@ -24,6 +24,7 @@ import org.eclipse.efbt.cocamo.smcubes.model.data_definition.CUBE;
 import org.eclipse.efbt.cocamo.smcubes.model.data_definition.CUBE_STRUCTURE;
 import org.eclipse.efbt.cocamo.smcubes.model.data_definition.CUBE_STRUCTURE_ITEM;
 import org.eclipse.efbt.cocamo.smcubes.model.efbt_data_definition.CubeModule;
+import org.eclipse.efbt.language.trl.component.translator.api.AttributeLineageUtil;
 import org.eclipse.efbt.language.trl.model.transformation.VersionedComponentsSet;
 import org.eclipse.efbt.language.trl.model.transformation.VersionedCubeSchemaModule;
 import org.eclipse.efbt.language.trl.model.transformation.VersionedFunctionalModuleLogic;
@@ -39,6 +40,9 @@ import org.eclipse.efbt.lineage.attributelineage.model.row_transformation_logic.
 import org.eclipse.efbt.lineage.attributelineage.model.row_transformation_logic.RowJoinFunction;
 import org.eclipse.efbt.lineage.attributelineage.model.row_transformation_logic.Row_transformation_logicFactory;
 import org.eclipse.efbt.lineage.attributelineage.modelquery.core.AttributeLineageModelQuery;
+import org.eclipse.efbt.lineage.common.model.advanced_variable_lineagefunctions.Advanced_variable_lineagefunctionsFactory;
+import org.eclipse.efbt.lineage.common.model.advanced_variable_lineagefunctions.ResolvedStructColumnParameter;
+import org.eclipse.efbt.lineage.common.model.advanced_variable_lineagefunctions.SpeculativeStructColumnParameter;
 import org.eclipse.efbt.lineage.common.model.column_transformation_logic.ColumnFunction;
 import org.eclipse.efbt.lineage.common.model.column_transformation_logic.Column_transformation_logicFactory;
 import org.eclipse.efbt.lineage.common.model.lineagecubes.cube_schema.CubeSchema;
@@ -52,6 +56,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+
+import org.eclipse.efbt.lineage.attributelineage.model.advanced_row_transformation_logic.ExplodeArrayOfStructsRowFunction;
 
 
 /**
@@ -205,10 +211,31 @@ public class Util {
           qcrpContainer.getParameters().add(index, linkedColParam);
 
         }
+        
+        if (o instanceof SpeculativeStructColumnParameter)
+		{
+			SpeculativeStructColumnParameter qrcrp = (SpeculativeStructColumnParameter) o;
+			Function qrcrpContainer = (Function) qrcrp.eContainer();
+			ResolvedStructColumnParameter linkedRowColParam = Advanced_variable_lineagefunctionsFactory.eINSTANCE.createResolvedStructColumnParameter();
+			CubeColumn col2 = resolveStructColumnFromRowLogicGroup(qrcrp,attributeLineageModel);
+			linkedRowColParam.setCubeColumn(col2);
+			linkedRowColParam.setColumnInsideStruct(qrcrp.getColumnInsideStruct());
+			int index = qrcrpContainer.getParameters().indexOf(qrcrp);
+			qrcrpContainer.getParameters().remove(index);
+			qrcrpContainer.getParameters().add(index, linkedRowColParam);
+			
+			
+		}
 
       }
     }
   }
+  
+  private static CubeColumn resolveStructColumnFromRowLogicGroup(SpeculativeStructColumnParameter speculativeStructColumn, AttributeLineageModel program) {
+		return resolveColumnFromRowLogicGroup(speculativeStructColumn.getStructColumn(), speculativeStructColumn.getCube(), program);
+		
+		
+	}
 
   /**
    * @param rowlogic
@@ -266,11 +293,46 @@ public class Util {
           rf.getDependantCubeColumns().add(EcoreUtil.copy(linkedColParam));
 
         }
+        
+        if (o instanceof SpeculativeStructColumnParameter)
+		{
+			SpeculativeStructColumnParameter qrcrp = (SpeculativeStructColumnParameter) o;
+			Function qrcrpContainer = (Function) qrcrp.eContainer();
+			ResolvedStructColumnParameter linkedRowColParam = Advanced_variable_lineagefunctionsFactory.eINSTANCE.createResolvedStructColumnParameter();
+			CubeColumn col2 = resolveStructColumnFromRowLogicGroup(qrcrp,attributeLineageModel);
+			linkedRowColParam.setCubeColumn(col2);
+			linkedRowColParam.setColumnInsideStruct(qrcrp.getColumnInsideStruct());
+			int index = qrcrpContainer.getParameters().indexOf(qrcrp);
+			qrcrpContainer.getParameters().remove(index);
+			qrcrpContainer.getParameters().add(index, linkedRowColParam);
+			rf.getDependantStructItemColumns().add(EcoreUtil.copy(linkedRowColParam));
+			
+			
+		}
 
       }
 
     }
 
+    if(rf instanceof ExplodeArrayOfStructsRowFunction)
+  	{
+  		FreeBirdToolsCube dependantTable = AttributeLineageModelQuery.getTheDependantFunctionalRowLogics(rowlogic).get(0).getRowCreationApproachForCube().getCube();
+  		//CubeColumn tc2 = Column_transformation_logicFactory.eINSTANCE.createCubeColumn();
+  		VARIABLE arraySourceColumn = ((ExplodeArrayOfStructsRowFunction) rf).getArraySourceVariable();
+  	  //  tc2.setVariable(arraySourceColumn);
+  	   // tc2.setCube(dependantTable);
+  		CubeColumn tc2 = resolveColumnFromRowLogicGroup(arraySourceColumn,dependantTable,attributeLineageModel);
+  	    // set the table to the source table: 			  tc2.setCube()
+  	    //and set the ID too.
+  	   // ((ExplodeArrayOfStructsRowFunction) rf).setArraySourceTableColumn(tc2);
+  	    
+  	    
+  	    ResolvedCubeColumnParameter linkedColParam = Column_transformation_logicFactory.eINSTANCE.createResolvedCubeColumnParameter();
+  	    linkedColParam.setCubeColumn(tc2);
+  	    rf.getDependantCubeColumns().add(linkedColParam);
+  	}
+      
+    
     if ((rf instanceof RowJoinFunction) || (rf instanceof FilterRowCreationApproach)) {
 
       // copy the basic functions,replace speculative with resolved, set onthe
@@ -293,6 +355,22 @@ public class Util {
           rf.getDependantCubeColumns().add(EcoreUtil.copy(linkedColParam));
 
         }
+        
+        if (o instanceof SpeculativeStructColumnParameter)
+      		{
+      			SpeculativeStructColumnParameter qrcrp = (SpeculativeStructColumnParameter) o;
+      			Function qrcrpContainer = (Function) qrcrp.eContainer();
+      			ResolvedStructColumnParameter linkedRowColParam = Advanced_variable_lineagefunctionsFactory.eINSTANCE.createResolvedStructColumnParameter();
+      			CubeColumn col2 = resolveStructColumnFromRowLogicGroup(qrcrp,attributeLineageModel);
+      			linkedRowColParam.setCubeColumn(col2);
+      			linkedRowColParam.setColumnInsideStruct(qrcrp.getColumnInsideStruct());
+      			int index = qrcrpContainer.getParameters().indexOf(qrcrp);
+      			qrcrpContainer.getParameters().remove(index);
+      			qrcrpContainer.getParameters().add(index, linkedRowColParam);
+      			 rf.getDependantStructItemColumns().add(EcoreUtil.copy(linkedRowColParam));
+      			
+      			
+      		}
 
       }
     }

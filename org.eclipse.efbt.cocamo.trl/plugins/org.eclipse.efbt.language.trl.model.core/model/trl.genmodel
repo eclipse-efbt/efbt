@@ -85,6 +85,8 @@
       resource="XML" disposableProviderFactory="true" ecorePackage="trl_report_cell_views.ecore#/">
     <genClasses ecoreClass="trl_report_cell_views.ecore#//ReportCellView">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_report_cell_views.ecore#//ReportCellView/reportCell"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_report_cell_views.ecore#//ReportCellView/structColumnHoldingDimension"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_report_cell_views.ecore#//ReportCellView/structColumnHoldingMeasure"/>
     </genClasses>
     <genClasses ecoreClass="trl_report_cell_views.ecore#//ReportCellViewModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_report_cell_views.ecore#//ReportCellViewModule/reportCellViews"/>

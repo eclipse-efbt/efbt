@@ -208,12 +208,70 @@ ProgramAndCalls : { program : TRLProgram :  {
 									column : "smcubesStaticModel1.smcubesModel1.variablesModule.tradeID"
 									cube : "trl_executable_logic2.freeBirdToolsCubeModule.cashflowSetGroup"
 								}
-							]
+							] 
 						}
 					}
 				}
-			]
-		} 
+			]  
+		}  
 					
 	] 
+	reportCellViewModules : [ 
+		ReportCellViewModule reportCellViewModule : { 
+			reportCellViews [ 
+				ReportCellView USDTradeNotionalsView : { 					
+					cube : "trl_executable_logic2.freeBirdToolsCubeModule.USDtradeNotionalsReportCell"
+					structColumnHoldingDimension : "stvm.trade"
+					reportCell : ReportCell USDtradeNotionals : {
+					combination : "smcubesStaticCubesModel.smcubesCubesModel.combinationModule.USDtradeNotionals"					
+					} 
+					
+				},
+				ReportCellView CorporateEADView : { 					
+					cube : "trl_executable_logic2.freeBirdToolsCubeModule.CorporateEAD"
+					structColumnHoldingDimension: "stvm.counterparty"
+					reportCell : ReportCell CorporateEAD : {
+					combination : "smcubesStaticCubesModel.smcubesCubesModel.combinationModule.CorporateEAD"					
+					} 
+					
+				},
+				ReportCellView EURTradeNotionalsView : { 					
+					cube : "trl_executable_logic2.freeBirdToolsCubeModule.EURtradeNotionalsReportCell"
+					structColumnHoldingDimension :"stvm.trade"
+					structColumnHoldingMeasure : "stvm.trade"
+					reportCell : ReportCell EURtradeNotionals : {
+					combination : "smcubesStaticCubesModel.smcubesCubesModel.combinationModule.EURtradeNotionals"					
+					} 
+					
+				},
+				ReportCellView FinancialInstitutionsEADView : { 					
+					cube : "trl_executable_logic2.freeBirdToolsCubeModule.FinancialInstitutionEAD"
+					structColumnHoldingDimension :"stvm.counterparty"
+					reportCell : ReportCell FinancialInstitutionEAD : {
+					combination : "smcubesStaticCubesModel.smcubesCubesModel.combinationModule.FinancialInstitutionEAD"					
+					} 
+					
+				},
+				ReportCellView GovernmentEADView : { 					
+					cube : "trl_executable_logic2.freeBirdToolsCubeModule.GovernmentEAD"
+					structColumnHoldingDimension : "stvm.counterparty"
+					reportCell : ReportCell GovernmentEAD : {
+					combination : "smcubesStaticCubesModel.smcubesCubesModel.combinationModule.GovernmentEAD"					
+					} 
+					
+				},
+				ReportCellView totalPVofTradesView : { 					
+					cube : "trl_executable_logic2.freeBirdToolsCubeModule.totalPVofTrades"
+					reportCell : ReportCell totalPVofTrades : {
+					combination : "smcubesStaticCubesModel.smcubesCubesModel.combinationModule.totalPVofTrades"					
+					} 
+					
+				}
+				
+				]
+
+	} ]
+	
+	
 } } } } 
+
