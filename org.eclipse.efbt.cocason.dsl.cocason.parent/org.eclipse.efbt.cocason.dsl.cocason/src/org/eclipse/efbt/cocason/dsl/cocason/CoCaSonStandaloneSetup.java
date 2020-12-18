@@ -46,6 +46,8 @@ import org.eclipse.efbt.lineage.common.model.advanced_variable_lineagefunctions.
 import org.eclipse.efbt.lineage.common.model.column_transformation_logic.Column_transformation_logicPackage;
 import org.eclipse.efbt.lineage.common.model.lineagecubes.cube_schema.Cube_schemaPackage;
 import org.eclipse.efbt.lineage.common.model.lineagecubes.cubes.CubesPackage;
+import org.eclipse.efbt.lineage.common.model.lineagecubes.efbt_advanced_data_definition.Efbt_advanced_data_definitionPackage;
+import org.eclipse.efbt.lineage.common.model.smcubes_functions.Smcubes_functionsPackage;
 import org.eclipse.efbt.controller.core.model.platform_call.Platform_callPackage;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;
@@ -200,6 +202,12 @@ public class CoCaSonStandaloneSetup extends CoCaSonStandaloneSetupGenerated {
 		}
 		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/platform_call")) {
 			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/platform_call", Platform_callPackage.eINSTANCE);
+		}
+		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/efbt_advanced_data_definition")) {
+			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/efbt_advanced_data_definition", Efbt_advanced_data_definitionPackage.eINSTANCE);
+		}
+		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/smcubes_functions")) {
+			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/smcubes_functions", Smcubes_functionsPackage.eINSTANCE);
 		}
 		
 		super.register(injector);

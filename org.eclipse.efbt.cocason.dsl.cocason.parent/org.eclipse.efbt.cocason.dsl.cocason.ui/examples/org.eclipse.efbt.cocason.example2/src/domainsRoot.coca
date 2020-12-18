@@ -1,0 +1,67 @@
+ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStaticModel smcubesDomainsStaticModel : {
+	 smCubesModel : SmcubesModel smcubesDomainsModel  : { 
+		domains :   [ DomainModule domainsModule : {
+			 dependencies : ModuleDependencies : { theModules : [ ModuleDependency : { theModule : "smcubesStaticCubesModel.smcubesCubesModel.membersModule" } ] } domains : [ 
+			 	DOMAIN creditQualityStep: {
+			 	 code : "creditQualityStep" 
+			 	 data_type ::String 
+			 	 domain_id : "creditQualityStep" 
+			 	 is_enumerated : true 
+			 	 is_reference : false 
+			 	 displayName : "creditQualityStep" } ,
+			 	DOMAIN ratingAgency: {
+			 	 code : "ratingAgency"  
+			 	 data_type ::String 			 	 
+			 	 domain_id : "ratingAgency" 
+			 	 is_enumerated : true 
+			 	 is_reference : false 
+			 	 displayName : "ratingAgency" } ,
+			 	DOMAIN Currency: {
+			 	 code : "Currency" 
+			 	 data_type ::String 
+			 	 domain_id : "Currency" 
+			 	 is_enumerated : true 
+			 	 is_reference : false 
+			 	 displayName : "Currency" } ,
+			 	DOMAIN exposureClass: {
+			 	 code : "exposureClass" 
+			 	 data_type ::String 
+			 	 domain_id : "exposureClass" 
+			 	 is_enumerated : true 
+			 	 is_reference : false 
+			 	 displayName : "exposureClass" } ,
+			 	DOMAIN ECB2_RL: {
+			 	 code : "RL" 
+			 	 data_type ::Double
+			 	 domain_id : "ECB2_RL" 
+			 	 is_enumerated : false 
+			 	 is_reference : false 
+			 	 displayName : "Real" } ,
+			 	DOMAIN DT: {
+			 	 code : "DT" 
+			 	 data_type ::DateTime
+			 	 domain_id : "DT" 
+			 	 is_enumerated : false 
+			 	 is_reference : false 
+			 	 displayName : "Date" } ,
+			 	 DOMAIN ECB2_STRNG: {
+			 	 code : "STRNG" 
+			 	 data_type ::String
+			 	 domain_id : "ECB2_STRNG" 
+			 	 is_enumerated : false 
+			 	 is_reference : false 
+			 	 displayName : "String" } ,
+			 	 DOMAIN BLN: {
+			 	 code : "BLN" 
+			 	 data_type ::DateTime
+			 	 domain_id : "BLN" 
+			 	 is_enumerated : true 
+			 	 is_reference : false 
+			 	 displayName : "Boolean" } ,
+			 	 DOMAIN ECB2_MNTRY: {
+			 	 code : "MNTRY" 
+			 	 data_type ::Double
+			 	 domain_id : "ECB2_MNTRY" 
+			 	 is_enumerated : false 
+			 	 is_reference : false 
+			 	 displayName : "Monetary" }  ] } ] } } } }
