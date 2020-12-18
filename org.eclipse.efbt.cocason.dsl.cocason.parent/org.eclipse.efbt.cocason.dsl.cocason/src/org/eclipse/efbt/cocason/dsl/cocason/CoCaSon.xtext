@@ -610,7 +610,7 @@ MemberParameter returns smcubes_functions::MemberParameter:
 	
 ValueParameter returns smcubes_functions::ValueParameter:
 	{smcubes_functions::ValueParameter}
-	'MemberParameter'  ':'
+	'ValueParameter'  ':'
 	'{'
 		('dataType' ':' dataType=FACET_VALUE_TYPE )?
 		('value' ':' value=EString)?

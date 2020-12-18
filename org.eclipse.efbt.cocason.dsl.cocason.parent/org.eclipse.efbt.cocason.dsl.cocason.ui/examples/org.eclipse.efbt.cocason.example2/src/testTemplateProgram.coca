@@ -1,7 +1,0 @@
-ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStaticModel testTemplateStaticModel : {
-	testTemplates  : TestTemplateModule testTemplateModule : {
-		templates : [ TestTemplate testTemplate1 : {
-			givenText : ClauseText then_specific_output_data_is_expected
-			whenText : ClauseText when_transformation_sheme_is_run
-			whenParams :  { Param : {
-				param : "abc.functionalityModules1.example_processing.processExampleData.scenarioSet1.AAA" } } } ] } } } }

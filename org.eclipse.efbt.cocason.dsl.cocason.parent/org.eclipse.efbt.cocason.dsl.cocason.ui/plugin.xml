@@ -461,8 +461,11 @@
     </extension>
    <extension point="org.eclipse.emf.common.ui.examples">
         <example wizardID="org.eclipse.efbt.cocason.dsl.cocason.ui.wizard.CocasonExampleWizard" pageImage="icons/genproject.gif">
-            <projectDescriptor name="org.eclipse.efbt.cocason.example" contentURI="examples/org.eclipse.efbt.cocason.example/" description="CoCaSon Example 1"/>           
-            <fileToOpen location="org.eclipse.efbt.cocason.example/variablesRoot.coca"/>           
+            <projectDescriptor name="org.eclipse.efbt.cocason.example.standard" contentURI="examples/org.eclipse.efbt.cocason.example.standard/" description="CoCaSon Standard Example 1"/>
+            <projectDescriptor name="org.eclipse.efbt.cocason.example.advanced" contentURI="examples/org.eclipse.efbt.cocason.example.advanced/" description="CoCaSon Advanced Example 1"/>
+            <projectDescriptor name="org.eclipse.efbt.cocason.example.frtb" contentURI="examples/org.eclipse.efbt.cocason.example.frtb/" description="CoCaSon FRTB Example 1"/>
+            <projectDescriptor name="org.eclipse.efbt.cocason.example.bird_import" contentURI="examples/org.eclipse.efbt.cocason.example.bird_import/" description="CoCaSon BIRD Import Example 1"/>
+            <projectDescriptor name="org.eclipse.efbt.cocason.example.ldm" contentURI="examples/org.eclipse.efbt.cocason.example.ldm/" description="CoCaSon LDM Example 1"/>                              
         </example>
     </extension>
 </plugin>
