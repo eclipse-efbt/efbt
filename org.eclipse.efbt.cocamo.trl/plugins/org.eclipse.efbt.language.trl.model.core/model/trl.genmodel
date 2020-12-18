@@ -3,7 +3,7 @@
     xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.language.trl.model.core/src-gen"
     modelPluginID="org.eclipse.efbt.language.trl.model.core" modelName="Trl" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     importerID="org.eclipse.emf.importer.ecore" complianceLevel="8.0" copyrightFields="false"
-    usedGenPackages="../../org.eclipse.efbt.cocamo.smcubes.model.program/model/cocamo.genmodel#//cocamo ../../org.eclipse.efbt.cocamo.core.model.functionality_module/model/functionality_module.genmodel#//functionality_module ../../org.eclipse.efbt.cocamo.core.model.functionality_module/model/functionality_module.genmodel#//scenarios ../../org.eclipse.efbt.cocamo.functions.model.core/model/functions.genmodel#//functions ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/lineagecubes.genmodel#//cube_schema ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/lineagecubes.genmodel#//cubes ../../org.eclipse.efbt.lineage.common.model.lineagefunctions/model/lineagefunctions.genmodel#//column_transformation_logic ../../org.eclipse.efbt.cocamo.core.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.cocamo.core.model.requirements_text/model/requirements_text.genmodel#//requirements_text ../../org.eclipse.efbt.cocamo.smcubes.model.input_data/model/smcubes_input_data.genmodel#//base_column_structured_data ../../org.eclipse.efbt.cocamo.smcubes.model.input_data/model/smcubes_input_data.genmodel#//column_structured_data ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//core ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//data_definition ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//efbt_data_definition ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//efbt_mapping ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//efbt_vtl_transformation ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//mapping ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//rendering ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//reports ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//smcubes_model ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//vtl_transformation ../../org.eclipse.efbt.cocamo.core.model.testing/model/testing.genmodel#//test_definition ../../org.eclipse.efbt.cocamo.core.model.testing/model/testing.genmodel#//test_input_data ../../org.eclipse.efbt.cocamo.core.model.testing/model/testing.genmodel#//test"
+    usedGenPackages="../../org.eclipse.efbt.cocamo.smcubes.model.program/model/cocamo.genmodel#//cocamo ../../org.eclipse.efbt.cocamo.core.model.functionality_module/model/functionality_module.genmodel#//functionality_module ../../org.eclipse.efbt.cocamo.core.model.functionality_module/model/functionality_module.genmodel#//scenarios ../../org.eclipse.efbt.cocamo.functions.model.core/model/functions.genmodel#//functions ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/lineagecubes.genmodel#//cube_schema ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/lineagecubes.genmodel#//cubes ../../org.eclipse.efbt.lineage.common.model.lineagefunctions/model/lineagefunctions.genmodel#//column_transformation_logic ../../org.eclipse.efbt.cocamo.core.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.cocamo.core.model.requirements_text/model/requirements_text.genmodel#//requirements_text ../../org.eclipse.efbt.cocamo.smcubes.model.input_data/model/smcubes_input_data.genmodel#//base_column_structured_data ../../org.eclipse.efbt.cocamo.smcubes.model.input_data/model/smcubes_input_data.genmodel#//column_structured_data ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//core ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//data_definition ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//efbt_data_definition ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//efbt_mapping ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//efbt_vtl_transformation ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//mapping ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//rendering ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//reports ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//smcubes_model ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/smcubes.genmodel#//vtl_transformation ../../org.eclipse.efbt.cocamo.core.model.testing/model/testing.genmodel#//test_definition ../../org.eclipse.efbt.cocamo.core.model.testing/model/testing.genmodel#//test_input_data ../../org.eclipse.efbt.cocamo.core.model.testing/model/testing.genmodel#//test ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/lineagecubes.genmodel#//efbt_advanced_data_definition"
     operationReflection="true" importOrganizing="true">
   <foreignModel>domain_model_mapping.ecore</foreignModel>
   <foreignModel>transformation.ecore</foreignModel>
@@ -77,6 +77,8 @@
     <genClasses ecoreClass="transformation.ecore#//TRLProgram">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference transformation.ecore#//TRLProgram/executableLogic"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference transformation.ecore#//TRLProgram/smcubesStaticModel"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference transformation.ecore#//TRLProgram/structVariablesModule"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference transformation.ecore#//TRLProgram/arrayTypedVariablesModule"/>
     </genClasses>
   </genPackages>
   <genPackages prefix="Trl_report_cell_views" basePackage="org.eclipse.efbt.language.trl.model"
@@ -144,6 +146,31 @@
     </genClasses>
     <genClasses ecoreClass="trl_sql_views.ecore#//DeltaAccumulation">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//DeltaAccumulation/ultimateSourceCube"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_sql_views.ecore#//CastColumnView">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//CastColumnView/sourceStructVariable"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//CastColumnView/targetStructVariable"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_sql_views.ecore#//ExplodeArrayOfStructsView">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//ExplodeArrayOfStructsView/arraySourceColumn"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//ExplodeArrayOfStructsView/indexColumn"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//ExplodeArrayOfStructsView/targetStructColumn"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_sql_views.ecore#//ExplodeStructView">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//ExplodeStructView/columnToUnpack"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_sql_views.ecore#//FilterByStructClassColumnView">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//FilterByStructClassColumnView/renameAsStructColumn"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//FilterByStructClassColumnView/structClass"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//FilterByStructClassColumnView/structColumn"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_sql_views.ecore#//MakeArrayOfStructsView">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//MakeArrayOfStructsView/groupingVariable"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//MakeArrayOfStructsView/sourceStructVariable"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//MakeArrayOfStructsView/targetArrayVariable"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_sql_views.ecore#//MakeStructView">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//MakeStructView/targetVariable"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

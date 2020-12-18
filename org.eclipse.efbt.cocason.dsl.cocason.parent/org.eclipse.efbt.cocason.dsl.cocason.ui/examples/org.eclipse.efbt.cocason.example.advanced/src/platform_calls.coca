@@ -8,8 +8,6 @@ ProgramAndCalls : {platformCalls : PlatformCallModule platfromCallsModule1 : {
 			outputDirectory : "C:\\Users\\neil\\outputcocason\\" 
 			testDirectory : "C:\\Users\\neil\\Dropbox\\neil\\bss\\newAnacredit_tests"
 		},
-		ConvertSQLDeveloperModelToEcore cobverLDMCall : {
+		ConvertSQLDeveloperModelToEcore convertLDMCall : {
 			inputDirectory : "C:\\Users\\neil\\ldm_structure\\"
-		}, CreateAttributeLineageForOneReportCell almcall1234 : { executableLogic : trl_executable_logic1 reportCell : "trl_executable_logic1.Relase1.reportsModule1.totalJPMktValue_view.totalJPMktValue" }
-		
-, CompareAttributeLineageModels almcomparison1 : { } ] } } 
+		}] } } 

@@ -1,0 +1,196 @@
+ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStaticModel smcubesCubeStructureItemsStaticModel : {
+	 smCubesModel : SmcubesModel smcubesCubeStructureItemsModel  : { 
+	 	cubes : [ CubeModule  cubeStructureItems_model  :{ 
+	 		cubeStructureItems : [ 
+	 			CUBE_STRUCTURE_ITEM : {
+	 				 description : "tradeID" 
+	 				 dimension_type ::B 
+	 				 is_flow : false 
+	 				 is_mandatory : false 
+	 				 order : 0 role ::D 
+	 				 isIdentifier : false 
+	 				 cube_structure_id : "smcubesCubeStructuresStaticModel.smcubesCubeStructuresModel.cubeStructures_model.trade"
+	 				 variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.tradeID" } ,
+	 			CUBE_STRUCTURE_ITEM : { 
+	 				description : "instrumentID" 
+	 				dimension_type ::B 
+	 				is_flow : false 
+	 				is_mandatory : false 
+	 				order : 0 role ::O 
+	 				isIdentifier : false 
+	 				cube_structure_id : "smcubesCubeStructuresStaticModel.smcubesCubeStructuresModel.cubeStructures_model.trade" 
+	 				variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.instrumentID" } ,
+	 			CUBE_STRUCTURE_ITEM : { 
+	 				description : "tradeCounterpartyID" 
+	 				dimension_type ::B 
+	 				is_flow : false 
+	 				is_mandatory : false 
+	 				order : 0 role ::O 
+	 				isIdentifier : false 
+	 				cube_structure_id : "smcubesCubeStructuresStaticModel.smcubesCubeStructuresModel.cubeStructures_model.trade" 
+	 				variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.tradeCounterpartyID" } ,
+	 			CUBE_STRUCTURE_ITEM : { 
+	 				description : "Currency" 
+	 				dimension_type ::B 
+	 				is_flow : false 
+	 				is_mandatory : false 
+	 				order : 0 role ::O 
+	 				isIdentifier : false 
+	 				cube_structure_id : "smcubesCubeStructuresStaticModel.smcubesCubeStructuresModel.cubeStructures_model.trade" 
+	 				variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.Currency" } ,
+	 			CUBE_STRUCTURE_ITEM : { 
+	 				description : "notionalAmount" 
+	 				dimension_type ::B 
+	 				is_flow : false 
+	 				is_mandatory : false 
+	 				order : 0 role ::O 
+	 				isIdentifier : false 
+	 				cube_structure_id : "smcubesCubeStructuresStaticModel.smcubesCubeStructuresModel.cubeStructures_model.trade" 
+	 				variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.notionalAmount" } ,
+	 			CUBE_STRUCTURE_ITEM : { 
+	 				description : "modifiedDuration" 
+	 				dimension_type ::B 
+	 				is_flow : false 
+	 				is_mandatory : false 
+	 				order : 0 role ::O 
+	 				isIdentifier : false 
+	 				cube_structure_id : "smcubesCubeStructuresStaticModel.smcubesCubeStructuresModel.cubeStructures_model.trade" 
+	 				variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.modifiedDuration" } ,
+	 			CUBE_STRUCTURE_ITEM : { 
+	 				description : "instrumentID" 
+	 				dimension_type ::B 
+	 				is_flow : false 
+	 				is_mandatory : false 
+	 				order : 0 role ::O 
+	 				isIdentifier : false 
+	 				cube_structure_id : "smcubesCubeStructuresStaticModel.smcubesCubeStructuresModel.cubeStructures_model.bondInstrument" 
+	 				variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.instrumentID" } ,
+	 			CUBE_STRUCTURE_ITEM : { 
+	 				description : "instrumentName" 
+	 				dimension_type ::B 
+	 				is_flow : false 
+	 				is_mandatory : false 
+	 				order : 0 role ::O 
+	 				isIdentifier : false 
+	 				cube_structure_id : "smcubesCubeStructuresStaticModel.smcubesCubeStructuresModel.cubeStructures_model.bondInstrument" 
+	 				variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.instrumentName" } ,
+	 			CUBE_STRUCTURE_ITEM : { 
+	 				description : "couponRate" 
+	 				dimension_type ::B 
+	 				is_flow : false 
+	 				is_mandatory : false 
+	 				order : 0 role ::O 
+	 				isIdentifier : false 
+	 				cube_structure_id : "smcubesCubeStructuresStaticModel.smcubesCubeStructuresModel.cubeStructures_model.bondInstrument" 
+	 				variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.couponRate" } ,
+	 			CUBE_STRUCTURE_ITEM : { 
+	 				description : "issuerCounterpartyID" 
+	 				dimension_type ::B 
+	 				is_flow : false 
+	 				is_mandatory : false 
+	 				order : 0 role ::O 
+	 				isIdentifier : false 
+	 				cube_structure_id : "smcubesCubeStructuresStaticModel.smcubesCubeStructuresModel.cubeStructures_model.bondInstrument" 
+	 				variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.issuerCounterpartyID" } ,
+	 			CUBE_STRUCTURE_ITEM : { 
+	 				description : "instrumentID" 
+	 				dimension_type ::B 
+	 				is_flow : false 
+	 				is_mandatory : false 
+	 				order : 0 role ::O 
+	 				isIdentifier : false 
+	 				cube_structure_id : "smcubesCubeStructuresStaticModel.smcubesCubeStructuresModel.cubeStructures_model.equityInstrument" 
+	 				variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.instrumentID" } ,
+	 			CUBE_STRUCTURE_ITEM : { 
+	 				description : "instrumentName" 
+	 				dimension_type ::B 
+	 				is_flow : false 
+	 				is_mandatory : false 
+	 				order : 0 role ::O 
+	 				isIdentifier : false 
+	 				cube_structure_id : "smcubesCubeStructuresStaticModel.smcubesCubeStructuresModel.cubeStructures_model.equityInstrument" 
+	 				variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.instrumentName" } ,
+	 			CUBE_STRUCTURE_ITEM : { 
+	 				description : "issuerCounterpartyID" 
+	 				dimension_type ::B 
+	 				is_flow : false 
+	 				is_mandatory : false 
+	 				order : 0 role ::O 
+	 				isIdentifier : false 
+	 				cube_structure_id : "smcubesCubeStructuresStaticModel.smcubesCubeStructuresModel.cubeStructures_model.equityInstrument" 
+	 				variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.issuerCounterpartyID" } ,
+	 			CUBE_STRUCTURE_ITEM : { 
+	 				description : "ratingID" 
+	 				dimension_type ::B 
+	 				is_flow : false 
+	 				is_mandatory : false 
+	 				order : 0 role ::O 
+	 				isIdentifier : false 
+	 				cube_structure_id : "smcubesCubeStructuresStaticModel.smcubesCubeStructuresModel.cubeStructures_model.rating" 
+	 				variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.ratingID" } ,
+	 			CUBE_STRUCTURE_ITEM : { 
+	 				description : "ratingAgency" 
+	 				dimension_type ::B 
+	 				is_flow : false 
+	 				is_mandatory : false 
+	 				order : 0 role ::O 
+	 				isIdentifier : false 
+	 				cube_structure_id : "smcubesCubeStructuresStaticModel.smcubesCubeStructuresModel.cubeStructures_model.rating" 
+	 				variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.ratingAgency" } ,
+	 			CUBE_STRUCTURE_ITEM : { 
+	 				description : "creditQualityStep" 
+	 				dimension_type ::B 
+	 				is_flow : false 
+	 				is_mandatory : false 
+	 				order : 0 role ::O 
+	 				isIdentifier : false 
+	 				cube_structure_id : "smcubesCubeStructuresStaticModel.smcubesCubeStructuresModel.cubeStructures_model.rating" 
+	 				variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.creditQualityStep" } ,
+	 			CUBE_STRUCTURE_ITEM : { 
+	 				description : "counterpartyId" 
+	 				dimension_type ::B 
+	 				is_flow : false 
+	 				is_mandatory : false 
+	 				order : 0 role ::O 
+	 				isIdentifier : false 
+	 				cube_structure_id : "smcubesCubeStructuresStaticModel.smcubesCubeStructuresModel.cubeStructures_model.rating" 
+	 				variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.counterpartyId" } ,
+	 			CUBE_STRUCTURE_ITEM : { 
+	 				description : "cashflowID" 
+	 				dimension_type ::B 
+	 				is_flow : false 
+	 				is_mandatory : false 
+	 				order : 0 role ::O 
+	 				isIdentifier : false 
+	 				cube_structure_id : "smcubesCubeStructuresStaticModel.smcubesCubeStructuresModel.cubeStructures_model.cashflow" 
+	 				variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.cashflowID" } ,
+	 			CUBE_STRUCTURE_ITEM : { 
+	 				description : "cashflowAmount" 
+	 				dimension_type ::B 
+	 				is_flow : false 
+	 				is_mandatory : false 
+	 				order : 0 role ::O 
+	 				isIdentifier : false 
+	 				cube_structure_id : "smcubesCubeStructuresStaticModel.smcubesCubeStructuresModel.cubeStructures_model.cashflow" 
+	 				variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.cashflowAmount" } ,
+	 			CUBE_STRUCTURE_ITEM : { 
+	 				description : "tradeID" 
+	 				dimension_type ::B 
+	 				is_flow : false 
+	 				is_mandatory : false 
+	 				order : 0 role ::O 
+	 				isIdentifier : false 
+	 				cube_structure_id : "smcubesCubeStructuresStaticModel.smcubesCubeStructuresModel.cubeStructures_model.cashflow" 
+	 				variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.tradeID" } ,
+	 			CUBE_STRUCTURE_ITEM : { 
+	 				description : "discountFactor" 
+	 				dimension_type ::B 
+	 				is_flow : false 
+	 				is_mandatory : false 
+	 				order : 0 role ::O 
+	 				isIdentifier : false 
+	 				cube_structure_id : "smcubesCubeStructuresStaticModel.smcubesCubeStructuresModel.cubeStructures_model.cashflow" 
+	 				variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.discountFactor" } 
+	 				
+	 		] } ] } } } }
+	 		

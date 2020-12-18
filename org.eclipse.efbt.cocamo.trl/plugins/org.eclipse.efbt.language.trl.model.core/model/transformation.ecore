@@ -142,5 +142,11 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="smcubesStaticModel" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.smcubes.model.program/model/cocamo.ecore#//SMCubesStaticModel"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="structVariablesModule"
+        eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/efbt_advanced_data_definition.ecore#//StructTypedVariablesModule"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="arrayTypedVariablesModule"
+        eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/efbt_advanced_data_definition.ecore#//ArrayTypedVariableModule"
+        containment="true"/>
   </eClassifiers>
 </ecore:EPackage>

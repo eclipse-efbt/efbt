@@ -1,0 +1,6 @@
+ProgramAndCalls : {platformCalls : PlatformCallModule platfromCallsModule1 : { 
+	platformCalls : [ 
+		ConvertSQLDeveloperModelToEcore cobverLDMCall : {
+			inputDirectory : "C:\\Users\\neil\\ldm_structure\\"
+		}
+		] } } 

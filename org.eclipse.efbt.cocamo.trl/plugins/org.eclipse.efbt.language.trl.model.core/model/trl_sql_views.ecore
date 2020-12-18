@@ -357,4 +357,29 @@
   <eClassifiers xsi:type="ecore:EClass" name="DeltaAccumulation" eSuperTypes="#//SQLView">
     <eStructuralFeatures xsi:type="ecore:EReference" name="ultimateSourceCube" eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/cubes.ecore#//FreeBirdToolsCube"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CastColumnView" eSuperTypes="#//SQLView">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sourceStructVariable" eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/efbt_advanced_data_definition.ecore#//StructTypedVariable"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="targetStructVariable" eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/efbt_advanced_data_definition.ecore#//StructTypedVariable"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ExplodeArrayOfStructsView" eSuperTypes="#//SQLView">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="arraySourceColumn" eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/efbt_advanced_data_definition.ecore#//ArrayTypedVariable"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="indexColumn" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/core.ecore#//VARIABLE"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="targetStructColumn" eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/efbt_advanced_data_definition.ecore#//StructTypedVariable"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ExplodeStructView" eSuperTypes="#//SQLView">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="columnToUnpack" eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/efbt_advanced_data_definition.ecore#//StructTypedVariable"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FilterByStructClassColumnView" eSuperTypes="#//SQLView">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="renameAsStructColumn" eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/efbt_advanced_data_definition.ecore#//StructTypedVariable"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="structClass" eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/cubes.ecore#//FreeBirdToolsCube"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="structColumn" eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/efbt_advanced_data_definition.ecore#//StructTypedVariable"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MakeArrayOfStructsView" eSuperTypes="#//SQLView">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="groupingVariable" eType="ecore:EClass ../../org.eclipse.efbt.cocamo.smcubes.model.core/model/core.ecore#//VARIABLE"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sourceStructVariable" eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/efbt_advanced_data_definition.ecore#//StructTypedVariable"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="targetArrayVariable" eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/efbt_advanced_data_definition.ecore#//ArrayTypedVariable"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MakeStructView" eSuperTypes="#//SQLView">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="targetVariable" eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/efbt_advanced_data_definition.ecore#//StructTypedVariable"/>
+  </eClassifiers>
 </ecore:EPackage>

@@ -1,0 +1,17 @@
+ProgramAndCalls : { program : TRLProgram : { smcubesStaticModel : SMCubesStaticModel smcubesCubeStructuresStaticModel : {
+	 smCubesModel : SmcubesModel smcubesCubeStructuresModel  : 
+	 { cubes : [ CubeModule  cubeStructures_model : { 
+	 	dependencies : ModuleDependencies : { theModules : [ ModuleDependency : { theModule : "smcubesCubeStructureItemsStaticModel.smcubesCubeStructureItemsModel.cubeStructureItems_model" } ] } cubeStructures : [ 
+	 		CUBE_STRUCTURE cashflow :{ code : "cashflow" cube_structure_id : "cashflow" description : "cashflow" },
+	 		 CUBE_STRUCTURE trade :  { code : "trade" cube_structure_id : "trade" description : "trade" },
+	 		  CUBE_STRUCTURE counterparty  : { code : "counterparty" cube_structure_id : "counterparty" description : "counterparty" },
+	 		  CUBE_STRUCTURE bondInstrument  : { code : "bondInstrument" cube_structure_id : "bondInstrument" description : "bondInstrument"},
+	 		  CUBE_STRUCTURE equityInstrument  : { code : "equityInstrument" cube_structure_id : "equityInstrument" description : "equityInstrument"},
+	 		  CUBE_STRUCTURE rating  : { code : "rating" cube_structure_id : "rating" description : "rating"},
+	 		  CUBE_STRUCTURE instrument  : { code : "instrument" cube_structure_id : "instrument" description : "instrument"}
+	 		  ]
+
+	 		  }
+
+
+	 	] } } }}
