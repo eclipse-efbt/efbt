@@ -184,7 +184,7 @@ public class TRLUtil {
               Column_transformation_logicFactory.eINSTANCE
               .createBasicColumnFunction();
           calculatedColumn.setName(view.getCube().getName() + 
-              ":" + column.getVariable().getVariable_id());
+              "_" + column.getVariable().getVariable_id());
 
           calculatedColumn.setVariable(column.getVariable());
           calculatedColumn.setCube(view.getCube());
@@ -211,7 +211,7 @@ public class TRLUtil {
               Column_transformation_logicFactory.eINSTANCE
               .createBasicColumnFunction();
           calculatedColumn.setName(view.getCube().getName() + 
-              ":" + column.getVariable_id());
+              "_" + column.getVariable_id());
           calculatedColumn.setVariable(column);
           calculatedColumn.setCube(view.getCube());
           BasicFunction function = FunctionsFactory.eINSTANCE.createBasicFunction();
@@ -251,7 +251,7 @@ public class TRLUtil {
           AggregateColumnFunction calculatedColumn = Column_transformation_logicFactory.eINSTANCE
               .createAggregateColumnFunction();
           calculatedColumn.setName(view.getCube().getName() +
-              ":" + column.getVariable_id());
+              "_" + column.getVariable_id());
           calculatedColumn.setVariable(column);
           calculatedColumn.setCube(view.getCube());
           AggregateFunction function = FunctionsFactory.eINSTANCE.createAggregateFunction();
@@ -287,7 +287,7 @@ public class TRLUtil {
             AggregateColumnFunction calculatedColumn = Column_transformation_logicFactory.eINSTANCE
                 .createAggregateColumnFunction();
             calculatedColumn.setName(view.getCube().getName() +
-                ":" + column.getVariable_id());
+                "_" + column.getVariable_id());
             calculatedColumn.setVariable(column);
             calculatedColumn.setCube(view.getCube());
             AggregateFunction function = FunctionsFactory.eINSTANCE.createAggregateFunction();
@@ -328,7 +328,7 @@ public class TRLUtil {
                 Column_transformation_logicFactory.eINSTANCE
                 .createBasicColumnFunction();
             calculatedColumn.setName(view.getCube().getName() + 
-                ":" + replacedColumn.getVariable_id());
+                "_" + replacedColumn.getVariable_id());
 
             calculatedColumn.setVariable(replacedColumn);
             calculatedColumn.setCube(view.getCube());
@@ -361,7 +361,7 @@ public class TRLUtil {
                 Column_transformation_logicFactory.eINSTANCE
                 .createBasicColumnFunction();
             calculatedColumn.setName(view.getCube().getName() +
-                ":" + replacedColumn.getVariable_id());
+                "_" + replacedColumn.getVariable_id());
             calculatedColumn.setVariable(replacedColumn);
             calculatedColumn.setCube(view.getCube());
             BasicFunction function = FunctionsFactory.eINSTANCE.createBasicFunction();
@@ -409,7 +409,7 @@ public class TRLUtil {
                 Column_transformation_logicFactory.eINSTANCE
                 .createBasicColumnFunction();
             calculatedColumn.setName(view.getCube().getName() +
-                ":" + column.getVariable().getVariable_id());
+                "_" + column.getVariable().getVariable_id());
 
             calculatedColumn.setVariable(column.getVariable());
             calculatedColumn.setCube(view.getCube());
@@ -451,7 +451,7 @@ public class TRLUtil {
                 Column_transformation_logicFactory.eINSTANCE
                 .createBasicColumnFunction();
             calculatedColumn.setName(
-                view.getCube().getName() + ":" + column.getVariable_id());
+                view.getCube().getName() + "_" + column.getVariable_id());
 
             calculatedColumn.setVariable(column);
             calculatedColumn.setCube(view.getCube());
@@ -484,63 +484,91 @@ public class TRLUtil {
     }
 
     if (view instanceof ReportCellView) {
-      // we want the groupbycolumns and the agregate column...
-      // we just make a plain assumption that the source is a groupby transformation.
-      EList<SQLView> dependantViews = getTheDependantViews(view, functionalModuleLogicList);
-      Iterator<SQLView> dependantViewsIter = dependantViews.iterator();
-      ReportCellView dpView = (ReportCellView) view;
-      while (dependantViewsIter.hasNext()) {
-        SQLView dependantView = dependantViewsIter.next();
+        // we want the groupbycolumns and the agregate column...
+        // we just make a plain assumption that the source is a groupby transformation.
+        EList<SQLView> dependantViews = getTheDependantViews(view, functionalModuleLogicList);
+        Iterator<SQLView> dependantViewsIter = dependantViews.iterator();
+        ReportCellView dpView = (ReportCellView) view;
+        StructTypedVariable dimStruct = dpView.getStructColumnHoldingDimension();
+        StructTypedVariable measureStruct = dpView.getStructColumnHoldingMeasure();
+        while (dependantViewsIter.hasNext()) {
+          SQLView dependantView = dependantViewsIter.next();
 
-        VARIABLE measure = getMeasure(dpView);
+          VARIABLE measure = getMeasure(dpView);
 
-        AggregateColumnFunction calculatedColumn = Column_transformation_logicFactory.eINSTANCE
-            .createAggregateColumnFunction();
-        calculatedColumn.setName(view.getCube().getName() + 
-            ":" + measure.getVariable_id());
-        calculatedColumn.setVariable(measure);
-        calculatedColumn.setCube(view.getCube());
-        AggregateFunction function = FunctionsFactory.eINSTANCE.createAggregateFunction();
-        function.setFunctionSpec(specialFunctions.sumColumnSpec);
-
-        SpeculativeCubeColumnParameter columnParameter = Column_transformation_logicFactory.eINSTANCE
-            .createSpeculativeCubeColumnParameter();
-        columnParameter.setColumn(measure);
-        columnParameter.setCube(dependantView.getCube());
-        function.getParameters().add(columnParameter);
-
-        calculatedColumn.setAggregateFunction(function);
-        cubeTransformationLogic .getColumnFunctionGroup().getColumnFunctions().add(calculatedColumn);
-
-        Iterator<COMBINATION_ITEM> dimensions = getDimensionValues(dpView);
-        while (dimensions.hasNext()) {
-          COMBINATION_ITEM dimensionVal = dimensions.next();
-          VARIABLE dimension = dimensionVal.getVariable_id();
-          AggregateColumnFunction calculatedColumnForDimension =
-              Column_transformation_logicFactory.eINSTANCE
+          AggregateColumnFunction calculatedColumn = Column_transformation_logicFactory.eINSTANCE
               .createAggregateColumnFunction();
-          calculatedColumnForDimension.setName(view.getCube().getName() + 
-              ":" + dimension.getVariable_id());
-          calculatedColumnForDimension.setVariable(dimension);
-          calculatedColumnForDimension.setCube(view.getCube());
-          AggregateFunction functionForDimension =
-              FunctionsFactory.eINSTANCE.createAggregateFunction();
-          functionForDimension.setFunctionSpec(specialFunctions.firstColumnSpec);
-          calculatedColumnForDimension.setAggregateFunction(functionForDimension);
+          calculatedColumn.setName(view.getCube().getName() + 
+              "_" + measure.getVariable_id());
+          calculatedColumn.setVariable(measure);
+          calculatedColumn.setCube(view.getCube());
+          AggregateFunction function = FunctionsFactory.eINSTANCE.createAggregateFunction();
+          function.setFunctionSpec(specialFunctions.sumColumnSpec);
 
-          SpeculativeCubeColumnParameter dimensionColumnParameter = Column_transformation_logicFactory.eINSTANCE
+          
+          if(measureStruct == null)
+          {
+                 SpeculativeCubeColumnParameter columnParameter = Column_transformation_logicFactory.eINSTANCE
               .createSpeculativeCubeColumnParameter();
-          dimensionColumnParameter.setColumn(dimension);
-          dimensionColumnParameter.setCube(dependantView.getCube());
-          functionForDimension.getParameters().add(dimensionColumnParameter);
+          columnParameter.setColumn(measure);
+          columnParameter.setCube(dependantView.getCube());
+          function.getParameters().add(columnParameter);
+          }
+          else
+          {
+          	 SpeculativeStructColumnParameter columnParameter = Advanced_variable_lineagefunctionsFactory.eINSTANCE
+                       .createSpeculativeStructColumnParameter();
+          	 columnParameter.setStructColumn(measureStruct);
+          	 columnParameter.setColumnInsideStruct(measure);
+          	 columnParameter.setCube(dependantView.getCube());
+          	 function.getParameters().add(columnParameter);
+          }
+          	
 
-          cubeTransformationLogic .getColumnFunctionGroup().
-            getColumnFunctions().add(calculatedColumnForDimension);
+          calculatedColumn.setAggregateFunction(function);
+          cubeTransformationLogic .getColumnFunctionGroup().getColumnFunctions().add(calculatedColumn);
+
+          Iterator<COMBINATION_ITEM> dimensions = getDimensionValues(dpView);
+          while (dimensions.hasNext()) {
+            COMBINATION_ITEM dimensionVal = dimensions.next();
+            VARIABLE dimension = dimensionVal.getVariable_id();
+            AggregateColumnFunction calculatedColumnForDimension =
+                Column_transformation_logicFactory.eINSTANCE
+                .createAggregateColumnFunction();
+            calculatedColumnForDimension.setName(view.getCube().getName() + 
+                "_" + dimension.getVariable_id());
+            calculatedColumnForDimension.setVariable(dimension);
+            calculatedColumnForDimension.setCube(view.getCube());
+            AggregateFunction functionForDimension =
+                FunctionsFactory.eINSTANCE.createAggregateFunction();
+            functionForDimension.setFunctionSpec(specialFunctions.firstColumnSpec);
+            calculatedColumnForDimension.setAggregateFunction(functionForDimension);
+
+            if(dimStruct == null)
+            {
+            SpeculativeCubeColumnParameter dimensionColumnParameter = Column_transformation_logicFactory.eINSTANCE
+                .createSpeculativeCubeColumnParameter();
+            dimensionColumnParameter.setColumn(dimension);
+            dimensionColumnParameter.setCube(dependantView.getCube());
+            functionForDimension.getParameters().add(dimensionColumnParameter);
+            }
+            else
+            {
+          	  SpeculativeStructColumnParameter dimensionColumnParameter = Advanced_variable_lineagefunctionsFactory.eINSTANCE
+                        .createSpeculativeStructColumnParameter();
+          	  dimensionColumnParameter.setStructColumn(dimStruct);
+          	  dimensionColumnParameter.setColumnInsideStruct(dimension);
+          	  dimensionColumnParameter.setCube(dependantView.getCube());
+          	  functionForDimension.getParameters().add(dimensionColumnParameter);
+            }
+          	          	         
+
+            cubeTransformationLogic .getColumnFunctionGroup().
+              getColumnFunctions().add(calculatedColumnForDimension);
+          }
+
         }
-
-      }
-    }
-    
+      }    
     if(view instanceof DeltaAccumulation) 
     {
     	
@@ -565,7 +593,7 @@ public class TRLUtil {
 				 {
 					 CubeColumn column = columnIter.next();
 					 BasicColumnFunction calculatedColumn =  Column_transformation_logicFactory.eINSTANCE.createBasicColumnFunction();
-					 calculatedColumn.setName(view.getCube().getCube_name()  +":" + column.getVariable().getVariable_id()  );
+					 calculatedColumn.setName(view.getCube().getCube_name()  +"_" + column.getVariable().getVariable_id()  );
 					 
 					 calculatedColumn.setVariable(column.getVariable());
 					 calculatedColumn.setCube(view.getCube());
@@ -605,7 +633,7 @@ public class TRLUtil {
 				 {
 					 VARIABLE column = columnIter.next();
 					 BasicColumnFunction calculatedColumn = Column_transformation_logicFactory.eINSTANCE.createBasicColumnFunction();
-					 calculatedColumn.setName(view.getCube().getName()  +":" + column.getVariable_id()  );
+					 calculatedColumn.setName(view.getCube().getName()  +"_" + column.getVariable_id()  );
 					 
 					 calculatedColumn.setVariable(column);
 					 calculatedColumn.setCube(view.getCube());
@@ -657,7 +685,7 @@ public class TRLUtil {
 				 {
 					 CubeColumn column = columnIter.next();
 					 BasicColumnFunction calculatedColumn =  Column_transformation_logicFactory.eINSTANCE.createBasicColumnFunction();
-					 calculatedColumn.setName(view.getCube().getCube_name()  +":" + column.getVariable().getVariable_id()  );
+					 calculatedColumn.setName(view.getCube().getCube_name()  +"_" + column.getVariable().getVariable_id()  );
 					 
 					 calculatedColumn.setVariable(column.getVariable());
 					 calculatedColumn.setCube(view.getCube());
@@ -697,7 +725,7 @@ public class TRLUtil {
 				 {
 					 VARIABLE column = columnIter.next();
 					 BasicColumnFunction calculatedColumn = Column_transformation_logicFactory.eINSTANCE.createBasicColumnFunction();
-					 calculatedColumn.setName(view.getCube().getName()  +":" + column.getVariable_id()  );
+					 calculatedColumn.setName(view.getCube().getName()  +"_" + column.getVariable_id()  );
 					 
 					 calculatedColumn.setVariable(column);
 					 calculatedColumn.setCube(view.getCube());
@@ -748,13 +776,13 @@ public class TRLUtil {
 				 if(column.equals(sourceColumn))
 				 {
 					 calculatedColumn.setVariable(targetColumn);
-					 calculatedColumn.setName(view.getCube().getName()  +":" + targetColumn.getVariable_id()  );
+					 calculatedColumn.setName(view.getCube().getName()  +"_" + targetColumn.getVariable_id()  );
 					 calculatedColumn.setCube(view.getCube());
 				 }
 				 else
 				 {
 					 calculatedColumn.setVariable(column.getVariable());
-					 calculatedColumn.setName(view.getCube().getName()  +":" + column.getVariable().getVariable_id()  );						
+					 calculatedColumn.setName(view.getCube().getName()  +"_" + column.getVariable().getVariable_id()  );						
 					 calculatedColumn.setCube(view.getCube());
 				 }
 				
@@ -779,7 +807,7 @@ public class TRLUtil {
 			 {
 				 VARIABLE column = columnIter.next();
 				 BasicColumnFunction calculatedColumn =  Column_transformation_logicFactory.eINSTANCE.createBasicColumnFunction();
-				 calculatedColumn.setName(view.getCube().getName()  +":" + column.getVariable_id()  );
+				 calculatedColumn.setName(view.getCube().getName()  +"_" + column.getVariable_id()  );
 				 calculatedColumn.setVariable(column);
 				 calculatedColumn.setCube(view.getCube());
 				 BasicFunction function= FunctionsFactory.eINSTANCE.createBasicFunction();
@@ -833,7 +861,7 @@ public class TRLUtil {
 		
 		 StructTypedVariable theRowsCol1 = ((MakeStructView) view ).getTargetVariable();
 		 BasicColumnFunction calculatedColumn1 = Column_transformation_logicFactory.eINSTANCE.createBasicColumnFunction();
-		 calculatedColumn1.setName(view.getCube().getName()  +":" + theRowsCol1.getVariable_id()   );
+		 calculatedColumn1.setName(view.getCube().getName()  +"_" + theRowsCol1.getVariable_id()   );
 		 calculatedColumn1.setVariable(theRowsCol1);
 		 calculatedColumn1.setCube(view.getCube());
 		 BasicFunction function1= FunctionsFactory.eINSTANCE.createBasicFunction();
@@ -919,13 +947,13 @@ public class TRLUtil {
 				 if(column.equals(sourceColumn))
 				 {
 					 calculatedColumn.setVariable(targetColumn);
-					 calculatedColumn.setName(view.getCube().getName()  +":" + targetColumn.getVariable_id()  );
+					 calculatedColumn.setName(view.getCube().getName()  +"_" + targetColumn.getVariable_id()  );
 					 calculatedColumn.setCube(view.getCube());
 				 }
 				 else
 				 {
 					 calculatedColumn.setVariable(column.getVariable());
-					 calculatedColumn.setName(view.getCube().getName()  +":" + column.getVariable().getVariable_id()  );						
+					 calculatedColumn.setName(view.getCube().getName()  +"_" + column.getVariable().getVariable_id()  );						
 					 calculatedColumn.setCube(view.getCube());
 				 }
 				
@@ -950,7 +978,7 @@ public class TRLUtil {
 			 {
 				 VARIABLE column = columnIter.next();
 				 BasicColumnFunction calculatedColumn = Column_transformation_logicFactory.eINSTANCE.createBasicColumnFunction();
-				 calculatedColumn.setName(view.getCube().getName()  +":" + column.getVariable_id()  );
+				 calculatedColumn.setName(view.getCube().getName()  +"_" + column.getVariable_id()  );
 				 calculatedColumn.setVariable(column);
 				 calculatedColumn.setCube(view.getCube());
 				 BasicFunction function= FunctionsFactory.eINSTANCE.createBasicFunction();
@@ -981,7 +1009,7 @@ public class TRLUtil {
 		 ArrayTypedVariable theRowsCol = makeRowSetsTransformtaion.getTargetArrayVariable();
 		 AggregateColumnFunction calculatedColumn = Column_transformation_logicFactory.eINSTANCE.createAggregateColumnFunction();
 		 
-		 calculatedColumn.setName(view.getCube().getName()  +":" + theRowsCol.getVariable_id()   );
+		 calculatedColumn.setName(view.getCube().getName()  +"_" + theRowsCol.getVariable_id()   );
 		 calculatedColumn.setVariable(theRowsCol);
 		 calculatedColumn.setCube(view.getCube());
 		 AggregateFunction function= FunctionsFactory.eINSTANCE.createAggregateFunction();
@@ -991,7 +1019,7 @@ public class TRLUtil {
 		 
 		 AggregateColumnFunction calculatedColumn2 = Column_transformation_logicFactory.eINSTANCE.createAggregateColumnFunction();
 		
-		 calculatedColumn2.setName(view.getCube().getName()  +":" + groupingColumn.getVariable_id()  );
+		 calculatedColumn2.setName(view.getCube().getName()  +"_" + groupingColumn.getVariable_id()  );
 		 calculatedColumn2.setVariable(groupingColumn);
 		 calculatedColumn2.setCube(view.getCube());
 		 AggregateFunction function2= FunctionsFactory.eINSTANCE.createAggregateFunction();
@@ -1039,7 +1067,7 @@ public class TRLUtil {
 				 else
 				 {
 					 calculatedColumn.setVariable(column.getVariable());
-					 calculatedColumn.setName(view.getCube().getName()  +":" + column.getVariable().getVariable_id()  );						
+					 calculatedColumn.setName(view.getCube().getName()  +"_" + column.getVariable().getVariable_id()  );						
 					 calculatedColumn.setCube(view.getCube());
 				 }
 				
@@ -1059,7 +1087,7 @@ public class TRLUtil {
 				StructTypedVariable targetColumn = ((ExplodeArrayOfStructsView) view).getTargetStructColumn();
 				 BasicColumnFunction calculatedColumn = Column_transformation_logicFactory.eINSTANCE.createBasicColumnFunction();
 				 calculatedColumn.setVariable(targetColumn);
-				 calculatedColumn.setName(view.getCube().getName()  +":" + targetColumn.getVariable_id()  );						
+				 calculatedColumn.setName(view.getCube().getName()  +"_" + targetColumn.getVariable_id()  );						
 				 calculatedColumn.setCube(view.getCube());
 				 BasicFunction function= FunctionsFactory.eINSTANCE.createBasicFunction();
 				 function.setFunctionSpec(specialFunctions.getRowNofColY);
@@ -1297,7 +1325,7 @@ public class TRLUtil {
 		  VARIABLE indexColumn = ((ExplodeArrayOfStructsView)view ).getIndexColumn();
 		  tc.setVariable(indexColumn);
 		  tc.setCube(view.getCube());
-		  tc.setName(indexColumn.getVariable_id() + ":" + view.getCube().getName());
+		  tc.setName(indexColumn.getVariable_id() + "_" + view.getCube().getName());
 		 // rf.setIndexColumn(tc);
 		  rf.getCreatedCubeColumns().add(tc);
 		 
