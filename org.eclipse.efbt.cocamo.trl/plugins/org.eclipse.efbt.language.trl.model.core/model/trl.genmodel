@@ -73,6 +73,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference transformation.ecore#//TRLExecutableLogic/cubesModule"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference transformation.ecore#//TRLExecutableLogic/functionSpecModule"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute transformation.ecore#//TRLExecutableLogic/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference transformation.ecore#//TRLExecutableLogic/cubesHierarchyModule"/>
     </genClasses>
     <genClasses ecoreClass="transformation.ecore#//TRLProgram">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference transformation.ecore#//TRLProgram/executableLogic"/>

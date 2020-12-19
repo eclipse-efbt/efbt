@@ -99,6 +99,11 @@ ProgramAndCalls : { program : TRLProgram :  {
 								 		column : "smcubesStaticModel1.smcubesModel1.variablesModule.notionalAmount"
 								 		cube : "trl_executable_logic2.freeBirdToolsCubeModule.tradesWithIssuer"
 								 		structColumn : "stvm.trade"
+								 	},
+								 	SpeculativeStructColumnParameter : {
+								 		column : "smcubesStaticModel1.smcubesModel1.variablesModule.creditQualityStep"
+								 		cube : "trl_executable_logic2.freeBirdToolsCubeModule.tradesWithIssuer"
+								 		structColumn : "stvm.rating"
 								 	}
 								 	
 								 ]
@@ -270,8 +275,17 @@ ProgramAndCalls : { program : TRLProgram :  {
 				
 				]
 
-	} ]
-	
-	
-} } } } 
+			} 
+		]
+	}
+	cubesHierarchyModule : FreeBIRDToolsCubeHierarchyRelationshipModule hierarchy : { 
+	hierarchyRelationships : 
+	[ FreeBIRDToolsCubeHierarchyRelationship : {
+		superCube : "trl_executable_logic2.freeBirdToolsCubeModule.instrument" 
+		subCube : "trl_executable_logic2.freeBirdToolsCubeModule.bondInstrument" } 
+	, 
+	FreeBIRDToolsCubeHierarchyRelationship : { 
+		superCube : "trl_executable_logic2.freeBirdToolsCubeModule.instrument" 
+		subCube : "trl_executable_logic2.freeBirdToolsCubeModule.equityInstrument"  }
+		]  } } } } 
 
