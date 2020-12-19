@@ -23,6 +23,7 @@ import org.eclipse.efbt.lineage.attributelineage.model.row_transformation_logic.
 import org.eclipse.efbt.lineage.attributelineage.model.row_transformation_logic.RowCreationApproachForCube; 
 import org.eclipse.efbt.lineage.common.model.column_transformation_logic.ColumnFunction;
 import org.eclipse.efbt.lineage.common.model.lineagecubes.cube_schema.CubeSchema;
+import org.eclipse.efbt.lineage.common.model.lineagecubes.cubes.FreeBIRDToolsCubeHierarchyRelationshipModule;
 import org.eclipse.efbt.lineage.common.model.lineagecubes.cubes.FreeBirdToolsCube;
 import org.eclipse.efbt.lineage.common.model.lineagecubes.cubes.TargetCube;
 import org.eclipse.efbt.lineage.common.model.column_transformation_logic.CubeColumn;
@@ -442,7 +443,8 @@ public  AttributeLineageModel createAttributeLineageModel(VersionedComponentsSet
 }
 
 public AttributeLineageModel createAttributeLineageModelForOneReportCell(VersionedComponentsSet finalContext,
-																ReportCell reportCell) {
+																ReportCell reportCell,
+		  													      FreeBIRDToolsCubeHierarchyRelationshipModule hmodule) {
 	
 	 
     
@@ -463,7 +465,7 @@ public AttributeLineageModel createAttributeLineageModelForOneReportCell(Version
     //necessery as it is not used elsewhere.
     AttributeLineageModel p = EcoreUtil.copy(referenceProgram);
     //mark each element that the report cell is dependent upon as UsedInSubset
-    ComparisonUtil.markAttributeLineageComponentsAsUsedInSubSet(p, singleTargetCubeList.iterator());
+    ComparisonUtil.markAttributeLineageComponentsAsUsedInSubSet(p, singleTargetCubeList.iterator(),hmodule);
     //delete every element that is not marked as usedInSubset.
     ComparisonUtil.trimComponentsMarkedInTrail(p);
 

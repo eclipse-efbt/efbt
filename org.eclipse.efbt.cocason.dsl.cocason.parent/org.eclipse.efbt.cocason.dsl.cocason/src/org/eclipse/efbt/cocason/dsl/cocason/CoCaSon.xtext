@@ -124,6 +124,28 @@ TRLExecutableLogic returns transformation::TRLExecutableLogic:
 		('componentSet' ':' componentSet=VersionedComponentsSet)?
 		('cubesModule' ':' cubesModule=FreeBirdToolsCubeModule)?
 		('functionSpecModule' ':' functionSpecModule=FunctionSpecModule)?
+		('cubesHierarchyModule' ':' cubesHierarchyModule=FreeBIRDToolsCubeHierarchyRelationshipModule)?
+	'}';
+	
+FreeBIRDToolsCubeHierarchyRelationshipModule returns cubes::FreeBIRDToolsCubeHierarchyRelationshipModule:
+	{cubes::FreeBIRDToolsCubeHierarchyRelationshipModule}
+	'FreeBIRDToolsCubeHierarchyRelationshipModule'
+	name=EString ':'
+	'{'
+		('theDescription' ':' theDescription=EString)?
+		('license' ':' license=EString)?
+		('version' ':' version=EString)?
+		('dependencies' ':' dependencies=ModuleDependencies)?
+		('longName' ':' longName=ModuleLongName)?
+		('hierarchyRelationships' ':' '[' hierarchyRelationships+=FreeBIRDToolsCubeHierarchyRelationship ( "," hierarchyRelationships+=FreeBIRDToolsCubeHierarchyRelationship)* ']' )?
+	'}';
+
+FreeBIRDToolsCubeHierarchyRelationship returns cubes::FreeBIRDToolsCubeHierarchyRelationship:
+	{cubes::FreeBIRDToolsCubeHierarchyRelationship}
+	'FreeBIRDToolsCubeHierarchyRelationship' ':'
+	'{'
+		('superCube' ':' superCube=[cubes::DerivedCube|EString])?
+		('subCube' ':' subCube=[cubes::DerivedCube|EString])?
 	'}';
 	
 FunctionSpecModule returns functions::FunctionSpecModule:

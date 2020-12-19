@@ -125,6 +125,33 @@ public class Util {
   
     attributeLineageModel.getSpecialFunctionSpecs().add(equalsSpec);
     specialFunctions.equalsSpec = equalsSpec;
+    
+    BasicFunctionSpec makeRowSpec= FunctionsFactory.eINSTANCE.createBasicFunctionSpec();
+   	makeRowSpec.setIsInfix(false);
+   	makeRowSpec.setName("MakeRow");
+   	makeRowSpec.setFunctionalName("funcs.MakeRow");
+   	makeRowSpec.setSqlName("MakeRow");
+   	attributeLineageModel.getSpecialFunctionSpecs().add(makeRowSpec);
+   	specialFunctions.makeRowSpec = makeRowSpec;
+   	
+   	
+   	AggregateFunctionSpec makeRowSetSpec = FunctionsFactory.eINSTANCE.createAggregateFunctionSpec();
+   	//firstColumnSpec.setInfix(false);
+   	makeRowSetSpec.setName("MakeRowSet");
+   	makeRowSetSpec.setFunctionalName("funcs.MakeRowSet");
+   	makeRowSetSpec.setSqlName("MakeRowSet");
+
+   	attributeLineageModel.getSpecialFunctionSpecs().add(makeRowSetSpec);
+   	specialFunctions.makeRowSetSpec = makeRowSetSpec;
+   	
+   	BasicFunctionSpec getRowNofColY= FunctionsFactory.eINSTANCE.createBasicFunctionSpec();
+   	getRowNofColY.setIsInfix(false);
+   	getRowNofColY.setName("GetRowNofColY");
+   	getRowNofColY.setFunctionalName("funcs.GetRowNofColY");
+   	getRowNofColY.setSqlName("GetRowNofColY");
+   	attributeLineageModel.getSpecialFunctionSpecs().add(getRowNofColY);
+   	specialFunctions.getRowNofColY = getRowNofColY;
+   	
 
     return specialFunctions;
   }

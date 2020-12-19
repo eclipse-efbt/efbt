@@ -1197,44 +1197,63 @@ public class TRLUtil {
     }
 
     if (view instanceof ReportCellView) {
-      // get the dependent view
-      SQLView dependantView = getTheDependantViews(view, functionalModuleLogicList).get(0);
-      RowCreationApproachForCube rowCreationApproachForCube = Row_transformation_logicFactoryImpl.eINSTANCE.createRowCreationApproachForCube();
-      FilterAndGroupToOneRowCreationApproach rowFilterAndGroupFunction = Row_transformation_logicFactoryImpl.eINSTANCE
-          .createFilterAndGroupToOneRowCreationApproach();
-     
-      BooleanFunction bf = FunctionsFactory.eINSTANCE.createBooleanFunction();
-      // this is a hack to make it work for 1 dimension, we need
-      // to change to make it work for multiple dimensions
-    
-
-      Iterator<COMBINATION_ITEM> dimensionValues = getDimensionValues((ReportCellView) view);
-      while (dimensionValues.hasNext()) {
-        COMBINATION_ITEM dimValue = dimensionValues.next();
+        // get the dependent view
+        SQLView dependantView = getTheDependantViews(view, functionalModuleLogicList).get(0);
+        RowCreationApproachForCube rowCreationApproachForCube = Row_transformation_logicFactoryImpl.eINSTANCE.createRowCreationApproachForCube();
+        FilterAndGroupToOneRowCreationApproach rowFilterAndGroupFunction = Row_transformation_logicFactoryImpl.eINSTANCE
+            .createFilterAndGroupToOneRowCreationApproach();
        
-        rowFilterAndGroupFunction.getGroupByVariables().add(dimValue.getVariable_id());
-        BooleanFunction bf2 = FunctionsFactory.eINSTANCE.createBooleanFunction();
-        bf2.setFunctionSpec(specialFunctions.equalsSpec);
+        BooleanFunction bf = FunctionsFactory.eINSTANCE.createBooleanFunction();
+        // this is a hack to make it work for 1 dimension, we need
+        // to change to make it work for multiple dimensions
+        ReportCellView dpView = (ReportCellView) view;
+        StructTypedVariable struct = dpView.getStructColumnHoldingDimension();
 
-        SpeculativeCubeColumnParameter param = Column_transformation_logicFactory.eINSTANCE.createSpeculativeCubeColumnParameter();
+        Iterator<COMBINATION_ITEM> dimensionValues = getDimensionValues((ReportCellView) view);
+        while (dimensionValues.hasNext()) {
+          COMBINATION_ITEM dimValue = dimensionValues.next();
+         
+          rowFilterAndGroupFunction.getGroupByVariables().add(dimValue.getVariable_id());
+          BooleanFunction bf2 = FunctionsFactory.eINSTANCE.createBooleanFunction();
+          bf2.setFunctionSpec(specialFunctions.equalsSpec);
 
-        param.setColumn(dimValue.getVariable_id());
-        param.setCube(dependantView.getCube());
-        bf2.getParameters().add(param);
+          
+          if(struct == null)
+          {
 
-        MemberParameter memberparam = Smcubes_functionsFactory.eINSTANCE.createMemberParameter();
-        memberparam.setParam(dimValue.getMember_id());
-        bf2.getParameters().add(memberparam);
+              SpeculativeCubeColumnParameter param = Column_transformation_logicFactory.eINSTANCE.createSpeculativeCubeColumnParameter();
 
-        rowFilterAndGroupFunction.setFilterFunction(bf2);
+              param.setColumn(dimValue.getVariable_id());
+              param.setCube(dependantView.getCube());
+              bf2.getParameters().add(param);
+
+
+          }
+          else
+          {
+        	  SpeculativeStructColumnParameter param = Advanced_variable_lineagefunctionsFactory.eINSTANCE
+                      .createSpeculativeStructColumnParameter();      	  
+
+            param.setStructColumn(struct);
+            param.setColumnInsideStruct(dimValue.getVariable_id());
+            param.setCube(dependantView.getCube());
+            bf2.getParameters().add(param);
+
+            
+          }
+          MemberParameter memberparam = Smcubes_functionsFactory.eINSTANCE.createMemberParameter();
+          memberparam.setParam(dimValue.getMember_id());
+          bf2.getParameters().add(memberparam);
+
+          rowFilterAndGroupFunction.setFilterFunction(bf2);
+
+        }
+             rowCreationApproachForCube.setRowCreationApproach(rowFilterAndGroupFunction);
+        rowCreationApproachForCube.setCube(view.getCube());
+        rowCreationApproachForCube.setName(view.getName());
+        cubeTransformationLogic .setRowCreationApproachForCube(rowCreationApproachForCube);
 
       }
-           rowCreationApproachForCube.setRowCreationApproach(rowFilterAndGroupFunction);
-      rowCreationApproachForCube.setCube(view.getCube());
-      rowCreationApproachForCube.setName(view.getName());
-      cubeTransformationLogic .setRowCreationApproachForCube(rowCreationApproachForCube);
-
-    }
     if(view instanceof DeltaAccumulation )
 	{
 		RowCreationApproachForCube tableLogic = Row_transformation_logicFactoryImpl.eINSTANCE.createRowCreationApproachForCube();

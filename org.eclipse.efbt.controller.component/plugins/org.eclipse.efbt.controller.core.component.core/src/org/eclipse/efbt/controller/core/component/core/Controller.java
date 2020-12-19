@@ -89,7 +89,10 @@ public class Controller {
 	private static void createAttributeLineageForOneReportCell(CreateAttributeLineageForOneReportCell call) {
 		AttributeLineageUtil almUtil = new AttributeLineageUtilImpl();
 		TRLExecutableLogic trlExecutableLogic = (TRLExecutableLogic) call.getExecutableLogic();
-		AttributeLineageModel alm = almUtil.createAttributeLineageModelForOneReportCell(trlExecutableLogic.getComponentSet(), call.getReportCell());
+		AttributeLineageModel alm = almUtil.
+								createAttributeLineageModelForOneReportCell(trlExecutableLogic.getComponentSet(), 
+										call.getReportCell(),
+										trlExecutableLogic.getCubesHierarchyModule());
 		alm.setName("ALM_" + call.getName());
 		call.setResultingALM(alm);
 		
