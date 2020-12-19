@@ -36,7 +36,7 @@ import "http://www.eclipse.org/efbt/efbt_advanced_data_definition" as efbt_advan
 import "http://www.eclipse.org/efbt/advanced_variable_lineagefunctions" as advanced_variable_lineagefunctions
 import "http://www.eclipse.org/efbt/smcubes_functions" as smcubes_functions
 import "http://www.eclipse.org/efbt/advanced_row_transformation_logic" as advanced_row_transformation_logic
-
+import "http://www.eclipse.org/efbt/incremental_cubes" as incremental_cubes
 
 ProgramAndCalls returns platform_call::ProgramAndCalls:
 	{platform_call::ProgramAndCalls}
@@ -587,7 +587,7 @@ RowCreationApproach returns row_transformation_logic::RowCreationApproach:
 	RowCreationApproach_Impl | CustomRowCreationApproach | FilterAndGroupToOneRowCreationApproach | OneToOneRowCreationApproach | FilterRowCreationApproach | GroupByRowCreationApproach | RowJoinFunction | UnionRowCreationApproach | ExplodeArrayOfStructsRowFunction;
 
 FreeBirdToolsCube returns cubes::FreeBirdToolsCube:
-	FreeBirdToolsCube_Impl | BaseCube | DerivedCube_Impl | TargetCube;
+	FreeBirdToolsCube_Impl | BaseCube_Impl | DerivedCube_Impl | TargetCube | BaseViewCube | BaseDeltaCube | DeltaAccumulationCube ;
 
 
 BasicFunction returns functions::BasicFunction:
@@ -631,8 +631,41 @@ ValueParameter returns smcubes_functions::ValueParameter:
 	'}';
 
 DerivedCube returns cubes::DerivedCube:
-	DerivedCube_Impl | TargetCube;
+	DerivedCube_Impl | TargetCube | BaseViewCube | DeltaAccumulationCube ;
+	
+BaseCube returns cubes::BaseCube:
+	BaseCube_Impl | BaseDeltaCube ;
+	
+BaseCube_Impl returns cubes::BaseCube:
+	{cubes::BaseCube}
+	'BaseCube'
+	name=EString ;
+	
+BaseDeltaCube returns incremental_cubes::BaseDeltaCube:
+	{incremental_cubes::BaseDeltaCube}
+	'BaseDeltaCube'
+	name=EString ':' 
+	'{'
+		('ultimateBaseCube' ':' ultimateBaseCube=[cubes::BaseCube|EString] )?
+	'}';
 
+BaseViewCube returns incremental_cubes::BaseViewCube:
+	{incremental_cubes::BaseViewCube}
+	'BaseViewCube'
+	name=EString ':'
+	'{'
+		('sourceCubes' ':' '[' sourceCubes+=[cubes::FreeBirdToolsCube|EString] ( "," sourceCubes+=[cubes::FreeBirdToolsCube|EString])* ']' )?
+		('ultimateBaseCube' ':' ultimateBaseCube=[cubes::BaseCube|EString] )?
+	'}';
+	
+DeltaAccumulationCube returns incremental_cubes::DeltaAccumulationCube:
+	{incremental_cubes::DeltaAccumulationCube}
+	'DeltaAccumulationCube'
+	name=EString ':'
+	'{'
+		('sourceCubes' ':' '[' sourceCubes+=[cubes::FreeBirdToolsCube|EString] ( "," sourceCubes+=[cubes::FreeBirdToolsCube|EString])* ']' )?
+	'}';
+	
 Function returns functions::Function:
 	Function_Impl | AggregateFunction | BasicFunction_Impl | BooleanFunction;
 
@@ -1671,10 +1704,7 @@ BasicColumnFunction returns column_transformation_logic::BasicColumnFunction:
 		('usedInSubsets' ':' usedInSubsets=EBoolean)?
 	'}';
 
-BaseCube returns cubes::BaseCube:
-	{cubes::BaseCube}
-	'BaseCube'
-	name=EString;
+
 
 DerivedCube_Impl returns cubes::DerivedCube:
 	{cubes::DerivedCube}

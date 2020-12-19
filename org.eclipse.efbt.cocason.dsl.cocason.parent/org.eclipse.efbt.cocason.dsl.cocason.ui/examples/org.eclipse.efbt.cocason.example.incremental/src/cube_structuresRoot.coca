@@ -1,0 +1,8 @@
+ProgramAndCalls : { program : TRLProgram : { smcubesStaticModel : SMCubesStaticModel smcubesCubeStructuresStaticModel : {
+	 smCubesModel : SmcubesModel smcubesCubeStructuresModel  : 
+	 { cubes : [ CubeModule  cubeStructures_model : { 
+	 	dependencies : ModuleDependencies : { theModules : [ ModuleDependency : { theModule : "smcubesCubeStructureItemsStaticModel.smcubesCubeStructureItemsModel.cubeStructureItems_model" } ] } cubeStructures : [ 
+	 		CUBE_STRUCTURE Loans :{ code : "Loans" cube_structure_id : "Loans" description : "Loans" },
+	 		 CUBE_STRUCTURE Counterparty :  { code : "Counterparty" cube_structure_id : "Counterparty" description : "Counterparty" },
+	 		  CUBE_STRUCTURE Rating  : { code : "Rating" cube_structure_id : "Rating" description : "Rating" }
+	 	] } ] } } } } 
