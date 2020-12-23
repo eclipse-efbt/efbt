@@ -1,0 +1,25 @@
+ProgramAndCalls : { program : TRLProgram :  {
+	smcubesStaticModel : SMCubesStaticModel smcubesStaticCubesModel : { 
+		smCubesModel  : SmcubesModel smcubesCubesModel: {  
+			cubes : [ CubeModule cubesModel  : { cubes : [ 
+ 						CUBE counterparty : { 
+ 							code : "counterparty" 
+ 							cube_id : "counterparty" 
+ 							description : "counterparty" 
+ 							is_allowed : false 
+ 							published : false 
+ 							cube_structure_id : "smcubesCubeStructuresStaticModel.smcubesCubeStructuresModel.cubeStructures_model.Counterparty" }  ,
+ 							CUBE rating : { 
+ 								code : "rating" 
+ 								cube_id : "rating" 
+ 								description : "rating" 
+ 								is_allowed : false 
+ 								published : false 
+ 								cube_structure_id : "smcubesCubeStructuresStaticModel.smcubesCubeStructuresModel.cubeStructures_model.Rating" } ,
+ 								CUBE loans: { 
+ 									code : "loans" 
+ 									cube_id : "loans" 
+ 									description : "loans" 
+ 									is_allowed : false 
+ 									published : false 
+ 									cube_structure_id : "smcubesCubeStructuresStaticModel.smcubesCubeStructuresModel.cubeStructures_model.Loans"} ] } ] } } } }
