@@ -41,7 +41,7 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference column_transformation_logic.ecore#//ResolvedCubeColumnParameter/cubeColumn"/>
     </genClasses>
     <genClasses ecoreClass="column_transformation_logic.ecore#//CubeColumn">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_transformation_logic.ecore#//CubeColumn/columnID"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_transformation_logic.ecore#//CubeColumn/name"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference column_transformation_logic.ecore#//CubeColumn/cube"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute column_transformation_logic.ecore#//CubeColumn/usedInSubsets"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference column_transformation_logic.ecore#//CubeColumn/variable"/>

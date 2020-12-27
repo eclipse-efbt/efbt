@@ -78,4 +78,13 @@
       <details key="kind" value="empty"/>
     </eAnnotations>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FreeBIRDToolsCubeHierarchyRelationshipModule"
+      eSuperTypes="../../org.eclipse.efbt.cocamo.core.model.module_management/model/module_management.ecore#//Module">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="hierarchyRelationships"
+        upperBound="-1" eType="#//FreeBIRDToolsCubeHierarchyRelationship" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FreeBIRDToolsCubeHierarchyRelationship">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="superCube" eType="#//FreeBirdToolsCube"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="subCube" eType="#//FreeBirdToolsCube"/>
+  </eClassifiers>
 </ecore:EPackage>

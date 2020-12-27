@@ -1,0 +1,291 @@
+ProgramAndCalls : { program : TRLProgram :  {
+	executableLogic : TRLExecutableLogic trl_executable_logic1 : { 
+		componentSet : VersionedComponentsSet  Relase1 : {
+			 cubeSchemaModules : [  VersionedCubeSchemaModule  readInExampleData : {schemas : [ 
+			 	CubeSchema counterparty :{ cube : "smcubesStaticCubesModel.smcubesCubesModel.cubesModel.counterparty" baseCube : "trl_executable_logic2.freeBirdToolsCubeModule.counterparty" },
+			 	CubeSchema rating : { cube : "smcubesStaticCubesModel.smcubesCubesModel.cubesModel.rating" baseCube : "trl_executable_logic2.freeBirdToolsCubeModule.rating" },
+			 	CubeSchema bondInstrument : { cube : "smcubesStaticCubesModel.smcubesCubesModel.cubesModel.bondInstrument" baseCube : "trl_executable_logic2.freeBirdToolsCubeModule.bondInstrument" },
+			 	CubeSchema cashflow : { cube : "smcubesStaticCubesModel.smcubesCubesModel.cubesModel.cashflow" baseCube : "trl_executable_logic2.freeBirdToolsCubeModule.cashflow" },
+			 	CubeSchema equityInstrument : { cube : "smcubesStaticCubesModel.smcubesCubesModel.cubesModel.equityInstrument" baseCube : "trl_executable_logic2.freeBirdToolsCubeModule.equityInstrument" },
+			 	CubeSchema instrument : { cube : "smcubesStaticCubesModel.smcubesCubesModel.cubesModel.instrument" baseCube : "trl_executable_logic2.freeBirdToolsCubeModule.instrument" },
+			 	CubeSchema trade : { cube : "smcubesStaticCubesModel.smcubesCubesModel.cubesModel.trade" baseCube : "trl_executable_logic2.freeBirdToolsCubeModule.trade" }
+			 	
+			 ] } ] 
+			 datasetTransformationModules : [ VersionedSQLViewsModule   processExampleData : { 
+				sqlViews : [ 
+					JoinView tradesWithInstruments : {
+						cube : "trl_executable_logic2.freeBirdToolsCubeModule.tradesWithInstruments"
+						whereClause : WhereClause : {
+							function : BooleanFunction view1 : { 
+								functionSpec : "trl_executable_logic3.functionSpecModule1.equals" 
+								parameters : [ 
+									SpeculativeStructColumnParameter :  {  
+										column : "smcubesStaticModel1.smcubesModel1.variablesModule.instrumentID"
+										cube : "trl_executable_logic2.freeBirdToolsCubeModule.allInstruments"
+										structColumn : 	"stvm.instrument"
+																		} ,
+									SpeculativeStructColumnParameter :  {  
+										column : "smcubesStaticModel1.smcubesModel1.variablesModule.instrumentID"
+										cube : "trl_executable_logic2.freeBirdToolsCubeModule.tradesAsOneColumn"
+										structColumn : 	"stvm.trade"
+																		} ]
+											}
+									}
+								}
+								
+					,
+					FilterByStructClassColumnView bondTrades : {
+						cube : "trl_executable_logic2.freeBirdToolsCubeModule.bondTrades" 
+						renameAsStructColumn : "stvm.bondInstrument"
+						structClass : "trl_executable_logic2.freeBirdToolsCubeModule.bondInstrument"
+						structColumn : "stvm.instrument"
+						} ,
+					EnrichmentView modifiedDurationPerTrade : { 
+						cube : "trl_executable_logic2.freeBirdToolsCubeModule.modifiedDurationPerTrade"
+						functions: [ 
+							BasicColumnFunction modifiedDurationPerTrade_weightedModifiedDuration : { 
+								cube : "trl_executable_logic2.freeBirdToolsCubeModule.modifiedDurationPerTrade"
+								variable : "smcubesStaticModel1.smcubesModel1.variablesModule.weightedModifiedDuration"
+								basicFunction : BasicFunction bf2 : { 
+									functionSpec : "trl_executable_logic3.functionSpecModule1.multiply" 
+									parameters : [ 
+										SpeculativeStructColumnParameter : { 
+											column: "smcubesStaticModel1.smcubesModel1.variablesModule.modifiedDuration" 
+											cube : "trl_executable_logic2.freeBirdToolsCubeModule.bondTrades"
+											structColumn : "stvm.trade" } ,
+										SpeculativeStructColumnParameter : { 
+											column: "smcubesStaticModel1.smcubesModel1.variablesModule.notionalAmount" 
+											cube : "trl_executable_logic2.freeBirdToolsCubeModule.bondTrades"
+											structColumn : "stvm.trade" } 
+											]
+											
+										} 
+									}
+								 
+								]
+							} ,
+							
+					JoinView tradesWithIssuer : {
+						cube   : "trl_executable_logic2.freeBirdToolsCubeModule.tradesWithIssuer"
+						whereClause : WhereClause : { 
+							function : BooleanFunction bf3 : {
+								functionSpec : "trl_executable_logic3.functionSpecModule1.equals" 
+								parameters : [
+									SpeculativeStructColumnParameter : { 
+										column: "smcubesStaticModel1.smcubesModel1.variablesModule.issuerCounterpartyID"
+										cube : "trl_executable_logic2.freeBirdToolsCubeModule.tradesWithInstruments"
+										structColumn : "stvm.instrument"
+									},
+									SpeculativeStructColumnParameter : { 
+										column: "smcubesStaticModel1.smcubesModel1.variablesModule.counterpartyId"
+										cube : "trl_executable_logic2.freeBirdToolsCubeModule.counterpartyAndRating"
+										structColumn : "stvm.counterparty"
+									}
+						
+								]
+							}
+						}
+					} ,
+				EnrichmentView exposureAtDefault : { 
+					cube : "trl_executable_logic2.freeBirdToolsCubeModule.exposureAtDefault"
+					functions : [
+						BasicColumnFunction exposureAtDefault_exposureAtDefault : { 
+							cube : "trl_executable_logic2.freeBirdToolsCubeModule.exposureAtDefault"
+							variable : "smcubesStaticModel1.smcubesModel1.variablesModule.exposureAtDefault"
+							basicFunction : BasicFunction bf4 : {
+								functionSpec : "trl_executable_logic3.functionSpecModule1.multiply"
+								 parameters : [ 
+								 	SpeculativeStructColumnParameter : {
+								 		column : "smcubesStaticModel1.smcubesModel1.variablesModule.notionalAmount"
+								 		cube : "trl_executable_logic2.freeBirdToolsCubeModule.tradesWithIssuer"
+								 		structColumn : "stvm.trade"
+								 	},
+								 	SpeculativeStructColumnParameter : {
+								 		column : "smcubesStaticModel1.smcubesModel1.variablesModule.creditQualityStep"
+								 		cube : "trl_executable_logic2.freeBirdToolsCubeModule.tradesWithIssuer"
+								 		structColumn : "stvm.rating"
+								 	}
+								 	
+								 ]
+							}
+						}
+					]
+				},
+				
+				EnrichmentView  tradesPresentValue : { 
+					cube : "trl_executable_logic2.freeBirdToolsCubeModule.tradesPresentValue"
+					functions : [
+						BasicColumnFunction tradesPresentValue_presentValue : {
+							cube : "trl_executable_logic2.freeBirdToolsCubeModule.tradesPresentValue" 
+							variable  : "atvm.cashflowSet"
+							basicFunction : BasicFunction b5 : {
+								functionSpec : "trl_executable_logic3.functionSpecModule1.presentValue" 
+								parameters : [
+									SpeculativeCubeColumnParameter : {
+										column : "atvm.cashflowSet" 
+										cube : "trl_executable_logic2.freeBirdToolsCubeModule.tradesWithCashflowSet"
+										},
+									ValueParameter : { 
+										dataType : :Double
+										value : "1"
+										}
+										]
+	
+									}
+									}
+								]
+							} ,
+				MakeStructView bondInstrumentAsInstrument : {
+					cube : "trl_executable_logic2.freeBirdToolsCubeModule.bondInstrumentAsInstrument" 
+					targetVariable : "stvm.instrument"
+					} ,
+				MakeStructView  equityInstrumentAsInstrument : {
+					cube : "trl_executable_logic2.freeBirdToolsCubeModule.equityInstrumentAsInstrument"
+					targetVariable : "stvm.instrument"
+					},
+				UnionView allInstruments : {
+					cube : "trl_executable_logic2.freeBirdToolsCubeModule.allInstruments"
+				},
+				MakeStructView tradesAsOneColumn : {
+					cube : "trl_executable_logic2.freeBirdToolsCubeModule.tradesAsOneColumn" 
+					targetVariable : "stvm.trade"
+				},
+				MakeStructView counterpartyAsOneColumn  : {
+					cube : "trl_executable_logic2.freeBirdToolsCubeModule.counterpartyAsOneColumn" 
+					targetVariable : "stvm.counterparty"
+				},
+				MakeStructView ratingAsOneColumn : {
+					cube : "trl_executable_logic2.freeBirdToolsCubeModule.ratingAsOneColumn" 
+					targetVariable : "stvm.rating"
+				},
+				JoinView counterpartyAndRating : {
+					cube : "trl_executable_logic2.freeBirdToolsCubeModule.counterpartyAndRating"
+					whereClause : WhereClause : { 
+						function : BooleanFunction BF6 : {
+							functionSpec : "trl_executable_logic3.functionSpecModule1.equals"
+							parameters : [
+								SpeculativeStructColumnParameter : {
+									column : "stvm.counterparty"
+									cube : "trl_executable_logic2.freeBirdToolsCubeModule.counterpartyAsOneColumn" 
+									structColumn : "stvm.counterparty" 
+								},
+								SpeculativeStructColumnParameter : { 
+									column : "stvm.counterparty"
+									cube : "trl_executable_logic2.freeBirdToolsCubeModule.ratingAsOneColumn"
+									structColumn : "stvm.rating"
+								}
+							]
+						}
+					}
+				}
+				,
+				MakeStructView cashflowAsOneColumn : { 
+					cube : "trl_executable_logic2.freeBirdToolsCubeModule.cashflowAsOneColumn"
+					targetVariable : "stvm.cashflow"
+				},
+				
+				MakeArrayOfStructsView cashflowSetGroup : {
+					cube : "trl_executable_logic2.freeBirdToolsCubeModule.cashflowSetGroup"
+					groupingVariable : "smcubesStaticModel1.smcubesModel1.variablesModule.tradeID"
+					sourceStructVariable : "stvm.cashflow"
+					targetArrayVariable : "atvm.cashflowSet"
+				},
+				ExplodeArrayOfStructsView explodedCashflowSet : {
+					cube : "trl_executable_logic2.freeBirdToolsCubeModule.explodedCashflowSet"
+					arraySourceColumn : "atvm.cashflowSet"
+					indexColumn : "smcubesStaticModel1.smcubesModel1.variablesModule.index"
+					targetStructColumn : "stvm.cashflow"
+				},
+				JoinView tradesWithCashflowSet : {
+					cube : "trl_executable_logic2.freeBirdToolsCubeModule.tradesWithCashflowSet"
+					whereClause : WhereClause : {
+						function : BooleanFunction BF7 : {
+							functionSpec : "trl_executable_logic3.functionSpecModule1.equals"
+							parameters : [
+								SpeculativeStructColumnParameter : { 
+									column : "smcubesStaticModel1.smcubesModel1.variablesModule.tradeID"
+									cube : "trl_executable_logic2.freeBirdToolsCubeModule.tradesAsOneColumn"
+									structColumn : "stvm.trade"
+									
+								}
+								,
+								SpeculativeCubeColumnParameter : {
+									column : "smcubesStaticModel1.smcubesModel1.variablesModule.tradeID"
+									cube : "trl_executable_logic2.freeBirdToolsCubeModule.cashflowSetGroup"
+								}
+							] 
+						}
+					}
+				}
+			]  
+		}  
+					
+	] 
+	reportCellViewModules : [ 
+		ReportCellViewModule reportCellViewModule : { 
+			reportCellViews [ 
+				ReportCellView USDTradeNotionalsView : { 					
+					cube : "trl_executable_logic2.freeBirdToolsCubeModule.USDtradeNotionalsReportCell"
+					structColumnHoldingDimension : "stvm.trade"
+					reportCell : ReportCell USDtradeNotionals : {
+					combination : "smcubesStaticCubesModel.smcubesCubesModel.combinationModule.USDtradeNotionals"					
+					} 
+					
+				},
+				ReportCellView CorporateEADView : { 					
+					cube : "trl_executable_logic2.freeBirdToolsCubeModule.CorporateEAD"
+					structColumnHoldingDimension: "stvm.counterparty"
+					reportCell : ReportCell CorporateEAD : {
+					combination : "smcubesStaticCubesModel.smcubesCubesModel.combinationModule.CorporateEAD"					
+					} 
+					
+				},
+				ReportCellView EURTradeNotionalsView : { 					
+					cube : "trl_executable_logic2.freeBirdToolsCubeModule.EURtradeNotionalsReportCell"
+					structColumnHoldingDimension :"stvm.trade"
+					structColumnHoldingMeasure : "stvm.trade"
+					reportCell : ReportCell EURtradeNotionals : {
+					combination : "smcubesStaticCubesModel.smcubesCubesModel.combinationModule.EURtradeNotionals"					
+					} 
+					
+				},
+				ReportCellView FinancialInstitutionsEADView : { 					
+					cube : "trl_executable_logic2.freeBirdToolsCubeModule.FinancialInstitutionEAD"
+					structColumnHoldingDimension :"stvm.counterparty"
+					reportCell : ReportCell FinancialInstitutionEAD : {
+					combination : "smcubesStaticCubesModel.smcubesCubesModel.combinationModule.FinancialInstitutionEAD"					
+					} 
+					
+				},
+				ReportCellView GovernmentEADView : { 					
+					cube : "trl_executable_logic2.freeBirdToolsCubeModule.GovernmentEAD"
+					structColumnHoldingDimension : "stvm.counterparty"
+					reportCell : ReportCell GovernmentEAD : {
+					combination : "smcubesStaticCubesModel.smcubesCubesModel.combinationModule.GovernmentEAD"					
+					} 
+					
+				},
+				ReportCellView totalPVofTradesView : { 					
+					cube : "trl_executable_logic2.freeBirdToolsCubeModule.totalPVofTrades"
+					reportCell : ReportCell totalPVofTrades : {
+					combination : "smcubesStaticCubesModel.smcubesCubesModel.combinationModule.totalPVofTrades"					
+					} 
+					
+				}
+				
+				]
+
+			} 
+		]
+	}
+	cubesHierarchyModule : FreeBIRDToolsCubeHierarchyRelationshipModule hierarchy : { 
+	hierarchyRelationships : 
+	[ FreeBIRDToolsCubeHierarchyRelationship : {
+		superCube : "trl_executable_logic2.freeBirdToolsCubeModule.instrument" 
+		subCube : "trl_executable_logic2.freeBirdToolsCubeModule.bondInstrument" } 
+	, 
+	FreeBIRDToolsCubeHierarchyRelationship : { 
+		superCube : "trl_executable_logic2.freeBirdToolsCubeModule.instrument" 
+		subCube : "trl_executable_logic2.freeBirdToolsCubeModule.equityInstrument"  }
+		]  } } } } 
+

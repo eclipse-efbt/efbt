@@ -41,5 +41,9 @@ public class SpecialFunctionSpecs {
      * the andSpec
      */
 	public BasicFunctionSpec andSpec;
+	
+	public BasicFunctionSpec makeRowSpec;
+	public AggregateFunctionSpec makeRowSetSpec;
+	public BasicFunctionSpec getRowNofColY;
 
 }

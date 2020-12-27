@@ -1,0 +1,63 @@
+ProgramAndCalls : { program : TRLProgram :  {
+	structVariablesModule : StructTypedVariablesModule stvm : {
+		structTypeVariables : [
+			
+			StructTypedVariable instrument : { 
+			 	code : "instrument"
+			 	description: "instrument" 
+			 	variable_id : "instrument" 
+			 	cubeType : "trl_executable_logic2.freeBirdToolsCubeModule.instrument"
+			 	},
+			 	StructTypedVariable bondInstrument : { 
+			 	code : "bondInstrument"
+			 	description: "bondInstrument" 
+			 	variable_id : "bondInstrument" 
+			 	cubeType : "trl_executable_logic2.freeBirdToolsCubeModule.bondInstrument"
+			 	},
+			 	
+			 	StructTypedVariable counterparty : { 
+			 	code : "counterparty"
+			 	description: "counterparty" 
+			 	variable_id : "counterparty" 
+			 	cubeType : "trl_executable_logic2.freeBirdToolsCubeModule.counterparty"
+			 	},
+			 	StructTypedVariable trade : { 
+			 	code : "trade"
+			 	description: "trade" 
+			 	variable_id : "trade" 
+			 	cubeType : "trl_executable_logic2.freeBirdToolsCubeModule.trade"
+			 	},
+			 	StructTypedVariable rating : { 
+			 	code : "rating"
+			 	description: "rating" 
+			 	variable_id : "rating" 
+			 	cubeType : "trl_executable_logic2.freeBirdToolsCubeModule.rating"
+			 	},
+			 	StructTypedVariable cashflow : { 
+			 	code : "cashflow"
+			 	description: "cashflow" 
+			 	variable_id : "cashflow" 
+			 	cubeType : "trl_executable_logic2.freeBirdToolsCubeModule.cashflow"
+			 	} 
+		]
+		
+		
+	}
+	 arrayTypedVariablesModule : ArrayTypedVariableModule atvm : {
+			arrayTypedVariables: [
+				    ArrayTypedVariable cashflowSet : { 
+				 	code : "cashflowSet"
+				 	description: "cashflowSet" 
+				 	variable_id : "cashflowSet" 
+				 	cubeType : "trl_executable_logic2.freeBirdToolsCubeModule.cashflow"
+				 	}
+				 	
+				 	] 
+				 	
+
+				 	}
+				 	
+				 	}
+		}
+		
+		
