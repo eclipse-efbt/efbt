@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Modelquery
+Bundle-SymbolicName: org.eclipse.efbt.cocalimo.smcubes.query.core
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: org.eclipse.efbt.cocalimo.smcubes.modelquery.core
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Export-Package: org.eclipse.efbt.cocalimo.smcubes.query.core
+Require-Bundle: org.eclipse.emf.common,
+ org.eclipse.efbt.cocalimo.smcubes.model.core;bundle-version="1.0.0"

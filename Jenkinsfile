@@ -8,48 +8,64 @@ pipeline {
         stage('Build') {
             steps {
                 sh '''                                     
-                    cd org.eclipse.efbt.cocamo.core
+                    cd cocalimo/core/model
                     mvn install
-                    cd ..
-                    cd org.eclipse.efbt.dependencies.accessdb
+                    cd ../../..
+                    cd cocalimo/core/ui_sirius
                     mvn install
-                    cd ..
-                    cd org.eclipse.efbt.cocamo.smcubes
+                    cd ../../..
+                    cd cocalimo/smcubes/model
                     mvn install
-                    cd ..
-                     cd org.eclipse.efbt.cocamo.functions
+                    cd ../../..
+                     cd cocalimo/smcubes/modelquery
                     mvn install
-                    cd ..
-                     cd org.eclipse.efbt.cocamo.lineage_core
+                    cd ../../..
+                     cd cocalimo/smcubes/ui_sirius
                     mvn install
-                    cd ..
-                    cd org.eclipse.efbt.cocamo.attributelineage
+                    cd ../../..
+                    cd cocalimo/smcubes_with_lineage/model
                     mvn install
-                    cd ..
-                    cd org.eclipse.efbt.cocamo.datalineage
+                    cd ../../..
+                    cd cocalimo/smcubes_with_lineage/modelquery
                     mvn install
-                    cd ..                    
-                    cd org.eclipse.efbt.ldm
+                    cd ../../..                    
+                    cd cocalimo/smcubes_with_lineage/ui_sirius
                     mvn install
-                    cd ..
-                    cd org.eclipse.efbt.cocamo.trl
+                    cd ../../..
+                    cd cocalimo/trl/model
                     mvn install
-                    cd ..
-                    cd org.eclipse.efbt.controller.model
+                    cd ../../..
+                    cd cocalimo/trl/modelquery
                     mvn install
-                    cd ..
-                    cd org.eclipse.efbt.cocason.dsl.cocason.parent -DskipTests
+                    cd ../../..
+                    cd cocalimo/trl/ui_sirius
                     mvn install
-                    cd ..                    
-                    cd org.eclipse.efbt.cocason
+                    cd ../../..                    
+                    cd cocason/org.eclipse.efbt.cocason.dsl.cocason.parent
                     mvn install 
-                    cd ..
-                    cd org.eclipse.efbt.controller.component
+                    cd ../..                   
+                    cd controller/ldm
                     mvn install
-                    cd ..
-                    cd org.eclipse.efbt.complete_repo
+                    cd ../..
+                    cd controller/smcubes/access_dependencies_external
                     mvn install
-                    cd ..
+                    cd ../../..
+                    cd controller/smcubes/access_dependencies_plugin
+                    mvn install
+                    cd ../../..
+                    cd controller/smcubes/component
+                    mvn install
+                    cd ../../..
+                    cd controller/trl/component
+                    mvn install
+                    cd ../../..
+                    cd controller/trl/ui_sirius
+                    mvn install
+                    cd ../../..
+                    cd installations/complete_repo/
+                    mvn install
+                    cd ../..
+                    
                 '''
             }
         }
@@ -59,7 +75,7 @@ pipeline {
 	          sh '''
 	            ssh genie.efbt@projects-storage.eclipse.org rm -rf /home/data/httpd/download.eclipse.org/efbt/snapshots
 	            ssh genie.efbt@projects-storage.eclipse.org mkdir -p /home/data/httpd/download.eclipse.org/efbt/snapshots	            	            	         
-	            scp -r org.eclipse.efbt.complete_repo/releng/org.eclipse.efbt.repository/target/repository/* genie.efbt@projects-storage.eclipse.org:/home/data/httpd/download.eclipse.org/efbt/snapshots
+	            scp -r installations/complete_repo/releng/org.eclipse.efbt.repository/target/repository/* genie.efbt@projects-storage.eclipse.org:/home/data/httpd/download.eclipse.org/efbt/snapshots
 	           '''
 	        }
 	      }

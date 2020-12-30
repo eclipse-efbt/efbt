@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="cubes" nsURI="http://www.eclipse.org/efbt/cubes" nsPrefix="cubes">
+  <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+    <details key="documentation" value="This package describes the FreeBirdToolsCubes.&#xA;DataStructure Approaches such as SMCubes allow us to define an input layer a the start of computation as a set of input Layer cubes (which are represented in this package as BaseCubes.&#xA;For languages such as VTL which create a chain of transformations of cubes, we can consider the inetrmediate datasets created as derived cubes, and the end results as Target Cubes.&#xA;This package allows us to represent these ideas at a high level, and show the lineage between target, derived and base cubes.&#xA;"/>
+  </eAnnotations>
+  <eAnnotations source="license">
+    <details key="license" value="Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;&#xD;&#xA;Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"/>
+  </eAnnotations>
+  <eClassifiers xsi:type="ecore:EClass" name="BaseCube" eSuperTypes="#//FreeBirdToolsCube">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="This is a cube which can contain actual base data, as opposed to DerivedCubes which contain data which is derived from BaseCubes, and other DerivedCubes. &#xA;The BaseCube class is a lightweight class which effectively just has a name, which allows us to define a very high level outline of the relationships between cubes.&#xA;The CubeSchema class in the cube_schema package links the BaseCube to a CUBE from the data_definition package which has a structure.&#xA;The BaseColumnStructuredData class in the base_column_structured_data package associates the  BaseCube with actual data to describe a populated cube."/>
+    </eAnnotations>
+    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+      <details key="name" value="BaseCube"/>
+      <details key="kind" value="empty"/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DerivedCube" eSuperTypes="#//FreeBirdToolsCube">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="This is a cube which can contain data which is derived from BaseCubes, and other DerivedCubes. DeriveCubes are different from BaseCubes which can contain actual base data &#xA;The DerivedCube class is a lightweight class which effectively just has a name, and the set of source cubes which it is derived from, this allows us to define a very high level outline of the relationships between cubes.&#xA;"/>
+    </eAnnotations>
+    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+      <details key="name" value="DerivedCube"/>
+      <details key="kind" value="empty"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sourceCubes" upperBound="-1"
+        eType="#//FreeBirdToolsCube">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="the sourceCubes from which this cube is derived"/>
+      </eAnnotations>
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="kind" value="attribute"/>
+        <details key="name" value="sourceCubes"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FreeBirdToolsCube">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A cube of the Eclipse Free BIRD Tools platform.&#xA;The FreeBirdToolsCube class is a lightweight class which effectively just has a name, which allows us to define a very high level outline of the relationships between cubes."/>
+    </eAnnotations>
+    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+      <details key="name" value="FreeBirdToolsCube"/>
+      <details key="kind" value="empty"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The name, and ID, of the Cube"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FreeBirdToolsCubeModule" eSuperTypes="../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.ecore#//Module">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value=" A Module containing a list of FreeBirdToolsCubes"/>
+    </eAnnotations>
+    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+      <details key="name" value="FreeBirdToolsCubeModule"/>
+      <details key="kind" value="elementOnly"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cubes" upperBound="-1"
+        eType="#//FreeBirdToolsCube" containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value=" The list of FreeBirdToolsCubes"/>
+      </eAnnotations>
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="kind" value="element"/>
+        <details key="name" value="cubes"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TargetCube" eSuperTypes="#//DerivedCube">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value=" A Derived Cube from which no other DerivedCubes are Derived"/>
+    </eAnnotations>
+    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+      <details key="name" value="TargetCube"/>
+      <details key="kind" value="empty"/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FreeBIRDToolsCubeHierarchyRelationshipModule"
+      eSuperTypes="../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.ecore#//Module">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="hierarchyRelationships"
+        upperBound="-1" eType="#//FreeBIRDToolsCubeHierarchyRelationship" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FreeBIRDToolsCubeHierarchyRelationship">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="superCube" eType="#//FreeBirdToolsCube"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="subCube" eType="#//FreeBirdToolsCube"/>
+  </eClassifiers>
+</ecore:EPackage>

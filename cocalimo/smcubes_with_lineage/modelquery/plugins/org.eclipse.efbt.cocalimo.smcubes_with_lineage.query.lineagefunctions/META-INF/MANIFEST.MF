@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Lineagefunctions
+Bundle-SymbolicName: org.eclipse.efbt.cocalimo.smcubes_with_lineage.query.lineagefunctions
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: org.eclipse.efbt.cocalimo.smcubes_with_lineage.query.lineagefunctions
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Require-Bundle: org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions,
+ org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagefunctions,
+ org.eclipse.efbt.cocalimo.smcubes.model.core
+Export-Package: org.eclipse.efbt.cocalimo.smcubes_with_lineage.query.lineagefunctions
+ 

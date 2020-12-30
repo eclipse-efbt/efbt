@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="advanced_row_transformation_logic" nsURI="http://www.eclipse.org/efbt/advanced_row_transformation_logic"
-    nsPrefix="advanced_row_transformation_logic">
-  <eClassifiers xsi:type="ecore:EClass" name="ExplodeArrayOfStructsRowFunction" eSuperTypes="row_transformation_logic.ecore#//RowCreationApproach">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="arraySourceVariable" eType="ecore:EClass ../../org.eclipse.efbt.lineage.common.model.lineagecubes/model/efbt_advanced_data_definition.ecore#//ArrayTypedVariable"/>
-  </eClassifiers>
-</ecore:EPackage>

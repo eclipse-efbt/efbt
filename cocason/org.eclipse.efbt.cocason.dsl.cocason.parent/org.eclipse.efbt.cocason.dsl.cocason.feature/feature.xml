@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright (c) 2020 Bird Software Solutions Ltd
+    This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License 2.0
+    which accompanies this distribution, and is available at
+    https://www.eclipse.org/legal/epl-2.0/
+   
+    SPDX-License-Identifier: EPL-2.0
+   
+    Contributors:
+       Neil Mackenzie - initial API and implementation
+ -->
+<feature
+      id="org.eclipse.efbt.cocason.dsl.cocason.feature"
+      label="CoCaSon Feature "
+      version="1.0.0.qualifier">
+
+   <requires>
+      <import plugin="org.eclipse.efbt.cocalimo.trl.model.platform_call"/>
+      <import plugin="org.eclipse.efbt.cocalimo.smcubes.model.program"/>
+      <import plugin="org.eclipse.xtext"/>
+      <import plugin="org.eclipse.xtext.xbase"/>
+      <import plugin="org.eclipse.equinox.common" version="3.5.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.xtext.xbase.lib" version="2.14.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.xtext.util"/>
+      <import plugin="org.eclipse.xtend.lib" version="2.14.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.attribute_lineage"/>
+      <import plugin="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.datalineage"/>
+      <import plugin="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagefunctions"/>
+      <import plugin="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions"/>
+      <import plugin="org.eclipse.efbt.cocalimo.trl.model.core"/>
+      <import plugin="org.apache.log4j"/>
+      <import plugin="org.eclipse.xtext.ide"/>
+      <import plugin="org.eclipse.xtext.xbase.ide"/>
+      <import plugin="org.eclipse.xtext.ui"/>
+      <import plugin="org.eclipse.xtext.ui.shared"/>
+      <import plugin="org.eclipse.xtext.ui.codetemplates.ui"/>
+      <import plugin="org.eclipse.ui.editors" version="3.5.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.ide" version="3.5.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.compare"/>
+      <import plugin="org.eclipse.xtext.builder"/>
+      <import plugin="org.antlr.runtime" version="3.2.0" match="greaterOrEqual"/>
+   </requires>
+
+   <plugin
+         id="org.eclipse.efbt.cocason.dsl.cocason"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.efbt.cocason.dsl.cocason.ide"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.efbt.cocason.dsl.cocason.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

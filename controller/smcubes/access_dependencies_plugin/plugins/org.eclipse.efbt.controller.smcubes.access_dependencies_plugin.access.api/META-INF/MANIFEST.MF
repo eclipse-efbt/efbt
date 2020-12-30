@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Accessdb
+Bundle-SymbolicName: org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.access.api
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.access.api
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Export-Package: org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.access.api

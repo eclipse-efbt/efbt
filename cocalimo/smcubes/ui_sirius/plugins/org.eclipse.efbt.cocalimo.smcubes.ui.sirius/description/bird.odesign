@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<description:Group xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:description_2="http://www.eclipse.org/sirius/table/description/1.1.0" xmlns:style="http://www.eclipse.org/sirius/diagram/description/style/1.1.0" name="bird" version="12.0.0.2017041100">
+  <ownedViewpoints name="BIRDViewpoint">
+    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="VARIABLE" domainClass="VARIABLE" enablePopupBars="true">
+      <defaultLayer name="DEFAULT">
+        <nodeMappings name="DOMAIN" semanticCandidatesExpression="aql:self.domain_id" domainClass="DOMAIN">
+          <style xsi:type="style:SquareDescription" labelSize="12" sizeComputationExpression="15" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="VAR" semanticCandidatesExpression="aql:self" domainClass="VARIABLE">
+          <style xsi:type="style:EllipseNodeDescription" labelSize="12" sizeComputationExpression="15" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='red']"/>
+          </style>
+        </nodeMappings>
+        <edgeMappings name="VARTODOMAIN" sourceMapping="//@ownedViewpoints[name='BIRDViewpoint']/@ownedRepresentations[name='VARIABLE']/@defaultLayer/@nodeMappings[name='VAR']" targetMapping="//@ownedViewpoints[name='BIRDViewpoint']/@ownedRepresentations[name='VARIABLE']/@defaultLayer/@nodeMappings[name='DOMAIN']" targetFinderExpression="aql:self.domain_id">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+      </defaultLayer>
+    </ownedRepresentations>
+    <ownedRepresentations xsi:type="description_2:EditionTableDescription" name="DOMAIN" domainClass="DOMAIN">
+      <ownedLineMappings name="MEMBER" domainClass="MEMBER" semanticCandidatesExpression="service:getMembers()"/>
+      <ownedColumnMappings name="name" featureName="name"/>
+    </ownedRepresentations>
+    <ownedJavaExtensions qualifiedClassName="org.eclipse.efbt.cocalimo.smcubes.ui.sirius.Services"/>
+  </ownedViewpoints>
+</description:Group>

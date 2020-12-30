@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+    Copyright (c) 2020 Bird Software Solutions Ltd
+    This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License 2.0
+    which accompanies this distribution, and is available at
+    https://www.eclipse.org/legal/epl-2.0/
+   
+    SPDX-License-Identifier: EPL-2.0
+   
+    Contributors:
+       Neil Mackenzie - initial API and implementation
+ -->
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated smcubes_input_data -->
+      <package
+            uri="http://www.eclipse.org/efbt/base_column_structured_data"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.Base_column_structured_dataPackage"
+            genModel="model/smcubes_input_data.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated smcubes_input_data -->
+      <parser
+            type="base_column_structured_data"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.util.Base_column_structured_dataResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated smcubes_input_data -->
+      <package
+            uri="http://www.eclipse.org/efbt/column_structured_data"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.column_structured_data.Column_structured_dataPackage"
+            genModel="model/smcubes_input_data.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated smcubes_input_data -->
+      <parser
+            type="column_structured_data"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.column_structured_data.util.Column_structured_dataResourceFactoryImpl"/>
+   </extension>
+
+</plugin>

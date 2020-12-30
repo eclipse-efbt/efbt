@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Core
-Bundle-SymbolicName: org.eclipse.efbt.lineage.datalineage.modelquery.core
-Bundle-Version: 1.0.0.qualifier
-Automatic-Module-Name: org.eclipse.efbt.lineage.datalineage.modelquery.core
-Bundle-RequiredExecutionEnvironment: JavaSE-11
-
