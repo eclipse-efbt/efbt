@@ -1,0 +1,18 @@
+ProgramAndCalls : { program : TRLProgram :  {
+	smcubesStaticModel : SMCubesStaticModel FRTBCubesStaticModel : { 
+		smCubesModel  : SmcubesModel FRTBCubesModel: {  
+			cubes : [ CubeModule cubesModel  : { cubes : [ 
+ 						CUBE girr_curvature_source_data : { 
+ 							code : "girr_curvature_source_data" 
+ 							cube_id : "girr_curvature_source_data" 
+ 							description : "girr_curvature_source_data" 
+ 							is_allowed : false 
+ 							published : false 
+ 							cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.girr_curvature_source_data_structure" }  ,
+ 							CUBE summed_girr_delta_sensitivities_per_instrument_and_curve_data : { 
+ 								code : "summed_girr_delta_sensitivities_per_instrument_and_curve_data" 
+ 								cube_id : "summed_girr_delta_sensitivities_per_instrument_and_curve_data" 
+ 								description : "summed_girr_delta_sensitivities_per_instrument_and_curve_data" 
+ 								is_allowed : false 
+ 								published : false 
+ 								cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.summed_girr_delta_sensitivities_per_instrument_and_curve_data_structure" } ] } ] } } } }
