@@ -1,0 +1,74 @@
+ProgramAndCalls : { program : TRLProgram :  {
+	executableLogic : TRLExecutableLogic FRTB_Logic : { 
+		componentSet : VersionedComponentsSet  Release1 : {
+			 cubeSchemaModules : [  VersionedCubeSchemaModule  readInFRTBData : {schemas : [ 
+			 	CubeSchema girr_curvature_source_data :{ cube : "FRTBCubesStaticModel.FRTBCubesModel.cubesModel.girr_curvature_source_data" baseCube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.girr_curvature_source_data" },
+			 	CubeSchema summed_girr_delta_sensitivities_per_instrument_and_curve_data : { cube : "FRTBCubesStaticModel.FRTBCubesModel.cubesModel.summed_girr_delta_sensitivities_per_instrument_and_curve_data" baseCube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.summed_girr_delta_sensitivities_per_instrument_and_curve_data" }
+			 ] } ] 
+			 datasetTransformationModules : [ VersionedSQLViewsModule   processFRTBData : { 
+			 	sqlViews : [ 
+			 		CopyView copy_of_girr_curvature_source : {
+			 			cube : "FRTB_EquityCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.copy_of_girr_curvature_source"
+			 		},
+			 		JoinView updown_and_normal_shifts : {
+			 			cube : "FRTB_EquityCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.updown_and_normal_shifts"
+			 			whereClause : WhereClause : {
+			 				function : BooleanFunction bf1 : {
+			 					functionSpec : "commonFunctions.functionSpecModule1.AND"
+			 					parameters : [ 
+			 						BasicFunction bf2 : { 
+			 							functionSpec: "commonFunctions.functionSpecModule1.AND" 
+			 							parameters : [ 
+			 									BasicFunction bf5 : { 
+			 										functionSpec : "commonFunctions.functionSpecModule1.OR"
+			 										 parameters : [ 
+			 										 	BasicFunction bf6 : { functionSpec : "commonFunctions.functionSpecModule1.equals" 
+			 										 		parameters : [ 
+			 										 			SpeculativeCubeColumnParameter : {
+			 										 				column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection" 
+			 										 				cube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.girr_curvature_source_data" } ,
+			 										 			MemberParameter : { 
+			 										 					param : "FRTBSourceDomainMembersStaticModel.FRTBSourceDomainMembersModel.membersModule.UP"
+			 										 				} 
+			 										 				] } ,
+			 										 		BasicFunction bf7 : { functionSpec : "commonFunctions.functionSpecModule1.equals" 
+			 										 		parameters : [ 
+			 										 			SpeculativeCubeColumnParameter : {
+			 										 				column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection" 
+			 										 				cube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.girr_curvature_source_data" } ,
+			 										 			MemberParameter : { 
+			 										 					param : "FRTBSourceDomainMembersStaticModel.FRTBSourceDomainMembersModel.membersModule.DOWN"
+			 										 				} 
+			 										 				] } 
+			 										 				] } ,
+			 										 				
+			 										 	BasicFunction bf8 : { functionSpec : "commonFunctions.functionSpecModule1.equals" 
+			 										 		parameters : [ 
+			 										 			SpeculativeCubeColumnParameter : {
+			 										 				column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection" 
+			 										 				cube : "FRTB_EquityCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.copy_of_girr_curvature_source" } ,
+			 										 			MemberParameter : { 
+			 										 					param : "FRTBSourceDomainMembersStaticModel.FRTBSourceDomainMembersModel.membersModule.NONE"
+			 										 				} 
+			 										 				] } ] } ,
+			 										 				
+			 										 	
+			 						BasicFunction bf3 : {
+			 							functionSpec : "commonFunctions.functionSpecModule1.AND" 
+			 							parameters : [ 
+			 								SpeculativeCubeColumnParameter : 
+			 								{ 
+			 									column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.Currency"
+			 									cube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.girr_curvature_source_data" } ,
+			 									
+			 								SpeculativeCubeColumnParameter  : {
+			 									column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.Currency"
+			 									cube : "FRTB_EquityCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.copy_of_girr_curvature_source"
+			 									}
+			 								] }
+			 						]
+			 							
+			 				}
+			 			}
+			 		}
+			 ] } ] } } } } 

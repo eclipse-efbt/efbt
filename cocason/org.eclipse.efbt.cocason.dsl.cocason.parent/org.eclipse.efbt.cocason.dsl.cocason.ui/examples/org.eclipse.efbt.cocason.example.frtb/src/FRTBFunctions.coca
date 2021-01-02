@@ -1,0 +1,7 @@
+ProgramAndCalls : { program : TRLProgram :  { executableLogic : TRLExecutableLogic FRTBFunctions: { functionSpecModule : FunctionSpecModule functionSpecModule1 : {  functionSpecs : 
+	[ BasicFunctionSpec getCorrelationFactor : { 
+		functionalName : "CustomFunctions_getCorrelationFactor"
+		sqlName : "getCorrelationFactor"		
+	}
+			
+	] } } } } 
