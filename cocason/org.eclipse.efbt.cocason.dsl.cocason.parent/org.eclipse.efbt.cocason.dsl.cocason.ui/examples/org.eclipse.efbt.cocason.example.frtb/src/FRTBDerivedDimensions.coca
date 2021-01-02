@@ -1,0 +1,40 @@
+ProgramAndCalls : { program :  TRLProgram :  {
+	smcubesStaticModel : SMCubesStaticModel FRTBDerivedDimensionsStaticModel : {
+	smCubesModel : SmcubesModel  FRTBDerivedDimensionsModel  : {
+		variables :  [ VariableModule variablesModule :  
+				{
+			variables : [ 
+			VARIABLE correlation_type : {
+				code : "correlation_type"
+				description : "correlation_type"
+				variable_id : "correlation_type"
+				displayName :  "correlation_type"
+				domain_id : "FRTBDerivedDomainsStaticModel.FRTBDerivedDomainsModel.domainsModule.Correlation_types"
+			}
+			,
+			VARIABLE risk_type : {
+				code : "risk_type"
+				description : "risk_type"
+				variable_id : "risk_type"
+				displayName :  "risk_type"
+				domain_id : "FRTBDerivedDomainsStaticModel.FRTBDerivedDomainsModel.domainsModule.risk_types"
+			}
+			,
+			VARIABLE GIRR_Bucket : {
+				code : "GIRR_Bucket"
+				description : "GIRR_Bucket"
+				variable_id : "GIRR_Bucket"
+				displayName :  "GIRR_Bucket"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
+			}
+			,
+			VARIABLE Currency2 : {
+				code : "Currency2"
+				description : "Currency2 "
+				variable_id : "Currency2"
+				displayName :  "Currency2"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
+			}
+			
+			 ] } ] } } } }
+				
