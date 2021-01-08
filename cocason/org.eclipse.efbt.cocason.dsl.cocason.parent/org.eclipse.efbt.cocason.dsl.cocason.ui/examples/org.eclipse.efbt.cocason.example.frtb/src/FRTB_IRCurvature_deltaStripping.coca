@@ -7,4 +7,4 @@ ProgramAndCalls : { program : TRLProgram : { executableLogic : TRLExecutableLogi
 				DerivedCube valuation_differences : { sourceCubes : [ updown_and_normal_shifts ] } ,
 				DerivedCube valuation_differences_linked_with_deltas : { sourceCubes : [ valuation_differences , "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.summed_girr_delta_sensitivities_per_instrument_and_curve_data" ] } ,
 				DerivedCube delta_stripped_shifts : { sourceCubes : [ valuation_differences_linked_with_deltas ] }  
-				 		] } } } }
+				 		] } } } } 

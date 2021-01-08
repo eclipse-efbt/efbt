@@ -238,7 +238,7 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 					}
 			 		 				, 
 			 		 			CopyView copy_of_summed_delta_stripped_shifts : {
-			 		 				cube : "FRTB_IRCurvatureAggregatedCVRCubeLineage.freeBirdToolsCubeModule.copy_of_curvature_risk_charge_for_risk_factor"
+			 		 				cube : "FRTB_EquityCurvaturCVRkCalcCubeLineage.freeBirdToolsCubeModule.copy_of_summed_delta_stripped_shifts"
 			 		 				},
 			 		 			JoinView up_and_down_delta_stripped_shifts : { 
 			 		 				 cube : "FRTB_EquityCurvaturCVRkCalcCubeLineage.freeBirdToolsCubeModule.up_and_down_delta_stripped_shifts"

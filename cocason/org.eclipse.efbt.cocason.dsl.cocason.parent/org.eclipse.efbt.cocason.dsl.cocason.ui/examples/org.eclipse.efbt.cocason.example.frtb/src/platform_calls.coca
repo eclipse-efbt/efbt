@@ -6,4 +6,9 @@ ProgramAndCalls : {platformCalls : PlatformCallModule platfromCallsModule1 : {
 		,
 		CreateAttributeLineageForOneReportCell almFRTB_ForOneCell : {
 			executableLogic : FRTB_Logic
-			reportCell : "FRTB_Logic.Release1.rc.irEURProductReportCellView.irEURProductReportCell" } ] } } 
+			reportCell : "FRTB_Logic.Release1.rc.irEURProductReportCellView.irEURProductReportCell" },
+			
+		CompareAttributeLineageModels alm_FRTB_Compare : {
+			}
+			
+			 ] } } 

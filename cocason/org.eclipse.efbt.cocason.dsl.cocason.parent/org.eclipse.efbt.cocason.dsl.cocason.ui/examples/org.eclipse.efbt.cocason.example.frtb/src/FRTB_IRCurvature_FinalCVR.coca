@@ -5,4 +5,4 @@ ProgramAndCalls : { program : TRLProgram : { executableLogic : TRLExecutableLogi
 				DerivedCube cvr_stuff : { sourceCubes : ["FRTB_IRCurvatureAggregatedCVRCubeLineage.freeBirdToolsCubeModule.product_of_correlated_with_square_of_minimums"] } ,
 				DerivedCube max_of_cvr_stuff : { sourceCubes : [ cvr_stuff ] } ,
 				DerivedCube square_roots_of_max_of_cvr_stuff : { sourceCubes : [ max_of_cvr_stuff ] } 				
-				 		] } } } }
+				 		] } } } } 

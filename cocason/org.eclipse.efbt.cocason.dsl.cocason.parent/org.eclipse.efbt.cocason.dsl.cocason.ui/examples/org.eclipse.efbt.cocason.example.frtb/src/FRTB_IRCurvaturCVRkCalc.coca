@@ -11,4 +11,4 @@ ProgramAndCalls : { program : TRLProgram : { executableLogic : TRLExecutableLogi
 				DerivedCube product_of_correlated_combinations : { sourceCubes : [ cvr_k_combinations_with_correlation_factor ] } ,
 				DerivedCube sum_of_product_of_correlated_combinations_by_currency : { sourceCubes : [ product_of_correlated_combinations ] } ,
 				DerivedCube product_of_correlated_with_square_of_minimums : { sourceCubes : [ total_grouped_summed_minimums , sum_of_product_of_correlated_combinations_by_currency ] 
-				 		} ] } } } }
+				 		} ] } } } }  

@@ -6,4 +6,4 @@ ProgramAndCalls : { program : TRLProgram : { executableLogic : TRLExecutableLogi
 				DerivedCube copy_of_summed_delta_stripped_shifts : { sourceCubes : [summed_delta_stripped_shifts] } ,
 				DerivedCube up_and_down_delta_stripped_shifts : { sourceCubes : [ summed_delta_stripped_shifts , copy_of_summed_delta_stripped_shifts ] } ,
 				DerivedCube curvature_risk_charge_for_risk_factor : { sourceCubes : [up_and_down_delta_stripped_shifts ] } 
-				 		] } } } }
+				 		] } } } } 
