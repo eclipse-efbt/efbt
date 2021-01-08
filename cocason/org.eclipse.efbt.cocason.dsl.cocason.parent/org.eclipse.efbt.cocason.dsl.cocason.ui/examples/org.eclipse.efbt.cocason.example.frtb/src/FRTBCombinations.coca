@@ -2,25 +2,25 @@ ProgramAndCalls : { program : TRLProgram :  {
 	smcubesStaticModel : SMCubesStaticModel FRTBCombinationsStaticModel : { 
 		smCubesModel  : SmcubesModel FRTBCombinationsModel: {    combinations  : [
 			CombinationModule combinationModule : { combinations : [
-				COMBINATION equityEURCurvatureReportCell : { 
-					code : "equityEURCurvatureReportCell" 
-					combination_id : "equityEURCurvatureReportCell" 
+				COMBINATION irEURCurvatureReportCell : { 
+					code : "irEURCurvatureReportCell" 
+					combination_id : "irEURCurvatureReportCell" 
 					combination_items : { 
 						COMBINATION_ITEM : { 
 							member_id : "FRTBSourceDomainMembersStaticModel.FRTBSourceDomainMembersModel.membersModule.EUR"
 							 variable_id : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.Currency" } , 
 							 COMBINATION_ITEM : { variable_id : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.sqrt_of_maximum_of_cvr_stuff" } } } , 
 							 
-				 COMBINATION equityEURProductReportCell : { 
-				 	code : "equityEURProductReportCell" 
-				 	combination_id : "equityEURProductReportCell" 
+				 COMBINATION irEURProductReportCell : { 
+				 	code : "irEURProductReportCell" 
+				 	combination_id : "irEURProductReportCell" 
 				 	combination_items : { COMBINATION_ITEM : 
 				 		{ member_id : "FRTBSourceDomainMembersStaticModel.FRTBSourceDomainMembersModel.membersModule.EUR"
 							 variable_id : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.Currency" } , 
 				 			COMBINATION_ITEM : { variable_id : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.CVRCorrelatedProduct" } } } , 
-				 COMBINATION equityEURAnotherCurvatureReportCell : { 
-				 	code : "equityEURAnotherCurvatureReportCell" 
-				 	combination_id : "equityEURAnotherCurvatureReportCell" 
+				 COMBINATION irEURAnotherCurvatureReportCell : { 
+				 	code : "irEURAnotherCurvatureReportCell" 
+				 	combination_id : "irEURAnotherCurvatureReportCell" 
 				 	combination_items : {COMBINATION_ITEM :  { member_id : "FRTBSourceDomainMembersStaticModel.FRTBSourceDomainMembersModel.membersModule.EUR"
 							 variable_id : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.Currency" }  ,
 				 		COMBINATION_ITEM :  { variable_id : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.double_of_max_of_cvr_stuff" }   } } ] } ] } } } }

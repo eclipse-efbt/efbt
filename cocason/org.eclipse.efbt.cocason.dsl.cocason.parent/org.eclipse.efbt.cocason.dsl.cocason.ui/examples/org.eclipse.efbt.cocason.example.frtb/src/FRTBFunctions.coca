@@ -1,7 +1,21 @@
 ProgramAndCalls : { program : TRLProgram :  { executableLogic : TRLExecutableLogic FRTBFunctions: { functionSpecModule : FunctionSpecModule functionSpecModule1 : {  functionSpecs : 
 	[ BasicFunctionSpec getCorrelationFactor : { 
 		functionalName : "CustomFunctions_getCorrelationFactor"
-		sqlName : "getCorrelationFactor"		
+		sqlName : "getCorrelationFactor"	
+		parameterSpecs : [ 
+			ParamaterSpec param1 ,
+			ParamaterSpec param2
+		]	
+	},
+	BasicFunctionSpec deltaStrip :
+	{
+		functionalName : "CustomFunctions_deltaStrip"
+		sqlName : deltaStrip
+		parameterSpecs : [
+			ParamaterSpec valuationDifference ,
+			ParamaterSpec summedGIRR_delta ,
+			ParamaterSpec ShockDirection
+		]
 	}
 			
 	] } } } } 

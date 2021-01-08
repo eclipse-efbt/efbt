@@ -23,7 +23,7 @@ ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStatic
 			 	DOMAIN  Numbers : {
 			 		code : Numbers
 			 		data_type : :Double
-			 		is_enumerated : true
+			 		is_enumerated : false
 			 		displayName : Numbers
 			 	}
 			 	

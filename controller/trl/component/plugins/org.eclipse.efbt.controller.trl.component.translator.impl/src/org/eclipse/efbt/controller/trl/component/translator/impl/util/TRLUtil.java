@@ -203,7 +203,9 @@ public class TRLUtil {
 
       while (dependantSourceTablesIter.hasNext()) {
         CubeSchema dependantSchema = dependantSourceTablesIter.next();
-        EList<VARIABLE> columns = Util.getVariablesFromBIRDCube(dependantSchema.getCube());
+        //EList<VARIABLE> columns = Util.getVariablesFromBIRDCube(dependantSchema.getCube());
+        EList<VARIABLE> columns = Util.getColumnsFromCubeSchema(dependantSchema);
+        
         Iterator<VARIABLE> columnIter = columns.iterator();
         while (columnIter.hasNext()) {
           VARIABLE column = columnIter.next();
