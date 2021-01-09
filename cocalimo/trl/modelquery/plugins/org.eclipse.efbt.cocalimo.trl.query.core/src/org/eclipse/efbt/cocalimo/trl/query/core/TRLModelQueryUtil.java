@@ -12,10 +12,54 @@
  *******************************************************************************/
 package org.eclipse.efbt.cocalimo.trl.query.core;
 
+import java.util.Iterator;
 
+import org.eclipse.efbt.cocalimo.core.model.module_management.Module;
+import org.eclipse.efbt.cocalimo.core.model.module_management.ModuleDependency;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE_STRUCTURE;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE_STRUCTURE_ITEM;
+import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.CubeModule;
+import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cube_schema.CubeSchema;
+import org.eclipse.emf.common.util.BasicEList;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 
 public class TRLModelQueryUtil {
+	
+	public static EList<CUBE_STRUCTURE_ITEM> getCubeStructureItemsFromDefaultBIRDModel(CubeSchema schema)
+	  {
+		  CUBE cube = schema.getCube();
+		 
+		    
+		    CUBE_STRUCTURE cubeStructure = cube.getCube_structure_id();
+		    EList<ModuleDependency> dependantModules = getDependantModules(cubeStructure);
+		     
+		    EList<CUBE_STRUCTURE_ITEM> returnlist = new BasicEList<CUBE_STRUCTURE_ITEM>();
+		    for (ModuleDependency moduleDependency : dependantModules) {
+		    	Module module = moduleDependency.getTheModule();
+		    	if (module instanceof CubeModule)
+		    	{
+		    		CubeModule cubeModule = (CubeModule) module;
+					EList<CUBE_STRUCTURE_ITEM> items = cubeModule.getCubeStructureItems();
+					for (Iterator iterator2 = items.iterator(); iterator2.hasNext();) {
+						CUBE_STRUCTURE_ITEM cube_STRUCTURE_ITEM = (CUBE_STRUCTURE_ITEM) iterator2.next();
+						if(cube_STRUCTURE_ITEM.getCube_structure_id().equals(cubeStructure))
+						{
+							returnlist.add(cube_STRUCTURE_ITEM);
+						}
+						
+					}
+		    	}
+		    }
+		    
+		    return returnlist;
+	  }
 
+	public static EList<ModuleDependency> getDependantModules( EObject o) {
+	    return  ((Module) o.eContainer()).getDependencies().getTheModules();
+
+	  }
 	 /**
 		 * For a FunctionalityModule, get the SQLViewsModule associated according to
 		 * the DefaultNavigationContext.

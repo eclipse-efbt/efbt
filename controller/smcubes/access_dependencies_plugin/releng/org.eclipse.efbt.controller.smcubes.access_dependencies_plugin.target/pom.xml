@@ -18,7 +18,7 @@
 		<artifactId>org.eclipse.efbt.controller.smcubes.component.access_dependencies_plugin</artifactId>
 		<version>1.0.0-SNAPSHOT</version>  <relativePath>../../pom.xml</relativePath>
 	</parent>
-	<artifactId>org.eclipse.efbt.controller.access_dependencies_plugin.target</artifactId>
+	<artifactId>org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.target</artifactId>
 	<packaging>eclipse-target-definition</packaging>
 
 
