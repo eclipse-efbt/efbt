@@ -21,6 +21,7 @@ import org.eclipse.efbt.language.trl.model.trl_sql_views.EnrichmentView;
 import org.eclipse.efbt.language.trl.model.trl_sql_views.JoinView;
 import org.eclipse.efbt.language.trl.model.trl_sql_views.SQLView;
 import org.eclipse.efbt.language.trl.model.trl_sql_views.VersionedSQLViewsModule;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE_STRUCTURE_ITEM;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cube_schema.CubeSchema;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cubes.FreeBirdToolsCube;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.AggregateFunction;
@@ -28,6 +29,7 @@ import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.BasicFunct
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.Function;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.query.lineagefunctions.LineageFunctionsModelQuery;
 import org.eclipse.efbt.cocalimo.trl.query.core.CubesAndViewsUtil;
+import org.eclipse.efbt.cocalimo.trl.query.core.TRLModelQueryUtil;
 
 import org.eclipse.emf.common.util.EList;
 
@@ -171,14 +173,14 @@ public String getStringForAggregateFunction(AggregateFunction self) {
     	return TRLUtil.getDefaultCubeSchemaModuleForFunctionalModule(  self); 
      }
   */
-  /**
+  
 public EList<CUBE_STRUCTURE_ITEM> getCubeStructureItemsFromDefaultBIRDModel(CubeSchema self) {
        
     	
-    	return TRLUtil.getCubeStructureItemsFromDefaultBIRDModel(  self); 
+    	return TRLModelQueryUtil.getCubeStructureItemsFromDefaultBIRDModel(  self); 
      }
     
-
+/**
 public EList<BooleanFunction> getCodeConditionFilterFunctions(Scenario self) {
     
 	

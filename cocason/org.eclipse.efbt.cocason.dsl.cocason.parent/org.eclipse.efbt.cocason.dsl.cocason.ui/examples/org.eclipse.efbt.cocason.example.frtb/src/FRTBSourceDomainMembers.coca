@@ -1,0 +1,37 @@
+ProgramAndCalls : { program : TRLProgram :  {
+	smcubesStaticModel : SMCubesStaticModel FRTBSourceDomainMembersStaticModel : { 
+		smCubesModel  : SmcubesModel FRTBSourceDomainMembersModel: { members : [
+			MemberModule membersModule : { members : 
+				[ 
+					MEMBER UP : {
+						code : UP
+						displayName : UP
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.shockDirection"
+
+					},
+					MEMBER DOWN : {
+						code : DOWN
+						displayName : DOWN
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.shockDirection"
+
+					},
+					MEMBER NONE : {
+						code : NONE
+						displayName : NONE
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.shockDirection"
+
+					},
+					MEMBER EUR : {
+						code : EUR
+						displayName : EUR
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
+
+					},
+					MEMBER USD : {
+						code : USD
+						displayName : USD
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
+
+					}
+					
+				] } ] } } } } 

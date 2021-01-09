@@ -22,8 +22,8 @@
 		<maven>3.0</maven>
 	</prerequisites>
 	<properties>
-		<xtextVersion>2.23.0</xtextVersion>
-		<mwe2Version>2.11.3</mwe2Version>
+		<xtextVersion>2.24.0</xtextVersion>
+		<mwe2Version>2.12.0</mwe2Version>
 		<junit-version>5.0.3</junit-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>11</maven.compiler.source>
@@ -38,7 +38,7 @@
 		<additionalTestArguments></additionalTestArguments>
 	</properties>
 	<modules>
-		<module>releng/org.eclipse.efbt.controller.access_dependencies_plugin.target</module>
+		<module>releng/org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.target</module>
 		<module>plugins/org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.jackcess.impl</module>
 		<module>plugins/org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.access.api</module>		
 		<module>features/org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.feature</module>
@@ -134,7 +134,7 @@
 					<target>
 						<artifact>
 							<groupId>org.eclipse.efbt.controller.smcubes.component.access_dependencies_plugin</groupId>
-							<artifactId>org.eclipse.efbt.controller.access_dependencies_plugin.target</artifactId>
+							<artifactId>org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.target</artifactId>
 							<version>${project.version}</version>
 						</artifact>
 					</target>

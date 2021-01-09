@@ -1,0 +1,43 @@
+ProgramAndCalls : { 
+	program : TRLProgram : 
+	{ 
+		smcubesStaticModel : 
+			SMCubesStaticModel FRTBTest1StaticModel : {
+				tests : SMCubesTestModule FRTBTestModule1 : {
+					tests  :  [
+						SMCubesTest FRTBTest1 : {
+							testDefinition : "FRTBTestConstriantsStaticModel.FRTBTestDefinitionModule.FRTBTestDefinition1"
+							inputData : SMCubesTestInputData FRTBTest1: {
+								smcubes_inputdata : [ 
+									BaseColumnStructuredData girr_curvature_source_data  : { 
+										cube : "FRTBCubesStaticModel.FRTBCubesModel.cubesModel.girr_curvature_source_data" 
+										rows : [
+											BaseRowData row1 : { 
+												cells : [ 
+													BaseCellWithEnumeratedValue row1_currency  :
+													{ 
+														column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.Currency"
+														value : "FRTBSourceDomainMembersStaticModel.FRTBSourceDomainMembersModel.membersModule.EUR"
+													}
+													
+													] }
+											,
+											BaseRowData row2 : { 
+												cells : [ 
+													BaseCellWithEnumeratedValue row2_currency  :
+													{ 
+														column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.Currency"
+														value : "FRTBSourceDomainMembersStaticModel.FRTBSourceDomainMembersModel.membersModule.EUR"
+													}
+													
+													] }
+												] }
+										]
+									}
+							}
+						
+					]
+				}
+			} 
+		}
+   }

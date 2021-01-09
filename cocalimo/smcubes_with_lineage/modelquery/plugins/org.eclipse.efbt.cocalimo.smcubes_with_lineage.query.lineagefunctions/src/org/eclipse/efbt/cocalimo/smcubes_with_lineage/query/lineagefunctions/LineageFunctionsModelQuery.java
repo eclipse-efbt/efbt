@@ -14,6 +14,7 @@ package org.eclipse.efbt.cocalimo.smcubes_with_lineage.query.lineagefunctions;
 
 import java.util.Iterator;
 
+import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.column_transformation_logic.SpeculativeCubeColumnParameter;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.AggregateFunction;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.BasicFunction;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.Parameter;
@@ -78,12 +79,13 @@ public class LineageFunctionsModelQuery {
 
 	    }
 
-	  //  if (param instanceof SpeculativeCubeColumnParameter) {
-	  //    SpeculativeCubeColumnParameter sccp = (SpeculativeCubeColumnParameter) param;
-	  //    str = str + sccp.getCube().getName();
-	  //    str = str + "." + sccp.getColumn().getVariable_id();
+	    if (param instanceof SpeculativeCubeColumnParameter) {
+	      SpeculativeCubeColumnParameter sccp = (SpeculativeCubeColumnParameter) param;
+	      str = str + sccp.getCube().getName();
+	      str = str + "." + sccp.getColumn().getVariable_id();
+	     
 
-	 //   }
+         }
 	 //   if (param instanceof ResolvedCubeColumnParameter) {
 	 //     ResolvedCubeColumnParameter rccp = (ResolvedCubeColumnParameter) param;
 	 //     str = str + rccp.getCubeColumn().getCube().getName();

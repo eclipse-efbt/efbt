@@ -1,0 +1,21 @@
+ProgramAndCalls : { program : TRLProgram :  {
+	smcubesStaticModel : SMCubesStaticModel FRTBCombinationsStaticModel : { 
+		smCubesModel  : SmcubesModel FRTBCombinationsModel: {    combinations  : [
+			CombinationModule combinationModule : { combinations : [
+				COMBINATION irEURCurvatureReportCell : { 
+					code : "irEURCurvatureReportCell" 
+					combination_id : "irEURCurvatureReportCell" 
+					combination_items : { 
+						COMBINATION_ITEM : { 
+							member_id : "FRTBSourceDomainMembersStaticModel.FRTBSourceDomainMembersModel.membersModule.EUR"
+							 variable_id : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.Currency" } , 
+							 COMBINATION_ITEM : { variable_id : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.sqrt_of_maximum_of_cvr_stuff" } } } , 
+							 
+				 COMBINATION irEURProductReportCell : { 
+				 	code : "irEURProductReportCell" 
+				 	combination_id : "irEURProductReportCell" 
+				 	combination_items : { COMBINATION_ITEM : 
+				 		{ member_id : "FRTBSourceDomainMembersStaticModel.FRTBSourceDomainMembersModel.membersModule.EUR"
+							 variable_id : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.Currency" } , 
+				 			COMBINATION_ITEM : { variable_id : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.CVRCorrelatedProduct" } } } 
+				  ] } ] } } } }

@@ -1,3 +1,5 @@
+
+pwd
 cd cocalimo/core/model
 mvn install
 cd ../../..

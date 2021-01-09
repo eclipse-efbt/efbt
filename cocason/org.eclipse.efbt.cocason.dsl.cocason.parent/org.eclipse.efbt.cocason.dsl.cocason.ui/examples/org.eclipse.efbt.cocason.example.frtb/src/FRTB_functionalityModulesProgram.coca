@@ -1,4 +1,58 @@
-ProgramAndCalls : { program : TRLProgram : { smcubesStaticModel : SMCubesStaticModel FRTBCoreProcessStaticModel : { 
-	functionalityModules : FunctionalityModuleModule FRTBCoreProcess : { 
-		FunctionalityModules : [ ParallelFunctionalityModule FRTBProcesses : {
-			subTransformationsAndSchemes : [ SerialFunctionalityModule EquitySBA : { subTransformationsAndSchemes : [ ReadDataSourceFunctionalityModule ReadEquityDelta : { } , SerialFunctionalityModule EquityCurvature : { subTransformationsAndSchemes : [ ReadDataSourceFunctionalityModule ReadEquityCurvatureData : { } , DataProcessingFunctionalityModule deltaStripping :{ scenarioSet : ScenarioSet deltaStrippingScenarios : { scenarios : [ Scenario upShocks ,Scenario downShocks ] } } , DataProcessingFunctionalityModule CVRForRiskFactor : { } , ParallelFunctionalityModule AggregateCVR : { subTransformationsAndSchemes : [ DataProcessingFunctionalityModule correlatedCVRs : { } , DataProcessingFunctionalityModule uncorrelatedCVRs : { } ] } , DataProcessingFunctionalityModule FinalCVR : { } , ReportCellCreationFunctionalityModule creatEquityCurvatureReportCells : { } ] } ] } ,  SerialFunctionalityModule InterestRateSBA :  { subTransformationsAndSchemes : [ DataProcessingFunctionalityModule InterestRateDelta : { },  DataProcessingFunctionalityModule InterestRateCurvature : { } ] } ] } ] functionalityModuleTags : [ FunctionalityModuleTag deltaStrippingTag : { displayName : deltaStrippingTag requirements : [ "CRRRequirementsStaticModel.CRRRequirementsModel.CRRRuleBook.Title_IV.Title_IV;Chapter_1_General_Provisions.Article_325.Article_325;1.Article_325:1(a)" , "CRRRequirementsStaticModel.CRRRequirementsModel.CRRRuleBook.Title_IV.Title_IV;Chapter_1_General_Provisions.Article_325.Article_325;1.Article_325:1(b)" ] FunctionalityModule : "FRTBProcesses.EquitySBA.EquityCurvature.deltaStripping" } ] SceanrioTags : [ ScenarioTag upshocksTag : { displayName : upshocksTag requirements : [ "CRRRequirementsStaticModel.CRRRequirementsModel.CRRRuleBook.Title_IV.Title_IV;Chapter_1_General_Provisions.Article_325" ] scenario : "FRTBProcesses.EquitySBA.EquityCurvature.deltaStripping.deltaStrippingScenarios.upShocks" } ] } } } }
+ProgramAndCalls : { program : TRLProgram : { smcubesStaticModel : SMCubesStaticModel FRTBCoreProcessStaticModel : {
+	functionalityModules : FunctionalityModuleModule FRTBCoreProcess : {
+		FunctionalityModules : [ ParallelFunctionalityModule SBAProcesses : {
+			subTransformationsAndSchemes : [ 
+				ParallelFunctionalityModule FRTBProcesses : { 
+					
+				subTransformationsAndSchemes : [
+				SerialFunctionalityModule InterestRateSBA : { 
+					subTransformationsAndSchemes : [ 
+						
+						ReadDataSourceFunctionalityModule ReadIRDeltaSensitivities : { } , 
+						DataProcessingFunctionalityModule AggregateIRDeltaSensitivities :{},
+						SerialFunctionalityModule IRCurvature : { 
+							subTransformationsAndSchemes : [ 
+								ReadDataSourceFunctionalityModule ReadIRCurvatureData : { } , 
+								DataProcessingFunctionalityModule deltaStripping :{ 
+									scenarioSet : ScenarioSet deltaStrippingScenarios : 
+									{ scenarios : [ Scenario upShocks ,Scenario downShocks ] }
+									
+								} , 
+								 DataProcessingFunctionalityModule CVRForRiskFactor : { } ,
+								  ParallelFunctionalityModule AggregateCVR : {
+								  	subTransformationsAndSchemes : [ 
+								  		DataProcessingFunctionalityModule correlatedCVRs : { } , 
+								  		DataProcessingFunctionalityModule uncorrelatedCVRs : { }
+								  	]
+								  } , 
+								  DataProcessingFunctionalityModule FinalCVR : { } , 
+								  ReportCellCreationFunctionalityModule createIRCurvatureReportCells : { }
+							]
+						}
+					]
+				} ,  SerialFunctionalityModule EquitySBA :  { 
+					subTransformationsAndSchemes : [ 
+						DataProcessingFunctionalityModule EquityDeltaProcessing : { },  
+						DataProcessingFunctionalityModule IRCurvatureProcessing : { }
+					]
+				}
+			] } 
+			] } ] 
+			functionalityModuleTags : [ 
+				FunctionalityModuleTag deltaStrippingTag : {
+					displayName : deltaStrippingTag 
+					requirements : [ 
+					"CRRRequirementsStaticModel.CRRRequirementsModel.CRRRuleBook.Title_IV.Title_IV;Chapter_1_General_Provisions.Article_325.Article_325;1.Article_325:1(a)" ,
+					 "CRRRequirementsStaticModel.CRRRequirementsModel.CRRRuleBook.Title_IV.Title_IV;Chapter_1_General_Provisions.Article_325.Article_325;1.Article_325:1(b)" ] 
+					 FunctionalityModule : "SBAProcesses.FRTBProcesses.InterestRateSBA.IRCurvature.deltaStripping"
+				}
+			] 
+			SceanrioTags : [ 
+				ScenarioTag upshocksTag : { 
+					displayName : upshocksTag 
+					requirements : [
+						"CRRRequirementsStaticModel.CRRRequirementsModel.CRRRuleBook.Title_IV.Title_IV;Chapter_1_General_Provisions.Article_325"
+					] 
+					scenario : "SBAProcesses.FRTBProcesses.InterestRateSBA.IRCurvature.deltaStripping.deltaStrippingScenarios.upShocks"
+				}
+			] } } } }

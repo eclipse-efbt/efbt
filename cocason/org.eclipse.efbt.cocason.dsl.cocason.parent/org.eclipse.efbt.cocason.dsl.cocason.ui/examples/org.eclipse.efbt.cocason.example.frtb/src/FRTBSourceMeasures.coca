@@ -1,0 +1,16 @@
+ProgramAndCalls : { program :  TRLProgram :  {
+	smcubesStaticModel : SMCubesStaticModel FRTBSourceMeasuresStaticModel : {
+	smCubesModel : SmcubesModel  FRTBSourceMeasuresModel  : {
+		variables :  [ VariableModule variablesModule :  
+				{
+			variables : [ 
+			VARIABLE instrumentValuation : {
+				code : "instrumentValuation"
+				description : "instrumentValuation"
+				variable_id : "instrumentValuation"
+				displayName :  "instrumentValuation"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			}
+			
+			 ] } ] } } } }
+				

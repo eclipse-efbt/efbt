@@ -1,6 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" uid="_5IZ5gEEcEeuL3teedWD5hQ" version="14.3.1.202003261200">
+<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" uid="_QJLFoFJkEeuggrGfrm2fJg" version="14.3.1.202003261200">
   <semanticResources>src/CRR_RequirementsBundleRoot.coca</semanticResources>
+  <semanticResources>src/FRTBCombinations.coca</semanticResources>
+  <semanticResources>src/FRTBSourceDomainMembers.coca</semanticResources>
+  <semanticResources>src/FRTBSourceDomains.coca</semanticResources>
+  <semanticResources>src/FRTBSourceDimensions.coca</semanticResources>
+  <semanticResources>src/FRTBDerivedMeasures.coca</semanticResources>
+  <semanticResources>src/FRTBCubeStructureItems.coca</semanticResources>
+  <semanticResources>src/FRTBCubeStructures.coca</semanticResources>
+  <semanticResources>src/FRTBSourceIdentifiers.coca</semanticResources>
+  <semanticResources>src/FRTBCubes.coca</semanticResources>
+  <semanticResources>src/FRTBDerivedDimensions.coca</semanticResources>
+  <semanticResources>src/FRTBDerivedDomain.coca</semanticResources>
+  <semanticResources>src/FRTBDerivedDomainMembers.coca</semanticResources>
+  <semanticResources>src/FRTBDerivedIdentifiers.coca</semanticResources>
+  <semanticResources>src/FRTBFunctions.coca</semanticResources>
+  <semanticResources>src/FRTBSourceMeasures.coca</semanticResources>
+  <semanticResources>src/FRTBSourceTables.coca</semanticResources>
+  <semanticResources>src/FRTB_EC_Datapoints.coca</semanticResources>
+  <semanticResources>src/FRTB_IRCurvature_FinalCVR.coca</semanticResources>
+  <semanticResources>src/FRTB_IRCurvaturCVRkCalc.coca</semanticResources>
+  <semanticResources>src/FRTB_IRCurvatureAggregatedCVR.coca</semanticResources>
+  <semanticResources>src/FRTB_IRCurvature_deltaStripping.coca</semanticResources>
+  <semanticResources>src/FRTB_Test1.coca</semanticResources>
+  <semanticResources>src/FRTB_TestDefinition1.coca</semanticResources>
+  <semanticResources>src/FRTB_TestDefinition_Constraint.coca</semanticResources>
+  <semanticResources>src/FRTB_TestDefinition_Template.coca</semanticResources>
   <semanticResources>src/FRTB_functionalityModulesProgram.coca</semanticResources>
   <semanticResources>src/FRTB_requirements.coca</semanticResources>
+  <semanticResources>src/FRTB_release.coca</semanticResources>
+  <semanticResources>src/commonFunctions.coca</semanticResources>
+  <semanticResources>src/platform_calls.coca</semanticResources>
 </viewpoint:DAnalysis>

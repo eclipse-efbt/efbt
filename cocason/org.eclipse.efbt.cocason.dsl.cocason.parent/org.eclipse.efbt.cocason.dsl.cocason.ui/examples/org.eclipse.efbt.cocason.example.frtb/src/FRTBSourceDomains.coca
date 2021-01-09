@@ -1,0 +1,30 @@
+ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStaticModel FRTBSourceDomainsStaticModel : {
+	 smCubesModel : SmcubesModel FRTBSourceDomainsModel  : { 
+		domains :   [ DomainModule domainsModule : {
+			 dependencies : ModuleDependencies : { theModules : [ ModuleDependency : { theModule : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule" } ] } domains : [ 
+			 	DOMAIN Currency: { 
+			 		code : Currency
+			 		is_enumerated : true
+			 		displayName : Currency
+			 		
+			 	},
+			 	DOMAIN  shockDirection : {
+			 		code : shockDirection
+			 		is_enumerated : true
+			 		displayName : shockDirection
+			 	},
+			 	DOMAIN  String : {			 	
+			 		code : String
+			 		data_type : :String
+			 		is_enumerated : false
+			 		displayName : String
+			 		
+			 	},
+			 	DOMAIN  Numbers : {
+			 		code : Numbers
+			 		data_type : :Double
+			 		is_enumerated : false
+			 		displayName : Numbers
+			 	}
+			 	
+			 	  ] } ] } } } }

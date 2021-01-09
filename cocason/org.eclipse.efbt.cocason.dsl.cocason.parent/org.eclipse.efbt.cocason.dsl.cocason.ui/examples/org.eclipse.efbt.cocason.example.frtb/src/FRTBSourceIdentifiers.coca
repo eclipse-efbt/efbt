@@ -1,0 +1,23 @@
+ProgramAndCalls : { program :  TRLProgram :  {
+	smcubesStaticModel : SMCubesStaticModel FRTBSourceIdentifiersStaticModel : {
+	smCubesModel : SmcubesModel  FRTBSourceIdentifiersModel  : {
+		variables :  [ VariableModule variablesModule :  
+				{
+			variables : [ 
+			VARIABLE curve : {
+				code : "curve"
+				description : "curve"
+				variable_id : "curve"
+				displayName :  "curve"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
+			},
+			VARIABLE InstrumentID : {
+				code : "InstrumentID"
+				description : "InstrumentID"
+				variable_id : "InstrumentID"
+				displayName : "InstrumentID"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
+			}
+			
+			 ] } ] } } } }
+				
