@@ -1,0 +1,202 @@
+@xcore.lang.Ecore(nsURI="http://www.eclipse.org/efbt/")
+@License(license="Copyright (c) 2020 Bird Software Solutions Ltd\n All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html\n\nSPDX-License-Identifier: EPL-2.0 \n\n Contributors:\n Neil Mackenzie - initial API and implementation\r")
+@xcore.lang.GenModel(modelDirectory="/org.eclipse.efbt.cocason.example.frtb/src", modelName="Sba",
+	importerID="org.eclipse.emf.importer.ecore")
+package sba
+
+import module_management.Module
+
+annotation "license" as License
+
+class RiskFactor {
+	id String name
+}
+
+class FXRiskFactor extends RiskFactor {
+	String ccy1
+	String ccy2
+}
+
+class GIRRRiskFactor extends RiskFactor {
+	boolean volFactor
+	GIRRRiskFactorType riskFactorType
+	String mainCurrency
+	String secondCurrency
+}
+
+class EquityRiskFactor extends RiskFactor {
+	refers EquityIssue issue
+	EquityFactorType equityFactorType
+}
+
+class CSRNonSecuritisationRiskFactor extends RiskFactor {
+	refers Organisation issuer
+	CreditSpreadCurveType curveType
+	RatingGrade CSRCreditQuality
+}
+
+class CSRSecuritisationNonCTPRiskFactor extends RiskFactor {
+	String trancheName
+	refers Securitisation securitisation
+}
+
+class CSRSecuritisationCTPRiskFactor extends RiskFactor {
+	refers Organisation issuer
+}
+
+class CommodityRiskFactor extends RiskFactor {
+	CommodityType commodityType
+	String deliveryLocation
+}
+
+class SensitivitySet {
+	id String name
+	refers RiskFactor riskFactor
+	refers Position position
+	String ccyOfRecord
+	contains Sensitivity[] sensitivities
+}
+
+class Sensitivity {
+}
+
+class DeltaSensitivity extends Sensitivity {
+	double tenor
+	double deltaSensitivity
+}
+
+class VegaSensitivity extends Sensitivity {
+	double vegaSensitivity
+	double optionMaturity
+	double optionUnderlyingResidualMaturity
+}
+
+class Position {
+	id String name
+}
+
+class Curvature {
+	ShockDirection shockDirection
+	refers RiskFactor riskFactor
+	double shiftedValue
+	refers Position position
+}
+
+class SecurityIssue {
+	refers Organisation issuer
+	RatingGrade ratingGrade
+	id String name
+}
+
+class Securitisation extends SecurityIssue {
+	SecuritisationSector securitisationSector
+	RatingGrade CSRCreditQuality
+}
+
+class EquityIssue extends SecurityIssue {
+}
+
+class BondIssue extends SecurityIssue {
+}
+
+class Organisation {
+	RatingGrade ratingGrade
+	Sector secter
+	MarketCap marketCap
+	id String name
+	Economy economy
+}
+
+enum ShockDirection {
+	upShock
+	downShock = 1
+}
+
+enum SecuritisationSector {
+	RMBS_PRIME = 1
+	RMBS_MID_PRIME = 2
+	RMBS_SUB_PRIME = 3
+	CMBS = 4
+	ABS_STUDENT_LOAN = 5
+	ABS_AUTO = 6
+	CLO_NON_CTP = 7
+	OTHER_SECTOR = 8
+}
+
+enum GIRRRiskFactorType {
+	INFLATION
+	BASIS = 1
+	YIELD = 2
+}
+
+enum EquityFactorType {
+	SPOT
+	REPO = 1
+}
+
+enum Economy {
+	EMERGING_MARKET
+	ADVANCED_ECONOMY = 1
+}
+
+enum RatingGrade {
+	SENIOR_IG
+	NON_SENIOR_IG = 1
+	HIGH_YIELD = 2
+	NON_RATED = 3
+	IG = 4
+}
+
+enum MarketCap {
+	LARGE
+	SMALL = 1
+}
+
+enum Sector {
+	SOVEREIGN
+	LOCAL_GOVERNMENT = 1
+	FINANCIALS = 2
+	BASIC_MATERIALS = 3
+	CONSUMER_GOODS = 4
+	TECHNOLOGY = 5
+	HEALTH_CARE = 6
+	COVERED_BONDS = 7
+	OTHER_SECTOR = 8
+}
+
+enum CreditSpreadCurveType {
+	BOND
+	CDS
+}
+
+enum CommodityType {
+	ENERGY_SOLID_COMBUSTABLES
+	ENERGY_LIQUID_COMBUSTABLES = 1
+	ENERGY_ELECTRICITY_AND_CARBON_TRADING = 2
+	FREIGHT = 3
+	METALS_NON_PRECIOUS = 4
+	GASEOUS_COMBUSTABLES = 5
+	PRECIOUS_METALS = 6
+	GRAINS_AND_OILSEED = 7
+	LIVESTOCK_AND_DAIRY = 8
+	SOFTS_AND_OTHER_AGRICULTURALS = 9
+	OTHER_COMMODITY = 10
+}
+
+class RiskFactorModule extends module_management.Module {
+	contains RiskFactor[] riskFactors
+}
+
+class PositionModule extends module_management.Module {
+	contains Position[] positions
+}
+
+class ReferenceDataModule extends module_management.Module {
+	contains SecurityIssue[] issues
+	contains Organisation[] issuers
+}
+
+class SensitivitiesAndCurvaturesModule extends module_management.Module {
+	contains SensitivitySet[] sensitivitySets
+	contains Curvature[] curvatures
+}
