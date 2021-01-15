@@ -1,0 +1,59 @@
+@xcore.lang.Ecore(nsURI="http://www.eclipse.org/efbt/module_management")
+@xcore.lang.GenModel(documentation="This package describes Module Management classes.\nThese classes allow items to be grouped together and given a version. For example a FunctionSpecModule will contain a group of FunctionSpecs.\nModules can also state which other modules they depend upon, allowing for fine grained dependencies between groups of items.\n",
+	modelDirectory="/org.eclipse.efbt.cocason.example.frtb/src", modelName="Sba",
+	importerID="org.eclipse.emf.importer.ecore")
+@License(license="Copyright (c) 2020 Bird Software Solutions Ltd\n All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html\n\nSPDX-License-Identifier: EPL-2.0 \n\n Contributors:\n Neil Mackenzie - initial API and implementation\r")
+package module_management
+
+annotation "license" as License
+
+@xcore.lang.GenModel(documentation="A grouping of related artifacts, persisted as a resource, with a version number, and a description, and a description of which Modules it depends upon (and importantly which version of those Modules).")
+@xcore.lang.ExtendedMetaData(name="Module", kind="elementOnly")
+abstract class Module {
+	@xcore.lang.ExtendedMetaData(kind="element", name="dependencies")
+	@xcore.lang.GenModel(documentation="These are the modules (and their version numbers) upon which this module is dependent.")
+	contains ModuleDependencies dependencies
+	@xcore.lang.GenModel(documentation="The description of the module")
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="theDescription")
+	String theDescription
+	@xcore.lang.GenModel(documentation="The license under which this module is distributed.")
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="license")
+	String license
+	@xcore.lang.GenModel(documentation="The name of the module. This name acts as the modules identifier.")
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="name")
+	id String name
+	@xcore.lang.GenModel(documentation="The version number of the module")
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="version")
+	String version
+	@xcore.lang.GenModel(documentation="The long name associated with the module.")
+	contains ModuleLongName longName
+}
+
+@xcore.lang.GenModel(documentation="A long name associated with a module")
+class ModuleLongName {
+	id String name
+}
+
+@xcore.lang.ExtendedMetaData(name="ModuleDependencies", kind="elementOnly")
+@xcore.lang.GenModel(documentation="a  list of module dependencies")
+class ModuleDependencies {
+	@xcore.lang.GenModel(documentation="The dependent Modules")
+	@xcore.lang.ExtendedMetaData(kind="element", name="theModules")
+	contains ModuleDependency[] theModules
+}
+
+@xcore.lang.ExtendedMetaData(name="ModuleDependency", kind="empty")
+@xcore.lang.GenModel(documentation="A module dependency, including its version number and its long name")
+class ModuleDependency {
+	@xcore.lang.GenModel(documentation="The name of the dependant Module")
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="moduleName")
+	String moduleName
+	@xcore.lang.GenModel(documentation="The version of the dependent Module")
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="moduleVersion")
+	String moduleVersion
+	@xcore.lang.GenModel(documentation="The dependent Module")
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="theModule")
+	refers Module theModule
+	@xcore.lang.GenModel(documentation="The dependent Module")
+	refers ModuleLongName longName
+}

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="lib" path="C:/Users/neil/.p2/pool/plugins/org.eclipse.xtext.xbase.lib_2.24.0.v20201130-0911.jar"/>
+	<classpathentry kind="lib" path="C:/Users/neil/.p2/pool/plugins/org.eclipse.emf.ecore.xcore.lib_1.5.0.v20200630-0516.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11">
 		<attributes>
 			<attribute name="module" value="true"/>
