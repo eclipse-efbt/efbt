@@ -187,5 +187,6 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sba.ecore#//SensitivitiesAndCurvaturesModule/sensitivitySets"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sba.ecore#//SensitivitiesAndCurvaturesModule/curvatures"/>
     </genClasses>
+    <genClasses ecoreClass="sba.ecore#//RiskMeasure"/>
   </genPackages>
 </genmodel:GenModel>
