@@ -47,7 +47,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="sensitivities" upperBound="-1"
         eType="#//Sensitivity" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Sensitivity"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Sensitivity" eSuperTypes="#//RiskMeasure"/>
   <eClassifiers xsi:type="ecore:EClass" name="DeltaSensitivity" eSuperTypes="#//Sensitivity">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="tenor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="deltaSensitivity" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
@@ -62,7 +62,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Curvature">
+  <eClassifiers xsi:type="ecore:EClass" name="Curvature" eSuperTypes="#//RiskMeasure">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="shockDirection" eType="#//ShockDirection"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="riskFactor" eType="#//RiskFactor"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="shiftedValue" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
@@ -174,4 +174,5 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="curvatures" upperBound="-1"
         eType="#//Curvature" containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RiskMeasure"/>
 </ecore:EPackage>
