@@ -98,13 +98,13 @@
     </genEnums>
     <genClasses ecoreClass="sba.ecore#//RiskFactor">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//RiskFactor/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//RiskFactor/volFactor"/>
     </genClasses>
     <genClasses ecoreClass="sba.ecore#//FXRiskFactor">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//FXRiskFactor/ccy1"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//FXRiskFactor/ccy2"/>
     </genClasses>
     <genClasses ecoreClass="sba.ecore#//GIRRRiskFactor">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//GIRRRiskFactor/volFactor"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//GIRRRiskFactor/riskFactorType"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//GIRRRiskFactor/mainCurrency"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//GIRRRiskFactor/secondCurrency"/>
@@ -120,9 +120,7 @@
     </genClasses>
     <genClasses ecoreClass="sba.ecore#//CSRSecuritisationNonCTPRiskFactor">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//CSRSecuritisationNonCTPRiskFactor/trancheName"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sba.ecore#//CSRSecuritisationNonCTPRiskFactor/issuer"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//CSRSecuritisationNonCTPRiskFactor/securitisationSector"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//CSRSecuritisationNonCTPRiskFactor/CSRCreditQuality"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sba.ecore#//CSRSecuritisationNonCTPRiskFactor/securitisation"/>
     </genClasses>
     <genClasses ecoreClass="sba.ecore#//CSRSecuritisationCTPRiskFactor">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sba.ecore#//CSRSecuritisationCTPRiskFactor/issuer"/>
@@ -130,13 +128,6 @@
     <genClasses ecoreClass="sba.ecore#//CommodityRiskFactor">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//CommodityRiskFactor/commodityType"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//CommodityRiskFactor/deliveryLocation"/>
-    </genClasses>
-    <genClasses ecoreClass="sba.ecore#//Issuer">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Issuer/name"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Issuer/marketCap"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Issuer/economy"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Issuer/sector"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Issuer/ratingGrade"/>
     </genClasses>
     <genClasses ecoreClass="sba.ecore#//SensitivitySet">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//SensitivitySet/name"/>
@@ -162,32 +153,39 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Curvature/shockDirection"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sba.ecore#//Curvature/riskFactor"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Curvature/shiftedValue"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sba.ecore#//Curvature/position"/>
     </genClasses>
     <genClasses ecoreClass="sba.ecore#//SecurityIssue">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sba.ecore#//SecurityIssue/issuer"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//SecurityIssue/ratingGrade"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//SecurityIssue/name"/>
     </genClasses>
-    <genClasses ecoreClass="sba.ecore#//Securitisation"/>
+    <genClasses ecoreClass="sba.ecore#//Securitisation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Securitisation/securitisationSector"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Securitisation/CSRCreditQuality"/>
+    </genClasses>
     <genClasses ecoreClass="sba.ecore#//EquityIssue"/>
     <genClasses ecoreClass="sba.ecore#//BondIssue"/>
     <genClasses ecoreClass="sba.ecore#//Organisation">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Organisation/ratingGrade"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Organisation/secter"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Organisation/marketCap"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Organisation/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Organisation/economy"/>
     </genClasses>
     <genClasses ecoreClass="sba.ecore#//RiskFactorModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sba.ecore#//RiskFactorModule/riskFactors"/>
     </genClasses>
-    <genClasses ecoreClass="sba.ecore#//TransactionModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sba.ecore#//TransactionModule/transactions"/>
+    <genClasses ecoreClass="sba.ecore#//PositionModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sba.ecore#//PositionModule/positions"/>
     </genClasses>
     <genClasses ecoreClass="sba.ecore#//ReferenceDataModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sba.ecore#//ReferenceDataModule/issues"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sba.ecore#//ReferenceDataModule/issuers"/>
     </genClasses>
-    <genClasses ecoreClass="sba.ecore#//SensitivitiesModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sba.ecore#//SensitivitiesModule/sensitivitySets"/>
+    <genClasses ecoreClass="sba.ecore#//SensitivitiesAndCurvaturesModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sba.ecore#//SensitivitiesAndCurvaturesModule/sensitivitySets"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sba.ecore#//SensitivitiesAndCurvaturesModule/curvatures"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>
