@@ -10,6 +10,7 @@ annotation "license" as License
 
 class RiskFactor {
 	id String name
+	boolean volFactor
 }
 
 class FXRiskFactor extends RiskFactor {
@@ -18,7 +19,6 @@ class FXRiskFactor extends RiskFactor {
 }
 
 class GIRRRiskFactor extends RiskFactor {
-	boolean volFactor
 	GIRRRiskFactorType riskFactorType
 	String mainCurrency
 	String secondCurrency

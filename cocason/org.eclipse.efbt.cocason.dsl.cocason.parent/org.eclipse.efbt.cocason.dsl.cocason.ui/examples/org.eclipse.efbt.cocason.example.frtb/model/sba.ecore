@@ -7,13 +7,13 @@
   <eClassifiers xsi:type="ecore:EClass" name="RiskFactor">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="volFactor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FXRiskFactor" eSuperTypes="#//RiskFactor">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="ccy1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="ccy2" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GIRRRiskFactor" eSuperTypes="#//RiskFactor">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="volFactor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="riskFactorType" eType="#//GIRRRiskFactorType"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="mainCurrency" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="secondCurrency" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
