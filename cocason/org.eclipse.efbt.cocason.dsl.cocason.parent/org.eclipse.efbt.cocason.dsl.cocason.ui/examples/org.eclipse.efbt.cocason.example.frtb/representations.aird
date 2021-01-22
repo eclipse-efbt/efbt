@@ -824,9 +824,10 @@
     <semanticResources>java:/Objects/org.eclipse.emf.ecore.util.Switch</semanticResources>
     <semanticResources>platform:/resource/org.eclipse.emf.ecore.xcore.lib/model/XcoreLang.xcore</semanticResources>
     <semanticResources>model/Sba.xcore</semanticResources>
+    <semanticResources>model/Module_management.xcore</semanticResources>
     <ownedViews xmi:type="viewpoint:DView" uid="_3uvhoFdGEeu4POeIwHF6ag">
       <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']"/>
-      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_4qkQsFdGEeu4POeIwHF6ag" name="sba class diagram" repPath="#_4qEhcFdGEeu4POeIwHF6ag" changeId="5de170f9-156b-47f5-b333-d2f58943421e">
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_4qkQsFdGEeu4POeIwHF6ag" name="sba class diagram" repPath="#_4qEhcFdGEeu4POeIwHF6ag" changeId="ee6dbe76-8f58-4f40-b987-26bf39ab267a">
         <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']"/>
         <target xmi:type="ecore:EPackage" href="model/sba.ecore#/"/>
       </ownedRepresentationDescriptors>
@@ -1059,6 +1060,10 @@
             <children xmi:type="notation:Node" xmi:id="_FSgvwFzFEeuOZKQjGo1DBQ" type="3010" element="_FSSGQFzFEeuOZKQjGo1DBQ">
               <styles xmi:type="notation:FontStyle" xmi:id="_FSgvwVzFEeuOZKQjGo1DBQ" fontName="Segoe UI" fontHeight="8"/>
               <layoutConstraint xmi:type="notation:Location" xmi:id="_FSgvwlzFEeuOZKQjGo1DBQ"/>
+            </children>
+            <children xmi:type="notation:Node" xmi:id="_q4-EoFzOEeuOZKQjGo1DBQ" type="3010" element="_q4Pr41zOEeuOZKQjGo1DBQ">
+              <styles xmi:type="notation:FontStyle" xmi:id="_q4-EoVzOEeuOZKQjGo1DBQ" fontName="Segoe UI" fontHeight="8"/>
+              <layoutConstraint xmi:type="notation:Location" xmi:id="_q4-EolzOEeuOZKQjGo1DBQ"/>
             </children>
             <styles xmi:type="notation:SortingStyle" xmi:id="_5ZOGcldGEeu4POeIwHF6ag"/>
             <styles xmi:type="notation:FilteringStyle" xmi:id="_5ZOGc1dGEeu4POeIwHF6ag"/>
@@ -2236,6 +2241,14 @@
         <target xmi:type="ecore:EAttribute" href="model/sba.ecore#//Curvature/shockDirection"/>
         <semanticElements xmi:type="ecore:EAttribute" href="model/sba.ecore#//Curvature/shockDirection"/>
         <ownedStyle xmi:type="diagram:BundledImage" uid="_FSSGQVzFEeuOZKQjGo1DBQ" labelAlignment="LEFT">
+          <description xmi:type="style:BundledImageDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']"/>
+      </ownedElements>
+      <ownedElements xmi:type="diagram:DNodeListElement" uid="_q4Pr41zOEeuOZKQjGo1DBQ" name="riskWeight : EDouble = 0.0" tooltipText="">
+        <target xmi:type="ecore:EAttribute" href="model/sba.ecore#//Curvature/riskWeight"/>
+        <semanticElements xmi:type="ecore:EAttribute" href="model/sba.ecore#//Curvature/riskWeight"/>
+        <ownedStyle xmi:type="diagram:BundledImage" uid="_q4QS8FzOEeuOZKQjGo1DBQ" labelAlignment="LEFT">
           <description xmi:type="style:BundledImageDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']/@style"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']"/>

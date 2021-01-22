@@ -4,6 +4,6 @@ ProgramAndCalls : { program : TRLProgram : { executableLogic : TRLExecutableLogi
 			cubes : [ 				
 				DerivedCube curvature_and_position: { sourceCubes : [ "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.curvature" , "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.position" ] },
 				DerivedCube valuation_differences : { sourceCubes : [ curvature_and_position , "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.girr_risk_factor" ] } ,
-				DerivedCube valuation_differences_linked_with_deltas : { sourceCubes : [ valuation_differences , "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.summed_girr_delta_sensitivities_per_instrument_and_risk_factor_id_data" ] } ,
+				DerivedCube valuation_differences_linked_with_deltas : { sourceCubes : [ valuation_differences , "FRTB_IRCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.summed_GIRR_delta_sensitivities" ] } ,
 				DerivedCube delta_stripped_shifts : { sourceCubes : [ valuation_differences_linked_with_deltas ] }  
 				 		] } } } } 

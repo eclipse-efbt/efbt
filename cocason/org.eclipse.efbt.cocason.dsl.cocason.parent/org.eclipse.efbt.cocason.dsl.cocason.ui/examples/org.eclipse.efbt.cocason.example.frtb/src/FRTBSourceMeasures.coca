@@ -24,7 +24,29 @@ ProgramAndCalls : { program :  TRLProgram :  {
 				variable_id : "downshockValuationDifference"
 				displayName :  "downshockValuationDifference"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE deltaSensitivity : {
+				code : "deltaSensitivity"
+				description : "deltaSensitivity"
+				variable_id : "deltaSensitivity"
+				displayName :  "deltaSensitivity"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE tenor : {
+				code : "tenor"
+				description : "tenor"
+				variable_id : "tenor"
+				displayName :  "tenor"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			}
-			
+			,
+			VARIABLE risk_weight : {
+				code : "risk_weight"
+				description : "risk_weight"
+				variable_id : "risk_weight"
+				displayName :  "risk_weight"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			}
+			 
 			 ] } ] } } } }
 				

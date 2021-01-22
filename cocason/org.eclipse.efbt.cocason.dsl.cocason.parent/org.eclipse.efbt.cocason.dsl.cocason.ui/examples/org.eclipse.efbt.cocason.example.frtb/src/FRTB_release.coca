@@ -5,10 +5,37 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 	CubeSchema curvature : {  cube : "FRTBCubesStaticModel.FRTBCubesModel.cubesModel.curvature" baseCube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.curvature" },
 			 	CubeSchema position : { cube : "FRTBCubesStaticModel.FRTBCubesModel.cubesModel.position" baseCube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.position" } ,
 			 	CubeSchema girr_risk_factor : { cube : "FRTBCubesStaticModel.FRTBCubesModel.cubesModel.girr_risk_factor" baseCube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.girr_risk_factor" } ,			 	 
-			 	CubeSchema summed_girr_delta_sensitivities_per_instrument_and_risk_factor_id_data : { cube : "FRTBCubesStaticModel.FRTBCubesModel.cubesModel.summed_girr_delta_sensitivities_per_instrument_and_risk_factor_id_data" baseCube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.summed_girr_delta_sensitivities_per_instrument_and_risk_factor_id_data" }
+			 	CubeSchema delta_sensitivities : { cube : "FRTBCubesStaticModel.FRTBCubesModel.cubesModel.delta_sensitivities" baseCube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.deltaSensitivities" }
 			 ] } ] 
 			 datasetTransformationModules : [ VersionedSQLViewsModule   processFRTBData : { 
 			 	sqlViews : [ 
+			 		
+			 		AggregateEnrichmentView summed_GIRR_delta_sensitivities : {
+			 		 				cube : "FRTB_IRCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.summed_GIRR_delta_sensitivities"
+			 		 				functions : [ 
+			 		 					AggregateColumnFunction  summed_GIRR_delta_sensitivities_summedGIRR_delta : {
+			 		 						cube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.deltaSensitivities"
+			 		 						variable : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.summedGIRR_delta"
+			 		 						aggregateFunction : AggregateFunction af1 : {
+			 		 							 functionSpec : "commonFunctions.functionSpecModule1.SUM" 
+			 		 							 parameters : [
+			 		 							 	SpeculativeCubeColumnParameter : {
+			 		 							 		column : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.deltaSensitivity"
+			 		 							 		cube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.deltaSensitivities"
+			 		 							 		}
+			 		 							 	]
+			 		 							 }
+			 		 							}
+			 		 						]
+			 		 						groupByClause : GroupByClause : {
+			 		 							groupByColumns : 
+			 		 							[			 		 								
+			 		 								"FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.risk_factor_id" ,
+			 		 								"FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.position_id"
+			 		 							]
+			 		 						}
+			 		 					}
+			 		 				, 
 			 		JoinView curvature_and_position : { 
 			 			cube  :"FRTB_IRCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.curvature_and_position"
 			 			whereClause : WhereClause : {
@@ -67,7 +94,7 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 					 		parameters : [
 			 		 					 			SpeculativeCubeColumnParameter : { 
 			 		 					 				column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.risk_factor_id"
-			 		 					 				cube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.summed_girr_delta_sensitivities_per_instrument_and_risk_factor_id_data"
+			 		 					 				cube : "FRTB_IRCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.summed_GIRR_delta_sensitivities"
 			 		 					 			} ,
 			 		 					 			SpeculativeCubeColumnParameter : {
 			 		 					 				column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.risk_factor_id"
@@ -79,35 +106,19 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 					 		parameters : [
 			 		 					 			SpeculativeCubeColumnParameter : { 
 			 		 					 				column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.position_id"
-			 		 					 				cube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.summed_girr_delta_sensitivities_per_instrument_and_risk_factor_id_data"
+			 		 					 				cube : "FRTB_IRCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.summed_GIRR_delta_sensitivities"
 			 		 					 			} ,
 			 		 					 			SpeculativeCubeColumnParameter : {
 			 		 					 				column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.position_id"
 			 		 					 				cube : "FRTB_IRCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.valuation_differences"
 			 		 					 			}
 			 		 					 		] }
-			 		 					 		] } , 
-			 		 					 		BasicFunction bf12  : { 
-			 		 					 		functionSpec : "commonFunctions.functionSpecModule1.equals"
-			 		 					 		parameters : [
-			 		 					 			SpeculativeCubeColumnParameter : { 
-			 		 					 				column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.Currency"
-			 		 					 				cube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.summed_girr_delta_sensitivities_per_instrument_and_risk_factor_id_data"
-			 		 					 			} ,
-			 		 					 			SpeculativeCubeColumnParameter : {
-			 		 					 				column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.MainCurrency"
-			 		 					 				cube : "FRTB_IRCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.valuation_differences"
-			 		 					 			}
-			 		 					 		] } ]
+			 		 					 		] }  ]
 			 		 					 	} }  
-			 		 					 ignores : [ 
-			 		 					 	IgnoreColumn : { 
-			 		 					 		columnToIgnore : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.MainCurrency"
-			 		 					 		cube : "FRTB_IRCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.valuation_differences"			 		 					 		
-			 		 					 	} ,
+			 		 					 ignores : [ 			 		 					 	
 			 		 					 	IgnoreColumn : { 
 			 		 					 		columnToIgnore : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.risk_factor_id"
-			 		 					 		cube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.summed_girr_delta_sensitivities_per_instrument_and_risk_factor_id_data"			 		 					 		
+			 		 					 		cube : "FRTB_IRCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.summed_GIRR_delta_sensitivities"			 		 					 		
 			 		 					 	} ,
 			 		 					 	IgnoreColumn : { 
 			 		 					 		columnToIgnore :"FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.position_id"
@@ -136,6 +147,10 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 								SpeculativeCubeColumnParameter : 
 			 		 								{ column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection"
 			 		 									cube : "FRTB_IRCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.valuation_differences_linked_with_deltas"
+			 		 									},
+			 		 								SpeculativeCubeColumnParameter : 
+			 		 								{ column : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.risk_weight"
+			 		 									cube : "FRTB_IRCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.valuation_differences_linked_with_deltas"
 			 		 									}
 			 		 									]	
 			 		 								
@@ -151,7 +166,7 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 					AggregateColumnFunction  summed_delta_stripped_shifts_summedDeltaStrippedShift : {
 			 		 						cube : "FRTB_EquityCurvaturCVRkCalcCubeLineage.freeBirdToolsCubeModule.summed_delta_stripped_shifts"
 			 		 						variable : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.summedDeltaStrippedShift"
-			 		 						aggregateFunction : AggregateFunction af1 : {
+			 		 						aggregateFunction : AggregateFunction af2 : {
 			 		 							 functionSpec : "commonFunctions.functionSpecModule1.SUM" 
 			 		 							 parameters : [
 			 		 							 	SpeculativeCubeColumnParameter : {
@@ -165,7 +180,7 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 						groupByClause : GroupByClause : {
 			 		 							groupByColumns : 
 			 		 							[
-			 		 								"FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.Currency" ,
+			 		 								"FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.MainCurrency" ,
 			 		 								"FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.risk_factor_id" ,
 			 		 								"FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection"
 			 		 							]
@@ -247,7 +262,7 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 				 			]
 			 		 				 			ignores : [
 			 		 				 				IgnoreColumn : {
-			 		 				 					columnToIgnore : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.Currency"
+			 		 				 					columnToIgnore : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.MainCurrency"
 			 		 				 					cube : "FRTB_EquityCurvaturCVRkCalcCubeLineage.freeBirdToolsCubeModule.copy_of_summed_delta_stripped_shifts"
 			 		 				 					} ,
 			 		 				 				IgnoreColumn : {
@@ -317,11 +332,11 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 				 							functionSpec : "commonFunctions.functionSpecModule1.equals"
 			 		 				 							parameters : [
 			 		 				 							SpeculativeCubeColumnParameter : {
-			 		 				 								column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.Currency"
+			 		 				 								column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.MainCurrency"
 			 		 				 								cube : "FRTB_EquityCurvaturCVRkCalcCubeLineage.freeBirdToolsCubeModule.curvature_risk_charge_for_risk_factor"
 			 		 				 								},
 			 		 				 							SpeculativeCubeColumnParameter : {
-			 		 				 								column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.Currency"
+			 		 				 								column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.MainCurrency"
 			 		 				 								cube : "FRTB_IRCurvatureAggregatedCVRCubeLineage.freeBirdToolsCubeModule.copy_of_curvature_risk_charge_for_risk_factor"
 			 		 				 								}
 			 		 				 							
@@ -338,7 +353,7 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 				 					},
 			 		 				 				RenameAs : {
 			 		 				 					fromCube : "FRTB_IRCurvatureAggregatedCVRCubeLineage.freeBirdToolsCubeModule.copy_of_curvature_risk_charge_for_risk_factor"
-			 		 				 					fromVariable : 	"FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.Currency"
+			 		 				 					fromVariable : 	"FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.MainCurrency"
 			 		 				 					toVariable : "FRTBDerivedDimensionsStaticModel.FRTBDerivedDimensionsModel.variablesModule.Currency2"
 			 		 				 					},
 			 		 				 				RenameAs : {
@@ -431,7 +446,7 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 							{ 
 			 		 								cube : "FRTB_IRCurvatureAggregatedCVRCubeLineage.freeBirdToolsCubeModule.sum_of_product_of_correlated_combinations_by_currency"
 			 		 								variable : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.sumOfproductOfCorrelatiedCombinations"
-			 		 								aggregateFunction : AggregateFunction af2 : {
+			 		 								aggregateFunction : AggregateFunction af3 : {
 			 		 									functionSpec : "commonFunctions.functionSpecModule1.SUM"
 			 		 									parameters : [
 			 		 										SpeculativeCubeColumnParameter : {
@@ -444,7 +459,7 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 						]
 			 		 						groupByClause : GroupByClause : { 
 			 		 							groupByColumns : [
-			 		 								"FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.Currency" ]
+			 		 								"FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.MainCurrency" ]
 			 		 					}
 			 		 				},
 			 		 				JoinView product_of_correlated_with_square_of_minimums : {
@@ -455,11 +470,11 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 						 	functionSpec : "commonFunctions.functionSpecModule1.equals"
 			 		 						 	parameters : [
 			 		 						 		SpeculativeCubeColumnParameter : {
-			 		 						 			column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.Currency"
+			 		 						 			column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.MainCurrency"
 			 		 						 			cube : "FRTB_IRCurvatureAggregatedCVRCubeLineage.freeBirdToolsCubeModule.sum_of_product_of_correlated_combinations_by_currency"
 			 		 						 			},
 			 		 						 		SpeculativeCubeColumnParameter : {
-			 		 						 			column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.Currency"
+			 		 						 			column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.MainCurrency"
 			 		 						 			cube : "FRTB_IRCurvatureAggregatedCVRCubeLineage.freeBirdToolsCubeModule.total_grouped_summed_minimums"
 			 		 						 			}	
 			 		 						 			]
@@ -468,7 +483,7 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 						 }
 			 		 						 ignores : [
 			 		 						 	IgnoreColumn : {
-			 		 						 		columnToIgnore : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.Currency"
+			 		 						 		columnToIgnore : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.MainCurrency"
 			 		 						 		cube : "FRTB_IRCurvatureAggregatedCVRCubeLineage.freeBirdToolsCubeModule.total_grouped_summed_minimums"
 			 		 						 	}
 			 		 						 ]
@@ -519,7 +534,7 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 						functions : [ AggregateColumnFunction total_grouped_summed_minimums_flooredMinimumShiftedTotalSquared : {
 			 		 							cube : "FRTB_IRCurvatureAggregatedCVRCubeLineage.freeBirdToolsCubeModule.total_grouped_summed_minimums"
 			 		 							variable : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.flooredMinimumShiftedTotalSquared"
-			 		 							aggregateFunction : AggregateFunction af3 : {
+			 		 							aggregateFunction : AggregateFunction af4 : {
 			 		 								functionSpec : "commonFunctions.functionSpecModule1.SUM"
 			 		 								parameters : [ SpeculativeCubeColumnParameter : {
 			 		 									column : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.flooredMinimumShiftedTotalSquared"
@@ -531,7 +546,7 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 									]
 			 		 						groupByClause : GroupByClause : {
 			 		 							groupByColumns : [
-			 		 								"FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.Currency"
+			 		 								"FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.MainCurrency"
 			 		 								]
 			 		 								}
 			 		 							},
