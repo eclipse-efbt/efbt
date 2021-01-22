@@ -3,50 +3,86 @@ ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStatic
 	 	cubes : [ CubeModule  cubeStructureItems_model  :{ 
 	 		cubeStructureItems : [ 
 	 			CUBE_STRUCTURE_ITEM : {
-	 				 description : "Currency" 
+	 				 description : "position_id" 
 	 				 dimension_type ::B 
 	 				 is_flow : false 
 	 				 is_mandatory : false 
 	 				 order : 0 role ::D 
 	 				 isIdentifier : false 
-	 				 cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.girr_curvature_source_data_structure"
-	 				 variable_id : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.Currency" } ,
+	 				 cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.position"
+	 				 variable_id : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.position_id"} ,
 	 			CUBE_STRUCTURE_ITEM : {
-	 				 description : "ShockDirection" 
+	 				 description : "risk_factor_id" 
 	 				 dimension_type ::B 
 	 				 is_flow : false 
 	 				 is_mandatory : false 
 	 				 order : 0 role ::D 
 	 				 isIdentifier : false 
-	 				 cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.girr_curvature_source_data_structure"
-	 				 variable_id : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection" } ,
+	 				 cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.girr_risk_factor"
+	 				 variable_id : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.risk_factor_id"} ,	 
 	 			CUBE_STRUCTURE_ITEM : {
-	 				 description : "curve" 
+	 				 description : "main_currecy" 
 	 				 dimension_type ::B 
 	 				 is_flow : false 
 	 				 is_mandatory : false 
 	 				 order : 0 role ::D 
 	 				 isIdentifier : false 
-	 				 cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.girr_curvature_source_data_structure"
-	 				 variable_id : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.curve" } ,
+	 				 cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.girr_risk_factor"
+	 				 variable_id : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.MainCurrency"} ,	
 	 			CUBE_STRUCTURE_ITEM : {
-	 				 description : "InstrumentID" 
+	 				 description : "second_currecy" 
 	 				 dimension_type ::B 
 	 				 is_flow : false 
 	 				 is_mandatory : false 
 	 				 order : 0 role ::D 
 	 				 isIdentifier : false 
-	 				 cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.girr_curvature_source_data_structure"
-	 				 variable_id : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.InstrumentID" } ,
+	 				 cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.girr_risk_factor"
+	 				 variable_id : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.SecondCurrency"} ,		
 	 			CUBE_STRUCTURE_ITEM : {
-	 				 description : "instrumentValuation" 
+	 				 description : "ccy_of_record" 
 	 				 dimension_type ::B 
 	 				 is_flow : false 
 	 				 is_mandatory : false 
 	 				 order : 0 role ::D 
 	 				 isIdentifier : false 
-	 				 cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.girr_curvature_source_data_structure"
-	 				 variable_id : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.instrumentValuation" } ,
+	 				 cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.curvature"
+	 				 variable_id : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.CurrencyOfRecord"} ,		
+	 			CUBE_STRUCTURE_ITEM : {
+	 				 description : "shockDirection" 
+	 				 dimension_type ::B 
+	 				 is_flow : false 
+	 				 is_mandatory : false 
+	 				 order : 0 role ::D 
+	 				 isIdentifier : false 
+	 				 cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.curvature"
+	 				 variable_id : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection"} ,		
+	 			CUBE_STRUCTURE_ITEM : {
+	 				 description : "valuationDifference" 
+	 				 dimension_type ::B 
+	 				 is_flow : false 
+	 				 is_mandatory : false 
+	 				 order : 0 role ::D 
+	 				 isIdentifier : false 
+	 				 cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.curvature"
+	 				 variable_id : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.valuationDifference"} ,	
+	 			CUBE_STRUCTURE_ITEM : {
+	 				 description : "position_id" 
+	 				 dimension_type ::B 
+	 				 is_flow : false 
+	 				 is_mandatory : false 
+	 				 order : 0 role ::D 
+	 				 isIdentifier : false 
+	 				 cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.curvature"
+	 				 variable_id : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.position_id"} ,	
+	 			CUBE_STRUCTURE_ITEM : {
+	 				 description : "risk_factor_id" 
+	 				 dimension_type ::B 
+	 				 is_flow : false 
+	 				 is_mandatory : false 
+	 				 order : 0 role ::D 
+	 				 isIdentifier : false 
+	 				 cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.curvature"
+	 				 variable_id : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.risk_factor_id"} ,	
 	 			CUBE_STRUCTURE_ITEM : {
 	 				 description : "summedGIRR_delta" 
 	 				 dimension_type ::B 
@@ -54,7 +90,7 @@ ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStatic
 	 				 is_mandatory : false 
 	 				 order : 0 role ::D 
 	 				 isIdentifier : false 
-	 				 cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.summed_girr_delta_sensitivities_per_instrument_and_curve_data_structure"
+	 				 cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.summed_girr_delta_sensitivities_per_instrument_and_risk_factor_id_data_structure"
 	 				 variable_id : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.summedGIRR_delta" } ,
 	 			CUBE_STRUCTURE_ITEM : {
 	 				 description : "Currency" 
@@ -63,25 +99,25 @@ ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStatic
 	 				 is_mandatory : false 
 	 				 order : 0 role ::D 
 	 				 isIdentifier : false 
-	 				 cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.summed_girr_delta_sensitivities_per_instrument_and_curve_data_structure"
+	 				 cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.summed_girr_delta_sensitivities_per_instrument_and_risk_factor_id_data_structure"
 	 				 variable_id : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.Currency" } ,
 	 			CUBE_STRUCTURE_ITEM : {
-	 				 description : "curve" 
+	 				 description : "risk_factor_id" 
 	 				 dimension_type ::B 
 	 				 is_flow : false 
 	 				 is_mandatory : false 
 	 				 order : 0 role ::D 
 	 				 isIdentifier : false 
-	 				 cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.summed_girr_delta_sensitivities_per_instrument_and_curve_data_structure"
-	 				 variable_id : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.curve" } ,
+	 				 cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.summed_girr_delta_sensitivities_per_instrument_and_risk_factor_id_data_structure"
+	 				 variable_id : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.risk_factor_id" } ,
 	 			CUBE_STRUCTURE_ITEM : {
-	 				 description : "InstrumentID" 
+	 				 description : "position_id" 
 	 				 dimension_type ::B 
 	 				 is_flow : false 
 	 				 is_mandatory : false 
 	 				 order : 0 role ::D 
 	 				 isIdentifier : false 
-	 				 cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.summed_girr_delta_sensitivities_per_instrument_and_curve_data_structure"
-	 				 variable_id : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.InstrumentID" }
+	 				 cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.summed_girr_delta_sensitivities_per_instrument_and_risk_factor_id_data_structure"
+	 				 variable_id : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.position_id" }
 	 			
 	 		] } ] } } } }

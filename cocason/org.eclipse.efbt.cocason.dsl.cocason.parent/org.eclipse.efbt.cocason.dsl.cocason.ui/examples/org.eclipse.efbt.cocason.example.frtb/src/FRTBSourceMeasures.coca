@@ -10,6 +10,20 @@ ProgramAndCalls : { program :  TRLProgram :  {
 				variable_id : "instrumentValuation"
 				displayName :  "instrumentValuation"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE upshockValuationDifference : {
+				code : "upshockValuationDifference"
+				description : "upshockValuationDifference"
+				variable_id : "upshockValuationDifference"
+				displayName :  "upshockValuationDifference"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE downshockValuationDifference : {
+				code : "downshockValuationDifference"
+				description : "downshockValuationDifference"
+				variable_id : "downshockValuationDifference"
+				displayName :  "downshockValuationDifference"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			}
 			
 			 ] } ] } } } }

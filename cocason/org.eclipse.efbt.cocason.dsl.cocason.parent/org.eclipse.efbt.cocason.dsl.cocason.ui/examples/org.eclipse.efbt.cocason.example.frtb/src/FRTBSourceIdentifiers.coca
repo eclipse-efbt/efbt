@@ -4,20 +4,22 @@ ProgramAndCalls : { program :  TRLProgram :  {
 		variables :  [ VariableModule variablesModule :  
 				{
 			variables : [ 
-			VARIABLE curve : {
-				code : "curve"
-				description : "curve"
-				variable_id : "curve"
-				displayName :  "curve"
+			VARIABLE risk_factor_id : {
+				code : "risk_factor_id"
+				description : "risk_factor_id"
+				variable_id : "risk_factor_id"
+				displayName :  "risk_factor_id"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
 			},
-			VARIABLE InstrumentID : {
-				code : "InstrumentID"
-				description : "InstrumentID"
-				variable_id : "InstrumentID"
-				displayName : "InstrumentID"
+			VARIABLE position_id : {
+				code : "position_id"
+				description : "position_id"
+				variable_id : "position_id"
+				displayName : "position_id"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
 			}
+			
+			
 			
 			 ] } ] } } } }
 				

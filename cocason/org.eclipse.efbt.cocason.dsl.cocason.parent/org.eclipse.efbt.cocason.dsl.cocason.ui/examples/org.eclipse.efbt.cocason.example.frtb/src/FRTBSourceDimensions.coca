@@ -11,6 +11,27 @@ ProgramAndCalls : { program :  TRLProgram :  {
 				displayName :  "ShockDirection"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.shockDirection"
 			},
+			VARIABLE MainCurrency : {
+				code : "MainCurrency"
+				description : "MainCurrency"
+				variable_id : "MainCurrency"
+				displayName : "MainCurrency"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
+			},
+			VARIABLE SecondCurrency : {
+				code : "SecondCurrency"
+				description : "SecondCurrency"
+				variable_id : "SecondCurrency"
+				displayName : "SecondCurrency"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
+			},
+			VARIABLE CurrencyOfRecord : {
+				code : "CurrencyOfRecord"
+				description : "CurrencyOfRecord"
+				variable_id : "CurrencyOfRecord"
+				displayName : "CurrencyOfRecord"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
+			},
 			VARIABLE Currency : {
 				code : "Currency"
 				description : "Currency"

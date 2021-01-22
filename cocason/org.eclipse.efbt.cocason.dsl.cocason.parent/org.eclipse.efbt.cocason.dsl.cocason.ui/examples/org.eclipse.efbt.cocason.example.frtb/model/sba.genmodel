@@ -31,7 +31,7 @@
   </genPackages>
   <genPackages prefix="Sba" disposableProviderFactory="true" ecorePackage="sba.ecore#/">
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="sba.ecore#//ShockDirection">
-      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//ShockDirection/upShock"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//ShockDirection/upshock"/>
       <genEnumLiterals ecoreEnumLiteral="sba.ecore#//ShockDirection/downShock"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="sba.ecore#//SecuritisationSector">
@@ -150,10 +150,11 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Position/name"/>
     </genClasses>
     <genClasses ecoreClass="sba.ecore#//Curvature">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Curvature/shockDirection"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sba.ecore#//Curvature/riskFactor"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Curvature/shiftedValue"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sba.ecore#//Curvature/position"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Curvature/ccyOfRecord"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Curvature/valuationDifference"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Curvature/shockDirection"/>
     </genClasses>
     <genClasses ecoreClass="sba.ecore#//SecurityIssue">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sba.ecore#//SecurityIssue/issuer"/>

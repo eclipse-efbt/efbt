@@ -1,7 +1,7 @@
 @Ecore(nsURI="http://www.eclipse.org/efbt/")
 @License(license="Copyright (c) 2020 Bird Software Solutions Ltd\n All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html\n\nSPDX-License-Identifier: EPL-2.0 \n\n Contributors:\n Neil Mackenzie - initial API and implementation\r")
-@GenModel(modelDirectory="/org.eclipse.efbt.cocason.example.frtb/src",
-	modelPluginID="org.eclipse.efbt.cocason.example.frtb", modelName="Sba", importerID="org.eclipse.emf.importer.ecore")
+@GenModel(modelDirectory="/org.eclipse.efbt.cocason.example.frtb/src", modelName="Sba",
+	importerID="org.eclipse.emf.importer.ecore")
 package sba
 
 import module_management.Module
@@ -76,10 +76,11 @@ class Position {
 }
 
 class Curvature extends RiskMeasure {
-	ShockDirection shockDirection
 	refers RiskFactor riskFactor
-	double shiftedValue
 	refers Position position
+	String ccyOfRecord
+	double upshockValuationDifference
+	double downshockValuationDifference
 }
 
 class SecurityIssue {
@@ -105,11 +106,6 @@ class Organisation {
 	MarketCap marketCap
 	id String name
 	Economy economy
-}
-
-enum ShockDirection {
-	upShock
-	downShock = 1
 }
 
 enum SecuritisationSector {

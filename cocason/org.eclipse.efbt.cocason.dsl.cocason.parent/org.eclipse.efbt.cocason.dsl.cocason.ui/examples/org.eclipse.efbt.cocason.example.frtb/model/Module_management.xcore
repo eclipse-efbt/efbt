@@ -1,7 +1,7 @@
 @Ecore(nsURI="http://www.eclipse.org/efbt/module_management")
 @GenModel(documentation="This package describes Module Management classes.\nThese classes allow items to be grouped together and given a version. For example a FunctionSpecModule will contain a group of FunctionSpecs.\nModules can also state which other modules they depend upon, allowing for fine grained dependencies between groups of items.\n",
-	modelDirectory="/org.eclipse.efbt.cocason.example.frtb/src", modelPluginID="org.eclipse.efbt.cocason.example.frtb",
-	modelName="Sba", importerID="org.eclipse.emf.importer.ecore")
+	modelDirectory="/org.eclipse.efbt.cocason.example.frtb/src", modelName="Sba",
+	importerID="org.eclipse.emf.importer.ecore")
 @License(license="Copyright (c) 2020 Bird Software Solutions Ltd\n All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html\n\nSPDX-License-Identifier: EPL-2.0 \n\n Contributors:\n Neil Mackenzie - initial API and implementation\r")
 package module_management
 
