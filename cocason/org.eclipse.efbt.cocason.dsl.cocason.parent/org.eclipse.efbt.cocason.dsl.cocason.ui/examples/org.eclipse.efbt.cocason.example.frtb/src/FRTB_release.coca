@@ -20,11 +20,37 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 ] } ] 
 			 datasetTransformationModules : [ VersionedSQLViewsModule   processFRTBData : { 
 			 	sqlViews : [ 
-			 		
-			 		AggregateEnrichmentView summed_GIRR_delta_sensitivities : {
-			 		 				cube : "FRTB_IRCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.summed_GIRR_delta_sensitivities"
+			 		AggregateEnrichmentView netted_delta_sensitivities: {
+			 			cube : "FRTB_IRCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.netted_delta_sensitivities"
+			 			functions : [
+			 				AggregateColumnFunction netted_delta_sensitivities_netted_sensitivities : {
+			 					cube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.deltaSensitivities"
+			 					variable : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.nettedDeltaSensitivity"
+			 					aggregateFunction : AggregateFunction af6 : {
+			 						functionSpec : "commonFunctions.functionSpecModule1.SUM" 
+			 						parameters : [
+			 							SpeculativeCubeColumnParameter : {
+			 								column : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.deltaSensitivity"
+			 		 						cube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.deltaSensitivities"
+			 		 					}
+			 		 				] 
+			 		 			} 
+			 		 		}
+			 		 	]
+			 		 	groupByClause : GroupByClause : {
+ 		 							groupByColumns : 
+ 		 							[			 		 								
+ 		 								"FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.risk_factor_id" ,
+ 		 								"FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.position_id",
+ 		 								"FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.tenor"
+ 		 								
+ 		 							]			 		 					
+			 					}
+			 				} ,			 							 	
+			 		AggregateEnrichmentView summed_delta_sensitivities_per_position : {
+			 		 				cube : "FRTB_IRCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.summed_delta_sensitivities_per_position"
 			 		 				functions : [ 
-			 		 					AggregateColumnFunction  summed_GIRR_delta_sensitivities_summedGIRR_delta : {
+			 		 					AggregateColumnFunction  summed_delta_sensitivities_per_position_summedGIRR_delta : {
 			 		 						cube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.deltaSensitivities"
 			 		 						variable : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.summedGIRR_delta"
 			 		 						aggregateFunction : AggregateFunction af1 : {
@@ -47,6 +73,74 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 						}
 			 		 					}
 			 		 				, 
+			 		JoinView GIRR_delta_sensitivities_and_risk_factors : {
+			 			cube : "FRTB_IRCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.GIRR_delta_sensitivities_and_risk_factors"
+			 			whereClause : WhereClause : { 
+			 				function : BooleanFunction bf40 : {
+			 					functionSpec : "commonFunctions.functionSpecModule1.equals" 
+			 					parameters : [ 
+			 						SpeculativeCubeColumnParameter : {
+			 							column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.risk_factor_id"
+			 							cube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.girr_risk_factor"
+			 							} ,
+			 						SpeculativeCubeColumnParameter : {
+			 							column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.risk_factor_id"
+			 							cube : "FRTB_IRCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.netted_delta_sensitivities"
+			 							} 
+			 						]
+			 					}
+			 				}
+			 				ignores : [ IgnoreColumn : { columnToIgnore : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.risk_factor_id" cube : "FRTB_IRCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.netted_delta_sensitivities" }
+			 				]
+			 			} 	,
+			 		EnrichmentView 	GIRR_delta_sensitivities_and_risk_factors_with_weight : {
+			 			cube : "FRTB_IRCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.GIRR_delta_sensitivities_and_risk_factors_with_weight"
+			 			functions : [ 
+			 				BasicColumnFunction GIRR_delta_sensitivities_and_risk_factors_with_weight_riskweight: { 
+			 					cube : "FRTB_IRCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.GIRR_delta_sensitivities_and_risk_factors_with_weight"
+			 					variable : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.risk_weight"
+			 					
+			 					basicFunction : BasicFunction bf41 : {
+			 						functionSpec : "FRTBFunctions.functionSpecModule1.getGIRRTenorRiskWeight"
+			 						parameters : [ 
+			 							SpeculativeCubeColumnParameter : {
+			 								column : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.tenor"
+			 								cube : "FRTB_IRCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.GIRR_delta_sensitivities_and_risk_factors"
+			 							}
+			 							
+			 						]
+			 					}
+			 				}
+			 			
+			 			]
+			 		},
+			 		EnrichmentView 	weighted_GIRR_delta_sensitivities_and_risk_factors : {
+			 			cube : "FRTB_IRCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.weighted_GIRR_delta_sensitivities_and_risk_factors"
+			 			functions : [ 
+			 				BasicColumnFunction weighted_GIRR_delta_sensitivities_and_risk_factors_weighted_delta_sensitivity: { 
+			 					cube : "FRTB_IRCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.weighted_GIRR_delta_sensitivities_and_risk_factors"
+			 					variable : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.weighted_sensitivity"
+			 					
+			 					basicFunction : BasicFunction bf42 : {
+			 						functionSpec : "commonFunctions.functionSpecModule1.multiply"
+			 						parameters : [ 
+			 							SpeculativeCubeColumnParameter : {
+			 								column : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.nettedDeltaSensitivity"
+			 								cube :  "FRTB_IRCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.GIRR_delta_sensitivities_and_risk_factors_with_weight"
+			 							},
+			 							SpeculativeCubeColumnParameter : {
+			 								column :"FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.risk_weight"
+			 								cube :  "FRTB_IRCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.GIRR_delta_sensitivities_and_risk_factors_with_weight"
+			 							}
+			 							
+			 						]
+			 					}
+			 				}
+			 			
+			 			]
+			 		},
+			 					
+			 		
 			 		JoinView curvature_and_position : { 
 			 			cube  :"FRTB_IRCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.curvature_and_position"
 			 			whereClause : WhereClause : {
@@ -105,7 +199,7 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 					 		parameters : [
 			 		 					 			SpeculativeCubeColumnParameter : { 
 			 		 					 				column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.risk_factor_id"
-			 		 					 				cube : "FRTB_IRCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.summed_GIRR_delta_sensitivities"
+			 		 					 				cube : "FRTB_IRCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.summed_delta_sensitivities_per_position"
 			 		 					 			} ,
 			 		 					 			SpeculativeCubeColumnParameter : {
 			 		 					 				column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.risk_factor_id"
@@ -117,7 +211,7 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 					 		parameters : [
 			 		 					 			SpeculativeCubeColumnParameter : { 
 			 		 					 				column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.position_id"
-			 		 					 				cube : "FRTB_IRCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.summed_GIRR_delta_sensitivities"
+			 		 					 				cube : "FRTB_IRCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.summed_delta_sensitivities_per_position"
 			 		 					 			} ,
 			 		 					 			SpeculativeCubeColumnParameter : {
 			 		 					 				column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.position_id"
@@ -129,7 +223,7 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 					 ignores : [ 			 		 					 	
 			 		 					 	IgnoreColumn : { 
 			 		 					 		columnToIgnore : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.risk_factor_id"
-			 		 					 		cube : "FRTB_IRCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.summed_GIRR_delta_sensitivities"			 		 					 		
+			 		 					 		cube : "FRTB_IRCurvature_deltaStrippingCubeLineage.freeBirdToolsCubeModule.summed_delta_sensitivities_per_position"			 		 					 		
 			 		 					 	} ,
 			 		 					 	IgnoreColumn : { 
 			 		 					 		columnToIgnore :"FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.position_id"

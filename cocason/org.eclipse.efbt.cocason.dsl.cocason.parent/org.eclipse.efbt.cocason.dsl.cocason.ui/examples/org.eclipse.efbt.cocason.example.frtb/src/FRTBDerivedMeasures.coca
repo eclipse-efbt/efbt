@@ -171,6 +171,20 @@ ProgramAndCalls : { program :  TRLProgram :  {
 				variable_id : "double_of_max_of_cvr_stuff"
 				displayName :  "double_of_max_of_cvr_stuff"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE nettedDeltaSensitivity : {
+				code : "nettedDeltaSensitivity"
+				description : "nettedDeltaSensitivity"
+				variable_id : "nettedDeltaSensitivity"
+				displayName :  "nettedDeltaSensitivity"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE weighted_sensitivity : {
+				code : "weighted_sensitivity"
+				description : "weighted_sensitivity"
+				variable_id : "weighted_sensitivity"
+				displayName :  "weighted_sensitivity"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			}
 			
 			

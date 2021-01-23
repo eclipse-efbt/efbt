@@ -2,5 +2,10 @@ ProgramAndCalls : { program : TRLProgram : { executableLogic : TRLExecutableLogi
 	{ cubesModule : FreeBirdToolsCubeModule freeBirdToolsCubeModule : 
 		{ license : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;" 
 			cubes : [ 	
-				DerivedCube summed_GIRR_delta_sensitivities :{ sourceCubes : [ "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.deltaSensitivities" ] }
+				DerivedCube summed_delta_sensitivities_per_position :{ sourceCubes : [ "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.deltaSensitivities" ] },
+				DerivedCube netted_delta_sensitivities :{ sourceCubes : [ "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.deltaSensitivities" ] },
+				DerivedCube GIRR_delta_sensitivities_and_risk_factors : { sourceCubes : [netted_delta_sensitivities, "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.girr_risk_factor" ] },
+				DerivedCube GIRR_delta_sensitivities_and_risk_factors_with_weight : { sourceCubes : [GIRR_delta_sensitivities_and_risk_factors] },
+				DerivedCube weighted_GIRR_delta_sensitivities_and_risk_factors : { sourceCubes : [GIRR_delta_sensitivities_and_risk_factors_with_weight] }
+				
 				 	 ] } } } } 

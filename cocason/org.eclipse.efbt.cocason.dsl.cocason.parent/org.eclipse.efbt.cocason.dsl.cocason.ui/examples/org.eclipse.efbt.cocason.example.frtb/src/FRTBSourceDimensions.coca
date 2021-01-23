@@ -108,6 +108,13 @@ ProgramAndCalls : { program :  TRLProgram :  {
 				variable_id : "securitisation_sector"
 				displayName : "securitisation_sector"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.securitisation_sector"
+			},
+			VARIABLE riskClass : {
+				code : "riskClass"
+				description : "riskClass"
+				variable_id : "riskClass"
+				displayName : "riskClass"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.riskClass"
 			}
 			
 			

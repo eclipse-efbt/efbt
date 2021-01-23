@@ -16,6 +16,14 @@ ProgramAndCalls : { program : TRLProgram :  { executableLogic : TRLExecutableLog
 			ParamaterSpec summedGIRR_delta ,
 			ParamaterSpec ShockDirection
 		]
+	},
+	BasicFunctionSpec getGIRRTenorRiskWeight :
+	{
+		functionalName : "CustomFunctions_getGIRRTenorRiskWeight"
+		sqlName : getGIRRTenorRiskWeight
+		parameterSpecs : [
+			ParamaterSpec tenor
+		]
 	}
 			
 	] } } } } 
