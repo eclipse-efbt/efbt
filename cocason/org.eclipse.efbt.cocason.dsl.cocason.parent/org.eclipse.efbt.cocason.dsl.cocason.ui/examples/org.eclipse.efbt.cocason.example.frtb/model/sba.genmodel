@@ -115,7 +115,7 @@
     </genClasses>
     <genClasses ecoreClass="sba.ecore#//CSRNonSecuritisationRiskFactor">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sba.ecore#//CSRNonSecuritisationRiskFactor/issuer"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//CSRNonSecuritisationRiskFactor/curveType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//CSRNonSecuritisationRiskFactor/CSRCurveType"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//CSRNonSecuritisationRiskFactor/CSRCreditQuality"/>
     </genClasses>
     <genClasses ecoreClass="sba.ecore#//CSRSecuritisationNonCTPRiskFactor">
@@ -164,13 +164,12 @@
     </genClasses>
     <genClasses ecoreClass="sba.ecore#//Securitisation">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Securitisation/securitisationSector"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Securitisation/CSRCreditQuality"/>
     </genClasses>
     <genClasses ecoreClass="sba.ecore#//EquityIssue"/>
     <genClasses ecoreClass="sba.ecore#//BondIssue"/>
     <genClasses ecoreClass="sba.ecore#//Organisation">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Organisation/ratingGrade"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Organisation/secter"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Organisation/sector"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Organisation/marketCap"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Organisation/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Organisation/economy"/>

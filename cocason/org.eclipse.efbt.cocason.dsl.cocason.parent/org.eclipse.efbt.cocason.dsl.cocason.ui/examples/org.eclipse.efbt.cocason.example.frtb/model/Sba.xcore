@@ -31,7 +31,7 @@ class EquityRiskFactor extends RiskFactor {
 
 class CSRNonSecuritisationRiskFactor extends RiskFactor {
 	refers Organisation issuer
-	CreditSpreadCurveType curveType
+	CreditSpreadCurveType CSRCurveType
 	RatingGrade CSRCreditQuality
 }
 
@@ -92,7 +92,6 @@ class SecurityIssue {
 
 class Securitisation extends SecurityIssue {
 	SecuritisationSector securitisationSector
-	RatingGrade CSRCreditQuality
 }
 
 class EquityIssue extends SecurityIssue {
@@ -103,7 +102,7 @@ class BondIssue extends SecurityIssue {
 
 class Organisation {
 	RatingGrade ratingGrade
-	Sector secter
+	Sector sector
 	MarketCap marketCap
 	id String name
 	Economy economy

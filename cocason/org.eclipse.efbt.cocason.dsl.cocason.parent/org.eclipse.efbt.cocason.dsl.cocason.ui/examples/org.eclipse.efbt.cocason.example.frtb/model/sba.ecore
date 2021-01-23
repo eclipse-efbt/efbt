@@ -24,7 +24,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CSRNonSecuritisationRiskFactor" eSuperTypes="#//RiskFactor">
     <eStructuralFeatures xsi:type="ecore:EReference" name="issuer" eType="#//Organisation"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="curveType" eType="#//CreditSpreadCurveType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="CSRCurveType" eType="#//CreditSpreadCurveType"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="CSRCreditQuality" eType="#//RatingGrade"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CSRSecuritisationNonCTPRiskFactor" eSuperTypes="#//RiskFactor">
@@ -78,13 +78,12 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Securitisation" eSuperTypes="#//SecurityIssue">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="securitisationSector" eType="#//SecuritisationSector"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="CSRCreditQuality" eType="#//RatingGrade"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EquityIssue" eSuperTypes="#//SecurityIssue"/>
   <eClassifiers xsi:type="ecore:EClass" name="BondIssue" eSuperTypes="#//SecurityIssue"/>
   <eClassifiers xsi:type="ecore:EClass" name="Organisation">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="ratingGrade" eType="#//RatingGrade"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="secter" eType="#//Sector"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sector" eType="#//Sector"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="marketCap" eType="#//MarketCap"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
