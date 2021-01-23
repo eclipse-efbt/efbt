@@ -5,7 +5,18 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 	CubeSchema curvature : {  cube : "FRTBCubesStaticModel.FRTBCubesModel.cubesModel.curvature" baseCube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.curvature" },
 			 	CubeSchema position : { cube : "FRTBCubesStaticModel.FRTBCubesModel.cubesModel.position" baseCube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.position" } ,
 			 	CubeSchema girr_risk_factor : { cube : "FRTBCubesStaticModel.FRTBCubesModel.cubesModel.girr_risk_factor" baseCube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.girr_risk_factor" } ,			 	 
-			 	CubeSchema delta_sensitivities : { cube : "FRTBCubesStaticModel.FRTBCubesModel.cubesModel.delta_sensitivities" baseCube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.deltaSensitivities" }
+			 	CubeSchema delta_sensitivities : { cube : "FRTBCubesStaticModel.FRTBCubesModel.cubesModel.delta_sensitivities" baseCube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.deltaSensitivities" },
+			 	CubeSchema vega_sensitivities : { cube : "FRTBCubesStaticModel.FRTBCubesModel.cubesModel.vega_sensitivities" baseCube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.vega_sensitivities" },
+			 	CubeSchema equity_risk_factor : { cube : "FRTBCubesStaticModel.FRTBCubesModel.cubesModel.equity_risk_factor" baseCube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.equity_risk_factor" },
+			 	CubeSchema commodity_risk_factor : { cube : "FRTBCubesStaticModel.FRTBCubesModel.cubesModel.commodity_risk_factor" baseCube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.commodity_risk_factor" },
+			 	CubeSchema CSR_NonSec_risk_factor : { cube : "FRTBCubesStaticModel.FRTBCubesModel.cubesModel.CSR_NonSec_risk_factor" baseCube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.CSR_NonSec_risk_factor" },
+			 	CubeSchema CSR_Sec_CTP_risk_factor : { cube : "FRTBCubesStaticModel.FRTBCubesModel.cubesModel.CSR_Sec_CTP_risk_factor" baseCube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.CSR_Sec_CTP_risk_factor" },
+			 	CubeSchema CSR_Sec_Non_CTP_risk_factor : { cube : "FRTBCubesStaticModel.FRTBCubesModel.cubesModel.CSR_Sec_Non_CTP_risk_factor" baseCube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.CSR_Sec_Non_CTP_risk_factor" },
+			 	CubeSchema FX_risk_factor : { cube : "FRTBCubesStaticModel.FRTBCubesModel.cubesModel.FX_risk_factor" baseCube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.FX_risk_factor" },
+			 	CubeSchema security_issue : { cube : "FRTBCubesStaticModel.FRTBCubesModel.cubesModel.security_issue" baseCube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.security_issue" },
+			 	CubeSchema organisation : { cube : "FRTBCubesStaticModel.FRTBCubesModel.cubesModel.organisation" baseCube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.organisation" },
+			 	CubeSchema securitisation : { cube : "FRTBCubesStaticModel.FRTBCubesModel.cubesModel.securitisation" baseCube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.securitisation" }
+			 	
 			 ] } ] 
 			 datasetTransformationModules : [ VersionedSQLViewsModule   processFRTBData : { 
 			 	sqlViews : [ 
