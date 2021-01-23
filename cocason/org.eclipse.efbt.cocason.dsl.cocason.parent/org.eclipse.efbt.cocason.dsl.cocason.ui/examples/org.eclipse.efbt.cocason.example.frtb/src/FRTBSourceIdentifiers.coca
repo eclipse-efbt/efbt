@@ -4,20 +4,63 @@ ProgramAndCalls : { program :  TRLProgram :  {
 		variables :  [ VariableModule variablesModule :  
 				{
 			variables : [ 
-			VARIABLE curve : {
-				code : "curve"
-				description : "curve"
-				variable_id : "curve"
-				displayName :  "curve"
+			VARIABLE risk_factor_id : {
+				code : "risk_factor_id"
+				description : "risk_factor_id"
+				variable_id : "risk_factor_id"
+				displayName :  "risk_factor_id"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
 			},
-			VARIABLE InstrumentID : {
-				code : "InstrumentID"
-				description : "InstrumentID"
-				variable_id : "InstrumentID"
-				displayName : "InstrumentID"
+			VARIABLE position_id : {
+				code : "position_id"
+				description : "position_id"
+				variable_id : "position_id"
+				displayName : "position_id"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
+			},
+			VARIABLE issue_id : {
+				code : "issue_id"
+				description : "issue_id"
+				variable_id : "issue_id"
+				displayName : "issue_id"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
+			},
+			VARIABLE issuer_id : {
+				code : "issuer_id"
+				description : "issuer_id"
+				variable_id : "issuer_id"
+				displayName : "issuer_id"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
+			},
+			VARIABLE trancheName : {
+				code : "trancheName"
+				description : "trancheName"
+				variable_id : "trancheName"
+				displayName : "trancheName"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
+			},
+			VARIABLE securitisation_id : {
+				code : "securitisation_id"
+				description : "securitisation_id"
+				variable_id : "securitisation_id"
+				displayName : "securitisation_id"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
+			},
+			VARIABLE deliveryLocation : {
+				code : "deliveryLocation"
+				description : "deliveryLocation"
+				variable_id : "deliveryLocation"
+				displayName : "deliveryLocation"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
+			},
+			VARIABLE organisation_id : {
+				code : "organisation_id"
+				description : "organisation_id"
+				variable_id : "organisation_id"
+				displayName : "organisation_id"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
 			}
+		
 			
 			 ] } ] } } } }
 				

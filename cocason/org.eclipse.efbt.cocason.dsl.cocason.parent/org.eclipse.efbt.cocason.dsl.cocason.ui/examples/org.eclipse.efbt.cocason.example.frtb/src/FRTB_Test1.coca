@@ -10,7 +10,7 @@ ProgramAndCalls : {
 							inputData : SMCubesTestInputData FRTBTest1: {
 								smcubes_inputdata : [ 
 									BaseColumnStructuredData girr_curvature_source_data  : { 
-										cube : "FRTBCubesStaticModel.FRTBCubesModel.cubesModel.girr_curvature_source_data" 
+										cube : "FRTBCubesStaticModel.FRTBCubesModel.cubesModel.delta_sensitivities"
 										rows : [
 											BaseRowData row1 : { 
 												cells : [ 

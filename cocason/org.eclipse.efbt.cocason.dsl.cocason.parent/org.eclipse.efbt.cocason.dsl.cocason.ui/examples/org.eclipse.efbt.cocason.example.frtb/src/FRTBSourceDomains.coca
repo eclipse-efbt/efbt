@@ -25,6 +25,60 @@ ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStatic
 			 		data_type : :Double
 			 		is_enumerated : false
 			 		displayName : Numbers
+			 	},
+			 	DOMAIN  riskClass : {
+			 		code : riskClass			 	
+			 		is_enumerated : true
+			 		displayName : riskClass
+			 		
+			 	},
+			 	DOMAIN  equityFactorType : {
+			 		code : equityFactorType			 	
+			 		is_enumerated : true
+			 		displayName : equityFactorType
+			 		
+			 	},
+			 	DOMAIN  CSRCurveType : {
+			 		code : curveType			 	
+			 		is_enumerated : true
+			 		displayName : curveType
+			 		
+			 	},
+			 	DOMAIN  ratingsGrade : {
+			 		code : ratingsGrade			 	
+			 		is_enumerated : true
+			 		displayName : ratingsGrade
+			 		
+			 	},
+			 	DOMAIN  commodityType : {
+			 		code : commodityType			 	
+			 		is_enumerated : true
+			 		displayName : commodityType
+			 		
+			 	},
+			 	DOMAIN  marketCap : {
+			 		code : marketCap			 	
+			 		is_enumerated : true
+			 		displayName : marketCap
+			 		
+			 	},
+			 	DOMAIN  economy : {
+			 		code : economy			 	
+			 		is_enumerated : true
+			 		displayName : economy
+			 		
+			 	},
+			 	DOMAIN  sector : {
+			 		code : sector			 	
+			 		is_enumerated : true
+			 		displayName : sector
+			 		
+			 	},
+			 	DOMAIN  securitisation_sector : {
+			 		code : securitisation_sector			 	
+			 		is_enumerated : true
+			 		displayName : securitisation_sector
+			 		
 			 	}
 			 	
 			 	  ] } ] } } } }

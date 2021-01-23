@@ -24,7 +24,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CSRNonSecuritisationRiskFactor" eSuperTypes="#//RiskFactor">
     <eStructuralFeatures xsi:type="ecore:EReference" name="issuer" eType="#//Organisation"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="curveType" eType="#//CreditSpreadCurveType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="CSRCurveType" eType="#//CreditSpreadCurveType"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="CSRCreditQuality" eType="#//RatingGrade"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CSRSecuritisationNonCTPRiskFactor" eSuperTypes="#//RiskFactor">
@@ -63,10 +63,12 @@
         iD="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Curvature" eSuperTypes="#//RiskMeasure">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="shockDirection" eType="#//ShockDirection"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="riskFactor" eType="#//RiskFactor"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="shiftedValue" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="position" eType="#//Position"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ccyOfRecord" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="valuationDifference" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="shockDirection" eType="#//ShockDirection"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="riskWeight" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SecurityIssue">
     <eStructuralFeatures xsi:type="ecore:EReference" name="issuer" eType="#//Organisation"/>
@@ -76,20 +78,19 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Securitisation" eSuperTypes="#//SecurityIssue">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="securitisationSector" eType="#//SecuritisationSector"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="CSRCreditQuality" eType="#//RatingGrade"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EquityIssue" eSuperTypes="#//SecurityIssue"/>
   <eClassifiers xsi:type="ecore:EClass" name="BondIssue" eSuperTypes="#//SecurityIssue"/>
   <eClassifiers xsi:type="ecore:EClass" name="Organisation">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="ratingGrade" eType="#//RatingGrade"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="secter" eType="#//Sector"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sector" eType="#//Sector"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="marketCap" eType="#//MarketCap"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="economy" eType="#//Economy"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="ShockDirection">
-    <eLiterals name="upShock"/>
+    <eLiterals name="upshock"/>
     <eLiterals name="downShock" value="1"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="SecuritisationSector">

@@ -2,17 +2,103 @@ ProgramAndCalls : { program : TRLProgram :  {
 	smcubesStaticModel : SMCubesStaticModel FRTBCubesStaticModel : { 
 		smCubesModel  : SmcubesModel FRTBCubesModel: {  
 			cubes : [ CubeModule cubesModel  : { cubes : [ 
- 						CUBE girr_curvature_source_data : { 
- 							code : "girr_curvature_source_data" 
- 							cube_id : "girr_curvature_source_data" 
- 							description : "girr_curvature_source_data" 
+ 						CUBE position : { 
+ 							code : "position" 
+ 							cube_id : "position" 
+ 							description : "position" 
  							is_allowed : false 
  							published : false 
- 							cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.girr_curvature_source_data_structure" }  ,
- 							CUBE summed_girr_delta_sensitivities_per_instrument_and_curve_data : { 
- 								code : "summed_girr_delta_sensitivities_per_instrument_and_curve_data" 
- 								cube_id : "summed_girr_delta_sensitivities_per_instrument_and_curve_data" 
- 								description : "summed_girr_delta_sensitivities_per_instrument_and_curve_data" 
- 								is_allowed : false 
- 								published : false 
- 								cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.summed_girr_delta_sensitivities_per_instrument_and_curve_data_structure" } ] } ] } } } }
+ 							cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.position" }  ,
+ 						CUBE girr_risk_factor : { 
+ 							code : "girr_risk_factor" 
+ 							cube_id : "girr_risk_factor" 
+ 							description : "girr_risk_factor" 
+ 							is_allowed : false 
+ 							published : false 
+ 							cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.girr_risk_factor" }  ,
+ 						CUBE curvature : { 
+ 							code : "curvature" 
+ 							cube_id : "curvature" 
+ 							description : "curvature" 
+ 							is_allowed : false 
+ 							published : false 
+ 							cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.curvature" }  ,
+ 						CUBE delta_sensitivities : { 
+ 							code : "delta_sensitivities" 
+ 							cube_id : "delta_sensitivities" 
+ 							description : "delta_sensitivities" 
+ 							is_allowed : false 
+ 							published : false 
+ 							cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.delta_sensitivities" },
+ 						CUBE vega_sensitivities : { 
+ 							code : "vega_sensitivities" 
+ 							cube_id : "vega_sensitivities" 
+ 							description : "vega_sensitivities" 
+ 							is_allowed : false 
+ 							published : false 
+ 							cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.vega_sensitivities" },
+ 						CUBE equity_risk_factor : { 
+ 							code : "equity_risk_factor" 
+ 							cube_id : "equity_risk_factor" 
+ 							description : "equity_risk_factor" 
+ 							is_allowed : false 
+ 							published : false 
+ 							cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.equity_risk_factor" }  ,
+ 						CUBE commodity_risk_factor : { 
+ 							code : "commodity_risk_factor" 
+ 							cube_id : "commodity_risk_factor" 
+ 							description : "commodity_risk_factor" 
+ 							is_allowed : false 
+ 							published : false 
+ 							cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.commodity_risk_factor" }  ,
+ 						CUBE CSR_NonSec_risk_factor : { 
+ 							code : "CSR_NonSec_risk_factor" 
+ 							cube_id : "CSR_NonSec_risk_factor" 
+ 							description : "CSR_NonSec_risk_factor" 
+ 							is_allowed : false 
+ 							published : false 
+ 							cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.CSR_NonSec_risk_factor" }  ,
+ 						CUBE CSR_Sec_CTP_risk_factor : { 
+ 							code : "CSR_Sec_CTP_risk_factor" 
+ 							cube_id : "CSR_Sec_CTP_risk_factor" 
+ 							description : "CSR_Sec_CTP_risk_factor" 
+ 							is_allowed : false 
+ 							published : false 
+ 							cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.CSR_Sec_CTP_risk_factor" }  ,
+ 						CUBE CSR_Sec_Non_CTP_risk_factor : { 
+ 							code : "CSR_Sec_Non_CTP_risk_factor" 
+ 							cube_id : "CSR_Sec_Non_CTP_risk_factor" 
+ 							description : "CSR_Sec_Non_CTP_risk_factor" 
+ 							is_allowed : false 
+ 							published : false 
+ 							cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.CSR_Sec_Non_CTP_risk_factor" }  ,
+ 						CUBE FX_risk_factor : { 
+ 							code : "FX_risk_factor" 
+ 							cube_id : "FX_risk_factor" 
+ 							description : "FX_risk_factor" 
+ 							is_allowed : false 
+ 							published : false 
+ 							cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.FX_risk_factor" },
+ 						CUBE security_issue : { 
+ 							code : "security_issue" 
+ 							cube_id : "security_issue" 
+ 							description : "security_issue" 
+ 							is_allowed : false 
+ 							published : false 
+ 							cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.security_issue" },
+ 						CUBE organisation : { 
+ 							code : "organisation" 
+ 							cube_id : "organisation" 
+ 							description : "organisation" 
+ 							is_allowed : false 
+ 							published : false 
+ 							cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.organisation" },
+ 						CUBE securitisation : { 
+ 							code : "securitisation" 
+ 							cube_id : "securitisation" 
+ 							description : "securitisation" 
+ 							is_allowed : false 
+ 							published : false 
+ 							cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.securitisation" }   						    
+ 						    
+ 						  ] } ] } } } }

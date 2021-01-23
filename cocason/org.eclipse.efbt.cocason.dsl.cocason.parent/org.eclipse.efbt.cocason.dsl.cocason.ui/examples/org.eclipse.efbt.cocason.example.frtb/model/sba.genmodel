@@ -31,7 +31,7 @@
   </genPackages>
   <genPackages prefix="Sba" disposableProviderFactory="true" ecorePackage="sba.ecore#/">
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="sba.ecore#//ShockDirection">
-      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//ShockDirection/upShock"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//ShockDirection/upshock"/>
       <genEnumLiterals ecoreEnumLiteral="sba.ecore#//ShockDirection/downShock"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="sba.ecore#//SecuritisationSector">
@@ -115,7 +115,7 @@
     </genClasses>
     <genClasses ecoreClass="sba.ecore#//CSRNonSecuritisationRiskFactor">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sba.ecore#//CSRNonSecuritisationRiskFactor/issuer"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//CSRNonSecuritisationRiskFactor/curveType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//CSRNonSecuritisationRiskFactor/CSRCurveType"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//CSRNonSecuritisationRiskFactor/CSRCreditQuality"/>
     </genClasses>
     <genClasses ecoreClass="sba.ecore#//CSRSecuritisationNonCTPRiskFactor">
@@ -150,10 +150,12 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Position/name"/>
     </genClasses>
     <genClasses ecoreClass="sba.ecore#//Curvature">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Curvature/shockDirection"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sba.ecore#//Curvature/riskFactor"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Curvature/shiftedValue"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sba.ecore#//Curvature/position"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Curvature/ccyOfRecord"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Curvature/valuationDifference"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Curvature/shockDirection"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Curvature/riskWeight"/>
     </genClasses>
     <genClasses ecoreClass="sba.ecore#//SecurityIssue">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sba.ecore#//SecurityIssue/issuer"/>
@@ -162,13 +164,12 @@
     </genClasses>
     <genClasses ecoreClass="sba.ecore#//Securitisation">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Securitisation/securitisationSector"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Securitisation/CSRCreditQuality"/>
     </genClasses>
     <genClasses ecoreClass="sba.ecore#//EquityIssue"/>
     <genClasses ecoreClass="sba.ecore#//BondIssue"/>
     <genClasses ecoreClass="sba.ecore#//Organisation">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Organisation/ratingGrade"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Organisation/secter"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Organisation/sector"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Organisation/marketCap"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Organisation/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Organisation/economy"/>
