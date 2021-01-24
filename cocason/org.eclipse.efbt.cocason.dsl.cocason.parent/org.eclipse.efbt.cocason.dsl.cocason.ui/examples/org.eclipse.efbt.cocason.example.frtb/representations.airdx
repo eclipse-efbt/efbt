@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" uid="_hM7skF4gEeuOA62rFX6mWw" version="14.3.1.202003261200">
+  <semanticResources>model/module_management.ecore</semanticResources>
+  <semanticResources>model/sba.ecore</semanticResources>
+  <semanticResources>model/sba.genmodel</semanticResources>
+</viewpoint:DAnalysis>

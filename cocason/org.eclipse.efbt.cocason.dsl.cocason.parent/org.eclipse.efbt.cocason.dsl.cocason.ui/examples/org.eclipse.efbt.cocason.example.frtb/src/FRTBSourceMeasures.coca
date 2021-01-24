@@ -32,7 +32,35 @@ ProgramAndCalls : { program :  TRLProgram :  {
 				displayName :  "deltaSensitivity"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			},
+			VARIABLE deltaSensitivityk : {
+				code : "deltaSensitivityk"
+				description : "deltaSensitivityk"
+				variable_id : "deltaSensitivityk"
+				displayName :  "deltaSensitivityk"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE deltaSensitivityl : {
+				code : "deltaSensitivityl"
+				description : "deltaSensitivityl"
+				variable_id : "deltaSensitivityl"
+				displayName :  "deltaSensitivityl"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
 			VARIABLE tenor : {
+				code : "tenor"
+				description : "tenor"
+				variable_id : "tenor"
+				displayName :  "tenor"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE tenork : {
+				code : "tenor"
+				description : "tenor"
+				variable_id : "tenor"
+				displayName :  "tenor"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE tenorl : {
 				code : "tenor"
 				description : "tenor"
 				variable_id : "tenor"

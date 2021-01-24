@@ -11,6 +11,20 @@ ProgramAndCalls : { program :  TRLProgram :  {
 				displayName :  "risk_factor_id"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
 			},
+			VARIABLE risk_factor_idk : {
+				code : "risk_factor_idk"
+				description : "risk_factor_idk"
+				variable_id : "risk_factor_idk"
+				displayName :  "risk_factor_idk"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
+			},
+			VARIABLE risk_factor_idl : {
+				code : "risk_factor_idl"
+				description : "risk_factor_idl"
+				variable_id : "risk_factor_idl"
+				displayName :  "risk_factor_idl"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
+			},
 			VARIABLE position_id : {
 				code : "position_id"
 				description : "position_id"

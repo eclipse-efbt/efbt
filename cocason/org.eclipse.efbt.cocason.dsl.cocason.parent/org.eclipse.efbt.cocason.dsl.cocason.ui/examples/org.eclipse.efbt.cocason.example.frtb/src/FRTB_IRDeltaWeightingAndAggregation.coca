@@ -6,6 +6,19 @@ ProgramAndCalls : { program : TRLProgram : { executableLogic : TRLExecutableLogi
 				DerivedCube netted_delta_sensitivities :{ sourceCubes : [ "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.deltaSensitivities" ] },
 				DerivedCube GIRR_delta_sensitivities_and_risk_factors : { sourceCubes : [netted_delta_sensitivities, "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.girr_risk_factor" ] },
 				DerivedCube GIRR_delta_sensitivities_and_risk_factors_with_weight : { sourceCubes : [GIRR_delta_sensitivities_and_risk_factors] },
-				DerivedCube weighted_GIRR_delta_sensitivities_and_risk_factors : { sourceCubes : [GIRR_delta_sensitivities_and_risk_factors_with_weight] }
+				DerivedCube weighted_GIRR_delta_sensitivities_and_risk_factors : { sourceCubes : [GIRR_delta_sensitivities_and_risk_factors_with_weight] },
+				DerivedCube copy_of_weighted_GIRR_delta_sensitivities_and_risk_factors : { sourceCubes : [weighted_GIRR_delta_sensitivities_and_risk_factors] },
+				DerivedCube GIRR_sensitivity_combinations : { sourceCubes : [weighted_GIRR_delta_sensitivities_and_risk_factors, copy_of_weighted_GIRR_delta_sensitivities_and_risk_factors] },
+				DerivedCube GIRR_sensitivity_combinationsWithCorrelationFactor : { sourceCubes : [GIRR_sensitivity_combinations] },
+				DerivedCube GIRR_delta_sensitivities_correlated : { sourceCubes : [GIRR_sensitivity_combinationsWithCorrelationFactor] },
+				DerivedCube GIRR_delta_sensitivities_correlated_and_aggregated : { sourceCubes : [GIRR_delta_sensitivities_correlated] },
+				DerivedCube KB_perBucket : { sourceCubes : [GIRR_delta_sensitivities_correlated] },
+				DerivedCube totalGIRRDeltaSensitivityPerBucket : { sourceCubes : [weighted_GIRR_delta_sensitivities_and_risk_factors] },
+				DerivedCube copy_of_totalGIRRDeltaSensitivityPerBucket : { sourceCubes :  [totalGIRRDeltaSensitivityPerBucket ] },
+				DerivedCube GIRRDeltaSensitivityPerBucketCombinations : { sourceCubes : [totalGIRRDeltaSensitivityPerBucket,copy_of_totalGIRRDeltaSensitivityPerBucket] },
+				DerivedCube correlatedDeltaSensitivityPerBucketCombinations : { sourceCubes : [GIRRDeltaSensitivityPerBucketCombinations] },
+				DerivedCube GIRRDeltaSensitivityPerBucketCorrelated : { sourceCubes : [correlatedDeltaSensitivityPerBucketCombinations] }
+				
+				
 				
 				 	 ] } } } } 

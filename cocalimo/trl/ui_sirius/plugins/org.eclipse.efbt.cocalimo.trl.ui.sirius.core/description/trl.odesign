@@ -143,17 +143,17 @@
           </style>
         </edgeMappings>
         <toolSections name="tool1">
-          <ownedTools xsi:type="tool:DiagramCreationDescription" name="showJoinView" label="showJoinView" precondition="true" browseExpression="service:getTag()" diagramDescription="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='JoinView']">
+          <ownedTools xsi:type="tool:DiagramCreationDescription" name="showJoinView" label="showJoinView" precondition="true" diagramDescription="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='JoinView']">
             <initialOperation/>
             <containerViewVariable name="containerView"/>
             <representationNameVariable name="diagramName"/>
           </ownedTools>
-          <ownedTools xsi:type="tool:DiagramCreationDescription" name="showSchema" label="showSchema" precondition="true" browseExpression="service:getTag()" diagramDescription="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='CubeSchema']">
+          <ownedTools xsi:type="tool:DiagramCreationDescription" name="showSchema" label="showSchema" precondition="true" diagramDescription="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='CubeSchema']">
             <initialOperation/>
             <containerViewVariable name="containerView"/>
             <representationNameVariable name="diagramName"/>
           </ownedTools>
-          <ownedTools xsi:type="tool:DiagramCreationDescription" name="showEnrichmentView" label="showEnrichmentView" precondition="true" browseExpression="service:getTag()" diagramDescription="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='EnrichmentView']">
+          <ownedTools xsi:type="tool:DiagramCreationDescription" name="showEnrichmentView" label="showEnrichmentView" precondition="true" diagramDescription="//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='EnrichmentView']">
             <initialOperation/>
             <containerViewVariable name="containerView"/>
             <representationNameVariable name="diagramName"/>
