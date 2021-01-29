@@ -95,6 +95,13 @@ ProgramAndCalls : { program :  TRLProgram :  {
 				displayName :  "CVR_CorrelationFactor"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			},
+			VARIABLE DeltaCorrelationFactor : {
+				code : "DeltaCorrelationFactor"
+				description : "DeltaCorrelationFactor"
+				variable_id : "DeltaCorrelationFactor"
+				displayName :  "DeltaCorrelationFactor"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
 			VARIABLE CVRCorrelatedProduct : {
 				code : "CVRCorrelatedProduct"
 				description : "CVRCorrelatedProduct"
@@ -170,6 +177,69 @@ ProgramAndCalls : { program :  TRLProgram :  {
 				description : "double_of_max_of_cvr_stuff"
 				variable_id : "double_of_max_of_cvr_stuff"
 				displayName :  "double_of_max_of_cvr_stuff"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE nettedDeltaSensitivity : {
+				code : "nettedDeltaSensitivity"
+				description : "nettedDeltaSensitivity"
+				variable_id : "nettedDeltaSensitivity"
+				displayName :  "nettedDeltaSensitivity"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE weighted_sensitivity : {
+				code : "weighted_sensitivity"
+				description : "weighted_sensitivity"
+				variable_id : "weighted_sensitivity"
+				displayName :  "weighted_sensitivity"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE KBInput : {
+				code : "KBInput"
+				description : "KBInput"
+				variable_id : "KBInput"
+				displayName :  "KBInput"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE KB : {
+				code : "KB"
+				description : "KB"
+				variable_id : "KB"
+				displayName :  "KB"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE KBInput_per_bucket : {
+				code : "KBInput_per_bucket"
+				description : "KBInput_per_bucket"
+				variable_id : "KBInput_per_bucket"
+				displayName :  "KBInput_per_bucket"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE sensitivityPerBucketCorrelated : {
+				code : "sensitivityPerBucketCorrelated"
+				description : "sensitivityPerBucketCorrelated"
+				variable_id : "sensitivityPerBucketCorrelated"
+				displayName :  "sensitivityPerBucketCorrelated"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE total_GIRRSensitivityPerBucket : {
+				code : "total_GIRRSensitivityPerBucket"
+				description : "total_GIRRSensitivityPerBucket"
+				variable_id : "total_GIRRSensitivityPerBucket"
+				displayName :  "total_GIRRSensitivityPerBucket"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE total_GIRRSensitivityPerBucketk : {
+				code : "total_GIRRSensitivityPerBucketk"
+				description : "total_GIRRSensitivityPerBucketk"
+				variable_id : "total_GIRRSensitivityPerBucketk"
+				displayName :  "total_GIRRSensitivityPerBucketk"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE total_GIRRSensitivityPerBucketl : {
+				code : "total_GIRRSensitivityPerBucketl"
+				description : "total_GIRRSensitivityPerBucketl"
+				variable_id : "total_GIRRSensitivityPerBucketl"
+				displayName :  "total_GIRRSensitivityPerBucketl"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			}
 			

@@ -18,6 +18,20 @@ ProgramAndCalls : { program :  TRLProgram :  {
 				displayName : "MainCurrency"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
 			},
+			VARIABLE MainCurrencyl : {
+				code : "MainCurrencyl"
+				description : "MainCurrencyl"
+				variable_id : "MainCurrencyl"
+				displayName : "MainCurrencyl"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
+			},
+			VARIABLE MainCurrencyk : {
+				code : "MainCurrencyk"
+				description : "MainCurrencyk"
+				variable_id : "MainCurrencyk"
+				displayName : "MaiMainCurrencyknCurrency"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
+			},
 			VARIABLE SecondCurrency : {
 				code : "SecondCurrency"
 				description : "SecondCurrency"
@@ -108,6 +122,13 @@ ProgramAndCalls : { program :  TRLProgram :  {
 				variable_id : "securitisation_sector"
 				displayName : "securitisation_sector"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.securitisation_sector"
+			},
+			VARIABLE riskClass : {
+				code : "riskClass"
+				description : "riskClass"
+				variable_id : "riskClass"
+				displayName : "riskClass"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.riskClass"
 			}
 			
 			
