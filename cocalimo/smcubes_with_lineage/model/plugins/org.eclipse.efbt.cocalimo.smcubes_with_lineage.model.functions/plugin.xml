@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated functions -->
+      <package
+            uri="http://www.eclipse.org/efbt/functions"
+            class="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.FunctionsPackage"
+            genModel="model/functions.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated functions -->
+      <parser
+            type="functions"
+            class="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.util.FunctionsResourceFactoryImpl"/>
+   </extension>
+
+</plugin>

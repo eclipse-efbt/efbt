@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+    Copyright (c) 2020 Bird Software Solutions Ltd
+    This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License 2.0
+    which accompanies this distribution, and is available at
+    https://www.eclipse.org/legal/epl-2.0/
+   
+    SPDX-License-Identifier: EPL-2.0
+   
+    Contributors:
+       Neil Mackenzie - initial API and implementation
+ -->
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated smcubes -->
+      <package
+            uri="http://www.eclipse.org/efbt/core"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage"
+            genModel="model/smcubes.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated smcubes -->
+      <parser
+            type="core"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.core.util.CoreResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated smcubes -->
+      <package
+            uri="http://www.eclipse.org/efbt/data_definition"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.data_definition.Data_definitionPackage"
+            genModel="model/smcubes.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated smcubes -->
+      <parser
+            type="data_definition"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.data_definition.util.Data_definitionResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated smcubes -->
+      <package
+            uri="http://www.eclipse.org/efbt/efbt_data_definition"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.Efbt_data_definitionPackage"
+            genModel="model/smcubes.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated smcubes -->
+      <parser
+            type="efbt_data_definition"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.util.Efbt_data_definitionResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated smcubes -->
+      <package
+            uri="http://www.eclipse.org/efbt/efbt_mapping"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.Efbt_mappingPackage"
+            genModel="model/smcubes.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated smcubes -->
+      <parser
+            type="efbt_mapping"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.util.Efbt_mappingResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated smcubes -->
+      <package
+            uri="http://www.eclipse.org/efbt/efbt_vtl_transformation"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.Efbt_vtl_transformationPackage"
+            genModel="model/smcubes.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated smcubes -->
+      <parser
+            type="efbt_vtl_transformation"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.util.Efbt_vtl_transformationResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated smcubes -->
+      <package
+            uri="http://www.eclipse.org/efbt/mapping"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.mapping.MappingPackage"
+            genModel="model/smcubes.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated smcubes -->
+      <parser
+            type="mapping"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.mapping.util.MappingResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated smcubes -->
+      <package
+            uri="http://www.eclipse.org/efbt/rendering"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.rendering.RenderingPackage"
+            genModel="model/smcubes.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated smcubes -->
+      <parser
+            type="rendering"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.rendering.util.RenderingResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated smcubes -->
+      <package
+            uri="http://www.eclipse.org/efbt/reports"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.reports.ReportsPackage"
+            genModel="model/smcubes.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated smcubes -->
+      <parser
+            type="reports"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.reports.util.ReportsResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated smcubes -->
+      <package
+            uri="http://www.eclipse.org/efbt/smcubes_model"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.Smcubes_modelPackage"
+            genModel="model/smcubes.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated smcubes -->
+      <parser
+            type="smcubes_model"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.util.Smcubes_modelResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated smcubes -->
+      <package
+            uri="http://www.eclipse.org/efbt/vtl_transformation"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.Vtl_transformationPackage"
+            genModel="model/smcubes.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated smcubes -->
+      <parser
+            type="vtl_transformation"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.util.Vtl_transformationResourceFactoryImpl"/>
+   </extension>
+
+</plugin>

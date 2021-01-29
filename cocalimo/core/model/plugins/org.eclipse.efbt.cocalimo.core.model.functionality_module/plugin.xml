@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+    Copyright (c) 2020 Bird Software Solutions Ltd
+    This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License 2.0
+    which accompanies this distribution, and is available at
+    https://www.eclipse.org/legal/epl-2.0/
+   
+    SPDX-License-Identifier: EPL-2.0
+   
+    Contributors:
+       Neil Mackenzie - initial API and implementation
+ -->
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated functionality_module -->
+      <package
+            uri="http://www.eclipse.org/efbt/functionality_module"
+            class="org.eclipse.efbt.cocalimo.core.model.functionality_module.Functionality_modulePackage"
+            genModel="model/functionality_module.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated functionality_module -->
+      <parser
+            type="functionality_module"
+            class="org.eclipse.efbt.cocalimo.core.model.functionality_module.util.Functionality_moduleResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated functionality_module -->
+      <package
+            uri="http://www.eclipse.org/efbt/scenarios"
+            class="org.eclipse.efbt.cocalimo.core.model.scenarios.ScenariosPackage"
+            genModel="model/functionality_module.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated functionality_module -->
+      <parser
+            type="scenarios"
+            class="org.eclipse.efbt.cocalimo.core.model.scenarios.util.ScenariosResourceFactoryImpl"/>
+   </extension>
+
+</plugin>

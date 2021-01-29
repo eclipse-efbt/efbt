@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Provider
+Bundle-SymbolicName: org.eclipse.efbt.controller.smcubes.component.access.provider
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: org.eclipse.efbt.util.access.provider
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Require-Bundle: org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.access.api,
+ org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.jackcess.impl
+Export-Package: org.eclipse.efbt.controller.smcubes.component.access.provider

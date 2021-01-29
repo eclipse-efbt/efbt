@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes/src-gen"
+    modelPluginID="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes"
+    modelName="Lineagecubes" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="8.0" copyrightFields="false"
+    usedGenPackages="../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//core ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//data_definition"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>cube_schema.ecore</foreignModel>
+  <foreignModel>cubes.ecore</foreignModel>
+  <foreignModel>efbt_advanced_data_definition.ecore</foreignModel>
+  <foreignModel>incremental_cubes.ecore</foreignModel>
+  <genPackages prefix="Cube_schema" basePackage="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model"
+      resource="XML" disposableProviderFactory="true" ecorePackage="cube_schema.ecore#/">
+    <genClasses ecoreClass="cube_schema.ecore#//CubeSchema">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cube_schema.ecore#//CubeSchema/cube"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cube_schema.ecore#//CubeSchema/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cube_schema.ecore#//CubeSchema/baseCube"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Cubes" basePackage="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model"
+      resource="XML" disposableProviderFactory="true" ecorePackage="cubes.ecore#/">
+    <genClasses ecoreClass="cubes.ecore#//BaseCube"/>
+    <genClasses ecoreClass="cubes.ecore#//DerivedCube">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cubes.ecore#//DerivedCube/sourceCubes"/>
+    </genClasses>
+    <genClasses ecoreClass="cubes.ecore#//FreeBirdToolsCube">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cubes.ecore#//FreeBirdToolsCube/name"/>
+    </genClasses>
+    <genClasses ecoreClass="cubes.ecore#//FreeBirdToolsCubeModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cubes.ecore#//FreeBirdToolsCubeModule/cubes"/>
+    </genClasses>
+    <genClasses ecoreClass="cubes.ecore#//TargetCube"/>
+    <genClasses ecoreClass="cubes.ecore#//FreeBIRDToolsCubeHierarchyRelationshipModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cubes.ecore#//FreeBIRDToolsCubeHierarchyRelationshipModule/hierarchyRelationships"/>
+    </genClasses>
+    <genClasses ecoreClass="cubes.ecore#//FreeBIRDToolsCubeHierarchyRelationship">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cubes.ecore#//FreeBIRDToolsCubeHierarchyRelationship/superCube"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cubes.ecore#//FreeBIRDToolsCubeHierarchyRelationship/subCube"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Efbt_advanced_data_definition" basePackage="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model"
+      resource="XML" disposableProviderFactory="true" ecorePackage="efbt_advanced_data_definition.ecore#/">
+    <genClasses ecoreClass="efbt_advanced_data_definition.ecore#//AdvancedTypedVariable"/>
+    <genClasses ecoreClass="efbt_advanced_data_definition.ecore#//ArrayTypedVariable">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference efbt_advanced_data_definition.ecore#//ArrayTypedVariable/cubeType"/>
+    </genClasses>
+    <genClasses ecoreClass="efbt_advanced_data_definition.ecore#//ArrayTypedVariableModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_advanced_data_definition.ecore#//ArrayTypedVariableModule/arrayTypedVariables"/>
+    </genClasses>
+    <genClasses ecoreClass="efbt_advanced_data_definition.ecore#//StructTypedVariable">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference efbt_advanced_data_definition.ecore#//StructTypedVariable/cubeType"/>
+    </genClasses>
+    <genClasses ecoreClass="efbt_advanced_data_definition.ecore#//StructTypedVariablesModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_advanced_data_definition.ecore#//StructTypedVariablesModule/structTypeVariables"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Incremental_cubes" basePackage="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model"
+      resource="XML" disposableProviderFactory="true" ecorePackage="incremental_cubes.ecore#/">
+    <genClasses ecoreClass="incremental_cubes.ecore#//BaseDeltaCube">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference incremental_cubes.ecore#//BaseDeltaCube/ultimateBaseCube"/>
+    </genClasses>
+    <genClasses ecoreClass="incremental_cubes.ecore#//BaseViewCube">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference incremental_cubes.ecore#//BaseViewCube/ultimateBaseCube"/>
+    </genClasses>
+    <genClasses ecoreClass="incremental_cubes.ecore#//DeltaAccumulationCube"/>
+  </genPackages>
+</genmodel:GenModel>

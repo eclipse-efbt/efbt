@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="sba" nsURI="http://www.eclipse.org/efbt/" nsPrefix="sba">
+  <eAnnotations source="license">
+    <details key="license" value="Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"/>
+  </eAnnotations>
+  <eClassifiers xsi:type="ecore:EClass" name="RiskFactor">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="volFactor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FXRiskFactor" eSuperTypes="#//RiskFactor">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ccy1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ccy2" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GIRRRiskFactor" eSuperTypes="#//RiskFactor">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="riskFactorType" eType="#//GIRRRiskFactorType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="mainCurrency" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="secondCurrency" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EquityRiskFactor" eSuperTypes="#//RiskFactor">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="issue" eType="#//EquityIssue"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="equityFactorType" eType="#//EquityFactorType"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CSRNonSecuritisationRiskFactor" eSuperTypes="#//RiskFactor">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="issuer" eType="#//Organisation"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="CSRCurveType" eType="#//CreditSpreadCurveType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="CSRCreditQuality" eType="#//RatingGrade"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CSRSecuritisationNonCTPRiskFactor" eSuperTypes="#//RiskFactor">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="trancheName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="securitisation" eType="#//Securitisation"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CSRSecuritisationCTPRiskFactor" eSuperTypes="#//RiskFactor">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="issuer" eType="#//Organisation"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CommodityRiskFactor" eSuperTypes="#//RiskFactor">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="commodityType" eType="#//CommodityType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="deliveryLocation" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SensitivitySet">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="riskFactor" eType="#//RiskFactor"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="position" eType="#//Position"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ccyOfRecord" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sensitivities" upperBound="-1"
+        eType="#//Sensitivity" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Sensitivity" eSuperTypes="#//RiskMeasure"/>
+  <eClassifiers xsi:type="ecore:EClass" name="DeltaSensitivity" eSuperTypes="#//Sensitivity">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="tenor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="deltaSensitivity" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VegaSensitivity" eSuperTypes="#//Sensitivity">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="vegaSensitivity" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="optionMaturity" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="optionUnderlyingResidualMaturity"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Position">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Curvature" eSuperTypes="#//RiskMeasure">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="riskFactor" eType="#//RiskFactor"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="position" eType="#//Position"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ccyOfRecord" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="valuationDifference" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="shockDirection" eType="#//ShockDirection"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="riskWeight" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SecurityIssue">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="issuer" eType="#//Organisation"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ratingGrade" eType="#//RatingGrade"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Securitisation" eSuperTypes="#//SecurityIssue">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="securitisationSector" eType="#//SecuritisationSector"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EquityIssue" eSuperTypes="#//SecurityIssue"/>
+  <eClassifiers xsi:type="ecore:EClass" name="BondIssue" eSuperTypes="#//SecurityIssue"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Organisation">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ratingGrade" eType="#//RatingGrade"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sector" eType="#//Sector"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="marketCap" eType="#//MarketCap"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="economy" eType="#//Economy"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="ShockDirection">
+    <eLiterals name="upshock"/>
+    <eLiterals name="downShock" value="1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="SecuritisationSector">
+    <eLiterals name="RMBS_PRIME" value="1"/>
+    <eLiterals name="RMBS_MID_PRIME" value="2"/>
+    <eLiterals name="RMBS_SUB_PRIME" value="3"/>
+    <eLiterals name="CMBS" value="4"/>
+    <eLiterals name="ABS_STUDENT_LOAN" value="5"/>
+    <eLiterals name="ABS_AUTO" value="6"/>
+    <eLiterals name="CLO_NON_CTP" value="7"/>
+    <eLiterals name="OTHER_SECTOR" value="8"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="GIRRRiskFactorType">
+    <eLiterals name="INFLATION"/>
+    <eLiterals name="BASIS" value="1"/>
+    <eLiterals name="YIELD" value="2"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="EquityFactorType">
+    <eLiterals name="SPOT"/>
+    <eLiterals name="REPO" value="1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="Economy">
+    <eLiterals name="EMERGING_MARKET"/>
+    <eLiterals name="ADVANCED_ECONOMY" value="1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="RatingGrade">
+    <eLiterals name="SENIOR_IG"/>
+    <eLiterals name="NON_SENIOR_IG" value="1"/>
+    <eLiterals name="HIGH_YIELD" value="2"/>
+    <eLiterals name="NON_RATED" value="3"/>
+    <eLiterals name="IG" value="4"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="MarketCap">
+    <eLiterals name="LARGE"/>
+    <eLiterals name="SMALL" value="1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="Sector">
+    <eLiterals name="SOVEREIGN"/>
+    <eLiterals name="LOCAL_GOVERNMENT" value="1"/>
+    <eLiterals name="FINANCIALS" value="2"/>
+    <eLiterals name="BASIC_MATERIALS" value="3"/>
+    <eLiterals name="CONSUMER_GOODS" value="4"/>
+    <eLiterals name="TECHNOLOGY" value="5"/>
+    <eLiterals name="HEALTH_CARE" value="6"/>
+    <eLiterals name="COVERED_BONDS" value="7"/>
+    <eLiterals name="OTHER_SECTOR" value="8"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="CreditSpreadCurveType">
+    <eLiterals name="BOND"/>
+    <eLiterals name="CDS"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="CommodityType">
+    <eLiterals name="ENERGY_SOLID_COMBUSTABLES"/>
+    <eLiterals name="ENERGY_LIQUID_COMBUSTABLES" value="1"/>
+    <eLiterals name="ENERGY_ELECTRICITY_AND_CARBON_TRADING" value="2"/>
+    <eLiterals name="FREIGHT" value="3"/>
+    <eLiterals name="METALS_NON_PRECIOUS" value="4"/>
+    <eLiterals name="GASEOUS_COMBUSTABLES" value="5"/>
+    <eLiterals name="PRECIOUS_METALS" value="6"/>
+    <eLiterals name="GRAINS_AND_OILSEED" value="7"/>
+    <eLiterals name="LIVESTOCK_AND_DAIRY" value="8"/>
+    <eLiterals name="SOFTS_AND_OTHER_AGRICULTURALS" value="9"/>
+    <eLiterals name="OTHER_COMMODITY" value="10"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RiskFactorModule" eSuperTypes="module_management.ecore#//Module">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="riskFactors" upperBound="-1"
+        eType="#//RiskFactor" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PositionModule" eSuperTypes="module_management.ecore#//Module">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="positions" upperBound="-1"
+        eType="#//Position" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ReferenceDataModule" eSuperTypes="module_management.ecore#//Module">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="issues" upperBound="-1"
+        eType="#//SecurityIssue" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="issuers" upperBound="-1"
+        eType="#//Organisation" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SensitivitiesAndCurvaturesModule" eSuperTypes="module_management.ecore#//Module">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sensitivitySets" upperBound="-1"
+        eType="#//SensitivitySet" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="curvatures" upperBound="-1"
+        eType="#//Curvature" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RiskMeasure"/>
+</ecore:EPackage>

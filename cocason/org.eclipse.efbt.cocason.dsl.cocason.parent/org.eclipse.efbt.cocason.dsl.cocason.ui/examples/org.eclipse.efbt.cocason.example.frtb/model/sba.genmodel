@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.cocason.example.frtb/src" modelPluginID="org.eclipse.efbt.cocason.example.frtb"
+    modelName="Sba" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="5.0" copyrightFields="false"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>module_management.ecore</foreignModel>
+  <foreignModel>sba.ecore</foreignModel>
+  <genPackages prefix="Module_management" resource="XML" disposableProviderFactory="true"
+      ecorePackage="module_management.ecore#/">
+    <genClasses image="false" ecoreClass="module_management.ecore#//Module">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference module_management.ecore#//Module/dependencies"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute module_management.ecore#//Module/theDescription"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute module_management.ecore#//Module/license"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute module_management.ecore#//Module/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute module_management.ecore#//Module/version"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference module_management.ecore#//Module/longName"/>
+    </genClasses>
+    <genClasses ecoreClass="module_management.ecore#//ModuleLongName">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute module_management.ecore#//ModuleLongName/name"/>
+    </genClasses>
+    <genClasses ecoreClass="module_management.ecore#//ModuleDependencies">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference module_management.ecore#//ModuleDependencies/theModules"/>
+    </genClasses>
+    <genClasses ecoreClass="module_management.ecore#//ModuleDependency">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute module_management.ecore#//ModuleDependency/moduleName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute module_management.ecore#//ModuleDependency/moduleVersion"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference module_management.ecore#//ModuleDependency/theModule"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference module_management.ecore#//ModuleDependency/longName"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Sba" disposableProviderFactory="true" ecorePackage="sba.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="sba.ecore#//ShockDirection">
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//ShockDirection/upshock"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//ShockDirection/downShock"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="sba.ecore#//SecuritisationSector">
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//SecuritisationSector/RMBS_PRIME"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//SecuritisationSector/RMBS_MID_PRIME"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//SecuritisationSector/RMBS_SUB_PRIME"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//SecuritisationSector/CMBS"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//SecuritisationSector/ABS_STUDENT_LOAN"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//SecuritisationSector/ABS_AUTO"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//SecuritisationSector/CLO_NON_CTP"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//SecuritisationSector/OTHER_SECTOR"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="sba.ecore#//GIRRRiskFactorType">
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//GIRRRiskFactorType/INFLATION"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//GIRRRiskFactorType/BASIS"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//GIRRRiskFactorType/YIELD"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="sba.ecore#//EquityFactorType">
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//EquityFactorType/SPOT"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//EquityFactorType/REPO"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="sba.ecore#//Economy">
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//Economy/EMERGING_MARKET"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//Economy/ADVANCED_ECONOMY"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="sba.ecore#//RatingGrade">
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//RatingGrade/SENIOR_IG"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//RatingGrade/NON_SENIOR_IG"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//RatingGrade/HIGH_YIELD"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//RatingGrade/NON_RATED"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//RatingGrade/IG"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="sba.ecore#//MarketCap">
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//MarketCap/LARGE"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//MarketCap/SMALL"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="sba.ecore#//Sector">
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//Sector/SOVEREIGN"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//Sector/LOCAL_GOVERNMENT"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//Sector/FINANCIALS"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//Sector/BASIC_MATERIALS"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//Sector/CONSUMER_GOODS"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//Sector/TECHNOLOGY"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//Sector/HEALTH_CARE"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//Sector/COVERED_BONDS"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//Sector/OTHER_SECTOR"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="sba.ecore#//CreditSpreadCurveType">
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//CreditSpreadCurveType/BOND"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//CreditSpreadCurveType/CDS"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="sba.ecore#//CommodityType">
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//CommodityType/ENERGY_SOLID_COMBUSTABLES"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//CommodityType/ENERGY_LIQUID_COMBUSTABLES"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//CommodityType/ENERGY_ELECTRICITY_AND_CARBON_TRADING"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//CommodityType/FREIGHT"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//CommodityType/METALS_NON_PRECIOUS"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//CommodityType/GASEOUS_COMBUSTABLES"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//CommodityType/PRECIOUS_METALS"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//CommodityType/GRAINS_AND_OILSEED"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//CommodityType/LIVESTOCK_AND_DAIRY"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//CommodityType/SOFTS_AND_OTHER_AGRICULTURALS"/>
+      <genEnumLiterals ecoreEnumLiteral="sba.ecore#//CommodityType/OTHER_COMMODITY"/>
+    </genEnums>
+    <genClasses ecoreClass="sba.ecore#//RiskFactor">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//RiskFactor/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//RiskFactor/volFactor"/>
+    </genClasses>
+    <genClasses ecoreClass="sba.ecore#//FXRiskFactor">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//FXRiskFactor/ccy1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//FXRiskFactor/ccy2"/>
+    </genClasses>
+    <genClasses ecoreClass="sba.ecore#//GIRRRiskFactor">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//GIRRRiskFactor/riskFactorType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//GIRRRiskFactor/mainCurrency"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//GIRRRiskFactor/secondCurrency"/>
+    </genClasses>
+    <genClasses ecoreClass="sba.ecore#//EquityRiskFactor">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sba.ecore#//EquityRiskFactor/issue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//EquityRiskFactor/equityFactorType"/>
+    </genClasses>
+    <genClasses ecoreClass="sba.ecore#//CSRNonSecuritisationRiskFactor">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sba.ecore#//CSRNonSecuritisationRiskFactor/issuer"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//CSRNonSecuritisationRiskFactor/CSRCurveType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//CSRNonSecuritisationRiskFactor/CSRCreditQuality"/>
+    </genClasses>
+    <genClasses ecoreClass="sba.ecore#//CSRSecuritisationNonCTPRiskFactor">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//CSRSecuritisationNonCTPRiskFactor/trancheName"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sba.ecore#//CSRSecuritisationNonCTPRiskFactor/securitisation"/>
+    </genClasses>
+    <genClasses ecoreClass="sba.ecore#//CSRSecuritisationCTPRiskFactor">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sba.ecore#//CSRSecuritisationCTPRiskFactor/issuer"/>
+    </genClasses>
+    <genClasses ecoreClass="sba.ecore#//CommodityRiskFactor">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//CommodityRiskFactor/commodityType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//CommodityRiskFactor/deliveryLocation"/>
+    </genClasses>
+    <genClasses ecoreClass="sba.ecore#//SensitivitySet">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//SensitivitySet/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sba.ecore#//SensitivitySet/riskFactor"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sba.ecore#//SensitivitySet/position"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//SensitivitySet/ccyOfRecord"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sba.ecore#//SensitivitySet/sensitivities"/>
+    </genClasses>
+    <genClasses ecoreClass="sba.ecore#//Sensitivity"/>
+    <genClasses ecoreClass="sba.ecore#//DeltaSensitivity">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//DeltaSensitivity/tenor"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//DeltaSensitivity/deltaSensitivity"/>
+    </genClasses>
+    <genClasses ecoreClass="sba.ecore#//VegaSensitivity">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//VegaSensitivity/vegaSensitivity"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//VegaSensitivity/optionMaturity"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//VegaSensitivity/optionUnderlyingResidualMaturity"/>
+    </genClasses>
+    <genClasses ecoreClass="sba.ecore#//Position">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Position/name"/>
+    </genClasses>
+    <genClasses ecoreClass="sba.ecore#//Curvature">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sba.ecore#//Curvature/riskFactor"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sba.ecore#//Curvature/position"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Curvature/ccyOfRecord"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Curvature/valuationDifference"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Curvature/shockDirection"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Curvature/riskWeight"/>
+    </genClasses>
+    <genClasses ecoreClass="sba.ecore#//SecurityIssue">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sba.ecore#//SecurityIssue/issuer"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//SecurityIssue/ratingGrade"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//SecurityIssue/name"/>
+    </genClasses>
+    <genClasses ecoreClass="sba.ecore#//Securitisation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Securitisation/securitisationSector"/>
+    </genClasses>
+    <genClasses ecoreClass="sba.ecore#//EquityIssue"/>
+    <genClasses ecoreClass="sba.ecore#//BondIssue"/>
+    <genClasses ecoreClass="sba.ecore#//Organisation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Organisation/ratingGrade"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Organisation/sector"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Organisation/marketCap"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Organisation/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sba.ecore#//Organisation/economy"/>
+    </genClasses>
+    <genClasses ecoreClass="sba.ecore#//RiskFactorModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sba.ecore#//RiskFactorModule/riskFactors"/>
+    </genClasses>
+    <genClasses ecoreClass="sba.ecore#//PositionModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sba.ecore#//PositionModule/positions"/>
+    </genClasses>
+    <genClasses ecoreClass="sba.ecore#//ReferenceDataModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sba.ecore#//ReferenceDataModule/issues"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sba.ecore#//ReferenceDataModule/issuers"/>
+    </genClasses>
+    <genClasses ecoreClass="sba.ecore#//SensitivitiesAndCurvaturesModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sba.ecore#//SensitivitiesAndCurvaturesModule/sensitivitySets"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sba.ecore#//SensitivitiesAndCurvaturesModule/curvatures"/>
+    </genClasses>
+    <genClasses ecoreClass="sba.ecore#//RiskMeasure"/>
+  </genPackages>
+</genmodel:GenModel>

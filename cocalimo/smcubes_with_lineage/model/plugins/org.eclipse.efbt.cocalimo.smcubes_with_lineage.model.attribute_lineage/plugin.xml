@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated attribute_lineage -->
+      <package
+            uri="http://www.eclipse.org/efbt/attribute_lineage"
+            class="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.attribute_lineage.Attribute_lineagePackage"
+            genModel="model/attribute_lineage.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated attribute_lineage -->
+      <parser
+            type="attribute_lineage"
+            class="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.attribute_lineage.util.Attribute_lineageResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated attribute_lineage -->
+      <package
+            uri="http://www.eclipse.org/efbt/cube_transformation_logic"
+            class="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cube_transformation_logic.Cube_transformation_logicPackage"
+            genModel="model/attribute_lineage.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated attribute_lineage -->
+      <package
+            uri="http://www.eclipse.org/efbt/incremental_row_transformation_logic"
+            class="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.incremental_row_transformation_logic.Incremental_row_transformation_logicPackage"
+            genModel="model/attribute_lineage.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated attribute_lineage -->
+      <parser
+            type="incremental_row_transformation_logic"
+            class="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.incremental_row_transformation_logic.util.Incremental_row_transformation_logicResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated attribute_lineage -->
+      <package
+            uri="http://www.eclipse.org/efbt/row_transformation_logic"
+            class="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.row_transformation_logic.Row_transformation_logicPackage"
+            genModel="model/attribute_lineage.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated attribute_lineage -->
+      <parser
+            type="row_transformation_logic"
+            class="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.row_transformation_logic.util.Row_transformation_logicResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated attribute_lineage -->
+      <package
+            uri="http://www.eclipse.org/efbt/advanced_row_transformation_logic"
+            class="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.advanced_row_transformation_logic.Advanced_row_transformation_logicPackage"
+            genModel="model/attribute_lineage.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated attribute_lineage -->
+      <parser
+            type="advanced_row_transformation_logic"
+            class="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.advanced_row_transformation_logic.util.Advanced_row_transformation_logicResourceFactoryImpl"/>
+   </extension>
+
+</plugin>

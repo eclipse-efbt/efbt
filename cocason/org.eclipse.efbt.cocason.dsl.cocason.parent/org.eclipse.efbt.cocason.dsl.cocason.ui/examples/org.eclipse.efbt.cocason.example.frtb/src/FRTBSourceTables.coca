@@ -1,0 +1,19 @@
+ProgramAndCalls : { program : TRLProgram : { executableLogic : TRLExecutableLogic FRTBSourceTablesCubeLineage: 
+	{ cubesModule : FreeBirdToolsCubeModule freeBirdToolsCubeModule : 
+		{ license : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;" 
+			cubes : [ 
+				BaseCube curvature,
+				BaseCube position,
+				BaseCube girr_risk_factor, 
+				BaseCube deltaSensitivities,
+				BaseCube vega_sensitivities,
+				BaseCube equity_risk_factor,
+				BaseCube commodity_risk_factor,
+				BaseCube CSR_NonSec_risk_factor,
+				BaseCube CSR_Sec_CTP_risk_factor,
+				BaseCube CSR_Sec_Non_CTP_risk_factor,
+				BaseCube FX_risk_factor,
+				BaseCube security_issue,
+				BaseCube organisation,
+				BaseCube securitisation
+							] } } } }

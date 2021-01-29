@@ -1,0 +1,20 @@
+ProgramAndCalls : { program : TRLProgram : { smcubesStaticModel : SMCubesStaticModel FRTBCubeStructuresStaticModel : {
+	 smCubesModel : SmcubesModel FRTBCubeStructuresModel  : 
+	 { cubes : [ CubeModule  cubeStructures_model : { 
+	 	dependencies : ModuleDependencies : { theModules : [ ModuleDependency : { theModule : "FRTBCubeStructureItemsStaticModel.FRTBCubeStructureItemsModel.cubeStructureItems_model" } ] } 
+	 	cubeStructures : [ 
+	 		CUBE_STRUCTURE position :{ code : "position" cube_structure_id : "position" description : "position" },
+	 		 CUBE_STRUCTURE girr_risk_factor :  { code : "girr_risk_factor" cube_structure_id : "girr_risk_factor" description : "girr_risk_factor" },
+	 		 CUBE_STRUCTURE curvature :{ code : "curvature" cube_structure_id : "curvature" description : "curvature" },
+	 		 CUBE_STRUCTURE delta_sensitivities :  { code : "delta_sensitivities" cube_structure_id : "delta_sensitivities" description : "delta_sensitivities" },
+	 		 CUBE_STRUCTURE vega_sensitivities :  { code : "vega_sensitivities" cube_structure_id : "vega_sensitivities" description : "vega_sensitivities" },
+	 		 CUBE_STRUCTURE equity_risk_factor :  { code : "equity_risk_factor" cube_structure_id : "equity_risk_factor" description : "equity_risk_factor" },
+	 		 CUBE_STRUCTURE commodity_risk_factor :  { code : "commodity_risk_factor" cube_structure_id : "commodity_risk_factor" description : "commodity_risk_factor" },
+	 		 CUBE_STRUCTURE CSR_NonSec_risk_factor :  { code : "CSR_NonSec_risk_factor" cube_structure_id : "CSR_NonSec_risk_factor" description : "CSR_NonSec_risk_factor" },
+	 		 CUBE_STRUCTURE CSR_Sec_CTP_risk_factor :  { code : "CSR_Sec_CTP_risk_factor" cube_structure_id : "CSR_Sec_CTP_risk_factor" description : "CSR_Sec_CTP_risk_factor" },
+	 		 CUBE_STRUCTURE CSR_Sec_Non_CTP_risk_factor :  { code : "CSR_Sec_Non_CTP_risk_factor" cube_structure_id : "CSR_Sec_Non_CTP_risk_factor" description : "CSR_Sec_Non_CTP_risk_factor" },
+	 		 CUBE_STRUCTURE FX_risk_factor :  { code : "FX_risk_factor" cube_structure_id : "FX_risk_factor" description : "FX_risk_factor" },
+	 		 CUBE_STRUCTURE security_issue :  { code : "security_issue" cube_structure_id : "security_issue" description : "security_issue" },
+	 		 CUBE_STRUCTURE organisation :  { code : "organisation" cube_structure_id : "organisation" description : "organisation" },
+	 		 CUBE_STRUCTURE securitisation :  { code : "securitisation" cube_structure_id : "securitisation" description : "securitisation" }
+	 	] } ] } } } } 

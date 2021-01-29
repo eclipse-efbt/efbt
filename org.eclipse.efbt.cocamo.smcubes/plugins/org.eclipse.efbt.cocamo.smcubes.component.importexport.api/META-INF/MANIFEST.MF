@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Api
-Bundle-SymbolicName: org.eclipse.efbt.cocamo.smcubes.component.importexport.api
-Bundle-Version: 1.0.0.qualifier
-Automatic-Module-Name: org.eclipse.efbt.data_structures.smcubes.component.importexport.api
-Bundle-RequiredExecutionEnvironment: JavaSE-11
-Export-Package: org.eclipse.efbt.cocamo.smcubes.component.importexport.api

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" uid="_5IZ5gEEcEeuL3teedWD5hQ" version="14.3.1.202003261200">
-  <semanticResources>src/CRR_RequirementsBundleRoot.coca</semanticResources>
-  <semanticResources>src/FRTB_functionalityModulesProgram.coca</semanticResources>
-  <semanticResources>src/FRTB_requirements.coca</semanticResources>
-</viewpoint:DAnalysis>
