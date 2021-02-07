@@ -1,149 +1,151 @@
 ProgramAndCalls : { program :  TRLProgram :  {
-	smcubesStaticModel : SMCubesStaticModel GIRRVegaMeasuresStaticModel : {
-	smCubesModel : SmcubesModel  GIRRVegaMeasuresModel  : {
+	smcubesStaticModel : SMCubesStaticModel vegaMeasuresStaticModel : {
+	smCubesModel : SmcubesModel  vegaMeasuresModel  : {
 		variables :  [ VariableModule variablesModule :  
 				{
+					license : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"
+					
 			variables : [ 
 			
-			VARIABLE GIRRVegaSensitivity : {
-				code : "GIRRVegaSensitivity"
-				description : "GIRRVegaSensitivity"
-				variable_id : "GIRRVegaSensitivity"
-				displayName :  "GIRRVegaSensitivity"
+			VARIABLE vegaSensitivity : {
+				code : "vegaSensitivity"
+				description : "vegaSensitivity"
+				variable_id : "vegaSensitivity"
+				displayName :  "vegaSensitivity"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			},
-			VARIABLE GIRRVegaSensitivityk : {
-				code : "GIRRVegaSensitivityk"
-				description : "GIRRVegaSensitivityk"
-				variable_id : "GIRRVegaSensitivityk"
-				displayName :  "GIRRVegaSensitivityk"
+			VARIABLE vegaSensitivityk : {
+				code : "vegaSensitivityk"
+				description : "vegaSensitivityk"
+				variable_id : "vegaSensitivityk"
+				displayName :  "vegaSensitivityk"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			},
-			VARIABLE GIRRVegaSensitivityl : {
-				code : "GIRRVegaSensitivityl"
-				description : "GIRRVegaSensitivityl"
-				variable_id : "GIRRVegaSensitivityl"
-				displayName :  "GIRRVegaSensitivityl"
+			VARIABLE vegaSensitivityl : {
+				code : "vegaSensitivityl"
+				description : "vegaSensitivityl"
+				variable_id : "vegaSensitivityl"
+				displayName :  "vegaSensitivityl"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			},
-			VARIABLE GIRRVegaTenor : {
-				code : "GIRRVegaTenor"
-				description : "GIRRVegaTenor"
-				variable_id : "GIRRVegaTenor"
-				displayName :  "GIRRVegaTenor"
+			VARIABLE vegaTenor : {
+				code : "vegaTenor"
+				description : "vegaTenor"
+				variable_id : "vegaTenor"
+				displayName :  "vegaTenor"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			},
-			VARIABLE GIRRVegaTenork : {
-				code : "GIRRVegaTenork"
-				description : "GIRRVegaTenork"
-				variable_id : "GIRRVegaTenork"
-				displayName :  "GIRRVegaTenork"
+			VARIABLE vegaTenork : {
+				code : "vegaTenork"
+				description : "vegaTenork"
+				variable_id : "vegaTenork"
+				displayName :  "vegaTenork"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			},
-			VARIABLE GIRRVegaTenorl : {
-				code : "GIRRVegaTenorl"
-				description : "GIRRVegaTenorl"
-				variable_id : "GIRRVegaTenorl"
-				displayName :  "GIRRVegaTenorl"
+			VARIABLE vegaTenorl : {
+				code : "vegaTenorl"
+				description : "vegaTenorl"
+				variable_id : "vegaTenorl"
+				displayName :  "vegaTenorl"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			},
-			VARIABLE GIRRVegaRiskWeight : {
-				code : "GIRRVegaRiskWeight"
-				description : "GIRRVegaRiskWeight"
-				variable_id : "GIRRVegaRiskWeight"
-				displayName :  "GIRRVegaRiskWeight"
+			VARIABLE vegaRiskWeight : {
+				code : "vegaRiskWeight"
+				description : "vegaRiskWeight"
+				variable_id : "vegaRiskWeight"
+				displayName :  "vegaRiskWeight"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			},
-			VARIABLE nettedGIRRVegaSensitivity : {
-				code : "nettedGIRRVegaSensitivity"
-				description : "nettedGIRRVegaSensitivity"
-				variable_id : "nettedGIRRVegaSensitivity"
-				displayName :  "nettedGIRRVegaSensitivity"
+			VARIABLE nettedvegaSensitivity : {
+				code : "nettedvegaSensitivity"
+				description : "nettedvegaSensitivity"
+				variable_id : "nettedvegaSensitivity"
+				displayName :  "nettedvegaSensitivity"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			},
-			VARIABLE weightedGIRRVegaSensitivity : {
-				code : "weightedGIRRVegaSensitivity"
-				description : "weightedGIRRVegaSensitivity"
-				variable_id : "weightedGIRRVegaSensitivity"
-				displayName :  "weightedGIRRVegaSensitivity"
+			VARIABLE weightedvegaSensitivity : {
+				code : "weightedvegaSensitivity"
+				description : "weightedvegaSensitivity"
+				variable_id : "weightedvegaSensitivity"
+				displayName :  "weightedvegaSensitivity"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			},
-			VARIABLE GIRRVegaKBInput : {
-				code : "GIRRVegaKBInput"
-				description : "GIRRVegaKBInput"
-				variable_id : "GIRRVegaKBInput"
-				displayName :  "GIRRVegaKBInput"
+			VARIABLE vegaKBInput : {
+				code : "vegaKBInput"
+				description : "vegaKBInput"
+				variable_id : "vegaKBInput"
+				displayName :  "vegaKBInput"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			},
-			VARIABLE GIRRVegaKB : {
-				code : "GIRRVegaKB"
-				description : "GIRRVegaKB"
-				variable_id : "GIRRVegaKB"
-				displayName :  "GIRRVegaKB"
+			VARIABLE vegaKB : {
+				code : "vegaKB"
+				description : "vegaKB"
+				variable_id : "vegaKB"
+				displayName :  "vegaKB"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			},
-			VARIABLE GIRRVegaKBInput_per_bucket : {
-				code : "GIRRVegaKBInput_per_bucket"
-				description : "GIRRVegaKBInput_per_bucket"
-				variable_id : "GIRRVegaKBInput_per_bucket"
-				displayName :  "GIRRVegaKBInput_per_bucket"
+			VARIABLE vegaKBInput_per_bucket : {
+				code : "vegaKBInput_per_bucket"
+				description : "vegaKBInput_per_bucket"
+				variable_id : "vegaKBInput_per_bucket"
+				displayName :  "vegaKBInput_per_bucket"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			},
-			VARIABLE GIRRVegaSensitivityPerBucketCorrelated : {
-				code : "GIRRVegaSensitivityPerBucketCorrelated"
-				description : "GIRRVegaSensitivityPerBucketCorrelated"
-				variable_id : "GIRRVegaSensitivityPerBucketCorrelated"
-				displayName :  "GIRRVegaSensitivityPerBucketCorrelated"
+			VARIABLE vegaSensitivityPerBucketCorrelated : {
+				code : "vegaSensitivityPerBucketCorrelated"
+				description : "vegaSensitivityPerBucketCorrelated"
+				variable_id : "vegaSensitivityPerBucketCorrelated"
+				displayName :  "vegaSensitivityPerBucketCorrelated"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			},
-			VARIABLE totalGIRRVegaSensitivityPerBucketCorrelated : {
-				code : "totalGIRRVegaSensitivityPerBucketCorrelated"
-				description : "totalGIRRVegaSensitivityPerBucketCorrelated"
-				variable_id : "totalGIRRVegaSensitivityPerBucketCorrelated"
-				displayName :  "totalGIRRVegaSensitivityPerBucketCorrelated"
+			VARIABLE totalvegaSensitivityPerBucketCorrelated : {
+				code : "totalvegaSensitivityPerBucketCorrelated"
+				description : "totalvegaSensitivityPerBucketCorrelated"
+				variable_id : "totalvegaSensitivityPerBucketCorrelated"
+				displayName :  "totalvegaSensitivityPerBucketCorrelated"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			},
-			VARIABLE totalGIRRVegaSensitivityPerBucket : {
-				code : "totalGIRRVegaSensitivityPerBucket"
-				description : "totalGIRRVegaSensitivityPerBucket"
-				variable_id : "totalGIRRVegaSensitivityPerBucket"
-				displayName :  "totalGIRRVegaSensitivityPerBucket"
+			VARIABLE totalvegaSensitivityPerBucket : {
+				code : "totalvegaSensitivityPerBucket"
+				description : "totalvegaSensitivityPerBucket"
+				variable_id : "totalvegaSensitivityPerBucket"
+				displayName :  "totalvegaSensitivityPerBucket"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			},
-			VARIABLE GIRRVegaBucketCorrelationFactor : {
-				code : "GIRRVegaBucketCorrelationFactor"
-				description : "GIRRVegaBucketCorrelationFactor"
-				variable_id : "GIRRVegaBucketCorrelationFactor"
-				displayName :  "GIRRVegaBucketCorrelationFactor"
+			VARIABLE vegaBucketCorrelationFactor : {
+				code : "vegaBucketCorrelationFactor"
+				description : "vegaBucketCorrelationFactor"
+				variable_id : "vegaBucketCorrelationFactor"
+				displayName :  "vegaBucketCorrelationFactor"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			},
-			VARIABLE totalGIRRVegaSensitivityPerBucketk : {
-				code : "totalGIRRVegaSensitivityPerBucketk"
-				description : "totalGIRRVegaSensitivityPerBucketk"
-				variable_id : "totalGIRRVegaSensitivityPerBucketk"
-				displayName :  "totalGIRRVegaSensitivityPerBucketk"
+			VARIABLE totalvegaSensitivityPerBucketk : {
+				code : "totalvegaSensitivityPerBucketk"
+				description : "totalvegaSensitivityPerBucketk"
+				variable_id : "totalvegaSensitivityPerBucketk"
+				displayName :  "totalvegaSensitivityPerBucketk"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			},
-			VARIABLE totalGIRRVegaSensitivityPerBucketl : {
-				code : "totalGIRRVegaSensitivityPerBucketl"
-				description : "totalGIRRVegaSensitivityPerBucketl"
-				variable_id : "totalGIRRVegaSensitivityPerBucketl"
-				displayName :  "totalGIRRVegaSensitivityPerBucketl"
+			VARIABLE totalvegaSensitivityPerBucketl : {
+				code : "totalvegaSensitivityPerBucketl"
+				description : "totalvegaSensitivityPerBucketl"
+				variable_id : "totalvegaSensitivityPerBucketl"
+				displayName :  "totalvegaSensitivityPerBucketl"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			},
 			
-			VARIABLE GIRRVegaOptionMaturity : {
-				code : "GIRRVegaOptionMaturity"
-				description : "GIRRVegaOptionMaturity"
-				variable_id : "GIRRVegaOptionMaturity"
-				displayName :  "GIRRVegaOptionMaturity"
+			VARIABLE vegaOptionMaturity : {
+				code : "vegaOptionMaturity"
+				description : "vegaOptionMaturity"
+				variable_id : "vegaOptionMaturity"
+				displayName :  "vegaOptionMaturity"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			},
-			VARIABLE GIRRVegaOptionUnderlyingResidualMaturity : {
-				code : "GIRRVegaOptionUnderlyingResidualMaturity"
-				description : "GIRRVegaOptionUnderlyingResidualMaturity"
-				variable_id : "GIRRVegaOptionUnderlyingResidualMaturity"
-				displayName :  "GIRRVegaOptionUnderlyingResidualMaturity"
+			VARIABLE vegaOptionUnderlyingResidualMaturity : {
+				code : "vegaOptionUnderlyingResidualMaturity"
+				description : "vegaOptionUnderlyingResidualMaturity"
+				variable_id : "vegaOptionUnderlyingResidualMaturity"
+				displayName :  "vegaOptionUnderlyingResidualMaturity"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			} 
 			 

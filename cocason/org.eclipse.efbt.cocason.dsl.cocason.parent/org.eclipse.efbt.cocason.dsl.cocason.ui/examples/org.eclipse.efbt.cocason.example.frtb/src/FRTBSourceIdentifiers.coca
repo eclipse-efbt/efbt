@@ -3,33 +3,34 @@ ProgramAndCalls : { program :  TRLProgram :  {
 	smCubesModel : SmcubesModel  FRTBSourceIdentifiersModel  : {
 		variables :  [ VariableModule variablesModule :  
 				{
+			license : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"
 			variables : [ 
-			VARIABLE risk_factor_id : {
-				code : "risk_factor_id"
-				description : "risk_factor_id"
-				variable_id : "risk_factor_id"
-				displayName :  "risk_factor_id"
+			VARIABLE riskFactorID : {
+				code : "riskFactorID"
+				description : "riskFactorID"
+				variable_id : "riskFactorID"
+				displayName :  "riskFactorID"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
 			},
-			VARIABLE position_id : {
-				code : "position_id"
-				description : "position_id"
-				variable_id : "position_id"
-				displayName : "position_id"
+			VARIABLE positionID : {
+				code : "positionID"
+				description : "positionID"
+				variable_id : "positionID"
+				displayName : "positionID"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
 			},
-			VARIABLE issue_id : {
-				code : "issue_id"
-				description : "issue_id"
-				variable_id : "issue_id"
-				displayName : "issue_id"
+			VARIABLE issueID : {
+				code : "issueID"
+				description : "issueID"
+				variable_id : "issueID"
+				displayName : "issueID"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
 			},
-			VARIABLE issuer_id : {
-				code : "issuer_id"
-				description : "issuer_id"
-				variable_id : "issuer_id"
-				displayName : "issuer_id"
+			VARIABLE issuerID : {
+				code : "issuerID"
+				description : "issuerID"
+				variable_id : "issuerID"
+				displayName : "issuerID"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
 			},
 			VARIABLE trancheName : {
@@ -39,11 +40,11 @@ ProgramAndCalls : { program :  TRLProgram :  {
 				displayName : "trancheName"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
 			},
-			VARIABLE securitisation_id : {
-				code : "securitisation_id"
-				description : "securitisation_id"
-				variable_id : "securitisation_id"
-				displayName : "securitisation_id"
+			VARIABLE securitisationID : {
+				code : "securitisationID"
+				description : "securitisationID"
+				variable_id : "securitisationID"
+				displayName : "securitisationID"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
 			},
 			VARIABLE deliveryLocation : {

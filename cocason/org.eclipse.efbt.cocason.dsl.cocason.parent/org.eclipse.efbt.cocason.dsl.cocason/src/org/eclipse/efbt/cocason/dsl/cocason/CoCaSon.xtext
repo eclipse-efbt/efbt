@@ -278,7 +278,7 @@ AggregateEnrichmentView returns trl_sql_views::AggregateEnrichmentView:
 	
 AggregateEnrichmentViewAndOrderBy returns trl_sql_views::AggregateEnrichmentViewAndOrderBy:
 	{trl_sql_views::AggregateEnrichmentViewAndOrderBy}
-	'AggregateEnrichmentView'
+	'AggregateEnrichmentViewAndOrderBy'
 	name=EString ':'
 	'{'
 		('VTL_Code' ':' VTL_Code=EString)?

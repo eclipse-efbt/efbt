@@ -5,7 +5,7 @@ ProgramAndCalls : { program : TRLProgram : { executableLogic : TRLExecutableLogi
 				DerivedCube deltaSensitivitiesWithRiskFactorLongname :{ sourceCubes : [ "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.deltaSensitivities" ] },
 				DerivedCube summedDeltaSensitivitiesPerPosition :{ sourceCubes : [ deltaSensitivitiesWithRiskFactorLongname ] },
 				DerivedCube nettedDeltaSensitivities :{ sourceCubes : [ deltaSensitivitiesWithRiskFactorLongname] },
-				DerivedCube GIRRDeltaSensitivitiesAndRiskFactors : { sourceCubes : [nettedDeltaSensitivities, "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.girr_risk_factor" ] },
+				DerivedCube GIRRDeltaSensitivitiesAndRiskFactors : { sourceCubes : [nettedDeltaSensitivities, "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.GIRRRiskFactor" ] },
 				DerivedCube GIRRDeltaSensitivitiesAndRiskFactorsWithWeight : { sourceCubes : [GIRRDeltaSensitivitiesAndRiskFactors] },
 				DerivedCube weightedGIRRDeltaSensitivitiesAndRiskFactors : { sourceCubes : [GIRRDeltaSensitivitiesAndRiskFactorsWithWeight] },
 				DerivedCube copyOfWeightedGIRRDeltaSensitivitiesAndRiskFactors : { sourceCubes : [weightedGIRRDeltaSensitivitiesAndRiskFactors] },
