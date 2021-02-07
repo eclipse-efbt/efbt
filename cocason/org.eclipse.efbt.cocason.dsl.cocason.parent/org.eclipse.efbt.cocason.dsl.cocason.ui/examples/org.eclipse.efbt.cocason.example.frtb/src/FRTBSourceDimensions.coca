@@ -3,6 +3,7 @@ ProgramAndCalls : { program :  TRLProgram :  {
 	smCubesModel : SmcubesModel  FRTBSourceDimensionsModel  : {
 		variables :  [ VariableModule variablesModule :  
 				{
+					license : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"
 			variables : [ 
 			VARIABLE ShockDirection : {
 				code : "ShockDirection"
@@ -11,39 +12,25 @@ ProgramAndCalls : { program :  TRLProgram :  {
 				displayName :  "ShockDirection"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.shockDirection"
 			},
-			VARIABLE MainCurrency : {
-				code : "MainCurrency"
-				description : "MainCurrency"
-				variable_id : "MainCurrency"
-				displayName : "MainCurrency"
+			VARIABLE mainCurrency : {
+				code : "mainCurrency"
+				description : "mainCurrency"
+				variable_id : "mainCurrency"
+				displayName : "mainCurrency"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
 			},
-			VARIABLE MainCurrencyl : {
-				code : "MainCurrencyl"
-				description : "MainCurrencyl"
-				variable_id : "MainCurrencyl"
-				displayName : "MainCurrencyl"
+			VARIABLE secondCurrency : {
+				code : "secondCurrency"
+				description : "secondCurrency"
+				variable_id : "secondCurrency"
+				displayName : "secondCurrency"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
 			},
-			VARIABLE MainCurrencyk : {
-				code : "MainCurrencyk"
-				description : "MainCurrencyk"
-				variable_id : "MainCurrencyk"
-				displayName : "MaiMainCurrencyknCurrency"
-				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
-			},
-			VARIABLE SecondCurrency : {
-				code : "SecondCurrency"
-				description : "SecondCurrency"
-				variable_id : "SecondCurrency"
-				displayName : "SecondCurrency"
-				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
-			},
-			VARIABLE CurrencyOfRecord : {
-				code : "CurrencyOfRecord"
-				description : "CurrencyOfRecord"
-				variable_id : "CurrencyOfRecord"
-				displayName : "CurrencyOfRecord"
+			VARIABLE currencyOfRecord : {
+				code : "currencyOfRecord"
+				description : "currencyOfRecord"
+				variable_id : "currencyOfRecord"
+				displayName : "currencyOfRecord"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
 			},
 			VARIABLE Currency : {
@@ -54,25 +41,19 @@ ProgramAndCalls : { program :  TRLProgram :  {
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
 			},
 			
-			VARIABLE Dummy : {
-				code : "Dummy"
-				description : "Dummy"
-				variable_id : "Dummy"
-				displayName : "Dummy"
-				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
-			},
-			VARIABLE Ccy1 : {
-				code : "Ccy1"
-				description : "Ccy1"
-				variable_id : "Ccy1"
-				displayName : "Ccy1"
+		
+			VARIABLE ccy1 : {
+				code : "ccy1"
+				description : "ccy1"
+				variable_id : "ccy1"
+				displayName : "ccy1"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
 			},
-			VARIABLE Ccy2 : {
-				code : "Ccy2"
-				description : "Ccy2"
-				variable_id : "Ccy2"
-				displayName : "Ccy2"
+			VARIABLE ccy2 : {
+				code : "ccy2"
+				description : "ccy2"
+				variable_id : "ccy2"
+				displayName : "ccy2"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
 			},
 			VARIABLE equityFactorType : {
@@ -124,12 +105,12 @@ ProgramAndCalls : { program :  TRLProgram :  {
 				displayName : "sector"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.sector"
 			},
-			VARIABLE securitisation_sector : {
-				code : "securitisation_sector"
-				description : "securitisation_sector"
-				variable_id : "securitisation_sector"
-				displayName : "securitisation_sector"
-				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.securitisation_sector"
+			VARIABLE securitisationSector : {
+				code : "securitisationSector"
+				description : "securitisationSector"
+				variable_id : "securitisationSector"
+				displayName : "securitisationSector"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.securitisationSector"
 			},
 			VARIABLE riskClass : {
 				code : "riskClass"
