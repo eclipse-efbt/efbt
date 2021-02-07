@@ -53,6 +53,14 @@ ProgramAndCalls : { program :  TRLProgram :  {
 				displayName : "Currency"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
 			},
+			
+			VARIABLE Dummy : {
+				code : "Dummy"
+				description : "Dummy"
+				variable_id : "Dummy"
+				displayName : "Dummy"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
+			},
 			VARIABLE Ccy1 : {
 				code : "Ccy1"
 				description : "Ccy1"

@@ -254,7 +254,7 @@ VersionedSQLViewsModule returns trl_sql_views::VersionedSQLViewsModule:
 	'}';
 	
 SQLView returns trl_sql_views::SQLView:
-	SQLView_Impl | AggregateEnrichmentView | CopyView | EnrichmentView | FilterByConditionView | GenericView | JoinView | UnionView | BaseViewIncorporatingDeltas | DeltaAccumulation | CastColumnView | ExplodeArrayOfStructsView | ExplodeStructView | FilterByStructClassColumnView | MakeArrayOfStructsView | MakeStructView;
+	SQLView_Impl | AggregateEnrichmentView | CopyView | EnrichmentView | FilterByConditionView | GenericView | JoinView | UnionView | BaseViewIncorporatingDeltas | DeltaAccumulation | CastColumnView | ExplodeArrayOfStructsView | ExplodeStructView | FilterByStructClassColumnView | MakeArrayOfStructsView | MakeStructView | AggregateEnrichmentViewAndOrderBy;
 
 SQLView_Impl returns trl_sql_views::SQLView:
 	{trl_sql_views::SQLView}
@@ -275,6 +275,20 @@ AggregateEnrichmentView returns trl_sql_views::AggregateEnrichmentView:
 		('functions' ':' '[' functions+=AggregateColumnFunction ( "," functions+=AggregateColumnFunction)* ']' )?
 		('groupByClause' ':' groupByClause=GroupByClause)?
 	'}';
+	
+AggregateEnrichmentViewAndOrderBy returns trl_sql_views::AggregateEnrichmentViewAndOrderBy:
+	{trl_sql_views::AggregateEnrichmentViewAndOrderBy}
+	'AggregateEnrichmentView'
+	name=EString ':'
+	'{'
+		('VTL_Code' ':' VTL_Code=EString)?
+		('cube' ':' cube=[cubes::DerivedCube|EString])?
+		('functions' ':' '[' functions+=AggregateColumnFunction ( "," functions+=AggregateColumnFunction)* ']' )?
+		('groupByClause' ':' groupByClause=GroupByClause)?
+		('orderByVariable' ':' orderByVariable=[core::VARIABLE|EString])?
+	'}';
+	
+	
 
 CopyView returns trl_sql_views::CopyView:
 	{trl_sql_views::CopyView}
@@ -294,6 +308,7 @@ EnrichmentView returns trl_sql_views::EnrichmentView:
 		('cube' ':' cube=[cubes::DerivedCube|EString])?
 		('functions' ':' '[' functions+=BasicColumnFunction ( "," functions+=BasicColumnFunction)* ']' )?
 		('renames' ':' '[' renames+=RenameAs ( "," renames+=RenameAs)* ']' )?
+		('ignores' ':' '[' ignores+=IgnoreColumn ( "," ignores+=IgnoreColumn)* ']' )?
 	'}';
 
 FilterByConditionView returns trl_sql_views::FilterByConditionView:

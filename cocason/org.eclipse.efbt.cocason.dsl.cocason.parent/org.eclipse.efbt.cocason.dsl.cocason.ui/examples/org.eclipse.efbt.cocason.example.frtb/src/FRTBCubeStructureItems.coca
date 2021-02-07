@@ -64,7 +64,7 @@ ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStatic
 	 				 order : 0 role ::D 
 	 				 isIdentifier : false 
 	 				 cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.curvature"
-	 				 variable_id : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.valuationDifference"} ,	
+	 				 variable_id : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.curvatureValuationDifference"} ,	
 	 			CUBE_STRUCTURE_ITEM : {
 	 				 description : "position_id" 
 	 				 dimension_type ::B 
@@ -91,7 +91,7 @@ ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStatic
 	 				 order : 0 role ::D 
 	 				 isIdentifier : false 
 	 				 cube_structure_id :"FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.curvature"
-	 				 variable_id : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.risk_weight"},
+	 				 variable_id : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.curvatureRiskWeight"},
 	 			CUBE_STRUCTURE_ITEM : {
 	 				 description : "risk_factor_id" 
 	 				 dimension_type ::B 
@@ -127,7 +127,7 @@ ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStatic
 	 				 order : 0 role ::D 
 	 				 isIdentifier : false 
 	 				 cube_structure_id :"FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.delta_sensitivities"
-	 				 variable_id : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.tenor" } ,
+	 				 variable_id : "GIRRDeltaMeasuresStaticModel.GIRRDeltaMeasuresModel.variablesModule.tenor" } ,
 	 			CUBE_STRUCTURE_ITEM : {
 	 				 description : "deltaSensitivity" 
 	 				 dimension_type ::B 
@@ -136,7 +136,7 @@ ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStatic
 	 				 order : 0 role ::D 
 	 				 isIdentifier : false 
 	 				 cube_structure_id :"FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.delta_sensitivities"
-	 				 variable_id : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.deltaSensitivity" } ,
+	 				 variable_id : "GIRRDeltaMeasuresStaticModel.GIRRDeltaMeasuresModel.variablesModule.deltaSensitivity" } ,
 	 			CUBE_STRUCTURE_ITEM : {
 	 				 description : "ccy_of_record" 
 	 				 dimension_type ::B 
@@ -173,7 +173,7 @@ ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStatic
 	 				 order : 0 role ::D 
 	 				 isIdentifier : false 
 	 				 cube_structure_id :"FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.vega_sensitivities"
-	 				 variable_id : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.optionMaturity" } ,
+	 				 variable_id :  "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.GIRRVegaOptionMaturity"} ,
 	 			CUBE_STRUCTURE_ITEM : {
 	 				 description : "vegaSensitivity" 
 	 				 dimension_type ::B 
@@ -182,7 +182,7 @@ ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStatic
 	 				 order : 0 role ::D 
 	 				 isIdentifier : false 
 	 				 cube_structure_id :"FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.vega_sensitivities"
-	 				 variable_id : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.vegaSensitivity" } ,
+	 				 variable_id : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.GIRRVegaSensitivity" } ,
 	 			CUBE_STRUCTURE_ITEM : {
 	 				 description : "ccy_of_record" 
 	 				 dimension_type ::B 
@@ -200,7 +200,7 @@ ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStatic
 	 				 order : 0 role ::D 
 	 				 isIdentifier : false 
 	 				 cube_structure_id :"FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.vega_sensitivities"
-	 				 variable_id : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.optionUnderlyingResidualMaturity"},	 		
+	 				 variable_id : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.GIRRVegaOptionUnderlyingResidualMaturity"},	 		
 	 			CUBE_STRUCTURE_ITEM : {
 	 				 description : "ccy1" 
 	 				 dimension_type : :B

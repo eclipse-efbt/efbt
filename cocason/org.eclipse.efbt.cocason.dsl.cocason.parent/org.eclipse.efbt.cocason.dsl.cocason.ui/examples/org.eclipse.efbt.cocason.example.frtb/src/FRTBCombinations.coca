@@ -8,14 +8,14 @@ ProgramAndCalls : { program : TRLProgram :  {
 					combination_items : { 
 						COMBINATION_ITEM : { 
 							member_id : "FRTBSourceDomainMembersStaticModel.FRTBSourceDomainMembersModel.membersModule.EUR"
-							 variable_id : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.Currency" } , 
-							 COMBINATION_ITEM : { variable_id : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.sqrt_of_maximum_of_cvr_stuff" } } } , 
+							 variable_id :"FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.MainCurrency" } , 
+							 COMBINATION_ITEM : { variable_id : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.sqrtOfMaximumOfGIRRCurvatureCVRFinal" } } } , 
 							 
 				 COMBINATION irEURProductReportCell : { 
 				 	code : "irEURProductReportCell" 
 				 	combination_id : "irEURProductReportCell" 
 				 	combination_items : { COMBINATION_ITEM : 
 				 		{ member_id : "FRTBSourceDomainMembersStaticModel.FRTBSourceDomainMembersModel.membersModule.EUR"
-							 variable_id : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.Currency" } , 
-				 			COMBINATION_ITEM : { variable_id : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.CVRCorrelatedProduct" } } } 
+							 variable_id : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.MainCurrency" } , 
+				 			COMBINATION_ITEM : { variable_id : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureCVRCorrelatedProduct" } } } 
 				  ] } ] } } } }

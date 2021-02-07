@@ -103,6 +103,7 @@
     <genClasses ecoreClass="trl_sql_views.ecore#//EnrichmentView">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//EnrichmentView/functions"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//EnrichmentView/renames"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//EnrichmentView/ignores"/>
     </genClasses>
     <genClasses ecoreClass="trl_sql_views.ecore#//FilterByConditionView">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//FilterByConditionView/whereClause"/>
@@ -174,6 +175,11 @@
     </genClasses>
     <genClasses ecoreClass="trl_sql_views.ecore#//MakeStructView">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//MakeStructView/targetVariable"/>
+    </genClasses>
+    <genClasses ecoreClass="trl_sql_views.ecore#//AggregateEnrichmentViewAndOrderBy">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//AggregateEnrichmentViewAndOrderBy/functions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//AggregateEnrichmentViewAndOrderBy/groupByClause"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference trl_sql_views.ecore#//AggregateEnrichmentViewAndOrderBy/orderByVariable"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

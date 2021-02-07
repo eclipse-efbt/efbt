@@ -1,6 +1,6 @@
-ProgramAndCalls : { program : TRLProgram :  { executableLogic : TRLExecutableLogic FRTBFunctions: { functionSpecModule : FunctionSpecModule functionSpecModule1 : {  functionSpecs : 
+ProgramAndCalls : { program : TRLProgram :  { executableLogic : TRLExecutableLogic FRTBFunctions: { functionSpecModule : FunctionSpecModule GIRRFunctionSpecModule : {  functionSpecs : 
 	[ 
-		BasicFunctionSpec getCorrelationFactor : { 
+		BasicFunctionSpec getGIRRCVRCorrelationFactor : { 
 		functionalName : "CustomFunctions_getCorrelationFactor"
 		sqlName : "getCorrelationFactor"	
 		parameterSpecs : [ 
@@ -8,7 +8,7 @@ ProgramAndCalls : { program : TRLProgram :  { executableLogic : TRLExecutableLog
 			ParamaterSpec param2
 		]	
 	},
-	BasicFunctionSpec getDeltaCorrelationFactor : { 
+	BasicFunctionSpec getGIRRDeltaCorrelationFactor : { 
 		functionalName : "CustomFunctions_getDeltaCorrelationFactor"
 		sqlName : "getDeltaCorrelationFactor"	
 		parameterSpecs : [ 
@@ -16,17 +16,25 @@ ProgramAndCalls : { program : TRLProgram :  { executableLogic : TRLExecutableLog
 			ParamaterSpec param2
 		]	
 	},
-	BasicFunctionSpec deltaStrip :
+	BasicFunctionSpec getGIRRBucketCorrelationFactor : { 
+		functionalName : "CustomFunctions_getDeltaCorrelationFactor"
+		sqlName : "getDeltaCorrelationFactor"	
+		parameterSpecs : [ 
+			ParamaterSpec param1 ,
+			ParamaterSpec param2
+		]	
+	},
+	BasicFunctionSpec GIRRDeltaStrip :
 	{
 		functionalName : "CustomFunctions_deltaStrip"
-		sqlName : deltaStrip
+		sqlName : GIRRDeltaStrip
 		parameterSpecs : [
 			ParamaterSpec valuationDifference ,
 			ParamaterSpec summedGIRR_delta ,
 			ParamaterSpec ShockDirection
 		]
 	},
-	BasicFunctionSpec getGIRRTenorRiskWeight :
+	BasicFunctionSpec getGIRRDeltaRiskFactorRiskWeight :
 	{
 		functionalName : "CustomFunctions_getGIRRTenorRiskWeight"
 		sqlName : getGIRRTenorRiskWeight

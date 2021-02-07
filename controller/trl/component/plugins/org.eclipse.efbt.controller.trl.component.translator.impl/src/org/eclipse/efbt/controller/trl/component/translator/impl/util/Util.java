@@ -459,7 +459,10 @@ public class Util {
       }
 
     }
-
+    if(returnCol == null)
+    {
+    	System.out.println("could not resolve " + theColumn + ":" + theCube);
+    }
     return returnCol;
   }
 

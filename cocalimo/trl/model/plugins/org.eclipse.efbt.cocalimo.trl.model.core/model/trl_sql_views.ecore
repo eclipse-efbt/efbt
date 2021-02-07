@@ -76,6 +76,16 @@
         <details key="name" value="renames"/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ignores" upperBound="-1"
+        eType="#//IgnoreColumn" containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="an IgnoreColumn for each column we want to ignore"/>
+      </eAnnotations>
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="kind" value="element"/>
+        <details key="name" value="ignores"/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FilterByConditionView" eSuperTypes="#//SQLView">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -381,5 +391,36 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MakeStructView" eSuperTypes="#//SQLView">
     <eStructuralFeatures xsi:type="ecore:EReference" name="targetVariable" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes/model/efbt_advanced_data_definition.ecore#//StructTypedVariable"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AggregateEnrichmentViewAndOrderBy" eSuperTypes="#//SQLView">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="An SQLView which represents a grouping of  rows of the single source table of the associated table, &#xA;      according to a set of Columns, and creates extra column(s) which runs a specified  aggregation  function over the group.&#xA;      This is equivalent to the GroupBy commands in SQL such as select ccy, country, sum(amount) from trades, groupby ccy, country.&#xA;      The resulting table structure will be a column for each of the groupBy columns, with one column added per calculated column.&#xA;      There will likely be considerably less rows in the results of the view, for example if we are grouping on million trades&#xA;      by currency, there will be on row per unique currency in the results.&#xA;      All SQLViews are associated with a DerivedCube, the source Cubes for the view are defined by the source Cubes of the associated Cube.&#xA;      "/>
+    </eAnnotations>
+    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+      <details key="name" value="AggregateEnrichmentView"/>
+      <details key="kind" value="elementOnly"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="functions" upperBound="-1"
+        eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagefunctions/model/column_transformation_logic.ecore#//AggregateColumnFunction"
+        containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Aggregated ColumnFunctions"/>
+      </eAnnotations>
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="kind" value="element"/>
+        <details key="name" value="functions"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="groupByClause" eType="#//GroupByClause"
+        containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The GroupBy clause which includes the GroupBy columns"/>
+      </eAnnotations>
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="kind" value="element"/>
+        <details key="name" value="groupByClause"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="orderByVariable" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/core.ecore#//VARIABLE"/>
   </eClassifiers>
 </ecore:EPackage>

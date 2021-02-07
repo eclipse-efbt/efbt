@@ -1,4 +1,4 @@
-ProgramAndCalls : { program : TRLProgram :  { executableLogic : TRLExecutableLogic commonFunctions: { functionSpecModule : FunctionSpecModule functionSpecModule1 : {  functionSpecs : 
+ProgramAndCalls : { program : TRLProgram :  { executableLogic : TRLExecutableLogic commonFunctions: { functionSpecModule : FunctionSpecModule GIRRFunctionSpecModule : {  functionSpecs : 
 	[ BasicFunctionSpec AND :  
 		{ functionalName : "&&" 
 			sqlName : "AND" 
@@ -24,6 +24,7 @@ ProgramAndCalls : { program : TRLProgram :  { executableLogic : TRLExecutableLog
 			BasicFunctionSpec notEquals  :{ functionalName : "!=" sqlName : "!=" isInfix : true }  , 
 			BasicFunctionSpec equals : { functionalName : "equals" sqlName : "=" isInfix : true } , 
 			 BasicFunctionSpec CopyColumn : { functionalName : "funcs.CopyColumn" sqlName : "ID" isInfix : false }  ,
+			  BasicFunctionSpec concat : { functionalName : "concat" sqlName : "concat" isInfix : false }  ,
 			 AggregateFunctionSpec First : { functionalName : "funcs.First" sqlName : "First" } 
 			
 	] } } } }
