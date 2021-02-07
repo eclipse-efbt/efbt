@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Birdartefactscreator
 Bundle-SymbolicName: org.eclipse.efbt.controller.smcubes.component.importexport.impl
 Bundle-Version: 1.0.0.qualifier
-Automatic-Module-Name: org.eclipse.efbt.component.birdartefactscreator
+Automatic-Module-Name: org.eclipse.efbt.controller.smcubes.component.importexport.impl
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.efbt.controller.smcubes.component.importexport.impl
 Require-Bundle: org.apache.commons.logging,
