@@ -19,6 +19,20 @@ ProgramAndCalls : { program :  TRLProgram :  {
 				displayName : "mainCurrency"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
 			},
+			VARIABLE mainCurrencyl : {
+				code : "mainCurrencyl"
+				description : "mainCurrencyl"
+				variable_id : "mainCurrencyl"
+				displayName : "mainCurrencyl"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
+			},
+			VARIABLE mainCurrencyk : {
+				code : "mainCurrencyk"
+				description : "mainCurrencyk"
+				variable_id : "mainCurrencyk"
+				displayName : "MaimainCurrencyknCurrency"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
+			},
 			VARIABLE secondCurrency : {
 				code : "secondCurrency"
 				description : "secondCurrency"
@@ -41,7 +55,13 @@ ProgramAndCalls : { program :  TRLProgram :  {
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
 			},
 			
-		
+			VARIABLE Dummy : {
+				code : "Dummy"
+				description : "Dummy"
+				variable_id : "Dummy"
+				displayName : "Dummy"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
+			},
 			VARIABLE ccy1 : {
 				code : "ccy1"
 				description : "ccy1"
@@ -105,12 +125,12 @@ ProgramAndCalls : { program :  TRLProgram :  {
 				displayName : "sector"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.sector"
 			},
-			VARIABLE securitisationSector : {
-				code : "securitisationSector"
-				description : "securitisationSector"
-				variable_id : "securitisationSector"
-				displayName : "securitisationSector"
-				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.securitisationSector"
+			VARIABLE securitisation_sector : {
+				code : "securitisation_sector"
+				description : "securitisation_sector"
+				variable_id : "securitisation_sector"
+				displayName : "securitisation_sector"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.securitisation_sector"
 			},
 			VARIABLE riskClass : {
 				code : "riskClass"

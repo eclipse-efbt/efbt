@@ -76,10 +76,10 @@ ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStatic
 			 		displayName : sector
 			 		
 			 	},
-			 	DOMAIN  securitisationSector : {
-			 		code : securitisationSector			 	
+			 	DOMAIN  securitisation_sector : {
+			 		code : securitisation_sector			 	
 			 		is_enumerated : true
-			 		displayName : securitisationSector
+			 		displayName : securitisation_sector
 			 		
 			 	}
 			 	
