@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" xsi:schemaLocation="http://www.eclipse.org/sirius/description/1.1.0 http://www.eclipse.org/sirius/1.1.0#//description" uid="_zqINEGlXEeuv07v9biKgRA" selectedViews="_3FC0wGlXEeuv07v9biKgRA" version="14.3.1.202003261200">
+<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" uid="_TjWusG1ZEeuIUYF_40uLgA" version="14.3.1.202003261200">
   <semanticResources>src/CRR_RequirementsBundleRoot.coca</semanticResources>
   <semanticResources>src/FRTBCombinations.coca</semanticResources>
   <semanticResources>src/FRTBSourceDomainMembers.coca</semanticResources>
@@ -26,14 +26,7 @@
   <semanticResources>src/FRTB_GIRRDeltaAndCurvatureRelease.coca</semanticResources>
   <semanticResources>src/commonFunctions.coca</semanticResources>
   <semanticResources>src/GIRRFunctions.coca</semanticResources>
-  <semanticResources>src/FRTB_Test1.coca</semanticResources>
-  <semanticResources>src/FRTB_TestDefinition1.coca</semanticResources>
-  <semanticResources>src/FRTB_TestDefinition_Constraint.coca</semanticResources>
-  <semanticResources>src/FRTB_TestDefinition_Template.coca</semanticResources>
   <semanticResources>src/FRTB_functionalityModulesProgram.coca</semanticResources>
   <semanticResources>src/FRTB_requirements.coca</semanticResources>
   <semanticResources>src/platform_calls.coca</semanticResources>
-  <ownedViews xmi:type="viewpoint:DView" uid="_3FC0wGlXEeuv07v9biKgRA">
-    <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.efbt.cocalimo.trl.ui.sirius.core/description/trl.odesign#//@ownedViewpoints[name='Modules']"/>
-  </ownedViews>
 </viewpoint:DAnalysis>

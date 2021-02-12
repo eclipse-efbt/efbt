@@ -284,49 +284,49 @@ ProgramAndCalls : { program : TRLProgram :  {
 					MEMBER RMBS_PRIME : {
 						code : OTHER_SECTOR
 						displayName : OTHER_SECTOR
-						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.securitisation_sector"
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.securitisationSector"
 
 					},
 					MEMBER RMBS_MID_PRIME : {
 						code : RMBS_MID_PRIME
 						displayName : RMBS_MID_PRIME
-						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.securitisation_sector"
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.securitisationSector"
 
 					},
 					MEMBER RMBS_SUB_PRIME : {
 						code : RMBS_SUB_PRIME
 						displayName : RMBS_SUB_PRIME
-						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.securitisation_sector"
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.securitisationSector"
 
 					},
 					MEMBER CMBS : {
 						code : CMBS
 						displayName : CMBS
-						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.securitisation_sector"
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.securitisationSector"
 
 					},
 					MEMBER ABS_STUDENT_LOAN : {
 						code : ABS_STUDENT_LOAN
 						displayName : ABS_STUDENT_LOAN
-						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.securitisation_sector"
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.securitisationSector"
 
 					},
 					MEMBER ABS_AUTO : {
 						code : ABS_AUTO
 						displayName : ABS_AUTO
-						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.securitisation_sector"
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.securitisationSector"
 
 					},
 					MEMBER CLO_NON_CTP : {
 						code : CLO_NON_CTP
 						displayName : CLO_NON_CTP
-						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.securitisation_sector"
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.securitisationSector"
 
 					},
-					MEMBER OTHER_SECURITISATION_SECTOR : {
-						code : OTHER_SECURITISATION_SECTOR
-						displayName : OTHER_SECURITISATION_SECTOR
-						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.securitisation_sector"
+					MEMBER OTHER_securitisationSector : {
+						code : OTHER_securitisationSector
+						displayName : OTHER_securitisationSector
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.securitisationSector"
 
 					}
 					
