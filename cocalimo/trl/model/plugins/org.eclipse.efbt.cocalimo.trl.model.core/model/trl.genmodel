@@ -69,17 +69,20 @@
     </genClasses>
     <genClasses ecoreClass="transformation.ecore#//VersionedFunctionalModuleLogic"/>
     <genClasses ecoreClass="transformation.ecore#//TRLExecutableLogic">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference transformation.ecore#//TRLExecutableLogic/componentSet"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference transformation.ecore#//TRLExecutableLogic/cubesModule"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference transformation.ecore#//TRLExecutableLogic/functionSpecModule"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute transformation.ecore#//TRLExecutableLogic/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference transformation.ecore#//TRLExecutableLogic/cubesHierarchyModule"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference transformation.ecore#//TRLExecutableLogic/cubeSchemaModules"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference transformation.ecore#//TRLExecutableLogic/datasetTransformationModules"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference transformation.ecore#//TRLExecutableLogic/reportCellViewModules"/>
     </genClasses>
     <genClasses ecoreClass="transformation.ecore#//TRLProgram">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference transformation.ecore#//TRLProgram/executableLogic"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference transformation.ecore#//TRLProgram/smcubesStaticModel"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference transformation.ecore#//TRLProgram/structVariablesModule"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference transformation.ecore#//TRLProgram/arrayTypedVariablesModule"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference transformation.ecore#//TRLProgram/release"/>
     </genClasses>
   </genPackages>
   <genPackages prefix="Trl_report_cell_views" basePackage="org.eclipse.efbt.language.trl.model"

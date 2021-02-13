@@ -1,0 +1,15 @@
+ProgramAndCalls : { program : TRLProgram : { executableLogic : [ TRLExecutableLogic GIRRCurvatureReportCells: 
+	{reportCellViewModules : [
+			 		 	ReportCellViewModule GIRRCurvatureReportCellsModule : { 
+			 		 		reportCellViews [ 
+			 		 			ReportCellView  irEURCurvatureReportCellView : {
+			 		 				cube : "FRTB_EC_DatapointsCubeLineage.freeBirdToolsCubeModule.irEURCurvatureReportCell" 
+			 		 				reportCell : ReportCell irEURCurvatureReportCell : {
+			 		 					combination : "FRTBCombinationsStaticModel.FRTBCombinationsModel.combinationModule.irEURCurvatureReportCell" 
+			 		 				}
+			 		 				}
+			 		 				]
+			 		 				
+			 		 			}
+			 		 		]
+			 		 	} ] } } 

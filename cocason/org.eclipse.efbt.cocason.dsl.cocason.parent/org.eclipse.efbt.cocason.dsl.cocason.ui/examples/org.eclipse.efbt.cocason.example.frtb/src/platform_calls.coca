@@ -3,12 +3,12 @@ ProgramAndCalls : {platformCalls : PlatformCallModule platfromCallsModule1 : {
 	
 	platformCalls : [ 
 		CreateAttributeLineageModel almFRTB : { 
-		executableLogic : FRTB_GIRRDeltaAndCurvatureRelease
+		release : FRTBRelease1
 		} 
 		,
 		CreateAttributeLineageForOneReportCell almFRTB_ForOneCell : {
-			executableLogic : FRTB_GIRRDeltaAndCurvatureRelease
-			reportCell : "FRTB_GIRRDeltaAndCurvatureRelease.Release1.rc.irEURCurvatureReportCellView.irEURCurvatureReportCell" },
+			release : FRTBRelease1
+			reportCell : "GIRRCurvatureReportCells.GIRRCurvatureReportCellsModule.irEURCurvatureReportCellView.irEURCurvatureReportCell"},
 			
 		CompareAttributeLineageModels alm_FRTB_Compare : {
 			}

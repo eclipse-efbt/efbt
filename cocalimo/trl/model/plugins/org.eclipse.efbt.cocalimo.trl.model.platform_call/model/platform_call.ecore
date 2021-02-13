@@ -130,7 +130,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="CreateAttributeLineageModel" eSuperTypes="#//PlatformCall">
     <eStructuralFeatures xsi:type="ecore:EReference" name="resultingALM" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.attribute_lineage/model/attribute_lineage.ecore#//AttributeLineageModel"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="executableLogic" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.trl.model.core/model/transformation.ecore#//TRLExecutableLogic"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="release" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.trl.model.core/model/transformation.ecore#//Release"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="unresolvedCubeColumnParams"
         upperBound="-1" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagefunctions/model/column_transformation_logic.ecore#//SpeculativeCubeColumnParameter">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -152,7 +152,7 @@
       eSuperTypes="#//PlatformCall">
     <eStructuralFeatures xsi:type="ecore:EReference" name="resultingALM" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.attribute_lineage/model/attribute_lineage.ecore#//AttributeLineageModel"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="executableLogic" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.trl.model.core/model/transformation.ecore#//TRLExecutableLogic"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="release" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.trl.model.core/model/transformation.ecore#//Release"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="unresolvedCubeColumnParams"
         upperBound="-1" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagefunctions/model/column_transformation_logic.ecore#//SpeculativeCubeColumnParameter">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
