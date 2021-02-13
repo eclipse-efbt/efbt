@@ -17,7 +17,7 @@
     </genClasses>
     <genClasses ecoreClass="functionality_module.ecore#//SerialFunctionalityModule"/>
     <genClasses ecoreClass="functionality_module.ecore#//FunctionalityModuleSet">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference functionality_module.ecore#//FunctionalityModuleSet/subTransformationsAndSchemes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference functionality_module.ecore#//FunctionalityModuleSet/subModules"/>
     </genClasses>
     <genClasses ecoreClass="functionality_module.ecore#//ReadDataSourceFunctionalityModule"/>
     <genClasses ecoreClass="functionality_module.ecore#//ReportCellCreationFunctionalityModule"/>

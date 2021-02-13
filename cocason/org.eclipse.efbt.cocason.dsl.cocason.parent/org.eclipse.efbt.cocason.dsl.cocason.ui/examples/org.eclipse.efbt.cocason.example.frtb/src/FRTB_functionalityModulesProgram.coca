@@ -3,17 +3,17 @@ ProgramAndCalls : { program : TRLProgram : { smcubesStaticModel : SMCubesStaticM
 		license : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"
 		FunctionalityModules : [ ParallelFunctionalityModule SBAProcesses : {
 			
-			subTransformationsAndSchemes : [ 
+			subModules : [ 
 				ParallelFunctionalityModule FRTBProcesses : { 
 					
-				subTransformationsAndSchemes : [
+				subModules : [
 				SerialFunctionalityModule InterestRateSBA : { 
-					subTransformationsAndSchemes : [ 
+					subModules : [ 
 						
 						ReadDataSourceFunctionalityModule ReadIRDeltaSensitivities : { } , 
 						DataProcessingFunctionalityModule AggregateIRDeltaSensitivities :{},
 						SerialFunctionalityModule IRCurvature : { 
-							subTransformationsAndSchemes : [ 
+							subModules : [ 
 								ReadDataSourceFunctionalityModule ReadIRCurvatureData : { } , 
 								DataProcessingFunctionalityModule deltaStripping :{ 
 									scenarioSet : ScenarioSet deltaStrippingScenarios : 
@@ -22,7 +22,7 @@ ProgramAndCalls : { program : TRLProgram : { smcubesStaticModel : SMCubesStaticM
 								} , 
 								 DataProcessingFunctionalityModule CVRForRiskFactor : { } ,
 								  ParallelFunctionalityModule AggregateCVR : {
-								  	subTransformationsAndSchemes : [ 
+								  	subModules : [ 
 								  		DataProcessingFunctionalityModule correlatedCVRs : { } , 
 								  		DataProcessingFunctionalityModule uncorrelatedCVRs : { }
 								  	]
@@ -33,7 +33,7 @@ ProgramAndCalls : { program : TRLProgram : { smcubesStaticModel : SMCubesStaticM
 						}
 					]
 				} ,  SerialFunctionalityModule EquitySBA :  { 
-					subTransformationsAndSchemes : [ 
+					subModules : [ 
 						DataProcessingFunctionalityModule EquityDeltaProcessing : { },  
 						DataProcessingFunctionalityModule IRCurvatureProcessing : { }
 					]
