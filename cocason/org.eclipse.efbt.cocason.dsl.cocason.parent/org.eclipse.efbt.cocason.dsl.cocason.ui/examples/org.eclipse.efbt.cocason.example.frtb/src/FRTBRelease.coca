@@ -1,0 +1,9 @@
+ProgramAndCalls : { program : TRLProgram :  { 
+			 		release : Release FRTBRelease1 : {
+			 			cubeSchemaModules : [ "GIRRCurvatureCubeSchemas.cubeschemas" ]
+			 			datasetTransformationModules : [ "GIRRCurvatureCVRLogic.views" , "GIRRCurvatureAggregatedCVRLogic.views" , "GIRRCurvatureDeltaStrippingLogic.views" , "GIRRCurvatureFinalCVRLogic.views" ,  "GIRRDeltaAggregationAndWeightingLogic.views" ]
+			 			reportCellViewModules : ["GIRRCurvatureReportCells.GIRRCurvatureReportCellsModule" ]
+			 		}
+			 		}
+			 		} 
+			 	
