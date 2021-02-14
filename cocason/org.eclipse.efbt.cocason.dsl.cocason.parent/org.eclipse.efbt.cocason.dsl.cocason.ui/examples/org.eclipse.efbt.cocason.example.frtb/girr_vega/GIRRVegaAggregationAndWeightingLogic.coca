@@ -1,0 +1,442 @@
+ProgramAndCalls : { program : TRLProgram :  { 
+	
+	executableLogic :[ TRLExecutableLogic GIRRVegaAggregationAndWeightingLogic : { 
+		
+			
+			 datasetTransformationModules : [ VersionedSQLViewsModule   views : { 
+			 	sqlViews : [ 
+			 		
+			 		JoinView GIRRVegaSensitivitiesAndRiskFactors : {
+			 			cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivitiesAndRiskFactors"
+			 			whereClause : WhereClause : { 
+			 				function : BooleanFunction bf40 : {
+			 					functionSpec : "commonFunctions.commonFunctionSpecModule.equals" 
+			 					parameters : [ 
+			 						SpeculativeCubeColumnParameter : {
+			 							column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
+			 							cube : "FRTBSourceCubes.freeBirdToolsCubeModule.GIRRRiskFactor"
+			 							} ,
+			 						SpeculativeCubeColumnParameter : {
+			 							column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
+			 							cube :"NetVegaSensitivities.freeBirdToolsCubeModule.nettedVegaSensitivities"
+			 							} 
+			 						]
+			 					}
+			 				}
+			 				ignores : [ IgnoreColumn : { columnToIgnore : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID" cube :"NetVegaSensitivities.freeBirdToolsCubeModule.nettedVegaSensitivities" }
+			 				]
+			 			} 	,
+			 		EnrichmentView 	GIRRVegaSensitivitiesAndRiskFactorsWithWeight : {
+			 			cube :"GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivitiesAndRiskFactorsWithWeight"
+			 			functions : [ 
+			 				BasicColumnFunction GIRRVegaSensitivitiesAndRiskFactorsWithWeight_GIRRVegaRiskWeight: { 
+			 					cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivitiesAndRiskFactorsWithWeight"
+			 					variable : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.GIRRVegaRiskWeight"
+			 					
+			 					basicFunction : BasicFunction bf41 : {
+			 						functionSpec : "FRTBFunctions.GIRRFunctionSpecModule.getGIRRVegaRiskFactorRiskWeight"
+			 						parameters : [ 
+			 							SpeculativeCubeColumnParameter : {
+			 								column : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.tenor"
+			 								cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivitiesAndRiskFactors"
+			 							}
+			 							
+			 						]
+			 					}
+			 				}
+			 			
+			 			]
+			 		},
+			 		EnrichmentView 	weightedGIRRVegaSensitivitiesAndRiskFactors : {
+			 			cube :"GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.weightedGIRRVegaSensitivitiesAndRiskFactors"
+			 			functions : [ 
+			 				BasicColumnFunction weightedGIRRVegaSensitivitiesAndRiskFactors_weightedGIRRVegaSensitivity: { 
+			 					cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.weightedGIRRVegaSensitivitiesAndRiskFactors"
+			 					variable : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.weightedGIRRVegaSensitivity"
+			 					
+			 					basicFunction : BasicFunction bf42 : {
+			 						functionSpec : "commonFunctions.commonFunctionSpecModule.multiply"
+			 						parameters : [ 
+			 							SpeculativeCubeColumnParameter : {
+			 								column : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.nettedVegaSensitivity"
+			 								cube :  "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivitiesAndRiskFactorsWithWeight"
+			 							},
+			 							SpeculativeCubeColumnParameter : {
+			 								column :"GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.GIRRVegaRiskWeight"
+			 								cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivitiesAndRiskFactorsWithWeight"
+			 							}
+			 							
+			 						]
+			 					}
+			 				}
+			 			
+			 			]
+			 		},
+			 		
+			 		CopyView copyOfWeightedGIRRVegaSensitivitiesAndRiskFactors : {
+			 			cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.copyOfWeightedGIRRVegaSensitivitiesAndRiskFactors"
+			 			
+			 		},
+			 		
+			 		JoinView GIRRVegaSensitivityCombinations : { 
+			 			cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivityCombinations"
+			 			whereClause : WhereClause : {
+			 				function : BooleanFunction bf43  : { 
+			 		 				 				
+			 		 				 						functionSpec : "commonFunctions.commonFunctionSpecModule.equals" 
+			 		 				 						parameters : [
+			 		 				 							SpeculativeCubeColumnParameter : {
+			 		 				 								column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.mainCurrency"
+			 		 				 								cube :"GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.copyOfWeightedGIRRVegaSensitivitiesAndRiskFactors"
+			 		 				 								},
+			 		 				 							SpeculativeCubeColumnParameter : {
+			 		 				 								column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.mainCurrency"
+			 		 				 								cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.weightedGIRRVegaSensitivitiesAndRiskFactors"
+			 		 				 								}
+			 		 				 							
+			 		 				 							]
+			 		 				 							}
+			 		 				 						
+			 		 				 			}
+			 		 				 			renames : [
+			 		 				 				RenameAs : {
+			 		 				 					fromCube :"GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.copyOfWeightedGIRRVegaSensitivitiesAndRiskFactors"
+			 		 				 					fromVariable : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.weightedGIRRVegaSensitivity"
+			 		 				 					toVariable : 	"GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.GIRRVegaSensitivityl"
+			 		 				 					},
+			 		 				 				RenameAs : {
+			 		 				 					fromCube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.weightedGIRRVegaSensitivitiesAndRiskFactors"
+			 		 				 					fromVariable : 	"GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.weightedGIRRVegaSensitivity"
+			 		 				 					toVariable : 	"GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.GIRRVegaSensitivityk"
+			 		 				 					},
+			 		 				 				RenameAs : {
+			 		 				 					fromCube :"GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.copyOfWeightedGIRRVegaSensitivitiesAndRiskFactors"
+			 		 				 					fromVariable : 	"FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.tenor"
+			 		 				 					toVariable : 	"GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.tenorl"
+			 		 				 					},
+			 		 				 				RenameAs : {
+			 		 				 					fromCube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.weightedGIRRVegaSensitivitiesAndRiskFactors"
+			 		 				 					fromVariable : 	"FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.tenor"
+			 		 				 					toVariable : 		"GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.tenork"
+			 		 				 					},
+			 		 				 				RenameAs : {
+			 		 				 					fromCube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.copyOfWeightedGIRRVegaSensitivitiesAndRiskFactors"
+			 		 				 					fromVariable : 	"FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
+			 		 				 					toVariable : 	"FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.riskFactorIDl"
+			 		 				 					},
+			 		 				 				RenameAs : {
+			 		 				 					fromCube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.weightedGIRRVegaSensitivitiesAndRiskFactors"
+			 		 				 					fromVariable : 	"FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
+			 		 				 					toVariable : 	"FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.riskFactorIDk"
+			 		 				 					}
+			 		 				 					
+			 		 				 					]
+			 		 				 				ignores : [ 
+			 		 				 					IgnoreColumn : {
+			 		 				 						columnToIgnore : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.mainCurrency"
+			 		 				 						cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.copyOfWeightedGIRRVegaSensitivitiesAndRiskFactors"
+			 		 				 					},
+			 		 				 					IgnoreColumn : {
+			 		 				 						columnToIgnore : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.secondCurrency"
+			 		 				 						cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.copyOfWeightedGIRRVegaSensitivitiesAndRiskFactors"
+			 		 				 					}
+			 		 				 					
+			 		 				 				]
+			 		 				 				
+			 		 				 			
+			 		 				 				},
+			 		EnrichmentView GIRRVegaSensitivityCombinationsWithCorrelationFactor : {
+			 			cube :"GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivityCombinationsWithCorrelationFactor"
+			 			functions : [ BasicColumnFunction GIRRVegaSensitivityCombinationsWithCorrelationFactor_GIRRVegaCorrelationFactor : {
+			 				cube :  "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivityCombinationsWithCorrelationFactor"
+			 				variable : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.GIRRVegaCorrelationFactor"
+			 				basicFunction : BasicFunction bf44 : {
+			 					functionSpec : "FRTBFunctions.GIRRFunctionSpecModule.getGIRRVegaCorrelationFactor" 
+			 					parameters : [
+			 						SpeculativeCubeColumnParameter : { 
+			 							column : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.tenork"
+			 							cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivityCombinations"
+			 						},
+			 						SpeculativeCubeColumnParameter : { 
+			 							column : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.tenorl"
+			 							cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivityCombinations"
+			 						},
+			 						SpeculativeCubeColumnParameter : { 
+			 							column : "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.riskFactorIDk"
+			 							cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivityCombinations"
+			 						},
+			 						SpeculativeCubeColumnParameter : { 
+			 							column :"FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.riskFactorIDl"
+			 							cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivityCombinations"
+			 						}
+			 						
+			 				
+			 					]
+			 				}
+			 			} 
+			 		
+			 			] 
+			 			
+			 			},
+			 		EnrichmentView 	GIRRVegaSensitivitiesCorrelated : {
+			 			
+			 			cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivitiesCorrelated"
+			 			
+			 			functions : [ BasicColumnFunction GIRRVegaSensitivitiesCorrelated_GIRRVegaKBInput : { 			 				
+			 					cube :  "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivitiesCorrelated"
+			 					variable :"GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.GIRRVegaKBInput"
+			 				 
+				 				basicFunction : BasicFunction bf45 :
+				 				{ 
+				 					functionSpec : "commonFunctions.commonFunctionSpecModule.multiply" 
+				 					parameters : [ 
+				 						BasicFunction bf46 : { 
+				 							functionSpec : "commonFunctions.commonFunctionSpecModule.multiply"
+				 							parameters : [
+				 								SpeculativeCubeColumnParameter : { 
+				 									column : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.GIRRVegaSensitivityk"
+				 									cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivityCombinationsWithCorrelationFactor"
+				 								},
+				 								SpeculativeCubeColumnParameter : { 
+				 									column :"GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.GIRRVegaSensitivityk"
+				 									cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivityCombinationsWithCorrelationFactor"
+				 								}
+				 								
+				 								]
+				 							},
+				 							SpeculativeCubeColumnParameter : { 
+				 									column : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.GIRRVegaCorrelationFactor"
+				 									cube :"GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivityCombinationsWithCorrelationFactor"
+				 								}
+				 							]
+				 						}
+				 					
+				 				}
+			 			]
+			 			
+			 		},
+			 		AggregateEnrichmentView GIRRVegaSensitivitiesCorrelatedAndAggregated : {
+			 			cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivitiesCorrelatedAndAggregated"
+			 			
+			 			functions : [ 
+			 				AggregateColumnFunction GIRRVegaSensitivitiesCorrelatedAndAggregated_GIRRVegaKBInput_per_bucket : {
+			 					cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivitiesCorrelatedAndAggregated"
+			 					variable : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.GIRRVegaKBInputPerBucket"
+			 					aggregateFunction : AggregateFunction af8 : { 
+			 						functionSpec : "commonFunctions.commonFunctionSpecModule.SUM"
+			 						parameters : [  
+			 							SpeculativeCubeColumnParameter : {
+			 								column : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.GIRRVegaKBInput"
+			 								cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivitiesCorrelated"
+			 							}
+			 						] 
+			 					} 
+			 				}
+			 			]
+			 			groupByClause : GroupByClause : {
+			 				groupByColumns : [ "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.mainCurrency" ]
+			 			}
+			 		},
+			 		
+			 		EnrichmentView GIRRVegaSensitivityKBPerBucket : {
+			 			cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivityKBPerBucket"
+			 			
+			 			functions : [ BasicColumnFunction GIRRVegaSensitivityKBPerBucket_GIRRVegaKB : {
+			 				cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivityKBPerBucket"
+			 				variable : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.GIRRVegaKB"
+			 				basicFunction : BasicFunction bf49  : { 
+			 					
+			 				functionSpec : "commonFunctions.commonFunctionSpecModule.sqrt" 
+			 				parameters : [ 
+			 					
+			 				 BasicFunction bf52 : {
+			 					
+			 					functionSpec : "commonFunctions.commonFunctionSpecModule.max"
+			 					parameters  : [
+			 						SpeculativeCubeColumnParameter : {
+			 							column : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.GIRRVegaKBInputPerBucket" 
+			 							cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivitiesCorrelatedAndAggregated"
+			 						},
+			 						ValueParameter : {
+			 							dataType : :Decimal
+			 							value : "0.0"
+			 						}
+			 						]
+			 					}
+			 				
+			 			]
+			 			}
+			 			}
+			 			]
+			 		
+			 			
+			 		},
+			 		AggregateEnrichmentView totalGIRRVegaSensitivityPerBucket : {
+			 			cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.totalGIRRVegaSensitivityPerBucket"
+			 			functions : [
+			 				AggregateColumnFunction totalGIRRVegaSensitivityPerBucket_totalGIRRVegaSensitivityPerBucket: { 
+			 					cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.totalGIRRVegaSensitivityPerBucket"
+			 					variable : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.totalGIRRVegaSensitivityPerBucket"
+			 					aggregateFunction : AggregateFunction af7 : {
+			 						functionSpec : "commonFunctions.commonFunctionSpecModule.SUM" 
+			 						parameters : [ 
+			 							SpeculativeCubeColumnParameter : {
+			 								column : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.weightedGIRRVegaSensitivity"
+			 								cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.weightedGIRRVegaSensitivitiesAndRiskFactors"
+			 								
+			 							}
+			 						] 
+			 						
+			 					}
+			 				
+			 			}
+			 		
+			 			]
+			 			groupByClause : GroupByClause : {
+			 				groupByColumns : [
+			 					"FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.mainCurrency"
+			 				]
+			 			}
+			 		}
+			 		,
+			 		CopyView copyOfTotalGIRRVegaSensitivityPerBucket : {
+			 			cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.copyOfTotalGIRRVegaSensitivityPerBucket"
+			 		},
+			 		JoinView GIRRVegaSensitivityPerBucketCombinations : {
+			 			cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivityPerBucketCombinations"
+			 			whereClause : WhereClause : {
+			 				function : BooleanFunction bf47 : {
+			 					functionSpec : "commonFunctions.commonFunctionSpecModule.notEquals"
+			 					parameters : [
+			 						SpeculativeCubeColumnParameter : { 
+			 							column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.mainCurrency"
+			 							cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.totalGIRRVegaSensitivityPerBucket"
+			 						}
+			 						,
+			 						SpeculativeCubeColumnParameter : { 
+			 							column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.mainCurrency"
+			 							cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.copyOfTotalGIRRVegaSensitivityPerBucket"
+			 						}
+			 					] } } 
+			 					renames : [
+			 						
+ 		 				 				RenameAs : {
+ 		 				 					fromCube :"GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.copyOfTotalGIRRVegaSensitivityPerBucket"
+ 		 				 					fromVariable : 	"FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.mainCurrency"
+ 		 				 					toVariable : 	"GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.mainCurrencyl"
+ 		 				 					},
+ 		 				 				RenameAs : {
+ 		 				 					fromCube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.totalGIRRVegaSensitivityPerBucket"
+ 		 				 					fromVariable : 	"FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.mainCurrency"
+ 		 				 					toVariable : 	"GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.mainCurrencyk"
+ 		 				 					},
+ 		 				 				RenameAs : {
+ 		 				 					fromCube :"GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.copyOfTotalGIRRVegaSensitivityPerBucket"
+ 		 				 					fromVariable : 	"GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.totalGIRRVegaSensitivityPerBucket"
+ 		 				 					toVariable : 	"GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.totalGIRRVegaSensitivityPerBucketk"
+ 		 				 					},
+ 		 				 				RenameAs : {
+ 		 				 					fromCube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.totalGIRRVegaSensitivityPerBucket"
+ 		 				 					fromVariable : 	"GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.totalGIRRVegaSensitivityPerBucket"
+ 		 				 					toVariable : 	"GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.totalGIRRVegaSensitivityPerBucketl"
+ 		 				 					}
+			 					]
+
+			 		},
+			 		EnrichmentView GIRRVegaSensitivityPerBucketCombinationsWithCorrelationFactor : {
+			 			cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivityPerBucketCombinationsWithCorrelationFactor"
+			 			functions : [ BasicColumnFunction GIRRVegaSensitivityPerBucketCombinationsWithCorrelationFactor_GIRRVegaBucketCorrelationFactor : 
+			 				{ 
+			 					cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivityPerBucketCombinationsWithCorrelationFactor"
+			 					variable : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.GIRRVegaBucketCorrelationFactor"
+			 					basicFunction : BasicFunction bf55 : { 
+			 						functionSpec : "FRTBFunctions.GIRRFunctionSpecModule.getGIRRBucketCorrelationFactor"
+			 						parameters : [
+			 							SpeculativeCubeColumnParameter : {
+			 								column : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.mainCurrencyk"
+			 								cube :  "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivityPerBucketCombinations"
+			 							},
+			 							SpeculativeCubeColumnParameter : {
+			 								column : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.mainCurrencyl"
+			 								cube :  "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivityPerBucketCombinations"
+			 							}
+			 						]
+			 					}
+			 					}
+			 			]
+			 		} ,
+			 		EnrichmentView GIRRVegaSensitivityPerBucketCorrelated : {
+			 			cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivityPerBucketCorrelated"
+			 			functions : [
+			 				BasicColumnFunction GIRRVegaSensitivityPerBucketCorrelated_GIRRVegaSensitivityPerBucketCorrelated : { 
+			 					cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivityPerBucketCorrelated"
+			 					variable : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.GIRRVegaSensitivityPerBucketCorrelated"
+			 					basicFunction : BasicFunction  bf53 : {
+			 						functionSpec : "commonFunctions.commonFunctionSpecModule.multiply" 
+			 						parameters : [ 
+			 							BasicFunction bf56 : {
+			 								functionSpec : "commonFunctions.commonFunctionSpecModule.multiply" 
+			 								parameters : [
+			 									SpeculativeCubeColumnParameter : {
+			 										column : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.totalGIRRVegaSensitivityPerBucketk"
+			 										cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivityPerBucketCombinations"
+			 									},
+			 									SpeculativeCubeColumnParameter : {
+			 										column : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.totalGIRRVegaSensitivityPerBucketl"
+			 										cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivityPerBucketCombinations"
+			 									}
+			 									
+			 								]
+			 							},
+			 							SpeculativeCubeColumnParameter : {
+			 								column : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.GIRRVegaBucketCorrelationFactor"
+			 								cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivityPerBucketCombinationsWithCorrelationFactor"
+			 					
+			 							}			 							
+			 						]
+			 						
+			 					}
+			 					
+			 				},
+			 				BasicColumnFunction GIRRVegaSensitivityPerBucketCorrelated_Dummy :
+			 				{ 
+			 					cube :  "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivityPerBucketCorrelated"
+			 					variable : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.Dummy" 
+			 					basicFunction : BasicFunction bf50: { 
+			 						functionSpec : "commonFunctions.commonFunctionSpecModule.equals"
+			 						parameters : [
+			 							 ValueParameter : { 
+			 							 	dataType : :Integer 
+			 							 	value : "0"
+			 							 },
+			 							 ValueParameter : { 
+			 							 	dataType : :Integer 
+			 							 	value : "0"
+			 							 }
+			 							 ]
+			 					}
+			 				}
+			 			] 
+			 		},
+			 		AggregateEnrichmentView totalGIRRVegaSensitivityPerBucketCorrelated : {  
+			 			cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.totalGIRRVegaSensitivityPerBucketCorrelated"
+			 			functions : [
+			 				AggregateColumnFunction totalGIRRVegaSensitivityPerBucketCorrelated_totalGIRRVegaSensitivityPerBucketCorrelated : {
+			 					cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.totalGIRRVegaSensitivityPerBucketCorrelated"
+			 					variable : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.totalGIRRVegaSensitivityPerBucketCorrelated"
+			 					aggregateFunction : AggregateFunction af9 : {
+			 						functionSpec : "commonFunctions.commonFunctionSpecModule.SUM" 
+			 						parameters : [
+			 							SpeculativeCubeColumnParameter : { 
+			 								column : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.GIRRVegaSensitivityPerBucketCorrelated"
+			 								cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivityPerBucketCorrelated"
+			 							} 
+			 						]
+			 					}
+			 				}
+			 			]
+			 			groupByClause : GroupByClause : { groupByColumns : [ "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.Dummy" ] }
+			 			
+			 		}
+
+			 		] } ] } ] } }
