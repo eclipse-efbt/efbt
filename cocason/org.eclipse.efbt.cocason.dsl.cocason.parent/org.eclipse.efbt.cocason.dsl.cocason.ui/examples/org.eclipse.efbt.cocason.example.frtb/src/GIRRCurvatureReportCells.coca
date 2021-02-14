@@ -3,7 +3,7 @@ ProgramAndCalls : { program : TRLProgram : { executableLogic : [ TRLExecutableLo
 			 		 	ReportCellViewModule GIRRCurvatureReportCellsModule : { 
 			 		 		reportCellViews [ 
 			 		 			ReportCellView  irEURCurvatureReportCellView : {
-			 		 				cube : "FRTB_EC_DatapointsCubeLineage.freeBirdToolsCubeModule.irEURCurvatureReportCell" 
+			 		 				cube : "GIRRCurvatureDatapoints.freeBirdToolsCubeModule.GIRRCurvatureEURReportCell"
 			 		 				reportCell : ReportCell irEURCurvatureReportCell : {
 			 		 					combination : "FRTBCombinationsStaticModel.FRTBCombinationsModel.combinationModule.irEURCurvatureReportCell" 
 			 		 				}

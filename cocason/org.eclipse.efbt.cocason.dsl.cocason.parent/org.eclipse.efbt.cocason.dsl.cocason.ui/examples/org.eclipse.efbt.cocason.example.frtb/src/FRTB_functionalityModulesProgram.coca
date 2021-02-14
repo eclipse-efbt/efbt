@@ -4,49 +4,54 @@ ProgramAndCalls : { program : TRLProgram : { smcubesStaticModel : SMCubesStaticM
 		FunctionalityModules : [ ParallelFunctionalityModule SBAProcesses : {
 			
 			subModules : [ 
-				ParallelFunctionalityModule FRTBProcesses : { 
+				ParallelFunctionalityModule FRTBProcesses : {  
 					
 				subModules : [
-				SerialFunctionalityModule InterestRateSBA : { 
+				ParallelFunctionalityModule GIRR_SBA : { 
 					subModules : [ 
-						
-						ReadDataSourceFunctionalityModule ReadIRDeltaSensitivities : { } , 
-						DataProcessingFunctionalityModule AggregateIRDeltaSensitivities :{},
-						SerialFunctionalityModule IRCurvature : { 
-							subModules : [ 
-								ReadDataSourceFunctionalityModule ReadIRCurvatureData : { } , 
-								DataProcessingFunctionalityModule deltaStripping :{ 
-									scenarioSet : ScenarioSet deltaStrippingScenarios : 
-									{ scenarios : [ Scenario upShocks ,Scenario downShocks ] }
-									
-								} , 
-								 DataProcessingFunctionalityModule CVRForRiskFactor : { } ,
-								  ParallelFunctionalityModule AggregateCVR : {
-								  	subModules : [ 
-								  		DataProcessingFunctionalityModule correlatedCVRs : { } , 
-								  		DataProcessingFunctionalityModule uncorrelatedCVRs : { }
-								  	]
-								  } , 
-								  DataProcessingFunctionalityModule FinalCVR : { } , 
-								  ReportCellCreationFunctionalityModule createIRCurvatureReportCells : { }
+						SerialFunctionalityModule GIRRDeltaAndGIRRCurvatureProcessing : { 
+							subModules : [
+								ReadDataSourceFunctionalityModule ReadGIRRDeltaSensitivities : { } , 
+								DataProcessingFunctionalityModule GIRRDeltaAggregationAndWeighting :{},
+								SerialFunctionalityModule GIRRCurvature : { 
+									subModules : [ 
+										ReadDataSourceFunctionalityModule ReadGIRRCurvatureData : { } , 
+										DataProcessingFunctionalityModule GIRRCurvatureDeltaStripping :{ 
+											scenarioSet : ScenarioSet GIRRCurvatureDeltaStrippingScenarios : 
+											{ scenarios : [ Scenario GIRRCurvatureUpShocks ,Scenario GIRRCurvatureDownShocks ] }
+											
+										} , 
+										 DataProcessingFunctionalityModule GIRRCurvatureCVR : { } ,
+										  ParallelFunctionalityModule GIRRCurvatureAggregatedCVR : {
+										  	subModules : [ 
+										  		DataProcessingFunctionalityModule GIRRCurvatureCorellatedCVR : { } , 
+										  		DataProcessingFunctionalityModule GIRRCurvatureUncorellatedCVR : { }
+										  	]
+										  } , 
+										  DataProcessingFunctionalityModule GIRRCurvatureFinalCVRLogic : { } , 
+										  ReportCellCreationFunctionalityModule createGIRRCurvatureReportCells : { }, 
+										  ReportCellCreationFunctionalityModule createGIRRDeltaReportCells : { }
+									]
+								}
 							]
-						}
-					]
-				} ,  SerialFunctionalityModule EquitySBA :  { 
+				},
+				SerialFunctionalityModule GIRRVegaProcessing : {
 					subModules : [ 
-						DataProcessingFunctionalityModule EquityDeltaProcessing : { },  
-						DataProcessingFunctionalityModule IRCurvatureProcessing : { }
+						ReadDataSourceFunctionalityModule ReadGIRRVegaSensitivities : { } , 
+								DataProcessingFunctionalityModule GIRRVegaAggregationAndWeighting :{},
+								 ReportCellCreationFunctionalityModule createGIRRVegaReportCells : { }
 					]
 				}
+				] } 
 			] } 
 			] } ] 
 			functionalityModuleTags : [ 
-				FunctionalityModuleTag deltaStrippingTag : {
-					displayName : deltaStrippingTag 
+				FunctionalityModuleTag GIRRCurvatureDeltaStrippingTag : {
+					displayName : GIRRCurvatureDeltaStrippingTag 
 					requirements : [ 
 					"CRRRequirementsStaticModel.CRRRequirementsModel.CRRRuleBook.Title_IV.Title_IV;Chapter_1_General_Provisions.Article_325.Article_325;1.Article_325:1(a)" ,
 					 "CRRRequirementsStaticModel.CRRRequirementsModel.CRRRuleBook.Title_IV.Title_IV;Chapter_1_General_Provisions.Article_325.Article_325;1.Article_325:1(b)" ] 
-					 FunctionalityModule : "SBAProcesses.FRTBProcesses.InterestRateSBA.IRCurvature.deltaStripping"
+					 FunctionalityModule : "SBAProcesses.FRTBProcesses.GIRR_SBA.GIRRDeltaAndGIRRCurvatureProcessing.GIRRCurvature.GIRRCurvatureDeltaStripping"
 				}
 			] 
 			SceanrioTags : [ 
@@ -55,6 +60,6 @@ ProgramAndCalls : { program : TRLProgram : { smcubesStaticModel : SMCubesStaticM
 					requirements : [
 						"CRRRequirementsStaticModel.CRRRequirementsModel.CRRRuleBook.Title_IV.Title_IV;Chapter_1_General_Provisions.Article_325"
 					] 
-					scenario : "SBAProcesses.FRTBProcesses.InterestRateSBA.IRCurvature.deltaStripping.deltaStrippingScenarios.upShocks"
+					scenario : "SBAProcesses.FRTBProcesses.GIRR_SBA.GIRRDeltaAndGIRRCurvatureProcessing.GIRRCurvature.GIRRCurvatureDeltaStripping.GIRRCurvatureDeltaStrippingScenarios.GIRRCurvatureUpShocks"
 				}
 			] } } } }

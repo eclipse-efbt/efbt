@@ -14,17 +14,17 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 					parameters : [ 
 			 						SpeculativeCubeColumnParameter : { 
 			 							column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.positionID"
-			 							cube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.curvature"
+			 							cube : "FRTBSourceCubes.freeBirdToolsCubeModule.curvature"
 			 						},
 			 						SpeculativeCubeColumnParameter : {
 			 							column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.positionID"
-			 							cube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.position"
+			 							cube : "FRTBSourceCubes.freeBirdToolsCubeModule.position"
 			 							
 			 						}
 			 					]
-			 				}
+			 				} 
 			 			}
-			 		ignores : [ IgnoreColumn : { columnToIgnore : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.positionID" cube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.curvature" } ]
+			 		ignores : [ IgnoreColumn : { columnToIgnore : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.positionID" cube : "FRTBSourceCubes.freeBirdToolsCubeModule.curvature" } ]
 			 		},
 			 		JoinView  GIRRCurvatureValuationDifferences : { 
 			 			cube : "GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureValuationDifferences"
@@ -35,7 +35,7 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 					parameters : [
 			 						SpeculativeCubeColumnParameter : { 
 			 							column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID" 
-			 							cube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.GIRRRiskFactor"
+			 							cube : "FRTBSourceCubes.freeBirdToolsCubeModule.GIRRRiskFactor"
 			 							} ,
 			 							SpeculativeCubeColumnParameter : { 
 			 							column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID" 
@@ -53,7 +53,7 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 JoinView GIRRCurvatureValuationDifferencesLinkedWithDeltas : {
 			 		 	cube : "GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureValuationDifferencesLinkedWithDeltas"
 			 		 	whereClause : WhereClause : { 
-			 		 		function : BooleanFunction GIRRCurvatureValuationDifferencesLinkedWithDeltasJoinViewWhereClauseFunction : {
+			 		 		function : BooleanFunction bf8 : {
 			 		 			functionSpec : "commonFunctions.GIRRFunctionSpecModule.AND"
 			 		 			parameters : [
 			 		 				BasicFunction bf9 : {  

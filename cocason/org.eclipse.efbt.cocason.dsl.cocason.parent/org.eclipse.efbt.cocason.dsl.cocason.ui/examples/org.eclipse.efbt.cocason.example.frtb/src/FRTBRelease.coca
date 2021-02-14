@@ -1,6 +1,6 @@
 ProgramAndCalls : { program : TRLProgram :  { 
 			 		release : Release FRTBRelease1 : {
-			 			cubeSchemaModules : [ "GIRRCurvatureCubeSchemas.cubeschemas" ]
+			 	 		cubeSchemaModules : [ "GIRRRiskFactorCubeSchemas.GIRRRiskFactorCubeSchemasModule" , "CurvatureCubeSchemas.CurvatureCubeSchemasModule" ,"DeltaCubeSchemas.DeltaCubeSchemasModule" , "PositionCubeSchemas.PositionCubeSchemasModule", "VegaCubeSchemas.VegaCubeSchemasModule" ]
 			 			datasetTransformationModules : [ "GIRRCurvatureCVRLogic.views" , "GIRRCurvatureAggregatedCVRLogic.views" , "GIRRCurvatureDeltaStrippingLogic.views" , "GIRRCurvatureFinalCVRLogic.views" ,  "GIRRDeltaAggregationAndWeightingLogic.views" ]
 			 			reportCellViewModules : ["GIRRCurvatureReportCells.GIRRCurvatureReportCellsModule" ]
 			 		}
