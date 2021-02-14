@@ -7,7 +7,9 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 	 								"VegaCubeSchemas.VegaCubeSchemasModule" ,
 			 	 								"EquityRiskFactorCubeSchemas.EquityRiskFactorCubeSchemasModule" 
 			 	 								]
-			 			datasetTransformationModules : [ "GIRRCurvatureCVRLogic.views" , 
+			 			datasetTransformationModules : [ "NetDeltaSensitivitiesLogic.views",
+			 												"NetVegaSensitivitiesLogic.views",
+			 												"GIRRCurvatureCVRLogic.views" , 
 			 											 "GIRRCurvatureAggregatedCVRLogic.views" , 
 			 											 "GIRRCurvatureDeltaStrippingLogic.views" , 
 			 											 "GIRRCurvatureFinalCVRLogic.views" ,  

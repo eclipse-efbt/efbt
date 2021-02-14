@@ -4,14 +4,30 @@ ProgramAndCalls : { program : TRLProgram : { smcubesStaticModel : SMCubesStaticM
 		FunctionalityModules : [ ParallelFunctionalityModule SBAProcesses : {
 			
 			subModules : [ 
-				ParallelFunctionalityModule FRTBProcesses : {  
+				SerialFunctionalityModule FRTBProcessing : { 
+					subModules  : [ 
+						ParallelFunctionalityModule PreNetting : {
+							
+						subModules : [ SerialFunctionalityModule DeltaNetting : {
+							subModules : [
+								ReadDataSourceFunctionalityModule ReadDeltaSensitivities : {},
+								DataProcessingFunctionalityModule NetDeltaSensitivities : { }
+								] },
+								SerialFunctionalityModule VegaNetting : {
+							subModules : [
+								ReadDataSourceFunctionalityModule ReadVegaSensitivities : {},
+								DataProcessingFunctionalityModule NetVegaSensitivities : { }
+								] } ] }, 
+								
+
+				ParallelFunctionalityModule RiskClassProcessing : {  
 					
 				subModules : [
 				ParallelFunctionalityModule GIRR_SBA : { 
 					subModules : [ 
 						SerialFunctionalityModule GIRRDeltaAndGIRRCurvatureProcessing : { 
 							subModules : [
-								ReadDataSourceFunctionalityModule ReadGIRRDeltaSensitivities : { } , 
+								
 								DataProcessingFunctionalityModule GIRRDeltaAggregationAndWeighting :{},
 								SerialFunctionalityModule GIRRCurvature : { 
 									subModules : [ 
@@ -37,21 +53,58 @@ ProgramAndCalls : { program : TRLProgram : { smcubesStaticModel : SMCubesStaticM
 				},
 				SerialFunctionalityModule GIRRVegaProcessing : {
 					subModules : [ 
-						ReadDataSourceFunctionalityModule ReadGIRRVegaSensitivities : { } , 
+						
 								DataProcessingFunctionalityModule GIRRVegaAggregationAndWeighting :{},
 								 ReportCellCreationFunctionalityModule createGIRRVegaReportCells : { }
 					]
 				}
+				] } ,
+				ParallelFunctionalityModule Equity_SBA : { 
+					subModules : [ 
+						SerialFunctionalityModule EquityDeltaAndEquityCurvatureProcessing : { 
+							subModules : [
+								
+								DataProcessingFunctionalityModule EquityDeltaAggregationAndWeighting :{},
+								SerialFunctionalityModule EquityCurvature : { 
+									subModules : [ 
+										ReadDataSourceFunctionalityModule ReadEquityCurvatureData : { } , 
+										DataProcessingFunctionalityModule EquityCurvatureDeltaStripping :{ 
+											scenarioSet : ScenarioSet EquityCurvatureDeltaStrippingScenarios : 
+											{ scenarios : [ Scenario EquityCurvatureUpShocks ,Scenario EquityCurvatureDownShocks ] }
+											
+										} , 
+										 DataProcessingFunctionalityModule EquityCurvatureCVR : { } ,
+										  ParallelFunctionalityModule EquityCurvatureAggregatedCVR : {
+										  	subModules : [ 
+										  		DataProcessingFunctionalityModule EquityCurvatureCorellatedCVR : { } , 
+										  		DataProcessingFunctionalityModule EquityCurvatureUncorellatedCVR : { }
+										  	]
+										  } , 
+										  DataProcessingFunctionalityModule EquityCurvatureFinalCVRLogic : { } , 
+										  ReportCellCreationFunctionalityModule createEquityCurvatureReportCells : { }, 
+										  ReportCellCreationFunctionalityModule createEquityDeltaReportCells : { }
+									]
+								}
+							]
+				},
+				SerialFunctionalityModule EquityVegaProcessing : {
+					subModules : [ 
+						
+								DataProcessingFunctionalityModule EquityVegaAggregationAndWeighting :{},
+								 ReportCellCreationFunctionalityModule createEquityVegaReportCells : { }
+					]
+				}
 				] } 
+				
 			] } 
-			] } ] 
+			] } ] } ]
 			functionalityModuleTags : [ 
 				FunctionalityModuleTag GIRRCurvatureDeltaStrippingTag : {
 					displayName : GIRRCurvatureDeltaStrippingTag 
 					requirements : [ 
 					"CRRRequirementsStaticModel.CRRRequirementsModel.CRRRuleBook.Title_IV.Title_IV;Chapter_1_General_Provisions.Article_325.Article_325;1.Article_325:1(a)" ,
-					 "CRRRequirementsStaticModel.CRRRequirementsModel.CRRRuleBook.Title_IV.Title_IV;Chapter_1_General_Provisions.Article_325.Article_325;1.Article_325:1(b)" ] 
-					 FunctionalityModule : "SBAProcesses.FRTBProcesses.GIRR_SBA.GIRRDeltaAndGIRRCurvatureProcessing.GIRRCurvature.GIRRCurvatureDeltaStripping"
+					 "CRRRequirementsStaticModel.CRRRequirementsModel.CRRRuleBook.Title_IV.Title_IV;Chapter_1_General_Provisions.Article_325.Article_325;1.Article_325:1(b)" ]  
+					 FunctionalityModule : "SBAProcesses.FRTBProcessing.RiskClassProcessing.GIRR_SBA.GIRRDeltaAndGIRRCurvatureProcessing.GIRRCurvature.GIRRCurvatureDeltaStripping"
 				}
 			] 
 			SceanrioTags : [ 
@@ -60,6 +113,6 @@ ProgramAndCalls : { program : TRLProgram : { smcubesStaticModel : SMCubesStaticM
 					requirements : [
 						"CRRRequirementsStaticModel.CRRRequirementsModel.CRRRuleBook.Title_IV.Title_IV;Chapter_1_General_Provisions.Article_325"
 					] 
-					scenario : "SBAProcesses.FRTBProcesses.GIRR_SBA.GIRRDeltaAndGIRRCurvatureProcessing.GIRRCurvature.GIRRCurvatureDeltaStripping.GIRRCurvatureDeltaStrippingScenarios.GIRRCurvatureUpShocks"
+					scenario : "SBAProcesses.FRTBProcessing.RiskClassProcessing.GIRR_SBA.GIRRDeltaAndGIRRCurvatureProcessing.GIRRCurvature.GIRRCurvatureDeltaStripping.GIRRCurvatureDeltaStrippingScenarios.GIRRCurvatureUpShocks"
 				}
 			] } } } }
