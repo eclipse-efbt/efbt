@@ -5,81 +5,7 @@ ProgramAndCalls : { program : TRLProgram :  {
 			
 			 datasetTransformationModules : [ VersionedSQLViewsModule   views : { 
 			 	sqlViews : [ 
-			 		EnrichmentView vegaSensitivitiesWithRiskFactorLongname : {
-			 			cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.vegaSensitivitiesWithRiskFactorLongname"
-			 			functions : [ 
-			 				BasicColumnFunction vegaSensitivitiesWithRiskFactorLongname_riskFactorLongName : {
-			 					cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.vegaSensitivitiesWithRiskFactorLongname"
-			 					variable : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorLongName"
-			 					basicFunction : BasicFunction bf54 : { 
-			 						functionSpec : "commonFunctions.commonFunctionSpecModule.concat"
-			 						parameters : [
-			 							SpeculativeCubeColumnParameter : {
-			 								column :"FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
-			 								cube : "FRTBSourceCubes.freeBirdToolsCubeModule.vegaSensitivities"
-			 							},
-			 							SpeculativeCubeColumnParameter : {
-			 								column : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.tenor" 
-			 								cube :"FRTBSourceCubes.freeBirdToolsCubeModule.vegaSensitivities"
-			 							}
-			 						]
-			 					}
-			 				}
-			 				
-			 			]
-			 		},
-			 		AggregateEnrichmentView nettedVegaSensitivities: {
-			 			cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.nettedVegaSensitivities"
-			 			functions : [
-			 				AggregateColumnFunction nettedVegaSensitivities_nettedVegaSensitivities : {
-			 					cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.nettedVegaSensitivities"
-			 					variable : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.nettedVegaSensitivity"
-			 					aggregateFunction : AggregateFunction af6 : {
-			 						functionSpec : "commonFunctions.commonFunctionSpecModule.SUM" 
-			 						parameters : [
-			 							SpeculativeCubeColumnParameter : {
-			 								column : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.vegaSensitivity"
-			 		 						cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.vegaSensitivitiesWithRiskFactorLongname"
-			 		 					}
-			 		 				] 
-			 		 			} 
-			 		 		}
-			 		 	]
-			 		 	groupByClause : GroupByClause : {
- 		 							groupByColumns : 
- 		 							[			 		 								
- 		 								"FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorLongName",
- 		 								"FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID",
- 		 								"FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.tenor"	 								
- 		 							]			 		 					
-			 					}
-			 				} ,			 							 	
-			 		AggregateEnrichmentView summedVegaSensitivitiesPerPosition : {
-			 		 				cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.summedVegaSensitivitiesPerPosition"
-			 		 				functions : [ 
-			 		 					AggregateColumnFunction  summedVegaSensitivitiesPerPosition_GIRRCurvatureSummedGIRRVega : {
-			 		 						cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.summedVegaSensitivitiesPerPosition"
-			 		 						variable : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.summedGIRRVega"
-			 		 						aggregateFunction : AggregateFunction af1 : {
-			 		 							 functionSpec : "commonFunctions.commonFunctionSpecModule.SUM" 
-			 		 							 parameters : [
-			 		 							 	SpeculativeCubeColumnParameter : {
-			 		 							 		column :"FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.vegaSensitivity"
-			 		 							 		cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.vegaSensitivitiesWithRiskFactorLongname"
-			 		 							 		}
-			 		 							 	]
-			 		 							 }
-			 		 							}
-			 		 						]
-			 		 						groupByClause : GroupByClause : {
-			 		 							groupByColumns : 
-			 		 							[			 		 								
-			 		 								"FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID" ,
-			 		 								"FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.positionID"
-			 		 							]
-			 		 						}
-			 		 					}
-			 		 				, 
+			 		
 			 		JoinView GIRRVegaSensitivitiesAndRiskFactors : {
 			 			cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivitiesAndRiskFactors"
 			 			whereClause : WhereClause : { 
@@ -92,12 +18,12 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 							} ,
 			 						SpeculativeCubeColumnParameter : {
 			 							column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
-			 							cube :"GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.nettedVegaSensitivities"
+			 							cube :"NetVegaSensitivities.freeBirdToolsCubeModule.nettedVegaSensitivities"
 			 							} 
 			 						]
 			 					}
 			 				}
-			 				ignores : [ IgnoreColumn : { columnToIgnore : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID" cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.nettedVegaSensitivities" }
+			 				ignores : [ IgnoreColumn : { columnToIgnore : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID" cube :"NetVegaSensitivities.freeBirdToolsCubeModule.nettedVegaSensitivities" }
 			 				]
 			 			} 	,
 			 		EnrichmentView 	GIRRVegaSensitivitiesAndRiskFactorsWithWeight : {

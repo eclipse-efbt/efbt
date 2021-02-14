@@ -40,13 +40,13 @@ ProgramAndCalls : { program : TRLProgram :  {
  							is_allowed : false 
  							published : false 
  							cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.vegaSensitivities" },
- 						CUBE equityRiskFactor : { 
- 							code : "equityRiskFactor" 
- 							cube_id : "equityRiskFactor" 
- 							description : "equityRiskFactor" 
+ 						CUBE EquityRiskFactor : { 
+ 							code : "EquityRiskFactor" 
+ 							cube_id : "EquityRiskFactor" 
+ 							description : "EquityRiskFactor" 
  							is_allowed : false 
  							published : false 
- 							cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.equityRiskFactor" }  ,
+ 							cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.EquityRiskFactor" }  ,
  						CUBE commodityRiskFactor : { 
  							code : "commodityRiskFactor" 
  							cube_id : "commodityRiskFactor" 

@@ -1,13 +1,13 @@
 ProgramAndCalls : { program : TRLProgram :  { 
 	
-	executableLogic :[ TRLExecutableLogic GIRRCurvatureDeltaStrippingLogic : { 
+	executableLogic :[ TRLExecutableLogic EquityCurvatureDeltaStrippingLogic : { 
 		
 			
 			 datasetTransformationModules : [ VersionedSQLViewsModule   views : { 
 			 	sqlViews : [ 
 			 	
-			 		JoinView GIRRCurvatureAndPosition : { 
-			 			cube  :"GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureAndPosition"
+			 		JoinView EquityCurvatureAndPosition : { 
+			 			cube  :"EquityCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.EquityCurvatureAndPosition"
 			 			whereClause : WhereClause : {
 			 				function : BooleanFunction bf33 : { 
 			 					functionSpec :  "commonFunctions.commonFunctionSpecModule.equals"
@@ -26,8 +26,8 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 			}
 			 		ignores : [ IgnoreColumn : { columnToIgnore : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.positionID" cube : "FRTBSourceCubes.freeBirdToolsCubeModule.curvature" } ]
 			 		},
-			 		JoinView  GIRRCurvatureValuationDifferences : { 
-			 			cube : "GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureValuationDifferences"
+			 		JoinView  EquityCurvatureValuationDifferences : { 
+			 			cube : "EquityCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.EquityCurvatureValuationDifferences"
 			 			whereClause : WhereClause : {
 			 				function : BooleanFunction bf34 :
 			 				{ 
@@ -35,23 +35,23 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 					parameters : [
 			 						SpeculativeCubeColumnParameter : { 
 			 							column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID" 
-			 							cube : "FRTBSourceCubes.freeBirdToolsCubeModule.GIRRRiskFactor"
+			 							cube : "FRTBSourceCubes.freeBirdToolsCubeModule.EquityRiskFactor"
 			 							} ,
 			 							SpeculativeCubeColumnParameter : { 
 			 							column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID" 
-			 							cube :"GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureAndPosition"
+			 							cube :"EquityCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.EquityCurvatureAndPosition"
 			 							} 
 			 							] 
 			 						}
 			 					}
 			 				ignores : [ IgnoreColumn : { columnToIgnore : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID" 
-			 					cube : "GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureAndPosition" }
+			 					cube : "EquityCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.EquityCurvatureAndPosition" }
 			 					]
 			 				}
 			 		, 
 			 		
-			 		 JoinView GIRRCurvatureValuationDifferencesLinkedWithDeltas : {
-			 		 	cube : "GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureValuationDifferencesLinkedWithDeltas"
+			 		 JoinView EquityCurvatureValuationDifferencesLinkedWithDeltas : {
+			 		 	cube : "EquityCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.EquityCurvatureValuationDifferencesLinkedWithDeltas"
 			 		 	whereClause : WhereClause : { 
 			 		 		function : BooleanFunction bf8 : {
 			 		 			functionSpec : "commonFunctions.commonFunctionSpecModule.AND"
@@ -68,7 +68,7 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 					 			} ,
 			 		 					 			SpeculativeCubeColumnParameter : {
 			 		 					 				column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
-			 		 					 				cube : "GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureValuationDifferences"
+			 		 					 				cube : "EquityCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.EquityCurvatureValuationDifferences"
 			 		 					 			}
 			 		 					 		] } ,
 			 		 					 		BasicFunction bf11 : { 
@@ -76,11 +76,11 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 					 		parameters : [
 			 		 					 			SpeculativeCubeColumnParameter : { 
 			 		 					 				column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.positionID"
-			 		 					 				cube : "NetDeltaSensitivities.freeBirdToolsCubeModule.summedDeltaSensitivitiesPerPosition"
+			 		 					 				cube :"NetDeltaSensitivities.freeBirdToolsCubeModule.summedDeltaSensitivitiesPerPosition"
 			 		 					 			} ,
 			 		 					 			SpeculativeCubeColumnParameter : {
 			 		 					 				column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.positionID"
-			 		 					 				cube : "GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureValuationDifferences"
+			 		 					 				cube : "EquityCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.EquityCurvatureValuationDifferences"
 			 		 					 			}
 			 		 					 		] }
 			 		 					 		] }  ]
@@ -88,39 +88,39 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 					 ignores : [ 			 		 					 	
 			 		 					 	IgnoreColumn : { 
 			 		 					 		columnToIgnore : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
-			 		 					 		cube :"NetDeltaSensitivities.freeBirdToolsCubeModule.summedDeltaSensitivitiesPerPosition"	 		 					 		
+			 		 					 		cube :"NetDeltaSensitivities.freeBirdToolsCubeModule.summedDeltaSensitivitiesPerPosition"		 		 					 		
 			 		 					 	} ,
 			 		 					 	IgnoreColumn : { 
 			 		 					 		columnToIgnore :"FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.positionID"
-			 		 					 		cube : "GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureValuationDifferences"		 		 					 		
+			 		 					 		cube : "EquityCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.EquityCurvatureValuationDifferences"		 		 					 		
 			 		 					 	} 
 			 		 					 	]
 			 		 				}
 			 		 			,
-			 		 			EnrichmentView GIRRCurvatureDeltaStrippedShifts : { 
-			 		 				cube : "GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureDeltaStrippedShifts"
+			 		 			EnrichmentView EquityCurvatureDeltaStrippedShifts : { 
+			 		 				cube : "EquityCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.EquityCurvatureDeltaStrippedShifts"
 			 		 				functions : [
-			 		 					BasicColumnFunction GIRRCurvatureDeltaStrippedShifts_GIRRCurvatureDeltaStrippedShift : {
-			 		 						cube : "GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureDeltaStrippedShifts" 
-			 		 						variable : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureDeltaStrippedShift"
+			 		 					BasicColumnFunction EquityCurvatureDeltaStrippedShifts_EquityCurvatureDeltaStrippedShift : {
+			 		 						cube : "EquityCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.EquityCurvatureDeltaStrippedShifts" 
+			 		 						variable : "EquityCurvatureMeasuresStaticModel.EquityCurvatureMeasures.variablesModule.EquityCurvatureDeltaStrippedShift"
 			 		 						basicFunction : BasicFunction bf14 : {
-			 		 							functionSpec : "FRTBFunctions.GIRRFunctionSpecModule.GIRRDeltaStrip"
+			 		 							functionSpec : "FRTBFunctions.EquityFunctionSpecModule.EquityDeltaStrip"
 			 		 							parameters : [
 			 		 								SpeculativeCubeColumnParameter : 
-			 		 								{ column : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.curvatureValuationDifference"
-			 		 									cube : "GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureValuationDifferencesLinkedWithDeltas"
+			 		 								{ column : "EquityCurvatureMeasuresStaticModel.EquityCurvatureMeasures.variablesModule.curvatureValuationDifference"
+			 		 									cube : "EquityCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.EquityCurvatureValuationDifferencesLinkedWithDeltas"
 			 		 									},
 			 		 								SpeculativeCubeColumnParameter : 
-			 		 								{ column :"GIRRDeltaMeasuresStaticModel.GIRRDeltaMeasuresModel.variablesModule.summedGIRRDelta"
-			 		 									cube : "GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureValuationDifferencesLinkedWithDeltas"
+			 		 								{ column :"EquityDeltaMeasuresStaticModel.EquityDeltaMeasuresModel.variablesModule.summedEquityDelta"
+			 		 									cube : "EquityCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.EquityCurvatureValuationDifferencesLinkedWithDeltas"
 			 		 									},
 			 		 								SpeculativeCubeColumnParameter : 
 			 		 								{ column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection"
-			 		 									cube : "GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureValuationDifferencesLinkedWithDeltas"
+			 		 									cube : "EquityCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.EquityCurvatureValuationDifferencesLinkedWithDeltas"
 			 		 									},
 			 		 								SpeculativeCubeColumnParameter : 
-			 		 								{ column : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.curvatureRiskWeight"
-			 		 									cube : "GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureValuationDifferencesLinkedWithDeltas"
+			 		 								{ column : "EquityCurvatureMeasuresStaticModel.EquityCurvatureMeasures.variablesModule.curvatureRiskWeight"
+			 		 									cube : "EquityCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.EquityCurvatureValuationDifferencesLinkedWithDeltas"
 			 		 									}
 			 		 									]	
 			 		 								
@@ -131,18 +131,18 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 			ignores : [ 
 			 		 				IgnoreColumn : 
 			 		 				{
-			 		 					columnToIgnore : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.curvatureValuationDifference"
-			 		 					cube :  "GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureValuationDifferencesLinkedWithDeltas"
+			 		 					columnToIgnore : "EquityCurvatureMeasuresStaticModel.EquityCurvatureMeasures.variablesModule.curvatureValuationDifference"
+			 		 					cube :  "EquityCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.EquityCurvatureValuationDifferencesLinkedWithDeltas"
 			 		 				},
 			 		 				IgnoreColumn : 
 			 		 				{
-			 		 					columnToIgnore : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.curvatureRiskWeight"
-			 		 					cube :  "GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureValuationDifferencesLinkedWithDeltas"
+			 		 					columnToIgnore : "EquityCurvatureMeasuresStaticModel.EquityCurvatureMeasures.variablesModule.curvatureRiskWeight"
+			 		 					cube :  "EquityCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.EquityCurvatureValuationDifferencesLinkedWithDeltas"
 			 		 				},
 			 		 				IgnoreColumn : 
 			 		 				{
-			 		 					columnToIgnore : "GIRRDeltaMeasuresStaticModel.GIRRDeltaMeasuresModel.variablesModule.summedGIRRDelta"
-			 		 					cube :  "GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureValuationDifferencesLinkedWithDeltas"
+			 		 					columnToIgnore : "EquityDeltaMeasuresStaticModel.EquityDeltaMeasuresModel.variablesModule.summedEquityDelta"
+			 		 					cube :  "EquityCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.EquityCurvatureValuationDifferencesLinkedWithDeltas"
 			 		 				}
 			 		 			]
 			 		 			

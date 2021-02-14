@@ -1,8 +1,26 @@
 ProgramAndCalls : { program : TRLProgram :  { 
 			 		release : Release FRTBRelease1 : {
-			 	 		cubeSchemaModules : [ "GIRRRiskFactorCubeSchemas.GIRRRiskFactorCubeSchemasModule" , "CurvatureCubeSchemas.CurvatureCubeSchemasModule" ,"DeltaCubeSchemas.DeltaCubeSchemasModule" , "PositionCubeSchemas.PositionCubeSchemasModule", "VegaCubeSchemas.VegaCubeSchemasModule" ]
-			 			datasetTransformationModules : [ "GIRRCurvatureCVRLogic.views" , "GIRRCurvatureAggregatedCVRLogic.views" , "GIRRCurvatureDeltaStrippingLogic.views" , "GIRRCurvatureFinalCVRLogic.views" ,  "GIRRDeltaAggregationAndWeightingLogic.views", "GIRRVegaAggregationAndWeightingLogic.views" ]
-			 			reportCellViewModules : ["GIRRCurvatureReportCells.GIRRCurvatureReportCellsModule" ]
+			 	 		cubeSchemaModules : [ "GIRRRiskFactorCubeSchemas.GIRRRiskFactorCubeSchemasModule" , 
+			 	 								"CurvatureCubeSchemas.CurvatureCubeSchemasModule" ,
+			 	 								"DeltaCubeSchemas.DeltaCubeSchemasModule" , 
+			 	 								"PositionCubeSchemas.PositionCubeSchemasModule", 
+			 	 								"VegaCubeSchemas.VegaCubeSchemasModule" ,
+			 	 								"EquityRiskFactorCubeSchemas.EquityRiskFactorCubeSchemasModule" 
+			 	 								]
+			 			datasetTransformationModules : [ "GIRRCurvatureCVRLogic.views" , 
+			 											 "GIRRCurvatureAggregatedCVRLogic.views" , 
+			 											 "GIRRCurvatureDeltaStrippingLogic.views" , 
+			 											 "GIRRCurvatureFinalCVRLogic.views" ,  
+			 											 "GIRRDeltaAggregationAndWeightingLogic.views", 
+			 											 "GIRRVegaAggregationAndWeightingLogic.views" ,
+			 											 "EquityCurvatureAggregatedCVRLogic.views",
+			 											 "EquityCurvatureCVRLogic.views",
+			 											 "EquityCurvatureDeltaStrippingLogic.views",
+			 											 "EquityCurvatureFinalCVRLogic.views",
+			 											 "EquityDeltaAggregationAndWeightingLogic.views",
+			 											 "EquityVegaAggregationAndWeightingLogic.views" ]
+			 			reportCellViewModules : ["GIRRCurvatureReportCells.GIRRCurvatureReportCellsModule" ,
+			 										"EquityCurvatureReportCells.EquityCurvatureReportCellsModule" ]
 			 		}
 			 		}
 			 		}  

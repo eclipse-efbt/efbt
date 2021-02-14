@@ -1,0 +1,99 @@
+ProgramAndCalls : { program : TRLProgram :  { 
+	
+	executableLogic :[ TRLExecutableLogic EquityCurvatureFinalCVRLogic : { 
+		 
+			 datasetTransformationModules : [ VersionedSQLViewsModule   views : { 
+			 	sqlViews : [ 
+			 
+			 		 					EnrichmentView EquityCurvatureCVRFinal : { 
+			 		 						cube : "EquityCurvatureFinalCVRCubes.freeBirdToolsCubeModule.EquityCurvatureCVRFinal" 
+			 		 						functions : [
+			 		 							BasicColumnFunction EquityCurvatureCVRFinal_EquityCurvatureCVRFinal :
+			 		 							{
+			 		 								cube : "EquityCurvatureFinalCVRCubes.freeBirdToolsCubeModule.EquityCurvatureCVRFinal" 
+			 		 								variable : "EquityCurvatureMeasuresStaticModel.EquityCurvatureMeasures.variablesModule.EquityCurvatureCVRFinal"
+			 		 								basicFunction : BasicFunction bf31  : {
+			 		 									functionSpec : "commonFunctions.commonFunctionSpecModule.plus" 
+			 		 									parameters : [
+			 		 										SpeculativeCubeColumnParameter : {
+			 		 											column : "EquityCurvatureMeasuresStaticModel.EquityCurvatureMeasures.variablesModule.EquityCurvatureFlooredMinimumShiftedTotalSquared"
+			 		 											cube : "EquityCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.productOfCorrelatedEquityCurvatureWithSquareOfMinimums"
+			 		 										},
+			 		 										SpeculativeCubeColumnParameter : {
+			 		 											column :"EquityCurvatureMeasuresStaticModel.EquityCurvatureMeasures.variablesModule.sumOfproductOfEquityCurvatureCorrelatedCombinations"
+			 		 											cube : "EquityCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.productOfCorrelatedEquityCurvatureWithSquareOfMinimums"
+			 		 										}
+			 		 									]
+			 		 								}
+			 		 								}
+			 		 						]
+			 		 						ignores : [
+			 		 							IgnoreColumn : {
+			 		 								 columnToIgnore : "EquityCurvatureMeasuresStaticModel.EquityCurvatureMeasures.variablesModule.EquityCurvatureFlooredMinimumShiftedTotalSquared"
+			 		 								 cube : "EquityCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.productOfCorrelatedEquityCurvatureWithSquareOfMinimums"
+			 		 							},
+			 		 							IgnoreColumn : {
+			 		 								 columnToIgnore : "EquityCurvatureMeasuresStaticModel.EquityCurvatureMeasures.variablesModule.sumOfproductOfEquityCurvatureCorrelatedCombinations"
+			 		 								 cube : "EquityCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.productOfCorrelatedEquityCurvatureWithSquareOfMinimums"
+			 		 							}
+			 		 							
+			 		 						]
+			 		 						},
+			 		 						EnrichmentView maxOfEquityCurvatureCVRFinal_maximumOfEquityCurvatureCVRFinal : {
+			 		 							cube : "EquityCurvatureFinalCVRCubes.freeBirdToolsCubeModule.maxOfEquityCurvatureCVRFinal"
+			 		 							functions : [ 
+			 		 								BasicColumnFunction max_of_cvr_stuff_maximum_of_cvr_stuff : {
+			 		 									cube : "EquityCurvatureFinalCVRCubes.freeBirdToolsCubeModule.maxOfEquityCurvatureCVRFinal"
+			 		 									variable : "EquityCurvatureMeasuresStaticModel.EquityCurvatureMeasures.variablesModule.maximumOfEquityCurvatureCVRFinal"
+			 		 									basicFunction : BasicFunction bf32 :
+			 		 									{ 
+			 		 										functionSpec : "commonFunctions.commonFunctionSpecModule.max"
+			 		 										parameters : [
+			 		 											SpeculativeCubeColumnParameter : { 
+			 		 												column :"EquityCurvatureMeasuresStaticModel.EquityCurvatureMeasures.variablesModule.EquityCurvatureCVRFinal"
+			 		 												cube : "EquityCurvatureFinalCVRCubes.freeBirdToolsCubeModule.EquityCurvatureCVRFinal"
+			 		 											},
+			 		 											ValueParameter : { 
+			 		 												dataType : :Double
+			 		 												value : "0.0"
+			 		 											}
+			 		 										]
+			 		 									}
+			 		 								} 
+			 		 								]
+			 		 								ignores : [ 
+			 		 									IgnoreColumn : {
+			 		 										columnToIgnore : "EquityCurvatureMeasuresStaticModel.EquityCurvatureMeasures.variablesModule.EquityCurvatureCVRFinal"
+			 		 										cube : "EquityCurvatureFinalCVRCubes.freeBirdToolsCubeModule.EquityCurvatureCVRFinal"
+			 		 									}
+			 		 								]
+			 		 						},
+			 		 						EnrichmentView squareRootOfMaxOfEquityCurvatureCVRFinal : {
+			 		 							cube : "EquityCurvatureFinalCVRCubes.freeBirdToolsCubeModule.squareRootOfMaxOfEquityCurvatureCVRFinal"
+			 		 							functions : [
+			 		 								BasicColumnFunction squareRootOfMaxOfEquityCurvatureCVRFinalr_sqrtOfMaximumOfEquityCurvatureCVRFinal :
+			 		 								{
+			 		 									cube : "EquityCurvatureFinalCVRCubes.freeBirdToolsCubeModule.squareRootOfMaxOfEquityCurvatureCVRFinal"
+			 		 									variable :"EquityCurvatureMeasuresStaticModel.EquityCurvatureMeasures.variablesModule.sqrtOfMaximumOfEquityCurvatureCVRFinal"
+			 		 									basicFunction : BasicFunction bf35 :
+			 		 									{ functionSpec : "commonFunctions.commonFunctionSpecModule.sqrt"
+			 		 										parameters : [
+			 		 											SpeculativeCubeColumnParameter : {
+			 		 												column :"EquityCurvatureMeasuresStaticModel.EquityCurvatureMeasures.variablesModule.maximumOfEquityCurvatureCVRFinal"
+			 		 												cube : "EquityCurvatureFinalCVRCubes.freeBirdToolsCubeModule.maxOfEquityCurvatureCVRFinal"
+			 		 											}
+			 		 										]
+			 		 									}
+			 		 								}
+			 		 							]
+			 		 							ignores : [
+			 		 								IgnoreColumn : {
+			 		 									columnToIgnore :"EquityCurvatureMeasuresStaticModel.EquityCurvatureMeasures.variablesModule.maximumOfEquityCurvatureCVRFinal"
+			 		 									cube : "EquityCurvatureFinalCVRCubes.freeBirdToolsCubeModule.maxOfEquityCurvatureCVRFinal"
+			 		 								}
+			 		 							]
+			 		 						} 
+			 		 						]
+			 		 						} ] 
+			 		}
+			 	] } }

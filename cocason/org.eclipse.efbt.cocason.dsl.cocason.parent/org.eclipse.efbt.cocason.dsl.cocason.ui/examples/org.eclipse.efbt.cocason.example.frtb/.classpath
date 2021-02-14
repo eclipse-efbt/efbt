@@ -14,5 +14,9 @@
 	<classpathentry kind="src" path="girr_vega"/>
 	<classpathentry kind="src" path="girr_delta"/>
 	<classpathentry kind="src" path="girr_common"/>
+	<classpathentry kind="src" path="equity_curvature"/>
+	<classpathentry kind="src" path="equity_vega"/>
+	<classpathentry kind="src" path="equity_delta"/>
+	<classpathentry kind="src" path="equity_common"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

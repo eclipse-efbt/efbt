@@ -4,6 +4,6 @@ ProgramAndCalls : { program : TRLProgram : { executableLogic :[ TRLExecutableLog
 			cubes : [ 				
 				DerivedCube GIRRCurvatureAndPosition: { sourceCubes : [ "FRTBSourceCubes.freeBirdToolsCubeModule.curvature" , "FRTBSourceCubes.freeBirdToolsCubeModule.position"] },
 				DerivedCube GIRRCurvatureValuationDifferences : { sourceCubes : [ GIRRCurvatureAndPosition , "FRTBSourceCubes.freeBirdToolsCubeModule.GIRRRiskFactor" ] } ,
-				DerivedCube GIRRCurvatureValuationDifferencesLinkedWithDeltas : { sourceCubes : [ GIRRCurvatureValuationDifferences , "GIRRDeltaAggregationAndWeightingCubes.freeBirdToolsCubeModule.summedDeltaSensitivitiesPerPosition" ] } ,
+				DerivedCube GIRRCurvatureValuationDifferencesLinkedWithDeltas : { sourceCubes : [ GIRRCurvatureValuationDifferences , "NetDeltaSensitivities.freeBirdToolsCubeModule.summedDeltaSensitivitiesPerPosition" ] } ,
 				DerivedCube GIRRCurvatureDeltaStrippedShifts : { sourceCubes : [ GIRRCurvatureValuationDifferencesLinkedWithDeltas ] }  
 				 		] } } ] } }

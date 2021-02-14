@@ -227,7 +227,7 @@ ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStatic
 	 				 is_mandatory : false 
 	 				 order : 0 role ::D 
 	 				 isIdentifier : false 
-	 				 cube_structure_id :"FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.equityRiskFactor"
+	 				 cube_structure_id :"FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.EquityRiskFactor"
 	 				 variable_id : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.equityFactorType"},
 	 			CUBE_STRUCTURE_ITEM : {
 	 				 description : "issueID" 
@@ -236,7 +236,7 @@ ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStatic
 	 				 is_mandatory : false 
 	 				 order : 0 role ::D 
 	 				 isIdentifier : false 
-	 				 cube_structure_id :"FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.equityRiskFactor"
+	 				 cube_structure_id :"FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.EquityRiskFactor"
 	 				 variable_id : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.issueID"},
 	 			CUBE_STRUCTURE_ITEM : {
 	 				 description : "issuerID" 

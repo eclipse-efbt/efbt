@@ -9,7 +9,7 @@ ProgramAndCalls : { program : TRLProgram : { smcubesStaticModel : SMCubesStaticM
 	 		 CUBE_STRUCTURE curvature :{ code : "curvature" cube_structure_id : "curvature" description : "curvature" },
 	 		 CUBE_STRUCTURE deltaSensitivities :  { code : "deltaSensitivities" cube_structure_id : "deltaSensitivities" description : "deltaSensitivities" },
 	 		 CUBE_STRUCTURE vegaSensitivities :  { code : "vegaSensitivities" cube_structure_id : "vegaSensitivities" description : "vegaSensitivities" },
-	 		 CUBE_STRUCTURE equityRiskFactor :  { code : "equityRiskFactor" cube_structure_id : "equityRiskFactor" description : "equityRiskFactor" },
+	 		 CUBE_STRUCTURE EquityRiskFactor :  { code : "EquityRiskFactor" cube_structure_id : "EquityRiskFactor" description : "EquityRiskFactor" },
 	 		 CUBE_STRUCTURE commodityRiskFactor :  { code : "commodityRiskFactor" cube_structure_id : "commodityRiskFactor" description : "commodityRiskFactor" },
 	 		 CUBE_STRUCTURE CSRNonSecRiskFactor :  { code : "CSRNonSecRiskFactor" cube_structure_id : "CSRNonSecRiskFactor" description : "CSRNonSecRiskFactor" },
 	 		 CUBE_STRUCTURE CSRSecCTPRiskFactor :  { code : "CSRSecCTPRiskFactor" cube_structure_id : "CSRSecCTPRiskFactor" description : "CSRSecCTPRiskFactor" },
