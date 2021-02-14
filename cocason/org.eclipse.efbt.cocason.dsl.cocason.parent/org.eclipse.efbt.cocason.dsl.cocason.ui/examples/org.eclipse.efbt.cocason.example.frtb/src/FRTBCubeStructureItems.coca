@@ -128,7 +128,7 @@ ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStatic
 	 				 order : 0 role ::D 
 	 				 isIdentifier : false 
 	 				 cube_structure_id :"FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.deltaSensitivities"
-	 				 variable_id : "GIRRDeltaMeasuresStaticModel.GIRRDeltaMeasuresModel.variablesModule.tenor" } ,
+	 				 variable_id : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.tenor" } ,
 	 			CUBE_STRUCTURE_ITEM : {
 	 				 description : "deltaSensitivity" 
 	 				 dimension_type ::B 
@@ -137,7 +137,7 @@ ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStatic
 	 				 order : 0 role ::D 
 	 				 isIdentifier : false 
 	 				 cube_structure_id :"FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.deltaSensitivities"
-	 				 variable_id : "GIRRDeltaMeasuresStaticModel.GIRRDeltaMeasuresModel.variablesModule.deltaSensitivity" } ,
+	 				 variable_id : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.deltaSensitivity"} ,
 	 			CUBE_STRUCTURE_ITEM : {
 	 				 description : "ccy_of_record" 
 	 				 dimension_type ::B 
@@ -174,7 +174,7 @@ ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStatic
 	 				 order : 0 role ::D 
 	 				 isIdentifier : false 
 	 				 cube_structure_id :"FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.vegaSensitivities"
-	 				 variable_id :  "vegaMeasuresStaticModel.vegaMeasuresModel.variablesModule.vegaOptionMaturity"} ,
+	 				 variable_id :  "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.vegaOptionMaturity"} ,
 	 			CUBE_STRUCTURE_ITEM : {
 	 				 description : "vegaSensitivity" 
 	 				 dimension_type ::B 
@@ -182,8 +182,8 @@ ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStatic
 	 				 is_mandatory : false 
 	 				 order : 0 role ::D 
 	 				 isIdentifier : false 
-	 				 cube_structure_id :"FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.vegaSensitivities"
-	 				 variable_id : "vegaMeasuresStaticModel.vegaMeasuresModel.variablesModule.vegaSensitivity" } ,
+	 				 cube_structure_id :"FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.vegaSensitivities" 
+	 				 variable_id : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.vegaSensitivity" } ,
 	 			CUBE_STRUCTURE_ITEM : {
 	 				 description : "ccy_of_record" 
 	 				 dimension_type ::B 
@@ -201,7 +201,7 @@ ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStatic
 	 				 order : 0 role ::D 
 	 				 isIdentifier : false 
 	 				 cube_structure_id :"FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.vegaSensitivities"
-	 				 variable_id : "vegaMeasuresStaticModel.vegaMeasuresModel.variablesModule.vegaOptionUnderlyingResidualMaturity"},	 		
+	 				 variable_id : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.vegaOptionUnderlyingResidualMaturity"},	  		
 	 			CUBE_STRUCTURE_ITEM : {
 	 				 description : "ccy1" 
 	 				 dimension_type : :B

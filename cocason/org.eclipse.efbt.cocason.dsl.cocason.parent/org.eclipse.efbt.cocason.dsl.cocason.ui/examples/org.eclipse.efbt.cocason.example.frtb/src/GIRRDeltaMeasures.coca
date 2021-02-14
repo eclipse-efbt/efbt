@@ -5,13 +5,6 @@ ProgramAndCalls : { program :  TRLProgram :  {
 				{
 					license : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"
 			variables : [ 
-			VARIABLE deltaSensitivity : {
-				code : "deltaSensitivity"
-				description : "deltaSensitivity"
-				variable_id : "deltaSensitivity"
-				displayName :  "deltaSensitivity"
-				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
-			},
 			VARIABLE GIRRDeltaSensitivityk : {
 				code : "GIRRDeltaSensitivityk"
 				description : "GIRRDeltaSensitivityk"
@@ -26,13 +19,7 @@ ProgramAndCalls : { program :  TRLProgram :  {
 				displayName :  "GIRRDeltaSensitivityl"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			},
-			VARIABLE tenor : {
-				code : "tenor"
-				description : "tenor"
-				variable_id : "tenor"
-				displayName :  "tenor"
-				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
-			},
+			
 			VARIABLE tenork : {
 				code : "tenork"
 				description : "tenork"
