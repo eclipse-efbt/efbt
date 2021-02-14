@@ -24,6 +24,7 @@ import org.eclipse.efbt.controller.trl.component.translator.api.AttributeLineage
 import org.eclipse.efbt.controller.trl.component.translator.impl.AttributeLineageUtilImpl;
 import org.eclipse.efbt.controller.trl.component.translator.impl.util.ALMComparisonTuple;
 import org.eclipse.efbt.controller.trl.component.translator.impl.util.ComparisonUtil;
+import org.eclipse.efbt.language.trl.model.transformation.Release;
 import org.eclipse.efbt.language.trl.model.transformation.TRLExecutableLogic;
 import org.eclipse.efbt.controller.core.model.platform_call.TranslateBIRDWithNewTestFormatToCocason;
 import org.eclipse.efbt.controller.ldm.component.sqldevconvertor.SQLDevConverter;
@@ -64,8 +65,8 @@ public class Controller {
 	
 	private static void createAttributeLineageModel(CreateAttributeLineageModel call) {
 		AttributeLineageUtil almUtil = new AttributeLineageUtilImpl();
-		TRLExecutableLogic trlExecutableLogic = (TRLExecutableLogic) call.getExecutableLogic();
-		AttributeLineageModel alm = almUtil.createAttributeLineageModel(trlExecutableLogic.getComponentSet());
+		Release release = (Release) call.getRelease();
+		AttributeLineageModel alm = almUtil.createAttributeLineageModel(release);
 		alm.setName("ALM_" + call.getName());
 		call.setResultingALM(alm);
 		
@@ -88,11 +89,10 @@ public class Controller {
 	
 	private static void createAttributeLineageForOneReportCell(CreateAttributeLineageForOneReportCell call) {
 		AttributeLineageUtil almUtil = new AttributeLineageUtilImpl();
-		TRLExecutableLogic trlExecutableLogic = (TRLExecutableLogic) call.getExecutableLogic();
+		Release release = (Release) call.getRelease();
 		AttributeLineageModel alm = almUtil.
-								createAttributeLineageModelForOneReportCell(trlExecutableLogic.getComponentSet(), 
-										call.getReportCell(),
-										trlExecutableLogic.getCubesHierarchyModule());
+								createAttributeLineageModelForOneReportCell(release, 
+										call.getReportCell(),null);
 		alm.setName("ALM_" + call.getName());
 		call.setResultingALM(alm);
 		

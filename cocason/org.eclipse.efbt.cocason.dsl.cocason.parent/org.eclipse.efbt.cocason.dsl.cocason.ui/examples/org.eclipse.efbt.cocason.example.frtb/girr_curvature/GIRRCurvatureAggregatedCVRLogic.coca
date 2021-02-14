@@ -1,0 +1,330 @@
+ProgramAndCalls : { program : TRLProgram :  { 
+	
+	executableLogic :[ TRLExecutableLogic GIRRCurvatureAggregatedCVRLogic : { 
+		
+			 
+			 datasetTransformationModules : [ VersionedSQLViewsModule   views : { 
+			 	sqlViews : [ 
+			 	
+			 		 		
+			 		 			
+			 		 				 	CopyView copyOfGIRRCurvatureRiskChargeForRiskFactor : { 
+			 		 				 		cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.copyOfGIRRCurvatureRiskChargeForRiskFactor" },
+			 		 				 	JoinView GIRRCurvatureCVRkCombinations : {
+			 		 				 		cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureCVRkCombinations"
+			 		 				 		whereClause : WhereClause : { 
+			 		 				 			function : BooleanFunction bf21 : { 
+			 		 				 				functionSpec : "commonFunctions.commonFunctionSpecModule.AND" 
+			 		 				 				parameters : 
+			 		 				 				[
+			 		 				 					BasicFunction bf60 : { 
+			 		 				 						functionSpec : "commonFunctions.commonFunctionSpecModule.AND" 
+			 		 				 						parameters : [ 
+			 		 				 							
+			 		 				 							BasicFunction bf61  : { 
+			 		 				 						functionSpec : "commonFunctions.commonFunctionSpecModule.equals" 
+			 		 				 						parameters : [
+			 		 				 							SpeculativeCubeColumnParameter : {
+			 		 				 								column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection"
+			 		 				 								cube : "GIRRCurvatureCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureRiskChargeForRiskFactor"
+			 		 				 								},
+			 		 				 							SpeculativeCubeColumnParameter : {
+			 		 				 								column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection"
+			 		 				 								cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.copyOfGIRRCurvatureRiskChargeForRiskFactor"
+			 		 				 								}
+			 		 				 							
+			 		 				 							]
+			 		 				 							},
+					 		 				 					BasicFunction bf22 : { 
+					 		 				 						functionSpec : "commonFunctions.commonFunctionSpecModule.notEquals" 
+					 		 				 						parameters : [
+					 		 				 							SpeculativeCubeColumnParameter : {
+					 		 				 								column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
+					 		 				 								cube : "GIRRCurvatureCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureRiskChargeForRiskFactor"
+					 		 				 								},
+					 		 				 							SpeculativeCubeColumnParameter : {
+					 		 				 								column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
+					 		 				 								cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.copyOfGIRRCurvatureRiskChargeForRiskFactor"
+					 		 				 								}
+					 		 				 							
+					 		 				 							]
+					 		 				 							}
+					 		 				 						,
+					 		 				 						BasicFunction bf23 : {
+					 		 				 							functionSpec : "commonFunctions.commonFunctionSpecModule.equals"
+					 		 				 							parameters : [
+					 		 				 							SpeculativeCubeColumnParameter : {
+					 		 				 								column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.mainCurrency"
+					 		 				 								cube : "GIRRCurvatureCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureRiskChargeForRiskFactor"
+					 		 				 								},
+					 		 				 							SpeculativeCubeColumnParameter : {
+					 		 				 								column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.mainCurrency"
+					 		 				 								cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.copyOfGIRRCurvatureRiskChargeForRiskFactor"
+					 		 				 								}
+					 		 				 							
+					 		 				 							]
+					 		 				 							}
+					 		 				 					]
+					 		 				 				} ]
+			 		 				 			} }
+			 		 				 			renames : [
+			 		 				 				RenameAs : {
+			 		 				 					fromCube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.copyOfGIRRCurvatureRiskChargeForRiskFactor"
+			 		 				 					fromVariable : 	 "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureCVRk"
+			 		 				 					toVariable : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureCVRl"
+			 		 				 					},
+			 		 				 				
+			 		 				 				RenameAs : {
+			 		 				 					fromCube : "GIRRCurvatureCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureRiskChargeForRiskFactor"
+			 		 				 					fromVariable : 	"FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
+			 		 				 					toVariable : "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.riskFactorIDl"
+			 		 				 					},
+			 		 				 				
+			 		 				 				RenameAs : {
+			 		 				 					fromCube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.copyOfGIRRCurvatureRiskChargeForRiskFactor"
+			 		 				 					fromVariable : 	"FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
+			 		 				 					toVariable : "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.riskFactorIDk"
+			 		 				 					}
+			 		 				 				]
+			 		 				 				ignores : [
+			 		 				 					IgnoreColumn : {
+			 		 				 						columnToIgnore : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.mainCurrency"
+			 		 				 						cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.copyOfGIRRCurvatureRiskChargeForRiskFactor"
+			 		 				 					},
+			 		 				 					IgnoreColumn : {
+			 		 				 						columnToIgnore : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection"
+			 		 				 						cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.copyOfGIRRCurvatureRiskChargeForRiskFactor"
+			 		 				 					}
+			 		 				 				]
+			 		 				 				},
+			 		 				 		EnrichmentView GIRRCurvatureCVRkCombinationsWithCorrelationFactor : { 
+			 		 				 			cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureCVRkCombinationsWithCorrelationFactor"
+			 		 				 			functions : [
+			 		 				 				BasicColumnFunction GIRRCurvatureCVRkCombinationsWithCorrelationFactor_GIRRCurvatureCVRCorrelationFactor : {
+			 		 				 					cube :"GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureCVRkCombinationsWithCorrelationFactor"
+			 		 				 					variable : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureCVRCorrelationFactor"
+			 		 				 					basicFunction : BasicFunction bf25 : {
+			 		 				 						functionSpec :"FRTBFunctions.GIRRFunctionSpecModule.getGIRRCVRCorrelationFactor"
+			 		 				 						parameters : [
+			 		 				 							SpeculativeCubeColumnParameter : { 
+			 		 				 								column : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureCVRk"
+			 		 				 								cube :"GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureCVRkCombinations"
+			 		 				 								},
+			 		 				 							SpeculativeCubeColumnParameter : { 
+			 		 				 								column : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureCVRl"
+			 		 				 								cube :"GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureCVRkCombinations"
+			 		 				 								}
+			 		 									 ]
+			 		 								}
+			 		 							}
+			 		 						] 
+			 		 						},
+			 		 						EnrichmentView productOfGIRRCurvatureCVRkCorrelatedCombinations : {
+			 		 							cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.productOfGIRRCurvatureCVRkCorrelatedCombinations"
+			 		 							functions : [ 
+			 		 								BasicColumnFunction productOfGIRRCurvatureCVRkCorrelatedCombinations_GIRRCurvatureCVRCorrelatedProduct :
+			 		 								{
+			 		 									cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.productOfGIRRCurvatureCVRkCorrelatedCombinations"
+			 		 									variable : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureCVRCorrelatedProduct"
+			 		 									basicFunction : BasicFunction bf26 : {
+			 		 										functionSpec : "commonFunctions.commonFunctionSpecModule.multiply"
+			 		 										parameters : [
+			 		 											BasicFunction bf62 : { 
+			 		 												functionSpec : "commonFunctions.commonFunctionSpecModule.multiply"
+			 		 												parameters : [ 
+
+				 		 											 SpeculativeCubeColumnParameter : { 
+				 		 											 	column : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureCVRk"
+				 		 											 	cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureCVRkCombinationsWithCorrelationFactor"
+				 		 											 	
+				 		 											 	},
+				 		 											  SpeculativeCubeColumnParameter : { 
+				 		 											 	column :"GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureCVRCorrelationFactor"
+				 		 											 	cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureCVRkCombinationsWithCorrelationFactor"
+				 		 											 	
+				 		 											 	}	
+			 		 											 ]},
+			 		 											  SpeculativeCubeColumnParameter : { 
+				 		 											 	column : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureCVRl"
+				 		 											 	cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureCVRkCombinationsWithCorrelationFactor"
+				 		 											 	
+				 		 											 	}
+			 		 											 
+			 		 											]
+			 		 											}
+			 		 										}
+			 		 									] 
+			 		 									ignores : [ 
+			 		 										IgnoreColumn : { 
+			 		 											columnToIgnore :"GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureCVRCorrelationFactor"
+			 		 											cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureCVRkCombinationsWithCorrelationFactor"			 		 											
+			 		 										},
+			 		 										IgnoreColumn : { 
+			 		 											columnToIgnore :"GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureCVRk"
+			 		 											cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureCVRkCombinationsWithCorrelationFactor"			 		 											
+			 		 										},
+			 		 										IgnoreColumn : { 
+			 		 											columnToIgnore :"GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureCVRl"
+			 		 											cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureCVRkCombinationsWithCorrelationFactor"			 		 											
+			 		 										},
+			 		 										IgnoreColumn : { 
+			 		 											columnToIgnore :"FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.riskFactorIDk"
+			 		 											cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureCVRkCombinationsWithCorrelationFactor"			 		 											
+			 		 										},
+			 		 										IgnoreColumn : { 
+			 		 											columnToIgnore :"FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.riskFactorIDl"
+			 		 											cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureCVRkCombinationsWithCorrelationFactor"			 		 											
+			 		 										}
+			 		 										
+			 		 									]
+			 		 							}  
+			 		 					,
+			 		 					AggregateEnrichmentView sumOfProductOfGIRRCurvatureCVRkCorrelatedCombinationsByBucket : {
+			 		 						cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.sumOfProductOfGIRRCurvatureCVRkCorrelatedCombinationsByBucket"
+			 		 						functions : [
+			 		 							AggregateColumnFunction sumOfProductOfGIRRCurvatureCVRkCorrelatedCombinationsByBucket_sumOfproductOfGIRRCurvatureCorrelatedCombinations :
+			 		 							{ 
+			 		 								cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.sumOfProductOfGIRRCurvatureCVRkCorrelatedCombinationsByBucket"
+			 		 								variable : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.sumOfproductOfGIRRCurvatureCorrelatedCombinations"
+			 		 								aggregateFunction : AggregateFunction af3 : {
+			 		 									functionSpec : "commonFunctions.commonFunctionSpecModule.SUM"
+			 		 									parameters : [
+			 		 										SpeculativeCubeColumnParameter : {
+			 		 											column : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureCVRCorrelatedProduct"
+			 		 											cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.productOfGIRRCurvatureCVRkCorrelatedCombinations"
+			 		 										}
+			 		 									]
+			 		 							}
+			 		 						} 
+			 		 						]
+			 		 						groupByClause : GroupByClause : { 
+			 		 							groupByColumns : [
+			 		 								"FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.mainCurrency",
+			 		 								"FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection" ]
+			 		 					}
+			 		 				},
+			 		 				JoinView productOfCorrelatedGIRRCurvatureWithSquareOfMinimums : {
+			 		 					cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.productOfCorrelatedGIRRCurvatureWithSquareOfMinimums"
+			 		 					whereClause : WhereClause : { 
+			 		 						 function : BooleanFunction bf27 :
+			 		 						 { 
+			 		 						 	functionSpec : "commonFunctions.commonFunctionSpecModule.AND" 
+			 		 						 	parameters : [ 
+			 		 						 		 
+			 		 							 BooleanFunction bf64 : {
+			 		 						 	functionSpec : "commonFunctions.commonFunctionSpecModule.equals"
+			 		 						 	parameters : [
+			 		 						 		SpeculativeCubeColumnParameter : {
+			 		 						 			column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.mainCurrency"
+			 		 						 			cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.sumOfProductOfGIRRCurvatureCVRkCorrelatedCombinationsByBucket"
+			 		 						 			},
+			 		 						 		SpeculativeCubeColumnParameter : {
+			 		 						 			column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.mainCurrency"
+			 		 						 			cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureTotalGroupedSummedMinimums"
+			 		 						 			}	
+			 		 						 			]
+			 		 						 	},
+			 		 						 	 BooleanFunction  bf65 : {
+			 		 						 	 	functionSpec : "commonFunctions.commonFunctionSpecModule.equals"
+			 		 						 	parameters : [
+			 		 						 		SpeculativeCubeColumnParameter : {
+			 		 						 			column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection"
+			 		 						 			cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.sumOfProductOfGIRRCurvatureCVRkCorrelatedCombinationsByBucket"
+			 		 						 			},
+			 		 						 		SpeculativeCubeColumnParameter : {
+			 		 						 			column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection"
+			 		 						 			cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureTotalGroupedSummedMinimums"
+			 		 						 			}	
+			 		 						 			]
+			 		 						 	} ]
+			 		 						 	 }
+			 		 						 	 	
+			 		 						 	 } 
+			 		 						
+			 		 						 ignores : [
+			 		 						 	IgnoreColumn : {
+			 		 						 		columnToIgnore : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.mainCurrency"
+			 		 						 		cube :"GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureTotalGroupedSummedMinimums"
+			 		 						 	},
+			 		 						 	IgnoreColumn : {
+			 		 						 		columnToIgnore :"FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection"
+			 		 						 		cube :"GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureTotalGroupedSummedMinimums"
+			 		 						 	}
+			 		 						 ]
+			 		 						 },
+			 		 						 EnrichmentView GIRRCurvatureFlooredMinimumShiftedTotalsSquared : { 
+			 		 					cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureFlooredMinimumShiftedTotalsSquared"
+			 		 					functions : [ 
+			 		 						BasicColumnFunction GIRRCurvatureFlooredMinimumShiftedTotalsSquared_GIRRCurvatureFlooredMinimumShiftedTotalSquared : {
+			 		 							cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureFlooredMinimumShiftedTotalsSquared"
+			 		 							variable : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureFlooredMinimumShiftedTotalSquared"
+			 		 							basicFunction : BasicFunction bf28 : {
+			 		 								functionSpec : "commonFunctions.commonFunctionSpecModule.multiply" parameters :
+			 		 								[
+			 		 									BasicFunction bf29 : {
+			 		 										functionSpec : "commonFunctions.commonFunctionSpecModule.max" 
+			 		 										parameters : [
+			 		 											SpeculativeCubeColumnParameter : {
+			 		 												column : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureCVRk"
+			 		 												cube : "GIRRCurvatureCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureRiskChargeForRiskFactor"
+			 		 											},
+			 		 											ValueParameter : {
+			 		 												dataType : :Double
+			 		 												value : "0.0"
+			 		 											}
+			 		 										]
+			 		 										},
+			 		 									BasicFunction bf30 : {
+			 		 										functionSpec : "commonFunctions.commonFunctionSpecModule.max" 
+			 		 										parameters : [
+			 		 											SpeculativeCubeColumnParameter : {
+			 		 												column : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureCVRk"
+			 		 												cube : "GIRRCurvatureCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureRiskChargeForRiskFactor"
+			 		 											},
+			 		 											ValueParameter : {
+			 		 												dataType : :Double
+			 		 												value : "0.0"
+			 		 											}
+			 		 										]
+			 		 										}
+			 		 									]
+			 		 										
+			 		 									}
+			 		 								} 
+			 		 								]
+			 		 								ignores : [ 
+			 		 									IgnoreColumn : {
+			 		 										columnToIgnore :  "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureCVRk"
+			 		 										cube : "GIRRCurvatureCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureRiskChargeForRiskFactor"
+			 		 									}
+			 		 								]
+			 		 								},
+			 		 					AggregateEnrichmentView GIRRCurvatureTotalGroupedSummedMinimums : {
+			 		 						cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureTotalGroupedSummedMinimums"
+			 		 						functions : [ AggregateColumnFunction GIRRCurvatureTotalGroupedSummedMinimums_GIRRCurvatureFlooredMinimumShiftedTotalSquared : {
+			 		 							cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureTotalGroupedSummedMinimums"
+			 		 							variable : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureFlooredMinimumShiftedTotalSquared"
+			 		 							aggregateFunction : AggregateFunction af4 : {
+			 		 								functionSpec : "commonFunctions.commonFunctionSpecModule.SUM"
+			 		 								parameters : [ SpeculativeCubeColumnParameter : {
+			 		 									column :"GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureFlooredMinimumShiftedTotalSquared"
+			 		 									cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureFlooredMinimumShiftedTotalsSquared"
+			 		 									}
+			 		 									]
+			 		 									}
+			 		 									}
+			 		 									]
+			 		 						groupByClause : GroupByClause : {
+			 		 							groupByColumns : [
+			 		 								"FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.mainCurrency",
+			 		 								"FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection"
+			 		 								]
+			 		 								}
+			 		 							}
+			 		 				
+			 		 						]
+			 		 						} ] 
+			 		 						
+			 		
+			 		}  ] }
+			 	 }

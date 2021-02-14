@@ -1,0 +1,99 @@
+ProgramAndCalls : { program : TRLProgram :  { 
+	
+	executableLogic :[ TRLExecutableLogic GIRRCurvatureFinalCVRLogic : { 
+		 
+			 datasetTransformationModules : [ VersionedSQLViewsModule   views : { 
+			 	sqlViews : [ 
+			 
+			 		 					EnrichmentView GIRRCurvatureCVRFinal : { 
+			 		 						cube : "GIRRCurvatureFinalCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureCVRFinal" 
+			 		 						functions : [
+			 		 							BasicColumnFunction GIRRCurvatureCVRFinal_GIRRCurvatureCVRFinal :
+			 		 							{
+			 		 								cube : "GIRRCurvatureFinalCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureCVRFinal" 
+			 		 								variable : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureCVRFinal"
+			 		 								basicFunction : BasicFunction bf31  : {
+			 		 									functionSpec : "commonFunctions.commonFunctionSpecModule.plus" 
+			 		 									parameters : [
+			 		 										SpeculativeCubeColumnParameter : {
+			 		 											column : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureFlooredMinimumShiftedTotalSquared"
+			 		 											cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.productOfCorrelatedGIRRCurvatureWithSquareOfMinimums"
+			 		 										},
+			 		 										SpeculativeCubeColumnParameter : {
+			 		 											column :"GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.sumOfproductOfGIRRCurvatureCorrelatedCombinations"
+			 		 											cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.productOfCorrelatedGIRRCurvatureWithSquareOfMinimums"
+			 		 										}
+			 		 									]
+			 		 								}
+			 		 								}
+			 		 						]
+			 		 						ignores : [
+			 		 							IgnoreColumn : {
+			 		 								 columnToIgnore : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureFlooredMinimumShiftedTotalSquared"
+			 		 								 cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.productOfCorrelatedGIRRCurvatureWithSquareOfMinimums"
+			 		 							},
+			 		 							IgnoreColumn : {
+			 		 								 columnToIgnore : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.sumOfproductOfGIRRCurvatureCorrelatedCombinations"
+			 		 								 cube : "GIRRCurvatureAggregatedCVRCubes.freeBirdToolsCubeModule.productOfCorrelatedGIRRCurvatureWithSquareOfMinimums"
+			 		 							}
+			 		 							
+			 		 						]
+			 		 						},
+			 		 						EnrichmentView maxOfGIRRCurvatureCVRFinal_maximumOfGIRRCurvatureCVRFinal : {
+			 		 							cube : "GIRRCurvatureFinalCVRCubes.freeBirdToolsCubeModule.maxOfGIRRCurvatureCVRFinal"
+			 		 							functions : [ 
+			 		 								BasicColumnFunction max_of_cvr_stuff_maximum_of_cvr_stuff : {
+			 		 									cube : "GIRRCurvatureFinalCVRCubes.freeBirdToolsCubeModule.maxOfGIRRCurvatureCVRFinal"
+			 		 									variable : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.maximumOfGIRRCurvatureCVRFinal"
+			 		 									basicFunction : BasicFunction bf32 :
+			 		 									{ 
+			 		 										functionSpec : "commonFunctions.commonFunctionSpecModule.max"
+			 		 										parameters : [
+			 		 											SpeculativeCubeColumnParameter : { 
+			 		 												column :"GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureCVRFinal"
+			 		 												cube : "GIRRCurvatureFinalCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureCVRFinal"
+			 		 											},
+			 		 											ValueParameter : { 
+			 		 												dataType : :Double
+			 		 												value : "0.0"
+			 		 											}
+			 		 										]
+			 		 									}
+			 		 								} 
+			 		 								]
+			 		 								ignores : [ 
+			 		 									IgnoreColumn : {
+			 		 										columnToIgnore : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureCVRFinal"
+			 		 										cube : "GIRRCurvatureFinalCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureCVRFinal"
+			 		 									}
+			 		 								]
+			 		 						},
+			 		 						EnrichmentView squareRootOfMaxOfGIRRCurvatureCVRFinal : {
+			 		 							cube : "GIRRCurvatureFinalCVRCubes.freeBirdToolsCubeModule.squareRootOfMaxOfGIRRCurvatureCVRFinal"
+			 		 							functions : [
+			 		 								BasicColumnFunction squareRootOfMaxOfGIRRCurvatureCVRFinalr_sqrtOfMaximumOfGIRRCurvatureCVRFinal :
+			 		 								{
+			 		 									cube : "GIRRCurvatureFinalCVRCubes.freeBirdToolsCubeModule.squareRootOfMaxOfGIRRCurvatureCVRFinal"
+			 		 									variable :"GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.sqrtOfMaximumOfGIRRCurvatureCVRFinal"
+			 		 									basicFunction : BasicFunction bf35 :
+			 		 									{ functionSpec : "commonFunctions.commonFunctionSpecModule.sqrt"
+			 		 										parameters : [
+			 		 											SpeculativeCubeColumnParameter : {
+			 		 												column :"GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.maximumOfGIRRCurvatureCVRFinal"
+			 		 												cube : "GIRRCurvatureFinalCVRCubes.freeBirdToolsCubeModule.maxOfGIRRCurvatureCVRFinal"
+			 		 											}
+			 		 										]
+			 		 									}
+			 		 								}
+			 		 							]
+			 		 							ignores : [
+			 		 								IgnoreColumn : {
+			 		 									columnToIgnore :"GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.maximumOfGIRRCurvatureCVRFinal"
+			 		 									cube : "GIRRCurvatureFinalCVRCubes.freeBirdToolsCubeModule.maxOfGIRRCurvatureCVRFinal"
+			 		 								}
+			 		 							]
+			 		 						} 
+			 		 						]
+			 		 						} ] 
+			 		}
+			 	] } }

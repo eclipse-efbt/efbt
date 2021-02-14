@@ -1,32 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" uid="_TjWusG1ZEeuIUYF_40uLgA" version="14.3.1.202003261200">
-  <semanticResources>src/CRR_RequirementsBundleRoot.coca</semanticResources>
-  <semanticResources>src/FRTBCombinations.coca</semanticResources>
-  <semanticResources>src/FRTBSourceDomainMembers.coca</semanticResources>
-  <semanticResources>src/FRTBSourceDomains.coca</semanticResources>
-  <semanticResources>src/FRTBSourceDimensions.coca</semanticResources>
-  <semanticResources>src/GIRRCurvatureMeasures.coca</semanticResources>
-  <semanticResources>src/FRTBCubeStructureItems.coca</semanticResources>
-  <semanticResources>src/FRTBCubeStructures.coca</semanticResources>
-  <semanticResources>src/FRTBSourceIdentifiers.coca</semanticResources>
-  <semanticResources>src/GIRRDeltaMeasures.coca</semanticResources>
-  <semanticResources>src/GIRRVegaMeasures.coca</semanticResources>
-  <semanticResources>src/FRTBCubes.coca</semanticResources>
-  <semanticResources>src/FRTBDerivedDimensions.coca</semanticResources>
-  <semanticResources>src/FRTBDerivedDomain.coca</semanticResources>
-  <semanticResources>src/FRTBDerivedDomainMembers.coca</semanticResources>
-  <semanticResources>src/FRTBDerivedIdentifiers.coca</semanticResources>
-  <semanticResources>src/FRTBSourceTables.coca</semanticResources>
-  <semanticResources>src/FRTB_EC_Datapoints.coca</semanticResources>
-  <semanticResources>src/GIRRCurvatureFinalCVR.coca</semanticResources>
-  <semanticResources>src/GIRRCurvatureAggregatedCVR.coca</semanticResources>
-  <semanticResources>src/GIRRCurvatureCVR.coca</semanticResources>
-  <semanticResources>src/GIRRCurvature_deltaStripping.coca</semanticResources>
-  <semanticResources>src/GIRRDeltaAggregationAndWeighting.coca</semanticResources>
-  <semanticResources>src/FRTB_GIRRDeltaAndCurvatureRelease.coca</semanticResources>
-  <semanticResources>src/commonFunctions.coca</semanticResources>
-  <semanticResources>src/GIRRFunctions.coca</semanticResources>
-  <semanticResources>src/FRTB_functionalityModulesProgram.coca</semanticResources>
-  <semanticResources>src/FRTB_requirements.coca</semanticResources>
+<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" xsi:schemaLocation="http://www.eclipse.org/sirius/description/1.1.0 http://www.eclipse.org/sirius/1.1.0#//description" uid="_BzD9kG6xEeuZhMJ4HrND4g" selectedViews="__HocoG6xEeuZhMJ4HrND4g _FFdE8G69EeudCoYAvPGQrA" version="14.3.1.202003261200">
+  <semanticResources>girr_curvature/GIRRCurvatureAggregatedCVRCubes.coca</semanticResources>
+  <semanticResources>girr_curvature/GIRRCurvatureCVRCubes.coca</semanticResources>
+  <semanticResources>girr_curvature/GIRRCurvatureDeltaStrippingCubes.coca</semanticResources>
+  <semanticResources>girr_curvature/GIRRCurvatureAggregatedCVRLogic.coca</semanticResources>
+  <semanticResources>girr_curvature/GIRRCurvatureMeasures.coca</semanticResources>
+  <semanticResources>girr_curvature/GIRRCurvatureCVRLogic.coca</semanticResources>
+  <semanticResources>girr_curvature/GIRRCurvatureDatapoints.coca</semanticResources>
+  <semanticResources>girr_curvature/GIRRCurvatureFinalCVRCubes.coca</semanticResources>
+  <semanticResources>girr_curvature/GIRRCurvatureDeltaStrippingLogic.coca</semanticResources>
+  <semanticResources>girr_curvature/GIRRCurvatureFinalCVRLogic.coca</semanticResources>
+  <semanticResources>girr_curvature/GIRRCurvatureReportCells.coca</semanticResources>
+  <semanticResources>girr_curvature/GIRRCurvtatureDatapoints.coca</semanticResources>
+  <semanticResources>src/FRTBRelease.coca</semanticResources>
   <semanticResources>src/platform_calls.coca</semanticResources>
+  <semanticResources>sdd/FRTBCubeStructureItems.coca</semanticResources>
+  <semanticResources>sdd/FRTBCubeStructures.coca</semanticResources>
+  <semanticResources>sdd/FRTBCubes.coca</semanticResources>
+  <semanticResources>sdd/FRTBDerivedDimensions.coca</semanticResources>
+  <semanticResources>sdd/FRTBDerivedDomain.coca</semanticResources>
+  <semanticResources>sdd/FRTBDerivedDomainMembers.coca</semanticResources>
+  <semanticResources>sdd/FRTBDerivedIdentifiers.coca</semanticResources>
+  <semanticResources>sdd/FRTBSourceDimensions.coca</semanticResources>
+  <semanticResources>sdd/FRTBSourceDomainMembers.coca</semanticResources>
+  <semanticResources>sdd/FRTBSourceDomains.coca</semanticResources>
+  <semanticResources>sdd/FRTBSourceIdentifiers.coca</semanticResources>
+  <semanticResources>sdd/FRTBSourceMeasures.coca</semanticResources>
+  <semanticResources>requirements/FRTB_functionalityModulesProgram.coca</semanticResources>
+  <semanticResources>requirements/FRTB_requirements.coca</semanticResources>
+  <semanticResources>sdd/FRTBCombinations.coca</semanticResources>
+  <semanticResources>cube_schemas/CurvatureCubeSchemas.coca</semanticResources>
+  <semanticResources>cube_schemas/DeltaCubeSchemas.coca</semanticResources>
+  <semanticResources>cube_schemas/PositionCubeSchemas.coca</semanticResources>
+  <semanticResources>cube_schemas/VegaCubeSchemas.coca</semanticResources>
+  <semanticResources>common/FRTBSourceCubes.coca</semanticResources>
+  <semanticResources>common/commonFunctions.coca</semanticResources>
+  <semanticResources>girr_delta/GIRRDeltaAggregationAndWeighting.coca</semanticResources>
+  <semanticResources>girr_delta/GIRRDeltaAggregationAndWeightingLogic.coca</semanticResources>
+  <semanticResources>girr_delta/GIRRDeltaMeasures.coca</semanticResources>
+  <semanticResources>girr_vega/GIRRVegaAggregationAndWeighting.coca</semanticResources>
+  <semanticResources>girr_vega/GIRRVegaAggregationAndWeightingLogic.coca</semanticResources>
+  <semanticResources>girr_vega/GIRRVegaMeasures.coca</semanticResources>
+  <semanticResources>girr_common/GIRRFunctions.coca</semanticResources>
+  <semanticResources>girr_common/GIRRRiskFactorCubeSchemas.coca</semanticResources>
+  <semanticResources>equity_common/EquityFunctions.coca</semanticResources>
+  <semanticResources>equity_common/EquityRiskFactorCubeSchemas.coca</semanticResources>
+  <semanticResources>equity_curvature/EquityCurvatureAggregatedCVRCubes.coca</semanticResources>
+  <semanticResources>equity_curvature/EquityCurvatureAggregatedCVRLogic.coca</semanticResources>
+  <semanticResources>equity_curvature/EquityCurvatureCVRCubes.coca</semanticResources>
+  <semanticResources>equity_curvature/EquityCurvatureCVRLogic.coca</semanticResources>
+  <semanticResources>equity_curvature/EquityCurvatureDatapoints.coca</semanticResources>
+  <semanticResources>equity_curvature/EquityCurvatureDeltaStrippingCubes.coca</semanticResources>
+  <semanticResources>equity_curvature/EquityCurvatureDeltaStrippingLogic.coca</semanticResources>
+  <semanticResources>equity_curvature/EquityCurvatureFinalCVRCubes.coca</semanticResources>
+  <semanticResources>equity_curvature/EquityCurvatureFinalCVRLogic.coca</semanticResources>
+  <semanticResources>equity_curvature/EquityCurvatureMeasures.coca</semanticResources>
+  <semanticResources>equity_curvature/EquityCurvatureReportCells.coca</semanticResources>
+  <semanticResources>equity_curvature/EquityCurvtatureDatapoints.coca</semanticResources>
+  <semanticResources>equity_delta/EquityDeltaAggregationAndWeighting.coca</semanticResources>
+  <semanticResources>equity_delta/EquityDeltaAggregationAndWeightingLogic.coca</semanticResources>
+  <semanticResources>equity_delta/EquityDeltaMeasures.coca</semanticResources>
+  <semanticResources>equity_vega/EquityVegaAggregationAndWeighting.coca</semanticResources>
+  <semanticResources>equity_vega/EquityVegaAggregationAndWeightingLogic.coca</semanticResources>
+  <semanticResources>equity_vega/EquityVegaMeasures.coca</semanticResources>
+  <semanticResources>common/NetVegaSensitivities.coca</semanticResources>
+  <semanticResources>common/NetVegaSensitivitiesLogic.coca</semanticResources>
+  <semanticResources>common/NetDeltaSensitivities.coca</semanticResources>
+  <semanticResources>common/NetDeltaSensitivitiesLogic.coca</semanticResources>
+  <ownedViews xmi:type="viewpoint:DView" uid="__HocoG6xEeuZhMJ4HrND4g">
+    <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.efbt.cocalimo.trl.ui.sirius.core/description/trl.odesign#//@ownedViewpoints[name='Modules']"/>
+  </ownedViews>
+  <ownedViews xmi:type="viewpoint:DView" uid="_FFdE8G69EeudCoYAvPGQrA">
+    <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']"/>
+  </ownedViews>
 </viewpoint:DAnalysis>

@@ -51,10 +51,11 @@ TRLProgram returns transformation::TRLProgram:
 	{transformation::TRLProgram}
 	'TRLProgram' ':'
 	'{'
-		('smcubesStaticModel' ':' smcubesStaticModel=SMCubesStaticModel)?		
-		('executableLogic' ':' executableLogic=TRLExecutableLogic)?
+		('executableLogic' ':' '[' executableLogic+=TRLExecutableLogic ( "," executableLogic+=TRLExecutableLogic)* ']' )?
+		('smcubesStaticModel' ':' smcubesStaticModel=SMCubesStaticModel)?
 		('structVariablesModule' ':' structVariablesModule=StructTypedVariablesModule)?
 		('arrayTypedVariablesModule' ':' arrayTypedVariablesModule=ArrayTypedVariableModule)?
+		('release' ':' release=Release)?
 	'}';
 	
 StructTypedVariablesModule returns efbt_advanced_data_definition::StructTypedVariablesModule:
@@ -121,10 +122,12 @@ TRLExecutableLogic returns transformation::TRLExecutableLogic:
 	'TRLExecutableLogic'
 	name=EString ':'
 	'{'
-		('componentSet' ':' componentSet=VersionedComponentsSet)?
 		('cubesModule' ':' cubesModule=FreeBirdToolsCubeModule)?
 		('functionSpecModule' ':' functionSpecModule=FunctionSpecModule)?
 		('cubesHierarchyModule' ':' cubesHierarchyModule=FreeBIRDToolsCubeHierarchyRelationshipModule)?
+		('cubeSchemaModules' ':' '[' cubeSchemaModules+=VersionedCubeSchemaModule ( "," cubeSchemaModules+=VersionedCubeSchemaModule)* ']' )?
+		('datasetTransformationModules' ':' '[' datasetTransformationModules+=VersionedSQLViewsModule ( "," datasetTransformationModules+=VersionedSQLViewsModule)* ']' )?
+		('reportCellViewModules' ':' '[' reportCellViewModules+=ReportCellViewModule ( "," reportCellViewModules+=ReportCellViewModule)* ']' )?
 	'}';
 	
 FreeBIRDToolsCubeHierarchyRelationshipModule returns cubes::FreeBIRDToolsCubeHierarchyRelationshipModule:
@@ -162,20 +165,6 @@ FunctionSpecModule returns functions::FunctionSpecModule:
 	'}';
 	
 	
-VersionedComponentsSet returns transformation::VersionedComponentsSet:
-	VersionedComponentsSet_Impl | Release;
-	
-
-VersionedComponentsSet_Impl returns transformation::VersionedComponentsSet:
-	{transformation::VersionedComponentsSet}
-	'VersionedComponentsSet'
-	name=EString ':'
-	'{'
-		('license' ':' license=EString)?
-		('cubeSchemaModules' ':' '[' cubeSchemaModules+=VersionedCubeSchemaModule ( "," cubeSchemaModules+=VersionedCubeSchemaModule)* ']' )?
-		('datasetTransformationModules' ':' '[' datasetTransformationModules+=VersionedSQLViewsModule ( "," datasetTransformationModules+=VersionedSQLViewsModule)* ']' )?
-		('reportCellViewModules' ':' '[' reportCellViewModules+=ReportCellViewModule ( "," reportCellViewModules+=ReportCellViewModule)* ']' )?
-	'}';
 	
 FreeBirdToolsCubeModule returns cubes::FreeBirdToolsCubeModule:
 	{cubes::FreeBirdToolsCubeModule}
@@ -235,9 +224,9 @@ Release returns transformation::Release:
 	'{'
 		('license' ':' license=EString)?
 		('version' ':' version=EString)?
-		('cubeSchemaModules' ':' '[' cubeSchemaModules+=VersionedCubeSchemaModule ( "," cubeSchemaModules+=VersionedCubeSchemaModule)* ']' )?
-		('datasetTransformationModules' ':' '[' datasetTransformationModules+=VersionedSQLViewsModule ( "," datasetTransformationModules+=VersionedSQLViewsModule)* ']' )?
-		('reportCellViewModules' ':' '[' reportCellViewModules+=ReportCellViewModule ( "," reportCellViewModules+=ReportCellViewModule)* ']' )?
+		('cubeSchemaModules' ':' '[' cubeSchemaModules+=[transformation::VersionedCubeSchemaModule|EString] ( "," cubeSchemaModules+=[transformation::VersionedCubeSchemaModule|EString])* ']' )?
+		('datasetTransformationModules' ':' '[' datasetTransformationModules+=[trl_sql_views::VersionedSQLViewsModule|EString] ( "," datasetTransformationModules+=[trl_sql_views::VersionedSQLViewsModule|EString])* ']' )?
+		('reportCellViewModules' ':' '[' reportCellViewModules+=[trl_report_cell_views::ReportCellViewModule|EString] ( "," reportCellViewModules+=[trl_report_cell_views::ReportCellViewModule|EString])* ']' )?
 	'}';
 
 VersionedSQLViewsModule returns trl_sql_views::VersionedSQLViewsModule:
@@ -515,8 +504,8 @@ CreateAttributeLineageForOneReportCell returns platform_call::CreateAttributeLin
 	'{'
 		('errorMessage' ':' errorMessage=EString)?
 		('returnStatus' ':' returnStatus=EInt)?
-		('executableLogic' ':' executableLogic=[transformation::TRLExecutableLogic|EString])?
-		('unresolvedCubeColumnParams' ':' '(' unresolvedCubeColumnParams+=[column_transformation_logic::SpeculativeCubeColumnParameter|EString] ( "," unresolvedCubeColumnParams+=[column_transformation_logic::SpeculativeCubeColumnParameter|EString])* ')' )?
+		('release' ':' release=[transformation::Release|EString])?
+		('unresolvedCubeColumnParams' ':' '[' unresolvedCubeColumnParams+=[column_transformation_logic::SpeculativeCubeColumnParameter|EString] ( "," unresolvedCubeColumnParams+=[column_transformation_logic::SpeculativeCubeColumnParameter|EString])* ']' )?
 		('reportCell' ':' reportCell=[reports::ReportCell|EString])?
 		('resultingALM' ':' resultingALM=AttributeLineageModel)?
 	'}';
@@ -1481,7 +1470,7 @@ DataProcessingFunctionalityModule returns functionality_module::DataProcessingFu
 	'DataProcessingFunctionalityModule'
 	name=EString ':'
 	'{'
-		('usedTransformationOrScheme' ':' usedTransformationOrScheme=[functionality_module::FunctionalityModule|EString] )?
+		('usedModule' ':' usedModule=[functionality_module::FunctionalityModule|EString] )?
 		('scenario' ':' scenario=[scenarios::Scenario|EString] )?
 		('scenarioSet' ':' scenarioSet=ScenarioSet)?
 	'}';
@@ -1491,7 +1480,7 @@ LeafFunctionalityModule_Impl returns functionality_module::LeafFunctionalityModu
 	'LeafFunctionalityModule'
 	name=EString ':'
 	'{'
-		('usedTransformationOrScheme' ':' usedTransformationOrScheme=[functionality_module::FunctionalityModule|EString] )?
+		('usedModule' ':' usedModule=[functionality_module::FunctionalityModule|EString] )?
 		('scenario' ':' scenario=[scenarios::Scenario|EString] )?
 		('scenarioSet' ':' scenarioSet=ScenarioSet)?
 	'}';
@@ -1501,10 +1490,10 @@ ParallelFunctionalityModule returns functionality_module::ParallelFunctionalityM
 	'ParallelFunctionalityModule'
 	name=EString ':'
 	'{'
-		('usedTransformationOrScheme' ':' usedTransformationOrScheme=[functionality_module::FunctionalityModule|EString] )?
+		('usedModule' ':' usedModule=[functionality_module::FunctionalityModule|EString] )?
 		('scenario' ':' scenario=[scenarios::Scenario|EString] )?
 		('scenarioSet' ':' scenarioSet=ScenarioSet )?
-		('subTransformationsAndSchemes' ':' '[' subTransformationsAndSchemes+=FunctionalityModule ( "," subTransformationsAndSchemes+=FunctionalityModule)* ']' )?
+		('subModules' ':' '[' subModules+=FunctionalityModule ( "," subModules+=FunctionalityModule)* ']' )?
 	'}';
 
 ScenarioSetFunctionalityModule returns functionality_module::ScenarioSetFunctionalityModule:
@@ -1512,10 +1501,10 @@ ScenarioSetFunctionalityModule returns functionality_module::ScenarioSetFunction
 	'ScenarioSetFunctionalityModule'
 	name=EString ':'
 	'{'
-		('usedTransformationOrScheme' ':' usedTransformationOrScheme=[functionality_module::FunctionalityModule|EString] )?
+		('usedModule' ':' usedModule=[functionality_module::FunctionalityModule|EString] )?
 		('scenario' ':' scenario=[scenarios::Scenario|EString] )?
 		('scenarioSet' ':' scenarioSet=ScenarioSet )?
-		('subTransformationsAndSchemes' ':' '[' subTransformationsAndSchemes+=FunctionalityModule ( "," subTransformationsAndSchemes+=FunctionalityModule)* ']' )?
+		('subModules' ':' '[' subModules+=FunctionalityModule ( "," subModules+=FunctionalityModule)* ']' )?
 		('scenarioSetChoice' ':' scenarioSetChoice=ScenarioSet)?
 	'}';
 
@@ -1524,10 +1513,10 @@ SerialFunctionalityModule returns functionality_module::SerialFunctionalityModul
 	'SerialFunctionalityModule'
 	name=EString ':'
 	'{'
-		('usedTransformationOrScheme' ':' usedTransformationOrScheme=[functionality_module::FunctionalityModule|EString] )?
+		('usedModule' ':' usedModule=[functionality_module::FunctionalityModule|EString] )?
 		('scenario' ':' scenario=[scenarios::Scenario|EString] )?
 		('scenarioSet' ':' scenarioSet=ScenarioSet )?
-		('subTransformationsAndSchemes' ':' '[' subTransformationsAndSchemes+=FunctionalityModule ( "," subTransformationsAndSchemes+=FunctionalityModule)* ']' )?
+		('subModules' ':' '[' subModules+=FunctionalityModule ( "," subModules+=FunctionalityModule)* ']' )?
 	'}';
 
 FunctionalityModuleSet_Impl returns functionality_module::FunctionalityModuleSet:
@@ -1535,10 +1524,10 @@ FunctionalityModuleSet_Impl returns functionality_module::FunctionalityModuleSet
 	'FunctionalityModuleSet'
 	name=EString ':'
 	'{'
-		('usedTransformationOrScheme' ':' usedTransformationOrScheme=[functionality_module::FunctionalityModule|EString] )?
+		('usedModule' ':' usedModule=[functionality_module::FunctionalityModule|EString] )?
 		('scenario' ':' scenario=[scenarios::Scenario|EString] )?
 		('scenarioSet' ':' scenarioSet=ScenarioSet )?
-		('subTransformationsAndSchemes' ':' '[' subTransformationsAndSchemes+=FunctionalityModule ( "," subTransformationsAndSchemes+=FunctionalityModule)* ']' )?
+		('subModules' ':' '[' subModules+=FunctionalityModule ( "," subModules+=FunctionalityModule)* ']' )?
 	'}';
 
 ReadDataSourceFunctionalityModule returns functionality_module::ReadDataSourceFunctionalityModule:
@@ -1546,7 +1535,7 @@ ReadDataSourceFunctionalityModule returns functionality_module::ReadDataSourceFu
 	'ReadDataSourceFunctionalityModule'
 	name=EString ':'
 	'{'
-		('usedTransformationOrScheme' ':' usedTransformationOrScheme=[functionality_module::FunctionalityModule|EString] )?
+		('usedModule' ':' usedModule=[functionality_module::FunctionalityModule|EString] )?
 		('scenario' ':' scenario=[scenarios::Scenario|EString] )?
 		('scenarioSet' ':' scenarioSet=ScenarioSet)?
 	'}';
@@ -1556,7 +1545,7 @@ ReportCellCreationFunctionalityModule returns functionality_module::ReportCellCr
 	'ReportCellCreationFunctionalityModule'
 	name=EString ':'
 	'{'
-		('usedTransformationOrScheme' ':' usedTransformationOrScheme=[functionality_module::FunctionalityModule|EString] )?
+		('usedModule' ':' usedModule=[functionality_module::FunctionalityModule|EString] )?
 		('scenario' ':' scenario=[scenarios::Scenario|EString] )?
 		('scenarioSet' ':' scenarioSet=ScenarioSet)?
 	'}';
@@ -1566,7 +1555,7 @@ ValidationFunctionalityModule returns functionality_module::ValidationFunctional
 	'ValidationFunctionalityModule'
 	name=EString ':'
 	'{'
-		('usedTransformationOrScheme' ':' usedTransformationOrScheme=[functionality_module::FunctionalityModule|EString] )?
+		('usedModule' ':' usedModule=[functionality_module::FunctionalityModule|EString] )?
 		('scenario' ':' scenario=[scenarios::Scenario|EString] )?
 		('scenarioSet' ':' scenarioSet=ScenarioSet)?
 	'}';
@@ -1621,7 +1610,7 @@ CreateAttributeLineageModel returns platform_call::CreateAttributeLineageModel:
 	'{'
 		('errorMessage' ':' errorMessage=EString)?
 		('returnStatus' ':' returnStatus=EInt)?
-		('executableLogic' ':' executableLogic=[transformation::TRLExecutableLogic|EString])?
+		('release' ':' release=[transformation::Release|EString])?
 		('unresolvedCubeColumnParams' ':' '[' unresolvedCubeColumnParams+=[column_transformation_logic::SpeculativeCubeColumnParameter|EString] ( "," unresolvedCubeColumnParams+=[column_transformation_logic::SpeculativeCubeColumnParameter|EString])* ']' )?
 		('resultingALM' ':' resultingALM=AttributeLineageModel)?
 	'}';

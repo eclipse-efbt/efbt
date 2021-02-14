@@ -1,7 +1,7 @@
 ProgramAndCalls : { program : TRLProgram : { smcubesStaticModel : SMCubesStaticModel abc: { functionalityModules : FunctionalityModuleModule functionalityModules1 : 
 	{  FunctionalityModules : 
 		[ SerialFunctionalityModule example_processing : { 
-			subTransformationsAndSchemes : [ 
+			subModules : [ 
 				ReadDataSourceFunctionalityModule readInExampleData :{ } , 
 				DataProcessingFunctionalityModule processExampleData : { 
 					scenarioSet : ScenarioSet scenarioSet1 : { 

@@ -1,0 +1,74 @@
+ProgramAndCalls : { program :  TRLProgram :  {
+	smcubesStaticModel : SMCubesStaticModel FRTBSourceIdentifiersStaticModel : {
+	smCubesModel : SmcubesModel  FRTBSourceIdentifiersModel  : {
+		variables :  [ VariableModule variablesModule :  
+				{
+			license : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"
+			variables : [ 
+			VARIABLE riskFactorID : {
+				code : "riskFactorID"
+				description : "riskFactorID"
+				variable_id : "riskFactorID"
+				displayName :  "riskFactorID"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
+			},
+			VARIABLE positionID : {
+				code : "positionID"
+				description : "positionID"
+				variable_id : "positionID"
+				displayName : "positionID"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
+			},
+			VARIABLE issueID : {
+				code : "issueID"
+				description : "issueID"
+				variable_id : "issueID"
+				displayName : "issueID"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
+			},
+			VARIABLE issuerID : {
+				code : "issuerID"
+				description : "issuerID"
+				variable_id : "issuerID"
+				displayName : "issuerID"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
+			},
+			VARIABLE trancheName : {
+				code : "trancheName"
+				description : "trancheName"
+				variable_id : "trancheName"
+				displayName : "trancheName"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
+			},
+			VARIABLE securitisationID : {
+				code : "securitisationID"
+				description : "securitisationID"
+				variable_id : "securitisationID"
+				displayName : "securitisationID"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
+			},
+			VARIABLE deliveryLocation : {
+				code : "deliveryLocation"
+				description : "deliveryLocation"
+				variable_id : "deliveryLocation"
+				displayName : "deliveryLocation"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
+			},
+			VARIABLE riskFactorLongName : {
+				code : "riskFactorLongName"
+				description : "riskFactorLongName"
+				variable_id : "riskFactorLongName"
+				displayName : "riskFactorLongName"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
+			},
+			VARIABLE organisation_id : {
+				code : "organisation_id"
+				description : "organisation_id"
+				variable_id : "organisation_id"
+				displayName : "organisation_id"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
+			}
+		
+			
+			 ] } ] } } } }
+				
