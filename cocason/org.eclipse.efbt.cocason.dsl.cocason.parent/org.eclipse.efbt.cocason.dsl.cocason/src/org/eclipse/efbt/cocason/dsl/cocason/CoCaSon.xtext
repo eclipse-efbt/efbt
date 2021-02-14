@@ -1470,7 +1470,7 @@ DataProcessingFunctionalityModule returns functionality_module::DataProcessingFu
 	'DataProcessingFunctionalityModule'
 	name=EString ':'
 	'{'
-		('usedTransformationOrScheme' ':' usedTransformationOrScheme=[functionality_module::FunctionalityModule|EString] )?
+		('usedModule' ':' usedModule=[functionality_module::FunctionalityModule|EString] )?
 		('scenario' ':' scenario=[scenarios::Scenario|EString] )?
 		('scenarioSet' ':' scenarioSet=ScenarioSet)?
 	'}';
@@ -1480,7 +1480,7 @@ LeafFunctionalityModule_Impl returns functionality_module::LeafFunctionalityModu
 	'LeafFunctionalityModule'
 	name=EString ':'
 	'{'
-		('usedTransformationOrScheme' ':' usedTransformationOrScheme=[functionality_module::FunctionalityModule|EString] )?
+		('usedModule' ':' usedModule=[functionality_module::FunctionalityModule|EString] )?
 		('scenario' ':' scenario=[scenarios::Scenario|EString] )?
 		('scenarioSet' ':' scenarioSet=ScenarioSet)?
 	'}';
@@ -1490,7 +1490,7 @@ ParallelFunctionalityModule returns functionality_module::ParallelFunctionalityM
 	'ParallelFunctionalityModule'
 	name=EString ':'
 	'{'
-		('usedTransformationOrScheme' ':' usedTransformationOrScheme=[functionality_module::FunctionalityModule|EString] )?
+		('usedModule' ':' usedModule=[functionality_module::FunctionalityModule|EString] )?
 		('scenario' ':' scenario=[scenarios::Scenario|EString] )?
 		('scenarioSet' ':' scenarioSet=ScenarioSet )?
 		('subModules' ':' '[' subModules+=FunctionalityModule ( "," subModules+=FunctionalityModule)* ']' )?
@@ -1501,7 +1501,7 @@ ScenarioSetFunctionalityModule returns functionality_module::ScenarioSetFunction
 	'ScenarioSetFunctionalityModule'
 	name=EString ':'
 	'{'
-		('usedTransformationOrScheme' ':' usedTransformationOrScheme=[functionality_module::FunctionalityModule|EString] )?
+		('usedModule' ':' usedModule=[functionality_module::FunctionalityModule|EString] )?
 		('scenario' ':' scenario=[scenarios::Scenario|EString] )?
 		('scenarioSet' ':' scenarioSet=ScenarioSet )?
 		('subModules' ':' '[' subModules+=FunctionalityModule ( "," subModules+=FunctionalityModule)* ']' )?
@@ -1513,7 +1513,7 @@ SerialFunctionalityModule returns functionality_module::SerialFunctionalityModul
 	'SerialFunctionalityModule'
 	name=EString ':'
 	'{'
-		('usedTransformationOrScheme' ':' usedTransformationOrScheme=[functionality_module::FunctionalityModule|EString] )?
+		('usedModule' ':' usedModule=[functionality_module::FunctionalityModule|EString] )?
 		('scenario' ':' scenario=[scenarios::Scenario|EString] )?
 		('scenarioSet' ':' scenarioSet=ScenarioSet )?
 		('subModules' ':' '[' subModules+=FunctionalityModule ( "," subModules+=FunctionalityModule)* ']' )?
@@ -1524,7 +1524,7 @@ FunctionalityModuleSet_Impl returns functionality_module::FunctionalityModuleSet
 	'FunctionalityModuleSet'
 	name=EString ':'
 	'{'
-		('usedTransformationOrScheme' ':' usedTransformationOrScheme=[functionality_module::FunctionalityModule|EString] )?
+		('usedModule' ':' usedModule=[functionality_module::FunctionalityModule|EString] )?
 		('scenario' ':' scenario=[scenarios::Scenario|EString] )?
 		('scenarioSet' ':' scenarioSet=ScenarioSet )?
 		('subModules' ':' '[' subModules+=FunctionalityModule ( "," subModules+=FunctionalityModule)* ']' )?
@@ -1535,7 +1535,7 @@ ReadDataSourceFunctionalityModule returns functionality_module::ReadDataSourceFu
 	'ReadDataSourceFunctionalityModule'
 	name=EString ':'
 	'{'
-		('usedTransformationOrScheme' ':' usedTransformationOrScheme=[functionality_module::FunctionalityModule|EString] )?
+		('usedModule' ':' usedModule=[functionality_module::FunctionalityModule|EString] )?
 		('scenario' ':' scenario=[scenarios::Scenario|EString] )?
 		('scenarioSet' ':' scenarioSet=ScenarioSet)?
 	'}';
@@ -1545,7 +1545,7 @@ ReportCellCreationFunctionalityModule returns functionality_module::ReportCellCr
 	'ReportCellCreationFunctionalityModule'
 	name=EString ':'
 	'{'
-		('usedTransformationOrScheme' ':' usedTransformationOrScheme=[functionality_module::FunctionalityModule|EString] )?
+		('usedModule' ':' usedModule=[functionality_module::FunctionalityModule|EString] )?
 		('scenario' ':' scenario=[scenarios::Scenario|EString] )?
 		('scenarioSet' ':' scenarioSet=ScenarioSet)?
 	'}';
@@ -1555,7 +1555,7 @@ ValidationFunctionalityModule returns functionality_module::ValidationFunctional
 	'ValidationFunctionalityModule'
 	name=EString ':'
 	'{'
-		('usedTransformationOrScheme' ':' usedTransformationOrScheme=[functionality_module::FunctionalityModule|EString] )?
+		('usedModule' ':' usedModule=[functionality_module::FunctionalityModule|EString] )?
 		('scenario' ':' scenario=[scenarios::Scenario|EString] )?
 		('scenarioSet' ':' scenarioSet=ScenarioSet)?
 	'}';
