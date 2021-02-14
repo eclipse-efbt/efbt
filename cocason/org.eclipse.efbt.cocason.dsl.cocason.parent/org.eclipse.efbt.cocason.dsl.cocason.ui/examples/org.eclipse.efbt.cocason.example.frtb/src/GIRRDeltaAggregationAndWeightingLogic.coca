@@ -16,11 +16,11 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 						parameters : [
 			 							SpeculativeCubeColumnParameter : {
 			 								column :"FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
-			 								cube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.deltaSensitivities"
+			 								cube : "FRTBSourceCubes.freeBirdToolsCubeModule.deltaSensitivities"
 			 							},
 			 							SpeculativeCubeColumnParameter : {
 			 								column : "GIRRDeltaMeasuresStaticModel.GIRRDeltaMeasuresModel.variablesModule.tenor"
-			 								cube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.deltaSensitivities"
+			 								cube :"FRTBSourceCubes.freeBirdToolsCubeModule.deltaSensitivities"
 			 							}
 			 						]
 			 					}
@@ -88,7 +88,7 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 					parameters : [ 
 			 						SpeculativeCubeColumnParameter : {
 			 							column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
-			 							cube : "FRTBSourceTablesCubeLineage.freeBirdToolsCubeModule.GIRRRiskFactor"
+			 							cube : "FRTBSourceCubes.freeBirdToolsCubeModule.GIRRRiskFactor"
 			 							} ,
 			 						SpeculativeCubeColumnParameter : {
 			 							column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
