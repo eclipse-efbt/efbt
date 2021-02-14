@@ -13,7 +13,7 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 						cube : "GIRRCurvatureCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureRiskChargeForRiskFactor"
 			 		 						variable :"GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureCVRk"
 			 		 						aggregateFunction : AggregateFunction af2 : {
-			 		 							 functionSpec : "commonFunctions.GIRRFunctionSpecModule.SUM" 
+			 		 							 functionSpec : "commonFunctions.commonFunctionSpecModule.SUM" 
 			 		 							 parameters : [
 			 		 							 	SpeculativeCubeColumnParameter : {
 			 		 							 		column : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureDeltaStrippedShift"

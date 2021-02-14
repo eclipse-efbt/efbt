@@ -18,6 +18,22 @@ ProgramAndCalls : { program : TRLProgram :  { executableLogic : [ TRLExecutableL
 			ParamaterSpec param2
 		]	
 	},
+	BasicFunctionSpec getGIRRVegaRiskFactorRiskWeight : { 
+		functionalName : "CustomFunctions_getGIRRVegaRiskFactorRiskWeight"
+		sqlName : "getGIRRVegaRiskFactorRiskWeight"	
+		parameterSpecs : [ 
+			ParamaterSpec param1 ,
+			ParamaterSpec param2
+		]	
+	},
+	BasicFunctionSpec getGIRRVegaCorrelationFactor : { 
+		functionalName : "CustomFunctions_getGIRRVegaCorrelationFactor"
+		sqlName : "getGIRRVegaCorrelationFactor"	
+		parameterSpecs : [ 
+			ParamaterSpec param1 ,
+			ParamaterSpec param2
+		]	
+	},
 	BasicFunctionSpec getGIRRBucketCorrelationFactor : { 
 		functionalName : "CustomFunctions_getDeltaCorrelationFactor"
 		sqlName : "getDeltaCorrelationFactor"	

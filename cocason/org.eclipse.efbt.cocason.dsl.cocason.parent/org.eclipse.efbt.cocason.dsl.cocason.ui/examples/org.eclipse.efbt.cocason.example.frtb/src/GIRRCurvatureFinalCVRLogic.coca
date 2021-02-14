@@ -13,7 +13,7 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 								cube : "GIRRCurvatureFinalCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureCVRFinal" 
 			 		 								variable : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureCVRFinal"
 			 		 								basicFunction : BasicFunction bf31  : {
-			 		 									functionSpec : "commonFunctions.GIRRFunctionSpecModule.plus" 
+			 		 									functionSpec : "commonFunctions.commonFunctionSpecModule.plus" 
 			 		 									parameters : [
 			 		 										SpeculativeCubeColumnParameter : {
 			 		 											column : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureFlooredMinimumShiftedTotalSquared"
@@ -47,7 +47,7 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 									variable : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.maximumOfGIRRCurvatureCVRFinal"
 			 		 									basicFunction : BasicFunction bf32 :
 			 		 									{ 
-			 		 										functionSpec : "commonFunctions.GIRRFunctionSpecModule.max"
+			 		 										functionSpec : "commonFunctions.commonFunctionSpecModule.max"
 			 		 										parameters : [
 			 		 											SpeculativeCubeColumnParameter : { 
 			 		 												column :"GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureCVRFinal"
@@ -76,7 +76,7 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 									cube : "GIRRCurvatureFinalCVRCubes.freeBirdToolsCubeModule.squareRootOfMaxOfGIRRCurvatureCVRFinal"
 			 		 									variable :"GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.sqrtOfMaximumOfGIRRCurvatureCVRFinal"
 			 		 									basicFunction : BasicFunction bf35 :
-			 		 									{ functionSpec : "commonFunctions.GIRRFunctionSpecModule.sqrt"
+			 		 									{ functionSpec : "commonFunctions.commonFunctionSpecModule.sqrt"
 			 		 										parameters : [
 			 		 											SpeculativeCubeColumnParameter : {
 			 		 												column :"GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.maximumOfGIRRCurvatureCVRFinal"

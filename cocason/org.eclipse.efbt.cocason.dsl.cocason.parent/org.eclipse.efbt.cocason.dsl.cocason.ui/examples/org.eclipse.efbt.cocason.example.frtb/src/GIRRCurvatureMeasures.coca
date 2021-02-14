@@ -26,13 +26,6 @@ ProgramAndCalls : { program :  TRLProgram :  {
 				displayName :  "GIRRCurvatureDownshockValuationDifference"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			},
-			VARIABLE GIRRCurvatureSummedGIRRDelta : {
-				code : "GIRRCurvatureSummedGIRRDelta"
-				description : "GIRRCurvatureSummedGIRRDelta"
-				variable_id : "GIRRCurvatureSummedGIRRDelta"
-				displayName :  "GIRRCurvatureSummedGIRRDelta"
-				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
-			},
 			VARIABLE curvatureValuationDifference : {
 				code : "curvatureValuationDifference"
 				description : "curvatureValuationDifference"
@@ -108,13 +101,6 @@ ProgramAndCalls : { program :  TRLProgram :  {
 				description : "GIRRCurvatureCVRCorrelationFactor"
 				variable_id : "GIRRCurvatureCVRCorrelationFactor"
 				displayName :  "GIRRCurvatureCVRCorrelationFactor"
-				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
-			},
-			VARIABLE GIRRDeltaCorrelationFactor : {
-				code : "GIRRDeltaCorrelationFactor"
-				description : "GIRRDeltaCorrelationFactor"
-				variable_id : "GIRRDeltaCorrelationFactor"
-				displayName :  "GIRRDeltaCorrelationFactor"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			},
 			VARIABLE GIRRCurvatureCVRCorrelatedProduct : {

@@ -10,7 +10,7 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 			cube  :"GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureAndPosition"
 			 			whereClause : WhereClause : {
 			 				function : BooleanFunction bf33 : { 
-			 					functionSpec :  "commonFunctions.GIRRFunctionSpecModule.equals"
+			 					functionSpec :  "commonFunctions.commonFunctionSpecModule.equals"
 			 					parameters : [ 
 			 						SpeculativeCubeColumnParameter : { 
 			 							column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.positionID"
@@ -31,7 +31,7 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 			whereClause : WhereClause : {
 			 				function : BooleanFunction bf34 :
 			 				{ 
-			 					functionSpec : "commonFunctions.GIRRFunctionSpecModule.equals"
+			 					functionSpec : "commonFunctions.commonFunctionSpecModule.equals"
 			 					parameters : [
 			 						SpeculativeCubeColumnParameter : { 
 			 							column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID" 
@@ -54,13 +54,13 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 	cube : "GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureValuationDifferencesLinkedWithDeltas"
 			 		 	whereClause : WhereClause : { 
 			 		 		function : BooleanFunction bf8 : {
-			 		 			functionSpec : "commonFunctions.GIRRFunctionSpecModule.AND"
+			 		 			functionSpec : "commonFunctions.commonFunctionSpecModule.AND"
 			 		 			parameters : [
 			 		 				BasicFunction bf9 : {  
-			 		 					 functionSpec : "commonFunctions.GIRRFunctionSpecModule.AND"
+			 		 					 functionSpec : "commonFunctions.commonFunctionSpecModule.AND"
 			 		 					 parameters : [
 			 		 					 	BasicFunction bf10 : { 
-			 		 					 		functionSpec : "commonFunctions.GIRRFunctionSpecModule.equals"
+			 		 					 		functionSpec : "commonFunctions.commonFunctionSpecModule.equals"
 			 		 					 		parameters : [
 			 		 					 			SpeculativeCubeColumnParameter : { 
 			 		 					 				column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
@@ -72,7 +72,7 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 					 			}
 			 		 					 		] } ,
 			 		 					 		BasicFunction bf11 : { 
-			 		 					 		functionSpec : "commonFunctions.GIRRFunctionSpecModule.equals"
+			 		 					 		functionSpec : "commonFunctions.commonFunctionSpecModule.equals"
 			 		 					 		parameters : [
 			 		 					 			SpeculativeCubeColumnParameter : { 
 			 		 					 				column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.positionID"
@@ -111,7 +111,7 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 									cube : "GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureValuationDifferencesLinkedWithDeltas"
 			 		 									},
 			 		 								SpeculativeCubeColumnParameter : 
-			 		 								{ column : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureSummedGIRRDelta" 
+			 		 								{ column :"GIRRDeltaMeasuresStaticModel.GIRRDeltaMeasuresModel.variablesModule.summedGIRRDelta"
 			 		 									cube : "GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureValuationDifferencesLinkedWithDeltas"
 			 		 									},
 			 		 								SpeculativeCubeColumnParameter : 
@@ -141,7 +141,7 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 				},
 			 		 				IgnoreColumn : 
 			 		 				{
-			 		 					columnToIgnore : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureSummedGIRRDelta"
+			 		 					columnToIgnore : "GIRRDeltaMeasuresStaticModel.GIRRDeltaMeasuresModel.variablesModule.summedGIRRDelta"
 			 		 					cube :  "GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureValuationDifferencesLinkedWithDeltas"
 			 		 				}
 			 		 			]

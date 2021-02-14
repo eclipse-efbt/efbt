@@ -35,11 +35,11 @@ ProgramAndCalls : { program :  TRLProgram :  {
 				displayName :  "tenorl"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			},
-			VARIABLE vegaOptionMaturity : {
-				code : "vegaOptionMaturity"
-				description : "vegaOptionMaturity"
-				variable_id : "vegaOptionMaturity"
-				displayName :  "vegaOptionMaturity"
+			VARIABLE summedGIRRVega : {
+				code : "summedGIRRVega"
+				description : "summedGIRRVega"
+				variable_id : "summedGIRRVega"
+				displayName :  "summedGIRRVega"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			},
 			
@@ -127,6 +127,7 @@ ProgramAndCalls : { program :  TRLProgram :  {
 				displayName :  "GIRRVegaBucketCorrelationFactor"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			},
+			
 			VARIABLE totalGIRRVegaSensitivityPerBucketk : {
 				code : "totalGIRRVegaSensitivityPerBucketk"
 				description : "totalGIRRVegaSensitivityPerBucketk"
@@ -139,6 +140,14 @@ ProgramAndCalls : { program :  TRLProgram :  {
 				description : "totalGIRRVegaSensitivityPerBucketl"
 				variable_id : "totalGIRRVegaSensitivityPerBucketl"
 				displayName :  "totalGIRRVegaSensitivityPerBucketl"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			}
+			,
+			VARIABLE GIRRVegaCorrelationFactor : {
+				code : "GIRRVegaCorrelationFactor"
+				description : "GIRRVegaCorrelationFactor"
+				variable_id : "GIRRVegaCorrelationFactor"
+				displayName :  "GIRRVegaCorrelationFactor"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			}
 			

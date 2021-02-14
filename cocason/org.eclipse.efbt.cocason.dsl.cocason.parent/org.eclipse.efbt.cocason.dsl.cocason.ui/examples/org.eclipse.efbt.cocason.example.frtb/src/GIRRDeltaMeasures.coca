@@ -12,11 +12,26 @@ ProgramAndCalls : { program :  TRLProgram :  {
 				displayName :  "GIRRDeltaSensitivityk"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			},
+			VARIABLE GIRRDeltaCorrelationFactor : {
+				code : "GIRRDeltaCorrelationFactor"
+				description : "GIRRDeltaCorrelationFactor"
+				variable_id : "GIRRDeltaCorrelationFactor"
+				displayName :  "GIRRDeltaCorrelationFactor"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			
 			VARIABLE GIRRDeltaSensitivityl : {
 				code : "GIRRDeltaSensitivityl"
 				description : "GIRRDeltaSensitivityl"
 				variable_id : "GIRRDeltaSensitivityl"
 				displayName :  "GIRRDeltaSensitivityl"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE summedGIRRDelta : {
+				code : "summedGIRRDelta"
+				description : "summedGIRRDelta"
+				variable_id : "summedGIRRDelta"
+				displayName :  "summedGIRRDelta"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			},
 			
