@@ -1,0 +1,65 @@
+ProgramAndCalls : { program : TRLProgram : { smcubesStaticModel : SMCubesStaticModel FRTBCoreProcessStaticModel : {
+	functionalityModules : FunctionalityModuleModule FRTBCoreProcess : {
+		license : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"
+		FunctionalityModules : [ ParallelFunctionalityModule SBAProcesses : {
+			
+			subModules : [ 
+				ParallelFunctionalityModule FRTBProcesses : {  
+					
+				subModules : [
+				ParallelFunctionalityModule GIRR_SBA : { 
+					subModules : [ 
+						SerialFunctionalityModule GIRRDeltaAndGIRRCurvatureProcessing : { 
+							subModules : [
+								ReadDataSourceFunctionalityModule ReadGIRRDeltaSensitivities : { } , 
+								DataProcessingFunctionalityModule GIRRDeltaAggregationAndWeighting :{},
+								SerialFunctionalityModule GIRRCurvature : { 
+									subModules : [ 
+										ReadDataSourceFunctionalityModule ReadGIRRCurvatureData : { } , 
+										DataProcessingFunctionalityModule GIRRCurvatureDeltaStripping :{ 
+											scenarioSet : ScenarioSet GIRRCurvatureDeltaStrippingScenarios : 
+											{ scenarios : [ Scenario GIRRCurvatureUpShocks ,Scenario GIRRCurvatureDownShocks ] }
+											
+										} , 
+										 DataProcessingFunctionalityModule GIRRCurvatureCVR : { } ,
+										  ParallelFunctionalityModule GIRRCurvatureAggregatedCVR : {
+										  	subModules : [ 
+										  		DataProcessingFunctionalityModule GIRRCurvatureCorellatedCVR : { } , 
+										  		DataProcessingFunctionalityModule GIRRCurvatureUncorellatedCVR : { }
+										  	]
+										  } , 
+										  DataProcessingFunctionalityModule GIRRCurvatureFinalCVRLogic : { } , 
+										  ReportCellCreationFunctionalityModule createGIRRCurvatureReportCells : { }, 
+										  ReportCellCreationFunctionalityModule createGIRRDeltaReportCells : { }
+									]
+								}
+							]
+				},
+				SerialFunctionalityModule GIRRVegaProcessing : {
+					subModules : [ 
+						ReadDataSourceFunctionalityModule ReadGIRRVegaSensitivities : { } , 
+								DataProcessingFunctionalityModule GIRRVegaAggregationAndWeighting :{},
+								 ReportCellCreationFunctionalityModule createGIRRVegaReportCells : { }
+					]
+				}
+				] } 
+			] } 
+			] } ] 
+			functionalityModuleTags : [ 
+				FunctionalityModuleTag GIRRCurvatureDeltaStrippingTag : {
+					displayName : GIRRCurvatureDeltaStrippingTag 
+					requirements : [ 
+					"CRRRequirementsStaticModel.CRRRequirementsModel.CRRRuleBook.Title_IV.Title_IV;Chapter_1_General_Provisions.Article_325.Article_325;1.Article_325:1(a)" ,
+					 "CRRRequirementsStaticModel.CRRRequirementsModel.CRRRuleBook.Title_IV.Title_IV;Chapter_1_General_Provisions.Article_325.Article_325;1.Article_325:1(b)" ] 
+					 FunctionalityModule : "SBAProcesses.FRTBProcesses.GIRR_SBA.GIRRDeltaAndGIRRCurvatureProcessing.GIRRCurvature.GIRRCurvatureDeltaStripping"
+				}
+			] 
+			SceanrioTags : [ 
+				ScenarioTag upshocksTag : { 
+					displayName : upshocksTag 
+					requirements : [
+						"CRRRequirementsStaticModel.CRRRequirementsModel.CRRRuleBook.Title_IV.Title_IV;Chapter_1_General_Provisions.Article_325"
+					] 
+					scenario : "SBAProcesses.FRTBProcesses.GIRR_SBA.GIRRDeltaAndGIRRCurvatureProcessing.GIRRCurvature.GIRRCurvatureDeltaStripping.GIRRCurvatureDeltaStrippingScenarios.GIRRCurvatureUpShocks"
+				}
+			] } } } }
