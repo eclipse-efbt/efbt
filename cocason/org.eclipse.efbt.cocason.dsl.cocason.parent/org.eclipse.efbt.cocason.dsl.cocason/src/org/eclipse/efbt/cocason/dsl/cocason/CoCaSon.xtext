@@ -1493,7 +1493,7 @@ ParallelFunctionalityModule returns functionality_module::ParallelFunctionalityM
 		('usedTransformationOrScheme' ':' usedTransformationOrScheme=[functionality_module::FunctionalityModule|EString] )?
 		('scenario' ':' scenario=[scenarios::Scenario|EString] )?
 		('scenarioSet' ':' scenarioSet=ScenarioSet )?
-		('subTransformationsAndSchemes' ':' '[' subTransformationsAndSchemes+=FunctionalityModule ( "," subTransformationsAndSchemes+=FunctionalityModule)* ']' )?
+		('subModules' ':' '[' subModules+=FunctionalityModule ( "," subModules+=FunctionalityModule)* ']' )?
 	'}';
 
 ScenarioSetFunctionalityModule returns functionality_module::ScenarioSetFunctionalityModule:
@@ -1504,7 +1504,7 @@ ScenarioSetFunctionalityModule returns functionality_module::ScenarioSetFunction
 		('usedTransformationOrScheme' ':' usedTransformationOrScheme=[functionality_module::FunctionalityModule|EString] )?
 		('scenario' ':' scenario=[scenarios::Scenario|EString] )?
 		('scenarioSet' ':' scenarioSet=ScenarioSet )?
-		('subTransformationsAndSchemes' ':' '[' subTransformationsAndSchemes+=FunctionalityModule ( "," subTransformationsAndSchemes+=FunctionalityModule)* ']' )?
+		('subModules' ':' '[' subModules+=FunctionalityModule ( "," subModules+=FunctionalityModule)* ']' )?
 		('scenarioSetChoice' ':' scenarioSetChoice=ScenarioSet)?
 	'}';
 
@@ -1516,7 +1516,7 @@ SerialFunctionalityModule returns functionality_module::SerialFunctionalityModul
 		('usedTransformationOrScheme' ':' usedTransformationOrScheme=[functionality_module::FunctionalityModule|EString] )?
 		('scenario' ':' scenario=[scenarios::Scenario|EString] )?
 		('scenarioSet' ':' scenarioSet=ScenarioSet )?
-		('subTransformationsAndSchemes' ':' '[' subTransformationsAndSchemes+=FunctionalityModule ( "," subTransformationsAndSchemes+=FunctionalityModule)* ']' )?
+		('subModules' ':' '[' subModules+=FunctionalityModule ( "," subModules+=FunctionalityModule)* ']' )?
 	'}';
 
 FunctionalityModuleSet_Impl returns functionality_module::FunctionalityModuleSet:
@@ -1527,7 +1527,7 @@ FunctionalityModuleSet_Impl returns functionality_module::FunctionalityModuleSet
 		('usedTransformationOrScheme' ':' usedTransformationOrScheme=[functionality_module::FunctionalityModule|EString] )?
 		('scenario' ':' scenario=[scenarios::Scenario|EString] )?
 		('scenarioSet' ':' scenarioSet=ScenarioSet )?
-		('subTransformationsAndSchemes' ':' '[' subTransformationsAndSchemes+=FunctionalityModule ( "," subTransformationsAndSchemes+=FunctionalityModule)* ']' )?
+		('subModules' ':' '[' subModules+=FunctionalityModule ( "," subModules+=FunctionalityModule)* ']' )?
 	'}';
 
 ReadDataSourceFunctionalityModule returns functionality_module::ReadDataSourceFunctionalityModule:
