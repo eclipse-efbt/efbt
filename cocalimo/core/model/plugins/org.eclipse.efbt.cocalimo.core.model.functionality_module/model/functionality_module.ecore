@@ -67,8 +67,8 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A set of FunctionalityModules.&#xA;Note that FunctionalityModulesSet is also a subclass of FunctionalityModule, so the set can also include FunctionalityModulesSets"/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="subModules"
-        upperBound="-1" eType="#//FunctionalityModule" containment="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="subModules" upperBound="-1"
+        eType="#//FunctionalityModule" containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The  contained set FunctionalityModules "/>
       </eAnnotations>
@@ -115,8 +115,7 @@
         <details key="name" value="name"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="usedModule"
-        eType="#//FunctionalityModule">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="usedModule" eType="#//FunctionalityModule">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="We can specify a dependency upon another Functional Module here if we wish. Normally the dependencies are not set but can be derived from where the Functionality Module exists within a set of Serial and Parallel FunctionalityModuleSets"/>
       </eAnnotations>

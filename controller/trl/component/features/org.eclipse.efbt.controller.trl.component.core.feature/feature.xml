@@ -124,8 +124,6 @@ Exhibit A – Form of Secondary Licenses Notice
       <import plugin="org.eclipse.efbt.cocalimo.trl.model.platform_call" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.efbt.controller.smcubes.component.export_smcubes" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.efbt.controller.ldm.component.sqldevconvertor" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.efbt.controller.trl.component.translator.api" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.efbt.controller.trl.component.translator.impl" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.efbt.cocalimo.trl.model.core" version="1.0.0" match="greaterOrEqual"/>
    </requires>
 

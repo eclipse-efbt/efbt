@@ -12,9 +12,6 @@
        Neil Mackenzie - initial API and implementation
  -->
 <site>
-   <feature id="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.attribute_lineage.feature">
-      <category name="cocamo.smcubes_with_lineage.modelquery"/>
-   </feature>
    <feature id="org.eclipse.efbt.cocalimo.smcubes_with_lineage.query.lineagefunctions.feature">
       <category name="cocamo.smcubes_with_lineage.modelquery"/>
    </feature>

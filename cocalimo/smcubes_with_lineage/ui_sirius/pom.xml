@@ -38,9 +38,7 @@
 	</properties>
 	<modules>
 		<module>releng/org.eclipse.efbt.cocalimo.smcubes_with_lineage.ui.sirius.target</module>
-		<module>plugins/org.eclipse.efbt.cocalimo.smcubes_with_lineage.ui.sirius.attribute_lineage</module>
 		<module>plugins/org.eclipse.efbt.cocalimo.smcubes_with_lineage.ui.sirius.datalineage</module>
-		<module>features/org.eclipse.efbt.cocalimo.smcubes_with_lineage.ui.sirius.attribute_lineage.feature</module>	
 		<module>features/org.eclipse.efbt.cocalimo.smcubes_with_lineage.ui.sirius.datalineage.feature</module>	
 		<module>releng/org.eclipse.efbt.cocalimo.smcubes_with_lineage.ui.sirius.repository</module>
 
