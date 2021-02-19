@@ -4,7 +4,7 @@
     modelPluginID="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.datalineage"
     modelName="Datalineage" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     importerID="org.eclipse.emf.importer.ecore" complianceLevel="5.0" copyrightFields="false"
-    usedGenPackages="../../org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.attribute_lineage/model/attribute_lineage.genmodel#//row_transformation_logic ../../org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions/model/functions.genmodel#//functions ../../org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes/model/lineagecubes.genmodel#//cubes ../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.cocalimo.smcubes.model.input_data/model/smcubes_input_data.genmodel#//column_structured_data ../../org.eclipse.efbt.cocalimo.smcubes.model.input_data/model/smcubes_input_data.genmodel#//base_column_structured_data ../../org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagefunctions/model/lineagefunctions.genmodel#//column_transformation_logic ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//core ../../org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagefunctions/model/lineagefunctions.genmodel#//advanced_variable_lineagefunctions ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//data_definition ../../org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes/model/lineagecubes.genmodel#//efbt_advanced_data_definition"
+    usedGenPackages="../../org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions/model/functions.genmodel#//functions ../../org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes/model/lineagecubes.genmodel#//cubes ../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.cocalimo.smcubes.model.input_data/model/smcubes_input_data.genmodel#//base_column_structured_data ../../org.eclipse.efbt.cocalimo.smcubes.model.input_data/model/smcubes_input_data.genmodel#//column_structured_data ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//core ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//data_definition"
     operationReflection="true" importOrganizing="true">
   <foreignModel>cell_transformation_logic.ecore</foreignModel>
   <foreignModel>data_lineage.ecore</foreignModel>
@@ -17,8 +17,8 @@
     <genClasses ecoreClass="cell_transformation_logic.ecore#//DerivedCubeData">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//DerivedCubeData/rows"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//DerivedCubeData/cube"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//DerivedCubeData/rowCreationApproachForCube"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//DerivedCubeData/sourceCubeData"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cell_transformation_logic.ecore#//DerivedCubeData/cubeCreationDescription"/>
     </genClasses>
     <genClasses ecoreClass="cell_transformation_logic.ecore#//DerivedRowData">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//DerivedRowData/formulaCells"/>
