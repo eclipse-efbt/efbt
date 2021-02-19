@@ -38,9 +38,7 @@
 	</properties>
 	<modules>
 		<module>releng/org.eclipse.efbt.cocalimo.smcubes_with_lineage.modelquery.target</module>
-		<module>plugins/org.eclipse.efbt.cocalimo.smcubes_with_lineage.query.attribute_lineage</module>
 		<module>plugins/org.eclipse.efbt.cocalimo.smcubes_with_lineage.query.lineagefunctions</module>
-		<module>features/org.eclipse.efbt.cocalimo.smcubes_with_lineage.query.attribute_lineage.feature</module>
 		<module>features/org.eclipse.efbt.cocalimo.smcubes_with_lineage.query.lineagefunctions.feature</module>
 		<module>releng/org.eclipse.efbt.cocalimo.smcubes_with_lineage.modelquery.repository</module>
 

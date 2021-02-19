@@ -12,9 +12,6 @@
        Neil Mackenzie - initial API and implementation
  -->
 <site>
-   <feature id="org.eclipse.efbt.cocalimo.smcubes_with_lineage.ui.sirius.attribute_lineage.feature">
-      <category name="cocamo.smcubes_with_lineage.ui.sirius"/>
-   </feature>
    <feature id="org.eclipse.efbt.cocalimo.smcubes_with_lineage.ui.sirius.datalineage.feature">
       <category name="cocamo.smcubes_with_lineage.ui.sirius"/>
    </feature>

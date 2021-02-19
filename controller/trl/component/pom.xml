@@ -38,11 +38,8 @@
 	</properties>
 	<modules>
 		<module>releng/org.eclipse.efbt.controller.trl.component.target</module>
-		<module>plugins/org.eclipse.efbt.controller.trl.component.translator.api</module>
-		<module>plugins/org.eclipse.efbt.controller.trl.component.translator.impl</module>
 		<module>plugins/org.eclipse.efbt.controller.trl.component.core</module>
-		<module>features/org.eclipse.efbt.controller.trl.component.core.feature</module>	
-		<module>features/org.eclipse.efbt.controller.trl.component.translator.feature</module>	
+		<module>features/org.eclipse.efbt.controller.trl.component.core.feature</module>		
 		<module>releng/org.eclipse.efbt.controller.trl.component.repository</module>
 
 
