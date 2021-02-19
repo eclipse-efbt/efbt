@@ -23,25 +23,25 @@
         <details key="documentation" value="The requirements associated with the program, these will be refrence by FunctionalityModules"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="testDefinitions" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.core.model.testing/model/test_definition.ecore#//TestDefinitionModule"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bddTestDefinitions" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.core.model.testing/model/test_definition.ecore#//BDDTestDefinitionModule"
         containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The TestDefinitions associated with the program, these will be refrence by FunctionalityModules"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="tests" eType="#//SMCubesTestModule"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tests" eType="#//SMCubesBDDTestModule"
         containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The Tests associated with the program, these will be refrence by FunctionalityModules"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="testTemplates" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.core.model.testing/model/test_definition.ecore#//TestTemplateModule"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="testTemplates" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.core.model.testing/model/test_definition.ecore#//BDDTestTemplateModule"
         containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The TestTemplates associated with the program, these will be refrence by FunctionalityModules"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="testConstriants" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.core.model.testing/model/test_definition.ecore#//TestContraints"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="testConstriants" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.core.model.testing/model/test_definition.ecore#//BDDTestContraints"
         containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The TestConstraints associated with the program, these will be refrence by FunctionalityModules"/>
@@ -51,6 +51,19 @@
         containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The FunctionaltyModules associated with the program, these will be refrence by FunctionalityModules"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="regFunctionalityTests"
+        eType="#//SMCubesRegFunctionalityTestModule" containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The Tests associated with the program, these will be refrence by FunctionalityModules"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="regFunctionalityTestDefinitions"
+        eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.core.model.testing/model/test_definition.ecore#//RegFunctionalityTestDefinitionModule"
+        containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The TestDefinitions associated with the program, these will be refrence by FunctionalityModules"/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
@@ -78,7 +91,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SMCubesTest" eSuperTypes="../../org.eclipse.efbt.cocalimo.core.model.testing/model/test.ecore#//E2ETest">
+  <eClassifiers xsi:type="ecore:EClass" name="SMCubesBDDTest" eSuperTypes="../../org.eclipse.efbt.cocalimo.core.model.testing/model/test.ecore#//BDDTest">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A test specific to the SMCubes methodolgy of describing Input Data structures and Output DataStructures (As cubes of typically COMBINATIONS representing report cells)"/>
     </eAnnotations>
@@ -94,12 +107,12 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SMCubesTestModule" eSuperTypes="../../org.eclipse.efbt.cocalimo.core.model.testing/model/test.ecore#//TestModule">
+  <eClassifiers xsi:type="ecore:EClass" name="SMCubesBDDTestModule" eSuperTypes="../../org.eclipse.efbt.cocalimo.core.model.testing/model/test.ecore#//TestModule">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A module containing a set of SMCubesTests"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="tests" upperBound="-1"
-        eType="#//SMCubesTest" containment="true">
+        eType="#//SMCubesBDDTest" containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The tests"/>
       </eAnnotations>
@@ -111,5 +124,22 @@
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SMCubesRegFunctionalityTest" eSuperTypes="../../org.eclipse.efbt.cocalimo.core.model.testing/model/test.ecore#//RegFunctionalityTest">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="inputData" eType="#//SMCubesTestInputData"
+        containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The input data"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expectedResults" eType="#//SMCubesReportResults">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The expected results"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SMCubesRegFunctionalityTestModule" eSuperTypes="../../org.eclipse.efbt.cocalimo.core.model.testing/model/test.ecore#//TestModule">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="regFunctionalityTests"
+        upperBound="-1" eType="#//SMCubesRegFunctionalityTest" containment="true"/>
   </eClassifiers>
 </ecore:EPackage>

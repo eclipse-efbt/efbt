@@ -21,5 +21,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.emf.ecore.xmi;visibility:=reexport,
  org.eclipse.efbt.cocalimo.core.model.module_management;visibility:=reexport,
- org.eclipse.efbt.cocalimo.core.model.requirements_text;visibility:=reexport
+ org.eclipse.efbt.cocalimo.core.model.requirements_text;visibility:=reexport,
+ org.eclipse.efbt.cocalimo.core.model.functionality_module;visibility:=reexport
 Bundle-ActivationPolicy: lazy

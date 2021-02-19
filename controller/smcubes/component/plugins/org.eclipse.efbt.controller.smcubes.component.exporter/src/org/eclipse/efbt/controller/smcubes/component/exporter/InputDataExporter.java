@@ -28,9 +28,9 @@ import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.BaseC
 import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.BaseColumnStructuredData;
 import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.BaseRowData;
 import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.SMCubesStaticModel;
-import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.SMCubesTest;
+import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.SMCubesBDDTest;
 import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.SMCubesTestInputData;
-import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.SMCubesTestModule;
+import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.SMCubesBDDTestModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE_STRUCTURE_ITEM;
 
@@ -62,12 +62,12 @@ public class InputDataExporter {
 	 */
 	public void exportInputData(SMCubesStaticModel program, String outputfileDirectory) {
 
-		 SMCubesTestModule testModule = program.getTests();
-		EList<SMCubesTest> tests = testModule.getTests();
+		 SMCubesBDDTestModule testModule = program.getTests();
+		EList<SMCubesBDDTest> tests = testModule.getTests();
 
 		// for each test, export the input data, the input daa may be in multiple tables
 		for (Iterator iterator = tests.iterator(); iterator.hasNext();) {
-			SMCubesTest e2eTest = (SMCubesTest) iterator.next();
+			SMCubesBDDTest e2eTest = (SMCubesBDDTest) iterator.next();
 
 			SMCubesTestInputData inputData = (SMCubesTestInputData) e2eTest.getInputData();
 			EList<BaseColumnStructuredData> tables = inputData.getSmcubes_inputdata();

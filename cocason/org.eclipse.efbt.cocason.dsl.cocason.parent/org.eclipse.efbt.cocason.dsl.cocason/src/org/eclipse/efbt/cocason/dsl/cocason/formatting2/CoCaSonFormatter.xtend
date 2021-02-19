@@ -8,7 +8,7 @@ import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.SmcubesModel
 import org.eclipse.efbt.cocason.dsl.cocason.services.CoCaSonGrammarAccess
 import org.eclipse.xtext.formatting2.AbstractFormatter2
 import org.eclipse.xtext.formatting2.IFormattableDocument
-import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.Smcubes_modelPackage
+
 import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.DomainModule
 import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.MemberModule
 import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.VariableModule
@@ -22,16 +22,16 @@ import org.eclipse.efbt.cocalimo.smcubes.model.core.VARIABLE
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE_STRUCTURE_ITEM
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE_STRUCTURE
-import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.SMCubesTestModule
-import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.SMCubesTest
+import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.SMCubesBDDTestModule
+import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.SMCubesBDDTest
 import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.SMCubesTestInputData
 import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.BaseColumnStructuredData
 import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.BaseRowData
 import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.BaseCell
-import org.eclipse.efbt.cocalimo.core.model.test_definition.TestDefinitionModule
-import org.eclipse.efbt.cocalimo.core.model.test_definition.TestDefinition
-import org.eclipse.efbt.cocalimo.core.model.test_definition.TestConstraintsModule
-import org.eclipse.efbt.cocalimo.core.model.test_definition.TestContraints
+import org.eclipse.efbt.cocalimo.core.model.test_definition.BDDTestDefinitionModule
+import org.eclipse.efbt.cocalimo.core.model.test_definition.BDDTestDefinition
+import org.eclipse.efbt.cocalimo.core.model.test_definition.BDDTestConstraintsModule
+import org.eclipse.efbt.cocalimo.core.model.test_definition.BDDTestContraints
 import org.eclipse.efbt.cocalimo.core.model.test_definition.Param
 import org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModuleModule
 import org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModule
@@ -40,11 +40,13 @@ import org.eclipse.efbt.cocalimo.core.model.test_definition.When
 import org.eclipse.efbt.cocalimo.core.model.test_definition.Then
 import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.BaseCellWithEnumeratedValue
 import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.BaseCellWithValue
-import org.eclipse.efbt.cocalimo.core.model.test_definition.TestTemplateModule
-import org.eclipse.efbt.cocalimo.core.model.test_definition.TestTemplate
+import org.eclipse.efbt.cocalimo.core.model.test_definition.BDDTestTemplateModule
+import org.eclipse.efbt.cocalimo.core.model.test_definition.BDDTestTemplate
 import org.eclipse.efbt.cocalimo.core.model.test_definition.ClauseText
 import org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.TRANSFORMATION_SCHEME
 import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.SMCubesStaticModel
+import org.eclipse.efbt.cocalimo.core.model.test_definition.BDDTestDefinition
+import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.SMCubesBDDTest
 
 class CoCaSonFormatter extends AbstractFormatter2 {
 
@@ -60,7 +62,7 @@ class CoCaSonFormatter extends AbstractFormatter2 {
 		
 		program.smCubesModel.format
 		program.requirements.format
-		program.testDefinitions.format
+		program.bddTestDefinitions.format
 		program.tests.format
 		program.testTemplates.format
 		program.testConstriants.format
@@ -90,7 +92,7 @@ def dispatch void format(FunctionalityModuleModule fmModule, extension IFormatta
 	}
 
 
-	def dispatch void format(TestDefinitionModule testdefModule, extension IFormattableDocument document) {
+	def dispatch void format(BDDTestDefinitionModule testdefModule, extension IFormattableDocument document) {
 		interior(
 			testdefModule.regionFor.keyword('{').append[newLine],
 			testdefModule.regionFor.keyword('}'),
@@ -102,7 +104,7 @@ def dispatch void format(FunctionalityModuleModule fmModule, extension IFormatta
 		}
 	}
 	
-	def dispatch void format(TestDefinition testdef, extension IFormattableDocument document) {
+	def dispatch void format(BDDTestDefinition testdef, extension IFormattableDocument document) {
 		interior(
 			testdef.regionFor.keyword('{').append[newLine],
 			testdef.regionFor.keyword('}'),
@@ -115,7 +117,7 @@ def dispatch void format(FunctionalityModuleModule fmModule, extension IFormatta
 		testdef.then.format;
 	}
 	
-	def dispatch void format(TestTemplateModule testTemplateModule, extension IFormattableDocument document) {
+	def dispatch void format(BDDTestTemplateModule testTemplateModule, extension IFormattableDocument document) {
 		interior(
 			testTemplateModule.regionFor.keyword('{').append[newLine],
 			testTemplateModule.regionFor.keyword('}'),
@@ -127,7 +129,7 @@ def dispatch void format(FunctionalityModuleModule fmModule, extension IFormatta
 		}
 	}
 	
-	def dispatch void format(TestTemplate testTemplate, extension IFormattableDocument document) {
+	def dispatch void format(BDDTestTemplate testTemplate, extension IFormattableDocument document) {
 		interior(
 			testTemplate.regionFor.keyword('{').append[newLine],
 			testTemplate.regionFor.keyword('}'),
@@ -199,7 +201,7 @@ def dispatch void format(FunctionalityModuleModule fmModule, extension IFormatta
 		}
 	}
 	
-	def dispatch void format(TestConstraintsModule testconstraintsModule, extension IFormattableDocument document) {
+	def dispatch void format(BDDTestConstraintsModule testconstraintsModule, extension IFormattableDocument document) {
 		interior(
 			testconstraintsModule.regionFor.keyword('{').append[newLine],
 			testconstraintsModule.regionFor.keyword('}'),
@@ -211,7 +213,7 @@ def dispatch void format(FunctionalityModuleModule fmModule, extension IFormatta
 		}
 	}
 	
-	def dispatch void format(TestContraints contraint, extension IFormattableDocument document) {
+	def dispatch void format(BDDTestContraints contraint, extension IFormattableDocument document) {
 		interior(
 			contraint.regionFor.keyword('{').append[newLine],
 			contraint.regionFor.keyword('}'),
@@ -241,7 +243,7 @@ def dispatch void format(FunctionalityModuleModule fmModule, extension IFormatta
 		
 	}
 	
-	def dispatch void format(SMCubesTestModule testModule, extension IFormattableDocument document) {
+	def dispatch void format(SMCubesBDDTestModule testModule, extension IFormattableDocument document) {
 		interior(
 			testModule.regionFor.keyword('{').append[newLine],
 			testModule.regionFor.keyword('}'),
@@ -253,14 +255,14 @@ def dispatch void format(FunctionalityModuleModule fmModule, extension IFormatta
 		}
 	}
 
-	def dispatch void format(SMCubesTest test, extension IFormattableDocument document) {
+	def dispatch void format(SMCubesBDDTest test, extension IFormattableDocument document) {
 		interior(
 			test.regionFor.keyword('{').append[newLine],
 			test.regionFor.keyword('}').append[newLine],
 			[indent]
 		)
 		
-		test.regionFor.crossRef(SMCubesTestAccess.testDefinitionE2ETestDefinitionCrossReference_5_2_0).append[newLine]
+		test.regionFor.crossRef(SMCubesBDDTestAccess.testDefinitionE2EBDDTestDefinitionCrossReference_5_2_0).append[newLine]
 		
 		
 		test.inputData.format

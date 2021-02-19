@@ -8,11 +8,11 @@
   <eAnnotations source="license">
     <details key="license" value="Copyright (c) 2019 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"/>
   </eAnnotations>
-  <eClassifiers xsi:type="ecore:EClass" name="TestContraints">
+  <eClassifiers xsi:type="ecore:EClass" name="BDDTestContraints">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="a set of  contraints upon the parameters described in an associated Test Template"/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="template" eType="#//TestTemplate">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="template" eType="#//BDDTestTemplate">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The associated Test Template"/>
       </eAnnotations>
@@ -42,18 +42,18 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TestTemplateModule" eSuperTypes="../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.ecore#//Module">
+  <eClassifiers xsi:type="ecore:EClass" name="BDDTestTemplateModule" eSuperTypes="../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.ecore#//Module">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A Module with a set of TestTemplates"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="templates" upperBound="-1"
-        eType="#//TestTemplate" containment="true">
+        eType="#//BDDTestTemplate" containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The templates"/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TestTemplate">
+  <eClassifiers xsi:type="ecore:EClass" name="BDDTestTemplate">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A TestTemplates describes what parameters exist in the given when and then clauses of a TestDefinition. &#xA;It also gives and example of one valid setting for each Parameter, this is an easy way to set the type of the parameter by example.&#xA;The actual parameters of the TestDefintion should be set to objects of the same type as the example parmater, and should meet the contraints defined int he TestConstraints associated with the TestDefinition."/>
     </eAnnotations>
@@ -100,28 +100,22 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TestConstraintsModule" eSuperTypes="../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.ecore#//Module">
+  <eClassifiers xsi:type="ecore:EClass" name="BDDTestConstraintsModule" eSuperTypes="../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.ecore#//Module">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A module containing a set of TestContraints"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="coverageTestSets" upperBound="-1"
-        eType="#//TestContraints" containment="true">
+        eType="#//BDDTestContraints" containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The TestConstraints"/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TestDefinition">
+  <eClassifiers xsi:type="ecore:EClass" name="BDDTestDefinition" eSuperTypes="#//TestDefinition">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A TestDefinition decribes a parameterised test. It references a TestConstraint that it meets, which in turn references a TestTemplate that it meets to define the parameters that must be set and their expected types provided by example."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-        iD="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The name of the TestDefinition"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="testContraints" eType="#//TestContraints">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="testContraints" eType="#//BDDTestContraints">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The constraints met by the TestDefinition"/>
       </eAnnotations>
@@ -143,12 +137,12 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="E2ETestDefinition" eSuperTypes="#//TestDefinition">
+  <eClassifiers xsi:type="ecore:EClass" name="E2EBDDTestDefinition" eSuperTypes="#//BDDTestDefinition">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A TestDefinition which represents and End To End Test"/>
     </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="UnitTestDefinition" eSuperTypes="#//TestDefinition">
+  <eClassifiers xsi:type="ecore:EClass" name="UnitTestDefinition" eSuperTypes="#//BDDTestDefinition">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A TestDefinition which represents a Unit  Test"/>
     </eAnnotations>
@@ -215,7 +209,7 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="For a TestConstraint, we can imagine the complete set of combinations of  possible parameters that meet the constraint, make up a coverage grid."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="coverageTestSet" eType="#//TestContraints">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="coverageTestSet" eType="#//BDDTestContraints">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The Test Constraint"/>
       </eAnnotations>
@@ -245,12 +239,45 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TestDefinitionModule" eSuperTypes="../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.ecore#//Module">
+  <eClassifiers xsi:type="ecore:EClass" name="BDDTestDefinitionModule" eSuperTypes="../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.ecore#//Module">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A module containing a set of TestDefinitions"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="testDefinitions" upperBound="-1"
-        eType="#//TestDefinition" containment="true">
+        eType="#//BDDTestDefinition" containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The TestDefinitions"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TestDefinition">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A TestDefinition decribes a parameterised test. It references a TestConstraint that it meets, which in turn references a TestTemplate that it meets to define the parameters that must be set and their expected types provided by example."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The name of the TestDefinition"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RegFunctionalityTestDefinition" eSuperTypes="#//TestDefinition">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="inputModules" upperBound="-1"
+        eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.core.model.functionality_module/model/functionality_module.ecore#//ReadDataSourceFunctionalityModule"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="processingModules" upperBound="-1"
+        eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.core.model.functionality_module/model/functionality_module.ecore#//FunctionalityModule"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reportCellCreationModules"
+        upperBound="-1" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.core.model.functionality_module/model/functionality_module.ecore#//ReportCellCreationFunctionalityModule"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="scenarios" upperBound="-1"
+        eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.core.model.functionality_module/model/scenarios.ecore#//Scenario"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RegFunctionalityTestDefinitionModule"
+      eSuperTypes="../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.ecore#//Module">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A module containing a set of TestDefinitions"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="testDefinitions" upperBound="-1"
+        eType="#//RegFunctionalityTestDefinition" containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The TestDefinitions"/>
       </eAnnotations>
