@@ -36,9 +36,6 @@
    <feature id="org.eclipse.efbt.cocason.dsl.cocason.feature">
       <category name="efbt"/>
    </feature>
-   <feature id="org.eclipse.efbt.controller.trl.component.translator.feature">
-      <category name="efbt"/>
-   </feature>
    <feature id="org.eclipse.efbt.cocalimo.trl.model.platform_call.feature">
       <category name="efbt"/>
    </feature>
@@ -49,15 +46,6 @@
       <category name="efbt"/>
    </feature>
    <feature id="org.eclipse.efbt.cocalimo.smcubes_with_lineage.ui.sirius.datalineage.feature">
-      <category name="efbt"/>
-   </feature>
-   <feature id="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.attribute_lineage.feature">
-      <category name="efbt"/>
-   </feature>
-   <feature id="org.eclipse.efbt.cocalimo.smcubes_with_lineage.query.attribute_lineage.feature">
-      <category name="efbt"/>
-   </feature>
-   <feature id="org.eclipse.efbt.cocalimo.smcubes_with_lineage.ui.sirius.attribute_lineage.feature">
       <category name="efbt"/>
    </feature>
    <feature id="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.feature">

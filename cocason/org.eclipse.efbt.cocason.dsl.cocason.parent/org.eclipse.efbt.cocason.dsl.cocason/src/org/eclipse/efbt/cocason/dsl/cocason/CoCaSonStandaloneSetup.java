@@ -40,7 +40,6 @@ import org.eclipse.efbt.language.trl.model.transformation.TransformationPackage;
 import org.eclipse.efbt.language.trl.model.trl_report_cell_views.Trl_report_cell_viewsPackage;
 import org.eclipse.efbt.language.trl.model.trl_sql_views.Trl_sql_viewsPackage;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.advanced_row_transformation_logic.Advanced_row_transformation_logicPackage;
-import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.attribute_lineage.Attribute_lineagePackage;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cube_transformation_logic.Cube_transformation_logicPackage;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.row_transformation_logic.Row_transformation_logicPackage;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.advanced_variable_lineagefunctions.Advanced_variable_lineagefunctionsPackage;
@@ -166,9 +165,6 @@ public class CoCaSonStandaloneSetup extends CoCaSonStandaloneSetupGenerated {
 		if (!EPackage.Registry.INSTANCE.containsKey(EcorePackage.eNS_URI))
 		    EPackage.Registry.INSTANCE.put(EcorePackage.eNS_URI, EcorePackage.eINSTANCE);
 		
-		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/attribute_lineage")) {
-			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/attribute_lineage", Attribute_lineagePackage.eINSTANCE);
-		}
 
 		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/functions")) {
 			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/functions", FunctionsPackage.eINSTANCE);
