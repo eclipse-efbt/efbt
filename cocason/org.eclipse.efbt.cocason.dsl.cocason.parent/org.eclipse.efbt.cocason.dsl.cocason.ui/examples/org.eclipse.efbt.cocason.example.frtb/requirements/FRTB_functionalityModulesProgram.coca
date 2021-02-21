@@ -26,9 +26,27 @@ ProgramAndCalls : { program : TRLProgram : { smcubesStaticModel : SMCubesStaticM
 				ParallelFunctionalityModule GIRR_SBA : { 
 					subModules : [ 
 						SerialFunctionalityModule GIRRDeltaAndGIRRCurvatureProcessing : { 
-							subModules : [
-								
-								DataProcessingFunctionalityModule GIRRDeltaAggregationAndWeighting :{},
+							subModules : [ SerialFunctionalityModule GIRRDeltaProcessing : { 
+								subModules : [ DataProcessingFunctionalityModule GIRRDeltaAssignBucket : { } , 
+									DataProcessingFunctionalityModule GIRRDeltaApplyWeighting : { } , 
+									SerialFunctionalityModule GIRRDeltaIntraBucketProcessing : { 
+										subModules : [ ParallelFunctionalityModule GIRRDeltaIntraBucketPairsAndSquares : { 
+											subModules : [ 
+												DataProcessingFunctionalityModule GIRRDeltaCreateCorrelatedPairs : { } , 
+												DataProcessingFunctionalityModule GIRRDeltaCreateSquares : { }
+											]
+										} , DataProcessingFunctionalityModule GIRRDeltaCreateBucketValue : { } ]
+									} , SerialFunctionalityModule GIRRDeltaInterBucketProcessing : { 
+										subModules : [ 
+											ParallelFunctionalityModule GIRRDeltaInterBucketPairsAndSquares : { 
+												subModules : [ 
+													DataProcessingFunctionalityModule GIRRDeltaBucketsCreateCorrelatedPairs : { } , 
+													DataProcessingFunctionalityModule GIRRDeltaBucketsCreateSquares : { }
+												]
+											} , DataProcessingFunctionalityModule GIRRDeltaCreateCapitalCharge : { }
+										]
+									} , ReportCellCreationFunctionalityModule createGIRRDeltaReportCells : { }
+									] } ,
 								SerialFunctionalityModule GIRRCurvature : { 
 									subModules : [ 
 										ReadDataSourceFunctionalityModule ReadGIRRCurvatureData : { } , 
@@ -37,34 +55,75 @@ ProgramAndCalls : { program : TRLProgram : { smcubesStaticModel : SMCubesStaticM
 											{ scenarios : [ Scenario GIRRCurvatureUpShocks ,Scenario GIRRCurvatureDownShocks ] }
 											
 										} , 
-										 DataProcessingFunctionalityModule GIRRCurvatureCVR : { } ,
-										  ParallelFunctionalityModule GIRRCurvatureAggregatedCVR : {
-										  	subModules : [ 
-										  		DataProcessingFunctionalityModule GIRRCurvatureCorellatedCVR : { } , 
-										  		DataProcessingFunctionalityModule GIRRCurvatureUncorellatedCVR : { }
-										  	]
-										  } , 
-										  DataProcessingFunctionalityModule GIRRCurvatureFinalCVRLogic : { } , 
-										  ReportCellCreationFunctionalityModule createGIRRCurvatureReportCells : { }, 
-										  ReportCellCreationFunctionalityModule createGIRRDeltaReportCells : { }
-									]
-								}
+										 DataProcessingFunctionalityModule GIRRCurvatureCalculateCVR : { } , 
+										 DataProcessingFunctionalityModule GIRRCurvatureAssignBucket : { } ,
+										 SerialFunctionalityModule GIRRCurvatureIntraBucketProcessing : { 
+										subModules : [ ParallelFunctionalityModule GIRRCurvatureIntraBucketPairsAndSquares : { 
+											subModules : [ 
+												DataProcessingFunctionalityModule GIRRCurvatureCreateCorrelatedPairs : { } , 
+												DataProcessingFunctionalityModule GIRRCurvatureCreateSquares : { }
+											]
+										} , DataProcessingFunctionalityModule GIRRCurvatureCreateBucketValue : { } ]
+									} , SerialFunctionalityModule GIRRCurvatureInterBucketProcessing : { 
+										subModules : [ 
+											ParallelFunctionalityModule GIRRCurvatureInterBucketPairsAndSquares : { 
+												subModules : [ 
+													DataProcessingFunctionalityModule GIRRCurvatureBucketsCreateCorrelatedPairs : { } , 
+													DataProcessingFunctionalityModule GIRRCurvatureBucketsCreateSquares : { }
+												]
+											} , DataProcessingFunctionalityModule GIRRCurvatureCreateCapitalCharge : { }
+										]
+									} , ReportCellCreationFunctionalityModule createGIRRCurvatureReportCells : { } 
+										 
+										  ] }
 							]
 				},
-				SerialFunctionalityModule GIRRVegaProcessing : {
-					subModules : [ 
-						
-								DataProcessingFunctionalityModule GIRRVegaAggregationAndWeighting :{},
-								 ReportCellCreationFunctionalityModule createGIRRVegaReportCells : { }
-					]
-				}
+				SerialFunctionalityModule GIRRVegaProcessing : { 
+								subModules : [ DataProcessingFunctionalityModule GIRRVegaAssignBucket : { } , 
+									DataProcessingFunctionalityModule GIRRVegaApplyWeighting : { } , 
+									SerialFunctionalityModule GIRRVegaIntraBucketProcessing : { 
+										subModules : [ ParallelFunctionalityModule GIRRVegaIntraBucketPairsAndSquares : { 
+											subModules : [ 
+												DataProcessingFunctionalityModule GIRRVegaCreateCorrelatedPairs : { } , 
+												DataProcessingFunctionalityModule GIRRVegaCreateSquares : { }
+											]
+										} , DataProcessingFunctionalityModule GIRRVegaCreateBucketValue : { } ]
+									} , SerialFunctionalityModule GIRRVegaInterBucketProcessing : { 
+										subModules : [ 
+											ParallelFunctionalityModule GIRRVegaInterBucketPairsAndSquares : { 
+												subModules : [ 
+													DataProcessingFunctionalityModule GIRRVegaBucketsCreateCorrelatedPairs : { } , 
+													DataProcessingFunctionalityModule GIRRVegaBucketsCreateSquares : { }
+												]
+											} , DataProcessingFunctionalityModule GIRRVegaCreateCapitalCharge : { }
+										]
+									} , ReportCellCreationFunctionalityModule createGIRRVegaReportCells : { }
+									] }
 				] } ,
 				ParallelFunctionalityModule Equity_SBA : { 
 					subModules : [ 
 						SerialFunctionalityModule EquityDeltaAndEquityCurvatureProcessing : { 
-							subModules : [
-								
-								DataProcessingFunctionalityModule EquityDeltaAggregationAndWeighting :{},
+							subModules : [ SerialFunctionalityModule EquityDeltaProcessing : { 
+								subModules : [ DataProcessingFunctionalityModule EquityDeltaAssignBucket : { } , 
+									DataProcessingFunctionalityModule EquityDeltaApplyWeighting : { } , 
+									SerialFunctionalityModule EquityDeltaIntraBucketProcessing : { 
+										subModules : [ ParallelFunctionalityModule EquityDeltaIntraBucketPairsAndSquares : { 
+											subModules : [ 
+												DataProcessingFunctionalityModule EquityDeltaCreateCorrelatedPairs : { } , 
+												DataProcessingFunctionalityModule EquityDeltaCreateSquares : { }
+											]
+										} , DataProcessingFunctionalityModule EquityDeltaCreateBucketValue : { } ]
+									} , SerialFunctionalityModule EquityDeltaInterBucketProcessing : { 
+										subModules : [ 
+											ParallelFunctionalityModule EquityDeltaInterBucketPairsAndSquares : { 
+												subModules : [ 
+													DataProcessingFunctionalityModule EquityDeltaBucketsCreateCorrelatedPairs : { } , 
+													DataProcessingFunctionalityModule EquityDeltaBucketsCreateSquares : { }
+												]
+											} , DataProcessingFunctionalityModule EquityDeltaCreateCapitalCharge : { }
+										]
+									} , ReportCellCreationFunctionalityModule createEquityDeltaReportCells : { }
+									] } ,
 								SerialFunctionalityModule EquityCurvature : { 
 									subModules : [ 
 										ReadDataSourceFunctionalityModule ReadEquityCurvatureData : { } , 
@@ -73,31 +132,442 @@ ProgramAndCalls : { program : TRLProgram : { smcubesStaticModel : SMCubesStaticM
 											{ scenarios : [ Scenario EquityCurvatureUpShocks ,Scenario EquityCurvatureDownShocks ] }
 											
 										} , 
-										 DataProcessingFunctionalityModule EquityCurvatureCVR : { } ,
-										  ParallelFunctionalityModule EquityCurvatureAggregatedCVR : {
-										  	subModules : [ 
-										  		DataProcessingFunctionalityModule EquityCurvatureCorellatedCVR : { } , 
-										  		DataProcessingFunctionalityModule EquityCurvatureUncorellatedCVR : { }
-										  	]
-										  } , 
-										  DataProcessingFunctionalityModule EquityCurvatureFinalCVRLogic : { } , 
-										  ReportCellCreationFunctionalityModule createEquityCurvatureReportCells : { }, 
-										  ReportCellCreationFunctionalityModule createEquityDeltaReportCells : { }
-									]
-								}
+										 DataProcessingFunctionalityModule EquityCurvatureCalculateCVR : { } , 
+										 DataProcessingFunctionalityModule EquityCurvatureAssignBucket : { } ,
+										 SerialFunctionalityModule EquityCurvatureIntraBucketProcessing : { 
+										subModules : [ ParallelFunctionalityModule EquityCurvatureIntraBucketPairsAndSquares : { 
+											subModules : [ 
+												DataProcessingFunctionalityModule EquityCurvatureCreateCorrelatedPairs : { } , 
+												DataProcessingFunctionalityModule EquityCurvatureCreateSquares : { }
+											]
+										} , DataProcessingFunctionalityModule EquityCurvatureCreateBucketValue : { } ]
+									} , SerialFunctionalityModule EquityCurvatureInterBucketProcessing : { 
+										subModules : [ 
+											ParallelFunctionalityModule EquityCurvatureInterBucketPairsAndSquares : { 
+												subModules : [ 
+													DataProcessingFunctionalityModule EquityCurvatureBucketsCreateCorrelatedPairs : { } , 
+													DataProcessingFunctionalityModule EquityCurvatureBucketsCreateSquares : { }
+												]
+											} , DataProcessingFunctionalityModule EquityCurvatureCreateCapitalCharge : { }
+										]
+									} , ReportCellCreationFunctionalityModule createEquityCurvatureReportCells : { } 
+										 
+										  ] }
 							]
 				},
-				SerialFunctionalityModule EquityVegaProcessing : {
-					subModules : [ 
-						
-								DataProcessingFunctionalityModule EquityVegaAggregationAndWeighting :{},
-								 ReportCellCreationFunctionalityModule createEquityVegaReportCells : { }
-					]
-				}
-				] } 
+				SerialFunctionalityModule EquityVegaProcessing : { 
+								subModules : [ DataProcessingFunctionalityModule EquityVegaAssignBucket : { } , 
+									DataProcessingFunctionalityModule EquityVegaApplyWeighting : { } , 
+									SerialFunctionalityModule EquityVegaIntraBucketProcessing : { 
+										subModules : [ ParallelFunctionalityModule EquityVegaIntraBucketPairsAndSquares : { 
+											subModules : [ 
+												DataProcessingFunctionalityModule EquityVegaCreateCorrelatedPairs : { } , 
+												DataProcessingFunctionalityModule EquityVegaCreateSquares : { }
+											]
+										} , DataProcessingFunctionalityModule EquityVegaCreateBucketValue : { } ]
+									} , SerialFunctionalityModule EquityVegaInterBucketProcessing : { 
+										subModules : [ 
+											ParallelFunctionalityModule EquityVegaInterBucketPairsAndSquares : { 
+												subModules : [ 
+													DataProcessingFunctionalityModule EquityVegaBucketsCreateCorrelatedPairs : { } , 
+													DataProcessingFunctionalityModule EquityVegaBucketsCreateSquares : { }
+												]
+											} , DataProcessingFunctionalityModule EquityVegaCreateCapitalCharge : { }
+										]
+									} , ReportCellCreationFunctionalityModule createEquityVegaReportCells : { }
+									] }
+				] },
 				
-			] } 
-			] } ] } ]
+				ParallelFunctionalityModule Commodity_SBA : { 
+					subModules : [ 
+						SerialFunctionalityModule CommodityDeltaAndCommodityCurvatureProcessing : { 
+							subModules : [ SerialFunctionalityModule CommodityDeltaProcessing : { 
+								subModules : [ DataProcessingFunctionalityModule CommodityDeltaAssignBucket : { } , 
+									DataProcessingFunctionalityModule CommodityDeltaApplyWeighting : { } , 
+									SerialFunctionalityModule CommodityDeltaIntraBucketProcessing : { 
+										subModules : [ ParallelFunctionalityModule CommodityDeltaIntraBucketPairsAndSquares : { 
+											subModules : [ 
+												DataProcessingFunctionalityModule CommodityDeltaCreateCorrelatedPairs : { } , 
+												DataProcessingFunctionalityModule CommodityDeltaCreateSquares : { }
+											]
+										} , DataProcessingFunctionalityModule CommodityDeltaCreateBucketValue : { } ]
+									} , SerialFunctionalityModule CommodityDeltaInterBucketProcessing : { 
+										subModules : [ 
+											ParallelFunctionalityModule CommodityDeltaInterBucketPairsAndSquares : { 
+												subModules : [ 
+													DataProcessingFunctionalityModule CommodityDeltaBucketsCreateCorrelatedPairs : { } , 
+													DataProcessingFunctionalityModule CommodityDeltaBucketsCreateSquares : { }
+												]
+											} , DataProcessingFunctionalityModule CommodityDeltaCreateCapitalCharge : { }
+										]
+									} , ReportCellCreationFunctionalityModule createCommodityDeltaReportCells : { }
+									] } ,
+								SerialFunctionalityModule CommodityCurvature : { 
+									subModules : [ 
+										ReadDataSourceFunctionalityModule ReadCommodityCurvatureData : { } , 
+										DataProcessingFunctionalityModule CommodityCurvatureDeltaStripping :{ 
+											scenarioSet : ScenarioSet CommodityCurvatureDeltaStrippingScenarios : 
+											{ scenarios : [ Scenario CommodityCurvatureUpShocks ,Scenario CommodityCurvatureDownShocks ] }
+											
+										} , 
+										 DataProcessingFunctionalityModule CommodityCurvatureCalculateCVR : { } , 
+										 DataProcessingFunctionalityModule CommodityCurvatureAssignBucket : { } ,
+										 SerialFunctionalityModule CommodityCurvatureIntraBucketProcessing : { 
+										subModules : [ ParallelFunctionalityModule CommodityCurvatureIntraBucketPairsAndSquares : { 
+											subModules : [ 
+												DataProcessingFunctionalityModule CommodityCurvatureCreateCorrelatedPairs : { } , 
+												DataProcessingFunctionalityModule CommodityCurvatureCreateSquares : { }
+											]
+										} , DataProcessingFunctionalityModule CommodityCurvatureCreateBucketValue : { } ]
+									} , SerialFunctionalityModule CommodityCurvatureInterBucketProcessing : { 
+										subModules : [ 
+											ParallelFunctionalityModule CommodityCurvatureInterBucketPairsAndSquares : { 
+												subModules : [ 
+													DataProcessingFunctionalityModule CommodityCurvatureBucketsCreateCorrelatedPairs : { } , 
+													DataProcessingFunctionalityModule CommodityCurvatureBucketsCreateSquares : { }
+												]
+											} , DataProcessingFunctionalityModule CommodityCurvatureCreateCapitalCharge : { }
+										]
+									} , ReportCellCreationFunctionalityModule createCommodityCurvatureReportCells : { } 
+										 
+										  ] }
+							]
+				},
+				SerialFunctionalityModule CommodityVegaProcessing : { 
+								subModules : [ DataProcessingFunctionalityModule CommodityVegaAssignBucket : { } , 
+									DataProcessingFunctionalityModule CommodityVegaApplyWeighting : { } , 
+									SerialFunctionalityModule CommodityVegaIntraBucketProcessing : { 
+										subModules : [ ParallelFunctionalityModule CommodityVegaIntraBucketPairsAndSquares : { 
+											subModules : [ 
+												DataProcessingFunctionalityModule CommodityVegaCreateCorrelatedPairs : { } , 
+												DataProcessingFunctionalityModule CommodityVegaCreateSquares : { }
+											]
+										} , DataProcessingFunctionalityModule CommodityVegaCreateBucketValue : { } ]
+									} , SerialFunctionalityModule CommodityVegaInterBucketProcessing : { 
+										subModules : [ 
+											ParallelFunctionalityModule CommodityVegaInterBucketPairsAndSquares : { 
+												subModules : [ 
+													DataProcessingFunctionalityModule CommodityVegaBucketsCreateCorrelatedPairs : { } , 
+													DataProcessingFunctionalityModule CommodityVegaBucketsCreateSquares : { }
+												]
+											} , DataProcessingFunctionalityModule CommodityVegaCreateCapitalCharge : { }
+										]
+									} , ReportCellCreationFunctionalityModule createCommodityVegaReportCells : { }
+									] }
+				] },
+				ParallelFunctionalityModule CSRNonSecRisk_SBA : { 
+					subModules : [ 
+						SerialFunctionalityModule CSRNonSecRiskDeltaAndCSRNonSecRiskCurvatureProcessing : { 
+							subModules : [ SerialFunctionalityModule CSRNonSecRiskDeltaProcessing : { 
+								subModules : [ DataProcessingFunctionalityModule CSRNonSecRiskDeltaAssignBucket : { } , 
+									DataProcessingFunctionalityModule CSRNonSecRiskDeltaApplyWeighting : { } , 
+									SerialFunctionalityModule CSRNonSecRiskDeltaIntraBucketProcessing : { 
+										subModules : [ ParallelFunctionalityModule CSRNonSecRiskDeltaIntraBucketPairsAndSquares : { 
+											subModules : [ 
+												DataProcessingFunctionalityModule CSRNonSecRiskDeltaCreateCorrelatedPairs : { } , 
+												DataProcessingFunctionalityModule CSRNonSecRiskDeltaCreateSquares : { }
+											]
+										} , DataProcessingFunctionalityModule CSRNonSecRiskDeltaCreateBucketValue : { } ]
+									} , SerialFunctionalityModule CSRNonSecRiskDeltaInterBucketProcessing : { 
+										subModules : [ 
+											ParallelFunctionalityModule CSRNonSecRiskDeltaInterBucketPairsAndSquares : { 
+												subModules : [ 
+													DataProcessingFunctionalityModule CSRNonSecRiskDeltaBucketsCreateCorrelatedPairs : { } , 
+													DataProcessingFunctionalityModule CSRNonSecRiskDeltaBucketsCreateSquares : { }
+												]
+											} , DataProcessingFunctionalityModule CSRNonSecRiskDeltaCreateCapitalCharge : { }
+										]
+									} , ReportCellCreationFunctionalityModule createCSRNonSecRiskDeltaReportCells : { }
+									] } ,
+								SerialFunctionalityModule CSRNonSecRiskCurvature : { 
+									subModules : [ 
+										ReadDataSourceFunctionalityModule ReadCSRNonSecRiskCurvatureData : { } , 
+										DataProcessingFunctionalityModule CSRNonSecRiskCurvatureDeltaStripping :{ 
+											scenarioSet : ScenarioSet CSRNonSecRiskCurvatureDeltaStrippingScenarios : 
+											{ scenarios : [ Scenario CSRNonSecRiskCurvatureUpShocks ,Scenario CSRNonSecRiskCurvatureDownShocks ] }
+											
+										} , 
+										 DataProcessingFunctionalityModule CSRNonSecRiskCurvatureCalculateCVR : { } , 
+										 DataProcessingFunctionalityModule CSRNonSecRiskCurvatureAssignBucket : { } ,
+										 SerialFunctionalityModule CSRNonSecRiskCurvatureIntraBucketProcessing : { 
+										subModules : [ ParallelFunctionalityModule CSRNonSecRiskCurvatureIntraBucketPairsAndSquares : { 
+											subModules : [ 
+												DataProcessingFunctionalityModule CSRNonSecRiskCurvatureCreateCorrelatedPairs : { } , 
+												DataProcessingFunctionalityModule CSRNonSecRiskCurvatureCreateSquares : { }
+											]
+										} , DataProcessingFunctionalityModule CSRNonSecRiskCurvatureCreateBucketValue : { } ]
+									} , SerialFunctionalityModule CSRNonSecRiskCurvatureInterBucketProcessing : { 
+										subModules : [ 
+											ParallelFunctionalityModule CSRNonSecRiskCurvatureInterBucketPairsAndSquares : { 
+												subModules : [ 
+													DataProcessingFunctionalityModule CSRNonSecRiskCurvatureBucketsCreateCorrelatedPairs : { } , 
+													DataProcessingFunctionalityModule CSRNonSecRiskCurvatureBucketsCreateSquares : { }
+												]
+											} , DataProcessingFunctionalityModule CSRNonSecRiskCurvatureCreateCapitalCharge : { }
+										]
+									} , ReportCellCreationFunctionalityModule createCSRNonSecRiskCurvatureReportCells : { } 
+										 
+										  ] }
+							]
+				},
+				SerialFunctionalityModule CSRNonSecRiskVegaProcessing : { 
+								subModules : [ DataProcessingFunctionalityModule CSRNonSecRiskVegaAssignBucket : { } , 
+									DataProcessingFunctionalityModule CSRNonSecRiskVegaApplyWeighting : { } , 
+									SerialFunctionalityModule CSRNonSecRiskVegaIntraBucketProcessing : { 
+										subModules : [ ParallelFunctionalityModule CSRNonSecRiskVegaIntraBucketPairsAndSquares : { 
+											subModules : [ 
+												DataProcessingFunctionalityModule CSRNonSecRiskVegaCreateCorrelatedPairs : { } , 
+												DataProcessingFunctionalityModule CSRNonSecRiskVegaCreateSquares : { }
+											]
+										} , DataProcessingFunctionalityModule CSRNonSecRiskVegaCreateBucketValue : { } ]
+									} , SerialFunctionalityModule CSRNonSecRiskVegaInterBucketProcessing : { 
+										subModules : [ 
+											ParallelFunctionalityModule CSRNonSecRiskVegaInterBucketPairsAndSquares : { 
+												subModules : [ 
+													DataProcessingFunctionalityModule CSRNonSecRiskVegaBucketsCreateCorrelatedPairs : { } , 
+													DataProcessingFunctionalityModule CSRNonSecRiskVegaBucketsCreateSquares : { }
+												]
+											} , DataProcessingFunctionalityModule CSRNonSecRiskVegaCreateCapitalCharge : { }
+										]
+									} , ReportCellCreationFunctionalityModule createCSRNonSecRiskVegaReportCells : { }
+									] }
+				] },
+				ParallelFunctionalityModule CSRSecCTP_SBA : { 
+					subModules : [ 
+						SerialFunctionalityModule CSRSecCTPRiskDeltaAndCSRSecCTPRiskCurvatureProcessing : { 
+							subModules : [ SerialFunctionalityModule CSRSecCTPRiskDeltaProcessing : { 
+								subModules : [ DataProcessingFunctionalityModule CSRSecCTPRiskDeltaAssignBucket : { } , 
+									DataProcessingFunctionalityModule CSRSecCTPRiskDeltaApplyWeighting : { } , 
+									SerialFunctionalityModule CSRSecCTPRiskDeltaIntraBucketProcessing : { 
+										subModules : [ ParallelFunctionalityModule CSRSecCTPRiskDeltaIntraBucketPairsAndSquares : { 
+											subModules : [ 
+												DataProcessingFunctionalityModule CSRSecCTPRiskDeltaCreateCorrelatedPairs : { } , 
+												DataProcessingFunctionalityModule CSRSecCTPRiskDeltaCreateSquares : { }
+											]
+										} , DataProcessingFunctionalityModule CSRSecCTPRiskDeltaCreateBucketValue : { } ]
+									} , SerialFunctionalityModule CSRSecCTPRiskDeltaInterBucketProcessing : { 
+										subModules : [ 
+											ParallelFunctionalityModule CSRSecCTPRiskDeltaInterBucketPairsAndSquares : { 
+												subModules : [ 
+													DataProcessingFunctionalityModule CSRSecCTPRiskDeltaBucketsCreateCorrelatedPairs : { } , 
+													DataProcessingFunctionalityModule CSRSecCTPRiskDeltaBucketsCreateSquares : { }
+												]
+											} , DataProcessingFunctionalityModule CSRSecCTPRiskDeltaCreateCapitalCharge : { }
+										]
+									} , ReportCellCreationFunctionalityModule createCSRSecCTPRiskDeltaReportCells : { }
+									] } ,
+								SerialFunctionalityModule CSRSecCTPRiskCurvature : { 
+									subModules : [ 
+										ReadDataSourceFunctionalityModule ReadCSRSecCTPRiskCurvatureData : { } , 
+										DataProcessingFunctionalityModule CSRSecCTPRiskCurvatureDeltaStripping :{ 
+											scenarioSet : ScenarioSet CSRSecCTPRiskCurvatureDeltaStrippingScenarios : 
+											{ scenarios : [ Scenario CSRSecCTPRiskCurvatureUpShocks ,Scenario CSRSecCTPRiskCurvatureDownShocks ] }
+											
+										} , 
+										 DataProcessingFunctionalityModule CSRSecCTPRiskCurvatureCalculateCVR : { } , 
+										 DataProcessingFunctionalityModule CSRSecCTPRiskCurvatureAssignBucket : { } ,
+										 SerialFunctionalityModule CSRSecCTPRiskCurvatureIntraBucketProcessing : { 
+										subModules : [ ParallelFunctionalityModule CSRSecCTPRiskCurvatureIntraBucketPairsAndSquares : { 
+											subModules : [ 
+												DataProcessingFunctionalityModule CSRSecCTPRiskCurvatureCreateCorrelatedPairs : { } , 
+												DataProcessingFunctionalityModule CSRSecCTPRiskCurvatureCreateSquares : { }
+											]
+										} , DataProcessingFunctionalityModule CSRSecCTPRiskCurvatureCreateBucketValue : { } ]
+									} , SerialFunctionalityModule CSRSecCTPRiskCurvatureInterBucketProcessing : { 
+										subModules : [ 
+											ParallelFunctionalityModule CSRSecCTPRiskCurvatureInterBucketPairsAndSquares : { 
+												subModules : [ 
+													DataProcessingFunctionalityModule CSRSecCTPRiskCurvatureBucketsCreateCorrelatedPairs : { } , 
+													DataProcessingFunctionalityModule CSRSecCTPRiskCurvatureBucketsCreateSquares : { }
+												]
+											} , DataProcessingFunctionalityModule CSRSecCTPRiskCurvatureCreateCapitalCharge : { }
+										]
+									} , ReportCellCreationFunctionalityModule createCSRSecCTPRiskCurvatureReportCells : { } 
+										 
+										  ] }
+							]
+				},
+				SerialFunctionalityModule CSRSecCTPRiskVegaProcessing : { 
+								subModules : [ DataProcessingFunctionalityModule CSRSecCTPRiskVegaAssignBucket : { } , 
+									DataProcessingFunctionalityModule CSRSecCTPRiskVegaApplyWeighting : { } , 
+									SerialFunctionalityModule CSRSecCTPRiskVegaIntraBucketProcessing : { 
+										subModules : [ ParallelFunctionalityModule CSRSecCTPRiskVegaIntraBucketPairsAndSquares : { 
+											subModules : [ 
+												DataProcessingFunctionalityModule CSRSecCTPRiskVegaCreateCorrelatedPairs : { } , 
+												DataProcessingFunctionalityModule CSRSecCTPRiskVegaCreateSquares : { }
+											]
+										} , DataProcessingFunctionalityModule CSRSecCTPRiskVegaCreateBucketValue : { } ]
+									} , SerialFunctionalityModule CSRSecCTPRiskVegaInterBucketProcessing : { 
+										subModules : [ 
+											ParallelFunctionalityModule CSRSecCTPRiskVegaInterBucketPairsAndSquares : { 
+												subModules : [ 
+													DataProcessingFunctionalityModule CSRSecCTPRiskVegaBucketsCreateCorrelatedPairs : { } , 
+													DataProcessingFunctionalityModule CSRSecCTPRiskVegaBucketsCreateSquares : { }
+												]
+											} , DataProcessingFunctionalityModule CSRSecCTPRiskVegaCreateCapitalCharge : { }
+										]
+									} , ReportCellCreationFunctionalityModule createCSRSecCTPRiskVegaReportCells : { }
+									] }
+				] },
+				ParallelFunctionalityModule CSRSecNonCTP_SBA : { 
+					subModules : [ 
+						SerialFunctionalityModule CSRSecNonCTPRiskDeltaAndCSRSecNonCTPRiskCurvatureProcessing : { 
+							subModules : [ SerialFunctionalityModule CSRSecNonCTPRiskDeltaProcessing : { 
+								subModules : [ DataProcessingFunctionalityModule CSRSecNonCTPRiskDeltaAssignBucket : { } , 
+									DataProcessingFunctionalityModule CSRSecNonCTPRiskDeltaApplyWeighting : { } , 
+									SerialFunctionalityModule CSRSecNonCTPRiskDeltaIntraBucketProcessing : { 
+										subModules : [ ParallelFunctionalityModule CSRSecNonCTPRiskDeltaIntraBucketPairsAndSquares : { 
+											subModules : [ 
+												DataProcessingFunctionalityModule CSRSecNonCTPRiskDeltaCreateCorrelatedPairs : { } , 
+												DataProcessingFunctionalityModule CSRSecNonCTPRiskDeltaCreateSquares : { }
+											]
+										} , DataProcessingFunctionalityModule CSRSecNonCTPRiskDeltaCreateBucketValue : { } ]
+									} , SerialFunctionalityModule CSRSecNonCTPRiskDeltaInterBucketProcessing : { 
+										subModules : [ 
+											ParallelFunctionalityModule CSRSecNonCTPRiskDeltaInterBucketPairsAndSquares : { 
+												subModules : [ 
+													DataProcessingFunctionalityModule CSRSecNonCTPRiskDeltaBucketsCreateCorrelatedPairs : { } , 
+													DataProcessingFunctionalityModule CSRSecNonCTPRiskDeltaBucketsCreateSquares : { }
+												]
+											} , DataProcessingFunctionalityModule CSRSecNonCTPRiskDeltaCreateCapitalCharge : { }
+										]
+									} , ReportCellCreationFunctionalityModule createCSRSecNonCTPRiskDeltaReportCells : { }
+									] } ,
+								SerialFunctionalityModule CSRSecNonCTPRiskCurvature : { 
+									subModules : [ 
+										ReadDataSourceFunctionalityModule ReadCSRSecNonCTPRiskCurvatureData : { } , 
+										DataProcessingFunctionalityModule CSRSecNonCTPRiskCurvatureDeltaStripping :{ 
+											scenarioSet : ScenarioSet CSRSecNonCTPRiskCurvatureDeltaStrippingScenarios : 
+											{ scenarios : [ Scenario CSRSecNonCTPRiskCurvatureUpShocks ,Scenario CSRSecNonCTPRiskCurvatureDownShocks ] }
+											
+										} , 
+										 DataProcessingFunctionalityModule CSRSecNonCTPRiskCurvatureCalculateCVR : { } , 
+										 DataProcessingFunctionalityModule CSRSecNonCTPRiskCurvatureAssignBucket : { } ,
+										 SerialFunctionalityModule CSRSecNonCTPRiskCurvatureIntraBucketProcessing : { 
+										subModules : [ ParallelFunctionalityModule CSRSecNonCTPRiskCurvatureIntraBucketPairsAndSquares : { 
+											subModules : [ 
+												DataProcessingFunctionalityModule CSRSecNonCTPRiskCurvatureCreateCorrelatedPairs : { } , 
+												DataProcessingFunctionalityModule CSRSecNonCTPRiskCurvatureCreateSquares : { }
+											]
+										} , DataProcessingFunctionalityModule CSRSecNonCTPRiskCurvatureCreateBucketValue : { } ]
+									} , SerialFunctionalityModule CSRSecNonCTPRiskCurvatureInterBucketProcessing : { 
+										subModules : [ 
+											ParallelFunctionalityModule CSRSecNonCTPRiskCurvatureInterBucketPairsAndSquares : { 
+												subModules : [ 
+													DataProcessingFunctionalityModule CSRSecNonCTPRiskCurvatureBucketsCreateCorrelatedPairs : { } , 
+													DataProcessingFunctionalityModule CSRSecNonCTPRiskCurvatureBucketsCreateSquares : { }
+												]
+											} , DataProcessingFunctionalityModule CSRSecNonCTPRiskCurvatureCreateCapitalCharge : { }
+										]
+									} , ReportCellCreationFunctionalityModule createCSRSecNonCTPRiskCurvatureReportCells : { } 
+										 
+										  ] }
+							]
+				},
+				SerialFunctionalityModule CSRSecNonCTPRiskVegaProcessing : { 
+								subModules : [ DataProcessingFunctionalityModule CSRSecNonCTPRiskVegaAssignBucket : { } , 
+									DataProcessingFunctionalityModule CSRSecNonCTPRiskVegaApplyWeighting : { } , 
+									SerialFunctionalityModule CSRSecNonCTPRiskVegaIntraBucketProcessing : { 
+										subModules : [ ParallelFunctionalityModule CSRSecNonCTPRiskVegaIntraBucketPairsAndSquares : { 
+											subModules : [ 
+												DataProcessingFunctionalityModule CSRSecNonCTPRiskVegaCreateCorrelatedPairs : { } , 
+												DataProcessingFunctionalityModule CSRSecNonCTPRiskVegaCreateSquares : { }
+											]
+										} , DataProcessingFunctionalityModule CSRSecNonCTPRiskVegaCreateBucketValue : { } ]
+									} , SerialFunctionalityModule CSRSecNonCTPRiskVegaInterBucketProcessing : { 
+										subModules : [ 
+											ParallelFunctionalityModule CSRSecNonCTPRiskVegaInterBucketPairsAndSquares : { 
+												subModules : [ 
+													DataProcessingFunctionalityModule CSRSecNonCTPRiskVegaBucketsCreateCorrelatedPairs : { } , 
+													DataProcessingFunctionalityModule CSRSecNonCTPRiskVegaBucketsCreateSquares : { }
+												]
+											} , DataProcessingFunctionalityModule CSRSecNonCTPRiskVegaCreateCapitalCharge : { }
+										]
+									} , ReportCellCreationFunctionalityModule createCSRSecNonCTPRiskVegaReportCells : { }
+									] }
+				] },
+				ParallelFunctionalityModule FX_SBA : { 
+					subModules : [ 
+						SerialFunctionalityModule FXRiskDeltaAndFXRiskCurvatureProcessing : { 
+							subModules : [ SerialFunctionalityModule FXRiskDeltaProcessing : { 
+								subModules : [ DataProcessingFunctionalityModule FXRiskDeltaAssignBucket : { } , 
+									DataProcessingFunctionalityModule FXRiskDeltaApplyWeighting : { } , 
+									SerialFunctionalityModule FXRiskDeltaIntraBucketProcessing : { 
+										subModules : [ ParallelFunctionalityModule FXRiskDeltaIntraBucketPairsAndSquares : { 
+											subModules : [ 
+												DataProcessingFunctionalityModule FXRiskDeltaCreateCorrelatedPairs : { } , 
+												DataProcessingFunctionalityModule FXRiskDeltaCreateSquares : { }
+											]
+										} , DataProcessingFunctionalityModule FXRiskDeltaCreateBucketValue : { } ]
+									} , SerialFunctionalityModule FXRiskDeltaInterBucketProcessing : { 
+										subModules : [ 
+											ParallelFunctionalityModule FXRiskDeltaInterBucketPairsAndSquares : { 
+												subModules : [ 
+													DataProcessingFunctionalityModule FXRiskDeltaBucketsCreateCorrelatedPairs : { } , 
+													DataProcessingFunctionalityModule FXRiskDeltaBucketsCreateSquares : { }
+												]
+											} , DataProcessingFunctionalityModule FXRiskDeltaCreateCapitalCharge : { }
+										]
+									} , ReportCellCreationFunctionalityModule createFXRiskDeltaReportCells : { }
+									] } ,
+								SerialFunctionalityModule FXRiskCurvature : { 
+									subModules : [ 
+										ReadDataSourceFunctionalityModule ReadFXRiskCurvatureData : { } , 
+										DataProcessingFunctionalityModule FXRiskCurvatureDeltaStripping :{ 
+											scenarioSet : ScenarioSet FXRiskCurvatureDeltaStrippingScenarios : 
+											{ scenarios : [ Scenario FXRiskCurvatureUpShocks ,Scenario FXRiskCurvatureDownShocks ] }
+											
+										} , 
+										 DataProcessingFunctionalityModule FXRiskCurvatureCalculateCVR : { } , 
+										 DataProcessingFunctionalityModule FXRiskCurvatureAssignBucket : { } ,
+										 SerialFunctionalityModule FXRiskCurvatureIntraBucketProcessing : { 
+										subModules : [ ParallelFunctionalityModule FXRiskCurvatureIntraBucketPairsAndSquares : { 
+											subModules : [ 
+												DataProcessingFunctionalityModule FXRiskCurvatureCreateCorrelatedPairs : { } , 
+												DataProcessingFunctionalityModule FXRiskCurvatureCreateSquares : { }
+											]
+										} , DataProcessingFunctionalityModule FXRiskCurvatureCreateBucketValue : { } ]
+									} , SerialFunctionalityModule FXRiskCurvatureInterBucketProcessing : { 
+										subModules : [ 
+											ParallelFunctionalityModule FXRiskCurvatureInterBucketPairsAndSquares : { 
+												subModules : [ 
+													DataProcessingFunctionalityModule FXRiskCurvatureBucketsCreateCorrelatedPairs : { } , 
+													DataProcessingFunctionalityModule FXRiskCurvatureBucketsCreateSquares : { }
+												]
+											} , DataProcessingFunctionalityModule FXRiskCurvatureCreateCapitalCharge : { }
+										]
+									} , ReportCellCreationFunctionalityModule createFXRiskCurvatureReportCells : { } 
+										 
+										  ] }
+							]
+				},
+				SerialFunctionalityModule FXRiskVegaProcessing : { 
+								subModules : [ DataProcessingFunctionalityModule FXRiskVegaAssignBucket : { } , 
+									DataProcessingFunctionalityModule FXRiskVegaApplyWeighting : { } , 
+									SerialFunctionalityModule FXRiskVegaIntraBucketProcessing : { 
+										subModules : [ ParallelFunctionalityModule FXRiskVegaIntraBucketPairsAndSquares : { 
+											subModules : [ 
+												DataProcessingFunctionalityModule FXRiskVegaCreateCorrelatedPairs : { } , 
+												DataProcessingFunctionalityModule FXRiskVegaCreateSquares : { }
+											]
+										} , DataProcessingFunctionalityModule FXRiskVegaCreateBucketValue : { } ]
+									} , SerialFunctionalityModule FXRiskVegaInterBucketProcessing : { 
+										subModules : [ 
+											ParallelFunctionalityModule FXRiskVegaInterBucketPairsAndSquares : { 
+												subModules : [ 
+													DataProcessingFunctionalityModule FXRiskVegaBucketsCreateCorrelatedPairs : { } , 
+													DataProcessingFunctionalityModule FXRiskVegaBucketsCreateSquares : { }
+												]
+											} , DataProcessingFunctionalityModule FXRiskVegaCreateCapitalCharge : { }
+										]
+									} , ReportCellCreationFunctionalityModule createFXRiskVegaReportCells : { }
+									] }
+				] }
+				
+				  
+				
+				
+			] } ] } ] } ] 
 			functionalityModuleTags : [ 
 				FunctionalityModuleTag GIRRCurvatureDeltaStrippingTag : {
 					displayName : GIRRCurvatureDeltaStrippingTag 

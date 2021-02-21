@@ -657,7 +657,7 @@ RegFunctionalityTestDefinition returns test_definition::RegFunctionalityTestDefi
 	'RegFunctionalityTestDefinition'
 	name=EString ':'
 	'{'
-		('inputModules' ':'' [' inputModules+=[functionality_module::ReadDataSourceFunctionalityModule|EString] ( "," inputModules+=[functionality_module::ReadDataSourceFunctionalityModule|EString])* ']' )?
+		('inputModules' ':' '[' inputModules+=[functionality_module::ReadDataSourceFunctionalityModule|EString] ( "," inputModules+=[functionality_module::ReadDataSourceFunctionalityModule|EString])* ']' )?
 		('processingModules' ':' '[' processingModules+=[functionality_module::FunctionalityModule|EString] ( "," processingModules+=[functionality_module::FunctionalityModule|EString])* ']' )?
 		('reportCellCreationModules' ':' '[' reportCellCreationModules+=[functionality_module::ReportCellCreationFunctionalityModule|EString] ( "," reportCellCreationModules+=[functionality_module::ReportCellCreationFunctionalityModule|EString])* ']' )?
 		('scenarios' ':' '[' scenarios+=[scenarios::Scenario|EString] ( "," scenarios+=[scenarios::Scenario|EString])* ']' )?

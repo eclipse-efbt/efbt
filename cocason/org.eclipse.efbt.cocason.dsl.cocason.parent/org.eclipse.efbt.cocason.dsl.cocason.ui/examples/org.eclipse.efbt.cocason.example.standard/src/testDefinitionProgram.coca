@@ -1,5 +1,5 @@
 ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStaticModel testDefinitionsStaticModel : {
-	testDefinitions : TestDefinitionModule testDefinitionsModule : {
+	bddTestDefinitions : BDDTestDefinitionModule testDefinitionsModule : {
 		testDefinitions : [ E2ETestDefinition standard_test : {
 			testContraints : "testConstraintsStaticModel.constraints" given : Given  :{
 			} when : When : {
