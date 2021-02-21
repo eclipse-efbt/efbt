@@ -1,6 +1,6 @@
 ProgramAndCalls : { program : TRLProgram :  {
-	executableLogic : TRLExecutableLogic trl_executable_logic1 : { 
-		componentSet : VersionedComponentsSet  Relase1 : {
+	executableLogic : [ TRLExecutableLogic trl_executable_logic1 : { 
+	
 			 cubeSchemaModules : [  VersionedCubeSchemaModule  readInExampleData : {schemas : [ 
 			 	CubeSchema counterparty :{ cube : "smcubesStaticCubesModel.smcubesCubesModel.cubesModel.counterparty" baseCube : "trl_executable_logic2.freeBirdToolsCubeModule.counterparty" },
 			 	CubeSchema rating : { cube : "smcubesStaticCubesModel.smcubesCubesModel.cubesModel.rating" baseCube : "trl_executable_logic2.freeBirdToolsCubeModule.rating" } , 
@@ -82,4 +82,4 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		  ReportCellView notionalOfUS_AAA_view : {  
 			 		  	cube : "trl_executable_logic2.freeBirdToolsCubeModule.notionalOfUS_AAA"
 			 		  	reportCell : ReportCell notionalOfUS_AAA : { 
-			 		  		combination : "smcubesStaticCubesModel.smcubesCubesModel.combinationModule.notionalOfUS_AAA"} } ] } ] } } } } 
+			 		  		combination : "smcubesStaticCubesModel.smcubesCubesModel.combinationModule.notionalOfUS_AAA"} } ] } ] } ] } } 

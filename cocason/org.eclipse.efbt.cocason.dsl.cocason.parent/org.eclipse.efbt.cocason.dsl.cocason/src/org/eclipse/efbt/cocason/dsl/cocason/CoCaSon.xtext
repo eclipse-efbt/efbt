@@ -494,9 +494,8 @@ PlatformCall returns platform_call::PlatformCall:
 
 
 
-
-TestDefinition returns test_definition::TestDefinition:
-	TestDefinition_Impl | E2ETestDefinition | UnitTestDefinition;
+BDDTestDefinition returns test_definition::BDDTestDefinition:
+	BDDTestDefinition_Impl | E2EBDDTestDefinition | UnitTestDefinition;
 
 
 
@@ -621,13 +620,61 @@ SMCubesStaticModel returns cocamo::SMCubesStaticModel:
 	'{'
 		('smCubesModel' ':' smCubesModel=SmcubesModel )?
 		('requirements' ':' requirements=RequirementsModule )?
-		('testDefinitions' ':' testDefinitions=TestDefinitionModule )?
-		('tests' ':' tests=SMCubesTestModule )?
-		('testTemplates' ':' testTemplates=TestTemplateModule )?
-		('testConstriants' ':' testConstriants=TestContraints )?
+		('bddTestDefinitions' ':' bddTestDefinitions=BDDTestDefinitionModule )?
+		('tests' ':' tests=SMCubesBDDTestModule )?
+		('testTemplates' ':' testTemplates=BDDTestTemplateModule )?
+		('testConstriants' ':' testConstriants=BDDTestContraints )?
 		('functionalityModules' ':' functionalityModules=FunctionalityModuleModule )?
+		('regFunctionalityTests' ':' regFunctionalityTests=SMCubesRegFunctionalityTestModule)?
+		('regFunctionalityTestDefinitions' ':' regFunctionalityTestDefinitions=RegFunctionalityTestDefinitionModule)?
 	'}';
 
+SMCubesRegFunctionalityTestModule returns cocamo::SMCubesRegFunctionalityTestModule:
+	{cocamo::SMCubesRegFunctionalityTestModule}
+	'SMCubesRegFunctionalityTestModule'
+	name=EString ':'
+	'{'
+		('theDescription' ':' theDescription=EString)?
+		('license' ':' license=EString)?
+		('version' ':' version=EString)?
+		('dependencies' ':' dependencies=ModuleDependencies)?
+		('longName' ':' longName=ModuleLongName)?
+		('regFunctionalityTests' ':' '[' regFunctionalityTests+=SMCubesRegFunctionalityTest ( "," regFunctionalityTests+=SMCubesRegFunctionalityTest)* ']' )?
+	'}';
+	
+	SMCubesRegFunctionalityTest returns cocamo::SMCubesRegFunctionalityTest:
+	{cocamo::SMCubesRegFunctionalityTest}
+	'SMCubesRegFunctionalityTest'
+	name=EString ':'
+	'{'
+		('testDefinition' ':' testDefinition=[test_definition::RegFunctionalityTestDefinition|EString])?
+		('expectedResults' ':' expectedResults=[cocamo::SMCubesReportResults|EString])?
+		('inputData' ':' inputData=SMCubesTestInputData)?
+	'}';
+
+RegFunctionalityTestDefinition returns test_definition::RegFunctionalityTestDefinition:
+	{test_definition::RegFunctionalityTestDefinition}
+	'RegFunctionalityTestDefinition'
+	name=EString ':'
+	'{'
+		('inputModules' ':' '[' inputModules+=[functionality_module::ReadDataSourceFunctionalityModule|EString] ( "," inputModules+=[functionality_module::ReadDataSourceFunctionalityModule|EString])* ']' )?
+		('processingModules' ':' '[' processingModules+=[functionality_module::FunctionalityModule|EString] ( "," processingModules+=[functionality_module::FunctionalityModule|EString])* ']' )?
+		('reportCellCreationModules' ':' '[' reportCellCreationModules+=[functionality_module::ReportCellCreationFunctionalityModule|EString] ( "," reportCellCreationModules+=[functionality_module::ReportCellCreationFunctionalityModule|EString])* ']' )?
+		('scenarios' ':' '[' scenarios+=[scenarios::Scenario|EString] ( "," scenarios+=[scenarios::Scenario|EString])* ']' )?
+	'}';
+
+RegFunctionalityTestDefinitionModule returns test_definition::RegFunctionalityTestDefinitionModule:
+	{test_definition::RegFunctionalityTestDefinitionModule}
+	'RegFunctionalityTestDefinitionModule'
+	name=EString ':'
+	'{'
+		('theDescription' theDescription=EString)?
+		('license' ':'license=EString)?
+		('version' ':' version=EString)?
+		('dependencies' ':' dependencies=ModuleDependencies)?
+		('longName' ':' longName=ModuleLongName)?
+		('testDefinitions' ':' '{' testDefinitions+=RegFunctionalityTestDefinition ( "," testDefinitions+=RegFunctionalityTestDefinition)* '}' )?
+	'}';
 PlatformCallModule returns platform_call::PlatformCallModule:
 	{platform_call::PlatformCallModule}
 	'PlatformCallModule'
@@ -674,9 +721,9 @@ RequirementsModule returns requirements_text::RequirementsModule:
 		('allowedtypes' ':' allowedtypes=AllowedTypes)?
 	'}';
 
-TestDefinitionModule returns test_definition::TestDefinitionModule:
-	{test_definition::TestDefinitionModule}
-	'TestDefinitionModule'
+BDDTestDefinitionModule returns test_definition::BDDTestDefinitionModule:
+	{test_definition::BDDTestDefinitionModule}
+	'BDDTestDefinitionModule'
 	name=EString ':'
 	'{'
 		('theDescription' ':' theDescription=EString )?
@@ -684,11 +731,11 @@ TestDefinitionModule returns test_definition::TestDefinitionModule:
 		('version' ':' version=EString )?
 		('dependencies' ':' dependencies=ModuleDependencies )?
 		('longName' ':' longName=ModuleLongName )?
-		('testDefinitions' ':' '[' testDefinitions+=TestDefinition ( "," testDefinitions+=TestDefinition)* ']' )?
+		('testDefinitions' ':' '[' testDefinitions+=BDDTestDefinition ( "," testDefinitions+=BDDTestDefinition)* ']' )?
 	'}';
 
-SMCubesTestModule returns cocamo::SMCubesTestModule:
-	{cocamo::SMCubesTestModule}
+SMCubesBDDTestModule returns cocamo::SMCubesBDDTestModule:
+	{cocamo::SMCubesBDDTestModule}
 	'SMCubesTestModule'
 	name=EString ':'
 	'{'
@@ -697,12 +744,12 @@ SMCubesTestModule returns cocamo::SMCubesTestModule:
 		('version' ':' version=EString )?
 		('dependencies' ':' dependencies=ModuleDependencies )?
 		('longName' ':' longName=ModuleLongName )?
-		('tests' ':' '[' tests+=SMCubesTest ( "," tests+=SMCubesTest)* ']' )?
+		('tests' ':' '[' tests+=SMCubesBDDTest ( "," tests+=SMCubesBDDTest)* ']' )?
 	'}';
 
-TestTemplateModule returns test_definition::TestTemplateModule:
-	{test_definition::TestTemplateModule}
-	'TestTemplateModule'
+BDDTestTemplateModule returns test_definition::BDDTestTemplateModule:
+	{test_definition::BDDTestTemplateModule}
+	'BDDTestTemplateModule'
 	name=EString ':'
 	'{'
 		('theDescription' ':' theDescription=EString )?
@@ -710,15 +757,15 @@ TestTemplateModule returns test_definition::TestTemplateModule:
 		('version' ':' version=EString )?
 		('dependencies' ':' dependencies=ModuleDependencies )?
 		('longName' ':' longName=ModuleLongName )?
-		('templates' ':' '[' templates+=TestTemplate ( "," templates+=TestTemplate)* ']' )?
+		('templates' ':' '[' templates+=BDDTestTemplate ( "," templates+=BDDTestTemplate)* ']' )?
 	'}';
 
-TestContraints returns test_definition::TestContraints:
-	{test_definition::TestContraints}
-	'TestContraints'
+BDDTestContraints returns test_definition::BDDTestContraints:
+	{test_definition::BDDTestContraints}
+	'BDDTestContraints'
 	name=EString ':'
 	'{'
-		('template' ':' template=[test_definition::TestTemplate|EString] )?
+		('template' ':' template=[test_definition::BDDTestTemplate|EString] )?
 		('givenParams' ':' '[' givenParams+=Param ( "," givenParams+=Param)* ']' )?
 		('whenParams' ':' '[' whenParams+=Param ( "," whenParams+=Param)* ']' )?
 		('thenParams' ':' '[' thenParams+=Param ( "," thenParams+=Param)* ']' )?
@@ -1198,12 +1245,12 @@ RequirementsSectionText returns requirements_text::RequirementsSectionText:
 		('text' ':' text=EString)?
 	'}';
 
-TestDefinition_Impl returns test_definition::TestDefinition:
-	{test_definition::TestDefinition}
-	'TestDefinition'
+BDDTestDefinition_Impl returns test_definition::BDDTestDefinition:
+	{test_definition::BDDTestDefinition}
+	'BDDTestDefinition'
 	name=EString ':'
 	'{'
-		('testContraints' ':' testContraints=[test_definition::TestContraints|EString])?
+		('testContraints' ':' testContraints=[test_definition::BDDTestContraints|EString])?
 		('given' ':' given=Given )?
 		('when' ':' when=When )?
 		('then' ':' then=Then )?
@@ -1236,12 +1283,12 @@ Then returns test_definition::Then:
 		('params' ':' '[' params+=Param ( "," params+=Param)* ']' )?
 	'}';
 
-E2ETestDefinition returns test_definition::E2ETestDefinition:
-	{test_definition::E2ETestDefinition}
+E2EBDDTestDefinition returns test_definition::E2EBDDTestDefinition:
+	{test_definition::E2EBDDTestDefinition}
 	'E2ETestDefinition'
 	name=EString ':'
 	'{'
-		('testContraints' ':' testContraints=[test_definition::TestContraints|EString] )?
+		('testContraints' ':' testContraints=[test_definition::BDDTestContraints|EString] )?
 		('given' ':' given=Given )?
 		('when' ':' when=When )?
 		('then' ':' then=Then)?
@@ -1252,7 +1299,7 @@ UnitTestDefinition returns test_definition::UnitTestDefinition:
 	'UnitTestDefinition'
 	name=EString ':'
 	'{'
-		('testContraints' ':' testContraints=[test_definition::TestContraints|EString] )?
+		('testContraints' ':' testContraints=[test_definition::BDDTestContraints|EString] )?
 		('given' ':' given=Given )?
 		('when' ':' when=When )?
 		('then' ':' then=Then)?
@@ -1275,12 +1322,12 @@ EObject returns ecore::EObject:
 	'EObject'
 	;
 
-SMCubesTest returns cocamo::SMCubesTest:
-	{cocamo::SMCubesTest}
-	'SMCubesTest'
+SMCubesBDDTest returns cocamo::SMCubesBDDTest:
+	{cocamo::SMCubesBDDTest}
+	'SMCubesBDDTest'
 	name=EString ':'
 	'{'
-		('testDefinition' ':' testDefinition=[test_definition::E2ETestDefinition|EString] )?
+		('testDefinition' ':' testDefinition=[test_definition::E2EBDDTestDefinition|EString] )?
 		('expectedResults' ':' expectedResults=[cocamo::SMCubesReportResults|EString] )?
 		('inputData' ':' inputData=SMCubesTestInputData)?
 	'}';
@@ -1350,8 +1397,8 @@ ReportCell returns reports::ReportCell:
 		('combination' ':' combination=[data_definition::COMBINATION|EString])?
 	'}';
 
-TestTemplate returns test_definition::TestTemplate:
-	{test_definition::TestTemplate}
+BDDTestTemplate returns test_definition::BDDTestTemplate:
+	{test_definition::BDDTestTemplate}
 	'TestTemplate'
 	name=EString ':'
 	'{'

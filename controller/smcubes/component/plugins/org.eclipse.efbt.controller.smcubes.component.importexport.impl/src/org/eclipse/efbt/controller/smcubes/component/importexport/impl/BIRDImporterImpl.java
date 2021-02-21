@@ -28,13 +28,13 @@ import java.util.Set;
 
 
 import org.eclipse.efbt.cocalimo.core.model.test_definition.ClauseText;
-import org.eclipse.efbt.cocalimo.core.model.test_definition.E2ETestDefinition;
+import org.eclipse.efbt.cocalimo.core.model.test_definition.E2EBDDTestDefinition;
 import org.eclipse.efbt.cocalimo.core.model.test_definition.Given;
 import org.eclipse.efbt.cocalimo.core.model.test_definition.Param;
-import org.eclipse.efbt.cocalimo.core.model.test_definition.TestContraints;
-import org.eclipse.efbt.cocalimo.core.model.test_definition.TestDefinitionModule;
-import org.eclipse.efbt.cocalimo.core.model.test_definition.TestTemplate;
-import org.eclipse.efbt.cocalimo.core.model.test_definition.TestTemplateModule;
+import org.eclipse.efbt.cocalimo.core.model.test_definition.BDDTestContraints;
+import org.eclipse.efbt.cocalimo.core.model.test_definition.BDDTestDefinitionModule;
+import org.eclipse.efbt.cocalimo.core.model.test_definition.BDDTestTemplate;
+import org.eclipse.efbt.cocalimo.core.model.test_definition.BDDTestTemplateModule;
 import org.eclipse.efbt.cocalimo.core.model.test_definition.Test_definitionFactory;
 import org.eclipse.efbt.cocalimo.core.model.test_definition.Then;
 import org.eclipse.efbt.cocalimo.core.model.test_definition.When;
@@ -47,10 +47,10 @@ import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.BaseC
 import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.BaseRowData;
 import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.Base_column_structured_dataFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.CocamoFactory;
+import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.SMCubesBDDTest;
+import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.SMCubesBDDTestModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.SMCubesStaticModel;
-import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.SMCubesTest;
 import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.SMCubesTestInputData;
-import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.SMCubesTestModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.CoreFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.DOMAIN;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.FACET_VALUE_TYPE;
@@ -974,7 +974,7 @@ public class BIRDImporterImpl extends Importer {
 			
 			List<CSVRecord> list = getCSVRowsFromFile(fileLocation);
 
-			HashMap<String, SMCubesTest> tests = new HashMap<String, SMCubesTest>();
+			HashMap<String, SMCubesBDDTest> tests = new HashMap<String, SMCubesBDDTest>();
 			HashMap<String, BaseColumnStructuredData> tables = new HashMap<String, BaseColumnStructuredData>();
 			HashMap<String, BaseRowData> rows = new HashMap<String, BaseRowData>();
 			int nameCounter = 0;
@@ -990,18 +990,18 @@ public class BIRDImporterImpl extends Importer {
 				String value = csvRecord.get(5);
 				//check whhich test this value is for, and see 
 				//if we already have created a Test for that test
-				SMCubesTest test = tests.get(id1 + ":" + id2);
+				SMCubesBDDTest test = tests.get(id1 + ":" + id2);
 				if (test == null) {
 					//if we dont have aTest for this item of Test data, then 
 					//we create one and add it to the list of tests
 					SMCubesStaticModel testProgram = CocamoFactory.eINSTANCE.createSMCubesStaticModel();
 					testPrograms.add(testProgram);
-					SMCubesTestModule testModule = CocamoFactory.eINSTANCE.createSMCubesTestModule();
+					SMCubesBDDTestModule testModule = CocamoFactory.eINSTANCE.createSMCubesBDDTestModule();
 					testModule.setName("TestModule" + nameCounter);
 					testProgram.setTests(testModule);
-					test = CocamoFactory.eINSTANCE.createSMCubesTest();
+					test = CocamoFactory.eINSTANCE.createSMCubesBDDTest();
 					test.setName(id1 + ":" + id2);
-					test.setTestDefinition((E2ETestDefinition) testDefinitionProgram.getTestDefinitions().getTestDefinitions().get(0)); 
+					test.setTestDefinition((E2EBDDTestDefinition) testDefinitionProgram.getBddTestDefinitions().getTestDefinitions().get(0)); 
 					testModule.getTests().add(test);
 					tests.put(id1 + ":" + id2, test);
 					SMCubesTestInputData inputData2 = CocamoFactory.eINSTANCE
@@ -1102,21 +1102,21 @@ public class BIRDImporterImpl extends Importer {
 		// create mutliple tests, with that data.
 		
 		//create the TestDefintion Module to hold the different TestDefinitions
-		TestDefinitionModule definitionModule = Test_definitionFactory.eINSTANCE.
-				createTestDefinitionModule();
+		BDDTestDefinitionModule definitionModule = Test_definitionFactory.eINSTANCE.
+				createBDDTestDefinitionModule();
 		definitionModule.setName("testDefinitionsModule");
 		
 		//create the TestTemplateModule to hold the different TestDefinitions
-		TestTemplateModule testTemplateModule = Test_definitionFactory.eINSTANCE.
-				createTestTemplateModule();
+		BDDTestTemplateModule testTemplateModule = Test_definitionFactory.eINSTANCE.
+				createBDDTestTemplateModule();
 		testTemplateModule.setName("testTemplateModule");
 		testTemplateProgram.setTestTemplates(testTemplateModule);
-		testDefinitionProgram.setTestDefinitions(definitionModule);
+		testDefinitionProgram.setBddTestDefinitions(definitionModule);
 
 		//create a TestTemplate and add it to the Test Template Module,
 		// all our tests are going to use the same template
-		TestTemplate testTemplate = 
-				Test_definitionFactory.eINSTANCE.createTestTemplate();
+		BDDTestTemplate testTemplate = 
+				Test_definitionFactory.eINSTANCE.createBDDTestTemplate();
 		testTemplate.setName("testTemplate1");
 		Param templateparam = Test_definitionFactory.eINSTANCE.createParam();
 		templateparam.setParam(transformationSchemes.getSchemes().get(0)
@@ -1141,8 +1141,8 @@ public class BIRDImporterImpl extends Importer {
 		testTemplateModule.getTemplates().add(testTemplate);
 		//create a TestConstraint and add it to the Test Constrinats Module,
 		// all our tests are going to use the same constriant
-		TestContraints contraints = 
-				Test_definitionFactory.eINSTANCE.createTestContraints();
+		BDDTestContraints contraints = 
+				Test_definitionFactory.eINSTANCE.createBDDTestContraints();
 		contraints.setName("constraints");
 		
 		contraints.setTemplate(testTemplate);
@@ -1155,8 +1155,8 @@ public class BIRDImporterImpl extends Importer {
 				.setParam(transformationSchemes);
 		contraints.getWhenParams().add(contraintsparam);
 
-		E2ETestDefinition definition =
-					Test_definitionFactory.eINSTANCE.createE2ETestDefinition();
+		E2EBDDTestDefinition definition =
+					Test_definitionFactory.eINSTANCE.createE2EBDDTestDefinition();
 		definition.setName("standard_test");
 		definitionModule.getTestDefinitions().add(definition);
 
@@ -1173,7 +1173,7 @@ public class BIRDImporterImpl extends Importer {
 		definition.getWhen().getParams().add(defparam);
 
 		definition.setTestContraints(contraints);
-		testDefinitionProgram.setTestDefinitions(definitionModule);
+		testDefinitionProgram.setBddTestDefinitions(definitionModule);
 
 		//create the Test model instances from the CSV test data
 				

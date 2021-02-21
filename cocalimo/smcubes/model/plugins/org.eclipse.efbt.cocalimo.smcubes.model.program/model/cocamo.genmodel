@@ -11,11 +11,13 @@
     <genClasses ecoreClass="cocamo.ecore#//SMCubesStaticModel">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesStaticModel/smCubesModel"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesStaticModel/requirements"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesStaticModel/testDefinitions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesStaticModel/bddTestDefinitions"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesStaticModel/tests"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesStaticModel/testTemplates"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesStaticModel/testConstriants"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesStaticModel/functionalityModules"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesStaticModel/regFunctionalityTests"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesStaticModel/regFunctionalityTestDefinitions"/>
     </genClasses>
     <genClasses ecoreClass="cocamo.ecore#//SMCubesTestInputData">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesTestInputData/smcubes_inputdata"/>
@@ -23,15 +25,22 @@
     <genClasses ecoreClass="cocamo.ecore#//SMCubesReportResults">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesReportResults/reportCells"/>
     </genClasses>
-    <genClasses ecoreClass="cocamo.ecore#//SMCubesTest">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesTest/inputData"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesTest/expectedResults"/>
+    <genClasses ecoreClass="cocamo.ecore#//SMCubesBDDTest">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesBDDTest/inputData"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesBDDTest/expectedResults"/>
     </genClasses>
-    <genClasses ecoreClass="cocamo.ecore#//SMCubesTestModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesTestModule/tests"/>
+    <genClasses ecoreClass="cocamo.ecore#//SMCubesBDDTestModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesBDDTestModule/tests"/>
     </genClasses>
     <genClasses ecoreClass="cocamo.ecore#//StaticModel">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cocamo.ecore#//StaticModel/name"/>
+    </genClasses>
+    <genClasses ecoreClass="cocamo.ecore#//SMCubesRegFunctionalityTest">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesRegFunctionalityTest/inputData"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesRegFunctionalityTest/expectedResults"/>
+    </genClasses>
+    <genClasses ecoreClass="cocamo.ecore#//SMCubesRegFunctionalityTestModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesRegFunctionalityTestModule/regFunctionalityTests"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>
