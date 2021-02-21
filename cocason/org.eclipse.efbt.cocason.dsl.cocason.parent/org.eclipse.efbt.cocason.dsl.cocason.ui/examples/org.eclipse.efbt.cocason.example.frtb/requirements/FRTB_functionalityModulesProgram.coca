@@ -62,9 +62,8 @@ ProgramAndCalls : { program : TRLProgram : { smcubesStaticModel : SMCubesStaticM
 				ParallelFunctionalityModule Equity_SBA : { 
 					subModules : [ 
 						SerialFunctionalityModule EquityDeltaAndEquityCurvatureProcessing : { 
-							subModules : [
-								
-								DataProcessingFunctionalityModule EquityDeltaAggregationAndWeighting :{},
+							subModules : [ SerialFunctionalityModule EquityDeltaProcessing : { subModules : [ DataProcessingFunctionalityModule EquityDeltaAssignBucket : { } , DataProcessingFunctionalityModule EquityDeltaApplyWeighting : { } , SerialFunctionalityModule EquityDeltaIntraBucketProcessing : { subModules : [ ParallelFunctionalityModule EquityDeltaIntraBucketPairsAndSquares : { subModules : [ DataProcessingFunctionalityModule EquityDeltaCreateCorrelatedPairs : { } , DataProcessingFunctionalityModule EquityDeltaCreateSquares : { } ] } , DataProcessingFunctionalityModule EquityDeltaCreateBucketValue : { } ] } , SerialFunctionalityModule EquityDeltaInterBucketProcessing : { subModules : [ ParallelFunctionalityModule EquityDeltaInterBucketPairsAndSquares : { subModules : [ DataProcessingFunctionalityModule EquityDeltaBucketsCreateCorrelatedPairs : { } , DataProcessingFunctionalityModule EquityDeltaBucketsCreateSquares : { } ] } , DataProcessingFunctionalityModule EquityDeltaCreateCapitalCharge : { } ] } , ReportCellCreationFunctionalityModule createEquityDeltaReportCells : { }
+									] } ,
 								SerialFunctionalityModule EquityCurvature : { 
 									subModules : [ 
 										ReadDataSourceFunctionalityModule ReadEquityCurvatureData : { } , 
@@ -73,7 +72,7 @@ ProgramAndCalls : { program : TRLProgram : { smcubesStaticModel : SMCubesStaticM
 											{ scenarios : [ Scenario EquityCurvatureUpShocks ,Scenario EquityCurvatureDownShocks ] }
 											
 										} , 
-										 DataProcessingFunctionalityModule EquityCurvatureCVR : { } ,
+										 DataProcessingFunctionalityModule EquityCurvatureCalculateCVR : { } , DataProcessingFunctionalityModule EquityCurvatureAssignBucket : { } , 
 										  ParallelFunctionalityModule EquityCurvatureAggregatedCVR : {
 										  	subModules : [ 
 										  		DataProcessingFunctionalityModule EquityCurvatureCorellatedCVR : { } , 
@@ -81,10 +80,7 @@ ProgramAndCalls : { program : TRLProgram : { smcubesStaticModel : SMCubesStaticM
 										  	]
 										  } , 
 										  DataProcessingFunctionalityModule EquityCurvatureFinalCVRLogic : { } , 
-										  ReportCellCreationFunctionalityModule createEquityCurvatureReportCells : { }, 
-										  ReportCellCreationFunctionalityModule createEquityDeltaReportCells : { }
-									]
-								}
+										  ReportCellCreationFunctionalityModule createEquityCurvatureReportCells : { } ] }
 							]
 				},
 				SerialFunctionalityModule EquityVegaProcessing : {

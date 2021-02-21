@@ -1,4 +1,4 @@
-ProgramAndCalls : { program : TRLProgram :  { executableLogic : TRLExecutableLogic trl_executable_logic3 : { functionSpecModule : FunctionSpecModule functionSpecModule1 : {  functionSpecs : 
+ProgramAndCalls : { program : TRLProgram :  { executableLogic : [ TRLExecutableLogic trl_executable_logic3 : { functionSpecModule : FunctionSpecModule functionSpecModule1 : {  functionSpecs : 
 	[ BasicFunctionSpec AND :  
 		{ functionalName : "&&" 
 			sqlName : "AND" 
@@ -26,4 +26,4 @@ ProgramAndCalls : { program : TRLProgram :  { executableLogic : TRLExecutableLog
 			 BasicFunctionSpec CopyColumn : { functionalName : "funcs.CopyColumn" sqlName : "ID" isInfix : false }  ,
 			 AggregateFunctionSpec First : { functionalName : "funcs.First" sqlName : "First" }  , 
 			 BasicFunctionSpec trippleA_NotionaAmount : { functionalName : "CustomFunctions.trippleA_NotionaAmount" sqlName : "trippleA_NotionaAmount" isInfix : false }
-	] } } } }
+	] } } ] } }

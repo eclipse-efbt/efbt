@@ -25,5 +25,5 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 										"EquityCurvatureReportCells.EquityCurvatureReportCellsModule" ]
 			 		}
 			 		}
-			 		}  
+			 		}   
 			 	

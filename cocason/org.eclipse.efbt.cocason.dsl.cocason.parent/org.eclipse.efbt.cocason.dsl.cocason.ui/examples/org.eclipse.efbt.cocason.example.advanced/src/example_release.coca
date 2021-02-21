@@ -1,6 +1,15 @@
 ProgramAndCalls : { program : TRLProgram :  {
-	executableLogic : TRLExecutableLogic trl_executable_logic1 : { 
-		componentSet : VersionedComponentsSet  Relase1 : {
+	executableLogic : [ TRLExecutableLogic trl_executable_logic1 : { 
+			cubesHierarchyModule : FreeBIRDToolsCubeHierarchyRelationshipModule hierarchy : { 
+			hierarchyRelationships : 
+			[ FreeBIRDToolsCubeHierarchyRelationship : {
+				superCube : "trl_executable_logic2.freeBirdToolsCubeModule.instrument" 
+				subCube : "trl_executable_logic2.freeBirdToolsCubeModule.bondInstrument" } 
+			, 
+			FreeBIRDToolsCubeHierarchyRelationship : { 
+				superCube : "trl_executable_logic2.freeBirdToolsCubeModule.instrument" 
+				subCube : "trl_executable_logic2.freeBirdToolsCubeModule.equityInstrument"  }
+				]  }
 			 cubeSchemaModules : [  VersionedCubeSchemaModule  readInExampleData : {schemas : [ 
 			 	CubeSchema counterparty :{ cube : "smcubesStaticCubesModel.smcubesCubesModel.cubesModel.counterparty" baseCube : "trl_executable_logic2.freeBirdToolsCubeModule.counterparty" },
 			 	CubeSchema rating : { cube : "smcubesStaticCubesModel.smcubesCubesModel.cubesModel.rating" baseCube : "trl_executable_logic2.freeBirdToolsCubeModule.rating" },
@@ -277,15 +286,6 @@ ProgramAndCalls : { program : TRLProgram :  {
 
 			} 
 		]
-	}
-	cubesHierarchyModule : FreeBIRDToolsCubeHierarchyRelationshipModule hierarchy : { 
-	hierarchyRelationships : 
-	[ FreeBIRDToolsCubeHierarchyRelationship : {
-		superCube : "trl_executable_logic2.freeBirdToolsCubeModule.instrument" 
-		subCube : "trl_executable_logic2.freeBirdToolsCubeModule.bondInstrument" } 
-	, 
-	FreeBIRDToolsCubeHierarchyRelationship : { 
-		superCube : "trl_executable_logic2.freeBirdToolsCubeModule.instrument" 
-		subCube : "trl_executable_logic2.freeBirdToolsCubeModule.equityInstrument"  }
-		]  } } } } 
+	} ] } } 
+
 

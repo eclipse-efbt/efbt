@@ -1,76 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" xsi:schemaLocation="http://www.eclipse.org/sirius/description/1.1.0 http://www.eclipse.org/sirius/1.1.0#//description" uid="_BzD9kG6xEeuZhMJ4HrND4g" selectedViews="__HocoG6xEeuZhMJ4HrND4g _FFdE8G69EeudCoYAvPGQrA" version="14.3.1.202003261200">
-  <semanticResources>girr_curvature/GIRRCurvatureAggregatedCVRCubes.coca</semanticResources>
-  <semanticResources>girr_curvature/GIRRCurvatureCVRCubes.coca</semanticResources>
-  <semanticResources>girr_curvature/GIRRCurvatureDeltaStrippingCubes.coca</semanticResources>
-  <semanticResources>girr_curvature/GIRRCurvatureAggregatedCVRLogic.coca</semanticResources>
-  <semanticResources>girr_curvature/GIRRCurvatureMeasures.coca</semanticResources>
-  <semanticResources>girr_curvature/GIRRCurvatureCVRLogic.coca</semanticResources>
-  <semanticResources>girr_curvature/GIRRCurvatureDatapoints.coca</semanticResources>
-  <semanticResources>girr_curvature/GIRRCurvatureFinalCVRCubes.coca</semanticResources>
-  <semanticResources>girr_curvature/GIRRCurvatureDeltaStrippingLogic.coca</semanticResources>
-  <semanticResources>girr_curvature/GIRRCurvatureFinalCVRLogic.coca</semanticResources>
-  <semanticResources>girr_curvature/GIRRCurvatureReportCells.coca</semanticResources>
-  <semanticResources>girr_curvature/GIRRCurvtatureDatapoints.coca</semanticResources>
-  <semanticResources>src/FRTBRelease.coca</semanticResources>
-  <semanticResources>src/platform_calls.coca</semanticResources>
-  <semanticResources>sdd/FRTBCubeStructureItems.coca</semanticResources>
-  <semanticResources>sdd/FRTBCubeStructures.coca</semanticResources>
-  <semanticResources>sdd/FRTBCubes.coca</semanticResources>
-  <semanticResources>sdd/FRTBDerivedDimensions.coca</semanticResources>
-  <semanticResources>sdd/FRTBDerivedDomain.coca</semanticResources>
-  <semanticResources>sdd/FRTBDerivedDomainMembers.coca</semanticResources>
-  <semanticResources>sdd/FRTBDerivedIdentifiers.coca</semanticResources>
-  <semanticResources>sdd/FRTBSourceDimensions.coca</semanticResources>
-  <semanticResources>sdd/FRTBSourceDomainMembers.coca</semanticResources>
-  <semanticResources>sdd/FRTBSourceDomains.coca</semanticResources>
-  <semanticResources>sdd/FRTBSourceIdentifiers.coca</semanticResources>
-  <semanticResources>sdd/FRTBSourceMeasures.coca</semanticResources>
-  <semanticResources>requirements/FRTB_functionalityModulesProgram.coca</semanticResources>
-  <semanticResources>requirements/FRTB_requirements.coca</semanticResources>
-  <semanticResources>sdd/FRTBCombinations.coca</semanticResources>
-  <semanticResources>cube_schemas/CurvatureCubeSchemas.coca</semanticResources>
-  <semanticResources>cube_schemas/DeltaCubeSchemas.coca</semanticResources>
-  <semanticResources>cube_schemas/PositionCubeSchemas.coca</semanticResources>
-  <semanticResources>cube_schemas/VegaCubeSchemas.coca</semanticResources>
-  <semanticResources>common/FRTBSourceCubes.coca</semanticResources>
-  <semanticResources>common/commonFunctions.coca</semanticResources>
-  <semanticResources>girr_delta/GIRRDeltaAggregationAndWeighting.coca</semanticResources>
-  <semanticResources>girr_delta/GIRRDeltaAggregationAndWeightingLogic.coca</semanticResources>
-  <semanticResources>girr_delta/GIRRDeltaMeasures.coca</semanticResources>
-  <semanticResources>girr_vega/GIRRVegaAggregationAndWeighting.coca</semanticResources>
-  <semanticResources>girr_vega/GIRRVegaAggregationAndWeightingLogic.coca</semanticResources>
-  <semanticResources>girr_vega/GIRRVegaMeasures.coca</semanticResources>
-  <semanticResources>girr_common/GIRRFunctions.coca</semanticResources>
-  <semanticResources>girr_common/GIRRRiskFactorCubeSchemas.coca</semanticResources>
-  <semanticResources>equity_common/EquityFunctions.coca</semanticResources>
-  <semanticResources>equity_common/EquityRiskFactorCubeSchemas.coca</semanticResources>
-  <semanticResources>equity_curvature/EquityCurvatureAggregatedCVRCubes.coca</semanticResources>
-  <semanticResources>equity_curvature/EquityCurvatureAggregatedCVRLogic.coca</semanticResources>
-  <semanticResources>equity_curvature/EquityCurvatureCVRCubes.coca</semanticResources>
-  <semanticResources>equity_curvature/EquityCurvatureCVRLogic.coca</semanticResources>
-  <semanticResources>equity_curvature/EquityCurvatureDatapoints.coca</semanticResources>
-  <semanticResources>equity_curvature/EquityCurvatureDeltaStrippingCubes.coca</semanticResources>
-  <semanticResources>equity_curvature/EquityCurvatureDeltaStrippingLogic.coca</semanticResources>
-  <semanticResources>equity_curvature/EquityCurvatureFinalCVRCubes.coca</semanticResources>
-  <semanticResources>equity_curvature/EquityCurvatureFinalCVRLogic.coca</semanticResources>
-  <semanticResources>equity_curvature/EquityCurvatureMeasures.coca</semanticResources>
-  <semanticResources>equity_curvature/EquityCurvatureReportCells.coca</semanticResources>
-  <semanticResources>equity_curvature/EquityCurvtatureDatapoints.coca</semanticResources>
-  <semanticResources>equity_delta/EquityDeltaAggregationAndWeighting.coca</semanticResources>
-  <semanticResources>equity_delta/EquityDeltaAggregationAndWeightingLogic.coca</semanticResources>
-  <semanticResources>equity_delta/EquityDeltaMeasures.coca</semanticResources>
-  <semanticResources>equity_vega/EquityVegaAggregationAndWeighting.coca</semanticResources>
-  <semanticResources>equity_vega/EquityVegaAggregationAndWeightingLogic.coca</semanticResources>
-  <semanticResources>equity_vega/EquityVegaMeasures.coca</semanticResources>
-  <semanticResources>common/NetVegaSensitivities.coca</semanticResources>
-  <semanticResources>common/NetVegaSensitivitiesLogic.coca</semanticResources>
-  <semanticResources>common/NetDeltaSensitivities.coca</semanticResources>
-  <semanticResources>common/NetDeltaSensitivitiesLogic.coca</semanticResources>
-  <ownedViews xmi:type="viewpoint:DView" uid="__HocoG6xEeuZhMJ4HrND4g">
-    <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.efbt.cocalimo.trl.ui.sirius.core/description/trl.odesign#//@ownedViewpoints[name='Modules']"/>
-  </ownedViews>
-  <ownedViews xmi:type="viewpoint:DView" uid="_FFdE8G69EeudCoYAvPGQrA">
-    <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']"/>
-  </ownedViews>
-</viewpoint:DAnalysis>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:diagram="http://www.eclipse.org/sirius/diagram/1.1.0" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.3/notation" xmlns:transformation="http://www.eclipse.org/efbt/transformation" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" xsi:schemaLocation="http://www.eclipse.org/sirius/description/1.1.0 http://www.eclipse.org/sirius/1.1.0#//description http://www.eclipse.org/sirius/diagram/description/1.1.0 http://www.eclipse.org/sirius/diagram/1.1.0#//description">
+  <viewpoint:DAnalysis uid="_6GiyEHN3EeuWGY6-hEKrsA" selectedViews="_Dng1MHN8EeuHUvOKXDaalw _7wSPcHQZEeuDsYNhGbpyQw" version="14.3.1.202003261200">
+    <semanticResources>common/FRTBSourceCubes.coca</semanticResources>
+    <semanticResources>common/NetDeltaSensitivities.coca</semanticResources>
+    <semanticResources>common/NetDeltaSensitivitiesLogic.coca</semanticResources>
+    <semanticResources>common/NetVegaSensitivities.coca</semanticResources>
+    <semanticResources>common/NetVegaSensitivitiesLogic.coca</semanticResources>
+    <semanticResources>common/commonFunctions.coca</semanticResources>
+    <semanticResources>cube_schemas/CurvatureCubeSchemas.coca</semanticResources>
+    <semanticResources>cube_schemas/DeltaCubeSchemas.coca</semanticResources>
+    <semanticResources>cube_schemas/PositionCubeSchemas.coca</semanticResources>
+    <semanticResources>cube_schemas/VegaCubeSchemas.coca</semanticResources>
+    <semanticResources>equity_common/EquityFunctions.coca</semanticResources>
+    <semanticResources>equity_common/EquityRiskFactorCubeSchemas.coca</semanticResources>
+    <semanticResources>equity_curvature/EquityCurvatureAggregatedCVRCubes.coca</semanticResources>
+    <semanticResources>equity_curvature/EquityCurvatureAggregatedCVRLogic.coca</semanticResources>
+    <semanticResources>equity_curvature/EquityCurvatureCVRCubes.coca</semanticResources>
+    <semanticResources>equity_curvature/EquityCurvatureCVRLogic.coca</semanticResources>
+    <semanticResources>equity_curvature/EquityCurvatureDatapoints.coca</semanticResources>
+    <semanticResources>equity_curvature/EquityCurvatureDeltaStrippingCubes.coca</semanticResources>
+    <semanticResources>equity_curvature/EquityCurvatureDeltaStrippingLogic.coca</semanticResources>
+    <semanticResources>equity_curvature/EquityCurvatureFinalCVRCubes.coca</semanticResources>
+    <semanticResources>equity_curvature/EquityCurvatureFinalCVRLogic.coca</semanticResources>
+    <semanticResources>equity_curvature/EquityCurvatureMeasures.coca</semanticResources>
+    <semanticResources>equity_curvature/EquityCurvatureReportCells.coca</semanticResources>
+    <semanticResources>equity_curvature/EquityCurvtatureDatapoints.coca</semanticResources>
+    <semanticResources>equity_delta/EquityDeltaAggregationAndWeighting.coca</semanticResources>
+    <semanticResources>equity_delta/EquityDeltaAggregationAndWeightingLogic.coca</semanticResources>
+    <semanticResources>equity_delta/EquityDeltaMeasures.coca</semanticResources>
+    <semanticResources>equity_vega/EquityVegaAggregationAndWeighting.coca</semanticResources>
+    <semanticResources>equity_vega/EquityVegaAggregationAndWeightingLogic.coca</semanticResources>
+    <semanticResources>equity_vega/EquityVegaMeasures.coca</semanticResources>
+    <semanticResources>girr_common/GIRRFunctions.coca</semanticResources>
+    <semanticResources>girr_common/GIRRRiskFactorCubeSchemas.coca</semanticResources>
+    <semanticResources>girr_curvature/GIRRCurvatureAggregatedCVRCubes.coca</semanticResources>
+    <semanticResources>girr_curvature/GIRRCurvatureAggregatedCVRLogic.coca</semanticResources>
+    <semanticResources>girr_curvature/GIRRCurvatureCVRCubes.coca</semanticResources>
+    <semanticResources>girr_curvature/GIRRCurvatureCVRLogic.coca</semanticResources>
+    <semanticResources>girr_curvature/GIRRCurvatureDatapoints.coca</semanticResources>
+    <semanticResources>girr_curvature/GIRRCurvatureDeltaStrippingCubes.coca</semanticResources>
+    <semanticResources>girr_curvature/GIRRCurvatureDeltaStrippingLogic.coca</semanticResources>
+    <semanticResources>girr_curvature/GIRRCurvatureFinalCVRCubes.coca</semanticResources>
+    <semanticResources>girr_curvature/GIRRCurvatureFinalCVRLogic.coca</semanticResources>
+    <semanticResources>girr_curvature/GIRRCurvatureMeasures.coca</semanticResources>
+    <semanticResources>girr_curvature/GIRRCurvatureReportCells.coca</semanticResources>
+    <semanticResources>girr_curvature/GIRRCurvtatureDatapoints.coca</semanticResources>
+    <semanticResources>girr_delta/GIRRDeltaAggregationAndWeighting.coca</semanticResources>
+    <semanticResources>girr_delta/GIRRDeltaAggregationAndWeightingLogic.coca</semanticResources>
+    <semanticResources>girr_delta/GIRRDeltaMeasures.coca</semanticResources>
+    <semanticResources>girr_vega/GIRRVegaAggregationAndWeighting.coca</semanticResources>
+    <semanticResources>girr_vega/GIRRVegaAggregationAndWeightingLogic.coca</semanticResources>
+    <semanticResources>girr_vega/GIRRVegaMeasures.coca</semanticResources>
+    <semanticResources>requirements/FRTB_functionalityModulesProgram.coca</semanticResources>
+    <semanticResources>requirements/FRTB_requirements.coca</semanticResources>
+    <semanticResources>sdd/FRTBCombinations.coca</semanticResources>
+    <semanticResources>sdd/FRTBCubeStructureItems.coca</semanticResources>
+    <semanticResources>sdd/FRTBCubeStructures.coca</semanticResources>
+    <semanticResources>sdd/FRTBCubes.coca</semanticResources>
+    <semanticResources>sdd/FRTBDerivedDimensions.coca</semanticResources>
+    <semanticResources>sdd/FRTBDerivedDomain.coca</semanticResources>
+    <semanticResources>sdd/FRTBDerivedDomainMembers.coca</semanticResources>
+    <semanticResources>sdd/FRTBDerivedIdentifiers.coca</semanticResources>
+    <semanticResources>sdd/FRTBSourceDimensions.coca</semanticResources>
+    <semanticResources>sdd/FRTBSourceDomainMembers.coca</semanticResources>
+    <semanticResources>sdd/FRTBSourceDomains.coca</semanticResources>
+    <semanticResources>sdd/FRTBSourceIdentifiers.coca</semanticResources>
+    <semanticResources>sdd/FRTBSourceMeasures.coca</semanticResources>
+    <semanticResources>src/FRTBRelease.coca</semanticResources>
+    <ownedViews xmi:type="viewpoint:DView" uid="_Dng1MHN8EeuHUvOKXDaalw">
+      <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.efbt.cocalimo.trl.ui.sirius.core/description/trl.odesign#//@ownedViewpoints[name='Modules']"/>
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_EDXDsHN8EeuHUvOKXDaalw" name="new VersionedComponentsSet" repPath="#_ECtjcHN8EeuHUvOKXDaalw" changeId="1cf4a40c-5024-4db0-b561-4c06441142b5">
+        <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.trl.ui.sirius.core/description/trl.odesign#//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']"/>
+        <target xmi:type="transformation:Release" href="src/FRTBRelease.coca#FRTBRelease1"/>
+      </ownedRepresentationDescriptors>
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_K5YgUXN8EeuHUvOKXDaalw" name="new VersionedComponentsSet" repPath="#_K5XSMHN8EeuHUvOKXDaalw" changeId="b47af529-5469-4819-8836-b29610b8a97f">
+        <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.trl.ui.sirius.core/description/trl.odesign#//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']"/>
+        <target xmi:type="transformation:Release" href="src/FRTBRelease.coca#FRTBRelease1"/>
+      </ownedRepresentationDescriptors>
+    </ownedViews>
+    <ownedViews xmi:type="viewpoint:DView" uid="_7wSPcHQZEeuDsYNhGbpyQw">
+      <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']"/>
+    </ownedViews>
+  </viewpoint:DAnalysis>
+  <diagram:DSemanticDiagram uid="_ECtjcHN8EeuHUvOKXDaalw">
+    <ownedAnnotationEntries xmi:type="description:AnnotationEntry" uid="_EEIfwHN8EeuHUvOKXDaalw" source="GMF_DIAGRAMS">
+      <data xmi:type="notation:Diagram" xmi:id="_EEIfwXN8EeuHUvOKXDaalw" type="Sirius" element="_ECtjcHN8EeuHUvOKXDaalw" measurementUnit="Pixel">
+        <styles xmi:type="notation:DiagramStyle" xmi:id="_EEIfwnN8EeuHUvOKXDaalw"/>
+      </data>
+    </ownedAnnotationEntries>
+    <ownedAnnotationEntries xmi:type="description:AnnotationEntry" uid="_EG9KQHN8EeuHUvOKXDaalw" source="DANNOTATION_CUSTOMIZATION_KEY">
+      <data xmi:type="diagram:ComputedStyleDescriptionRegistry" uid="_EG9xUHN8EeuHUvOKXDaalw"/>
+    </ownedAnnotationEntries>
+    <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.trl.ui.sirius.core/description/trl.odesign#//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']"/>
+    <filterVariableHistory xmi:type="diagram:FilterVariableHistory" uid="_EC6-0HN8EeuHUvOKXDaalw"/>
+    <activatedLayers xmi:type="description_1:Layer" href="platform:/plugin/org.eclipse.efbt.cocalimo.trl.ui.sirius.core/description/trl.odesign#//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer"/>
+    <activatedLayers xmi:type="description_1:AdditionalLayer" href="platform:/plugin/org.eclipse.efbt.cocalimo.trl.ui.sirius.core/description/trl.odesign#//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']"/>
+    <target xmi:type="transformation:Release" href="src/FRTBRelease.coca#FRTBRelease1"/>
+  </diagram:DSemanticDiagram>
+  <diagram:DSemanticDiagram uid="_K5XSMHN8EeuHUvOKXDaalw">
+    <ownedAnnotationEntries xmi:type="description:AnnotationEntry" uid="_K5ZHYHN8EeuHUvOKXDaalw" source="GMF_DIAGRAMS">
+      <data xmi:type="notation:Diagram" xmi:id="_K5ZHYXN8EeuHUvOKXDaalw" type="Sirius" element="_K5XSMHN8EeuHUvOKXDaalw" measurementUnit="Pixel">
+        <styles xmi:type="notation:DiagramStyle" xmi:id="_K5ZHYnN8EeuHUvOKXDaalw"/>
+      </data>
+    </ownedAnnotationEntries>
+    <ownedAnnotationEntries xmi:type="description:AnnotationEntry" uid="_K5cxwHN8EeuHUvOKXDaalw" source="DANNOTATION_CUSTOMIZATION_KEY">
+      <data xmi:type="diagram:ComputedStyleDescriptionRegistry" uid="_K5cxwXN8EeuHUvOKXDaalw"/>
+    </ownedAnnotationEntries>
+    <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.trl.ui.sirius.core/description/trl.odesign#//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']"/>
+    <filterVariableHistory xmi:type="diagram:FilterVariableHistory" uid="_K5XSMXN8EeuHUvOKXDaalw"/>
+    <activatedLayers xmi:type="description_1:Layer" href="platform:/plugin/org.eclipse.efbt.cocalimo.trl.ui.sirius.core/description/trl.odesign#//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@defaultLayer"/>
+    <activatedLayers xmi:type="description_1:AdditionalLayer" href="platform:/plugin/org.eclipse.efbt.cocalimo.trl.ui.sirius.core/description/trl.odesign#//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='VersionedComponentsSet']/@additionalLayers[name='Views']"/>
+    <target xmi:type="transformation:Release" href="src/FRTBRelease.coca#FRTBRelease1"/>
+  </diagram:DSemanticDiagram>
+</xmi:XMI>

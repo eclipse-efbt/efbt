@@ -1,6 +1,6 @@
 ProgramAndCalls : { program :  TRLProgram :  { smcubesStaticModel : SMCubesStaticModel TestStaticModel1 : {
 	tests  : SMCubesTestModule TestModule1 : {
-		tests : [ SMCubesTest "Test1" : {
+		tests : [ SMCubesBDDTest "Test1" : {
 			testDefinition : "testDefinitionsStaticModel.testDefinitionsModule.standard_test"
 			inputData : SMCubesTestInputData "Test1:Data" : {
 				smcubes_inputdata : [ BaseColumnStructuredData "Test1:counterparty:CubeData" : {
