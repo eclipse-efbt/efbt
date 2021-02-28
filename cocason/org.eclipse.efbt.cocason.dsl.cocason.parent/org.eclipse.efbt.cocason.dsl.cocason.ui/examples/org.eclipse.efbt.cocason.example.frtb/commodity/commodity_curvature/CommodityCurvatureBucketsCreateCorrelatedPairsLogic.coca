@@ -1,0 +1,8 @@
+ProgramAndCalls : { program : TRLProgram :  { 
+	
+	executableLogic :[ TRLExecutableLogic CommodityCurvatureBucketsCreateCorrelatedPairsLogic : { 
+		
+			
+			 datasetTransformationModules : [ VersionedSQLViewsModule   views : { 
+			 	 } ] } ] } }
+			 		

@@ -1,0 +1,38 @@
+ProgramAndCalls : { program : TRLProgram :  { 
+	
+	executableLogic :[ TRLExecutableLogic CSRSecCTPDeltaCreateSquaresLogic : { 
+		
+			
+			 datasetTransformationModules : [ VersionedSQLViewsModule   views : { 
+			 	sqlViews : [ 
+
+				AggregateEnrichmentView totalCSRSecCTPDeltaSensitivityPerBucket : {
+			 			cube : "CSRSecCTPDeltaCreateSquaresCubes.freeBirdToolsCubeModule.totalCSRSecCTPDeltaSensitivityPerBucket"
+			 			functions : [
+			 				AggregateColumnFunction totalCSRSecCTPDeltaSensitivityPerBucket_totalCSRSecCTPDeltaSensitivityPerBucket: { 
+			 					cube : "CSRSecCTPDeltaCreateSquaresCubes.freeBirdToolsCubeModule.totalCSRSecCTPDeltaSensitivityPerBucket"
+			 					variable : "CSRSecCTPDeltaMeasuresStaticModel.CSRSecCTPDeltaMeasuresModel.variablesModule.totalCSRSecCTPDeltaSensitivityPerBucket"
+			 					aggregateFunction : AggregateFunction af7 : {
+			 						functionSpec : "commonFunctions.commonFunctionSpecModule.SUM" 
+			 						parameters : [ 
+			 							SpeculativeCubeColumnParameter : {
+			 								column : "CSRSecCTPDeltaMeasuresStaticModel.CSRSecCTPDeltaMeasuresModel.variablesModule.weightedCSRSecCTPDeltaSensitivity"
+			 								cube : "CSRSecCTPDeltaApplyWeighting.freeBirdToolsCubeModule.weightedCSRSecCTPDeltaSensitivitiesAndRiskFactors"
+			 								
+			 							}
+			 						] 
+			 						
+			 					}
+			 				
+			 			}
+			 		
+			 			]
+			 			groupByClause : GroupByClause : {
+			 				groupByColumns : [
+			 					"FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID"
+			 				]
+			 			}
+			 		}
+
+			 		] } ] } ] } }
+			 		

@@ -1,0 +1,89 @@
+ProgramAndCalls : { program : TRLProgram :  { executableLogic : [ TRLExecutableLogic FRTBFunctions: { functionSpecModule : FunctionSpecModule CommodityFunctionSpecModule : {  
+	license : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"
+	functionSpecs : 
+	[ 
+		BasicFunctionSpec getCommodityCVRCorrelationFactor : { 
+		functionalName : "CustomFunctions_getCorrelationFactor"
+		sqlName : "getCorrelationFactor"	
+		parameterSpecs : [ 
+			ParamaterSpec param1 ,
+			ParamaterSpec param2
+		]	
+	},
+	BasicFunctionSpec getCommodityDeltaCorrelationFactor : { 
+		functionalName : "CustomFunctions_getDeltaCorrelationFactor"
+		sqlName : "getDeltaCorrelationFactor"	
+		parameterSpecs : [ 
+			ParamaterSpec param1 ,
+			ParamaterSpec param2
+		]	
+	},
+	BasicFunctionSpec getCommodityVegaRiskFactorRiskWeight : { 
+		functionalName : "CustomFunctions_getCommodityVegaRiskFactorRiskWeight"
+		sqlName : "getCommodityVegaRiskFactorRiskWeight"	
+		parameterSpecs : [ 
+			ParamaterSpec param1 ,
+			ParamaterSpec param2
+		]	
+	},
+	BasicFunctionSpec getCommodityVegaCorrelationFactor : { 
+		functionalName : "CustomFunctions_getCommodityVegaCorrelationFactor"
+		sqlName : "getCommodityVegaCorrelationFactor"	
+		parameterSpecs : [ 
+			ParamaterSpec param1 ,
+			ParamaterSpec param2
+		]	
+	},
+	BasicFunctionSpec getCommodityBucketCorrelationFactor : { 
+		functionalName : "CustomFunctions_getDeltaCorrelationFactor"
+		sqlName : "getDeltaCorrelationFactor"	
+		parameterSpecs : [ 
+			ParamaterSpec param1 ,
+			ParamaterSpec param2
+		]	
+	},
+	BasicFunctionSpec CommodityDeltaStrip :
+	{
+		functionalName : "CustomFunctions_deltaStrip"
+		sqlName : CommodityDeltaStrip
+		parameterSpecs : [
+			ParamaterSpec valuationDifference ,
+			ParamaterSpec summedCommodity_delta ,
+			ParamaterSpec ShockDirection
+		]
+	},
+	BasicFunctionSpec getCommodityDeltaRiskFactorRiskWeight :
+	{
+		functionalName : "CustomFunctions_getCommodityTenorRiskWeight"
+		sqlName : getCommodityTenorRiskWeight
+		parameterSpecs : [
+			ParamaterSpec tenor
+		]
+	},
+	BasicFunctionSpec getCommodityDeltaBucketName :
+	{
+		functionalName : "CustomFunctions_getCommodityDeltaBucketName"
+		sqlName : getCommodityDeltaBucketName
+		parameterSpecs : [
+			ParamaterSpec MainCurrency
+		]
+	},
+	BasicFunctionSpec getCommodityVegaBucketName :
+	{
+		functionalName : "CustomFunctions_getCommodityVegaBucketName"
+		sqlName : getCommodityDeltaBucketName
+		parameterSpecs : [
+			ParamaterSpec MainCurrency
+		]
+	},
+	BasicFunctionSpec getCommodityCurvatureBucketName :
+	{
+		functionalName : "CustomFunctions_getCommodityCurvatureBucketName"
+		sqlName : getCommodityDeltaBucketName
+		parameterSpecs : [
+			ParamaterSpec MainCurrency
+		]
+	}
+	
+			
+	] } } ] } } 

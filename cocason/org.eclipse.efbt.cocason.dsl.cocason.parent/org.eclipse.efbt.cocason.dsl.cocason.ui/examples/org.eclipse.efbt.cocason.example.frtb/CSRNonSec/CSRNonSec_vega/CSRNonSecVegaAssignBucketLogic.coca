@@ -1,0 +1,44 @@
+ProgramAndCalls : { program : TRLProgram :  { 
+	
+	executableLogic :[ TRLExecutableLogic CSRNonSecVegaAssignBucketLogic : { 
+		
+			
+			 datasetTransformationModules : [ VersionedSQLViewsModule   views : { 
+			 	sqlViews : [ 
+			 		
+			 		JoinView CSRNonSecVegaSensitivitiesAndRiskFactors : {
+			 			cube : "CSRNonSecVegaAssignBucket.freeBirdToolsCubeModule.CSRNonSecVegaSensitivitiesAndRiskFactors"
+			 			whereClause : WhereClause : { 
+			 				function : BooleanFunction bf40 : {
+			 					functionSpec : "commonFunctions.commonFunctionSpecModule.equals" 
+			 					parameters : [ 
+			 						SpeculativeCubeColumnParameter : {
+			 							column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
+			 							cube : "FRTBSourceCubes.freeBirdToolsCubeModule.CSRNonSecRiskFactor"
+			 							} ,
+			 						SpeculativeCubeColumnParameter : {
+			 							column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
+			 							cube :"NetVegaSensitivities.freeBirdToolsCubeModule.nettedVegaSensitivities"
+			 							} 
+			 						]
+			 					}
+			 				}
+			 				ignores : [ IgnoreColumn : { columnToIgnore : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID" cube :"NetVegaSensitivities.freeBirdToolsCubeModule.nettedVegaSensitivities" }
+			 				]
+			 			} 	,
+			 		EnrichmentView 	CSRNonSecVegaAssignBucket  : { 
+			 			cube : "CSRNonSecVegaAssignBucket.freeBirdToolsCubeModule.CSRNonSecVegaSensitivitiesAndRiskFactorsWithBucketName"
+			 			functions : [ 
+			 				BasicColumnFunction getCSRNonSecVegaBucketName : { 
+			 					cube : "CSRNonSecVegaAssignBucket.freeBirdToolsCubeModule.CSRNonSecVegaSensitivitiesAndRiskFactorsWithBucketName"
+			 					variable : "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID"
+			 					basicFunction : BasicFunction bf1 : { 
+			 						functionSpec : "FRTBFunctions.CSRNonSecFunctionSpecModule.getCSRNonSecVegaBucketName"
+			 						parameters : [ SpeculativeCubeColumnParameter : { 
+			 							column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.mainCurrency"
+			 							cube : "CSRNonSecVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.CSRNonSecVegaSensitivitiesAndRiskFactors"
+			 						} ]
+			 					}
+			 				}
+			 		]
+ } ] } ] } ] } }

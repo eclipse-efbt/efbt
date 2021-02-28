@@ -40,7 +40,7 @@ ProgramAndCalls : { program : TRLProgram : { smcubesStaticModel : SMCubesStaticM
 						DataProcessingFunctionalityModule CalculateOriginalExposure : { } , 
 						SerialFunctionalityModule CreditRiskMitigation : {
 							subModules : [ 
-								ReadDataSourceFunctionalityModule ReadCollateralData : { } , 
+								DataProcessingFunctionalityModule ReadCollateralData : { } , 
 								ParallelFunctionalityModule ApplyCreditRiskMitigationApproach : { 
 									subModules : [ 
 										SerialFunctionalityModule SimplifiedApproach : { 

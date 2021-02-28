@@ -32,6 +32,13 @@ ProgramAndCalls : { program :  TRLProgram :  {
 				variable_id : "rowID"
 				displayName :  "rowID"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
+			},
+			VARIABLE bucketID : {
+				code : "bucketID"
+				description : "bucketID"
+				variable_id : "bucketID"
+				displayName :  "bucketID"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.String"
 			}
 			
 			
