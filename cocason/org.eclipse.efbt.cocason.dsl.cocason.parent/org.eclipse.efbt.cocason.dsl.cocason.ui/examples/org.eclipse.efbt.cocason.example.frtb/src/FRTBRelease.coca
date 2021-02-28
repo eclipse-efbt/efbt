@@ -4,25 +4,34 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 	 								"CurvatureCubeSchemas.CurvatureCubeSchemasModule" ,
 			 	 								"DeltaCubeSchemas.DeltaCubeSchemasModule" , 
 			 	 								"PositionCubeSchemas.PositionCubeSchemasModule", 
-			 	 								"VegaCubeSchemas.VegaCubeSchemasModule" ,
-			 	 								"EquityRiskFactorCubeSchemas.EquityRiskFactorCubeSchemasModule" 
+			 	 								"VegaCubeSchemas.VegaCubeSchemasModule" 
+			 	 								
 			 	 								]
 			 			datasetTransformationModules : [ "NetDeltaSensitivitiesLogic.views",
 			 												"NetVegaSensitivitiesLogic.views",
-			 												"GIRRCurvatureCVRLogic.views" , 
-			 											 "GIRRCurvatureAggregatedCVRLogic.views" , 
-			 											 "GIRRCurvatureDeltaStrippingLogic.views" , 
-			 											 "GIRRCurvatureFinalCVRLogic.views" ,  
-			 											 "GIRRDeltaAggregationAndWeightingLogic.views", 
-			 											 "GIRRVegaAggregationAndWeightingLogic.views" ,
-			 											 "EquityCurvatureAggregatedCVRLogic.views",
-			 											 "EquityCurvatureCVRLogic.views",
-			 											 "EquityCurvatureDeltaStrippingLogic.views",
-			 											 "EquityCurvatureFinalCVRLogic.views",
-			 											 "EquityDeltaAggregationAndWeightingLogic.views",
-			 											 "EquityVegaAggregationAndWeightingLogic.views" ]
-			 			reportCellViewModules : ["GIRRCurvatureReportCells.GIRRCurvatureReportCellsModule" ,
-			 										"EquityCurvatureReportCells.EquityCurvatureReportCellsModule" ]
+			 												"GIRRDeltaApplyWeightingLogic.views",
+			 												"GIRRDeltaAssignBucketLogic.views"  ,
+			 												"GIRRDeltaBucketsCreateCorrelatedPairsLogic.views",
+			 												"GIRRDeltaBucketsCreateSquaresLogic.views",
+			 												"GIRRDeltaCreateCorrelatedPairsLogic.views",
+			 												"GIRRDeltaCreateSquaresLogic.views" ,
+			 												"GIRRVegaApplyWeightingLogic.views",
+			 												"GIRRVegaAssignBucketLogic.views"  ,
+			 												"GIRRVegaBucketsCreateCorrelatedPairsLogic.views",
+			 												"GIRRVegaBucketsCreateSquaresLogic.views",
+			 												"GIRRVegaCreateCorrelatedPairsLogic.views",
+			 												"GIRRVegaCreateSquaresLogic.views",
+			 												"GIRRCurvatureAssignBucketLogic.views",
+			 												"GIRRCurvatureBucketsCreateCorrelatedPairsLogic.views",
+			 												"GIRRCurvatureBucketsCreateSquaresLogic.views",
+			 												"GIRRCurvatureCalculateCVRLogic.views",
+			 												"GIRRCurvatureCreateBucketValueLogic.views",
+			 												"GIRRCurvatureCreateCorrelatedPairsLogic.views",
+			 												"GIRRCurvatureDeltaStrippingLogic.views",
+			 												"GIRRCurvatureCreateSquaresLogic.views"
+			 												
+			 											 ]
+			 			reportCellViewModules : ["GIRRCurvatureReportCells.GIRRCurvatureReportCellsModule"  ] 
 			 		}
 			 		}
 			 		}   

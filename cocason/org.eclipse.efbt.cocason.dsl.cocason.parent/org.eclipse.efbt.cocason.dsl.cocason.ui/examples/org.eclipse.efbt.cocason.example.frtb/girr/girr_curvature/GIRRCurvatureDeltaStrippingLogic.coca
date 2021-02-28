@@ -1,0 +1,110 @@
+ProgramAndCalls : { program : TRLProgram :  { 
+	
+	executableLogic :[ TRLExecutableLogic GIRRCurvatureDeltaStrippingLogic : { 
+		
+			
+			 datasetTransformationModules : [ VersionedSQLViewsModule   views : { 
+			 	sqlViews : [ 
+			 	
+			 		
+			 		
+			 		
+			 		 JoinView GIRRCurvatureValuationDifferencesLinkedWithDeltas : {
+			 		 	cube : "GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureValuationDifferencesLinkedWithDeltas"
+			 		 	whereClause : WhereClause : { 
+			 		 		function : BooleanFunction bf8 : {
+			 		 			functionSpec : "commonFunctions.commonFunctionSpecModule.AND"
+			 		 			parameters : [
+			 		 				BasicFunction bf9 : {  
+			 		 					 functionSpec : "commonFunctions.commonFunctionSpecModule.AND"
+			 		 					 parameters : [
+			 		 					 	BasicFunction bf10 : { 
+			 		 					 		functionSpec : "commonFunctions.commonFunctionSpecModule.equals"
+			 		 					 		parameters : [
+			 		 					 			SpeculativeCubeColumnParameter : { 
+			 		 					 				column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
+			 		 					 				cube :"NetDeltaSensitivities.freeBirdToolsCubeModule.summedDeltaSensitivitiesPerPosition"
+			 		 					 			} ,
+			 		 					 			SpeculativeCubeColumnParameter : {
+			 		 					 				column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
+			 		 					 				cube : "GIRRCurvatureAssignBucketCubes.freeBirdToolsCubeModule.GIRRCurvatureValuationDifferencesWithBucket"
+			 		 					 			}
+			 		 					 		] } ,
+			 		 					 		BasicFunction bf11 : { 
+			 		 					 		functionSpec : "commonFunctions.commonFunctionSpecModule.equals"
+			 		 					 		parameters : [
+			 		 					 			SpeculativeCubeColumnParameter : { 
+			 		 					 				column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.positionID"
+			 		 					 				cube : "NetDeltaSensitivities.freeBirdToolsCubeModule.summedDeltaSensitivitiesPerPosition"
+			 		 					 			} ,
+			 		 					 			SpeculativeCubeColumnParameter : {
+			 		 					 				column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.positionID"
+			 		 					 				cube : "GIRRCurvatureAssignBucketCubes.freeBirdToolsCubeModule.GIRRCurvatureValuationDifferencesWithBucket"
+			 		 					 			}
+			 		 					 		] }
+			 		 					 		] }  ]
+			 		 					 	} }  
+			 		 					 ignores : [ 			 		 					 	
+			 		 					 	IgnoreColumn : { 
+			 		 					 		columnToIgnore : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
+			 		 					 		cube :"NetDeltaSensitivities.freeBirdToolsCubeModule.summedDeltaSensitivitiesPerPosition"	 		 					 		
+			 		 					 	} ,
+			 		 					 	IgnoreColumn : { 
+			 		 					 		columnToIgnore :"FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.positionID"
+			 		 					 		cube : "GIRRCurvatureAssignBucketCubes.freeBirdToolsCubeModule.GIRRCurvatureValuationDifferencesWithBucket"	 		 					 		
+			 		 					 	} 
+			 		 					 	]
+			 		 				}
+			 		 			,
+			 		 			EnrichmentView GIRRCurvatureDeltaStrippedShifts : { 
+			 		 				cube : "GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureDeltaStrippedShifts"
+			 		 				functions : [
+			 		 					BasicColumnFunction GIRRCurvatureDeltaStrippedShifts_GIRRCurvatureDeltaStrippedShift : {
+			 		 						cube : "GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureDeltaStrippedShifts" 
+			 		 						variable : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureDeltaStrippedShift"
+			 		 						basicFunction : BasicFunction bf14 : {
+			 		 							functionSpec : "FRTBFunctions.GIRRFunctionSpecModule.GIRRDeltaStrip"
+			 		 							parameters : [
+			 		 								SpeculativeCubeColumnParameter : 
+			 		 								{ column : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.curvatureValuationDifference"
+			 		 									cube : "GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureValuationDifferencesLinkedWithDeltas"
+			 		 									},
+			 		 								SpeculativeCubeColumnParameter : 
+			 		 								{ column :"GIRRDeltaMeasuresStaticModel.GIRRDeltaMeasuresModel.variablesModule.summedGIRRDelta"
+			 		 									cube : "GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureValuationDifferencesLinkedWithDeltas"
+			 		 									},
+			 		 								SpeculativeCubeColumnParameter : 
+			 		 								{ column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection"
+			 		 									cube : "GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureValuationDifferencesLinkedWithDeltas"
+			 		 									},
+			 		 								SpeculativeCubeColumnParameter : 
+			 		 								{ column : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.curvatureRiskWeight"
+			 		 									cube : "GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureValuationDifferencesLinkedWithDeltas"
+			 		 									}
+			 		 									]	
+			 		 								
+			 		 					
+			 		 			}
+			 		 			}
+			 		 			] 
+			 		 			ignores : [ 
+			 		 				IgnoreColumn : 
+			 		 				{
+			 		 					columnToIgnore : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.curvatureValuationDifference"
+			 		 					cube :  "GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureValuationDifferencesLinkedWithDeltas"
+			 		 				},
+			 		 				IgnoreColumn : 
+			 		 				{
+			 		 					columnToIgnore : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.curvatureRiskWeight"
+			 		 					cube :  "GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureValuationDifferencesLinkedWithDeltas"
+			 		 				},
+			 		 				IgnoreColumn : 
+			 		 				{
+			 		 					columnToIgnore : "GIRRDeltaMeasuresStaticModel.GIRRDeltaMeasuresModel.variablesModule.summedGIRRDelta"
+			 		 					cube :  "GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureValuationDifferencesLinkedWithDeltas"
+			 		 				}
+			 		 			]
+			 		 			
+			 		 			}
+			 		 			]
+			 		} ] } ] } } 

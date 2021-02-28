@@ -1,0 +1,147 @@
+ProgramAndCalls : { program :  TRLProgram :  {
+	smcubesStaticModel : SMCubesStaticModel EquityDeltaMeasuresStaticModel : {
+	smCubesModel : SmcubesModel  EquityDeltaMeasuresModel  : {
+		variables :  [ VariableModule variablesModule :  
+				{
+					license : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"
+			variables : [ 
+			VARIABLE EquityDeltaSensitivityk : {
+				code : "EquityDeltaSensitivityk"
+				description : "EquityDeltaSensitivityk"
+				variable_id : "EquityDeltaSensitivityk"
+				displayName :  "EquityDeltaSensitivityk"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE EquityDeltaCorrelationFactor : {
+				code : "EquityDeltaCorrelationFactor"
+				description : "EquityDeltaCorrelationFactor"
+				variable_id : "EquityDeltaCorrelationFactor"
+				displayName :  "EquityDeltaCorrelationFactor"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			
+			VARIABLE EquityDeltaSensitivityl : {
+				code : "EquityDeltaSensitivityl"
+				description : "EquityDeltaSensitivityl"
+				variable_id : "EquityDeltaSensitivityl"
+				displayName :  "EquityDeltaSensitivityl"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE summedEquityDelta : {
+				code : "summedEquityDelta"
+				description : "summedEquityDelta"
+				variable_id : "summedEquityDelta"
+				displayName :  "summedEquityDelta"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			
+			VARIABLE tenork : {
+				code : "tenork"
+				description : "tenork"
+				variable_id : "tenork"
+				displayName :  "tenork"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE tenorl : {
+				code : "tenorl"
+				description : "tenorl"
+				variable_id : "tenorl"
+				displayName :  "tenorl"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE mainCurrencyl : {
+				code : "mainCurrencyl"
+				description : "mainCurrencyl"
+				variable_id : "mainCurrencyl"
+				displayName : "mainCurrencyl"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
+			},
+			VARIABLE mainCurrencyk : {
+				code : "mainCurrencyk"
+				description : "mainCurrencyk"
+				variable_id : "mainCurrencyk"
+				displayName : "MaimainCurrencyknCurrency"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
+			},
+			VARIABLE EquityDeltaRiskWeight : {
+				code : "EquityDeltaRiskWeight"
+				description : "EquityDeltaRiskWeight"
+				variable_id : "EquityDeltaRiskWeight"
+				displayName :  "EquityDeltaRiskWeight"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE weightedEquityDeltaSensitivity : {
+				code : "weightedEquityDeltaSensitivity"
+				description : "weightedEquityDeltaSensitivity"
+				variable_id : "weightedEquityDeltaSensitivity"
+				displayName :  "weightedEquityDeltaSensitivity"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE EquityDeltaKBInput : {
+				code : "EquityDeltaKBInput"
+				description : "EquityDeltaKBInput"
+				variable_id : "EquityDeltaKBInput"
+				displayName :  "EquityDeltaKBInput"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE EquityDeltaKB : {
+				code : "EquityDeltaKB"
+				description : "EquityDeltaKB"
+				variable_id : "EquityDeltaKB"
+				displayName :  "EquityDeltaKB"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE EquityDeltaKBInputPerBucket : {
+				code : "EquityDeltaKBInputPerBucket"
+				description : "EquityDeltaKBInputPerBucket"
+				variable_id : "EquityDeltaKBInputPerBucket"
+				displayName :  "EquityDeltaKBInputPerBucket"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE EquityDeltaSensitivityPerBucketCorrelated : {
+				code : "EquityDeltaSensitivityPerBucketCorrelated"
+				description : "EquityDeltaSensitivityPerBucketCorrelated"
+				variable_id : "EquityDeltaSensitivityPerBucketCorrelated"
+				displayName :  "EquityDeltaSensitivityPerBucketCorrelated"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE totalEquityDeltaSensitivityPerBucketCorrelated : {
+				code : "totalEquityDeltaSensitivityPerBucketCorrelated"
+				description : "totalEquityDeltaSensitivityPerBucketCorrelated"
+				variable_id : "totalEquityDeltaSensitivityPerBucketCorrelated"
+				displayName :  "totalEquityDeltaSensitivityPerBucketCorrelated"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE totalEquityDeltaSensitivityPerBucket : {
+				code : "totalEquityDeltaSensitivityPerBucket"
+				description : "totalEquityDeltaSensitivityPerBucket"
+				variable_id : "totalEquityDeltaSensitivityPerBucket"
+				displayName :  "totalEquityDeltaSensitivityPerBucket"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE EquityDeltaBucketCorrelationFactor : {
+				code : "EquityDeltaBucketCorrelationFactor"
+				description : "EquityDeltaBucketCorrelationFactor"
+				variable_id : "EquityDeltaBucketCorrelationFactor"
+				displayName :  "EquityDeltaBucketCorrelationFactor"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE totalEquityDeltaSensitivityPerBucketk : {
+				code : "totalEquityDeltaSensitivityPerBucketk"
+				description : "totalEquityDeltaSensitivityPerBucketk"
+				variable_id : "totalEquityDeltaSensitivityPerBucketk"
+				displayName :  "totalEquityDeltaSensitivityPerBucketk"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE totalEquityDeltaSensitivityPerBucketl : {
+				code : "totalEquityDeltaSensitivityPerBucketl"
+				description : "totalEquityDeltaSensitivityPerBucketl"
+				variable_id : "totalEquityDeltaSensitivityPerBucketl"
+				displayName :  "totalEquityDeltaSensitivityPerBucketl"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			}
+			
+			
+			
+			 ] } ] } } } }
+				

@@ -33,7 +33,7 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 			functions : [
 			 				AggregateColumnFunction nettedVegaSensitivities_nettedVegaSensitivities : {
 			 					cube : "NetVegaSensitivities.freeBirdToolsCubeModule.nettedVegaSensitivities"
-			 					variable : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.nettedVegaSensitivity"
+			 					variable : "CommonMeasuresStaticModel.CommonMeasuresModel.variablesModule.nettedVegaSensitivity"
 			 					aggregateFunction : AggregateFunction af6 : {
 			 						functionSpec : "commonFunctions.commonFunctionSpecModule.SUM" 
 			 						parameters : [

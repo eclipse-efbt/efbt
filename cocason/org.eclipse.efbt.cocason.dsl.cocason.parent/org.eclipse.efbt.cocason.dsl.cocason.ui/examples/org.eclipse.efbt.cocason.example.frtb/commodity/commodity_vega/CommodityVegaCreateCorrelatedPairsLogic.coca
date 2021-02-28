@@ -1,0 +1,209 @@
+ProgramAndCalls : { program : TRLProgram :  { 
+	
+	executableLogic :[ TRLExecutableLogic CommodityVegaCreateCorrelatedPairsLogic : { 
+		
+			
+			 datasetTransformationModules : [ VersionedSQLViewsModule   views : { 
+			 	sqlViews : [ 
+
+			 		CopyView copyOfWeightedCommodityVegaSensitivitiesAndRiskFactors : {
+			 			cube : "CommodityVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfWeightedCommodityVegaSensitivitiesAndRiskFactors"
+			 			
+			 		},
+			 		
+			 		JoinView CommodityVegaSensitivityCombinations : { 
+			 			cube : "CommodityVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CommodityVegaSensitivityCombinations"
+			 			whereClause : WhereClause : {
+			 				function : BooleanFunction bf43  : { 
+			 		 				 				
+			 		 				 						functionSpec : "commonFunctions.commonFunctionSpecModule.equals" 
+			 		 				 						parameters : [
+			 		 				 							SpeculativeCubeColumnParameter : {
+			 		 				 								column : "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID"
+			 		 				 								cube :"CommodityVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfWeightedCommodityVegaSensitivitiesAndRiskFactors"
+			 		 				 								},
+			 		 				 							SpeculativeCubeColumnParameter : {
+			 		 				 								column : "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID"
+			 		 				 								cube : "CommodityVegaApplyWeighting.freeBirdToolsCubeModule.weightedCommodityVegaSensitivitiesAndRiskFactors"
+			 		 				 								}
+			 		 				 							
+			 		 				 							]
+			 		 				 							}
+			 		 				 						
+			 		 				 			}
+			 		 				 			renames : [
+			 		 				 				RenameAs : {
+			 		 				 					fromCube :"CommodityVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfWeightedCommodityVegaSensitivitiesAndRiskFactors"
+			 		 				 					fromVariable : "CommodityVegaMeasuresStaticModel.CommodityVegaMeasuresModel.variablesModule.weightedCommodityVegaSensitivity"
+			 		 				 					toVariable : 	"CommodityVegaMeasuresStaticModel.CommodityVegaMeasuresModel.variablesModule.CommodityVegaSensitivityl"
+			 		 				 					},
+			 		 				 				RenameAs : {
+			 		 				 					fromCube : "CommodityVegaApplyWeighting.freeBirdToolsCubeModule.weightedCommodityVegaSensitivitiesAndRiskFactors"
+			 		 				 					fromVariable : 	"CommodityVegaMeasuresStaticModel.CommodityVegaMeasuresModel.variablesModule.weightedCommodityVegaSensitivity"
+			 		 				 					toVariable : 	"CommodityVegaMeasuresStaticModel.CommodityVegaMeasuresModel.variablesModule.CommodityVegaSensitivityk"
+			 		 				 					},
+			 		 				 				RenameAs : {
+			 		 				 					fromCube :"CommodityVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfWeightedCommodityVegaSensitivitiesAndRiskFactors"
+			 		 				 					fromVariable : 	"FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.tenor"
+			 		 				 					toVariable : 	"CommodityVegaMeasuresStaticModel.CommodityVegaMeasuresModel.variablesModule.tenorl"
+			 		 				 					},
+			 		 				 				RenameAs : {
+			 		 				 					fromCube : "CommodityVegaApplyWeighting.freeBirdToolsCubeModule.weightedCommodityVegaSensitivitiesAndRiskFactors"
+			 		 				 					fromVariable : 	"FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.tenor"
+			 		 				 					toVariable : 		"CommodityVegaMeasuresStaticModel.CommodityVegaMeasuresModel.variablesModule.tenork"
+			 		 				 					},
+			 		 				 				RenameAs : {
+			 		 				 					fromCube : "CommodityVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfWeightedCommodityVegaSensitivitiesAndRiskFactors"
+			 		 				 					fromVariable : 	"FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
+			 		 				 					toVariable : 	"FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.riskFactorIDl"
+			 		 				 					},
+			 		 				 				RenameAs : {
+			 		 				 					fromCube : "CommodityVegaApplyWeighting.freeBirdToolsCubeModule.weightedCommodityVegaSensitivitiesAndRiskFactors"
+			 		 				 					fromVariable : 	"FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
+			 		 				 					toVariable : 	"FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.riskFactorIDk"
+			 		 				 					} 
+			 		 				 					
+			 		 				 					]
+			 		 				 				ignores : [ 
+			 		 				 					IgnoreColumn : {
+			 		 				 						columnToIgnore : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.mainCurrency"
+			 		 				 						cube : "CommodityVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfWeightedCommodityVegaSensitivitiesAndRiskFactors"
+			 		 				 					},
+			 		 				 					IgnoreColumn : {
+			 		 				 						columnToIgnore : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.secondCurrency"
+			 		 				 						cube : "CommodityVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfWeightedCommodityVegaSensitivitiesAndRiskFactors"
+			 		 				 					}
+			 		 				 					
+			 		 				 				]
+			 		 				 				
+			 		 				 			
+			 		 				 				},
+			 		EnrichmentView CommodityVegaSensitivityCombinationsWithCorrelationFactor : {
+			 			cube :"CommodityVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CommodityVegaSensitivityCombinationsWithCorrelationFactor"
+			 			functions : [ BasicColumnFunction CommodityVegaSensitivityCombinationsWithCorrelationFactor_CommodityVegaCorrelationFactor : {
+			 				cube :  "CommodityVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CommodityVegaSensitivityCombinationsWithCorrelationFactor"
+			 				variable : "CommodityVegaMeasuresStaticModel.CommodityVegaMeasuresModel.variablesModule.CommodityVegaCorrelationFactor"
+			 				basicFunction : BasicFunction bf44 : {
+			 					functionSpec : "FRTBFunctions.CommodityFunctionSpecModule.getCommodityVegaCorrelationFactor" 
+			 					parameters : [
+			 						SpeculativeCubeColumnParameter : { 
+			 							column : "CommodityVegaMeasuresStaticModel.CommodityVegaMeasuresModel.variablesModule.tenork"
+			 							cube : "CommodityVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CommodityVegaSensitivityCombinations"
+			 						},
+			 						SpeculativeCubeColumnParameter : { 
+			 							column : "CommodityVegaMeasuresStaticModel.CommodityVegaMeasuresModel.variablesModule.tenorl"
+			 							cube : "CommodityVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CommodityVegaSensitivityCombinations"
+			 						},
+			 						SpeculativeCubeColumnParameter : { 
+			 							column : "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.riskFactorIDk"
+			 							cube : "CommodityVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CommodityVegaSensitivityCombinations"
+			 						},
+			 						SpeculativeCubeColumnParameter : { 
+			 							column :"FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.riskFactorIDl"
+			 							cube : "CommodityVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CommodityVegaSensitivityCombinations"
+			 						}
+			 						
+			 				
+			 					]
+			 				}
+			 			} 
+			 		
+			 			] 
+			 			
+			 			},
+			 		EnrichmentView 	CommodityVegaSensitivitiesCorrelated : {
+			 			
+			 			cube : "CommodityVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CommodityVegaSensitivitiesCorrelated"
+			 			
+			 			functions : [ BasicColumnFunction CommodityVegaSensitivitiesCorrelated_CommodityVegaKBInput : { 			 				
+			 					cube :  "CommodityVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CommodityVegaSensitivitiesCorrelated"
+			 					variable :"CommodityVegaMeasuresStaticModel.CommodityVegaMeasuresModel.variablesModule.CommodityVegaKBInput"
+			 				 
+				 				basicFunction : BasicFunction bf45 :
+				 				{ 
+				 					functionSpec : "commonFunctions.commonFunctionSpecModule.multiply" 
+				 					parameters : [ 
+				 						BasicFunction bf46 : { 
+				 							functionSpec : "commonFunctions.commonFunctionSpecModule.multiply"
+				 							parameters : [
+				 								SpeculativeCubeColumnParameter : { 
+				 									column : "CommodityVegaMeasuresStaticModel.CommodityVegaMeasuresModel.variablesModule.CommodityVegaSensitivityk"
+				 									cube : "CommodityVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CommodityVegaSensitivityCombinationsWithCorrelationFactor"
+				 								},
+				 								SpeculativeCubeColumnParameter : { 
+				 									column :"CommodityVegaMeasuresStaticModel.CommodityVegaMeasuresModel.variablesModule.CommodityVegaSensitivityk"
+				 									cube : "CommodityVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CommodityVegaSensitivityCombinationsWithCorrelationFactor"
+				 								}
+				 								
+				 								]
+				 							},
+				 							SpeculativeCubeColumnParameter : { 
+				 									column : "CommodityVegaMeasuresStaticModel.CommodityVegaMeasuresModel.variablesModule.CommodityVegaCorrelationFactor"
+				 									cube :"CommodityVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CommodityVegaSensitivityCombinationsWithCorrelationFactor"
+				 								}
+				 							]
+				 						}
+				 					
+				 				}
+			 			]
+			 			
+			 		},
+			 		AggregateEnrichmentView CommodityVegaSensitivitiesCorrelatedAndAggregated : {
+			 			cube : "CommodityVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CommodityVegaSensitivitiesCorrelatedAndAggregated"
+			 			
+			 			functions : [ 
+			 				AggregateColumnFunction CommodityVegaSensitivitiesCorrelatedAndAggregated_CommodityVegaKBInput_per_bucket : {
+			 					cube : "CommodityVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CommodityVegaSensitivitiesCorrelatedAndAggregated"
+			 					variable : "CommodityVegaMeasuresStaticModel.CommodityVegaMeasuresModel.variablesModule.CommodityVegaKBInputPerBucket"
+			 					aggregateFunction : AggregateFunction af8 : { 
+			 						functionSpec : "commonFunctions.commonFunctionSpecModule.SUM"
+			 						parameters : [  
+			 							SpeculativeCubeColumnParameter : {
+			 								column : "CommodityVegaMeasuresStaticModel.CommodityVegaMeasuresModel.variablesModule.CommodityVegaKBInput"
+			 								cube : "CommodityVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CommodityVegaSensitivitiesCorrelated"
+			 							}
+			 						] 
+			 					} 
+			 				}
+			 			]
+			 			groupByClause : GroupByClause : {
+			 				groupByColumns : [ "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID" ]
+			 			}
+			 		},
+			 		
+			 		EnrichmentView CommodityVegaSensitivityKBPerBucket : {
+			 			cube : "CommodityVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CommodityVegaSensitivityKBPerBucket"
+			 			
+			 			functions : [ BasicColumnFunction CommodityVegaSensitivityKBPerBucket_CommodityVegaKB : {
+			 				cube : "CommodityVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CommodityVegaSensitivityKBPerBucket"
+			 				variable : "CommodityVegaMeasuresStaticModel.CommodityVegaMeasuresModel.variablesModule.CommodityVegaKB"
+			 				basicFunction : BasicFunction bf49  : { 
+			 					
+			 				functionSpec : "commonFunctions.commonFunctionSpecModule.sqrt" 
+			 				parameters : [ 
+			 					
+			 				 BasicFunction bf52 : {
+			 					
+			 					functionSpec : "commonFunctions.commonFunctionSpecModule.max"
+			 					parameters  : [
+			 						SpeculativeCubeColumnParameter : {
+			 							column : "CommodityVegaMeasuresStaticModel.CommodityVegaMeasuresModel.variablesModule.CommodityVegaKBInputPerBucket" 
+			 							cube : "CommodityVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CommodityVegaSensitivitiesCorrelatedAndAggregated"
+			 						},
+			 						ValueParameter : {
+			 							dataType : :Decimal
+			 							value : "0.0"
+			 						}
+			 						]
+			 					}
+			 				
+			 			]
+			 			}
+			 			}
+			 			]
+			 		
+			 			
+			 		}
+
+
+			 		] } ] } ] } }

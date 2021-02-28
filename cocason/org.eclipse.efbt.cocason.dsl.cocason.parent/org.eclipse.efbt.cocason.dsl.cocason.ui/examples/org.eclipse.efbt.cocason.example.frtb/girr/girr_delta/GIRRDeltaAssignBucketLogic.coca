@@ -1,0 +1,44 @@
+ProgramAndCalls : { program : TRLProgram :  { 
+	
+	executableLogic :[ TRLExecutableLogic GIRRDeltaAssignBucketLogic : { 
+		
+			
+			 datasetTransformationModules : [ VersionedSQLViewsModule   views : { 
+			 	sqlViews : [ 
+			 		
+			 		JoinView GIRRDeltaSensitivitiesAndRiskFactors : {
+			 			cube : "GIRRDeltaAssignBucket.freeBirdToolsCubeModule.GIRRDeltaSensitivitiesAndRiskFactors"
+			 			whereClause : WhereClause : { 
+			 				function : BooleanFunction bf40 : {
+			 					functionSpec : "commonFunctions.commonFunctionSpecModule.equals" 
+			 					parameters : [ 
+			 						SpeculativeCubeColumnParameter : {
+			 							column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
+			 							cube : "FRTBSourceCubes.freeBirdToolsCubeModule.GIRRRiskFactor"
+			 							} ,
+			 						SpeculativeCubeColumnParameter : {
+			 							column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
+			 							cube :"NetDeltaSensitivities.freeBirdToolsCubeModule.nettedDeltaSensitivities"
+			 							} 
+			 						]
+			 					}
+			 				}
+			 				ignores : [ IgnoreColumn : { columnToIgnore : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID" cube :"NetDeltaSensitivities.freeBirdToolsCubeModule.nettedDeltaSensitivities" }
+			 				]
+			 			} 	,
+			 		EnrichmentView 	GIRRDeltaAssignBucket  : { 
+			 			cube : "GIRRDeltaAssignBucket.freeBirdToolsCubeModule.GIRRDeltaSensitivitiesAndRiskFactorsWithBucketName"
+			 			functions : [ 
+			 				BasicColumnFunction getGIRRDeltaBucketName : { 
+			 					cube : "GIRRDeltaAssignBucket.freeBirdToolsCubeModule.GIRRDeltaSensitivitiesAndRiskFactorsWithBucketName"
+			 					variable : "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID"
+			 					basicFunction : BasicFunction bf1 : { 
+			 						functionSpec : "FRTBFunctions.GIRRFunctionSpecModule.getGIRRDeltaBucketName"
+			 						parameters : [ SpeculativeCubeColumnParameter : { 
+			 							column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.mainCurrency"
+			 							cube : "GIRRDeltaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRDeltaSensitivitiesAndRiskFactors"
+			 						} ]
+			 					}
+			 				}
+			 		]
+ } ] } ] } ] } }

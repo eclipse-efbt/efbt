@@ -1,0 +1,73 @@
+ProgramAndCalls : { program : TRLProgram :  { 
+	
+	executableLogic :[ TRLExecutableLogic CSRNonSecCurvatureAssignBucketLogic : { 
+		
+			 
+			 datasetTransformationModules : [ VersionedSQLViewsModule   views : { 
+			 	sqlViews : [ 
+			 	JoinView CSRNonSecCurvatureAndPosition : { 
+			 			cube  :"CSRNonSecCurvatureAssignBucketCubes.freeBirdToolsCubeModule.CSRNonSecCurvatureAndPosition"
+			 			whereClause : WhereClause : {
+			 				function : BooleanFunction bf33 : { 
+			 					functionSpec :  "commonFunctions.commonFunctionSpecModule.equals"
+			 					parameters : [ 
+			 						SpeculativeCubeColumnParameter : { 
+			 							column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.positionID"
+			 							cube : "FRTBSourceCubes.freeBirdToolsCubeModule.curvature"
+			 						},
+			 						SpeculativeCubeColumnParameter : {
+			 							column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.positionID"
+			 							cube : "FRTBSourceCubes.freeBirdToolsCubeModule.position"
+			 							
+			 						}
+			 					]
+			 				} 
+			 			}
+			 		ignores : [ IgnoreColumn : { columnToIgnore : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.positionID" cube : "FRTBSourceCubes.freeBirdToolsCubeModule.curvature" } ]
+			 		},
+			 		
+			 		JoinView  CSRNonSecCurvatureValuationDifferences : { 
+			 			cube : "CSRNonSecCurvatureAssignBucketCubes.freeBirdToolsCubeModule.CSRNonSecCurvatureValuationDifferences"
+			 			whereClause : WhereClause : {
+			 				function : BooleanFunction bf34 :
+			 				{ 
+			 					functionSpec : "commonFunctions.commonFunctionSpecModule.equals"
+			 					parameters : [
+			 						SpeculativeCubeColumnParameter : { 
+			 							column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID" 
+			 							cube : "FRTBSourceCubes.freeBirdToolsCubeModule.CSRNonSecRiskFactor"
+			 							} ,
+			 							SpeculativeCubeColumnParameter : { 
+			 							column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID" 
+			 							cube :"CSRNonSecCurvatureAssignBucketCubes.freeBirdToolsCubeModule.CSRNonSecCurvatureAndPosition"
+			 							} 
+			 							] 
+			 						}
+			 					}
+			 				ignores : [ IgnoreColumn : { columnToIgnore : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID" 
+			 					cube : "CSRNonSecCurvatureAssignBucketCubes.freeBirdToolsCubeModule.CSRNonSecCurvatureAndPosition"}
+			 					]
+			 				}
+			 		, 
+			 		
+			 		
+			 		 	EnrichmentView 	CSRNonSecCurvatureValuationDifferencesWithBucket  : { 
+			 			cube : "CSRNonSecCurvatureAssignBucketCubes.freeBirdToolsCubeModule.CSRNonSecCurvatureValuationDifferencesWithBucket"
+			 			functions : [ 
+			 				BasicColumnFunction getCSRNonSecCuvatureBucketName : { 
+			 					cube : "CSRNonSecCurvatureAssignBucketCubes.freeBirdToolsCubeModule.CSRNonSecCurvatureValuationDifferencesWithBucket"
+			 					variable : "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID"
+			 					basicFunction : BasicFunction bf1 : { 
+			 						functionSpec : "FRTBFunctions.CSRNonSecFunctionSpecModule.getCSRNonSecCurvatureBucketName"
+			 						parameters : [ SpeculativeCubeColumnParameter : { 
+			 							column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.mainCurrency"
+			 							cube : "CSRNonSecCurvatureAssignBucketCubes.freeBirdToolsCubeModule.CSRNonSecCurvatureValuationDifferences"
+			 						} ]
+			 					}
+			 				}	
+			 		 			
+			 	 ] 
+			 		 						
+			 		
+			 		}  ] }
+			 ] } ] } }

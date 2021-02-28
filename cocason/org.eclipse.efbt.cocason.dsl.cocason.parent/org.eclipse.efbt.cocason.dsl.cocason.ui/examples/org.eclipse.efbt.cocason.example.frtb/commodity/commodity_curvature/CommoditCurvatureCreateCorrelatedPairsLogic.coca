@@ -1,0 +1,209 @@
+ProgramAndCalls : { program : TRLProgram :  { 
+	
+	executableLogic :[ TRLExecutableLogic CommodityCurvatureCreateCorrelatedPairsLogic : { 
+		
+			 
+			 datasetTransformationModules : [ VersionedSQLViewsModule   views : { 
+			 	sqlViews : [ 
+			 	
+			 		 		
+			 		 			
+			 		 				 	CopyView copyOfCommodityCurvatureRiskChargeForRiskFactor : { 
+			 		 				 		cube : "CommodityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfCommodityCurvatureRiskChargeForRiskFactor" },
+			 		 				 	JoinView CommodityCurvatureCVRkCombinations : {
+			 		 				 		cube : "CommodityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CommodityCurvatureCVRkCombinations"
+			 		 				 		whereClause : WhereClause : { 
+			 		 				 			function : BooleanFunction bf21 : { 
+			 		 				 				functionSpec : "commonFunctions.commonFunctionSpecModule.AND" 
+			 		 				 				parameters : 
+			 		 				 				[
+			 		 				 					BasicFunction bf60 : { 
+			 		 				 						functionSpec : "commonFunctions.commonFunctionSpecModule.AND" 
+			 		 				 						parameters : [ 
+			 		 				 							
+			 		 				 							BasicFunction bf61  : { 
+			 		 				 						functionSpec : "commonFunctions.commonFunctionSpecModule.equals" 
+			 		 				 						parameters : [
+			 		 				 							SpeculativeCubeColumnParameter : {
+			 		 				 								column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection"
+			 		 				 								cube : "CommodityCurvatureCalculateCVRCubes.freeBirdToolsCubeModule.CommodityCurvatureRiskChargeForRiskFactor"
+			 		 				 								},
+			 		 				 							SpeculativeCubeColumnParameter : {
+			 		 				 								column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection"
+			 		 				 								cube : "CommodityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfCommodityCurvatureRiskChargeForRiskFactor"
+			 		 				 								}
+			 		 				 							
+			 		 				 							]
+			 		 				 							},
+					 		 				 					BasicFunction bf22 : { 
+					 		 				 						functionSpec : "commonFunctions.commonFunctionSpecModule.notEquals" 
+					 		 				 						parameters : [
+					 		 				 							SpeculativeCubeColumnParameter : {
+					 		 				 								column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
+					 		 				 								cube : "CommodityCurvatureCalculateCVRCubes.freeBirdToolsCubeModule.CommodityCurvatureRiskChargeForRiskFactor"
+					 		 				 								},
+					 		 				 							SpeculativeCubeColumnParameter : {
+					 		 				 								column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
+					 		 				 								cube : "CommodityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfCommodityCurvatureRiskChargeForRiskFactor"
+					 		 				 								}
+					 		 				 							
+					 		 				 							]
+					 		 				 							}
+					 		 				 						,
+					 		 				 						BasicFunction bf23 : {
+					 		 				 							functionSpec : "commonFunctions.commonFunctionSpecModule.equals"
+					 		 				 							parameters : [
+					 		 				 							SpeculativeCubeColumnParameter : {
+					 		 				 								column : "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID"
+					 		 				 								cube : "CommodityCurvatureCalculateCVRCubes.freeBirdToolsCubeModule.CommodityCurvatureRiskChargeForRiskFactor"
+					 		 				 								},
+					 		 				 							SpeculativeCubeColumnParameter : {
+					 		 				 								column : "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID"
+					 		 				 								cube : "CommodityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfCommodityCurvatureRiskChargeForRiskFactor"
+					 		 				 								}
+					 		 				 							
+					 		 				 							]
+					 		 				 							}
+					 		 				 					]
+					 		 				 				} ]
+			 		 				 			} }
+			 		 				 			renames : [
+			 		 				 				RenameAs : {
+			 		 				 					fromCube : "CommodityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfCommodityCurvatureRiskChargeForRiskFactor"
+			 		 				 					fromVariable : 	 "CommodityCurvatureMeasuresStaticModel.CommodityCurvatureMeasures.variablesModule.CommodityCurvatureCVRk"
+			 		 				 					toVariable : "CommodityCurvatureMeasuresStaticModel.CommodityCurvatureMeasures.variablesModule.CommodityCurvatureCVRl"
+			 		 				 					},
+			 		 				 				
+			 		 				 				RenameAs : {
+			 		 				 					fromCube : "CommodityCurvatureCalculateCVRCubes.freeBirdToolsCubeModule.CommodityCurvatureRiskChargeForRiskFactor"
+			 		 				 					fromVariable : 	"FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
+			 		 				 					toVariable : "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.riskFactorIDl"
+			 		 				 					},
+			 		 				 				
+			 		 				 				RenameAs : {
+			 		 				 					fromCube : "CommodityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfCommodityCurvatureRiskChargeForRiskFactor"
+			 		 				 					fromVariable : 	"FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
+			 		 				 					toVariable : "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.riskFactorIDk"
+			 		 				 					}
+			 		 				 				]
+			 		 				 				ignores : [
+			 		 				 					IgnoreColumn : {
+			 		 				 						columnToIgnore : "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID"
+			 		 				 						cube : "CommodityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfCommodityCurvatureRiskChargeForRiskFactor"
+			 		 				 					},
+			 		 				 					IgnoreColumn : {
+			 		 				 						columnToIgnore : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection"
+			 		 				 						cube : "CommodityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfCommodityCurvatureRiskChargeForRiskFactor"
+			 		 				 					}
+			 		 				 				]
+			 		 				 				},
+			 		 				 		EnrichmentView CommodityCurvatureCVRkCombinationsWithCorrelationFactor : { 
+			 		 				 			cube : "CommodityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CommodityCurvatureCVRkCombinationsWithCorrelationFactor"
+			 		 				 			functions : [
+			 		 				 				BasicColumnFunction CommodityCurvatureCVRkCombinationsWithCorrelationFactor_CommodityCurvatureCVRCorrelationFactor : {
+			 		 				 					cube :"CommodityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CommodityCurvatureCVRkCombinationsWithCorrelationFactor"
+			 		 				 					variable : "CommodityCurvatureMeasuresStaticModel.CommodityCurvatureMeasures.variablesModule.CommodityCurvatureCVRCorrelationFactor"
+			 		 				 					basicFunction : BasicFunction bf25 : {
+			 		 				 						functionSpec :"FRTBFunctions.CommodityFunctionSpecModule.getCommodityCVRCorrelationFactor"
+			 		 				 						parameters : [
+			 		 				 							SpeculativeCubeColumnParameter : { 
+			 		 				 								column : "CommodityCurvatureMeasuresStaticModel.CommodityCurvatureMeasures.variablesModule.CommodityCurvatureCVRk"
+			 		 				 								cube :"CommodityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CommodityCurvatureCVRkCombinations"
+			 		 				 								},
+			 		 				 							SpeculativeCubeColumnParameter : { 
+			 		 				 								column : "CommodityCurvatureMeasuresStaticModel.CommodityCurvatureMeasures.variablesModule.CommodityCurvatureCVRl"
+			 		 				 								cube :"CommodityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CommodityCurvatureCVRkCombinations"
+			 		 				 								}
+			 		 									 ]
+			 		 								}
+			 		 							}
+			 		 						] 
+			 		 						},
+			 		 						EnrichmentView productOfCommodityCurvatureCVRkCorrelatedCombinations : {
+			 		 							cube : "CommodityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.productOfCommodityCurvatureCVRkCorrelatedCombinations"
+			 		 							functions : [ 
+			 		 								BasicColumnFunction productOfCommodityCurvatureCVRkCorrelatedCombinations_CommodityCurvatureCVRCorrelatedProduct :
+			 		 								{
+			 		 									cube : "CommodityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.productOfCommodityCurvatureCVRkCorrelatedCombinations"
+			 		 									variable : "CommodityCurvatureMeasuresStaticModel.CommodityCurvatureMeasures.variablesModule.CommodityCurvatureCVRCorrelatedProduct"
+			 		 									basicFunction : BasicFunction bf26 : {
+			 		 										functionSpec : "commonFunctions.commonFunctionSpecModule.multiply"
+			 		 										parameters : [
+			 		 											BasicFunction bf62 : { 
+			 		 												functionSpec : "commonFunctions.commonFunctionSpecModule.multiply"
+			 		 												parameters : [ 
+
+				 		 											 SpeculativeCubeColumnParameter : { 
+				 		 											 	column : "CommodityCurvatureMeasuresStaticModel.CommodityCurvatureMeasures.variablesModule.CommodityCurvatureCVRk"
+				 		 											 	cube : "CommodityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CommodityCurvatureCVRkCombinationsWithCorrelationFactor"
+				 		 											 	
+				 		 											 	},
+				 		 											  SpeculativeCubeColumnParameter : { 
+				 		 											 	column :"CommodityCurvatureMeasuresStaticModel.CommodityCurvatureMeasures.variablesModule.CommodityCurvatureCVRCorrelationFactor"
+				 		 											 	cube : "CommodityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CommodityCurvatureCVRkCombinationsWithCorrelationFactor"
+				 		 											 	
+				 		 											 	}	
+			 		 											 ]},
+			 		 											  SpeculativeCubeColumnParameter : { 
+				 		 											 	column : "CommodityCurvatureMeasuresStaticModel.CommodityCurvatureMeasures.variablesModule.CommodityCurvatureCVRl"
+				 		 											 	cube : "CommodityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CommodityCurvatureCVRkCombinationsWithCorrelationFactor"
+				 		 											 	
+				 		 											 	}
+			 		 											 
+			 		 											]
+			 		 											}
+			 		 										}
+			 		 									] 
+			 		 									ignores : [ 
+			 		 										IgnoreColumn : { 
+			 		 											columnToIgnore :"CommodityCurvatureMeasuresStaticModel.CommodityCurvatureMeasures.variablesModule.CommodityCurvatureCVRCorrelationFactor"
+			 		 											cube : "CommodityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CommodityCurvatureCVRkCombinationsWithCorrelationFactor"			 		 											
+			 		 										},
+			 		 										IgnoreColumn : { 
+			 		 											columnToIgnore :"CommodityCurvatureMeasuresStaticModel.CommodityCurvatureMeasures.variablesModule.CommodityCurvatureCVRk"
+			 		 											cube : "CommodityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CommodityCurvatureCVRkCombinationsWithCorrelationFactor"			 		 											
+			 		 										},
+			 		 										IgnoreColumn : { 
+			 		 											columnToIgnore :"CommodityCurvatureMeasuresStaticModel.CommodityCurvatureMeasures.variablesModule.CommodityCurvatureCVRl"
+			 		 											cube : "CommodityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CommodityCurvatureCVRkCombinationsWithCorrelationFactor"			 		 											
+			 		 										},
+			 		 										IgnoreColumn : { 
+			 		 											columnToIgnore :"FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.riskFactorIDk"
+			 		 											cube : "CommodityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CommodityCurvatureCVRkCombinationsWithCorrelationFactor"			 		 											
+			 		 										},
+			 		 										IgnoreColumn : { 
+			 		 											columnToIgnore :"FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.riskFactorIDl"
+			 		 											cube : "CommodityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CommodityCurvatureCVRkCombinationsWithCorrelationFactor"			 		 											
+			 		 										}
+			 		 										
+			 		 									]
+			 		 							}  
+			 		 					,
+			 		 					AggregateEnrichmentView sumOfProductOfCommodityCurvatureCVRkCorrelatedCombinationsByBucket : {
+			 		 						cube : "CommodityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.sumOfProductOfCommodityCurvatureCVRkCorrelatedCombinationsByBucket"
+			 		 						functions : [
+			 		 							AggregateColumnFunction sumOfProductOfCommodityCurvatureCVRkCorrelatedCombinationsByBucket_sumOfproductOfCommodityCurvatureCorrelatedCombinations :
+			 		 							{ 
+			 		 								cube : "CommodityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.sumOfProductOfCommodityCurvatureCVRkCorrelatedCombinationsByBucket"
+			 		 								variable : "CommodityCurvatureMeasuresStaticModel.CommodityCurvatureMeasures.variablesModule.sumOfproductOfCommodityCurvatureCorrelatedCombinations"
+			 		 								aggregateFunction : AggregateFunction af3 : {
+			 		 									functionSpec : "commonFunctions.commonFunctionSpecModule.SUM"
+			 		 									parameters : [
+			 		 										SpeculativeCubeColumnParameter : {
+			 		 											column : "CommodityCurvatureMeasuresStaticModel.CommodityCurvatureMeasures.variablesModule.CommodityCurvatureCVRCorrelatedProduct"
+			 		 											cube : "CommodityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.productOfCommodityCurvatureCVRkCorrelatedCombinations"
+			 		 										}
+			 		 									]
+			 		 							}
+			 		 						} 
+			 		 						]
+			 		 						groupByClause : GroupByClause : { 
+			 		 							groupByColumns : [
+			 		 								"FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID",
+			 		 								"FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection" ]
+			 		 					}
+			 		 				}] 
+			 		 						
+			 		
+			 		}  ] }
+			 	] } }

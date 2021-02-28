@@ -1,0 +1,201 @@
+ProgramAndCalls : { program :  TRLProgram :  {
+	smcubesStaticModel : SMCubesStaticModel CSRSecCTPCurvatureMeasuresStaticModel : {
+	smCubesModel : SmcubesModel  CSRSecCTPCurvatureMeasures  : {
+		variables :  [ VariableModule variablesModule :  
+				{
+					license : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"
+			variables : [ 
+				VARIABLE CSRSecCTPCurvatureInstrumentValuation : {
+				code : "CSRSecCTPCurvatureInstrumentValuation"
+				description : "CSRSecCTPCurvatureInstrumentValuation"
+				variable_id : "CSRSecCTPCurvatureInstrumentValuation"
+				displayName :  "CSRSecCTPCurvatureInstrumentValuation"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE CSRSecCTPCurvatureUpshockValuationDifference : {
+				code : "CSRSecCTPCurvatureUpshockValuationDifference"
+				description : "CSRSecCTPCurvatureUpshockValuationDifference"
+				variable_id : "CSRSecCTPCurvatureUpshockValuationDifference"
+				displayName :  "CSRSecCTPCurvatureUpshockValuationDifference"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE CSRSecCTPCurvatureDownshockValuationDifference : {
+				code : "CSRSecCTPCurvatureDownshockValuationDifference"
+				description : "CSRSecCTPCurvatureDownshockValuationDifference"
+				variable_id : "CSRSecCTPCurvatureDownshockValuationDifference"
+				displayName :  "CSRSecCTPCurvatureDownshockValuationDifference"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE curvatureValuationDifference : {
+				code : "curvatureValuationDifference"
+				description : "curvatureValuationDifference"
+				variable_id : "curvatureValuationDifference"
+				displayName :  "curvatureValuationDifference"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE CSRSecCTPCurvatureDeltaStrippedShift : {
+				code : "CSRSecCTPCurvatureDeltaStrippedShift"
+				description : "CSRSecCTPCurvatureDeltaStrippedShift"
+				variable_id : "CSRSecCTPCurvatureDeltaStrippedShift"
+				displayName :  "CSRSecCTPCurvatureDeltaStrippedShift"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE CSRSecCTPCurvatureSummedDeltaStrippedShift : {
+				code : "CSRSecCTPCurvatureSummedDeltaStrippedShift"
+				description : "CSRSecCTPCurvatureSummedDeltaStrippedShift"
+				variable_id : "CSRSecCTPCurvatureSummedDeltaStrippedShift"
+				displayName :  "CSRSecCTPCurvatureSummedDeltaStrippedShift"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE CSRSecCTPCurvatureShiftedValuation : {
+				code : "CSRSecCTPCurvatureShiftedValuation"
+				description : "CSRSecCTPCurvatureShiftedValuation"
+				variable_id : "CSRSecCTPCurvatureShiftedValuation"
+				displayName :  "CSRSecCTPCurvatureShiftedValuation"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE CSRSecCTPCurvatureMinimumShiftedTotal : {
+				code : "CSRSecCTPCurvatureMinimumShiftedTotal"
+				description : "CSRSecCTPCurvatureMinimumShiftedTotal"
+				variable_id : "CSRSecCTPCurvatureMinimumShiftedTotal"
+				displayName :  "CSRSecCTPCurvatureMinimumShiftedTotal"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE CSRSecCTPCurvatureUpshiftDeltaStrippedValuation : {
+				code : "CSRSecCTPCurvatureUpshiftDeltaStrippedValuation"
+				description : "CSRSecCTPCurvatureUpshiftDeltaStrippedValuation"
+				variable_id : "CSRSecCTPCurvatureUpshiftDeltaStrippedValuation"
+				displayName :  "CSRSecCTPCurvatureUpshiftDeltaStrippedValuation"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE CSRSecCTPCurvatureDownshiftDeltaStrippedValuation : {
+				code : "CSRSecCTPCurvatureDownshiftDeltaStrippedValuation"
+				description : "CSRSecCTPCurvatureDownshiftDeltaStrippedValuation"
+				variable_id : "CSRSecCTPCurvatureDownshiftDeltaStrippedValuation"
+				displayName :  "CSRSecCTPCurvatureDownshiftDeltaStrippedValuation"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE CSRSecCTPCurvatureFlooredMinimumShiftedTotalSquared : {
+				code : "CSRSecCTPCurvatureFlooredMinimumShiftedTotalSquared"
+				description : "CSRSecCTPCurvatureFlooredMinimumShiftedTotalSquared"
+				variable_id : "CSRSecCTPCurvatureFlooredMinimumShiftedTotalSquared"
+				displayName :  "CSRSecCTPCurvatureFlooredMinimumShiftedTotalSquared"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE CSRSecCTPCurvatureCVRk : {
+				code : "CSRSecCTPCurvatureCVRk"
+				description : "CSRSecCTPCurvatureCVRk"
+				variable_id : "CSRSecCTPCurvatureCVRk"
+				displayName :  "CSRSecCTPCurvatureCVRk"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE CSRSecCTPCurvatureCVRl : {
+				code : "CSRSecCTPCurvatureCVRl"
+				description : "CSRSecCTPCurvatureCVRl"
+				variable_id : "CSRSecCTPCurvatureCVRl"
+				displayName :  "CSRSecCTPCurvatureCVRl"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE CSRSecCTPCurvatureCVRCorrelationFactor : {
+				code : "CSRSecCTPCurvatureCVRCorrelationFactor"
+				description : "CSRSecCTPCurvatureCVRCorrelationFactor"
+				variable_id : "CSRSecCTPCurvatureCVRCorrelationFactor"
+				displayName :  "CSRSecCTPCurvatureCVRCorrelationFactor"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE CSRSecCTPCurvatureCVRCorrelatedProduct : {
+				code : "CSRSecCTPCurvatureCVRCorrelatedProduct"
+				description : "CSRSecCTPCurvatureCVRCorrelatedProduct"
+				variable_id : "CSRSecCTPCurvatureCVRCorrelatedProduct"
+				displayName :  "CSRSecCTPCurvatureCVRCorrelatedProduct"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE sumOfproductOfCSRSecCTPCurvatureCorrelatedCombinations : {
+				code : "sumOfproductOfCSRSecCTPCurvatureCorrelatedCombinations"
+				description : "sumOfproductOfCSRSecCTPCurvatureCorrelatedCombinations"
+				variable_id : "sumOfproductOfCSRSecCTPCurvatureCorrelatedCombinations"
+				displayName :  "sumOfproductOfCSRSecCTPCurvatureCorrelatedCombinations"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE CSRSecCTPCurvatureTotalGroupedSummedMinimums : {
+				code : "CSRSecCTPCurvatureTotalGroupedSummedMinimums"
+				description : "CSRSecCTPCurvatureTotalGroupedSummedMinimums"
+				variable_id : "CSRSecCTPCurvatureTotalGroupedSummedMinimums"
+				displayName :  "CSRSecCTPCurvatureTotalGroupedSummedMinimums"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			
+			VARIABLE CSRSecCTPCurvatureRiskExposureK : {
+				code : "CSRSecCTPCurvatureRiskExposureK"
+				description : "CSRSecCTPCurvatureRiskExposureK"
+				variable_id : "CSRSecCTPCurvatureRiskExposureK"
+				displayName :  "CSRSecCTPCurvatureRiskExposureK"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE sqrtOfMaximumOfCSRSecCTPCurvatureCVRFinal : {
+				code : "sqrtOfMaximumOfCSRSecCTPCurvatureCVRFinal"
+				description : "sqrtOfMaximumOfCSRSecCTPCurvatureCVRFinal"
+				variable_id : "sqrtOfMaximumOfCSRSecCTPCurvatureCVRFinal"
+				displayName :  "sqrtOfMaximumOfCSRSecCTPCurvatureCVRFinal"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE maximumOfCSRSecCTPCurvatureCVRFinal : {
+				code : "maximumOfCSRSecCTPCurvatureCVRFinal"
+				description : "maximumOfCSRSecCTPCurvatureCVRFinal"
+				variable_id : "maximumOfCSRSecCTPCurvatureCVRFinal"
+				displayName :  "maximumOfCSRSecCTPCurvatureCVRFinal
+"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE CSRSecCTPCurvatureCVRFinal : {
+				code : "CSRSecCTPCurvatureCVRFinal"
+				description : "CSRSecCTPCurvatureCVRFinal"
+				variable_id : "CSRSecCTPCurvatureCVRFinal"
+				displayName :  "CSRSecCTPCurvatureCVRFinal"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE summedCSRSecCTPCurvatureDeltaStrippedShiftUp : {
+				code : "summedCSRSecCTPCurvatureDeltaStrippedShiftUp"
+				description : "summedCSRSecCTPCurvatureDeltaStrippedShiftUp"
+				variable_id : "summedCSRSecCTPCurvatureDeltaStrippedShiftUp"
+				displayName :  "summedCSRSecCTPCurvatureDeltaStrippedShiftUp"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE summedCSRSecCTPCurvatureDeltaStrippedShiftDown : {
+				code : "summedCSRSecCTPCurvatureDeltaStrippedShiftDown"
+				description : "summedCSRSecCTPCurvatureDeltaStrippedShiftDown"
+				variable_id : "summedCSRSecCTPCurvatureDeltaStrippedShiftDown"
+				displayName :  "summedCSRSecCTPCurvatureDeltaStrippedShiftDown"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE summedCSRSecCTPCurvatureDeltaStrippedShiftUp2 : {
+				code : "summedCSRSecCTPCurvatureDeltaStrippedShiftUp2"
+				description : "summedCSRSecCTPCurvatureDeltaStrippedShiftUp2"
+				variable_id : "summedCSRSecCTPCurvatureDeltaStrippedShiftUp2"
+				displayName :  "summedCSRSecCTPCurvatureDeltaStrippedShiftUp2"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE summedCSRSecCTPCurvatureDeltaStrippedShiftDown2 : {
+				code : "summedDeltaStrippedShiftDown2"
+				description : "summedDeltaStrippedShiftDown2"
+				variable_id : "summedDeltaStrippedShiftDown2"
+				displayName :  "summedDeltaStrippedShiftDown2"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE doubleOfMaxOfCSRSecCTPCurvatureCVRFinal : {
+				code : "doubleOfMaxOfCSRSecCTPCurvatureCVRFinal"
+				description : "doubleOfMaxOfCSRSecCTPCurvatureCVRFinal"
+				variable_id : "doubleOfMaxOfCSRSecCTPCurvatureCVRFinal"
+				displayName :  "doubleOfMaxOfCSRSecCTPCurvatureCVRFinal"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE curvatureRiskWeight : {
+				code : "curvatureRiskWeight"
+				description : "curvatureRiskWeight"
+				variable_id : "curvatureRiskWeight"
+				displayName :  "curvatureRiskWeight"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			}
+			
+			 ] } ] } } } }
+				
