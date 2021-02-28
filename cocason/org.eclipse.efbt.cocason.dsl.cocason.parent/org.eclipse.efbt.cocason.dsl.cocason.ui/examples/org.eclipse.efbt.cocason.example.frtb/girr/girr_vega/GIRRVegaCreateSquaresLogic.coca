@@ -1,0 +1,38 @@
+ProgramAndCalls : { program : TRLProgram :  { 
+	
+	executableLogic :[ TRLExecutableLogic GIRRVegaCreateSquaresLogic : { 
+		
+			
+			 datasetTransformationModules : [ VersionedSQLViewsModule   views : { 
+			 	sqlViews : [ 
+
+				AggregateEnrichmentView totalGIRRVegaSensitivityPerBucket : {
+			 			cube : "GIRRVegaCreateSquaresCubes.freeBirdToolsCubeModule.totalGIRRVegaSensitivityPerBucket"
+			 			functions : [
+			 				AggregateColumnFunction totalGIRRVegaSensitivityPerBucket_totalGIRRVegaSensitivityPerBucket: { 
+			 					cube : "GIRRVegaCreateSquaresCubes.freeBirdToolsCubeModule.totalGIRRVegaSensitivityPerBucket"
+			 					variable : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.totalGIRRVegaSensitivityPerBucket"
+			 					aggregateFunction : AggregateFunction af7 : {
+			 						functionSpec : "commonFunctions.commonFunctionSpecModule.SUM" 
+			 						parameters : [ 
+			 							SpeculativeCubeColumnParameter : {
+			 								column : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.weightedGIRRVegaSensitivity"
+			 								cube : "GIRRVegaApplyWeighting.freeBirdToolsCubeModule.weightedGIRRVegaSensitivitiesAndRiskFactors"
+			 								
+			 							}
+			 						] 
+			 						
+			 					}
+			 				
+			 			}
+			 		
+			 			]
+			 			groupByClause : GroupByClause : {
+			 				groupByColumns : [
+			 					"FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID"
+			 				]
+			 			}
+			 		}
+
+			 		] } ] } ] } }
+			 		

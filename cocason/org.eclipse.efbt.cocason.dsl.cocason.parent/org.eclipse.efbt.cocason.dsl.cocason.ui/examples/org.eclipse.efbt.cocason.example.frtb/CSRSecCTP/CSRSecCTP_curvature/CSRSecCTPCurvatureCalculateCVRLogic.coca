@@ -1,0 +1,36 @@
+ProgramAndCalls : { program : TRLProgram :  { 
+	
+	executableLogic :[ TRLExecutableLogic CSRSecCTPCurvatureCalculateCVRLogic : { 
+		
+			 
+			 datasetTransformationModules : [ VersionedSQLViewsModule   views : { 
+			 	sqlViews : [ 
+			 		
+			 		 			AggregateEnrichmentView CSRSecCTPCurvatureRiskChargeForRiskFactor : {
+			 		 				cube : "CSRSecCTPCurvatureCalculateCVRCubes.freeBirdToolsCubeModule.CSRSecCTPCurvatureRiskChargeForRiskFactor"
+			 		 				functions : [ 
+			 		 					AggregateColumnFunction  CSRSecCTPCurvatureRiskChargeForRiskFactor_CSRSecCTPCurvatureCVRk : {
+			 		 						cube : "CSRSecCTPCurvatureCalculateCVRCubes.freeBirdToolsCubeModule.CSRSecCTPCurvatureRiskChargeForRiskFactor"
+			 		 						variable :"CSRSecCTPCurvatureMeasuresStaticModel.CSRSecCTPCurvatureMeasures.variablesModule.CSRSecCTPCurvatureCVRk"
+			 		 						aggregateFunction : AggregateFunction af2 : {
+			 		 							 functionSpec : "commonFunctions.commonFunctionSpecModule.SUM" 
+			 		 							 parameters : [
+			 		 							 	SpeculativeCubeColumnParameter : {
+			 		 							 		column : "CSRSecCTPCurvatureMeasuresStaticModel.CSRSecCTPCurvatureMeasures.variablesModule.CSRSecCTPCurvatureDeltaStrippedShift"
+			 		 							 		cube : "CSRSecCTPCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.CSRSecCTPCurvatureDeltaStrippedShifts"
+			 		 							 		}
+			 		 							 	]
+			 		 							 }
+			 		 							}
+			 		 						]
+			 		 						groupByClause : GroupByClause : {
+			 		 							groupByColumns : 
+			 		 							[
+			 		 								"FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID" ,
+			 		 								"FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID" ,
+			 		 								"FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection"
+			 		 							]
+			 		 						}
+			 		 					}
+			 		 				
+			 		] } ] } ] } }

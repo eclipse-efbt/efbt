@@ -130,6 +130,15 @@ ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStatic
 	 				 cube_structure_id :"FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.deltaSensitivities"
 	 				 variable_id : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.tenor" } ,
 	 			CUBE_STRUCTURE_ITEM : {
+	 				 description : "tenor" 
+	 				 dimension_type ::B 
+	 				 is_flow : false 
+	 				 is_mandatory : false 
+	 				 order : 0 role ::D 
+	 				 isIdentifier : false 
+	 				 cube_structure_id :"FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.vegaSensitivities"
+	 				 variable_id : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.tenor" } ,
+	 			CUBE_STRUCTURE_ITEM : {
 	 				 description : "deltaSensitivity" 
 	 				 dimension_type ::B 
 	 				 is_flow : false 

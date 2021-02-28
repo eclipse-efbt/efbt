@@ -1,0 +1,36 @@
+ProgramAndCalls : { program : TRLProgram :  { 
+	
+	executableLogic :[ TRLExecutableLogic GIRRCurvatureCalculateCVRLogic : { 
+		
+			 
+			 datasetTransformationModules : [ VersionedSQLViewsModule   views : { 
+			 	sqlViews : [ 
+			 		
+			 		 			AggregateEnrichmentView GIRRCurvatureRiskChargeForRiskFactor : {
+			 		 				cube : "GIRRCurvatureCalculateCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureRiskChargeForRiskFactor"
+			 		 				functions : [ 
+			 		 					AggregateColumnFunction  GIRRCurvatureRiskChargeForRiskFactor_GIRRCurvatureCVRk : {
+			 		 						cube : "GIRRCurvatureCalculateCVRCubes.freeBirdToolsCubeModule.GIRRCurvatureRiskChargeForRiskFactor"
+			 		 						variable :"GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureCVRk"
+			 		 						aggregateFunction : AggregateFunction af2 : {
+			 		 							 functionSpec : "commonFunctions.commonFunctionSpecModule.SUM" 
+			 		 							 parameters : [
+			 		 							 	SpeculativeCubeColumnParameter : {
+			 		 							 		column : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureDeltaStrippedShift"
+			 		 							 		cube : "GIRRCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.GIRRCurvatureDeltaStrippedShifts"
+			 		 							 		}
+			 		 							 	]
+			 		 							 }
+			 		 							}
+			 		 						]
+			 		 						groupByClause : GroupByClause : {
+			 		 							groupByColumns : 
+			 		 							[
+			 		 								"FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID" ,
+			 		 								"FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID" ,
+			 		 								"FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection"
+			 		 							]
+			 		 						}
+			 		 					}
+			 		 				
+			 		] } ] } ] } }

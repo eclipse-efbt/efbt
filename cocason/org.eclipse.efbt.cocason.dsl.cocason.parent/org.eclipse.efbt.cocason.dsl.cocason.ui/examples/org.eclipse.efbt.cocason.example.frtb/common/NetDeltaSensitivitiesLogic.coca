@@ -33,7 +33,7 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 			functions : [
 			 				AggregateColumnFunction nettedDeltaSensitivities_nettedDeltaSensitivities : {
 			 					cube : "NetDeltaSensitivities.freeBirdToolsCubeModule.nettedDeltaSensitivities"
-			 					variable : "GIRRDeltaMeasuresStaticModel.GIRRDeltaMeasuresModel.variablesModule.nettedDeltaSensitivity"
+			 					variable : "CommonMeasuresStaticModel.CommonMeasuresModel.variablesModule.nettedDeltaSensitivity"
 			 					aggregateFunction : AggregateFunction af6 : {
 			 						functionSpec : "commonFunctions.commonFunctionSpecModule.SUM" 
 			 						parameters : [

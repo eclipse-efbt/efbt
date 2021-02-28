@@ -1,0 +1,147 @@
+ProgramAndCalls : { program :  TRLProgram :  {
+	smcubesStaticModel : SMCubesStaticModel CSRSecNonCTPDeltaMeasuresStaticModel : {
+	smCubesModel : SmcubesModel  CSRSecNonCTPDeltaMeasuresModel  : {
+		variables :  [ VariableModule variablesModule :  
+				{
+					license : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"
+			variables : [ 
+			VARIABLE CSRSecNonCTPDeltaSensitivityk : {
+				code : "CSRSecNonCTPDeltaSensitivityk"
+				description : "CSRSecNonCTPDeltaSensitivityk"
+				variable_id : "CSRSecNonCTPDeltaSensitivityk"
+				displayName :  "CSRSecNonCTPDeltaSensitivityk"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE CSRSecNonCTPDeltaCorrelationFactor : {
+				code : "CSRSecNonCTPDeltaCorrelationFactor"
+				description : "CSRSecNonCTPDeltaCorrelationFactor"
+				variable_id : "CSRSecNonCTPDeltaCorrelationFactor"
+				displayName :  "CSRSecNonCTPDeltaCorrelationFactor"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			
+			VARIABLE CSRSecNonCTPDeltaSensitivityl : {
+				code : "CSRSecNonCTPDeltaSensitivityl"
+				description : "CSRSecNonCTPDeltaSensitivityl"
+				variable_id : "CSRSecNonCTPDeltaSensitivityl"
+				displayName :  "CSRSecNonCTPDeltaSensitivityl"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE summedCSRSecNonCTPDelta : {
+				code : "summedCSRSecNonCTPDelta"
+				description : "summedCSRSecNonCTPDelta"
+				variable_id : "summedCSRSecNonCTPDelta"
+				displayName :  "summedCSRSecNonCTPDelta"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			
+			VARIABLE tenork : {
+				code : "tenork"
+				description : "tenork"
+				variable_id : "tenork"
+				displayName :  "tenork"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE tenorl : {
+				code : "tenorl"
+				description : "tenorl"
+				variable_id : "tenorl"
+				displayName :  "tenorl"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE mainCurrencyl : {
+				code : "mainCurrencyl"
+				description : "mainCurrencyl"
+				variable_id : "mainCurrencyl"
+				displayName : "mainCurrencyl"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
+			},
+			VARIABLE mainCurrencyk : {
+				code : "mainCurrencyk"
+				description : "mainCurrencyk"
+				variable_id : "mainCurrencyk"
+				displayName : "MaimainCurrencyknCurrency"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
+			},
+			VARIABLE CSRSecNonCTPDeltaRiskWeight : {
+				code : "CSRSecNonCTPDeltaRiskWeight"
+				description : "CSRSecNonCTPDeltaRiskWeight"
+				variable_id : "CSRSecNonCTPDeltaRiskWeight"
+				displayName :  "CSRSecNonCTPDeltaRiskWeight"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE weightedCSRSecNonCTPDeltaSensitivity : {
+				code : "weightedCSRSecNonCTPDeltaSensitivity"
+				description : "weightedCSRSecNonCTPDeltaSensitivity"
+				variable_id : "weightedCSRSecNonCTPDeltaSensitivity"
+				displayName :  "weightedCSRSecNonCTPDeltaSensitivity"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE CSRSecNonCTPDeltaKBInput : {
+				code : "CSRSecNonCTPDeltaKBInput"
+				description : "CSRSecNonCTPDeltaKBInput"
+				variable_id : "CSRSecNonCTPDeltaKBInput"
+				displayName :  "CSRSecNonCTPDeltaKBInput"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE CSRSecNonCTPDeltaKB : {
+				code : "CSRSecNonCTPDeltaKB"
+				description : "CSRSecNonCTPDeltaKB"
+				variable_id : "CSRSecNonCTPDeltaKB"
+				displayName :  "CSRSecNonCTPDeltaKB"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE CSRSecNonCTPDeltaKBInputPerBucket : {
+				code : "CSRSecNonCTPDeltaKBInputPerBucket"
+				description : "CSRSecNonCTPDeltaKBInputPerBucket"
+				variable_id : "CSRSecNonCTPDeltaKBInputPerBucket"
+				displayName :  "CSRSecNonCTPDeltaKBInputPerBucket"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE CSRSecNonCTPDeltaSensitivityPerBucketCorrelated : {
+				code : "CSRSecNonCTPDeltaSensitivityPerBucketCorrelated"
+				description : "CSRSecNonCTPDeltaSensitivityPerBucketCorrelated"
+				variable_id : "CSRSecNonCTPDeltaSensitivityPerBucketCorrelated"
+				displayName :  "CSRSecNonCTPDeltaSensitivityPerBucketCorrelated"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE totalCSRSecNonCTPDeltaSensitivityPerBucketCorrelated : {
+				code : "totalCSRSecNonCTPDeltaSensitivityPerBucketCorrelated"
+				description : "totalCSRSecNonCTPDeltaSensitivityPerBucketCorrelated"
+				variable_id : "totalCSRSecNonCTPDeltaSensitivityPerBucketCorrelated"
+				displayName :  "totalCSRSecNonCTPDeltaSensitivityPerBucketCorrelated"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE totalCSRSecNonCTPDeltaSensitivityPerBucket : {
+				code : "totalCSRSecNonCTPDeltaSensitivityPerBucket"
+				description : "totalCSRSecNonCTPDeltaSensitivityPerBucket"
+				variable_id : "totalCSRSecNonCTPDeltaSensitivityPerBucket"
+				displayName :  "totalCSRSecNonCTPDeltaSensitivityPerBucket"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE CSRSecNonCTPDeltaBucketCorrelationFactor : {
+				code : "CSRSecNonCTPDeltaBucketCorrelationFactor"
+				description : "CSRSecNonCTPDeltaBucketCorrelationFactor"
+				variable_id : "CSRSecNonCTPDeltaBucketCorrelationFactor"
+				displayName :  "CSRSecNonCTPDeltaBucketCorrelationFactor"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE totalCSRSecNonCTPDeltaSensitivityPerBucketk : {
+				code : "totalCSRSecNonCTPDeltaSensitivityPerBucketk"
+				description : "totalCSRSecNonCTPDeltaSensitivityPerBucketk"
+				variable_id : "totalCSRSecNonCTPDeltaSensitivityPerBucketk"
+				displayName :  "totalCSRSecNonCTPDeltaSensitivityPerBucketk"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE totalCSRSecNonCTPDeltaSensitivityPerBucketl : {
+				code : "totalCSRSecNonCTPDeltaSensitivityPerBucketl"
+				description : "totalCSRSecNonCTPDeltaSensitivityPerBucketl"
+				variable_id : "totalCSRSecNonCTPDeltaSensitivityPerBucketl"
+				displayName :  "totalCSRSecNonCTPDeltaSensitivityPerBucketl"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			}
+			
+			
+			
+			 ] } ] } } } }
+				

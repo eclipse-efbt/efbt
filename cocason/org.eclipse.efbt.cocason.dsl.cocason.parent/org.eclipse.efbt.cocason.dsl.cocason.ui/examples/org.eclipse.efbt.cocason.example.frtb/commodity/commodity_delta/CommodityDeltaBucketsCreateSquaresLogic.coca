@@ -1,0 +1,8 @@
+ProgramAndCalls : { program : TRLProgram :  { 
+	
+	executableLogic :[ TRLExecutableLogic CommodityDeltaBucketsCreateSquaresLogic : { 
+		
+			
+			 datasetTransformationModules : [ VersionedSQLViewsModule   views : { 
+			  } ] } ] } }
+			 		

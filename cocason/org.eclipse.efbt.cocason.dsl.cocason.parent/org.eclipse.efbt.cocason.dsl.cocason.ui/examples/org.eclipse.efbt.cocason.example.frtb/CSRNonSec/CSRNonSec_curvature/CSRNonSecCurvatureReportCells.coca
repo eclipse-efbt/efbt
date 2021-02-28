@@ -1,0 +1,15 @@
+ProgramAndCalls : { program : TRLProgram : { executableLogic : [ TRLExecutableLogic CSRNonSecCurvatureReportCells: 
+	{reportCellViewModules : [
+			 		 	ReportCellViewModule CSRNonSecCurvatureReportCellsModule : { 
+			 		 		reportCellViews [ 
+			 		 			ReportCellView  irEURCurvatureReportCellView : {
+			 		 				cube : "CSRNonSecCurvatureDatapoints.freeBirdToolsCubeModule.CSRNonSecCurvatureEURReportCell"
+			 		 				reportCell : ReportCell irEURCurvatureReportCell : {
+			 		 					combination : "FRTBCombinationsStaticModel.FRTBCombinationsModel.combinationModule.irEURCurvatureReportCell" 
+			 		 				}
+			 		 				}
+			 		 				]
+			 		 				
+			 		 			}
+			 		 		]
+			 		 	} ] } }  

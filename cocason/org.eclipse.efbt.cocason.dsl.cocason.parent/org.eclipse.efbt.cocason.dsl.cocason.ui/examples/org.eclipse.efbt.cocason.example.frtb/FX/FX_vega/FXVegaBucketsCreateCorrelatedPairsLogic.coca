@@ -1,0 +1,8 @@
+ProgramAndCalls : { program : TRLProgram :  { 
+	
+	executableLogic :[ TRLExecutableLogic FXVegaBucketsCreateCorrelatedPairsLogic : { 
+		
+			
+			 datasetTransformationModules : [ VersionedSQLViewsModule   views : { 
+			 	 } ] } ] } }
+			 		

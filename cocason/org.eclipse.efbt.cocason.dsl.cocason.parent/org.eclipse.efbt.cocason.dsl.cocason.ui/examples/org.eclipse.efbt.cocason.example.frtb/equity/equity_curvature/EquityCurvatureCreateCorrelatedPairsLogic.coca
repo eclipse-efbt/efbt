@@ -1,0 +1,209 @@
+ProgramAndCalls : { program : TRLProgram :  { 
+	
+	executableLogic :[ TRLExecutableLogic EquityCurvatureCreateCorrelatedPairsLogic : { 
+		
+			 
+			 datasetTransformationModules : [ VersionedSQLViewsModule   views : { 
+			 	sqlViews : [ 
+			 	
+			 		 		
+			 		 			
+			 		 				 	CopyView copyOfEquityCurvatureRiskChargeForRiskFactor : { 
+			 		 				 		cube : "EquityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfEquityCurvatureRiskChargeForRiskFactor" },
+			 		 				 	JoinView EquityCurvatureCVRkCombinations : {
+			 		 				 		cube : "EquityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.EquityCurvatureCVRkCombinations"
+			 		 				 		whereClause : WhereClause : { 
+			 		 				 			function : BooleanFunction bf21 : { 
+			 		 				 				functionSpec : "commonFunctions.commonFunctionSpecModule.AND" 
+			 		 				 				parameters : 
+			 		 				 				[
+			 		 				 					BasicFunction bf60 : { 
+			 		 				 						functionSpec : "commonFunctions.commonFunctionSpecModule.AND" 
+			 		 				 						parameters : [ 
+			 		 				 							
+			 		 				 							BasicFunction bf61  : { 
+			 		 				 						functionSpec : "commonFunctions.commonFunctionSpecModule.equals" 
+			 		 				 						parameters : [
+			 		 				 							SpeculativeCubeColumnParameter : {
+			 		 				 								column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection"
+			 		 				 								cube : "EquityCurvatureCalculateCVRCubes.freeBirdToolsCubeModule.EquityCurvatureRiskChargeForRiskFactor"
+			 		 				 								},
+			 		 				 							SpeculativeCubeColumnParameter : {
+			 		 				 								column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection"
+			 		 				 								cube : "EquityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfEquityCurvatureRiskChargeForRiskFactor"
+			 		 				 								}
+			 		 				 							
+			 		 				 							]
+			 		 				 							},
+					 		 				 					BasicFunction bf22 : { 
+					 		 				 						functionSpec : "commonFunctions.commonFunctionSpecModule.notEquals" 
+					 		 				 						parameters : [
+					 		 				 							SpeculativeCubeColumnParameter : {
+					 		 				 								column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
+					 		 				 								cube : "EquityCurvatureCalculateCVRCubes.freeBirdToolsCubeModule.EquityCurvatureRiskChargeForRiskFactor"
+					 		 				 								},
+					 		 				 							SpeculativeCubeColumnParameter : {
+					 		 				 								column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
+					 		 				 								cube : "EquityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfEquityCurvatureRiskChargeForRiskFactor"
+					 		 				 								}
+					 		 				 							
+					 		 				 							]
+					 		 				 							}
+					 		 				 						,
+					 		 				 						BasicFunction bf23 : {
+					 		 				 							functionSpec : "commonFunctions.commonFunctionSpecModule.equals"
+					 		 				 							parameters : [
+					 		 				 							SpeculativeCubeColumnParameter : {
+					 		 				 								column : "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID"
+					 		 				 								cube : "EquityCurvatureCalculateCVRCubes.freeBirdToolsCubeModule.EquityCurvatureRiskChargeForRiskFactor"
+					 		 				 								},
+					 		 				 							SpeculativeCubeColumnParameter : {
+					 		 				 								column : "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID"
+					 		 				 								cube : "EquityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfEquityCurvatureRiskChargeForRiskFactor"
+					 		 				 								}
+					 		 				 							
+					 		 				 							]
+					 		 				 							}
+					 		 				 					]
+					 		 				 				} ]
+			 		 				 			} }
+			 		 				 			renames : [
+			 		 				 				RenameAs : {
+			 		 				 					fromCube : "EquityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfEquityCurvatureRiskChargeForRiskFactor"
+			 		 				 					fromVariable : 	 "EquityCurvatureMeasuresStaticModel.EquityCurvatureMeasures.variablesModule.EquityCurvatureCVRk"
+			 		 				 					toVariable : "EquityCurvatureMeasuresStaticModel.EquityCurvatureMeasures.variablesModule.EquityCurvatureCVRl"
+			 		 				 					},
+			 		 				 				
+			 		 				 				RenameAs : {
+			 		 				 					fromCube : "EquityCurvatureCalculateCVRCubes.freeBirdToolsCubeModule.EquityCurvatureRiskChargeForRiskFactor"
+			 		 				 					fromVariable : 	"FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
+			 		 				 					toVariable : "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.riskFactorIDl"
+			 		 				 					},
+			 		 				 				
+			 		 				 				RenameAs : {
+			 		 				 					fromCube : "EquityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfEquityCurvatureRiskChargeForRiskFactor"
+			 		 				 					fromVariable : 	"FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
+			 		 				 					toVariable : "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.riskFactorIDk"
+			 		 				 					}
+			 		 				 				]
+			 		 				 				ignores : [
+			 		 				 					IgnoreColumn : {
+			 		 				 						columnToIgnore : "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID"
+			 		 				 						cube : "EquityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfEquityCurvatureRiskChargeForRiskFactor"
+			 		 				 					},
+			 		 				 					IgnoreColumn : {
+			 		 				 						columnToIgnore : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection"
+			 		 				 						cube : "EquityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfEquityCurvatureRiskChargeForRiskFactor"
+			 		 				 					}
+			 		 				 				]
+			 		 				 				},
+			 		 				 		EnrichmentView EquityCurvatureCVRkCombinationsWithCorrelationFactor : { 
+			 		 				 			cube : "EquityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.EquityCurvatureCVRkCombinationsWithCorrelationFactor"
+			 		 				 			functions : [
+			 		 				 				BasicColumnFunction EquityCurvatureCVRkCombinationsWithCorrelationFactor_EquityCurvatureCVRCorrelationFactor : {
+			 		 				 					cube :"EquityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.EquityCurvatureCVRkCombinationsWithCorrelationFactor"
+			 		 				 					variable : "EquityCurvatureMeasuresStaticModel.EquityCurvatureMeasures.variablesModule.EquityCurvatureCVRCorrelationFactor"
+			 		 				 					basicFunction : BasicFunction bf25 : {
+			 		 				 						functionSpec :"FRTBFunctions.EquityFunctionSpecModule.getEquityCVRCorrelationFactor"
+			 		 				 						parameters : [
+			 		 				 							SpeculativeCubeColumnParameter : { 
+			 		 				 								column : "EquityCurvatureMeasuresStaticModel.EquityCurvatureMeasures.variablesModule.EquityCurvatureCVRk"
+			 		 				 								cube :"EquityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.EquityCurvatureCVRkCombinations"
+			 		 				 								},
+			 		 				 							SpeculativeCubeColumnParameter : { 
+			 		 				 								column : "EquityCurvatureMeasuresStaticModel.EquityCurvatureMeasures.variablesModule.EquityCurvatureCVRl"
+			 		 				 								cube :"EquityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.EquityCurvatureCVRkCombinations"
+			 		 				 								}
+			 		 									 ]
+			 		 								}
+			 		 							}
+			 		 						] 
+			 		 						},
+			 		 						EnrichmentView productOfEquityCurvatureCVRkCorrelatedCombinations : {
+			 		 							cube : "EquityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.productOfEquityCurvatureCVRkCorrelatedCombinations"
+			 		 							functions : [ 
+			 		 								BasicColumnFunction productOfEquityCurvatureCVRkCorrelatedCombinations_EquityCurvatureCVRCorrelatedProduct :
+			 		 								{
+			 		 									cube : "EquityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.productOfEquityCurvatureCVRkCorrelatedCombinations"
+			 		 									variable : "EquityCurvatureMeasuresStaticModel.EquityCurvatureMeasures.variablesModule.EquityCurvatureCVRCorrelatedProduct"
+			 		 									basicFunction : BasicFunction bf26 : {
+			 		 										functionSpec : "commonFunctions.commonFunctionSpecModule.multiply"
+			 		 										parameters : [
+			 		 											BasicFunction bf62 : { 
+			 		 												functionSpec : "commonFunctions.commonFunctionSpecModule.multiply"
+			 		 												parameters : [ 
+
+				 		 											 SpeculativeCubeColumnParameter : { 
+				 		 											 	column : "EquityCurvatureMeasuresStaticModel.EquityCurvatureMeasures.variablesModule.EquityCurvatureCVRk"
+				 		 											 	cube : "EquityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.EquityCurvatureCVRkCombinationsWithCorrelationFactor"
+				 		 											 	
+				 		 											 	},
+				 		 											  SpeculativeCubeColumnParameter : { 
+				 		 											 	column :"EquityCurvatureMeasuresStaticModel.EquityCurvatureMeasures.variablesModule.EquityCurvatureCVRCorrelationFactor"
+				 		 											 	cube : "EquityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.EquityCurvatureCVRkCombinationsWithCorrelationFactor"
+				 		 											 	
+				 		 											 	}	
+			 		 											 ]},
+			 		 											  SpeculativeCubeColumnParameter : { 
+				 		 											 	column : "EquityCurvatureMeasuresStaticModel.EquityCurvatureMeasures.variablesModule.EquityCurvatureCVRl"
+				 		 											 	cube : "EquityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.EquityCurvatureCVRkCombinationsWithCorrelationFactor"
+				 		 											 	
+				 		 											 	}
+			 		 											 
+			 		 											]
+			 		 											}
+			 		 										}
+			 		 									] 
+			 		 									ignores : [ 
+			 		 										IgnoreColumn : { 
+			 		 											columnToIgnore :"EquityCurvatureMeasuresStaticModel.EquityCurvatureMeasures.variablesModule.EquityCurvatureCVRCorrelationFactor"
+			 		 											cube : "EquityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.EquityCurvatureCVRkCombinationsWithCorrelationFactor"			 		 											
+			 		 										},
+			 		 										IgnoreColumn : { 
+			 		 											columnToIgnore :"EquityCurvatureMeasuresStaticModel.EquityCurvatureMeasures.variablesModule.EquityCurvatureCVRk"
+			 		 											cube : "EquityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.EquityCurvatureCVRkCombinationsWithCorrelationFactor"			 		 											
+			 		 										},
+			 		 										IgnoreColumn : { 
+			 		 											columnToIgnore :"EquityCurvatureMeasuresStaticModel.EquityCurvatureMeasures.variablesModule.EquityCurvatureCVRl"
+			 		 											cube : "EquityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.EquityCurvatureCVRkCombinationsWithCorrelationFactor"			 		 											
+			 		 										},
+			 		 										IgnoreColumn : { 
+			 		 											columnToIgnore :"FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.riskFactorIDk"
+			 		 											cube : "EquityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.EquityCurvatureCVRkCombinationsWithCorrelationFactor"			 		 											
+			 		 										},
+			 		 										IgnoreColumn : { 
+			 		 											columnToIgnore :"FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.riskFactorIDl"
+			 		 											cube : "EquityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.EquityCurvatureCVRkCombinationsWithCorrelationFactor"			 		 											
+			 		 										}
+			 		 										
+			 		 									]
+			 		 							}  
+			 		 					,
+			 		 					AggregateEnrichmentView sumOfProductOfEquityCurvatureCVRkCorrelatedCombinationsByBucket : {
+			 		 						cube : "EquityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.sumOfProductOfEquityCurvatureCVRkCorrelatedCombinationsByBucket"
+			 		 						functions : [
+			 		 							AggregateColumnFunction sumOfProductOfEquityCurvatureCVRkCorrelatedCombinationsByBucket_sumOfproductOfEquityCurvatureCorrelatedCombinations :
+			 		 							{ 
+			 		 								cube : "EquityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.sumOfProductOfEquityCurvatureCVRkCorrelatedCombinationsByBucket"
+			 		 								variable : "EquityCurvatureMeasuresStaticModel.EquityCurvatureMeasures.variablesModule.sumOfproductOfEquityCurvatureCorrelatedCombinations"
+			 		 								aggregateFunction : AggregateFunction af3 : {
+			 		 									functionSpec : "commonFunctions.commonFunctionSpecModule.SUM"
+			 		 									parameters : [
+			 		 										SpeculativeCubeColumnParameter : {
+			 		 											column : "EquityCurvatureMeasuresStaticModel.EquityCurvatureMeasures.variablesModule.EquityCurvatureCVRCorrelatedProduct"
+			 		 											cube : "EquityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.productOfEquityCurvatureCVRkCorrelatedCombinations"
+			 		 										}
+			 		 									]
+			 		 							}
+			 		 						} 
+			 		 						]
+			 		 						groupByClause : GroupByClause : { 
+			 		 							groupByColumns : [
+			 		 								"FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID",
+			 		 								"FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection" ]
+			 		 					}
+			 		 				}] 
+			 		 						
+			 		
+			 		}  ] }
+			 	] } }
