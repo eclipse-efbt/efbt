@@ -11,13 +11,7 @@ ProgramAndCalls : { program : TRLProgram :  {
 						COMBINATION_ITEM : { 
 							member_id : "FRTBSourceDomainMembersStaticModel.FRTBSourceDomainMembersModel.membersModule.EUR"
 							 variable_id :"FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID"} , 
-							 COMBINATION_ITEM : { variable_id : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.sqrtOfMaximumOfGIRRCurvatureCVRFinal" } } } , 
+							 COMBINATION_ITEM : { variable_id : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.sqrtOfMaximumOfGIRRCurvatureCVRFinal" } } }  
 							 
-				 COMBINATION irEURProductReportCell : { 
-				 	code : "irEURProductReportCell" 
-				 	combination_id : "irEURProductReportCell" 
-				 	combination_items : { COMBINATION_ITEM : 
-				 		{ member_id : "FRTBSourceDomainMembersStaticModel.FRTBSourceDomainMembersModel.membersModule.EUR"
-							 variable_id : "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID" } , 
-				 			COMBINATION_ITEM : { variable_id : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.GIRRCurvatureCVRCorrelatedProduct" } } } 
+				 
 				  ] } ] } } } }

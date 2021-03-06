@@ -65,7 +65,7 @@ ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStatic
 	 				 order : 0 role ::D 
 	 				 isIdentifier : false 
 	 				 cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.curvature"
-	 				 variable_id : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.curvatureValuationDifference"} ,	
+	 				 variable_id : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.curvatureValuationDifference"} ,	
 	 			CUBE_STRUCTURE_ITEM : {
 	 				 description : "positionID" 
 	 				 dimension_type ::B 
@@ -92,7 +92,7 @@ ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStatic
 	 				 order : 0 role ::D 
 	 				 isIdentifier : false 
 	 				 cube_structure_id :"FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.curvature"
-	 				 variable_id : "GIRRCurvatureMeasuresStaticModel.GIRRCurvatureMeasures.variablesModule.curvatureRiskWeight"},
+	 				 variable_id : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.curvatureRiskWeight"},
 	 			CUBE_STRUCTURE_ITEM : {
 	 				 description : "riskFactorID" 
 	 				 dimension_type ::B 
@@ -308,7 +308,7 @@ ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStatic
 	 				 is_mandatory : false 
 	 				 order : 0 role ::D 
 	 				 isIdentifier : false 
-	 				 cube_structure_id :"FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.commodityRiskFactor"
+	 				 cube_structure_id :"FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.CommodityRiskFactor"
 	 				 variable_id :"FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.commodityType"},
 	 			CUBE_STRUCTURE_ITEM : {
 	 				 description : "deliveryLocation" 
@@ -317,7 +317,7 @@ ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStatic
 	 				 is_mandatory : false 
 	 				 order : 0 role ::D 
 	 				 isIdentifier : false 
-	 				 cube_structure_id :"FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.commodityRiskFactor"
+	 				 cube_structure_id :"FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.CommodityRiskFactor"
 	 				 variable_id :"FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.deliveryLocation"}
 	 			,
 	 			CUBE_STRUCTURE_ITEM : {

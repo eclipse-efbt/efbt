@@ -8,7 +8,7 @@ ProgramAndCalls : { program : TRLProgram : { executableLogic : [ TRLExecutableLo
 				BaseCube deltaSensitivities,
 				BaseCube vegaSensitivities,
 				BaseCube EquityRiskFactor,
-				BaseCube commodityRiskFactor,
+				BaseCube CommodityRiskFactor,
 				BaseCube CSRNonSecRiskFactor,
 				BaseCube CSRSecCTPRiskFactor,
 				BaseCube CSRSecNonCTPRiskFactor,
