@@ -39,6 +39,20 @@ ProgramAndCalls : { program :  TRLProgram :  {
 				variable_id : "deltaSensitivity"
 				displayName :  "deltaSensitivity"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE curvatureValuationDifference : {
+				code : "curvatureValuationDifference"
+				description : "curvatureValuationDifference"
+				variable_id : "curvatureValuationDifference"
+				displayName :  "curvatureValuationDifference"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE curvatureRiskWeight : {
+				code : "curvatureRiskWeight"
+				description : "curvatureRiskWeight"
+				variable_id : "curvatureRiskWeight"
+				displayName :  "curvatureRiskWeight"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			}
 			
 			

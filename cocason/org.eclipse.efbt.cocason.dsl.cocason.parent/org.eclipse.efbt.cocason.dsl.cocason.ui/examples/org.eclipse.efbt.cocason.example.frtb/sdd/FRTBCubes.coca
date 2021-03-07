@@ -47,13 +47,13 @@ ProgramAndCalls : { program : TRLProgram :  {
  							is_allowed : false 
  							published : false 
  							cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.EquityRiskFactor" }  ,
- 						CUBE commodityRiskFactor : { 
- 							code : "commodityRiskFactor" 
- 							cube_id : "commodityRiskFactor" 
- 							description : "commodityRiskFactor" 
+ 						CUBE CommodityRiskFactor : { 
+ 							code : "CommodityRiskFactor" 
+ 							cube_id : "CommodityRiskFactor" 
+ 							description : "CommodityRiskFactor" 
  							is_allowed : false 
  							published : false 
- 							cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.commodityRiskFactor" }  ,
+ 							cube_structure_id : "FRTBCubeStructuresStaticModel.FRTBCubeStructuresModel.cubeStructures_model.CommodityRiskFactor" }  ,
  						CUBE CSRNonSecRiskFactor : { 
  							code : "CSRNonSecRiskFactor" 
  							cube_id : "CSRNonSecRiskFactor" 
