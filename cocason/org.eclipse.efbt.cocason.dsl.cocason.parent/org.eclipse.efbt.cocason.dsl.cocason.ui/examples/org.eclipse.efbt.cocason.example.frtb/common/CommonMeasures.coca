@@ -19,6 +19,20 @@ ProgramAndCalls : { program :  TRLProgram :  {
 				variable_id : "nettedDeltaSensitivity"
 				displayName :  "nettedDeltaSensitivity"
 				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE summedDeltaPerPosition : {
+				code : "summedDeltaPerPosition"
+				description : "summedDeltaPerPosition"
+				variable_id : "summedDeltaPerPosition"
+				displayName :  "summedDeltaPerPosition"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE summedVegaPerPosition : {
+				code : "summedVegaPerPosition"
+				description : "summedVegaPerPosition"
+				variable_id : "summedVegaPerPosition"
+				displayName :  "summedVegaPerPosition"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
 			}
 			 
 			

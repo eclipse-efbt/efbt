@@ -59,7 +59,7 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 				functions : [ 
 			 		 					AggregateColumnFunction  summedVegaSensitivitiesPerPosition_GIRRCurvatureSummedGIRRVega : {
 			 		 						cube : "NetVegaSensitivities.freeBirdToolsCubeModule.summedVegaSensitivitiesPerPosition"
-			 		 						variable : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.summedGIRRVega"
+			 		 						variable :"CommonMeasuresStaticModel.CommonMeasuresModel.variablesModule.summedVegaPerPosition"
 			 		 						aggregateFunction : AggregateFunction af1 : {
 			 		 							 functionSpec : "commonFunctions.commonFunctionSpecModule.SUM" 
 			 		 							 parameters : [
@@ -79,47 +79,6 @@ ProgramAndCalls : { program : TRLProgram :  {
 			 		 							]
 			 		 						}
 			 		 					}
-			 		 				, 
-			 		JoinView GIRRVegaSensitivitiesAndRiskFactors : {
-			 			cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivitiesAndRiskFactors"
-			 			whereClause : WhereClause : { 
-			 				function : BooleanFunction bf40 : {
-			 					functionSpec : "commonFunctions.commonFunctionSpecModule.equals" 
-			 					parameters : [ 
-			 						SpeculativeCubeColumnParameter : {
-			 							column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
-			 							cube : "FRTBSourceCubes.freeBirdToolsCubeModule.GIRRRiskFactor"
-			 							} ,
-			 						SpeculativeCubeColumnParameter : {
-			 							column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
-			 							cube :"NetVegaSensitivities.freeBirdToolsCubeModule.nettedVegaSensitivities"
-			 							} 
-			 						]
-			 					}
-			 				}
-			 				ignores : [ IgnoreColumn : { columnToIgnore : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID" cube : "NetVegaSensitivities.freeBirdToolsCubeModule.nettedVegaSensitivities" }
-			 				]
-			 			} 	,
-			 		EnrichmentView 	GIRRVegaSensitivitiesAndRiskFactorsWithWeight : {
-			 			cube :"GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivitiesAndRiskFactorsWithWeight"
-			 			functions : [ 
-			 				BasicColumnFunction GIRRVegaSensitivitiesAndRiskFactorsWithWeight_GIRRVegaRiskWeight: { 
-			 					cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivitiesAndRiskFactorsWithWeight"
-			 					variable : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.GIRRVegaRiskWeight"
-			 					
-			 					basicFunction : BasicFunction bf41 : {
-			 						functionSpec : "FRTBFunctions.GIRRFunctionSpecModule.getGIRRVegaRiskFactorRiskWeight"
-			 						parameters : [ 
-			 							SpeculativeCubeColumnParameter : {
-			 								column : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.tenor"
-			 								cube : "GIRRVegaAggregationAndWeightingCubes.freeBirdToolsCubeModule.GIRRVegaSensitivitiesAndRiskFactors"
-			 							}
-			 							
-			 						]
-			 					}
-			 				}
-			 			
-			 			]
-			 		}
+			 		 			
 
 			 		] } ] } ] } }
