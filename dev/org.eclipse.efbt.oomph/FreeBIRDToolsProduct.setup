@@ -61,15 +61,24 @@
       xsi:type="setup:ResourceCreationTask"
       excludedTriggers="STARTUP MANUAL"
       filter="(osgi.os=linux)"
-      content="[Desktop Entry]&#xA;Type=Application&#xA;Name=${scope.product.label} - ${scope.product.version.label}&#xA;Exec=${product.location/}eclipse&#xA;Icon=${product.location/}icon.xpm&#xA;Terminal=false&#xA;Categories=Development;IDE;"
-      targetURL="${product.location|uri}/eclipse.desktop"/>
+      targetURL="${product.location|uri}/eclipse.desktop">
+    <content>
+      [Desktop Entry]
+      Type=Application
+      Name=${scope.product.label} - ${scope.product.version.label}
+      Exec=${product.location/}eclipse
+      Icon=${product.location/}icon.xpm
+      Terminal=false
+      Categories=Development;IDE;
+    </content>
+  </setupTask>
   <setupTask
       xsi:type="setup:VariableTask"
       name="product.location"
       value="${installation.location/}${installation.relativeProductFolder}"/>
   <version name="latest"
       label="Latest"
-      requiredJavaVersion="1.8">
+      requiredJavaVersion="11">
     <setupTask
         xsi:type="setup:CompoundTask"
         name="User Preferences">
@@ -206,14 +215,24 @@
           name="org.eclipse.mylyn.github.feature.feature.group"/>
       <requirement
           name="org.eclipse.buildship.feature.group"/>
+      <requirement
+          name="org.apache.commons.csv"/>
+      <requirement
+          name="org.eclipse.xtext.sdk.feature.group"/>
+      <requirement
+          name="org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.feature.feature.group"/>
       <repository
-          url="http://download.eclipse.org/releases/2020-06"/>
+          url="http://download.eclipse.org/releases/2021-03"/>
       <repository
-          url="http://download.eclipse.org/technology/epp/packages/2020-06"/>
+          url="http://download.eclipse.org/technology/epp/packages/2021-03"/>
       <repository
           url="https://checkstyle.github.io/eclipse-cs/update"/>
       <repository
           url="http://download.eclipse.org/cbi/tpd/3.0.0-SNAPSHOT/"/>
+      <repository
+          url="https://download.eclipse.org/tools/orbit/downloads/2021-03"/>
+      <repository
+          url="https://download.eclipse.org/efbt/snapshots/"/>
     </setupTask>
     <description></description>
   </version>
