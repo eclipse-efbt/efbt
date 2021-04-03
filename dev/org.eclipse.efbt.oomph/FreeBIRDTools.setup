@@ -16,13 +16,14 @@
   <setupTask
       xsi:type="setup:EclipseIniTask"
       option="-Xmx"
-      value="1024m"
+      value="2048m"
       vm="true">
     <description>Set the heap space needed to work with the projects of ${scope.project.label}</description>
   </setupTask>
   <setupTask
       xsi:type="setup:ResourceCreationTask"
       excludedTriggers="STARTUP MANUAL"
+      force="true"
       targetURL="${workspace.location|uri}/.metadata/.plugins/org.eclipse.jdt.ui/dialog_settings.xml"
       encoding="UTF-8">
     <description>Initialize JDT's package explorer to show working sets as its root objects</description>
@@ -404,6 +405,13 @@
           pattern=".*\.eclipse.efbt.oomph.*"/>
     </workingSet>
     <description>efbt_working_sets</description>
+  </setupTask>
+  <setupTask
+      xsi:type="setup:PreferenceTask"
+      id="autobuild"
+      key="/instance/org.eclipse.core.resources/description.autobuilding"
+      value="false">
+    <description>autobuild</description>
   </setupTask>
   <stream name="develop"
       label="Develop">

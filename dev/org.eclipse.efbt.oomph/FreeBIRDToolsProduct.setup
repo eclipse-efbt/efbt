@@ -56,6 +56,13 @@
         xsi:type="setup:PreferenceTask"
         key="/instance/org.eclipse.pde.ui/Preferences.MainPage.addToJavaSearch"
         value="true"/>
+    <setupTask
+        xsi:type="setup:PreferenceTask"
+        id="autobuild"
+        key="/instance/org.eclipse.core.resources/description.autobuilding"
+        value="false">
+      <description>autobuild</description>
+    </setupTask>
   </setupTask>
   <setupTask
       xsi:type="setup:ResourceCreationTask"
