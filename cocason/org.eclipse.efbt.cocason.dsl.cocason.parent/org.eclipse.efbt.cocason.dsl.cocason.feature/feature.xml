@@ -17,7 +17,7 @@
       version="1.0.0.qualifier">
 
    <requires>
-      <import plugin="org.eclipse.efbt.cocalimo.trl.model.platform_call"/>
+      <import plugin="org.eclipse.efbt.cocalimo.dtm.model.platform_call"/>
       <import plugin="org.eclipse.efbt.cocalimo.smcubes.model.program"/>
       <import plugin="org.eclipse.xtext"/>
       <import plugin="org.eclipse.xtext.xbase"/>
@@ -28,7 +28,7 @@
       <import plugin="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.datalineage"/>
       <import plugin="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagefunctions"/>
       <import plugin="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions"/>
-      <import plugin="org.eclipse.efbt.cocalimo.trl.model.core"/>
+      <import plugin="org.eclipse.efbt.cocalimo.dtm.model.core"/>
       <import plugin="org.apache.log4j"/>
       <import plugin="org.eclipse.xtext.ide"/>
       <import plugin="org.eclipse.xtext.xbase.ide"/>

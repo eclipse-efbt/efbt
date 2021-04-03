@@ -1,6 +1,6 @@
-ProgramAndCalls : { program : TRLProgram :  { 
+ProgramAndCalls : { program : dtmProgram :  { 
 	
-	executableLogic :[ TRLExecutableLogic CommodityCurvatureCalculateCVRLogic : { 
+	executableLogic :[ dtmExecutableLogic CommodityCurvatureCalculateCVRLogic : { 
 		
 			 
 			 datasetTransformationModules : [ VersionedSQLViewsModule   views : { 

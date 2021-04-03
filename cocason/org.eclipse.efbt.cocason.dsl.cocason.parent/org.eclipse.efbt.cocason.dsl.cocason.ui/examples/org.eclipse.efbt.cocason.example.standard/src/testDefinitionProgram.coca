@@ -1,4 +1,4 @@
-ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStaticModel testDefinitionsStaticModel : {
+ProgramAndCalls : { program :  dtmProgram : { smcubesStaticModel : SMCubesStaticModel testDefinitionsStaticModel : {
 	bddTestDefinitions : BDDTestDefinitionModule testDefinitionsModule : {
 		testDefinitions : [ E2ETestDefinition standard_test : {
 			testContraints : "testConstraintsStaticModel.constraints" given : Given  :{

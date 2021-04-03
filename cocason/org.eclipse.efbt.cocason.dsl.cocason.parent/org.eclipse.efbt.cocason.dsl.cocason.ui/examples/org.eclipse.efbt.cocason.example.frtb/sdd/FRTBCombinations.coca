@@ -1,4 +1,4 @@
-ProgramAndCalls : { program : TRLProgram :  {
+ProgramAndCalls : { program : dtmProgram :  {
 	smcubesStaticModel : SMCubesStaticModel FRTBCombinationsStaticModel : { 
 		smCubesModel  : SmcubesModel FRTBCombinationsModel: {    combinations  : [
 			CombinationModule combinationModule : { 

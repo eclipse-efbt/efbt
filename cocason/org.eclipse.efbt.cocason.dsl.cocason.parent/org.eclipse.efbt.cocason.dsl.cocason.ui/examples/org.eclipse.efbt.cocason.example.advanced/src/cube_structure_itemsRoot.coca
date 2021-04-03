@@ -1,4 +1,4 @@
-ProgramAndCalls : { program : TRLProgram : { smcubesStaticModel : SMCubesStaticModel smcubesCubeStructureItemsStaticModel : {
+ProgramAndCalls : { program : dtmProgram : { smcubesStaticModel : SMCubesStaticModel smcubesCubeStructureItemsStaticModel : {
 	smCubesModel : SmcubesModel smcubesCubeStructureItemsModel : {
 		cubes : [ CubeModule cubeStructureItems_model : {
 			cubeStructureItems : [ CUBE_STRUCTURE_ITEM : {

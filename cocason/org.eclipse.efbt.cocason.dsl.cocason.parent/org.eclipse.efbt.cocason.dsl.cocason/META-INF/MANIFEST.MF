@@ -7,7 +7,7 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-SymbolicName: org.eclipse.efbt.cocason.dsl.cocason; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: 
- org.eclipse.efbt.cocalimo.trl.model.platform_call,
+ org.eclipse.efbt.cocalimo.dtm.model.platform_call,
  org.eclipse.efbt.cocalimo.smcubes.model.program,
  org.eclipse.xtext,
  org.eclipse.xtext.xbase,
@@ -19,7 +19,7 @@ Require-Bundle:
  org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.datalineage,
  org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagefunctions,
  org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions,
- org.eclipse.efbt.cocalimo.trl.model.core
+ org.eclipse.efbt.cocalimo.dtm.model.core
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.efbt.cocason.dsl.cocason.validation,
  org.eclipse.efbt.cocason.dsl.cocason.services,

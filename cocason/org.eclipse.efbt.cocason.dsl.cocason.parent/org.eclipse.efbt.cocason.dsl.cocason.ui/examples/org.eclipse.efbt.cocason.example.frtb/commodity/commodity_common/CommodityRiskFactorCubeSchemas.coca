@@ -1,6 +1,6 @@
-ProgramAndCalls : { program : TRLProgram :  { 
+ProgramAndCalls : { program : dtmProgram :  { 
 	
-	executableLogic :[ TRLExecutableLogic CommodityRiskFactorCubeSchemas : { 
+	executableLogic :[ dtmExecutableLogic CommodityRiskFactorCubeSchemas : { 
 		
 			 cubeSchemaModules : [  VersionedCubeSchemaModule  CommodityRiskFactorCubeSchemasModule : { 
 			 	

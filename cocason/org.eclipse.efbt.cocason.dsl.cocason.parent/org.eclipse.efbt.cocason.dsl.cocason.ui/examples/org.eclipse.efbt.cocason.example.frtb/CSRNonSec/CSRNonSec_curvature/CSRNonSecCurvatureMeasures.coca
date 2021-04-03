@@ -1,4 +1,4 @@
-ProgramAndCalls : { program :  TRLProgram :  {
+ProgramAndCalls : { program :  dtmProgram :  {
 	smcubesStaticModel : SMCubesStaticModel CSRNonSecCurvatureMeasuresStaticModel : {
 	smCubesModel : SmcubesModel  CSRNonSecCurvatureMeasures  : {
 		variables :  [ VariableModule variablesModule :  

@@ -14,6 +14,6 @@ Require-Bundle: org.eclipse.emf.ecore,
  org.eclipse.xtext,
  org.eclipse.efbt.controller.smcubes.component.exporter,
  org.eclipse.efbt.cocason.dsl.cocason,
- org.eclipse.efbt.cocalimo.trl.model.platform_call,
- org.eclipse.efbt.cocalimo.trl.model.core
+ org.eclipse.efbt.cocalimo.dtm.model.platform_call,
+ org.eclipse.efbt.cocalimo.dtm.model.core
 Export-Package: org.eclipse.efbt.controller.smcubes.component.export_smcubes

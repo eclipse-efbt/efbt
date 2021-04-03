@@ -1,6 +1,6 @@
-ProgramAndCalls : { program : TRLProgram :  { 
+ProgramAndCalls : { program : dtmProgram :  { 
 	
-	executableLogic :[ TRLExecutableLogic EquityCurvatureDeltaStrippingLogic : { 
+	executableLogic :[ dtmExecutableLogic EquityCurvatureDeltaStrippingLogic : { 
 		
 			
 			 datasetTransformationModules : [ VersionedSQLViewsModule   views : { 

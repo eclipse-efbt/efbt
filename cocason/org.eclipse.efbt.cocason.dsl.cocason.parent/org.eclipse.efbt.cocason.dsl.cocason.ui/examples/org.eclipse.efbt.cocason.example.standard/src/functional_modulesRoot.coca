@@ -1,4 +1,4 @@
-ProgramAndCalls : { program : TRLProgram : { smcubesStaticModel : SMCubesStaticModel abc: { functionalityModules : FunctionalityModuleModule functionalityModules1 : 
+ProgramAndCalls : { program : dtmProgram : { smcubesStaticModel : SMCubesStaticModel abc: { functionalityModules : FunctionalityModuleModule functionalityModules1 : 
 	{  FunctionalityModules : 
 		[ SerialFunctionalityModule example_processing : { 
 			subModules : [ 
