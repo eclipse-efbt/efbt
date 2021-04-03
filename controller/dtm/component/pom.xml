@@ -13,9 +13,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.eclipse.efbt.controller.trl.component</groupId>
+	<groupId>org.eclipse.efbt.controller.dtm.component</groupId>
 	<version>1.0.0-SNAPSHOT</version>
-	<artifactId>org.eclipse.efbt.controller.trl.component</artifactId>
+	<artifactId>org.eclipse.efbt.controller.dtm.component</artifactId>
 	<packaging>pom</packaging>
 <prerequisites>
     <maven>3.0</maven>
@@ -37,10 +37,10 @@
 		<additionalTestArguments></additionalTestArguments>
 	</properties>
 	<modules>
-		<module>releng/org.eclipse.efbt.controller.trl.component.target</module>
-		<module>plugins/org.eclipse.efbt.controller.trl.component.core</module>
-		<module>features/org.eclipse.efbt.controller.trl.component.core.feature</module>		
-		<module>releng/org.eclipse.efbt.controller.trl.component.repository</module>
+		<module>releng/org.eclipse.efbt.controller.dtm.component.target</module>
+		<module>plugins/org.eclipse.efbt.controller.dtm.component.core</module>
+		<module>features/org.eclipse.efbt.controller.dtm.component.core.feature</module>		
+		<module>releng/org.eclipse.efbt.controller.dtm.component.repository</module>
 
 
 
@@ -128,8 +128,8 @@
 				  <pomDependencies>consider</pomDependencies>
 					<target>
 						<artifact>
-							<groupId>org.eclipse.efbt.controller.trl.component</groupId>
-							<artifactId>org.eclipse.efbt.controller.trl.component.target</artifactId>
+							<groupId>org.eclipse.efbt.controller.dtm.component</groupId>
+							<artifactId>org.eclipse.efbt.controller.dtm.component.target</artifactId>
 							<version>${project.version}</version>
 						</artifact>
 					</target>

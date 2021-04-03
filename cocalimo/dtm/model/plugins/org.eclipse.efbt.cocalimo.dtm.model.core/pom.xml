@@ -39,7 +39,7 @@
 				<configuration>
 					<mainClass>org.eclipse.emf.mwe2.launch.runtime.Mwe2Launcher</mainClass>
 					<arguments>
-						<argument>/${project.basedir}/src/org/eclipse/efbt/language/dtm/model/core/GeneratedtmModel.mwe2</argument>
+						<argument>/${project.basedir}/src/org/eclipse/efbt/language/dtm/model/core/GenerateDTMModel.mwe2</argument>
 						<argument>-p</argument>
 						<argument>rootPath=/${project.basedir}/..</argument>
 					</arguments>
