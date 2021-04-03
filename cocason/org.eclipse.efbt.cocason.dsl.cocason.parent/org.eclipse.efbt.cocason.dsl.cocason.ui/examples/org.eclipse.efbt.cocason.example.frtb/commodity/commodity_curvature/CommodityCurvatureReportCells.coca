@@ -1,4 +1,4 @@
-ProgramAndCalls : { program : TRLProgram : { executableLogic : [ TRLExecutableLogic CommodityCurvatureReportCells: 
+ProgramAndCalls : { program : dtmProgram : { executableLogic : [ dtmExecutableLogic CommodityCurvatureReportCells: 
 	{reportCellViewModules : [
 			 		 	ReportCellViewModule CommodityCurvatureReportCellsModule : { 
 			 		 		reportCellViews [ 

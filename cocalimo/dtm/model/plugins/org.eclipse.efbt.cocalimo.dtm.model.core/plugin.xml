@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+    Copyright (c) 2020 Bird Software Solutions Ltd
+    This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License 2.0
+    which accompanies this distribution, and is available at
+    https://www.eclipse.org/legal/epl-2.0/
+   
+    SPDX-License-Identifier: EPL-2.0
+   
+    Contributors:
+       Neil Mackenzie - initial API and implementation
+ -->
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated dtm -->
+      <package
+            uri="http://www.eclipse.org/efbt/domain_model_mapping"
+            class="org.eclipse.efbt.language.dtm.model.domain_model_mapping.Domain_model_mappingPackage"
+            genModel="model/dtm.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated dtm -->
+      <parser
+            type="domain_model_mapping"
+            class="org.eclipse.efbt.language.dtm.model.domain_model_mapping.util.Domain_model_mappingResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated dtm -->
+      <package
+            uri="http://www.eclipse.org/efbt/transformation"
+            class="org.eclipse.efbt.language.dtm.model.transformation.TransformationPackage"
+            genModel="model/dtm.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated dtm -->
+      <parser
+            type="transformation"
+            class="org.eclipse.efbt.language.dtm.model.transformation.util.TransformationResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated dtm -->
+      <package
+            uri="http://www.eclipse.org/efbt/dtm_report_cell_views"
+            class="org.eclipse.efbt.language.dtm.model.dtm_report_cell_views.dtm_report_cell_viewsPackage"
+            genModel="model/dtm.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated dtm -->
+      <parser
+            type="dtm_report_cell_views"
+            class="org.eclipse.efbt.language.dtm.model.dtm_report_cell_views.util.dtm_report_cell_viewsResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated dtm -->
+      <package
+            uri="http://www.eclipse.org/efbt/dtm_sql_views"
+            class="org.eclipse.efbt.language.dtm.model.dtm_sql_views.dtm_sql_viewsPackage"
+            genModel="model/dtm.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated dtm -->
+      <parser
+            type="dtm_sql_views"
+            class="org.eclipse.efbt.language.dtm.model.dtm_sql_views.util.dtm_sql_viewsResourceFactoryImpl"/>
+   </extension>
+
+</plugin>

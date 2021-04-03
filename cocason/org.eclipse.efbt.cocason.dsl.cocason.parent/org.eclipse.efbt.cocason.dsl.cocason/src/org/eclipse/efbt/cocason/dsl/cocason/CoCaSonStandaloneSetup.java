@@ -36,9 +36,9 @@ import org.eclipse.efbt.cocalimo.smcubes.model.rendering.RenderingPackage;
 import org.eclipse.efbt.cocalimo.smcubes.model.reports.ReportsPackage;
 import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.Smcubes_modelPackage;
 import org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.Vtl_transformationPackage;
-import org.eclipse.efbt.language.trl.model.transformation.TransformationPackage;
-import org.eclipse.efbt.language.trl.model.trl_report_cell_views.Trl_report_cell_viewsPackage;
-import org.eclipse.efbt.language.trl.model.trl_sql_views.Trl_sql_viewsPackage;
+import org.eclipse.efbt.language.dtm.model.transformation.TransformationPackage;
+import org.eclipse.efbt.language.dtm.model.dtm_report_cell_views.dtm_report_cell_viewsPackage;
+import org.eclipse.efbt.language.dtm.model.dtm_sql_views.dtm_sql_viewsPackage;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.advanced_variable_lineagefunctions.Advanced_variable_lineagefunctionsPackage;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.column_transformation_logic.Column_transformation_logicPackage;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cube_schema.Cube_schemaPackage;
@@ -182,11 +182,11 @@ public class CoCaSonStandaloneSetup extends CoCaSonStandaloneSetupGenerated {
 		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/cube_schema")) {
 			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/cube_schema", Cube_schemaPackage.eINSTANCE);
 		}
-		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/trl_sql_views")) {
-			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/trl_sql_views", Trl_sql_viewsPackage.eINSTANCE);
+		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/dtm_sql_views")) {
+			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/dtm_sql_views", dtm_sql_viewsPackage.eINSTANCE);
 		}
-		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/trl_report_cell_views")) {
-			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/trl_report_cell_views", Trl_report_cell_viewsPackage.eINSTANCE);
+		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/dtm_report_cell_views")) {
+			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/dtm_report_cell_views", dtm_report_cell_viewsPackage.eINSTANCE);
 		}
 		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/efbt/platform_call")) {
 			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/platform_call", Platform_callPackage.eINSTANCE);

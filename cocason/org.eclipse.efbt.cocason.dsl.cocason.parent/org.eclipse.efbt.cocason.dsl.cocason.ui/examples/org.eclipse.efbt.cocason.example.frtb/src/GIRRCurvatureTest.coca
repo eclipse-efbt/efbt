@@ -1,5 +1,5 @@
 ProgramAndCalls : { 
-	program : TRLProgram : { 
+	program : dtmProgram : { 
 		smcubesStaticModel : SMCubesStaticModel staticModel1 : {
 			regFunctionalityTests : SMCubesRegFunctionalityTestModule regFunctionalityTests1 : {
 				regFunctionalityTests : [ 

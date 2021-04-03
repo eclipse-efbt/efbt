@@ -1,6 +1,6 @@
-ProgramAndCalls : { program : TRLProgram :  { 
+ProgramAndCalls : { program : dtmProgram :  { 
 	
-	executableLogic :[ TRLExecutableLogic CSRSecNonCTPDeltaCreateCorrelatedPairsLogic : { 
+	executableLogic :[ dtmExecutableLogic CSRSecNonCTPDeltaCreateCorrelatedPairsLogic : { 
 		
 			
 			 datasetTransformationModules : [ VersionedSQLViewsModule   views : { 

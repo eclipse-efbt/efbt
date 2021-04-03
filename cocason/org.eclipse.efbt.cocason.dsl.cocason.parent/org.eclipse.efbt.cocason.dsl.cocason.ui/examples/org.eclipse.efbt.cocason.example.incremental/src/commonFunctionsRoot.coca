@@ -1,4 +1,4 @@
-ProgramAndCalls : { program : TRLProgram :  { executableLogic : [ TRLExecutableLogic trl_executable_logic3 : { functionSpecModule : FunctionSpecModule functionSpecModule1 : {  functionSpecs : 
+ProgramAndCalls : { program : dtmProgram :  { executableLogic : [ dtmExecutableLogic dtm_executable_logic3 : { functionSpecModule : FunctionSpecModule functionSpecModule1 : {  functionSpecs : 
 	[ BasicFunctionSpec AND :  
 		{ functionalName : "&&" 
 			sqlName : "AND" 

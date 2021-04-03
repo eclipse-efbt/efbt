@@ -1,6 +1,6 @@
-ProgramAndCalls : { program : TRLProgram :  { 
+ProgramAndCalls : { program : dtmProgram :  { 
 	
-	executableLogic :[ TRLExecutableLogic GIRRDeltaBucketsCreateCorrelatedPairsLogic : { 
+	executableLogic :[ dtmExecutableLogic GIRRDeltaBucketsCreateCorrelatedPairsLogic : { 
 		
 			
 			 datasetTransformationModules : [ VersionedSQLViewsModule   views : { 

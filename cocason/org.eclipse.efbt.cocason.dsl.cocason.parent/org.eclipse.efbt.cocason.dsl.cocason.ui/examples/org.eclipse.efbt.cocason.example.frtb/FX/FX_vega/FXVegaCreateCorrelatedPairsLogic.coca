@@ -1,6 +1,6 @@
-ProgramAndCalls : { program : TRLProgram :  { 
+ProgramAndCalls : { program : dtmProgram :  { 
 	
-	executableLogic :[ TRLExecutableLogic FXVegaCreateCorrelatedPairsLogic : { 
+	executableLogic :[ dtmExecutableLogic FXVegaCreateCorrelatedPairsLogic : { 
 		
 			
 			 datasetTransformationModules : [ VersionedSQLViewsModule   views : { 

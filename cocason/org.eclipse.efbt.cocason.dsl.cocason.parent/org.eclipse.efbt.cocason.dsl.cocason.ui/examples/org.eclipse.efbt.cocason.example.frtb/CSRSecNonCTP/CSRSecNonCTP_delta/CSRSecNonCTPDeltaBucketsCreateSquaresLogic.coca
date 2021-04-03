@@ -1,6 +1,6 @@
-ProgramAndCalls : { program : TRLProgram :  { 
+ProgramAndCalls : { program : dtmProgram :  { 
 	
-	executableLogic :[ TRLExecutableLogic CSRSecNonCTPDeltaBucketsCreateSquaresLogic : { 
+	executableLogic :[ dtmExecutableLogic CSRSecNonCTPDeltaBucketsCreateSquaresLogic : { 
 		
 			
 			 datasetTransformationModules : [ VersionedSQLViewsModule   views : { 

@@ -1,4 +1,4 @@
-ProgramAndCalls : { program : TRLProgram : { executableLogic : [ TRLExecutableLogic CSRNonSecCurvatureReportCells: 
+ProgramAndCalls : { program : dtmProgram : { executableLogic : [ dtmExecutableLogic CSRNonSecCurvatureReportCells: 
 	{reportCellViewModules : [
 			 		 	ReportCellViewModule CSRNonSecCurvatureReportCellsModule : { 
 			 		 		reportCellViews [ 

@@ -1,4 +1,4 @@
-ProgramAndCalls : { program :  TRLProgram : { smcubesStaticModel : SMCubesStaticModel testTemplateStaticModel : {
+ProgramAndCalls : { program :  dtmProgram : { smcubesStaticModel : SMCubesStaticModel testTemplateStaticModel : {
 	testTemplates  : BDDTestTemplateModule testTemplateModule : {
 		templates : [ TestTemplate testTemplate1 : {
 			givenText : ClauseText then_specific_output_data_is_expected

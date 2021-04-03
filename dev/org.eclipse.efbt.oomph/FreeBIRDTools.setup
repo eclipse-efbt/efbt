@@ -205,13 +205,13 @@
       </predicate>
     </workingSet>
     <workingSet
-        name="cocalimo_trl"
-        id="cocalimo_trl">
+        name="cocalimo_dtm"
+        id="cocalimo_dtm">
       <predicate
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.cocalimo.trl.*"/>
+            pattern=".*\.eclipse.efbt.cocalimo.dtm.*"/>
         <operand
             xsi:type="predicates:NotPredicate">
           <operand
@@ -351,13 +351,13 @@
       </predicate>
     </workingSet>
     <workingSet
-        name="controller_trl"
-        id="controller_trl">
+        name="controller_dtm"
+        id="controller_dtm">
       <predicate
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.controller.trl.*"/>
+            pattern=".*\.eclipse.efbt.controller.dtm.*"/>
         <operand
             xsi:type="predicates:NotPredicate">
           <operand
