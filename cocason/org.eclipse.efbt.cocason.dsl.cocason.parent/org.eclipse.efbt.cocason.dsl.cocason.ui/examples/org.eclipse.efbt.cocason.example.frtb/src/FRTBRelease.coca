@@ -1,4 +1,4 @@
-ProgramAndCalls : { program : TRLProgram :  { 
+ProgramAndCalls : { program : dtmProgram :  { 
 			 		release : Release FRTBRelease1 : {
 			 	 		cubeSchemaModules : [ "GIRRRiskFactorCubeSchemas.GIRRRiskFactorCubeSchemasModule" , 
 			 	 								"CurvatureCubeSchemas.CurvatureCubeSchemasModule" ,

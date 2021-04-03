@@ -1,6 +1,6 @@
-ProgramAndCalls : { program : TRLProgram :  { 
+ProgramAndCalls : { program : dtmProgram :  { 
 	
-	executableLogic :[ TRLExecutableLogic CommodityDeltaBucketsCreateSquaresLogic : { 
+	executableLogic :[ dtmExecutableLogic CommodityDeltaBucketsCreateSquaresLogic : { 
 		
 			
 			 datasetTransformationModules : [ VersionedSQLViewsModule   views : { 

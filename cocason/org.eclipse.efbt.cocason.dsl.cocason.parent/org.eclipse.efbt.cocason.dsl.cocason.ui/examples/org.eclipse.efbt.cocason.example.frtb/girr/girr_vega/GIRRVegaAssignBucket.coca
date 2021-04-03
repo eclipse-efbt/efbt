@@ -1,4 +1,4 @@
-ProgramAndCalls : { program : TRLProgram : { executableLogic :[ TRLExecutableLogic GIRRVegaAssignBucket: 
+ProgramAndCalls : { program : dtmProgram : { executableLogic :[ dtmExecutableLogic GIRRVegaAssignBucket: 
 	{ cubesModule : FreeBirdToolsCubeModule freeBirdToolsCubeModule : 
 		{ license : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;" 
 			cubes : [ 	

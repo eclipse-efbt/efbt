@@ -6,7 +6,7 @@ Bundle-Vendor: My Company
 Bundle-Version: 1.0.0.qualifier
 Bundle-SymbolicName: org.eclipse.efbt.cocason.dsl.cocason.ui; singleton:=true
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.eclipse.efbt.cocalimo.trl.model.platform_call,
+Require-Bundle: org.eclipse.efbt.cocalimo.dtm.model.platform_call,
  org.eclipse.efbt.cocason.dsl.cocason,
  org.eclipse.efbt.cocason.dsl.cocason.ide,
  org.eclipse.efbt.cocalimo.smcubes.model.program,

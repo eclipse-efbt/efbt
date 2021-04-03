@@ -1,6 +1,6 @@
-ProgramAndCalls : { program : TRLProgram :  { 
+ProgramAndCalls : { program : dtmProgram :  { 
 	
-	executableLogic :[ TRLExecutableLogic CSRSecNonCTPRiskFactorCubeSchemas : { 
+	executableLogic :[ dtmExecutableLogic CSRSecNonCTPRiskFactorCubeSchemas : { 
 		
 			 cubeSchemaModules : [  VersionedCubeSchemaModule  CSRSecNonCTPRiskFactorCubeSchemasModule : { 
 			 	

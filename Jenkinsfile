@@ -32,13 +32,13 @@ pipeline {
                     cd cocalimo/smcubes_with_lineage/ui_sirius
                     mvn install
                     cd ../../..
-                    cd cocalimo/trl/model
+                    cd cocalimo/dtm/model
                     mvn install
                     cd ../../..
-                    cd cocalimo/trl/modelquery
+                    cd cocalimo/dtm/modelquery
                     mvn install
                     cd ../../..
-                    cd cocalimo/trl/ui_sirius
+                    cd cocalimo/dtm/ui_sirius
                     mvn install
                     cd ../../..                    
                     cd cocason/org.eclipse.efbt.cocason.dsl.cocason.parent
@@ -56,10 +56,10 @@ pipeline {
                     cd controller/smcubes/component
                     mvn install
                     cd ../../..
-                    cd controller/trl/component
+                    cd controller/dtm/component
                     mvn install
                     cd ../../..
-                    cd controller/trl/ui_sirius
+                    cd controller/dtm/ui_sirius
                     mvn install
                     cd ../../..
                     cd installations/complete_repo/

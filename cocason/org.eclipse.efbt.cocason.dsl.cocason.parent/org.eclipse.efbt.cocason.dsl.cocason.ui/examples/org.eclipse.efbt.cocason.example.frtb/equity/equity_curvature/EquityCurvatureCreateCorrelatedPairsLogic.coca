@@ -1,6 +1,6 @@
-ProgramAndCalls : { program : TRLProgram :  { 
+ProgramAndCalls : { program : dtmProgram :  { 
 	
-	executableLogic :[ TRLExecutableLogic EquityCurvatureCreateCorrelatedPairsLogic : { 
+	executableLogic :[ dtmExecutableLogic EquityCurvatureCreateCorrelatedPairsLogic : { 
 		
 			 
 			 datasetTransformationModules : [ VersionedSQLViewsModule   views : { 

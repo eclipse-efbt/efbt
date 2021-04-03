@@ -1,4 +1,4 @@
-ProgramAndCalls : { program :  TRLProgram :  { smcubesStaticModel : SMCubesStaticModel TestStaticModel1 : {
+ProgramAndCalls : { program :  dtmProgram :  { smcubesStaticModel : SMCubesStaticModel TestStaticModel1 : {
 	tests  : SMCubesTestModule TestModule1 : {
 		tests : [ SMCubesBDDTest "Test1" : {
 			testDefinition : "testDefinitionsStaticModel.testDefinitionsModule.standard_test"

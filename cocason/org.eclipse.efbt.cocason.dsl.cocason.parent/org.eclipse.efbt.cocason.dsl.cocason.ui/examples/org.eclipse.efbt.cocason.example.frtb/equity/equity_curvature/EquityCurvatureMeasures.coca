@@ -1,4 +1,4 @@
-ProgramAndCalls : { program :  TRLProgram :  {
+ProgramAndCalls : { program :  dtmProgram :  {
 	smcubesStaticModel : SMCubesStaticModel EquityCurvatureMeasuresStaticModel : {
 	smCubesModel : SmcubesModel  EquityCurvatureMeasures  : {
 		variables :  [ VariableModule variablesModule :  

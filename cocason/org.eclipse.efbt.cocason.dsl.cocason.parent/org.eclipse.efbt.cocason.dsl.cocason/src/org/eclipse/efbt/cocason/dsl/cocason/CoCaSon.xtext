@@ -27,8 +27,8 @@ import "http://www.eclipse.org/efbt/column_transformation_logic" as column_trans
 import "http://www.eclipse.org/efbt/cubes" as cubes
 import "http://www.eclipse.org/efbt/transformation" as transformation
 import "http://www.eclipse.org/efbt/cube_schema" as cube_schema
-import "http://www.eclipse.org/efbt/trl_sql_views" as trl_sql_views
-import "http://www.eclipse.org/efbt/trl_report_cell_views" as trl_report_cell_views
+import "http://www.eclipse.org/efbt/dtm_sql_views" as dtm_sql_views
+import "http://www.eclipse.org/efbt/dtm_report_cell_views" as dtm_report_cell_views
 import "http://www.eclipse.org/efbt/efbt_advanced_data_definition" as efbt_advanced_data_definition
 import "http://www.eclipse.org/efbt/advanced_variable_lineagefunctions" as advanced_variable_lineagefunctions
 import "http://www.eclipse.org/efbt/smcubes_functions" as smcubes_functions
@@ -39,15 +39,15 @@ ProgramAndCalls returns platform_call::ProgramAndCalls:
 	'ProgramAndCalls' ':'
 	'{'
 		('platformCalls' ':' platformCalls=PlatformCallModule)?
-		('program' ':' program=TRLProgram)?
+		('program' ':' program=dtmProgram)?
 	'}';
 
 
-TRLProgram returns transformation::TRLProgram:
-	{transformation::TRLProgram}
-	'TRLProgram' ':'
+dtmProgram returns transformation::dtmProgram:
+	{transformation::dtmProgram}
+	'dtmProgram' ':'
 	'{'
-		('executableLogic' ':' '[' executableLogic+=TRLExecutableLogic ( "," executableLogic+=TRLExecutableLogic)* ']' )?
+		('executableLogic' ':' '[' executableLogic+=dtmExecutableLogic ( "," executableLogic+=dtmExecutableLogic)* ']' )?
 		('smcubesStaticModel' ':' smcubesStaticModel=SMCubesStaticModel)?
 		('structVariablesModule' ':' structVariablesModule=StructTypedVariablesModule)?
 		('arrayTypedVariablesModule' ':' arrayTypedVariablesModule=ArrayTypedVariableModule)?
@@ -113,9 +113,9 @@ ArrayTypedVariable returns efbt_advanced_data_definition::ArrayTypedVariable:
 	'}';
 
 
-TRLExecutableLogic returns transformation::TRLExecutableLogic:
-	{transformation::TRLExecutableLogic}
-	'TRLExecutableLogic'
+dtmExecutableLogic returns transformation::dtmExecutableLogic:
+	{transformation::dtmExecutableLogic}
+	'dtmExecutableLogic'
 	name=EString ':'
 	'{'
 		('cubesModule' ':' cubesModule=FreeBirdToolsCubeModule)?
@@ -200,8 +200,8 @@ VersionedFunctionalModuleLogic returns transformation::VersionedFunctionalModule
 		('longName' ':' longName=ModuleLongName)?
 	'}';
 
-ReportCellViewModule returns trl_report_cell_views::ReportCellViewModule:
-	{trl_report_cell_views::ReportCellViewModule}
+ReportCellViewModule returns dtm_report_cell_views::ReportCellViewModule:
+	{dtm_report_cell_views::ReportCellViewModule}
 	'ReportCellViewModule'
 	name=EString ':'
 	'{'
@@ -221,12 +221,12 @@ Release returns transformation::Release:
 		('license' ':' license=EString)?
 		('version' ':' version=EString)?
 		('cubeSchemaModules' ':' '[' cubeSchemaModules+=[transformation::VersionedCubeSchemaModule|EString] ( "," cubeSchemaModules+=[transformation::VersionedCubeSchemaModule|EString])* ']' )?
-		('datasetTransformationModules' ':' '[' datasetTransformationModules+=[trl_sql_views::VersionedSQLViewsModule|EString] ( "," datasetTransformationModules+=[trl_sql_views::VersionedSQLViewsModule|EString])* ']' )?
-		('reportCellViewModules' ':' '[' reportCellViewModules+=[trl_report_cell_views::ReportCellViewModule|EString] ( "," reportCellViewModules+=[trl_report_cell_views::ReportCellViewModule|EString])* ']' )?
+		('datasetTransformationModules' ':' '[' datasetTransformationModules+=[dtm_sql_views::VersionedSQLViewsModule|EString] ( "," datasetTransformationModules+=[dtm_sql_views::VersionedSQLViewsModule|EString])* ']' )?
+		('reportCellViewModules' ':' '[' reportCellViewModules+=[dtm_report_cell_views::ReportCellViewModule|EString] ( "," reportCellViewModules+=[dtm_report_cell_views::ReportCellViewModule|EString])* ']' )?
 	'}';
 
-VersionedSQLViewsModule returns trl_sql_views::VersionedSQLViewsModule:
-	{trl_sql_views::VersionedSQLViewsModule}
+VersionedSQLViewsModule returns dtm_sql_views::VersionedSQLViewsModule:
+	{dtm_sql_views::VersionedSQLViewsModule}
 	'VersionedSQLViewsModule'
 	name=EString ':'
 	'{'
@@ -238,11 +238,11 @@ VersionedSQLViewsModule returns trl_sql_views::VersionedSQLViewsModule:
 		('sqlViews' ':' '[' sqlViews+=SQLView ( "," sqlViews+=SQLView)* ']' )?
 	'}';
 	
-SQLView returns trl_sql_views::SQLView:
+SQLView returns dtm_sql_views::SQLView:
 	SQLView_Impl | AggregateEnrichmentView | CopyView | EnrichmentView | FilterByConditionView | GenericView | JoinView | UnionView | BaseViewIncorporatingDeltas | DeltaAccumulation | CastColumnView | ExplodeArrayOfStructsView | ExplodeStructView | FilterByStructClassColumnView | MakeArrayOfStructsView | MakeStructView | AggregateEnrichmentViewAndOrderBy;
 
-SQLView_Impl returns trl_sql_views::SQLView:
-	{trl_sql_views::SQLView}
+SQLView_Impl returns dtm_sql_views::SQLView:
+	{dtm_sql_views::SQLView}
 	'SQLView'
 	name=EString ':'
 	'{'
@@ -250,8 +250,8 @@ SQLView_Impl returns trl_sql_views::SQLView:
 		('cube' ':' cube=[cubes::DerivedCube|EString])?
 	'}';
 
-AggregateEnrichmentView returns trl_sql_views::AggregateEnrichmentView:
-	{trl_sql_views::AggregateEnrichmentView}
+AggregateEnrichmentView returns dtm_sql_views::AggregateEnrichmentView:
+	{dtm_sql_views::AggregateEnrichmentView}
 	'AggregateEnrichmentView'
 	name=EString ':'
 	'{'
@@ -261,8 +261,8 @@ AggregateEnrichmentView returns trl_sql_views::AggregateEnrichmentView:
 		('groupByClause' ':' groupByClause=GroupByClause)?
 	'}';
 	
-AggregateEnrichmentViewAndOrderBy returns trl_sql_views::AggregateEnrichmentViewAndOrderBy:
-	{trl_sql_views::AggregateEnrichmentViewAndOrderBy}
+AggregateEnrichmentViewAndOrderBy returns dtm_sql_views::AggregateEnrichmentViewAndOrderBy:
+	{dtm_sql_views::AggregateEnrichmentViewAndOrderBy}
 	'AggregateEnrichmentViewAndOrderBy'
 	name=EString ':'
 	'{'
@@ -275,8 +275,8 @@ AggregateEnrichmentViewAndOrderBy returns trl_sql_views::AggregateEnrichmentView
 	
 	
 
-CopyView returns trl_sql_views::CopyView:
-	{trl_sql_views::CopyView}
+CopyView returns dtm_sql_views::CopyView:
+	{dtm_sql_views::CopyView}
 	'CopyView'
 	name=EString ':'
 	'{'
@@ -284,8 +284,8 @@ CopyView returns trl_sql_views::CopyView:
 		('cube' ':' cube=[cubes::DerivedCube|EString])?
 	'}';
 
-EnrichmentView returns trl_sql_views::EnrichmentView:
-	{trl_sql_views::EnrichmentView}
+EnrichmentView returns dtm_sql_views::EnrichmentView:
+	{dtm_sql_views::EnrichmentView}
 	'EnrichmentView'
 	name=EString ':'
 	'{'
@@ -296,8 +296,8 @@ EnrichmentView returns trl_sql_views::EnrichmentView:
 		('ignores' ':' '[' ignores+=IgnoreColumn ( "," ignores+=IgnoreColumn)* ']' )?
 	'}';
 
-FilterByConditionView returns trl_sql_views::FilterByConditionView:
-	{trl_sql_views::FilterByConditionView}
+FilterByConditionView returns dtm_sql_views::FilterByConditionView:
+	{dtm_sql_views::FilterByConditionView}
 	'FilterByConditionView'
 	name=EString ':'
 	'{'
@@ -306,8 +306,8 @@ FilterByConditionView returns trl_sql_views::FilterByConditionView:
 		('whereClause' ':' whereClause=WhereClause)?
 	'}';
 
-GenericView returns trl_sql_views::GenericView:
-	{trl_sql_views::GenericView}
+GenericView returns dtm_sql_views::GenericView:
+	{dtm_sql_views::GenericView}
 	'GenericView'
 	name=EString ':'
 	'{'
@@ -318,8 +318,8 @@ GenericView returns trl_sql_views::GenericView:
 		('groupByClause' ':' groupByClause=GroupByClause)?
 	'}';
 
-JoinView returns trl_sql_views::JoinView:
-	{trl_sql_views::JoinView}
+JoinView returns dtm_sql_views::JoinView:
+	{dtm_sql_views::JoinView}
 	'JoinView'
 	name=EString ':'
 	'{'
@@ -330,8 +330,8 @@ JoinView returns trl_sql_views::JoinView:
 		('ignores' ':' '[' ignores+=IgnoreColumn ( "," ignores+=IgnoreColumn)* ']' )?
 	'}';
 
-UnionView returns trl_sql_views::UnionView:
-	{trl_sql_views::UnionView}
+UnionView returns dtm_sql_views::UnionView:
+	{dtm_sql_views::UnionView}
 	'UnionView'
 	name=EString ':'
 	'{'
@@ -339,8 +339,8 @@ UnionView returns trl_sql_views::UnionView:
 		('cube' ':' cube=[cubes::DerivedCube|EString])?
 	'}';
 
-BaseViewIncorporatingDeltas returns trl_sql_views::BaseViewIncorporatingDeltas:
-	{trl_sql_views::BaseViewIncorporatingDeltas}
+BaseViewIncorporatingDeltas returns dtm_sql_views::BaseViewIncorporatingDeltas:
+	{dtm_sql_views::BaseViewIncorporatingDeltas}
 	'BaseViewIncorporatingDeltas'
 	name=EString ':'
 	'{'
@@ -349,8 +349,8 @@ BaseViewIncorporatingDeltas returns trl_sql_views::BaseViewIncorporatingDeltas:
 		('ultimateSourceCube' ':' ultimateSourceCube=[cubes::FreeBirdToolsCube|EString])?
 	'}';
 
-DeltaAccumulation returns trl_sql_views::DeltaAccumulation:
-	{trl_sql_views::DeltaAccumulation}
+DeltaAccumulation returns dtm_sql_views::DeltaAccumulation:
+	{dtm_sql_views::DeltaAccumulation}
 	'DeltaAccumulation'
 	name=EString ':'
 	'{'
@@ -359,8 +359,8 @@ DeltaAccumulation returns trl_sql_views::DeltaAccumulation:
 		('ultimateSourceCube' ':' ultimateSourceCube=[cubes::FreeBirdToolsCube|EString])?
 	'}';
 	
-CastColumnView returns trl_sql_views::CastColumnView:
-	{trl_sql_views::CastColumnView}
+CastColumnView returns dtm_sql_views::CastColumnView:
+	{dtm_sql_views::CastColumnView}
 	'CastColumnView'
 	name=EString ':'
 	'{'
@@ -370,8 +370,8 @@ CastColumnView returns trl_sql_views::CastColumnView:
 		('targetStructVariable' ':' targetStructVariable=[efbt_advanced_data_definition::StructTypedVariable|EString])?
 	'}';
 
-ExplodeArrayOfStructsView returns trl_sql_views::ExplodeArrayOfStructsView:
-	{trl_sql_views::ExplodeArrayOfStructsView}
+ExplodeArrayOfStructsView returns dtm_sql_views::ExplodeArrayOfStructsView:
+	{dtm_sql_views::ExplodeArrayOfStructsView}
 	'ExplodeArrayOfStructsView'
 	name=EString ':'
 	'{'
@@ -382,8 +382,8 @@ ExplodeArrayOfStructsView returns trl_sql_views::ExplodeArrayOfStructsView:
 		('targetStructColumn' ':' targetStructColumn=[efbt_advanced_data_definition::StructTypedVariable|EString])?
 	'}';
 
-ExplodeStructView returns trl_sql_views::ExplodeStructView:
-	{trl_sql_views::ExplodeStructView}
+ExplodeStructView returns dtm_sql_views::ExplodeStructView:
+	{dtm_sql_views::ExplodeStructView}
 	'ExplodeStructView'
 	name=EString ':'
 	'{'
@@ -392,8 +392,8 @@ ExplodeStructView returns trl_sql_views::ExplodeStructView:
 		('columnToUnpack' ':' columnToUnpack=[efbt_advanced_data_definition::StructTypedVariable|EString])?
 	'}';
 
-FilterByStructClassColumnView returns trl_sql_views::FilterByStructClassColumnView:
-	{trl_sql_views::FilterByStructClassColumnView}
+FilterByStructClassColumnView returns dtm_sql_views::FilterByStructClassColumnView:
+	{dtm_sql_views::FilterByStructClassColumnView}
 	'FilterByStructClassColumnView'
 	name=EString ':'
 	'{'
@@ -404,8 +404,8 @@ FilterByStructClassColumnView returns trl_sql_views::FilterByStructClassColumnVi
 		('structColumn' ':' structColumn=[efbt_advanced_data_definition::StructTypedVariable|EString])?
 	'}';
 
-MakeArrayOfStructsView returns trl_sql_views::MakeArrayOfStructsView:
-	{trl_sql_views::MakeArrayOfStructsView}
+MakeArrayOfStructsView returns dtm_sql_views::MakeArrayOfStructsView:
+	{dtm_sql_views::MakeArrayOfStructsView}
 	'MakeArrayOfStructsView'
 	name=EString ':'
 	'{'
@@ -416,8 +416,8 @@ MakeArrayOfStructsView returns trl_sql_views::MakeArrayOfStructsView:
 		('targetArrayVariable' ':' targetArrayVariable=[efbt_advanced_data_definition::ArrayTypedVariable|EString])?
 	'}';
 
-MakeStructView returns trl_sql_views::MakeStructView:
-	{trl_sql_views::MakeStructView}
+MakeStructView returns dtm_sql_views::MakeStructView:
+	{dtm_sql_views::MakeStructView}
 	'MakeStructView'
 	name=EString ':'
 	'{'
@@ -426,15 +426,15 @@ MakeStructView returns trl_sql_views::MakeStructView:
 		('targetVariable' ':' targetVariable=[efbt_advanced_data_definition::StructTypedVariable|EString])?
 	'}';
 
-GroupByClause returns trl_sql_views::GroupByClause:
-	{trl_sql_views::GroupByClause}
+GroupByClause returns dtm_sql_views::GroupByClause:
+	{dtm_sql_views::GroupByClause}
 	'GroupByClause' ':'
 	'{'
 		('groupByColumns' ':' '[' groupByColumns+=[core::VARIABLE|EString] ( "," groupByColumns+=[core::VARIABLE|EString])* ']' )?
 	'}';
 
-RenameAs returns trl_sql_views::RenameAs:
-	{trl_sql_views::RenameAs}
+RenameAs returns dtm_sql_views::RenameAs:
+	{dtm_sql_views::RenameAs}
 	'RenameAs' ':'
 	'{'
 		('fromCube' ':' fromCube=[cubes::FreeBirdToolsCube|EString])?
@@ -442,15 +442,15 @@ RenameAs returns trl_sql_views::RenameAs:
 		('toVariable' ':' toVariable=[core::VARIABLE|EString])?
 	'}';
 
-WhereClause returns trl_sql_views::WhereClause:
-	{trl_sql_views::WhereClause}
+WhereClause returns dtm_sql_views::WhereClause:
+	{dtm_sql_views::WhereClause}
 	'WhereClause' ':'
 	'{'
 		('function' ':' function=BooleanFunction)?
 	'}';
 
-SelectClause returns trl_sql_views::SelectClause:
-	{trl_sql_views::SelectClause}
+SelectClause returns dtm_sql_views::SelectClause:
+	{dtm_sql_views::SelectClause}
 	'SelectClause' ':'
 	'{'
 		('aggregateFunctions' ':' '(' aggregateFunctions+=[functions::AggregateFunction|EString] ( "," aggregateFunctions+=[functions::AggregateFunction|EString])* ')' )?
@@ -458,8 +458,8 @@ SelectClause returns trl_sql_views::SelectClause:
 		('varaibles' ':' '(' varaibles+=[core::VARIABLE|EString] ( "," varaibles+=[core::VARIABLE|EString])* ')' )?
 	'}';
 
-IgnoreColumn returns trl_sql_views::IgnoreColumn:
-	{trl_sql_views::IgnoreColumn}
+IgnoreColumn returns dtm_sql_views::IgnoreColumn:
+	{dtm_sql_views::IgnoreColumn}
 	'IgnoreColumn' ':'
 	'{'
 		('columnToIgnore' ':' columnToIgnore=[core::VARIABLE|EString])?
@@ -476,8 +476,8 @@ CubeSchema returns cube_schema::CubeSchema:
 		('baseCube' ':' baseCube=[cubes::BaseCube|EString])?
 	'}';
 
-ReportCellView returns trl_report_cell_views::ReportCellView:
-	{trl_report_cell_views::ReportCellView}
+ReportCellView returns dtm_report_cell_views::ReportCellView:
+	{dtm_report_cell_views::ReportCellView}
 	'ReportCellView'
 	name=EString ':'
 	'{'

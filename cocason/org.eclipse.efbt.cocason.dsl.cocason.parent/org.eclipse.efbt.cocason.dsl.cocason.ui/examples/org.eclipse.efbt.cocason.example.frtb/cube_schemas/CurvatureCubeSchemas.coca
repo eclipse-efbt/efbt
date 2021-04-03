@@ -1,6 +1,6 @@
-ProgramAndCalls : { program : TRLProgram :  { 
+ProgramAndCalls : { program : dtmProgram :  { 
 	
-	executableLogic :[ TRLExecutableLogic CurvatureCubeSchemas : { 
+	executableLogic :[ dtmExecutableLogic CurvatureCubeSchemas : { 
 		
 			 cubeSchemaModules : [  VersionedCubeSchemaModule  CurvatureCubeSchemasModule : { 
 			 	

@@ -1,6 +1,6 @@
-ProgramAndCalls : { program : TRLProgram :  { 
+ProgramAndCalls : { program : dtmProgram :  { 
 	
-	executableLogic :[ TRLExecutableLogic CSRSecCTPVegaCreateSquaresLogic : { 
+	executableLogic :[ dtmExecutableLogic CSRSecCTPVegaCreateSquaresLogic : { 
 		
 			
 			 datasetTransformationModules : [ VersionedSQLViewsModule   views : { 

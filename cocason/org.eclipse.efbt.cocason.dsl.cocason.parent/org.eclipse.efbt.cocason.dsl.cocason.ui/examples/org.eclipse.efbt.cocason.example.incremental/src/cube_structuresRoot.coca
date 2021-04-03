@@ -1,4 +1,4 @@
-ProgramAndCalls : { program : TRLProgram : { smcubesStaticModel : SMCubesStaticModel smcubesCubeStructuresStaticModel : {
+ProgramAndCalls : { program : dtmProgram : { smcubesStaticModel : SMCubesStaticModel smcubesCubeStructuresStaticModel : {
 	 smCubesModel : SmcubesModel smcubesCubeStructuresModel  : 
 	 { cubes : [ CubeModule  cubeStructures_model : { 
 	 	dependencies : ModuleDependencies : { theModules : [ ModuleDependency : { theModule : "smcubesCubeStructureItemsStaticModel.smcubesCubeStructureItemsModel.cubeStructureItems_model" } ] } cubeStructures : [ 

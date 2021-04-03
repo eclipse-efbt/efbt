@@ -1,4 +1,4 @@
-ProgramAndCalls : { program : TRLProgram : { executableLogic : [ TRLExecutableLogic FXCurvatureReportCells: 
+ProgramAndCalls : { program : dtmProgram : { executableLogic : [ dtmExecutableLogic FXCurvatureReportCells: 
 	{reportCellViewModules : [
 			 		 	ReportCellViewModule FXCurvatureReportCellsModule : { 
 			 		 		reportCellViews [ 

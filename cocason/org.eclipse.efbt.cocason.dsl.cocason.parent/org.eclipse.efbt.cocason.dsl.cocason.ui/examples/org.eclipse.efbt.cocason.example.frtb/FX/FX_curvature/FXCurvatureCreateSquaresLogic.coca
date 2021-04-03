@@ -1,6 +1,6 @@
-ProgramAndCalls : { program : TRLProgram :  { 
+ProgramAndCalls : { program : dtmProgram :  { 
 	
-	executableLogic :[ TRLExecutableLogic FXCurvatureCreateSquaresLogic : { 
+	executableLogic :[ dtmExecutableLogic FXCurvatureCreateSquaresLogic : { 
 		
 			 
 			 datasetTransformationModules : [ VersionedSQLViewsModule   views : { 

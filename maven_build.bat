@@ -22,13 +22,13 @@ cd ..\..\..
 cd cocalimo\smcubes_with_lineage\ui_sirius
 call mvn install
 cd ..\..\..
-cd cocalimo\trl\model
+cd cocalimo\dtm\model
 call mvn install
 cd ..\..\..
-cd cocalimo\trl\modelquery
+cd cocalimo\dtm\modelquery
 call mvn install
 cd ..\..\..
-cd cocalimo\trl\ui_sirius
+cd cocalimo\dtm\ui_sirius
 call mvn install
 cd ..\..\..
 cd cocason\org.eclipse.efbt.cocason.dsl.cocason.parent
@@ -46,10 +46,10 @@ cd ..\..\..
 cd controller\smcubes\component
 call mvn install
 cd ..\..\..
-cd controller\trl\component
+cd controller\dtm\component
 call mvn install
 cd ..\..\..
-cd controller\trl\ui_sirius
+cd controller\dtm\ui_sirius
 call mvn install
 cd ..\..\..
 cd installations\complete_repo\

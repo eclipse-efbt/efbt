@@ -1,4 +1,4 @@
-ProgramAndCalls : { program : TRLProgram : { executableLogic : [ TRLExecutableLogic GIRRCurvatureReportCells: 
+ProgramAndCalls : { program : dtmProgram : { executableLogic : [ dtmExecutableLogic GIRRCurvatureReportCells: 
 	{reportCellViewModules : [
 			 		 	ReportCellViewModule GIRRCurvatureReportCellsModule : { 
 			 		 		reportCellViews [ 

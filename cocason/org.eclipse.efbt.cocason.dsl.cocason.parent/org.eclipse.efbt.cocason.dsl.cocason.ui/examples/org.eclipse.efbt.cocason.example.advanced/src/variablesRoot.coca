@@ -1,4 +1,4 @@
-ProgramAndCalls : { program :  TRLProgram :  {
+ProgramAndCalls : { program :  dtmProgram :  {
 	smcubesStaticModel : SMCubesStaticModel smcubesStaticModel1 : {
 	smCubesModel : SmcubesModel  smcubesModel1  : {
 		variables :  [ VariableModule variablesModule :  
