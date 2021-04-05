@@ -1,9 +1,9 @@
 <!-- This file was created using the HTML documentation generator. -->
-<!-- Creation date: Mon Apr 05 13:07:04 BST 2021-->
+<!-- Creation date: Mon Apr 05 12:59:00 BST 2021-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-      	<title>Metamodel Documentation (platform:/resource/org.eclipse.efbt.cocalimo.dtm.model.core/model/dtm_report_cell_views.ecore)</title>
+      	<title>Metamodel Documentation (platform:/resource/org.eclipse.efbt.cocalimo.core.model.testing/model/test.ecore)</title>
     	<script type="text/javascript">
 //<![CDATA[				    	
 // TOC script based on code taken from http://www.quirksmode.org/dom/toc.html
@@ -126,22 +126,16 @@ function getElementsByTagNames(list,obj) {
 	    	<link rel="stylesheet" type="text/css" href="style.css" />
 	</head>
 	<body onload="makeTOC();">
-<h1 id="dtmreportcellviews"><a href="#dtmreportcellviews"><span class="packageName">dtm_report_cell_views</span> package</a></h1>
+<h1 id="test"><a href="#test"><span class="packageName">test</span> package</a></h1>
 
-<p>This package describes dtm preport cell views</p>
+<p>This package describes the test package of FreeBIRDTools</p>
 <div class="">EPackage properties:</div>
-<div class="keyValue"><span class="label">Namespace Prefix: </span><span class="teletype">dtm_report_cell_views</span></div>
-<div class="keyValue"><span class="label">Namespace URI: </span><span class="teletype">http://www.eclipse.org/efbt/dtm_report_cell_views</span></div>
-<h2 id="dtmreportcellviewsReportCellView"><a href="#dtmreportcellviewsReportCellView"><a href="#dtmreportcellviewsReportCellView">ReportCellView</a></a></h2>
+<div class="keyValue"><span class="label">Namespace Prefix: </span><span class="teletype">test</span></div>
+<div class="keyValue"><span class="label">Namespace URI: </span><span class="teletype">http://www.eclipse.org/efbt/test</span></div>
+<h2 id="testBDDTest"><a href="#testBDDTest"><a href="#testBDDTest">BDDTest</a></a></h2>
 
-<p>A ReportCellView is an SQL View which has the explicit purpose of calculating one report cell.
-ReportCells are represented as a TargetCube with one row. This cube has multiple Dimensions columns and one Measure Column.
-The Dimension fields for table are set to be specific members of that dimension. 
-Similar concepts exist in the taxonomy of XBRL reporting language and DataPointModelling.
-For example a ReportCellView which has a sourceCube of trade, associated measure 'amount' and associated dimensions Currency and Country,
-where it has been specified that Currency will equal USD and Country will equal US, will lead to the amount measure
-being populated with the sum of the amount field in the Trade table, for all rows in the Trade Table  where Currency=USD AND Country = US.</p>
-<h4><b>Supertype:</b><a href="#dtmsqlviewsSQLView">SQLView</a></h4><table>
+<p>An end to end test</p>
+<h4><b>Supertype:</b><a href="#testTest">Test</a></h4><table>
 <tr>
 	<th colspan="3"><div class="tableHeader">References</div></th>
 </tr>
@@ -150,32 +144,19 @@ being populated with the sum of the amount field in the Trade table, for all row
 	<th><div class="columnHeader">Properties</div></th>
 	<th><div class="columnHeader">Documentation</div></th>
 </tr>
-<tr>	<td><div id="dtmreportcellviewsReportCellView.reportCell" class="teletype">reportCell</div>
+<tr>	<td><div id="testBDDTest.testDefinition" class="teletype">testDefinition</div>
 	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#reportsReportCell">ReportCell</a></span></div>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#testdefinitionBDDTestDefinition">BDDTestDefinition</a></span></div>
 <div class="label">Cardinality: [0..1]</div>
-<div class="label">Containment</div>
 </td> 
-<td> <p>The report cell</p>
+<td> <p>The TesDefinition associated with the test</p>
 </td>
-		</tr><tr>	<td><div id="dtmreportcellviewsReportCellView.structColumnHoldingDimension" class="teletype">structColumnHoldingDimension</div>
-	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#efbtadvanceddatadefinitionStructTypedVariable">StructTypedVariable</a></span></div>
-<div class="label">Cardinality: [0..1]</div>
-</td> 
-<td> </td>
-		</tr><tr>	<td><div id="dtmreportcellviewsReportCellView.structColumnHoldingMeasure" class="teletype">structColumnHoldingMeasure</div>
-	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#efbtadvanceddatadefinitionStructTypedVariable">StructTypedVariable</a></span></div>
-<div class="label">Cardinality: [0..1]</div>
-</td> 
-<td> </td>
 		</tr></table>
-<a href="#dtm_report_cell_views.ReportCellView.ref"></a>
-<h2 id="dtmreportcellviewsReportCellViewModule"><a href="#dtmreportcellviewsReportCellViewModule"><a href="#dtmreportcellviewsReportCellViewModule">ReportCellViewModule</a></a></h2>
+<a href="#test.BDDTest.ref"></a>
+<h2 id="testRegFunctionalityTest"><a href="#testRegFunctionalityTest"><a href="#testRegFunctionalityTest">RegFunctionalityTest</a></a></h2>
 
-<p>A Module containing a set of ReportCellViews </p>
-<h4><b>Supertype:</b><a href="#modulemanagementModule">Module</a></h4><table>
+<p>A Test</p>
+<h4><b>Supertype:</b><a href="#testTest">Test</a></h4><table>
 <tr>
 	<th colspan="3"><div class="tableHeader">References</div></th>
 </tr>
@@ -184,15 +165,39 @@ being populated with the sum of the amount field in the Trade table, for all row
 	<th><div class="columnHeader">Properties</div></th>
 	<th><div class="columnHeader">Documentation</div></th>
 </tr>
-<tr>	<td><div id="dtmreportcellviewsReportCellViewModule.reportCellViews" class="teletype">reportCellViews</div>
+<tr>	<td><div id="testRegFunctionalityTest.testDefinition" class="teletype">testDefinition</div>
 	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#dtmreportcellviewsReportCellView">ReportCellView</a></span></div>
-<div class="label">Cardinality: [0..*]</div>
-<div class="label">Containment</div>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#testdefinitionRegFunctionalityTestDefinition">RegFunctionalityTestDefinition</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
 </td> 
-<td> <p>The set of ReportCellViews</p>
+<td> </td>
+		</tr></table>
+<a href="#test.RegFunctionalityTest.ref"></a>
+<h2 id="testResult"><a href="#testResult"><a href="#testResult">Result</a></a></h2>
+
+<p>A result or expected results of a test</p>
+<h2 id="testTest"><a href="#testTest"><a href="#testTest">Test</a></a></h2>
+
+<table>
+<tr>
+	<th colspan="3"><div class="tableHeader">Attributes</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="testTest.name" class="teletype">name</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EString</span></div>
+<div class="label">Cardinality: [0..1]</div>
+<div class="label">Identifier</div>
+ </td> <td><p>The name and ID of the test</p>
 </td>
 		</tr></table>
-<a href="#dtm_report_cell_views.ReportCellViewModule.ref"></a>
-</body>
+<a href="#test.Test.attr"></a>
+<h2 id="testTestModule"><a href="#testTestModule"><a href="#testTestModule">TestModule</a></a></h2>
+
+<p>A Module containing a set of Tests</p>
+<h4><b>Supertype:</b><a href="#modulemanagementModule">Module</a></h4></body>
 </html>

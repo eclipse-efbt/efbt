@@ -1,5 +1,5 @@
 <!-- This file was created using the HTML documentation generator. -->
-<!-- Creation date: Fri Dec 04 10:30:11 GMT 2020-->
+<!-- Creation date: Mon Apr 05 13:15:06 BST 2021-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -193,36 +193,7 @@ Note that the DataSetTransformations has many subsclasses, currently they repres
 </td>
 		</tr></table>
 <a href="#transformation.Release.attr"></a>
-<h2 id="transformationdtmExecutableProgram"><a href="#transformationdtmExecutableProgram"><a href="#transformationdtmExecutableProgram">dtmExecutableProgram</a></a></h2>
-
-<h4><b>Supertype:</b><a href="#platformcallExecutableLogic">ExecutableLogic</a></h4><table>
-<tr>
-	<th colspan="3"><div class="tableHeader">References</div></th>
-</tr>
-<tr>
-	<th><div class="columnHeader">Name</div></th>
-	<th><div class="columnHeader">Properties</div></th>
-	<th><div class="columnHeader">Documentation</div></th>
-</tr>
-<tr>	<td><div id="transformationdtmExecutableProgram.componentSet" class="teletype">componentSet</div>
-	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#transformationVersionedComponentsSet">VersionedComponentsSet</a></span></div>
-<div class="label">Cardinality: [0..1]</div>
-<div class="label">Containment</div>
-</td> 
-<td> </td>
-		</tr><tr>	<td><div id="transformationdtmExecutableProgram.cubesModule" class="teletype">cubesModule</div>
-	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#cubesFreeBirdToolsCubeModule">FreeBirdToolsCubeModule</a></span></div>
-<div class="label">Cardinality: [0..1]</div>
-<div class="label">Containment</div>
-</td> 
-<td> </td>
-		</tr></table>
-<a href="#transformation.dtmExecutableProgram.ref"></a>
-<h2 id="transformationdtmProgram"><a href="#transformationdtmProgram"><a href="#transformationdtmProgram">dtmProgram</a></a></h2>
-
-<h4><b>Supertype:</b><a href="#platformcallSMCubesProgram">SMCubesProgram</a></h4><h2 id="transformationVersionedComponentsSet"><a href="#transformationVersionedComponentsSet"><a href="#transformationVersionedComponentsSet">VersionedComponentsSet</a></a></h2>
+<h2 id="transformationVersionedComponentsSet"><a href="#transformationVersionedComponentsSet"><a href="#transformationVersionedComponentsSet">VersionedComponentsSet</a></a></h2>
 
 <p>VersionedComponentsSet contains all the information required to translate a FunctionalModule and its dependent FunctionalModules into an AttributeLineageModel
 It is this component set that contains the cub scehma structures ,and the actual DataSetTransformations.</p>
@@ -263,15 +234,13 @@ It is this component set that contains the cub scehma structures ,and the actual
 	</td>
 	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#transformationVersionedCubeSchemaModule">VersionedCubeSchemaModule</a></span></div>
 <div class="label">Cardinality: [0..*]</div>
-<div class="label">Containment</div>
 </td> 
 <td> <p>The set of VersionedCubeSchemaModules. Note that VersionedCubeSchemaModules state which ReadDataFunctionalModule they are associated with in the functionalModule reference.</p>
 </td>
 		</tr><tr>	<td><div id="transformationVersionedComponentsSet.datasetTransformationModules" class="teletype">datasetTransformationModules</div>
 	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#transformationVersionedFunctionalModuleLogic">VersionedFunctionalModuleLogic</a></span></div>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#dtmsqlviewsVersionedSQLViewsModule">VersionedSQLViewsModule</a></span></div>
 <div class="label">Cardinality: [0..*]</div>
-<div class="label">Containment</div>
 </td> 
 <td> <p>The set of DataSetTransformationModules, note that each DataSetTransformationModule states which  DataSetTransformationFunctionalModule they are associated with in the functionalModule reference.</p>
 </td>
@@ -279,7 +248,6 @@ It is this component set that contains the cub scehma structures ,and the actual
 	</td>
 	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#dtmreportcellviewsReportCellViewModule">ReportCellViewModule</a></span></div>
 <div class="label">Cardinality: [0..*]</div>
-<div class="label">Containment</div>
 </td> 
 <td> <p>The set of ReportCellViewModules, note that each ReportCellViewModule states which  ReportCellCreationFunctionalModule they are associated with in the functionalModule reference.</p>
 </td>
@@ -310,5 +278,128 @@ It is this component set that contains the cub scehma structures ,and the actual
 <h2 id="transformationVersionedFunctionalModuleLogic"><a href="#transformationVersionedFunctionalModuleLogic"><a href="#transformationVersionedFunctionalModuleLogic">VersionedFunctionalModuleLogic</a></a></h2>
 
 <p>A Module containing a set of DataSetTransformations </p>
-<h4><b>Supertype:</b><a href="#modulemanagementModule">Module</a></h4></body>
+<h4><b>Supertype:</b><a href="#modulemanagementModule">Module</a></h4><h2 id="transformationdtmExecutableLogic"><a href="#transformationdtmExecutableLogic"><a href="#transformationdtmExecutableLogic">dtmExecutableLogic</a></a></h2>
+
+<table>
+<tr>
+	<th colspan="3"><div class="tableHeader">Attributes</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="transformationdtmExecutableLogic.name" class="teletype">name</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EString</span></div>
+<div class="label">Cardinality: [0..1]</div>
+<div class="label">Identifier</div>
+ </td> <td></td>
+		</tr></table>
+<a href="#transformation.dtmExecutableLogic.attr"></a>
+<table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="transformationdtmExecutableLogic.cubeSchemaModules" class="teletype">cubeSchemaModules</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#transformationVersionedCubeSchemaModule">VersionedCubeSchemaModule</a></span></div>
+<div class="label">Cardinality: [0..*]</div>
+<div class="label">Containment</div>
+</td> 
+<td> <p>The set of VersionedCubeSchemaModules. Note that VersionedCubeSchemaModules state which ReadDataFunctionalModule they are associated with in the functionalModule reference.</p>
+</td>
+		</tr><tr>	<td><div id="transformationdtmExecutableLogic.cubesHierarchyModule" class="teletype">cubesHierarchyModule</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#cubesFreeBIRDToolsCubeHierarchyRelationshipModule">FreeBIRDToolsCubeHierarchyRelationshipModule</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+<div class="label">Containment</div>
+</td> 
+<td> </td>
+		</tr><tr>	<td><div id="transformationdtmExecutableLogic.cubesModule" class="teletype">cubesModule</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#cubesFreeBirdToolsCubeModule">FreeBirdToolsCubeModule</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+<div class="label">Containment</div>
+</td> 
+<td> </td>
+		</tr><tr>	<td><div id="transformationdtmExecutableLogic.datasetTransformationModules" class="teletype">datasetTransformationModules</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#dtmsqlviewsVersionedSQLViewsModule">VersionedSQLViewsModule</a></span></div>
+<div class="label">Cardinality: [0..*]</div>
+<div class="label">Containment</div>
+</td> 
+<td> <p>The set of DataSetTransformationModules, note that each DataSetTransformationModule states which  DataSetTransformationFunctionalModule they are associated with in the functionalModule reference.</p>
+</td>
+		</tr><tr>	<td><div id="transformationdtmExecutableLogic.functionSpecModule" class="teletype">functionSpecModule</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#functionsFunctionSpecModule">FunctionSpecModule</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+<div class="label">Containment</div>
+</td> 
+<td> </td>
+		</tr><tr>	<td><div id="transformationdtmExecutableLogic.reportCellViewModules" class="teletype">reportCellViewModules</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#dtmreportcellviewsReportCellViewModule">ReportCellViewModule</a></span></div>
+<div class="label">Cardinality: [0..*]</div>
+<div class="label">Containment</div>
+</td> 
+<td> <p>The set of ReportCellViewModules, note that each ReportCellViewModule states which  ReportCellCreationFunctionalModule they are associated with in the functionalModule reference.</p>
+</td>
+		</tr></table>
+<a href="#transformation.dtmExecutableLogic.ref"></a>
+<h2 id="transformationdtmProgram"><a href="#transformationdtmProgram"><a href="#transformationdtmProgram">dtmProgram</a></a></h2>
+
+<table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="transformationdtmProgram.arrayTypedVariablesModule" class="teletype">arrayTypedVariablesModule</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#efbtadvanceddatadefinitionArrayTypedVariableModule">ArrayTypedVariableModule</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+<div class="label">Containment</div>
+</td> 
+<td> </td>
+		</tr><tr>	<td><div id="transformationdtmProgram.executableLogic" class="teletype">executableLogic</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#transformationdtmExecutableLogic">dtmExecutableLogic</a></span></div>
+<div class="label">Cardinality: [0..*]</div>
+<div class="label">Containment</div>
+</td> 
+<td> </td>
+		</tr><tr>	<td><div id="transformationdtmProgram.release" class="teletype">release</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#transformationRelease">Release</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+<div class="label">Containment</div>
+</td> 
+<td> </td>
+		</tr><tr>	<td><div id="transformationdtmProgram.smcubesStaticModel" class="teletype">smcubesStaticModel</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#cocamoSMCubesStaticModel">SMCubesStaticModel</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+<div class="label">Containment</div>
+</td> 
+<td> </td>
+		</tr><tr>	<td><div id="transformationdtmProgram.structVariablesModule" class="teletype">structVariablesModule</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#efbtadvanceddatadefinitionStructTypedVariablesModule">StructTypedVariablesModule</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+<div class="label">Containment</div>
+</td> 
+<td> </td>
+		</tr></table>
+<a href="#transformation.dtmProgram.ref"></a>
+</body>
 </html>
