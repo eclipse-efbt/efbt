@@ -85,7 +85,8 @@
       xsi:type="projects:ProjectsImportTask"
       id="freebirdtools">
     <sourceLocator
-        rootFolder="${git.clone.freebirdtools.location}"/>
+        rootFolder="${git.clone.freebirdtools.location}"
+        locateNestedProjects="true"/>
   </setupTask>
   <setupTask
       xsi:type="setup.workingsets:WorkingSetTask"
