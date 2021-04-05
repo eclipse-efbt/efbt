@@ -1,5 +1,5 @@
 <!-- This file was created using the HTML documentation generator. -->
-<!-- Creation date: Sun Nov 29 18:56:54 GMT 2020-->
+<!-- Creation date: Mon Apr 05 13:13:37 BST 2021-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -176,6 +176,48 @@ All SQLViews are associated with a DerivedCube, the source Cubes for the view ar
 </td>
 		</tr></table>
 <a href="#dtm_sql_views.AggregateEnrichmentView.ref"></a>
+<h2 id="dtmsqlviewsAggregateEnrichmentViewAndOrderBy"><a href="#dtmsqlviewsAggregateEnrichmentViewAndOrderBy"><a href="#dtmsqlviewsAggregateEnrichmentViewAndOrderBy">AggregateEnrichmentViewAndOrderBy</a></a></h2>
+
+<p>An SQLView which represents a grouping of  rows of the single source table of the associated table, 
+according to a set of Columns, and creates extra column(s) which runs a specified  aggregation  function over the group.
+This is equivalent to the GroupBy commands in SQL such as select ccy, country, sum(amount) from trades, groupby ccy, country.
+The resulting table structure will be a column for each of the groupBy columns, with one column added per calculated column.
+There will likely be considerably less rows in the results of the view, for example if we are grouping on million trades
+by currency, there will be on row per unique currency in the results.
+All SQLViews are associated with a DerivedCube, the source Cubes for the view are defined by the source Cubes of the associated Cube.</p>
+<h4><b>Supertype:</b><a href="#dtmsqlviewsSQLView">SQLView</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="dtmsqlviewsAggregateEnrichmentViewAndOrderBy.functions" class="teletype">functions</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#columntransformationlogicAggregateColumnFunction">AggregateColumnFunction</a></span></div>
+<div class="label">Cardinality: [0..*]</div>
+<div class="label">Containment</div>
+</td> 
+<td> <p>Aggregated ColumnFunctions</p>
+</td>
+		</tr><tr>	<td><div id="dtmsqlviewsAggregateEnrichmentViewAndOrderBy.groupByClause" class="teletype">groupByClause</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#dtmsqlviewsGroupByClause">GroupByClause</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+<div class="label">Containment</div>
+</td> 
+<td> <p>The GroupBy clause which includes the GroupBy columns</p>
+</td>
+		</tr><tr>	<td><div id="dtmsqlviewsAggregateEnrichmentViewAndOrderBy.orderByVariable" class="teletype">orderByVariable</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#coreVARIABLE">VARIABLE</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+</td> 
+<td> </td>
+		</tr></table>
+<a href="#dtm_sql_views.AggregateEnrichmentViewAndOrderBy.ref"></a>
 <h2 id="dtmsqlviewsBaseViewIncorporatingDeltas"><a href="#dtmsqlviewsBaseViewIncorporatingDeltas"><a href="#dtmsqlviewsBaseViewIncorporatingDeltas">BaseViewIncorporatingDeltas</a></a></h2>
 
 <h4><b>Supertype:</b><a href="#dtmsqlviewsSQLView">SQLView</a></h4><table>
@@ -195,6 +237,31 @@ All SQLViews are associated with a DerivedCube, the source Cubes for the view ar
 <td> </td>
 		</tr></table>
 <a href="#dtm_sql_views.BaseViewIncorporatingDeltas.ref"></a>
+<h2 id="dtmsqlviewsCastColumnView"><a href="#dtmsqlviewsCastColumnView"><a href="#dtmsqlviewsCastColumnView">CastColumnView</a></a></h2>
+
+<h4><b>Supertype:</b><a href="#dtmsqlviewsSQLView">SQLView</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="dtmsqlviewsCastColumnView.sourceStructVariable" class="teletype">sourceStructVariable</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#efbtadvanceddatadefinitionStructTypedVariable">StructTypedVariable</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+</td> 
+<td> </td>
+		</tr><tr>	<td><div id="dtmsqlviewsCastColumnView.targetStructVariable" class="teletype">targetStructVariable</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#efbtadvanceddatadefinitionStructTypedVariable">StructTypedVariable</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+</td> 
+<td> </td>
+		</tr></table>
+<a href="#dtm_sql_views.CastColumnView.ref"></a>
 <h2 id="dtmsqlviewsCopyView"><a href="#dtmsqlviewsCopyView"><a href="#dtmsqlviewsCopyView">CopyView</a></a></h2>
 
 <p>An SQLView which represents a Copy of all rows of the single source cubw of the associated DereivedCube.
@@ -244,6 +311,14 @@ although we can choose to Rename some of the columns from the source cube if we 
 one relationship between the rows in the resulting view and the rows in the source row. So the column function could<br/>
 represent the  addition of 2 columns in the source row for example.</p>
 </td>
+		</tr><tr>	<td><div id="dtmsqlviewsEnrichmentView.ignores" class="teletype">ignores</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#dtmsqlviewsIgnoreColumn">IgnoreColumn</a></span></div>
+<div class="label">Cardinality: [0..*]</div>
+<div class="label">Containment</div>
+</td> 
+<td> <p>an IgnoreColumn for each column we want to ignore</p>
+</td>
 		</tr><tr>	<td><div id="dtmsqlviewsEnrichmentView.renames" class="teletype">renames</div>
 	</td>
 	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#dtmsqlviewsRenameAs">RenameAs</a></span></div>
@@ -255,6 +330,56 @@ e.g. in SQL select CCY as Currency from cube1, will mean that the cube structure
 </td>
 		</tr></table>
 <a href="#dtm_sql_views.EnrichmentView.ref"></a>
+<h2 id="dtmsqlviewsExplodeArrayOfStructsView"><a href="#dtmsqlviewsExplodeArrayOfStructsView"><a href="#dtmsqlviewsExplodeArrayOfStructsView">ExplodeArrayOfStructsView</a></a></h2>
+
+<h4><b>Supertype:</b><a href="#dtmsqlviewsSQLView">SQLView</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="dtmsqlviewsExplodeArrayOfStructsView.arraySourceColumn" class="teletype">arraySourceColumn</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#efbtadvanceddatadefinitionArrayTypedVariable">ArrayTypedVariable</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+</td> 
+<td> </td>
+		</tr><tr>	<td><div id="dtmsqlviewsExplodeArrayOfStructsView.indexColumn" class="teletype">indexColumn</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#coreVARIABLE">VARIABLE</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+</td> 
+<td> </td>
+		</tr><tr>	<td><div id="dtmsqlviewsExplodeArrayOfStructsView.targetStructColumn" class="teletype">targetStructColumn</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#efbtadvanceddatadefinitionStructTypedVariable">StructTypedVariable</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+</td> 
+<td> </td>
+		</tr></table>
+<a href="#dtm_sql_views.ExplodeArrayOfStructsView.ref"></a>
+<h2 id="dtmsqlviewsExplodeStructView"><a href="#dtmsqlviewsExplodeStructView"><a href="#dtmsqlviewsExplodeStructView">ExplodeStructView</a></a></h2>
+
+<h4><b>Supertype:</b><a href="#dtmsqlviewsSQLView">SQLView</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="dtmsqlviewsExplodeStructView.columnToUnpack" class="teletype">columnToUnpack</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#efbtadvanceddatadefinitionStructTypedVariable">StructTypedVariable</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+</td> 
+<td> </td>
+		</tr></table>
+<a href="#dtm_sql_views.ExplodeStructView.ref"></a>
 <h2 id="dtmsqlviewsFilterByConditionView"><a href="#dtmsqlviewsFilterByConditionView"><a href="#dtmsqlviewsFilterByConditionView">FilterByConditionView</a></a></h2>
 
 <p>An SQLView which represents a Copy of all rows  of the single source cube of the associated cube IF they meet a filter condition.
@@ -279,6 +404,37 @@ The number of rows in the view will be the number of rows in the source table th
 </td>
 		</tr></table>
 <a href="#dtm_sql_views.FilterByConditionView.ref"></a>
+<h2 id="dtmsqlviewsFilterByStructClassColumnView"><a href="#dtmsqlviewsFilterByStructClassColumnView"><a href="#dtmsqlviewsFilterByStructClassColumnView">FilterByStructClassColumnView</a></a></h2>
+
+<h4><b>Supertype:</b><a href="#dtmsqlviewsSQLView">SQLView</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="dtmsqlviewsFilterByStructClassColumnView.renameAsStructColumn" class="teletype">renameAsStructColumn</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#efbtadvanceddatadefinitionStructTypedVariable">StructTypedVariable</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+</td> 
+<td> </td>
+		</tr><tr>	<td><div id="dtmsqlviewsFilterByStructClassColumnView.structClass" class="teletype">structClass</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#cubesFreeBirdToolsCube">FreeBirdToolsCube</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+</td> 
+<td> </td>
+		</tr><tr>	<td><div id="dtmsqlviewsFilterByStructClassColumnView.structColumn" class="teletype">structColumn</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#efbtadvanceddatadefinitionStructTypedVariable">StructTypedVariable</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+</td> 
+<td> </td>
+		</tr></table>
+<a href="#dtm_sql_views.FilterByStructClassColumnView.ref"></a>
 <h2 id="dtmsqlviewsGenericView"><a href="#dtmsqlviewsGenericView"><a href="#dtmsqlviewsGenericView">GenericView</a></a></h2>
 
 <p>An SQLView which represents a custom transformation.</p>
@@ -409,6 +565,56 @@ The resulting cube structure will be a column for each of the  columns in the 2 
 </td>
 		</tr></table>
 <a href="#dtm_sql_views.JoinView.ref"></a>
+<h2 id="dtmsqlviewsMakeArrayOfStructsView"><a href="#dtmsqlviewsMakeArrayOfStructsView"><a href="#dtmsqlviewsMakeArrayOfStructsView">MakeArrayOfStructsView</a></a></h2>
+
+<h4><b>Supertype:</b><a href="#dtmsqlviewsSQLView">SQLView</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="dtmsqlviewsMakeArrayOfStructsView.groupingVariable" class="teletype">groupingVariable</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#coreVARIABLE">VARIABLE</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+</td> 
+<td> </td>
+		</tr><tr>	<td><div id="dtmsqlviewsMakeArrayOfStructsView.sourceStructVariable" class="teletype">sourceStructVariable</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#efbtadvanceddatadefinitionStructTypedVariable">StructTypedVariable</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+</td> 
+<td> </td>
+		</tr><tr>	<td><div id="dtmsqlviewsMakeArrayOfStructsView.targetArrayVariable" class="teletype">targetArrayVariable</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#efbtadvanceddatadefinitionArrayTypedVariable">ArrayTypedVariable</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+</td> 
+<td> </td>
+		</tr></table>
+<a href="#dtm_sql_views.MakeArrayOfStructsView.ref"></a>
+<h2 id="dtmsqlviewsMakeStructView"><a href="#dtmsqlviewsMakeStructView"><a href="#dtmsqlviewsMakeStructView">MakeStructView</a></a></h2>
+
+<h4><b>Supertype:</b><a href="#dtmsqlviewsSQLView">SQLView</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="dtmsqlviewsMakeStructView.targetVariable" class="teletype">targetVariable</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#efbtadvanceddatadefinitionStructTypedVariable">StructTypedVariable</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+</td> 
+<td> </td>
+		</tr></table>
+<a href="#dtm_sql_views.MakeStructView.ref"></a>
 <h2 id="dtmsqlviewsRenameAs"><a href="#dtmsqlviewsRenameAs"><a href="#dtmsqlviewsRenameAs">RenameAs</a></a></h2>
 
 <p>Column to rename in the resulting View. similar to AS in SQL. Particularly useful if a Join View would result in 2 columns with the same name</p>
