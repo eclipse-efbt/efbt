@@ -16,8 +16,8 @@
   <foreignModel>reports.ecore</foreignModel>
   <foreignModel>smcubes_model.ecore</foreignModel>
   <foreignModel>vtl_transformation.ecore</foreignModel>
-  <genPackages prefix="Core" basePackage="org.eclipse.efbt.cocalimo.smcubes.model" resource="XML"
-      disposableProviderFactory="true" ecorePackage="core.ecore#/">
+  <genPackages prefix="Core" basePackage="org.eclipse.efbt.cocalimo.smcubes.model"
+      resource="XML" disposableProviderFactory="true" ecorePackage="core.ecore#/">
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="core.ecore#//FACET_VALUE_TYPE">
       <genEnumLiterals ecoreEnumLiteral="core.ecore#//FACET_VALUE_TYPE/BigInteger"/>
       <genEnumLiterals ecoreEnumLiteral="core.ecore#//FACET_VALUE_TYPE/Boolean"/>
@@ -472,6 +472,7 @@
     </genClasses>
     <genClasses ecoreClass="reports.ecore#//ReportCellValue">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference reports.ecore#//ReportCellValue/reportCell"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reports.ecore#//ReportCellValue/value"/>
     </genClasses>
     <genClasses ecoreClass="reports.ecore#//ReportTableModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reports.ecore#//ReportTableModule/reportTables"/>

@@ -648,7 +648,7 @@ SMCubesRegFunctionalityTestModule returns cocamo::SMCubesRegFunctionalityTestMod
 	name=EString ':'
 	'{'
 		('testDefinition' ':' testDefinition=[test_definition::RegFunctionalityTestDefinition|EString])?
-		('expectedResults' ':' expectedResults=[cocamo::SMCubesReportResults|EString])?
+		('expectedResults' expectedResults=SMCubesReportResults)?
 		('inputData' ':' inputData=SMCubesTestInputData)?
 	'}';
 
@@ -1386,6 +1386,7 @@ ReportCellValue returns reports::ReportCellValue:
 	{reports::ReportCellValue}
 	'ReportCellValue' ':'
 	'{'
+		('value' ':' value=EString)?
 		('reportCell' ':' reportCell=[reports::ReportCell|EString])?
 	'}';
 

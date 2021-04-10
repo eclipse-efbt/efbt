@@ -132,7 +132,8 @@
         <details key="documentation" value="The input data"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expectedResults" eType="#//SMCubesReportResults">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expectedResults" eType="#//SMCubesReportResults"
+        containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The expected results"/>
       </eAnnotations>
