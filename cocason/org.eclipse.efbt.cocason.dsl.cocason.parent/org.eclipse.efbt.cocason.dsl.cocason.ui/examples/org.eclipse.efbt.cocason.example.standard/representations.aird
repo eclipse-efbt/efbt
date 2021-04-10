@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" uid="_hFcaUEEdEeuL3teedWD5hQ" version="14.3.1.202003261200">
+<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" uid="_-9oeQJoCEeu_UqxWNmydhQ" version="14.3.1.202003261200">
   <semanticResources>src/CRR_RequirementsBundleRoot.coca</semanticResources>
   <semanticResources>src/combinationsRoot.coca</semanticResources>
   <semanticResources>src/membersRoot.coca</semanticResources>
   <semanticResources>src/domainsRoot.coca</semanticResources>
   <semanticResources>src/variablesRoot.coca</semanticResources>
   <semanticResources>src/commonFunctionsRoot.coca</semanticResources>
-  <semanticResources>src/cube_structure_itemsRoot.coca</semanticResources>
-  <semanticResources>src/cube_structuresRoot.coca</semanticResources>
+  <semanticResources>src/cube_schema_module.coca</semanticResources>
   <semanticResources>src/cubesRoot.coca</semanticResources>
+  <semanticResources>src/cube_structuresRoot.coca</semanticResources>
+  <semanticResources>src/cube_structure_itemsRoot.coca</semanticResources>
   <semanticResources>src/efbt_cubesRoot.coca</semanticResources>
   <semanticResources>src/example_release.coca</semanticResources>
+  <semanticResources>src/processing_module1.coca</semanticResources>
+  <semanticResources>src/report_cell_creation_module1.coca</semanticResources>
   <semanticResources>src/functional_modulesRoot.coca</semanticResources>
-  <semanticResources>src/platform_calls.coca</semanticResources>
+  <semanticResources>src/regTest.coca</semanticResources>
+  <semanticResources>src/regTestDefintion1.coca</semanticResources>
   <semanticResources>src/testConstraintsProgram.coca</semanticResources>
   <semanticResources>src/testTemplateProgram.coca</semanticResources>
   <semanticResources>src/testDefinitionProgram.coca</semanticResources>

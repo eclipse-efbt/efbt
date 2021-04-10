@@ -1,4 +1,4 @@
-ProgramAndCalls : { program : dtmProgram : { smcubesStaticModel : SMCubesStaticModel abc: { functionalityModules : FunctionalityModuleModule functionalityModules1 : 
+ProgramAndCalls : { program : dtmProgram : { smcubesStaticModel : SMCubesStaticModel functionalityMod1: { functionalityModules : FunctionalityModuleModule functionalityModules1 : 
 	{  FunctionalityModules : 
 		[ SerialFunctionalityModule example_processing : { 
 			subModules : [ 
@@ -6,5 +6,14 @@ ProgramAndCalls : { program : dtmProgram : { smcubesStaticModel : SMCubesStaticM
 				DataProcessingFunctionalityModule processExampleData : { 
 					scenarioSet : ScenarioSet scenarioSet1 : { 
 						scenarios : [ Scenario AAA , Scenario notAAA] } } ,
-				ReportCellCreationFunctionalityModule createReportCells : { scenarioSet : ScenarioSet scenarioSet2 : { scenarios : [ Scenario IsUSCountry ,Scenario isNotUSCountry ] } }
-			] } ] } } } }
+				ReportCellCreationFunctionalityModule createReportCells : { }
+			] } ] 
+			functionalityModuleTags : [ FunctionalityModuleTag precessingTag : {
+				displayName : precessingTag1 
+				requirements :  [ "CRRRequirementsStaticModel.CRRRequirementsModel.CRRRuleBook.Title_IV.Title_IV;Chapter_1_General_Provisions.Article_325.Article_325;1.Article_325:1(b)" ,
+					"CRRRequirementsStaticModel.CRRRequirementsModel.CRRRuleBook.Title_IV.Title_IV;Chapter_1_General_Provisions.Article_325.Article_325;1.Article_325:1(a)" ] 
+			
+				FunctionalityModule : "example_processing.processExampleData"   } ] 
+				SceanrioTags : [ ScenarioTag scenarioAAA : { displayName : AAA   requirements  : [
+					"CRRRequirementsStaticModel.CRRRequirementsModel.CRRRuleBook.Title_IV.Title_IV;Chapter_1_General_Provisions.Article_325.Article_325;1.Article_325:1(a)" ] 
+		scenario : "example_processing.processExampleData.scenarioSet1.AAA" } ] } } } }

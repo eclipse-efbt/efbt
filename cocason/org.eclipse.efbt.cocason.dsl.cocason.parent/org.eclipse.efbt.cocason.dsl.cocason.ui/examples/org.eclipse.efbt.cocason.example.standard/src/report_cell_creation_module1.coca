@@ -1,0 +1,16 @@
+ProgramAndCalls : { program : dtmProgram : { executableLogic : [ dtmExecutableLogic logic1 : { reportCellViewModules : [
+			 		 	ReportCellViewModule reportsModule1 : {   reportCellViews  [ 
+			 	ReportCellView totalJPMktValue_view  : { 
+			 		cube : "dtm_executable_logic2.freeBirdToolsCubeModule.totalJPMktValue"
+			 		 reportCell : ReportCell totalJPMktValue : { 
+			 		 	combination :  "smcubesStaticCubesModel.smcubesCubesModel.combinationModule.totalJPMktValue"  } 
+			 		  } ,
+			 		  ReportCellView totalUSNotional_view : { 
+			 		  	cube : "dtm_executable_logic2.freeBirdToolsCubeModule.totalUSNotional"  			 		
+			 		  	reportCell : ReportCell totalUSNotional : { combination : "smcubesStaticCubesModel.smcubesCubesModel.combinationModule.totalUSNotional" } 
+			 		  	} ,
+			 		  ReportCellView notionalOfUS_AAA_view : {  
+			 		  	cube : "dtm_executable_logic2.freeBirdToolsCubeModule.notionalOfUS_AAA"
+			 		  	reportCell : ReportCell notionalOfUS_AAA : { 
+			 		  		combination : "smcubesStaticCubesModel.smcubesCubesModel.combinationModule.notionalOfUS_AAA"} } ] } ] }
+			 		 	] } }  
