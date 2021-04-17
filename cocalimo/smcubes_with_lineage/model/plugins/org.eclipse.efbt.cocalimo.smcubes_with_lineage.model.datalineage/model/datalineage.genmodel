@@ -9,7 +9,7 @@
   <foreignModel>cell_transformation_logic.ecore</foreignModel>
   <foreignModel>data_lineage.ecore</foreignModel>
   <genPackages prefix="Cell_transformation_logic" basePackage="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model"
-      resource="XML" disposableProviderFactory="true" ecorePackage="cell_transformation_logic.ecore#/">
+      resource="XMI" disposableProviderFactory="true" ecorePackage="cell_transformation_logic.ecore#/">
     <genClasses ecoreClass="cell_transformation_logic.ecore#//FormulaCell">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cell_transformation_logic.ecore#//FormulaCell/function"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cell_transformation_logic.ecore#//FormulaCell/value"/>
@@ -27,7 +27,7 @@
     </genClasses>
   </genPackages>
   <genPackages prefix="Data_lineage" basePackage="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model"
-      resource="XML" disposableProviderFactory="true" ecorePackage="data_lineage.ecore#/">
+      resource="XMI" disposableProviderFactory="true" ecorePackage="data_lineage.ecore#/">
     <genClasses ecoreClass="data_lineage.ecore#//DataLineageModel">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference data_lineage.ecore#//DataLineageModel/dataTraceableByCell"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference data_lineage.ecore#//DataLineageModel/sourceData"/>

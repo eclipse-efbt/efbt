@@ -26,4 +26,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.efbt.cocalimo.smcubes.model.core;visibility:=reexport,
  org.eclipse.emf.mwe.core,
  org.eclipse.emf.mwe.utils,
- org.eclipse.emf.mwe2.runtime
+ org.eclipse.emf.mwe2.runtime,
+ com.fasterxml.jackson.core.jackson-databind,
+ org.emfjson.jackson
