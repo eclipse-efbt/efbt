@@ -10,7 +10,7 @@
   <foreignModel>dtm_report_cell_views.ecore</foreignModel>
   <foreignModel>dtm_sql_views.ecore</foreignModel>
   <genPackages prefix="Domain_model_mapping" basePackage="org.eclipse.efbt.language.dtm.model"
-      resource="XML" disposableProviderFactory="true" ecorePackage="domain_model_mapping.ecore#/">
+      resource="XMI" disposableProviderFactory="true" ecorePackage="domain_model_mapping.ecore#/">
     <genClasses ecoreClass="domain_model_mapping.ecore#//LeafModuleToVersionedSQLViewsModule">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference domain_model_mapping.ecore#//LeafModuleToVersionedSQLViewsModule/scheme"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference domain_model_mapping.ecore#//LeafModuleToVersionedSQLViewsModule/module"/>
@@ -49,7 +49,7 @@
     </genClasses>
   </genPackages>
   <genPackages prefix="Transformation" basePackage="org.eclipse.efbt.language.dtm.model"
-      resource="XML" disposableProviderFactory="true" ecorePackage="transformation.ecore#/">
+      resource="XMI" disposableProviderFactory="true" ecorePackage="transformation.ecore#/">
     <genClasses ecoreClass="transformation.ecore#//DataSetTransformation">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference transformation.ecore#//DataSetTransformation/cube"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute transformation.ecore#//DataSetTransformation/name"/>
@@ -86,7 +86,7 @@
     </genClasses>
   </genPackages>
   <genPackages prefix="dtm_report_cell_views" basePackage="org.eclipse.efbt.language.dtm.model"
-      resource="XML" disposableProviderFactory="true" ecorePackage="dtm_report_cell_views.ecore#/">
+      resource="XMI" disposableProviderFactory="true" ecorePackage="dtm_report_cell_views.ecore#/">
     <genClasses ecoreClass="dtm_report_cell_views.ecore#//ReportCellView">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_report_cell_views.ecore#//ReportCellView/reportCell"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_report_cell_views.ecore#//ReportCellView/structColumnHoldingDimension"/>
@@ -97,7 +97,7 @@
     </genClasses>
   </genPackages>
   <genPackages prefix="dtm_sql_views" basePackage="org.eclipse.efbt.language.dtm.model"
-      resource="XML" disposableProviderFactory="true" ecorePackage="dtm_sql_views.ecore#/">
+      resource="XMI" disposableProviderFactory="true" ecorePackage="dtm_sql_views.ecore#/">
     <genClasses ecoreClass="dtm_sql_views.ecore#//AggregateEnrichmentView">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//AggregateEnrichmentView/functions"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//AggregateEnrichmentView/groupByClause"/>
