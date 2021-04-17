@@ -7,7 +7,7 @@
     operationReflection="true" importOrganizing="true">
   <foreignModel>cocamo.ecore</foreignModel>
   <genPackages prefix="Cocamo" basePackage="org.eclipse.efbt.cocalimo.smcubes.model"
-      disposableProviderFactory="true" ecorePackage="cocamo.ecore#/">
+      resource="XMI" disposableProviderFactory="true" ecorePackage="cocamo.ecore#/">
     <genClasses ecoreClass="cocamo.ecore#//SMCubesStaticModel">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesStaticModel/smCubesModel"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocamo.ecore#//SMCubesStaticModel/requirements"/>

@@ -18,5 +18,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.efbt.cocalimo.core.model.requirements_text;visibility:=reexport,
  org.eclipse.efbt.cocalimo.smcubes.model.input_data;visibility:=reexport,
  org.eclipse.efbt.cocalimo.smcubes.model.core;visibility:=reexport,
- org.eclipse.efbt.cocalimo.core.model.testing;visibility:=reexport
+ org.eclipse.efbt.cocalimo.core.model.testing;visibility:=reexport,
+ com.fasterxml.jackson.core.jackson-databind,
+ org.emfjson.jackson
 Bundle-ActivationPolicy: lazy
