@@ -7,7 +7,7 @@
     operationReflection="true" importOrganizing="true">
   <foreignModel>requirements_text.ecore</foreignModel>
   <genPackages prefix="Requirements_text" basePackage="org.eclipse.efbt.cocalimo.core.model"
-      resource="XML" disposableProviderFactory="true" ecorePackage="requirements_text.ecore#/">
+      resource="XMI" disposableProviderFactory="true" ecorePackage="requirements_text.ecore#/">
     <genClasses ecoreClass="requirements_text.ecore#//AllowedTypes">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference requirements_text.ecore#//AllowedTypes/allowedTypes"/>
     </genClasses>
