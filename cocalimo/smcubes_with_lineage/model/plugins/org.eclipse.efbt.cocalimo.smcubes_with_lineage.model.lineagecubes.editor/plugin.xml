@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <!-- @generated lineagecubes -->
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cube_schema.presentation.Cube_schemaModelWizardID"
+            name="%_UI_Cube_schemaModelWizard_label"
+            class="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cube_schema.presentation.Cube_schemaModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/Cube_schemaModelFile.gif">
+         <description>%_UI_Cube_schemaModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <!-- @generated lineagecubes -->
+      <editor
+            id="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cube_schema.presentation.Cube_schemaEditorID"
+            name="%_UI_Cube_schemaEditor_label"
+            icon="icons/full/obj16/Cube_schemaModelFile.gif"
+            extensions="cube_schema"
+            class="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cube_schema.presentation.Cube_schemaEditor"
+            contributorClass="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cube_schema.presentation.Cube_schemaActionBarContributor">
+      </editor>
+   </extension>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <!-- @generated lineagecubes -->
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cubes.presentation.CubesModelWizardID"
+            name="%_UI_CubesModelWizard_label"
+            class="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cubes.presentation.CubesModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/CubesModelFile.gif">
+         <description>%_UI_CubesModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <!-- @generated lineagecubes -->
+      <editor
+            id="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cubes.presentation.CubesEditorID"
+            name="%_UI_CubesEditor_label"
+            icon="icons/full/obj16/CubesModelFile.gif"
+            extensions="cubes"
+            class="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cubes.presentation.CubesEditor"
+            contributorClass="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cubes.presentation.CubesActionBarContributor">
+      </editor>
+   </extension>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <!-- @generated lineagecubes -->
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.efbt_advanced_data_definition.presentation.Efbt_advanced_data_definitionModelWizardID"
+            name="%_UI_Efbt_advanced_data_definitionModelWizard_label"
+            class="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.efbt_advanced_data_definition.presentation.Efbt_advanced_data_definitionModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/Efbt_advanced_data_definitionModelFile.gif">
+         <description>%_UI_Efbt_advanced_data_definitionModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <!-- @generated lineagecubes -->
+      <editor
+            id="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.efbt_advanced_data_definition.presentation.Efbt_advanced_data_definitionEditorID"
+            name="%_UI_Efbt_advanced_data_definitionEditor_label"
+            icon="icons/full/obj16/Efbt_advanced_data_definitionModelFile.gif"
+            extensions="efbt_advanced_data_definition"
+            class="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.efbt_advanced_data_definition.presentation.Efbt_advanced_data_definitionEditor"
+            contributorClass="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.efbt_advanced_data_definition.presentation.Efbt_advanced_data_definitionActionBarContributor">
+      </editor>
+   </extension>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <!-- @generated lineagecubes -->
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.incremental_cubes.presentation.Incremental_cubesModelWizardID"
+            name="%_UI_Incremental_cubesModelWizard_label"
+            class="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.incremental_cubes.presentation.Incremental_cubesModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/Incremental_cubesModelFile.gif">
+         <description>%_UI_Incremental_cubesModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <!-- @generated lineagecubes -->
+      <editor
+            id="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.incremental_cubes.presentation.Incremental_cubesEditorID"
+            name="%_UI_Incremental_cubesEditor_label"
+            icon="icons/full/obj16/Incremental_cubesModelFile.gif"
+            extensions="incremental_cubes"
+            class="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.incremental_cubes.presentation.Incremental_cubesEditor"
+            contributorClass="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.incremental_cubes.presentation.Incremental_cubesActionBarContributor">
+      </editor>
+   </extension>
+
+</plugin>

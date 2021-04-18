@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <!-- @generated datalineage -->
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cell_transformation_logic.presentation.Cell_transformation_logicModelWizardID"
+            name="%_UI_Cell_transformation_logicModelWizard_label"
+            class="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cell_transformation_logic.presentation.Cell_transformation_logicModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/Cell_transformation_logicModelFile.gif">
+         <description>%_UI_Cell_transformation_logicModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <!-- @generated datalineage -->
+      <editor
+            id="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cell_transformation_logic.presentation.Cell_transformation_logicEditorID"
+            name="%_UI_Cell_transformation_logicEditor_label"
+            icon="icons/full/obj16/Cell_transformation_logicModelFile.gif"
+            extensions="cell_transformation_logic"
+            class="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cell_transformation_logic.presentation.Cell_transformation_logicEditor"
+            contributorClass="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cell_transformation_logic.presentation.Cell_transformation_logicActionBarContributor">
+      </editor>
+   </extension>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <!-- @generated datalineage -->
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.data_lineage.presentation.Data_lineageModelWizardID"
+            name="%_UI_Data_lineageModelWizard_label"
+            class="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.data_lineage.presentation.Data_lineageModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/Data_lineageModelFile.gif">
+         <description>%_UI_Data_lineageModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <!-- @generated datalineage -->
+      <editor
+            id="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.data_lineage.presentation.Data_lineageEditorID"
+            name="%_UI_Data_lineageEditor_label"
+            icon="icons/full/obj16/Data_lineageModelFile.gif"
+            extensions="data_lineage"
+            class="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.data_lineage.presentation.Data_lineageEditor"
+            contributorClass="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.data_lineage.presentation.Data_lineageActionBarContributor">
+      </editor>
+   </extension>
+
+</plugin>

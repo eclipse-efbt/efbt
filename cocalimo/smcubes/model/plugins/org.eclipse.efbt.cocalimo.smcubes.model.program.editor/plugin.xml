@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <!-- @generated cocamo -->
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="org.eclipse.efbt.cocalimo.smcubes.model.cocamo.presentation.CocamoModelWizardID"
+            name="%_UI_CocamoModelWizard_label"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.cocamo.presentation.CocamoModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/CocamoModelFile.gif">
+         <description>%_UI_CocamoModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <!-- @generated cocamo -->
+      <editor
+            id="org.eclipse.efbt.cocalimo.smcubes.model.cocamo.presentation.CocamoEditorID"
+            name="%_UI_CocamoEditor_label"
+            icon="icons/full/obj16/CocamoModelFile.gif"
+            extensions="cocamo"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.cocamo.presentation.CocamoEditor"
+            contributorClass="org.eclipse.efbt.cocalimo.smcubes.model.cocamo.presentation.CocamoActionBarContributor">
+      </editor>
+   </extension>
+
+</plugin>

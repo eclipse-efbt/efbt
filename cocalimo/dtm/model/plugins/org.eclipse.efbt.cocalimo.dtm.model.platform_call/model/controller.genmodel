@@ -7,7 +7,7 @@
     operationReflection="true" importOrganizing="true">
   <foreignModel>platform_call.ecore</foreignModel>
   <genPackages prefix="Platform_call" basePackage="org.eclipse.efbt.controller.core.model"
-      resource="XML" disposableProviderFactory="true" ecorePackage="platform_call.ecore#/">
+      resource="XMI" disposableProviderFactory="true" ecorePackage="platform_call.ecore#/">
     <genClasses ecoreClass="platform_call.ecore#//PlatformCall">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//PlatformCall/errorMessage"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//PlatformCall/name"/>

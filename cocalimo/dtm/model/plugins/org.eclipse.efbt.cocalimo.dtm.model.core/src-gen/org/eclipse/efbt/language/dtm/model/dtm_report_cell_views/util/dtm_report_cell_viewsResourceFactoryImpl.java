@@ -3,10 +3,8 @@
 package org.eclipse.efbt.language.dtm.model.dtm_report_cell_views.util;
 
 import org.eclipse.emf.common.util.URI;
-
 import org.eclipse.emf.ecore.resource.Resource;
-
-import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
+import org.emfjson.jackson.resource.JsonResourceFactory;
 
 /**
  * <!-- begin-user-doc -->
@@ -15,7 +13,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
  * @see org.eclipse.efbt.language.dtm.model.dtm_report_cell_views.util.dtm_report_cell_viewsResourceImpl
  * @generated NOT
  */
-public class dtm_report_cell_viewsResourceFactoryImpl extends ResourceFactoryImpl {
+public class dtm_report_cell_viewsResourceFactoryImpl extends JsonResourceFactory {
 	/**
 	 * Creates an instance of the resource factory.
 	 * <!-- begin-user-doc -->
