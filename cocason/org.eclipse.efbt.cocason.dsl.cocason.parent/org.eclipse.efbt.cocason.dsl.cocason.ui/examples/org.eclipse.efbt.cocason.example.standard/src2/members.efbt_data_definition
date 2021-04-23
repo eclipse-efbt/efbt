@@ -1,0 +1,75 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/efbt_data_definition#//MemberModule",
+  "name" : "memberModule",
+  "members" : [ {
+    "code" : "JP",
+    "description" : "JP",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "domains.efbt_data_definition#GGRPHCL_ARS"
+    },
+    "member_id" : "EBA_GA_EBA_JP",
+    "name" : "EBA_GA_EBA_JP",
+    "displayName" : "JP"
+  }, {
+    "code" : "US",
+    "description" : "US",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "domains.efbt_data_definition#GGRPHCL_ARS"
+    },
+    "member_id" : "EBA_GA_EBA_US",
+    "name" : "EBA_GA_EBA_US",
+    "displayName" : "US"
+  }, {
+    "code" : "1",
+    "description" : "Credit rating agency used in Asset encumbrance.\nSee EBA ITS on Asset encumbrance, 5.2.3. Instructions concerning specific columns, External credit rating on covered bond (090-140), As per credit rating agencies methodology to maintain current external credit rating on covered bond (230-250).",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "domains.efbt_data_definition#CRDT_RTNG_AGNCY"
+    },
+    "member_id" : "CRDT_RTNG_AGNCY_1",
+    "name" : "CRDT_RTNG_AGNCY_1",
+    "displayName" : "1"
+  }, {
+    "code" : "2",
+    "description" : "Credit rating agency used in Asset encumbrance.\nSee EBA ITS on Asset encumbrance, 5.2.3. Instructions concerning specific columns, External credit rating on covered bond (090-140), As per credit rating agencies methodology to maintain current external credit rating on covered bond (230-250).",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "domains.efbt_data_definition#CRDT_RTNG_AGNCY"
+    },
+    "member_id" : "CRDT_RTNG_AGNCY_2",
+    "name" : "CRDT_RTNG_AGNCY_2",
+    "displayName" : "2"
+  }, {
+    "code" : "3",
+    "description" : "Credit rating agency used in Asset encumbrance.\nSee EBA ITS on Asset encumbrance, 5.2.3. Instructions concerning specific columns, External credit rating on covered bond (090-140), As per credit rating agencies methodology to maintain current external credit rating on covered bond (230-250).",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "domains.efbt_data_definition#CRDT_RTNG_AGNCY"
+    },
+    "member_id" : "CRDT_RTNG_AGNCY_3",
+    "name" : "CRDT_RTNG_AGNCY_3",
+    "displayName" : "3"
+  }, {
+    "code" : "F",
+    "description" : "F",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "domains.efbt_data_definition#BLN"
+    },
+    "member_id" : "BLN_F",
+    "name" : "BLN_F",
+    "displayName" : "F"
+  }, {
+    "code" : "T",
+    "description" : "T",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "domains.efbt_data_definition#BLN"
+    },
+    "member_id" : "BLN_T",
+    "name" : "BLN_T",
+    "displayName" : "T"
+  } ]
+}

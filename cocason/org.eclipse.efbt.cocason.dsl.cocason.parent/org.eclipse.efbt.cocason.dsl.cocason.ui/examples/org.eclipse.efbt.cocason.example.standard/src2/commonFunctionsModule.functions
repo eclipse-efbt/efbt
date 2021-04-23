@@ -1,0 +1,99 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/functions#//FunctionSpecModule",
+  "name" : "commonfunctionsModule",
+  "functionSpecs" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "functionalName" : "&&",
+    "name" : "AND",
+    "sqlName" : "AND",
+    "isInfix" : true
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "functionalName" : "-",
+    "name" : "minus",
+    "sqlName" : "-",
+    "isInfix" : true
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "functionalName" : "==",
+    "name" : "equality",
+    "sqlName" : "=",
+    "isInfix" : true
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "functionalName" : "||",
+    "name" : "OR",
+    "sqlName" : "OR",
+    "isInfix" : true
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "functionalName" : "+",
+    "name" : "plus",
+    "sqlName" : "+",
+    "isInfix" : true
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//AggregateFunctionSpec",
+    "functionalName" : "funcs.SUM",
+    "name" : "SUM",
+    "sqlName" : "SUM"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "functionalName" : "CustomFunctions.sqrt",
+    "name" : "sqrt",
+    "sqlName" : "sqrt"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "functionalName" : "Math.max",
+    "name" : "max",
+    "sqlName" : "max"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "functionalName" : "*",
+    "name" : "multiply",
+    "sqlName" : "*",
+    "isInfix" : true
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "functionalName" : ">",
+    "name" : "greaterThan",
+    "sqlName" : ">",
+    "isInfix" : true
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "functionalName" : "Math.pow",
+    "name" : "exp",
+    "sqlName" : "exp"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "functionalName" : "Math.min",
+    "name" : "min",
+    "sqlName" : "min"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "functionalName" : "!=",
+    "name" : "notEquals",
+    "sqlName" : "!=",
+    "isInfix" : true
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "functionalName" : "equals",
+    "name" : "equals",
+    "sqlName" : "=",
+    "isInfix" : true
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "functionalName" : "funcs.CopyColumn",
+    "name" : "CopyColumn",
+    "sqlName" : "ID"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//AggregateFunctionSpec",
+    "functionalName" : "funcs.First",
+    "name" : "First",
+    "sqlName" : "First"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "functionalName" : "CustomFunctions.trippleA_NotionaAmount",
+    "name" : "trippleA_NotionaAmount",
+    "sqlName" : "trippleA_NotionaAmount"
+  } ]
+}

@@ -1,0 +1,20 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/efbt_data_definition#//CubeModule",
+  "name" : "cubeStructuresModule",
+  "cubeStructures" : [ {
+    "code" : "Loans",
+    "cube_structure_id" : "Loans",
+    "description" : "Loans",
+    "name" : "Loans"
+  }, {
+    "code" : "Counterparty",
+    "cube_structure_id" : "Counterparty",
+    "description" : "Counterparty",
+    "name" : "Counterparty"
+  }, {
+    "code" : "Rating",
+    "cube_structure_id" : "Rating",
+    "description" : "Rating",
+    "name" : "Rating"
+  } ]
+}

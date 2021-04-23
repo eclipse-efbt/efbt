@@ -1,0 +1,30 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/dtm_sql_views#//VersionedSQLViewsModule",
+  "name" : "processExampleData",
+  "sqlViews" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_sql_views#//AggregateEnrichmentView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "cubeLineageModule.cubes#aggregateLoans"
+    },
+    "name" : "aggregateLoans",
+    "functions" : [ {
+      "name" : "aggregateLoans_ECB2_MRKT_VL",
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+        "$ref" : "cubeLineageModule.cubes#loans"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "variables.efbt_data_definition#ECB2_MRKT_VL"
+      },
+      "aggregateFunction" : {
+        "name" : "sum",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//AggregateFunctionSpec",
+          "$ref" : "commonFunctionsModule.functions#SUM"
+        }
+      }
+    } ]
+  } ]
+}
