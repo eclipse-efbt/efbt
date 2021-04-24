@@ -22,15 +22,14 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.FunctionSpec#getParameterSpecs <em>Parameter Specs</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.FunctionSpec#getFunctionalName <em>Functional Name</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.FunctionSpec#getName <em>Name</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.FunctionSpec#getSqlName <em>Sql Name</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.FunctionSpec#getRelationalName <em>Relational Name</em>}</li>
  * </ul>
  *
  * @see org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.FunctionsPackage#getFunctionSpec()
  * @model extendedMetaData="name='FunctionSpec' kind='elementOnly'"
  * @generated
  */
-public interface FunctionSpec extends EObject
-{
+public interface FunctionSpec extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Parameter Specs</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.ParamaterSpec}.
@@ -99,28 +98,28 @@ public interface FunctionSpec extends EObject
 	void setName(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Sql Name</b></em>' attribute.
+	 * Returns the value of the '<em><b>Relational Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * If the function spec represents a common SQL function like SUM, then this field holds that name 
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Sql Name</em>' attribute.
-	 * @see #setSqlName(String)
-	 * @see org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.FunctionsPackage#getFunctionSpec_SqlName()
-	 * @model extendedMetaData="kind='attribute' name='sqlName'"
+	 * @return the value of the '<em>Relational Name</em>' attribute.
+	 * @see #setRelationalName(String)
+	 * @see org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.FunctionsPackage#getFunctionSpec_RelationalName()
+	 * @model extendedMetaData="kind='attribute' name='relationalName'"
 	 * @generated
 	 */
-	String getSqlName();
+	String getRelationalName();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.FunctionSpec#getSqlName <em>Sql Name</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.FunctionSpec#getRelationalName <em>Relational Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Sql Name</em>' attribute.
-	 * @see #getSqlName()
+	 * @param value the new value of the '<em>Relational Name</em>' attribute.
+	 * @see #getRelationalName()
 	 * @generated
 	 */
-	void setSqlName(String value);
+	void setRelationalName(String value);
 
 } // FunctionSpec

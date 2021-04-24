@@ -14,6 +14,5 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface CodeCondition extends EObject
-{
+public interface CodeCondition extends EObject {
 } // CodeCondition

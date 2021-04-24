@@ -11,7 +11,7 @@ Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.eclipse.efbt.language.dtm.model.domain_model_mapping.provider,
  org.eclipse.efbt.language.dtm.model.dtm_report_cell_views.provider,
- org.eclipse.efbt.language.dtm.model.dtm_sql_views.provider,
+ org.eclipse.efbt.language.dtm.model.dtm_views.provider,
  org.eclipse.efbt.language.dtm.model.transformation.provider
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.efbt.cocalimo.dtm.model.core;visibility:=reexport,
@@ -24,8 +24,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.edit;visibility:=reexport,
  org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes;visibility:=reexport,
  org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes.edit;visibility:=reexport,
- org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagefunctions;visibility:=reexport,
- org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagefunctions.edit;visibility:=reexport,
  org.eclipse.efbt.cocalimo.core.model.module_management;visibility:=reexport,
  org.eclipse.efbt.cocalimo.core.model.module_management.edit;visibility:=reexport,
  org.eclipse.efbt.cocalimo.core.model.requirements_text;visibility:=reexport,

@@ -1,0 +1,159 @@
+/**
+ */
+package org.eclipse.efbt.language.dtm.model.dtm_views.impl;
+
+import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cubes.FreeBirdToolsCube;
+
+import org.eclipse.efbt.language.dtm.model.dtm_views.DeltaAccumulation;
+import org.eclipse.efbt.language.dtm.model.dtm_views.dtm_viewsPackage;
+
+import org.eclipse.emf.common.notify.Notification;
+
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
+
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
+
+/**
+ * <!-- begin-user-doc -->
+ * An implementation of the model object '<em><b>Delta Accumulation</b></em>'.
+ * <!-- end-user-doc -->
+ * <p>
+ * The following features are implemented:
+ * </p>
+ * <ul>
+ *   <li>{@link org.eclipse.efbt.language.dtm.model.dtm_views.impl.DeltaAccumulationImpl#getUltimateSourceCube <em>Ultimate Source Cube</em>}</li>
+ * </ul>
+ *
+ * @generated
+ */
+public class DeltaAccumulationImpl extends DTMViewImpl implements DeltaAccumulation {
+	/**
+	 * The cached value of the '{@link #getUltimateSourceCube() <em>Ultimate Source Cube</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getUltimateSourceCube()
+	 * @generated
+	 * @ordered
+	 */
+	protected FreeBirdToolsCube ultimateSourceCube;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected DeltaAccumulationImpl() {
+		super();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	protected EClass eStaticClass() {
+		return dtm_viewsPackage.Literals.DELTA_ACCUMULATION;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public FreeBirdToolsCube getUltimateSourceCube() {
+		if (ultimateSourceCube != null && ultimateSourceCube.eIsProxy()) {
+			InternalEObject oldUltimateSourceCube = (InternalEObject)ultimateSourceCube;
+			ultimateSourceCube = (FreeBirdToolsCube)eResolveProxy(oldUltimateSourceCube);
+			if (ultimateSourceCube != oldUltimateSourceCube) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, dtm_viewsPackage.DELTA_ACCUMULATION__ULTIMATE_SOURCE_CUBE, oldUltimateSourceCube, ultimateSourceCube));
+			}
+		}
+		return ultimateSourceCube;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public FreeBirdToolsCube basicGetUltimateSourceCube() {
+		return ultimateSourceCube;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setUltimateSourceCube(FreeBirdToolsCube newUltimateSourceCube) {
+		FreeBirdToolsCube oldUltimateSourceCube = ultimateSourceCube;
+		ultimateSourceCube = newUltimateSourceCube;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, dtm_viewsPackage.DELTA_ACCUMULATION__ULTIMATE_SOURCE_CUBE, oldUltimateSourceCube, ultimateSourceCube));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
+			case dtm_viewsPackage.DELTA_ACCUMULATION__ULTIMATE_SOURCE_CUBE:
+				if (resolve) return getUltimateSourceCube();
+				return basicGetUltimateSourceCube();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
+			case dtm_viewsPackage.DELTA_ACCUMULATION__ULTIMATE_SOURCE_CUBE:
+				setUltimateSourceCube((FreeBirdToolsCube)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void eUnset(int featureID) {
+		switch (featureID) {
+			case dtm_viewsPackage.DELTA_ACCUMULATION__ULTIMATE_SOURCE_CUBE:
+				setUltimateSourceCube((FreeBirdToolsCube)null);
+				return;
+		}
+		super.eUnset(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case dtm_viewsPackage.DELTA_ACCUMULATION__ULTIMATE_SOURCE_CUBE:
+				return ultimateSourceCube != null;
+		}
+		return super.eIsSet(featureID);
+	}
+
+} //DeltaAccumulationImpl

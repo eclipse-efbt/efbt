@@ -1,0 +1,153 @@
+ProgramAndCalls : { program : dtmProgram :  { 
+	
+	executableLogic :[ dtmExecutableLogic CommodityCurvatureCreateBucketValueLogic : { 
+		
+			 
+			 datasetTransformationModules : [ VersionedDTMViewsModule   views : { 
+			 	DTMViews : [ 
+			 	
+		
+			 		 				JoinView productOfCorrelatedCommodityCurvatureWithSquareOfMinimums : {
+			 		 					cube : "CommodityCurvatureCreateBucketValueCubes.freeBirdToolsCubeModule.productOfCorrelatedCommodityCurvatureWithSquareOfMinimums"
+			 		 					whereClause : WhereClause : { 
+			 		 						 function : BooleanFunction bf27 :
+			 		 						 { 
+			 		 						 	functionSpec : "commonFunctions.commonFunctionSpecModule.AND" 
+			 		 						 	parameters : [ 
+			 		 						 		 
+			 		 							 BooleanFunction bf64 : {
+			 		 						 	functionSpec : "commonFunctions.commonFunctionSpecModule.equals"
+			 		 						 	parameters : [
+			 		 						 		SpeculativeCubeColumnParameter : {
+			 		 						 			column : "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID"
+			 		 						 			cube : "CommodityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.sumOfProductOfCommodityCurvatureCVRkCorrelatedCombinationsByBucket"
+			 		 						 			},
+			 		 						 		SpeculativeCubeColumnParameter : {
+			 		 						 			column : "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID"
+			 		 						 			cube : "CommodityCurvatureCreateSquaresCubes.freeBirdToolsCubeModule.CommodityCurvatureTotalGroupedSummedMinimums"
+			 		 						 			}	
+			 		 						 			]
+			 		 						 	},
+			 		 						 	 BooleanFunction  bf65 : {
+			 		 						 	 	functionSpec : "commonFunctions.commonFunctionSpecModule.equals"
+			 		 						 	parameters : [
+			 		 						 		SpeculativeCubeColumnParameter : {
+			 		 						 			column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection"
+			 		 						 			cube : "CommodityCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.sumOfProductOfCommodityCurvatureCVRkCorrelatedCombinationsByBucket"
+			 		 						 			},
+			 		 						 		SpeculativeCubeColumnParameter : {
+			 		 						 			column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection"
+			 		 						 			cube : "CommodityCurvatureCreateSquaresCubes.freeBirdToolsCubeModule.CommodityCurvatureTotalGroupedSummedMinimums"
+			 		 						 			}	
+			 		 						 			]
+			 		 						 	} ]
+			 		 						 	 }
+			 		 						 	 	
+			 		 						 	 } 
+			 		 						
+			 		 						 ignores : [
+			 		 						 	IgnoreColumn : {
+			 		 						 		columnToIgnore : "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID"
+			 		 						 		cube :"CommodityCurvatureCreateSquaresCubes.freeBirdToolsCubeModule.CommodityCurvatureTotalGroupedSummedMinimums"
+			 		 						 	},
+			 		 						 	IgnoreColumn : {
+			 		 						 		columnToIgnore :"FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection"
+			 		 						 		cube :"CommodityCurvatureCreateSquaresCubes.freeBirdToolsCubeModule.CommodityCurvatureTotalGroupedSummedMinimums"
+			 		 						 	}
+			 		 						 ]
+			 		 						 },
+			 		 					
+			 		 					EnrichmentView CommodityCurvatureCVRFinal : { 
+			 		 						cube : "CommodityCurvatureCreateBucketValueCubes.freeBirdToolsCubeModule.CommodityCurvatureCVRFinal" 
+			 		 						functions : [
+			 		 							BasicColumnFunction CommodityCurvatureCVRFinal_CommodityCurvatureCVRFinal :
+			 		 							{
+			 		 								cube : "CommodityCurvatureCreateBucketValueCubes.freeBirdToolsCubeModule.CommodityCurvatureCVRFinal" 
+			 		 								variable : "CommodityCurvatureMeasuresStaticModel.CommodityCurvatureMeasures.variablesModule.CommodityCurvatureCVRFinal"
+			 		 								basicFunction : BasicFunction bf31  : {
+			 		 									functionSpec : "commonFunctions.commonFunctionSpecModule.plus" 
+			 		 									parameters : [
+			 		 										SpeculativeCubeColumnParameter : {
+			 		 											column : "CommodityCurvatureMeasuresStaticModel.CommodityCurvatureMeasures.variablesModule.CommodityCurvatureTotalGroupedSummedMinimums"
+			 		 											cube : "CommodityCurvatureCreateBucketValueCubes.freeBirdToolsCubeModule.productOfCorrelatedCommodityCurvatureWithSquareOfMinimums"
+			 		 										},
+			 		 										SpeculativeCubeColumnParameter : {
+			 		 											column :"CommodityCurvatureMeasuresStaticModel.CommodityCurvatureMeasures.variablesModule.sumOfproductOfCommodityCurvatureCorrelatedCombinations"
+			 		 											cube : "CommodityCurvatureCreateBucketValueCubes.freeBirdToolsCubeModule.productOfCorrelatedCommodityCurvatureWithSquareOfMinimums"
+			 		 										}
+			 		 									]
+			 		 								}
+			 		 								}
+			 		 						]
+			 		 						ignores : [
+			 		 							IgnoreColumn : {
+			 		 								 columnToIgnore : "CommodityCurvatureMeasuresStaticModel.CommodityCurvatureMeasures.variablesModule.CommodityCurvatureTotalGroupedSummedMinimums"
+			 		 								 cube : "CommodityCurvatureCreateBucketValueCubes.freeBirdToolsCubeModule.productOfCorrelatedCommodityCurvatureWithSquareOfMinimums"
+			 		 							},
+			 		 							IgnoreColumn : {
+			 		 								 columnToIgnore : "CommodityCurvatureMeasuresStaticModel.CommodityCurvatureMeasures.variablesModule.sumOfproductOfCommodityCurvatureCorrelatedCombinations"
+			 		 								 cube : "CommodityCurvatureCreateBucketValueCubes.freeBirdToolsCubeModule.productOfCorrelatedCommodityCurvatureWithSquareOfMinimums"
+			 		 							}
+			 		 							
+			 		 						]
+			 		 						},
+			 		 						EnrichmentView maxOfCommodityCurvatureCVRFinal_maximumOfCommodityCurvatureCVRFinal : {
+			 		 							cube : "CommodityCurvatureCreateBucketValueCubes.freeBirdToolsCubeModule.maxOfCommodityCurvatureCVRFinal"
+			 		 							functions : [ 
+			 		 								BasicColumnFunction max_of_cvr_stuff_maximum_of_cvr_stuff : {
+			 		 									cube : "CommodityCurvatureCreateBucketValueCubes.freeBirdToolsCubeModule.maxOfCommodityCurvatureCVRFinal"
+			 		 									variable : "CommodityCurvatureMeasuresStaticModel.CommodityCurvatureMeasures.variablesModule.maximumOfCommodityCurvatureCVRFinal"
+			 		 									basicFunction : BasicFunction bf32 :
+			 		 									{ 
+			 		 										functionSpec : "commonFunctions.commonFunctionSpecModule.max"
+			 		 										parameters : [
+			 		 											SpeculativeCubeColumnParameter : { 
+			 		 												column :"CommodityCurvatureMeasuresStaticModel.CommodityCurvatureMeasures.variablesModule.CommodityCurvatureCVRFinal"
+			 		 												cube : "CommodityCurvatureCreateBucketValueCubes.freeBirdToolsCubeModule.CommodityCurvatureCVRFinal"
+			 		 											},
+			 		 											ValueParameter : { 
+			 		 												dataType : :Double
+			 		 												value : "0.0"
+			 		 											}
+			 		 										]
+			 		 									}
+			 		 								} 
+			 		 								]
+			 		 								ignores : [ 
+			 		 									IgnoreColumn : {
+			 		 										columnToIgnore : "CommodityCurvatureMeasuresStaticModel.CommodityCurvatureMeasures.variablesModule.CommodityCurvatureCVRFinal"
+			 		 										cube : "CommodityCurvatureCreateBucketValueCubes.freeBirdToolsCubeModule.CommodityCurvatureCVRFinal"
+			 		 									}
+			 		 								]
+			 		 						},
+			 		 						EnrichmentView squareRootOfMaxOfCommodityCurvatureCVRFinal : {
+			 		 							cube : "CommodityCurvatureCreateBucketValueCubes.freeBirdToolsCubeModule.squareRootOfMaxOfCommodityCurvatureCVRFinal"
+			 		 							functions : [
+			 		 								BasicColumnFunction squareRootOfMaxOfCommodityCurvatureCVRFinalr_sqrtOfMaximumOfCommodityCurvatureCVRFinal :
+			 		 								{
+			 		 									cube : "CommodityCurvatureCreateBucketValueCubes.freeBirdToolsCubeModule.squareRootOfMaxOfCommodityCurvatureCVRFinal"
+			 		 									variable :"CommodityCurvatureMeasuresStaticModel.CommodityCurvatureMeasures.variablesModule.sqrtOfMaximumOfCommodityCurvatureCVRFinal"
+			 		 									basicFunction : BasicFunction bf35 :
+			 		 									{ functionSpec : "commonFunctions.commonFunctionSpecModule.sqrt"
+			 		 										parameters : [
+			 		 											SpeculativeCubeColumnParameter : {
+			 		 												column :"CommodityCurvatureMeasuresStaticModel.CommodityCurvatureMeasures.variablesModule.maximumOfCommodityCurvatureCVRFinal"
+			 		 												cube : "CommodityCurvatureCreateBucketValueCubes.freeBirdToolsCubeModule.maxOfCommodityCurvatureCVRFinal"
+			 		 											}
+			 		 										]
+			 		 									}
+			 		 								}
+			 		 							]
+			 		 							ignores : [
+			 		 								IgnoreColumn : {
+			 		 									columnToIgnore :"CommodityCurvatureMeasuresStaticModel.CommodityCurvatureMeasures.variablesModule.maximumOfCommodityCurvatureCVRFinal"
+			 		 									cube : "CommodityCurvatureCreateBucketValueCubes.freeBirdToolsCubeModule.maxOfCommodityCurvatureCVRFinal"
+			 		 								}
+			 		 							]
+			 		 						} 
+			 		 						]
+			 		 						} ] 
+			 		}
+			 		 				
+			 		 						]
+			 		 						}  } 

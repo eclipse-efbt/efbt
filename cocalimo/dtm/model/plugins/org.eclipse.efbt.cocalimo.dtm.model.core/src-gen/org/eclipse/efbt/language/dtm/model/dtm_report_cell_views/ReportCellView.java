@@ -6,7 +6,7 @@ import org.eclipse.efbt.cocalimo.smcubes.model.reports.ReportCell;
 
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.efbt_advanced_data_definition.StructTypedVariable;
 
-import org.eclipse.efbt.language.dtm.model.dtm_sql_views.SQLView;
+import org.eclipse.efbt.language.dtm.model.dtm_views.DTMView;
 
 /**
  * <!-- begin-user-doc -->
@@ -37,8 +37,7 @@ import org.eclipse.efbt.language.dtm.model.dtm_sql_views.SQLView;
  * @model extendedMetaData="name='ReportCellView' kind='elementOnly'"
  * @generated
  */
-public interface ReportCellView extends SQLView
-{
+public interface ReportCellView extends DTMView {
 	/**
 	 * Returns the value of the '<em><b>Report Cell</b></em>' containment reference.
 	 * <!-- begin-user-doc -->

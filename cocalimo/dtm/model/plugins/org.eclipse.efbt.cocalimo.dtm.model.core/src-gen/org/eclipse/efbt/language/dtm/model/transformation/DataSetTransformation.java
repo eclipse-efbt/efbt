@@ -29,8 +29,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='DataSetTransformation' kind='empty'"
  * @generated
  */
-public interface DataSetTransformation extends EObject
-{
+public interface DataSetTransformation extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Cube</b></em>' reference.
 	 * <!-- begin-user-doc -->

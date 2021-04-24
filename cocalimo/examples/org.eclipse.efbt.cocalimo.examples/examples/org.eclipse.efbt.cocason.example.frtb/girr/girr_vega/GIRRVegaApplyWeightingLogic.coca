@@ -1,0 +1,58 @@
+ProgramAndCalls : { program : dtmProgram :  { 
+	
+	executableLogic :[ dtmExecutableLogic GIRRVegaApplyWeightingLogic : { 
+		
+			
+			 datasetTransformationModules : [ VersionedDTMViewsModule   views : { 
+			 	DTMViews : [ 
+			 		
+			 		EnrichmentView 	GIRRVegaSensitivitiesAndRiskFactorsWithWeight : {
+			 			cube :"GIRRVegaApplyWeighting.freeBirdToolsCubeModule.GIRRVegaSensitivitiesAndRiskFactorsWithWeight"
+			 			functions : [ 
+			 				BasicColumnFunction GIRRVegaSensitivitiesAndRiskFactorsWithWeight_GIRRVegaRiskWeight: { 
+			 					cube : "GIRRVegaApplyWeighting.freeBirdToolsCubeModule.GIRRVegaSensitivitiesAndRiskFactorsWithWeight"
+			 					variable : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.GIRRVegaRiskWeight"
+			 					
+			 					basicFunction : BasicFunction bf41 : {
+			 						functionSpec : "FRTBFunctions.GIRRFunctionSpecModule.getGIRRVegaRiskFactorRiskWeight"
+			 						parameters : [ 
+			 							SpeculativeCubeColumnParameter : {
+			 								column : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.tenor"
+			 								cube : "GIRRVegaAssignBucket.freeBirdToolsCubeModule.GIRRVegaSensitivitiesAndRiskFactors"
+			 							}
+			 							
+			 						]
+			 					}
+			 				}
+			 			
+			 			]
+			 		},
+			 		EnrichmentView 	weightedGIRRVegaSensitivitiesAndRiskFactors : {
+			 			cube :"GIRRVegaApplyWeighting.freeBirdToolsCubeModule.weightedGIRRVegaSensitivitiesAndRiskFactors"
+			 			functions : [ 
+			 				BasicColumnFunction weightedGIRRVegaSensitivitiesAndRiskFactors_weightedGIRRVegaSensitivity: { 
+			 					cube :"GIRRVegaApplyWeighting.freeBirdToolsCubeModule.weightedGIRRVegaSensitivitiesAndRiskFactors"
+			 					variable : "GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.weightedGIRRVegaSensitivity"
+			 					
+			 					basicFunction : BasicFunction bf42 : {
+			 						functionSpec : "commonFunctions.commonFunctionSpecModule.multiply"
+			 						parameters : [ 
+			 							SpeculativeCubeColumnParameter : {
+			 								column : "CommonMeasuresStaticModel.CommonMeasuresModel.variablesModule.nettedVegaSensitivity"
+			 								cube :  "GIRRVegaApplyWeighting.freeBirdToolsCubeModule.GIRRVegaSensitivitiesAndRiskFactorsWithWeight"
+			 							},
+			 							SpeculativeCubeColumnParameter : {
+			 								column :"GIRRVegaMeasuresStaticModel.GIRRVegaMeasuresModel.variablesModule.GIRRVegaRiskWeight"
+			 								cube :  "GIRRVegaApplyWeighting.freeBirdToolsCubeModule.GIRRVegaSensitivitiesAndRiskFactorsWithWeight"
+			 							}
+			 							
+			 						]
+			 					}
+			 				}
+			 			
+			 			]
+			 		}
+			 		
+			 	
+
+			 		] } ] } ] } }

@@ -23,8 +23,7 @@ package org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions;
  * @model extendedMetaData="name='BasicFunctionSpec' kind='elementOnly'"
  * @generated
  */
-public interface BasicFunctionSpec extends FunctionSpec
-{
+public interface BasicFunctionSpec extends FunctionSpec {
 	/**
 	 * Returns the value of the '<em><b>Is Infix</b></em>' attribute.
 	 * <!-- begin-user-doc -->

@@ -25,8 +25,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class ParamaterSpecImpl extends MinimalEObjectImpl.Container implements ParamaterSpec
-{
+public class ParamaterSpecImpl extends MinimalEObjectImpl.Container implements ParamaterSpec {
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -52,8 +51,7 @@ public class ParamaterSpecImpl extends MinimalEObjectImpl.Container implements P
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ParamaterSpecImpl()
-	{
+	protected ParamaterSpecImpl() {
 		super();
 	}
 
@@ -63,8 +61,7 @@ public class ParamaterSpecImpl extends MinimalEObjectImpl.Container implements P
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return FunctionsPackage.Literals.PARAMATER_SPEC;
 	}
 
@@ -73,8 +70,7 @@ public class ParamaterSpecImpl extends MinimalEObjectImpl.Container implements P
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
@@ -83,8 +79,7 @@ public class ParamaterSpecImpl extends MinimalEObjectImpl.Container implements P
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setName(String newName)
-	{
+	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
@@ -97,8 +92,7 @@ public class ParamaterSpecImpl extends MinimalEObjectImpl.Container implements P
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case FunctionsPackage.PARAMATER_SPEC__NAME:
 				return getName();
@@ -112,8 +106,7 @@ public class ParamaterSpecImpl extends MinimalEObjectImpl.Container implements P
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case FunctionsPackage.PARAMATER_SPEC__NAME:
 				setName((String)newValue);
@@ -128,8 +121,7 @@ public class ParamaterSpecImpl extends MinimalEObjectImpl.Container implements P
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case FunctionsPackage.PARAMATER_SPEC__NAME:
 				setName(NAME_EDEFAULT);
@@ -144,8 +136,7 @@ public class ParamaterSpecImpl extends MinimalEObjectImpl.Container implements P
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case FunctionsPackage.PARAMATER_SPEC__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
@@ -159,8 +150,7 @@ public class ParamaterSpecImpl extends MinimalEObjectImpl.Container implements P
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

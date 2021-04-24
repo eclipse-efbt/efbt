@@ -33,8 +33,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class ReportCellViewModuleImpl extends ModuleImpl implements ReportCellViewModule
-{
+public class ReportCellViewModuleImpl extends ModuleImpl implements ReportCellViewModule {
 	/**
 	 * The cached value of the '{@link #getReportCellViews() <em>Report Cell Views</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -50,8 +49,7 @@ public class ReportCellViewModuleImpl extends ModuleImpl implements ReportCellVi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ReportCellViewModuleImpl()
-	{
+	protected ReportCellViewModuleImpl() {
 		super();
 	}
 
@@ -61,8 +59,7 @@ public class ReportCellViewModuleImpl extends ModuleImpl implements ReportCellVi
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return dtm_report_cell_viewsPackage.Literals.REPORT_CELL_VIEW_MODULE;
 	}
 
@@ -72,8 +69,7 @@ public class ReportCellViewModuleImpl extends ModuleImpl implements ReportCellVi
 	 * @generated
 	 */
 	@Override
-	public EList<ReportCellView> getReportCellViews()
-	{
+	public EList<ReportCellView> getReportCellViews() {
 		if (reportCellViews == null) {
 			reportCellViews = new EObjectContainmentEList<ReportCellView>(ReportCellView.class, this, dtm_report_cell_viewsPackage.REPORT_CELL_VIEW_MODULE__REPORT_CELL_VIEWS);
 		}
@@ -86,8 +82,7 @@ public class ReportCellViewModuleImpl extends ModuleImpl implements ReportCellVi
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case dtm_report_cell_viewsPackage.REPORT_CELL_VIEW_MODULE__REPORT_CELL_VIEWS:
 				return ((InternalEList<?>)getReportCellViews()).basicRemove(otherEnd, msgs);
@@ -101,8 +96,7 @@ public class ReportCellViewModuleImpl extends ModuleImpl implements ReportCellVi
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case dtm_report_cell_viewsPackage.REPORT_CELL_VIEW_MODULE__REPORT_CELL_VIEWS:
 				return getReportCellViews();
@@ -117,8 +111,7 @@ public class ReportCellViewModuleImpl extends ModuleImpl implements ReportCellVi
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case dtm_report_cell_viewsPackage.REPORT_CELL_VIEW_MODULE__REPORT_CELL_VIEWS:
 				getReportCellViews().clear();
@@ -134,8 +127,7 @@ public class ReportCellViewModuleImpl extends ModuleImpl implements ReportCellVi
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case dtm_report_cell_viewsPackage.REPORT_CELL_VIEW_MODULE__REPORT_CELL_VIEWS:
 				getReportCellViews().clear();
@@ -150,8 +142,7 @@ public class ReportCellViewModuleImpl extends ModuleImpl implements ReportCellVi
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case dtm_report_cell_viewsPackage.REPORT_CELL_VIEW_MODULE__REPORT_CELL_VIEWS:
 				return reportCellViews != null && !reportCellViews.isEmpty();

@@ -17,6 +17,5 @@ package org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions;
  * @model extendedMetaData="name='AggregateFunctionSpec' kind='elementOnly'"
  * @generated
  */
-public interface AggregateFunctionSpec extends FunctionSpec
-{
+public interface AggregateFunctionSpec extends FunctionSpec {
 } // AggregateFunctionSpec

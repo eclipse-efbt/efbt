@@ -66,7 +66,7 @@ public class DomainMappingModuleItemProvider extends ModuleItemProvider {
 	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
-			childrenFeatures.add(Domain_model_mappingPackage.Literals.DOMAIN_MAPPING_MODULE__LEAF_MODULE_TO_VERSIONED_SQL_VIEWS_MODULES);
+			childrenFeatures.add(Domain_model_mappingPackage.Literals.DOMAIN_MAPPING_MODULE__LEAF_MODULE_TO_VERSIONED_DTM_VIEWS_MODULES);
 			childrenFeatures.add(Domain_model_mappingPackage.Literals.DOMAIN_MAPPING_MODULE__LEAF_MODULE_TO_VERSIONED_CUBE_SCHEMA_MODULES);
 			childrenFeatures.add(Domain_model_mappingPackage.Literals.DOMAIN_MAPPING_MODULE__LEAF_MODULE_TO_REPORT_CELL_VIEW_MODULES);
 			childrenFeatures.add(Domain_model_mappingPackage.Literals.DOMAIN_MAPPING_MODULE__SCENARIO_TO_CODE_CONDITIONS);
@@ -125,7 +125,7 @@ public class DomainMappingModuleItemProvider extends ModuleItemProvider {
 		updateChildren(notification);
 
 		switch (notification.getFeatureID(DomainMappingModule.class)) {
-			case Domain_model_mappingPackage.DOMAIN_MAPPING_MODULE__LEAF_MODULE_TO_VERSIONED_SQL_VIEWS_MODULES:
+			case Domain_model_mappingPackage.DOMAIN_MAPPING_MODULE__LEAF_MODULE_TO_VERSIONED_DTM_VIEWS_MODULES:
 			case Domain_model_mappingPackage.DOMAIN_MAPPING_MODULE__LEAF_MODULE_TO_VERSIONED_CUBE_SCHEMA_MODULES:
 			case Domain_model_mappingPackage.DOMAIN_MAPPING_MODULE__LEAF_MODULE_TO_REPORT_CELL_VIEW_MODULES:
 			case Domain_model_mappingPackage.DOMAIN_MAPPING_MODULE__SCENARIO_TO_CODE_CONDITIONS:
@@ -148,8 +148,8 @@ public class DomainMappingModuleItemProvider extends ModuleItemProvider {
 
 		newChildDescriptors.add
 			(createChildParameter
-				(Domain_model_mappingPackage.Literals.DOMAIN_MAPPING_MODULE__LEAF_MODULE_TO_VERSIONED_SQL_VIEWS_MODULES,
-				 Domain_model_mappingFactory.eINSTANCE.createLeafModuleToVersionedSQLViewsModule()));
+				(Domain_model_mappingPackage.Literals.DOMAIN_MAPPING_MODULE__LEAF_MODULE_TO_VERSIONED_DTM_VIEWS_MODULES,
+				 Domain_model_mappingFactory.eINSTANCE.createLeafModuleToVersionedDTMViewsModule()));
 
 		newChildDescriptors.add
 			(createChildParameter

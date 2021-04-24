@@ -31,8 +31,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  *
  * @generated
  */
-public class DataSetFilterConditionImpl extends CodeConditionImpl implements DataSetFilterCondition
-{
+public class DataSetFilterConditionImpl extends CodeConditionImpl implements DataSetFilterCondition {
 	/**
 	 * The cached value of the '{@link #getFilterConditions() <em>Filter Conditions</em>}' containment reference.
 	 * <!-- begin-user-doc -->
@@ -58,8 +57,7 @@ public class DataSetFilterConditionImpl extends CodeConditionImpl implements Dat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected DataSetFilterConditionImpl()
-	{
+	protected DataSetFilterConditionImpl() {
 		super();
 	}
 
@@ -69,8 +67,7 @@ public class DataSetFilterConditionImpl extends CodeConditionImpl implements Dat
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Domain_model_mappingPackage.Literals.DATA_SET_FILTER_CONDITION;
 	}
 
@@ -80,8 +77,7 @@ public class DataSetFilterConditionImpl extends CodeConditionImpl implements Dat
 	 * @generated
 	 */
 	@Override
-	public BooleanFunction getFilterConditions()
-	{
+	public BooleanFunction getFilterConditions() {
 		return filterConditions;
 	}
 
@@ -90,8 +86,7 @@ public class DataSetFilterConditionImpl extends CodeConditionImpl implements Dat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetFilterConditions(BooleanFunction newFilterConditions, NotificationChain msgs)
-	{
+	public NotificationChain basicSetFilterConditions(BooleanFunction newFilterConditions, NotificationChain msgs) {
 		BooleanFunction oldFilterConditions = filterConditions;
 		filterConditions = newFilterConditions;
 		if (eNotificationRequired()) {
@@ -107,8 +102,7 @@ public class DataSetFilterConditionImpl extends CodeConditionImpl implements Dat
 	 * @generated
 	 */
 	@Override
-	public void setFilterConditions(BooleanFunction newFilterConditions)
-	{
+	public void setFilterConditions(BooleanFunction newFilterConditions) {
 		if (newFilterConditions != filterConditions) {
 			NotificationChain msgs = null;
 			if (filterConditions != null)
@@ -128,8 +122,7 @@ public class DataSetFilterConditionImpl extends CodeConditionImpl implements Dat
 	 * @generated
 	 */
 	@Override
-	public FreeBirdToolsCube getCube()
-	{
+	public FreeBirdToolsCube getCube() {
 		if (cube != null && cube.eIsProxy()) {
 			InternalEObject oldCube = (InternalEObject)cube;
 			cube = (FreeBirdToolsCube)eResolveProxy(oldCube);
@@ -146,8 +139,7 @@ public class DataSetFilterConditionImpl extends CodeConditionImpl implements Dat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public FreeBirdToolsCube basicGetCube()
-	{
+	public FreeBirdToolsCube basicGetCube() {
 		return cube;
 	}
 
@@ -157,8 +149,7 @@ public class DataSetFilterConditionImpl extends CodeConditionImpl implements Dat
 	 * @generated
 	 */
 	@Override
-	public void setCube(FreeBirdToolsCube newCube)
-	{
+	public void setCube(FreeBirdToolsCube newCube) {
 		FreeBirdToolsCube oldCube = cube;
 		cube = newCube;
 		if (eNotificationRequired())
@@ -171,8 +162,7 @@ public class DataSetFilterConditionImpl extends CodeConditionImpl implements Dat
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case Domain_model_mappingPackage.DATA_SET_FILTER_CONDITION__FILTER_CONDITIONS:
 				return basicSetFilterConditions(null, msgs);
@@ -186,8 +176,7 @@ public class DataSetFilterConditionImpl extends CodeConditionImpl implements Dat
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Domain_model_mappingPackage.DATA_SET_FILTER_CONDITION__FILTER_CONDITIONS:
 				return getFilterConditions();
@@ -204,8 +193,7 @@ public class DataSetFilterConditionImpl extends CodeConditionImpl implements Dat
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Domain_model_mappingPackage.DATA_SET_FILTER_CONDITION__FILTER_CONDITIONS:
 				setFilterConditions((BooleanFunction)newValue);
@@ -223,8 +211,7 @@ public class DataSetFilterConditionImpl extends CodeConditionImpl implements Dat
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Domain_model_mappingPackage.DATA_SET_FILTER_CONDITION__FILTER_CONDITIONS:
 				setFilterConditions((BooleanFunction)null);
@@ -242,8 +229,7 @@ public class DataSetFilterConditionImpl extends CodeConditionImpl implements Dat
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Domain_model_mappingPackage.DATA_SET_FILTER_CONDITION__FILTER_CONDITIONS:
 				return filterConditions != null;

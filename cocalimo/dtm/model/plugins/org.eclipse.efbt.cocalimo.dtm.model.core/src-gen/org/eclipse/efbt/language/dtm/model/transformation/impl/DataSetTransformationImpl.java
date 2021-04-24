@@ -29,8 +29,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class DataSetTransformationImpl extends MinimalEObjectImpl.Container implements DataSetTransformation
-{
+public class DataSetTransformationImpl extends MinimalEObjectImpl.Container implements DataSetTransformation {
 	/**
 	 * The cached value of the '{@link #getCube() <em>Cube</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -66,8 +65,7 @@ public class DataSetTransformationImpl extends MinimalEObjectImpl.Container impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected DataSetTransformationImpl()
-	{
+	protected DataSetTransformationImpl() {
 		super();
 	}
 
@@ -77,8 +75,7 @@ public class DataSetTransformationImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return TransformationPackage.Literals.DATA_SET_TRANSFORMATION;
 	}
 
@@ -88,8 +85,7 @@ public class DataSetTransformationImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public DerivedCube getCube()
-	{
+	public DerivedCube getCube() {
 		if (cube != null && cube.eIsProxy()) {
 			InternalEObject oldCube = (InternalEObject)cube;
 			cube = (DerivedCube)eResolveProxy(oldCube);
@@ -106,8 +102,7 @@ public class DataSetTransformationImpl extends MinimalEObjectImpl.Container impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public DerivedCube basicGetCube()
-	{
+	public DerivedCube basicGetCube() {
 		return cube;
 	}
 
@@ -117,8 +112,7 @@ public class DataSetTransformationImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public void setCube(DerivedCube newCube)
-	{
+	public void setCube(DerivedCube newCube) {
 		DerivedCube oldCube = cube;
 		cube = newCube;
 		if (eNotificationRequired())
@@ -131,8 +125,7 @@ public class DataSetTransformationImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
@@ -142,8 +135,7 @@ public class DataSetTransformationImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public void setName(String newName)
-	{
+	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
@@ -156,8 +148,7 @@ public class DataSetTransformationImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case TransformationPackage.DATA_SET_TRANSFORMATION__CUBE:
 				if (resolve) return getCube();
@@ -174,8 +165,7 @@ public class DataSetTransformationImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case TransformationPackage.DATA_SET_TRANSFORMATION__CUBE:
 				setCube((DerivedCube)newValue);
@@ -193,8 +183,7 @@ public class DataSetTransformationImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case TransformationPackage.DATA_SET_TRANSFORMATION__CUBE:
 				setCube((DerivedCube)null);
@@ -212,8 +201,7 @@ public class DataSetTransformationImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case TransformationPackage.DATA_SET_TRANSFORMATION__CUBE:
 				return cube != null;
@@ -229,8 +217,7 @@ public class DataSetTransformationImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

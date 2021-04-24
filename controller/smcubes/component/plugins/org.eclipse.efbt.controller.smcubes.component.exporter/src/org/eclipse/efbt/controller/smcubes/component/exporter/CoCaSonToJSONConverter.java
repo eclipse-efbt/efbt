@@ -17,8 +17,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.CocamoPackage;
-import org.eclipse.efbt.cocason.dsl.cocason.CoCaSonStandaloneSetup;
+import org.eclipse.efbt.cocalimo.smcubes.model.program.ProgramPackage;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
@@ -55,7 +54,7 @@ public class CoCaSonToJSONConverter {
 		//try this with domains and members first
 
 		//EPackage.Registry.INSTANCE.put("http://www.eclipse.org/efbt/cocamo", CocamoPackage.eINSTANCE);
-		CoCaSonStandaloneSetup setup = new CoCaSonStandaloneSetup();
+		/**CoCaSonStandaloneSetup setup = new CoCaSonStandaloneSetup();
 		Injector i = setup.createInjectorAndDoEMFRegistration();
 		XtextResourceSet xrs = i.getInstance(XtextResourceSet.class);
 		URI srctURI = URI.createFileURI("C:/Users/Neil/output3/domains.dsl");
@@ -114,7 +113,7 @@ public class CoCaSonToJSONConverter {
 		
 		//save the xtext representation of the model
 		domainsResource2.save(Collections.EMPTY_MAP);
-		inputDataStructuresResource2.save(Collections.EMPTY_MAP);
+		inputDataStructuresResource2.save(Collections.EMPTY_MAP);*/
 
 	}
 

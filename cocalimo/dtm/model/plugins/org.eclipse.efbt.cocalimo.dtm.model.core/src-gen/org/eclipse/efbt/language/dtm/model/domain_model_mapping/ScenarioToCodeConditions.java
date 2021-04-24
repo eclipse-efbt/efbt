@@ -25,8 +25,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface ScenarioToCodeConditions extends EObject
-{
+public interface ScenarioToCodeConditions extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Scenario</b></em>' reference.
 	 * <!-- begin-user-doc -->

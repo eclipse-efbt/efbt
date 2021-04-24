@@ -302,6 +302,236 @@ public class FunctionsItemProviderAdapterFactory extends FunctionsAdapterFactory
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.GetStructColumnFunction} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected GetStructColumnFunctionItemProvider getStructColumnFunctionItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.GetStructColumnFunction}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createGetStructColumnFunctionAdapter() {
+		if (getStructColumnFunctionItemProvider == null) {
+			getStructColumnFunctionItemProvider = new GetStructColumnFunctionItemProvider(this);
+		}
+
+		return getStructColumnFunctionItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.SpeculativeStructColumnParameter} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected SpeculativeStructColumnParameterItemProvider speculativeStructColumnParameterItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.SpeculativeStructColumnParameter}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createSpeculativeStructColumnParameterAdapter() {
+		if (speculativeStructColumnParameterItemProvider == null) {
+			speculativeStructColumnParameterItemProvider = new SpeculativeStructColumnParameterItemProvider(this);
+		}
+
+		return speculativeStructColumnParameterItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.AggregateColumnFunction} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected AggregateColumnFunctionItemProvider aggregateColumnFunctionItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.AggregateColumnFunction}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createAggregateColumnFunctionAdapter() {
+		if (aggregateColumnFunctionItemProvider == null) {
+			aggregateColumnFunctionItemProvider = new AggregateColumnFunctionItemProvider(this);
+		}
+
+		return aggregateColumnFunctionItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.BasicColumnFunction} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected BasicColumnFunctionItemProvider basicColumnFunctionItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.BasicColumnFunction}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createBasicColumnFunctionAdapter() {
+		if (basicColumnFunctionItemProvider == null) {
+			basicColumnFunctionItemProvider = new BasicColumnFunctionItemProvider(this);
+		}
+
+		return basicColumnFunctionItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.ColumnFunction} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ColumnFunctionItemProvider columnFunctionItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.ColumnFunction}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createColumnFunctionAdapter() {
+		if (columnFunctionItemProvider == null) {
+			columnFunctionItemProvider = new ColumnFunctionItemProvider(this);
+		}
+
+		return columnFunctionItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.ColumnFunctionGroup} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ColumnFunctionGroupItemProvider columnFunctionGroupItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.ColumnFunctionGroup}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createColumnFunctionGroupAdapter() {
+		if (columnFunctionGroupItemProvider == null) {
+			columnFunctionGroupItemProvider = new ColumnFunctionGroupItemProvider(this);
+		}
+
+		return columnFunctionGroupItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.CubeColumn} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected CubeColumnItemProvider cubeColumnItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.CubeColumn}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createCubeColumnAdapter() {
+		if (cubeColumnItemProvider == null) {
+			cubeColumnItemProvider = new CubeColumnItemProvider(this);
+		}
+
+		return cubeColumnItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.SpeculativeCubeColumnParameter} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected SpeculativeCubeColumnParameterItemProvider speculativeCubeColumnParameterItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.SpeculativeCubeColumnParameter}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createSpeculativeCubeColumnParameterAdapter() {
+		if (speculativeCubeColumnParameterItemProvider == null) {
+			speculativeCubeColumnParameterItemProvider = new SpeculativeCubeColumnParameterItemProvider(this);
+		}
+
+		return speculativeCubeColumnParameterItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.MemberParameter} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected MemberParameterItemProvider memberParameterItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.MemberParameter}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createMemberParameterAdapter() {
+		if (memberParameterItemProvider == null) {
+			memberParameterItemProvider = new MemberParameterItemProvider(this);
+		}
+
+		return memberParameterItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.ValueParameter} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ValueParameterItemProvider valueParameterItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.ValueParameter}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createValueParameterAdapter() {
+		if (valueParameterItemProvider == null) {
+			valueParameterItemProvider = new ValueParameterItemProvider(this);
+		}
+
+		return valueParameterItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -410,6 +640,16 @@ public class FunctionsItemProviderAdapterFactory extends FunctionsAdapterFactory
 		if (functionSpecModuleItemProvider != null) functionSpecModuleItemProvider.dispose();
 		if (paramaterSpecItemProvider != null) paramaterSpecItemProvider.dispose();
 		if (parameterItemProvider != null) parameterItemProvider.dispose();
+		if (getStructColumnFunctionItemProvider != null) getStructColumnFunctionItemProvider.dispose();
+		if (speculativeStructColumnParameterItemProvider != null) speculativeStructColumnParameterItemProvider.dispose();
+		if (aggregateColumnFunctionItemProvider != null) aggregateColumnFunctionItemProvider.dispose();
+		if (basicColumnFunctionItemProvider != null) basicColumnFunctionItemProvider.dispose();
+		if (columnFunctionItemProvider != null) columnFunctionItemProvider.dispose();
+		if (columnFunctionGroupItemProvider != null) columnFunctionGroupItemProvider.dispose();
+		if (cubeColumnItemProvider != null) cubeColumnItemProvider.dispose();
+		if (speculativeCubeColumnParameterItemProvider != null) speculativeCubeColumnParameterItemProvider.dispose();
+		if (memberParameterItemProvider != null) memberParameterItemProvider.dispose();
+		if (valueParameterItemProvider != null) valueParameterItemProvider.dispose();
 	}
 
 }

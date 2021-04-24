@@ -14,15 +14,13 @@ import org.eclipse.emf.ecore.EClass;
  *
  * @generated
  */
-public class BooleanFunctionImpl extends BasicFunctionImpl implements BooleanFunction
-{
+public class BooleanFunctionImpl extends BasicFunctionImpl implements BooleanFunction {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected BooleanFunctionImpl()
-	{
+	protected BooleanFunctionImpl() {
 		super();
 	}
 
@@ -32,8 +30,7 @@ public class BooleanFunctionImpl extends BasicFunctionImpl implements BooleanFun
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return FunctionsPackage.Literals.BOOLEAN_FUNCTION;
 	}
 

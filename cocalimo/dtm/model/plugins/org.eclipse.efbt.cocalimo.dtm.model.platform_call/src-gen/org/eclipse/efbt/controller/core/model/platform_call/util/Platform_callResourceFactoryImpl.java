@@ -11,14 +11,14 @@ import org.emfjson.jackson.resource.JsonResourceFactory;
  * The <b>Resource Factory</b> associated with the package.
  * <!-- end-user-doc -->
  * @see org.eclipse.efbt.controller.core.model.platform_call.util.Platform_callResourceImpl
- * @generated
+ * @generated NOT
  */
 public class Platform_callResourceFactoryImpl extends JsonResourceFactory {
 	/**
 	 * Creates an instance of the resource factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	public Platform_callResourceFactoryImpl() {
 		super();
@@ -28,7 +28,7 @@ public class Platform_callResourceFactoryImpl extends JsonResourceFactory {
 	 * Creates an instance of the resource.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public Resource createResource(URI uri) {

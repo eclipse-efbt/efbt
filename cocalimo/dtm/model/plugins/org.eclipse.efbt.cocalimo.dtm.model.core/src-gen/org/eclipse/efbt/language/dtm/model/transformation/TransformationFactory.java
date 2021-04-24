@@ -12,8 +12,7 @@ import org.eclipse.emf.ecore.EFactory;
  * @see org.eclipse.efbt.language.dtm.model.transformation.TransformationPackage
  * @generated
  */
-public interface TransformationFactory extends EFactory
-{
+public interface TransformationFactory extends EFactory {
 	/**
 	 * The singleton instance of the factory.
 	 * <!-- begin-user-doc -->

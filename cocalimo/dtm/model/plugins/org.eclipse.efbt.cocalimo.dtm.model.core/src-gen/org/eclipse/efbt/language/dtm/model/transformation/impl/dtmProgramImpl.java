@@ -3,9 +3,6 @@
 package org.eclipse.efbt.language.dtm.model.transformation.impl;
 
 import java.util.Collection;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.SMCubesStaticModel;
-
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.efbt_advanced_data_definition.ArrayTypedVariableModule;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.efbt_advanced_data_definition.StructTypedVariablesModule;
 
@@ -45,8 +42,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class dtmProgramImpl extends MinimalEObjectImpl.Container implements dtmProgram
-{
+public class dtmProgramImpl extends MinimalEObjectImpl.Container implements dtmProgram {
 	/**
 	 * The cached value of the '{@link #getExecutableLogic() <em>Executable Logic</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -65,7 +61,7 @@ public class dtmProgramImpl extends MinimalEObjectImpl.Container implements dtmP
 	 * @generated
 	 * @ordered
 	 */
-	protected SMCubesStaticModel smcubesStaticModel;
+	protected org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel smcubesStaticModel;
 
 	/**
 	 * The cached value of the '{@link #getStructVariablesModule() <em>Struct Variables Module</em>}' containment reference.
@@ -102,8 +98,7 @@ public class dtmProgramImpl extends MinimalEObjectImpl.Container implements dtmP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected dtmProgramImpl()
-	{
+	protected dtmProgramImpl() {
 		super();
 	}
 
@@ -113,8 +108,7 @@ public class dtmProgramImpl extends MinimalEObjectImpl.Container implements dtmP
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return TransformationPackage.Literals.DTM_PROGRAM;
 	}
 
@@ -124,8 +118,7 @@ public class dtmProgramImpl extends MinimalEObjectImpl.Container implements dtmP
 	 * @generated
 	 */
 	@Override
-	public EList<dtmExecutableLogic> getExecutableLogic()
-	{
+	public EList<dtmExecutableLogic> getExecutableLogic() {
 		if (executableLogic == null) {
 			executableLogic = new EObjectContainmentEList<dtmExecutableLogic>(dtmExecutableLogic.class, this, TransformationPackage.DTM_PROGRAM__EXECUTABLE_LOGIC);
 		}
@@ -138,8 +131,7 @@ public class dtmProgramImpl extends MinimalEObjectImpl.Container implements dtmP
 	 * @generated
 	 */
 	@Override
-	public SMCubesStaticModel getSmcubesStaticModel()
-	{
+	public org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel getSmcubesStaticModel() {
 		return smcubesStaticModel;
 	}
 
@@ -148,9 +140,8 @@ public class dtmProgramImpl extends MinimalEObjectImpl.Container implements dtmP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetSmcubesStaticModel(SMCubesStaticModel newSmcubesStaticModel, NotificationChain msgs)
-	{
-		SMCubesStaticModel oldSmcubesStaticModel = smcubesStaticModel;
+	public NotificationChain basicSetSmcubesStaticModel(org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel newSmcubesStaticModel, NotificationChain msgs) {
+		org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel oldSmcubesStaticModel = smcubesStaticModel;
 		smcubesStaticModel = newSmcubesStaticModel;
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, TransformationPackage.DTM_PROGRAM__SMCUBES_STATIC_MODEL, oldSmcubesStaticModel, newSmcubesStaticModel);
@@ -165,8 +156,7 @@ public class dtmProgramImpl extends MinimalEObjectImpl.Container implements dtmP
 	 * @generated
 	 */
 	@Override
-	public void setSmcubesStaticModel(SMCubesStaticModel newSmcubesStaticModel)
-	{
+	public void setSmcubesStaticModel(org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel newSmcubesStaticModel) {
 		if (newSmcubesStaticModel != smcubesStaticModel) {
 			NotificationChain msgs = null;
 			if (smcubesStaticModel != null)
@@ -186,8 +176,7 @@ public class dtmProgramImpl extends MinimalEObjectImpl.Container implements dtmP
 	 * @generated
 	 */
 	@Override
-	public StructTypedVariablesModule getStructVariablesModule()
-	{
+	public StructTypedVariablesModule getStructVariablesModule() {
 		return structVariablesModule;
 	}
 
@@ -196,8 +185,7 @@ public class dtmProgramImpl extends MinimalEObjectImpl.Container implements dtmP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetStructVariablesModule(StructTypedVariablesModule newStructVariablesModule, NotificationChain msgs)
-	{
+	public NotificationChain basicSetStructVariablesModule(StructTypedVariablesModule newStructVariablesModule, NotificationChain msgs) {
 		StructTypedVariablesModule oldStructVariablesModule = structVariablesModule;
 		structVariablesModule = newStructVariablesModule;
 		if (eNotificationRequired()) {
@@ -213,8 +201,7 @@ public class dtmProgramImpl extends MinimalEObjectImpl.Container implements dtmP
 	 * @generated
 	 */
 	@Override
-	public void setStructVariablesModule(StructTypedVariablesModule newStructVariablesModule)
-	{
+	public void setStructVariablesModule(StructTypedVariablesModule newStructVariablesModule) {
 		if (newStructVariablesModule != structVariablesModule) {
 			NotificationChain msgs = null;
 			if (structVariablesModule != null)
@@ -234,8 +221,7 @@ public class dtmProgramImpl extends MinimalEObjectImpl.Container implements dtmP
 	 * @generated
 	 */
 	@Override
-	public ArrayTypedVariableModule getArrayTypedVariablesModule()
-	{
+	public ArrayTypedVariableModule getArrayTypedVariablesModule() {
 		return arrayTypedVariablesModule;
 	}
 
@@ -244,8 +230,7 @@ public class dtmProgramImpl extends MinimalEObjectImpl.Container implements dtmP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetArrayTypedVariablesModule(ArrayTypedVariableModule newArrayTypedVariablesModule, NotificationChain msgs)
-	{
+	public NotificationChain basicSetArrayTypedVariablesModule(ArrayTypedVariableModule newArrayTypedVariablesModule, NotificationChain msgs) {
 		ArrayTypedVariableModule oldArrayTypedVariablesModule = arrayTypedVariablesModule;
 		arrayTypedVariablesModule = newArrayTypedVariablesModule;
 		if (eNotificationRequired()) {
@@ -261,8 +246,7 @@ public class dtmProgramImpl extends MinimalEObjectImpl.Container implements dtmP
 	 * @generated
 	 */
 	@Override
-	public void setArrayTypedVariablesModule(ArrayTypedVariableModule newArrayTypedVariablesModule)
-	{
+	public void setArrayTypedVariablesModule(ArrayTypedVariableModule newArrayTypedVariablesModule) {
 		if (newArrayTypedVariablesModule != arrayTypedVariablesModule) {
 			NotificationChain msgs = null;
 			if (arrayTypedVariablesModule != null)
@@ -282,8 +266,7 @@ public class dtmProgramImpl extends MinimalEObjectImpl.Container implements dtmP
 	 * @generated
 	 */
 	@Override
-	public Release getRelease()
-	{
+	public Release getRelease() {
 		return release;
 	}
 
@@ -292,8 +275,7 @@ public class dtmProgramImpl extends MinimalEObjectImpl.Container implements dtmP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetRelease(Release newRelease, NotificationChain msgs)
-	{
+	public NotificationChain basicSetRelease(Release newRelease, NotificationChain msgs) {
 		Release oldRelease = release;
 		release = newRelease;
 		if (eNotificationRequired()) {
@@ -309,8 +291,7 @@ public class dtmProgramImpl extends MinimalEObjectImpl.Container implements dtmP
 	 * @generated
 	 */
 	@Override
-	public void setRelease(Release newRelease)
-	{
+	public void setRelease(Release newRelease) {
 		if (newRelease != release) {
 			NotificationChain msgs = null;
 			if (release != null)
@@ -330,8 +311,7 @@ public class dtmProgramImpl extends MinimalEObjectImpl.Container implements dtmP
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case TransformationPackage.DTM_PROGRAM__EXECUTABLE_LOGIC:
 				return ((InternalEList<?>)getExecutableLogic()).basicRemove(otherEnd, msgs);
@@ -353,8 +333,7 @@ public class dtmProgramImpl extends MinimalEObjectImpl.Container implements dtmP
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case TransformationPackage.DTM_PROGRAM__EXECUTABLE_LOGIC:
 				return getExecutableLogic();
@@ -377,15 +356,14 @@ public class dtmProgramImpl extends MinimalEObjectImpl.Container implements dtmP
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case TransformationPackage.DTM_PROGRAM__EXECUTABLE_LOGIC:
 				getExecutableLogic().clear();
 				getExecutableLogic().addAll((Collection<? extends dtmExecutableLogic>)newValue);
 				return;
 			case TransformationPackage.DTM_PROGRAM__SMCUBES_STATIC_MODEL:
-				setSmcubesStaticModel((SMCubesStaticModel)newValue);
+				setSmcubesStaticModel((org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel)newValue);
 				return;
 			case TransformationPackage.DTM_PROGRAM__STRUCT_VARIABLES_MODULE:
 				setStructVariablesModule((StructTypedVariablesModule)newValue);
@@ -406,14 +384,13 @@ public class dtmProgramImpl extends MinimalEObjectImpl.Container implements dtmP
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case TransformationPackage.DTM_PROGRAM__EXECUTABLE_LOGIC:
 				getExecutableLogic().clear();
 				return;
 			case TransformationPackage.DTM_PROGRAM__SMCUBES_STATIC_MODEL:
-				setSmcubesStaticModel((SMCubesStaticModel)null);
+				setSmcubesStaticModel((org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel)null);
 				return;
 			case TransformationPackage.DTM_PROGRAM__STRUCT_VARIABLES_MODULE:
 				setStructVariablesModule((StructTypedVariablesModule)null);
@@ -434,8 +411,7 @@ public class dtmProgramImpl extends MinimalEObjectImpl.Container implements dtmP
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case TransformationPackage.DTM_PROGRAM__EXECUTABLE_LOGIC:
 				return executableLogic != null && !executableLogic.isEmpty();

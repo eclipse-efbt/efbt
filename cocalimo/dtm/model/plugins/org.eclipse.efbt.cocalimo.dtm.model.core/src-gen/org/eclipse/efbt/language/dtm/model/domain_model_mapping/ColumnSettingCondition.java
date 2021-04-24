@@ -26,8 +26,7 @@ import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.BasicFunct
  * @model
  * @generated
  */
-public interface ColumnSettingCondition extends CodeCondition
-{
+public interface ColumnSettingCondition extends CodeCondition {
 	/**
 	 * Returns the value of the '<em><b>Cube</b></em>' reference.
 	 * <!-- begin-user-doc -->

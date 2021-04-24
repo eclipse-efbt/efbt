@@ -3,6 +3,9 @@
 package org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.provider;
 
 import org.eclipse.efbt.cocalimo.core.model.module_management.provider.Module_managementEditPlugin;
+import org.eclipse.efbt.cocalimo.smcubes.model.core.provider.SmcubesEditPlugin;
+
+import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cube_schema.provider.LineagecubesEditPlugin;
 
 import org.eclipse.emf.common.EMFPlugin;
 
@@ -40,7 +43,9 @@ public final class FunctionsEditPlugin extends EMFPlugin {
 	public FunctionsEditPlugin() {
 		super
 		  (new ResourceLocator [] {
+		     LineagecubesEditPlugin.INSTANCE,
 		     Module_managementEditPlugin.INSTANCE,
+		     SmcubesEditPlugin.INSTANCE,
 		   });
 	}
 

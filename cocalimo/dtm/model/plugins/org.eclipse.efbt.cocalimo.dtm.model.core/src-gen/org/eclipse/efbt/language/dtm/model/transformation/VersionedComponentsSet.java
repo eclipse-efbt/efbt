@@ -4,7 +4,7 @@ package org.eclipse.efbt.language.dtm.model.transformation;
 
 import org.eclipse.efbt.language.dtm.model.dtm_report_cell_views.ReportCellViewModule;
 
-import org.eclipse.efbt.language.dtm.model.dtm_sql_views.VersionedSQLViewsModule;
+import org.eclipse.efbt.language.dtm.model.dtm_views.VersionedDTMViewsModule;
 
 import org.eclipse.emf.common.util.EList;
 
@@ -35,8 +35,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='VersionedComponentsSet' kind='empty'"
  * @generated
  */
-public interface VersionedComponentsSet extends EObject
-{
+public interface VersionedComponentsSet extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Cube Schema Modules</b></em>' reference list.
 	 * The list contents are of type {@link org.eclipse.efbt.language.dtm.model.transformation.VersionedCubeSchemaModule}.
@@ -54,7 +53,7 @@ public interface VersionedComponentsSet extends EObject
 
 	/**
 	 * Returns the value of the '<em><b>Dataset Transformation Modules</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.efbt.language.dtm.model.dtm_sql_views.VersionedSQLViewsModule}.
+	 * The list contents are of type {@link org.eclipse.efbt.language.dtm.model.dtm_views.VersionedDTMViewsModule}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
@@ -65,7 +64,7 @@ public interface VersionedComponentsSet extends EObject
 	 * @model
 	 * @generated
 	 */
-	EList<VersionedSQLViewsModule> getDatasetTransformationModules();
+	EList<VersionedDTMViewsModule> getDatasetTransformationModules();
 
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.

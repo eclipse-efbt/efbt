@@ -24,8 +24,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  *
  * @generated
  */
-public class BasicFunctionSpecImpl extends FunctionSpecImpl implements BasicFunctionSpec
-{
+public class BasicFunctionSpecImpl extends FunctionSpecImpl implements BasicFunctionSpec {
 	/**
 	 * The default value of the '{@link #isIsInfix() <em>Is Infix</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -51,8 +50,7 @@ public class BasicFunctionSpecImpl extends FunctionSpecImpl implements BasicFunc
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected BasicFunctionSpecImpl()
-	{
+	protected BasicFunctionSpecImpl() {
 		super();
 	}
 
@@ -62,8 +60,7 @@ public class BasicFunctionSpecImpl extends FunctionSpecImpl implements BasicFunc
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return FunctionsPackage.Literals.BASIC_FUNCTION_SPEC;
 	}
 
@@ -72,8 +69,7 @@ public class BasicFunctionSpecImpl extends FunctionSpecImpl implements BasicFunc
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean isIsInfix()
-	{
+	public boolean isIsInfix() {
 		return isInfix;
 	}
 
@@ -82,8 +78,7 @@ public class BasicFunctionSpecImpl extends FunctionSpecImpl implements BasicFunc
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setIsInfix(boolean newIsInfix)
-	{
+	public void setIsInfix(boolean newIsInfix) {
 		boolean oldIsInfix = isInfix;
 		isInfix = newIsInfix;
 		if (eNotificationRequired())
@@ -96,8 +91,7 @@ public class BasicFunctionSpecImpl extends FunctionSpecImpl implements BasicFunc
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case FunctionsPackage.BASIC_FUNCTION_SPEC__IS_INFIX:
 				return isIsInfix();
@@ -111,8 +105,7 @@ public class BasicFunctionSpecImpl extends FunctionSpecImpl implements BasicFunc
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case FunctionsPackage.BASIC_FUNCTION_SPEC__IS_INFIX:
 				setIsInfix((Boolean)newValue);
@@ -127,8 +120,7 @@ public class BasicFunctionSpecImpl extends FunctionSpecImpl implements BasicFunc
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case FunctionsPackage.BASIC_FUNCTION_SPEC__IS_INFIX:
 				setIsInfix(IS_INFIX_EDEFAULT);
@@ -143,8 +135,7 @@ public class BasicFunctionSpecImpl extends FunctionSpecImpl implements BasicFunc
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case FunctionsPackage.BASIC_FUNCTION_SPEC__IS_INFIX:
 				return isInfix != IS_INFIX_EDEFAULT;
@@ -158,8 +149,7 @@ public class BasicFunctionSpecImpl extends FunctionSpecImpl implements BasicFunc
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

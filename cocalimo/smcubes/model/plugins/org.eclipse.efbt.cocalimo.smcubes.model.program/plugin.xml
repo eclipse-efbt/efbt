@@ -20,11 +20,17 @@
 <plugin>
 
    <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated cocamo -->
+      <!-- @generated program -->
       <package
-            uri="http://www.eclipse.org/efbt/cocamo"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.cocamo.CocamoPackage"
-            genModel="model/cocamo.genmodel"/>
+            uri="http://www.eclipse.org/efbt/program"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.program.ProgramPackage"
+            genModel="model/program.genmodel"/>
    </extension>
 
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated program -->
+      <parser
+            type="program"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.program.util.ProgramResourceFactoryImpl"/>
+   </extension>
 </plugin>

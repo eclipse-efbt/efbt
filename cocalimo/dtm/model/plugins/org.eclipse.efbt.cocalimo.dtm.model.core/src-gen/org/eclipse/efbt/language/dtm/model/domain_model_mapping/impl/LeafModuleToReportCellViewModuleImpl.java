@@ -31,8 +31,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class LeafModuleToReportCellViewModuleImpl extends MinimalEObjectImpl.Container implements LeafModuleToReportCellViewModule
-{
+public class LeafModuleToReportCellViewModuleImpl extends MinimalEObjectImpl.Container implements LeafModuleToReportCellViewModule {
 	/**
 	 * The cached value of the '{@link #getScheme() <em>Scheme</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -58,8 +57,7 @@ public class LeafModuleToReportCellViewModuleImpl extends MinimalEObjectImpl.Con
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected LeafModuleToReportCellViewModuleImpl()
-	{
+	protected LeafModuleToReportCellViewModuleImpl() {
 		super();
 	}
 
@@ -69,8 +67,7 @@ public class LeafModuleToReportCellViewModuleImpl extends MinimalEObjectImpl.Con
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Domain_model_mappingPackage.Literals.LEAF_MODULE_TO_REPORT_CELL_VIEW_MODULE;
 	}
 
@@ -80,8 +77,7 @@ public class LeafModuleToReportCellViewModuleImpl extends MinimalEObjectImpl.Con
 	 * @generated
 	 */
 	@Override
-	public LeafFunctionalityModule getScheme()
-	{
+	public LeafFunctionalityModule getScheme() {
 		if (scheme != null && scheme.eIsProxy()) {
 			InternalEObject oldScheme = (InternalEObject)scheme;
 			scheme = (LeafFunctionalityModule)eResolveProxy(oldScheme);
@@ -98,8 +94,7 @@ public class LeafModuleToReportCellViewModuleImpl extends MinimalEObjectImpl.Con
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public LeafFunctionalityModule basicGetScheme()
-	{
+	public LeafFunctionalityModule basicGetScheme() {
 		return scheme;
 	}
 
@@ -109,8 +104,7 @@ public class LeafModuleToReportCellViewModuleImpl extends MinimalEObjectImpl.Con
 	 * @generated
 	 */
 	@Override
-	public void setScheme(LeafFunctionalityModule newScheme)
-	{
+	public void setScheme(LeafFunctionalityModule newScheme) {
 		LeafFunctionalityModule oldScheme = scheme;
 		scheme = newScheme;
 		if (eNotificationRequired())
@@ -123,8 +117,7 @@ public class LeafModuleToReportCellViewModuleImpl extends MinimalEObjectImpl.Con
 	 * @generated
 	 */
 	@Override
-	public ReportCellViewModule getModule()
-	{
+	public ReportCellViewModule getModule() {
 		if (module != null && module.eIsProxy()) {
 			InternalEObject oldModule = (InternalEObject)module;
 			module = (ReportCellViewModule)eResolveProxy(oldModule);
@@ -141,8 +134,7 @@ public class LeafModuleToReportCellViewModuleImpl extends MinimalEObjectImpl.Con
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ReportCellViewModule basicGetModule()
-	{
+	public ReportCellViewModule basicGetModule() {
 		return module;
 	}
 
@@ -152,8 +144,7 @@ public class LeafModuleToReportCellViewModuleImpl extends MinimalEObjectImpl.Con
 	 * @generated
 	 */
 	@Override
-	public void setModule(ReportCellViewModule newModule)
-	{
+	public void setModule(ReportCellViewModule newModule) {
 		ReportCellViewModule oldModule = module;
 		module = newModule;
 		if (eNotificationRequired())
@@ -166,8 +157,7 @@ public class LeafModuleToReportCellViewModuleImpl extends MinimalEObjectImpl.Con
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Domain_model_mappingPackage.LEAF_MODULE_TO_REPORT_CELL_VIEW_MODULE__SCHEME:
 				if (resolve) return getScheme();
@@ -185,8 +175,7 @@ public class LeafModuleToReportCellViewModuleImpl extends MinimalEObjectImpl.Con
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Domain_model_mappingPackage.LEAF_MODULE_TO_REPORT_CELL_VIEW_MODULE__SCHEME:
 				setScheme((LeafFunctionalityModule)newValue);
@@ -204,8 +193,7 @@ public class LeafModuleToReportCellViewModuleImpl extends MinimalEObjectImpl.Con
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Domain_model_mappingPackage.LEAF_MODULE_TO_REPORT_CELL_VIEW_MODULE__SCHEME:
 				setScheme((LeafFunctionalityModule)null);
@@ -223,8 +211,7 @@ public class LeafModuleToReportCellViewModuleImpl extends MinimalEObjectImpl.Con
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Domain_model_mappingPackage.LEAF_MODULE_TO_REPORT_CELL_VIEW_MODULE__SCHEME:
 				return scheme != null;

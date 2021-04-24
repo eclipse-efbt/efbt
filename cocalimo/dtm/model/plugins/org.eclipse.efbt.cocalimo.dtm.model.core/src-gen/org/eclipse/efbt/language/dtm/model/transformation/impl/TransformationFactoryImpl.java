@@ -18,16 +18,14 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
  * <!-- end-user-doc -->
  * @generated
  */
-public class TransformationFactoryImpl extends EFactoryImpl implements TransformationFactory
-{
+public class TransformationFactoryImpl extends EFactoryImpl implements TransformationFactory {
 	/**
 	 * Creates the default factory implementation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static TransformationFactory init()
-	{
+	public static TransformationFactory init() {
 		try {
 			TransformationFactory theTransformationFactory = (TransformationFactory)EPackage.Registry.INSTANCE.getEFactory(TransformationPackage.eNS_URI);
 			if (theTransformationFactory != null) {
@@ -46,8 +44,7 @@ public class TransformationFactoryImpl extends EFactoryImpl implements Transform
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public TransformationFactoryImpl()
-	{
+	public TransformationFactoryImpl() {
 		super();
 	}
 
@@ -57,8 +54,7 @@ public class TransformationFactoryImpl extends EFactoryImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public EObject create(EClass eClass)
-	{
+	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case TransformationPackage.DATA_SET_TRANSFORMATION: return createDataSetTransformation();
 			case TransformationPackage.RELEASE: return createRelease();
@@ -78,8 +74,7 @@ public class TransformationFactoryImpl extends EFactoryImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public DataSetTransformation createDataSetTransformation()
-	{
+	public DataSetTransformation createDataSetTransformation() {
 		DataSetTransformationImpl dataSetTransformation = new DataSetTransformationImpl();
 		return dataSetTransformation;
 	}
@@ -90,8 +85,7 @@ public class TransformationFactoryImpl extends EFactoryImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public Release createRelease()
-	{
+	public Release createRelease() {
 		ReleaseImpl release = new ReleaseImpl();
 		return release;
 	}
@@ -102,8 +96,7 @@ public class TransformationFactoryImpl extends EFactoryImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public VersionedComponentsSet createVersionedComponentsSet()
-	{
+	public VersionedComponentsSet createVersionedComponentsSet() {
 		VersionedComponentsSetImpl versionedComponentsSet = new VersionedComponentsSetImpl();
 		return versionedComponentsSet;
 	}
@@ -114,8 +107,7 @@ public class TransformationFactoryImpl extends EFactoryImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public VersionedCubeSchemaModule createVersionedCubeSchemaModule()
-	{
+	public VersionedCubeSchemaModule createVersionedCubeSchemaModule() {
 		VersionedCubeSchemaModuleImpl versionedCubeSchemaModule = new VersionedCubeSchemaModuleImpl();
 		return versionedCubeSchemaModule;
 	}
@@ -126,8 +118,7 @@ public class TransformationFactoryImpl extends EFactoryImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public VersionedFunctionalModuleLogic createVersionedFunctionalModuleLogic()
-	{
+	public VersionedFunctionalModuleLogic createVersionedFunctionalModuleLogic() {
 		VersionedFunctionalModuleLogicImpl versionedFunctionalModuleLogic = new VersionedFunctionalModuleLogicImpl();
 		return versionedFunctionalModuleLogic;
 	}
@@ -138,8 +129,7 @@ public class TransformationFactoryImpl extends EFactoryImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public dtmExecutableLogic createdtmExecutableLogic()
-	{
+	public dtmExecutableLogic createdtmExecutableLogic() {
 		dtmExecutableLogicImpl dtmExecutableLogic = new dtmExecutableLogicImpl();
 		return dtmExecutableLogic;
 	}
@@ -150,8 +140,7 @@ public class TransformationFactoryImpl extends EFactoryImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public dtmProgram createdtmProgram()
-	{
+	public dtmProgram createdtmProgram() {
 		dtmProgramImpl dtmProgram = new dtmProgramImpl();
 		return dtmProgram;
 	}
@@ -162,8 +151,7 @@ public class TransformationFactoryImpl extends EFactoryImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public TransformationPackage getTransformationPackage()
-	{
+	public TransformationPackage getTransformationPackage() {
 		return (TransformationPackage)getEPackage();
 	}
 
@@ -174,8 +162,7 @@ public class TransformationFactoryImpl extends EFactoryImpl implements Transform
 	 * @generated
 	 */
 	@Deprecated
-	public static TransformationPackage getPackage()
-	{
+	public static TransformationPackage getPackage() {
 		return TransformationPackage.eINSTANCE;
 	}
 

@@ -17,9 +17,6 @@ import org.eclipse.efbt.cocalimo.core.model.test_definition.Test_definitionPacka
 import org.eclipse.efbt.cocalimo.core.model.test_input_data.Test_input_dataPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.Base_column_structured_dataPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.CocamoPackage;
-
 import org.eclipse.efbt.cocalimo.smcubes.model.column_structured_data.Column_structured_dataPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage;
@@ -34,6 +31,7 @@ import org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.Efbt_vtl_
 
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MappingPackage;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.program.ProgramPackage;
 import org.eclipse.efbt.cocalimo.smcubes.model.rendering.RenderingPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.reports.ReportsPackage;
@@ -41,8 +39,6 @@ import org.eclipse.efbt.cocalimo.smcubes.model.reports.ReportsPackage;
 import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.Smcubes_modelPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.Vtl_transformationPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.column_transformation_logic.Column_transformation_logicPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cube_schema.Cube_schemaPackage;
 
@@ -61,9 +57,9 @@ import org.eclipse.efbt.language.dtm.model.dtm_report_cell_views.ReportCellViewM
 import org.eclipse.efbt.language.dtm.model.dtm_report_cell_views.dtm_report_cell_viewsFactory;
 import org.eclipse.efbt.language.dtm.model.dtm_report_cell_views.dtm_report_cell_viewsPackage;
 
-import org.eclipse.efbt.language.dtm.model.dtm_sql_views.dtm_sql_viewsPackage;
+import org.eclipse.efbt.language.dtm.model.dtm_views.dtm_viewsPackage;
 
-import org.eclipse.efbt.language.dtm.model.dtm_sql_views.impl.dtm_sql_viewsPackageImpl;
+import org.eclipse.efbt.language.dtm.model.dtm_views.impl.dtm_viewsPackageImpl;
 
 import org.eclipse.efbt.language.dtm.model.transformation.TransformationPackage;
 
@@ -81,8 +77,7 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
  * <!-- end-user-doc -->
  * @generated
  */
-public class dtm_report_cell_viewsPackageImpl extends EPackageImpl implements dtm_report_cell_viewsPackage
-{
+public class dtm_report_cell_viewsPackageImpl extends EPackageImpl implements dtm_report_cell_viewsPackage {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -112,8 +107,7 @@ public class dtm_report_cell_viewsPackageImpl extends EPackageImpl implements dt
 	 * @see #init()
 	 * @generated
 	 */
-	private dtm_report_cell_viewsPackageImpl()
-	{
+	private dtm_report_cell_viewsPackageImpl() {
 		super(eNS_URI, dtm_report_cell_viewsFactory.eINSTANCE);
 	}
 
@@ -136,8 +130,7 @@ public class dtm_report_cell_viewsPackageImpl extends EPackageImpl implements dt
 	 * @see #initializePackageContents()
 	 * @generated
 	 */
-	public static dtm_report_cell_viewsPackage init()
-	{
+	public static dtm_report_cell_viewsPackage init() {
 		if (isInited) return (dtm_report_cell_viewsPackage)EPackage.Registry.INSTANCE.getEPackage(dtm_report_cell_viewsPackage.eNS_URI);
 
 		// Obtain or create and register package
@@ -147,14 +140,14 @@ public class dtm_report_cell_viewsPackageImpl extends EPackageImpl implements dt
 		isInited = true;
 
 		// Initialize simple dependencies
-		CocamoPackage.eINSTANCE.eClass();
 		Functionality_modulePackage.eINSTANCE.eClass();
 		ScenariosPackage.eINSTANCE.eClass();
 		FunctionsPackage.eINSTANCE.eClass();
 		Cube_schemaPackage.eINSTANCE.eClass();
 		CubesPackage.eINSTANCE.eClass();
-		Column_transformation_logicPackage.eINSTANCE.eClass();
+		Efbt_advanced_data_definitionPackage.eINSTANCE.eClass();
 		Module_managementPackage.eINSTANCE.eClass();
+		ProgramPackage.eINSTANCE.eClass();
 		Requirements_textPackage.eINSTANCE.eClass();
 		Base_column_structured_dataPackage.eINSTANCE.eClass();
 		Column_structured_dataPackage.eINSTANCE.eClass();
@@ -171,27 +164,26 @@ public class dtm_report_cell_viewsPackageImpl extends EPackageImpl implements dt
 		Test_definitionPackage.eINSTANCE.eClass();
 		Test_input_dataPackage.eINSTANCE.eClass();
 		TestPackage.eINSTANCE.eClass();
-		Efbt_advanced_data_definitionPackage.eINSTANCE.eClass();
 
 		// Obtain or create and register interdependencies
 		Object registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Domain_model_mappingPackage.eNS_URI);
 		Domain_model_mappingPackageImpl theDomain_model_mappingPackage = (Domain_model_mappingPackageImpl)(registeredPackage instanceof Domain_model_mappingPackageImpl ? registeredPackage : Domain_model_mappingPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(TransformationPackage.eNS_URI);
 		TransformationPackageImpl theTransformationPackage = (TransformationPackageImpl)(registeredPackage instanceof TransformationPackageImpl ? registeredPackage : TransformationPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(dtm_sql_viewsPackage.eNS_URI);
-		dtm_sql_viewsPackageImpl thedtm_sql_viewsPackage = (dtm_sql_viewsPackageImpl)(registeredPackage instanceof dtm_sql_viewsPackageImpl ? registeredPackage : dtm_sql_viewsPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(dtm_viewsPackage.eNS_URI);
+		dtm_viewsPackageImpl thedtm_viewsPackage = (dtm_viewsPackageImpl)(registeredPackage instanceof dtm_viewsPackageImpl ? registeredPackage : dtm_viewsPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		thedtm_report_cell_viewsPackage.createPackageContents();
 		theDomain_model_mappingPackage.createPackageContents();
 		theTransformationPackage.createPackageContents();
-		thedtm_sql_viewsPackage.createPackageContents();
+		thedtm_viewsPackage.createPackageContents();
 
 		// Initialize created meta-data
 		thedtm_report_cell_viewsPackage.initializePackageContents();
 		theDomain_model_mappingPackage.initializePackageContents();
 		theTransformationPackage.initializePackageContents();
-		thedtm_sql_viewsPackage.initializePackageContents();
+		thedtm_viewsPackage.initializePackageContents();
 
 		// Mark meta-data to indicate it can't be changed
 		thedtm_report_cell_viewsPackage.freeze();
@@ -207,8 +199,7 @@ public class dtm_report_cell_viewsPackageImpl extends EPackageImpl implements dt
 	 * @generated
 	 */
 	@Override
-	public EClass getReportCellView()
-	{
+	public EClass getReportCellView() {
 		return reportCellViewEClass;
 	}
 
@@ -218,8 +209,7 @@ public class dtm_report_cell_viewsPackageImpl extends EPackageImpl implements dt
 	 * @generated
 	 */
 	@Override
-	public EReference getReportCellView_ReportCell()
-	{
+	public EReference getReportCellView_ReportCell() {
 		return (EReference)reportCellViewEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -229,8 +219,7 @@ public class dtm_report_cell_viewsPackageImpl extends EPackageImpl implements dt
 	 * @generated
 	 */
 	@Override
-	public EReference getReportCellView_StructColumnHoldingDimension()
-	{
+	public EReference getReportCellView_StructColumnHoldingDimension() {
 		return (EReference)reportCellViewEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -240,8 +229,7 @@ public class dtm_report_cell_viewsPackageImpl extends EPackageImpl implements dt
 	 * @generated
 	 */
 	@Override
-	public EReference getReportCellView_StructColumnHoldingMeasure()
-	{
+	public EReference getReportCellView_StructColumnHoldingMeasure() {
 		return (EReference)reportCellViewEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -251,8 +239,7 @@ public class dtm_report_cell_viewsPackageImpl extends EPackageImpl implements dt
 	 * @generated
 	 */
 	@Override
-	public EClass getReportCellViewModule()
-	{
+	public EClass getReportCellViewModule() {
 		return reportCellViewModuleEClass;
 	}
 
@@ -262,8 +249,7 @@ public class dtm_report_cell_viewsPackageImpl extends EPackageImpl implements dt
 	 * @generated
 	 */
 	@Override
-	public EReference getReportCellViewModule_ReportCellViews()
-	{
+	public EReference getReportCellViewModule_ReportCellViews() {
 		return (EReference)reportCellViewModuleEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -273,8 +259,7 @@ public class dtm_report_cell_viewsPackageImpl extends EPackageImpl implements dt
 	 * @generated
 	 */
 	@Override
-	public dtm_report_cell_viewsFactory getdtm_report_cell_viewsFactory()
-	{
+	public dtm_report_cell_viewsFactory getdtm_report_cell_viewsFactory() {
 		return (dtm_report_cell_viewsFactory)getEFactoryInstance();
 	}
 
@@ -292,8 +277,7 @@ public class dtm_report_cell_viewsPackageImpl extends EPackageImpl implements dt
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void createPackageContents()
-	{
+	public void createPackageContents() {
 		if (isCreated) return;
 		isCreated = true;
 
@@ -321,8 +305,7 @@ public class dtm_report_cell_viewsPackageImpl extends EPackageImpl implements dt
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void initializePackageContents()
-	{
+	public void initializePackageContents() {
 		if (isInitialized) return;
 		isInitialized = true;
 
@@ -332,7 +315,7 @@ public class dtm_report_cell_viewsPackageImpl extends EPackageImpl implements dt
 		setNsURI(eNS_URI);
 
 		// Obtain other dependent packages
-		dtm_sql_viewsPackage thedtm_sql_viewsPackage = (dtm_sql_viewsPackage)EPackage.Registry.INSTANCE.getEPackage(dtm_sql_viewsPackage.eNS_URI);
+		dtm_viewsPackage thedtm_viewsPackage = (dtm_viewsPackage)EPackage.Registry.INSTANCE.getEPackage(dtm_viewsPackage.eNS_URI);
 		ReportsPackage theReportsPackage = (ReportsPackage)EPackage.Registry.INSTANCE.getEPackage(ReportsPackage.eNS_URI);
 		Efbt_advanced_data_definitionPackage theEfbt_advanced_data_definitionPackage = (Efbt_advanced_data_definitionPackage)EPackage.Registry.INSTANCE.getEPackage(Efbt_advanced_data_definitionPackage.eNS_URI);
 		Module_managementPackage theModule_managementPackage = (Module_managementPackage)EPackage.Registry.INSTANCE.getEPackage(Module_managementPackage.eNS_URI);
@@ -342,7 +325,7 @@ public class dtm_report_cell_viewsPackageImpl extends EPackageImpl implements dt
 		// Set bounds for type parameters
 
 		// Add supertypes to classes
-		reportCellViewEClass.getESuperTypes().add(thedtm_sql_viewsPackage.getSQLView());
+		reportCellViewEClass.getESuperTypes().add(thedtm_viewsPackage.getDTMView());
 		reportCellViewModuleEClass.getESuperTypes().add(theModule_managementPackage.getModule());
 
 		// Initialize classes, features, and operations; add parameters
@@ -370,8 +353,7 @@ public class dtm_report_cell_viewsPackageImpl extends EPackageImpl implements dt
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void createLicenseAnnotations()
-	{
+	protected void createLicenseAnnotations() {
 		String source = "license";
 		addAnnotation
 		  (this,
@@ -387,8 +369,7 @@ public class dtm_report_cell_viewsPackageImpl extends EPackageImpl implements dt
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void createExtendedMetaDataAnnotations()
-	{
+	protected void createExtendedMetaDataAnnotations() {
 		String source = "http:///org/eclipse/emf/ecore/util/ExtendedMetaData";
 		addAnnotation
 		  (reportCellViewEClass,

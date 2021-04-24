@@ -7,10 +7,10 @@
 <plugin>
 
    <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
-      <!-- @generated cocamo -->
+      <!-- @generated program -->
       <factory
-            uri="http://www.eclipse.org/efbt/cocamo"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.cocamo.provider.CocamoItemProviderAdapterFactory"
+            uri="http://www.eclipse.org/efbt/program"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.program.provider.ProgramItemProviderAdapterFactory"
             supportedTypes=
               "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
                org.eclipse.emf.edit.provider.IStructuredItemContentProvider

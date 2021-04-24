@@ -72,26 +72,26 @@ public class Domain_model_mappingItemProviderAdapterFactory extends Domain_model
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.language.dtm.model.domain_model_mapping.LeafModuleToVersionedSQLViewsModule} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.language.dtm.model.domain_model_mapping.LeafModuleToVersionedDTMViewsModule} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected LeafModuleToVersionedSQLViewsModuleItemProvider leafModuleToVersionedSQLViewsModuleItemProvider;
+	protected LeafModuleToVersionedDTMViewsModuleItemProvider leafModuleToVersionedDTMViewsModuleItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.language.dtm.model.domain_model_mapping.LeafModuleToVersionedSQLViewsModule}.
+	 * This creates an adapter for a {@link org.eclipse.efbt.language.dtm.model.domain_model_mapping.LeafModuleToVersionedDTMViewsModule}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	public Adapter createLeafModuleToVersionedSQLViewsModuleAdapter() {
-		if (leafModuleToVersionedSQLViewsModuleItemProvider == null) {
-			leafModuleToVersionedSQLViewsModuleItemProvider = new LeafModuleToVersionedSQLViewsModuleItemProvider(this);
+	public Adapter createLeafModuleToVersionedDTMViewsModuleAdapter() {
+		if (leafModuleToVersionedDTMViewsModuleItemProvider == null) {
+			leafModuleToVersionedDTMViewsModuleItemProvider = new LeafModuleToVersionedDTMViewsModuleItemProvider(this);
 		}
 
-		return leafModuleToVersionedSQLViewsModuleItemProvider;
+		return leafModuleToVersionedDTMViewsModuleItemProvider;
 	}
 
 	/**
@@ -383,7 +383,7 @@ public class Domain_model_mappingItemProviderAdapterFactory extends Domain_model
 	 */
 	@Override
 	public void dispose() {
-		if (leafModuleToVersionedSQLViewsModuleItemProvider != null) leafModuleToVersionedSQLViewsModuleItemProvider.dispose();
+		if (leafModuleToVersionedDTMViewsModuleItemProvider != null) leafModuleToVersionedDTMViewsModuleItemProvider.dispose();
 		if (leafModuleToVersionedCubeSchemaModuleItemProvider != null) leafModuleToVersionedCubeSchemaModuleItemProvider.dispose();
 		if (leafModuleToReportCellViewModuleItemProvider != null) leafModuleToReportCellViewModuleItemProvider.dispose();
 		if (scenarioToCodeConditionsItemProvider != null) scenarioToCodeConditionsItemProvider.dispose();

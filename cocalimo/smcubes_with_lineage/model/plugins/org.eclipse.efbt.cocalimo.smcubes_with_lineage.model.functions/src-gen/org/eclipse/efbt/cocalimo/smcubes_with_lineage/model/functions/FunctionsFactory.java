@@ -12,8 +12,7 @@ import org.eclipse.emf.ecore.EFactory;
  * @see org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.FunctionsPackage
  * @generated
  */
-public interface FunctionsFactory extends EFactory
-{
+public interface FunctionsFactory extends EFactory {
 	/**
 	 * The singleton instance of the factory.
 	 * <!-- begin-user-doc -->
@@ -111,6 +110,96 @@ public interface FunctionsFactory extends EFactory
 	 * @generated
 	 */
 	Parameter createParameter();
+
+	/**
+	 * Returns a new object of class '<em>Get Struct Column Function</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Get Struct Column Function</em>'.
+	 * @generated
+	 */
+	GetStructColumnFunction createGetStructColumnFunction();
+
+	/**
+	 * Returns a new object of class '<em>Speculative Struct Column Parameter</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Speculative Struct Column Parameter</em>'.
+	 * @generated
+	 */
+	SpeculativeStructColumnParameter createSpeculativeStructColumnParameter();
+
+	/**
+	 * Returns a new object of class '<em>Aggregate Column Function</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Aggregate Column Function</em>'.
+	 * @generated
+	 */
+	AggregateColumnFunction createAggregateColumnFunction();
+
+	/**
+	 * Returns a new object of class '<em>Basic Column Function</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Basic Column Function</em>'.
+	 * @generated
+	 */
+	BasicColumnFunction createBasicColumnFunction();
+
+	/**
+	 * Returns a new object of class '<em>Column Function</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Column Function</em>'.
+	 * @generated
+	 */
+	ColumnFunction createColumnFunction();
+
+	/**
+	 * Returns a new object of class '<em>Column Function Group</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Column Function Group</em>'.
+	 * @generated
+	 */
+	ColumnFunctionGroup createColumnFunctionGroup();
+
+	/**
+	 * Returns a new object of class '<em>Cube Column</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Cube Column</em>'.
+	 * @generated
+	 */
+	CubeColumn createCubeColumn();
+
+	/**
+	 * Returns a new object of class '<em>Speculative Cube Column Parameter</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Speculative Cube Column Parameter</em>'.
+	 * @generated
+	 */
+	SpeculativeCubeColumnParameter createSpeculativeCubeColumnParameter();
+
+	/**
+	 * Returns a new object of class '<em>Member Parameter</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Member Parameter</em>'.
+	 * @generated
+	 */
+	MemberParameter createMemberParameter();
+
+	/**
+	 * Returns a new object of class '<em>Value Parameter</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Value Parameter</em>'.
+	 * @generated
+	 */
+	ValueParameter createValueParameter();
 
 	/**
 	 * Returns the package supported by this factory.

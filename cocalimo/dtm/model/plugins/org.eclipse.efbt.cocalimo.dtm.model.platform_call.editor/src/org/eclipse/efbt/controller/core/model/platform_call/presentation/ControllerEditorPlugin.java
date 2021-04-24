@@ -11,13 +11,9 @@ import org.eclipse.efbt.cocalimo.core.model.requirements_text.provider.Requireme
 import org.eclipse.efbt.cocalimo.core.model.test_definition.provider.TestingEditPlugin;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.provider.Smcubes_input_dataEditPlugin;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.provider.CocamoEditPlugin;
-
 import org.eclipse.efbt.cocalimo.smcubes.model.core.provider.SmcubesEditPlugin;
 
-import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.advanced_variable_lineagefunctions.provider.LineagefunctionsEditPlugin;
-
+import org.eclipse.efbt.cocalimo.smcubes.model.program.provider.ProgramEditPlugin;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cube_schema.provider.LineagecubesEditPlugin;
 
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.provider.FunctionsEditPlugin;
@@ -62,17 +58,16 @@ public final class ControllerEditorPlugin extends EMFPlugin {
 	public ControllerEditorPlugin() {
 		super
 			(new ResourceLocator [] {
-				CocamoEditPlugin.INSTANCE,
 				Functionality_moduleEditPlugin.INSTANCE,
 				FunctionsEditPlugin.INSTANCE,
 				LineagecubesEditPlugin.INSTANCE,
-				LineagefunctionsEditPlugin.INSTANCE,
 				Module_managementEditPlugin.INSTANCE,
 				Requirements_textEditPlugin.INSTANCE,
 				Smcubes_input_dataEditPlugin.INSTANCE,
 				SmcubesEditPlugin.INSTANCE,
 				TestingEditPlugin.INSTANCE,
 				dtmEditPlugin.INSTANCE,
+				ProgramEditPlugin.INSTANCE,
 			});
 	}
 

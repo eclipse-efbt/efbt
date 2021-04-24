@@ -14,7 +14,7 @@ import org.eclipse.efbt.language.dtm.model.domain_model_mapping.provider.dtmEdit
 
 import org.eclipse.efbt.language.dtm.model.dtm_report_cell_views.dtm_report_cell_viewsFactory;
 
-import org.eclipse.efbt.language.dtm.model.dtm_sql_views.dtm_sql_viewsFactory;
+import org.eclipse.efbt.language.dtm.model.dtm_views.dtm_viewsFactory;
 
 import org.eclipse.efbt.language.dtm.model.transformation.TransformationFactory;
 import org.eclipse.efbt.language.dtm.model.transformation.TransformationPackage;
@@ -222,7 +222,7 @@ public class dtmExecutableLogicItemProvider
 		newChildDescriptors.add
 			(createChildParameter
 				(TransformationPackage.Literals.DTM_EXECUTABLE_LOGIC__DATASET_TRANSFORMATION_MODULES,
-				 dtm_sql_viewsFactory.eINSTANCE.createVersionedSQLViewsModule()));
+				 dtm_viewsFactory.eINSTANCE.createVersionedDTMViewsModule()));
 
 		newChildDescriptors.add
 			(createChildParameter

@@ -141,6 +141,77 @@ public class FunctionsSwitch<T> extends Switch<T>
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case FunctionsPackage.GET_STRUCT_COLUMN_FUNCTION: {
+				GetStructColumnFunction getStructColumnFunction = (GetStructColumnFunction)theEObject;
+				T result = caseGetStructColumnFunction(getStructColumnFunction);
+				if (result == null) result = caseColumnFunction(getStructColumnFunction);
+				if (result == null) result = caseCubeColumn(getStructColumnFunction);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case FunctionsPackage.SPECULATIVE_STRUCT_COLUMN_PARAMETER: {
+				SpeculativeStructColumnParameter speculativeStructColumnParameter = (SpeculativeStructColumnParameter)theEObject;
+				T result = caseSpeculativeStructColumnParameter(speculativeStructColumnParameter);
+				if (result == null) result = caseParameter(speculativeStructColumnParameter);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case FunctionsPackage.AGGREGATE_COLUMN_FUNCTION: {
+				AggregateColumnFunction aggregateColumnFunction = (AggregateColumnFunction)theEObject;
+				T result = caseAggregateColumnFunction(aggregateColumnFunction);
+				if (result == null) result = caseColumnFunction(aggregateColumnFunction);
+				if (result == null) result = caseCubeColumn(aggregateColumnFunction);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case FunctionsPackage.BASIC_COLUMN_FUNCTION: {
+				BasicColumnFunction basicColumnFunction = (BasicColumnFunction)theEObject;
+				T result = caseBasicColumnFunction(basicColumnFunction);
+				if (result == null) result = caseColumnFunction(basicColumnFunction);
+				if (result == null) result = caseCubeColumn(basicColumnFunction);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case FunctionsPackage.COLUMN_FUNCTION: {
+				ColumnFunction columnFunction = (ColumnFunction)theEObject;
+				T result = caseColumnFunction(columnFunction);
+				if (result == null) result = caseCubeColumn(columnFunction);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case FunctionsPackage.COLUMN_FUNCTION_GROUP: {
+				ColumnFunctionGroup columnFunctionGroup = (ColumnFunctionGroup)theEObject;
+				T result = caseColumnFunctionGroup(columnFunctionGroup);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case FunctionsPackage.CUBE_COLUMN: {
+				CubeColumn cubeColumn = (CubeColumn)theEObject;
+				T result = caseCubeColumn(cubeColumn);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case FunctionsPackage.SPECULATIVE_CUBE_COLUMN_PARAMETER: {
+				SpeculativeCubeColumnParameter speculativeCubeColumnParameter = (SpeculativeCubeColumnParameter)theEObject;
+				T result = caseSpeculativeCubeColumnParameter(speculativeCubeColumnParameter);
+				if (result == null) result = caseParameter(speculativeCubeColumnParameter);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case FunctionsPackage.MEMBER_PARAMETER: {
+				MemberParameter memberParameter = (MemberParameter)theEObject;
+				T result = caseMemberParameter(memberParameter);
+				if (result == null) result = caseParameter(memberParameter);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case FunctionsPackage.VALUE_PARAMETER: {
+				ValueParameter valueParameter = (ValueParameter)theEObject;
+				T result = caseValueParameter(valueParameter);
+				if (result == null) result = caseParameter(valueParameter);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -302,6 +373,156 @@ public class FunctionsSwitch<T> extends Switch<T>
 	 */
 	public T caseParameter(Parameter object)
 	{
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Get Struct Column Function</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Get Struct Column Function</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseGetStructColumnFunction(GetStructColumnFunction object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Speculative Struct Column Parameter</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Speculative Struct Column Parameter</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseSpeculativeStructColumnParameter(SpeculativeStructColumnParameter object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Aggregate Column Function</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Aggregate Column Function</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseAggregateColumnFunction(AggregateColumnFunction object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Basic Column Function</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Basic Column Function</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseBasicColumnFunction(BasicColumnFunction object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Column Function</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Column Function</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseColumnFunction(ColumnFunction object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Column Function Group</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Column Function Group</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseColumnFunctionGroup(ColumnFunctionGroup object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Cube Column</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Cube Column</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseCubeColumn(CubeColumn object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Speculative Cube Column Parameter</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Speculative Cube Column Parameter</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseSpeculativeCubeColumnParameter(SpeculativeCubeColumnParameter object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Member Parameter</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Member Parameter</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseMemberParameter(MemberParameter object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Value Parameter</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Value Parameter</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseValueParameter(ValueParameter object) {
 		return null;
 	}
 

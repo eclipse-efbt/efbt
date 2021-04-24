@@ -158,6 +158,11 @@ import org.eclipse.emf.edit.ui.view.ExtendedPropertySheetPage;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.provider.FunctionsItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.core.model.module_management.provider.Module_managementItemProviderAdapterFactory;
+import org.eclipse.efbt.cocalimo.smcubes.model.core.provider.CoreItemProviderAdapterFactory;
+
+import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cubes.provider.CubesItemProviderAdapterFactory;
+
+import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.efbt_advanced_data_definition.provider.Efbt_advanced_data_definitionItemProviderAdapterFactory;
 
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
@@ -703,7 +708,10 @@ public class FunctionsEditor
 
 		adapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new FunctionsItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new CubesItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new Efbt_advanced_data_definitionItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Module_managementItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new CoreItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 
 		// Create the command stack that will notify this editor as commands are executed.

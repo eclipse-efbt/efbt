@@ -1,0 +1,38 @@
+ProgramAndCalls : { program : dtmProgram :  { 
+	
+	executableLogic :[ dtmExecutableLogic EquityVegaCreateSquaresLogic : { 
+		
+			
+			 datasetTransformationModules : [ VersionedDTMViewsModule   views : { 
+			 	DTMViews : [ 
+
+				AggregateEnrichmentView totalEquityVegaSensitivityPerBucket : {
+			 			cube : "EquityVegaCreateSquaresCubes.freeBirdToolsCubeModule.totalEquityVegaSensitivityPerBucket"
+			 			functions : [
+			 				AggregateColumnFunction totalEquityVegaSensitivityPerBucket_totalEquityVegaSensitivityPerBucket: { 
+			 					cube : "EquityVegaCreateSquaresCubes.freeBirdToolsCubeModule.totalEquityVegaSensitivityPerBucket"
+			 					variable : "EquityVegaMeasuresStaticModel.EquityVegaMeasuresModel.variablesModule.totalEquityVegaSensitivityPerBucket"
+			 					aggregateFunction : AggregateFunction af7 : {
+			 						functionSpec : "commonFunctions.commonFunctionSpecModule.SUM" 
+			 						parameters : [ 
+			 							SpeculativeCubeColumnParameter : {
+			 								column : "EquityVegaMeasuresStaticModel.EquityVegaMeasuresModel.variablesModule.weightedEquityVegaSensitivity"
+			 								cube : "EquityVegaApplyWeighting.freeBirdToolsCubeModule.weightedEquityVegaSensitivitiesAndRiskFactors"
+			 								
+			 							}
+			 						] 
+			 						
+			 					}
+			 				
+			 			}
+			 		
+			 			]
+			 			groupByClause : GroupByClause : {
+			 				groupByColumns : [
+			 					"FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID"
+			 				]
+			 			}
+			 		}
+
+			 		] } ] } ] } }
+			 		

@@ -111,6 +111,46 @@ public class FunctionsAdapterFactory extends AdapterFactoryImpl
 				return createParameterAdapter();
 			}
 			@Override
+			public Adapter caseGetStructColumnFunction(GetStructColumnFunction object) {
+				return createGetStructColumnFunctionAdapter();
+			}
+			@Override
+			public Adapter caseSpeculativeStructColumnParameter(SpeculativeStructColumnParameter object) {
+				return createSpeculativeStructColumnParameterAdapter();
+			}
+			@Override
+			public Adapter caseAggregateColumnFunction(AggregateColumnFunction object) {
+				return createAggregateColumnFunctionAdapter();
+			}
+			@Override
+			public Adapter caseBasicColumnFunction(BasicColumnFunction object) {
+				return createBasicColumnFunctionAdapter();
+			}
+			@Override
+			public Adapter caseColumnFunction(ColumnFunction object) {
+				return createColumnFunctionAdapter();
+			}
+			@Override
+			public Adapter caseColumnFunctionGroup(ColumnFunctionGroup object) {
+				return createColumnFunctionGroupAdapter();
+			}
+			@Override
+			public Adapter caseCubeColumn(CubeColumn object) {
+				return createCubeColumnAdapter();
+			}
+			@Override
+			public Adapter caseSpeculativeCubeColumnParameter(SpeculativeCubeColumnParameter object) {
+				return createSpeculativeCubeColumnParameterAdapter();
+			}
+			@Override
+			public Adapter caseMemberParameter(MemberParameter object) {
+				return createMemberParameterAdapter();
+			}
+			@Override
+			public Adapter caseValueParameter(ValueParameter object) {
+				return createValueParameterAdapter();
+			}
+			@Override
 			public Adapter caseModule(org.eclipse.efbt.cocalimo.core.model.module_management.Module object) {
 				return createModuleAdapter();
 			}
@@ -282,6 +322,146 @@ public class FunctionsAdapterFactory extends AdapterFactoryImpl
 	 */
 	public Adapter createParameterAdapter()
 	{
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.GetStructColumnFunction <em>Get Struct Column Function</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.GetStructColumnFunction
+	 * @generated
+	 */
+	public Adapter createGetStructColumnFunctionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.SpeculativeStructColumnParameter <em>Speculative Struct Column Parameter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.SpeculativeStructColumnParameter
+	 * @generated
+	 */
+	public Adapter createSpeculativeStructColumnParameterAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.AggregateColumnFunction <em>Aggregate Column Function</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.AggregateColumnFunction
+	 * @generated
+	 */
+	public Adapter createAggregateColumnFunctionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.BasicColumnFunction <em>Basic Column Function</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.BasicColumnFunction
+	 * @generated
+	 */
+	public Adapter createBasicColumnFunctionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.ColumnFunction <em>Column Function</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.ColumnFunction
+	 * @generated
+	 */
+	public Adapter createColumnFunctionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.ColumnFunctionGroup <em>Column Function Group</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.ColumnFunctionGroup
+	 * @generated
+	 */
+	public Adapter createColumnFunctionGroupAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.CubeColumn <em>Cube Column</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.CubeColumn
+	 * @generated
+	 */
+	public Adapter createCubeColumnAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.SpeculativeCubeColumnParameter <em>Speculative Cube Column Parameter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.SpeculativeCubeColumnParameter
+	 * @generated
+	 */
+	public Adapter createSpeculativeCubeColumnParameterAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.MemberParameter <em>Member Parameter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.MemberParameter
+	 * @generated
+	 */
+	public Adapter createMemberParameterAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.ValueParameter <em>Value Parameter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.ValueParameter
+	 * @generated
+	 */
+	public Adapter createValueParameterAdapter() {
 		return null;
 	}
 

@@ -17,6 +17,5 @@ package org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions;
  * @model extendedMetaData="name='BooleanFunction' kind='elementOnly'"
  * @generated
  */
-public interface BooleanFunction extends BasicFunction
-{
+public interface BooleanFunction extends BasicFunction {
 } // BooleanFunction

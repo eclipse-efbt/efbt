@@ -26,8 +26,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  *
  * @generated
  */
-public class AggregateFunctionImpl extends FunctionImpl implements AggregateFunction
-{
+public class AggregateFunctionImpl extends FunctionImpl implements AggregateFunction {
 	/**
 	 * The cached value of the '{@link #getFunctionSpec() <em>Function Spec</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -43,8 +42,7 @@ public class AggregateFunctionImpl extends FunctionImpl implements AggregateFunc
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected AggregateFunctionImpl()
-	{
+	protected AggregateFunctionImpl() {
 		super();
 	}
 
@@ -54,8 +52,7 @@ public class AggregateFunctionImpl extends FunctionImpl implements AggregateFunc
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return FunctionsPackage.Literals.AGGREGATE_FUNCTION;
 	}
 
@@ -64,8 +61,7 @@ public class AggregateFunctionImpl extends FunctionImpl implements AggregateFunc
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public AggregateFunctionSpec getFunctionSpec()
-	{
+	public AggregateFunctionSpec getFunctionSpec() {
 		if (functionSpec != null && functionSpec.eIsProxy()) {
 			InternalEObject oldFunctionSpec = (InternalEObject)functionSpec;
 			functionSpec = (AggregateFunctionSpec)eResolveProxy(oldFunctionSpec);
@@ -82,8 +78,7 @@ public class AggregateFunctionImpl extends FunctionImpl implements AggregateFunc
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public AggregateFunctionSpec basicGetFunctionSpec()
-	{
+	public AggregateFunctionSpec basicGetFunctionSpec() {
 		return functionSpec;
 	}
 
@@ -92,8 +87,7 @@ public class AggregateFunctionImpl extends FunctionImpl implements AggregateFunc
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setFunctionSpec(AggregateFunctionSpec newFunctionSpec)
-	{
+	public void setFunctionSpec(AggregateFunctionSpec newFunctionSpec) {
 		AggregateFunctionSpec oldFunctionSpec = functionSpec;
 		functionSpec = newFunctionSpec;
 		if (eNotificationRequired())
@@ -106,8 +100,7 @@ public class AggregateFunctionImpl extends FunctionImpl implements AggregateFunc
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case FunctionsPackage.AGGREGATE_FUNCTION__FUNCTION_SPEC:
 				if (resolve) return getFunctionSpec();
@@ -122,8 +115,7 @@ public class AggregateFunctionImpl extends FunctionImpl implements AggregateFunc
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case FunctionsPackage.AGGREGATE_FUNCTION__FUNCTION_SPEC:
 				setFunctionSpec((AggregateFunctionSpec)newValue);
@@ -138,8 +130,7 @@ public class AggregateFunctionImpl extends FunctionImpl implements AggregateFunc
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case FunctionsPackage.AGGREGATE_FUNCTION__FUNCTION_SPEC:
 				setFunctionSpec((AggregateFunctionSpec)null);
@@ -154,8 +145,7 @@ public class AggregateFunctionImpl extends FunctionImpl implements AggregateFunc
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case FunctionsPackage.AGGREGATE_FUNCTION__FUNCTION_SPEC:
 				return functionSpec != null;

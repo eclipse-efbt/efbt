@@ -96,12 +96,12 @@
             id="org.eclipse.emf.ecore.Wizard.category.ID"
             name="%_UI_Wizard_category"/>
       <wizard
-            id="org.eclipse.efbt.language.dtm.model.dtm_sql_views.presentation.dtm_sql_viewsModelWizardID"
-            name="%_UI_dtm_sql_viewsModelWizard_label"
-            class="org.eclipse.efbt.language.dtm.model.dtm_sql_views.presentation.dtm_sql_viewsModelWizard"
+            id="org.eclipse.efbt.language.dtm.model.dtm_views.presentation.dtm_viewsModelWizardID"
+            name="%_UI_dtm_viewsModelWizard_label"
+            class="org.eclipse.efbt.language.dtm.model.dtm_views.presentation.dtm_viewsModelWizard"
             category="org.eclipse.emf.ecore.Wizard.category.ID"
-            icon="icons/full/obj16/dtm_sql_viewsModelFile.gif">
-         <description>%_UI_dtm_sql_viewsModelWizard_description</description>
+            icon="icons/full/obj16/dtm_viewsModelFile.gif">
+         <description>%_UI_dtm_viewsModelWizard_description</description>
          <selection class="org.eclipse.core.resources.IResource"/>
       </wizard>
    </extension>
@@ -109,12 +109,12 @@
    <extension point="org.eclipse.ui.editors">
       <!-- @generated dtm -->
       <editor
-            id="org.eclipse.efbt.language.dtm.model.dtm_sql_views.presentation.dtm_sql_viewsEditorID"
-            name="%_UI_dtm_sql_viewsEditor_label"
-            icon="icons/full/obj16/dtm_sql_viewsModelFile.gif"
-            extensions="dtm_sql_views"
-            class="org.eclipse.efbt.language.dtm.model.dtm_sql_views.presentation.dtm_sql_viewsEditor"
-            contributorClass="org.eclipse.efbt.language.dtm.model.dtm_sql_views.presentation.dtm_sql_viewsActionBarContributor">
+            id="org.eclipse.efbt.language.dtm.model.dtm_views.presentation.dtm_viewsEditorID"
+            name="%_UI_dtm_viewsEditor_label"
+            icon="icons/full/obj16/dtm_viewsModelFile.gif"
+            extensions="dtm_views"
+            class="org.eclipse.efbt.language.dtm.model.dtm_views.presentation.dtm_viewsEditor"
+            contributorClass="org.eclipse.efbt.language.dtm.model.dtm_views.presentation.dtm_viewsActionBarContributor">
       </editor>
    </extension>
 

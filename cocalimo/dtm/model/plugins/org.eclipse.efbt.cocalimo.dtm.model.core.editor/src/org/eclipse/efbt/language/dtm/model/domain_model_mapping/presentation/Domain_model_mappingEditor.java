@@ -172,9 +172,6 @@ import org.eclipse.efbt.cocalimo.core.model.test_definition.provider.Test_defini
 import org.eclipse.efbt.cocalimo.core.model.test_input_data.provider.Test_input_dataItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.provider.Base_column_structured_dataItemProviderAdapterFactory;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.provider.CocamoItemProviderAdapterFactory;
-
 import org.eclipse.efbt.cocalimo.smcubes.model.column_structured_data.provider.Column_structured_dataItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.core.provider.CoreItemProviderAdapterFactory;
@@ -189,6 +186,7 @@ import org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.provider.
 
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.provider.MappingItemProviderAdapterFactory;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.program.provider.ProgramItemProviderAdapterFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.rendering.provider.RenderingItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.reports.provider.ReportsItemProviderAdapterFactory;
@@ -196,8 +194,6 @@ import org.eclipse.efbt.cocalimo.smcubes.model.reports.provider.ReportsItemProvi
 import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.provider.Smcubes_modelItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.provider.Vtl_transformationItemProviderAdapterFactory;
-
-import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.column_transformation_logic.provider.Column_transformation_logicItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cube_schema.provider.Cube_schemaItemProviderAdapterFactory;
 
@@ -209,7 +205,7 @@ import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.provider.F
 
 import org.eclipse.efbt.language.dtm.model.dtm_report_cell_views.provider.dtm_report_cell_viewsItemProviderAdapterFactory;
 
-import org.eclipse.efbt.language.dtm.model.dtm_sql_views.provider.dtm_sql_viewsItemProviderAdapterFactory;
+import org.eclipse.efbt.language.dtm.model.dtm_views.provider.dtm_viewsItemProviderAdapterFactory;
 
 import org.eclipse.efbt.language.dtm.model.transformation.provider.TransformationItemProviderAdapterFactory;
 
@@ -769,15 +765,15 @@ public class Domain_model_mappingEditor
 		adapterFactory.addAdapterFactory(new Domain_model_mappingItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new TransformationItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new dtm_report_cell_viewsItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new dtm_sql_viewsItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new CocamoItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new dtm_viewsItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Functionality_moduleItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new ScenariosItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new FunctionsItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Cube_schemaItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new CubesItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new Column_transformation_logicItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new Efbt_advanced_data_definitionItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Module_managementItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new ProgramItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Requirements_textItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Base_column_structured_dataItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Column_structured_dataItemProviderAdapterFactory());
@@ -794,7 +790,6 @@ public class Domain_model_mappingEditor
 		adapterFactory.addAdapterFactory(new Test_definitionItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Test_input_dataItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new TestItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new Efbt_advanced_data_definitionItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 
 		// Create the command stack that will notify this editor as commands are executed.

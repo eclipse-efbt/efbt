@@ -26,8 +26,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  *
  * @generated
  */
-public class BasicFunctionImpl extends FunctionImpl implements BasicFunction
-{
+public class BasicFunctionImpl extends FunctionImpl implements BasicFunction {
 	/**
 	 * The cached value of the '{@link #getFunctionSpec() <em>Function Spec</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -43,8 +42,7 @@ public class BasicFunctionImpl extends FunctionImpl implements BasicFunction
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected BasicFunctionImpl()
-	{
+	protected BasicFunctionImpl() {
 		super();
 	}
 
@@ -54,8 +52,7 @@ public class BasicFunctionImpl extends FunctionImpl implements BasicFunction
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return FunctionsPackage.Literals.BASIC_FUNCTION;
 	}
 
@@ -64,8 +61,7 @@ public class BasicFunctionImpl extends FunctionImpl implements BasicFunction
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public BasicFunctionSpec getFunctionSpec()
-	{
+	public BasicFunctionSpec getFunctionSpec() {
 		if (functionSpec != null && functionSpec.eIsProxy()) {
 			InternalEObject oldFunctionSpec = (InternalEObject)functionSpec;
 			functionSpec = (BasicFunctionSpec)eResolveProxy(oldFunctionSpec);
@@ -82,8 +78,7 @@ public class BasicFunctionImpl extends FunctionImpl implements BasicFunction
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public BasicFunctionSpec basicGetFunctionSpec()
-	{
+	public BasicFunctionSpec basicGetFunctionSpec() {
 		return functionSpec;
 	}
 
@@ -92,8 +87,7 @@ public class BasicFunctionImpl extends FunctionImpl implements BasicFunction
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setFunctionSpec(BasicFunctionSpec newFunctionSpec)
-	{
+	public void setFunctionSpec(BasicFunctionSpec newFunctionSpec) {
 		BasicFunctionSpec oldFunctionSpec = functionSpec;
 		functionSpec = newFunctionSpec;
 		if (eNotificationRequired())
@@ -106,8 +100,7 @@ public class BasicFunctionImpl extends FunctionImpl implements BasicFunction
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case FunctionsPackage.BASIC_FUNCTION__FUNCTION_SPEC:
 				if (resolve) return getFunctionSpec();
@@ -122,8 +115,7 @@ public class BasicFunctionImpl extends FunctionImpl implements BasicFunction
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case FunctionsPackage.BASIC_FUNCTION__FUNCTION_SPEC:
 				setFunctionSpec((BasicFunctionSpec)newValue);
@@ -138,8 +130,7 @@ public class BasicFunctionImpl extends FunctionImpl implements BasicFunction
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case FunctionsPackage.BASIC_FUNCTION__FUNCTION_SPEC:
 				setFunctionSpec((BasicFunctionSpec)null);
@@ -154,8 +145,7 @@ public class BasicFunctionImpl extends FunctionImpl implements BasicFunction
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case FunctionsPackage.BASIC_FUNCTION__FUNCTION_SPEC:
 				return functionSpec != null;

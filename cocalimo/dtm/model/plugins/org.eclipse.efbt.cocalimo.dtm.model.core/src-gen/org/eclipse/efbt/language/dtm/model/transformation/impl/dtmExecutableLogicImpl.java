@@ -11,7 +11,7 @@ import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.FunctionSp
 
 import org.eclipse.efbt.language.dtm.model.dtm_report_cell_views.ReportCellViewModule;
 
-import org.eclipse.efbt.language.dtm.model.dtm_sql_views.VersionedSQLViewsModule;
+import org.eclipse.efbt.language.dtm.model.dtm_views.VersionedDTMViewsModule;
 
 import org.eclipse.efbt.language.dtm.model.transformation.TransformationPackage;
 import org.eclipse.efbt.language.dtm.model.transformation.VersionedCubeSchemaModule;
@@ -50,8 +50,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class dtmExecutableLogicImpl extends MinimalEObjectImpl.Container implements dtmExecutableLogic
-{
+public class dtmExecutableLogicImpl extends MinimalEObjectImpl.Container implements dtmExecutableLogic {
 	/**
 	 * The cached value of the '{@link #getCubesModule() <em>Cubes Module</em>}' containment reference.
 	 * <!-- begin-user-doc -->
@@ -120,7 +119,7 @@ public class dtmExecutableLogicImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<VersionedSQLViewsModule> datasetTransformationModules;
+	protected EList<VersionedDTMViewsModule> datasetTransformationModules;
 
 	/**
 	 * The cached value of the '{@link #getReportCellViewModules() <em>Report Cell View Modules</em>}' containment reference list.
@@ -137,8 +136,7 @@ public class dtmExecutableLogicImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected dtmExecutableLogicImpl()
-	{
+	protected dtmExecutableLogicImpl() {
 		super();
 	}
 
@@ -148,8 +146,7 @@ public class dtmExecutableLogicImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return TransformationPackage.Literals.DTM_EXECUTABLE_LOGIC;
 	}
 
@@ -159,8 +156,7 @@ public class dtmExecutableLogicImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public FreeBirdToolsCubeModule getCubesModule()
-	{
+	public FreeBirdToolsCubeModule getCubesModule() {
 		return cubesModule;
 	}
 
@@ -169,8 +165,7 @@ public class dtmExecutableLogicImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetCubesModule(FreeBirdToolsCubeModule newCubesModule, NotificationChain msgs)
-	{
+	public NotificationChain basicSetCubesModule(FreeBirdToolsCubeModule newCubesModule, NotificationChain msgs) {
 		FreeBirdToolsCubeModule oldCubesModule = cubesModule;
 		cubesModule = newCubesModule;
 		if (eNotificationRequired()) {
@@ -186,8 +181,7 @@ public class dtmExecutableLogicImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public void setCubesModule(FreeBirdToolsCubeModule newCubesModule)
-	{
+	public void setCubesModule(FreeBirdToolsCubeModule newCubesModule) {
 		if (newCubesModule != cubesModule) {
 			NotificationChain msgs = null;
 			if (cubesModule != null)
@@ -207,8 +201,7 @@ public class dtmExecutableLogicImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public FunctionSpecModule getFunctionSpecModule()
-	{
+	public FunctionSpecModule getFunctionSpecModule() {
 		return functionSpecModule;
 	}
 
@@ -217,8 +210,7 @@ public class dtmExecutableLogicImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetFunctionSpecModule(FunctionSpecModule newFunctionSpecModule, NotificationChain msgs)
-	{
+	public NotificationChain basicSetFunctionSpecModule(FunctionSpecModule newFunctionSpecModule, NotificationChain msgs) {
 		FunctionSpecModule oldFunctionSpecModule = functionSpecModule;
 		functionSpecModule = newFunctionSpecModule;
 		if (eNotificationRequired()) {
@@ -234,8 +226,7 @@ public class dtmExecutableLogicImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public void setFunctionSpecModule(FunctionSpecModule newFunctionSpecModule)
-	{
+	public void setFunctionSpecModule(FunctionSpecModule newFunctionSpecModule) {
 		if (newFunctionSpecModule != functionSpecModule) {
 			NotificationChain msgs = null;
 			if (functionSpecModule != null)
@@ -255,8 +246,7 @@ public class dtmExecutableLogicImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
@@ -266,8 +256,7 @@ public class dtmExecutableLogicImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public void setName(String newName)
-	{
+	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
@@ -280,8 +269,7 @@ public class dtmExecutableLogicImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public FreeBIRDToolsCubeHierarchyRelationshipModule getCubesHierarchyModule()
-	{
+	public FreeBIRDToolsCubeHierarchyRelationshipModule getCubesHierarchyModule() {
 		return cubesHierarchyModule;
 	}
 
@@ -290,8 +278,7 @@ public class dtmExecutableLogicImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetCubesHierarchyModule(FreeBIRDToolsCubeHierarchyRelationshipModule newCubesHierarchyModule, NotificationChain msgs)
-	{
+	public NotificationChain basicSetCubesHierarchyModule(FreeBIRDToolsCubeHierarchyRelationshipModule newCubesHierarchyModule, NotificationChain msgs) {
 		FreeBIRDToolsCubeHierarchyRelationshipModule oldCubesHierarchyModule = cubesHierarchyModule;
 		cubesHierarchyModule = newCubesHierarchyModule;
 		if (eNotificationRequired()) {
@@ -307,8 +294,7 @@ public class dtmExecutableLogicImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public void setCubesHierarchyModule(FreeBIRDToolsCubeHierarchyRelationshipModule newCubesHierarchyModule)
-	{
+	public void setCubesHierarchyModule(FreeBIRDToolsCubeHierarchyRelationshipModule newCubesHierarchyModule) {
 		if (newCubesHierarchyModule != cubesHierarchyModule) {
 			NotificationChain msgs = null;
 			if (cubesHierarchyModule != null)
@@ -328,8 +314,7 @@ public class dtmExecutableLogicImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public EList<VersionedCubeSchemaModule> getCubeSchemaModules()
-	{
+	public EList<VersionedCubeSchemaModule> getCubeSchemaModules() {
 		if (cubeSchemaModules == null) {
 			cubeSchemaModules = new EObjectContainmentEList<VersionedCubeSchemaModule>(VersionedCubeSchemaModule.class, this, TransformationPackage.DTM_EXECUTABLE_LOGIC__CUBE_SCHEMA_MODULES);
 		}
@@ -342,10 +327,9 @@ public class dtmExecutableLogicImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public EList<VersionedSQLViewsModule> getDatasetTransformationModules()
-	{
+	public EList<VersionedDTMViewsModule> getDatasetTransformationModules() {
 		if (datasetTransformationModules == null) {
-			datasetTransformationModules = new EObjectContainmentEList<VersionedSQLViewsModule>(VersionedSQLViewsModule.class, this, TransformationPackage.DTM_EXECUTABLE_LOGIC__DATASET_TRANSFORMATION_MODULES);
+			datasetTransformationModules = new EObjectContainmentEList<VersionedDTMViewsModule>(VersionedDTMViewsModule.class, this, TransformationPackage.DTM_EXECUTABLE_LOGIC__DATASET_TRANSFORMATION_MODULES);
 		}
 		return datasetTransformationModules;
 	}
@@ -356,8 +340,7 @@ public class dtmExecutableLogicImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public EList<ReportCellViewModule> getReportCellViewModules()
-	{
+	public EList<ReportCellViewModule> getReportCellViewModules() {
 		if (reportCellViewModules == null) {
 			reportCellViewModules = new EObjectContainmentEList<ReportCellViewModule>(ReportCellViewModule.class, this, TransformationPackage.DTM_EXECUTABLE_LOGIC__REPORT_CELL_VIEW_MODULES);
 		}
@@ -370,8 +353,7 @@ public class dtmExecutableLogicImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case TransformationPackage.DTM_EXECUTABLE_LOGIC__CUBES_MODULE:
 				return basicSetCubesModule(null, msgs);
@@ -395,8 +377,7 @@ public class dtmExecutableLogicImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case TransformationPackage.DTM_EXECUTABLE_LOGIC__CUBES_MODULE:
 				return getCubesModule();
@@ -423,8 +404,7 @@ public class dtmExecutableLogicImpl extends MinimalEObjectImpl.Container impleme
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case TransformationPackage.DTM_EXECUTABLE_LOGIC__CUBES_MODULE:
 				setCubesModule((FreeBirdToolsCubeModule)newValue);
@@ -444,7 +424,7 @@ public class dtmExecutableLogicImpl extends MinimalEObjectImpl.Container impleme
 				return;
 			case TransformationPackage.DTM_EXECUTABLE_LOGIC__DATASET_TRANSFORMATION_MODULES:
 				getDatasetTransformationModules().clear();
-				getDatasetTransformationModules().addAll((Collection<? extends VersionedSQLViewsModule>)newValue);
+				getDatasetTransformationModules().addAll((Collection<? extends VersionedDTMViewsModule>)newValue);
 				return;
 			case TransformationPackage.DTM_EXECUTABLE_LOGIC__REPORT_CELL_VIEW_MODULES:
 				getReportCellViewModules().clear();
@@ -460,8 +440,7 @@ public class dtmExecutableLogicImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case TransformationPackage.DTM_EXECUTABLE_LOGIC__CUBES_MODULE:
 				setCubesModule((FreeBirdToolsCubeModule)null);
@@ -494,8 +473,7 @@ public class dtmExecutableLogicImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case TransformationPackage.DTM_EXECUTABLE_LOGIC__CUBES_MODULE:
 				return cubesModule != null;
@@ -521,8 +499,7 @@ public class dtmExecutableLogicImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

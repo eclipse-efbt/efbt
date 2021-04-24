@@ -34,8 +34,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class VersionedCubeSchemaModuleImpl extends ModuleImpl implements VersionedCubeSchemaModule
-{
+public class VersionedCubeSchemaModuleImpl extends ModuleImpl implements VersionedCubeSchemaModule {
 	/**
 	 * The cached value of the '{@link #getSchemas() <em>Schemas</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -51,8 +50,7 @@ public class VersionedCubeSchemaModuleImpl extends ModuleImpl implements Version
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected VersionedCubeSchemaModuleImpl()
-	{
+	protected VersionedCubeSchemaModuleImpl() {
 		super();
 	}
 
@@ -62,8 +60,7 @@ public class VersionedCubeSchemaModuleImpl extends ModuleImpl implements Version
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return TransformationPackage.Literals.VERSIONED_CUBE_SCHEMA_MODULE;
 	}
 
@@ -73,8 +70,7 @@ public class VersionedCubeSchemaModuleImpl extends ModuleImpl implements Version
 	 * @generated
 	 */
 	@Override
-	public EList<CubeSchema> getSchemas()
-	{
+	public EList<CubeSchema> getSchemas() {
 		if (schemas == null) {
 			schemas = new EObjectContainmentEList<CubeSchema>(CubeSchema.class, this, TransformationPackage.VERSIONED_CUBE_SCHEMA_MODULE__SCHEMAS);
 		}
@@ -87,8 +83,7 @@ public class VersionedCubeSchemaModuleImpl extends ModuleImpl implements Version
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case TransformationPackage.VERSIONED_CUBE_SCHEMA_MODULE__SCHEMAS:
 				return ((InternalEList<?>)getSchemas()).basicRemove(otherEnd, msgs);
@@ -102,8 +97,7 @@ public class VersionedCubeSchemaModuleImpl extends ModuleImpl implements Version
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case TransformationPackage.VERSIONED_CUBE_SCHEMA_MODULE__SCHEMAS:
 				return getSchemas();
@@ -118,8 +112,7 @@ public class VersionedCubeSchemaModuleImpl extends ModuleImpl implements Version
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case TransformationPackage.VERSIONED_CUBE_SCHEMA_MODULE__SCHEMAS:
 				getSchemas().clear();
@@ -135,8 +128,7 @@ public class VersionedCubeSchemaModuleImpl extends ModuleImpl implements Version
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case TransformationPackage.VERSIONED_CUBE_SCHEMA_MODULE__SCHEMAS:
 				getSchemas().clear();
@@ -151,8 +143,7 @@ public class VersionedCubeSchemaModuleImpl extends ModuleImpl implements Version
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case TransformationPackage.VERSIONED_CUBE_SCHEMA_MODULE__SCHEMAS:
 				return schemas != null && !schemas.isEmpty();

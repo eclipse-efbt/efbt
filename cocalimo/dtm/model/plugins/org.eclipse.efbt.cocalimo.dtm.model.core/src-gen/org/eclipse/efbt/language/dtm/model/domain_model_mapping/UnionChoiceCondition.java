@@ -23,8 +23,7 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface UnionChoiceCondition extends CodeCondition
-{
+public interface UnionChoiceCondition extends CodeCondition {
 	/**
 	 * Returns the value of the '<em><b>Cube</b></em>' reference.
 	 * <!-- begin-user-doc -->

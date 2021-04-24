@@ -13,7 +13,7 @@ import org.eclipse.emf.common.util.EList;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.efbt.language.dtm.model.domain_model_mapping.DomainMappingModule#getLeafModuleToVersionedSQLViewsModules <em>Leaf Module To Versioned SQL Views Modules</em>}</li>
+ *   <li>{@link org.eclipse.efbt.language.dtm.model.domain_model_mapping.DomainMappingModule#getLeafModuleToVersionedDTMViewsModules <em>Leaf Module To Versioned DTM Views Modules</em>}</li>
  *   <li>{@link org.eclipse.efbt.language.dtm.model.domain_model_mapping.DomainMappingModule#getLeafModuleToVersionedCubeSchemaModules <em>Leaf Module To Versioned Cube Schema Modules</em>}</li>
  *   <li>{@link org.eclipse.efbt.language.dtm.model.domain_model_mapping.DomainMappingModule#getLeafModuleToReportCellViewModules <em>Leaf Module To Report Cell View Modules</em>}</li>
  *   <li>{@link org.eclipse.efbt.language.dtm.model.domain_model_mapping.DomainMappingModule#getScenarioToCodeConditions <em>Scenario To Code Conditions</em>}</li>
@@ -23,19 +23,18 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface DomainMappingModule extends org.eclipse.efbt.cocalimo.core.model.module_management.Module
-{
+public interface DomainMappingModule extends org.eclipse.efbt.cocalimo.core.model.module_management.Module {
 	/**
-	 * Returns the value of the '<em><b>Leaf Module To Versioned SQL Views Modules</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.efbt.language.dtm.model.domain_model_mapping.LeafModuleToVersionedSQLViewsModule}.
+	 * Returns the value of the '<em><b>Leaf Module To Versioned DTM Views Modules</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.efbt.language.dtm.model.domain_model_mapping.LeafModuleToVersionedDTMViewsModule}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Leaf Module To Versioned SQL Views Modules</em>' containment reference list.
-	 * @see org.eclipse.efbt.language.dtm.model.domain_model_mapping.Domain_model_mappingPackage#getDomainMappingModule_LeafModuleToVersionedSQLViewsModules()
+	 * @return the value of the '<em>Leaf Module To Versioned DTM Views Modules</em>' containment reference list.
+	 * @see org.eclipse.efbt.language.dtm.model.domain_model_mapping.Domain_model_mappingPackage#getDomainMappingModule_LeafModuleToVersionedDTMViewsModules()
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<LeafModuleToVersionedSQLViewsModule> getLeafModuleToVersionedSQLViewsModules();
+	EList<LeafModuleToVersionedDTMViewsModule> getLeafModuleToVersionedDTMViewsModules();
 
 	/**
 	 * Returns the value of the '<em><b>Leaf Module To Versioned Cube Schema Modules</b></em>' containment reference list.

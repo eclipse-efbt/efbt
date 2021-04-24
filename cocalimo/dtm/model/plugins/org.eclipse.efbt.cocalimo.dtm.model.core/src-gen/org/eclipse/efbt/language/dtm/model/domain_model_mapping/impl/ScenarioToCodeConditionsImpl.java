@@ -38,8 +38,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class ScenarioToCodeConditionsImpl extends MinimalEObjectImpl.Container implements ScenarioToCodeConditions
-{
+public class ScenarioToCodeConditionsImpl extends MinimalEObjectImpl.Container implements ScenarioToCodeConditions {
 	/**
 	 * The cached value of the '{@link #getScenario() <em>Scenario</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -65,8 +64,7 @@ public class ScenarioToCodeConditionsImpl extends MinimalEObjectImpl.Container i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ScenarioToCodeConditionsImpl()
-	{
+	protected ScenarioToCodeConditionsImpl() {
 		super();
 	}
 
@@ -76,8 +74,7 @@ public class ScenarioToCodeConditionsImpl extends MinimalEObjectImpl.Container i
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Domain_model_mappingPackage.Literals.SCENARIO_TO_CODE_CONDITIONS;
 	}
 
@@ -87,8 +84,7 @@ public class ScenarioToCodeConditionsImpl extends MinimalEObjectImpl.Container i
 	 * @generated
 	 */
 	@Override
-	public Scenario getScenario()
-	{
+	public Scenario getScenario() {
 		if (scenario != null && scenario.eIsProxy()) {
 			InternalEObject oldScenario = (InternalEObject)scenario;
 			scenario = (Scenario)eResolveProxy(oldScenario);
@@ -105,8 +101,7 @@ public class ScenarioToCodeConditionsImpl extends MinimalEObjectImpl.Container i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Scenario basicGetScenario()
-	{
+	public Scenario basicGetScenario() {
 		return scenario;
 	}
 
@@ -116,8 +111,7 @@ public class ScenarioToCodeConditionsImpl extends MinimalEObjectImpl.Container i
 	 * @generated
 	 */
 	@Override
-	public void setScenario(Scenario newScenario)
-	{
+	public void setScenario(Scenario newScenario) {
 		Scenario oldScenario = scenario;
 		scenario = newScenario;
 		if (eNotificationRequired())
@@ -130,8 +124,7 @@ public class ScenarioToCodeConditionsImpl extends MinimalEObjectImpl.Container i
 	 * @generated
 	 */
 	@Override
-	public EList<CodeCondition> getCodeConditions()
-	{
+	public EList<CodeCondition> getCodeConditions() {
 		if (codeConditions == null) {
 			codeConditions = new EObjectContainmentEList<CodeCondition>(CodeCondition.class, this, Domain_model_mappingPackage.SCENARIO_TO_CODE_CONDITIONS__CODE_CONDITIONS);
 		}
@@ -144,8 +137,7 @@ public class ScenarioToCodeConditionsImpl extends MinimalEObjectImpl.Container i
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case Domain_model_mappingPackage.SCENARIO_TO_CODE_CONDITIONS__CODE_CONDITIONS:
 				return ((InternalEList<?>)getCodeConditions()).basicRemove(otherEnd, msgs);
@@ -159,8 +151,7 @@ public class ScenarioToCodeConditionsImpl extends MinimalEObjectImpl.Container i
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Domain_model_mappingPackage.SCENARIO_TO_CODE_CONDITIONS__SCENARIO:
 				if (resolve) return getScenario();
@@ -178,8 +169,7 @@ public class ScenarioToCodeConditionsImpl extends MinimalEObjectImpl.Container i
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Domain_model_mappingPackage.SCENARIO_TO_CODE_CONDITIONS__SCENARIO:
 				setScenario((Scenario)newValue);
@@ -198,8 +188,7 @@ public class ScenarioToCodeConditionsImpl extends MinimalEObjectImpl.Container i
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Domain_model_mappingPackage.SCENARIO_TO_CODE_CONDITIONS__SCENARIO:
 				setScenario((Scenario)null);
@@ -217,8 +206,7 @@ public class ScenarioToCodeConditionsImpl extends MinimalEObjectImpl.Container i
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Domain_model_mappingPackage.SCENARIO_TO_CODE_CONDITIONS__SCENARIO:
 				return scenario != null;

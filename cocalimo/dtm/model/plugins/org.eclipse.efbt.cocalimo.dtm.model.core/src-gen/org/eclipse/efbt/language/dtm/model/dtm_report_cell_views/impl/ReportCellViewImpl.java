@@ -9,7 +9,7 @@ import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.efbt_advanced_data_d
 import org.eclipse.efbt.language.dtm.model.dtm_report_cell_views.ReportCellView;
 import org.eclipse.efbt.language.dtm.model.dtm_report_cell_views.dtm_report_cell_viewsPackage;
 
-import org.eclipse.efbt.language.dtm.model.dtm_sql_views.impl.SQLViewImpl;
+import org.eclipse.efbt.language.dtm.model.dtm_views.impl.DTMViewImpl;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -34,8 +34,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  *
  * @generated
  */
-public class ReportCellViewImpl extends SQLViewImpl implements ReportCellView
-{
+public class ReportCellViewImpl extends DTMViewImpl implements ReportCellView {
 	/**
 	 * The cached value of the '{@link #getReportCell() <em>Report Cell</em>}' containment reference.
 	 * <!-- begin-user-doc -->
@@ -71,8 +70,7 @@ public class ReportCellViewImpl extends SQLViewImpl implements ReportCellView
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ReportCellViewImpl()
-	{
+	protected ReportCellViewImpl() {
 		super();
 	}
 
@@ -82,8 +80,7 @@ public class ReportCellViewImpl extends SQLViewImpl implements ReportCellView
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return dtm_report_cell_viewsPackage.Literals.REPORT_CELL_VIEW;
 	}
 
@@ -93,8 +90,7 @@ public class ReportCellViewImpl extends SQLViewImpl implements ReportCellView
 	 * @generated
 	 */
 	@Override
-	public ReportCell getReportCell()
-	{
+	public ReportCell getReportCell() {
 		return reportCell;
 	}
 
@@ -103,8 +99,7 @@ public class ReportCellViewImpl extends SQLViewImpl implements ReportCellView
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetReportCell(ReportCell newReportCell, NotificationChain msgs)
-	{
+	public NotificationChain basicSetReportCell(ReportCell newReportCell, NotificationChain msgs) {
 		ReportCell oldReportCell = reportCell;
 		reportCell = newReportCell;
 		if (eNotificationRequired()) {
@@ -120,8 +115,7 @@ public class ReportCellViewImpl extends SQLViewImpl implements ReportCellView
 	 * @generated
 	 */
 	@Override
-	public void setReportCell(ReportCell newReportCell)
-	{
+	public void setReportCell(ReportCell newReportCell) {
 		if (newReportCell != reportCell) {
 			NotificationChain msgs = null;
 			if (reportCell != null)
@@ -141,8 +135,7 @@ public class ReportCellViewImpl extends SQLViewImpl implements ReportCellView
 	 * @generated
 	 */
 	@Override
-	public StructTypedVariable getStructColumnHoldingDimension()
-	{
+	public StructTypedVariable getStructColumnHoldingDimension() {
 		if (structColumnHoldingDimension != null && structColumnHoldingDimension.eIsProxy()) {
 			InternalEObject oldStructColumnHoldingDimension = (InternalEObject)structColumnHoldingDimension;
 			structColumnHoldingDimension = (StructTypedVariable)eResolveProxy(oldStructColumnHoldingDimension);
@@ -159,8 +152,7 @@ public class ReportCellViewImpl extends SQLViewImpl implements ReportCellView
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public StructTypedVariable basicGetStructColumnHoldingDimension()
-	{
+	public StructTypedVariable basicGetStructColumnHoldingDimension() {
 		return structColumnHoldingDimension;
 	}
 
@@ -170,8 +162,7 @@ public class ReportCellViewImpl extends SQLViewImpl implements ReportCellView
 	 * @generated
 	 */
 	@Override
-	public void setStructColumnHoldingDimension(StructTypedVariable newStructColumnHoldingDimension)
-	{
+	public void setStructColumnHoldingDimension(StructTypedVariable newStructColumnHoldingDimension) {
 		StructTypedVariable oldStructColumnHoldingDimension = structColumnHoldingDimension;
 		structColumnHoldingDimension = newStructColumnHoldingDimension;
 		if (eNotificationRequired())
@@ -184,8 +175,7 @@ public class ReportCellViewImpl extends SQLViewImpl implements ReportCellView
 	 * @generated
 	 */
 	@Override
-	public StructTypedVariable getStructColumnHoldingMeasure()
-	{
+	public StructTypedVariable getStructColumnHoldingMeasure() {
 		if (structColumnHoldingMeasure != null && structColumnHoldingMeasure.eIsProxy()) {
 			InternalEObject oldStructColumnHoldingMeasure = (InternalEObject)structColumnHoldingMeasure;
 			structColumnHoldingMeasure = (StructTypedVariable)eResolveProxy(oldStructColumnHoldingMeasure);
@@ -202,8 +192,7 @@ public class ReportCellViewImpl extends SQLViewImpl implements ReportCellView
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public StructTypedVariable basicGetStructColumnHoldingMeasure()
-	{
+	public StructTypedVariable basicGetStructColumnHoldingMeasure() {
 		return structColumnHoldingMeasure;
 	}
 
@@ -213,8 +202,7 @@ public class ReportCellViewImpl extends SQLViewImpl implements ReportCellView
 	 * @generated
 	 */
 	@Override
-	public void setStructColumnHoldingMeasure(StructTypedVariable newStructColumnHoldingMeasure)
-	{
+	public void setStructColumnHoldingMeasure(StructTypedVariable newStructColumnHoldingMeasure) {
 		StructTypedVariable oldStructColumnHoldingMeasure = structColumnHoldingMeasure;
 		structColumnHoldingMeasure = newStructColumnHoldingMeasure;
 		if (eNotificationRequired())
@@ -227,8 +215,7 @@ public class ReportCellViewImpl extends SQLViewImpl implements ReportCellView
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case dtm_report_cell_viewsPackage.REPORT_CELL_VIEW__REPORT_CELL:
 				return basicSetReportCell(null, msgs);
@@ -242,8 +229,7 @@ public class ReportCellViewImpl extends SQLViewImpl implements ReportCellView
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case dtm_report_cell_viewsPackage.REPORT_CELL_VIEW__REPORT_CELL:
 				return getReportCell();
@@ -263,8 +249,7 @@ public class ReportCellViewImpl extends SQLViewImpl implements ReportCellView
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case dtm_report_cell_viewsPackage.REPORT_CELL_VIEW__REPORT_CELL:
 				setReportCell((ReportCell)newValue);
@@ -285,8 +270,7 @@ public class ReportCellViewImpl extends SQLViewImpl implements ReportCellView
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case dtm_report_cell_viewsPackage.REPORT_CELL_VIEW__REPORT_CELL:
 				setReportCell((ReportCell)null);
@@ -307,8 +291,7 @@ public class ReportCellViewImpl extends SQLViewImpl implements ReportCellView
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case dtm_report_cell_viewsPackage.REPORT_CELL_VIEW__REPORT_CELL:
 				return reportCell != null;

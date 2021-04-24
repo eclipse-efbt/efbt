@@ -23,8 +23,7 @@ package org.eclipse.efbt.language.dtm.model.transformation;
  * @model extendedMetaData="name='Release' kind='empty'"
  * @generated
  */
-public interface Release extends VersionedComponentsSet
-{
+public interface Release extends VersionedComponentsSet {
 	/**
 	 * Returns the value of the '<em><b>Version</b></em>' attribute.
 	 * <!-- begin-user-doc -->

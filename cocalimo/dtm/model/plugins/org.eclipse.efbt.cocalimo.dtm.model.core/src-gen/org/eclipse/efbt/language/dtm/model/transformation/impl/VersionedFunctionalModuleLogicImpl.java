@@ -16,15 +16,13 @@ import org.eclipse.emf.ecore.EClass;
  *
  * @generated
  */
-public class VersionedFunctionalModuleLogicImpl extends ModuleImpl implements VersionedFunctionalModuleLogic
-{
+public class VersionedFunctionalModuleLogicImpl extends ModuleImpl implements VersionedFunctionalModuleLogic {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected VersionedFunctionalModuleLogicImpl()
-	{
+	protected VersionedFunctionalModuleLogicImpl() {
 		super();
 	}
 
@@ -34,8 +32,7 @@ public class VersionedFunctionalModuleLogicImpl extends ModuleImpl implements Ve
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return TransformationPackage.Literals.VERSIONED_FUNCTIONAL_MODULE_LOGIC;
 	}
 

@@ -26,8 +26,7 @@ import org.eclipse.emf.common.util.EList;
  * @model extendedMetaData="name='Function' kind='elementOnly'"
  * @generated
  */
-public interface Function extends Parameter
-{
+public interface Function extends Parameter {
 	/**
 	 * Returns the value of the '<em><b>Parameters</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.Parameter}.

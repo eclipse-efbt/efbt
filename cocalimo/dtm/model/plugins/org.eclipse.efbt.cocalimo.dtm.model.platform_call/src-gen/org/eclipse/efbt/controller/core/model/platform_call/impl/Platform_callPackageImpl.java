@@ -17,9 +17,6 @@ import org.eclipse.efbt.cocalimo.core.model.test_definition.Test_definitionPacka
 import org.eclipse.efbt.cocalimo.core.model.test_input_data.Test_input_dataPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.Base_column_structured_dataPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.CocamoPackage;
-
 import org.eclipse.efbt.cocalimo.smcubes.model.column_structured_data.Column_structured_dataPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage;
@@ -34,6 +31,7 @@ import org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.Efbt_vtl_
 
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MappingPackage;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.program.ProgramPackage;
 import org.eclipse.efbt.cocalimo.smcubes.model.rendering.RenderingPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.reports.ReportsPackage;
@@ -41,8 +39,6 @@ import org.eclipse.efbt.cocalimo.smcubes.model.reports.ReportsPackage;
 import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.Smcubes_modelPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.Vtl_transformationPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.column_transformation_logic.Column_transformation_logicPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cube_schema.Cube_schemaPackage;
 
@@ -63,7 +59,7 @@ import org.eclipse.efbt.controller.core.model.platform_call.TranslateBIRDWithOld
 
 import org.eclipse.efbt.language.dtm.model.dtm_report_cell_views.dtm_report_cell_viewsPackage;
 
-import org.eclipse.efbt.language.dtm.model.dtm_sql_views.dtm_sql_viewsPackage;
+import org.eclipse.efbt.language.dtm.model.dtm_views.dtm_viewsPackage;
 
 import org.eclipse.efbt.language.dtm.model.transformation.TransformationPackage;
 
@@ -171,14 +167,12 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 		isInited = true;
 
 		// Initialize simple dependencies
-		CocamoPackage.eINSTANCE.eClass();
 		Functionality_modulePackage.eINSTANCE.eClass();
 		ScenariosPackage.eINSTANCE.eClass();
 		FunctionsPackage.eINSTANCE.eClass();
 		Cube_schemaPackage.eINSTANCE.eClass();
 		CubesPackage.eINSTANCE.eClass();
 		Efbt_advanced_data_definitionPackage.eINSTANCE.eClass();
-		Column_transformation_logicPackage.eINSTANCE.eClass();
 		Module_managementPackage.eINSTANCE.eClass();
 		Requirements_textPackage.eINSTANCE.eClass();
 		Base_column_structured_dataPackage.eINSTANCE.eClass();
@@ -198,7 +192,8 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 		TestPackage.eINSTANCE.eClass();
 		TransformationPackage.eINSTANCE.eClass();
 		dtm_report_cell_viewsPackage.eINSTANCE.eClass();
-		dtm_sql_viewsPackage.eINSTANCE.eClass();
+		dtm_viewsPackage.eINSTANCE.eClass();
+		ProgramPackage.eINSTANCE.eClass();
 
 		// Create package meta-data objects
 		thePlatform_callPackage.createPackageContents();

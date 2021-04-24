@@ -188,6 +188,26 @@ public class FunctionItemProvider extends ParameterItemProvider {
 			(createChildParameter
 				(FunctionsPackage.Literals.FUNCTION__PARAMETERS,
 				 FunctionsFactory.eINSTANCE.createBooleanFunction()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FunctionsPackage.Literals.FUNCTION__PARAMETERS,
+				 FunctionsFactory.eINSTANCE.createSpeculativeStructColumnParameter()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FunctionsPackage.Literals.FUNCTION__PARAMETERS,
+				 FunctionsFactory.eINSTANCE.createSpeculativeCubeColumnParameter()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FunctionsPackage.Literals.FUNCTION__PARAMETERS,
+				 FunctionsFactory.eINSTANCE.createMemberParameter()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FunctionsPackage.Literals.FUNCTION__PARAMETERS,
+				 FunctionsFactory.eINSTANCE.createValueParameter()));
 	}
 
 }

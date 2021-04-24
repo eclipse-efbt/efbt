@@ -1,0 +1,8 @@
+ProgramAndCalls : { program : dtmProgram :  { 
+	
+	executableLogic :[ dtmExecutableLogic CommodityDeltaBucketsCreateSquaresLogic : { 
+		
+			
+			 datasetTransformationModules : [ VersionedDTMViewsModule   views : { 
+			  } ] } ] } }
+			 		

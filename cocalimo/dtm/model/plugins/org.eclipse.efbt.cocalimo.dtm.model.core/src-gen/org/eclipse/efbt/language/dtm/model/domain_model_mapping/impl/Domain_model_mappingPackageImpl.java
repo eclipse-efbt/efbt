@@ -17,9 +17,6 @@ import org.eclipse.efbt.cocalimo.core.model.test_definition.Test_definitionPacka
 import org.eclipse.efbt.cocalimo.core.model.test_input_data.Test_input_dataPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.Base_column_structured_dataPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.CocamoPackage;
-
 import org.eclipse.efbt.cocalimo.smcubes.model.column_structured_data.Column_structured_dataPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage;
@@ -34,6 +31,7 @@ import org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.Efbt_vtl_
 
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MappingPackage;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.program.ProgramPackage;
 import org.eclipse.efbt.cocalimo.smcubes.model.rendering.RenderingPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.reports.ReportsPackage;
@@ -41,8 +39,6 @@ import org.eclipse.efbt.cocalimo.smcubes.model.reports.ReportsPackage;
 import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.Smcubes_modelPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.Vtl_transformationPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.column_transformation_logic.Column_transformation_logicPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cube_schema.Cube_schemaPackage;
 
@@ -60,7 +56,7 @@ import org.eclipse.efbt.language.dtm.model.domain_model_mapping.Domain_model_map
 import org.eclipse.efbt.language.dtm.model.domain_model_mapping.Domain_model_mappingPackage;
 import org.eclipse.efbt.language.dtm.model.domain_model_mapping.LeafModuleToReportCellViewModule;
 import org.eclipse.efbt.language.dtm.model.domain_model_mapping.LeafModuleToVersionedCubeSchemaModule;
-import org.eclipse.efbt.language.dtm.model.domain_model_mapping.LeafModuleToVersionedSQLViewsModule;
+import org.eclipse.efbt.language.dtm.model.domain_model_mapping.LeafModuleToVersionedDTMViewsModule;
 import org.eclipse.efbt.language.dtm.model.domain_model_mapping.ScenarioToCodeConditions;
 import org.eclipse.efbt.language.dtm.model.domain_model_mapping.UnionChoiceCondition;
 
@@ -68,9 +64,9 @@ import org.eclipse.efbt.language.dtm.model.dtm_report_cell_views.dtm_report_cell
 
 import org.eclipse.efbt.language.dtm.model.dtm_report_cell_views.impl.dtm_report_cell_viewsPackageImpl;
 
-import org.eclipse.efbt.language.dtm.model.dtm_sql_views.dtm_sql_viewsPackage;
+import org.eclipse.efbt.language.dtm.model.dtm_views.dtm_viewsPackage;
 
-import org.eclipse.efbt.language.dtm.model.dtm_sql_views.impl.dtm_sql_viewsPackageImpl;
+import org.eclipse.efbt.language.dtm.model.dtm_views.impl.dtm_viewsPackageImpl;
 
 import org.eclipse.efbt.language.dtm.model.transformation.TransformationPackage;
 
@@ -88,14 +84,13 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
  * <!-- end-user-doc -->
  * @generated
  */
-public class Domain_model_mappingPackageImpl extends EPackageImpl implements Domain_model_mappingPackage
-{
+public class Domain_model_mappingPackageImpl extends EPackageImpl implements Domain_model_mappingPackage {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass leafModuleToVersionedSQLViewsModuleEClass = null;
+	private EClass leafModuleToVersionedDTMViewsModuleEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -168,8 +163,7 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 	 * @see #init()
 	 * @generated
 	 */
-	private Domain_model_mappingPackageImpl()
-	{
+	private Domain_model_mappingPackageImpl() {
 		super(eNS_URI, Domain_model_mappingFactory.eINSTANCE);
 	}
 
@@ -192,8 +186,7 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 	 * @see #initializePackageContents()
 	 * @generated
 	 */
-	public static Domain_model_mappingPackage init()
-	{
+	public static Domain_model_mappingPackage init() {
 		if (isInited) return (Domain_model_mappingPackage)EPackage.Registry.INSTANCE.getEPackage(Domain_model_mappingPackage.eNS_URI);
 
 		// Obtain or create and register package
@@ -203,14 +196,14 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 		isInited = true;
 
 		// Initialize simple dependencies
-		CocamoPackage.eINSTANCE.eClass();
 		Functionality_modulePackage.eINSTANCE.eClass();
 		ScenariosPackage.eINSTANCE.eClass();
 		FunctionsPackage.eINSTANCE.eClass();
 		Cube_schemaPackage.eINSTANCE.eClass();
 		CubesPackage.eINSTANCE.eClass();
-		Column_transformation_logicPackage.eINSTANCE.eClass();
+		Efbt_advanced_data_definitionPackage.eINSTANCE.eClass();
 		Module_managementPackage.eINSTANCE.eClass();
+		ProgramPackage.eINSTANCE.eClass();
 		Requirements_textPackage.eINSTANCE.eClass();
 		Base_column_structured_dataPackage.eINSTANCE.eClass();
 		Column_structured_dataPackage.eINSTANCE.eClass();
@@ -227,27 +220,26 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 		Test_definitionPackage.eINSTANCE.eClass();
 		Test_input_dataPackage.eINSTANCE.eClass();
 		TestPackage.eINSTANCE.eClass();
-		Efbt_advanced_data_definitionPackage.eINSTANCE.eClass();
 
 		// Obtain or create and register interdependencies
 		Object registeredPackage = EPackage.Registry.INSTANCE.getEPackage(TransformationPackage.eNS_URI);
 		TransformationPackageImpl theTransformationPackage = (TransformationPackageImpl)(registeredPackage instanceof TransformationPackageImpl ? registeredPackage : TransformationPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(dtm_report_cell_viewsPackage.eNS_URI);
 		dtm_report_cell_viewsPackageImpl thedtm_report_cell_viewsPackage = (dtm_report_cell_viewsPackageImpl)(registeredPackage instanceof dtm_report_cell_viewsPackageImpl ? registeredPackage : dtm_report_cell_viewsPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(dtm_sql_viewsPackage.eNS_URI);
-		dtm_sql_viewsPackageImpl thedtm_sql_viewsPackage = (dtm_sql_viewsPackageImpl)(registeredPackage instanceof dtm_sql_viewsPackageImpl ? registeredPackage : dtm_sql_viewsPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(dtm_viewsPackage.eNS_URI);
+		dtm_viewsPackageImpl thedtm_viewsPackage = (dtm_viewsPackageImpl)(registeredPackage instanceof dtm_viewsPackageImpl ? registeredPackage : dtm_viewsPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theDomain_model_mappingPackage.createPackageContents();
 		theTransformationPackage.createPackageContents();
 		thedtm_report_cell_viewsPackage.createPackageContents();
-		thedtm_sql_viewsPackage.createPackageContents();
+		thedtm_viewsPackage.createPackageContents();
 
 		// Initialize created meta-data
 		theDomain_model_mappingPackage.initializePackageContents();
 		theTransformationPackage.initializePackageContents();
 		thedtm_report_cell_viewsPackage.initializePackageContents();
-		thedtm_sql_viewsPackage.initializePackageContents();
+		thedtm_viewsPackage.initializePackageContents();
 
 		// Mark meta-data to indicate it can't be changed
 		theDomain_model_mappingPackage.freeze();
@@ -263,9 +255,8 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public EClass getLeafModuleToVersionedSQLViewsModule()
-	{
-		return leafModuleToVersionedSQLViewsModuleEClass;
+	public EClass getLeafModuleToVersionedDTMViewsModule() {
+		return leafModuleToVersionedDTMViewsModuleEClass;
 	}
 
 	/**
@@ -274,9 +265,8 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public EReference getLeafModuleToVersionedSQLViewsModule_Scheme()
-	{
-		return (EReference)leafModuleToVersionedSQLViewsModuleEClass.getEStructuralFeatures().get(0);
+	public EReference getLeafModuleToVersionedDTMViewsModule_Scheme() {
+		return (EReference)leafModuleToVersionedDTMViewsModuleEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -285,9 +275,8 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public EReference getLeafModuleToVersionedSQLViewsModule_Module()
-	{
-		return (EReference)leafModuleToVersionedSQLViewsModuleEClass.getEStructuralFeatures().get(1);
+	public EReference getLeafModuleToVersionedDTMViewsModule_Module() {
+		return (EReference)leafModuleToVersionedDTMViewsModuleEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -296,8 +285,7 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public EClass getLeafModuleToVersionedCubeSchemaModule()
-	{
+	public EClass getLeafModuleToVersionedCubeSchemaModule() {
 		return leafModuleToVersionedCubeSchemaModuleEClass;
 	}
 
@@ -307,8 +295,7 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public EReference getLeafModuleToVersionedCubeSchemaModule_Scheme()
-	{
+	public EReference getLeafModuleToVersionedCubeSchemaModule_Scheme() {
 		return (EReference)leafModuleToVersionedCubeSchemaModuleEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -318,8 +305,7 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public EReference getLeafModuleToVersionedCubeSchemaModule_Module()
-	{
+	public EReference getLeafModuleToVersionedCubeSchemaModule_Module() {
 		return (EReference)leafModuleToVersionedCubeSchemaModuleEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -329,8 +315,7 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public EClass getLeafModuleToReportCellViewModule()
-	{
+	public EClass getLeafModuleToReportCellViewModule() {
 		return leafModuleToReportCellViewModuleEClass;
 	}
 
@@ -340,8 +325,7 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public EReference getLeafModuleToReportCellViewModule_Scheme()
-	{
+	public EReference getLeafModuleToReportCellViewModule_Scheme() {
 		return (EReference)leafModuleToReportCellViewModuleEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -351,8 +335,7 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public EReference getLeafModuleToReportCellViewModule_Module()
-	{
+	public EReference getLeafModuleToReportCellViewModule_Module() {
 		return (EReference)leafModuleToReportCellViewModuleEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -362,8 +345,7 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public EClass getScenarioToCodeConditions()
-	{
+	public EClass getScenarioToCodeConditions() {
 		return scenarioToCodeConditionsEClass;
 	}
 
@@ -373,8 +355,7 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public EReference getScenarioToCodeConditions_Scenario()
-	{
+	public EReference getScenarioToCodeConditions_Scenario() {
 		return (EReference)scenarioToCodeConditionsEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -384,8 +365,7 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public EReference getScenarioToCodeConditions_CodeConditions()
-	{
+	public EReference getScenarioToCodeConditions_CodeConditions() {
 		return (EReference)scenarioToCodeConditionsEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -395,8 +375,7 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public EClass getCodeCondition()
-	{
+	public EClass getCodeCondition() {
 		return codeConditionEClass;
 	}
 
@@ -406,8 +385,7 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public EClass getColumnSettingCondition()
-	{
+	public EClass getColumnSettingCondition() {
 		return columnSettingConditionEClass;
 	}
 
@@ -417,8 +395,7 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public EReference getColumnSettingCondition_Cube()
-	{
+	public EReference getColumnSettingCondition_Cube() {
 		return (EReference)columnSettingConditionEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -428,8 +405,7 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public EReference getColumnSettingCondition_Variable()
-	{
+	public EReference getColumnSettingCondition_Variable() {
 		return (EReference)columnSettingConditionEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -439,8 +415,7 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public EReference getColumnSettingCondition_FilterConditions()
-	{
+	public EReference getColumnSettingCondition_FilterConditions() {
 		return (EReference)columnSettingConditionEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -450,8 +425,7 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public EClass getDataSetFilterCondition()
-	{
+	public EClass getDataSetFilterCondition() {
 		return dataSetFilterConditionEClass;
 	}
 
@@ -461,8 +435,7 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public EReference getDataSetFilterCondition_FilterConditions()
-	{
+	public EReference getDataSetFilterCondition_FilterConditions() {
 		return (EReference)dataSetFilterConditionEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -472,8 +445,7 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public EReference getDataSetFilterCondition_Cube()
-	{
+	public EReference getDataSetFilterCondition_Cube() {
 		return (EReference)dataSetFilterConditionEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -483,8 +455,7 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public EClass getUnionChoiceCondition()
-	{
+	public EClass getUnionChoiceCondition() {
 		return unionChoiceConditionEClass;
 	}
 
@@ -494,8 +465,7 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public EReference getUnionChoiceCondition_Cube()
-	{
+	public EReference getUnionChoiceCondition_Cube() {
 		return (EReference)unionChoiceConditionEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -505,8 +475,7 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public EReference getUnionChoiceCondition_ChosenCubes()
-	{
+	public EReference getUnionChoiceCondition_ChosenCubes() {
 		return (EReference)unionChoiceConditionEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -516,8 +485,7 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public EClass getDomainMappingModule()
-	{
+	public EClass getDomainMappingModule() {
 		return domainMappingModuleEClass;
 	}
 
@@ -527,8 +495,7 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public EReference getDomainMappingModule_LeafModuleToVersionedSQLViewsModules()
-	{
+	public EReference getDomainMappingModule_LeafModuleToVersionedDTMViewsModules() {
 		return (EReference)domainMappingModuleEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -538,8 +505,7 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public EReference getDomainMappingModule_LeafModuleToVersionedCubeSchemaModules()
-	{
+	public EReference getDomainMappingModule_LeafModuleToVersionedCubeSchemaModules() {
 		return (EReference)domainMappingModuleEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -549,8 +515,7 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public EReference getDomainMappingModule_LeafModuleToReportCellViewModules()
-	{
+	public EReference getDomainMappingModule_LeafModuleToReportCellViewModules() {
 		return (EReference)domainMappingModuleEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -560,8 +525,7 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public EReference getDomainMappingModule_ScenarioToCodeConditions()
-	{
+	public EReference getDomainMappingModule_ScenarioToCodeConditions() {
 		return (EReference)domainMappingModuleEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -571,8 +535,7 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public Domain_model_mappingFactory getDomain_model_mappingFactory()
-	{
+	public Domain_model_mappingFactory getDomain_model_mappingFactory() {
 		return (Domain_model_mappingFactory)getEFactoryInstance();
 	}
 
@@ -590,15 +553,14 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void createPackageContents()
-	{
+	public void createPackageContents() {
 		if (isCreated) return;
 		isCreated = true;
 
 		// Create classes and their features
-		leafModuleToVersionedSQLViewsModuleEClass = createEClass(LEAF_MODULE_TO_VERSIONED_SQL_VIEWS_MODULE);
-		createEReference(leafModuleToVersionedSQLViewsModuleEClass, LEAF_MODULE_TO_VERSIONED_SQL_VIEWS_MODULE__SCHEME);
-		createEReference(leafModuleToVersionedSQLViewsModuleEClass, LEAF_MODULE_TO_VERSIONED_SQL_VIEWS_MODULE__MODULE);
+		leafModuleToVersionedDTMViewsModuleEClass = createEClass(LEAF_MODULE_TO_VERSIONED_DTM_VIEWS_MODULE);
+		createEReference(leafModuleToVersionedDTMViewsModuleEClass, LEAF_MODULE_TO_VERSIONED_DTM_VIEWS_MODULE__SCHEME);
+		createEReference(leafModuleToVersionedDTMViewsModuleEClass, LEAF_MODULE_TO_VERSIONED_DTM_VIEWS_MODULE__MODULE);
 
 		leafModuleToVersionedCubeSchemaModuleEClass = createEClass(LEAF_MODULE_TO_VERSIONED_CUBE_SCHEMA_MODULE);
 		createEReference(leafModuleToVersionedCubeSchemaModuleEClass, LEAF_MODULE_TO_VERSIONED_CUBE_SCHEMA_MODULE__SCHEME);
@@ -628,7 +590,7 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 		createEReference(unionChoiceConditionEClass, UNION_CHOICE_CONDITION__CHOSEN_CUBES);
 
 		domainMappingModuleEClass = createEClass(DOMAIN_MAPPING_MODULE);
-		createEReference(domainMappingModuleEClass, DOMAIN_MAPPING_MODULE__LEAF_MODULE_TO_VERSIONED_SQL_VIEWS_MODULES);
+		createEReference(domainMappingModuleEClass, DOMAIN_MAPPING_MODULE__LEAF_MODULE_TO_VERSIONED_DTM_VIEWS_MODULES);
 		createEReference(domainMappingModuleEClass, DOMAIN_MAPPING_MODULE__LEAF_MODULE_TO_VERSIONED_CUBE_SCHEMA_MODULES);
 		createEReference(domainMappingModuleEClass, DOMAIN_MAPPING_MODULE__LEAF_MODULE_TO_REPORT_CELL_VIEW_MODULES);
 		createEReference(domainMappingModuleEClass, DOMAIN_MAPPING_MODULE__SCENARIO_TO_CODE_CONDITIONS);
@@ -648,8 +610,7 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void initializePackageContents()
-	{
+	public void initializePackageContents() {
 		if (isInitialized) return;
 		isInitialized = true;
 
@@ -660,7 +621,7 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 
 		// Obtain other dependent packages
 		Functionality_modulePackage theFunctionality_modulePackage = (Functionality_modulePackage)EPackage.Registry.INSTANCE.getEPackage(Functionality_modulePackage.eNS_URI);
-		dtm_sql_viewsPackage thedtm_sql_viewsPackage = (dtm_sql_viewsPackage)EPackage.Registry.INSTANCE.getEPackage(dtm_sql_viewsPackage.eNS_URI);
+		dtm_viewsPackage thedtm_viewsPackage = (dtm_viewsPackage)EPackage.Registry.INSTANCE.getEPackage(dtm_viewsPackage.eNS_URI);
 		TransformationPackage theTransformationPackage = (TransformationPackage)EPackage.Registry.INSTANCE.getEPackage(TransformationPackage.eNS_URI);
 		dtm_report_cell_viewsPackage thedtm_report_cell_viewsPackage = (dtm_report_cell_viewsPackage)EPackage.Registry.INSTANCE.getEPackage(dtm_report_cell_viewsPackage.eNS_URI);
 		ScenariosPackage theScenariosPackage = (ScenariosPackage)EPackage.Registry.INSTANCE.getEPackage(ScenariosPackage.eNS_URI);
@@ -680,9 +641,9 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 		domainMappingModuleEClass.getESuperTypes().add(theModule_managementPackage.getModule());
 
 		// Initialize classes, features, and operations; add parameters
-		initEClass(leafModuleToVersionedSQLViewsModuleEClass, LeafModuleToVersionedSQLViewsModule.class, "LeafModuleToVersionedSQLViewsModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getLeafModuleToVersionedSQLViewsModule_Scheme(), theFunctionality_modulePackage.getLeafFunctionalityModule(), null, "scheme", null, 0, 1, LeafModuleToVersionedSQLViewsModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getLeafModuleToVersionedSQLViewsModule_Module(), thedtm_sql_viewsPackage.getVersionedSQLViewsModule(), null, "module", null, 0, 1, LeafModuleToVersionedSQLViewsModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(leafModuleToVersionedDTMViewsModuleEClass, LeafModuleToVersionedDTMViewsModule.class, "LeafModuleToVersionedDTMViewsModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getLeafModuleToVersionedDTMViewsModule_Scheme(), theFunctionality_modulePackage.getLeafFunctionalityModule(), null, "scheme", null, 0, 1, LeafModuleToVersionedDTMViewsModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getLeafModuleToVersionedDTMViewsModule_Module(), thedtm_viewsPackage.getVersionedDTMViewsModule(), null, "module", null, 0, 1, LeafModuleToVersionedDTMViewsModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(leafModuleToVersionedCubeSchemaModuleEClass, LeafModuleToVersionedCubeSchemaModule.class, "LeafModuleToVersionedCubeSchemaModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getLeafModuleToVersionedCubeSchemaModule_Scheme(), theFunctionality_modulePackage.getLeafFunctionalityModule(), null, "scheme", null, 0, 1, LeafModuleToVersionedCubeSchemaModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -712,7 +673,7 @@ public class Domain_model_mappingPackageImpl extends EPackageImpl implements Dom
 		initEReference(getUnionChoiceCondition_ChosenCubes(), theCubesPackage.getFreeBirdToolsCube(), null, "chosenCubes", null, 0, -1, UnionChoiceCondition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(domainMappingModuleEClass, DomainMappingModule.class, "DomainMappingModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getDomainMappingModule_LeafModuleToVersionedSQLViewsModules(), this.getLeafModuleToVersionedSQLViewsModule(), null, "leafModuleToVersionedSQLViewsModules", null, 0, -1, DomainMappingModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDomainMappingModule_LeafModuleToVersionedDTMViewsModules(), this.getLeafModuleToVersionedDTMViewsModule(), null, "leafModuleToVersionedDTMViewsModules", null, 0, -1, DomainMappingModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getDomainMappingModule_LeafModuleToVersionedCubeSchemaModules(), this.getLeafModuleToVersionedCubeSchemaModule(), null, "leafModuleToVersionedCubeSchemaModules", null, 0, -1, DomainMappingModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getDomainMappingModule_LeafModuleToReportCellViewModules(), this.getLeafModuleToReportCellViewModule(), null, "leafModuleToReportCellViewModules", null, 0, -1, DomainMappingModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getDomainMappingModule_ScenarioToCodeConditions(), this.getScenarioToCodeConditions(), null, "scenarioToCodeConditions", null, 0, -1, DomainMappingModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

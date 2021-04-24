@@ -1,0 +1,53 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//FunctionalityModuleModule",
+  "name" : "functionality_modules",
+  "FunctionalityModules" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
+    "name" : "example_processing",
+    "subModules" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReadDataSourceFunctionalityModule",
+      "name" : "readInExampleData"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
+      "name" : "processExampleData",
+      "scenarioSet" : {
+        "scenarios" : [ {
+          "name" : "AAA"
+        }, {
+          "name" : "notAAA"
+        } ],
+        "name" : "scenarioSet1"
+      }
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReportCellCreationFunctionalityModule",
+      "name" : "createReportCells"
+    } ]
+  } ],
+  "functionalityModuleTags" : [ {
+    "displayName" : "processingTag1",
+    "name" : "processingTag",
+    "requirements" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/requirements_text#//TitledRequirementsSection",
+      "$ref" : "crr2.requirements_text#Article_325:1(a)"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/requirements_text#//TitledRequirementsSection",
+      "$ref" : "crr2.requirements_text#Article_325:1(b)"
+    } ],
+    "FunctionalityModule" : {
+      "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
+      "$ref" : "processExampleData"
+    }
+  } ],
+  "SceanrioTags" : [ {
+    "displayName" : "AAA",
+    "name" : "scenarioAAA",
+    "requirements" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/requirements_text#//TitledRequirementsSection",
+      "$ref" : "crr2.requirements_text#Article_325:1(b)"
+    } ],
+    "scenario" : {
+      "eClass" : "http://www.eclipse.org/efbt/scenarios#//Scenario",
+      "$ref" : "AAA"
+    }
+  } ]
+}

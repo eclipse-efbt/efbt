@@ -24,8 +24,7 @@ import org.eclipse.emf.common.util.EList;
  * @model extendedMetaData="name='ReportCellViewModule' kind='elementOnly'"
  * @generated
  */
-public interface ReportCellViewModule extends org.eclipse.efbt.cocalimo.core.model.module_management.Module
-{
+public interface ReportCellViewModule extends org.eclipse.efbt.cocalimo.core.model.module_management.Module {
 	/**
 	 * Returns the value of the '<em><b>Report Cell Views</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.efbt.language.dtm.model.dtm_report_cell_views.ReportCellView}.

@@ -7,30 +7,30 @@
 <plugin>
 
    <extension point="org.eclipse.ui.newWizards">
-      <!-- @generated cocamo -->
+      <!-- @generated program -->
       <category
             id="org.eclipse.emf.ecore.Wizard.category.ID"
             name="%_UI_Wizard_category"/>
       <wizard
-            id="org.eclipse.efbt.cocalimo.smcubes.model.cocamo.presentation.CocamoModelWizardID"
-            name="%_UI_CocamoModelWizard_label"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.cocamo.presentation.CocamoModelWizard"
+            id="org.eclipse.efbt.cocalimo.smcubes.model.program.presentation.ProgramModelWizardID"
+            name="%_UI_ProgramModelWizard_label"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.program.presentation.ProgramModelWizard"
             category="org.eclipse.emf.ecore.Wizard.category.ID"
-            icon="icons/full/obj16/CocamoModelFile.gif">
-         <description>%_UI_CocamoModelWizard_description</description>
+            icon="icons/full/obj16/ProgramModelFile.gif">
+         <description>%_UI_ProgramModelWizard_description</description>
          <selection class="org.eclipse.core.resources.IResource"/>
       </wizard>
    </extension>
 
    <extension point="org.eclipse.ui.editors">
-      <!-- @generated cocamo -->
+      <!-- @generated program -->
       <editor
-            id="org.eclipse.efbt.cocalimo.smcubes.model.cocamo.presentation.CocamoEditorID"
-            name="%_UI_CocamoEditor_label"
-            icon="icons/full/obj16/CocamoModelFile.gif"
-            extensions="cocamo"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.cocamo.presentation.CocamoEditor"
-            contributorClass="org.eclipse.efbt.cocalimo.smcubes.model.cocamo.presentation.CocamoActionBarContributor">
+            id="org.eclipse.efbt.cocalimo.smcubes.model.program.presentation.ProgramEditorID"
+            name="%_UI_ProgramEditor_label"
+            icon="icons/full/obj16/ProgramModelFile.gif"
+            extensions="program"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.program.presentation.ProgramEditor"
+            contributorClass="org.eclipse.efbt.cocalimo.smcubes.model.program.presentation.ProgramActionBarContributor">
       </editor>
    </extension>
 

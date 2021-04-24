@@ -33,8 +33,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class FunctionSpecModuleImpl extends ModuleImpl implements FunctionSpecModule
-{
+public class FunctionSpecModuleImpl extends ModuleImpl implements FunctionSpecModule {
 	/**
 	 * The cached value of the '{@link #getFunctionSpecs() <em>Function Specs</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -50,8 +49,7 @@ public class FunctionSpecModuleImpl extends ModuleImpl implements FunctionSpecMo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected FunctionSpecModuleImpl()
-	{
+	protected FunctionSpecModuleImpl() {
 		super();
 	}
 
@@ -61,8 +59,7 @@ public class FunctionSpecModuleImpl extends ModuleImpl implements FunctionSpecMo
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return FunctionsPackage.Literals.FUNCTION_SPEC_MODULE;
 	}
 
@@ -71,8 +68,7 @@ public class FunctionSpecModuleImpl extends ModuleImpl implements FunctionSpecMo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<FunctionSpec> getFunctionSpecs()
-	{
+	public EList<FunctionSpec> getFunctionSpecs() {
 		if (functionSpecs == null) {
 			functionSpecs = new EObjectContainmentEList<FunctionSpec>(FunctionSpec.class, this, FunctionsPackage.FUNCTION_SPEC_MODULE__FUNCTION_SPECS);
 		}
@@ -85,8 +81,7 @@ public class FunctionSpecModuleImpl extends ModuleImpl implements FunctionSpecMo
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case FunctionsPackage.FUNCTION_SPEC_MODULE__FUNCTION_SPECS:
 				return ((InternalEList<?>)getFunctionSpecs()).basicRemove(otherEnd, msgs);
@@ -100,8 +95,7 @@ public class FunctionSpecModuleImpl extends ModuleImpl implements FunctionSpecMo
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case FunctionsPackage.FUNCTION_SPEC_MODULE__FUNCTION_SPECS:
 				return getFunctionSpecs();
@@ -116,8 +110,7 @@ public class FunctionSpecModuleImpl extends ModuleImpl implements FunctionSpecMo
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case FunctionsPackage.FUNCTION_SPEC_MODULE__FUNCTION_SPECS:
 				getFunctionSpecs().clear();
@@ -133,8 +126,7 @@ public class FunctionSpecModuleImpl extends ModuleImpl implements FunctionSpecMo
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case FunctionsPackage.FUNCTION_SPEC_MODULE__FUNCTION_SPECS:
 				getFunctionSpecs().clear();
@@ -149,8 +141,7 @@ public class FunctionSpecModuleImpl extends ModuleImpl implements FunctionSpecMo
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case FunctionsPackage.FUNCTION_SPEC_MODULE__FUNCTION_SPECS:
 				return functionSpecs != null && !functionSpecs.isEmpty();

@@ -24,8 +24,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='ParamaterSpec' kind='empty'"
  * @generated
  */
-public interface ParamaterSpec extends EObject
-{
+public interface ParamaterSpec extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->

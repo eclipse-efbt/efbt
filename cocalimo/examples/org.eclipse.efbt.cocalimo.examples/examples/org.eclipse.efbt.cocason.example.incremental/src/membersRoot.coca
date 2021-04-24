@@ -1,0 +1,19 @@
+ProgramAndCalls : { program : dtmProgram :  {
+	smcubesStaticModel : SMCubesStaticModel smcubesStaticCubesModel : { 
+		smCubesModel  : SmcubesModel smcubesCubesModel: { members : [
+			MemberModule membersModule : { members : 
+				[ 
+					MEMBER EBA_GA_EBA_JP : { code : "JP" member_id : "EBA_GA_EBA_JP" domain_id : "smcubesDomainsStaticModel.smcubesDomainsModel.domainsModule.GGRPHCL_ARS" } ,
+					 MEMBER EBA_GA_EBA_US: { code : "US" member_id : "EBA_GA_EBA_US" domain_id : "smcubesDomainsStaticModel.smcubesDomainsModel.domainsModule.GGRPHCL_ARS" } ,
+					 MEMBER CRDT_RTNG_AGNCY_1 : { code : "1" description : "Credit rating agency used in Asset encumbrance.\nSee EBA ITS on Asset encumbrance, 5.2.3. Instructions concerning specific columns, External credit rating on covered bond (090-140), As per credit rating agencies\' methodology to maintain current external credit rating on covered bond (230-250)." 
+					 	member_id : "CRDT_RTNG_AGNCY_1" domain_id : "smcubesDomainsStaticModel.smcubesDomainsModel.domainsModule.CRDT_RTNG_AGNCY"} ,
+					 	MEMBER CRDT_RTNG_AGNCY_2 : { code : "2" description : "Credit rating agency used in Asset encumbrance.\nSee EBA ITS on Asset encumbrance, 5.2.3. Instructions concerning specific columns, External credit rating on covered bond (090-140), As per credit rating agencies\' methodology to maintain current external credit rating on covered bond (230-250)." 
+					 		member_id : "CRDT_RTNG_AGNCY_2" domain_id : "smcubesDomainsStaticModel.smcubesDomainsModel.domainsModule.CRDT_RTNG_AGNCY" } ,
+					 		MEMBER CRDT_RTNG_AGNCY_3 : { 
+					 			code : "3" 
+					 			description : "Credit rating agency used in Asset encumbrance.\nSee EBA ITS on Asset encumbrance, 5.2.3. Instructions concerning specific columns, External credit rating on covered bond (090-140), As per credit rating agencies\' methodology to maintain current external credit rating on covered bond (230-250)."
+					 			 member_id : "CRDT_RTNG_AGNCY_3" 
+					 			 domain_id : "smcubesDomainsStaticModel.smcubesDomainsModel.domainsModule.CRDT_RTNG_AGNCY" },
+					 			  MEMBER BLN_F :{ code : "F" member_id : "BLN_F" domain_id : "smcubesDomainsStaticModel.smcubesDomainsModel.domainsModule.BLN" } ,
+					 			  MEMBER BLN_T: { code : "T" member_id : "BLN_T" domain_id : "smcubesDomainsStaticModel.smcubesDomainsModel.domainsModule.BLN" }
+				] } ] } } } } 

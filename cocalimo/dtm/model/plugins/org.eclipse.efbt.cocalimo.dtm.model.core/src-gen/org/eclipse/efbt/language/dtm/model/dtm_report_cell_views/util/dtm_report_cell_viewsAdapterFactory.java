@@ -4,7 +4,7 @@ package org.eclipse.efbt.language.dtm.model.dtm_report_cell_views.util;
 
 import org.eclipse.efbt.language.dtm.model.dtm_report_cell_views.*;
 
-import org.eclipse.efbt.language.dtm.model.dtm_sql_views.SQLView;
+import org.eclipse.efbt.language.dtm.model.dtm_views.DTMView;
 
 import org.eclipse.efbt.language.dtm.model.transformation.DataSetTransformation;
 
@@ -87,8 +87,8 @@ public class dtm_report_cell_viewsAdapterFactory extends AdapterFactoryImpl
 				return createDataSetTransformationAdapter();
 			}
 			@Override
-			public Adapter caseSQLView(SQLView object) {
-				return createSQLViewAdapter();
+			public Adapter caseDTMView(DTMView object) {
+				return createDTMViewAdapter();
 			}
 			@Override
 			public Adapter caseModule(org.eclipse.efbt.cocalimo.core.model.module_management.Module object) {
@@ -161,16 +161,16 @@ public class dtm_report_cell_viewsAdapterFactory extends AdapterFactoryImpl
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.language.dtm.model.dtm_sql_views.SQLView <em>SQL View</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.language.dtm.model.dtm_views.DTMView <em>DTM View</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.efbt.language.dtm.model.dtm_sql_views.SQLView
+	 * @see org.eclipse.efbt.language.dtm.model.dtm_views.DTMView
 	 * @generated
 	 */
-	public Adapter createSQLViewAdapter()
+	public Adapter createDTMViewAdapter()
 	{
 		return null;
 	}

@@ -23,8 +23,7 @@ import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.BooleanFun
  * @model
  * @generated
  */
-public interface DataSetFilterCondition extends CodeCondition
-{
+public interface DataSetFilterCondition extends CodeCondition {
 	/**
 	 * Returns the value of the '<em><b>Filter Conditions</b></em>' containment reference.
 	 * <!-- begin-user-doc -->

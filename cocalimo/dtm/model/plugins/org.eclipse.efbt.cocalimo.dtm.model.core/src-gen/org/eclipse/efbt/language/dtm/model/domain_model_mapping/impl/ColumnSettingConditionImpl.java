@@ -34,8 +34,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  *
  * @generated
  */
-public class ColumnSettingConditionImpl extends CodeConditionImpl implements ColumnSettingCondition
-{
+public class ColumnSettingConditionImpl extends CodeConditionImpl implements ColumnSettingCondition {
 	/**
 	 * The cached value of the '{@link #getCube() <em>Cube</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -71,8 +70,7 @@ public class ColumnSettingConditionImpl extends CodeConditionImpl implements Col
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ColumnSettingConditionImpl()
-	{
+	protected ColumnSettingConditionImpl() {
 		super();
 	}
 
@@ -82,8 +80,7 @@ public class ColumnSettingConditionImpl extends CodeConditionImpl implements Col
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Domain_model_mappingPackage.Literals.COLUMN_SETTING_CONDITION;
 	}
 
@@ -93,8 +90,7 @@ public class ColumnSettingConditionImpl extends CodeConditionImpl implements Col
 	 * @generated
 	 */
 	@Override
-	public FreeBirdToolsCube getCube()
-	{
+	public FreeBirdToolsCube getCube() {
 		if (cube != null && cube.eIsProxy()) {
 			InternalEObject oldCube = (InternalEObject)cube;
 			cube = (FreeBirdToolsCube)eResolveProxy(oldCube);
@@ -111,8 +107,7 @@ public class ColumnSettingConditionImpl extends CodeConditionImpl implements Col
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public FreeBirdToolsCube basicGetCube()
-	{
+	public FreeBirdToolsCube basicGetCube() {
 		return cube;
 	}
 
@@ -122,8 +117,7 @@ public class ColumnSettingConditionImpl extends CodeConditionImpl implements Col
 	 * @generated
 	 */
 	@Override
-	public void setCube(FreeBirdToolsCube newCube)
-	{
+	public void setCube(FreeBirdToolsCube newCube) {
 		FreeBirdToolsCube oldCube = cube;
 		cube = newCube;
 		if (eNotificationRequired())
@@ -136,8 +130,7 @@ public class ColumnSettingConditionImpl extends CodeConditionImpl implements Col
 	 * @generated
 	 */
 	@Override
-	public VARIABLE getVariable()
-	{
+	public VARIABLE getVariable() {
 		if (variable != null && variable.eIsProxy()) {
 			InternalEObject oldVariable = (InternalEObject)variable;
 			variable = (VARIABLE)eResolveProxy(oldVariable);
@@ -154,8 +147,7 @@ public class ColumnSettingConditionImpl extends CodeConditionImpl implements Col
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public VARIABLE basicGetVariable()
-	{
+	public VARIABLE basicGetVariable() {
 		return variable;
 	}
 
@@ -165,8 +157,7 @@ public class ColumnSettingConditionImpl extends CodeConditionImpl implements Col
 	 * @generated
 	 */
 	@Override
-	public void setVariable(VARIABLE newVariable)
-	{
+	public void setVariable(VARIABLE newVariable) {
 		VARIABLE oldVariable = variable;
 		variable = newVariable;
 		if (eNotificationRequired())
@@ -179,8 +170,7 @@ public class ColumnSettingConditionImpl extends CodeConditionImpl implements Col
 	 * @generated
 	 */
 	@Override
-	public BasicFunction getFilterConditions()
-	{
+	public BasicFunction getFilterConditions() {
 		return filterConditions;
 	}
 
@@ -189,8 +179,7 @@ public class ColumnSettingConditionImpl extends CodeConditionImpl implements Col
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetFilterConditions(BasicFunction newFilterConditions, NotificationChain msgs)
-	{
+	public NotificationChain basicSetFilterConditions(BasicFunction newFilterConditions, NotificationChain msgs) {
 		BasicFunction oldFilterConditions = filterConditions;
 		filterConditions = newFilterConditions;
 		if (eNotificationRequired()) {
@@ -206,8 +195,7 @@ public class ColumnSettingConditionImpl extends CodeConditionImpl implements Col
 	 * @generated
 	 */
 	@Override
-	public void setFilterConditions(BasicFunction newFilterConditions)
-	{
+	public void setFilterConditions(BasicFunction newFilterConditions) {
 		if (newFilterConditions != filterConditions) {
 			NotificationChain msgs = null;
 			if (filterConditions != null)
@@ -227,8 +215,7 @@ public class ColumnSettingConditionImpl extends CodeConditionImpl implements Col
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case Domain_model_mappingPackage.COLUMN_SETTING_CONDITION__FILTER_CONDITIONS:
 				return basicSetFilterConditions(null, msgs);
@@ -242,8 +229,7 @@ public class ColumnSettingConditionImpl extends CodeConditionImpl implements Col
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Domain_model_mappingPackage.COLUMN_SETTING_CONDITION__CUBE:
 				if (resolve) return getCube();
@@ -263,8 +249,7 @@ public class ColumnSettingConditionImpl extends CodeConditionImpl implements Col
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Domain_model_mappingPackage.COLUMN_SETTING_CONDITION__CUBE:
 				setCube((FreeBirdToolsCube)newValue);
@@ -285,8 +270,7 @@ public class ColumnSettingConditionImpl extends CodeConditionImpl implements Col
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Domain_model_mappingPackage.COLUMN_SETTING_CONDITION__CUBE:
 				setCube((FreeBirdToolsCube)null);
@@ -307,8 +291,7 @@ public class ColumnSettingConditionImpl extends CodeConditionImpl implements Col
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Domain_model_mappingPackage.COLUMN_SETTING_CONDITION__CUBE:
 				return cube != null;

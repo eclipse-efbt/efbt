@@ -9,7 +9,7 @@ import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.FunctionSp
 
 import org.eclipse.efbt.language.dtm.model.dtm_report_cell_views.ReportCellViewModule;
 
-import org.eclipse.efbt.language.dtm.model.dtm_sql_views.VersionedSQLViewsModule;
+import org.eclipse.efbt.language.dtm.model.dtm_views.VersionedDTMViewsModule;
 
 import org.eclipse.emf.common.util.EList;
 
@@ -37,8 +37,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface dtmExecutableLogic extends EObject
-{
+public interface dtmExecutableLogic extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Cubes Module</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
@@ -144,7 +143,7 @@ public interface dtmExecutableLogic extends EObject
 
 	/**
 	 * Returns the value of the '<em><b>Dataset Transformation Modules</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.efbt.language.dtm.model.dtm_sql_views.VersionedSQLViewsModule}.
+	 * The list contents are of type {@link org.eclipse.efbt.language.dtm.model.dtm_views.VersionedDTMViewsModule}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
@@ -155,7 +154,7 @@ public interface dtmExecutableLogic extends EObject
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<VersionedSQLViewsModule> getDatasetTransformationModules();
+	EList<VersionedDTMViewsModule> getDatasetTransformationModules();
 
 	/**
 	 * Returns the value of the '<em><b>Report Cell View Modules</b></em>' containment reference list.

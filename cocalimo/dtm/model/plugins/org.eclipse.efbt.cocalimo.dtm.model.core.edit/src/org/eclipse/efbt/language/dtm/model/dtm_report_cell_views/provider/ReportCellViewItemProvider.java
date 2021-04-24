@@ -13,7 +13,7 @@ import org.eclipse.efbt.language.dtm.model.domain_model_mapping.provider.dtmEdit
 import org.eclipse.efbt.language.dtm.model.dtm_report_cell_views.ReportCellView;
 import org.eclipse.efbt.language.dtm.model.dtm_report_cell_views.dtm_report_cell_viewsPackage;
 
-import org.eclipse.efbt.language.dtm.model.dtm_sql_views.provider.SQLViewItemProvider;
+import org.eclipse.efbt.language.dtm.model.dtm_views.provider.DTMViewItemProvider;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
@@ -32,7 +32,7 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
  * <!-- end-user-doc -->
  * @generated
  */
-public class ReportCellViewItemProvider extends SQLViewItemProvider {
+public class ReportCellViewItemProvider extends DTMViewItemProvider {
 	/**
 	 * This constructs an instance from a factory and a notifier.
 	 * <!-- begin-user-doc -->

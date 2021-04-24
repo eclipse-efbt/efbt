@@ -24,8 +24,7 @@ import org.eclipse.emf.ecore.EReference;
  * @model kind="package"
  * @generated
  */
-public interface Domain_model_mappingPackage extends EPackage
-{
+public interface Domain_model_mappingPackage extends EPackage {
 	/**
 	 * The package name.
 	 * <!-- begin-user-doc -->
@@ -59,14 +58,14 @@ public interface Domain_model_mappingPackage extends EPackage
 	Domain_model_mappingPackage eINSTANCE = org.eclipse.efbt.language.dtm.model.domain_model_mapping.impl.Domain_model_mappingPackageImpl.init();
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.language.dtm.model.domain_model_mapping.impl.LeafModuleToVersionedSQLViewsModuleImpl <em>Leaf Module To Versioned SQL Views Module</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.efbt.language.dtm.model.domain_model_mapping.impl.LeafModuleToVersionedDTMViewsModuleImpl <em>Leaf Module To Versioned DTM Views Module</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.language.dtm.model.domain_model_mapping.impl.LeafModuleToVersionedSQLViewsModuleImpl
-	 * @see org.eclipse.efbt.language.dtm.model.domain_model_mapping.impl.Domain_model_mappingPackageImpl#getLeafModuleToVersionedSQLViewsModule()
+	 * @see org.eclipse.efbt.language.dtm.model.domain_model_mapping.impl.LeafModuleToVersionedDTMViewsModuleImpl
+	 * @see org.eclipse.efbt.language.dtm.model.domain_model_mapping.impl.Domain_model_mappingPackageImpl#getLeafModuleToVersionedDTMViewsModule()
 	 * @generated
 	 */
-	int LEAF_MODULE_TO_VERSIONED_SQL_VIEWS_MODULE = 0;
+	int LEAF_MODULE_TO_VERSIONED_DTM_VIEWS_MODULE = 0;
 
 	/**
 	 * The feature id for the '<em><b>Scheme</b></em>' reference.
@@ -75,7 +74,7 @@ public interface Domain_model_mappingPackage extends EPackage
 	 * @generated
 	 * @ordered
 	 */
-	int LEAF_MODULE_TO_VERSIONED_SQL_VIEWS_MODULE__SCHEME = 0;
+	int LEAF_MODULE_TO_VERSIONED_DTM_VIEWS_MODULE__SCHEME = 0;
 
 	/**
 	 * The feature id for the '<em><b>Module</b></em>' reference.
@@ -84,25 +83,25 @@ public interface Domain_model_mappingPackage extends EPackage
 	 * @generated
 	 * @ordered
 	 */
-	int LEAF_MODULE_TO_VERSIONED_SQL_VIEWS_MODULE__MODULE = 1;
+	int LEAF_MODULE_TO_VERSIONED_DTM_VIEWS_MODULE__MODULE = 1;
 
 	/**
-	 * The number of structural features of the '<em>Leaf Module To Versioned SQL Views Module</em>' class.
+	 * The number of structural features of the '<em>Leaf Module To Versioned DTM Views Module</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int LEAF_MODULE_TO_VERSIONED_SQL_VIEWS_MODULE_FEATURE_COUNT = 2;
+	int LEAF_MODULE_TO_VERSIONED_DTM_VIEWS_MODULE_FEATURE_COUNT = 2;
 
 	/**
-	 * The number of operations of the '<em>Leaf Module To Versioned SQL Views Module</em>' class.
+	 * The number of operations of the '<em>Leaf Module To Versioned DTM Views Module</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int LEAF_MODULE_TO_VERSIONED_SQL_VIEWS_MODULE_OPERATION_COUNT = 0;
+	int LEAF_MODULE_TO_VERSIONED_DTM_VIEWS_MODULE_OPERATION_COUNT = 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.language.dtm.model.domain_model_mapping.impl.LeafModuleToVersionedCubeSchemaModuleImpl <em>Leaf Module To Versioned Cube Schema Module</em>}' class.
@@ -482,13 +481,13 @@ public interface Domain_model_mappingPackage extends EPackage
 	int DOMAIN_MAPPING_MODULE__LONG_NAME = Module_managementPackage.MODULE__LONG_NAME;
 
 	/**
-	 * The feature id for the '<em><b>Leaf Module To Versioned SQL Views Modules</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Leaf Module To Versioned DTM Views Modules</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOMAIN_MAPPING_MODULE__LEAF_MODULE_TO_VERSIONED_SQL_VIEWS_MODULES = Module_managementPackage.MODULE_FEATURE_COUNT + 0;
+	int DOMAIN_MAPPING_MODULE__LEAF_MODULE_TO_VERSIONED_DTM_VIEWS_MODULES = Module_managementPackage.MODULE_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Leaf Module To Versioned Cube Schema Modules</b></em>' containment reference list.
@@ -537,36 +536,36 @@ public interface Domain_model_mappingPackage extends EPackage
 
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.language.dtm.model.domain_model_mapping.LeafModuleToVersionedSQLViewsModule <em>Leaf Module To Versioned SQL Views Module</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.efbt.language.dtm.model.domain_model_mapping.LeafModuleToVersionedDTMViewsModule <em>Leaf Module To Versioned DTM Views Module</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Leaf Module To Versioned SQL Views Module</em>'.
-	 * @see org.eclipse.efbt.language.dtm.model.domain_model_mapping.LeafModuleToVersionedSQLViewsModule
+	 * @return the meta object for class '<em>Leaf Module To Versioned DTM Views Module</em>'.
+	 * @see org.eclipse.efbt.language.dtm.model.domain_model_mapping.LeafModuleToVersionedDTMViewsModule
 	 * @generated
 	 */
-	EClass getLeafModuleToVersionedSQLViewsModule();
+	EClass getLeafModuleToVersionedDTMViewsModule();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.language.dtm.model.domain_model_mapping.LeafModuleToVersionedSQLViewsModule#getScheme <em>Scheme</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.language.dtm.model.domain_model_mapping.LeafModuleToVersionedDTMViewsModule#getScheme <em>Scheme</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Scheme</em>'.
-	 * @see org.eclipse.efbt.language.dtm.model.domain_model_mapping.LeafModuleToVersionedSQLViewsModule#getScheme()
-	 * @see #getLeafModuleToVersionedSQLViewsModule()
+	 * @see org.eclipse.efbt.language.dtm.model.domain_model_mapping.LeafModuleToVersionedDTMViewsModule#getScheme()
+	 * @see #getLeafModuleToVersionedDTMViewsModule()
 	 * @generated
 	 */
-	EReference getLeafModuleToVersionedSQLViewsModule_Scheme();
+	EReference getLeafModuleToVersionedDTMViewsModule_Scheme();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.language.dtm.model.domain_model_mapping.LeafModuleToVersionedSQLViewsModule#getModule <em>Module</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.language.dtm.model.domain_model_mapping.LeafModuleToVersionedDTMViewsModule#getModule <em>Module</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Module</em>'.
-	 * @see org.eclipse.efbt.language.dtm.model.domain_model_mapping.LeafModuleToVersionedSQLViewsModule#getModule()
-	 * @see #getLeafModuleToVersionedSQLViewsModule()
+	 * @see org.eclipse.efbt.language.dtm.model.domain_model_mapping.LeafModuleToVersionedDTMViewsModule#getModule()
+	 * @see #getLeafModuleToVersionedDTMViewsModule()
 	 * @generated
 	 */
-	EReference getLeafModuleToVersionedSQLViewsModule_Module();
+	EReference getLeafModuleToVersionedDTMViewsModule_Module();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.language.dtm.model.domain_model_mapping.LeafModuleToVersionedCubeSchemaModule <em>Leaf Module To Versioned Cube Schema Module</em>}'.
@@ -792,15 +791,15 @@ public interface Domain_model_mappingPackage extends EPackage
 	EClass getDomainMappingModule();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.language.dtm.model.domain_model_mapping.DomainMappingModule#getLeafModuleToVersionedSQLViewsModules <em>Leaf Module To Versioned SQL Views Modules</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.language.dtm.model.domain_model_mapping.DomainMappingModule#getLeafModuleToVersionedDTMViewsModules <em>Leaf Module To Versioned DTM Views Modules</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Leaf Module To Versioned SQL Views Modules</em>'.
-	 * @see org.eclipse.efbt.language.dtm.model.domain_model_mapping.DomainMappingModule#getLeafModuleToVersionedSQLViewsModules()
+	 * @return the meta object for the containment reference list '<em>Leaf Module To Versioned DTM Views Modules</em>'.
+	 * @see org.eclipse.efbt.language.dtm.model.domain_model_mapping.DomainMappingModule#getLeafModuleToVersionedDTMViewsModules()
 	 * @see #getDomainMappingModule()
 	 * @generated
 	 */
-	EReference getDomainMappingModule_LeafModuleToVersionedSQLViewsModules();
+	EReference getDomainMappingModule_LeafModuleToVersionedDTMViewsModules();
 
 	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.language.dtm.model.domain_model_mapping.DomainMappingModule#getLeafModuleToVersionedCubeSchemaModules <em>Leaf Module To Versioned Cube Schema Modules</em>}'.
@@ -857,17 +856,16 @@ public interface Domain_model_mappingPackage extends EPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	interface Literals
-	{
+	interface Literals {
 		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.language.dtm.model.domain_model_mapping.impl.LeafModuleToVersionedSQLViewsModuleImpl <em>Leaf Module To Versioned SQL Views Module</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.efbt.language.dtm.model.domain_model_mapping.impl.LeafModuleToVersionedDTMViewsModuleImpl <em>Leaf Module To Versioned DTM Views Module</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.language.dtm.model.domain_model_mapping.impl.LeafModuleToVersionedSQLViewsModuleImpl
-		 * @see org.eclipse.efbt.language.dtm.model.domain_model_mapping.impl.Domain_model_mappingPackageImpl#getLeafModuleToVersionedSQLViewsModule()
+		 * @see org.eclipse.efbt.language.dtm.model.domain_model_mapping.impl.LeafModuleToVersionedDTMViewsModuleImpl
+		 * @see org.eclipse.efbt.language.dtm.model.domain_model_mapping.impl.Domain_model_mappingPackageImpl#getLeafModuleToVersionedDTMViewsModule()
 		 * @generated
 		 */
-		EClass LEAF_MODULE_TO_VERSIONED_SQL_VIEWS_MODULE = eINSTANCE.getLeafModuleToVersionedSQLViewsModule();
+		EClass LEAF_MODULE_TO_VERSIONED_DTM_VIEWS_MODULE = eINSTANCE.getLeafModuleToVersionedDTMViewsModule();
 
 		/**
 		 * The meta object literal for the '<em><b>Scheme</b></em>' reference feature.
@@ -875,7 +873,7 @@ public interface Domain_model_mappingPackage extends EPackage
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference LEAF_MODULE_TO_VERSIONED_SQL_VIEWS_MODULE__SCHEME = eINSTANCE.getLeafModuleToVersionedSQLViewsModule_Scheme();
+		EReference LEAF_MODULE_TO_VERSIONED_DTM_VIEWS_MODULE__SCHEME = eINSTANCE.getLeafModuleToVersionedDTMViewsModule_Scheme();
 
 		/**
 		 * The meta object literal for the '<em><b>Module</b></em>' reference feature.
@@ -883,7 +881,7 @@ public interface Domain_model_mappingPackage extends EPackage
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference LEAF_MODULE_TO_VERSIONED_SQL_VIEWS_MODULE__MODULE = eINSTANCE.getLeafModuleToVersionedSQLViewsModule_Module();
+		EReference LEAF_MODULE_TO_VERSIONED_DTM_VIEWS_MODULE__MODULE = eINSTANCE.getLeafModuleToVersionedDTMViewsModule_Module();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.language.dtm.model.domain_model_mapping.impl.LeafModuleToVersionedCubeSchemaModuleImpl <em>Leaf Module To Versioned Cube Schema Module</em>}' class.
@@ -1070,12 +1068,12 @@ public interface Domain_model_mappingPackage extends EPackage
 		EClass DOMAIN_MAPPING_MODULE = eINSTANCE.getDomainMappingModule();
 
 		/**
-		 * The meta object literal for the '<em><b>Leaf Module To Versioned SQL Views Modules</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Leaf Module To Versioned DTM Views Modules</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference DOMAIN_MAPPING_MODULE__LEAF_MODULE_TO_VERSIONED_SQL_VIEWS_MODULES = eINSTANCE.getDomainMappingModule_LeafModuleToVersionedSQLViewsModules();
+		EReference DOMAIN_MAPPING_MODULE__LEAF_MODULE_TO_VERSIONED_DTM_VIEWS_MODULES = eINSTANCE.getDomainMappingModule_LeafModuleToVersionedDTMViewsModules();
 
 		/**
 		 * The meta object literal for the '<em><b>Leaf Module To Versioned Cube Schema Modules</b></em>' containment reference list feature.

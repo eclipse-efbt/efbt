@@ -23,8 +23,7 @@ package org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions;
  * @model extendedMetaData="name='BasicFunction' kind='elementOnly'"
  * @generated
  */
-public interface BasicFunction extends Function
-{
+public interface BasicFunction extends Function {
 	/**
 	 * Returns the value of the '<em><b>Function Spec</b></em>' reference.
 	 * <!-- begin-user-doc -->

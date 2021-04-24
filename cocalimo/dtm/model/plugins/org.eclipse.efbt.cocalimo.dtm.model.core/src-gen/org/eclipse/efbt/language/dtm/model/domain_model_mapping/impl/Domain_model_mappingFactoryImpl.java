@@ -18,16 +18,14 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
  * <!-- end-user-doc -->
  * @generated
  */
-public class Domain_model_mappingFactoryImpl extends EFactoryImpl implements Domain_model_mappingFactory
-{
+public class Domain_model_mappingFactoryImpl extends EFactoryImpl implements Domain_model_mappingFactory {
 	/**
 	 * Creates the default factory implementation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static Domain_model_mappingFactory init()
-	{
+	public static Domain_model_mappingFactory init() {
 		try {
 			Domain_model_mappingFactory theDomain_model_mappingFactory = (Domain_model_mappingFactory)EPackage.Registry.INSTANCE.getEFactory(Domain_model_mappingPackage.eNS_URI);
 			if (theDomain_model_mappingFactory != null) {
@@ -46,8 +44,7 @@ public class Domain_model_mappingFactoryImpl extends EFactoryImpl implements Dom
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Domain_model_mappingFactoryImpl()
-	{
+	public Domain_model_mappingFactoryImpl() {
 		super();
 	}
 
@@ -57,10 +54,9 @@ public class Domain_model_mappingFactoryImpl extends EFactoryImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public EObject create(EClass eClass)
-	{
+	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			case Domain_model_mappingPackage.LEAF_MODULE_TO_VERSIONED_SQL_VIEWS_MODULE: return createLeafModuleToVersionedSQLViewsModule();
+			case Domain_model_mappingPackage.LEAF_MODULE_TO_VERSIONED_DTM_VIEWS_MODULE: return createLeafModuleToVersionedDTMViewsModule();
 			case Domain_model_mappingPackage.LEAF_MODULE_TO_VERSIONED_CUBE_SCHEMA_MODULE: return createLeafModuleToVersionedCubeSchemaModule();
 			case Domain_model_mappingPackage.LEAF_MODULE_TO_REPORT_CELL_VIEW_MODULE: return createLeafModuleToReportCellViewModule();
 			case Domain_model_mappingPackage.SCENARIO_TO_CODE_CONDITIONS: return createScenarioToCodeConditions();
@@ -80,10 +76,9 @@ public class Domain_model_mappingFactoryImpl extends EFactoryImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public LeafModuleToVersionedSQLViewsModule createLeafModuleToVersionedSQLViewsModule()
-	{
-		LeafModuleToVersionedSQLViewsModuleImpl leafModuleToVersionedSQLViewsModule = new LeafModuleToVersionedSQLViewsModuleImpl();
-		return leafModuleToVersionedSQLViewsModule;
+	public LeafModuleToVersionedDTMViewsModule createLeafModuleToVersionedDTMViewsModule() {
+		LeafModuleToVersionedDTMViewsModuleImpl leafModuleToVersionedDTMViewsModule = new LeafModuleToVersionedDTMViewsModuleImpl();
+		return leafModuleToVersionedDTMViewsModule;
 	}
 
 	/**
@@ -92,8 +87,7 @@ public class Domain_model_mappingFactoryImpl extends EFactoryImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public LeafModuleToVersionedCubeSchemaModule createLeafModuleToVersionedCubeSchemaModule()
-	{
+	public LeafModuleToVersionedCubeSchemaModule createLeafModuleToVersionedCubeSchemaModule() {
 		LeafModuleToVersionedCubeSchemaModuleImpl leafModuleToVersionedCubeSchemaModule = new LeafModuleToVersionedCubeSchemaModuleImpl();
 		return leafModuleToVersionedCubeSchemaModule;
 	}
@@ -104,8 +98,7 @@ public class Domain_model_mappingFactoryImpl extends EFactoryImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public LeafModuleToReportCellViewModule createLeafModuleToReportCellViewModule()
-	{
+	public LeafModuleToReportCellViewModule createLeafModuleToReportCellViewModule() {
 		LeafModuleToReportCellViewModuleImpl leafModuleToReportCellViewModule = new LeafModuleToReportCellViewModuleImpl();
 		return leafModuleToReportCellViewModule;
 	}
@@ -116,8 +109,7 @@ public class Domain_model_mappingFactoryImpl extends EFactoryImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public ScenarioToCodeConditions createScenarioToCodeConditions()
-	{
+	public ScenarioToCodeConditions createScenarioToCodeConditions() {
 		ScenarioToCodeConditionsImpl scenarioToCodeConditions = new ScenarioToCodeConditionsImpl();
 		return scenarioToCodeConditions;
 	}
@@ -128,8 +120,7 @@ public class Domain_model_mappingFactoryImpl extends EFactoryImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public CodeCondition createCodeCondition()
-	{
+	public CodeCondition createCodeCondition() {
 		CodeConditionImpl codeCondition = new CodeConditionImpl();
 		return codeCondition;
 	}
@@ -140,8 +131,7 @@ public class Domain_model_mappingFactoryImpl extends EFactoryImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public ColumnSettingCondition createColumnSettingCondition()
-	{
+	public ColumnSettingCondition createColumnSettingCondition() {
 		ColumnSettingConditionImpl columnSettingCondition = new ColumnSettingConditionImpl();
 		return columnSettingCondition;
 	}
@@ -152,8 +142,7 @@ public class Domain_model_mappingFactoryImpl extends EFactoryImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public DataSetFilterCondition createDataSetFilterCondition()
-	{
+	public DataSetFilterCondition createDataSetFilterCondition() {
 		DataSetFilterConditionImpl dataSetFilterCondition = new DataSetFilterConditionImpl();
 		return dataSetFilterCondition;
 	}
@@ -164,8 +153,7 @@ public class Domain_model_mappingFactoryImpl extends EFactoryImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public UnionChoiceCondition createUnionChoiceCondition()
-	{
+	public UnionChoiceCondition createUnionChoiceCondition() {
 		UnionChoiceConditionImpl unionChoiceCondition = new UnionChoiceConditionImpl();
 		return unionChoiceCondition;
 	}
@@ -176,8 +164,7 @@ public class Domain_model_mappingFactoryImpl extends EFactoryImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public DomainMappingModule createDomainMappingModule()
-	{
+	public DomainMappingModule createDomainMappingModule() {
 		DomainMappingModuleImpl domainMappingModule = new DomainMappingModuleImpl();
 		return domainMappingModule;
 	}
@@ -188,8 +175,7 @@ public class Domain_model_mappingFactoryImpl extends EFactoryImpl implements Dom
 	 * @generated
 	 */
 	@Override
-	public Domain_model_mappingPackage getDomain_model_mappingPackage()
-	{
+	public Domain_model_mappingPackage getDomain_model_mappingPackage() {
 		return (Domain_model_mappingPackage)getEPackage();
 	}
 
@@ -200,8 +186,7 @@ public class Domain_model_mappingFactoryImpl extends EFactoryImpl implements Dom
 	 * @generated
 	 */
 	@Deprecated
-	public static Domain_model_mappingPackage getPackage()
-	{
+	public static Domain_model_mappingPackage getPackage() {
 		return Domain_model_mappingPackage.eINSTANCE;
 	}
 

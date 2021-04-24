@@ -1,0 +1,58 @@
+ProgramAndCalls : { program : dtmProgram :  { 
+	
+	executableLogic :[ dtmExecutableLogic CSRSecCTPVegaApplyWeightingLogic : { 
+		
+			
+			 datasetTransformationModules : [ VersionedDTMViewsModule   views : { 
+			 	DTMViews : [ 
+			 		
+			 		EnrichmentView 	CSRSecCTPVegaSensitivitiesAndRiskFactorsWithWeight : {
+			 			cube :"CSRSecCTPVegaApplyWeighting.freeBirdToolsCubeModule.CSRSecCTPVegaSensitivitiesAndRiskFactorsWithWeight"
+			 			functions : [ 
+			 				BasicColumnFunction CSRSecCTPVegaSensitivitiesAndRiskFactorsWithWeight_CSRSecCTPVegaRiskWeight: { 
+			 					cube : "CSRSecCTPVegaApplyWeighting.freeBirdToolsCubeModule.CSRSecCTPVegaSensitivitiesAndRiskFactorsWithWeight"
+			 					variable : "CSRSecCTPVegaMeasuresStaticModel.CSRSecCTPVegaMeasuresModel.variablesModule.CSRSecCTPVegaRiskWeight"
+			 					
+			 					basicFunction : BasicFunction bf41 : {
+			 						functionSpec : "FRTBFunctions.CSRSecCTPFunctionSpecModule.getCSRSecCTPVegaRiskFactorRiskWeight"
+			 						parameters : [ 
+			 							SpeculativeCubeColumnParameter : {
+			 								column : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.tenor"
+			 								cube : "CSRSecCTPVegaAssignBucket.freeBirdToolsCubeModule.CSRSecCTPVegaSensitivitiesAndRiskFactors"
+			 							}
+			 							
+			 						]
+			 					}
+			 				}
+			 			
+			 			]
+			 		},
+			 		EnrichmentView 	weightedCSRSecCTPVegaSensitivitiesAndRiskFactors : {
+			 			cube :"CSRSecCTPVegaApplyWeighting.freeBirdToolsCubeModule.weightedCSRSecCTPVegaSensitivitiesAndRiskFactors"
+			 			functions : [ 
+			 				BasicColumnFunction weightedCSRSecCTPVegaSensitivitiesAndRiskFactors_weightedCSRSecCTPVegaSensitivity: { 
+			 					cube :"CSRSecCTPVegaApplyWeighting.freeBirdToolsCubeModule.weightedCSRSecCTPVegaSensitivitiesAndRiskFactors"
+			 					variable : "CSRSecCTPVegaMeasuresStaticModel.CSRSecCTPVegaMeasuresModel.variablesModule.weightedCSRSecCTPVegaSensitivity"
+			 					
+			 					basicFunction : BasicFunction bf42 : {
+			 						functionSpec : "commonFunctions.commonFunctionSpecModule.multiply"
+			 						parameters : [ 
+			 							SpeculativeCubeColumnParameter : {
+			 								column : "CommonMeasuresStaticModel.CommonMeasuresModel.variablesModule.nettedVegaSensitivity"
+			 								cube :  "CSRSecCTPVegaApplyWeighting.freeBirdToolsCubeModule.CSRSecCTPVegaSensitivitiesAndRiskFactorsWithWeight"
+			 							},
+			 							SpeculativeCubeColumnParameter : {
+			 								column :"CSRSecCTPVegaMeasuresStaticModel.CSRSecCTPVegaMeasuresModel.variablesModule.CSRSecCTPVegaRiskWeight"
+			 								cube :  "CSRSecCTPVegaApplyWeighting.freeBirdToolsCubeModule.CSRSecCTPVegaSensitivitiesAndRiskFactorsWithWeight"
+			 							}
+			 							
+			 						]
+			 					}
+			 				}
+			 			
+			 			]
+			 		}
+			 		
+			 	
+
+			 		] } ] } ] } }

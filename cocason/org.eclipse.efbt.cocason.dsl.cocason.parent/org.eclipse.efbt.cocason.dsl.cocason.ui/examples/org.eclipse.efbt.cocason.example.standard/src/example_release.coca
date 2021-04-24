@@ -1,6 +1,0 @@
-ProgramAndCalls : { program : dtmProgram :  { 
-			 		release : Release release1 : {
-			 	 		cubeSchemaModules : [ "cubeSchemas1.readInExampleData1" ] 
-			 datasetTransformationModules : ["dataSetProcessingLogic.processExampleData" ] 
-			
-			 reportCellViewModules : ["logic1.reportsModule1"] } } } 

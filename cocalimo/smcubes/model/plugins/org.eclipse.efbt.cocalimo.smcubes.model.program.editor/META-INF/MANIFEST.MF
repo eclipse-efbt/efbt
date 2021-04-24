@@ -5,11 +5,11 @@ Bundle-SymbolicName: org.eclipse.efbt.cocalimo.smcubes.model.program.editor;sing
 Automatic-Module-Name: org.eclipse.efbt.cocalimo.smcubes.model.program.editor
 Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: .
-Bundle-Activator: org.eclipse.efbt.cocalimo.smcubes.model.cocamo.presentation.CocamoEditorPlugin$Implementation
+Bundle-Activator: org.eclipse.efbt.cocalimo.smcubes.model.program.presentation.ProgramEditorPlugin$Implementation
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Export-Package: org.eclipse.efbt.cocalimo.smcubes.model.cocamo.presentation
+Export-Package: org.eclipse.efbt.cocalimo.smcubes.model.program.presentation
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources;visibility:=reexport,
  org.eclipse.efbt.cocalimo.smcubes.model.program.edit;visibility:=reexport,

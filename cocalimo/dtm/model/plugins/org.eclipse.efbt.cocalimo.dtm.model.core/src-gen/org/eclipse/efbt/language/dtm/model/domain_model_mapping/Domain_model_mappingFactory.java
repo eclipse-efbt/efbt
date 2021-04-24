@@ -12,8 +12,7 @@ import org.eclipse.emf.ecore.EFactory;
  * @see org.eclipse.efbt.language.dtm.model.domain_model_mapping.Domain_model_mappingPackage
  * @generated
  */
-public interface Domain_model_mappingFactory extends EFactory
-{
+public interface Domain_model_mappingFactory extends EFactory {
 	/**
 	 * The singleton instance of the factory.
 	 * <!-- begin-user-doc -->
@@ -23,13 +22,13 @@ public interface Domain_model_mappingFactory extends EFactory
 	Domain_model_mappingFactory eINSTANCE = org.eclipse.efbt.language.dtm.model.domain_model_mapping.impl.Domain_model_mappingFactoryImpl.init();
 
 	/**
-	 * Returns a new object of class '<em>Leaf Module To Versioned SQL Views Module</em>'.
+	 * Returns a new object of class '<em>Leaf Module To Versioned DTM Views Module</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Leaf Module To Versioned SQL Views Module</em>'.
+	 * @return a new object of class '<em>Leaf Module To Versioned DTM Views Module</em>'.
 	 * @generated
 	 */
-	LeafModuleToVersionedSQLViewsModule createLeafModuleToVersionedSQLViewsModule();
+	LeafModuleToVersionedDTMViewsModule createLeafModuleToVersionedDTMViewsModule();
 
 	/**
 	 * Returns a new object of class '<em>Leaf Module To Versioned Cube Schema Module</em>'.

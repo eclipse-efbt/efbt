@@ -70,9 +70,9 @@ public class Domain_model_mappingSwitch<T> extends Switch<T>
 	protected T doSwitch(int classifierID, EObject theEObject)
 	{
 		switch (classifierID) {
-			case Domain_model_mappingPackage.LEAF_MODULE_TO_VERSIONED_SQL_VIEWS_MODULE: {
-				LeafModuleToVersionedSQLViewsModule leafModuleToVersionedSQLViewsModule = (LeafModuleToVersionedSQLViewsModule)theEObject;
-				T result = caseLeafModuleToVersionedSQLViewsModule(leafModuleToVersionedSQLViewsModule);
+			case Domain_model_mappingPackage.LEAF_MODULE_TO_VERSIONED_DTM_VIEWS_MODULE: {
+				LeafModuleToVersionedDTMViewsModule leafModuleToVersionedDTMViewsModule = (LeafModuleToVersionedDTMViewsModule)theEObject;
+				T result = caseLeafModuleToVersionedDTMViewsModule(leafModuleToVersionedDTMViewsModule);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -133,17 +133,17 @@ public class Domain_model_mappingSwitch<T> extends Switch<T>
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Leaf Module To Versioned SQL Views Module</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Leaf Module To Versioned DTM Views Module</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Leaf Module To Versioned SQL Views Module</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Leaf Module To Versioned DTM Views Module</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseLeafModuleToVersionedSQLViewsModule(LeafModuleToVersionedSQLViewsModule object)
+	public T caseLeafModuleToVersionedDTMViewsModule(LeafModuleToVersionedDTMViewsModule object)
 	{
 		return null;
 	}

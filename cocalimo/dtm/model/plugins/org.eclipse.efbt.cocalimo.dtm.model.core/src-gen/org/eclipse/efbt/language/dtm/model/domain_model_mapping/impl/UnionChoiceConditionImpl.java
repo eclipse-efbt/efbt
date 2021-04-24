@@ -34,8 +34,7 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  *
  * @generated
  */
-public class UnionChoiceConditionImpl extends CodeConditionImpl implements UnionChoiceCondition
-{
+public class UnionChoiceConditionImpl extends CodeConditionImpl implements UnionChoiceCondition {
 	/**
 	 * The cached value of the '{@link #getCube() <em>Cube</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -61,8 +60,7 @@ public class UnionChoiceConditionImpl extends CodeConditionImpl implements Union
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected UnionChoiceConditionImpl()
-	{
+	protected UnionChoiceConditionImpl() {
 		super();
 	}
 
@@ -72,8 +70,7 @@ public class UnionChoiceConditionImpl extends CodeConditionImpl implements Union
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Domain_model_mappingPackage.Literals.UNION_CHOICE_CONDITION;
 	}
 
@@ -83,8 +80,7 @@ public class UnionChoiceConditionImpl extends CodeConditionImpl implements Union
 	 * @generated
 	 */
 	@Override
-	public FreeBirdToolsCube getCube()
-	{
+	public FreeBirdToolsCube getCube() {
 		if (cube != null && cube.eIsProxy()) {
 			InternalEObject oldCube = (InternalEObject)cube;
 			cube = (FreeBirdToolsCube)eResolveProxy(oldCube);
@@ -101,8 +97,7 @@ public class UnionChoiceConditionImpl extends CodeConditionImpl implements Union
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public FreeBirdToolsCube basicGetCube()
-	{
+	public FreeBirdToolsCube basicGetCube() {
 		return cube;
 	}
 
@@ -112,8 +107,7 @@ public class UnionChoiceConditionImpl extends CodeConditionImpl implements Union
 	 * @generated
 	 */
 	@Override
-	public void setCube(FreeBirdToolsCube newCube)
-	{
+	public void setCube(FreeBirdToolsCube newCube) {
 		FreeBirdToolsCube oldCube = cube;
 		cube = newCube;
 		if (eNotificationRequired())
@@ -126,8 +120,7 @@ public class UnionChoiceConditionImpl extends CodeConditionImpl implements Union
 	 * @generated
 	 */
 	@Override
-	public EList<FreeBirdToolsCube> getChosenCubes()
-	{
+	public EList<FreeBirdToolsCube> getChosenCubes() {
 		if (chosenCubes == null) {
 			chosenCubes = new EObjectResolvingEList<FreeBirdToolsCube>(FreeBirdToolsCube.class, this, Domain_model_mappingPackage.UNION_CHOICE_CONDITION__CHOSEN_CUBES);
 		}
@@ -140,8 +133,7 @@ public class UnionChoiceConditionImpl extends CodeConditionImpl implements Union
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Domain_model_mappingPackage.UNION_CHOICE_CONDITION__CUBE:
 				if (resolve) return getCube();
@@ -159,8 +151,7 @@ public class UnionChoiceConditionImpl extends CodeConditionImpl implements Union
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Domain_model_mappingPackage.UNION_CHOICE_CONDITION__CUBE:
 				setCube((FreeBirdToolsCube)newValue);
@@ -179,8 +170,7 @@ public class UnionChoiceConditionImpl extends CodeConditionImpl implements Union
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Domain_model_mappingPackage.UNION_CHOICE_CONDITION__CUBE:
 				setCube((FreeBirdToolsCube)null);
@@ -198,8 +188,7 @@ public class UnionChoiceConditionImpl extends CodeConditionImpl implements Union
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Domain_model_mappingPackage.UNION_CHOICE_CONDITION__CUBE:
 				return cube != null;

@@ -71,8 +71,8 @@ public class Domain_model_mappingAdapterFactory extends AdapterFactoryImpl
 	protected Domain_model_mappingSwitch<Adapter> modelSwitch =
 		new Domain_model_mappingSwitch<Adapter>() {
 			@Override
-			public Adapter caseLeafModuleToVersionedSQLViewsModule(LeafModuleToVersionedSQLViewsModule object) {
-				return createLeafModuleToVersionedSQLViewsModuleAdapter();
+			public Adapter caseLeafModuleToVersionedDTMViewsModule(LeafModuleToVersionedDTMViewsModule object) {
+				return createLeafModuleToVersionedDTMViewsModuleAdapter();
 			}
 			@Override
 			public Adapter caseLeafModuleToVersionedCubeSchemaModule(LeafModuleToVersionedCubeSchemaModule object) {
@@ -132,16 +132,16 @@ public class Domain_model_mappingAdapterFactory extends AdapterFactoryImpl
 
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.language.dtm.model.domain_model_mapping.LeafModuleToVersionedSQLViewsModule <em>Leaf Module To Versioned SQL Views Module</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.language.dtm.model.domain_model_mapping.LeafModuleToVersionedDTMViewsModule <em>Leaf Module To Versioned DTM Views Module</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.efbt.language.dtm.model.domain_model_mapping.LeafModuleToVersionedSQLViewsModule
+	 * @see org.eclipse.efbt.language.dtm.model.domain_model_mapping.LeafModuleToVersionedDTMViewsModule
 	 * @generated
 	 */
-	public Adapter createLeafModuleToVersionedSQLViewsModuleAdapter()
+	public Adapter createLeafModuleToVersionedDTMViewsModuleAdapter()
 	{
 		return null;
 	}

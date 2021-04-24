@@ -6,7 +6,7 @@ import java.util.Collection;
 
 import org.eclipse.efbt.language.dtm.model.dtm_report_cell_views.ReportCellViewModule;
 
-import org.eclipse.efbt.language.dtm.model.dtm_sql_views.VersionedSQLViewsModule;
+import org.eclipse.efbt.language.dtm.model.dtm_views.VersionedDTMViewsModule;
 
 import org.eclipse.efbt.language.dtm.model.transformation.TransformationPackage;
 import org.eclipse.efbt.language.dtm.model.transformation.VersionedComponentsSet;
@@ -40,8 +40,7 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  *
  * @generated
  */
-public class VersionedComponentsSetImpl extends MinimalEObjectImpl.Container implements VersionedComponentsSet
-{
+public class VersionedComponentsSetImpl extends MinimalEObjectImpl.Container implements VersionedComponentsSet {
 	/**
 	 * The cached value of the '{@link #getCubeSchemaModules() <em>Cube Schema Modules</em>}' reference list.
 	 * <!-- begin-user-doc -->
@@ -60,7 +59,7 @@ public class VersionedComponentsSetImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<VersionedSQLViewsModule> datasetTransformationModules;
+	protected EList<VersionedDTMViewsModule> datasetTransformationModules;
 
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
@@ -117,8 +116,7 @@ public class VersionedComponentsSetImpl extends MinimalEObjectImpl.Container imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected VersionedComponentsSetImpl()
-	{
+	protected VersionedComponentsSetImpl() {
 		super();
 	}
 
@@ -128,8 +126,7 @@ public class VersionedComponentsSetImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return TransformationPackage.Literals.VERSIONED_COMPONENTS_SET;
 	}
 
@@ -139,8 +136,7 @@ public class VersionedComponentsSetImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public EList<VersionedCubeSchemaModule> getCubeSchemaModules()
-	{
+	public EList<VersionedCubeSchemaModule> getCubeSchemaModules() {
 		if (cubeSchemaModules == null) {
 			cubeSchemaModules = new EObjectResolvingEList<VersionedCubeSchemaModule>(VersionedCubeSchemaModule.class, this, TransformationPackage.VERSIONED_COMPONENTS_SET__CUBE_SCHEMA_MODULES);
 		}
@@ -153,10 +149,9 @@ public class VersionedComponentsSetImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public EList<VersionedSQLViewsModule> getDatasetTransformationModules()
-	{
+	public EList<VersionedDTMViewsModule> getDatasetTransformationModules() {
 		if (datasetTransformationModules == null) {
-			datasetTransformationModules = new EObjectResolvingEList<VersionedSQLViewsModule>(VersionedSQLViewsModule.class, this, TransformationPackage.VERSIONED_COMPONENTS_SET__DATASET_TRANSFORMATION_MODULES);
+			datasetTransformationModules = new EObjectResolvingEList<VersionedDTMViewsModule>(VersionedDTMViewsModule.class, this, TransformationPackage.VERSIONED_COMPONENTS_SET__DATASET_TRANSFORMATION_MODULES);
 		}
 		return datasetTransformationModules;
 	}
@@ -167,8 +162,7 @@ public class VersionedComponentsSetImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
@@ -178,8 +172,7 @@ public class VersionedComponentsSetImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public void setName(String newName)
-	{
+	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
@@ -192,8 +185,7 @@ public class VersionedComponentsSetImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public EList<ReportCellViewModule> getReportCellViewModules()
-	{
+	public EList<ReportCellViewModule> getReportCellViewModules() {
 		if (reportCellViewModules == null) {
 			reportCellViewModules = new EObjectResolvingEList<ReportCellViewModule>(ReportCellViewModule.class, this, TransformationPackage.VERSIONED_COMPONENTS_SET__REPORT_CELL_VIEW_MODULES);
 		}
@@ -206,8 +198,7 @@ public class VersionedComponentsSetImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public String getLicense()
-	{
+	public String getLicense() {
 		return license;
 	}
 
@@ -217,8 +208,7 @@ public class VersionedComponentsSetImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public void setLicense(String newLicense)
-	{
+	public void setLicense(String newLicense) {
 		String oldLicense = license;
 		license = newLicense;
 		if (eNotificationRequired())
@@ -231,8 +221,7 @@ public class VersionedComponentsSetImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case TransformationPackage.VERSIONED_COMPONENTS_SET__CUBE_SCHEMA_MODULES:
 				return getCubeSchemaModules();
@@ -255,8 +244,7 @@ public class VersionedComponentsSetImpl extends MinimalEObjectImpl.Container imp
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case TransformationPackage.VERSIONED_COMPONENTS_SET__CUBE_SCHEMA_MODULES:
 				getCubeSchemaModules().clear();
@@ -264,7 +252,7 @@ public class VersionedComponentsSetImpl extends MinimalEObjectImpl.Container imp
 				return;
 			case TransformationPackage.VERSIONED_COMPONENTS_SET__DATASET_TRANSFORMATION_MODULES:
 				getDatasetTransformationModules().clear();
-				getDatasetTransformationModules().addAll((Collection<? extends VersionedSQLViewsModule>)newValue);
+				getDatasetTransformationModules().addAll((Collection<? extends VersionedDTMViewsModule>)newValue);
 				return;
 			case TransformationPackage.VERSIONED_COMPONENTS_SET__NAME:
 				setName((String)newValue);
@@ -286,8 +274,7 @@ public class VersionedComponentsSetImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case TransformationPackage.VERSIONED_COMPONENTS_SET__CUBE_SCHEMA_MODULES:
 				getCubeSchemaModules().clear();
@@ -314,8 +301,7 @@ public class VersionedComponentsSetImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case TransformationPackage.VERSIONED_COMPONENTS_SET__CUBE_SCHEMA_MODULES:
 				return cubeSchemaModules != null && !cubeSchemaModules.isEmpty();
@@ -337,8 +323,7 @@ public class VersionedComponentsSetImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

@@ -17,9 +17,6 @@ import org.eclipse.efbt.cocalimo.core.model.test_definition.Test_definitionPacka
 import org.eclipse.efbt.cocalimo.core.model.test_input_data.Test_input_dataPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.Base_column_structured_dataPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.CocamoPackage;
-
 import org.eclipse.efbt.cocalimo.smcubes.model.column_structured_data.Column_structured_dataPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage;
@@ -34,6 +31,7 @@ import org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.Efbt_vtl_
 
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MappingPackage;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.program.ProgramPackage;
 import org.eclipse.efbt.cocalimo.smcubes.model.rendering.RenderingPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.reports.ReportsPackage;
@@ -41,8 +39,6 @@ import org.eclipse.efbt.cocalimo.smcubes.model.reports.ReportsPackage;
 import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.Smcubes_modelPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.Vtl_transformationPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.column_transformation_logic.Column_transformation_logicPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cube_schema.Cube_schemaPackage;
 
@@ -60,9 +56,9 @@ import org.eclipse.efbt.language.dtm.model.dtm_report_cell_views.dtm_report_cell
 
 import org.eclipse.efbt.language.dtm.model.dtm_report_cell_views.impl.dtm_report_cell_viewsPackageImpl;
 
-import org.eclipse.efbt.language.dtm.model.dtm_sql_views.dtm_sql_viewsPackage;
+import org.eclipse.efbt.language.dtm.model.dtm_views.dtm_viewsPackage;
 
-import org.eclipse.efbt.language.dtm.model.dtm_sql_views.impl.dtm_sql_viewsPackageImpl;
+import org.eclipse.efbt.language.dtm.model.dtm_views.impl.dtm_viewsPackageImpl;
 
 import org.eclipse.efbt.language.dtm.model.transformation.DataSetTransformation;
 import org.eclipse.efbt.language.dtm.model.transformation.Release;
@@ -87,8 +83,7 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
  * <!-- end-user-doc -->
  * @generated
  */
-public class TransformationPackageImpl extends EPackageImpl implements TransformationPackage
-{
+public class TransformationPackageImpl extends EPackageImpl implements TransformationPackage {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -153,8 +148,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * @see #init()
 	 * @generated
 	 */
-	private TransformationPackageImpl()
-	{
+	private TransformationPackageImpl() {
 		super(eNS_URI, TransformationFactory.eINSTANCE);
 	}
 
@@ -177,8 +171,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * @see #initializePackageContents()
 	 * @generated
 	 */
-	public static TransformationPackage init()
-	{
+	public static TransformationPackage init() {
 		if (isInited) return (TransformationPackage)EPackage.Registry.INSTANCE.getEPackage(TransformationPackage.eNS_URI);
 
 		// Obtain or create and register package
@@ -188,14 +181,14 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 		isInited = true;
 
 		// Initialize simple dependencies
-		CocamoPackage.eINSTANCE.eClass();
 		Functionality_modulePackage.eINSTANCE.eClass();
 		ScenariosPackage.eINSTANCE.eClass();
 		FunctionsPackage.eINSTANCE.eClass();
 		Cube_schemaPackage.eINSTANCE.eClass();
 		CubesPackage.eINSTANCE.eClass();
-		Column_transformation_logicPackage.eINSTANCE.eClass();
+		Efbt_advanced_data_definitionPackage.eINSTANCE.eClass();
 		Module_managementPackage.eINSTANCE.eClass();
+		ProgramPackage.eINSTANCE.eClass();
 		Requirements_textPackage.eINSTANCE.eClass();
 		Base_column_structured_dataPackage.eINSTANCE.eClass();
 		Column_structured_dataPackage.eINSTANCE.eClass();
@@ -212,27 +205,26 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 		Test_definitionPackage.eINSTANCE.eClass();
 		Test_input_dataPackage.eINSTANCE.eClass();
 		TestPackage.eINSTANCE.eClass();
-		Efbt_advanced_data_definitionPackage.eINSTANCE.eClass();
 
 		// Obtain or create and register interdependencies
 		Object registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Domain_model_mappingPackage.eNS_URI);
 		Domain_model_mappingPackageImpl theDomain_model_mappingPackage = (Domain_model_mappingPackageImpl)(registeredPackage instanceof Domain_model_mappingPackageImpl ? registeredPackage : Domain_model_mappingPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(dtm_report_cell_viewsPackage.eNS_URI);
 		dtm_report_cell_viewsPackageImpl thedtm_report_cell_viewsPackage = (dtm_report_cell_viewsPackageImpl)(registeredPackage instanceof dtm_report_cell_viewsPackageImpl ? registeredPackage : dtm_report_cell_viewsPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(dtm_sql_viewsPackage.eNS_URI);
-		dtm_sql_viewsPackageImpl thedtm_sql_viewsPackage = (dtm_sql_viewsPackageImpl)(registeredPackage instanceof dtm_sql_viewsPackageImpl ? registeredPackage : dtm_sql_viewsPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(dtm_viewsPackage.eNS_URI);
+		dtm_viewsPackageImpl thedtm_viewsPackage = (dtm_viewsPackageImpl)(registeredPackage instanceof dtm_viewsPackageImpl ? registeredPackage : dtm_viewsPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theTransformationPackage.createPackageContents();
 		theDomain_model_mappingPackage.createPackageContents();
 		thedtm_report_cell_viewsPackage.createPackageContents();
-		thedtm_sql_viewsPackage.createPackageContents();
+		thedtm_viewsPackage.createPackageContents();
 
 		// Initialize created meta-data
 		theTransformationPackage.initializePackageContents();
 		theDomain_model_mappingPackage.initializePackageContents();
 		thedtm_report_cell_viewsPackage.initializePackageContents();
-		thedtm_sql_viewsPackage.initializePackageContents();
+		thedtm_viewsPackage.initializePackageContents();
 
 		// Mark meta-data to indicate it can't be changed
 		theTransformationPackage.freeze();
@@ -248,8 +240,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public EClass getDataSetTransformation()
-	{
+	public EClass getDataSetTransformation() {
 		return dataSetTransformationEClass;
 	}
 
@@ -259,8 +250,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public EReference getDataSetTransformation_Cube()
-	{
+	public EReference getDataSetTransformation_Cube() {
 		return (EReference)dataSetTransformationEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -270,8 +260,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public EAttribute getDataSetTransformation_Name()
-	{
+	public EAttribute getDataSetTransformation_Name() {
 		return (EAttribute)dataSetTransformationEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -281,8 +270,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public EClass getRelease()
-	{
+	public EClass getRelease() {
 		return releaseEClass;
 	}
 
@@ -292,8 +280,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public EAttribute getRelease_Version()
-	{
+	public EAttribute getRelease_Version() {
 		return (EAttribute)releaseEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -303,8 +290,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public EClass getVersionedComponentsSet()
-	{
+	public EClass getVersionedComponentsSet() {
 		return versionedComponentsSetEClass;
 	}
 
@@ -314,8 +300,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public EReference getVersionedComponentsSet_CubeSchemaModules()
-	{
+	public EReference getVersionedComponentsSet_CubeSchemaModules() {
 		return (EReference)versionedComponentsSetEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -325,8 +310,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public EReference getVersionedComponentsSet_DatasetTransformationModules()
-	{
+	public EReference getVersionedComponentsSet_DatasetTransformationModules() {
 		return (EReference)versionedComponentsSetEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -336,8 +320,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public EAttribute getVersionedComponentsSet_Name()
-	{
+	public EAttribute getVersionedComponentsSet_Name() {
 		return (EAttribute)versionedComponentsSetEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -347,8 +330,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public EReference getVersionedComponentsSet_ReportCellViewModules()
-	{
+	public EReference getVersionedComponentsSet_ReportCellViewModules() {
 		return (EReference)versionedComponentsSetEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -358,8 +340,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public EAttribute getVersionedComponentsSet_License()
-	{
+	public EAttribute getVersionedComponentsSet_License() {
 		return (EAttribute)versionedComponentsSetEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -369,8 +350,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public EClass getVersionedCubeSchemaModule()
-	{
+	public EClass getVersionedCubeSchemaModule() {
 		return versionedCubeSchemaModuleEClass;
 	}
 
@@ -380,8 +360,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public EReference getVersionedCubeSchemaModule_Schemas()
-	{
+	public EReference getVersionedCubeSchemaModule_Schemas() {
 		return (EReference)versionedCubeSchemaModuleEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -391,8 +370,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public EClass getVersionedFunctionalModuleLogic()
-	{
+	public EClass getVersionedFunctionalModuleLogic() {
 		return versionedFunctionalModuleLogicEClass;
 	}
 
@@ -402,8 +380,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public EClass getdtmExecutableLogic()
-	{
+	public EClass getdtmExecutableLogic() {
 		return dtmExecutableLogicEClass;
 	}
 
@@ -413,8 +390,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public EReference getdtmExecutableLogic_CubesModule()
-	{
+	public EReference getdtmExecutableLogic_CubesModule() {
 		return (EReference)dtmExecutableLogicEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -424,8 +400,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public EReference getdtmExecutableLogic_FunctionSpecModule()
-	{
+	public EReference getdtmExecutableLogic_FunctionSpecModule() {
 		return (EReference)dtmExecutableLogicEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -435,8 +410,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public EAttribute getdtmExecutableLogic_Name()
-	{
+	public EAttribute getdtmExecutableLogic_Name() {
 		return (EAttribute)dtmExecutableLogicEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -446,8 +420,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public EReference getdtmExecutableLogic_CubesHierarchyModule()
-	{
+	public EReference getdtmExecutableLogic_CubesHierarchyModule() {
 		return (EReference)dtmExecutableLogicEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -457,8 +430,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public EReference getdtmExecutableLogic_CubeSchemaModules()
-	{
+	public EReference getdtmExecutableLogic_CubeSchemaModules() {
 		return (EReference)dtmExecutableLogicEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -468,8 +440,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public EReference getdtmExecutableLogic_DatasetTransformationModules()
-	{
+	public EReference getdtmExecutableLogic_DatasetTransformationModules() {
 		return (EReference)dtmExecutableLogicEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -479,8 +450,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public EReference getdtmExecutableLogic_ReportCellViewModules()
-	{
+	public EReference getdtmExecutableLogic_ReportCellViewModules() {
 		return (EReference)dtmExecutableLogicEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -490,8 +460,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public EClass getdtmProgram()
-	{
+	public EClass getdtmProgram() {
 		return dtmProgramEClass;
 	}
 
@@ -501,8 +470,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public EReference getdtmProgram_ExecutableLogic()
-	{
+	public EReference getdtmProgram_ExecutableLogic() {
 		return (EReference)dtmProgramEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -512,8 +480,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public EReference getdtmProgram_SmcubesStaticModel()
-	{
+	public EReference getdtmProgram_SmcubesStaticModel() {
 		return (EReference)dtmProgramEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -523,8 +490,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public EReference getdtmProgram_StructVariablesModule()
-	{
+	public EReference getdtmProgram_StructVariablesModule() {
 		return (EReference)dtmProgramEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -534,8 +500,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public EReference getdtmProgram_ArrayTypedVariablesModule()
-	{
+	public EReference getdtmProgram_ArrayTypedVariablesModule() {
 		return (EReference)dtmProgramEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -545,8 +510,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public EReference getdtmProgram_Release()
-	{
+	public EReference getdtmProgram_Release() {
 		return (EReference)dtmProgramEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -556,8 +520,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * @generated
 	 */
 	@Override
-	public TransformationFactory getTransformationFactory()
-	{
+	public TransformationFactory getTransformationFactory() {
 		return (TransformationFactory)getEFactoryInstance();
 	}
 
@@ -575,8 +538,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void createPackageContents()
-	{
+	public void createPackageContents() {
 		if (isCreated) return;
 		isCreated = true;
 
@@ -631,8 +593,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void initializePackageContents()
-	{
+	public void initializePackageContents() {
 		if (isInitialized) return;
 		isInitialized = true;
 
@@ -643,12 +604,12 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 
 		// Obtain other dependent packages
 		CubesPackage theCubesPackage = (CubesPackage)EPackage.Registry.INSTANCE.getEPackage(CubesPackage.eNS_URI);
-		dtm_sql_viewsPackage thedtm_sql_viewsPackage = (dtm_sql_viewsPackage)EPackage.Registry.INSTANCE.getEPackage(dtm_sql_viewsPackage.eNS_URI);
+		dtm_viewsPackage thedtm_viewsPackage = (dtm_viewsPackage)EPackage.Registry.INSTANCE.getEPackage(dtm_viewsPackage.eNS_URI);
 		dtm_report_cell_viewsPackage thedtm_report_cell_viewsPackage = (dtm_report_cell_viewsPackage)EPackage.Registry.INSTANCE.getEPackage(dtm_report_cell_viewsPackage.eNS_URI);
 		Module_managementPackage theModule_managementPackage = (Module_managementPackage)EPackage.Registry.INSTANCE.getEPackage(Module_managementPackage.eNS_URI);
 		Cube_schemaPackage theCube_schemaPackage = (Cube_schemaPackage)EPackage.Registry.INSTANCE.getEPackage(Cube_schemaPackage.eNS_URI);
 		FunctionsPackage theFunctionsPackage = (FunctionsPackage)EPackage.Registry.INSTANCE.getEPackage(FunctionsPackage.eNS_URI);
-		CocamoPackage theCocamoPackage = (CocamoPackage)EPackage.Registry.INSTANCE.getEPackage(CocamoPackage.eNS_URI);
+		ProgramPackage theProgramPackage = (ProgramPackage)EPackage.Registry.INSTANCE.getEPackage(ProgramPackage.eNS_URI);
 		Efbt_advanced_data_definitionPackage theEfbt_advanced_data_definitionPackage = (Efbt_advanced_data_definitionPackage)EPackage.Registry.INSTANCE.getEPackage(Efbt_advanced_data_definitionPackage.eNS_URI);
 
 		// Create type parameters
@@ -670,7 +631,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 
 		initEClass(versionedComponentsSetEClass, VersionedComponentsSet.class, "VersionedComponentsSet", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getVersionedComponentsSet_CubeSchemaModules(), this.getVersionedCubeSchemaModule(), null, "cubeSchemaModules", null, 0, -1, VersionedComponentsSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getVersionedComponentsSet_DatasetTransformationModules(), thedtm_sql_viewsPackage.getVersionedSQLViewsModule(), null, "datasetTransformationModules", null, 0, -1, VersionedComponentsSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getVersionedComponentsSet_DatasetTransformationModules(), thedtm_viewsPackage.getVersionedDTMViewsModule(), null, "datasetTransformationModules", null, 0, -1, VersionedComponentsSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getVersionedComponentsSet_Name(), ecorePackage.getEString(), "name", null, 0, 1, VersionedComponentsSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getVersionedComponentsSet_ReportCellViewModules(), thedtm_report_cell_viewsPackage.getReportCellViewModule(), null, "reportCellViewModules", null, 0, -1, VersionedComponentsSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getVersionedComponentsSet_License(), ecorePackage.getEString(), "license", null, 0, 1, VersionedComponentsSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -686,12 +647,12 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 		initEAttribute(getdtmExecutableLogic_Name(), ecorePackage.getEString(), "name", null, 0, 1, dtmExecutableLogic.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getdtmExecutableLogic_CubesHierarchyModule(), theCubesPackage.getFreeBIRDToolsCubeHierarchyRelationshipModule(), null, "cubesHierarchyModule", null, 0, 1, dtmExecutableLogic.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getdtmExecutableLogic_CubeSchemaModules(), this.getVersionedCubeSchemaModule(), null, "cubeSchemaModules", null, 0, -1, dtmExecutableLogic.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getdtmExecutableLogic_DatasetTransformationModules(), thedtm_sql_viewsPackage.getVersionedSQLViewsModule(), null, "datasetTransformationModules", null, 0, -1, dtmExecutableLogic.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getdtmExecutableLogic_DatasetTransformationModules(), thedtm_viewsPackage.getVersionedDTMViewsModule(), null, "datasetTransformationModules", null, 0, -1, dtmExecutableLogic.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getdtmExecutableLogic_ReportCellViewModules(), thedtm_report_cell_viewsPackage.getReportCellViewModule(), null, "reportCellViewModules", null, 0, -1, dtmExecutableLogic.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(dtmProgramEClass, dtmProgram.class, "dtmProgram", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getdtmProgram_ExecutableLogic(), this.getdtmExecutableLogic(), null, "executableLogic", null, 0, -1, dtmProgram.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getdtmProgram_SmcubesStaticModel(), theCocamoPackage.getSMCubesStaticModel(), null, "smcubesStaticModel", null, 0, 1, dtmProgram.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getdtmProgram_SmcubesStaticModel(), theProgramPackage.getSMCubesStaticModel(), null, "smcubesStaticModel", null, 0, 1, dtmProgram.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getdtmProgram_StructVariablesModule(), theEfbt_advanced_data_definitionPackage.getStructTypedVariablesModule(), null, "structVariablesModule", null, 0, 1, dtmProgram.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getdtmProgram_ArrayTypedVariablesModule(), theEfbt_advanced_data_definitionPackage.getArrayTypedVariableModule(), null, "arrayTypedVariablesModule", null, 0, 1, dtmProgram.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getdtmProgram_Release(), this.getRelease(), null, "release", null, 0, 1, dtmProgram.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -712,8 +673,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void createLicenseAnnotations()
-	{
+	protected void createLicenseAnnotations() {
 		String source = "license";
 		addAnnotation
 		  (this,
@@ -729,8 +689,7 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void createExtendedMetaDataAnnotations()
-	{
+	protected void createExtendedMetaDataAnnotations() {
 		String source = "http:///org/eclipse/emf/ecore/util/ExtendedMetaData";
 		addAnnotation
 		  (dataSetTransformationEClass,

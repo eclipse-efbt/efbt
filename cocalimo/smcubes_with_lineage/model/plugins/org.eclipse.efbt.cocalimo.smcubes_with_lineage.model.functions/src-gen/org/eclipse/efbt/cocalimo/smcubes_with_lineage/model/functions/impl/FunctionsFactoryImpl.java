@@ -18,16 +18,14 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
  * <!-- end-user-doc -->
  * @generated
  */
-public class FunctionsFactoryImpl extends EFactoryImpl implements FunctionsFactory
-{
+public class FunctionsFactoryImpl extends EFactoryImpl implements FunctionsFactory {
 	/**
 	 * Creates the default factory implementation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static FunctionsFactory init()
-	{
+	public static FunctionsFactory init() {
 		try {
 			FunctionsFactory theFunctionsFactory = (FunctionsFactory)EPackage.Registry.INSTANCE.getEFactory(FunctionsPackage.eNS_URI);
 			if (theFunctionsFactory != null) {
@@ -46,8 +44,7 @@ public class FunctionsFactoryImpl extends EFactoryImpl implements FunctionsFacto
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public FunctionsFactoryImpl()
-	{
+	public FunctionsFactoryImpl() {
 		super();
 	}
 
@@ -57,8 +54,7 @@ public class FunctionsFactoryImpl extends EFactoryImpl implements FunctionsFacto
 	 * @generated
 	 */
 	@Override
-	public EObject create(EClass eClass)
-	{
+	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case FunctionsPackage.AGGREGATE_FUNCTION: return createAggregateFunction();
 			case FunctionsPackage.AGGREGATE_FUNCTION_SPEC: return createAggregateFunctionSpec();
@@ -70,6 +66,16 @@ public class FunctionsFactoryImpl extends EFactoryImpl implements FunctionsFacto
 			case FunctionsPackage.FUNCTION_SPEC_MODULE: return createFunctionSpecModule();
 			case FunctionsPackage.PARAMATER_SPEC: return createParamaterSpec();
 			case FunctionsPackage.PARAMETER: return createParameter();
+			case FunctionsPackage.GET_STRUCT_COLUMN_FUNCTION: return createGetStructColumnFunction();
+			case FunctionsPackage.SPECULATIVE_STRUCT_COLUMN_PARAMETER: return createSpeculativeStructColumnParameter();
+			case FunctionsPackage.AGGREGATE_COLUMN_FUNCTION: return createAggregateColumnFunction();
+			case FunctionsPackage.BASIC_COLUMN_FUNCTION: return createBasicColumnFunction();
+			case FunctionsPackage.COLUMN_FUNCTION: return createColumnFunction();
+			case FunctionsPackage.COLUMN_FUNCTION_GROUP: return createColumnFunctionGroup();
+			case FunctionsPackage.CUBE_COLUMN: return createCubeColumn();
+			case FunctionsPackage.SPECULATIVE_CUBE_COLUMN_PARAMETER: return createSpeculativeCubeColumnParameter();
+			case FunctionsPackage.MEMBER_PARAMETER: return createMemberParameter();
+			case FunctionsPackage.VALUE_PARAMETER: return createValueParameter();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -80,8 +86,7 @@ public class FunctionsFactoryImpl extends EFactoryImpl implements FunctionsFacto
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public AggregateFunction createAggregateFunction()
-	{
+	public AggregateFunction createAggregateFunction() {
 		AggregateFunctionImpl aggregateFunction = new AggregateFunctionImpl();
 		return aggregateFunction;
 	}
@@ -91,8 +96,7 @@ public class FunctionsFactoryImpl extends EFactoryImpl implements FunctionsFacto
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public AggregateFunctionSpec createAggregateFunctionSpec()
-	{
+	public AggregateFunctionSpec createAggregateFunctionSpec() {
 		AggregateFunctionSpecImpl aggregateFunctionSpec = new AggregateFunctionSpecImpl();
 		return aggregateFunctionSpec;
 	}
@@ -102,8 +106,7 @@ public class FunctionsFactoryImpl extends EFactoryImpl implements FunctionsFacto
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public BasicFunction createBasicFunction()
-	{
+	public BasicFunction createBasicFunction() {
 		BasicFunctionImpl basicFunction = new BasicFunctionImpl();
 		return basicFunction;
 	}
@@ -113,8 +116,7 @@ public class FunctionsFactoryImpl extends EFactoryImpl implements FunctionsFacto
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public BasicFunctionSpec createBasicFunctionSpec()
-	{
+	public BasicFunctionSpec createBasicFunctionSpec() {
 		BasicFunctionSpecImpl basicFunctionSpec = new BasicFunctionSpecImpl();
 		return basicFunctionSpec;
 	}
@@ -124,8 +126,7 @@ public class FunctionsFactoryImpl extends EFactoryImpl implements FunctionsFacto
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public BooleanFunction createBooleanFunction()
-	{
+	public BooleanFunction createBooleanFunction() {
 		BooleanFunctionImpl booleanFunction = new BooleanFunctionImpl();
 		return booleanFunction;
 	}
@@ -135,8 +136,7 @@ public class FunctionsFactoryImpl extends EFactoryImpl implements FunctionsFacto
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Function createFunction()
-	{
+	public Function createFunction() {
 		FunctionImpl function = new FunctionImpl();
 		return function;
 	}
@@ -146,8 +146,7 @@ public class FunctionsFactoryImpl extends EFactoryImpl implements FunctionsFacto
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public FunctionSpec createFunctionSpec()
-	{
+	public FunctionSpec createFunctionSpec() {
 		FunctionSpecImpl functionSpec = new FunctionSpecImpl();
 		return functionSpec;
 	}
@@ -157,8 +156,7 @@ public class FunctionsFactoryImpl extends EFactoryImpl implements FunctionsFacto
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public FunctionSpecModule createFunctionSpecModule()
-	{
+	public FunctionSpecModule createFunctionSpecModule() {
 		FunctionSpecModuleImpl functionSpecModule = new FunctionSpecModuleImpl();
 		return functionSpecModule;
 	}
@@ -168,8 +166,7 @@ public class FunctionsFactoryImpl extends EFactoryImpl implements FunctionsFacto
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ParamaterSpec createParamaterSpec()
-	{
+	public ParamaterSpec createParamaterSpec() {
 		ParamaterSpecImpl paramaterSpec = new ParamaterSpecImpl();
 		return paramaterSpec;
 	}
@@ -179,8 +176,7 @@ public class FunctionsFactoryImpl extends EFactoryImpl implements FunctionsFacto
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Parameter createParameter()
-	{
+	public Parameter createParameter() {
 		ParameterImpl parameter = new ParameterImpl();
 		return parameter;
 	}
@@ -190,8 +186,107 @@ public class FunctionsFactoryImpl extends EFactoryImpl implements FunctionsFacto
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public FunctionsPackage getFunctionsPackage()
-	{
+	public GetStructColumnFunction createGetStructColumnFunction() {
+		GetStructColumnFunctionImpl getStructColumnFunction = new GetStructColumnFunctionImpl();
+		return getStructColumnFunction;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public SpeculativeStructColumnParameter createSpeculativeStructColumnParameter() {
+		SpeculativeStructColumnParameterImpl speculativeStructColumnParameter = new SpeculativeStructColumnParameterImpl();
+		return speculativeStructColumnParameter;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public AggregateColumnFunction createAggregateColumnFunction() {
+		AggregateColumnFunctionImpl aggregateColumnFunction = new AggregateColumnFunctionImpl();
+		return aggregateColumnFunction;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public BasicColumnFunction createBasicColumnFunction() {
+		BasicColumnFunctionImpl basicColumnFunction = new BasicColumnFunctionImpl();
+		return basicColumnFunction;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ColumnFunction createColumnFunction() {
+		ColumnFunctionImpl columnFunction = new ColumnFunctionImpl();
+		return columnFunction;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ColumnFunctionGroup createColumnFunctionGroup() {
+		ColumnFunctionGroupImpl columnFunctionGroup = new ColumnFunctionGroupImpl();
+		return columnFunctionGroup;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public CubeColumn createCubeColumn() {
+		CubeColumnImpl cubeColumn = new CubeColumnImpl();
+		return cubeColumn;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public SpeculativeCubeColumnParameter createSpeculativeCubeColumnParameter() {
+		SpeculativeCubeColumnParameterImpl speculativeCubeColumnParameter = new SpeculativeCubeColumnParameterImpl();
+		return speculativeCubeColumnParameter;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public MemberParameter createMemberParameter() {
+		MemberParameterImpl memberParameter = new MemberParameterImpl();
+		return memberParameter;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ValueParameter createValueParameter() {
+		ValueParameterImpl valueParameter = new ValueParameterImpl();
+		return valueParameter;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public FunctionsPackage getFunctionsPackage() {
 		return (FunctionsPackage)getEPackage();
 	}
 
@@ -202,8 +297,7 @@ public class FunctionsFactoryImpl extends EFactoryImpl implements FunctionsFacto
 	 * @generated
 	 */
 	@Deprecated
-	public static FunctionsPackage getPackage()
-	{
+	public static FunctionsPackage getPackage() {
 		return FunctionsPackage.eINSTANCE;
 	}
 

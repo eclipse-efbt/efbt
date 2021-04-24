@@ -18,6 +18,5 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='Parameter' kind='empty'"
  * @generated
  */
-public interface Parameter extends EObject
-{
+public interface Parameter extends EObject {
 } // Parameter

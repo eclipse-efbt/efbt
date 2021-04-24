@@ -1,0 +1,58 @@
+ProgramAndCalls : { program : dtmProgram :  { 
+	
+	executableLogic :[ dtmExecutableLogic GIRRDeltaApplyWeightingLogic : { 
+		
+			
+			 datasetTransformationModules : [ VersionedDTMViewsModule   views : { 
+			 	DTMViews : [ 
+			 		
+			 		EnrichmentView 	GIRRDeltaSensitivitiesAndRiskFactorsWithWeight : {
+			 			cube :"GIRRDeltaApplyWeighting.freeBirdToolsCubeModule.GIRRDeltaSensitivitiesAndRiskFactorsWithWeight"
+			 			functions : [ 
+			 				BasicColumnFunction GIRRDeltaSensitivitiesAndRiskFactorsWithWeight_GIRRDeltaRiskWeight: { 
+			 					cube : "GIRRDeltaApplyWeighting.freeBirdToolsCubeModule.GIRRDeltaSensitivitiesAndRiskFactorsWithWeight"
+			 					variable : "GIRRDeltaMeasuresStaticModel.GIRRDeltaMeasuresModel.variablesModule.GIRRDeltaRiskWeight"
+			 					
+			 					basicFunction : BasicFunction bf41 : {
+			 						functionSpec : "FRTBFunctions.GIRRFunctionSpecModule.getGIRRDeltaRiskFactorRiskWeight"
+			 						parameters : [ 
+			 							SpeculativeCubeColumnParameter : {
+			 								column : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.tenor"
+			 								cube : "GIRRDeltaAssignBucket.freeBirdToolsCubeModule.GIRRDeltaSensitivitiesAndRiskFactors"
+			 							}
+			 							
+			 						]
+			 					}
+			 				}
+			 			
+			 			]
+			 		},
+			 		EnrichmentView 	weightedGIRRDeltaSensitivitiesAndRiskFactors : {
+			 			cube :"GIRRDeltaApplyWeighting.freeBirdToolsCubeModule.weightedGIRRDeltaSensitivitiesAndRiskFactors"
+			 			functions : [ 
+			 				BasicColumnFunction weightedGIRRDeltaSensitivitiesAndRiskFactors_weightedGIRRDeltaSensitivity: { 
+			 					cube :"GIRRDeltaApplyWeighting.freeBirdToolsCubeModule.weightedGIRRDeltaSensitivitiesAndRiskFactors"
+			 					variable : "GIRRDeltaMeasuresStaticModel.GIRRDeltaMeasuresModel.variablesModule.weightedGIRRDeltaSensitivity"
+			 					
+			 					basicFunction : BasicFunction bf42 : {
+			 						functionSpec : "commonFunctions.commonFunctionSpecModule.multiply"
+			 						parameters : [ 
+			 							SpeculativeCubeColumnParameter : {
+			 								column : "CommonMeasuresStaticModel.CommonMeasuresModel.variablesModule.nettedDeltaSensitivity"
+			 								cube :  "GIRRDeltaApplyWeighting.freeBirdToolsCubeModule.GIRRDeltaSensitivitiesAndRiskFactorsWithWeight"
+			 							},
+			 							SpeculativeCubeColumnParameter : {
+			 								column :"GIRRDeltaMeasuresStaticModel.GIRRDeltaMeasuresModel.variablesModule.GIRRDeltaRiskWeight"
+			 								cube :  "GIRRDeltaApplyWeighting.freeBirdToolsCubeModule.GIRRDeltaSensitivitiesAndRiskFactorsWithWeight"
+			 							}
+			 							
+			 						]
+			 					}
+			 				}
+			 			
+			 			]
+			 		}
+			 		
+			 	
+
+			 		] } ] } ] } }

@@ -16,15 +16,13 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class CodeConditionImpl extends MinimalEObjectImpl.Container implements CodeCondition
-{
+public class CodeConditionImpl extends MinimalEObjectImpl.Container implements CodeCondition {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected CodeConditionImpl()
-	{
+	protected CodeConditionImpl() {
 		super();
 	}
 
@@ -34,8 +32,7 @@ public class CodeConditionImpl extends MinimalEObjectImpl.Container implements C
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Domain_model_mappingPackage.Literals.CODE_CONDITION;
 	}
 

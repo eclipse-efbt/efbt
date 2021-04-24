@@ -2,8 +2,6 @@
  */
 package org.eclipse.efbt.language.dtm.model.transformation;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.SMCubesStaticModel;
-
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.efbt_advanced_data_definition.ArrayTypedVariableModule;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.efbt_advanced_data_definition.StructTypedVariablesModule;
 
@@ -31,8 +29,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface dtmProgram extends EObject
-{
+public interface dtmProgram extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Executable Logic</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.efbt.language.dtm.model.transformation.dtmExecutableLogic}.
@@ -50,12 +47,12 @@ public interface dtmProgram extends EObject
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Smcubes Static Model</em>' containment reference.
-	 * @see #setSmcubesStaticModel(SMCubesStaticModel)
+	 * @see #setSmcubesStaticModel(org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel)
 	 * @see org.eclipse.efbt.language.dtm.model.transformation.TransformationPackage#getdtmProgram_SmcubesStaticModel()
 	 * @model containment="true"
 	 * @generated
 	 */
-	SMCubesStaticModel getSmcubesStaticModel();
+	org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel getSmcubesStaticModel();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.efbt.language.dtm.model.transformation.dtmProgram#getSmcubesStaticModel <em>Smcubes Static Model</em>}' containment reference.
@@ -65,7 +62,7 @@ public interface dtmProgram extends EObject
 	 * @see #getSmcubesStaticModel()
 	 * @generated
 	 */
-	void setSmcubesStaticModel(SMCubesStaticModel value);
+	void setSmcubesStaticModel(org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel value);
 
 	/**
 	 * Returns the value of the '<em><b>Struct Variables Module</b></em>' containment reference.

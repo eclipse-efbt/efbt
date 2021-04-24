@@ -35,8 +35,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class FunctionImpl extends ParameterImpl implements Function
-{
+public class FunctionImpl extends ParameterImpl implements Function {
 	/**
 	 * The cached value of the '{@link #getParameters() <em>Parameters</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -72,8 +71,7 @@ public class FunctionImpl extends ParameterImpl implements Function
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected FunctionImpl()
-	{
+	protected FunctionImpl() {
 		super();
 	}
 
@@ -83,8 +81,7 @@ public class FunctionImpl extends ParameterImpl implements Function
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return FunctionsPackage.Literals.FUNCTION;
 	}
 
@@ -93,8 +90,7 @@ public class FunctionImpl extends ParameterImpl implements Function
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<Parameter> getParameters()
-	{
+	public EList<Parameter> getParameters() {
 		if (parameters == null) {
 			parameters = new EObjectContainmentEList<Parameter>(Parameter.class, this, FunctionsPackage.FUNCTION__PARAMETERS);
 		}
@@ -106,8 +102,7 @@ public class FunctionImpl extends ParameterImpl implements Function
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
@@ -116,8 +111,7 @@ public class FunctionImpl extends ParameterImpl implements Function
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setName(String newName)
-	{
+	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
@@ -130,8 +124,7 @@ public class FunctionImpl extends ParameterImpl implements Function
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case FunctionsPackage.FUNCTION__PARAMETERS:
 				return ((InternalEList<?>)getParameters()).basicRemove(otherEnd, msgs);
@@ -145,8 +138,7 @@ public class FunctionImpl extends ParameterImpl implements Function
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case FunctionsPackage.FUNCTION__PARAMETERS:
 				return getParameters();
@@ -163,8 +155,7 @@ public class FunctionImpl extends ParameterImpl implements Function
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case FunctionsPackage.FUNCTION__PARAMETERS:
 				getParameters().clear();
@@ -183,8 +174,7 @@ public class FunctionImpl extends ParameterImpl implements Function
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case FunctionsPackage.FUNCTION__PARAMETERS:
 				getParameters().clear();
@@ -202,8 +192,7 @@ public class FunctionImpl extends ParameterImpl implements Function
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case FunctionsPackage.FUNCTION__PARAMETERS:
 				return parameters != null && !parameters.isEmpty();
@@ -219,8 +208,7 @@ public class FunctionImpl extends ParameterImpl implements Function
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

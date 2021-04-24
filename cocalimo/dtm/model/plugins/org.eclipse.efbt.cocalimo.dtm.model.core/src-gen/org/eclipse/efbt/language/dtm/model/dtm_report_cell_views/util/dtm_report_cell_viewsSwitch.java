@@ -4,7 +4,7 @@ package org.eclipse.efbt.language.dtm.model.dtm_report_cell_views.util;
 
 import org.eclipse.efbt.language.dtm.model.dtm_report_cell_views.*;
 
-import org.eclipse.efbt.language.dtm.model.dtm_sql_views.SQLView;
+import org.eclipse.efbt.language.dtm.model.dtm_views.DTMView;
 
 import org.eclipse.efbt.language.dtm.model.transformation.DataSetTransformation;
 
@@ -77,7 +77,7 @@ public class dtm_report_cell_viewsSwitch<T> extends Switch<T>
 			case dtm_report_cell_viewsPackage.REPORT_CELL_VIEW: {
 				ReportCellView reportCellView = (ReportCellView)theEObject;
 				T result = caseReportCellView(reportCellView);
-				if (result == null) result = caseSQLView(reportCellView);
+				if (result == null) result = caseDTMView(reportCellView);
 				if (result == null) result = caseDataSetTransformation(reportCellView);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -142,17 +142,17 @@ public class dtm_report_cell_viewsSwitch<T> extends Switch<T>
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>SQL View</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>DTM View</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>SQL View</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>DTM View</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseSQLView(SQLView object)
+	public T caseDTMView(DTMView object)
 	{
 		return null;
 	}

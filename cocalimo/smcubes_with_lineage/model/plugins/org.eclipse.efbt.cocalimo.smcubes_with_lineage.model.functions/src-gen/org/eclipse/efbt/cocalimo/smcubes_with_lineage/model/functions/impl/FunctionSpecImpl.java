@@ -33,13 +33,12 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.impl.FunctionSpecImpl#getParameterSpecs <em>Parameter Specs</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.impl.FunctionSpecImpl#getFunctionalName <em>Functional Name</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.impl.FunctionSpecImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.impl.FunctionSpecImpl#getSqlName <em>Sql Name</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.impl.FunctionSpecImpl#getRelationalName <em>Relational Name</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class FunctionSpecImpl extends MinimalEObjectImpl.Container implements FunctionSpec
-{
+public class FunctionSpecImpl extends MinimalEObjectImpl.Container implements FunctionSpec {
 	/**
 	 * The cached value of the '{@link #getParameterSpecs() <em>Parameter Specs</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -91,32 +90,31 @@ public class FunctionSpecImpl extends MinimalEObjectImpl.Container implements Fu
 	protected String name = NAME_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getSqlName() <em>Sql Name</em>}' attribute.
+	 * The default value of the '{@link #getRelationalName() <em>Relational Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getSqlName()
+	 * @see #getRelationalName()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String SQL_NAME_EDEFAULT = null;
+	protected static final String RELATIONAL_NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getSqlName() <em>Sql Name</em>}' attribute.
+	 * The cached value of the '{@link #getRelationalName() <em>Relational Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getSqlName()
+	 * @see #getRelationalName()
 	 * @generated
 	 * @ordered
 	 */
-	protected String sqlName = SQL_NAME_EDEFAULT;
+	protected String relationalName = RELATIONAL_NAME_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected FunctionSpecImpl()
-	{
+	protected FunctionSpecImpl() {
 		super();
 	}
 
@@ -126,8 +124,7 @@ public class FunctionSpecImpl extends MinimalEObjectImpl.Container implements Fu
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return FunctionsPackage.Literals.FUNCTION_SPEC;
 	}
 
@@ -136,8 +133,7 @@ public class FunctionSpecImpl extends MinimalEObjectImpl.Container implements Fu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<ParamaterSpec> getParameterSpecs()
-	{
+	public EList<ParamaterSpec> getParameterSpecs() {
 		if (parameterSpecs == null) {
 			parameterSpecs = new EObjectContainmentEList<ParamaterSpec>(ParamaterSpec.class, this, FunctionsPackage.FUNCTION_SPEC__PARAMETER_SPECS);
 		}
@@ -149,8 +145,7 @@ public class FunctionSpecImpl extends MinimalEObjectImpl.Container implements Fu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getFunctionalName()
-	{
+	public String getFunctionalName() {
 		return functionalName;
 	}
 
@@ -159,8 +154,7 @@ public class FunctionSpecImpl extends MinimalEObjectImpl.Container implements Fu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setFunctionalName(String newFunctionalName)
-	{
+	public void setFunctionalName(String newFunctionalName) {
 		String oldFunctionalName = functionalName;
 		functionalName = newFunctionalName;
 		if (eNotificationRequired())
@@ -172,8 +166,7 @@ public class FunctionSpecImpl extends MinimalEObjectImpl.Container implements Fu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
@@ -182,8 +175,7 @@ public class FunctionSpecImpl extends MinimalEObjectImpl.Container implements Fu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setName(String newName)
-	{
+	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
@@ -195,9 +187,8 @@ public class FunctionSpecImpl extends MinimalEObjectImpl.Container implements Fu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getSqlName()
-	{
-		return sqlName;
+	public String getRelationalName() {
+		return relationalName;
 	}
 
 	/**
@@ -205,12 +196,11 @@ public class FunctionSpecImpl extends MinimalEObjectImpl.Container implements Fu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setSqlName(String newSqlName)
-	{
-		String oldSqlName = sqlName;
-		sqlName = newSqlName;
+	public void setRelationalName(String newRelationalName) {
+		String oldRelationalName = relationalName;
+		relationalName = newRelationalName;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, FunctionsPackage.FUNCTION_SPEC__SQL_NAME, oldSqlName, sqlName));
+			eNotify(new ENotificationImpl(this, Notification.SET, FunctionsPackage.FUNCTION_SPEC__RELATIONAL_NAME, oldRelationalName, relationalName));
 	}
 
 	/**
@@ -219,8 +209,7 @@ public class FunctionSpecImpl extends MinimalEObjectImpl.Container implements Fu
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case FunctionsPackage.FUNCTION_SPEC__PARAMETER_SPECS:
 				return ((InternalEList<?>)getParameterSpecs()).basicRemove(otherEnd, msgs);
@@ -234,8 +223,7 @@ public class FunctionSpecImpl extends MinimalEObjectImpl.Container implements Fu
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case FunctionsPackage.FUNCTION_SPEC__PARAMETER_SPECS:
 				return getParameterSpecs();
@@ -243,8 +231,8 @@ public class FunctionSpecImpl extends MinimalEObjectImpl.Container implements Fu
 				return getFunctionalName();
 			case FunctionsPackage.FUNCTION_SPEC__NAME:
 				return getName();
-			case FunctionsPackage.FUNCTION_SPEC__SQL_NAME:
-				return getSqlName();
+			case FunctionsPackage.FUNCTION_SPEC__RELATIONAL_NAME:
+				return getRelationalName();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -256,8 +244,7 @@ public class FunctionSpecImpl extends MinimalEObjectImpl.Container implements Fu
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case FunctionsPackage.FUNCTION_SPEC__PARAMETER_SPECS:
 				getParameterSpecs().clear();
@@ -269,8 +256,8 @@ public class FunctionSpecImpl extends MinimalEObjectImpl.Container implements Fu
 			case FunctionsPackage.FUNCTION_SPEC__NAME:
 				setName((String)newValue);
 				return;
-			case FunctionsPackage.FUNCTION_SPEC__SQL_NAME:
-				setSqlName((String)newValue);
+			case FunctionsPackage.FUNCTION_SPEC__RELATIONAL_NAME:
+				setRelationalName((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -282,8 +269,7 @@ public class FunctionSpecImpl extends MinimalEObjectImpl.Container implements Fu
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case FunctionsPackage.FUNCTION_SPEC__PARAMETER_SPECS:
 				getParameterSpecs().clear();
@@ -294,8 +280,8 @@ public class FunctionSpecImpl extends MinimalEObjectImpl.Container implements Fu
 			case FunctionsPackage.FUNCTION_SPEC__NAME:
 				setName(NAME_EDEFAULT);
 				return;
-			case FunctionsPackage.FUNCTION_SPEC__SQL_NAME:
-				setSqlName(SQL_NAME_EDEFAULT);
+			case FunctionsPackage.FUNCTION_SPEC__RELATIONAL_NAME:
+				setRelationalName(RELATIONAL_NAME_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -307,8 +293,7 @@ public class FunctionSpecImpl extends MinimalEObjectImpl.Container implements Fu
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case FunctionsPackage.FUNCTION_SPEC__PARAMETER_SPECS:
 				return parameterSpecs != null && !parameterSpecs.isEmpty();
@@ -316,8 +301,8 @@ public class FunctionSpecImpl extends MinimalEObjectImpl.Container implements Fu
 				return FUNCTIONAL_NAME_EDEFAULT == null ? functionalName != null : !FUNCTIONAL_NAME_EDEFAULT.equals(functionalName);
 			case FunctionsPackage.FUNCTION_SPEC__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-			case FunctionsPackage.FUNCTION_SPEC__SQL_NAME:
-				return SQL_NAME_EDEFAULT == null ? sqlName != null : !SQL_NAME_EDEFAULT.equals(sqlName);
+			case FunctionsPackage.FUNCTION_SPEC__RELATIONAL_NAME:
+				return RELATIONAL_NAME_EDEFAULT == null ? relationalName != null : !RELATIONAL_NAME_EDEFAULT.equals(relationalName);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -328,8 +313,7 @@ public class FunctionSpecImpl extends MinimalEObjectImpl.Container implements Fu
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
@@ -337,8 +321,8 @@ public class FunctionSpecImpl extends MinimalEObjectImpl.Container implements Fu
 		result.append(functionalName);
 		result.append(", name: ");
 		result.append(name);
-		result.append(", sqlName: ");
-		result.append(sqlName);
+		result.append(", relationalName: ");
+		result.append(relationalName);
 		result.append(')');
 		return result.toString();
 	}

@@ -25,8 +25,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface LeafModuleToVersionedCubeSchemaModule extends EObject
-{
+public interface LeafModuleToVersionedCubeSchemaModule extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Scheme</b></em>' reference.
 	 * <!-- begin-user-doc -->

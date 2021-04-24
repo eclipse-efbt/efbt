@@ -46,11 +46,11 @@ import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.BaseC
 import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.BaseColumnStructuredData;
 import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.BaseRowData;
 import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.Base_column_structured_dataFactory;
-import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.CocamoFactory;
-import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.SMCubesBDDTest;
-import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.SMCubesBDDTestModule;
-import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.SMCubesStaticModel;
-import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.SMCubesTestInputData;
+import org.eclipse.efbt.cocalimo.smcubes.model.program.ProgramFactory;
+import org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesBDDTest;
+import org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesBDDTestModule;
+import org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel;
+import org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesTestInputData;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.CoreFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.DOMAIN;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.FACET_VALUE_TYPE;
@@ -994,17 +994,17 @@ public class BIRDImporterImpl extends Importer {
 				if (test == null) {
 					//if we dont have aTest for this item of Test data, then 
 					//we create one and add it to the list of tests
-					SMCubesStaticModel testProgram = CocamoFactory.eINSTANCE.createSMCubesStaticModel();
+					SMCubesStaticModel testProgram = ProgramFactory.eINSTANCE.createSMCubesStaticModel();
 					testPrograms.add(testProgram);
-					SMCubesBDDTestModule testModule = CocamoFactory.eINSTANCE.createSMCubesBDDTestModule();
+					SMCubesBDDTestModule testModule = ProgramFactory.eINSTANCE.createSMCubesBDDTestModule();
 					testModule.setName("TestModule" + nameCounter);
 					testProgram.setTests(testModule);
-					test = CocamoFactory.eINSTANCE.createSMCubesBDDTest();
+					test = ProgramFactory.eINSTANCE.createSMCubesBDDTest();
 					test.setName(id1 + ":" + id2);
 					test.setTestDefinition((E2EBDDTestDefinition) testDefinitionProgram.getBddTestDefinitions().getTestDefinitions().get(0)); 
 					testModule.getTests().add(test);
 					tests.put(id1 + ":" + id2, test);
-					SMCubesTestInputData inputData2 = CocamoFactory.eINSTANCE
+					SMCubesTestInputData inputData2 = ProgramFactory.eINSTANCE
 							.createSMCubesTestInputData();
 					inputData2.setName(id1 + ":" + id2 + ":Data");
 					test.setInputData(inputData2);

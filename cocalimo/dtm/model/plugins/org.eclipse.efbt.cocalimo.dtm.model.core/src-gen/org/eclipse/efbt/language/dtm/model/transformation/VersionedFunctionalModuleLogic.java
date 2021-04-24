@@ -17,6 +17,5 @@ package org.eclipse.efbt.language.dtm.model.transformation;
  * @model extendedMetaData="name='VersionedFunctionalModuleLogic' kind='elementOnly'"
  * @generated
  */
-public interface VersionedFunctionalModuleLogic extends org.eclipse.efbt.cocalimo.core.model.module_management.Module
-{
+public interface VersionedFunctionalModuleLogic extends org.eclipse.efbt.cocalimo.core.model.module_management.Module {
 } // VersionedFunctionalModuleLogic

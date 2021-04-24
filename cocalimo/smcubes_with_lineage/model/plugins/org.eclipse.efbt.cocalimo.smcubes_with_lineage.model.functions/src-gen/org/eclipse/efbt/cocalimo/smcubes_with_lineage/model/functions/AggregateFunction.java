@@ -23,8 +23,7 @@ package org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions;
  * @model extendedMetaData="name='AggregateFunction' kind='elementOnly'"
  * @generated
  */
-public interface AggregateFunction extends Function
-{
+public interface AggregateFunction extends Function {
 	/**
 	 * Returns the value of the '<em><b>Function Spec</b></em>' reference.
 	 * <!-- begin-user-doc -->

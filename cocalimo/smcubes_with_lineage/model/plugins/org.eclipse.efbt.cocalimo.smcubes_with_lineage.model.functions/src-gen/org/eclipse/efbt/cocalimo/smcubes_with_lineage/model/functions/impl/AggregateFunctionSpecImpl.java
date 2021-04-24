@@ -14,15 +14,13 @@ import org.eclipse.emf.ecore.EClass;
  *
  * @generated
  */
-public class AggregateFunctionSpecImpl extends FunctionSpecImpl implements AggregateFunctionSpec
-{
+public class AggregateFunctionSpecImpl extends FunctionSpecImpl implements AggregateFunctionSpec {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected AggregateFunctionSpecImpl()
-	{
+	protected AggregateFunctionSpecImpl() {
 		super();
 	}
 
@@ -32,8 +30,7 @@ public class AggregateFunctionSpecImpl extends FunctionSpecImpl implements Aggre
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return FunctionsPackage.Literals.AGGREGATE_FUNCTION_SPEC;
 	}
 

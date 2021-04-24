@@ -65,7 +65,7 @@ public class FunctionSpecItemProvider
 
 			addFunctionalNamePropertyDescriptor(object);
 			addNamePropertyDescriptor(object);
-			addSqlNamePropertyDescriptor(object);
+			addRelationalNamePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -115,19 +115,19 @@ public class FunctionSpecItemProvider
 	}
 
 	/**
-	 * This adds a property descriptor for the Sql Name feature.
+	 * This adds a property descriptor for the Relational Name feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addSqlNamePropertyDescriptor(Object object) {
+	protected void addRelationalNamePropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_FunctionSpec_sqlName_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_FunctionSpec_sqlName_feature", "_UI_FunctionSpec_type"),
-				 FunctionsPackage.Literals.FUNCTION_SPEC__SQL_NAME,
+				 getString("_UI_FunctionSpec_relationalName_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_FunctionSpec_relationalName_feature", "_UI_FunctionSpec_type"),
+				 FunctionsPackage.Literals.FUNCTION_SPEC__RELATIONAL_NAME,
 				 true,
 				 false,
 				 false,
@@ -206,7 +206,7 @@ public class FunctionSpecItemProvider
 		switch (notification.getFeatureID(FunctionSpec.class)) {
 			case FunctionsPackage.FUNCTION_SPEC__FUNCTIONAL_NAME:
 			case FunctionsPackage.FUNCTION_SPEC__NAME:
-			case FunctionsPackage.FUNCTION_SPEC__SQL_NAME:
+			case FunctionsPackage.FUNCTION_SPEC__RELATIONAL_NAME:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 			case FunctionsPackage.FUNCTION_SPEC__PARAMETER_SPECS:

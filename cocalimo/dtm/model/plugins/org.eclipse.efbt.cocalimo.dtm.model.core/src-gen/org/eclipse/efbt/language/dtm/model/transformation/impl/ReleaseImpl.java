@@ -24,8 +24,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  *
  * @generated
  */
-public class ReleaseImpl extends VersionedComponentsSetImpl implements Release
-{
+public class ReleaseImpl extends VersionedComponentsSetImpl implements Release {
 	/**
 	 * The default value of the '{@link #getVersion() <em>Version</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -51,8 +50,7 @@ public class ReleaseImpl extends VersionedComponentsSetImpl implements Release
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ReleaseImpl()
-	{
+	protected ReleaseImpl() {
 		super();
 	}
 
@@ -62,8 +60,7 @@ public class ReleaseImpl extends VersionedComponentsSetImpl implements Release
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return TransformationPackage.Literals.RELEASE;
 	}
 
@@ -73,8 +70,7 @@ public class ReleaseImpl extends VersionedComponentsSetImpl implements Release
 	 * @generated
 	 */
 	@Override
-	public String getVersion()
-	{
+	public String getVersion() {
 		return version;
 	}
 
@@ -84,8 +80,7 @@ public class ReleaseImpl extends VersionedComponentsSetImpl implements Release
 	 * @generated
 	 */
 	@Override
-	public void setVersion(String newVersion)
-	{
+	public void setVersion(String newVersion) {
 		String oldVersion = version;
 		version = newVersion;
 		if (eNotificationRequired())
@@ -98,8 +93,7 @@ public class ReleaseImpl extends VersionedComponentsSetImpl implements Release
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case TransformationPackage.RELEASE__VERSION:
 				return getVersion();
@@ -113,8 +107,7 @@ public class ReleaseImpl extends VersionedComponentsSetImpl implements Release
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case TransformationPackage.RELEASE__VERSION:
 				setVersion((String)newValue);
@@ -129,8 +122,7 @@ public class ReleaseImpl extends VersionedComponentsSetImpl implements Release
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case TransformationPackage.RELEASE__VERSION:
 				setVersion(VERSION_EDEFAULT);
@@ -145,8 +137,7 @@ public class ReleaseImpl extends VersionedComponentsSetImpl implements Release
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case TransformationPackage.RELEASE__VERSION:
 				return VERSION_EDEFAULT == null ? version != null : !VERSION_EDEFAULT.equals(version);
@@ -160,8 +151,7 @@ public class ReleaseImpl extends VersionedComponentsSetImpl implements Release
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
