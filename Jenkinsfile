@@ -40,7 +40,7 @@ pipeline {
                     cd ../../..
                     cd cocalimo/dtm/ui_sirius
                     mvn install 
-                    cd ../..                   
+                    cd ../../..                   
                     cd controller/ldm
                     mvn install
                     cd ../..
