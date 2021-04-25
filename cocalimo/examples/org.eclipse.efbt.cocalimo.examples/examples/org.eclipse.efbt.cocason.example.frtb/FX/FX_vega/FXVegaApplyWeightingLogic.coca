@@ -1,0 +1,58 @@
+ProgramAndCalls : { program : dtmProgram :  { 
+	
+	executableLogic :[ dtmExecutableLogic FXVegaApplyWeightingLogic : { 
+		
+			
+			 datasetTransformationModules : [ VersionedDTMViewsModule   views : { 
+			 	DTMViews : [ 
+			 		
+			 		EnrichmentView 	FXVegaSensitivitiesAndRiskFactorsWithWeight : {
+			 			cube :"FXVegaApplyWeighting.freeBirdToolsCubeModule.FXVegaSensitivitiesAndRiskFactorsWithWeight"
+			 			functions : [ 
+			 				BasicColumnFunction FXVegaSensitivitiesAndRiskFactorsWithWeight_FXVegaRiskWeight: { 
+			 					cube : "FXVegaApplyWeighting.freeBirdToolsCubeModule.FXVegaSensitivitiesAndRiskFactorsWithWeight"
+			 					variable : "FXVegaMeasuresStaticModel.FXVegaMeasuresModel.variablesModule.FXVegaRiskWeight"
+			 					
+			 					basicFunction : BasicFunction bf41 : {
+			 						functionSpec : "FRTBFunctions.FXFunctionSpecModule.getFXVegaRiskFactorRiskWeight"
+			 						parameters : [ 
+			 							SpeculativeCubeColumnParameter : {
+			 								column : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.tenor"
+			 								cube : "FXVegaAssignBucket.freeBirdToolsCubeModule.FXVegaSensitivitiesAndRiskFactors"
+			 							}
+			 							
+			 						]
+			 					}
+			 				}
+			 			
+			 			]
+			 		},
+			 		EnrichmentView 	weightedFXVegaSensitivitiesAndRiskFactors : {
+			 			cube :"FXVegaApplyWeighting.freeBirdToolsCubeModule.weightedFXVegaSensitivitiesAndRiskFactors"
+			 			functions : [ 
+			 				BasicColumnFunction weightedFXVegaSensitivitiesAndRiskFactors_weightedFXVegaSensitivity: { 
+			 					cube :"FXVegaApplyWeighting.freeBirdToolsCubeModule.weightedFXVegaSensitivitiesAndRiskFactors"
+			 					variable : "FXVegaMeasuresStaticModel.FXVegaMeasuresModel.variablesModule.weightedFXVegaSensitivity"
+			 					
+			 					basicFunction : BasicFunction bf42 : {
+			 						functionSpec : "commonFunctions.commonFunctionSpecModule.multiply"
+			 						parameters : [ 
+			 							SpeculativeCubeColumnParameter : {
+			 								column : "CommonMeasuresStaticModel.CommonMeasuresModel.variablesModule.nettedVegaSensitivity"
+			 								cube :  "FXVegaApplyWeighting.freeBirdToolsCubeModule.FXVegaSensitivitiesAndRiskFactorsWithWeight"
+			 							},
+			 							SpeculativeCubeColumnParameter : {
+			 								column :"FXVegaMeasuresStaticModel.FXVegaMeasuresModel.variablesModule.FXVegaRiskWeight"
+			 								cube :  "FXVegaApplyWeighting.freeBirdToolsCubeModule.FXVegaSensitivitiesAndRiskFactorsWithWeight"
+			 							}
+			 							
+			 						]
+			 					}
+			 				}
+			 			
+			 			]
+			 		}
+			 		
+			 	
+
+			 		] } ] } ] } }

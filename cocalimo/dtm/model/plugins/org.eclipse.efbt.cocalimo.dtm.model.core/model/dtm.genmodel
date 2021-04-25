@@ -3,17 +3,17 @@
     xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.cocalimo.dtm.model.core/src-gen"
     modelPluginID="org.eclipse.efbt.cocalimo.dtm.model.core" modelName="dtm" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     importerID="org.eclipse.emf.importer.ecore" complianceLevel="8.0" copyrightFields="false"
-    usedGenPackages="../../org.eclipse.efbt.cocalimo.smcubes.model.program/model/cocamo.genmodel#//cocamo ../../org.eclipse.efbt.cocalimo.core.model.functionality_module/model/functionality_module.genmodel#//functionality_module ../../org.eclipse.efbt.cocalimo.core.model.functionality_module/model/functionality_module.genmodel#//scenarios ../../org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions/model/functions.genmodel#//functions ../../org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes/model/lineagecubes.genmodel#//cube_schema ../../org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes/model/lineagecubes.genmodel#//cubes ../../org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagefunctions/model/lineagefunctions.genmodel#//column_transformation_logic ../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.cocalimo.core.model.requirements_text/model/requirements_text.genmodel#//requirements_text ../../org.eclipse.efbt.cocalimo.smcubes.model.input_data/model/smcubes_input_data.genmodel#//base_column_structured_data ../../org.eclipse.efbt.cocalimo.smcubes.model.input_data/model/smcubes_input_data.genmodel#//column_structured_data ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//core ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//data_definition ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//efbt_data_definition ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//efbt_mapping ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//efbt_vtl_transformation ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//mapping ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//rendering ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//reports ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//smcubes_model ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//vtl_transformation ../../org.eclipse.efbt.cocalimo.core.model.testing/model/testing.genmodel#//test_definition ../../org.eclipse.efbt.cocalimo.core.model.testing/model/testing.genmodel#//test_input_data ../../org.eclipse.efbt.cocalimo.core.model.testing/model/testing.genmodel#//test ../../org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes/model/lineagecubes.genmodel#//efbt_advanced_data_definition"
+    usedGenPackages="../../org.eclipse.efbt.cocalimo.core.model.functionality_module/model/functionality_module.genmodel#//functionality_module ../../org.eclipse.efbt.cocalimo.core.model.functionality_module/model/functionality_module.genmodel#//scenarios ../../org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions/model/functions.genmodel#//functions ../../org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes/model/lineagecubes.genmodel#//cube_schema ../../org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes/model/lineagecubes.genmodel#//cubes ../../org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes/model/lineagecubes.genmodel#//efbt_advanced_data_definition ../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.cocalimo.smcubes.model.program/model/program.genmodel#//program ../../org.eclipse.efbt.cocalimo.core.model.requirements_text/model/requirements_text.genmodel#//requirements_text ../../org.eclipse.efbt.cocalimo.smcubes.model.input_data/model/smcubes_input_data.genmodel#//base_column_structured_data ../../org.eclipse.efbt.cocalimo.smcubes.model.input_data/model/smcubes_input_data.genmodel#//column_structured_data ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//core ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//data_definition ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//efbt_data_definition ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//efbt_mapping ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//efbt_vtl_transformation ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//mapping ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//rendering ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//reports ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//smcubes_model ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//vtl_transformation ../../org.eclipse.efbt.cocalimo.core.model.testing/model/testing.genmodel#//test_definition ../../org.eclipse.efbt.cocalimo.core.model.testing/model/testing.genmodel#//test_input_data ../../org.eclipse.efbt.cocalimo.core.model.testing/model/testing.genmodel#//test"
     operationReflection="true" importOrganizing="true">
   <foreignModel>domain_model_mapping.ecore</foreignModel>
   <foreignModel>transformation.ecore</foreignModel>
   <foreignModel>dtm_report_cell_views.ecore</foreignModel>
-  <foreignModel>dtm_sql_views.ecore</foreignModel>
+  <foreignModel>dtm_views.ecore</foreignModel>
   <genPackages prefix="Domain_model_mapping" basePackage="org.eclipse.efbt.language.dtm.model"
-      resource="XML" disposableProviderFactory="true" ecorePackage="domain_model_mapping.ecore#/">
-    <genClasses ecoreClass="domain_model_mapping.ecore#//LeafModuleToVersionedSQLViewsModule">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference domain_model_mapping.ecore#//LeafModuleToVersionedSQLViewsModule/scheme"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference domain_model_mapping.ecore#//LeafModuleToVersionedSQLViewsModule/module"/>
+      resource="XMI" disposableProviderFactory="true" ecorePackage="domain_model_mapping.ecore#/">
+    <genClasses ecoreClass="domain_model_mapping.ecore#//LeafModuleToVersionedDTMViewsModule">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference domain_model_mapping.ecore#//LeafModuleToVersionedDTMViewsModule/scheme"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference domain_model_mapping.ecore#//LeafModuleToVersionedDTMViewsModule/module"/>
     </genClasses>
     <genClasses ecoreClass="domain_model_mapping.ecore#//LeafModuleToVersionedCubeSchemaModule">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference domain_model_mapping.ecore#//LeafModuleToVersionedCubeSchemaModule/scheme"/>
@@ -42,14 +42,14 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference domain_model_mapping.ecore#//UnionChoiceCondition/chosenCubes"/>
     </genClasses>
     <genClasses ecoreClass="domain_model_mapping.ecore#//DomainMappingModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference domain_model_mapping.ecore#//DomainMappingModule/leafModuleToVersionedSQLViewsModules"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference domain_model_mapping.ecore#//DomainMappingModule/leafModuleToVersionedDTMViewsModules"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference domain_model_mapping.ecore#//DomainMappingModule/leafModuleToVersionedCubeSchemaModules"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference domain_model_mapping.ecore#//DomainMappingModule/leafModuleToReportCellViewModules"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference domain_model_mapping.ecore#//DomainMappingModule/scenarioToCodeConditions"/>
     </genClasses>
   </genPackages>
   <genPackages prefix="Transformation" basePackage="org.eclipse.efbt.language.dtm.model"
-      resource="XML" disposableProviderFactory="true" ecorePackage="transformation.ecore#/">
+      resource="XMI" disposableProviderFactory="true" ecorePackage="transformation.ecore#/">
     <genClasses ecoreClass="transformation.ecore#//DataSetTransformation">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference transformation.ecore#//DataSetTransformation/cube"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute transformation.ecore#//DataSetTransformation/name"/>
@@ -86,7 +86,7 @@
     </genClasses>
   </genPackages>
   <genPackages prefix="dtm_report_cell_views" basePackage="org.eclipse.efbt.language.dtm.model"
-      resource="XML" disposableProviderFactory="true" ecorePackage="dtm_report_cell_views.ecore#/">
+      resource="XMI" disposableProviderFactory="true" ecorePackage="dtm_report_cell_views.ecore#/">
     <genClasses ecoreClass="dtm_report_cell_views.ecore#//ReportCellView">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_report_cell_views.ecore#//ReportCellView/reportCell"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_report_cell_views.ecore#//ReportCellView/structColumnHoldingDimension"/>
@@ -96,93 +96,85 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_report_cell_views.ecore#//ReportCellViewModule/reportCellViews"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="dtm_sql_views" basePackage="org.eclipse.efbt.language.dtm.model"
-      resource="XML" disposableProviderFactory="true" ecorePackage="dtm_sql_views.ecore#/">
-    <genClasses ecoreClass="dtm_sql_views.ecore#//AggregateEnrichmentView">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//AggregateEnrichmentView/functions"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//AggregateEnrichmentView/groupByClause"/>
+  <genPackages prefix="dtm_views" basePackage="org.eclipse.efbt.language.dtm.model"
+      resource="XMI" disposableProviderFactory="true" ecorePackage="dtm_views.ecore#/">
+    <genClasses ecoreClass="dtm_views.ecore#//AggregateEnrichmentView">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_views.ecore#//AggregateEnrichmentView/functions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_views.ecore#//AggregateEnrichmentView/groupByClause"/>
     </genClasses>
-    <genClasses ecoreClass="dtm_sql_views.ecore#//CopyView"/>
-    <genClasses ecoreClass="dtm_sql_views.ecore#//EnrichmentView">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//EnrichmentView/functions"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//EnrichmentView/renames"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//EnrichmentView/ignores"/>
+    <genClasses ecoreClass="dtm_views.ecore#//CopyView"/>
+    <genClasses ecoreClass="dtm_views.ecore#//EnrichmentView">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_views.ecore#//EnrichmentView/functions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_views.ecore#//EnrichmentView/renames"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_views.ecore#//EnrichmentView/ignores"/>
     </genClasses>
-    <genClasses ecoreClass="dtm_sql_views.ecore#//FilterByConditionView">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//FilterByConditionView/whereClause"/>
+    <genClasses ecoreClass="dtm_views.ecore#//FilterByConditionView">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_views.ecore#//FilterByConditionView/whereClause"/>
     </genClasses>
-    <genClasses ecoreClass="dtm_sql_views.ecore#//GenericView">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//GenericView/selectClause"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//GenericView/whereClause"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//GenericView/groupByClause"/>
+    <genClasses ecoreClass="dtm_views.ecore#//GenericView">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_views.ecore#//GenericView/selectClause"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_views.ecore#//GenericView/whereClause"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_views.ecore#//GenericView/groupByClause"/>
     </genClasses>
-    <genClasses ecoreClass="dtm_sql_views.ecore#//GroupByClause">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//GroupByClause/groupByColumns"/>
+    <genClasses ecoreClass="dtm_views.ecore#//GroupByClause">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_views.ecore#//GroupByClause/groupByColumns"/>
     </genClasses>
-    <genClasses ecoreClass="dtm_sql_views.ecore#//IgnoreColumn">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//IgnoreColumn/columnToIgnore"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//IgnoreColumn/cube"/>
+    <genClasses ecoreClass="dtm_views.ecore#//IgnoreColumn">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_views.ecore#//IgnoreColumn/columnToIgnore"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_views.ecore#//IgnoreColumn/cube"/>
     </genClasses>
-    <genClasses ecoreClass="dtm_sql_views.ecore#//JoinView">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//JoinView/whereClause"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//JoinView/renames"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//JoinView/ignores"/>
+    <genClasses ecoreClass="dtm_views.ecore#//JoinView">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_views.ecore#//JoinView/whereClause"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_views.ecore#//JoinView/renames"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_views.ecore#//JoinView/ignores"/>
     </genClasses>
-    <genClasses ecoreClass="dtm_sql_views.ecore#//RenameAs">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//RenameAs/fromCube"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//RenameAs/fromVariable"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//RenameAs/toVariable"/>
+    <genClasses ecoreClass="dtm_views.ecore#//RenameAs">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_views.ecore#//RenameAs/fromCube"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_views.ecore#//RenameAs/fromVariable"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_views.ecore#//RenameAs/toVariable"/>
     </genClasses>
-    <genClasses ecoreClass="dtm_sql_views.ecore#//SelectClause">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//SelectClause/aggregateFunctions"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//SelectClause/basicFunctions"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//SelectClause/varaibles"/>
+    <genClasses ecoreClass="dtm_views.ecore#//SelectClause">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_views.ecore#//SelectClause/aggregateFunctions"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_views.ecore#//SelectClause/basicFunctions"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_views.ecore#//SelectClause/varaibles"/>
     </genClasses>
-    <genClasses ecoreClass="dtm_sql_views.ecore#//SQLView">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dtm_sql_views.ecore#//SQLView/VTL_Code"/>
+    <genClasses ecoreClass="dtm_views.ecore#//DTMView"/>
+    <genClasses ecoreClass="dtm_views.ecore#//UnionView"/>
+    <genClasses ecoreClass="dtm_views.ecore#//VersionedDTMViewsModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_views.ecore#//VersionedDTMViewsModule/DTMViews"/>
     </genClasses>
-    <genClasses ecoreClass="dtm_sql_views.ecore#//UnionView"/>
-    <genClasses ecoreClass="dtm_sql_views.ecore#//VersionedSQLViewsModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//VersionedSQLViewsModule/sqlViews"/>
+    <genClasses ecoreClass="dtm_views.ecore#//WhereClause">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_views.ecore#//WhereClause/function"/>
     </genClasses>
-    <genClasses ecoreClass="dtm_sql_views.ecore#//WhereClause">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//WhereClause/function"/>
+    <genClasses ecoreClass="dtm_views.ecore#//CastColumnView">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_views.ecore#//CastColumnView/sourceStructVariable"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_views.ecore#//CastColumnView/targetStructVariable"/>
     </genClasses>
-    <genClasses ecoreClass="dtm_sql_views.ecore#//BaseViewIncorporatingDeltas">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//BaseViewIncorporatingDeltas/ultimateSourceCube"/>
+    <genClasses ecoreClass="dtm_views.ecore#//ExplodeArrayOfStructsView">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_views.ecore#//ExplodeArrayOfStructsView/arraySourceColumn"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_views.ecore#//ExplodeArrayOfStructsView/indexColumn"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_views.ecore#//ExplodeArrayOfStructsView/targetStructColumn"/>
     </genClasses>
-    <genClasses ecoreClass="dtm_sql_views.ecore#//DeltaAccumulation">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//DeltaAccumulation/ultimateSourceCube"/>
+    <genClasses ecoreClass="dtm_views.ecore#//ExplodeStructView">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_views.ecore#//ExplodeStructView/columnToUnpack"/>
     </genClasses>
-    <genClasses ecoreClass="dtm_sql_views.ecore#//CastColumnView">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//CastColumnView/sourceStructVariable"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//CastColumnView/targetStructVariable"/>
+    <genClasses ecoreClass="dtm_views.ecore#//FilterByStructClassColumnView">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_views.ecore#//FilterByStructClassColumnView/renameAsStructColumn"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_views.ecore#//FilterByStructClassColumnView/structClass"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_views.ecore#//FilterByStructClassColumnView/structColumn"/>
     </genClasses>
-    <genClasses ecoreClass="dtm_sql_views.ecore#//ExplodeArrayOfStructsView">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//ExplodeArrayOfStructsView/arraySourceColumn"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//ExplodeArrayOfStructsView/indexColumn"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//ExplodeArrayOfStructsView/targetStructColumn"/>
+    <genClasses ecoreClass="dtm_views.ecore#//MakeArrayOfStructsView">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_views.ecore#//MakeArrayOfStructsView/groupingVariable"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_views.ecore#//MakeArrayOfStructsView/sourceStructVariable"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_views.ecore#//MakeArrayOfStructsView/targetArrayVariable"/>
     </genClasses>
-    <genClasses ecoreClass="dtm_sql_views.ecore#//ExplodeStructView">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//ExplodeStructView/columnToUnpack"/>
+    <genClasses ecoreClass="dtm_views.ecore#//MakeStructView">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_views.ecore#//MakeStructView/targetVariable"/>
     </genClasses>
-    <genClasses ecoreClass="dtm_sql_views.ecore#//FilterByStructClassColumnView">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//FilterByStructClassColumnView/renameAsStructColumn"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//FilterByStructClassColumnView/structClass"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//FilterByStructClassColumnView/structColumn"/>
-    </genClasses>
-    <genClasses ecoreClass="dtm_sql_views.ecore#//MakeArrayOfStructsView">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//MakeArrayOfStructsView/groupingVariable"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//MakeArrayOfStructsView/sourceStructVariable"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//MakeArrayOfStructsView/targetArrayVariable"/>
-    </genClasses>
-    <genClasses ecoreClass="dtm_sql_views.ecore#//MakeStructView">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//MakeStructView/targetVariable"/>
-    </genClasses>
-    <genClasses ecoreClass="dtm_sql_views.ecore#//AggregateEnrichmentViewAndOrderBy">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//AggregateEnrichmentViewAndOrderBy/functions"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//AggregateEnrichmentViewAndOrderBy/groupByClause"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_sql_views.ecore#//AggregateEnrichmentViewAndOrderBy/orderByVariable"/>
+    <genClasses ecoreClass="dtm_views.ecore#//AggregateEnrichmentViewAndOrderBy">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_views.ecore#//AggregateEnrichmentViewAndOrderBy/functions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_views.ecore#//AggregateEnrichmentViewAndOrderBy/groupByClause"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_views.ecore#//AggregateEnrichmentViewAndOrderBy/orderByVariable"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

@@ -1,0 +1,86 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/efbt_data_definition#//CubeModule",
+  "name" : "cubeStructureItemsModule",
+  "cubeStructureItems" : [ {
+    "cube_structure_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_definition#//CUBE_STRUCTURE",
+      "$ref" : "cube_structures.efbt_data_definition#Counterparty"
+    },
+    "description" : "LEI",
+    "role" : "D",
+    "variable_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+      "$ref" : "variables.efbt_data_definition#ECB2_ENTITY_LEI"
+    }
+  }, {
+    "cube_structure_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_definition#//CUBE_STRUCTURE",
+      "$ref" : "cube_structures.efbt_data_definition#Counterparty"
+    },
+    "description" : "country of residence",
+    "variable_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+      "$ref" : "variables.efbt_data_definition#CNTRY"
+    }
+  }, {
+    "cube_structure_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_definition#//CUBE_STRUCTURE",
+      "$ref" : "cube_structures.efbt_data_definition#Rating"
+    },
+    "description" : "Credit rating agency",
+    "variable_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+      "$ref" : "variables.efbt_data_definition#CRDT_RTNG_AGNCY"
+    }
+  }, {
+    "cube_structure_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_definition#//CUBE_STRUCTURE",
+      "$ref" : "cube_structures.efbt_data_definition#Rating"
+    },
+    "description" : "Rating",
+    "variable_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+      "$ref" : "variables.efbt_data_definition#RTNG_SCL_CD"
+    }
+  }, {
+    "cube_structure_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_definition#//CUBE_STRUCTURE",
+      "$ref" : "cube_structures.efbt_data_definition#Rating"
+    },
+    "description" : "LEI",
+    "variable_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+      "$ref" : "variables.efbt_data_definition#ECB2_ENTITY_LEI"
+    }
+  }, {
+    "cube_structure_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_definition#//CUBE_STRUCTURE",
+      "$ref" : "cube_structures.efbt_data_definition#Loans"
+    },
+    "description" : "Market Value",
+    "variable_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+      "$ref" : "variables.efbt_data_definition#ECB2_MRKT_VL"
+    }
+  }, {
+    "cube_structure_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_definition#//CUBE_STRUCTURE",
+      "$ref" : "cube_structures.efbt_data_definition#Loans"
+    },
+    "description" : "Notional Amount",
+    "variable_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+      "$ref" : "variables.efbt_data_definition#NTNL_AMNT"
+    }
+  }, {
+    "cube_structure_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_definition#//CUBE_STRUCTURE",
+      "$ref" : "cube_structures.efbt_data_definition#Loans"
+    },
+    "description" : "LEI",
+    "variable_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+      "$ref" : "variables.efbt_data_definition#ECB2_ENTITY_LEI"
+    }
+  } ]
+}

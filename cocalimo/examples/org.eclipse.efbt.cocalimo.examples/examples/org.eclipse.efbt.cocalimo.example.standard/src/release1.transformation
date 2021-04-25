@@ -1,0 +1,17 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/transformation#//Release",
+  "cubeSchemaModules" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/transformation#//VersionedCubeSchemaModule",
+    "$ref" : "cubeSchemaModule.transformation#cubeSchemaModule"
+  } ],
+  "datasetTransformationModules" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+    "$ref" : "dataset_transformations.dtm_views#processExampleData"
+  } ],
+  "name" : "release1",
+  "reportCellViewModules" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_report_cell_views#//ReportCellViewModule",
+    "$ref" : "report_cell_creation_module.dtm_report_cell_views#reportCellViewsModule"
+  } ],
+  "version" : "1"
+}

@@ -2,7 +2,7 @@
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:diagram="http://www.eclipse.org/sirius/diagram/1.1.0" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.3/notation" xmlns:style="http://www.eclipse.org/sirius/diagram/description/style/1.1.0" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" xsi:schemaLocation="http://www.eclipse.org/sirius/description/1.1.0 http://www.eclipse.org/sirius/1.1.0#//description http://www.eclipse.org/sirius/diagram/description/1.1.0 http://www.eclipse.org/sirius/diagram/1.1.0#//description http://www.eclipse.org/sirius/diagram/description/style/1.1.0 http://www.eclipse.org/sirius/diagram/1.1.0#//description/style">
   <viewpoint:DAnalysis uid="_vqE1wJX-Eeuf37xcIYD_eA" selectedViews="_vtcS0JX-Eeuf37xcIYD_eA _vuJdcJX-Eeuf37xcIYD_eA _vuxIgJX-Eeuf37xcIYD_eA _vvgvYJX-Eeuf37xcIYD_eA" version="14.3.1.202003261200">
     <semanticResources>dtm_report_cell_views.ecore</semanticResources>
-    <semanticResources>dtm_sql_views.ecore</semanticResources>
+    <semanticResources>dtm_views.ecore</semanticResources>
     <semanticResources>platform:/resource/org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagefunctions/model/column_transformation_logic.ecore</semanticResources>
     <semanticResources>platform:/resource/org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions/model/functions.ecore</semanticResources>
     <semanticResources>platform:/resource/org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.ecore</semanticResources>
@@ -275,9 +275,9 @@
       </ownedStyle>
       <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@edgeMappings[name='EC_EReference']"/>
     </ownedDiagramElements>
-    <ownedDiagramElements xmi:type="diagram:DNodeList" uid="_0VTOwJX-Eeuf37xcIYD_eA" name="SQLView" tooltipText="" outgoingEdges="_5aXrIJX-Eeuf37xcIYD_eA" incomingEdges="_0VZ8cJX-Eeuf37xcIYD_eA" width="12" height="10">
-      <target xmi:type="ecore:EClass" href="dtm_sql_views.ecore#//SQLView"/>
-      <semanticElements xmi:type="ecore:EClass" href="dtm_sql_views.ecore#//SQLView"/>
+    <ownedDiagramElements xmi:type="diagram:DNodeList" uid="_0VTOwJX-Eeuf37xcIYD_eA" name="DTMView" tooltipText="" outgoingEdges="_5aXrIJX-Eeuf37xcIYD_eA" incomingEdges="_0VZ8cJX-Eeuf37xcIYD_eA" width="12" height="10">
+      <target xmi:type="ecore:EClass" href="dtm_views.ecore#//DTMView"/>
+      <semanticElements xmi:type="ecore:EClass" href="dtm_views.ecore#//DTMView"/>
       <decorations xmi:type="viewpoint:Decoration" uid="_0VT10ZX-Eeuf37xcIYD_eA">
         <description xmi:type="description:SemanticBasedDecoration" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@decorationDescriptionsSet/@decorationDescriptions[name='External']"/>
       </decorations>
@@ -289,8 +289,8 @@
       </ownedStyle>
       <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']"/>
       <ownedElements xmi:type="diagram:DNodeListElement" uid="_0VYuUJX-Eeuf37xcIYD_eA" name="VTL_Code : EString" tooltipText="">
-        <target xmi:type="ecore:EAttribute" href="dtm_sql_views.ecore#//SQLView/VTL_Code"/>
-        <semanticElements xmi:type="ecore:EAttribute" href="dtm_sql_views.ecore#//SQLView/VTL_Code"/>
+        <target xmi:type="ecore:EAttribute" href="dtm_views.ecore#//DTMView/VTL_Code"/>
+        <semanticElements xmi:type="ecore:EAttribute" href="dtm_views.ecore#//DTMView/VTL_Code"/>
         <ownedStyle xmi:type="diagram:BundledImage" uid="_0VYuUZX-Eeuf37xcIYD_eA" labelAlignment="LEFT">
           <description xmi:type="style:BundledImageDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']/@style"/>
         </ownedStyle>
@@ -340,8 +340,8 @@
       </ownedElements>
     </ownedDiagramElements>
     <ownedDiagramElements xmi:type="diagram:DEdge" uid="_5aXrIJX-Eeuf37xcIYD_eA" sourceNode="_0VTOwJX-Eeuf37xcIYD_eA" targetNode="_5aQ9cJX-Eeuf37xcIYD_eA">
-      <target xmi:type="ecore:EClass" href="dtm_sql_views.ecore#//SQLView"/>
-      <semanticElements xmi:type="ecore:EClass" href="dtm_sql_views.ecore#//SQLView"/>
+      <target xmi:type="ecore:EClass" href="dtm_views.ecore#//DTMView"/>
+      <semanticElements xmi:type="ecore:EClass" href="dtm_views.ecore#//DTMView"/>
       <decorations xmi:type="viewpoint:Decoration" uid="_5aYSNpX-Eeuf37xcIYD_eA">
         <description xmi:type="description:SemanticBasedDecoration" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@decorationDescriptionsSet/@decorationDescriptions[name='External']"/>
       </decorations>

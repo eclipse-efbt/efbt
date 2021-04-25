@@ -126,12 +126,6 @@ Exhibit A – Form of Secondary Licenses Notice
       <import plugin="org.eclipse.emf.ecore.xmi"/>
       <import plugin="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions"/>
       <import plugin="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes"/>
-      <import plugin="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagefunctions"/>
-      <import plugin="org.eclipse.emf.mwe.core"/>
-      <import plugin="org.eclipse.emf.mwe.utils"/>
-      <import plugin="org.eclipse.emf.mwe2.lib"/>
-      <import plugin="org.eclipse.emf.mwe2.runtime"/>
-      <import plugin="org.eclipse.emf.mwe2.launch"/>
       <import plugin="org.eclipse.efbt.cocalimo.smcubes.model.program"/>
       <import plugin="org.eclipse.efbt.cocalimo.core.model.requirements_text"/>
       <import plugin="org.eclipse.efbt.cocalimo.core.model.testing"/>
@@ -140,10 +134,40 @@ Exhibit A – Form of Secondary Licenses Notice
       <import plugin="org.eclipse.efbt.cocalimo.core.model.module_management" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.efbt.cocalimo.smcubes.model.core"/>
       <import plugin="org.eclipse.efbt.cocalimo.dtm.model.core"/>
+      <import plugin="org.emfjson.jackson"/>
+      <import plugin="com.fasterxml.jackson.core.jackson-databind"/>
+      <import plugin="org.eclipse.emf.edit"/>
+      <import plugin="org.eclipse.efbt.cocalimo.smcubes.model.program.edit"/>
+      <import plugin="org.eclipse.efbt.cocalimo.core.model.functionality_module.edit"/>
+      <import plugin="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.edit"/>
+      <import plugin="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes.edit"/>
+      <import plugin="org.eclipse.efbt.cocalimo.core.model.module_management.edit"/>
+      <import plugin="org.eclipse.efbt.cocalimo.core.model.requirements_text.edit"/>
+      <import plugin="org.eclipse.efbt.cocalimo.smcubes.model.input_data.edit"/>
+      <import plugin="org.eclipse.efbt.cocalimo.smcubes.model.core.edit"/>
+      <import plugin="org.eclipse.efbt.cocalimo.core.model.testing.edit"/>
+      <import plugin="org.eclipse.efbt.cocalimo.dtm.model.core.edit"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.emf.edit.ui"/>
+      <import plugin="org.eclipse.ui.ide"/>
    </requires>
 
    <plugin
          id="org.eclipse.efbt.cocalimo.dtm.model.platform_call"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.efbt.cocalimo.dtm.model.platform_call.edit"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.efbt.cocalimo.dtm.model.platform_call.editor"
          download-size="0"
          install-size="0"
          version="0.0.0"

@@ -1,0 +1,62 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/efbt_data_definition#//CombinationModule",
+  "name" : "combinationsModule",
+  "combinations" : [ {
+    "code" : "totalJPMktValue",
+    "combination_id" : "totalJPMktValue",
+    "name" : "totalJPMktValue",
+    "combination_items" : [ {
+      "member_id" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
+        "$ref" : "members.efbt_data_definition#EBA_GA_EBA_JP"
+      },
+      "variable_id" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "variables.efbt_data_definition#CNTRY"
+      }
+    }, {
+      "variable_id" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "variables.efbt_data_definition#ECB2_MRKT_VL"
+      }
+    } ]
+  }, {
+    "code" : "totalUSNotional",
+    "combination_id" : "totalUSNotional",
+    "name" : "totalUSNotional",
+    "combination_items" : [ {
+      "member_id" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
+        "$ref" : "members.efbt_data_definition#EBA_GA_EBA_US"
+      },
+      "variable_id" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "variables.efbt_data_definition#CNTRY"
+      }
+    }, {
+      "variable_id" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "variables.efbt_data_definition#NTNL_AMNT"
+      }
+    } ]
+  }, {
+    "code" : "notionalOfUS_AAA",
+    "combination_id" : "notionalOfUS_AAA",
+    "name" : "notionalOfUS_AAA",
+    "combination_items" : [ {
+      "member_id" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
+        "$ref" : "members.efbt_data_definition#EBA_GA_EBA_US"
+      },
+      "variable_id" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "variables.efbt_data_definition#CNTRY"
+      }
+    }, {
+      "variable_id" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "variables.efbt_data_definition#trippleA_NotionaAmount"
+      }
+    } ]
+  } ]
+}

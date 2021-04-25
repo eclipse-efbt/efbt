@@ -467,9 +467,9 @@
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']"/>
       </ownedElements>
-      <ownedElements xmi:type="diagram:DNodeListElement" uid="_2eALNCWxEeug2Zn8-gtYyw" name="sqlName : EString" tooltipText="">
-        <target xmi:type="ecore:EAttribute" href="functions.ecore#//FunctionSpec/sqlName"/>
-        <semanticElements xmi:type="ecore:EAttribute" href="functions.ecore#//FunctionSpec/sqlName"/>
+      <ownedElements xmi:type="diagram:DNodeListElement" uid="_2eALNCWxEeug2Zn8-gtYyw" name="relationalName : EString" tooltipText="">
+        <target xmi:type="ecore:EAttribute" href="functions.ecore#//FunctionSpec/relationalName"/>
+        <semanticElements xmi:type="ecore:EAttribute" href="functions.ecore#//FunctionSpec/relationalName"/>
         <ownedStyle xmi:type="diagram:BundledImage" uid="_2eAyQCWxEeug2Zn8-gtYyw" labelAlignment="LEFT">
           <description xmi:type="style:BundledImageDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']/@style"/>
         </ownedStyle>

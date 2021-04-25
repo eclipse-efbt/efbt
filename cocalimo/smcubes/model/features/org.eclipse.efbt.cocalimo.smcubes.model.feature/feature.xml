@@ -128,6 +128,16 @@ Exhibit A – Form of Secondary Licenses Notice
       <import plugin="org.eclipse.efbt.cocalimo.core.model.functionality_module"/>
       <import plugin="org.eclipse.efbt.cocalimo.core.model.requirements_text"/>
       <import plugin="org.eclipse.efbt.cocalimo.core.model.testing"/>
+      <import plugin="org.emfjson.jackson"/>
+      <import plugin="com.fasterxml.jackson.core.jackson-databind"/>
+      <import plugin="org.eclipse.emf.edit"/>
+      <import plugin="org.eclipse.efbt.cocalimo.core.model.module_management.edit"/>
+      <import plugin="org.eclipse.efbt.cocalimo.core.model.functionality_module.edit"/>
+      <import plugin="org.eclipse.efbt.cocalimo.core.model.requirements_text.edit"/>
+      <import plugin="org.eclipse.efbt.cocalimo.core.model.testing.edit"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.emf.edit.ui"/>
+      <import plugin="org.eclipse.ui.ide"/>
    </requires>
 
    <plugin
@@ -146,6 +156,48 @@ Exhibit A – Form of Secondary Licenses Notice
 
    <plugin
          id="org.eclipse.efbt.cocalimo.smcubes.model.program"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.efbt.cocalimo.smcubes.model.core.edit"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.efbt.cocalimo.smcubes.model.input_data.edit"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.efbt.cocalimo.smcubes.model.program.edit"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.efbt.cocalimo.smcubes.model.core.editor"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.efbt.cocalimo.smcubes.model.input_data.editor"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.efbt.cocalimo.smcubes.model.program.editor"
          download-size="0"
          install-size="0"
          version="0.0.0"

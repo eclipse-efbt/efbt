@@ -1,0 +1,44 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/dtm_report_cell_views#//ReportCellViewModule",
+  "name" : "reportCellViewsModule",
+  "reportCellViews" : [ {
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//TargetCube",
+      "$ref" : "cubeLineageModule.cubes#totalJPMktValue"
+    },
+    "name" : "totalJPMktValue_view",
+    "reportCell" : {
+      "combination" : {
+        "eClass" : "http://www.eclipse.org/efbt/data_definition#//COMBINATION",
+        "$ref" : "combinations.efbt_data_definition#totalJPMktValue"
+      },
+      "name" : "totalJPMktValue"
+    }
+  }, {
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//TargetCube",
+      "$ref" : "cubeLineageModule.cubes#totalUSNotional"
+    },
+    "name" : "totalUSNotional_view",
+    "reportCell" : {
+      "combination" : {
+        "eClass" : "http://www.eclipse.org/efbt/data_definition#//COMBINATION",
+        "$ref" : "combinations.efbt_data_definition#totalUSNotional"
+      },
+      "name" : "totalUSNotional"
+    }
+  }, {
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//TargetCube",
+      "$ref" : "cubeLineageModule.cubes#notionalOfUS_AAA"
+    },
+    "name" : "notionalOfUS_AAA_view",
+    "reportCell" : {
+      "combination" : {
+        "eClass" : "http://www.eclipse.org/efbt/data_definition#//COMBINATION",
+        "$ref" : "combinations.efbt_data_definition#notionalOfUS_AAA"
+      },
+      "name" : "notionalOfUS_AAA"
+    }
+  } ]
+}

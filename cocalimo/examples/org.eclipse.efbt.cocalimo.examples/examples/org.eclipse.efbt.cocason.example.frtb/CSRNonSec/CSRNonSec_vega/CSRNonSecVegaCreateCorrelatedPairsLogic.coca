@@ -1,0 +1,209 @@
+ProgramAndCalls : { program : dtmProgram :  { 
+	
+	executableLogic :[ dtmExecutableLogic CSRNonSecVegaCreateCorrelatedPairsLogic : { 
+		
+			
+			 datasetTransformationModules : [ VersionedDTMViewsModule   views : { 
+			 	DTMViews : [ 
+
+			 		CopyView copyOfWeightedCSRNonSecVegaSensitivitiesAndRiskFactors : {
+			 			cube : "CSRNonSecVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfWeightedCSRNonSecVegaSensitivitiesAndRiskFactors"
+			 			
+			 		},
+			 		
+			 		JoinView CSRNonSecVegaSensitivityCombinations : { 
+			 			cube : "CSRNonSecVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CSRNonSecVegaSensitivityCombinations"
+			 			whereClause : WhereClause : {
+			 				function : BooleanFunction bf43  : { 
+			 		 				 				
+			 		 				 						functionSpec : "commonFunctions.commonFunctionSpecModule.equals" 
+			 		 				 						parameters : [
+			 		 				 							SpeculativeCubeColumnParameter : {
+			 		 				 								column : "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID"
+			 		 				 								cube :"CSRNonSecVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfWeightedCSRNonSecVegaSensitivitiesAndRiskFactors"
+			 		 				 								},
+			 		 				 							SpeculativeCubeColumnParameter : {
+			 		 				 								column : "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID"
+			 		 				 								cube : "CSRNonSecVegaApplyWeighting.freeBirdToolsCubeModule.weightedCSRNonSecVegaSensitivitiesAndRiskFactors"
+			 		 				 								}
+			 		 				 							
+			 		 				 							]
+			 		 				 							}
+			 		 				 						
+			 		 				 			}
+			 		 				 			renames : [
+			 		 				 				RenameAs : {
+			 		 				 					fromCube :"CSRNonSecVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfWeightedCSRNonSecVegaSensitivitiesAndRiskFactors"
+			 		 				 					fromVariable : "CSRNonSecVegaMeasuresStaticModel.CSRNonSecVegaMeasuresModel.variablesModule.weightedCSRNonSecVegaSensitivity"
+			 		 				 					toVariable : 	"CSRNonSecVegaMeasuresStaticModel.CSRNonSecVegaMeasuresModel.variablesModule.CSRNonSecVegaSensitivityl"
+			 		 				 					},
+			 		 				 				RenameAs : {
+			 		 				 					fromCube : "CSRNonSecVegaApplyWeighting.freeBirdToolsCubeModule.weightedCSRNonSecVegaSensitivitiesAndRiskFactors"
+			 		 				 					fromVariable : 	"CSRNonSecVegaMeasuresStaticModel.CSRNonSecVegaMeasuresModel.variablesModule.weightedCSRNonSecVegaSensitivity"
+			 		 				 					toVariable : 	"CSRNonSecVegaMeasuresStaticModel.CSRNonSecVegaMeasuresModel.variablesModule.CSRNonSecVegaSensitivityk"
+			 		 				 					},
+			 		 				 				RenameAs : {
+			 		 				 					fromCube :"CSRNonSecVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfWeightedCSRNonSecVegaSensitivitiesAndRiskFactors"
+			 		 				 					fromVariable : 	"FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.tenor"
+			 		 				 					toVariable : 	"CSRNonSecVegaMeasuresStaticModel.CSRNonSecVegaMeasuresModel.variablesModule.tenorl"
+			 		 				 					},
+			 		 				 				RenameAs : {
+			 		 				 					fromCube : "CSRNonSecVegaApplyWeighting.freeBirdToolsCubeModule.weightedCSRNonSecVegaSensitivitiesAndRiskFactors"
+			 		 				 					fromVariable : 	"FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.tenor"
+			 		 				 					toVariable : 		"CSRNonSecVegaMeasuresStaticModel.CSRNonSecVegaMeasuresModel.variablesModule.tenork"
+			 		 				 					},
+			 		 				 				RenameAs : {
+			 		 				 					fromCube : "CSRNonSecVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfWeightedCSRNonSecVegaSensitivitiesAndRiskFactors"
+			 		 				 					fromVariable : 	"FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
+			 		 				 					toVariable : 	"FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.riskFactorIDl"
+			 		 				 					},
+			 		 				 				RenameAs : {
+			 		 				 					fromCube : "CSRNonSecVegaApplyWeighting.freeBirdToolsCubeModule.weightedCSRNonSecVegaSensitivitiesAndRiskFactors"
+			 		 				 					fromVariable : 	"FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
+			 		 				 					toVariable : 	"FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.riskFactorIDk"
+			 		 				 					} 
+			 		 				 					
+			 		 				 					]
+			 		 				 				ignores : [ 
+			 		 				 					IgnoreColumn : {
+			 		 				 						columnToIgnore : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.mainCurrency"
+			 		 				 						cube : "CSRNonSecVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfWeightedCSRNonSecVegaSensitivitiesAndRiskFactors"
+			 		 				 					},
+			 		 				 					IgnoreColumn : {
+			 		 				 						columnToIgnore : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.secondCurrency"
+			 		 				 						cube : "CSRNonSecVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfWeightedCSRNonSecVegaSensitivitiesAndRiskFactors"
+			 		 				 					}
+			 		 				 					
+			 		 				 				]
+			 		 				 				
+			 		 				 			
+			 		 				 				},
+			 		EnrichmentView CSRNonSecVegaSensitivityCombinationsWithCorrelationFactor : {
+			 			cube :"CSRNonSecVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CSRNonSecVegaSensitivityCombinationsWithCorrelationFactor"
+			 			functions : [ BasicColumnFunction CSRNonSecVegaSensitivityCombinationsWithCorrelationFactor_CSRNonSecVegaCorrelationFactor : {
+			 				cube :  "CSRNonSecVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CSRNonSecVegaSensitivityCombinationsWithCorrelationFactor"
+			 				variable : "CSRNonSecVegaMeasuresStaticModel.CSRNonSecVegaMeasuresModel.variablesModule.CSRNonSecVegaCorrelationFactor"
+			 				basicFunction : BasicFunction bf44 : {
+			 					functionSpec : "FRTBFunctions.CSRNonSecFunctionSpecModule.getCSRNonSecVegaCorrelationFactor" 
+			 					parameters : [
+			 						SpeculativeCubeColumnParameter : { 
+			 							column : "CSRNonSecVegaMeasuresStaticModel.CSRNonSecVegaMeasuresModel.variablesModule.tenork"
+			 							cube : "CSRNonSecVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CSRNonSecVegaSensitivityCombinations"
+			 						},
+			 						SpeculativeCubeColumnParameter : { 
+			 							column : "CSRNonSecVegaMeasuresStaticModel.CSRNonSecVegaMeasuresModel.variablesModule.tenorl"
+			 							cube : "CSRNonSecVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CSRNonSecVegaSensitivityCombinations"
+			 						},
+			 						SpeculativeCubeColumnParameter : { 
+			 							column : "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.riskFactorIDk"
+			 							cube : "CSRNonSecVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CSRNonSecVegaSensitivityCombinations"
+			 						},
+			 						SpeculativeCubeColumnParameter : { 
+			 							column :"FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.riskFactorIDl"
+			 							cube : "CSRNonSecVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CSRNonSecVegaSensitivityCombinations"
+			 						}
+			 						
+			 				
+			 					]
+			 				}
+			 			} 
+			 		
+			 			] 
+			 			
+			 			},
+			 		EnrichmentView 	CSRNonSecVegaSensitivitiesCorrelated : {
+			 			
+			 			cube : "CSRNonSecVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CSRNonSecVegaSensitivitiesCorrelated"
+			 			
+			 			functions : [ BasicColumnFunction CSRNonSecVegaSensitivitiesCorrelated_CSRNonSecVegaKBInput : { 			 				
+			 					cube :  "CSRNonSecVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CSRNonSecVegaSensitivitiesCorrelated"
+			 					variable :"CSRNonSecVegaMeasuresStaticModel.CSRNonSecVegaMeasuresModel.variablesModule.CSRNonSecVegaKBInput"
+			 				 
+				 				basicFunction : BasicFunction bf45 :
+				 				{ 
+				 					functionSpec : "commonFunctions.commonFunctionSpecModule.multiply" 
+				 					parameters : [ 
+				 						BasicFunction bf46 : { 
+				 							functionSpec : "commonFunctions.commonFunctionSpecModule.multiply"
+				 							parameters : [
+				 								SpeculativeCubeColumnParameter : { 
+				 									column : "CSRNonSecVegaMeasuresStaticModel.CSRNonSecVegaMeasuresModel.variablesModule.CSRNonSecVegaSensitivityk"
+				 									cube : "CSRNonSecVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CSRNonSecVegaSensitivityCombinationsWithCorrelationFactor"
+				 								},
+				 								SpeculativeCubeColumnParameter : { 
+				 									column :"CSRNonSecVegaMeasuresStaticModel.CSRNonSecVegaMeasuresModel.variablesModule.CSRNonSecVegaSensitivityk"
+				 									cube : "CSRNonSecVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CSRNonSecVegaSensitivityCombinationsWithCorrelationFactor"
+				 								}
+				 								
+				 								]
+				 							},
+				 							SpeculativeCubeColumnParameter : { 
+				 									column : "CSRNonSecVegaMeasuresStaticModel.CSRNonSecVegaMeasuresModel.variablesModule.CSRNonSecVegaCorrelationFactor"
+				 									cube :"CSRNonSecVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CSRNonSecVegaSensitivityCombinationsWithCorrelationFactor"
+				 								}
+				 							]
+				 						}
+				 					
+				 				}
+			 			]
+			 			
+			 		},
+			 		AggregateEnrichmentView CSRNonSecVegaSensitivitiesCorrelatedAndAggregated : {
+			 			cube : "CSRNonSecVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CSRNonSecVegaSensitivitiesCorrelatedAndAggregated"
+			 			
+			 			functions : [ 
+			 				AggregateColumnFunction CSRNonSecVegaSensitivitiesCorrelatedAndAggregated_CSRNonSecVegaKBInput_per_bucket : {
+			 					cube : "CSRNonSecVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CSRNonSecVegaSensitivitiesCorrelatedAndAggregated"
+			 					variable : "CSRNonSecVegaMeasuresStaticModel.CSRNonSecVegaMeasuresModel.variablesModule.CSRNonSecVegaKBInputPerBucket"
+			 					aggregateFunction : AggregateFunction af8 : { 
+			 						functionSpec : "commonFunctions.commonFunctionSpecModule.SUM"
+			 						parameters : [  
+			 							SpeculativeCubeColumnParameter : {
+			 								column : "CSRNonSecVegaMeasuresStaticModel.CSRNonSecVegaMeasuresModel.variablesModule.CSRNonSecVegaKBInput"
+			 								cube : "CSRNonSecVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CSRNonSecVegaSensitivitiesCorrelated"
+			 							}
+			 						] 
+			 					} 
+			 				}
+			 			]
+			 			groupByClause : GroupByClause : {
+			 				groupByColumns : [ "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID" ]
+			 			}
+			 		},
+			 		
+			 		EnrichmentView CSRNonSecVegaSensitivityKBPerBucket : {
+			 			cube : "CSRNonSecVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CSRNonSecVegaSensitivityKBPerBucket"
+			 			
+			 			functions : [ BasicColumnFunction CSRNonSecVegaSensitivityKBPerBucket_CSRNonSecVegaKB : {
+			 				cube : "CSRNonSecVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CSRNonSecVegaSensitivityKBPerBucket"
+			 				variable : "CSRNonSecVegaMeasuresStaticModel.CSRNonSecVegaMeasuresModel.variablesModule.CSRNonSecVegaKB"
+			 				basicFunction : BasicFunction bf49  : { 
+			 					
+			 				functionSpec : "commonFunctions.commonFunctionSpecModule.sqrt" 
+			 				parameters : [ 
+			 					
+			 				 BasicFunction bf52 : {
+			 					
+			 					functionSpec : "commonFunctions.commonFunctionSpecModule.max"
+			 					parameters  : [
+			 						SpeculativeCubeColumnParameter : {
+			 							column : "CSRNonSecVegaMeasuresStaticModel.CSRNonSecVegaMeasuresModel.variablesModule.CSRNonSecVegaKBInputPerBucket" 
+			 							cube : "CSRNonSecVegaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.CSRNonSecVegaSensitivitiesCorrelatedAndAggregated"
+			 						},
+			 						ValueParameter : {
+			 							dataType : :Decimal
+			 							value : "0.0"
+			 						}
+			 						]
+			 					}
+			 				
+			 			]
+			 			}
+			 			}
+			 			]
+			 		
+			 			
+			 		}
+
+
+			 		] } ] } ] } }

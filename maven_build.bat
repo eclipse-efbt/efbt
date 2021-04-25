@@ -30,10 +30,7 @@ call mvn install
 cd ..\..\..
 cd cocalimo\dtm\ui_sirius
 call mvn install
-cd ..\..\..
-cd cocason\org.eclipse.efbt.cocason.dsl.cocason.parent
-call mvn install 
-cd ..\..                   
+cd ..\..\..                   
 cd controller\ldm
 call mvn install
 cd ..\..

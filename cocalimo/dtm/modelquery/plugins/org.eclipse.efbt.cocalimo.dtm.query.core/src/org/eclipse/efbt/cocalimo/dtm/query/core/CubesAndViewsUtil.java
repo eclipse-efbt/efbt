@@ -20,13 +20,10 @@ import org.eclipse.efbt.language.dtm.model.transformation.VersionedComponentsSet
 import org.eclipse.efbt.language.dtm.model.transformation.VersionedCubeSchemaModule;
 import org.eclipse.efbt.language.dtm.model.transformation.VersionedFunctionalModuleLogic;
 import org.eclipse.efbt.language.dtm.model.dtm_report_cell_views.ReportCellViewModule;
-import org.eclipse.efbt.language.dtm.model.dtm_sql_views.SQLView;
-import org.eclipse.efbt.language.dtm.model.dtm_sql_views.VersionedSQLViewsModule;
+import org.eclipse.efbt.language.dtm.model.dtm_views.DTMView;
+import org.eclipse.efbt.language.dtm.model.dtm_views.VersionedDTMViewsModule;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cubes.BaseCube;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cube_schema.CubeSchema;
-
-import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.incremental_cubes.BaseDeltaCube;
-import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.incremental_cubes.BaseViewCube;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cubes.DerivedCube;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cubes.FreeBirdToolsCube;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cubes.TargetCube;
@@ -56,10 +53,6 @@ public class CubesAndViewsUtil {
 			return "INPUT LAYER CUBE: " + cube.getName().replace('_', ' ');
 		else if  (cube instanceof TargetCube)
 			return "REPORT CELL: " + cube.getName().replace('_', ' ');
-		else if(cube instanceof BaseDeltaCube)
-			return "BASE DELTA CUBE: " + cube.getName().replace('_', ' ');
-		else if  (cube instanceof BaseViewCube)
-			return "BASE VIEW CUBE: " + cube.getName().replace('_', ' ');
 		else 
 			return "TRANSFORMATION: " + cube.getName().replace('_', ' ');
 	}
@@ -78,12 +71,12 @@ public class CubesAndViewsUtil {
 	}
 	
 	/**
-	 * Provides a UI display name for an SQLView.
+	 * Provides a UI display name for an DTMView.
 	 * 
 	 * @param view
 	 * @return
 	 */
-	public static String getSQLViewDisplayName(SQLView view)
+	public static String getDTMViewDisplayName(DTMView view)
 	{
 		String cn = view.getClass().getSimpleName();
 		String vn = "";
@@ -148,44 +141,13 @@ public class CubesAndViewsUtil {
 		while (tableListIter.hasNext())
 		{
 			FreeBirdToolsCube t = tableListIter.next();
-			if( (t instanceof BaseCube) && !(t instanceof BaseDeltaCube) && !(t instanceof BaseViewCube))
+			if( (t instanceof BaseCube) )
 				returnvalue.add(t);
 		}
 		return returnvalue;
 	}
 	
-	public static EList<FreeBirdToolsCube> getBaseViewCubes ( VersionedComponentsSet context)
-	{
-		
-		
-			EList<FreeBirdToolsCube> tableList = getCubes(context);
-			EList<FreeBirdToolsCube> returnvalue = new BasicEList<FreeBirdToolsCube>();
-			Iterator<FreeBirdToolsCube> tableListIter = tableList.iterator();
-			while (tableListIter.hasNext())
-			{
-				FreeBirdToolsCube t = tableListIter.next();
-				if( t instanceof BaseViewCube)
-					returnvalue.add(t);
-			}
-			return returnvalue;
-		
-	}
-	
-	public static EList<FreeBirdToolsCube> getBaseDeltaCubes ( VersionedComponentsSet context)
-	{
-		
-		EList<FreeBirdToolsCube> tableList = getCubes(context);
-		EList<FreeBirdToolsCube> returnvalue = new BasicEList<FreeBirdToolsCube>();
-		Iterator<FreeBirdToolsCube> tableListIter = tableList.iterator();
-		while (tableListIter.hasNext())
-		{
-			FreeBirdToolsCube t = tableListIter.next();
-			if( t instanceof BaseDeltaCube)
-				returnvalue.add(t);
-		}
-		return returnvalue;
-	}
-	
+
 
 	
 	
@@ -200,10 +162,10 @@ public class CubesAndViewsUtil {
 	{
 	
 		EList<FreeBirdToolsCube> returnCubelist = new BasicEList<FreeBirdToolsCube>();
-		 EList<VersionedSQLViewsModule> functionalModuleLogic = versionedComponentsSet.getDatasetTransformationModules();
+		 EList<VersionedDTMViewsModule> functionalModuleLogic = versionedComponentsSet.getDatasetTransformationModules();
 		 EList<ReportCellViewModule> reportcellmodules = versionedComponentsSet.getReportCellViewModules();
 		EList<VersionedCubeSchemaModule> cubeSchemaModules = versionedComponentsSet.getCubeSchemaModules();
-		Iterator<VersionedSQLViewsModule> functionalModuleLogicIter = functionalModuleLogic.iterator();
+		Iterator<VersionedDTMViewsModule> functionalModuleLogicIter = functionalModuleLogic.iterator();
 		Iterator<VersionedCubeSchemaModule> cubeSchemaModulesIter = cubeSchemaModules.iterator();
 		Iterator<ReportCellViewModule> reportcellmodulesIter = reportcellmodules.iterator();
 		while (functionalModuleLogicIter.hasNext())
@@ -214,8 +176,8 @@ public class CubesAndViewsUtil {
 			while(moduleContents.hasNext())
 			{
 				EObject object = moduleContents.next();
-				if(object instanceof SQLView)
-					returnCubelist.add(((SQLView) object).getCube());
+				if(object instanceof DTMView)
+					returnCubelist.add(((DTMView) object).getCube());
 				
 			}
 		}
@@ -228,8 +190,8 @@ public class CubesAndViewsUtil {
 			while(moduleContents.hasNext())
 			{
 				EObject object = moduleContents.next();
-				if(object instanceof SQLView)
-					returnCubelist.add(((SQLView) object).getCube());
+				if(object instanceof DTMView)
+					returnCubelist.add(((DTMView) object).getCube());
 				
 			}
 		}
@@ -279,7 +241,7 @@ public class CubesAndViewsUtil {
 		while (tableListIter.hasNext())
 		{
 			FreeBirdToolsCube t = tableListIter.next();
-			if( (t instanceof DerivedCube) && !(t instanceof TargetCube) && !(t instanceof BaseViewCube))
+			if( (t instanceof DerivedCube) && !(t instanceof TargetCube) )
 				returnvalue.add(t);
 		}
 		return returnvalue;
@@ -313,18 +275,18 @@ public class CubesAndViewsUtil {
 	
 	                                                                            
 	/**
-	 * Returns all the SQLViews  referenced in a VersionedComponentsSet.
+	 * Returns all the DTMViews  referenced in a VersionedComponentsSet.
 	 * 
 	 * @param versionedComponentsSet
 	 * @return
 	 */
-	public static EList<SQLView> getViews( VersionedComponentsSet versionedComponentsSet)
+	public static EList<DTMView> getViews( VersionedComponentsSet versionedComponentsSet)
 	{
 	
 		
-		EList<SQLView> returnvalue = new BasicEList<SQLView>();
-		 EList<VersionedSQLViewsModule> functionalModuleLogics = versionedComponentsSet.getDatasetTransformationModules();
-		Iterator<VersionedSQLViewsModule> functionalModuleLogicsIter = functionalModuleLogics.iterator();
+		EList<DTMView> returnvalue = new BasicEList<DTMView>();
+		 EList<VersionedDTMViewsModule> functionalModuleLogics = versionedComponentsSet.getDatasetTransformationModules();
+		Iterator<VersionedDTMViewsModule> functionalModuleLogicsIter = functionalModuleLogics.iterator();
 		while (functionalModuleLogicsIter.hasNext())
 		{
 			VersionedFunctionalModuleLogic module = functionalModuleLogicsIter.next();
@@ -333,8 +295,8 @@ public class CubesAndViewsUtil {
 			while(moduleContents.hasNext())
 			{
 				EObject object = moduleContents.next();
-				if(object instanceof SQLView)
-					returnvalue.add((SQLView) object);
+				if(object instanceof DTMView)
+					returnvalue.add((DTMView) object);
 				
 			}
 		}
@@ -363,18 +325,18 @@ public class CubesAndViewsUtil {
 	}
 	
 	/**
-	 * Gets the list of DerivedCubes referenced in a VersionedSQLViewsModule.
+	 * Gets the list of DerivedCubes referenced in a VersionedDTMViewsModule.
 	 * 
 	 * @param module
 	 * @return
 	 */
-	public static EList<FreeBirdToolsCube> getCubes ( VersionedSQLViewsModule module)
+	public static EList<FreeBirdToolsCube> getCubes ( VersionedDTMViewsModule module)
 	{		
 		EList<FreeBirdToolsCube> returnvalue = new BasicEList<FreeBirdToolsCube>();
-		Iterator<SQLView> viewIter = module.getSqlViews().iterator();
+		Iterator<DTMView> viewIter = module.getDTMViews().iterator();
 		while (viewIter.hasNext())
 		{
-			SQLView view = viewIter.next();
+			DTMView view = viewIter.next();
 			returnvalue.add(view.getCube());
 		}
 		return returnvalue;

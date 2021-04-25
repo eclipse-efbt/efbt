@@ -6,7 +6,7 @@
     <semanticResources>platform:/resource/org.eclipse.efbt.cocalimo.core.model.functionality_module/model/scenarios.ecore</semanticResources>
     <semanticResources>platform:/resource/org.eclipse.efbt.cocalimo.core.model.requirements_text/model/requirements_text.ecore</semanticResources>
     <semanticResources>platform:/resource/org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.ecore</semanticResources>
-    <semanticResources>dtm_sql_views.ecore</semanticResources>
+    <semanticResources>dtm_views.ecore</semanticResources>
     <semanticResources>platform:/resource/org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagefunctions/model/column_transformation_logic.ecore</semanticResources>
     <semanticResources>platform:/resource/org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions/model/functions.ecore</semanticResources>
     <semanticResources>platform:/resource/org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes/model/cubes.ecore</semanticResources>
@@ -380,24 +380,24 @@
         </computedStyleDescriptions>
       </data>
     </ownedAnnotationEntries>
-    <ownedDiagramElements xmi:type="diagram:DNodeList" uid="_L2AVcJX-Eeuf37xcIYD_eA" name="LeafModuleToVersionedSQLViewsModule" tooltipText="" incomingEdges="_L2PmA5X-Eeuf37xcIYD_eA" width="12" height="10">
-      <target xmi:type="ecore:EClass" href="domain_model_mapping.ecore#//LeafModuleToVersionedSQLViewsModule"/>
-      <semanticElements xmi:type="ecore:EClass" href="domain_model_mapping.ecore#//LeafModuleToVersionedSQLViewsModule"/>
+    <ownedDiagramElements xmi:type="diagram:DNodeList" uid="_L2AVcJX-Eeuf37xcIYD_eA" name="LeafModuleToVersionedDTMViewsModule" tooltipText="" incomingEdges="_L2PmA5X-Eeuf37xcIYD_eA" width="12" height="10">
+      <target xmi:type="ecore:EClass" href="domain_model_mapping.ecore#//LeafModuleToVersionedDTMViewsModule"/>
+      <semanticElements xmi:type="ecore:EClass" href="domain_model_mapping.ecore#//LeafModuleToVersionedDTMViewsModule"/>
       <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_L2A8gJX-Eeuf37xcIYD_eA" borderSize="1" borderSizeComputationExpression="1" backgroundStyle="Liquid" foregroundColor="255,252,216">
         <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@style"/>
       </ownedStyle>
       <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']"/>
       <ownedElements xmi:type="diagram:DNodeListElement" uid="_L2HqO5X-Eeuf37xcIYD_eA" name=" scheme : LeafFunctionalityModule" tooltipText="">
-        <target xmi:type="ecore:EReference" href="domain_model_mapping.ecore#//LeafModuleToVersionedSQLViewsModule/scheme"/>
-        <semanticElements xmi:type="ecore:EReference" href="domain_model_mapping.ecore#//LeafModuleToVersionedSQLViewsModule/scheme"/>
+        <target xmi:type="ecore:EReference" href="domain_model_mapping.ecore#//LeafModuleToVersionedDTMViewsModule/scheme"/>
+        <semanticElements xmi:type="ecore:EReference" href="domain_model_mapping.ecore#//LeafModuleToVersionedDTMViewsModule/scheme"/>
         <ownedStyle xmi:type="diagram:BundledImage" uid="_L2IRQJX-Eeuf37xcIYD_eA" labelAlignment="LEFT" color="114,159,207">
           <description xmi:type="style:BundledImageDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EReferenceNode']/@style"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EReferenceNode']"/>
       </ownedElements>
-      <ownedElements xmi:type="diagram:DNodeListElement" uid="_L2I4UJX-Eeuf37xcIYD_eA" name=" module : VersionedSQLViewsModule" tooltipText="">
-        <target xmi:type="ecore:EReference" href="domain_model_mapping.ecore#//LeafModuleToVersionedSQLViewsModule/module"/>
-        <semanticElements xmi:type="ecore:EReference" href="domain_model_mapping.ecore#//LeafModuleToVersionedSQLViewsModule/module"/>
+      <ownedElements xmi:type="diagram:DNodeListElement" uid="_L2I4UJX-Eeuf37xcIYD_eA" name=" module : VersionedDTMViewsModule" tooltipText="">
+        <target xmi:type="ecore:EReference" href="domain_model_mapping.ecore#//LeafModuleToVersionedDTMViewsModule/module"/>
+        <semanticElements xmi:type="ecore:EReference" href="domain_model_mapping.ecore#//LeafModuleToVersionedDTMViewsModule/module"/>
         <ownedStyle xmi:type="diagram:BundledImage" uid="_L2I4UZX-Eeuf37xcIYD_eA" labelAlignment="LEFT" color="114,159,207">
           <description xmi:type="style:BundledImageDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EReferenceNode']/@style"/>
         </ownedStyle>
@@ -598,9 +598,9 @@
       </ownedStyle>
       <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@edgeMappings[name='EC_EReference']"/>
     </ownedDiagramElements>
-    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_L2PmA5X-Eeuf37xcIYD_eA" name="[0..*] leafModuleToVersionedSQLViewsModules" sourceNode="_L2Em4ZX-Eeuf37xcIYD_eA" targetNode="_L2AVcJX-Eeuf37xcIYD_eA">
-      <target xmi:type="ecore:EReference" href="domain_model_mapping.ecore#//DomainMappingModule/leafModuleToVersionedSQLViewsModules"/>
-      <semanticElements xmi:type="ecore:EReference" href="domain_model_mapping.ecore#//DomainMappingModule/leafModuleToVersionedSQLViewsModules"/>
+    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_L2PmA5X-Eeuf37xcIYD_eA" name="[0..*] leafModuleToVersionedDTMViewsModules" sourceNode="_L2Em4ZX-Eeuf37xcIYD_eA" targetNode="_L2AVcJX-Eeuf37xcIYD_eA">
+      <target xmi:type="ecore:EReference" href="domain_model_mapping.ecore#//DomainMappingModule/leafModuleToVersionedDTMViewsModules"/>
+      <semanticElements xmi:type="ecore:EReference" href="domain_model_mapping.ecore#//DomainMappingModule/leafModuleToVersionedDTMViewsModules"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="_L2QNEJX-Eeuf37xcIYD_eA" description="_L2O-8JX-Eeuf37xcIYD_eA" sourceArrow="FillDiamond" routingStyle="manhattan" strokeColor="0,0,0">
         <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_L2QNEpX-Eeuf37xcIYD_eA" showIcon="false">
           <customFeatures>labelSize</customFeatures>

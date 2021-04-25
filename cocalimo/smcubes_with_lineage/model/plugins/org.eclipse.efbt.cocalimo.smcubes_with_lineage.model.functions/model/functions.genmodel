@@ -4,11 +4,11 @@
     modelPluginID="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions"
     modelName="Functions" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     importerID="org.eclipse.emf.importer.ecore" complianceLevel="5.0" copyrightFields="false"
-    usedGenPackages="../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.genmodel#//module_management"
+    usedGenPackages="../../org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes/model/lineagecubes.genmodel#//cubes ../../org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes/model/lineagecubes.genmodel#//efbt_advanced_data_definition ../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//core"
     operationReflection="true" importOrganizing="true">
   <foreignModel>functions.ecore</foreignModel>
   <genPackages prefix="Functions" basePackage="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model"
-      resource="XML" disposableProviderFactory="true" ecorePackage="functions.ecore#/">
+      resource="XMI" disposableProviderFactory="true" ecorePackage="functions.ecore#/">
     <genClasses ecoreClass="functions.ecore#//AggregateFunction">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference functions.ecore#//AggregateFunction/functionSpec"/>
     </genClasses>
@@ -28,7 +28,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference functions.ecore#//FunctionSpec/parameterSpecs"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//FunctionSpec/functionalName"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//FunctionSpec/name"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//FunctionSpec/sqlName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//FunctionSpec/relationalName"/>
     </genClasses>
     <genClasses ecoreClass="functions.ecore#//FunctionSpecModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference functions.ecore#//FunctionSpecModule/functionSpecs"/>
@@ -37,5 +37,41 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//ParamaterSpec/name"/>
     </genClasses>
     <genClasses ecoreClass="functions.ecore#//Parameter"/>
+    <genClasses ecoreClass="functions.ecore#//GetStructColumnFunction">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference functions.ecore#//GetStructColumnFunction/columnInStruct"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference functions.ecore#//GetStructColumnFunction/cubeColumn"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//SpeculativeStructColumnParameter">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference functions.ecore#//SpeculativeStructColumnParameter/columnInsideStruct"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference functions.ecore#//SpeculativeStructColumnParameter/cube"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference functions.ecore#//SpeculativeStructColumnParameter/structColumn"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//AggregateColumnFunction">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference functions.ecore#//AggregateColumnFunction/aggregateFunction"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//BasicColumnFunction">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference functions.ecore#//BasicColumnFunction/basicFunction"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//ColumnFunction"/>
+    <genClasses ecoreClass="functions.ecore#//ColumnFunctionGroup">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference functions.ecore#//ColumnFunctionGroup/columnFunctions"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//CubeColumn">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//CubeColumn/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference functions.ecore#//CubeColumn/cube"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//CubeColumn/usedInSubsets"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference functions.ecore#//CubeColumn/variable"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//SpeculativeCubeColumnParameter">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference functions.ecore#//SpeculativeCubeColumnParameter/column"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference functions.ecore#//SpeculativeCubeColumnParameter/cube"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//MemberParameter">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference functions.ecore#//MemberParameter/param"/>
+    </genClasses>
+    <genClasses ecoreClass="functions.ecore#//ValueParameter">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//ValueParameter/dataType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute functions.ecore#//ValueParameter/value"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>

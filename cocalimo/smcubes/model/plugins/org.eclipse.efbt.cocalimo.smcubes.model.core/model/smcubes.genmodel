@@ -17,7 +17,7 @@
   <foreignModel>smcubes_model.ecore</foreignModel>
   <foreignModel>vtl_transformation.ecore</foreignModel>
   <genPackages prefix="Core" basePackage="org.eclipse.efbt.cocalimo.smcubes.model"
-      resource="XML" disposableProviderFactory="true" ecorePackage="core.ecore#/">
+      resource="XMI" disposableProviderFactory="true" ecorePackage="core.ecore#/">
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="core.ecore#//FACET_VALUE_TYPE">
       <genEnumLiterals ecoreEnumLiteral="core.ecore#//FACET_VALUE_TYPE/BigInteger"/>
       <genEnumLiterals ecoreEnumLiteral="core.ecore#//FACET_VALUE_TYPE/Boolean"/>
@@ -155,7 +155,7 @@
     </genClasses>
   </genPackages>
   <genPackages prefix="Data_definition" basePackage="org.eclipse.efbt.cocalimo.smcubes.model"
-      resource="XML" disposableProviderFactory="true" ecorePackage="data_definition.ecore#/">
+      resource="XMI" disposableProviderFactory="true" ecorePackage="data_definition.ecore#/">
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="data_definition.ecore#//TYP_DMNSN">
       <genEnumLiterals ecoreEnumLiteral="data_definition.ecore#//TYP_DMNSN/B"/>
       <genEnumLiterals ecoreEnumLiteral="data_definition.ecore#//TYP_DMNSN/M"/>
@@ -297,7 +297,7 @@
     </genClasses>
   </genPackages>
   <genPackages prefix="Efbt_data_definition" basePackage="org.eclipse.efbt.cocalimo.smcubes.model"
-      resource="XML" disposableProviderFactory="true" ecorePackage="efbt_data_definition.ecore#/">
+      resource="XMI" disposableProviderFactory="true" ecorePackage="efbt_data_definition.ecore#/">
     <genClasses ecoreClass="efbt_data_definition.ecore#//CombinationModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_data_definition.ecore#//CombinationModule/combinations"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_data_definition.ecore#//CombinationModule/combination_items"/>
@@ -323,7 +323,7 @@
     </genClasses>
   </genPackages>
   <genPackages prefix="Efbt_mapping" basePackage="org.eclipse.efbt.cocalimo.smcubes.model"
-      resource="XML" disposableProviderFactory="true" ecorePackage="efbt_mapping.ecore#/">
+      resource="XMI" disposableProviderFactory="true" ecorePackage="efbt_mapping.ecore#/">
     <genClasses ecoreClass="efbt_mapping.ecore#//MappingDefinitionModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_mapping.ecore#//MappingDefinitionModule/mappings"/>
     </genClasses>
@@ -338,13 +338,13 @@
     </genClasses>
   </genPackages>
   <genPackages prefix="Efbt_vtl_transformation" basePackage="org.eclipse.efbt.cocalimo.smcubes.model"
-      resource="XML" disposableProviderFactory="true" ecorePackage="efbt_vtl_transformation.ecore#/">
+      resource="XMI" disposableProviderFactory="true" ecorePackage="efbt_vtl_transformation.ecore#/">
     <genClasses ecoreClass="efbt_vtl_transformation.ecore#//TransformationSchemeModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_vtl_transformation.ecore#//TransformationSchemeModule/schemes"/>
     </genClasses>
   </genPackages>
   <genPackages prefix="Mapping" basePackage="org.eclipse.efbt.cocalimo.smcubes.model"
-      resource="XML" disposableProviderFactory="true" ecorePackage="mapping.ecore#/">
+      resource="XMI" disposableProviderFactory="true" ecorePackage="mapping.ecore#/">
     <genClasses ecoreClass="mapping.ecore#//CUBE_MAPPING">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mapping.ecore#//CUBE_MAPPING/cube_mapping_id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mapping.ecore#//CUBE_MAPPING/description"/>
@@ -396,7 +396,7 @@
     </genClasses>
   </genPackages>
   <genPackages prefix="Rendering" basePackage="org.eclipse.efbt.cocalimo.smcubes.model"
-      resource="XML" disposableProviderFactory="true" ecorePackage="rendering.ecore#/">
+      resource="XMI" disposableProviderFactory="true" ecorePackage="rendering.ecore#/">
     <genClasses ecoreClass="rendering.ecore#//AXIS">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rendering.ecore#//AXIS/axis_id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rendering.ecore#//AXIS/code"/>
@@ -449,7 +449,7 @@
     </genClasses>
   </genPackages>
   <genPackages prefix="Reports" basePackage="org.eclipse.efbt.cocalimo.smcubes.model"
-      resource="XML" disposableProviderFactory="true" ecorePackage="reports.ecore#/">
+      resource="XMI" disposableProviderFactory="true" ecorePackage="reports.ecore#/">
     <genClasses ecoreClass="reports.ecore#//AxisModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reports.ecore#//AxisModule/axes"/>
     </genClasses>
@@ -482,7 +482,7 @@
     </genClasses>
   </genPackages>
   <genPackages prefix="Smcubes_model" basePackage="org.eclipse.efbt.cocalimo.smcubes.model"
-      resource="XML" disposableProviderFactory="true" ecorePackage="smcubes_model.ecore#/">
+      resource="XMI" disposableProviderFactory="true" ecorePackage="smcubes_model.ecore#/">
     <genClasses ecoreClass="smcubes_model.ecore#//SmcubesModel">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference smcubes_model.ecore#//SmcubesModel/domains"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference smcubes_model.ecore#//SmcubesModel/members"/>
@@ -495,7 +495,7 @@
     </genClasses>
   </genPackages>
   <genPackages prefix="Vtl_transformation" basePackage="org.eclipse.efbt.cocalimo.smcubes.model"
-      resource="XML" disposableProviderFactory="true" ecorePackage="vtl_transformation.ecore#/">
+      resource="XMI" disposableProviderFactory="true" ecorePackage="vtl_transformation.ecore#/">
     <genClasses ecoreClass="vtl_transformation.ecore#//TRANSFORMATION_SCHEME">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute vtl_transformation.ecore#//TRANSFORMATION_SCHEME/transformation_scheme_id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute vtl_transformation.ecore#//TRANSFORMATION_SCHEME/description"/>

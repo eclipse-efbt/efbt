@@ -17,10 +17,10 @@ package org.eclipse.efbt.cocalimo.dtm.ui.sirius.core;
 
 import org.eclipse.efbt.language.dtm.model.transformation.VersionedComponentsSet;
 import org.eclipse.efbt.language.dtm.model.transformation.VersionedCubeSchemaModule;
-import org.eclipse.efbt.language.dtm.model.dtm_sql_views.EnrichmentView;
-import org.eclipse.efbt.language.dtm.model.dtm_sql_views.JoinView;
-import org.eclipse.efbt.language.dtm.model.dtm_sql_views.SQLView;
-import org.eclipse.efbt.language.dtm.model.dtm_sql_views.VersionedSQLViewsModule;
+import org.eclipse.efbt.language.dtm.model.dtm_views.EnrichmentView;
+import org.eclipse.efbt.language.dtm.model.dtm_views.JoinView;
+import org.eclipse.efbt.language.dtm.model.dtm_views.DTMView;
+import org.eclipse.efbt.language.dtm.model.dtm_views.VersionedDTMViewsModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE_STRUCTURE_ITEM;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cube_schema.CubeSchema;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cubes.FreeBirdToolsCube;
@@ -83,20 +83,11 @@ public class Services {
     	return CubesAndViewsUtil.getBaseTablesButNotDeltaTables( self);
      }
     
-    public EList<FreeBirdToolsCube> getBaseDeltaCubes(VersionedComponentsSet self) {
-
-    	return CubesAndViewsUtil.getBaseDeltaCubes( self);
-     }
-    
-    public EList<FreeBirdToolsCube> getBaseViewCubes(VersionedComponentsSet self) {
-
-    	return CubesAndViewsUtil.getBaseViewCubes( self);
-     }
 
 
     
     
-    public EList<FreeBirdToolsCube> getTables(VersionedSQLViewsModule self) {
+    public EList<FreeBirdToolsCube> getTables(VersionedDTMViewsModule self) {
 
     	return CubesAndViewsUtil.getCubes( self);
      }
@@ -121,7 +112,7 @@ public class Services {
     	return CubesAndViewsUtil.getCubes( self);
      }
     
-    public EList<SQLView> getViews(VersionedComponentsSet self) {
+    public EList<DTMView> getViews(VersionedComponentsSet self) {
 
     	return CubesAndViewsUtil.getViews( self);
      }
@@ -138,9 +129,9 @@ public class Services {
     	return CubesAndViewsUtil.getCubeDisplayName(table);
     }
     
-    public String getViewDisplayName(SQLView view)
+    public String getViewDisplayName(DTMView view)
     {
-    	return CubesAndViewsUtil.getSQLViewDisplayName(view);
+    	return CubesAndViewsUtil.getDTMViewDisplayName(view);
     }
     
 
@@ -161,10 +152,10 @@ public String getStringForAggregateFunction(AggregateFunction self) {
 
 
     
-/**    public VersionedSQLViewsModule getDefaultSQLViewsModuleForTransformation(LeafFunctionalModule self) {
+/**    public VersionedDTMViewsModule getDefaultDTMViewsModuleForTransformation(LeafFunctionalModule self) {
        
     	
-    	return dtmModelQueryUtil.getDefaultSQLViewsModuleForTransformation(  self); 
+    	return dtmModelQueryUtil.getDefaultDTMViewsModuleForTransformation(  self); 
      }
     
     public VersionedCubeSchemaModule getDefaultCubeSchemaModuleForFunctionalModule(LeafFunctionalModule self) {

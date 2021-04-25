@@ -33,19 +33,10 @@
    <feature id="org.eclipse.efbt.cocalimo.smcubes.ui.sirius.feature">
       <category name="efbt"/>
    </feature>
-   <feature id="org.eclipse.efbt.cocason.dsl.cocason.feature">
-      <category name="efbt"/>
-   </feature>
    <feature id="org.eclipse.efbt.cocalimo.dtm.model.platform_call.feature">
       <category name="efbt"/>
    </feature>
    <feature id="org.eclipse.efbt.controller.dtm.ui.sirius.core.feature">
-      <category name="efbt"/>
-   </feature>
-   <feature id="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.datalineage.feature">
-      <category name="efbt"/>
-   </feature>
-   <feature id="org.eclipse.efbt.cocalimo.smcubes_with_lineage.ui.sirius.datalineage.feature">
       <category name="efbt"/>
    </feature>
    <feature id="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.feature">

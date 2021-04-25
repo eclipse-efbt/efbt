@@ -1,0 +1,38 @@
+ProgramAndCalls : { program : dtmProgram :  { 
+	
+	executableLogic :[ dtmExecutableLogic GIRRDeltaCreateSquaresLogic : { 
+		
+			
+			 datasetTransformationModules : [ VersionedDTMViewsModule   views : { 
+			 	DTMViews : [ 
+
+				AggregateEnrichmentView totalGIRRDeltaSensitivityPerBucket : {
+			 			cube : "GIRRDeltaCreateSquaresCubes.freeBirdToolsCubeModule.totalGIRRDeltaSensitivityPerBucket"
+			 			functions : [
+			 				AggregateColumnFunction totalGIRRDeltaSensitivityPerBucket_totalGIRRDeltaSensitivityPerBucket: { 
+			 					cube : "GIRRDeltaCreateSquaresCubes.freeBirdToolsCubeModule.totalGIRRDeltaSensitivityPerBucket"
+			 					variable : "GIRRDeltaMeasuresStaticModel.GIRRDeltaMeasuresModel.variablesModule.totalGIRRDeltaSensitivityPerBucket"
+			 					aggregateFunction : AggregateFunction af7 : {
+			 						functionSpec : "commonFunctions.commonFunctionSpecModule.SUM" 
+			 						parameters : [ 
+			 							SpeculativeCubeColumnParameter : {
+			 								column : "GIRRDeltaMeasuresStaticModel.GIRRDeltaMeasuresModel.variablesModule.weightedGIRRDeltaSensitivity"
+			 								cube : "GIRRDeltaApplyWeighting.freeBirdToolsCubeModule.weightedGIRRDeltaSensitivitiesAndRiskFactors"
+			 								
+			 							}
+			 						] 
+			 						
+			 					}
+			 				
+			 			}
+			 		
+			 			]
+			 			groupByClause : GroupByClause : {
+			 				groupByColumns : [
+			 					"FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID"
+			 				]
+			 			}
+			 		}
+
+			 		] } ] } ] } }
+			 		

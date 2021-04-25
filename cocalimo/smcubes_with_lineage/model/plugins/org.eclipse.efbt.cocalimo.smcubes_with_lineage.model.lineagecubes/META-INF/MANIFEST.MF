@@ -23,9 +23,8 @@ Export-Package: org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cube_schema
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.emf.ecore.xmi;visibility:=reexport,
- org.eclipse.emf.mwe.core,
- org.eclipse.emf.mwe.utils,
- org.eclipse.emf.mwe2.runtime,
  org.eclipse.efbt.cocalimo.core.model.module_management;bundle-version="1.0.0";visibility:=reexport,
- org.eclipse.efbt.cocalimo.smcubes.model.core;visibility:=reexport
+ org.eclipse.efbt.cocalimo.smcubes.model.core;visibility:=reexport,
+ com.fasterxml.jackson.core.jackson-databind,
+ org.emfjson.jackson
 Bundle-ActivationPolicy: lazy

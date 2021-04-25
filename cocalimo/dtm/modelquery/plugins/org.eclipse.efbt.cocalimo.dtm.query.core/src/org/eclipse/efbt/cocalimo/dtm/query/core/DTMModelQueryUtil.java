@@ -61,16 +61,16 @@ public class DTMModelQueryUtil {
 
 	  }
 	 /**
-		 * For a FunctionalityModule, get the SQLViewsModule associated according to
+		 * For a FunctionalityModule, get the DTMViewsModule associated according to
 		 * the DefaultNavigationContext.
 		 * 
 		 * @param functionalModule
 		 * @return
 		 */
-/*		public static VersionedSQLViewsModule getDefaultSQLViewsModuleForTransformation( 
+/*		public static VersionedDTMViewsModule getDefaultDTMViewsModuleForTransformation( 
 				LeafFunctionalityModule functionalModule) {
 
-			VersionedSQLViewsModule returnModule = null;
+			VersionedDTMViewsModule returnModule = null;
 			EList<FunctionalityModuleTag> returnlist = new BasicEList<FunctionalityModuleTag>();
 			NavigationContext nc = dtmUtil.getDefaultNavigationContext(functionalModule);
 			/**
@@ -85,16 +85,16 @@ public class DTMModelQueryUtil {
 			 * VersionedFunctionalModuleLogic dataSetTransformationModule =
 			 * (VersionedFunctionalModuleLogic) iterator .next(); if
 			 * (dataSetTransformationModule.getFunctionalityModule().equals(functionalModule))
-			 * { returnModule = (VersionedSQLViewsModule) dataSetTransformationModule; }
+			 * { returnModule = (VersionedDTMViewsModule) dataSetTransformationModule; }
 			 * 
 			 * }
 			 **/
 	/*			DomainMappingModule domainMapping = nc.getDomainModelMapping();
-			EList<LeafModuleToVersionedSQLViewsModule> csm = domainMapping.getLeafModuleToVersionedSQLViewsModules();
+			EList<LeafModuleToVersionedDTMViewsModule> csm = domainMapping.getLeafModuleToVersionedDTMViewsModules();
 
-			for (LeafModuleToVersionedSQLViewsModule leafModuleToVersionedSQLViewsModule : csm) {
-				if (leafModuleToVersionedSQLViewsModule.getScheme().equals(functionalModule)) {
-					returnModule = leafModuleToVersionedSQLViewsModule.getModule();
+			for (LeafModuleToVersionedDTMViewsModule leafModuleToVersionedDTMViewsModule : csm) {
+				if (leafModuleToVersionedDTMViewsModule.getScheme().equals(functionalModule)) {
+					returnModule = leafModuleToVersionedDTMViewsModule.getModule();
 				}
 			}
 

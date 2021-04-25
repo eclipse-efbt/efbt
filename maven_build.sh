@@ -32,10 +32,7 @@ mvn install
 cd ../../..
 cd cocalimo/dtm/ui_sirius
 mvn install
-cd ../../..
-cd cocason/org.eclipse.efbt.cocason.dsl.cocason.parent
-mvn install 
-cd ../..                   
+cd ../../..                   
 cd controller/ldm
 mvn install
 cd ../..

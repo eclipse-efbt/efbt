@@ -4,7 +4,7 @@
     <semanticResources>transformation.ecore</semanticResources>
     <semanticResources>platform:/resource/org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes/model/cubes.ecore</semanticResources>
     <semanticResources>platform:/resource/org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.ecore</semanticResources>
-    <semanticResources>dtm_sql_views.ecore</semanticResources>
+    <semanticResources>dtm_views.ecore</semanticResources>
     <semanticResources>platform:/resource/org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagefunctions/model/column_transformation_logic.ecore</semanticResources>
     <semanticResources>platform:/resource/org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions/model/functions.ecore</semanticResources>
     <semanticResources>platform:/resource/org.eclipse.efbt.cocalimo.smcubes.model.core/model/core.ecore</semanticResources>
@@ -404,7 +404,7 @@
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']"/>
       </ownedElements>
-      <ownedElements xmi:type="diagram:DNodeListElement" uid="_C6dE0JYAEeuf37xcIYD_eA" name=" datasetTransformationModules : VersionedSQLViewsModule" tooltipText="">
+      <ownedElements xmi:type="diagram:DNodeListElement" uid="_C6dE0JYAEeuf37xcIYD_eA" name=" datasetTransformationModules : VersionedDTMViewsModule" tooltipText="">
         <target xmi:type="ecore:EReference" href="transformation.ecore#//VersionedComponentsSet/datasetTransformationModules"/>
         <semanticElements xmi:type="ecore:EReference" href="transformation.ecore#//VersionedComponentsSet/datasetTransformationModules"/>
         <ownedStyle xmi:type="diagram:BundledImage" uid="_C6dE0ZYAEeuf37xcIYD_eA" labelAlignment="LEFT" color="114,159,207">
@@ -484,7 +484,7 @@
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EReferenceNode']"/>
       </ownedElements>
-      <ownedElements xmi:type="diagram:DNodeListElement" uid="_C6eS9pYAEeuf37xcIYD_eA" name=" datasetTransformationModules : VersionedSQLViewsModule" tooltipText="">
+      <ownedElements xmi:type="diagram:DNodeListElement" uid="_C6eS9pYAEeuf37xcIYD_eA" name=" datasetTransformationModules : VersionedDTMViewsModule" tooltipText="">
         <target xmi:type="ecore:EReference" href="transformation.ecore#//dtmExecutableLogic/datasetTransformationModules"/>
         <semanticElements xmi:type="ecore:EReference" href="transformation.ecore#//dtmExecutableLogic/datasetTransformationModules"/>
         <ownedStyle xmi:type="diagram:BundledImage" uid="_C6eS95YAEeuf37xcIYD_eA" labelAlignment="LEFT" color="114,159,207">
