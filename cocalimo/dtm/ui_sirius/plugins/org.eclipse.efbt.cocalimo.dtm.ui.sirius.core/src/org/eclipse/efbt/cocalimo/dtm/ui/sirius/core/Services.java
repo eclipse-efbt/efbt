@@ -83,15 +83,6 @@ public class Services {
     	return CubesAndViewsUtil.getBaseTablesButNotDeltaTables( self);
      }
     
-    public EList<FreeBirdToolsCube> getBaseDeltaCubes(VersionedComponentsSet self) {
-
-    	return CubesAndViewsUtil.getBaseDeltaCubes( self);
-     }
-    
-    public EList<FreeBirdToolsCube> getBaseViewCubes(VersionedComponentsSet self) {
-
-    	return CubesAndViewsUtil.getBaseViewCubes( self);
-     }
 
 
     
