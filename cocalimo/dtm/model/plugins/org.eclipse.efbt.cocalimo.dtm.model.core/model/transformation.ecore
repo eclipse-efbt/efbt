@@ -69,7 +69,7 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="datasetTransformationModules"
-        upperBound="-1" eType="ecore:EClass dtm_sql_views.ecore#//VersionedSQLViewsModule">
+        upperBound="-1" eType="ecore:EClass dtm_views.ecore#//VersionedDTMViewsModule">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The set of DataSetTransformationModules, note that each DataSetTransformationModule states which  DataSetTransformationFunctionalModule they are associated with in the functionalModule reference."/>
       </eAnnotations>
@@ -141,7 +141,7 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="datasetTransformationModules"
-        upperBound="-1" eType="ecore:EClass dtm_sql_views.ecore#//VersionedSQLViewsModule"
+        upperBound="-1" eType="ecore:EClass dtm_views.ecore#//VersionedDTMViewsModule"
         containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The set of DataSetTransformationModules, note that each DataSetTransformationModule states which  DataSetTransformationFunctionalModule they are associated with in the functionalModule reference."/>
@@ -158,7 +158,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="dtmProgram">
     <eStructuralFeatures xsi:type="ecore:EReference" name="executableLogic" upperBound="-1"
         eType="#//dtmExecutableLogic" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="smcubesStaticModel" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes.model.program/model/cocamo.ecore#//SMCubesStaticModel"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="smcubesStaticModel" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes.model.program/model/program.ecore#//SMCubesStaticModel"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="structVariablesModule"
         eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes/model/efbt_advanced_data_definition.ecore#//StructTypedVariablesModule"

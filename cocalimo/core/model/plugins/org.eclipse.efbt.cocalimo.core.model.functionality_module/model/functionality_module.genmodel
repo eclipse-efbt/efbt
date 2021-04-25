@@ -8,7 +8,7 @@
   <foreignModel>functionality_module.ecore</foreignModel>
   <foreignModel>scenarios.ecore</foreignModel>
   <genPackages prefix="Functionality_module" basePackage="org.eclipse.efbt.cocalimo.core.model"
-      resource="XML" disposableProviderFactory="true" ecorePackage="functionality_module.ecore#/">
+      resource="XMI" disposableProviderFactory="true" ecorePackage="functionality_module.ecore#/">
     <genClasses ecoreClass="functionality_module.ecore#//DataProcessingFunctionalityModule"/>
     <genClasses ecoreClass="functionality_module.ecore#//LeafFunctionalityModule"/>
     <genClasses ecoreClass="functionality_module.ecore#//ParallelFunctionalityModule"/>
@@ -38,7 +38,7 @@
     <genClasses ecoreClass="functionality_module.ecore#//ValidationFunctionalityModule"/>
   </genPackages>
   <genPackages prefix="Scenarios" basePackage="org.eclipse.efbt.cocalimo.core.model"
-      resource="XML" disposableProviderFactory="true" ecorePackage="scenarios.ecore#/">
+      resource="XMI" disposableProviderFactory="true" ecorePackage="scenarios.ecore#/">
     <genClasses ecoreClass="scenarios.ecore#//Scenario">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute scenarios.ecore#//Scenario/name"/>
     </genClasses>

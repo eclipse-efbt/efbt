@@ -1,0 +1,53 @@
+ProgramAndCalls : { program : dtmProgram :  {
+	smcubesStaticModel : SMCubesStaticModel smcubesStaticCubesModel : { 
+		smCubesModel  : SmcubesModel smcubesCubesModel: {    combinations  : [
+			CombinationModule combinationModule : { combinations : [
+				COMBINATION USDtradeNotionals : { 
+					code : "USDtradeNotionals" 
+					combination_id : "USDtradeNotionals" 
+					combination_items : { 
+					COMBINATION_ITEM : { 
+						member_id : "smcubesStaticCubesModel.smcubesCubesModel.membersModule.USD"
+						variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.Currency" } , 
+					COMBINATION_ITEM : { variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.notionalAmount" } } } , 
+				COMBINATION EURtradeNotionals : { 
+					code : "EURtradeNotionals" 
+					combination_id : "EURtradeNotionals" 
+					combination_items : { 
+					COMBINATION_ITEM : { 
+						member_id : "smcubesStaticCubesModel.smcubesCubesModel.membersModule.EUR"
+						variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.Currency" } , 
+					COMBINATION_ITEM : { variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.notionalAmount" } } } , 
+				COMBINATION GovernmentEAD : { 
+					code : "GovernmentEAD" 
+					combination_id : "GovernmentEAD" 
+					combination_items : { 
+					COMBINATION_ITEM : { 
+						member_id : "smcubesStaticCubesModel.smcubesCubesModel.membersModule.government"
+						variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.exposureClass" } , 
+					COMBINATION_ITEM : { variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.exposureAtDefault" } } } , 
+				COMBINATION CorporateEAD : { 
+					code : "CorporateEAD" 
+					combination_id : "CorporateEAD" 
+					combination_items : { 
+					COMBINATION_ITEM : { 
+						member_id : "smcubesStaticCubesModel.smcubesCubesModel.membersModule.corporate"
+						variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.exposureClass" } , 
+					COMBINATION_ITEM : { variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.exposureAtDefault" } } } , 
+				COMBINATION FinancialInstitutionEAD : { 
+					code : "FinancialInstitutionEAD" 
+					combination_id : "FinancialInstitutionEAD" 
+					combination_items : { 
+					COMBINATION_ITEM : { 
+						member_id : "smcubesStaticCubesModel.smcubesCubesModel.membersModule.financial_institution"
+						variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.exposureClass" } , 
+					COMBINATION_ITEM : { variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.exposureAtDefault" } } } , 
+				COMBINATION totalPVofTrades : { 
+					code : "totalPVofTrades" 
+					combination_id : "totalPVofTrades" 
+					combination_items : { 
+					COMBINATION_ITEM : { variable_id : "smcubesStaticModel1.smcubesModel1.variablesModule.presentValue" } } }
+					]
+				
+					
+				 }  ] } } } }

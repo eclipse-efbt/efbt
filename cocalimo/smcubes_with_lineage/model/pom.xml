@@ -21,8 +21,6 @@
     <maven>3.0</maven>
   </prerequisites>
 	<properties>
-		<xtextVersion>2.25.0</xtextVersion>
-		<mwe2Version>2.12.1</mwe2Version>
 		<junit-version>5.0.3</junit-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>11</maven.compiler.source>
@@ -40,9 +38,10 @@
 		<module>releng/org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.target</module>
 		<module>plugins/org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions</module>
 		<module>plugins/org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes</module>
-		<module>plugins/org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagefunctions</module>
-		<module>plugins/org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.datalineage</module>
-		<module>features/org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.datalineage.feature</module>
+		<module>plugins/org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.edit</module>
+		<module>plugins/org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes.edit</module>
+		<module>plugins/org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.editor</module>
+		<module>plugins/org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes.editor</module>
 		<module>features/org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.feature</module>
 		<module>features/org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineage_core.feature</module>
 		<module>releng/org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.repository</module>
@@ -139,11 +138,6 @@
 					</environments>
 					<dependency-resolution>
 						<extraRequirements>
-							<requirement>
-								<type>eclipse-plugin</type>
-								<id>org.eclipse.xtext.logging</id>
-								<versionRange>1.2.15</versionRange>
-							</requirement>
 							<!-- to get the org.eclipse.osgi.compatibility.state plugin if the target 
 								platform is Luna or later. (backward compatible with kepler and previous 
 								versions) see https://bugs.eclipse.org/bugs/show_bug.cgi?id=492149 -->
@@ -159,38 +153,13 @@
 			</plugin>
 		</plugins>
 		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.eclipse.xtend</groupId>
-					<artifactId>xtend-maven-plugin</artifactId>
-					<version>${xtextVersion}</version>
-					<executions>
-						<execution>
-							<goals>
-								<goal>compile</goal>
-								<goal>xtend-install-debug-info</goal>
-								<goal>testCompile</goal>
-								<goal>xtend-test-install-debug-info</goal>
-							</goals>
-						</execution>
-					</executions>
-					<configuration>
-						<outputDirectory>${basedir}/xtend-gen</outputDirectory>
-						<testOutputDirectory>${basedir}/xtend-gen</testOutputDirectory>
-					</configuration>
-				</plugin>
+			<plugins>				
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-clean-plugin</artifactId>
 					<version>3.1.0</version>
 					<configuration>
-						<filesets>
-							<fileset>
-								<directory>${basedir}/xtend-gen</directory>
-								<includes>
-									<include>**/*</include>
-								</includes>
-							</fileset>
+						<filesets>							
 						</filesets>
 					</configuration>
 				</plugin>

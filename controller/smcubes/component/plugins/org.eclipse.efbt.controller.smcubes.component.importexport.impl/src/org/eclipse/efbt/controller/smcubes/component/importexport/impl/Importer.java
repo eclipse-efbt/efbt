@@ -20,8 +20,8 @@ import org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityMo
 import org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModuleModule;
 import org.eclipse.efbt.cocalimo.core.model.functionality_module.Functionality_moduleFactory;
 import org.eclipse.efbt.controller.smcubes.component.importexport.api.BirdImporter;
-import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.CocamoFactory;
-import org.eclipse.efbt.cocalimo.smcubes.model.cocamo.SMCubesStaticModel;
+import org.eclipse.efbt.cocalimo.smcubes.model.program.ProgramFactory;
+import org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel;
 import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.CombinationModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.CubeModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.DomainModule;
@@ -199,10 +199,10 @@ public abstract class Importer implements BirdImporter {
 		birdModel.getFunctionalModules().add(transformationSchemes);
 		birdModel.getVariables().add(variables);
 		
-		testDefinitionProgram = CocamoFactory.eINSTANCE.createSMCubesStaticModel();
-		testTemplateProgram = CocamoFactory.eINSTANCE.createSMCubesStaticModel();
-		testConstraintsProgram = CocamoFactory.eINSTANCE.createSMCubesStaticModel();
-		functionalityModulesProgram = CocamoFactory.eINSTANCE.createSMCubesStaticModel();
+		testDefinitionProgram = ProgramFactory.eINSTANCE.createSMCubesStaticModel();
+		testTemplateProgram = ProgramFactory.eINSTANCE.createSMCubesStaticModel();
+		testConstraintsProgram = ProgramFactory.eINSTANCE.createSMCubesStaticModel();
+		functionalityModulesProgram = ProgramFactory.eINSTANCE.createSMCubesStaticModel();
 		FunctionalityModuleModule fmm = Functionality_moduleFactory.eINSTANCE.createFunctionalityModuleModule();
 		fmm.setName("functionalityModuleModule");
 		FunctionalityModule fm = Functionality_moduleFactory.eINSTANCE.createDataProcessingFunctionalityModule();

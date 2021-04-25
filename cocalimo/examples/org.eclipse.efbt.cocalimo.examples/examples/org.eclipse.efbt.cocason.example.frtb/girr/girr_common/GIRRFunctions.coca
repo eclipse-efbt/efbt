@@ -1,0 +1,89 @@
+ProgramAndCalls : { program : dtmProgram :  { executableLogic : [ dtmExecutableLogic FRTBFunctions: { functionSpecModule : FunctionSpecModule GIRRFunctionSpecModule : {  
+	license : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"
+	functionSpecs : 
+	[ 
+		BasicFunctionSpec getGIRRCVRCorrelationFactor : { 
+		functionalName : "CustomFunctions_getCorrelationFactor"
+		relationalName : "getCorrelationFactor"	
+		parameterSpecs : [ 
+			ParamaterSpec param1 ,
+			ParamaterSpec param2
+		]	
+	},
+	BasicFunctionSpec getGIRRDeltaCorrelationFactor : { 
+		functionalName : "CustomFunctions_getDeltaCorrelationFactor"
+		relationalName : "getDeltaCorrelationFactor"	
+		parameterSpecs : [ 
+			ParamaterSpec param1 ,
+			ParamaterSpec param2
+		]	
+	},
+	BasicFunctionSpec getGIRRVegaRiskFactorRiskWeight : { 
+		functionalName : "CustomFunctions_getGIRRVegaRiskFactorRiskWeight"
+		relationalName : "getGIRRVegaRiskFactorRiskWeight"	
+		parameterSpecs : [ 
+			ParamaterSpec param1 ,
+			ParamaterSpec param2
+		]	
+	},
+	BasicFunctionSpec getGIRRVegaCorrelationFactor : { 
+		functionalName : "CustomFunctions_getGIRRVegaCorrelationFactor"
+		relationalName : "getGIRRVegaCorrelationFactor"	
+		parameterSpecs : [ 
+			ParamaterSpec param1 ,
+			ParamaterSpec param2
+		]	
+	},
+	BasicFunctionSpec getGIRRBucketCorrelationFactor : { 
+		functionalName : "CustomFunctions_getDeltaCorrelationFactor"
+		relationalName : "getDeltaCorrelationFactor"	
+		parameterSpecs : [ 
+			ParamaterSpec param1 ,
+			ParamaterSpec param2
+		]	
+	},
+	BasicFunctionSpec GIRRDeltaStrip :
+	{
+		functionalName : "CustomFunctions_deltaStrip"
+		relationalName : GIRRDeltaStrip
+		parameterSpecs : [
+			ParamaterSpec valuationDifference ,
+			ParamaterSpec summedGIRR_delta ,
+			ParamaterSpec ShockDirection
+		]
+	},
+	BasicFunctionSpec getGIRRDeltaRiskFactorRiskWeight :
+	{
+		functionalName : "CustomFunctions_getGIRRTenorRiskWeight"
+		relationalName : getGIRRTenorRiskWeight
+		parameterSpecs : [
+			ParamaterSpec tenor
+		]
+	},
+	BasicFunctionSpec getGIRRDeltaBucketName :
+	{
+		functionalName : "CustomFunctions_getGIRRDeltaBucketName"
+		relationalName : getGIRRDeltaBucketName
+		parameterSpecs : [
+			ParamaterSpec MainCurrency
+		]
+	},
+	BasicFunctionSpec getGIRRVegaBucketName :
+	{
+		functionalName : "CustomFunctions_getGIRRVegaBucketName"
+		relationalName : getGIRRDeltaBucketName
+		parameterSpecs : [
+			ParamaterSpec MainCurrency
+		]
+	},
+	BasicFunctionSpec getGIRRCurvatureBucketName :
+	{
+		functionalName : "CustomFunctions_getGIRRCurvatureBucketName"
+		relationalName : getGIRRDeltaBucketName
+		parameterSpecs : [
+			ParamaterSpec MainCurrency
+		]
+	}
+	
+			
+	] } } ] } } 

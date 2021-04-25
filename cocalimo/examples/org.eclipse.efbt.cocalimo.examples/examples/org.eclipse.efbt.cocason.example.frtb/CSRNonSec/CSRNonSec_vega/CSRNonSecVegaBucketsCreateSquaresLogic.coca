@@ -1,0 +1,8 @@
+ProgramAndCalls : { program : dtmProgram :  { 
+	
+	executableLogic :[ dtmExecutableLogic CSRNonSecVegaBucketsCreateSquaresLogic : { 
+		
+			
+			 datasetTransformationModules : [ VersionedDTMViewsModule   views : { 
+			  } ] } ] } }
+			 		

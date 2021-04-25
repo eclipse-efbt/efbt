@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <!-- @generated module_management -->
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="org.eclipse.efbt.cocalimo.core.model.module_management.presentation.Module_managementModelWizardID"
+            name="%_UI_Module_managementModelWizard_label"
+            class="org.eclipse.efbt.cocalimo.core.model.module_management.presentation.Module_managementModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/Module_managementModelFile.gif">
+         <description>%_UI_Module_managementModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <!-- @generated module_management -->
+      <editor
+            id="org.eclipse.efbt.cocalimo.core.model.module_management.presentation.Module_managementEditorID"
+            name="%_UI_Module_managementEditor_label"
+            icon="icons/full/obj16/Module_managementModelFile.gif"
+            extensions="module_management"
+            class="org.eclipse.efbt.cocalimo.core.model.module_management.presentation.Module_managementEditor"
+            contributorClass="org.eclipse.efbt.cocalimo.core.model.module_management.presentation.Module_managementActionBarContributor">
+      </editor>
+   </extension>
+
+</plugin>

@@ -14,11 +14,11 @@ package org.eclipse.efbt.cocalimo.smcubes_with_lineage.query.lineagefunctions;
 
 import java.util.Iterator;
 
-import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.column_transformation_logic.SpeculativeCubeColumnParameter;
+import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.SpeculativeCubeColumnParameter;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.AggregateFunction;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.BasicFunction;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.Parameter;
-import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.smcubes_functions.ValueParameter;
+import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.ValueParameter;
 import org.eclipse.emf.common.util.EList;
 
 

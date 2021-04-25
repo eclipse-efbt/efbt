@@ -1,0 +1,36 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/efbt_data_definition#//CubeModule",
+  "name" : "cubesModule",
+  "cubes" : [ {
+    "code" : "counterparty",
+    "cube_id" : "counterparty",
+    "cube_structure_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_definition#//CUBE_STRUCTURE",
+      "$ref" : "cube_structures.efbt_data_definition#Counterparty"
+    },
+    "is_allowed" : true,
+    "name" : "counterparty",
+    "published" : true,
+    "displayName" : "counterparty"
+  }, {
+    "code" : "rating",
+    "cube_id" : "rating",
+    "cube_structure_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_definition#//CUBE_STRUCTURE",
+      "$ref" : "cube_structures.efbt_data_definition#Rating"
+    },
+    "description" : "rating",
+    "is_allowed" : true,
+    "name" : "rating",
+    "published" : true
+  }, {
+    "code" : "loans",
+    "cube_id" : "loans",
+    "cube_structure_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_definition#//CUBE_STRUCTURE",
+      "$ref" : "cube_structures.efbt_data_definition#Loans"
+    },
+    "name" : "loans",
+    "displayName" : "loans"
+  } ]
+}

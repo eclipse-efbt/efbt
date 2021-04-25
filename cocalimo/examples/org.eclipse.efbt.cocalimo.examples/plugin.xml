@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<?eclipse version="3.0"?>
+<!--
+    Copyright (c) 2020 Bird Software Solutions Ltd
+    This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License 2.0
+    which accompanies this distribution, and is available at
+    https://www.eclipse.org/legal/epl-2.0/
+   
+    SPDX-License-Identifier: EPL-2.0
+   
+    Contributors:
+       Neil Mackenzie - initial API and implementation
+ -->
+
+<plugin>	
+	<extension
+          point="org.eclipse.ui.newWizards">
+       <category 
+            id="org.eclipse.efbt.cocason.dsl.cocason.ui.Examples"
+            name="CoCaSon"
+            parentCategory="org.eclipse.ui.Examples" />
+       <wizard
+             category="org.eclipse.ui.Examples/org.eclipse.efbt.cocason.dsl.cocason.ui.Examples"
+             class="org.eclipse.emf.common.ui.wizard.ExampleInstallerWizard"
+             icon="icons/EObject.gif"
+             id="org.eclipse.efbt.cocason.dsl.cocason.ui.wizard.CocasonExampleWizard"
+             name="CoCaLiMo Example"
+             project="true">
+       </wizard>      
+    </extension>
+   <extension point="org.eclipse.emf.common.ui.examples">
+        <example wizardID="org.eclipse.efbt.cocason.dsl.cocason.ui.wizard.CocasonExampleWizard" pageImage="icons/genproject.gif">
+            <projectDescriptor name="org.eclipse.efbt.cocalimo.example.standard" contentURI="examples/org.eclipse.efbt.cocalimo.example.standard/" description="CoCaLiMo Standard Example 1"/>
+            <projectDescriptor name="org.eclipse.efbt.cocason.example.incremental" contentURI="examples/org.eclipse.efbt.cocason.example.incremental/" description="CoCaSon Incremental Example 1"/>
+            <projectDescriptor name="org.eclipse.efbt.cocason.example.advanced" contentURI="examples/org.eclipse.efbt.cocason.example.advanced/" description="CoCaSon Advanced Example 1"/>
+            <projectDescriptor name="org.eclipse.efbt.cocason.example.frtb" contentURI="examples/org.eclipse.efbt.cocason.example.frtb/" description="CoCaSon FRTB Example 1"/>
+            <projectDescriptor name="org.eclipse.efbt.cocason.example.bird_import" contentURI="examples/org.eclipse.efbt.cocason.example.bird_import/" description="CoCaSon BIRD Import Example 1"/>
+            <projectDescriptor name="org.eclipse.efbt.cocason.example.ldm" contentURI="examples/org.eclipse.efbt.cocason.example.ldm/" description="CoCaSon LDM Example 1"/>                              
+        </example>
+    </extension>
+</plugin>

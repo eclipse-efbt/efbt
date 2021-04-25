@@ -1,0 +1,195 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/program#//SMCubesRegFunctionalityTestModule",
+  "name" : "regtestModule",
+  "regFunctionalityTests" : [ {
+    "name" : "regtest1",
+    "testDefinition" : {
+      "eClass" : "http://www.eclipse.org/efbt/test_definition#//RegFunctionalityTestDefinition",
+      "$ref" : "regTestDefintion.test_definition#testdef1"
+    },
+    "inputData" : {
+      "name" : "Test1_Data",
+      "smcubes_inputdata" : [ {
+        "name" : "Test1_counterparty_CubeData",
+        "rows" : [ {
+          "rowID" : "Test1_counterparty_row_1",
+          "cells" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/base_column_structured_data#//BaseCellWithEnumeratedValue",
+            "cellID" : "Test1_counterparty_row1_CNTRY",
+            "column" : {
+              "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+              "$ref" : "variables.efbt_data_definition#CNTRY"
+            },
+            "value" : {
+              "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
+              "$ref" : "members.efbt_data_definition#EBA_GA_EBA_JP"
+            }
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/base_column_structured_data#//BaseCellWithValue",
+            "cellID" : "Test1_counterparty_row1_ECB2_ENTITY_LEI",
+            "column" : {
+              "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+              "$ref" : "variables.efbt_data_definition#ECB2_ENTITY_LEI"
+            },
+            "value" : "Mizuho"
+          } ]
+        }, {
+          "rowID" : "Test1_counterparty_row_2",
+          "cells" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/base_column_structured_data#//BaseCellWithEnumeratedValue",
+            "cellID" : "Test1_counterparty_row2_CNTRY",
+            "column" : {
+              "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+              "$ref" : "variables.efbt_data_definition#CNTRY"
+            },
+            "value" : {
+              "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
+              "$ref" : "members.efbt_data_definition#EBA_GA_EBA_US"
+            }
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/base_column_structured_data#//BaseCellWithValue",
+            "cellID" : "Test1_counterparty_row2_ECB2_ENTITY_LEI",
+            "column" : {
+              "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+              "$ref" : "variables.efbt_data_definition#ECB2_ENTITY_LEI"
+            },
+            "value" : "CitiBank"
+          } ]
+        } ],
+        "cube" : {
+          "eClass" : "http://www.eclipse.org/efbt/data_definition#//CUBE",
+          "$ref" : "cubes.efbt_data_definition#counterparty"
+        }
+      }, {
+        "name" : "Test1_loans_CubeData",
+        "rows" : [ {
+          "rowID" : "Test1_loans_row1",
+          "cells" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/base_column_structured_data#//BaseCellWithValue",
+            "cellID" : "Test1_loans_row1_notional",
+            "column" : {
+              "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+              "$ref" : "variables.efbt_data_definition#NTNL_AMNT"
+            },
+            "value" : "1000"
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/base_column_structured_data#//BaseCellWithValue",
+            "cellID" : "Test1_loans_row1_lei",
+            "column" : {
+              "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+              "$ref" : "variables.efbt_data_definition#ECB2_ENTITY_LEI"
+            },
+            "value" : "Mizuho"
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/base_column_structured_data#//BaseCellWithValue",
+            "cellID" : "Test1_loans_row1_mkt_value",
+            "column" : {
+              "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+              "$ref" : "variables.efbt_data_definition#ECB2_MRKT_VL"
+            },
+            "value" : "500"
+          } ]
+        }, {
+          "rowID" : "Test1_loans_row2",
+          "cells" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/base_column_structured_data#//BaseCellWithValue",
+            "cellID" : "Test1_loans_row2_notional",
+            "column" : {
+              "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+              "$ref" : "variables.efbt_data_definition#NTNL_AMNT"
+            },
+            "value" : "1000"
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/base_column_structured_data#//BaseCellWithValue",
+            "cellID" : "Test1_loans_row2_lei",
+            "column" : {
+              "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+              "$ref" : "variables.efbt_data_definition#ECB2_ENTITY_LEI"
+            },
+            "value" : "CitiBank"
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/base_column_structured_data#//BaseCellWithValue",
+            "cellID" : "Test1_loans_row2_mkt_value",
+            "column" : {
+              "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+              "$ref" : "variables.efbt_data_definition#ECB2_MRKT_VL"
+            },
+            "value" : "500"
+          } ]
+        } ],
+        "cube" : {
+          "eClass" : "http://www.eclipse.org/efbt/data_definition#//CUBE",
+          "$ref" : "cubes.efbt_data_definition#loans"
+        }
+      }, {
+        "name" : "Test1_ratings_CubeData",
+        "rows" : [ {
+          "rowID" : "Test1_ratings_row1",
+          "cells" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/base_column_structured_data#//BaseCellWithValue",
+            "cellID" : "Test1_ratings_row1_rating_lei",
+            "column" : {
+              "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+              "$ref" : "variables.efbt_data_definition#ECB2_ENTITY_LEI"
+            },
+            "value" : "Mizuho"
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/base_column_structured_data#//BaseCellWithEnumeratedValue",
+            "cellID" : "Test1_ratings_row1_rating_rating_agency",
+            "column" : {
+              "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+              "$ref" : "variables.efbt_data_definition#CRDT_RTNG_AGNCY"
+            },
+            "value" : {
+              "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
+              "$ref" : "members.efbt_data_definition#CRDT_RTNG_AGNCY_1"
+            }
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/base_column_structured_data#//BaseCellWithValue",
+            "cellID" : "Test1_ratings_row1_rating_rating_scale",
+            "column" : {
+              "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+              "$ref" : "variables.efbt_data_definition#RTNG_SCL_CD"
+            },
+            "value" : "AAA"
+          } ]
+        }, {
+          "rowID" : "Test1_ratings_row2",
+          "cells" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/base_column_structured_data#//BaseCellWithValue",
+            "cellID" : "Test1_ratings_row2_rating_lei",
+            "column" : {
+              "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+              "$ref" : "variables.efbt_data_definition#ECB2_ENTITY_LEI"
+            },
+            "value" : "CitiBank"
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/base_column_structured_data#//BaseCellWithEnumeratedValue",
+            "cellID" : "Test1_ratings_row2_rating_rating_agency",
+            "column" : {
+              "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+              "$ref" : "variables.efbt_data_definition#CRDT_RTNG_AGNCY"
+            },
+            "value" : {
+              "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
+              "$ref" : "members.efbt_data_definition#CRDT_RTNG_AGNCY_1"
+            }
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/base_column_structured_data#//BaseCellWithValue",
+            "cellID" : "Test1_ratings_row2_rating_rating_scale",
+            "column" : {
+              "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+              "$ref" : "variables.efbt_data_definition#RTNG_SCL_CD"
+            },
+            "value" : "AA"
+          } ]
+        } ],
+        "cube" : {
+          "eClass" : "http://www.eclipse.org/efbt/data_definition#//CUBE",
+          "$ref" : "cubes.efbt_data_definition#rating"
+        }
+      } ]
+    },
+    "expectedResults" : { }
+  } ]
+}

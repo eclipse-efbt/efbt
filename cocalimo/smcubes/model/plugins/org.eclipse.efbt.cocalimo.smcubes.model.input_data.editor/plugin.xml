@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <!-- @generated smcubes_input_data -->
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.presentation.Base_column_structured_dataModelWizardID"
+            name="%_UI_Base_column_structured_dataModelWizard_label"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.presentation.Base_column_structured_dataModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/Base_column_structured_dataModelFile.gif">
+         <description>%_UI_Base_column_structured_dataModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <!-- @generated smcubes_input_data -->
+      <editor
+            id="org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.presentation.Base_column_structured_dataEditorID"
+            name="%_UI_Base_column_structured_dataEditor_label"
+            icon="icons/full/obj16/Base_column_structured_dataModelFile.gif"
+            extensions="base_column_structured_data"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.presentation.Base_column_structured_dataEditor"
+            contributorClass="org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.presentation.Base_column_structured_dataActionBarContributor">
+      </editor>
+   </extension>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <!-- @generated smcubes_input_data -->
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="org.eclipse.efbt.cocalimo.smcubes.model.column_structured_data.presentation.Column_structured_dataModelWizardID"
+            name="%_UI_Column_structured_dataModelWizard_label"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.column_structured_data.presentation.Column_structured_dataModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/Column_structured_dataModelFile.gif">
+         <description>%_UI_Column_structured_dataModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <!-- @generated smcubes_input_data -->
+      <editor
+            id="org.eclipse.efbt.cocalimo.smcubes.model.column_structured_data.presentation.Column_structured_dataEditorID"
+            name="%_UI_Column_structured_dataEditor_label"
+            icon="icons/full/obj16/Column_structured_dataModelFile.gif"
+            extensions="column_structured_data"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.column_structured_data.presentation.Column_structured_dataEditor"
+            contributorClass="org.eclipse.efbt.cocalimo.smcubes.model.column_structured_data.presentation.Column_structured_dataActionBarContributor">
+      </editor>
+   </extension>
+
+</plugin>

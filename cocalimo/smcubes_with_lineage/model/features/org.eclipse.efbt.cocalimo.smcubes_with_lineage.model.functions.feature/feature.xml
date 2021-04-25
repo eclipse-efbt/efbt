@@ -125,10 +125,37 @@ Exhibit A – Form of Secondary Licenses Notice
       <import plugin="org.eclipse.emf.ecore"/>
       <import plugin="org.eclipse.emf.ecore.xmi"/>
       <import plugin="org.eclipse.efbt.cocalimo.core.model.module_management"/>
+      <import plugin="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes"/>
+      <import plugin="org.eclipse.efbt.cocalimo.smcubes.model.input_data"/>
+      <import plugin="org.eclipse.efbt.cocalimo.smcubes.model.core"/>
+      <import plugin="com.fasterxml.jackson.core.jackson-databind"/>
+      <import plugin="org.emfjson.jackson"/>
+      <import plugin="org.eclipse.emf.edit"/>
+      <import plugin="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes.edit"/>
+      <import plugin="org.eclipse.efbt.cocalimo.core.model.module_management.edit"/>
+      <import plugin="org.eclipse.efbt.cocalimo.smcubes.model.input_data.edit"/>
+      <import plugin="org.eclipse.efbt.cocalimo.smcubes.model.core.edit"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.emf.edit.ui"/>
+      <import plugin="org.eclipse.ui.ide"/>
    </requires>
 
    <plugin
          id="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.edit"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.editor"
          download-size="0"
          install-size="0"
          version="0.0.0"

@@ -1,0 +1,8 @@
+ProgramAndCalls : { program : dtmProgram :  { 
+	
+	executableLogic :[ dtmExecutableLogic FXCurvatureBucketsCreateSquaresLogic : { 
+		
+			
+			 datasetTransformationModules : [ VersionedDTMViewsModule   views : { 
+			  } ] } ] } }
+			 		
