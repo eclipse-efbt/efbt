@@ -166,6 +166,7 @@ import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.provider.Data_def
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cubes.provider.CubesItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.efbt_advanced_data_definition.provider.Efbt_advanced_data_definitionItemProviderAdapterFactory;
+
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 

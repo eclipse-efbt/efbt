@@ -11,8 +11,7 @@ Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cube_schema.presentation,
  org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cubes.presentation,
- org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.efbt_advanced_data_definition.presentation,
- org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.incremental_cubes.presentation
+ org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.efbt_advanced_data_definition.presentation
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources;visibility:=reexport,
  org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes.edit;visibility:=reexport,

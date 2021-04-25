@@ -13,6 +13,7 @@ import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cube_schema.provider
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cubes.CubesFactory;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cubes.CubesPackage;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cubes.FreeBirdToolsCubeModule;
+
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 

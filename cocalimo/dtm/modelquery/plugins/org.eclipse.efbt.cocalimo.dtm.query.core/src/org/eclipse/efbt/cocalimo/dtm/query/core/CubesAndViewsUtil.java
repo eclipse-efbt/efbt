@@ -24,9 +24,6 @@ import org.eclipse.efbt.language.dtm.model.dtm_views.DTMView;
 import org.eclipse.efbt.language.dtm.model.dtm_views.VersionedDTMViewsModule;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cubes.BaseCube;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cube_schema.CubeSchema;
-
-import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.incremental_cubes.BaseDeltaCube;
-import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.incremental_cubes.BaseViewCube;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cubes.DerivedCube;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cubes.FreeBirdToolsCube;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cubes.TargetCube;
@@ -56,10 +53,6 @@ public class CubesAndViewsUtil {
 			return "INPUT LAYER CUBE: " + cube.getName().replace('_', ' ');
 		else if  (cube instanceof TargetCube)
 			return "REPORT CELL: " + cube.getName().replace('_', ' ');
-		else if(cube instanceof BaseDeltaCube)
-			return "BASE DELTA CUBE: " + cube.getName().replace('_', ' ');
-		else if  (cube instanceof BaseViewCube)
-			return "BASE VIEW CUBE: " + cube.getName().replace('_', ' ');
 		else 
 			return "TRANSFORMATION: " + cube.getName().replace('_', ' ');
 	}
@@ -148,44 +141,13 @@ public class CubesAndViewsUtil {
 		while (tableListIter.hasNext())
 		{
 			FreeBirdToolsCube t = tableListIter.next();
-			if( (t instanceof BaseCube) && !(t instanceof BaseDeltaCube) && !(t instanceof BaseViewCube))
+			if( (t instanceof BaseCube) )
 				returnvalue.add(t);
 		}
 		return returnvalue;
 	}
 	
-	public static EList<FreeBirdToolsCube> getBaseViewCubes ( VersionedComponentsSet context)
-	{
-		
-		
-			EList<FreeBirdToolsCube> tableList = getCubes(context);
-			EList<FreeBirdToolsCube> returnvalue = new BasicEList<FreeBirdToolsCube>();
-			Iterator<FreeBirdToolsCube> tableListIter = tableList.iterator();
-			while (tableListIter.hasNext())
-			{
-				FreeBirdToolsCube t = tableListIter.next();
-				if( t instanceof BaseViewCube)
-					returnvalue.add(t);
-			}
-			return returnvalue;
-		
-	}
-	
-	public static EList<FreeBirdToolsCube> getBaseDeltaCubes ( VersionedComponentsSet context)
-	{
-		
-		EList<FreeBirdToolsCube> tableList = getCubes(context);
-		EList<FreeBirdToolsCube> returnvalue = new BasicEList<FreeBirdToolsCube>();
-		Iterator<FreeBirdToolsCube> tableListIter = tableList.iterator();
-		while (tableListIter.hasNext())
-		{
-			FreeBirdToolsCube t = tableListIter.next();
-			if( t instanceof BaseDeltaCube)
-				returnvalue.add(t);
-		}
-		return returnvalue;
-	}
-	
+
 
 	
 	
@@ -279,7 +241,7 @@ public class CubesAndViewsUtil {
 		while (tableListIter.hasNext())
 		{
 			FreeBirdToolsCube t = tableListIter.next();
-			if( (t instanceof DerivedCube) && !(t instanceof TargetCube) && !(t instanceof BaseViewCube))
+			if( (t instanceof DerivedCube) && !(t instanceof TargetCube) )
 				returnvalue.add(t);
 		}
 		return returnvalue;
