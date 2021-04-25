@@ -25,11 +25,6 @@ import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cubes.TargetCube;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.efbt_advanced_data_definition.Efbt_advanced_data_definitionPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.efbt_advanced_data_definition.impl.Efbt_advanced_data_definitionPackageImpl;
-
-import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.incremental_cubes.Incremental_cubesPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.incremental_cubes.impl.Incremental_cubesPackageImpl;
-
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
@@ -153,20 +148,16 @@ public class CubesPackageImpl extends EPackageImpl implements CubesPackage
 		Cube_schemaPackageImpl theCube_schemaPackage = (Cube_schemaPackageImpl)(registeredPackage instanceof Cube_schemaPackageImpl ? registeredPackage : Cube_schemaPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Efbt_advanced_data_definitionPackage.eNS_URI);
 		Efbt_advanced_data_definitionPackageImpl theEfbt_advanced_data_definitionPackage = (Efbt_advanced_data_definitionPackageImpl)(registeredPackage instanceof Efbt_advanced_data_definitionPackageImpl ? registeredPackage : Efbt_advanced_data_definitionPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Incremental_cubesPackage.eNS_URI);
-		Incremental_cubesPackageImpl theIncremental_cubesPackage = (Incremental_cubesPackageImpl)(registeredPackage instanceof Incremental_cubesPackageImpl ? registeredPackage : Incremental_cubesPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theCubesPackage.createPackageContents();
 		theCube_schemaPackage.createPackageContents();
 		theEfbt_advanced_data_definitionPackage.createPackageContents();
-		theIncremental_cubesPackage.createPackageContents();
 
 		// Initialize created meta-data
 		theCubesPackage.initializePackageContents();
 		theCube_schemaPackage.initializePackageContents();
 		theEfbt_advanced_data_definitionPackage.initializePackageContents();
-		theIncremental_cubesPackage.initializePackageContents();
 
 		// Mark meta-data to indicate it can't be changed
 		theCubesPackage.freeze();

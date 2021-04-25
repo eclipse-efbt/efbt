@@ -124,15 +124,16 @@ Exhibit A – Form of Secondary Licenses Notice
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.emf.ecore"/>
       <import plugin="org.eclipse.emf.ecore.xmi"/>
-      <import plugin="org.eclipse.emf.mwe.core"/>
-      <import plugin="org.eclipse.emf.mwe.utils"/>
-      <import plugin="org.eclipse.emf.mwe2.lib"/>
-      <import plugin="org.eclipse.emf.mwe2.runtime"/>
-      <import plugin="org.eclipse.emf.mwe2.launch"/>
       <import plugin="org.eclipse.efbt.cocalimo.core.model.module_management" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.efbt.cocalimo.smcubes.model.core"/>
-      <import plugin="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions"/>
-      <import plugin="org.eclipse.efbt.cocalimo.smcubes.model.input_data"/>
+      <import plugin="com.fasterxml.jackson.core.jackson-databind"/>
+      <import plugin="org.emfjson.jackson"/>
+      <import plugin="org.eclipse.emf.edit"/>
+      <import plugin="org.eclipse.efbt.cocalimo.core.model.module_management.edit"/>
+      <import plugin="org.eclipse.efbt.cocalimo.smcubes.model.core.edit"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.emf.edit.ui"/>
+      <import plugin="org.eclipse.ui.ide"/>
    </requires>
 
    <plugin
@@ -143,7 +144,14 @@ Exhibit A – Form of Secondary Licenses Notice
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagefunctions"
+         id="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes.edit"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes.editor"
          download-size="0"
          install-size="0"
          version="0.0.0"

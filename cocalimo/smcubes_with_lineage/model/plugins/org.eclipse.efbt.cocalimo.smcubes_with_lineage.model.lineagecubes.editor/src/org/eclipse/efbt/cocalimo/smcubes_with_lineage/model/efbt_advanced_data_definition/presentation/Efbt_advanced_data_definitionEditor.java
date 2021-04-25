@@ -168,9 +168,6 @@ import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cube_schema.presenta
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cube_schema.provider.Cube_schemaItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cubes.provider.CubesItemProviderAdapterFactory;
-
-import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.incremental_cubes.provider.Incremental_cubesItemProviderAdapterFactory;
-
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 
@@ -727,7 +724,6 @@ public class Efbt_advanced_data_definitionEditor
 		adapterFactory.addAdapterFactory(new Cube_schemaItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new CubesItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Efbt_advanced_data_definitionItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new Incremental_cubesItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Module_managementItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new CoreItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Data_definitionItemProviderAdapterFactory());

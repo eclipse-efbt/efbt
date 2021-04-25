@@ -146,12 +146,6 @@
     <genClasses ecoreClass="dtm_views.ecore#//WhereClause">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dtm_views.ecore#//WhereClause/function"/>
     </genClasses>
-    <genClasses ecoreClass="dtm_views.ecore#//BaseViewIncorporatingDeltas">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_views.ecore#//BaseViewIncorporatingDeltas/ultimateSourceCube"/>
-    </genClasses>
-    <genClasses ecoreClass="dtm_views.ecore#//DeltaAccumulation">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_views.ecore#//DeltaAccumulation/ultimateSourceCube"/>
-    </genClasses>
     <genClasses ecoreClass="dtm_views.ecore#//CastColumnView">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_views.ecore#//CastColumnView/sourceStructVariable"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference dtm_views.ecore#//CastColumnView/targetStructVariable"/>

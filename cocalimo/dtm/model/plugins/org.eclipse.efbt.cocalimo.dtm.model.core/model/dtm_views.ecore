@@ -359,12 +359,6 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="BaseViewIncorporatingDeltas" eSuperTypes="#//DTMView">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="ultimateSourceCube" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes/model/cubes.ecore#//FreeBirdToolsCube"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="DeltaAccumulation" eSuperTypes="#//DTMView">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="ultimateSourceCube" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes/model/cubes.ecore#//FreeBirdToolsCube"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CastColumnView" eSuperTypes="#//DTMView">
     <eStructuralFeatures xsi:type="ecore:EReference" name="sourceStructVariable" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes/model/efbt_advanced_data_definition.ecore#//StructTypedVariable"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="targetStructVariable" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes/model/efbt_advanced_data_definition.ecore#//StructTypedVariable"/>

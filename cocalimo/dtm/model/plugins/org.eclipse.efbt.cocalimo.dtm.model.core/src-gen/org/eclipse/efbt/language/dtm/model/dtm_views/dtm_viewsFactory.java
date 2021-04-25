@@ -148,24 +148,6 @@ public interface dtm_viewsFactory extends EFactory {
 	WhereClause createWhereClause();
 
 	/**
-	 * Returns a new object of class '<em>Base View Incorporating Deltas</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Base View Incorporating Deltas</em>'.
-	 * @generated
-	 */
-	BaseViewIncorporatingDeltas createBaseViewIncorporatingDeltas();
-
-	/**
-	 * Returns a new object of class '<em>Delta Accumulation</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Delta Accumulation</em>'.
-	 * @generated
-	 */
-	DeltaAccumulation createDeltaAccumulation();
-
-	/**
 	 * Returns a new object of class '<em>Cast Column View</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

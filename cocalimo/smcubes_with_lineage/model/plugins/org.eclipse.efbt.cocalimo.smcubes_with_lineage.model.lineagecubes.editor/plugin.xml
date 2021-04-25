@@ -90,32 +90,4 @@
       </editor>
    </extension>
 
-   <extension point="org.eclipse.ui.newWizards">
-      <!-- @generated lineagecubes -->
-      <category
-            id="org.eclipse.emf.ecore.Wizard.category.ID"
-            name="%_UI_Wizard_category"/>
-      <wizard
-            id="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.incremental_cubes.presentation.Incremental_cubesModelWizardID"
-            name="%_UI_Incremental_cubesModelWizard_label"
-            class="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.incremental_cubes.presentation.Incremental_cubesModelWizard"
-            category="org.eclipse.emf.ecore.Wizard.category.ID"
-            icon="icons/full/obj16/Incremental_cubesModelFile.gif">
-         <description>%_UI_Incremental_cubesModelWizard_description</description>
-         <selection class="org.eclipse.core.resources.IResource"/>
-      </wizard>
-   </extension>
-
-   <extension point="org.eclipse.ui.editors">
-      <!-- @generated lineagecubes -->
-      <editor
-            id="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.incremental_cubes.presentation.Incremental_cubesEditorID"
-            name="%_UI_Incremental_cubesEditor_label"
-            icon="icons/full/obj16/Incremental_cubesModelFile.gif"
-            extensions="incremental_cubes"
-            class="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.incremental_cubes.presentation.Incremental_cubesEditor"
-            contributorClass="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.incremental_cubes.presentation.Incremental_cubesActionBarContributor">
-      </editor>
-   </extension>
-
 </plugin>

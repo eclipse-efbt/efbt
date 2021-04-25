@@ -17,6 +17,7 @@ import org.eclipse.efbt.cocalimo.core.model.test_definition.Test_definitionPacka
 import org.eclipse.efbt.cocalimo.core.model.test_input_data.Test_input_dataPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.Base_column_structured_dataPackage;
+
 import org.eclipse.efbt.cocalimo.smcubes.model.column_structured_data.Column_structured_dataPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage;
@@ -32,6 +33,7 @@ import org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.Efbt_vtl_
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MappingPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.program.ProgramPackage;
+
 import org.eclipse.efbt.cocalimo.smcubes.model.rendering.RenderingPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.reports.ReportsPackage;
@@ -58,11 +60,9 @@ import org.eclipse.efbt.language.dtm.model.dtm_report_cell_views.impl.dtm_report
 
 import org.eclipse.efbt.language.dtm.model.dtm_views.AggregateEnrichmentView;
 import org.eclipse.efbt.language.dtm.model.dtm_views.AggregateEnrichmentViewAndOrderBy;
-import org.eclipse.efbt.language.dtm.model.dtm_views.BaseViewIncorporatingDeltas;
 import org.eclipse.efbt.language.dtm.model.dtm_views.CastColumnView;
 import org.eclipse.efbt.language.dtm.model.dtm_views.CopyView;
 import org.eclipse.efbt.language.dtm.model.dtm_views.DTMView;
-import org.eclipse.efbt.language.dtm.model.dtm_views.DeltaAccumulation;
 import org.eclipse.efbt.language.dtm.model.dtm_views.EnrichmentView;
 import org.eclipse.efbt.language.dtm.model.dtm_views.ExplodeArrayOfStructsView;
 import org.eclipse.efbt.language.dtm.model.dtm_views.ExplodeStructView;
@@ -196,20 +196,6 @@ public class dtm_viewsPackageImpl extends EPackageImpl implements dtm_viewsPacka
 	 * @generated
 	 */
 	private EClass whereClauseEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass baseViewIncorporatingDeltasEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass deltaAccumulationEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -737,46 +723,6 @@ public class dtm_viewsPackageImpl extends EPackageImpl implements dtm_viewsPacka
 	 * @generated
 	 */
 	@Override
-	public EClass getBaseViewIncorporatingDeltas() {
-		return baseViewIncorporatingDeltasEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getBaseViewIncorporatingDeltas_UltimateSourceCube() {
-		return (EReference)baseViewIncorporatingDeltasEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EClass getDeltaAccumulation() {
-		return deltaAccumulationEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getDeltaAccumulation_UltimateSourceCube() {
-		return (EReference)deltaAccumulationEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EClass getCastColumnView() {
 		return castColumnViewEClass;
 	}
@@ -1081,12 +1027,6 @@ public class dtm_viewsPackageImpl extends EPackageImpl implements dtm_viewsPacka
 		whereClauseEClass = createEClass(WHERE_CLAUSE);
 		createEReference(whereClauseEClass, WHERE_CLAUSE__FUNCTION);
 
-		baseViewIncorporatingDeltasEClass = createEClass(BASE_VIEW_INCORPORATING_DELTAS);
-		createEReference(baseViewIncorporatingDeltasEClass, BASE_VIEW_INCORPORATING_DELTAS__ULTIMATE_SOURCE_CUBE);
-
-		deltaAccumulationEClass = createEClass(DELTA_ACCUMULATION);
-		createEReference(deltaAccumulationEClass, DELTA_ACCUMULATION__ULTIMATE_SOURCE_CUBE);
-
 		castColumnViewEClass = createEClass(CAST_COLUMN_VIEW);
 		createEReference(castColumnViewEClass, CAST_COLUMN_VIEW__SOURCE_STRUCT_VARIABLE);
 		createEReference(castColumnViewEClass, CAST_COLUMN_VIEW__TARGET_STRUCT_VARIABLE);
@@ -1162,8 +1102,6 @@ public class dtm_viewsPackageImpl extends EPackageImpl implements dtm_viewsPacka
 		dtmViewEClass.getESuperTypes().add(theTransformationPackage.getDataSetTransformation());
 		unionViewEClass.getESuperTypes().add(this.getDTMView());
 		versionedDTMViewsModuleEClass.getESuperTypes().add(theTransformationPackage.getVersionedFunctionalModuleLogic());
-		baseViewIncorporatingDeltasEClass.getESuperTypes().add(this.getDTMView());
-		deltaAccumulationEClass.getESuperTypes().add(this.getDTMView());
 		castColumnViewEClass.getESuperTypes().add(this.getDTMView());
 		explodeArrayOfStructsViewEClass.getESuperTypes().add(this.getDTMView());
 		explodeStructViewEClass.getESuperTypes().add(this.getDTMView());
@@ -1223,12 +1161,6 @@ public class dtm_viewsPackageImpl extends EPackageImpl implements dtm_viewsPacka
 
 		initEClass(whereClauseEClass, WhereClause.class, "WhereClause", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getWhereClause_Function(), theFunctionsPackage.getBooleanFunction(), null, "function", null, 0, 1, WhereClause.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(baseViewIncorporatingDeltasEClass, BaseViewIncorporatingDeltas.class, "BaseViewIncorporatingDeltas", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getBaseViewIncorporatingDeltas_UltimateSourceCube(), theCubesPackage.getFreeBirdToolsCube(), null, "ultimateSourceCube", null, 0, 1, BaseViewIncorporatingDeltas.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(deltaAccumulationEClass, DeltaAccumulation.class, "DeltaAccumulation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getDeltaAccumulation_UltimateSourceCube(), theCubesPackage.getFreeBirdToolsCube(), null, "ultimateSourceCube", null, 0, 1, DeltaAccumulation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(castColumnViewEClass, CastColumnView.class, "CastColumnView", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getCastColumnView_SourceStructVariable(), theEfbt_advanced_data_definitionPackage.getStructTypedVariable(), null, "sourceStructVariable", null, 0, 1, CastColumnView.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

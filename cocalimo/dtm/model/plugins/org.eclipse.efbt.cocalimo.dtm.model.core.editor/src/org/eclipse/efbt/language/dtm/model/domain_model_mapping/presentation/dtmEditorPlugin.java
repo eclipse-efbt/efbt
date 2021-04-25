@@ -11,9 +11,11 @@ import org.eclipse.efbt.cocalimo.core.model.requirements_text.provider.Requireme
 import org.eclipse.efbt.cocalimo.core.model.test_definition.provider.TestingEditPlugin;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.provider.Smcubes_input_dataEditPlugin;
+
 import org.eclipse.efbt.cocalimo.smcubes.model.core.provider.SmcubesEditPlugin;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.program.provider.ProgramEditPlugin;
+
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cube_schema.provider.LineagecubesEditPlugin;
 
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.provider.FunctionsEditPlugin;

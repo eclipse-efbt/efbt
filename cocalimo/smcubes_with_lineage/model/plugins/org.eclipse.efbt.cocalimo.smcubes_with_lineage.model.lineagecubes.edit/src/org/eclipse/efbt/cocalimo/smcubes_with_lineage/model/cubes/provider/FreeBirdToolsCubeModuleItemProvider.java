@@ -13,9 +13,6 @@ import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cube_schema.provider
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cubes.CubesFactory;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cubes.CubesPackage;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.cubes.FreeBirdToolsCubeModule;
-
-import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.incremental_cubes.Incremental_cubesFactory;
-
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 
@@ -163,21 +160,6 @@ public class FreeBirdToolsCubeModuleItemProvider extends ModuleItemProvider {
 			(createChildParameter
 				(CubesPackage.Literals.FREE_BIRD_TOOLS_CUBE_MODULE__CUBES,
 				 CubesFactory.eINSTANCE.createTargetCube()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(CubesPackage.Literals.FREE_BIRD_TOOLS_CUBE_MODULE__CUBES,
-				 Incremental_cubesFactory.eINSTANCE.createBaseDeltaCube()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(CubesPackage.Literals.FREE_BIRD_TOOLS_CUBE_MODULE__CUBES,
-				 Incremental_cubesFactory.eINSTANCE.createBaseViewCube()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(CubesPackage.Literals.FREE_BIRD_TOOLS_CUBE_MODULE__CUBES,
-				 Incremental_cubesFactory.eINSTANCE.createDeltaAccumulationCube()));
 	}
 
 	/**

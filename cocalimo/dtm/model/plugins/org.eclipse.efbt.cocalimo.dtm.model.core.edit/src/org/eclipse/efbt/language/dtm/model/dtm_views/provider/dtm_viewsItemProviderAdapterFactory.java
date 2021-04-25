@@ -394,52 +394,6 @@ public class dtm_viewsItemProviderAdapterFactory extends dtm_viewsAdapterFactory
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.language.dtm.model.dtm_views.BaseViewIncorporatingDeltas} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected BaseViewIncorporatingDeltasItemProvider baseViewIncorporatingDeltasItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.language.dtm.model.dtm_views.BaseViewIncorporatingDeltas}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createBaseViewIncorporatingDeltasAdapter() {
-		if (baseViewIncorporatingDeltasItemProvider == null) {
-			baseViewIncorporatingDeltasItemProvider = new BaseViewIncorporatingDeltasItemProvider(this);
-		}
-
-		return baseViewIncorporatingDeltasItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.language.dtm.model.dtm_views.DeltaAccumulation} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected DeltaAccumulationItemProvider deltaAccumulationItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.language.dtm.model.dtm_views.DeltaAccumulation}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createDeltaAccumulationAdapter() {
-		if (deltaAccumulationItemProvider == null) {
-			deltaAccumulationItemProvider = new DeltaAccumulationItemProvider(this);
-		}
-
-		return deltaAccumulationItemProvider;
-	}
-
-	/**
 	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.language.dtm.model.dtm_views.CastColumnView} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -719,8 +673,6 @@ public class dtm_viewsItemProviderAdapterFactory extends dtm_viewsAdapterFactory
 		if (unionViewItemProvider != null) unionViewItemProvider.dispose();
 		if (versionedDTMViewsModuleItemProvider != null) versionedDTMViewsModuleItemProvider.dispose();
 		if (whereClauseItemProvider != null) whereClauseItemProvider.dispose();
-		if (baseViewIncorporatingDeltasItemProvider != null) baseViewIncorporatingDeltasItemProvider.dispose();
-		if (deltaAccumulationItemProvider != null) deltaAccumulationItemProvider.dispose();
 		if (castColumnViewItemProvider != null) castColumnViewItemProvider.dispose();
 		if (explodeArrayOfStructsViewItemProvider != null) explodeArrayOfStructsViewItemProvider.dispose();
 		if (explodeStructViewItemProvider != null) explodeStructViewItemProvider.dispose();

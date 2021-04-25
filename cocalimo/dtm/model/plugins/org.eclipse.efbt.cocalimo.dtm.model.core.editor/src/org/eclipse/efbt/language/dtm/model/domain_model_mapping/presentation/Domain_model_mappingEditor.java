@@ -172,6 +172,7 @@ import org.eclipse.efbt.cocalimo.core.model.test_definition.provider.Test_defini
 import org.eclipse.efbt.cocalimo.core.model.test_input_data.provider.Test_input_dataItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.provider.Base_column_structured_dataItemProviderAdapterFactory;
+
 import org.eclipse.efbt.cocalimo.smcubes.model.column_structured_data.provider.Column_structured_dataItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.core.provider.CoreItemProviderAdapterFactory;
@@ -187,6 +188,7 @@ import org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.provider.
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.provider.MappingItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.program.provider.ProgramItemProviderAdapterFactory;
+
 import org.eclipse.efbt.cocalimo.smcubes.model.rendering.provider.RenderingItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.reports.provider.ReportsItemProviderAdapterFactory;

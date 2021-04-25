@@ -187,16 +187,6 @@ public class VersionedDTMViewsModuleItemProvider extends VersionedFunctionalModu
 		newChildDescriptors.add
 			(createChildParameter
 				(dtm_viewsPackage.Literals.VERSIONED_DTM_VIEWS_MODULE__DTM_VIEWS,
-				 dtm_viewsFactory.eINSTANCE.createBaseViewIncorporatingDeltas()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(dtm_viewsPackage.Literals.VERSIONED_DTM_VIEWS_MODULE__DTM_VIEWS,
-				 dtm_viewsFactory.eINSTANCE.createDeltaAccumulation()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(dtm_viewsPackage.Literals.VERSIONED_DTM_VIEWS_MODULE__DTM_VIEWS,
 				 dtm_viewsFactory.eINSTANCE.createCastColumnView()));
 
 		newChildDescriptors.add

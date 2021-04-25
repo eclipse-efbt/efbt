@@ -70,8 +70,6 @@ public class dtm_viewsFactoryImpl extends EFactoryImpl implements dtm_viewsFacto
 			case dtm_viewsPackage.UNION_VIEW: return createUnionView();
 			case dtm_viewsPackage.VERSIONED_DTM_VIEWS_MODULE: return createVersionedDTMViewsModule();
 			case dtm_viewsPackage.WHERE_CLAUSE: return createWhereClause();
-			case dtm_viewsPackage.BASE_VIEW_INCORPORATING_DELTAS: return createBaseViewIncorporatingDeltas();
-			case dtm_viewsPackage.DELTA_ACCUMULATION: return createDeltaAccumulation();
 			case dtm_viewsPackage.CAST_COLUMN_VIEW: return createCastColumnView();
 			case dtm_viewsPackage.EXPLODE_ARRAY_OF_STRUCTS_VIEW: return createExplodeArrayOfStructsView();
 			case dtm_viewsPackage.EXPLODE_STRUCT_VIEW: return createExplodeStructView();
@@ -236,28 +234,6 @@ public class dtm_viewsFactoryImpl extends EFactoryImpl implements dtm_viewsFacto
 	public WhereClause createWhereClause() {
 		WhereClauseImpl whereClause = new WhereClauseImpl();
 		return whereClause;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public BaseViewIncorporatingDeltas createBaseViewIncorporatingDeltas() {
-		BaseViewIncorporatingDeltasImpl baseViewIncorporatingDeltas = new BaseViewIncorporatingDeltasImpl();
-		return baseViewIncorporatingDeltas;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public DeltaAccumulation createDeltaAccumulation() {
-		DeltaAccumulationImpl deltaAccumulation = new DeltaAccumulationImpl();
-		return deltaAccumulation;
 	}
 
 	/**

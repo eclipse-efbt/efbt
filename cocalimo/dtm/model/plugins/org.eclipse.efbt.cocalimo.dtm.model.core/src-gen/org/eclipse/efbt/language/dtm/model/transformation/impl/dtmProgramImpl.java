@@ -3,6 +3,7 @@
 package org.eclipse.efbt.language.dtm.model.transformation.impl;
 
 import java.util.Collection;
+import org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.efbt_advanced_data_definition.ArrayTypedVariableModule;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.efbt_advanced_data_definition.StructTypedVariablesModule;
 
@@ -61,7 +62,7 @@ public class dtmProgramImpl extends MinimalEObjectImpl.Container implements dtmP
 	 * @generated
 	 * @ordered
 	 */
-	protected org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel smcubesStaticModel;
+	protected SMCubesStaticModel smcubesStaticModel;
 
 	/**
 	 * The cached value of the '{@link #getStructVariablesModule() <em>Struct Variables Module</em>}' containment reference.
@@ -131,7 +132,7 @@ public class dtmProgramImpl extends MinimalEObjectImpl.Container implements dtmP
 	 * @generated
 	 */
 	@Override
-	public org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel getSmcubesStaticModel() {
+	public SMCubesStaticModel getSmcubesStaticModel() {
 		return smcubesStaticModel;
 	}
 
@@ -140,8 +141,8 @@ public class dtmProgramImpl extends MinimalEObjectImpl.Container implements dtmP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetSmcubesStaticModel(org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel newSmcubesStaticModel, NotificationChain msgs) {
-		org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel oldSmcubesStaticModel = smcubesStaticModel;
+	public NotificationChain basicSetSmcubesStaticModel(SMCubesStaticModel newSmcubesStaticModel, NotificationChain msgs) {
+		SMCubesStaticModel oldSmcubesStaticModel = smcubesStaticModel;
 		smcubesStaticModel = newSmcubesStaticModel;
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, TransformationPackage.DTM_PROGRAM__SMCUBES_STATIC_MODEL, oldSmcubesStaticModel, newSmcubesStaticModel);
@@ -156,7 +157,7 @@ public class dtmProgramImpl extends MinimalEObjectImpl.Container implements dtmP
 	 * @generated
 	 */
 	@Override
-	public void setSmcubesStaticModel(org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel newSmcubesStaticModel) {
+	public void setSmcubesStaticModel(SMCubesStaticModel newSmcubesStaticModel) {
 		if (newSmcubesStaticModel != smcubesStaticModel) {
 			NotificationChain msgs = null;
 			if (smcubesStaticModel != null)
@@ -363,7 +364,7 @@ public class dtmProgramImpl extends MinimalEObjectImpl.Container implements dtmP
 				getExecutableLogic().addAll((Collection<? extends dtmExecutableLogic>)newValue);
 				return;
 			case TransformationPackage.DTM_PROGRAM__SMCUBES_STATIC_MODEL:
-				setSmcubesStaticModel((org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel)newValue);
+				setSmcubesStaticModel((SMCubesStaticModel)newValue);
 				return;
 			case TransformationPackage.DTM_PROGRAM__STRUCT_VARIABLES_MODULE:
 				setStructVariablesModule((StructTypedVariablesModule)newValue);
@@ -390,7 +391,7 @@ public class dtmProgramImpl extends MinimalEObjectImpl.Container implements dtmP
 				getExecutableLogic().clear();
 				return;
 			case TransformationPackage.DTM_PROGRAM__SMCUBES_STATIC_MODEL:
-				setSmcubesStaticModel((org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel)null);
+				setSmcubesStaticModel((SMCubesStaticModel)null);
 				return;
 			case TransformationPackage.DTM_PROGRAM__STRUCT_VARIABLES_MODULE:
 				setStructVariablesModule((StructTypedVariablesModule)null);

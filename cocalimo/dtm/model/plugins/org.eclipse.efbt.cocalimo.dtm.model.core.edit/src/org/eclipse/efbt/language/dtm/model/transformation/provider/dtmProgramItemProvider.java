@@ -5,7 +5,9 @@ package org.eclipse.efbt.language.dtm.model.transformation.provider;
 
 import java.util.Collection;
 import java.util.List;
+
 import org.eclipse.efbt.cocalimo.smcubes.model.program.ProgramFactory;
+
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.efbt_advanced_data_definition.Efbt_advanced_data_definitionFactory;
 
 import org.eclipse.efbt.language.dtm.model.domain_model_mapping.provider.dtmEditPlugin;

@@ -170,22 +170,6 @@ public class dtm_viewsSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case dtm_viewsPackage.BASE_VIEW_INCORPORATING_DELTAS: {
-				BaseViewIncorporatingDeltas baseViewIncorporatingDeltas = (BaseViewIncorporatingDeltas)theEObject;
-				T result = caseBaseViewIncorporatingDeltas(baseViewIncorporatingDeltas);
-				if (result == null) result = caseDTMView(baseViewIncorporatingDeltas);
-				if (result == null) result = caseDataSetTransformation(baseViewIncorporatingDeltas);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case dtm_viewsPackage.DELTA_ACCUMULATION: {
-				DeltaAccumulation deltaAccumulation = (DeltaAccumulation)theEObject;
-				T result = caseDeltaAccumulation(deltaAccumulation);
-				if (result == null) result = caseDTMView(deltaAccumulation);
-				if (result == null) result = caseDataSetTransformation(deltaAccumulation);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case dtm_viewsPackage.CAST_COLUMN_VIEW: {
 				CastColumnView castColumnView = (CastColumnView)theEObject;
 				T result = caseCastColumnView(castColumnView);
@@ -453,36 +437,6 @@ public class dtm_viewsSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseWhereClause(WhereClause object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Base View Incorporating Deltas</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Base View Incorporating Deltas</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseBaseViewIncorporatingDeltas(BaseViewIncorporatingDeltas object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Delta Accumulation</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Delta Accumulation</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseDeltaAccumulation(DeltaAccumulation object) {
 		return null;
 	}
 

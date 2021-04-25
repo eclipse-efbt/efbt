@@ -127,14 +127,6 @@ public class dtm_viewsAdapterFactory extends AdapterFactoryImpl {
 				return createWhereClauseAdapter();
 			}
 			@Override
-			public Adapter caseBaseViewIncorporatingDeltas(BaseViewIncorporatingDeltas object) {
-				return createBaseViewIncorporatingDeltasAdapter();
-			}
-			@Override
-			public Adapter caseDeltaAccumulation(DeltaAccumulation object) {
-				return createDeltaAccumulationAdapter();
-			}
-			@Override
 			public Adapter caseCastColumnView(CastColumnView object) {
 				return createCastColumnViewAdapter();
 			}
@@ -387,34 +379,6 @@ public class dtm_viewsAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createWhereClauseAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.language.dtm.model.dtm_views.BaseViewIncorporatingDeltas <em>Base View Incorporating Deltas</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.efbt.language.dtm.model.dtm_views.BaseViewIncorporatingDeltas
-	 * @generated
-	 */
-	public Adapter createBaseViewIncorporatingDeltasAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.language.dtm.model.dtm_views.DeltaAccumulation <em>Delta Accumulation</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.efbt.language.dtm.model.dtm_views.DeltaAccumulation
-	 * @generated
-	 */
-	public Adapter createDeltaAccumulationAdapter() {
 		return null;
 	}
 

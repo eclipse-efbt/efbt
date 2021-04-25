@@ -867,116 +867,6 @@ public interface dtm_viewsPackage extends EPackage {
 	int WHERE_CLAUSE_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.language.dtm.model.dtm_views.impl.BaseViewIncorporatingDeltasImpl <em>Base View Incorporating Deltas</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.language.dtm.model.dtm_views.impl.BaseViewIncorporatingDeltasImpl
-	 * @see org.eclipse.efbt.language.dtm.model.dtm_views.impl.dtm_viewsPackageImpl#getBaseViewIncorporatingDeltas()
-	 * @generated
-	 */
-	int BASE_VIEW_INCORPORATING_DELTAS = 14;
-
-	/**
-	 * The feature id for the '<em><b>Cube</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_VIEW_INCORPORATING_DELTAS__CUBE = DTM_VIEW__CUBE;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_VIEW_INCORPORATING_DELTAS__NAME = DTM_VIEW__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Ultimate Source Cube</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_VIEW_INCORPORATING_DELTAS__ULTIMATE_SOURCE_CUBE = DTM_VIEW_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Base View Incorporating Deltas</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_VIEW_INCORPORATING_DELTAS_FEATURE_COUNT = DTM_VIEW_FEATURE_COUNT + 1;
-
-	/**
-	 * The number of operations of the '<em>Base View Incorporating Deltas</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_VIEW_INCORPORATING_DELTAS_OPERATION_COUNT = DTM_VIEW_OPERATION_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.language.dtm.model.dtm_views.impl.DeltaAccumulationImpl <em>Delta Accumulation</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.language.dtm.model.dtm_views.impl.DeltaAccumulationImpl
-	 * @see org.eclipse.efbt.language.dtm.model.dtm_views.impl.dtm_viewsPackageImpl#getDeltaAccumulation()
-	 * @generated
-	 */
-	int DELTA_ACCUMULATION = 15;
-
-	/**
-	 * The feature id for the '<em><b>Cube</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DELTA_ACCUMULATION__CUBE = DTM_VIEW__CUBE;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DELTA_ACCUMULATION__NAME = DTM_VIEW__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Ultimate Source Cube</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DELTA_ACCUMULATION__ULTIMATE_SOURCE_CUBE = DTM_VIEW_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Delta Accumulation</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DELTA_ACCUMULATION_FEATURE_COUNT = DTM_VIEW_FEATURE_COUNT + 1;
-
-	/**
-	 * The number of operations of the '<em>Delta Accumulation</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DELTA_ACCUMULATION_OPERATION_COUNT = DTM_VIEW_OPERATION_COUNT + 0;
-
-	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.language.dtm.model.dtm_views.impl.CastColumnViewImpl <em>Cast Column View</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -984,7 +874,7 @@ public interface dtm_viewsPackage extends EPackage {
 	 * @see org.eclipse.efbt.language.dtm.model.dtm_views.impl.dtm_viewsPackageImpl#getCastColumnView()
 	 * @generated
 	 */
-	int CAST_COLUMN_VIEW = 16;
+	int CAST_COLUMN_VIEW = 14;
 
 	/**
 	 * The feature id for the '<em><b>Cube</b></em>' reference.
@@ -1048,7 +938,7 @@ public interface dtm_viewsPackage extends EPackage {
 	 * @see org.eclipse.efbt.language.dtm.model.dtm_views.impl.dtm_viewsPackageImpl#getExplodeArrayOfStructsView()
 	 * @generated
 	 */
-	int EXPLODE_ARRAY_OF_STRUCTS_VIEW = 17;
+	int EXPLODE_ARRAY_OF_STRUCTS_VIEW = 15;
 
 	/**
 	 * The feature id for the '<em><b>Cube</b></em>' reference.
@@ -1121,7 +1011,7 @@ public interface dtm_viewsPackage extends EPackage {
 	 * @see org.eclipse.efbt.language.dtm.model.dtm_views.impl.dtm_viewsPackageImpl#getExplodeStructView()
 	 * @generated
 	 */
-	int EXPLODE_STRUCT_VIEW = 18;
+	int EXPLODE_STRUCT_VIEW = 16;
 
 	/**
 	 * The feature id for the '<em><b>Cube</b></em>' reference.
@@ -1176,7 +1066,7 @@ public interface dtm_viewsPackage extends EPackage {
 	 * @see org.eclipse.efbt.language.dtm.model.dtm_views.impl.dtm_viewsPackageImpl#getFilterByStructClassColumnView()
 	 * @generated
 	 */
-	int FILTER_BY_STRUCT_CLASS_COLUMN_VIEW = 19;
+	int FILTER_BY_STRUCT_CLASS_COLUMN_VIEW = 17;
 
 	/**
 	 * The feature id for the '<em><b>Cube</b></em>' reference.
@@ -1249,7 +1139,7 @@ public interface dtm_viewsPackage extends EPackage {
 	 * @see org.eclipse.efbt.language.dtm.model.dtm_views.impl.dtm_viewsPackageImpl#getMakeArrayOfStructsView()
 	 * @generated
 	 */
-	int MAKE_ARRAY_OF_STRUCTS_VIEW = 20;
+	int MAKE_ARRAY_OF_STRUCTS_VIEW = 18;
 
 	/**
 	 * The feature id for the '<em><b>Cube</b></em>' reference.
@@ -1322,7 +1212,7 @@ public interface dtm_viewsPackage extends EPackage {
 	 * @see org.eclipse.efbt.language.dtm.model.dtm_views.impl.dtm_viewsPackageImpl#getMakeStructView()
 	 * @generated
 	 */
-	int MAKE_STRUCT_VIEW = 21;
+	int MAKE_STRUCT_VIEW = 19;
 
 	/**
 	 * The feature id for the '<em><b>Cube</b></em>' reference.
@@ -1377,7 +1267,7 @@ public interface dtm_viewsPackage extends EPackage {
 	 * @see org.eclipse.efbt.language.dtm.model.dtm_views.impl.dtm_viewsPackageImpl#getAggregateEnrichmentViewAndOrderBy()
 	 * @generated
 	 */
-	int AGGREGATE_ENRICHMENT_VIEW_AND_ORDER_BY = 22;
+	int AGGREGATE_ENRICHMENT_VIEW_AND_ORDER_BY = 20;
 
 	/**
 	 * The feature id for the '<em><b>Cube</b></em>' reference.
@@ -1835,48 +1725,6 @@ public interface dtm_viewsPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getWhereClause_Function();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.language.dtm.model.dtm_views.BaseViewIncorporatingDeltas <em>Base View Incorporating Deltas</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Base View Incorporating Deltas</em>'.
-	 * @see org.eclipse.efbt.language.dtm.model.dtm_views.BaseViewIncorporatingDeltas
-	 * @generated
-	 */
-	EClass getBaseViewIncorporatingDeltas();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.language.dtm.model.dtm_views.BaseViewIncorporatingDeltas#getUltimateSourceCube <em>Ultimate Source Cube</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Ultimate Source Cube</em>'.
-	 * @see org.eclipse.efbt.language.dtm.model.dtm_views.BaseViewIncorporatingDeltas#getUltimateSourceCube()
-	 * @see #getBaseViewIncorporatingDeltas()
-	 * @generated
-	 */
-	EReference getBaseViewIncorporatingDeltas_UltimateSourceCube();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.language.dtm.model.dtm_views.DeltaAccumulation <em>Delta Accumulation</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Delta Accumulation</em>'.
-	 * @see org.eclipse.efbt.language.dtm.model.dtm_views.DeltaAccumulation
-	 * @generated
-	 */
-	EClass getDeltaAccumulation();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.language.dtm.model.dtm_views.DeltaAccumulation#getUltimateSourceCube <em>Ultimate Source Cube</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Ultimate Source Cube</em>'.
-	 * @see org.eclipse.efbt.language.dtm.model.dtm_views.DeltaAccumulation#getUltimateSourceCube()
-	 * @see #getDeltaAccumulation()
-	 * @generated
-	 */
-	EReference getDeltaAccumulation_UltimateSourceCube();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.language.dtm.model.dtm_views.CastColumnView <em>Cast Column View</em>}'.
@@ -2470,42 +2318,6 @@ public interface dtm_viewsPackage extends EPackage {
 		 * @generated
 		 */
 		EReference WHERE_CLAUSE__FUNCTION = eINSTANCE.getWhereClause_Function();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.language.dtm.model.dtm_views.impl.BaseViewIncorporatingDeltasImpl <em>Base View Incorporating Deltas</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.language.dtm.model.dtm_views.impl.BaseViewIncorporatingDeltasImpl
-		 * @see org.eclipse.efbt.language.dtm.model.dtm_views.impl.dtm_viewsPackageImpl#getBaseViewIncorporatingDeltas()
-		 * @generated
-		 */
-		EClass BASE_VIEW_INCORPORATING_DELTAS = eINSTANCE.getBaseViewIncorporatingDeltas();
-
-		/**
-		 * The meta object literal for the '<em><b>Ultimate Source Cube</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference BASE_VIEW_INCORPORATING_DELTAS__ULTIMATE_SOURCE_CUBE = eINSTANCE.getBaseViewIncorporatingDeltas_UltimateSourceCube();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.language.dtm.model.dtm_views.impl.DeltaAccumulationImpl <em>Delta Accumulation</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.language.dtm.model.dtm_views.impl.DeltaAccumulationImpl
-		 * @see org.eclipse.efbt.language.dtm.model.dtm_views.impl.dtm_viewsPackageImpl#getDeltaAccumulation()
-		 * @generated
-		 */
-		EClass DELTA_ACCUMULATION = eINSTANCE.getDeltaAccumulation();
-
-		/**
-		 * The meta object literal for the '<em><b>Ultimate Source Cube</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference DELTA_ACCUMULATION__ULTIMATE_SOURCE_CUBE = eINSTANCE.getDeltaAccumulation_UltimateSourceCube();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.language.dtm.model.dtm_views.impl.CastColumnViewImpl <em>Cast Column View</em>}' class.
