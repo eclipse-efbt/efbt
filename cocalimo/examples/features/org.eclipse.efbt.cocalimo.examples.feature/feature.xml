@@ -120,16 +120,11 @@ Exhibit A – Form of Secondary Licenses Notice
     You may add additional accurate notices of copyright ownership.
    </license>
 
-   <requires>
-    
-   </requires>
-
    <plugin
          id="org.eclipse.efbt.cocalimo.examples.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
 
 </feature>
