@@ -24,9 +24,9 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.xtext.resource.XtextResourceSet;
+//import org.eclipse.xtext.resource.XtextResourceSet;
 
-import com.google.inject.Injector;
+//import com.google.inject.Injector;
 
 
 /**
