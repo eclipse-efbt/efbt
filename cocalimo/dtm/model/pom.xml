@@ -44,7 +44,6 @@
 		<module>plugins/org.eclipse.efbt.cocalimo.dtm.model.platform_call.editor</module>		
 		<module>features/org.eclipse.efbt.cocalimo.dtm.model.core.feature</module>
 		<module>features/org.eclipse.efbt.cocalimo.dtm.model.platform_call.feature</module>
-		<module>releng/org.eclipse.efbt.cocalimo.dtm.model.repository</module>
 
 	</modules>
 	

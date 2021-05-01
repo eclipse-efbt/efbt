@@ -46,7 +46,6 @@
 		<module>plugins/org.eclipse.efbt.cocalimo.smcubes.model.input_data.editor</module>
 		<module>plugins/org.eclipse.efbt.cocalimo.smcubes.model.program.editor</module>
 		<module>features/org.eclipse.efbt.cocalimo.smcubes.model.feature</module>
-		<module>releng/org.eclipse.efbt.cocalimo.smcubes.model.repository</module>
 	</modules>
 	
 	<build>

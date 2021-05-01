@@ -40,7 +40,6 @@
 		<module>releng/org.eclipse.efbt.cocalimo.dtm.modelquery.target</module>
 		<module>plugins/org.eclipse.efbt.cocalimo.dtm.query.core</module>
 		<module>features/org.eclipse.efbt.cocalimo.dtm.query.core.feature</module>
-		<module>releng/org.eclipse.efbt.cocalimo.dtm.modelquery.repository</module>
 	</modules>
 	
 	<build>
@@ -134,11 +133,7 @@
 					</environments>
 					<dependency-resolution>
 						<extraRequirements>
-							<requirement>
-								<type>eclipse-plugin</type>
-								<id>org.eclipse.xtext.logging</id>
-								<versionRange>1.2.15</versionRange>
-							</requirement>
+							
 							<!-- to get the org.eclipse.osgi.compatibility.state plugin if the target 
 								platform is Luna or later. (backward compatible with kepler and previous 
 								versions) see https://bugs.eclipse.org/bugs/show_bug.cgi?id=492149 -->
