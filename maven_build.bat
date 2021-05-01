@@ -30,7 +30,10 @@ call mvn install
 cd ..\..\..
 cd cocalimo\dtm\ui_sirius
 call mvn install
-cd ..\..\..                   
+cd ..\..\..
+cd cocalimo\examples
+mvn install 
+cd ..\..                  
 cd controller\ldm
 call mvn install
 cd ..\..
