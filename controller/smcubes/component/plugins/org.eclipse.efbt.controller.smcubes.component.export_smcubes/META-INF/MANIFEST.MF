@@ -9,7 +9,7 @@ Require-Bundle: org.eclipse.emf.ecore,
  org.eclipse.efbt.cocalimo.smcubes.model.core,
  org.eclipse.efbt.cocalimo.core.model.module_management,
  org.eclipse.efbt.cocalimo.smcubes.model.program,
- org.eclipse.efbt.controller.smcubes.component.importexport.impl
+ org.eclipse.efbt.controller.smcubes.component.importexport.impl,
  org.eclipse.efbt.controller.smcubes.component.exporter,
  org.eclipse.efbt.cocalimo.dtm.model.platform_call,
  org.eclipse.efbt.cocalimo.dtm.model.core
