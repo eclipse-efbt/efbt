@@ -17,22 +17,21 @@
 	<extension
           point="org.eclipse.ui.newWizards">
        <category 
-            id="org.eclipse.efbt.cocason.dsl.cocason.ui.Examples"
-            name="CoCaSon"
+            id="org.eclipse.efbt.cocalimo.Examples"
+            name="CoCaLiMo Example"
             parentCategory="org.eclipse.ui.Examples" />
        <wizard
-             category="org.eclipse.ui.Examples/org.eclipse.efbt.cocason.dsl.cocason.ui.Examples"
+             category="org.eclipse.ui.Examples/org.eclipse.efbt.cocalimo.Examples"
              class="org.eclipse.emf.common.ui.wizard.ExampleInstallerWizard"
              icon="icons/EObject.gif"
-             id="org.eclipse.efbt.cocason.dsl.cocason.ui.wizard.CocasonExampleWizard"
+             id="org.eclipse.efbt.cocalimo.wizard.CocasonExampleWizard"
              name="CoCaLiMo Example"
              project="true">
        </wizard>      
     </extension>
    <extension point="org.eclipse.emf.common.ui.examples">
-        <example wizardID="org.eclipse.efbt.cocason.dsl.cocason.ui.wizard.CocasonExampleWizard" pageImage="icons/genproject.gif">
+        <example wizardID="org.eclipse.efbt.cocalimo.wizard.CocasonExampleWizard" pageImage="icons/EObject.gif">
             <projectDescriptor name="org.eclipse.efbt.cocalimo.example.standard" contentURI="examples/org.eclipse.efbt.cocalimo.example.standard/" description="CoCaLiMo Standard Example 1"/>
-            <projectDescriptor name="org.eclipse.efbt.cocason.example.incremental" contentURI="examples/org.eclipse.efbt.cocason.example.incremental/" description="CoCaSon Incremental Example 1"/>
             <projectDescriptor name="org.eclipse.efbt.cocason.example.advanced" contentURI="examples/org.eclipse.efbt.cocason.example.advanced/" description="CoCaSon Advanced Example 1"/>
             <projectDescriptor name="org.eclipse.efbt.cocason.example.frtb" contentURI="examples/org.eclipse.efbt.cocason.example.frtb/" description="CoCaSon FRTB Example 1"/>
             <projectDescriptor name="org.eclipse.efbt.cocason.example.bird_import" contentURI="examples/org.eclipse.efbt.cocason.example.bird_import/" description="CoCaSon BIRD Import Example 1"/>
