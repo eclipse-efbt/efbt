@@ -38,7 +38,6 @@
 		<module>releng/org.eclipse.efbt.cocalimo.examples.target</module>
 		<module>plugins/org.eclipse.efbt.cocalimo.examples.core</module>
 		<module>features/org.eclipse.efbt.cocalimo.examples.feature</module>
-		<module>releng/org.eclipse.efbt.cocalimo.examples.repository</module>
 	</modules>
 	
 	<build>

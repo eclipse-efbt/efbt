@@ -44,7 +44,6 @@
 		<module>plugins/org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes.editor</module>
 		<module>features/org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.feature</module>
 		<module>features/org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineage_core.feature</module>
-		<module>releng/org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.repository</module>
 	</modules>
 	
 	<build>

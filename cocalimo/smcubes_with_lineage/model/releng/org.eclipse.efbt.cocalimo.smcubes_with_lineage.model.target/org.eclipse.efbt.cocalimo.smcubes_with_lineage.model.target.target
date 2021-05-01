@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
 <target name="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.target" sequenceNumber="1">
-	<locations>
+<locations>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<unit id="org.eclipse.jdt.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.platform.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.pde.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
-			
+			<unit id="org.eclipse.emf.ecoretools.design.feature.group" version="0.0.0"/>				
 			<repository location="https://download.eclipse.org/releases/2021-03"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">		
@@ -20,14 +20,14 @@
 			<unit id="org.junit.platform.launcher" version="0.0.0"/>
 			<unit id="org.junit.platform.runner" version="0.0.0"/>
 			<unit id="org.opentest4j" version="0.0.0"/>	
-			<unit id="org.apache.poi" version="0.0.0"/>							  
+			<unit id="org.apache.poi" version="0.0.0"/>
+			<unit id="com.fasterxml.jackson.core.jackson-annotations" version="2.12.1.v20210128-1726"/>
+			<unit id="com.fasterxml.jackson.core.jackson-core" version="2.12.1.v20210128-1726"/>
+			<unit id="com.fasterxml.jackson.core.jackson-databind" version="2.12.1.v20210128-1726"/>							  
 			<repository location="https://download.eclipse.org/tools/orbit/downloads/2021-03"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<repository location="http://ghillairet.github.io/p2"/>
-			<unit id="com.fasterxml.jackson.core.jackson-core" version="2.9.1"/>
-			<unit id="com.fasterxml.jackson.core.jackson-databind" version="2.9.1"/>
-			<unit id="com.fasterxml.jackson.core.jackson-annotations" version="2.9.1"/>
 			<unit id="org.emfjson.jackson" version="1.2.0"/>
 		</location>
 	</locations>

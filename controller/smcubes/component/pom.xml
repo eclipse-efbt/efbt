@@ -45,7 +45,6 @@
 		<module>plugins/org.eclipse.efbt.controller.smcubes.component.importexport.impl</module>
 		<module>plugins/org.eclipse.efbt.controller.smcubes.component.export_smcubes</module>
 		<module>features/org.eclipse.efbt.controller.smcubes.component.feature</module>
-		<module>releng/org.eclipse.efbt.controller.smcubes.component.repository</module>
 		<module>tests/org.eclipse.efbt.controller.smcubes.component.importexport.test</module>
 		<module>tests/org.eclipse.efbt.controller.smcubes.component.export_smcubes.test</module>
 	</modules>
@@ -162,11 +161,6 @@
 					</environments>
 					<dependency-resolution>
 						<extraRequirements>
-							<requirement>
-								<type>eclipse-plugin</type>
-								<id>org.eclipse.xtext.logging</id>
-								<versionRange>1.2.15</versionRange>
-							</requirement>
 							<!-- to get the org.eclipse.osgi.compatibility.state plugin if the 
 								target platform is Luna or later. (backward compatible with kepler and previous 
 								versions) see https://bugs.eclipse.org/bugs/show_bug.cgi?id=492149 -->
