@@ -38,7 +38,6 @@
 	</properties>
 	<modules>
 		<module>releng/org.eclipse.efbt.controller.ldm.target</module>	
-		<module>releng/org.eclipse.efbt.controller.ldm.repository</module>
 		<module>plugins/org.eclipse.efbt.controller.ldm.component.sqldevconvertor</module>
 		<module>features/org.eclipse.efbt.controller.ldm.component.sqldevconvertor.feature</module>		
 		<module>tests/org.eclipse.efbt.controller.ldm.component.sqldevconvertor.test</module>

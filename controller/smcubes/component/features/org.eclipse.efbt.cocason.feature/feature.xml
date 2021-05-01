@@ -119,20 +119,6 @@ Exhibit A – Form of Secondary Licenses Notice
     You may add additional accurate notices of copyright ownership.
    </license>
 
-   <requires>
-      <import plugin="org.eclipse.emf.ecore"/>
-      <import plugin="org.eclipse.xtext.junit4"/>
-      <import plugin="org.eclipse.efbt.cocalimo.smcubes.model.core"/>
-      <import plugin="org.eclipse.efbt.cocalimo.core.model.module_management"/>
-      <import plugin="org.eclipse.efbt.cocalimo.smcubes.model.program"/>
-      <import plugin="org.eclipse.efbt.cocalimo.smcubes.component.importexport.impl"/>
-      <import plugin="org.eclipse.xtext"/>
-      <import plugin="org.eclipse.efbt.cocalimo.smcubes.component.exporter"/>
-      <import plugin="org.eclipse.efbt.cocason.dsl.cocason"/>
-      <import plugin="org.eclipse.efbt.cocalimo.dtm.model.platform_call"/>
-      <import plugin="org.eclipse.efbt.cocalimo.dtm.model.core"/>
-   </requires>
-
    <plugin
          id="org.eclipse.efbt.cocason.component.export_smcubes"
          download-size="0"
