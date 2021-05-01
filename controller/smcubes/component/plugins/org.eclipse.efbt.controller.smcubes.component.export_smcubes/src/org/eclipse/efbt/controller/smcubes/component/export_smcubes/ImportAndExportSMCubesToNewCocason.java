@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.efbt.controller.smcubes.component.export_smcubes;
 
-import java.util.Collections;
+/**import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.efbt.controller.smcubes.component.importexport.impl.BIRDImporterImpl;
@@ -38,10 +38,10 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xtext.resource.XtextResourceSet;
 
 import com.google.inject.Injector;
-
+*/
 public class ImportAndExportSMCubesToNewCocason {
 
-	
+	/**
 	public void importAndExportSMCubes(String filepath, String outputFilepath, String testdatafilepath)
 	{
 		Importer  importer = new BIRDImporterImpl(); 
@@ -243,6 +243,6 @@ public class ImportAndExportSMCubesToNewCocason {
 			e.printStackTrace();
 		}
 		
-	}
+	}*/
 	
 }
