@@ -228,6 +228,14 @@
           name="org.eclipse.xtext.sdk.feature.group"/>
       <requirement
           name="org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.feature.feature.group"/>
+      <requirement
+          name="org.emfjson.jackson"/>
+      <requirement
+          name="com.fasterxml.jackson.core.jackson-annotations"/>
+      <requirement
+          name="com.fasterxml.jackson.core.jackson-core"/>
+      <requirement
+          name="com.fasterxml.jackson.core.jackson-databind"/>
       <repository
           url="http://download.eclipse.org/releases/2021-03"/>
       <repository
@@ -240,6 +248,8 @@
           url="https://download.eclipse.org/tools/orbit/downloads/2021-03"/>
       <repository
           url="https://download.eclipse.org/efbt/snapshots/"/>
+      <repository
+          url="http://ghillairet.github.io/p2"/>
     </setupTask>
     <description></description>
   </version>

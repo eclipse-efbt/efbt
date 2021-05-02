@@ -12,6 +12,9 @@
  *******************************************************************************/
 package org.eclipse.efbt.controller.smcubes.component.export_smcubes;
 
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+
 /**import java.util.Collections;
 import java.util.List;
 
@@ -41,40 +44,40 @@ import com.google.inject.Injector;
 */
 public class ImportAndExportSMCubesToNewCocason {
 
-	/**
+	
 	public void importAndExportSMCubes(String filepath, String outputFilepath, String testdatafilepath)
 	{
-		Importer  importer = new BIRDImporterImpl(); 
+		/**Importer  importer = new BIRDImporterImpl(); 
 		importer.doImport(filepath,outputFilepath,testdatafilepath);
 		SmcubesModel birdModel = importer.getBirdModel();
 		//CoCaSonSMCubesPersister persister = new CoCaSonSMCubesPersister();
 		XtextResourceSet xrs = new XtextResourceSet();
-		//persister.saveArtifactsAsCoCaSon(birdModel, outputFilepath,xrs);
+		//persister.saveArtifactsAsCoCaSon(birdModel, outputFilepath,xrs); */
 	}
 	
 	public static void translateBIRDWithNewTestFormatToCocason(String filepath, String outputFilepath, String testdatafilepath)
 	{
-		Importer  importer = new BIRDImporterImpl(); 
+		/**Importer  importer = new BIRDImporterImpl(); 
 		importer.doImport(filepath,outputFilepath,testdatafilepath);
 		importer.importTestDataWithNewTestFormat();
-		persistModel(importer,  outputFilepath);
+		persistModel(importer,  outputFilepath); */
 	}
 	
 	
 	public static void translateBIRDWithOldTestFormatToCocason(String filepath, String outputFilepath, String testdatafilepath)
 	{
 		
-		Importer  importer = new BIRDImporterImpl(); 
+		/**Importer  importer = new BIRDImporterImpl(); 
 		importer.doImport(filepath,outputFilepath,testdatafilepath);
 		importer.importTestDataWithOldTestFormat(testdatafilepath);
-		persistModel(importer,  outputFilepath);
+		persistModel(importer,  outputFilepath); */
 	}
 	
 	public static void persistModel(Importer  importer, String outputFilepath)
 	{
 		
 	
-		SmcubesModel birdModel = importer.getBirdModel();
+		/**SmcubesModel birdModel = importer.getBirdModel();
 		
 		
 	
@@ -224,12 +227,12 @@ public class ImportAndExportSMCubesToNewCocason {
 			 ProgramAndCalls testProgramAndCalls = Platform_callFactory.eINSTANCE.createProgramAndCalls();
 			 testProgramAndCalls.setProgram(testProgram);
 			saveArtifactsAsCoCaSon(testProgramAndCalls, outputFilepath + "testProgram" + counter + ".coca",xrs);
-		}
+		} */
 		
 	}
 	
 	private static void saveArtifactsAsCoCaSon(EObject o, String outputFilepath, ResourceSet xrs) {
-		URI smcubesURI = URI.createFileURI(outputFilepath );
+		/** URI smcubesURI = URI.createFileURI(outputFilepath );
 		Resource smcubesResource = xrs.createResource(smcubesURI);
 		smcubesResource.getContents().add(o);
 		
@@ -241,8 +244,8 @@ public class ImportAndExportSMCubesToNewCocason {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		} */
 		
-	}*/
+	}
 	
 }
