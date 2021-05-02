@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.eclipse.efbt.controller.smcubes.component.export_smcubes;
 
+import org.eclipse.efbt.controller.smcubes.component.importexport.impl.Importer;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
