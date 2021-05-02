@@ -313,10 +313,25 @@
         name="examples"
         id="examples">
       <predicate
-          xsi:type="predicates:OrPredicate">
+          xsi:type="predicates:AndPredicate">
         <operand
-            xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.cocalimo.examples.*"/>
+            xsi:type="predicates:OrPredicate">
+          <operand
+              xsi:type="predicates:NamePredicate"
+              pattern=".*\.eclipse.efbt.cocalimo.examples.*"/>
+        </operand>
+        <operand
+            xsi:type="predicates:NotPredicate">
+          <operand
+              xsi:type="predicates:NamePredicate"
+              pattern=".*\.target\.*"/>
+        </operand>
+        <operand
+            xsi:type="predicates:NotPredicate">
+          <operand
+              xsi:type="predicates:NamePredicate"
+              pattern=".*\.feature"/>
+        </operand>
       </predicate>
     </workingSet>
     <workingSet

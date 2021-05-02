@@ -203,8 +203,6 @@
       <requirement
           name="org.eclipse.eclemma.feature.feature.group"/>
       <requirement
-          name="net.sf.eclipsecs.feature.group"/>
-      <requirement
           name="org.eclipse.pde.api.tools.ee.feature.feature.group"/>
       <requirement
           name="org.eclipse.wst.web_ui.feature.feature.group"/>
@@ -240,8 +238,6 @@
           url="http://download.eclipse.org/releases/2021-03"/>
       <repository
           url="http://download.eclipse.org/technology/epp/packages/2021-03"/>
-      <repository
-          url="https://checkstyle.github.io/eclipse-cs/update"/>
       <repository
           url="http://download.eclipse.org/cbi/tpd/3.0.0-SNAPSHOT/"/>
       <repository
