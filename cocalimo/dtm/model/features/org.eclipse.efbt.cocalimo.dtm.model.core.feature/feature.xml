@@ -134,7 +134,7 @@ Exhibit A – Form of Secondary Licenses Notice
       <import plugin="org.eclipse.efbt.cocalimo.core.model.functionality_module"/>
       <import plugin="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions"/>
       <import plugin="org.emfjson.jackson"/>
-      <import plugin="com.fasterxml.jackson.core.jackson-databind"/>
+      <import plugin="com.fasterxml.jackson.core.jackson-databind" version="2.9.1" match="perfect"/>
       <import plugin="org.eclipse.emf.edit"/>
       <import plugin="org.eclipse.efbt.cocalimo.core.model.functionality_module.edit"/>
       <import plugin="org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.edit"/>
