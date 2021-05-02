@@ -35,7 +35,6 @@
 		<additionalTestArguments></additionalTestArguments>
 	</properties>
 	<modules>
-		<module>releng/org.eclipse.efbt.cocalimo.smcubes.model.target</module>
 		<module>plugins/org.eclipse.efbt.cocalimo.smcubes.model.core</module>
 		<module>plugins/org.eclipse.efbt.cocalimo.smcubes.model.input_data</module>
 		<module>plugins/org.eclipse.efbt.cocalimo.smcubes.model.program</module>
@@ -115,8 +114,8 @@
 				  <pomDependencies>consider</pomDependencies>
 					<target>
 						<artifact>
-							<groupId>org.eclipse.efbt.cocalimo.smcubes.model</groupId>
-							<artifactId>org.eclipse.efbt.cocalimo.smcubes.model.target</artifactId>
+							<groupId>org.eclipse.efbt.cocalimo.core.model</groupId>
+							<artifactId>org.eclipse.efbt.cocalimo.core.model.target</artifactId>
 							<version>${project.version}</version>
 						</artifact>
 					</target>

@@ -35,7 +35,6 @@
 		<additionalTestArguments></additionalTestArguments>
 	</properties>
 	<modules>
-		<module>releng/org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.target</module>
 		<module>plugins/org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions</module>
 		<module>plugins/org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.lineagecubes</module>
 		<module>plugins/org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.functions.edit</module>
@@ -113,8 +112,8 @@
 				  <pomDependencies>consider</pomDependencies>
 					<target>
 						<artifact>
-							<groupId>org.eclipse.efbt.cocalimo.smcubes_with_lineage.model</groupId>
-							<artifactId>org.eclipse.efbt.cocalimo.smcubes_with_lineage.model.target</artifactId>
+							<groupId>org.eclipse.efbt.cocalimo.core.model</groupId>
+							<artifactId>org.eclipse.efbt.cocalimo.core.model.target</artifactId>
 							<version>${project.version}</version>
 						</artifact>
 					</target>

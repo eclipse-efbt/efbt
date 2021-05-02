@@ -22,8 +22,6 @@
 		<maven>3.0</maven>
 	</prerequisites>
 	<properties>
-		<xtextVersion>2.25.0</xtextVersion>
-		<mwe2Version>2.12.1</mwe2Version>
 		<junit-version>5.0.3</junit-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>11</maven.compiler.source>
@@ -38,7 +36,6 @@
 		<additionalTestArguments></additionalTestArguments>
 	</properties>
 	<modules>
-		<module>releng/org.eclipse.efbt.controller.smcubes.component.target</module>
 		<module>plugins/org.eclipse.efbt.controller.smcubes.component.access.provider</module>
 		<module>plugins/org.eclipse.efbt.controller.smcubes.component.exporter</module>
 		<module>plugins/org.eclipse.efbt.controller.smcubes.component.importexport.api</module>
@@ -50,13 +47,6 @@
 	</modules>
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
-				<groupId>org.eclipse.xtext</groupId>
-				<artifactId>xtext-dev-bom</artifactId>
-				<version>${xtextVersion}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
 			<dependency>
 				<groupId>org.eclipse.efbt.dependencies.accessdb</groupId>
 				<artifactId>org.eclipse.efbt.dependencies.access.jackcess</artifactId>
@@ -137,8 +127,8 @@
 					<pomDependencies>consider</pomDependencies>
 					<target>
 						<artifact>
-							<groupId>org.eclipse.efbt.controller.smcubes.component</groupId>
-							<artifactId>org.eclipse.efbt.controller.smcubes.component.target</artifactId>
+							<groupId>org.eclipse.efbt.cocalimo.core.model</groupId>
+							<artifactId>org.eclipse.efbt.cocalimo.core.model.target</artifactId>
 							<version>${project.version}</version>
 						</artifact>
 					</target>
@@ -177,25 +167,7 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<plugin>
-					<groupId>org.eclipse.xtend</groupId>
-					<artifactId>xtend-maven-plugin</artifactId>
-					<version>${xtextVersion}</version>
-					<executions>
-						<execution>
-							<goals>
-								<goal>compile</goal>
-								<goal>xtend-install-debug-info</goal>
-								<goal>testCompile</goal>
-								<goal>xtend-test-install-debug-info</goal>
-							</goals>
-						</execution>
-					</executions>
-					<configuration>
-						<outputDirectory>${basedir}/xtend-gen</outputDirectory>
-						<testOutputDirectory>${basedir}/xtend-gen</testOutputDirectory>
-					</configuration>
-				</plugin>
+				
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-clean-plugin</artifactId>

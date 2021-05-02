@@ -37,7 +37,6 @@
 		<additionalTestArguments></additionalTestArguments>
 	</properties>
 	<modules>
-		<module>releng/org.eclipse.efbt.cocalimo.dtm.modelquery.target</module>
 		<module>plugins/org.eclipse.efbt.cocalimo.dtm.query.core</module>
 		<module>features/org.eclipse.efbt.cocalimo.dtm.query.core.feature</module>
 	</modules>
@@ -109,8 +108,8 @@
 				  <pomDependencies>consider</pomDependencies>
 					<target>
 						<artifact>
-							<groupId>org.eclipse.efbt.cocalimo.dtm.modelquery</groupId>
-							<artifactId>org.eclipse.efbt.cocalimo.dtm.modelquery.target</artifactId>
+							<groupId>org.eclipse.efbt.cocalimo.core.model</groupId>
+							<artifactId>org.eclipse.efbt.cocalimo.core.model.target</artifactId>
 							<version>${project.version}</version>
 						</artifact>
 					</target>
