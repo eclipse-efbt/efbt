@@ -124,7 +124,6 @@ Exhibit A – Form of Secondary Licenses Notice
       <import plugin="org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.access.api" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.jackcess.impl"/>
       <import plugin="org.eclipse.efbt.cocalimo.smcubes.model.program" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.xtext"/>
       <import plugin="org.eclipse.emf.ecore"/>
       <import plugin="org.eclipse.efbt.cocalimo.smcubes.model.input_data"/>
       <import plugin="org.eclipse.efbt.cocalimo.core.model.testing"/>
@@ -133,9 +132,7 @@ Exhibit A – Form of Secondary Licenses Notice
       <import plugin="org.eclipse.efbt.controller.smcubes.component.access.provider" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.efbt.cocalimo.core.model.functionality_module"/>
       <import plugin="org.eclipse.efbt.cocalimo.core.model.requirements_text"/>
-      <import plugin="com.google.inject"/>
       <import plugin="org.apache.commons.csv"/>
-      <import plugin="org.eclipse.xtext.junit4"/>
       <import plugin="org.eclipse.efbt.cocalimo.core.model.module_management"/>
       <import plugin="org.eclipse.efbt.cocalimo.dtm.model.platform_call"/>
       <import plugin="org.eclipse.efbt.cocalimo.dtm.model.core"/>

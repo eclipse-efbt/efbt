@@ -14,9 +14,9 @@ package org.eclipse.efbt.controller.smcubes.component.exporter;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.xmi.XMLResource;
-import org.eclipse.emf.ecore.xmi.impl.XMLResourceFactoryImpl;
-import org.eclipse.xtext.resource.IResourceFactory;
+//import org.eclipse.emf.ecore.xmi.XMLResource;
+//import org.eclipse.emf.ecore.xmi.impl.XMLResourceFactoryImpl;
+//import org.eclipse.xtext.resource.IResourceFactory;
 
 /**
  * This class is an Resource Factory which uses XML, and a specific set of load/save options.
@@ -25,7 +25,7 @@ import org.eclipse.xtext.resource.IResourceFactory;
  *
  */
 @SuppressWarnings("restriction")
-public class FreeBirdToolsResourceFactory extends XMLResourceFactoryImpl implements IResourceFactory {
+public class FreeBirdToolsResourceFactory { // extends XMLResourceFactoryImpl implements IResourceFactory {
 
 
 	/**
@@ -34,9 +34,10 @@ public class FreeBirdToolsResourceFactory extends XMLResourceFactoryImpl impleme
 	 * 
 	 *  @param uri 
 	 */
-	@Override
+	//@Override
 	public Resource createResource(URI uri) {
-		XMLResource result = (XMLResource) super.createResource(uri);
+		return null;
+	/**	XMLResource result = (XMLResource) super.createResource(uri);
 		result.getDefaultSaveOptions().put(XMLResource.OPTION_EXTENDED_META_DATA, Boolean.TRUE);
 		result.getDefaultLoadOptions().put(XMLResource.OPTION_EXTENDED_META_DATA, Boolean.TRUE);
 
@@ -46,6 +47,6 @@ public class FreeBirdToolsResourceFactory extends XMLResourceFactoryImpl impleme
 		result.getDefaultSaveOptions().put(XMLResource.OPTION_USE_ENCODED_ATTRIBUTE_STYLE, Boolean.TRUE);
 
 		result.getDefaultLoadOptions().put(XMLResource.OPTION_USE_LEXICAL_HANDLER, Boolean.TRUE);
-		return result;
+		return result;*/
 	}
 }

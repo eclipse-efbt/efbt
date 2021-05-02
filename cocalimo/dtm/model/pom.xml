@@ -35,7 +35,6 @@
 		<additionalTestArguments></additionalTestArguments>
 	</properties>
 	<modules>
-		<module>releng/org.eclipse.efbt.cocalimo.dtm.model.target</module>
 		<module>plugins/org.eclipse.efbt.cocalimo.dtm.model.core</module>
 		<module>plugins/org.eclipse.efbt.cocalimo.dtm.model.platform_call</module>
 		<module>plugins/org.eclipse.efbt.cocalimo.dtm.model.core.edit</module>
@@ -44,7 +43,6 @@
 		<module>plugins/org.eclipse.efbt.cocalimo.dtm.model.platform_call.editor</module>		
 		<module>features/org.eclipse.efbt.cocalimo.dtm.model.core.feature</module>
 		<module>features/org.eclipse.efbt.cocalimo.dtm.model.platform_call.feature</module>
-		<module>releng/org.eclipse.efbt.cocalimo.dtm.model.repository</module>
 
 	</modules>
 	
@@ -115,8 +113,8 @@
 				  <pomDependencies>consider</pomDependencies>
 					<target>
 						<artifact>
-							<groupId>org.eclipse.efbt.cocalimo.dtm.model</groupId>
-							<artifactId>org.eclipse.efbt.cocalimo.dtm.model.target</artifactId>
+							<groupId>org.eclipse.efbt.cocalimo.core.model</groupId>
+							<artifactId>org.eclipse.efbt.cocalimo.core.model.target</artifactId>
 							<version>${project.version}</version>
 						</artifact>
 					</target>

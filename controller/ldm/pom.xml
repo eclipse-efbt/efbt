@@ -21,8 +21,6 @@
     <maven>3.0</maven>
   </prerequisites>
 	<properties>
-		<xtextVersion>2.22.0</xtextVersion>
-		<mwe2Version>2.12.1</mwe2Version>
 		<junit-version>5.0.3</junit-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>11</maven.compiler.source>
@@ -37,8 +35,6 @@
 		<additionalTestArguments></additionalTestArguments>
 	</properties>
 	<modules>
-		<module>releng/org.eclipse.efbt.controller.ldm.target</module>	
-		<module>releng/org.eclipse.efbt.controller.ldm.repository</module>
 		<module>plugins/org.eclipse.efbt.controller.ldm.component.sqldevconvertor</module>
 		<module>features/org.eclipse.efbt.controller.ldm.component.sqldevconvertor.feature</module>		
 		<module>tests/org.eclipse.efbt.controller.ldm.component.sqldevconvertor.test</module>
@@ -112,8 +108,8 @@
 				  <pomDependencies>consider</pomDependencies>
 					<target>
 						<artifact>
-							<groupId>org.eclipse.efbt.controller.ldm</groupId>
-							<artifactId>org.eclipse.efbt.controller.ldm.target</artifactId>
+							<groupId>org.eclipse.efbt.cocalimo.core.model</groupId>
+							<artifactId>org.eclipse.efbt.cocalimo.core.model.target</artifactId>
 							<version>${project.version}</version>
 						</artifact>
 					</target>
@@ -136,11 +132,6 @@
 					</environments>
 					<dependency-resolution>
 						<extraRequirements>
-							<requirement>
-								<type>eclipse-plugin</type>
-								<id>org.eclipse.xtext.logging</id>
-								<versionRange>1.2.15</versionRange>
-							</requirement>
 							<!-- to get the org.eclipse.osgi.compatibility.state plugin if the target 
 								platform is Luna or later. (backward compatible with kepler and previous 
 								versions) see https://bugs.eclipse.org/bugs/show_bug.cgi?id=492149 -->
@@ -157,37 +148,14 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<plugin>
-					<groupId>org.eclipse.xtend</groupId>
-					<artifactId>xtend-maven-plugin</artifactId>
-					<version>${xtextVersion}</version>
-					<executions>
-						<execution>
-							<goals>
-								<goal>compile</goal>
-								<goal>xtend-install-debug-info</goal>
-								<goal>testCompile</goal>
-								<goal>xtend-test-install-debug-info</goal>
-							</goals>
-						</execution>
-					</executions>
-					<configuration>
-						<outputDirectory>${basedir}/xtend-gen</outputDirectory>
-						<testOutputDirectory>${basedir}/xtend-gen</testOutputDirectory>
-					</configuration>
-				</plugin>
+				
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-clean-plugin</artifactId>
 					<version>3.1.0</version>
 					<configuration>
 						<filesets>
-							<fileset>
-								<directory>${basedir}/xtend-gen</directory>
-								<includes>
-									<include>**/*</include>
-								</includes>
-							</fileset>
+
 						</filesets>
 					</configuration>
 				</plugin>

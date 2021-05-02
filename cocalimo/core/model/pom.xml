@@ -49,7 +49,6 @@
 		<module>plugins/org.eclipse.efbt.cocalimo.core.model.requirements_text.editor</module>
 		<module>plugins/org.eclipse.efbt.cocalimo.core.model.testing.editor</module>
 		<module>features/org.eclipse.efbt.cocalimo.core.model.feature</module>
-		<module>releng/org.eclipse.efbt.cocalimo.core.model.repository</module>
 
 	</modules>
 	
