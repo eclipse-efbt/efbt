@@ -230,13 +230,15 @@
           name="org.emfjson.jackson"/>
       <requirement
           name="com.fasterxml.jackson.core.jackson-annotations"
-          versionRange="2.9.1"/>
+          versionRange="[2.9.1,2.9.1]"/>
       <requirement
           name="com.fasterxml.jackson.core.jackson-core"
-          versionRange="2.9.1"/>
+          versionRange="[2.9.1,2.9.1]"/>
       <requirement
           name="com.fasterxml.jackson.core.jackson-databind"
-          versionRange="2.9.1"/>
+          versionRange="[2.9.1,2.9.1]"/>
+      <repository
+          url="http://ghillairet.github.io/p2"/>
       <repository
           url="http://download.eclipse.org/releases/2021-03"/>
       <repository
@@ -247,8 +249,6 @@
           url="https://download.eclipse.org/tools/orbit/downloads/2021-03"/>
       <repository
           url="https://download.eclipse.org/efbt/snapshots/"/>
-      <repository
-          url="http://ghillairet.github.io/p2"/>
     </setupTask>
     <description></description>
   </version>
