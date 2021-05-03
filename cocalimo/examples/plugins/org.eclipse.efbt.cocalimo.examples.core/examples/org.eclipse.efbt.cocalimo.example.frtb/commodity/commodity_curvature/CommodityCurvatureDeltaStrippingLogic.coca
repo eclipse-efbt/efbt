@@ -1,0 +1,110 @@
+ProgramAndCalls : { program : dtmProgram :  { 
+	
+	executableLogic :[ dtmExecutableLogic CommodityCurvatureDeltaStrippingLogic : { 
+		
+			
+			 datasetTransformationModules : [ VersionedDTMViewsModule   views : { 
+			 	DTMViews : [ 
+			 	
+			 		
+			 		
+			 		
+			 		 JoinView CommodityCurvatureValuationDifferencesLinkedWithDeltas : {
+			 		 	cube : "CommodityCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.CommodityCurvatureValuationDifferencesLinkedWithDeltas"
+			 		 	whereClause : WhereClause : { 
+			 		 		function : BooleanFunction bf8 : {
+			 		 			functionSpec : "commonFunctions.commonFunctionSpecModule.AND"
+			 		 			parameters : [
+			 		 				BasicFunction bf9 : {  
+			 		 					 functionSpec : "commonFunctions.commonFunctionSpecModule.AND"
+			 		 					 parameters : [
+			 		 					 	BasicFunction bf10 : { 
+			 		 					 		functionSpec : "commonFunctions.commonFunctionSpecModule.equals"
+			 		 					 		parameters : [
+			 		 					 			SpeculativeCubeColumnParameter : { 
+			 		 					 				column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
+			 		 					 				cube :"NetDeltaSensitivities.freeBirdToolsCubeModule.summedDeltaSensitivitiesPerPosition"
+			 		 					 			} ,
+			 		 					 			SpeculativeCubeColumnParameter : {
+			 		 					 				column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
+			 		 					 				cube : "CommodityCurvatureAssignBucketCubes.freeBirdToolsCubeModule.CommodityCurvatureValuationDifferencesWithBucket"
+			 		 					 			}
+			 		 					 		] } ,
+			 		 					 		BasicFunction bf11 : { 
+			 		 					 		functionSpec : "commonFunctions.commonFunctionSpecModule.equals"
+			 		 					 		parameters : [
+			 		 					 			SpeculativeCubeColumnParameter : { 
+			 		 					 				column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.positionID"
+			 		 					 				cube : "NetDeltaSensitivities.freeBirdToolsCubeModule.summedDeltaSensitivitiesPerPosition"
+			 		 					 			} ,
+			 		 					 			SpeculativeCubeColumnParameter : {
+			 		 					 				column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.positionID"
+			 		 					 				cube : "CommodityCurvatureAssignBucketCubes.freeBirdToolsCubeModule.CommodityCurvatureValuationDifferencesWithBucket"
+			 		 					 			}
+			 		 					 		] }
+			 		 					 		] }  ]
+			 		 					 	} }  
+			 		 					 ignores : [ 			 		 					 	
+			 		 					 	IgnoreColumn : { 
+			 		 					 		columnToIgnore : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
+			 		 					 		cube :"NetDeltaSensitivities.freeBirdToolsCubeModule.summedDeltaSensitivitiesPerPosition"	 		 					 		
+			 		 					 	} ,
+			 		 					 	IgnoreColumn : { 
+			 		 					 		columnToIgnore :"FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.positionID"
+			 		 					 		cube : "CommodityCurvatureAssignBucketCubes.freeBirdToolsCubeModule.CommodityCurvatureValuationDifferencesWithBucket"	 		 					 		
+			 		 					 	} 
+			 		 					 	]
+			 		 				}
+			 		 			,
+			 		 			EnrichmentView CommodityCurvatureDeltaStrippedShifts : { 
+			 		 				cube : "CommodityCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.CommodityCurvatureDeltaStrippedShifts"
+			 		 				functions : [
+			 		 					BasicColumnFunction CommodityCurvatureDeltaStrippedShifts_CommodityCurvatureDeltaStrippedShift : {
+			 		 						cube : "CommodityCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.CommodityCurvatureDeltaStrippedShifts" 
+			 		 						variable : "CommodityCurvatureMeasuresStaticModel.CommodityCurvatureMeasures.variablesModule.CommodityCurvatureDeltaStrippedShift"
+			 		 						basicFunction : BasicFunction bf14 : {
+			 		 							functionSpec : "FRTBFunctions.CommodityFunctionSpecModule.CommodityDeltaStrip"
+			 		 							parameters : [
+			 		 								SpeculativeCubeColumnParameter : 
+			 		 								{ column : "CommodityCurvatureMeasuresStaticModel.CommodityCurvatureMeasures.variablesModule.curvatureValuationDifference"
+			 		 									cube : "CommodityCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.CommodityCurvatureValuationDifferencesLinkedWithDeltas"
+			 		 									},
+			 		 								SpeculativeCubeColumnParameter : 
+			 		 								{ column :"CommodityDeltaMeasuresStaticModel.CommodityDeltaMeasuresModel.variablesModule.summedCommodityDelta"
+			 		 									cube : "CommodityCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.CommodityCurvatureValuationDifferencesLinkedWithDeltas"
+			 		 									},
+			 		 								SpeculativeCubeColumnParameter : 
+			 		 								{ column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection"
+			 		 									cube : "CommodityCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.CommodityCurvatureValuationDifferencesLinkedWithDeltas"
+			 		 									},
+			 		 								SpeculativeCubeColumnParameter : 
+			 		 								{ column : "CommodityCurvatureMeasuresStaticModel.CommodityCurvatureMeasures.variablesModule.curvatureRiskWeight"
+			 		 									cube : "CommodityCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.CommodityCurvatureValuationDifferencesLinkedWithDeltas"
+			 		 									}
+			 		 									]	
+			 		 								
+			 		 					
+			 		 			}
+			 		 			}
+			 		 			] 
+			 		 			ignores : [ 
+			 		 				IgnoreColumn : 
+			 		 				{
+			 		 					columnToIgnore : "CommodityCurvatureMeasuresStaticModel.CommodityCurvatureMeasures.variablesModule.curvatureValuationDifference"
+			 		 					cube :  "CommodityCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.CommodityCurvatureValuationDifferencesLinkedWithDeltas"
+			 		 				},
+			 		 				IgnoreColumn : 
+			 		 				{
+			 		 					columnToIgnore : "CommodityCurvatureMeasuresStaticModel.CommodityCurvatureMeasures.variablesModule.curvatureRiskWeight"
+			 		 					cube :  "CommodityCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.CommodityCurvatureValuationDifferencesLinkedWithDeltas"
+			 		 				},
+			 		 				IgnoreColumn : 
+			 		 				{
+			 		 					columnToIgnore : "CommodityDeltaMeasuresStaticModel.CommodityDeltaMeasuresModel.variablesModule.summedCommodityDelta"
+			 		 					cube :  "CommodityCurvatureDeltaStrippingCubes.freeBirdToolsCubeModule.CommodityCurvatureValuationDifferencesLinkedWithDeltas"
+			 		 				}
+			 		 			]
+			 		 			
+			 		 			}
+			 		 			]
+			 		} ] } ] } } 

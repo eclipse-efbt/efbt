@@ -1,0 +1,8 @@
+ProgramAndCalls : { program : dtmProgram :  { 
+	
+	executableLogic :[ dtmExecutableLogic GIRRCurvatureBucketsCreateCorrelatedPairsLogic : { 
+		
+			
+			 datasetTransformationModules : [ VersionedDTMViewsModule   views : { 
+			 	 } ] } ] } }
+			 		

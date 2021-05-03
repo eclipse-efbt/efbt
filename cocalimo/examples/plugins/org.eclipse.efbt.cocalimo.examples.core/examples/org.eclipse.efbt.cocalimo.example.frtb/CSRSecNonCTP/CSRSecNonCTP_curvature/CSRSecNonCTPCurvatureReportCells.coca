@@ -1,0 +1,15 @@
+ProgramAndCalls : { program : dtmProgram : { executableLogic : [ dtmExecutableLogic CSRSecNonCTPCurvatureReportCells: 
+	{reportCellViewModules : [
+			 		 	ReportCellViewModule CSRSecNonCTPCurvatureReportCellsModule : { 
+			 		 		reportCellViews [ 
+			 		 			ReportCellView  irEURCurvatureReportCellView : {
+			 		 				cube : "CSRSecNonCTPCurvatureDatapoints.freeBirdToolsCubeModule.CSRSecNonCTPCurvatureEURReportCell"
+			 		 				reportCell : ReportCell irEURCurvatureReportCell : {
+			 		 					combination : "FRTBCombinationsStaticModel.FRTBCombinationsModel.combinationModule.irEURCurvatureReportCell" 
+			 		 				}
+			 		 				}
+			 		 				]
+			 		 				
+			 		 			}
+			 		 		]
+			 		 	} ] } }  

@@ -1,0 +1,60 @@
+ProgramAndCalls : { program :  dtmProgram :  {
+	smcubesStaticModel : SMCubesStaticModel FRTBSourceMeasuresStaticModel : {
+	smCubesModel : SmcubesModel  FRTBSourceMeasuresModel  : {
+		variables :  [ VariableModule variablesModule :  
+				{
+			license : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"
+			variables : [ 
+			VARIABLE vegaSensitivity : {
+				code : "vegaSensitivity"
+				description : "vegaSensitivity"
+				variable_id : "vegaSensitivity"
+				displayName :  "vegaSensitivity"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE vegaOptionUnderlyingResidualMaturity : {
+				code : "vegaOptionUnderlyingResidualMaturity"
+				description : "vegaOptionUnderlyingResidualMaturity"
+				variable_id : "vegaOptionUnderlyingResidualMaturity"
+				displayName :  "vegaOptionUnderlyingResidualMaturity"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE vegaOptionMaturity : {
+				code : "vegaOptionMaturity"
+				description : "vegaOptionMaturity"
+				variable_id : "vegaOptionMaturity"
+				displayName :  "vegaOptionMaturity"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE tenor : {
+				code : "tenor"
+				description : "tenor"
+				variable_id : "tenor"
+				displayName :  "tenor"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE deltaSensitivity : {
+				code : "deltaSensitivity"
+				description : "deltaSensitivity"
+				variable_id : "deltaSensitivity"
+				displayName :  "deltaSensitivity"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE curvatureValuationDifference : {
+				code : "curvatureValuationDifference"
+				description : "curvatureValuationDifference"
+				variable_id : "curvatureValuationDifference"
+				displayName :  "curvatureValuationDifference"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE curvatureRiskWeight : {
+				code : "curvatureRiskWeight"
+				description : "curvatureRiskWeight"
+				variable_id : "curvatureRiskWeight"
+				displayName :  "curvatureRiskWeight"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			}
+			
+			
+			 ] } ] } } } }
+				

@@ -1,0 +1,209 @@
+ProgramAndCalls : { program : dtmProgram :  { 
+	
+	executableLogic :[ dtmExecutableLogic EquityDeltaCreateCorrelatedPairsLogic : { 
+		
+			
+			 datasetTransformationModules : [ VersionedDTMViewsModule   views : { 
+			 	DTMViews : [ 
+
+			 		CopyView copyOfWeightedEquityDeltaSensitivitiesAndRiskFactors : {
+			 			cube : "EquityDeltaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfWeightedEquityDeltaSensitivitiesAndRiskFactors"
+			 			
+			 		},
+			 		
+			 		JoinView EquityDeltaSensitivityCombinations : { 
+			 			cube : "EquityDeltaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.EquityDeltaSensitivityCombinations"
+			 			whereClause : WhereClause : {
+			 				function : BooleanFunction bf43  : { 
+			 		 				 				
+			 		 				 						functionSpec : "commonFunctions.commonFunctionSpecModule.equals" 
+			 		 				 						parameters : [
+			 		 				 							SpeculativeCubeColumnParameter : {
+			 		 				 								column : "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID"
+			 		 				 								cube :"EquityDeltaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfWeightedEquityDeltaSensitivitiesAndRiskFactors"
+			 		 				 								},
+			 		 				 							SpeculativeCubeColumnParameter : {
+			 		 				 								column : "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID"
+			 		 				 								cube : "EquityDeltaApplyWeighting.freeBirdToolsCubeModule.weightedEquityDeltaSensitivitiesAndRiskFactors"
+			 		 				 								}
+			 		 				 							
+			 		 				 							]
+			 		 				 							}
+			 		 				 						
+			 		 				 			}
+			 		 				 			renames : [
+			 		 				 				RenameAs : {
+			 		 				 					fromCube :"EquityDeltaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfWeightedEquityDeltaSensitivitiesAndRiskFactors"
+			 		 				 					fromVariable : "EquityDeltaMeasuresStaticModel.EquityDeltaMeasuresModel.variablesModule.weightedEquityDeltaSensitivity"
+			 		 				 					toVariable : 	"EquityDeltaMeasuresStaticModel.EquityDeltaMeasuresModel.variablesModule.EquityDeltaSensitivityl"
+			 		 				 					},
+			 		 				 				RenameAs : {
+			 		 				 					fromCube : "EquityDeltaApplyWeighting.freeBirdToolsCubeModule.weightedEquityDeltaSensitivitiesAndRiskFactors"
+			 		 				 					fromVariable : 	"EquityDeltaMeasuresStaticModel.EquityDeltaMeasuresModel.variablesModule.weightedEquityDeltaSensitivity"
+			 		 				 					toVariable : 	"EquityDeltaMeasuresStaticModel.EquityDeltaMeasuresModel.variablesModule.EquityDeltaSensitivityk"
+			 		 				 					},
+			 		 				 				RenameAs : {
+			 		 				 					fromCube :"EquityDeltaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfWeightedEquityDeltaSensitivitiesAndRiskFactors"
+			 		 				 					fromVariable : 	"FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.tenor"
+			 		 				 					toVariable : 	"EquityDeltaMeasuresStaticModel.EquityDeltaMeasuresModel.variablesModule.tenorl"
+			 		 				 					},
+			 		 				 				RenameAs : {
+			 		 				 					fromCube : "EquityDeltaApplyWeighting.freeBirdToolsCubeModule.weightedEquityDeltaSensitivitiesAndRiskFactors"
+			 		 				 					fromVariable : 	"FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.tenor"
+			 		 				 					toVariable : 		"EquityDeltaMeasuresStaticModel.EquityDeltaMeasuresModel.variablesModule.tenork"
+			 		 				 					},
+			 		 				 				RenameAs : {
+			 		 				 					fromCube : "EquityDeltaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfWeightedEquityDeltaSensitivitiesAndRiskFactors"
+			 		 				 					fromVariable : 	"FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
+			 		 				 					toVariable : 	"FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.riskFactorIDl"
+			 		 				 					},
+			 		 				 				RenameAs : {
+			 		 				 					fromCube : "EquityDeltaApplyWeighting.freeBirdToolsCubeModule.weightedEquityDeltaSensitivitiesAndRiskFactors"
+			 		 				 					fromVariable : 	"FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
+			 		 				 					toVariable : 	"FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.riskFactorIDk"
+			 		 				 					} 
+			 		 				 					
+			 		 				 					]
+			 		 				 				ignores : [ 
+			 		 				 					IgnoreColumn : {
+			 		 				 						columnToIgnore : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.mainCurrency"
+			 		 				 						cube : "EquityDeltaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfWeightedEquityDeltaSensitivitiesAndRiskFactors"
+			 		 				 					},
+			 		 				 					IgnoreColumn : {
+			 		 				 						columnToIgnore : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.secondCurrency"
+			 		 				 						cube : "EquityDeltaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.copyOfWeightedEquityDeltaSensitivitiesAndRiskFactors"
+			 		 				 					}
+			 		 				 					
+			 		 				 				]
+			 		 				 				
+			 		 				 			
+			 		 				 				},
+			 		EnrichmentView EquityDeltaSensitivityCombinationsWithCorrelationFactor : {
+			 			cube :"EquityDeltaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.EquityDeltaSensitivityCombinationsWithCorrelationFactor"
+			 			functions : [ BasicColumnFunction EquityDeltaSensitivityCombinationsWithCorrelationFactor_EquityDeltaCorrelationFactor : {
+			 				cube :  "EquityDeltaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.EquityDeltaSensitivityCombinationsWithCorrelationFactor"
+			 				variable : "EquityDeltaMeasuresStaticModel.EquityDeltaMeasuresModel.variablesModule.EquityDeltaCorrelationFactor"
+			 				basicFunction : BasicFunction bf44 : {
+			 					functionSpec : "FRTBFunctions.EquityFunctionSpecModule.getEquityDeltaCorrelationFactor" 
+			 					parameters : [
+			 						SpeculativeCubeColumnParameter : { 
+			 							column : "EquityDeltaMeasuresStaticModel.EquityDeltaMeasuresModel.variablesModule.tenork"
+			 							cube : "EquityDeltaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.EquityDeltaSensitivityCombinations"
+			 						},
+			 						SpeculativeCubeColumnParameter : { 
+			 							column : "EquityDeltaMeasuresStaticModel.EquityDeltaMeasuresModel.variablesModule.tenorl"
+			 							cube : "EquityDeltaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.EquityDeltaSensitivityCombinations"
+			 						},
+			 						SpeculativeCubeColumnParameter : { 
+			 							column : "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.riskFactorIDk"
+			 							cube : "EquityDeltaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.EquityDeltaSensitivityCombinations"
+			 						},
+			 						SpeculativeCubeColumnParameter : { 
+			 							column :"FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.riskFactorIDl"
+			 							cube : "EquityDeltaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.EquityDeltaSensitivityCombinations"
+			 						}
+			 						
+			 				
+			 					]
+			 				}
+			 			} 
+			 		
+			 			] 
+			 			
+			 			},
+			 		EnrichmentView 	EquityDeltaSensitivitiesCorrelated : {
+			 			
+			 			cube : "EquityDeltaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.EquityDeltaSensitivitiesCorrelated"
+			 			
+			 			functions : [ BasicColumnFunction EquityDeltaSensitivitiesCorrelated_EquityDeltaKBInput : { 			 				
+			 					cube :  "EquityDeltaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.EquityDeltaSensitivitiesCorrelated"
+			 					variable :"EquityDeltaMeasuresStaticModel.EquityDeltaMeasuresModel.variablesModule.EquityDeltaKBInput"
+			 				 
+				 				basicFunction : BasicFunction bf45 :
+				 				{ 
+				 					functionSpec : "commonFunctions.commonFunctionSpecModule.multiply" 
+				 					parameters : [ 
+				 						BasicFunction bf46 : { 
+				 							functionSpec : "commonFunctions.commonFunctionSpecModule.multiply"
+				 							parameters : [
+				 								SpeculativeCubeColumnParameter : { 
+				 									column : "EquityDeltaMeasuresStaticModel.EquityDeltaMeasuresModel.variablesModule.EquityDeltaSensitivityk"
+				 									cube : "EquityDeltaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.EquityDeltaSensitivityCombinationsWithCorrelationFactor"
+				 								},
+				 								SpeculativeCubeColumnParameter : { 
+				 									column :"EquityDeltaMeasuresStaticModel.EquityDeltaMeasuresModel.variablesModule.EquityDeltaSensitivityk"
+				 									cube : "EquityDeltaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.EquityDeltaSensitivityCombinationsWithCorrelationFactor"
+				 								}
+				 								
+				 								]
+				 							},
+				 							SpeculativeCubeColumnParameter : { 
+				 									column : "EquityDeltaMeasuresStaticModel.EquityDeltaMeasuresModel.variablesModule.EquityDeltaCorrelationFactor"
+				 									cube :"EquityDeltaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.EquityDeltaSensitivityCombinationsWithCorrelationFactor"
+				 								}
+				 							]
+				 						}
+				 					
+				 				}
+			 			]
+			 			
+			 		},
+			 		AggregateEnrichmentView EquityDeltaSensitivitiesCorrelatedAndAggregated : {
+			 			cube : "EquityDeltaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.EquityDeltaSensitivitiesCorrelatedAndAggregated"
+			 			
+			 			functions : [ 
+			 				AggregateColumnFunction EquityDeltaSensitivitiesCorrelatedAndAggregated_EquityDeltaKBInput_per_bucket : {
+			 					cube : "EquityDeltaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.EquityDeltaSensitivitiesCorrelatedAndAggregated"
+			 					variable : "EquityDeltaMeasuresStaticModel.EquityDeltaMeasuresModel.variablesModule.EquityDeltaKBInputPerBucket"
+			 					aggregateFunction : AggregateFunction af8 : { 
+			 						functionSpec : "commonFunctions.commonFunctionSpecModule.SUM"
+			 						parameters : [  
+			 							SpeculativeCubeColumnParameter : {
+			 								column : "EquityDeltaMeasuresStaticModel.EquityDeltaMeasuresModel.variablesModule.EquityDeltaKBInput"
+			 								cube : "EquityDeltaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.EquityDeltaSensitivitiesCorrelated"
+			 							}
+			 						] 
+			 					} 
+			 				}
+			 			]
+			 			groupByClause : GroupByClause : {
+			 				groupByColumns : [ "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID" ]
+			 			}
+			 		},
+			 		
+			 		EnrichmentView EquityDeltaSensitivityKBPerBucket : {
+			 			cube : "EquityDeltaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.EquityDeltaSensitivityKBPerBucket"
+			 			
+			 			functions : [ BasicColumnFunction EquityDeltaSensitivityKBPerBucket_EquityDeltaKB : {
+			 				cube : "EquityDeltaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.EquityDeltaSensitivityKBPerBucket"
+			 				variable : "EquityDeltaMeasuresStaticModel.EquityDeltaMeasuresModel.variablesModule.EquityDeltaKB"
+			 				basicFunction : BasicFunction bf49  : { 
+			 					
+			 				functionSpec : "commonFunctions.commonFunctionSpecModule.sqrt" 
+			 				parameters : [ 
+			 					
+			 				 BasicFunction bf52 : {
+			 					
+			 					functionSpec : "commonFunctions.commonFunctionSpecModule.max"
+			 					parameters  : [
+			 						SpeculativeCubeColumnParameter : {
+			 							column : "EquityDeltaMeasuresStaticModel.EquityDeltaMeasuresModel.variablesModule.EquityDeltaKBInputPerBucket" 
+			 							cube : "EquityDeltaCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.EquityDeltaSensitivitiesCorrelatedAndAggregated"
+			 						},
+			 						ValueParameter : {
+			 							dataType : :Decimal
+			 							value : "0.0"
+			 						}
+			 						]
+			 					}
+			 				
+			 			]
+			 			}
+			 			}
+			 			]
+			 		
+			 			
+			 		}
+
+
+			 		] } ] } ] } }

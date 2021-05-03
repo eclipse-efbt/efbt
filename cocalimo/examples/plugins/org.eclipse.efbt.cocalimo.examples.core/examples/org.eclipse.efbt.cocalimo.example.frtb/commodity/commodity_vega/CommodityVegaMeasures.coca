@@ -1,0 +1,150 @@
+ProgramAndCalls : { program :  dtmProgram :  {
+	smcubesStaticModel : SMCubesStaticModel CommodityVegaMeasuresStaticModel : {
+	smCubesModel : SmcubesModel  CommodityVegaMeasuresModel  : {
+		variables :  [ VariableModule variablesModule :  
+				{
+					license : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"
+			variables : [ 
+			
+			VARIABLE CommodityVegaSensitivityk : {
+				code : "CommodityVegaSensitivityk"
+				description : "CommodityVegaSensitivityk"
+				variable_id : "CommodityVegaSensitivityk"
+				displayName :  "CommodityVegaSensitivityk"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE CommodityVegaSensitivityl : {
+				code : "CommodityVegaSensitivityl"
+				description : "CommodityVegaSensitivityl"
+				variable_id : "CommodityVegaSensitivityl"
+				displayName :  "CommodityVegaSensitivityl"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			
+			VARIABLE tenork : {
+				code : "tenork"
+				description : "tenork"
+				variable_id : "tenork"
+				displayName :  "tenork"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE tenorl : {
+				code : "tenorl"
+				description : "tenorl"
+				variable_id : "tenorl"
+				displayName :  "tenorl"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE summedCommodityVega : {
+				code : "summedCommodityVega"
+				description : "summedCommodityVega"
+				variable_id : "summedCommodityVega"
+				displayName :  "summedCommodityVega"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			
+			VARIABLE mainCurrencyl : {
+				code : "mainCurrencyl"
+				description : "mainCurrencyl"
+				variable_id : "mainCurrencyl"
+				displayName : "mainCurrencyl"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
+			},
+			VARIABLE mainCurrencyk : {
+				code : "mainCurrencyk"
+				description : "mainCurrencyk"
+				variable_id : "mainCurrencyk"
+				displayName : "MaimainCurrencyknCurrency"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
+			},
+			VARIABLE CommodityVegaRiskWeight : {
+				code : "CommodityVegaRiskWeight"
+				description : "CommodityVegaRiskWeight"
+				variable_id : "CommodityVegaRiskWeight"
+				displayName :  "CommodityVegaRiskWeight"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE weightedCommodityVegaSensitivity : {
+				code : "weightedCommodityVegaSensitivity"
+				description : "weightedCommodityVegaSensitivity"
+				variable_id : "weightedCommodityVegaSensitivity"
+				displayName :  "weightedCommodityVegaSensitivity"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE CommodityVegaKBInput : {
+				code : "CommodityVegaKBInput"
+				description : "CommodityVegaKBInput"
+				variable_id : "CommodityVegaKBInput"
+				displayName :  "CommodityVegaKBInput"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE CommodityVegaKB : {
+				code : "CommodityVegaKB"
+				description : "CommodityVegaKB"
+				variable_id : "CommodityVegaKB"
+				displayName :  "CommodityVegaKB"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE CommodityVegaKBInputPerBucket : {
+				code : "CommodityVegaKBInputPerBucket"
+				description : "CommodityVegaKBInputPerBucket"
+				variable_id : "CommodityVegaKBInputPerBucket"
+				displayName :  "CommodityVegaKBInputPerBucket"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE CommodityVegaSensitivityPerBucketCorrelated : {
+				code : "CommodityVegaSensitivityPerBucketCorrelated"
+				description : "CommodityVegaSensitivityPerBucketCorrelated"
+				variable_id : "CommodityVegaSensitivityPerBucketCorrelated"
+				displayName :  "CommodityVegaSensitivityPerBucketCorrelated"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE totalCommodityVegaSensitivityPerBucketCorrelated : {
+				code : "totalCommodityVegaSensitivityPerBucketCorrelated"
+				description : "totalCommodityVegaSensitivityPerBucketCorrelated"
+				variable_id : "totalCommodityVegaSensitivityPerBucketCorrelated"
+				displayName :  "totalCommodityVegaSensitivityPerBucketCorrelated"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE totalCommodityVegaSensitivityPerBucket : {
+				code : "totalCommodityVegaSensitivityPerBucket"
+				description : "totalCommodityVegaSensitivityPerBucket"
+				variable_id : "totalCommodityVegaSensitivityPerBucket"
+				displayName :  "totalCommodityVegaSensitivityPerBucket"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE CommodityVegaBucketCorrelationFactor : {
+				code : "CommodityVegaBucketCorrelationFactor"
+				description : "CommodityVegaBucketCorrelationFactor"
+				variable_id : "CommodityVegaBucketCorrelationFactor"
+				displayName :  "CommodityVegaBucketCorrelationFactor"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			
+			VARIABLE totalCommodityVegaSensitivityPerBucketk : {
+				code : "totalCommodityVegaSensitivityPerBucketk"
+				description : "totalCommodityVegaSensitivityPerBucketk"
+				variable_id : "totalCommodityVegaSensitivityPerBucketk"
+				displayName :  "totalCommodityVegaSensitivityPerBucketk"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE totalCommodityVegaSensitivityPerBucketl : {
+				code : "totalCommodityVegaSensitivityPerBucketl"
+				description : "totalCommodityVegaSensitivityPerBucketl"
+				variable_id : "totalCommodityVegaSensitivityPerBucketl"
+				displayName :  "totalCommodityVegaSensitivityPerBucketl"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			}
+			,
+			VARIABLE CommodityVegaCorrelationFactor : {
+				code : "CommodityVegaCorrelationFactor"
+				description : "CommodityVegaCorrelationFactor"
+				variable_id : "CommodityVegaCorrelationFactor"
+				displayName :  "CommodityVegaCorrelationFactor"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			}
+			
+			
+			
+			 ] } ] } } } }
+				

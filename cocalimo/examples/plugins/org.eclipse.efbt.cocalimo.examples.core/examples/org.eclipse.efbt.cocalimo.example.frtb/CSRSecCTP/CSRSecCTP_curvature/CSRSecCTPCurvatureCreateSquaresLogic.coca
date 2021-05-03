@@ -1,0 +1,82 @@
+ProgramAndCalls : { program : dtmProgram :  { 
+	
+	executableLogic :[ dtmExecutableLogic CSRSecCTPCurvatureCreateSquaresLogic : { 
+		
+			 
+			 datasetTransformationModules : [ VersionedDTMViewsModule   views : { 
+			 	DTMViews : [ 
+			 	
+					EnrichmentView CSRSecCTPCurvatureFlooredMinimumShiftedTotalsSquared : { 
+			 		 					cube : "CSRSecCTPCurvatureCreateSquaresCubes.freeBirdToolsCubeModule.CSRSecCTPCurvatureFlooredMinimumShiftedTotalsSquared"
+			 		 					functions : [ 
+			 		 						BasicColumnFunction CSRSecCTPCurvatureFlooredMinimumShiftedTotalsSquared_CSRSecCTPCurvatureFlooredMinimumShiftedTotalSquared : {
+			 		 							cube : "CSRSecCTPCurvatureCreateSquaresCubes.freeBirdToolsCubeModule.CSRSecCTPCurvatureFlooredMinimumShiftedTotalsSquared"
+			 		 							variable : "CSRSecCTPCurvatureMeasuresStaticModel.CSRSecCTPCurvatureMeasures.variablesModule.CSRSecCTPCurvatureFlooredMinimumShiftedTotalSquared"
+			 		 							basicFunction : BasicFunction bf28 : {
+			 		 								functionSpec : "commonFunctions.commonFunctionSpecModule.multiply" parameters :
+			 		 								[
+			 		 									BasicFunction bf29 : {
+			 		 										functionSpec : "commonFunctions.commonFunctionSpecModule.max" 
+			 		 										parameters : [
+			 		 											SpeculativeCubeColumnParameter : {
+			 		 												column : "CSRSecCTPCurvatureMeasuresStaticModel.CSRSecCTPCurvatureMeasures.variablesModule.CSRSecCTPCurvatureCVRk"
+			 		 												cube : "CSRSecCTPCurvatureCalculateCVRCubes.freeBirdToolsCubeModule.CSRSecCTPCurvatureRiskChargeForRiskFactor"
+			 		 											},
+			 		 											ValueParameter : {
+			 		 												dataType : :Double
+			 		 												value : "0.0"
+			 		 											}
+			 		 										]
+			 		 										},
+			 		 									BasicFunction bf30 : {
+			 		 										functionSpec : "commonFunctions.commonFunctionSpecModule.max" 
+			 		 										parameters : [
+			 		 											SpeculativeCubeColumnParameter : {
+			 		 												column : "CSRSecCTPCurvatureMeasuresStaticModel.CSRSecCTPCurvatureMeasures.variablesModule.CSRSecCTPCurvatureCVRk"
+			 		 												cube : "CSRSecCTPCurvatureCalculateCVRCubes.freeBirdToolsCubeModule.CSRSecCTPCurvatureRiskChargeForRiskFactor"
+			 		 											},
+			 		 											ValueParameter : {
+			 		 												dataType : :Double
+			 		 												value : "0.0"
+			 		 											}
+			 		 										]
+			 		 										}
+			 		 									]
+			 		 										
+			 		 									}
+			 		 								} 
+			 		 								]
+			 		 								ignores : [ 
+			 		 									IgnoreColumn : {
+			 		 										columnToIgnore :  "CSRSecCTPCurvatureMeasuresStaticModel.CSRSecCTPCurvatureMeasures.variablesModule.CSRSecCTPCurvatureCVRk"
+			 		 										cube : "CSRSecCTPCurvatureCalculateCVRCubes.freeBirdToolsCubeModule.CSRSecCTPCurvatureRiskChargeForRiskFactor"
+			 		 									}
+			 		 								]
+			 		 								},
+			 		 					AggregateEnrichmentView CSRSecCTPCurvatureTotalGroupedSummedMinimums : {
+			 		 						cube : "CSRSecCTPCurvatureCreateSquaresCubes.freeBirdToolsCubeModule.CSRSecCTPCurvatureTotalGroupedSummedMinimums"
+			 		 						functions : [ AggregateColumnFunction CSRSecCTPCurvatureTotalGroupedSummedMinimums_CSRSecCTPCurvatureTotalGroupedSummedMinimums : {
+			 		 							cube : "CSRSecCTPCurvatureCreateSquaresCubes.freeBirdToolsCubeModule.CSRSecCTPCurvatureTotalGroupedSummedMinimums"
+			 		 							variable : "CSRSecCTPCurvatureMeasuresStaticModel.CSRSecCTPCurvatureMeasures.variablesModule.CSRSecCTPCurvatureTotalGroupedSummedMinimums"
+			 		 							aggregateFunction : AggregateFunction af4 : {
+			 		 								functionSpec : "commonFunctions.commonFunctionSpecModule.SUM"
+			 		 								parameters : [ SpeculativeCubeColumnParameter : {
+			 		 									column :"CSRSecCTPCurvatureMeasuresStaticModel.CSRSecCTPCurvatureMeasures.variablesModule.CSRSecCTPCurvatureFlooredMinimumShiftedTotalSquared"
+			 		 									cube : "CSRSecCTPCurvatureCreateSquaresCubes.freeBirdToolsCubeModule.CSRSecCTPCurvatureFlooredMinimumShiftedTotalsSquared"
+			 		 									}
+			 		 									]
+			 		 									}
+			 		 									}
+			 		 									]
+			 		 						groupByClause : GroupByClause : {
+			 		 							groupByColumns : [
+			 		 								"FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID",
+			 		 								"FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection"
+			 		 								]
+			 		 								}
+			 		 							}
+			 		 				
+			 		 				
+			 		 						]
+			 		 						}   ] }
+			 ] } } 
