@@ -103,24 +103,6 @@
             xsi:type="predicates:NotPredicate">
           <operand
               xsi:type="predicates:NamePredicate"
-              pattern=".*\.feature"/>
-        </operand>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.target\.*"/>
-        </operand>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.repository\.*"/>
-        </operand>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
               pattern=".*\.edit"/>
         </operand>
         <operand
@@ -132,30 +114,6 @@
       </predicate>
     </workingSet>
     <workingSet
-        name="releng">
-      <predicate
-          xsi:type="predicates:AndPredicate">
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.eclipse.efbt.controller.smcubes.access_dependencies.plugin.*"/>
-        </operand>
-        <operand
-            xsi:type="predicates:OrPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.feature"/>
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.target\.*"/>
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.repository\.*"/>
-        </operand>
-      </predicate>
-    </workingSet>
-    <workingSet
         name="cocalimo_smcubes"
         id="cocalimo_smcubes">
       <predicate
@@ -163,24 +121,6 @@
         <operand
             xsi:type="predicates:NamePredicate"
             pattern=".*\.eclipse.efbt.cocalimo.smcubes.*"/>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.feature"/>
-        </operand>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.target\.*"/>
-        </operand>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.repository\.*"/>
-        </operand>
         <operand
             xsi:type="predicates:NotPredicate">
           <operand
@@ -213,24 +153,6 @@
             xsi:type="predicates:NotPredicate">
           <operand
               xsi:type="predicates:NamePredicate"
-              pattern=".*\.feature"/>
-        </operand>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.target\.*"/>
-        </operand>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.repository\.*"/>
-        </operand>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
               pattern=".*\.edit"/>
         </operand>
         <operand
@@ -253,24 +175,6 @@
             xsi:type="predicates:NotPredicate">
           <operand
               xsi:type="predicates:NamePredicate"
-              pattern=".*\.feature"/>
-        </operand>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.target\.*"/>
-        </operand>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.repository\.*"/>
-        </operand>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
               pattern=".*\.edit"/>
         </operand>
         <operand
@@ -289,24 +193,6 @@
         <operand
             xsi:type="predicates:NamePredicate"
             pattern=".*\.eclipse.efbt.controller.ldm.*"/>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.feature"/>
-        </operand>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.target\.*"/>
-        </operand>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.repository\.*"/>
-        </operand>
       </predicate>
     </workingSet>
     <workingSet
@@ -320,18 +206,6 @@
               xsi:type="predicates:NamePredicate"
               pattern=".*\.eclipse.efbt.cocalimo.examples.*"/>
         </operand>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.target\.*"/>
-        </operand>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.feature"/>
-        </operand>
       </predicate>
     </workingSet>
     <workingSet
@@ -342,24 +216,6 @@
         <operand
             xsi:type="predicates:NamePredicate"
             pattern=".*\.eclipse.efbt.controller.smcubes.component.*"/>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.feature"/>
-        </operand>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.target\.*"/>
-        </operand>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.repository\.*"/>
-        </operand>
       </predicate>
     </workingSet>
     <workingSet
@@ -370,24 +226,6 @@
         <operand
             xsi:type="predicates:NamePredicate"
             pattern=".*\.eclipse.efbt.controller.dtm.*"/>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.feature"/>
-        </operand>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.target\.*"/>
-        </operand>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.repository\.*"/>
-        </operand>
       </predicate>
     </workingSet>
     <workingSet
@@ -427,6 +265,19 @@
         <operand
             xsi:type="predicates:NamePredicate"
             pattern=".*\.editor"/>
+      </predicate>
+    </workingSet>
+    <workingSet
+        name="installations"
+        id="installations">
+      <predicate
+          xsi:type="predicates:OrPredicate">
+        <operand
+            xsi:type="predicates:NamePredicate"
+            pattern="org.eclipse.efbt.repository"/>
+        <operand
+            xsi:type="predicates:NamePredicate"
+            pattern="org.eclipse.efbt.target"/>
       </predicate>
     </workingSet>
     <description>efbt_working_sets</description>
