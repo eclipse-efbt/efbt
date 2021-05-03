@@ -11,8 +11,7 @@
     "variable_id" : "riskFactorID1",
     "name" : "riskFactorID1",
     "displayName" : "riskFactorID1"
-  },
-  {
+  }, {
     "code" : "riskFactorIDk",
     "description" : "riskFactorIDk",
     "domain_id" : {
@@ -22,8 +21,7 @@
     "variable_id" : "riskFactorIDk",
     "name" : "riskFactorIDk",
     "displayName" : "riskFactorIDk"
-  },
-  {
+  }, {
     "code" : "riskFactorIDl",
     "description" : "riskFactorIDl",
     "domain_id" : {
@@ -33,8 +31,7 @@
     "variable_id" : "riskFactorIDl",
     "name" : "riskFactorIDl",
     "displayName" : "riskFactorIDl"
-  },
-  {
+  }, {
     "code" : "rowID",
     "description" : "rowID",
     "domain_id" : {
@@ -44,8 +41,7 @@
     "variable_id" : "rowID",
     "name" : "rowID",
     "displayName" : "rowID"
-  },
-  {
+  }, {
     "code" : "bucketID",
     "description" : "bucketID",
     "domain_id" : {
@@ -55,6 +51,5 @@
     "variable_id" : "bucketID",
     "name" : "bucketID",
     "displayName" : "bucketID"
-  }
-   ]
+  } ]
 }

@@ -1,0 +1,18 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/efbt_data_definition#//CombinationModule",
+  "combinations" : [ {
+    "code" : "irEURCurvatureReportCell",
+    "combination_id" : "irEURCurvatureReportCell",
+    "name" : "irEURCurvatureReportCell",
+    "combination_items" : [ {
+      "member_id" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
+        "$ref" : "FRTBSourceDomainMembers.efbt_data_definition#EUR"
+      },
+      "variable_id" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "FRTBDerivedIdentifiers.efbt_data_definition#bucketID"
+      }
+    } ]
+  } ]
+}

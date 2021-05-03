@@ -11,8 +11,7 @@
     "variable_id" : "riskFactorID",
     "name" : "riskFactorID",
     "displayName" : "riskFactorID"
-  },
-  {
+  }, {
     "code" : "positionID",
     "description" : "positionID",
     "domain_id" : {
@@ -22,8 +21,7 @@
     "variable_id" : "positionID",
     "name" : "positionID",
     "displayName" : "positionID"
-  },
-  {
+  }, {
     "code" : "issueID",
     "description" : "issueID",
     "domain_id" : {
@@ -33,8 +31,7 @@
     "variable_id" : "issueID",
     "name" : "issueID",
     "displayName" : "issueID"
-  },
-  {
+  }, {
     "code" : "issuerID",
     "description" : "issuerID",
     "domain_id" : {
@@ -44,8 +41,7 @@
     "variable_id" : "issuerID",
     "name" : "issuerID",
     "displayName" : "issuerID"
-  },
-  {
+  }, {
     "code" : "trancheName",
     "description" : "trancheName",
     "domain_id" : {
@@ -55,8 +51,7 @@
     "variable_id" : "trancheName",
     "name" : "trancheName",
     "displayName" : "trancheName"
-  },
-  {
+  }, {
     "code" : "securitisationID",
     "description" : "securitisationID",
     "domain_id" : {
@@ -66,8 +61,7 @@
     "variable_id" : "securitisationID",
     "name" : "securitisationID",
     "displayName" : "securitisationID"
-  },
-  {
+  }, {
     "code" : "deliveryLocation",
     "description" : "deliveryLocation",
     "domain_id" : {
@@ -77,8 +71,7 @@
     "variable_id" : "deliveryLocation",
     "name" : "deliveryLocation",
     "displayName" : "deliveryLocation"
-  },
-  {
+  }, {
     "code" : "riskFactorLongName",
     "description" : "riskFactorLongName",
     "domain_id" : {
@@ -88,8 +81,7 @@
     "variable_id" : "riskFactorLongName",
     "name" : "riskFactorLongName",
     "displayName" : "riskFactorLongName"
-  },
-  {
+  }, {
     "code" : "organisation_id",
     "description" : "organisation_id",
     "domain_id" : {
@@ -99,6 +91,5 @@
     "variable_id" : "organisation_id",
     "name" : "organisation_id",
     "displayName" : "organisation_id"
-  }
-   ]
+  } ]
 }
