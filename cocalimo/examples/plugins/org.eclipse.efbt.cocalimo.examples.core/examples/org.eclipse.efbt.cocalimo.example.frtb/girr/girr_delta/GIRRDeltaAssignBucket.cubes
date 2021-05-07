@@ -1,0 +1,22 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/cubes#//FreeBirdToolsCubeModule",
+  "name" : "GIRRDeltaAssignBucket",
+  "cubes" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "GIRRDeltaSensitivitiesAndRiskFactors",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "../../common/NetDeltaSensitivities.cubes#nettedDeltaSensitivities"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+      "$ref" : "../../common/FRTBSourceCubes.cubes#GIRRRiskFactor"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "GIRRDeltaSensitivitiesAndRiskFactorsWithBucketName",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "GIRRDeltaSensitivitiesAndRiskFactors"
+    } ]
+  } ]
+}

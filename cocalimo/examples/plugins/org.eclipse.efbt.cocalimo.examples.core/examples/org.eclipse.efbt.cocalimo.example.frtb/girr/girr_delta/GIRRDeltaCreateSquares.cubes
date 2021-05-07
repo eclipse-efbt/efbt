@@ -1,0 +1,12 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/cubes#//FreeBirdToolsCubeModule",
+  "name" : "GIRRDeltaCreateSquares",
+  "cubes" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "totalGIRRDeltaSensitivityPerBucket",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "GIRRDeltaApplyWeighting.cubes#weightedGIRRDeltaSensitivitiesAndRiskFactors"
+    } ]
+  } ]
+}

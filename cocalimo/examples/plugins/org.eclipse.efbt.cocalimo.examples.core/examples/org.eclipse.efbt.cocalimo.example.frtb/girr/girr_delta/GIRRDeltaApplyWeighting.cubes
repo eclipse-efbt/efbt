@@ -1,0 +1,19 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/cubes#//FreeBirdToolsCubeModule",
+  "name" : "GIRRDeltaApplyWeighting",
+  "cubes" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "GIRRDeltaSensitivitiesAndRiskFactorsWithWeight",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "GIRRDeltaAssignBucket.cubes#GIRRDeltaSensitivitiesAndRiskFactorsWithBucketName"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "weightedGIRRDeltaSensitivitiesAndRiskFactors",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "GIRRDeltaSensitivitiesAndRiskFactorsWithWeight"
+    } ]
+  } ]
+}

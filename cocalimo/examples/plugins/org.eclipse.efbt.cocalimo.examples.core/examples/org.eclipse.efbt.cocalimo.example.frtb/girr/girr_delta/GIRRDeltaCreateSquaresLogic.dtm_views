@@ -1,0 +1,47 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+  "name" : "GIRRDeltaCreateSquaresLogic",
+  "DTMViews" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//AggregateEnrichmentView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "GIRRDeltaCreateSquares.cubes#totalGIRRDeltaSensitivityPerBucket"
+    },
+    "name" : "totalGIRRDeltaSensitivityPerBucket",
+    "functions" : [ {
+      "name" : "totalGIRRDeltaSensitivityPerBucket_totalGIRRDeltaSensitivityPerBucket",
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "GIRRDeltaCreateSquares.cubes#totalGIRRDeltaSensitivityPerBucket"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "GIRRDeltaMeasures.efbt_data_definition#totalGIRRDeltaSensitivityPerBucket"
+      },
+      "aggregateFunction" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "GIRRDeltaMeasures.efbt_data_definition#weightedGIRRDeltaSensitivity"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "GIRRDeltaApplyWeighting.cubes#weightedGIRRDeltaSensitivitiesAndRiskFactors"
+          }
+        } ],
+        "name" : "SUM",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//AggregateFunctionSpec",
+          "$ref" : "../../common/commonFunctionsModule.functions#SUM"
+        }
+      }
+    } ],
+    "groupByClause" : {
+      "groupByColumns" : [ {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../../sdd/FRTBDerivedIdentifiers.efbt_data_definition#bucketID"
+      } ]
+    }
+  } ]
+}

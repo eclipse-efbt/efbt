@@ -1,0 +1,50 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/cubes#//FreeBirdToolsCubeModule",
+  "name" : "GIRRDeltaCreateCorrelatedPairs",
+  "cubes" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "copyOfWeightedGIRRDeltaSensitivitiesAndRiskFactors",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "GIRRDeltaApplyWeighting.cubes#weightedGIRRDeltaSensitivitiesAndRiskFactors"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "GIRRDeltaSensitivityCombinations",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "copyOfWeightedGIRRDeltaSensitivitiesAndRiskFactors"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "GIRRDeltaApplyWeighting.cubes#weightedGIRRDeltaSensitivitiesAndRiskFactors"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "GIRRDeltaSensitivityCombinationsWithCorrelationFactor",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "GIRRDeltaSensitivityCombinations"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "GIRRDeltaSensitivitiesCorrelated",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "GIRRDeltaSensitivityCombinationsWithCorrelationFactor"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "GIRRDeltaSensitivitiesCorrelatedAndAggregated",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "GIRRDeltaSensitivitiesCorrelated"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "GIRRDeltaSensitivityKBPerBucket",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "GIRRDeltaSensitivitiesCorrelatedAndAggregated"
+    } ]
+  } ]
+}

@@ -1,0 +1,4 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+  "name" : "GIRRDeltaBucketsCreateCorrelatedPairsLogic"
+}

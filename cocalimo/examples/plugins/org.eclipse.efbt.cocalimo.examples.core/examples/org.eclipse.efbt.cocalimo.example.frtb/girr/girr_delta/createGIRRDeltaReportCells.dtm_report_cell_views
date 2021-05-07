@@ -1,0 +1,4 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/dtm_report_cell_views#//ReportCellViewModule",
+  "name" : "createGIRRDeltaReportCells"
+}

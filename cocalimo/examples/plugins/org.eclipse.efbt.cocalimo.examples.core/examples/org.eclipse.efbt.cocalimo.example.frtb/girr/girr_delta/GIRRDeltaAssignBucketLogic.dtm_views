@@ -1,0 +1,70 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+  "name" : "GIRRDeltaAssignBucketLogic",
+  "DTMViews" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//JoinView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "GIRRDeltaAssignBucket.cubes#GIRRDeltaSensitivitiesAndRiskFactors"
+    },
+    "name" : "GIRRDeltaSensitivitiesAndRiskFactors",
+    "whereClause" : {
+      "function" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "../../sdd/FRTBSourceIdentifiers.efbt_data_definition#riskFactorID"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+            "$ref" : "../../common/FRTBSourceCubes.cubes#GIRRRiskFactor"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "../../sdd/FRTBSourceIdentifiers.efbt_data_definition#riskFactorID"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "../../common/NetDeltaSensitivities.cubes#nettedDeltaSensitivities"
+          }
+        } ],
+        "name" : "equals",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+          "$ref" : "../../common/commonFunctionsModule.functions#equals"
+        }
+      }
+    },
+    "ignores" : [ {
+      "columnToIgnore" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../../sdd/FRTBSourceIdentifiers.efbt_data_definition#riskFactorID"
+      },
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "../../common/NetDeltaSensitivities.cubes#nettedDeltaSensitivities"
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//EnrichmentView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "GIRRDeltaAssignBucket.cubes#GIRRDeltaSensitivitiesAndRiskFactorsWithBucketName"
+    },
+    "name" : "GIRRDeltaAssignBucket",
+    "functions" : [ {
+      "name" : "getGIRRDeltaBucketName",
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "GIRRDeltaAssignBucket.cubes#GIRRDeltaSensitivitiesAndRiskFactorsWithBucketName"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../../sdd/FRTBDerivedIdentifiers.efbt_data_definition#bucketID"
+      }
+    } ]
+  } ]
+}

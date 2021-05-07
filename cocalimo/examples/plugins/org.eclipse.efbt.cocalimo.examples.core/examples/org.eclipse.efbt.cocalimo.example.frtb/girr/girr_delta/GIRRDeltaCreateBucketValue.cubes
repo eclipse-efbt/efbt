@@ -1,0 +1,40 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/cubes#//FreeBirdToolsCubeModule",
+  "name" : "GIRRDeltaCreateBucketValue",
+  "cubes" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "copyOfTotalGIRRDeltaSensitivityPerBucket",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "GIRRDeltaCreateSquares.cubes#totalGIRRDeltaSensitivityPerBucket"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "GIRRDeltaSensitivityPerBucketCombinations",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "copyOfTotalGIRRDeltaSensitivityPerBucket"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "GIRRDeltaSensitivityPerBucketCombinationsWithCorrelationFactor",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "GIRRDeltaSensitivityPerBucketCombinations"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "GIRRDeltaSensitivityPerBucketCorrelated",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "GIRRDeltaSensitivityPerBucketCombinationsWithCorrelationFactor"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "totalGIRRDeltaSensitivityPerBucketCorrelated",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "totalGIRRDeltaSensitivityPerBucketCorrelated"
+    } ]
+  } ]
+}
