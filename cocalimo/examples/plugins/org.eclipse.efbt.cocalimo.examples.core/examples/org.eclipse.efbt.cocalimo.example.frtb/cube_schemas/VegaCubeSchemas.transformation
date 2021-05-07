@@ -1,0 +1,15 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/transformation#//VersionedCubeSchemaModule",
+  "name" : "VegaCubeSchemas",
+  "schemas" : [ {
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_definition#//CUBE",
+      "$ref" : "../sdd/FRTBCubes.efbt_data_definition#vegaSensitivities "
+    },
+    "name" : "curvature",
+    "baseCube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+      "$ref" : "../common/FRTBSourceCubes.cubes#vegaSensitivities "
+    }
+  } ]
+}

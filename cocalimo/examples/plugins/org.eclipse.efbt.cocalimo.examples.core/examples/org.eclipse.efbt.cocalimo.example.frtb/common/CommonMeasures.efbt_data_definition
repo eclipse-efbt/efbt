@@ -1,0 +1,45 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/efbt_data_definition#//VariableModule",
+  "name" : "CommonMeasuresModel",
+  "variables" : [ {
+    "code" : "nettedVegaSensitivity",
+    "description" : "nettedVegaSensitivity",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "nettedVegaSensitivity",
+    "name" : "nettedVegaSensitivity",
+    "displayName" : "nettedVegaSensitivity"
+  }, {
+    "code" : "nettedDeltaSensitivity",
+    "description" : "nettedDeltaSensitivity",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "nettedDeltaSensitivity",
+    "name" : "nettedDeltaSensitivity",
+    "displayName" : "nettedDeltaSensitivity"
+  }, {
+    "code" : "summedDeltaPerPosition",
+    "description" : "summedDeltaPerPosition",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "summedDeltaPerPosition",
+    "name" : "summedDeltaPerPosition",
+    "displayName" : "summedDeltaPerPosition"
+  }, {
+    "code" : "summedVegaPerPosition",
+    "description" : "summedVegaPerPosition",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "summedVegaPerPosition",
+    "name" : "summedVegaPerPosition",
+    "displayName" : "summedVegaPerPosition"
+  } ]
+}
