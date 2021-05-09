@@ -1,0 +1,58 @@
+ProgramAndCalls : { 
+	program : dtmProgram : { 
+		smcubesStaticModel : SMCubesStaticModel staticModel1 : {
+			regFunctionalityTests : SMCubesRegFunctionalityTestModule regFunctionalityTests1 : {
+				regFunctionalityTests : [ 
+					SMCubesRegFunctionalityTest  girrCurvatureTest : {
+						testDefinition : "regFunctionalityTestDefinitions1.girrCurvatureTestDefinition"
+						inputData : SMCubesTestInputData testInputData1 : {
+							smcubes_inputdata : [ 
+								BaseColumnStructuredData girr_risk_factor_cube : {
+									cube : "FRTBCubesStaticModel.FRTBCubesModel.cubesModel.GIRRRiskFactor"
+									rows : [ 
+										BaseRowData girr_risk_factor_cube_row1 : { 
+											cells : [ BaseCellWithEnumeratedValue mainCurrency : {
+												column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.mainCurrency"
+												value : "FRTBSourceDomainMembersStaticModel.FRTBSourceDomainMembersModel.membersModule.EUR"
+											} ,
+										BaseCellWithValue  risk_factor_id : {
+											value : "USD3MLiborcurve"
+											column : "FRTBSourceIdentifiersStaticModel.FRTBSourceIdentifiersModel.variablesModule.riskFactorID"
+											
+										}
+											]
+										}
+									]
+								}
+							]
+						}
+					}
+				]
+			}
+			
+			 regFunctionalityTestDefinitions : RegFunctionalityTestDefinitionModule regFunctionalityTestDefinitions1 : {
+			 	testDefinitions : { RegFunctionalityTestDefinition girrCurvatureTestDefinition : {
+			 		inputModules : [ 
+			 		"FRTBCoreProcessStaticModel.FRTBCoreProcess.SBAProcesses.FRTBProcessing.PreNetting.DeltaNetting.ReadDeltaSensitivities" ,
+			 		"FRTBCoreProcessStaticModel.FRTBCoreProcess.SBAProcesses.FRTBProcessing.RiskClassProcessing.GIRR_SBA.GIRRDeltaAndGIRRCurvatureProcessing.GIRRCurvature.ReadGIRRCurvatureData"			 		
+			 		] 
+			 		processingModules : [ 
+			 		"FRTBCoreProcessStaticModel.FRTBCoreProcess.SBAProcesses.FRTBProcessing.PreNetting.DeltaNetting",
+			 		"FRTBCoreProcessStaticModel.FRTBCoreProcess.SBAProcesses.FRTBProcessing.RiskClassProcessing.GIRR_SBA.GIRRDeltaAndGIRRCurvatureProcessing"
+			 		
+			 		]
+			 		reportCellCreationModules : [
+			 			"FRTBCoreProcessStaticModel.FRTBCoreProcess.SBAProcesses.FRTBProcessing.RiskClassProcessing.GIRR_SBA.GIRRDeltaAndGIRRCurvatureProcessing.GIRRCurvature.createGIRRCurvatureReportCells"
+			 		]
+			 		scenarios : [
+			 			"FRTBCoreProcessStaticModel.FRTBCoreProcess.SBAProcesses.FRTBProcessing.RiskClassProcessing.GIRR_SBA.GIRRDeltaAndGIRRCurvatureProcessing.GIRRCurvature.GIRRCurvatureDeltaStripping.GIRRCurvatureDeltaStrippingScenarios.GIRRCurvatureDownShocks"
+			 		]
+			 	
+			 		} 
+			 	}
+			 }
+		}
+		
+		}
+			 		}   
+			 	

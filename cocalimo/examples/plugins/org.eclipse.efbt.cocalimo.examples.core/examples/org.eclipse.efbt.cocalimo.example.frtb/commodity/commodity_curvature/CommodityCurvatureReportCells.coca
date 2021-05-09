@@ -1,0 +1,15 @@
+ProgramAndCalls : { program : dtmProgram : { executableLogic : [ dtmExecutableLogic CommodityCurvatureReportCells: 
+	{reportCellViewModules : [
+			 		 	ReportCellViewModule CommodityCurvatureReportCellsModule : { 
+			 		 		reportCellViews [ 
+			 		 			ReportCellView  irEURCurvatureReportCellView : {
+			 		 				cube : "CommodityCurvatureDatapoints.freeBirdToolsCubeModule.CommodityCurvatureEURReportCell"
+			 		 				reportCell : ReportCell irEURCurvatureReportCell : {
+			 		 					combination : "FRTBCombinationsStaticModel.FRTBCombinationsModel.combinationModule.irEURCurvatureReportCell" 
+			 		 				}
+			 		 				}
+			 		 				]
+			 		 				
+			 		 			}
+			 		 		]
+			 		 	} ] } }  

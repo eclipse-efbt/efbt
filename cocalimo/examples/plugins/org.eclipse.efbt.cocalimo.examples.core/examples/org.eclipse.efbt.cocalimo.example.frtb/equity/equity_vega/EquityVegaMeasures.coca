@@ -1,0 +1,150 @@
+ProgramAndCalls : { program :  dtmProgram :  {
+	smcubesStaticModel : SMCubesStaticModel EquityVegaMeasuresStaticModel : {
+	smCubesModel : SmcubesModel  EquityVegaMeasuresModel  : {
+		variables :  [ VariableModule variablesModule :  
+				{
+					license : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"
+			variables : [ 
+			
+			VARIABLE EquityVegaSensitivityk : {
+				code : "EquityVegaSensitivityk"
+				description : "EquityVegaSensitivityk"
+				variable_id : "EquityVegaSensitivityk"
+				displayName :  "EquityVegaSensitivityk"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE EquityVegaSensitivityl : {
+				code : "EquityVegaSensitivityl"
+				description : "EquityVegaSensitivityl"
+				variable_id : "EquityVegaSensitivityl"
+				displayName :  "EquityVegaSensitivityl"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			
+			VARIABLE tenork : {
+				code : "tenork"
+				description : "tenork"
+				variable_id : "tenork"
+				displayName :  "tenork"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE tenorl : {
+				code : "tenorl"
+				description : "tenorl"
+				variable_id : "tenorl"
+				displayName :  "tenorl"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE summedEquityVega : {
+				code : "summedEquityVega"
+				description : "summedEquityVega"
+				variable_id : "summedEquityVega"
+				displayName :  "summedEquityVega"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			
+			VARIABLE mainCurrencyl : {
+				code : "mainCurrencyl"
+				description : "mainCurrencyl"
+				variable_id : "mainCurrencyl"
+				displayName : "mainCurrencyl"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
+			},
+			VARIABLE mainCurrencyk : {
+				code : "mainCurrencyk"
+				description : "mainCurrencyk"
+				variable_id : "mainCurrencyk"
+				displayName : "MaimainCurrencyknCurrency"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
+			},
+			VARIABLE EquityVegaRiskWeight : {
+				code : "EquityVegaRiskWeight"
+				description : "EquityVegaRiskWeight"
+				variable_id : "EquityVegaRiskWeight"
+				displayName :  "EquityVegaRiskWeight"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE weightedEquityVegaSensitivity : {
+				code : "weightedEquityVegaSensitivity"
+				description : "weightedEquityVegaSensitivity"
+				variable_id : "weightedEquityVegaSensitivity"
+				displayName :  "weightedEquityVegaSensitivity"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE EquityVegaKBInput : {
+				code : "EquityVegaKBInput"
+				description : "EquityVegaKBInput"
+				variable_id : "EquityVegaKBInput"
+				displayName :  "EquityVegaKBInput"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE EquityVegaKB : {
+				code : "EquityVegaKB"
+				description : "EquityVegaKB"
+				variable_id : "EquityVegaKB"
+				displayName :  "EquityVegaKB"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE EquityVegaKBInputPerBucket : {
+				code : "EquityVegaKBInputPerBucket"
+				description : "EquityVegaKBInputPerBucket"
+				variable_id : "EquityVegaKBInputPerBucket"
+				displayName :  "EquityVegaKBInputPerBucket"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE EquityVegaSensitivityPerBucketCorrelated : {
+				code : "EquityVegaSensitivityPerBucketCorrelated"
+				description : "EquityVegaSensitivityPerBucketCorrelated"
+				variable_id : "EquityVegaSensitivityPerBucketCorrelated"
+				displayName :  "EquityVegaSensitivityPerBucketCorrelated"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE totalEquityVegaSensitivityPerBucketCorrelated : {
+				code : "totalEquityVegaSensitivityPerBucketCorrelated"
+				description : "totalEquityVegaSensitivityPerBucketCorrelated"
+				variable_id : "totalEquityVegaSensitivityPerBucketCorrelated"
+				displayName :  "totalEquityVegaSensitivityPerBucketCorrelated"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE totalEquityVegaSensitivityPerBucket : {
+				code : "totalEquityVegaSensitivityPerBucket"
+				description : "totalEquityVegaSensitivityPerBucket"
+				variable_id : "totalEquityVegaSensitivityPerBucket"
+				displayName :  "totalEquityVegaSensitivityPerBucket"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE EquityVegaBucketCorrelationFactor : {
+				code : "EquityVegaBucketCorrelationFactor"
+				description : "EquityVegaBucketCorrelationFactor"
+				variable_id : "EquityVegaBucketCorrelationFactor"
+				displayName :  "EquityVegaBucketCorrelationFactor"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			
+			VARIABLE totalEquityVegaSensitivityPerBucketk : {
+				code : "totalEquityVegaSensitivityPerBucketk"
+				description : "totalEquityVegaSensitivityPerBucketk"
+				variable_id : "totalEquityVegaSensitivityPerBucketk"
+				displayName :  "totalEquityVegaSensitivityPerBucketk"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE totalEquityVegaSensitivityPerBucketl : {
+				code : "totalEquityVegaSensitivityPerBucketl"
+				description : "totalEquityVegaSensitivityPerBucketl"
+				variable_id : "totalEquityVegaSensitivityPerBucketl"
+				displayName :  "totalEquityVegaSensitivityPerBucketl"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			}
+			,
+			VARIABLE EquityVegaCorrelationFactor : {
+				code : "EquityVegaCorrelationFactor"
+				description : "EquityVegaCorrelationFactor"
+				variable_id : "EquityVegaCorrelationFactor"
+				displayName :  "EquityVegaCorrelationFactor"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			}
+			
+			
+			
+			 ] } ] } } } }
+				

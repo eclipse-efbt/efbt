@@ -1,0 +1,333 @@
+ProgramAndCalls : { program : dtmProgram :  {
+	smcubesStaticModel : SMCubesStaticModel FRTBSourceDomainMembersStaticModel : { 
+		smCubesModel  : SmcubesModel FRTBSourceDomainMembersModel: { members : [
+			MemberModule membersModule : {
+				license : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"
+				 members : 
+				[ 
+					MEMBER UP : {
+						code : UP
+						displayName : UP
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.shockDirection"
+
+					},
+					MEMBER DOWN : {
+						code : DOWN
+						displayName : DOWN
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.shockDirection"
+
+					},
+					MEMBER NONE : {
+						code : NONE
+						displayName : NONE
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.shockDirection"
+
+					},
+					MEMBER EUR : {
+						code : EUR
+						displayName : EUR
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
+
+					},
+					MEMBER USD : {
+						code : USD
+						displayName : USD
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
+
+					},
+					MEMBER GIRR : {
+						code : GIRR
+						displayName : GIRR
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Currency"
+
+					},
+					MEMBER Equity : {
+						code : Equity
+						displayName : Equity
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.riskClass"
+
+					},
+					MEMBER CSR_NonSec : {
+						code : CSR_NonSec
+						displayName : CSR_NonSec
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.riskClass"
+
+					},
+					MEMBER CSR_Sec_CTP : {
+						code : CSR_Sec_CTP
+						displayName : CSR_Sec_CTP
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.riskClass"
+
+					},
+					MEMBER CSR_Sec_Non_CTP : {
+						code : CSR_Sec_Non_CTP
+						displayName : CSR_Sec_Non_CTP
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.riskClass"
+
+					},
+					MEMBER Commodity : {
+						code : Commodity
+						displayName : Commodity
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.riskClass"
+
+					},
+					MEMBER FX : {
+						code : FX
+						displayName : FX
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.riskClass"
+
+					},
+					MEMBER Spot : {
+						code : Spot
+						displayName : Spot
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.equityFactorType"
+
+					},
+					MEMBER Repo : {
+						code : Repo
+						displayName : Repo
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.riskClass"
+
+					},
+					MEMBER Bond : {
+						code : Bond
+						displayName : Bond
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.CSRCurveType"
+
+					},
+					MEMBER CDS : {
+						code : CDS
+						displayName : CDS
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.CSRCurveType"
+
+					},
+					MEMBER SENIOR_IG : {
+						code : SENIOR_IG
+						displayName : SENIOR_IG
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.ratingsGrade"
+
+					},
+					MEMBER NON_SENIOR_IG : {
+						code : NON_SENIOR_IG
+						displayName : NON_SENIOR_IG
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.ratingsGrade"
+
+					},
+					MEMBER HIGH_YIELD : {
+						code : HIGH_YIELD
+						displayName : HIGH_YIELD
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.ratingsGrade"
+
+					},
+					MEMBER NON_RATED : {
+						code : NON_RATED
+						displayName : NON_RATED
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.ratingsGrade"
+
+					},
+					MEMBER IG : {
+						code : IG
+						displayName : IG
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.ratingsGrade"
+
+					},
+					MEMBER ENERGY_SOLID_COMBUSTABLES : {
+						code : ENERGY_SOLID_COMBUSTABLES
+						displayName : ENERGY_SOLID_COMBUSTABLES
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.commodityType"
+
+					},
+					MEMBER ENERGY_LIQUID_COMBUSTABLES : {
+						code : ENERGY_LIQUID_COMBUSTABLES
+						displayName : ENERGY_LIQUID_COMBUSTABLES
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.commodityType"
+
+					},
+					MEMBER ENERGY_ELECTRICITY_AND_CARBON_TRADING : {
+						code : ENERGY_ELECTRICITY_AND_CARBON_TRADING
+						displayName : ENERGY_ELECTRICITY_AND_CARBON_TRADING
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.commodityType"
+
+					},
+					MEMBER FREIGHT : {
+						code : FREIGHT
+						displayName : FREIGHT
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.commodityType"
+
+					},
+					MEMBER METALS_NON_PRECIOUS : {
+						code : METALS_NON_PRECIOUS
+						displayName : METALS_NON_PRECIOUS
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.commodityType"
+
+					},
+					MEMBER GASEOUS_COMBUSTABLES : {
+						code : GASEOUS_COMBUSTABLES
+						displayName : GASEOUS_COMBUSTABLES
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.commodityType"
+
+					},
+					MEMBER a : {
+						code : IG
+						displayName : IG
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.commodityType"
+
+					},
+					MEMBER PRECIOUS_METALS : {
+						code : PRECIOUS_METALS
+						displayName : PRECIOUS_METALS
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.commodityType"
+
+					},
+					MEMBER GRAINS_AND_OILSEED : {
+						code : GRAINS_AND_OILSEED
+						displayName : GRAINS_AND_OILSEED
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.commodityType"
+
+					},
+					MEMBER LIVESTOCK_AND_DAIRY : {
+						code : LIVESTOCK_AND_DAIRY
+						displayName : LIVESTOCK_AND_DAIRY
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.commodityType"
+
+					},
+					MEMBER SOFTS_AND_OTHER_AGRICULTURALS : {
+						code : SOFTS_AND_OTHER_AGRICULTURALS
+						displayName : SOFTS_AND_OTHER_AGRICULTURALS
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.commodityType"
+
+					},
+					MEMBER OTHER_COMMODITY : {
+						code : OTHER_COMMODITY
+						displayName : OTHER_COMMODITY
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.commodityType"
+
+					},
+					MEMBER LARGE : {
+						code : LARGE
+						displayName : LARGE
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.marketCap"
+
+					},
+					MEMBER SMALL : {
+						code : SMALL
+						displayName : SMALL
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.marketCap"
+
+					},
+					MEMBER EMERGING_MARKET : {
+						code : EMERGING_MARKET
+						displayName : EMERGING_MARKET
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.economy"
+
+					},
+					MEMBER ADVANCED_ECONOMY : {
+						code : ADVANCED_ECONOMY
+						displayName : ADVANCED_ECONOMY
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.economy"
+
+					},
+					MEMBER SOVEREIGN : {
+						code : SOVEREIGN
+						displayName : SOVEREIGN
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.sector"
+
+					},
+					MEMBER LOCAL_GOVERNMENT : {
+						code : LOCAL_GOVERNMENT
+						displayName : LOCAL_GOVERNMENT
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.sector"
+
+					},
+					MEMBER FINANCIALS : {
+						code : FINANCIALS
+						displayName : FINANCIALS
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.sector"
+
+					},
+					MEMBER BASIC_MATERIALS : {
+						code : BASIC_MATERIALS
+						displayName : BASIC_MATERIALS
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.sector"
+
+					},
+					MEMBER CONSUMER_GOODS : {
+						code : CONSUMER_GOODS
+						displayName : CONSUMER_GOODS
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.sector"
+
+					},
+					MEMBER TECHNOLOGY : {
+						code : TECHNOLOGY
+						displayName : TECHNOLOGY
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.sector"
+
+					},
+					MEMBER HEALTH_CARE : {
+						code : HEALTH_CARE
+						displayName : HEALTH_CARE
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.sector"
+
+					},
+					MEMBER COVERED_BONDS : {
+						code : COVERED_BONDS
+						displayName : COVERED_BONDS
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.sector"
+
+					},
+					MEMBER OTHER_SECTOR : {
+						code : OTHER_SECTOR
+						displayName : OTHER_SECTOR
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.sector"
+
+					},
+					MEMBER RMBS_PRIME : {
+						code : OTHER_SECTOR
+						displayName : OTHER_SECTOR
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.securitisationSector"
+
+					},
+					MEMBER RMBS_MID_PRIME : {
+						code : RMBS_MID_PRIME
+						displayName : RMBS_MID_PRIME
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.securitisationSector"
+
+					},
+					MEMBER RMBS_SUB_PRIME : {
+						code : RMBS_SUB_PRIME
+						displayName : RMBS_SUB_PRIME
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.securitisationSector"
+
+					},
+					MEMBER CMBS : {
+						code : CMBS
+						displayName : CMBS
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.securitisationSector"
+
+					},
+					MEMBER ABS_STUDENT_LOAN : {
+						code : ABS_STUDENT_LOAN
+						displayName : ABS_STUDENT_LOAN
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.securitisationSector"
+
+					},
+					MEMBER ABS_AUTO : {
+						code : ABS_AUTO
+						displayName : ABS_AUTO
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.securitisationSector"
+
+					},
+					MEMBER CLO_NON_CTP : {
+						code : CLO_NON_CTP
+						displayName : CLO_NON_CTP
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.securitisationSector"
+
+					},
+					MEMBER OTHER_securitisationSector : {
+						code : OTHER_securitisationSector
+						displayName : OTHER_securitisationSector
+						domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.securitisationSector"
+
+					}
+					
+				] } ] } } } } 

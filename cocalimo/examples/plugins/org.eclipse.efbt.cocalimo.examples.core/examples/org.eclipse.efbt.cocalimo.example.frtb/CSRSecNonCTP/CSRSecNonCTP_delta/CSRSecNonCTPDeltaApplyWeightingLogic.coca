@@ -1,0 +1,58 @@
+ProgramAndCalls : { program : dtmProgram :  { 
+	
+	executableLogic :[ dtmExecutableLogic CSRSecNonCTPDeltaApplyWeightingLogic : { 
+		
+			
+			 datasetTransformationModules : [ VersionedDTMViewsModule   views : { 
+			 	DTMViews : [ 
+			 		
+			 		EnrichmentView 	CSRSecNonCTPDeltaSensitivitiesAndRiskFactorsWithWeight : {
+			 			cube :"CSRSecNonCTPDeltaApplyWeighting.freeBirdToolsCubeModule.CSRSecNonCTPDeltaSensitivitiesAndRiskFactorsWithWeight"
+			 			functions : [ 
+			 				BasicColumnFunction CSRSecNonCTPDeltaSensitivitiesAndRiskFactorsWithWeight_CSRSecNonCTPDeltaRiskWeight: { 
+			 					cube : "CSRSecNonCTPDeltaApplyWeighting.freeBirdToolsCubeModule.CSRSecNonCTPDeltaSensitivitiesAndRiskFactorsWithWeight"
+			 					variable : "CSRSecNonCTPDeltaMeasuresStaticModel.CSRSecNonCTPDeltaMeasuresModel.variablesModule.CSRSecNonCTPDeltaRiskWeight"
+			 					
+			 					basicFunction : BasicFunction bf41 : {
+			 						functionSpec : "FRTBFunctions.CSRSecNonCTPFunctionSpecModule.getCSRSecNonCTPDeltaRiskFactorRiskWeight"
+			 						parameters : [ 
+			 							SpeculativeCubeColumnParameter : {
+			 								column : "FRTBSourceMeasuresStaticModel.FRTBSourceMeasuresModel.variablesModule.tenor"
+			 								cube : "CSRSecNonCTPDeltaAssignBucket.freeBirdToolsCubeModule.CSRSecNonCTPDeltaSensitivitiesAndRiskFactors"
+			 							}
+			 							
+			 						]
+			 					}
+			 				}
+			 			
+			 			]
+			 		},
+			 		EnrichmentView 	weightedCSRSecNonCTPDeltaSensitivitiesAndRiskFactors : {
+			 			cube :"CSRSecNonCTPDeltaApplyWeighting.freeBirdToolsCubeModule.weightedCSRSecNonCTPDeltaSensitivitiesAndRiskFactors"
+			 			functions : [ 
+			 				BasicColumnFunction weightedCSRSecNonCTPDeltaSensitivitiesAndRiskFactors_weightedCSRSecNonCTPDeltaSensitivity: { 
+			 					cube :"CSRSecNonCTPDeltaApplyWeighting.freeBirdToolsCubeModule.weightedCSRSecNonCTPDeltaSensitivitiesAndRiskFactors"
+			 					variable : "CSRSecNonCTPDeltaMeasuresStaticModel.CSRSecNonCTPDeltaMeasuresModel.variablesModule.weightedCSRSecNonCTPDeltaSensitivity"
+			 					
+			 					basicFunction : BasicFunction bf42 : {
+			 						functionSpec : "commonFunctions.commonFunctionSpecModule.multiply"
+			 						parameters : [ 
+			 							SpeculativeCubeColumnParameter : {
+			 								column : "CommonMeasuresStaticModel.CommonMeasuresModel.variablesModule.nettedDeltaSensitivity"
+			 								cube :  "CSRSecNonCTPDeltaApplyWeighting.freeBirdToolsCubeModule.CSRSecNonCTPDeltaSensitivitiesAndRiskFactorsWithWeight"
+			 							},
+			 							SpeculativeCubeColumnParameter : {
+			 								column :"CSRSecNonCTPDeltaMeasuresStaticModel.CSRSecNonCTPDeltaMeasuresModel.variablesModule.CSRSecNonCTPDeltaRiskWeight"
+			 								cube :  "CSRSecNonCTPDeltaApplyWeighting.freeBirdToolsCubeModule.CSRSecNonCTPDeltaSensitivitiesAndRiskFactorsWithWeight"
+			 							}
+			 							
+			 						]
+			 					}
+			 				}
+			 			
+			 			]
+			 		}
+			 		
+			 	
+
+			 		] } ] } ] } }
