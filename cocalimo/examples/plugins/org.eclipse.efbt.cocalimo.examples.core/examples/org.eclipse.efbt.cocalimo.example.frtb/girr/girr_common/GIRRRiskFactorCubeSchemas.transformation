@@ -1,0 +1,15 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/transformation#//VersionedCubeSchemaModule",
+  "name" : "GIRRRiskFactorCubeSchemas",
+  "schemas" : [ {
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_definition#//CUBE",
+      "$ref" : "../../sdd/FRTBCubes.efbt_data_definition#GIRRRiskFactor"
+    },
+    "name" : "GIRRRiskFactor",
+    "baseCube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+      "$ref" : "../../common/FRTBSourceCubes.cubes#GIRRRiskFactor"
+    }
+  } ]
+}

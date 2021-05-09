@@ -1,0 +1,38 @@
+ProgramAndCalls : { program : dtmProgram :  { 
+	
+	executableLogic :[ dtmExecutableLogic CSRNonSecDeltaCreateSquaresLogic : { 
+		
+			
+			 datasetTransformationModules : [ VersionedDTMViewsModule   views : { 
+			 	DTMViews : [ 
+
+				AggregateEnrichmentView totalCSRNonSecDeltaSensitivityPerBucket : {
+			 			cube : "CSRNonSecDeltaCreateSquaresCubes.freeBirdToolsCubeModule.totalCSRNonSecDeltaSensitivityPerBucket"
+			 			functions : [
+			 				AggregateColumnFunction totalCSRNonSecDeltaSensitivityPerBucket_totalCSRNonSecDeltaSensitivityPerBucket: { 
+			 					cube : "CSRNonSecDeltaCreateSquaresCubes.freeBirdToolsCubeModule.totalCSRNonSecDeltaSensitivityPerBucket"
+			 					variable : "CSRNonSecDeltaMeasuresStaticModel.CSRNonSecDeltaMeasuresModel.variablesModule.totalCSRNonSecDeltaSensitivityPerBucket"
+			 					aggregateFunction : AggregateFunction af7 : {
+			 						functionSpec : "commonFunctions.commonFunctionSpecModule.SUM" 
+			 						parameters : [ 
+			 							SpeculativeCubeColumnParameter : {
+			 								column : "CSRNonSecDeltaMeasuresStaticModel.CSRNonSecDeltaMeasuresModel.variablesModule.weightedCSRNonSecDeltaSensitivity"
+			 								cube : "CSRNonSecDeltaApplyWeighting.freeBirdToolsCubeModule.weightedCSRNonSecDeltaSensitivitiesAndRiskFactors"
+			 								
+			 							}
+			 						] 
+			 						
+			 					}
+			 				
+			 			}
+			 		
+			 			]
+			 			groupByClause : GroupByClause : {
+			 				groupByColumns : [
+			 					"FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID"
+			 				]
+			 			}
+			 		}
+
+			 		] } ] } ] } }
+			 		

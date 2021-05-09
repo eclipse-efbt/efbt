@@ -1,0 +1,137 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+  "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
+  "name" : "GIRRCurvatureAssignBucketLogic",
+  "version" : "1.0",
+  "DTMViews" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//JoinView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "GIRRCurvatureAssignBucket.cubes#GIRRCurvatureAndPosition"
+    },
+    "name" : "GIRRCurvatureAndPosition",
+    "whereClause" : {
+      "function" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "../../sdd/FRTBSourceIdentifiers.efbt_data_definition#positionID"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+            "$ref" : "../../common/FRTBSourceCubes.cubes#curvature"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "../../sdd/FRTBSourceIdentifiers.efbt_data_definition#positionID"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+            "$ref" : "../../common/FRTBSourceCubes.cubes#position"
+          }
+        } ],
+        "name" : "equals",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+          "$ref" : "../../common/commonFunctionsModule.functions#equals"
+        }
+      }
+    },
+    "ignores" : [ {
+      "columnToIgnore" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../../sdd/FRTBSourceIdentifiers.efbt_data_definition#positionID"
+      },
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+        "$ref" : "../../common/FRTBSourceCubes.cubes#curvature"
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//JoinView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "GIRRCurvatureAssignBucket.cubes#GIRRCurvatureValuationDifferences"
+    },
+    "name" : "GIRRCurvatureValuationDifferences",
+    "whereClause" : {
+      "function" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "../../sdd/FRTBSourceIdentifiers.efbt_data_definition#riskFactorID"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+            "$ref" : "../../common/FRTBSourceCubes.cubes#GIRRRiskFactor"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "../../sdd/FRTBSourceIdentifiers.efbt_data_definition#riskFactorID"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "GIRRCurvatureAssignBucket.cubes#GIRRCurvatureAndPosition"
+          }
+        } ],
+        "name" : "equals",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+          "$ref" : "../../common/commonFunctionsModule.functions#equals"
+        }
+      }
+    },
+    "ignores" : [ {
+      "columnToIgnore" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../../sdd/FRTBSourceIdentifiers.efbt_data_definition#riskFactorID"
+      },
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "GIRRCurvatureAssignBucket.cubes#GIRRCurvatureAndPosition"
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//EnrichmentView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "GIRRCurvatureAssignBucket.cubes#GIRRCurvatureValuationDifferencesWithBucket"
+    },
+    "name" : "GIRRCurvatureValuationDifferencesWithBucket",
+    "functions" : [ {
+      "name" : "getGIRRCuvatureBucketName",
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "GIRRCurvatureAssignBucket.cubes#GIRRCurvatureValuationDifferencesWithBucket"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../../sdd/FRTBDerivedIdentifiers.efbt_data_definition#bucketID"
+      },
+      "basicFunction" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "../../sdd/FRTBSourceDimensions.efbt_data_definition#mainCurrency"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "GIRRCurvatureAssignBucket.cubes#GIRRCurvatureValuationDifferences"
+          }
+        } ],
+        "name" : "getGIRRCurvatureBucketName",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+          "$ref" : "../girr_common/GIRRFunctions.functions#getGIRRCurvatureBucketName"
+        }
+      }
+    } ]
+  } ]
+}

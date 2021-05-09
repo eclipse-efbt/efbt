@@ -1,0 +1,153 @@
+ProgramAndCalls : { program : dtmProgram :  { 
+	
+	executableLogic :[ dtmExecutableLogic CSRNonSecCurvatureCreateBucketValueLogic : { 
+		
+			 
+			 datasetTransformationModules : [ VersionedDTMViewsModule   views : { 
+			 	DTMViews : [ 
+			 	
+		
+			 		 				JoinView productOfCorrelatedCSRNonSecCurvatureWithSquareOfMinimums : {
+			 		 					cube : "CSRNonSecCurvatureCreateBucketValueCubes.freeBirdToolsCubeModule.productOfCorrelatedCSRNonSecCurvatureWithSquareOfMinimums"
+			 		 					whereClause : WhereClause : { 
+			 		 						 function : BooleanFunction bf27 :
+			 		 						 { 
+			 		 						 	functionSpec : "commonFunctions.commonFunctionSpecModule.AND" 
+			 		 						 	parameters : [ 
+			 		 						 		 
+			 		 							 BooleanFunction bf64 : {
+			 		 						 	functionSpec : "commonFunctions.commonFunctionSpecModule.equals"
+			 		 						 	parameters : [
+			 		 						 		SpeculativeCubeColumnParameter : {
+			 		 						 			column : "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID"
+			 		 						 			cube : "CSRNonSecCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.sumOfProductOfCSRNonSecCurvatureCVRkCorrelatedCombinationsByBucket"
+			 		 						 			},
+			 		 						 		SpeculativeCubeColumnParameter : {
+			 		 						 			column : "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID"
+			 		 						 			cube : "CSRNonSecCurvatureCreateSquaresCubes.freeBirdToolsCubeModule.CSRNonSecCurvatureTotalGroupedSummedMinimums"
+			 		 						 			}	
+			 		 						 			]
+			 		 						 	},
+			 		 						 	 BooleanFunction  bf65 : {
+			 		 						 	 	functionSpec : "commonFunctions.commonFunctionSpecModule.equals"
+			 		 						 	parameters : [
+			 		 						 		SpeculativeCubeColumnParameter : {
+			 		 						 			column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection"
+			 		 						 			cube : "CSRNonSecCurvatureCreateCorrelatedPairsCubes.freeBirdToolsCubeModule.sumOfProductOfCSRNonSecCurvatureCVRkCorrelatedCombinationsByBucket"
+			 		 						 			},
+			 		 						 		SpeculativeCubeColumnParameter : {
+			 		 						 			column : "FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection"
+			 		 						 			cube : "CSRNonSecCurvatureCreateSquaresCubes.freeBirdToolsCubeModule.CSRNonSecCurvatureTotalGroupedSummedMinimums"
+			 		 						 			}	
+			 		 						 			]
+			 		 						 	} ]
+			 		 						 	 }
+			 		 						 	 	
+			 		 						 	 } 
+			 		 						
+			 		 						 ignores : [
+			 		 						 	IgnoreColumn : {
+			 		 						 		columnToIgnore : "FRTBDerivedIdentifiersStaticModel.FRTBDerivedIdentifiersModel.variablesModule.bucketID"
+			 		 						 		cube :"CSRNonSecCurvatureCreateSquaresCubes.freeBirdToolsCubeModule.CSRNonSecCurvatureTotalGroupedSummedMinimums"
+			 		 						 	},
+			 		 						 	IgnoreColumn : {
+			 		 						 		columnToIgnore :"FRTBSourceDimensionsStaticModel.FRTBSourceDimensionsModel.variablesModule.ShockDirection"
+			 		 						 		cube :"CSRNonSecCurvatureCreateSquaresCubes.freeBirdToolsCubeModule.CSRNonSecCurvatureTotalGroupedSummedMinimums"
+			 		 						 	}
+			 		 						 ]
+			 		 						 },
+			 		 					
+			 		 					EnrichmentView CSRNonSecCurvatureCVRFinal : { 
+			 		 						cube : "CSRNonSecCurvatureCreateBucketValueCubes.freeBirdToolsCubeModule.CSRNonSecCurvatureCVRFinal" 
+			 		 						functions : [
+			 		 							BasicColumnFunction CSRNonSecCurvatureCVRFinal_CSRNonSecCurvatureCVRFinal :
+			 		 							{
+			 		 								cube : "CSRNonSecCurvatureCreateBucketValueCubes.freeBirdToolsCubeModule.CSRNonSecCurvatureCVRFinal" 
+			 		 								variable : "CSRNonSecCurvatureMeasuresStaticModel.CSRNonSecCurvatureMeasures.variablesModule.CSRNonSecCurvatureCVRFinal"
+			 		 								basicFunction : BasicFunction bf31  : {
+			 		 									functionSpec : "commonFunctions.commonFunctionSpecModule.plus" 
+			 		 									parameters : [
+			 		 										SpeculativeCubeColumnParameter : {
+			 		 											column : "CSRNonSecCurvatureMeasuresStaticModel.CSRNonSecCurvatureMeasures.variablesModule.CSRNonSecCurvatureTotalGroupedSummedMinimums"
+			 		 											cube : "CSRNonSecCurvatureCreateBucketValueCubes.freeBirdToolsCubeModule.productOfCorrelatedCSRNonSecCurvatureWithSquareOfMinimums"
+			 		 										},
+			 		 										SpeculativeCubeColumnParameter : {
+			 		 											column :"CSRNonSecCurvatureMeasuresStaticModel.CSRNonSecCurvatureMeasures.variablesModule.sumOfproductOfCSRNonSecCurvatureCorrelatedCombinations"
+			 		 											cube : "CSRNonSecCurvatureCreateBucketValueCubes.freeBirdToolsCubeModule.productOfCorrelatedCSRNonSecCurvatureWithSquareOfMinimums"
+			 		 										}
+			 		 									]
+			 		 								}
+			 		 								}
+			 		 						]
+			 		 						ignores : [
+			 		 							IgnoreColumn : {
+			 		 								 columnToIgnore : "CSRNonSecCurvatureMeasuresStaticModel.CSRNonSecCurvatureMeasures.variablesModule.CSRNonSecCurvatureTotalGroupedSummedMinimums"
+			 		 								 cube : "CSRNonSecCurvatureCreateBucketValueCubes.freeBirdToolsCubeModule.productOfCorrelatedCSRNonSecCurvatureWithSquareOfMinimums"
+			 		 							},
+			 		 							IgnoreColumn : {
+			 		 								 columnToIgnore : "CSRNonSecCurvatureMeasuresStaticModel.CSRNonSecCurvatureMeasures.variablesModule.sumOfproductOfCSRNonSecCurvatureCorrelatedCombinations"
+			 		 								 cube : "CSRNonSecCurvatureCreateBucketValueCubes.freeBirdToolsCubeModule.productOfCorrelatedCSRNonSecCurvatureWithSquareOfMinimums"
+			 		 							}
+			 		 							
+			 		 						]
+			 		 						},
+			 		 						EnrichmentView maxOfCSRNonSecCurvatureCVRFinal_maximumOfCSRNonSecCurvatureCVRFinal : {
+			 		 							cube : "CSRNonSecCurvatureCreateBucketValueCubes.freeBirdToolsCubeModule.maxOfCSRNonSecCurvatureCVRFinal"
+			 		 							functions : [ 
+			 		 								BasicColumnFunction max_of_cvr_stuff_maximum_of_cvr_stuff : {
+			 		 									cube : "CSRNonSecCurvatureCreateBucketValueCubes.freeBirdToolsCubeModule.maxOfCSRNonSecCurvatureCVRFinal"
+			 		 									variable : "CSRNonSecCurvatureMeasuresStaticModel.CSRNonSecCurvatureMeasures.variablesModule.maximumOfCSRNonSecCurvatureCVRFinal"
+			 		 									basicFunction : BasicFunction bf32 :
+			 		 									{ 
+			 		 										functionSpec : "commonFunctions.commonFunctionSpecModule.max"
+			 		 										parameters : [
+			 		 											SpeculativeCubeColumnParameter : { 
+			 		 												column :"CSRNonSecCurvatureMeasuresStaticModel.CSRNonSecCurvatureMeasures.variablesModule.CSRNonSecCurvatureCVRFinal"
+			 		 												cube : "CSRNonSecCurvatureCreateBucketValueCubes.freeBirdToolsCubeModule.CSRNonSecCurvatureCVRFinal"
+			 		 											},
+			 		 											ValueParameter : { 
+			 		 												dataType : :Double
+			 		 												value : "0.0"
+			 		 											}
+			 		 										]
+			 		 									}
+			 		 								} 
+			 		 								]
+			 		 								ignores : [ 
+			 		 									IgnoreColumn : {
+			 		 										columnToIgnore : "CSRNonSecCurvatureMeasuresStaticModel.CSRNonSecCurvatureMeasures.variablesModule.CSRNonSecCurvatureCVRFinal"
+			 		 										cube : "CSRNonSecCurvatureCreateBucketValueCubes.freeBirdToolsCubeModule.CSRNonSecCurvatureCVRFinal"
+			 		 									}
+			 		 								]
+			 		 						},
+			 		 						EnrichmentView squareRootOfMaxOfCSRNonSecCurvatureCVRFinal : {
+			 		 							cube : "CSRNonSecCurvatureCreateBucketValueCubes.freeBirdToolsCubeModule.squareRootOfMaxOfCSRNonSecCurvatureCVRFinal"
+			 		 							functions : [
+			 		 								BasicColumnFunction squareRootOfMaxOfCSRNonSecCurvatureCVRFinalr_sqrtOfMaximumOfCSRNonSecCurvatureCVRFinal :
+			 		 								{
+			 		 									cube : "CSRNonSecCurvatureCreateBucketValueCubes.freeBirdToolsCubeModule.squareRootOfMaxOfCSRNonSecCurvatureCVRFinal"
+			 		 									variable :"CSRNonSecCurvatureMeasuresStaticModel.CSRNonSecCurvatureMeasures.variablesModule.sqrtOfMaximumOfCSRNonSecCurvatureCVRFinal"
+			 		 									basicFunction : BasicFunction bf35 :
+			 		 									{ functionSpec : "commonFunctions.commonFunctionSpecModule.sqrt"
+			 		 										parameters : [
+			 		 											SpeculativeCubeColumnParameter : {
+			 		 												column :"CSRNonSecCurvatureMeasuresStaticModel.CSRNonSecCurvatureMeasures.variablesModule.maximumOfCSRNonSecCurvatureCVRFinal"
+			 		 												cube : "CSRNonSecCurvatureCreateBucketValueCubes.freeBirdToolsCubeModule.maxOfCSRNonSecCurvatureCVRFinal"
+			 		 											}
+			 		 										]
+			 		 									}
+			 		 								}
+			 		 							]
+			 		 							ignores : [
+			 		 								IgnoreColumn : {
+			 		 									columnToIgnore :"CSRNonSecCurvatureMeasuresStaticModel.CSRNonSecCurvatureMeasures.variablesModule.maximumOfCSRNonSecCurvatureCVRFinal"
+			 		 									cube : "CSRNonSecCurvatureCreateBucketValueCubes.freeBirdToolsCubeModule.maxOfCSRNonSecCurvatureCVRFinal"
+			 		 								}
+			 		 							]
+			 		 						} 
+			 		 						]
+			 		 						} ] 
+			 		}
+			 		 				
+			 		 						]
+			 		 						}  } 

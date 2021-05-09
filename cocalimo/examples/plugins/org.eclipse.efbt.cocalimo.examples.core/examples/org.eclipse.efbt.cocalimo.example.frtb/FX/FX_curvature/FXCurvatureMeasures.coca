@@ -1,0 +1,201 @@
+ProgramAndCalls : { program :  dtmProgram :  {
+	smcubesStaticModel : SMCubesStaticModel FXCurvatureMeasuresStaticModel : {
+	smCubesModel : SmcubesModel  FXCurvatureMeasures  : {
+		variables :  [ VariableModule variablesModule :  
+				{
+					license : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"
+			variables : [ 
+				VARIABLE FXCurvatureInstrumentValuation : {
+				code : "FXCurvatureInstrumentValuation"
+				description : "FXCurvatureInstrumentValuation"
+				variable_id : "FXCurvatureInstrumentValuation"
+				displayName :  "FXCurvatureInstrumentValuation"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE FXCurvatureUpshockValuationDifference : {
+				code : "FXCurvatureUpshockValuationDifference"
+				description : "FXCurvatureUpshockValuationDifference"
+				variable_id : "FXCurvatureUpshockValuationDifference"
+				displayName :  "FXCurvatureUpshockValuationDifference"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE FXCurvatureDownshockValuationDifference : {
+				code : "FXCurvatureDownshockValuationDifference"
+				description : "FXCurvatureDownshockValuationDifference"
+				variable_id : "FXCurvatureDownshockValuationDifference"
+				displayName :  "FXCurvatureDownshockValuationDifference"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE curvatureValuationDifference : {
+				code : "curvatureValuationDifference"
+				description : "curvatureValuationDifference"
+				variable_id : "curvatureValuationDifference"
+				displayName :  "curvatureValuationDifference"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE FXCurvatureDeltaStrippedShift : {
+				code : "FXCurvatureDeltaStrippedShift"
+				description : "FXCurvatureDeltaStrippedShift"
+				variable_id : "FXCurvatureDeltaStrippedShift"
+				displayName :  "FXCurvatureDeltaStrippedShift"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE FXCurvatureSummedDeltaStrippedShift : {
+				code : "FXCurvatureSummedDeltaStrippedShift"
+				description : "FXCurvatureSummedDeltaStrippedShift"
+				variable_id : "FXCurvatureSummedDeltaStrippedShift"
+				displayName :  "FXCurvatureSummedDeltaStrippedShift"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE FXCurvatureShiftedValuation : {
+				code : "FXCurvatureShiftedValuation"
+				description : "FXCurvatureShiftedValuation"
+				variable_id : "FXCurvatureShiftedValuation"
+				displayName :  "FXCurvatureShiftedValuation"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE FXCurvatureMinimumShiftedTotal : {
+				code : "FXCurvatureMinimumShiftedTotal"
+				description : "FXCurvatureMinimumShiftedTotal"
+				variable_id : "FXCurvatureMinimumShiftedTotal"
+				displayName :  "FXCurvatureMinimumShiftedTotal"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE FXCurvatureUpshiftDeltaStrippedValuation : {
+				code : "FXCurvatureUpshiftDeltaStrippedValuation"
+				description : "FXCurvatureUpshiftDeltaStrippedValuation"
+				variable_id : "FXCurvatureUpshiftDeltaStrippedValuation"
+				displayName :  "FXCurvatureUpshiftDeltaStrippedValuation"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE FXCurvatureDownshiftDeltaStrippedValuation : {
+				code : "FXCurvatureDownshiftDeltaStrippedValuation"
+				description : "FXCurvatureDownshiftDeltaStrippedValuation"
+				variable_id : "FXCurvatureDownshiftDeltaStrippedValuation"
+				displayName :  "FXCurvatureDownshiftDeltaStrippedValuation"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE FXCurvatureFlooredMinimumShiftedTotalSquared : {
+				code : "FXCurvatureFlooredMinimumShiftedTotalSquared"
+				description : "FXCurvatureFlooredMinimumShiftedTotalSquared"
+				variable_id : "FXCurvatureFlooredMinimumShiftedTotalSquared"
+				displayName :  "FXCurvatureFlooredMinimumShiftedTotalSquared"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE FXCurvatureCVRk : {
+				code : "FXCurvatureCVRk"
+				description : "FXCurvatureCVRk"
+				variable_id : "FXCurvatureCVRk"
+				displayName :  "FXCurvatureCVRk"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE FXCurvatureCVRl : {
+				code : "FXCurvatureCVRl"
+				description : "FXCurvatureCVRl"
+				variable_id : "FXCurvatureCVRl"
+				displayName :  "FXCurvatureCVRl"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE FXCurvatureCVRCorrelationFactor : {
+				code : "FXCurvatureCVRCorrelationFactor"
+				description : "FXCurvatureCVRCorrelationFactor"
+				variable_id : "FXCurvatureCVRCorrelationFactor"
+				displayName :  "FXCurvatureCVRCorrelationFactor"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE FXCurvatureCVRCorrelatedProduct : {
+				code : "FXCurvatureCVRCorrelatedProduct"
+				description : "FXCurvatureCVRCorrelatedProduct"
+				variable_id : "FXCurvatureCVRCorrelatedProduct"
+				displayName :  "FXCurvatureCVRCorrelatedProduct"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE sumOfproductOfFXCurvatureCorrelatedCombinations : {
+				code : "sumOfproductOfFXCurvatureCorrelatedCombinations"
+				description : "sumOfproductOfFXCurvatureCorrelatedCombinations"
+				variable_id : "sumOfproductOfFXCurvatureCorrelatedCombinations"
+				displayName :  "sumOfproductOfFXCurvatureCorrelatedCombinations"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE FXCurvatureTotalGroupedSummedMinimums : {
+				code : "FXCurvatureTotalGroupedSummedMinimums"
+				description : "FXCurvatureTotalGroupedSummedMinimums"
+				variable_id : "FXCurvatureTotalGroupedSummedMinimums"
+				displayName :  "FXCurvatureTotalGroupedSummedMinimums"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			
+			VARIABLE FXCurvatureRiskExposureK : {
+				code : "FXCurvatureRiskExposureK"
+				description : "FXCurvatureRiskExposureK"
+				variable_id : "FXCurvatureRiskExposureK"
+				displayName :  "FXCurvatureRiskExposureK"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE sqrtOfMaximumOfFXCurvatureCVRFinal : {
+				code : "sqrtOfMaximumOfFXCurvatureCVRFinal"
+				description : "sqrtOfMaximumOfFXCurvatureCVRFinal"
+				variable_id : "sqrtOfMaximumOfFXCurvatureCVRFinal"
+				displayName :  "sqrtOfMaximumOfFXCurvatureCVRFinal"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE maximumOfFXCurvatureCVRFinal : {
+				code : "maximumOfFXCurvatureCVRFinal"
+				description : "maximumOfFXCurvatureCVRFinal"
+				variable_id : "maximumOfFXCurvatureCVRFinal"
+				displayName :  "maximumOfFXCurvatureCVRFinal
+"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE FXCurvatureCVRFinal : {
+				code : "FXCurvatureCVRFinal"
+				description : "FXCurvatureCVRFinal"
+				variable_id : "FXCurvatureCVRFinal"
+				displayName :  "FXCurvatureCVRFinal"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE summedFXCurvatureDeltaStrippedShiftUp : {
+				code : "summedFXCurvatureDeltaStrippedShiftUp"
+				description : "summedFXCurvatureDeltaStrippedShiftUp"
+				variable_id : "summedFXCurvatureDeltaStrippedShiftUp"
+				displayName :  "summedFXCurvatureDeltaStrippedShiftUp"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE summedFXCurvatureDeltaStrippedShiftDown : {
+				code : "summedFXCurvatureDeltaStrippedShiftDown"
+				description : "summedFXCurvatureDeltaStrippedShiftDown"
+				variable_id : "summedFXCurvatureDeltaStrippedShiftDown"
+				displayName :  "summedFXCurvatureDeltaStrippedShiftDown"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE summedFXCurvatureDeltaStrippedShiftUp2 : {
+				code : "summedFXCurvatureDeltaStrippedShiftUp2"
+				description : "summedFXCurvatureDeltaStrippedShiftUp2"
+				variable_id : "summedFXCurvatureDeltaStrippedShiftUp2"
+				displayName :  "summedFXCurvatureDeltaStrippedShiftUp2"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE summedFXCurvatureDeltaStrippedShiftDown2 : {
+				code : "summedDeltaStrippedShiftDown2"
+				description : "summedDeltaStrippedShiftDown2"
+				variable_id : "summedDeltaStrippedShiftDown2"
+				displayName :  "summedDeltaStrippedShiftDown2"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE doubleOfMaxOfFXCurvatureCVRFinal : {
+				code : "doubleOfMaxOfFXCurvatureCVRFinal"
+				description : "doubleOfMaxOfFXCurvatureCVRFinal"
+				variable_id : "doubleOfMaxOfFXCurvatureCVRFinal"
+				displayName :  "doubleOfMaxOfFXCurvatureCVRFinal"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			},
+			VARIABLE curvatureRiskWeight : {
+				code : "curvatureRiskWeight"
+				description : "curvatureRiskWeight"
+				variable_id : "curvatureRiskWeight"
+				displayName :  "curvatureRiskWeight"
+				domain_id : "FRTBSourceDomainsStaticModel.FRTBSourceDomainsModel.domainsModule.Numbers"
+			}
+			
+			 ] } ] } } } }
+				

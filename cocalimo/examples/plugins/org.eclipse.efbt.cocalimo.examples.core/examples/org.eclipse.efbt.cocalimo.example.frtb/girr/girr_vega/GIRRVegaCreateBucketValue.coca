@@ -1,0 +1,22 @@
+ProgramAndCalls : { program : dtmProgram : { executableLogic :[ dtmExecutableLogic GIRRVegaAggregationAndWeightingCubes: 
+	{ cubesModule : FreeBirdToolsCubeModule freeBirdToolsCubeModule : 
+		{ license : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;" 
+			cubes : [ 	
+
+				DerivedCube GIRRVegaSensitivitiesAndRiskFactors : { sourceCubes : ["NetVegaSensitivities.freeBirdToolsCubeModule.nettedVegaSensitivities", "FRTBSourceCubes.freeBirdToolsCubeModule.GIRRRiskFactor"] },
+				DerivedCube GIRRVegaSensitivitiesAndRiskFactorsWithWeight : { sourceCubes : [GIRRVegaSensitivitiesAndRiskFactors] },
+				DerivedCube weightedGIRRVegaSensitivitiesAndRiskFactors : { sourceCubes : [GIRRVegaSensitivitiesAndRiskFactorsWithWeight] },
+				DerivedCube copyOfWeightedGIRRVegaSensitivitiesAndRiskFactors : { sourceCubes : [weightedGIRRVegaSensitivitiesAndRiskFactors] },
+				DerivedCube GIRRVegaSensitivityCombinations : { sourceCubes : [weightedGIRRVegaSensitivitiesAndRiskFactors, copyOfWeightedGIRRVegaSensitivitiesAndRiskFactors] },
+				DerivedCube GIRRVegaSensitivityCombinationsWithCorrelationFactor : { sourceCubes : [GIRRVegaSensitivityCombinations] },
+				DerivedCube GIRRVegaSensitivitiesCorrelated : { sourceCubes : [GIRRVegaSensitivityCombinationsWithCorrelationFactor] },
+				DerivedCube GIRRVegaSensitivitiesCorrelatedAndAggregated : { sourceCubes : [GIRRVegaSensitivitiesCorrelated] },
+				DerivedCube GIRRVegaSensitivityKBPerBucket : { sourceCubes : [GIRRVegaSensitivitiesCorrelatedAndAggregated] },
+				DerivedCube totalGIRRVegaSensitivityPerBucket : { sourceCubes : [weightedGIRRVegaSensitivitiesAndRiskFactors] },
+				DerivedCube copyOfTotalGIRRVegaSensitivityPerBucket : { sourceCubes :  [totalGIRRVegaSensitivityPerBucket ] },
+				DerivedCube GIRRVegaSensitivityPerBucketCombinations : { sourceCubes : [totalGIRRVegaSensitivityPerBucket,copyOfTotalGIRRVegaSensitivityPerBucket] },
+				DerivedCube GIRRVegaSensitivityPerBucketCombinationsWithCorrelationFactor : { sourceCubes : [GIRRVegaSensitivityPerBucketCombinations ]} ,
+				DerivedCube GIRRVegaSensitivityPerBucketCorrelated : { sourceCubes : [GIRRVegaSensitivityPerBucketCombinationsWithCorrelationFactor] },
+				DerivedCube totalGIRRVegaSensitivityPerBucketCorrelated : { sourceCubes : [GIRRVegaSensitivityPerBucketCorrelated] }
+
+				 	 ] } }] } } 

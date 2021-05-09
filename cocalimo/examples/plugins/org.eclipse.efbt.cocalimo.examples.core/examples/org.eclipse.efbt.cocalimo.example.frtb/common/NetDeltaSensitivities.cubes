@@ -1,0 +1,26 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/cubes#//FreeBirdToolsCubeModule",
+  "name" : "NetDeltaSensitivities",
+  "cubes" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "deltaSensitivitiesWithRiskFactorLongname",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+      "$ref" : "FRTBSourceCubes.cubes#deltaSensitivities"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "summedDeltaSensitivitiesPerPosition",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "deltaSensitivitiesWithRiskFactorLongname"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "nettedDeltaSensitivities",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "summedDeltaSensitivitiesPerPosition"
+    } ]
+  } ]
+}

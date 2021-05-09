@@ -1,0 +1,89 @@
+ProgramAndCalls : { program : dtmProgram :  { executableLogic : [ dtmExecutableLogic FRTBFunctions: { functionSpecModule : FunctionSpecModule CSRSecCTPFunctionSpecModule : {  
+	license : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"
+	functionSpecs : 
+	[ 
+		BasicFunctionSpec getCSRSecCTPCVRCorrelationFactor : { 
+		functionalName : "CustomFunctions_getCorrelationFactor"
+		relationalName : "getCorrelationFactor"	
+		parameterSpecs : [ 
+			ParamaterSpec param1 ,
+			ParamaterSpec param2
+		]	
+	},
+	BasicFunctionSpec getCSRSecCTPDeltaCorrelationFactor : { 
+		functionalName : "CustomFunctions_getDeltaCorrelationFactor"
+		relationalName : "getDeltaCorrelationFactor"	
+		parameterSpecs : [ 
+			ParamaterSpec param1 ,
+			ParamaterSpec param2
+		]	
+	},
+	BasicFunctionSpec getCSRSecCTPVegaRiskFactorRiskWeight : { 
+		functionalName : "CustomFunctions_getCSRSecCTPVegaRiskFactorRiskWeight"
+		relationalName : "getCSRSecCTPVegaRiskFactorRiskWeight"	
+		parameterSpecs : [ 
+			ParamaterSpec param1 ,
+			ParamaterSpec param2
+		]	
+	},
+	BasicFunctionSpec getCSRSecCTPVegaCorrelationFactor : { 
+		functionalName : "CustomFunctions_getCSRSecCTPVegaCorrelationFactor"
+		relationalName : "getCSRSecCTPVegaCorrelationFactor"	
+		parameterSpecs : [ 
+			ParamaterSpec param1 ,
+			ParamaterSpec param2
+		]	
+	},
+	BasicFunctionSpec getCSRSecCTPBucketCorrelationFactor : { 
+		functionalName : "CustomFunctions_getDeltaCorrelationFactor"
+		relationalName : "getDeltaCorrelationFactor"	
+		parameterSpecs : [ 
+			ParamaterSpec param1 ,
+			ParamaterSpec param2
+		]	
+	},
+	BasicFunctionSpec CSRSecCTPDeltaStrip :
+	{
+		functionalName : "CustomFunctions_deltaStrip"
+		relationalName : CSRSecCTPDeltaStrip
+		parameterSpecs : [
+			ParamaterSpec valuationDifference ,
+			ParamaterSpec summedCSRSecCTP_delta ,
+			ParamaterSpec ShockDirection
+		]
+	},
+	BasicFunctionSpec getCSRSecCTPDeltaRiskFactorRiskWeight :
+	{
+		functionalName : "CustomFunctions_getCSRSecCTPTenorRiskWeight"
+		relationalName : getCSRSecCTPTenorRiskWeight
+		parameterSpecs : [
+			ParamaterSpec tenor
+		]
+	},
+	BasicFunctionSpec getCSRSecCTPDeltaBucketName :
+	{
+		functionalName : "CustomFunctions_getCSRSecCTPDeltaBucketName"
+		relationalName : getCSRSecCTPDeltaBucketName
+		parameterSpecs : [
+			ParamaterSpec MainCurrency
+		]
+	},
+	BasicFunctionSpec getCSRSecCTPVegaBucketName :
+	{
+		functionalName : "CustomFunctions_getCSRSecCTPVegaBucketName"
+		relationalName : getCSRSecCTPDeltaBucketName
+		parameterSpecs : [
+			ParamaterSpec MainCurrency
+		]
+	},
+	BasicFunctionSpec getCSRSecCTPCurvatureBucketName :
+	{
+		functionalName : "CustomFunctions_getCSRSecCTPCurvatureBucketName"
+		relationalName : getCSRSecCTPDeltaBucketName
+		parameterSpecs : [
+			ParamaterSpec MainCurrency
+		]
+	}
+	
+			
+	] } } ] } } 
