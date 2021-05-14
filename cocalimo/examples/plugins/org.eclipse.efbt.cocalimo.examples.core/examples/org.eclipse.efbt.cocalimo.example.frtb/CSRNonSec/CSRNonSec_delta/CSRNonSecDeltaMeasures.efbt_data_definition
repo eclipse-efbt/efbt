@@ -1,0 +1,184 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/efbt_data_definition#//VariableModule",
+  "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
+  "name" : "CSRNonSecDeltaMeasures",
+  "version" : "1.0",
+  "variables" : [ {
+    "code" : "CSRNonSecDeltaSensitivityk",
+    "description" : "CSRNonSecDeltaSensitivityk",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CSRNonSecDeltaSensitivityk",
+    "name" : "CSRNonSecDeltaSensitivityk",
+    "displayName" : "CSRNonSecDeltaSensitivityk"
+  }, {
+    "code" : "CSRNonSecDeltaCorrelationFactor",
+    "description" : "CSRNonSecDeltaCorrelationFactor",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CSRNonSecDeltaCorrelationFactor",
+    "name" : "CSRNonSecDeltaCorrelationFactor",
+    "displayName" : "CSRNonSecDeltaCorrelationFactor"
+  }, {
+    "code" : "CSRNonSecDeltaSensitivityl",
+    "description" : "CSRNonSecDeltaSensitivityl",
+    "primary_concept" : "",
+    "variable_id" : "CSRNonSecDeltaSensitivityl",
+    "name" : "CSRNonSecDeltaSensitivityl"
+  }, {
+    "code" : "summedCSRNonSecDelta",
+    "description" : "summedCSRNonSecDelta",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "summedCSRNonSecDelta",
+    "name" : "summedCSRNonSecDelta",
+    "displayName" : "summedCSRNonSecDelta"
+  }, {
+    "code" : "tenork",
+    "description" : "tenork",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#ratingsGrade"
+    },
+    "variable_id" : "tenork",
+    "name" : "tenork",
+    "displayName" : "tenork"
+  }, {
+    "code" : "tenorl",
+    "description" : "tenorl",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "tenorl",
+    "name" : "tenorl",
+    "displayName" : "tenorl"
+  }, {
+    "code" : "mainCurrencyl",
+    "description" : "mainCurrencyl",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Currency"
+    },
+    "variable_id" : "mainCurrencyl",
+    "name" : "mainCurrencyl",
+    "displayName" : "mainCurrencyl"
+  }, {
+    "code" : "mainCurrencyk",
+    "description" : "mainCurrencyk",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Currency"
+    },
+    "variable_id" : "mainCurrencyk",
+    "name" : "mainCurrencyk",
+    "displayName" : "mainCurrencyk"
+  }, {
+    "code" : "CSRNonSecDeltaRiskWeight",
+    "description" : "CSRNonSecDeltaRiskWeight",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CSRNonSecDeltaRiskWeight",
+    "name" : "CSRNonSecDeltaRiskWeight",
+    "displayName" : "CSRNonSecDeltaRiskWeight"
+  }, {
+    "code" : "weightedCSRNonSecDeltaSensitivity",
+    "description" : "weightedCSRNonSecDeltaSensitivity",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "weightedCSRNonSecDeltaSensitivity",
+    "name" : "weightedCSRNonSecDeltaSensitivity",
+    "displayName" : "weightedCSRNonSecDeltaSensitivity"
+  }, {
+    "code" : "CSRNonSecDeltaKBInput",
+    "description" : "CSRNonSecDeltaKBInput",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CSRNonSecDeltaKBInput",
+    "name" : "CSRNonSecDeltaKBInput",
+    "displayName" : "CSRNonSecDeltaKBInput"
+  }, {
+    "code" : "CSRNonSecDeltaKB",
+    "description" : "CSRNonSecDeltaKB",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "primary_concept" : "CSRNonSecDeltaKB",
+    "variable_id" : "CSRNonSecDeltaKB",
+    "name" : "CSRNonSecDeltaKB",
+    "displayName" : "CSRNonSecDeltaKB"
+  }, {
+    "code" : "CSRNonSecDeltaKBInputPerBucket",
+    "description" : "CSRNonSecDeltaKBInputPerBucket",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CSRNonSecDeltaKBInputPerBucket",
+    "name" : "CSRNonSecDeltaKBInputPerBucket",
+    "displayName" : "CSRNonSecDeltaKBInputPerBucket"
+  }, {
+    "code" : "CSRNonSecDeltaSensitivityPerBucketCorrelated",
+    "description" : "CSRNonSecDeltaSensitivityPerBucketCorrelated",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CSRNonSecDeltaSensitivityPerBucketCorrelated",
+    "name" : "CSRNonSecDeltaSensitivityPerBucketCorrelated",
+    "displayName" : "CSRNonSecDeltaSensitivityPerBucketCorrelated"
+  }, {
+    "code" : "totalCSRNonSecDeltaSensitivityPerBucket",
+    "description" : "totalCSRNonSecDeltaSensitivityPerBucket",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "totalCSRNonSecDeltaSensitivityPerBucket",
+    "name" : "totalCSRNonSecDeltaSensitivityPerBucket",
+    "displayName" : "totalCSRNonSecDeltaSensitivityPerBucket"
+  }, {
+    "code" : "CSRNonSecDeltaBucketCorrelationFactor",
+    "description" : "CSRNonSecDeltaBucketCorrelationFactor",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CSRNonSecDeltaBucketCorrelationFactor",
+    "name" : "CSRNonSecDeltaBucketCorrelationFactor",
+    "displayName" : "CSRNonSecDeltaBucketCorrelationFactor"
+  }, {
+    "code" : "totalCSRNonSecDeltaSensitivityPerBucketk",
+    "description" : "totalCSRNonSecDeltaSensitivityPerBucketk",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "totalCSRNonSecDeltaSensitivityPerBucketk",
+    "name" : "totalCSRNonSecDeltaSensitivityPerBucketk",
+    "displayName" : "totalCSRNonSecDeltaSensitivityPerBucketk"
+  }, {
+    "code" : "totalCSRNonSecDeltaSensitivityPerBucketl",
+    "description" : "totalCSRNonSecDeltaSensitivityPerBucketl",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "totalCSRNonSecDeltaSensitivityPerBucketl",
+    "name" : "totalCSRNonSecDeltaSensitivityPerBucketl",
+    "displayName" : "totalCSRNonSecDeltaSensitivityPerBucketl"
+  } ]
+}

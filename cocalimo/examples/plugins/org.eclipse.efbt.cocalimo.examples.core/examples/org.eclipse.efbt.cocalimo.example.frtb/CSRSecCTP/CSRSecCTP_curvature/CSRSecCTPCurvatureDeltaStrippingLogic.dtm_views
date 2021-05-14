@@ -1,0 +1,201 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+  "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
+  "name" : "CSRSecCTPCurvatureDeltaStrippingLogic",
+  "version" : "1.0",
+  "DTMViews" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//JoinView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "CSRSecCTPCurvatureDeltaStripping.cubes#CSRSecCTPCurvatureValuationDifferencesLinkedWithDeltas"
+    },
+    "name" : "CSRSecCTPCurvatureValuationDifferencesLinkedWithDeltas",
+    "whereClause" : {
+      "function" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunction",
+          "parameters" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunction",
+            "parameters" : [ {
+              "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+              "column" : {
+                "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+                "$ref" : "../../sdd/FRTBSourceIdentifiers.efbt_data_definition#riskFactorID"
+              },
+              "cube" : {
+                "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+                "$ref" : "../../common/NetDeltaSensitivities.cubes#summedDeltaSensitivitiesPerPosition"
+              }
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+              "column" : {
+                "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+                "$ref" : "../../sdd/FRTBSourceIdentifiers.efbt_data_definition#riskFactorID"
+              },
+              "cube" : {
+                "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+                "$ref" : "CSRSecCTPCurvatureAssignBucket.cubes#CSRSecCTPCurvatureValuationDifferencesWithBucket"
+              }
+            } ],
+            "name" : "equals",
+            "functionSpec" : {
+              "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+              "$ref" : "../../common/commonFunctionsModule.functions#equals"
+            }
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunction",
+            "parameters" : [ {
+              "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+              "column" : {
+                "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+                "$ref" : "../../sdd/FRTBSourceIdentifiers.efbt_data_definition#positionID"
+              },
+              "cube" : {
+                "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+                "$ref" : "../../common/NetDeltaSensitivities.cubes#summedDeltaSensitivitiesPerPosition"
+              }
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+              "column" : {
+                "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+                "$ref" : "../../sdd/FRTBSourceIdentifiers.efbt_data_definition#positionID"
+              },
+              "cube" : {
+                "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+                "$ref" : "CSRSecCTPCurvatureAssignBucket.cubes#CSRSecCTPCurvatureValuationDifferencesWithBucket"
+              }
+            } ],
+            "name" : "equals_2",
+            "functionSpec" : {
+              "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+              "$ref" : "../../common/commonFunctionsModule.functions#equals"
+            }
+          } ],
+          "name" : "AND_2",
+          "functionSpec" : {
+            "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+            "$ref" : "../../common/commonFunctionsModule.functions#AND"
+          }
+        } ],
+        "name" : "AND",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+          "$ref" : "../../common/commonFunctionsModule.functions#AND"
+        }
+      }
+    },
+    "ignores" : [ {
+      "columnToIgnore" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../../sdd/FRTBSourceIdentifiers.efbt_data_definition#riskFactorID"
+      },
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "../../common/NetDeltaSensitivities.cubes#summedDeltaSensitivitiesPerPosition"
+      }
+    }, {
+      "columnToIgnore" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../../sdd/FRTBSourceIdentifiers.efbt_data_definition#positionID"
+      },
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "CSRSecCTPCurvatureAssignBucket.cubes#CSRSecCTPCurvatureValuationDifferencesWithBucket"
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//EnrichmentView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "CSRSecCTPCurvatureDeltaStripping.cubes#CSRSecCTPCurvatureDeltaStrippedShifts"
+    },
+    "name" : "CSRSecCTPCurvatureDeltaStrippedShifts",
+    "functions" : [ {
+      "name" : "CSRSecCTPCurvatureDeltaStrippedShifts_CSRSecCTPCurvatureDeltaStrippedShift",
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "CSRSecCTPCurvatureDeltaStripping.cubes#CSRSecCTPCurvatureDeltaStrippedShifts"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "CSRSecCTPCurvatureMeasures.efbt_data_definition#CSRSecCTPCurvatureDeltaStrippedShift"
+      },
+      "basicFunction" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "CSRSecCTPCurvatureMeasures.efbt_data_definition#curvatureValuationDifference"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "CSRSecCTPCurvatureDeltaStripping.cubes#CSRSecCTPCurvatureValuationDifferencesLinkedWithDeltas"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "../CSRSecCTP_delta/CSRSecCTPDeltaMeasures.efbt_data_definition#summedCSRSecCTPDelta"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "CSRSecCTPCurvatureDeltaStripping.cubes#CSRSecCTPCurvatureValuationDifferencesLinkedWithDeltas"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "../../sdd/FRTBSourceDimensions.efbt_data_definition#ShockDirection"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "CSRSecCTPCurvatureDeltaStripping.cubes#CSRSecCTPCurvatureValuationDifferencesLinkedWithDeltas"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "CSRSecCTPCurvatureMeasures.efbt_data_definition#curvatureRiskWeight"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "CSRSecCTPCurvatureDeltaStripping.cubes#CSRSecCTPCurvatureValuationDifferencesLinkedWithDeltas"
+          }
+        } ],
+        "name" : "CSRSecCTPDeltaStrip",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+          "$ref" : "../CSRSecCTP_common/CSRSecCTPFunctions.functions#CSRSecCTPDeltaStrip"
+        }
+      }
+    } ],
+    "ignores" : [ {
+      "columnToIgnore" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "CSRSecCTPCurvatureMeasures.efbt_data_definition#curvatureValuationDifference"
+      },
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "CSRSecCTPCurvatureDeltaStripping.cubes#CSRSecCTPCurvatureValuationDifferencesLinkedWithDeltas"
+      }
+    }, {
+      "columnToIgnore" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "CSRSecCTPCurvatureMeasures.efbt_data_definition#curvatureRiskWeight"
+      },
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "CSRSecCTPCurvatureDeltaStripping.cubes#CSRSecCTPCurvatureValuationDifferencesLinkedWithDeltas"
+      }
+    }, {
+      "columnToIgnore" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../CSRSecCTP_delta/CSRSecCTPDeltaMeasures.efbt_data_definition#summedCSRSecCTPDelta"
+      },
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "CSRSecCTPCurvatureDeltaStripping.cubes#CSRSecCTPCurvatureValuationDifferencesLinkedWithDeltas"
+      }
+    } ]
+  } ]
+}

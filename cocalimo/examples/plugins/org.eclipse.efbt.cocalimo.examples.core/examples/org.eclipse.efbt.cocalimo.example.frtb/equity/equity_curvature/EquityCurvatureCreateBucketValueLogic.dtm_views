@@ -1,0 +1,260 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+  "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
+  "name" : "EquityCurvatureCreateBucketValueLogic",
+  "version" : "1.0",
+  "DTMViews" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//JoinView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "EquityCurvatureCreateBucketValue.cubes#productOfCorrelatedEquityCurvatureWithSquareOfMinimums"
+    },
+    "name" : "productOfCorrelatedEquityCurvatureWithSquareOfMinimums",
+    "whereClause" : {
+      "function" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BooleanFunction",
+          "parameters" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+            "column" : {
+              "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+              "$ref" : "../../sdd/FRTBDerivedIdentifiers.efbt_data_definition#bucketID"
+            },
+            "cube" : {
+              "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+              "$ref" : "EquityCurvatureCreateCorrelatedPairs.cubes#sumOfProductOfEquityCurvatureCVRkCorrelatedCombinationsByBucket"
+            }
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+            "column" : {
+              "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+              "$ref" : "../../sdd/FRTBDerivedIdentifiers.efbt_data_definition#bucketID"
+            },
+            "cube" : {
+              "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+              "$ref" : "EquityCurvatureCreateSquares.cubes#EquityCurvatureTotalGroupedSummedMinimums"
+            }
+          } ],
+          "name" : "equlas",
+          "functionSpec" : {
+            "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+            "$ref" : "../../common/commonFunctionsModule.functions#equals"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunction",
+          "parameters" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+            "column" : {
+              "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+              "$ref" : "../../sdd/FRTBSourceDimensions.efbt_data_definition#ShockDirection"
+            },
+            "cube" : {
+              "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+              "$ref" : "EquityCurvatureCreateCorrelatedPairs.cubes#sumOfProductOfEquityCurvatureCVRkCorrelatedCombinationsByBucket"
+            }
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+            "column" : {
+              "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+              "$ref" : "../../sdd/FRTBSourceDimensions.efbt_data_definition#ShockDirection"
+            },
+            "cube" : {
+              "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+              "$ref" : "EquityCurvatureCreateSquares.cubes#EquityCurvatureTotalGroupedSummedMinimums"
+            }
+          } ],
+          "name" : "equals_2",
+          "functionSpec" : {
+            "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+            "$ref" : "../../common/commonFunctionsModule.functions#equals"
+          }
+        } ],
+        "name" : "AND",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+          "$ref" : "../../common/commonFunctionsModule.functions#AND"
+        }
+      }
+    },
+    "ignores" : [ {
+      "columnToIgnore" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../../sdd/FRTBDerivedIdentifiers.efbt_data_definition#bucketID"
+      },
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "EquityCurvatureCreateSquares.cubes#EquityCurvatureTotalGroupedSummedMinimums"
+      }
+    }, {
+      "columnToIgnore" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../../sdd/FRTBSourceDimensions.efbt_data_definition#ShockDirection"
+      },
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "EquityCurvatureCreateSquares.cubes#EquityCurvatureTotalGroupedSummedMinimums"
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//EnrichmentView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "EquityCurvatureCreateBucketValue.cubes#EquityCurvatureCVRFinal"
+    },
+    "name" : "EquityCurvatureCVRFinal",
+    "functions" : [ {
+      "name" : "EquityCurvatureCVRFinal_EquityCurvatureCVRFinal",
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "EquityCurvatureCreateBucketValue.cubes#EquityCurvatureCVRFinal"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "EquityCurvatureMeasures.efbt_data_definition#EquityCurvatureCVRFinal"
+      },
+      "basicFunction" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "EquityCurvatureMeasures.efbt_data_definition#EquityCurvatureTotalGroupedSummedMinimums"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "EquityCurvatureCreateBucketValue.cubes#productOfCorrelatedEquityCurvatureWithSquareOfMinimums"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "EquityCurvatureMeasures.efbt_data_definition#sumOfproductOfEquityCurvatureCorrelatedCombinations"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "EquityCurvatureCreateBucketValue.cubes#productOfCorrelatedEquityCurvatureWithSquareOfMinimums"
+          }
+        } ],
+        "name" : "plus",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+          "$ref" : "../../common/commonFunctionsModule.functions#plus"
+        }
+      }
+    } ],
+    "ignores" : [ {
+      "columnToIgnore" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "EquityCurvatureMeasures.efbt_data_definition#EquityCurvatureTotalGroupedSummedMinimums"
+      },
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "EquityCurvatureCreateBucketValue.cubes#productOfCorrelatedEquityCurvatureWithSquareOfMinimums"
+      }
+    }, {
+      "columnToIgnore" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "EquityCurvatureMeasures.efbt_data_definition#sumOfproductOfEquityCurvatureCorrelatedCombinations"
+      },
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "EquityCurvatureCreateBucketValue.cubes#productOfCorrelatedEquityCurvatureWithSquareOfMinimums"
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//EnrichmentView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "EquityCurvatureCreateBucketValue.cubes#maxOfEquityCurvatureCVRFinal"
+    },
+    "name" : "maxOfEquityCurvatureCVRFinal",
+    "functions" : [ {
+      "name" : "maxOfEquityCurvatureCVRFinal_maximumOfEquityCurvatureCVRFinal",
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "EquityCurvatureCreateBucketValue.cubes#maxOfEquityCurvatureCVRFinal"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "EquityCurvatureMeasures.efbt_data_definition#maximumOfEquityCurvatureCVRFinal"
+      },
+      "basicFunction" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "EquityCurvatureMeasures.efbt_data_definition#EquityCurvatureCVRFinal"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "EquityCurvatureCreateBucketValue.cubes#EquityCurvatureCVRFinal"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//ValueParameter",
+          "dataType" : "Double",
+          "value" : "0.0"
+        } ],
+        "name" : "max",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+          "$ref" : "../../common/commonFunctionsModule.functions#max"
+        }
+      }
+    } ],
+    "ignores" : [ {
+      "columnToIgnore" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "EquityCurvatureMeasures.efbt_data_definition#EquityCurvatureCVRFinal"
+      },
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "EquityCurvatureCreateBucketValue.cubes#EquityCurvatureCVRFinal"
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//EnrichmentView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "EquityCurvatureCreateBucketValue.cubes#squareRootOfMaxOfEquityCurvatureCVRFinal"
+    },
+    "name" : "squareRootOfMaxOfEquityCurvatureCVRFinal",
+    "functions" : [ {
+      "name" : "squareRootOfMaxOfEquityCurvatureCVRFinalr_sqrtOfMaximumOfEquityCurvatureCVRFinal",
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "EquityCurvatureCreateBucketValue.cubes#squareRootOfMaxOfEquityCurvatureCVRFinal"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "EquityCurvatureMeasures.efbt_data_definition#sqrtOfMaximumOfEquityCurvatureCVRFinal"
+      },
+      "basicFunction" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "EquityCurvatureMeasures.efbt_data_definition#maximumOfEquityCurvatureCVRFinal"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "EquityCurvatureCreateBucketValue.cubes#maxOfEquityCurvatureCVRFinal"
+          }
+        } ],
+        "name" : "sqrt",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+          "$ref" : "../../common/commonFunctionsModule.functions#sqrt"
+        }
+      }
+    } ],
+    "ignores" : [ {
+      "columnToIgnore" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "EquityCurvatureMeasures.efbt_data_definition#maximumOfEquityCurvatureCVRFinal"
+      },
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "EquityCurvatureCreateBucketValue.cubes#maxOfEquityCurvatureCVRFinal"
+      }
+    } ]
+  } ]
+}

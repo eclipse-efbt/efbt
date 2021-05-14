@@ -1,0 +1,101 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/functions#//FunctionSpecModule",
+  "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
+  "name" : "CommodityFunctions",
+  "version" : "1.0",
+  "functionSpecs" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "param1"
+    }, {
+      "name" : "param2"
+    } ],
+    "functionalName" : "CustomFunctions_getCommodityCVRCorrelationFactor",
+    "name" : "getCommodityCVRCorrelationFactor",
+    "relationalName" : "getCommodityCVRCorrelationFactor"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "param1"
+    }, {
+      "name" : "param2"
+    } ],
+    "functionalName" : "CustomFunctions_getCommodityDeltaCorrelationFactor",
+    "name" : "getCommodityDeltaCorrelationFactor",
+    "relationalName" : "getCommodityDeltaCorrelationFactor"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "param1"
+    }, {
+      "name" : "param2"
+    } ],
+    "functionalName" : "CustomFunctions_getCommodityVegaRiskFactorRiskWeight",
+    "name" : "getCommodityVegaRiskFactorRiskWeight",
+    "relationalName" : "getCommodityVegaRiskFactorRiskWeight"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "param1"
+    }, {
+      "name" : "param2"
+    } ],
+    "functionalName" : "CustomFunctions_getCommodityVegaCorrelationFactor",
+    "name" : "getCommodityVegaCorrelationFactor",
+    "relationalName" : "getCommodityVegaCorrelationFactor"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "param1"
+    }, {
+      "name" : "param2"
+    } ],
+    "functionalName" : "CustomFunctions_getCommodityBucketCorrelationFactor",
+    "name" : "getCommodityBucketCorrelationFactor",
+    "relationalName" : "getCommodityBucketCorrelationFactor"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "valuationDifference"
+    }, {
+      "name" : "summedCommodity_delta"
+    }, {
+      "name" : "ShockDirection"
+    } ],
+    "functionalName" : "CustomFunctions_CommodityDeltaStrip",
+    "name" : "CommodityDeltaStrip",
+    "relationalName" : "CommodityDeltaStrip"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "tenor"
+    } ],
+    "functionalName" : "CustomFunctions_getCommodityDeltaRiskFactorRiskWeight",
+    "name" : "getCommodityDeltaRiskFactorRiskWeight",
+    "relationalName" : "getCommodityDeltaRiskFactorRiskWeight"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "mainCurrency"
+    } ],
+    "functionalName" : "CustomFunctions_getCommodityDeltaBucketName",
+    "name" : "getCommodityDeltaBucketName",
+    "relationalName" : "getCommodityDeltaBucketName"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "mainCurrency"
+    } ],
+    "functionalName" : "CustomFunctions_getCommodityVegaBucketName",
+    "name" : "getCommodityVegaBucketName",
+    "relationalName" : "getCommodityVegaBucketName"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "mainCurrency"
+    } ],
+    "functionalName" : "CustomFunctions_getCommodityCurvatureBucketName",
+    "name" : "getCommodityCurvatureBucketName",
+    "relationalName" : "getCommodityCurvatureBucketName"
+  } ]
+}

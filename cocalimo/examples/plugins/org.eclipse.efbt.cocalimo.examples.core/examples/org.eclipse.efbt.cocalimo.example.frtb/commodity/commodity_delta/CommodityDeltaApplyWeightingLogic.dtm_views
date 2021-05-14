@@ -1,0 +1,89 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+  "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
+  "name" : "CommodityDeltaApplyWeightingLogic",
+  "version" : "1.0",
+  "DTMViews" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//EnrichmentView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "CommodityDeltaApplyWeighting.cubes#CommodityDeltaSensitivitiesAndRiskFactorsWithWeight"
+    },
+    "name" : "CommodityDeltaSensitivitiesAndRiskFactorsWithWeight",
+    "functions" : [ {
+      "name" : "CommodityDeltaSensitivitiesAndRiskFactorsWithWeight_CommodityDeltaRiskWeight",
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "CommodityDeltaApplyWeighting.cubes#CommodityDeltaSensitivitiesAndRiskFactorsWithWeight"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "CommodityDeltaMeasures.efbt_data_definition#CommodityDeltaRiskWeight"
+      },
+      "basicFunction" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "../../sdd/FRTBSourceMeasures.efbt_data_definition#tenor"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "CommodityDeltaAssignBucket.cubes#CommodityDeltaSensitivitiesAndRiskFactors"
+          }
+        } ],
+        "name" : "getCommodityDeltaRiskWeight",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+          "$ref" : "../commodity_common/CommodityFunctions.functions#getCommodityDeltaRiskFactorRiskWeight"
+        }
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//EnrichmentView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "CommodityDeltaApplyWeighting.cubes#weightedCommodityDeltaSensitivitiesAndRiskFactors"
+    },
+    "name" : "weightedCommodityDeltaSensitivitiesAndRiskFactors",
+    "functions" : [ {
+      "name" : "weightedCommodityDeltaSensitivitiesAndRiskFactors_weightedCommodityDeltaSensitivity",
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "CommodityDeltaApplyWeighting.cubes#weightedCommodityDeltaSensitivitiesAndRiskFactors"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "CommodityDeltaMeasures.efbt_data_definition#weightedCommodityDeltaSensitivity"
+      },
+      "basicFunction" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "../../common/CommonMeasures.efbt_data_definition#nettedDeltaSensitivity"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "CommodityDeltaApplyWeighting.cubes#CommodityDeltaSensitivitiesAndRiskFactorsWithWeight"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "CommodityDeltaMeasures.efbt_data_definition#CommodityDeltaRiskWeight"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "CommodityDeltaApplyWeighting.cubes#CommodityDeltaSensitivitiesAndRiskFactorsWithWeight"
+          }
+        } ],
+        "name" : "multiply",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+          "$ref" : "../../common/commonFunctionsModule.functions#multiply"
+        }
+      }
+    } ]
+  } ]
+}

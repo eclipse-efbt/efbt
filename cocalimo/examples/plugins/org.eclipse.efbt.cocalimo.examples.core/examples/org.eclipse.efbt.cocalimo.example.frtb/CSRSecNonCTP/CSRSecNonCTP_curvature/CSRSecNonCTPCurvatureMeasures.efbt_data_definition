@@ -1,0 +1,267 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/efbt_data_definition#//VariableModule",
+  "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
+  "name" : "CSRSecNonCTPCurvautureMaasures",
+  "version" : "1.0",
+  "variables" : [ {
+    "code" : "CSRSecNonCTPCurvatureInstrumentValuation",
+    "description" : "CSRSecNonCTPCurvatureInstrumentValuation",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CSRSecNonCTPCurvatureInstrumentValuation",
+    "name" : "CSRSecNonCTPCurvatureInstrumentValuation",
+    "displayName" : "CSRSecNonCTPCurvatureInstrumentValuation"
+  }, {
+    "code" : "CSRSecNonCTPCurvatureUpshockValuationDifference",
+    "description" : "CSRSecNonCTPCurvatureUpshockValuationDifference",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CSRSecNonCTPCurvatureUpshockValuationDifference",
+    "name" : "CSRSecNonCTPCurvatureUpshockValuationDifference",
+    "displayName" : "CSRSecNonCTPCurvatureUpshockValuationDifference"
+  }, {
+    "code" : "CSRSecNonCTPCurvatureDownshockValuationDifference",
+    "description" : "CSRSecNonCTPCurvatureDownshockValuationDifference",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CSRSecNonCTPCurvatureDownshockValuationDifference",
+    "name" : "CSRSecNonCTPCurvatureDownshockValuationDifference",
+    "displayName" : "CSRSecNonCTPCurvatureDownshockValuationDifference"
+  }, {
+    "code" : "curvatureValuationDifference",
+    "description" : "curvatureValuationDifference",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "curvatureValuationDifference",
+    "name" : "curvatureValuationDifference",
+    "displayName" : "curvatureValuationDifference"
+  }, {
+    "code" : "CSRSecNonCTPCurvatureDeltaStrippedShift",
+    "description" : "CSRSecNonCTPCurvatureDeltaStrippedShift",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CSRSecNonCTPCurvatureDeltaStrippedShift",
+    "name" : "CSRSecNonCTPCurvatureDeltaStrippedShift",
+    "displayName" : "CSRSecNonCTPCurvatureDeltaStrippedShift"
+  }, {
+    "code" : "CSRSecNonCTPCurvatureShiftedValuation",
+    "description" : "CSRSecNonCTPCurvatureShiftedValuation",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CSRSecNonCTPCurvatureShiftedValuation",
+    "name" : "CSRSecNonCTPCurvatureShiftedValuation",
+    "displayName" : "CSRSecNonCTPCurvatureShiftedValuation"
+  }, {
+    "code" : "CSRSecNonCTPCurvatureMinimumShiftedTotal",
+    "description" : "CSRSecNonCTPCurvatureMinimumShiftedTotal",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CSRSecNonCTPCurvatureMinimumShiftedTotal",
+    "name" : "CSRSecNonCTPCurvatureMinimumShiftedTotal",
+    "displayName" : "CSRSecNonCTPCurvatureMinimumShiftedTotal"
+  }, {
+    "code" : "CSRSecNonCTPCurvatureUpshiftDeltaStrippedValuation",
+    "description" : "CSRSecNonCTPCurvatureUpshiftDeltaStrippedValuation",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CSRSecNonCTPCurvatureUpshiftDeltaStrippedValuation",
+    "name" : "CSRSecNonCTPCurvatureUpshiftDeltaStrippedValuation",
+    "displayName" : "CSRSecNonCTPCurvatureUpshiftDeltaStrippedValuation"
+  }, {
+    "code" : "CSRSecNonCTPCurvatureDownshiftDeltaStrippedValuation",
+    "description" : "CSRSecNonCTPCurvatureDownshiftDeltaStrippedValuation",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CSRSecNonCTPCurvatureDownshiftDeltaStrippedValuation",
+    "name" : "CSRSecNonCTPCurvatureDownshiftDeltaStrippedValuation",
+    "displayName" : "CSRSecNonCTPCurvatureDownshiftDeltaStrippedValuation"
+  }, {
+    "code" : "CSRSecNonCTPCurvatureFlooredMinimumShiftedTotalSquared",
+    "description" : "CSRSecNonCTPCurvatureFlooredMinimumShiftedTotalSquared",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CSRSecNonCTPCurvatureFlooredMinimumShiftedTotalSquared",
+    "name" : "CSRSecNonCTPCurvatureFlooredMinimumShiftedTotalSquared",
+    "displayName" : "CSRSecNonCTPCurvatureFlooredMinimumShiftedTotalSquared"
+  }, {
+    "code" : "CSRSecNonCTPCurvatureCVRk",
+    "description" : "CSRSecNonCTPCurvatureCVRk",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CSRSecNonCTPCurvatureCVRk",
+    "name" : "CSRSecNonCTPCurvatureCVRk",
+    "displayName" : "CSRSecNonCTPCurvatureCVRk"
+  }, {
+    "code" : "CSRSecNonCTPCurvatureCVRl",
+    "description" : "CSRSecNonCTPCurvatureCVRl",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CSRSecNonCTPCurvatureCVRl",
+    "name" : "CSRSecNonCTPCurvatureCVRl",
+    "displayName" : "CSRSecNonCTPCurvatureCVRl"
+  }, {
+    "code" : "CSRSecNonCTPCurvatureCVRCorrelationFactor",
+    "description" : "CSRSecNonCTPCurvatureCVRCorrelationFactor",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CSRSecNonCTPCurvatureCVRCorrelationFactor",
+    "name" : "CSRSecNonCTPCurvatureCVRCorrelationFactor",
+    "displayName" : "CSRSecNonCTPCurvatureCVRCorrelationFactor"
+  }, {
+    "code" : "CSRSecNonCTPCurvatureCVRCorrelatedProduct",
+    "description" : "CSRSecNonCTPCurvatureCVRCorrelatedProduct",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CSRSecNonCTPCurvatureCVRCorrelatedProduct",
+    "name" : "CSRSecNonCTPCurvatureCVRCorrelatedProduct",
+    "displayName" : "CSRSecNonCTPCurvatureCVRCorrelatedProduct"
+  }, {
+    "code" : "sumOfproductOfCSRSecNonCTPCurvatureCorrelatedCombinations",
+    "description" : "sumOfproductOfCSRSecNonCTPCurvatureCorrelatedCombinations",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "sumOfproductOfCSRSecNonCTPCurvatureCorrelatedCombinations",
+    "name" : "sumOfproductOfCSRSecNonCTPCurvatureCorrelatedCombinations",
+    "displayName" : "sumOfproductOfCSRSecNonCTPCurvatureCorrelatedCombinations"
+  }, {
+    "code" : "CSRSecNonCTPCurvatureTotalGroupedSummedMinimums",
+    "description" : "CSRSecNonCTPCurvatureTotalGroupedSummedMinimums",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CSRSecNonCTPCurvatureTotalGroupedSummedMinimums",
+    "name" : "CSRSecNonCTPCurvatureTotalGroupedSummedMinimums",
+    "displayName" : "CSRSecNonCTPCurvatureTotalGroupedSummedMinimums"
+  }, {
+    "code" : "CSRSecNonCTPCurvatureRiskExposureK",
+    "description" : "CSRSecNonCTPCurvatureRiskExposureK",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CSRSecNonCTPCurvatureRiskExposureK",
+    "name" : "CSRSecNonCTPCurvatureRiskExposureK",
+    "displayName" : "CSRSecNonCTPCurvatureRiskExposureK"
+  }, {
+    "code" : "sqrtOfMaximumOfCSRSecNonCTPCurvatureCVRFinal",
+    "description" : "sqrtOfMaximumOfCSRSecNonCTPCurvatureCVRFinal",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "sqrtOfMaximumOfCSRSecNonCTPCurvatureCVRFinal",
+    "name" : "sqrtOfMaximumOfCSRSecNonCTPCurvatureCVRFinal",
+    "displayName" : "sqrtOfMaximumOfCSRSecNonCTPCurvatureCVRFinal"
+  }, {
+    "code" : "maximumOfCSRSecNonCTPCurvatureCVRFinal",
+    "description" : "maximumOfCSRSecNonCTPCurvatureCVRFinal",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "maximumOfCSRSecNonCTPCurvatureCVRFinal",
+    "name" : "maximumOfCSRSecNonCTPCurvatureCVRFinal",
+    "displayName" : "maximumOfCSRSecNonCTPCurvatureCVRFinal"
+  }, {
+    "code" : "CSRSecNonCTPCurvatureCVRFinal",
+    "description" : "CSRSecNonCTPCurvatureCVRFinal",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CSRSecNonCTPCurvatureCVRFinal",
+    "name" : "CSRSecNonCTPCurvatureCVRFinal",
+    "displayName" : "CSRSecNonCTPCurvatureCVRFinal"
+  }, {
+    "code" : "summedCSRSecNonCTPCurvatureDeltaStrippedShiftUp",
+    "description" : "summedCSRSecNonCTPCurvatureDeltaStrippedShiftUp",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "summedCSRSecNonCTPCurvatureDeltaStrippedShiftUp",
+    "name" : "summedCSRSecNonCTPCurvatureDeltaStrippedShiftUp",
+    "displayName" : "summedCSRSecNonCTPCurvatureDeltaStrippedShiftUp"
+  }, {
+    "code" : "summedCSRSecNonCTPCurvatureDeltaStrippedShiftDown",
+    "description" : "summedCSRSecNonCTPCurvatureDeltaStrippedShiftDown",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "summedCSRSecNonCTPCurvatureDeltaStrippedShiftDown",
+    "name" : "summedCSRSecNonCTPCurvatureDeltaStrippedShiftDown",
+    "displayName" : "summedCSRSecNonCTPCurvatureDeltaStrippedShiftDown"
+  }, {
+    "code" : "summedCSRSecNonCTPCurvatureDeltaStrippedShiftUp2",
+    "description" : "summedCSRSecNonCTPCurvatureDeltaStrippedShiftUp2",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "summedCSRSecNonCTPCurvatureDeltaStrippedShiftUp2",
+    "name" : "summedCSRSecNonCTPCurvatureDeltaStrippedShiftUp2",
+    "displayName" : "summedCSRSecNonCTPCurvatureDeltaStrippedShiftUp2"
+  }, {
+    "code" : "summedCSRSecNonCTPCurvatureDeltaStrippedShiftDown2",
+    "description" : "summedCSRSecNonCTPCurvatureDeltaStrippedShiftDown2",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "summedCSRSecNonCTPCurvatureDeltaStrippedShiftDown2",
+    "name" : "summedCSRSecNonCTPCurvatureDeltaStrippedShiftDown2",
+    "displayName" : "summedCSRSecNonCTPCurvatureDeltaStrippedShiftDown2"
+  }, {
+    "code" : "doubleOfMaxOfCSRSecNonCTPCurvatureCVRFinal",
+    "description" : "doubleOfMaxOfCSRSecNonCTPCurvatureCVRFinal",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "doubleOfMaxOfCSRSecNonCTPCurvatureCVRFinal",
+    "name" : "doubleOfMaxOfCSRSecNonCTPCurvatureCVRFinal",
+    "displayName" : "doubleOfMaxOfCSRSecNonCTPCurvatureCVRFinal"
+  }, {
+    "code" : "curvatureRiskWeight",
+    "description" : "curvatureRiskWeight",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "curvatureRiskWeight",
+    "name" : "curvatureRiskWeight",
+    "displayName" : "curvatureRiskWeight"
+  } ]
+}
