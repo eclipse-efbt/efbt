@@ -1,0 +1,267 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/efbt_data_definition#//VariableModule",
+  "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
+  "name" : "CommodityCurvautureMaasures",
+  "version" : "1.0",
+  "variables" : [ {
+    "code" : "CommodityCurvatureInstrumentValuation",
+    "description" : "CommodityCurvatureInstrumentValuation",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CommodityCurvatureInstrumentValuation",
+    "name" : "CommodityCurvatureInstrumentValuation",
+    "displayName" : "CommodityCurvatureInstrumentValuation"
+  }, {
+    "code" : "CommodityCurvatureUpshockValuationDifference",
+    "description" : "CommodityCurvatureUpshockValuationDifference",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CommodityCurvatureUpshockValuationDifference",
+    "name" : "CommodityCurvatureUpshockValuationDifference",
+    "displayName" : "CommodityCurvatureUpshockValuationDifference"
+  }, {
+    "code" : "CommodityCurvatureDownshockValuationDifference",
+    "description" : "CommodityCurvatureDownshockValuationDifference",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CommodityCurvatureDownshockValuationDifference",
+    "name" : "CommodityCurvatureDownshockValuationDifference",
+    "displayName" : "CommodityCurvatureDownshockValuationDifference"
+  }, {
+    "code" : "curvatureValuationDifference",
+    "description" : "curvatureValuationDifference",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "curvatureValuationDifference",
+    "name" : "curvatureValuationDifference",
+    "displayName" : "curvatureValuationDifference"
+  }, {
+    "code" : "CommodityCurvatureDeltaStrippedShift",
+    "description" : "CommodityCurvatureDeltaStrippedShift",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CommodityCurvatureDeltaStrippedShift",
+    "name" : "CommodityCurvatureDeltaStrippedShift",
+    "displayName" : "CommodityCurvatureDeltaStrippedShift"
+  }, {
+    "code" : "CommodityCurvatureShiftedValuation",
+    "description" : "CommodityCurvatureShiftedValuation",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CommodityCurvatureShiftedValuation",
+    "name" : "CommodityCurvatureShiftedValuation",
+    "displayName" : "CommodityCurvatureShiftedValuation"
+  }, {
+    "code" : "CommodityCurvatureMinimumShiftedTotal",
+    "description" : "CommodityCurvatureMinimumShiftedTotal",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CommodityCurvatureMinimumShiftedTotal",
+    "name" : "CommodityCurvatureMinimumShiftedTotal",
+    "displayName" : "CommodityCurvatureMinimumShiftedTotal"
+  }, {
+    "code" : "CommodityCurvatureUpshiftDeltaStrippedValuation",
+    "description" : "CommodityCurvatureUpshiftDeltaStrippedValuation",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CommodityCurvatureUpshiftDeltaStrippedValuation",
+    "name" : "CommodityCurvatureUpshiftDeltaStrippedValuation",
+    "displayName" : "CommodityCurvatureUpshiftDeltaStrippedValuation"
+  }, {
+    "code" : "CommodityCurvatureDownshiftDeltaStrippedValuation",
+    "description" : "CommodityCurvatureDownshiftDeltaStrippedValuation",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CommodityCurvatureDownshiftDeltaStrippedValuation",
+    "name" : "CommodityCurvatureDownshiftDeltaStrippedValuation",
+    "displayName" : "CommodityCurvatureDownshiftDeltaStrippedValuation"
+  }, {
+    "code" : "CommodityCurvatureFlooredMinimumShiftedTotalSquared",
+    "description" : "CommodityCurvatureFlooredMinimumShiftedTotalSquared",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CommodityCurvatureFlooredMinimumShiftedTotalSquared",
+    "name" : "CommodityCurvatureFlooredMinimumShiftedTotalSquared",
+    "displayName" : "CommodityCurvatureFlooredMinimumShiftedTotalSquared"
+  }, {
+    "code" : "CommodityCurvatureCVRk",
+    "description" : "CommodityCurvatureCVRk",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CommodityCurvatureCVRk",
+    "name" : "CommodityCurvatureCVRk",
+    "displayName" : "CommodityCurvatureCVRk"
+  }, {
+    "code" : "CommodityCurvatureCVRl",
+    "description" : "CommodityCurvatureCVRl",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CommodityCurvatureCVRl",
+    "name" : "CommodityCurvatureCVRl",
+    "displayName" : "CommodityCurvatureCVRl"
+  }, {
+    "code" : "CommodityCurvatureCVRCorrelationFactor",
+    "description" : "CommodityCurvatureCVRCorrelationFactor",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CommodityCurvatureCVRCorrelationFactor",
+    "name" : "CommodityCurvatureCVRCorrelationFactor",
+    "displayName" : "CommodityCurvatureCVRCorrelationFactor"
+  }, {
+    "code" : "CommodityCurvatureCVRCorrelatedProduct",
+    "description" : "CommodityCurvatureCVRCorrelatedProduct",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CommodityCurvatureCVRCorrelatedProduct",
+    "name" : "CommodityCurvatureCVRCorrelatedProduct",
+    "displayName" : "CommodityCurvatureCVRCorrelatedProduct"
+  }, {
+    "code" : "sumOfproductOfCommodityCurvatureCorrelatedCombinations",
+    "description" : "sumOfproductOfCommodityCurvatureCorrelatedCombinations",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "sumOfproductOfCommodityCurvatureCorrelatedCombinations",
+    "name" : "sumOfproductOfCommodityCurvatureCorrelatedCombinations",
+    "displayName" : "sumOfproductOfCommodityCurvatureCorrelatedCombinations"
+  }, {
+    "code" : "CommodityCurvatureTotalGroupedSummedMinimums",
+    "description" : "CommodityCurvatureTotalGroupedSummedMinimums",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CommodityCurvatureTotalGroupedSummedMinimums",
+    "name" : "CommodityCurvatureTotalGroupedSummedMinimums",
+    "displayName" : "CommodityCurvatureTotalGroupedSummedMinimums"
+  }, {
+    "code" : "CommodityCurvatureRiskExposureK",
+    "description" : "CommodityCurvatureRiskExposureK",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CommodityCurvatureRiskExposureK",
+    "name" : "CommodityCurvatureRiskExposureK",
+    "displayName" : "CommodityCurvatureRiskExposureK"
+  }, {
+    "code" : "sqrtOfMaximumOfCommodityCurvatureCVRFinal",
+    "description" : "sqrtOfMaximumOfCommodityCurvatureCVRFinal",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "sqrtOfMaximumOfCommodityCurvatureCVRFinal",
+    "name" : "sqrtOfMaximumOfCommodityCurvatureCVRFinal",
+    "displayName" : "sqrtOfMaximumOfCommodityCurvatureCVRFinal"
+  }, {
+    "code" : "maximumOfCommodityCurvatureCVRFinal",
+    "description" : "maximumOfCommodityCurvatureCVRFinal",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "maximumOfCommodityCurvatureCVRFinal",
+    "name" : "maximumOfCommodityCurvatureCVRFinal",
+    "displayName" : "maximumOfCommodityCurvatureCVRFinal"
+  }, {
+    "code" : "CommodityCurvatureCVRFinal",
+    "description" : "CommodityCurvatureCVRFinal",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CommodityCurvatureCVRFinal",
+    "name" : "CommodityCurvatureCVRFinal",
+    "displayName" : "CommodityCurvatureCVRFinal"
+  }, {
+    "code" : "summedCommodityCurvatureDeltaStrippedShiftUp",
+    "description" : "summedCommodityCurvatureDeltaStrippedShiftUp",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "summedCommodityCurvatureDeltaStrippedShiftUp",
+    "name" : "summedCommodityCurvatureDeltaStrippedShiftUp",
+    "displayName" : "summedCommodityCurvatureDeltaStrippedShiftUp"
+  }, {
+    "code" : "summedCommodityCurvatureDeltaStrippedShiftDown",
+    "description" : "summedCommodityCurvatureDeltaStrippedShiftDown",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "summedCommodityCurvatureDeltaStrippedShiftDown",
+    "name" : "summedCommodityCurvatureDeltaStrippedShiftDown",
+    "displayName" : "summedCommodityCurvatureDeltaStrippedShiftDown"
+  }, {
+    "code" : "summedCommodityCurvatureDeltaStrippedShiftUp2",
+    "description" : "summedCommodityCurvatureDeltaStrippedShiftUp2",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "summedCommodityCurvatureDeltaStrippedShiftUp2",
+    "name" : "summedCommodityCurvatureDeltaStrippedShiftUp2",
+    "displayName" : "summedCommodityCurvatureDeltaStrippedShiftUp2"
+  }, {
+    "code" : "summedCommodityCurvatureDeltaStrippedShiftDown2",
+    "description" : "summedCommodityCurvatureDeltaStrippedShiftDown2",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "summedCommodityCurvatureDeltaStrippedShiftDown2",
+    "name" : "summedCommodityCurvatureDeltaStrippedShiftDown2",
+    "displayName" : "summedCommodityCurvatureDeltaStrippedShiftDown2"
+  }, {
+    "code" : "doubleOfMaxOfCommodityCurvatureCVRFinal",
+    "description" : "doubleOfMaxOfCommodityCurvatureCVRFinal",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "doubleOfMaxOfCommodityCurvatureCVRFinal",
+    "name" : "doubleOfMaxOfCommodityCurvatureCVRFinal",
+    "displayName" : "doubleOfMaxOfCommodityCurvatureCVRFinal"
+  }, {
+    "code" : "curvatureRiskWeight",
+    "description" : "curvatureRiskWeight",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "curvatureRiskWeight",
+    "name" : "curvatureRiskWeight",
+    "displayName" : "curvatureRiskWeight"
+  } ]
+}

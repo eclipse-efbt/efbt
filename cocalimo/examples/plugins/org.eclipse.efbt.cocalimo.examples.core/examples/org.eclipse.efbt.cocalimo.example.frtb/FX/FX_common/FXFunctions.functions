@@ -1,0 +1,101 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/functions#//FunctionSpecModule",
+  "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
+  "name" : "FXFunctions",
+  "version" : "1.0",
+  "functionSpecs" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "param1"
+    }, {
+      "name" : "param2"
+    } ],
+    "functionalName" : "CustomFunctions_getFXCVRCorrelationFactor",
+    "name" : "getFXCVRCorrelationFactor",
+    "relationalName" : "getFXCVRCorrelationFactor"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "param1"
+    }, {
+      "name" : "param2"
+    } ],
+    "functionalName" : "CustomFunctions_getFXDeltaCorrelationFactor",
+    "name" : "getFXDeltaCorrelationFactor",
+    "relationalName" : "getFXDeltaCorrelationFactor"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "param1"
+    }, {
+      "name" : "param2"
+    } ],
+    "functionalName" : "CustomFunctions_getFXVegaRiskFactorRiskWeight",
+    "name" : "getFXVegaRiskFactorRiskWeight",
+    "relationalName" : "getFXVegaRiskFactorRiskWeight"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "param1"
+    }, {
+      "name" : "param2"
+    } ],
+    "functionalName" : "CustomFunctions_getFXVegaCorrelationFactor",
+    "name" : "getFXVegaCorrelationFactor",
+    "relationalName" : "getFXVegaCorrelationFactor"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "param1"
+    }, {
+      "name" : "param2"
+    } ],
+    "functionalName" : "CustomFunctions_getFXBucketCorrelationFactor",
+    "name" : "getFXBucketCorrelationFactor",
+    "relationalName" : "getFXBucketCorrelationFactor"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "valuationDifference"
+    }, {
+      "name" : "summedFX_delta"
+    }, {
+      "name" : "ShockDirection"
+    } ],
+    "functionalName" : "CustomFunctions_FXDeltaStrip",
+    "name" : "FXDeltaStrip",
+    "relationalName" : "FXDeltaStrip"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "tenor"
+    } ],
+    "functionalName" : "CustomFunctions_getFXDeltaRiskFactorRiskWeight",
+    "name" : "getFXDeltaRiskFactorRiskWeight",
+    "relationalName" : "getFXDeltaRiskFactorRiskWeight"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "mainCurrency"
+    } ],
+    "functionalName" : "CustomFunctions_getFXDeltaBucketName",
+    "name" : "getFXDeltaBucketName",
+    "relationalName" : "getFXDeltaBucketName"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "mainCurrency"
+    } ],
+    "functionalName" : "CustomFunctions_getFXVegaBucketName",
+    "name" : "getFXVegaBucketName",
+    "relationalName" : "getFXVegaBucketName"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "mainCurrency"
+    } ],
+    "functionalName" : "CustomFunctions_getFXCurvatureBucketName",
+    "name" : "getFXCurvatureBucketName",
+    "relationalName" : "getFXCurvatureBucketName"
+  } ]
+}

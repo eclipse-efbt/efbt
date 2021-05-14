@@ -1,0 +1,132 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+  "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
+  "name" : "FXCurvatureCreateSquaresLogic",
+  "version" : "1.0",
+  "DTMViews" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//EnrichmentView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "FXCurvatureCreateSquares.cubes#FXCurvatureFlooredMinimumShiftedTotalsSquared"
+    },
+    "name" : "FXCurvatureFlooredMinimumShiftedTotalsSquared",
+    "functions" : [ {
+      "name" : "FXCurvatureFlooredMinimumShiftedTotalsSquared_FXCurvatureFlooredMinimumShiftedTotalSquared",
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "FXCurvatureCreateSquares.cubes#FXCurvatureFlooredMinimumShiftedTotalsSquared"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "FXCurvatureMeasures.efbt_data_definition#FXCurvatureFlooredMinimumShiftedTotalSquared"
+      },
+      "basicFunction" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunction",
+          "parameters" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+            "column" : {
+              "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+              "$ref" : "FXCurvatureMeasures.efbt_data_definition#FXCurvatureCVRk"
+            },
+            "cube" : {
+              "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+              "$ref" : "FXCurvatureCalculateCVR.cubes#FXCurvatureRiskChargeForRiskFactor"
+            }
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/functions#//ValueParameter",
+            "dataType" : "Double",
+            "value" : "0.0"
+          } ],
+          "name" : "max",
+          "functionSpec" : {
+            "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+            "$ref" : "../../common/commonFunctionsModule.functions#max"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunction",
+          "parameters" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+            "column" : {
+              "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+              "$ref" : "FXCurvatureMeasures.efbt_data_definition#FXCurvatureCVRk"
+            },
+            "cube" : {
+              "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+              "$ref" : "FXCurvatureCalculateCVR.cubes#FXCurvatureRiskChargeForRiskFactor"
+            }
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/functions#//ValueParameter",
+            "dataType" : "Double",
+            "value" : "0.0"
+          } ],
+          "name" : "max",
+          "functionSpec" : {
+            "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+            "$ref" : "../../common/commonFunctionsModule.functions#max"
+          }
+        } ],
+        "name" : "multiply",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+          "$ref" : "../../common/commonFunctionsModule.functions#multiply"
+        }
+      }
+    } ],
+    "ignores" : [ {
+      "columnToIgnore" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "FXCurvatureMeasures.efbt_data_definition#FXCurvatureCVRk"
+      },
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "FXCurvatureCalculateCVR.cubes#FXCurvatureRiskChargeForRiskFactor"
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//AggregateEnrichmentView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "FXCurvatureCreateSquares.cubes#FXCurvatureTotalGroupedSummedMinimums"
+    },
+    "name" : "FXCurvatureTotalGroupedSummedMinimums",
+    "functions" : [ {
+      "name" : "FXCurvatureTotalGroupedSummedMinimums_FXCurvatureTotalGroupedSummedMinimums",
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "FXCurvatureCreateSquares.cubes#FXCurvatureTotalGroupedSummedMinimums"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "FXCurvatureMeasures.efbt_data_definition#FXCurvatureTotalGroupedSummedMinimums"
+      },
+      "aggregateFunction" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "FXCurvatureMeasures.efbt_data_definition#FXCurvatureFlooredMinimumShiftedTotalSquared"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "FXCurvatureCreateSquares.cubes#FXCurvatureFlooredMinimumShiftedTotalsSquared"
+          }
+        } ],
+        "name" : "SUM",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//AggregateFunctionSpec",
+          "$ref" : "../../common/commonFunctionsModule.functions#SUM"
+        }
+      }
+    } ],
+    "groupByClause" : {
+      "groupByColumns" : [ {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../../sdd/FRTBDerivedIdentifiers.efbt_data_definition#bucketID"
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../../sdd/FRTBSourceDimensions.efbt_data_definition#ShockDirection"
+      } ]
+    }
+  } ]
+}

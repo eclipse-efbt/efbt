@@ -1,6 +1,6 @@
 {
   "eClass" : "http://www.eclipse.org/efbt/requirements_text#//RequirementsModule",
-  "name" : "CRRRequirementsModel",
+  "name" : "CRRRequirementsModel1",
   "rules" : [ {
     "iD" : "CRRRuleBook",
     "sections" : [ {

@@ -1,0 +1,184 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/efbt_data_definition#//VariableModule",
+  "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
+  "name" : "FXVegaMeasures",
+  "version" : "1.0",
+  "variables" : [ {
+    "code" : "FXVegaSensitivityk",
+    "description" : "FXVegaSensitivityk",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "FXVegaSensitivityk",
+    "name" : "FXVegaSensitivityk",
+    "displayName" : "FXVegaSensitivityk"
+  }, {
+    "code" : "FXVegaCorrelationFactor",
+    "description" : "FXVegaCorrelationFactor",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "FXVegaCorrelationFactor",
+    "name" : "FXVegaCorrelationFactor",
+    "displayName" : "FXVegaCorrelationFactor"
+  }, {
+    "code" : "FXVegaSensitivityl",
+    "description" : "FXVegaSensitivityl",
+    "primary_concept" : "",
+    "variable_id" : "FXVegaSensitivityl",
+    "name" : "FXVegaSensitivityl"
+  }, {
+    "code" : "summedFXVega",
+    "description" : "summedFXVega",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "summedFXVega",
+    "name" : "summedFXVega",
+    "displayName" : "summedFXVega"
+  }, {
+    "code" : "tenork",
+    "description" : "tenork",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#ratingsGrade"
+    },
+    "variable_id" : "tenork",
+    "name" : "tenork",
+    "displayName" : "tenork"
+  }, {
+    "code" : "tenorl",
+    "description" : "tenorl",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "tenorl",
+    "name" : "tenorl",
+    "displayName" : "tenorl"
+  }, {
+    "code" : "mainCurrencyl",
+    "description" : "mainCurrencyl",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Currency"
+    },
+    "variable_id" : "mainCurrencyl",
+    "name" : "mainCurrencyl",
+    "displayName" : "mainCurrencyl"
+  }, {
+    "code" : "mainCurrencyk",
+    "description" : "mainCurrencyk",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Currency"
+    },
+    "variable_id" : "mainCurrencyk",
+    "name" : "mainCurrencyk",
+    "displayName" : "mainCurrencyk"
+  }, {
+    "code" : "FXVegaRiskWeight",
+    "description" : "FXVegaRiskWeight",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "FXVegaRiskWeight",
+    "name" : "FXVegaRiskWeight",
+    "displayName" : "FXVegaRiskWeight"
+  }, {
+    "code" : "weightedFXVegaSensitivity",
+    "description" : "weightedFXVegaSensitivity",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "weightedFXVegaSensitivity",
+    "name" : "weightedFXVegaSensitivity",
+    "displayName" : "weightedFXVegaSensitivity"
+  }, {
+    "code" : "FXVegaKBInput",
+    "description" : "FXVegaKBInput",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "FXVegaKBInput",
+    "name" : "FXVegaKBInput",
+    "displayName" : "FXVegaKBInput"
+  }, {
+    "code" : "FXVegaKB",
+    "description" : "FXVegaKB",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "primary_concept" : "FXVegaKB",
+    "variable_id" : "FXVegaKB",
+    "name" : "FXVegaKB",
+    "displayName" : "FXVegaKB"
+  }, {
+    "code" : "FXVegaKBInputPerBucket",
+    "description" : "FXVegaKBInputPerBucket",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "FXVegaKBInputPerBucket",
+    "name" : "FXVegaKBInputPerBucket",
+    "displayName" : "FXVegaKBInputPerBucket"
+  }, {
+    "code" : "FXVegaSensitivityPerBucketCorrelated",
+    "description" : "FXVegaSensitivityPerBucketCorrelated",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "FXVegaSensitivityPerBucketCorrelated",
+    "name" : "FXVegaSensitivityPerBucketCorrelated",
+    "displayName" : "FXVegaSensitivityPerBucketCorrelated"
+  }, {
+    "code" : "totalFXVegaSensitivityPerBucket",
+    "description" : "totalFXVegaSensitivityPerBucket",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "totalFXVegaSensitivityPerBucket",
+    "name" : "totalFXVegaSensitivityPerBucket",
+    "displayName" : "totalFXVegaSensitivityPerBucket"
+  }, {
+    "code" : "FXVegaBucketCorrelationFactor",
+    "description" : "FXVegaBucketCorrelationFactor",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "FXVegaBucketCorrelationFactor",
+    "name" : "FXVegaBucketCorrelationFactor",
+    "displayName" : "FXVegaBucketCorrelationFactor"
+  }, {
+    "code" : "totalFXVegaSensitivityPerBucketk",
+    "description" : "totalFXVegaSensitivityPerBucketk",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "totalFXVegaSensitivityPerBucketk",
+    "name" : "totalFXVegaSensitivityPerBucketk",
+    "displayName" : "totalFXVegaSensitivityPerBucketk"
+  }, {
+    "code" : "totalFXVegaSensitivityPerBucketl",
+    "description" : "totalFXVegaSensitivityPerBucketl",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "totalFXVegaSensitivityPerBucketl",
+    "name" : "totalFXVegaSensitivityPerBucketl",
+    "displayName" : "totalFXVegaSensitivityPerBucketl"
+  } ]
+}

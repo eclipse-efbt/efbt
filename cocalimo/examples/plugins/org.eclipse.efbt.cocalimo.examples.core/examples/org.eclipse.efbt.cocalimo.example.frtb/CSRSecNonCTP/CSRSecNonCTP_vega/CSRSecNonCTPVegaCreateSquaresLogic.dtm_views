@@ -1,0 +1,49 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+  "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
+  "name" : "CSRSecNonCTPVegaCreateSquaresLogic",
+  "version" : "1.0",
+  "DTMViews" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//AggregateEnrichmentView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "CSRSecNonCTPVegaCreateSquares.cubes#totalCSRSecNonCTPVegaSensitivityPerBucket"
+    },
+    "name" : "totalCSRSecNonCTPVegaSensitivityPerBucket",
+    "functions" : [ {
+      "name" : "totalCSRSecNonCTPVegaSensitivityPerBucket_totalCSRSecNonCTPVegaSensitivityPerBucket",
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "CSRSecNonCTPVegaCreateSquares.cubes#totalCSRSecNonCTPVegaSensitivityPerBucket"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "CSRSecNonCTPVegaMeasures.efbt_data_definition#totalCSRSecNonCTPVegaSensitivityPerBucket"
+      },
+      "aggregateFunction" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "CSRSecNonCTPVegaMeasures.efbt_data_definition#weightedCSRSecNonCTPVegaSensitivity"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "CSRSecNonCTPVegaApplyWeighting.cubes#weightedCSRSecNonCTPVegaSensitivitiesAndRiskFactors"
+          }
+        } ],
+        "name" : "SUM",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//AggregateFunctionSpec",
+          "$ref" : "../../common/commonFunctionsModule.functions#SUM"
+        }
+      }
+    } ],
+    "groupByClause" : {
+      "groupByColumns" : [ {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../../sdd/FRTBDerivedIdentifiers.efbt_data_definition#bucketID"
+      } ]
+    }
+  } ]
+}
