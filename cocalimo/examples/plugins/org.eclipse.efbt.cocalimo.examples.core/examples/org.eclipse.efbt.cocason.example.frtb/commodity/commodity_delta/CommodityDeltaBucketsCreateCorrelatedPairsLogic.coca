@@ -1,8 +1,0 @@
-ProgramAndCalls : { program : dtmProgram :  { 
-	
-	executableLogic :[ dtmExecutableLogic CommodityDeltaBucketsCreateCorrelatedPairsLogic : { 
-		
-			
-			 datasetTransformationModules : [ VersionedDTMViewsModule   views : { 
-			 	 } ] } ] } }
-			 		
