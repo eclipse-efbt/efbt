@@ -1,0 +1,114 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/transformation#//Release",
+  "cubeSchemaModules" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/transformation#//VersionedCubeSchemaModule",
+    "$ref" : "../girr/girr_common/GIRRRiskFactorCubeSchemas.transformation#GIRRRiskFactorCubeSchemas"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/transformation#//VersionedCubeSchemaModule",
+    "$ref" : "../cube_schemas/CurvatureCubeSchemas.transformation#CurvatureCubeSchemas"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/transformation#//VersionedCubeSchemaModule",
+    "$ref" : "../cube_schemas/DeltaCubeSchemas.transformation#DeltaCubeSchemas"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/transformation#//VersionedCubeSchemaModule",
+    "$ref" : "../cube_schemas/PositionCubeSchemas.transformation#PositionSchemas"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/transformation#//VersionedCubeSchemaModule",
+    "$ref" : "../cube_schemas/VegaCubeSchemas.transformation#VegaCubeSchemas"
+  } ],
+  "datasetTransformationModules" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+    "$ref" : "../girr/girr_curvature/GIRRCurvatureAssignBucketLogic.dtm_views#GIRRCurvatureAssignBucketLogic"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+    "$ref" : "../girr/girr_curvature/GIRRCurvatureBucketsCreateCorrelatedPairsLogic.dtm_views#GIRRCurvatureBucketsCreateCorrelatedPairsLogic"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+    "$ref" : "../girr/girr_curvature/GIRRCurvatureBucketsCreateSquaresLogic.dtm_views#GIRRCurvatureBucketsCreateSquaresLogic"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+    "$ref" : "../girr/girr_curvature/GIRRCurvatureCalculateCVRLogic.dtm_views#GIRRCurvatureCalculateCVRLogic"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+    "$ref" : "../girr/girr_curvature/GIRRCurvatureCreateBucketValueLogic.dtm_views#GIRRCurvatureCreateBucketValueLogic"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+    "$ref" : "../girr/girr_curvature/GIRRCurvatureCreateCapitalChargeLogic.dtm_views#GIRRCurvatureCreateCapitalChargeLogic"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+    "$ref" : "../girr/girr_curvature/GIRRCurvatureCreateCorrelatedPairsLogic.dtm_views#GIRRCurvatureCreateCorrelatedPairsLogic"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+    "$ref" : "../girr/girr_curvature/GIRRCurvatureCreateSquaresLogic.dtm_views#GIRRCurvatureCreateSquaresLogic"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+    "$ref" : "../girr/girr_curvature/GIRRCurvatureDeltaStrippingLogic.dtm_views#GIRRCurvatureDeltaStrippingLogic"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+    "$ref" : "../girr/girr_delta/GIRRDeltaApplyWeightingLogic.dtm_views#GIRRDeltaApplyWeightingLogic"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+    "$ref" : "../girr/girr_delta/GIRRDeltaAssignBucketLogic.dtm_views#GIRRDeltaAssignBucketLogic"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+    "$ref" : "../girr/girr_delta/GIRRDeltaBucketsCreateCorrelatedPairsLogic.dtm_views#GIRRDeltaBucketsCreateCorrelatedPairsLogic"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+    "$ref" : "../girr/girr_delta/GIRRDeltaBucketsCreateSquaresLogic.dtm_views#GIRRDeltaBucketsCreateSquaresLogic"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+    "$ref" : "../girr/girr_delta/GIRRDeltaCreateBucketValueLogic.dtm_views#GIRRDeltaCreateBucketValueLogic"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+    "$ref" : "../girr/girr_delta/GIRRDeltaCreateCapitalChargeLogic.dtm_views#GIRRDeltaCreateCapitalChargeLogic"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+    "$ref" : "../girr/girr_delta/GIRRDeltaCreateCorrelatedPairsLogic.dtm_views#GIRRDeltaCreateCorrelatedPairsLogic"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+    "$ref" : "../girr/girr_delta/GIRRDeltaCreateSquaresLogic.dtm_views#GIRRDeltaCreateSquaresLogic"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+    "$ref" : "../girr/girr_vega/GIRRVegaApplyWeightingLogic.dtm_views#GIRRVegaApplyWeightingLogic"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+    "$ref" : "../girr/girr_vega/GIRRVegaAssignBucketLogic.dtm_views#GIRRVegaAssignBucketLogic"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+    "$ref" : "../girr/girr_vega/GIRRVegaBucketsCreateCorrelatedPairsLogic.dtm_views#GIRRVegaBucketsCreateCorrelatedPairsLogic"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+    "$ref" : "../girr/girr_vega/GIRRVegaBucketsCreateSquaresLogic.dtm_views#GIRRVegaBucketsCreateSquaresLogic"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+    "$ref" : "../girr/girr_vega/GIRRVegaCreateBucketValueLogic.dtm_views#GIRRVegaCreateBucketValueLogic"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+    "$ref" : "../girr/girr_vega/GIRRVegaCreateCapitalChargeLogic.dtm_views#GIRRVegaCreateCapitalChargeLogic"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+    "$ref" : "../girr/girr_vega/GIRRVegaCreateCorrelatedPairsLogic.dtm_views#GIRRVegaCreateCorrelatedPairsLogic"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+    "$ref" : "../girr/girr_vega/GIRRVegaCreateSquaresLogic.dtm_views#GIRRVegaCreateSquaresLogic"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+    "$ref" : "../common/NetDeltaSensitivitiesLogic.dtm_views#NetDeltaSensitivitiesLogic"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+    "$ref" : "../common/NetVegaSensitivitiesLogic.dtm_views#NetVegaSensitivitiesLogic"
+  } ],
+  "name" : "FRTBRelease1",
+  "reportCellViewModules" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_report_cell_views#//ReportCellViewModule",
+    "$ref" : "../girr/girr_delta/createGIRRDeltaReportCells.dtm_report_cell_views#createGIRRDeltaReportCells"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_report_cell_views#//ReportCellViewModule",
+    "$ref" : "../girr/girr_vega/createGIRRVegaReportCells.dtm_report_cell_views#createGIRRVegaReportCells"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_report_cell_views#//ReportCellViewModule",
+    "$ref" : "../girr/girr_curvature/GIRRCurvatureReportCells.dtm_report_cell_views#GIRRCurvatureReportCells"
+  } ],
+  "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
+  "version" : "1.0"
+}
