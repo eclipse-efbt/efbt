@@ -1,0 +1,89 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+  "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
+  "name" : "CSRSecNonCTPDeltaApplyWeightingLogic",
+  "version" : "1.0",
+  "DTMViews" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//EnrichmentView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "CSRSecNonCTPDeltaApplyWeighting.cubes#CSRSecNonCTPDeltaSensitivitiesAndRiskFactorsWithWeight"
+    },
+    "name" : "CSRSecNonCTPDeltaSensitivitiesAndRiskFactorsWithWeight",
+    "functions" : [ {
+      "name" : "CSRSecNonCTPDeltaSensitivitiesAndRiskFactorsWithWeight_CSRSecNonCTPDeltaRiskWeight",
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "CSRSecNonCTPDeltaApplyWeighting.cubes#CSRSecNonCTPDeltaSensitivitiesAndRiskFactorsWithWeight"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "CSRSecNonCTPDeltaMeasures.efbt_data_definition#CSRSecNonCTPDeltaRiskWeight"
+      },
+      "basicFunction" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "../../sdd/FRTBSourceMeasures.efbt_data_definition#tenor"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "CSRSecNonCTPDeltaAssignBucket.cubes#CSRSecNonCTPDeltaSensitivitiesAndRiskFactors"
+          }
+        } ],
+        "name" : "getCSRSecNonCTPDeltaRiskWeight",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+          "$ref" : "../CSRSecNonCTP_common/CSRSecNonCTPFunctions.functions#getCSRSecNonCTPDeltaRiskFactorRiskWeight"
+        }
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//EnrichmentView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "CSRSecNonCTPDeltaApplyWeighting.cubes#weightedCSRSecNonCTPDeltaSensitivitiesAndRiskFactors"
+    },
+    "name" : "weightedCSRSecNonCTPDeltaSensitivitiesAndRiskFactors",
+    "functions" : [ {
+      "name" : "weightedCSRSecNonCTPDeltaSensitivitiesAndRiskFactors_weightedCSRSecNonCTPDeltaSensitivity",
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "CSRSecNonCTPDeltaApplyWeighting.cubes#weightedCSRSecNonCTPDeltaSensitivitiesAndRiskFactors"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "CSRSecNonCTPDeltaMeasures.efbt_data_definition#weightedCSRSecNonCTPDeltaSensitivity"
+      },
+      "basicFunction" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "../../common/CommonMeasures.efbt_data_definition#nettedDeltaSensitivity"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "CSRSecNonCTPDeltaApplyWeighting.cubes#CSRSecNonCTPDeltaSensitivitiesAndRiskFactorsWithWeight"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "CSRSecNonCTPDeltaMeasures.efbt_data_definition#CSRSecNonCTPDeltaRiskWeight"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "CSRSecNonCTPDeltaApplyWeighting.cubes#CSRSecNonCTPDeltaSensitivitiesAndRiskFactorsWithWeight"
+          }
+        } ],
+        "name" : "multiply",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+          "$ref" : "../../common/commonFunctionsModule.functions#multiply"
+        }
+      }
+    } ]
+  } ]
+}

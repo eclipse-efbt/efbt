@@ -1,0 +1,184 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/efbt_data_definition#//VariableModule",
+  "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
+  "name" : "FXDeltaMeasures",
+  "version" : "1.0",
+  "variables" : [ {
+    "code" : "FXDeltaSensitivityk",
+    "description" : "FXDeltaSensitivityk",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "FXDeltaSensitivityk",
+    "name" : "FXDeltaSensitivityk",
+    "displayName" : "FXDeltaSensitivityk"
+  }, {
+    "code" : "FXDeltaCorrelationFactor",
+    "description" : "FXDeltaCorrelationFactor",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "FXDeltaCorrelationFactor",
+    "name" : "FXDeltaCorrelationFactor",
+    "displayName" : "FXDeltaCorrelationFactor"
+  }, {
+    "code" : "FXDeltaSensitivityl",
+    "description" : "FXDeltaSensitivityl",
+    "primary_concept" : "",
+    "variable_id" : "FXDeltaSensitivityl",
+    "name" : "FXDeltaSensitivityl"
+  }, {
+    "code" : "summedFXDelta",
+    "description" : "summedFXDelta",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "summedFXDelta",
+    "name" : "summedFXDelta",
+    "displayName" : "summedFXDelta"
+  }, {
+    "code" : "tenork",
+    "description" : "tenork",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#ratingsGrade"
+    },
+    "variable_id" : "tenork",
+    "name" : "tenork",
+    "displayName" : "tenork"
+  }, {
+    "code" : "tenorl",
+    "description" : "tenorl",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "tenorl",
+    "name" : "tenorl",
+    "displayName" : "tenorl"
+  }, {
+    "code" : "mainCurrencyl",
+    "description" : "mainCurrencyl",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Currency"
+    },
+    "variable_id" : "mainCurrencyl",
+    "name" : "mainCurrencyl",
+    "displayName" : "mainCurrencyl"
+  }, {
+    "code" : "mainCurrencyk",
+    "description" : "mainCurrencyk",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Currency"
+    },
+    "variable_id" : "mainCurrencyk",
+    "name" : "mainCurrencyk",
+    "displayName" : "mainCurrencyk"
+  }, {
+    "code" : "FXDeltaRiskWeight",
+    "description" : "FXDeltaRiskWeight",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "FXDeltaRiskWeight",
+    "name" : "FXDeltaRiskWeight",
+    "displayName" : "FXDeltaRiskWeight"
+  }, {
+    "code" : "weightedFXDeltaSensitivity",
+    "description" : "weightedFXDeltaSensitivity",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "weightedFXDeltaSensitivity",
+    "name" : "weightedFXDeltaSensitivity",
+    "displayName" : "weightedFXDeltaSensitivity"
+  }, {
+    "code" : "FXDeltaKBInput",
+    "description" : "FXDeltaKBInput",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "FXDeltaKBInput",
+    "name" : "FXDeltaKBInput",
+    "displayName" : "FXDeltaKBInput"
+  }, {
+    "code" : "FXDeltaKB",
+    "description" : "FXDeltaKB",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "primary_concept" : "FXDeltaKB",
+    "variable_id" : "FXDeltaKB",
+    "name" : "FXDeltaKB",
+    "displayName" : "FXDeltaKB"
+  }, {
+    "code" : "FXDeltaKBInputPerBucket",
+    "description" : "FXDeltaKBInputPerBucket",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "FXDeltaKBInputPerBucket",
+    "name" : "FXDeltaKBInputPerBucket",
+    "displayName" : "FXDeltaKBInputPerBucket"
+  }, {
+    "code" : "FXDeltaSensitivityPerBucketCorrelated",
+    "description" : "FXDeltaSensitivityPerBucketCorrelated",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "FXDeltaSensitivityPerBucketCorrelated",
+    "name" : "FXDeltaSensitivityPerBucketCorrelated",
+    "displayName" : "FXDeltaSensitivityPerBucketCorrelated"
+  }, {
+    "code" : "totalFXDeltaSensitivityPerBucket",
+    "description" : "totalFXDeltaSensitivityPerBucket",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "totalFXDeltaSensitivityPerBucket",
+    "name" : "totalFXDeltaSensitivityPerBucket",
+    "displayName" : "totalFXDeltaSensitivityPerBucket"
+  }, {
+    "code" : "FXDeltaBucketCorrelationFactor",
+    "description" : "FXDeltaBucketCorrelationFactor",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "FXDeltaBucketCorrelationFactor",
+    "name" : "FXDeltaBucketCorrelationFactor",
+    "displayName" : "FXDeltaBucketCorrelationFactor"
+  }, {
+    "code" : "totalFXDeltaSensitivityPerBucketk",
+    "description" : "totalFXDeltaSensitivityPerBucketk",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "totalFXDeltaSensitivityPerBucketk",
+    "name" : "totalFXDeltaSensitivityPerBucketk",
+    "displayName" : "totalFXDeltaSensitivityPerBucketk"
+  }, {
+    "code" : "totalFXDeltaSensitivityPerBucketl",
+    "description" : "totalFXDeltaSensitivityPerBucketl",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "totalFXDeltaSensitivityPerBucketl",
+    "name" : "totalFXDeltaSensitivityPerBucketl",
+    "displayName" : "totalFXDeltaSensitivityPerBucketl"
+  } ]
+}

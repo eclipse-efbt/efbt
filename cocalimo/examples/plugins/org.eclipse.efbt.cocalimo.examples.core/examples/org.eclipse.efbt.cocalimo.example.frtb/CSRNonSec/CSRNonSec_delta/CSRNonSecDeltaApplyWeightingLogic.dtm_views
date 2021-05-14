@@ -1,0 +1,89 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+  "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
+  "name" : "CSRNonSecDeltaApplyWeightingLogic",
+  "version" : "1.0",
+  "DTMViews" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//EnrichmentView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "CSRNonSecDeltaApplyWeighting.cubes#CSRNonSecDeltaSensitivitiesAndRiskFactorsWithWeight"
+    },
+    "name" : "CSRNonSecDeltaSensitivitiesAndRiskFactorsWithWeight",
+    "functions" : [ {
+      "name" : "CSRNonSecDeltaSensitivitiesAndRiskFactorsWithWeight_CSRNonSecDeltaRiskWeight",
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "CSRNonSecDeltaApplyWeighting.cubes#CSRNonSecDeltaSensitivitiesAndRiskFactorsWithWeight"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "CSRNonSecDeltaMeasures.efbt_data_definition#CSRNonSecDeltaRiskWeight"
+      },
+      "basicFunction" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "../../sdd/FRTBSourceMeasures.efbt_data_definition#tenor"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "CSRNonSecDeltaAssignBucket.cubes#CSRNonSecDeltaSensitivitiesAndRiskFactors"
+          }
+        } ],
+        "name" : "getCSRNonSecDeltaRiskWeight",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+          "$ref" : "../CSRNonSec_common/CSRNonSecFunctions.functions#getCSRNonSecDeltaRiskFactorRiskWeight"
+        }
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//EnrichmentView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "CSRNonSecDeltaApplyWeighting.cubes#weightedCSRNonSecDeltaSensitivitiesAndRiskFactors"
+    },
+    "name" : "weightedCSRNonSecDeltaSensitivitiesAndRiskFactors",
+    "functions" : [ {
+      "name" : "weightedCSRNonSecDeltaSensitivitiesAndRiskFactors_weightedCSRNonSecDeltaSensitivity",
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "CSRNonSecDeltaApplyWeighting.cubes#weightedCSRNonSecDeltaSensitivitiesAndRiskFactors"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "CSRNonSecDeltaMeasures.efbt_data_definition#weightedCSRNonSecDeltaSensitivity"
+      },
+      "basicFunction" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "../../common/CommonMeasures.efbt_data_definition#nettedDeltaSensitivity"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "CSRNonSecDeltaApplyWeighting.cubes#CSRNonSecDeltaSensitivitiesAndRiskFactorsWithWeight"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "CSRNonSecDeltaMeasures.efbt_data_definition#CSRNonSecDeltaRiskWeight"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "CSRNonSecDeltaApplyWeighting.cubes#CSRNonSecDeltaSensitivitiesAndRiskFactorsWithWeight"
+          }
+        } ],
+        "name" : "multiply",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+          "$ref" : "../../common/commonFunctionsModule.functions#multiply"
+        }
+      }
+    } ]
+  } ]
+}

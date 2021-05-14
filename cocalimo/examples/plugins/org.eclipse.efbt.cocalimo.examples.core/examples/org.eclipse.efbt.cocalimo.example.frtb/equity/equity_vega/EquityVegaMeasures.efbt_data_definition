@@ -1,0 +1,184 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/efbt_data_definition#//VariableModule",
+  "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
+  "name" : "EquityVegaMeasures",
+  "version" : "1.0",
+  "variables" : [ {
+    "code" : "EquityVegaSensitivityk",
+    "description" : "EquityVegaSensitivityk",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "EquityVegaSensitivityk",
+    "name" : "EquityVegaSensitivityk",
+    "displayName" : "EquityVegaSensitivityk"
+  }, {
+    "code" : "EquityVegaCorrelationFactor",
+    "description" : "EquityVegaCorrelationFactor",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "EquityVegaCorrelationFactor",
+    "name" : "EquityVegaCorrelationFactor",
+    "displayName" : "EquityVegaCorrelationFactor"
+  }, {
+    "code" : "EquityVegaSensitivityl",
+    "description" : "EquityVegaSensitivityl",
+    "primary_concept" : "",
+    "variable_id" : "EquityVegaSensitivityl",
+    "name" : "EquityVegaSensitivityl"
+  }, {
+    "code" : "summedEquityVega",
+    "description" : "summedEquityVega",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "summedEquityVega",
+    "name" : "summedEquityVega",
+    "displayName" : "summedEquityVega"
+  }, {
+    "code" : "tenork",
+    "description" : "tenork",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#ratingsGrade"
+    },
+    "variable_id" : "tenork",
+    "name" : "tenork",
+    "displayName" : "tenork"
+  }, {
+    "code" : "tenorl",
+    "description" : "tenorl",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "tenorl",
+    "name" : "tenorl",
+    "displayName" : "tenorl"
+  }, {
+    "code" : "mainCurrencyl",
+    "description" : "mainCurrencyl",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Currency"
+    },
+    "variable_id" : "mainCurrencyl",
+    "name" : "mainCurrencyl",
+    "displayName" : "mainCurrencyl"
+  }, {
+    "code" : "mainCurrencyk",
+    "description" : "mainCurrencyk",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Currency"
+    },
+    "variable_id" : "mainCurrencyk",
+    "name" : "mainCurrencyk",
+    "displayName" : "mainCurrencyk"
+  }, {
+    "code" : "EquityVegaRiskWeight",
+    "description" : "EquityVegaRiskWeight",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "EquityVegaRiskWeight",
+    "name" : "EquityVegaRiskWeight",
+    "displayName" : "EquityVegaRiskWeight"
+  }, {
+    "code" : "weightedEquityVegaSensitivity",
+    "description" : "weightedEquityVegaSensitivity",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "weightedEquityVegaSensitivity",
+    "name" : "weightedEquityVegaSensitivity",
+    "displayName" : "weightedEquityVegaSensitivity"
+  }, {
+    "code" : "EquityVegaKBInput",
+    "description" : "EquityVegaKBInput",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "EquityVegaKBInput",
+    "name" : "EquityVegaKBInput",
+    "displayName" : "EquityVegaKBInput"
+  }, {
+    "code" : "EquityVegaKB",
+    "description" : "EquityVegaKB",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "primary_concept" : "EquityVegaKB",
+    "variable_id" : "EquityVegaKB",
+    "name" : "EquityVegaKB",
+    "displayName" : "EquityVegaKB"
+  }, {
+    "code" : "EquityVegaKBInputPerBucket",
+    "description" : "EquityVegaKBInputPerBucket",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "EquityVegaKBInputPerBucket",
+    "name" : "EquityVegaKBInputPerBucket",
+    "displayName" : "EquityVegaKBInputPerBucket"
+  }, {
+    "code" : "EquityVegaSensitivityPerBucketCorrelated",
+    "description" : "EquityVegaSensitivityPerBucketCorrelated",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "EquityVegaSensitivityPerBucketCorrelated",
+    "name" : "EquityVegaSensitivityPerBucketCorrelated",
+    "displayName" : "EquityVegaSensitivityPerBucketCorrelated"
+  }, {
+    "code" : "totalEquityVegaSensitivityPerBucket",
+    "description" : "totalEquityVegaSensitivityPerBucket",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "totalEquityVegaSensitivityPerBucket",
+    "name" : "totalEquityVegaSensitivityPerBucket",
+    "displayName" : "totalEquityVegaSensitivityPerBucket"
+  }, {
+    "code" : "EquityVegaBucketCorrelationFactor",
+    "description" : "EquityVegaBucketCorrelationFactor",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "EquityVegaBucketCorrelationFactor",
+    "name" : "EquityVegaBucketCorrelationFactor",
+    "displayName" : "EquityVegaBucketCorrelationFactor"
+  }, {
+    "code" : "totalEquityVegaSensitivityPerBucketk",
+    "description" : "totalEquityVegaSensitivityPerBucketk",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "totalEquityVegaSensitivityPerBucketk",
+    "name" : "totalEquityVegaSensitivityPerBucketk",
+    "displayName" : "totalEquityVegaSensitivityPerBucketk"
+  }, {
+    "code" : "totalEquityVegaSensitivityPerBucketl",
+    "description" : "totalEquityVegaSensitivityPerBucketl",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "totalEquityVegaSensitivityPerBucketl",
+    "name" : "totalEquityVegaSensitivityPerBucketl",
+    "displayName" : "totalEquityVegaSensitivityPerBucketl"
+  } ]
+}

@@ -1,0 +1,184 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/efbt_data_definition#//VariableModule",
+  "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
+  "name" : "CSRSecCTPVegaMeasures",
+  "version" : "1.0",
+  "variables" : [ {
+    "code" : "CSRSecCTPVegaSensitivityk",
+    "description" : "CSRSecCTPVegaSensitivityk",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CSRSecCTPVegaSensitivityk",
+    "name" : "CSRSecCTPVegaSensitivityk",
+    "displayName" : "CSRSecCTPVegaSensitivityk"
+  }, {
+    "code" : "CSRSecCTPVegaCorrelationFactor",
+    "description" : "CSRSecCTPVegaCorrelationFactor",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CSRSecCTPVegaCorrelationFactor",
+    "name" : "CSRSecCTPVegaCorrelationFactor",
+    "displayName" : "CSRSecCTPVegaCorrelationFactor"
+  }, {
+    "code" : "CSRSecCTPVegaSensitivityl",
+    "description" : "CSRSecCTPVegaSensitivityl",
+    "primary_concept" : "",
+    "variable_id" : "CSRSecCTPVegaSensitivityl",
+    "name" : "CSRSecCTPVegaSensitivityl"
+  }, {
+    "code" : "summedCSRSecCTPVega",
+    "description" : "summedCSRSecCTPVega",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "summedCSRSecCTPVega",
+    "name" : "summedCSRSecCTPVega",
+    "displayName" : "summedCSRSecCTPVega"
+  }, {
+    "code" : "tenork",
+    "description" : "tenork",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#ratingsGrade"
+    },
+    "variable_id" : "tenork",
+    "name" : "tenork",
+    "displayName" : "tenork"
+  }, {
+    "code" : "tenorl",
+    "description" : "tenorl",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "tenorl",
+    "name" : "tenorl",
+    "displayName" : "tenorl"
+  }, {
+    "code" : "mainCurrencyl",
+    "description" : "mainCurrencyl",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Currency"
+    },
+    "variable_id" : "mainCurrencyl",
+    "name" : "mainCurrencyl",
+    "displayName" : "mainCurrencyl"
+  }, {
+    "code" : "mainCurrencyk",
+    "description" : "mainCurrencyk",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Currency"
+    },
+    "variable_id" : "mainCurrencyk",
+    "name" : "mainCurrencyk",
+    "displayName" : "mainCurrencyk"
+  }, {
+    "code" : "CSRSecCTPVegaRiskWeight",
+    "description" : "CSRSecCTPVegaRiskWeight",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CSRSecCTPVegaRiskWeight",
+    "name" : "CSRSecCTPVegaRiskWeight",
+    "displayName" : "CSRSecCTPVegaRiskWeight"
+  }, {
+    "code" : "weightedCSRSecCTPVegaSensitivity",
+    "description" : "weightedCSRSecCTPVegaSensitivity",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "weightedCSRSecCTPVegaSensitivity",
+    "name" : "weightedCSRSecCTPVegaSensitivity",
+    "displayName" : "weightedCSRSecCTPVegaSensitivity"
+  }, {
+    "code" : "CSRSecCTPVegaKBInput",
+    "description" : "CSRSecCTPVegaKBInput",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CSRSecCTPVegaKBInput",
+    "name" : "CSRSecCTPVegaKBInput",
+    "displayName" : "CSRSecCTPVegaKBInput"
+  }, {
+    "code" : "CSRSecCTPVegaKB",
+    "description" : "CSRSecCTPVegaKB",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "primary_concept" : "CSRSecCTPVegaKB",
+    "variable_id" : "CSRSecCTPVegaKB",
+    "name" : "CSRSecCTPVegaKB",
+    "displayName" : "CSRSecCTPVegaKB"
+  }, {
+    "code" : "CSRSecCTPVegaKBInputPerBucket",
+    "description" : "CSRSecCTPVegaKBInputPerBucket",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CSRSecCTPVegaKBInputPerBucket",
+    "name" : "CSRSecCTPVegaKBInputPerBucket",
+    "displayName" : "CSRSecCTPVegaKBInputPerBucket"
+  }, {
+    "code" : "CSRSecCTPVegaSensitivityPerBucketCorrelated",
+    "description" : "CSRSecCTPVegaSensitivityPerBucketCorrelated",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CSRSecCTPVegaSensitivityPerBucketCorrelated",
+    "name" : "CSRSecCTPVegaSensitivityPerBucketCorrelated",
+    "displayName" : "CSRSecCTPVegaSensitivityPerBucketCorrelated"
+  }, {
+    "code" : "totalCSRSecCTPVegaSensitivityPerBucket",
+    "description" : "totalCSRSecCTPVegaSensitivityPerBucket",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "totalCSRSecCTPVegaSensitivityPerBucket",
+    "name" : "totalCSRSecCTPVegaSensitivityPerBucket",
+    "displayName" : "totalCSRSecCTPVegaSensitivityPerBucket"
+  }, {
+    "code" : "CSRSecCTPVegaBucketCorrelationFactor",
+    "description" : "CSRSecCTPVegaBucketCorrelationFactor",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CSRSecCTPVegaBucketCorrelationFactor",
+    "name" : "CSRSecCTPVegaBucketCorrelationFactor",
+    "displayName" : "CSRSecCTPVegaBucketCorrelationFactor"
+  }, {
+    "code" : "totalCSRSecCTPVegaSensitivityPerBucketk",
+    "description" : "totalCSRSecCTPVegaSensitivityPerBucketk",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "totalCSRSecCTPVegaSensitivityPerBucketk",
+    "name" : "totalCSRSecCTPVegaSensitivityPerBucketk",
+    "displayName" : "totalCSRSecCTPVegaSensitivityPerBucketk"
+  }, {
+    "code" : "totalCSRSecCTPVegaSensitivityPerBucketl",
+    "description" : "totalCSRSecCTPVegaSensitivityPerBucketl",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "totalCSRSecCTPVegaSensitivityPerBucketl",
+    "name" : "totalCSRSecCTPVegaSensitivityPerBucketl",
+    "displayName" : "totalCSRSecCTPVegaSensitivityPerBucketl"
+  } ]
+}

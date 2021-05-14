@@ -10,8 +10,7 @@
     },
     "name" : "position",
     "displayName" : "position"
-  },
-  {
+  }, {
     "code" : "GIRRRiskFactor",
     "cube_id" : "GIRRRiskFactor",
     "cube_structure_id" : {
@@ -20,8 +19,7 @@
     },
     "name" : "GIRRRiskFactor",
     "displayName" : "GIRRRiskFactor"
-  },
-  {
+  }, {
     "code" : "curvature",
     "cube_id" : "curvature",
     "cube_structure_id" : {
@@ -30,8 +28,7 @@
     },
     "name" : "curvature",
     "displayName" : "curvature"
-  },
-  {
+  }, {
     "code" : "deltaSensitivities",
     "cube_id" : "deltaSensitivities",
     "cube_structure_id" : {
@@ -40,8 +37,7 @@
     },
     "name" : "deltaSensitivities",
     "displayName" : "deltaSensitivities"
-  },
-  {
+  }, {
     "code" : "vegaSensitivities",
     "cube_id" : "vegaSensitivities",
     "cube_structure_id" : {
@@ -50,8 +46,7 @@
     },
     "name" : "vegaSensitivities",
     "displayName" : "vegaSensitivities"
-  },
-  {
+  }, {
     "code" : "EquityRiskFactor",
     "cube_id" : "position",
     "cube_structure_id" : {
@@ -60,8 +55,7 @@
     },
     "name" : "EquityRiskFactor",
     "displayName" : "EquityRiskFactor"
-  },
-  {
+  }, {
     "code" : "CommodityRiskFactor",
     "cube_id" : "CommodityRiskFactor",
     "cube_structure_id" : {
@@ -70,8 +64,7 @@
     },
     "name" : "CommodityRiskFactor",
     "displayName" : "CommodityRiskFactor"
-  },
-  {
+  }, {
     "code" : "CSRNonSecRiskFactor",
     "cube_id" : "CSRNonSecRiskFactor",
     "cube_structure_id" : {
@@ -80,8 +73,7 @@
     },
     "name" : "CSRNonSecRiskFactor",
     "displayName" : "CSRNonSecRiskFactor"
-  },
-  {
+  }, {
     "code" : "CSRSecCTPRiskFactor",
     "cube_id" : "CSRSecCTPRiskFactor",
     "cube_structure_id" : {
@@ -90,8 +82,7 @@
     },
     "name" : "CSRSecCTPRiskFactor",
     "displayName" : "CSRSecCTPRiskFactor"
-  },
-  {
+  }, {
     "code" : "CSRSecNonCTPRiskFactor",
     "cube_id" : "CSRSecNonCTPRiskFactor",
     "cube_structure_id" : {
@@ -100,8 +91,7 @@
     },
     "name" : "CSRSecNonCTPRiskFactor",
     "displayName" : "CSRSecNonCTPRiskFactor"
-  },
-  {
+  }, {
     "code" : "FXRiskFactor",
     "cube_id" : "FXRiskFactor",
     "cube_structure_id" : {
@@ -110,8 +100,7 @@
     },
     "name" : "FXRiskFactor",
     "displayName" : "FXRiskFactor"
-  },
-  {
+  }, {
     "code" : "securityIssue",
     "cube_id" : "securityIssue",
     "cube_structure_id" : {
@@ -120,8 +109,7 @@
     },
     "name" : "securityIssue",
     "displayName" : "securityIssue"
-  },
-  {
+  }, {
     "code" : "organisation",
     "cube_id" : "organisation",
     "cube_structure_id" : {
@@ -130,8 +118,7 @@
     },
     "name" : "organisation",
     "displayName" : "organisation"
-  },
-   {
+  }, {
     "code" : "securitisation",
     "cube_id" : "securitisation",
     "cube_structure_id" : {
@@ -140,6 +127,5 @@
     },
     "name" : "securitisation",
     "displayName" : "securitisation"
-  }
-   ]
+  } ]
 }
