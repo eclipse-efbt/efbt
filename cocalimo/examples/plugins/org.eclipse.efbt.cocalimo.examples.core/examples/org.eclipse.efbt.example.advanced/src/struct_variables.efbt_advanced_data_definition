@@ -1,0 +1,67 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/efbt_advanced_data_definition#//StructTypedVariablesModule",
+  "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
+  "name" : "struct_variables",
+  "version" : "1.0",
+  "structTypeVariables" : [ {
+    "code" : "instrument",
+    "description" : "instrument",
+    "variable_id" : "instrument",
+    "name" : "instrument",
+    "displayName" : "instrument",
+    "cubeType" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+      "$ref" : "efbt_cubes.cubes#instrument"
+    }
+  }, {
+    "code" : "bondInstrument",
+    "description" : "bondInstrument",
+    "variable_id" : "bondInstrument",
+    "name" : "bondInstrument",
+    "displayName" : "bondInstrument",
+    "cubeType" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+      "$ref" : "efbt_cubes.cubes#bondInstrument"
+    }
+  }, {
+    "code" : "counterparty",
+    "description" : "counterparty",
+    "variable_id" : "counterparty",
+    "name" : "counterparty",
+    "displayName" : "counterparty",
+    "cubeType" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+      "$ref" : "efbt_cubes.cubes#counterparty"
+    }
+  }, {
+    "code" : "trade",
+    "description" : "trade",
+    "variable_id" : "trade",
+    "name" : "trade",
+    "displayName" : "trade",
+    "cubeType" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+      "$ref" : "efbt_cubes.cubes#trade"
+    }
+  }, {
+    "code" : "rating",
+    "description" : "rating",
+    "variable_id" : "rating",
+    "name" : "rating",
+    "displayName" : "rating",
+    "cubeType" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+      "$ref" : "efbt_cubes.cubes#rating"
+    }
+  }, {
+    "code" : "cashflow",
+    "description" : "cashflow",
+    "variable_id" : "cashflow",
+    "name" : "cashflow",
+    "displayName" : "cashflow",
+    "cubeType" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+      "$ref" : "efbt_cubes.cubes#cashflow"
+    }
+  } ]
+}

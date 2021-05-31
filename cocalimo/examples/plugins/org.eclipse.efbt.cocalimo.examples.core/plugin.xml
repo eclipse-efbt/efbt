@@ -17,24 +17,24 @@
 	<extension
           point="org.eclipse.ui.newWizards">
        <category 
-            id="org.eclipse.efbt.cocalimo.Examples"
-            name="CoCaLiMo Example"
+            id="org.eclipse.efbt.Examples"
+            name="EFBT Example"
             parentCategory="org.eclipse.ui.Examples" />
        <wizard
-             category="org.eclipse.ui.Examples/org.eclipse.efbt.cocalimo.Examples"
+             category="org.eclipse.ui.Examples/org.eclipse.efbt.Examples"
              class="org.eclipse.emf.common.ui.wizard.ExampleInstallerWizard"
              icon="icons/EObject.gif"
-             id="org.eclipse.efbt.cocalimo.wizard.CocasonExampleWizard"
-             name="CoCaLiMo Example"
+             id="org.eclipse.efbt.wizard.EFBTExampleWizard"
+             name="EFBT Example"
              project="true">
        </wizard>      
     </extension>
    <extension point="org.eclipse.emf.common.ui.examples">
-        <example wizardID="org.eclipse.efbt.cocalimo.wizard.CocasonExampleWizard" pageImage="icons/EObject.gif">
-            <projectDescriptor name="org.eclipse.efbt.cocalimo.example.standard" contentURI="examples/org.eclipse.efbt.cocalimo.example.standard/" description="CoCaLiMo Standard Example 1"/>
+        <example wizardID="org.eclipse.efbt.wizard.EFBTExampleWizard" pageImage="icons/EObject.gif">
+            <projectDescriptor name="org.eclipse.efbt.example.standard" contentURI="examples/org.eclipse.efbt.example.standard/" description="EFBT Standard Example"/>
+            <projectDescriptor name="org.eclipse.efbt.example.advanced" contentURI="examples/org.eclipse.efbt.example.advanced/" description="EFBT Advanced Example"/>
             <projectDescriptor name="org.eclipse.efbt.cocason.example.advanced" contentURI="examples/org.eclipse.efbt.cocason.example.advanced/" description="CoCaSon Advanced Example 1"/>
-            <projectDescriptor name="org.eclipse.efbt.cocason.example.frtb" contentURI="examples/org.eclipse.efbt.cocason.example.frtb/" description="CoCaSon FRTB Example 1"/>
-            <projectDescriptor name="org.eclipse.efbt.cocalimo.example.frtb" contentURI="examples/org.eclipse.efbt.cocalimo.example.frtb/" description="CoCaLiMo FRTB Example"/>
+            <projectDescriptor name="org.eclipse.efbt.example.frtb" contentURI="examples/org.eclipse.efbt.example.frtb/" description="FRTB Example"/>
             <projectDescriptor name="org.eclipse.efbt.cocason.example.bird_import" contentURI="examples/org.eclipse.efbt.cocason.example.bird_import/" description="CoCaSon BIRD Import Example 1"/>
             <projectDescriptor name="org.eclipse.efbt.cocason.example.ldm" contentURI="examples/org.eclipse.efbt.cocason.example.ldm/" description="CoCaSon LDM Example 1"/>                              
         </example>
