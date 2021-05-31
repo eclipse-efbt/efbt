@@ -1,0 +1,461 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+  "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
+  "name" : "processing",
+  "version" : "1.0",
+  "DTMViews" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//JoinView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "efbt_cubes.cubes#tradesWithInstruments"
+    },
+    "name" : "tradesWithInstruments",
+    "whereClause" : {
+      "function" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeStructColumnParameter",
+          "columnInsideStruct" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "variables.efbt_data_definition#instrumentID"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "efbt_cubes.cubes#allInstruments"
+          },
+          "structColumn" : {
+            "eClass" : "http://www.eclipse.org/efbt/efbt_advanced_data_definition#//StructTypedVariable",
+            "$ref" : "struct_variables.efbt_advanced_data_definition#instrument"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeStructColumnParameter",
+          "columnInsideStruct" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "variables.efbt_data_definition#instrumentID"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "efbt_cubes.cubes#tradesAsOneColumn"
+          },
+          "structColumn" : {
+            "eClass" : "http://www.eclipse.org/efbt/efbt_advanced_data_definition#//StructTypedVariable",
+            "$ref" : "struct_variables.efbt_advanced_data_definition#trade"
+          }
+        } ],
+        "name" : "view1",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+          "$ref" : "commonFunctionsModule.functions#equals"
+        }
+      }
+    }
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//FilterByStructClassColumnView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "efbt_cubes.cubes#bondTrades"
+    },
+    "name" : "bondTrades",
+    "renameAsStructColumn" : {
+      "eClass" : "http://www.eclipse.org/efbt/efbt_advanced_data_definition#//StructTypedVariable",
+      "$ref" : "struct_variables.efbt_advanced_data_definition#bondInstrument"
+    },
+    "structClass" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+      "$ref" : "efbt_cubes.cubes#bondInstrument"
+    },
+    "structColumn" : {
+      "eClass" : "http://www.eclipse.org/efbt/efbt_advanced_data_definition#//StructTypedVariable",
+      "$ref" : "struct_variables.efbt_advanced_data_definition#instrument"
+    }
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//EnrichmentView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "efbt_cubes.cubes#modifiedDurationPerTrade"
+    },
+    "name" : "modifiedDurationPerTrade",
+    "functions" : [ {
+      "name" : "modifiedDurationPerTrade_weightedModifiedDuration",
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "efbt_cubes.cubes#modifiedDurationPerTrade"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "variables.efbt_data_definition#weightedModifiedDuration"
+      },
+      "basicFunction" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeStructColumnParameter",
+          "columnInsideStruct" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "variables.efbt_data_definition#modifiedDuration"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "efbt_cubes.cubes#bondTrades"
+          },
+          "structColumn" : {
+            "eClass" : "http://www.eclipse.org/efbt/efbt_advanced_data_definition#//StructTypedVariable",
+            "$ref" : "struct_variables.efbt_advanced_data_definition#trade"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeStructColumnParameter",
+          "columnInsideStruct" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "variables.efbt_data_definition#notionalAmount"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "efbt_cubes.cubes#bondTrades"
+          },
+          "structColumn" : {
+            "eClass" : "http://www.eclipse.org/efbt/efbt_advanced_data_definition#//StructTypedVariable",
+            "$ref" : "struct_variables.efbt_advanced_data_definition#trade"
+          }
+        } ],
+        "name" : "multiply",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+          "$ref" : "commonFunctionsModule.functions#multiply"
+        }
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//JoinView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "efbt_cubes.cubes#tradesWithIssuer"
+    },
+    "name" : "tradesWithIssuer",
+    "whereClause" : {
+      "function" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeStructColumnParameter",
+          "columnInsideStruct" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "variables.efbt_data_definition#issuerCounterpartyID"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "efbt_cubes.cubes#tradesWithInstruments"
+          },
+          "structColumn" : {
+            "eClass" : "http://www.eclipse.org/efbt/efbt_advanced_data_definition#//StructTypedVariable",
+            "$ref" : "struct_variables.efbt_advanced_data_definition#instrument"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeStructColumnParameter",
+          "columnInsideStruct" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "variables.efbt_data_definition#counterpartyId"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "efbt_cubes.cubes#counterpartyAndRating"
+          },
+          "structColumn" : {
+            "eClass" : "http://www.eclipse.org/efbt/efbt_advanced_data_definition#//StructTypedVariable",
+            "$ref" : "struct_variables.efbt_advanced_data_definition#counterparty"
+          }
+        } ],
+        "name" : "equals",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+          "$ref" : "commonFunctionsModule.functions#equals"
+        }
+      }
+    }
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//EnrichmentView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "efbt_cubes.cubes#exposureAtDefault"
+    },
+    "name" : "exposureAtDefault",
+    "functions" : [ {
+      "name" : "exposureAtDefault_exposureAtDefault",
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "efbt_cubes.cubes#exposureAtDefault"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "variables.efbt_data_definition#exposureAtDefault"
+      },
+      "basicFunction" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeStructColumnParameter",
+          "columnInsideStruct" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "variables.efbt_data_definition#notionalAmount"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "efbt_cubes.cubes#tradesWithIssuer"
+          },
+          "structColumn" : {
+            "eClass" : "http://www.eclipse.org/efbt/efbt_advanced_data_definition#//StructTypedVariable",
+            "$ref" : "struct_variables.efbt_advanced_data_definition#trade"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeStructColumnParameter",
+          "columnInsideStruct" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "variables.efbt_data_definition#creditQualityStep"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "efbt_cubes.cubes#tradesWithIssuer"
+          },
+          "structColumn" : {
+            "eClass" : "http://www.eclipse.org/efbt/efbt_advanced_data_definition#//StructTypedVariable",
+            "$ref" : "struct_variables.efbt_advanced_data_definition#rating"
+          }
+        } ],
+        "name" : "multiply",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+          "$ref" : "commonFunctionsModule.functions#multiply"
+        }
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//EnrichmentView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "efbt_cubes.cubes#tradesPresentValue"
+    },
+    "name" : "tradesPresentValue",
+    "functions" : [ {
+      "name" : "tradesPresentValue_presentValue",
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "efbt_cubes.cubes#tradesPresentValue"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "variables.efbt_data_definition#presentValue"
+      },
+      "basicFunction" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/efbt_advanced_data_definition#//ArrayTypedVariable",
+            "$ref" : "array_variables.efbt_advanced_data_definition#cashflowSet"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "efbt_cubes.cubes#tradesWithCashflowSet"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//ValueParameter",
+          "dataType" : "Double",
+          "value" : "1.0"
+        } ],
+        "name" : "presentValue",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+          "$ref" : "commonFunctionsModule.functions#presentValue"
+        }
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//MakeStructView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "efbt_cubes.cubes#bondInstrumentAsInstrument"
+    },
+    "name" : "bondInstrumentAsInstrument",
+    "targetVariable" : {
+      "eClass" : "http://www.eclipse.org/efbt/efbt_advanced_data_definition#//StructTypedVariable",
+      "$ref" : "struct_variables.efbt_advanced_data_definition#instrument"
+    }
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//MakeStructView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "efbt_cubes.cubes#equityInstrumentAsInstrument"
+    },
+    "name" : "equityInstrumentAsInstrument",
+    "targetVariable" : {
+      "eClass" : "http://www.eclipse.org/efbt/efbt_advanced_data_definition#//StructTypedVariable",
+      "$ref" : "struct_variables.efbt_advanced_data_definition#instrument"
+    }
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//UnionView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "efbt_cubes.cubes#allInstruments"
+    },
+    "name" : "allInstruments"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//MakeStructView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "efbt_cubes.cubes#tradesAsOneColumn"
+    },
+    "name" : "tradesAsOneColumn",
+    "targetVariable" : {
+      "eClass" : "http://www.eclipse.org/efbt/efbt_advanced_data_definition#//StructTypedVariable",
+      "$ref" : "struct_variables.efbt_advanced_data_definition#trade"
+    }
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//MakeStructView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "efbt_cubes.cubes#counterpartyAsOneColumn"
+    },
+    "name" : "counterpartyAsOneColumn",
+    "targetVariable" : {
+      "eClass" : "http://www.eclipse.org/efbt/efbt_advanced_data_definition#//StructTypedVariable",
+      "$ref" : "struct_variables.efbt_advanced_data_definition#counterparty"
+    }
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//MakeStructView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "efbt_cubes.cubes#ratingAsOneColumn"
+    },
+    "name" : "ratingAsOneColumn",
+    "targetVariable" : {
+      "eClass" : "http://www.eclipse.org/efbt/efbt_advanced_data_definition#//StructTypedVariable",
+      "$ref" : "struct_variables.efbt_advanced_data_definition#rating"
+    }
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//JoinView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "efbt_cubes.cubes#counterpartyAndRating"
+    },
+    "name" : "counterpartyAndRating",
+    "whereClause" : {
+      "function" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeStructColumnParameter",
+          "columnInsideStruct" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "variables.efbt_data_definition#counterpartyId"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "efbt_cubes.cubes#counterpartyAsOneColumn"
+          },
+          "structColumn" : {
+            "eClass" : "http://www.eclipse.org/efbt/efbt_advanced_data_definition#//StructTypedVariable",
+            "$ref" : "struct_variables.efbt_advanced_data_definition#counterparty"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeStructColumnParameter",
+          "columnInsideStruct" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "variables.efbt_data_definition#counterpartyId"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "efbt_cubes.cubes#ratingAsOneColumn"
+          },
+          "structColumn" : {
+            "eClass" : "http://www.eclipse.org/efbt/efbt_advanced_data_definition#//StructTypedVariable",
+            "$ref" : "struct_variables.efbt_advanced_data_definition#rating"
+          }
+        } ],
+        "name" : "equals",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+          "$ref" : "commonFunctionsModule.functions#equals"
+        }
+      }
+    }
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//MakeStructView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "efbt_cubes.cubes#cashflowAsOneColumn"
+    },
+    "name" : "cashflowAsOneColumn",
+    "targetVariable" : {
+      "eClass" : "http://www.eclipse.org/efbt/efbt_advanced_data_definition#//StructTypedVariable",
+      "$ref" : "struct_variables.efbt_advanced_data_definition#cashflow"
+    }
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//MakeArrayOfStructsView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "efbt_cubes.cubes#cashflowSetGroup"
+    },
+    "name" : "cashflowSetGroup",
+    "groupingVariable" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+      "$ref" : "variables.efbt_data_definition#tradeID"
+    },
+    "sourceStructVariable" : {
+      "eClass" : "http://www.eclipse.org/efbt/efbt_advanced_data_definition#//StructTypedVariable",
+      "$ref" : "struct_variables.efbt_advanced_data_definition#cashflow"
+    },
+    "targetArrayVariable" : {
+      "eClass" : "http://www.eclipse.org/efbt/efbt_advanced_data_definition#//ArrayTypedVariable",
+      "$ref" : "array_variables.efbt_advanced_data_definition#cashflowSet"
+    }
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//ExplodeArrayOfStructsView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "efbt_cubes.cubes#explodedCashflowSet"
+    },
+    "name" : "explodedCashflowSet",
+    "arraySourceColumn" : {
+      "eClass" : "http://www.eclipse.org/efbt/efbt_advanced_data_definition#//ArrayTypedVariable",
+      "$ref" : "array_variables.efbt_advanced_data_definition#cashflowSet"
+    },
+    "indexColumn" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+      "$ref" : "variables.efbt_data_definition#index"
+    },
+    "targetStructColumn" : {
+      "eClass" : "http://www.eclipse.org/efbt/efbt_advanced_data_definition#//StructTypedVariable",
+      "$ref" : "struct_variables.efbt_advanced_data_definition#cashflow"
+    }
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//JoinView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "efbt_cubes.cubes#tradesWithCashflowSet"
+    },
+    "name" : "tradesWithCashflowSet",
+    "whereClause" : {
+      "function" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeStructColumnParameter",
+          "columnInsideStruct" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "variables.efbt_data_definition#tradeID"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "efbt_cubes.cubes#tradesAsOneColumn"
+          },
+          "structColumn" : {
+            "eClass" : "http://www.eclipse.org/efbt/efbt_advanced_data_definition#//StructTypedVariable",
+            "$ref" : "struct_variables.efbt_advanced_data_definition#trade"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "variables.efbt_data_definition#tradeID"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "efbt_cubes.cubes#cashflowSetGroup"
+          }
+        } ],
+        "name" : "equals",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+          "$ref" : "commonFunctionsModule.functions#equals"
+        }
+      }
+    }
+  } ]
+}
