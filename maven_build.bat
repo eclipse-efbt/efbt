@@ -13,24 +13,6 @@ cd ..\..\..
  cd cocalimo\smcubes\ui_sirius
 call mvn install
 cd ..\..\..
-cd cocalimo\smcubes_with_lineage\model
-call mvn install
-cd ..\..\..
-cd cocalimo\smcubes_with_lineage\modelquery
-call mvn install
-cd ..\..\..
-cd cocalimo\smcubes_with_lineage\ui_sirius
-call mvn install
-cd ..\..\..
-cd cocalimo\dtm\model
-call mvn install
-cd ..\..\..
-cd cocalimo\dtm\modelquery
-call mvn install
-cd ..\..\..
-cd cocalimo\dtm\ui_sirius
-call mvn install
-cd ..\..\..
 cd cocalimo\examples
 call mvn install 
 cd ..\..                  
