@@ -28,10 +28,10 @@ cd ..\..\..
 cd controller\smcubes\component
 call mvn install
 cd ..\..\..
-cd controller\dtm\component
+cd controller\platformcall\component
 call mvn install
 cd ..\..\..
-cd controller\dtm\ui_sirius
+cd controller\platformcall\ui_sirius
 call mvn install
 cd ..\..\..
 cd installations\complete_repo\

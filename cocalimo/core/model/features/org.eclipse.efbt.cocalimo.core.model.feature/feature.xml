@@ -161,6 +161,13 @@ Exhibit A – Form of Secondary Licenses Notice
          unpack="false"/>
 
    <plugin
+         id="org.eclipse.efbt.cocalimo.core.model.platform_call"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="org.eclipse.efbt.cocalimo.core.model.testing.edit"
          download-size="0"
          install-size="0"
@@ -189,6 +196,13 @@ Exhibit A – Form of Secondary Licenses Notice
          unpack="false"/>
 
    <plugin
+         id="org.eclipse.efbt.cocalimo.core.model.platform_call.edit"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="org.eclipse.efbt.cocalimo.core.model.testing.editor"
          download-size="0"
          install-size="0"
@@ -211,6 +225,13 @@ Exhibit A – Form of Secondary Licenses Notice
 
    <plugin
          id="org.eclipse.efbt.cocalimo.core.model.requirements_text.editor"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.efbt.cocalimo.core.model.platform_call.editor"
          download-size="0"
          install-size="0"
          version="0.0.0"

@@ -37,10 +37,10 @@ pipeline {
                     cd controller/smcubes/component
                     mvn install
                     cd ../../..
-                    cd controller/dtm/component
+                    cd controller/platformcall/component
                     mvn install
                     cd ../../..
-                    cd controller/dtm/ui_sirius
+                    cd controller/platformcall/ui_sirius
                     mvn install
                     cd ../../..
                     cd installations/complete_repo/
