@@ -22,7 +22,8 @@ pipeline {
                     cd ../../..
                     cd cocalimo/smcubes/ui_sirius
                     mvn install                    
-                    cd cocalimo/examples
+                    cd ../../..
+		    cd cocalimo/examples
                     mvn install 
                     cd ../..                   
                     cd controller/ldm
