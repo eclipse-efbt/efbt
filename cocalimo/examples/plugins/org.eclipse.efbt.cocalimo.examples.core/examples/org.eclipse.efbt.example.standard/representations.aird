@@ -1,32 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" xsi:schemaLocation="http://www.eclipse.org/sirius/description/1.1.0 http://www.eclipse.org/sirius/1.1.0#//description" uid="_oE1woKTOEeuRR81aGSTUGQ" selectedViews="_rHuS0KTOEeuRR81aGSTUGQ _rIZoQKTOEeuRR81aGSTUGQ _rIkAUKTOEeuRR81aGSTUGQ _rIwNkKTOEeuRR81aGSTUGQ" version="14.3.1.202003261200">
+<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" uid="_5MCAwNHhEeuzl_tbdL1J9g" version="14.3.1.202003261200">
+  <semanticResources>bin/combinations.efbt_data_definition</semanticResources>
+  <semanticResources>bin/members.efbt_data_definition</semanticResources>
+  <semanticResources>bin/domains.efbt_data_definition</semanticResources>
+  <semanticResources>bin/variables.efbt_data_definition</semanticResources>
+  <semanticResources>bin/crr2.requirements_text</semanticResources>
+  <semanticResources>bin/cube_structure_items.efbt_data_definition</semanticResources>
+  <semanticResources>bin/cube_structures.efbt_data_definition</semanticResources>
+  <semanticResources>bin/cubes.efbt_data_definition</semanticResources>
+  <semanticResources>bin/functionality_modules.functionality_module</semanticResources>
+  <semanticResources>bin/regTestDefintion.test_definition</semanticResources>
+  <semanticResources>bin/test.program</semanticResources>
   <semanticResources>src/combinations.efbt_data_definition</semanticResources>
   <semanticResources>src/members.efbt_data_definition</semanticResources>
   <semanticResources>src/domains.efbt_data_definition</semanticResources>
   <semanticResources>src/variables.efbt_data_definition</semanticResources>
-  <semanticResources>src/commonFunctionsModule.functions</semanticResources>
   <semanticResources>src/crr2.requirements_text</semanticResources>
-  <semanticResources>src/cubeLineageModule.cubes</semanticResources>
-  <semanticResources>src/cubeSchemaModule.transformation</semanticResources>
-  <semanticResources>src/cubes.efbt_data_definition</semanticResources>
-  <semanticResources>src/cube_structures.efbt_data_definition</semanticResources>
   <semanticResources>src/cube_structure_items.efbt_data_definition</semanticResources>
-  <semanticResources>src/dataset_transformations.dtm_views</semanticResources>
+  <semanticResources>src/cube_structures.efbt_data_definition</semanticResources>
+  <semanticResources>src/cubes.efbt_data_definition</semanticResources>
   <semanticResources>src/functionality_modules.functionality_module</semanticResources>
   <semanticResources>src/regTestDefintion.test_definition</semanticResources>
-  <semanticResources>src/release1.transformation</semanticResources>
-  <semanticResources>src/report_cell_creation_module.dtm_report_cell_views</semanticResources>
   <semanticResources>src/test.program</semanticResources>
-  <ownedViews xmi:type="viewpoint:DView" uid="_rHuS0KTOEeuRR81aGSTUGQ">
-    <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.efbt.cocalimo.dtm.ui.sirius.core/description/dtm.odesign#//@ownedViewpoints[name='Modules']"/>
-  </ownedViews>
-  <ownedViews xmi:type="viewpoint:DView" uid="_rIZoQKTOEeuRR81aGSTUGQ">
-    <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/testmanager.odesign#//@ownedViewpoints[name='TestingViewpoint']"/>
-  </ownedViews>
-  <ownedViews xmi:type="viewpoint:DView" uid="_rIkAUKTOEeuRR81aGSTUGQ">
-    <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.efbt.cocalimo.smcubes.ui.sirius/description/bird.odesign#//@ownedViewpoints[name='BIRDViewpoint']"/>
-  </ownedViews>
-  <ownedViews xmi:type="viewpoint:DView" uid="_rIwNkKTOEeuRR81aGSTUGQ">
-    <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.efbt.controller.dtm.ui.sirius.core/description/controller.odesign#//@ownedViewpoints[name='Modules']"/>
-  </ownedViews>
 </viewpoint:DAnalysis>

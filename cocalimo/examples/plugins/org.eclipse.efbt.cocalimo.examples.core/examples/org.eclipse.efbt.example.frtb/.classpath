@@ -7,36 +7,6 @@
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="sdd"/>
-	<classpathentry kind="src" path="cube_schemas"/>
 	<classpathentry kind="src" path="requirements"/>
-	<classpathentry kind="src" path="common"/>
-	<classpathentry kind="src" path="girr/girr_common"/>
-	<classpathentry kind="src" path="girr/girr_curvature"/>
-	<classpathentry kind="src" path="girr/girr_delta"/>
-	<classpathentry kind="src" path="girr/girr_vega"/>
-	<classpathentry kind="src" path="equity/equity_common"/>
-	<classpathentry kind="src" path="equity/equity_curvature"/>
-	<classpathentry kind="src" path="equity/equity_delta"/>
-	<classpathentry kind="src" path="equity/equity_vega"/>
-	<classpathentry kind="src" path="commodity/commodity_common"/>
-	<classpathentry kind="src" path="commodity/commodity_curvature"/>
-	<classpathentry kind="src" path="commodity/commodity_delta"/>
-	<classpathentry kind="src" path="commodity/commodity_vega"/>
-	<classpathentry kind="src" path="CSRNonSec/CSRNonSec_common"/>
-	<classpathentry kind="src" path="CSRNonSec/CSRNonSec_curvature"/>
-	<classpathentry kind="src" path="CSRNonSec/CSRNonSec_delta"/>
-	<classpathentry kind="src" path="CSRNonSec/CSRNonSec_vega"/>
-	<classpathentry kind="src" path="CSRSecCTP/CSRSecCTP_common"/>
-	<classpathentry kind="src" path="CSRSecCTP/CSRSecCTP_curvature"/>
-	<classpathentry kind="src" path="CSRSecCTP/CSRSecCTP_delta"/>
-	<classpathentry kind="src" path="CSRSecCTP/CSRSecCTP_vega"/>
-	<classpathentry kind="src" path="CSRSecNonCTP/CSRSecNonCTP_common"/>
-	<classpathentry kind="src" path="CSRSecNonCTP/CSRSecNonCTP_curvature"/>
-	<classpathentry kind="src" path="CSRSecNonCTP/CSRSecNonCTP_delta"/>
-	<classpathentry kind="src" path="CSRSecNonCTP/CSRSecNonCTP_vega"/>
-	<classpathentry kind="src" path="FX/FX_common"/>
-	<classpathentry kind="src" path="FX/FX_curvature"/>
-	<classpathentry kind="src" path="FX/FX_delta"/>
-	<classpathentry kind="src" path="FX/FX_vega"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
