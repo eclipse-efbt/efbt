@@ -12,10 +12,10 @@
  *******************************************************************************/
 package org.eclipse.efbt.controller.platformcall.component.core;
 
-import org.eclipse.efbt.controller.core.model.platform_call.ConvertSQLDeveloperModelToEcore;
-import org.eclipse.efbt.controller.core.model.platform_call.PlatformCall;
-import org.eclipse.efbt.controller.core.model.platform_call.TranslateBIRDWithOldTestFormatToCocason;
-import org.eclipse.efbt.controller.core.model.platform_call.TranslateBIRDWithNewTestFormatToCocason;
+import org.eclipse.efbt.cocalimo.core.model.platform_call.ConvertSQLDeveloperModelToEcore;
+import org.eclipse.efbt.cocalimo.core.model.platform_call.PlatformCall;
+import org.eclipse.efbt.cocalimo.core.model.platform_call.TranslateBIRDWithOldTestFormatToCocason;
+import org.eclipse.efbt.cocalimo.core.model.platform_call.TranslateBIRDWithNewTestFormatToCocason;
 import org.eclipse.efbt.controller.ldm.component.sqldevconvertor.SQLDevConverter;
 import org.eclipse.efbt.controller.smcubes.component.export_smcubes.ImportAndExportSMCubesToNewCocason;
 
