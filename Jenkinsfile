@@ -17,31 +17,13 @@ pipeline {
                     cd cocalimo/smcubes/model
                     mvn install
                     cd ../../..
-                     cd cocalimo/smcubes/modelquery
+                    cd cocalimo/smcubes/modelquery
                     mvn install
                     cd ../../..
-                     cd cocalimo/smcubes/ui_sirius
-                    mvn install
+                    cd cocalimo/smcubes/ui_sirius
+                    mvn install                    
                     cd ../../..
-                    cd cocalimo/smcubes_with_lineage/model
-                    mvn install
-                    cd ../../..
-                    cd cocalimo/smcubes_with_lineage/modelquery
-                    mvn install
-                    cd ../../..                    
-                    cd cocalimo/smcubes_with_lineage/ui_sirius
-                    mvn install
-                    cd ../../..
-                    cd cocalimo/dtm/model
-                    mvn install
-                    cd ../../..
-                    cd cocalimo/dtm/modelquery
-                    mvn install
-                    cd ../../..
-                    cd cocalimo/dtm/ui_sirius
-                    mvn install 
-                    cd ../../..
-                    cd cocalimo/examples
+		    cd cocalimo/examples
                     mvn install 
                     cd ../..                   
                     cd controller/ldm
@@ -56,10 +38,10 @@ pipeline {
                     cd controller/smcubes/component
                     mvn install
                     cd ../../..
-                    cd controller/dtm/component
+                    cd controller/platformcall/component
                     mvn install
                     cd ../../..
-                    cd controller/dtm/ui_sirius
+                    cd controller/platformcall/ui_sirius
                     mvn install
                     cd ../../..
                     cd installations/complete_repo/

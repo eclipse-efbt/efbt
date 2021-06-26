@@ -164,28 +164,6 @@
       </predicate>
     </workingSet>
     <workingSet
-        name="cocalimo_dtm"
-        id="cocalimo_dtm">
-      <predicate
-          xsi:type="predicates:AndPredicate">
-        <operand
-            xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.cocalimo.dtm.*"/>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.edit"/>
-        </operand>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.editor"/>
-        </operand>
-      </predicate>
-    </workingSet>
-    <workingSet
         name="controller_ldm"
         id="controller_ldm">
       <predicate
@@ -216,16 +194,6 @@
         <operand
             xsi:type="predicates:NamePredicate"
             pattern=".*\.eclipse.efbt.controller.smcubes.component.*"/>
-      </predicate>
-    </workingSet>
-    <workingSet
-        name="controller_dtm"
-        id="controller_dtm">
-      <predicate
-          xsi:type="predicates:AndPredicate">
-        <operand
-            xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.controller.dtm.*"/>
       </predicate>
     </workingSet>
     <workingSet
