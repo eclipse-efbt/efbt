@@ -12,7 +12,7 @@
        Neil Mackenzie - initial API and implementation
  -->
 <feature
-      id="org.eclipse.efbt.controller.ldm.component.sqldevconvertor.feature"
+      id="org.eclipse.efbt.controller.platformcall.component.core.feature"
       label="Controller LDM Component"
       version="1.0.0.qualifier"
       provider-name="Bird Software Solutions">
@@ -119,9 +119,6 @@ Exhibit A – Form of Secondary Licenses Notice
 
     You may add additional accurate notices of copyright ownership.
    </license>
-
-   <requires>
-   </requires>
 
    <plugin
          id="org.eclipse.efbt.controller.platformcall.component.core"

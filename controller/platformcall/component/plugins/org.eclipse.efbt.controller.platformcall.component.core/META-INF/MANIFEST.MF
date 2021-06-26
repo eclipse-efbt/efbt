@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Component
-Bundle-SymbolicName: org.eclipse.efbt.controller.platform_call.component.core
+Bundle-SymbolicName: org.eclipse.efbt.controller.platformcall.component.core
 Bundle-Version: 1.0.0.qualifier
-Automatic-Module-Name: org.eclipse.efbt.controller.platform_call.component.core
+Automatic-Module-Name: org.eclipse.efbt.controller.platformcall.component.core
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.efbt.cocalimo.core.model.platform_call;bundle-version="1.0.0",
  org.eclipse.efbt.controller.smcubes.component.export_smcubes;bundle-version="1.0.0",
