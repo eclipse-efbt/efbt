@@ -44,7 +44,7 @@
   <setupTask
       xsi:type="setup:VariableTask"
       name="eclipse.target.platform"
-      defaultValue="2021-03"
+      defaultValue="2021-06"
       storageURI="scope://Workspace"/>
   <setupTask
       xsi:type="setup.p2:P2Task">
@@ -142,28 +142,6 @@
       </predicate>
     </workingSet>
     <workingSet
-        name="cocalimo_smcubes_with_lineage"
-        id="cocalimo_smcubes_with_lineage">
-      <predicate
-          xsi:type="predicates:AndPredicate">
-        <operand
-            xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.cocalimo.smcubes_with_lineage.*"/>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.edit"/>
-        </operand>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.editor"/>
-        </operand>
-      </predicate>
-    </workingSet>
-    <workingSet
         name="controller_ldm"
         id="controller_ldm">
       <predicate
@@ -246,6 +224,16 @@
         <operand
             xsi:type="predicates:NamePredicate"
             pattern="org.eclipse.efbt.target"/>
+      </predicate>
+    </workingSet>
+    <workingSet
+        name="controller_platformcall"
+        id="controller_platformcall">
+      <predicate
+          xsi:type="predicates:AndPredicate">
+        <operand
+            xsi:type="predicates:NamePredicate"
+            pattern=".*\.eclipse.efbt.controller.platformcall.*"/>
       </predicate>
     </workingSet>
     <description>efbt_working_sets</description>
