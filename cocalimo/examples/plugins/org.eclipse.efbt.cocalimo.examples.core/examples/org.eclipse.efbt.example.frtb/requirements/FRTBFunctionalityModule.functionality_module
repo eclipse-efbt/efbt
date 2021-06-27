@@ -17,7 +17,7 @@
           "name" : "DeltaNetting",
           "subModules" : [ {
             "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReadDataSourceFunctionalityModule",
-            "name" : "ReadDeltaSensitivities"
+            "name" : "Read_DeltaSensitivity"
           }, {
             "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
             "name" : "NetDeltaSensitivities"
@@ -28,7 +28,7 @@
           "usedInSubset" : true,
           "subModules" : [ {
             "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReadDataSourceFunctionalityModule",
-            "name" : "ReadVegaSensitivities",
+            "name" : "Read_VegaSensitivity",
             "usedInSubset" : true
           }, {
             "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
@@ -129,14 +129,21 @@
             "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
             "name" : "Curvature",
             "subModules" : [ {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelChoiceFunctionalityModule",
+              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
               "name" : "ReadCurvatureData",
               "subModules" : [ {
                 "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReadDataSourceFunctionalityModule",
-                "name" : "ReadGIRRCurvatureData"
+                "name" : "Read_Curvature"
               }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReadDataSourceFunctionalityModule",
-                "name" : "ReadEquityCurvatureData"
+                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelChoiceFunctionalityModule",
+                "name" : "ReadCurvatureData",
+                "subModules" : [ {
+                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReadDataSourceFunctionalityModule",
+                  "name" : "Read_GIRRRiskFactor "
+                }, {
+                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReadDataSourceFunctionalityModule",
+                  "name" : "Read_EquityRiskFactor"
+                } ]
               } ]
             }, {
               "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
