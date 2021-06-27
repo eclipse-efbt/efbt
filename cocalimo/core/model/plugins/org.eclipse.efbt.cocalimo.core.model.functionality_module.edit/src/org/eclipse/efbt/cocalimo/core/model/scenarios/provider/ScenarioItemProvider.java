@@ -63,6 +63,7 @@ public class ScenarioItemProvider
 			super.getPropertyDescriptors(object);
 
 			addNamePropertyDescriptor(object);
+			addUsedInSubsetPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -85,6 +86,28 @@ public class ScenarioItemProvider
 				 false,
 				 false,
 				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Used In Subset feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addUsedInSubsetPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_Scenario_usedInSubset_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_Scenario_usedInSubset_feature", "_UI_Scenario_type"),
+				 ScenariosPackage.Literals.SCENARIO__USED_IN_SUBSET,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
 				 null,
 				 null));
 	}
@@ -128,6 +151,7 @@ public class ScenarioItemProvider
 
 		switch (notification.getFeatureID(Scenario.class)) {
 			case ScenariosPackage.SCENARIO__NAME:
+			case ScenariosPackage.SCENARIO__USED_IN_SUBSET:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 		}

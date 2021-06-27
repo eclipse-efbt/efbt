@@ -17,6 +17,5 @@ package org.eclipse.efbt.cocalimo.core.model.functionality_module;
  * @model
  * @generated
  */
-public interface ValidationFunctionalityModule extends LeafFunctionalityModule
-{
+public interface ValidationFunctionalityModule extends LeafFunctionalityModule {
 } // ValidationFunctionalityModule

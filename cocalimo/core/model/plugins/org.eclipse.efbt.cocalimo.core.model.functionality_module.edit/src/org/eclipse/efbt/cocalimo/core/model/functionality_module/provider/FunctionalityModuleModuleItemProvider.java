@@ -193,6 +193,11 @@ public class FunctionalityModuleModuleItemProvider extends ModuleItemProvider {
 
 		newChildDescriptors.add
 			(createChildParameter
+				(Functionality_modulePackage.Literals.FUNCTIONALITY_MODULE_MODULE__FUNCTIONALITY_MODULES,
+				 Functionality_moduleFactory.eINSTANCE.createParallelChoiceFunctionalityModule()));
+
+		newChildDescriptors.add
+			(createChildParameter
 				(Functionality_modulePackage.Literals.FUNCTIONALITY_MODULE_MODULE__FUNCTIONALITY_MODULE_TAGS,
 				 Functionality_moduleFactory.eINSTANCE.createFunctionalityModuleTag()));
 

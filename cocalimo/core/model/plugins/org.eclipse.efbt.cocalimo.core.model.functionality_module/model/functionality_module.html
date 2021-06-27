@@ -1,5 +1,5 @@
 <!-- This file was created using the HTML documentation generator. -->
-<!-- Creation date: Mon Apr 05 12:29:42 BST 2021-->
+<!-- Creation date: Sun Jun 27 11:33:37 BST 2021-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -155,6 +155,11 @@ It represents a set of processing.</p>
 <div class="label">Identifier</div>
  </td> <td><p>The name of the FunctionalityModule</p>
 </td>
+		</tr><tr>	<td><div id="functionalitymoduleFunctionalityModule.usedInSubset" class="teletype">usedInSubset</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EBoolean</span></div>
+<div class="label">Cardinality: [0..1]</div>
+ </td> <td></td>
 		</tr></table>
 <a href="#functionality_module.FunctionalityModule.attr"></a>
 <table>
@@ -275,7 +280,10 @@ Note that FunctionalityModulesSet is also a subclass of FunctionalityModule, so 
 <h2 id="functionalitymoduleLeafFunctionalityModule"><a href="#functionalitymoduleLeafFunctionalityModule"><a href="#functionalitymoduleLeafFunctionalityModule">LeafFunctionalityModule</a></a></h2>
 
 <p>A  LeafFunctionalityModule is a FunctionalityModule which does not contain any sub FunctionalityModules</p>
-<h4><b>Supertype:</b><a href="#functionalitymoduleFunctionalityModule">FunctionalityModule</a></h4><h2 id="functionalitymoduleParallelFunctionalityModule"><a href="#functionalitymoduleParallelFunctionalityModule"><a href="#functionalitymoduleParallelFunctionalityModule">ParallelFunctionalityModule</a></a></h2>
+<h4><b>Supertype:</b><a href="#functionalitymoduleFunctionalityModule">FunctionalityModule</a></h4><h2 id="functionalitymoduleParallelChoiceFunctionalityModule"><a href="#functionalitymoduleParallelChoiceFunctionalityModule"><a href="#functionalitymoduleParallelChoiceFunctionalityModule">ParallelChoiceFunctionalityModule</a></a></h2>
+
+<p>A FunctionalityModuleSet, where the sub FunctionalityModules can be run in parallel , or in any order, since there is no dependency between them whereby one needs to run before another. ParallelChoiceFunctionalityModule represents the case where one or more of the contained moduels are run, unlike ParallelFunctionalityModule where all should be run.</p>
+<h4><b>Supertype:</b><a href="#functionalitymoduleFunctionalityModuleSet">FunctionalityModuleSet</a></h4><h2 id="functionalitymoduleParallelFunctionalityModule"><a href="#functionalitymoduleParallelFunctionalityModule"><a href="#functionalitymoduleParallelFunctionalityModule">ParallelFunctionalityModule</a></a></h2>
 
 <p>A FunctionalityModuleSet, where the sub FunctionalityModules can be run in parallel , or in any order, since there is no dependency between them whereby one needs to run before another.</p>
 <h4><b>Supertype:</b><a href="#functionalitymoduleFunctionalityModuleSet">FunctionalityModuleSet</a></h4><h2 id="functionalitymoduleReadDataSourceFunctionalityModule"><a href="#functionalitymoduleReadDataSourceFunctionalityModule"><a href="#functionalitymoduleReadDataSourceFunctionalityModule">ReadDataSourceFunctionalityModule</a></a></h2>

@@ -17,6 +17,5 @@ package org.eclipse.efbt.cocalimo.core.model.functionality_module;
  * @model extendedMetaData="name='ReadDataSourceFunctionalityModule' kind='elementOnly'"
  * @generated
  */
-public interface ReadDataSourceFunctionalityModule extends LeafFunctionalityModule
-{
+public interface ReadDataSourceFunctionalityModule extends LeafFunctionalityModule {
 } // ReadDataSourceFunctionalityModule

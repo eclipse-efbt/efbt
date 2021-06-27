@@ -12,8 +12,7 @@ import org.eclipse.emf.ecore.EFactory;
  * @see org.eclipse.efbt.cocalimo.core.model.functionality_module.Functionality_modulePackage
  * @generated
  */
-public interface Functionality_moduleFactory extends EFactory
-{
+public interface Functionality_moduleFactory extends EFactory {
 	/**
 	 * The singleton instance of the factory.
 	 * <!-- begin-user-doc -->
@@ -120,6 +119,15 @@ public interface Functionality_moduleFactory extends EFactory
 	 * @generated
 	 */
 	ValidationFunctionalityModule createValidationFunctionalityModule();
+
+	/**
+	 * Returns a new object of class '<em>Parallel Choice Functionality Module</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Parallel Choice Functionality Module</em>'.
+	 * @generated
+	 */
+	ParallelChoiceFunctionalityModule createParallelChoiceFunctionalityModule();
 
 	/**
 	 * Returns the package supported by this factory.

@@ -24,8 +24,7 @@ import org.eclipse.emf.ecore.util.Switch;
  * @see org.eclipse.efbt.cocalimo.core.model.functionality_module.Functionality_modulePackage
  * @generated
  */
-public class Functionality_moduleSwitch<T> extends Switch<T>
-{
+public class Functionality_moduleSwitch<T> extends Switch<T> {
 	/**
 	 * The cached model package
 	 * <!-- begin-user-doc -->
@@ -40,8 +39,7 @@ public class Functionality_moduleSwitch<T> extends Switch<T>
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Functionality_moduleSwitch()
-	{
+	public Functionality_moduleSwitch() {
 		if (modelPackage == null) {
 			modelPackage = Functionality_modulePackage.eINSTANCE;
 		}
@@ -56,8 +54,7 @@ public class Functionality_moduleSwitch<T> extends Switch<T>
 	 * @generated
 	 */
 	@Override
-	protected boolean isSwitchFor(EPackage ePackage)
-	{
+	protected boolean isSwitchFor(EPackage ePackage) {
 		return ePackage == modelPackage;
 	}
 
@@ -69,8 +66,7 @@ public class Functionality_moduleSwitch<T> extends Switch<T>
 	 * @generated
 	 */
 	@Override
-	protected T doSwitch(int classifierID, EObject theEObject)
-	{
+	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
 			case Functionality_modulePackage.DATA_PROCESSING_FUNCTIONALITY_MODULE: {
 				DataProcessingFunctionalityModule dataProcessingFunctionalityModule = (DataProcessingFunctionalityModule)theEObject;
@@ -162,6 +158,14 @@ public class Functionality_moduleSwitch<T> extends Switch<T>
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case Functionality_modulePackage.PARALLEL_CHOICE_FUNCTIONALITY_MODULE: {
+				ParallelChoiceFunctionalityModule parallelChoiceFunctionalityModule = (ParallelChoiceFunctionalityModule)theEObject;
+				T result = caseParallelChoiceFunctionalityModule(parallelChoiceFunctionalityModule);
+				if (result == null) result = caseFunctionalityModuleSet(parallelChoiceFunctionalityModule);
+				if (result == null) result = caseFunctionalityModule(parallelChoiceFunctionalityModule);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -177,8 +181,7 @@ public class Functionality_moduleSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseDataProcessingFunctionalityModule(DataProcessingFunctionalityModule object)
-	{
+	public T caseDataProcessingFunctionalityModule(DataProcessingFunctionalityModule object) {
 		return null;
 	}
 
@@ -193,8 +196,7 @@ public class Functionality_moduleSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseLeafFunctionalityModule(LeafFunctionalityModule object)
-	{
+	public T caseLeafFunctionalityModule(LeafFunctionalityModule object) {
 		return null;
 	}
 
@@ -209,8 +211,7 @@ public class Functionality_moduleSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseParallelFunctionalityModule(ParallelFunctionalityModule object)
-	{
+	public T caseParallelFunctionalityModule(ParallelFunctionalityModule object) {
 		return null;
 	}
 
@@ -225,8 +226,7 @@ public class Functionality_moduleSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseScenarioSetFunctionalityModule(ScenarioSetFunctionalityModule object)
-	{
+	public T caseScenarioSetFunctionalityModule(ScenarioSetFunctionalityModule object) {
 		return null;
 	}
 
@@ -241,8 +241,7 @@ public class Functionality_moduleSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseSerialFunctionalityModule(SerialFunctionalityModule object)
-	{
+	public T caseSerialFunctionalityModule(SerialFunctionalityModule object) {
 		return null;
 	}
 
@@ -257,8 +256,7 @@ public class Functionality_moduleSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseFunctionalityModuleSet(FunctionalityModuleSet object)
-	{
+	public T caseFunctionalityModuleSet(FunctionalityModuleSet object) {
 		return null;
 	}
 
@@ -273,8 +271,7 @@ public class Functionality_moduleSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseReadDataSourceFunctionalityModule(ReadDataSourceFunctionalityModule object)
-	{
+	public T caseReadDataSourceFunctionalityModule(ReadDataSourceFunctionalityModule object) {
 		return null;
 	}
 
@@ -289,8 +286,7 @@ public class Functionality_moduleSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseReportCellCreationFunctionalityModule(ReportCellCreationFunctionalityModule object)
-	{
+	public T caseReportCellCreationFunctionalityModule(ReportCellCreationFunctionalityModule object) {
 		return null;
 	}
 
@@ -305,8 +301,7 @@ public class Functionality_moduleSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseFunctionalityModule(FunctionalityModule object)
-	{
+	public T caseFunctionalityModule(FunctionalityModule object) {
 		return null;
 	}
 
@@ -321,8 +316,7 @@ public class Functionality_moduleSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseFunctionalityModuleModule(FunctionalityModuleModule object)
-	{
+	public T caseFunctionalityModuleModule(FunctionalityModuleModule object) {
 		return null;
 	}
 
@@ -337,8 +331,7 @@ public class Functionality_moduleSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseFunctionalityModuleTag(FunctionalityModuleTag object)
-	{
+	public T caseFunctionalityModuleTag(FunctionalityModuleTag object) {
 		return null;
 	}
 
@@ -353,8 +346,22 @@ public class Functionality_moduleSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseValidationFunctionalityModule(ValidationFunctionalityModule object)
-	{
+	public T caseValidationFunctionalityModule(ValidationFunctionalityModule object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Parallel Choice Functionality Module</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Parallel Choice Functionality Module</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseParallelChoiceFunctionalityModule(ParallelChoiceFunctionalityModule object) {
 		return null;
 	}
 
@@ -369,8 +376,7 @@ public class Functionality_moduleSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseModule(org.eclipse.efbt.cocalimo.core.model.module_management.Module object)
-	{
+	public T caseModule(org.eclipse.efbt.cocalimo.core.model.module_management.Module object) {
 		return null;
 	}
 
@@ -385,8 +391,7 @@ public class Functionality_moduleSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseTag(Tag object)
-	{
+	public T caseTag(Tag object) {
 		return null;
 	}
 
@@ -402,8 +407,7 @@ public class Functionality_moduleSwitch<T> extends Switch<T>
 	 * @generated
 	 */
 	@Override
-	public T defaultCase(EObject object)
-	{
+	public T defaultCase(EObject object) {
 		return null;
 	}
 

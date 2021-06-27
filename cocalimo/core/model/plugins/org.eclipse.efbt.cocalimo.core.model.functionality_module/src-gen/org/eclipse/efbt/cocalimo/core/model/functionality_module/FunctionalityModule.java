@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModule#getUsedModule <em>Used Module</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModule#getScenario <em>Scenario</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModule#getScenarioSet <em>Scenario Set</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModule#isUsedInSubset <em>Used In Subset</em>}</li>
  * </ul>
  *
  * @see org.eclipse.efbt.cocalimo.core.model.functionality_module.Functionality_modulePackage#getFunctionalityModule()
@@ -32,8 +33,7 @@ import org.eclipse.emf.ecore.EObject;
  *        extendedMetaData="name='FunctionalityModule' kind='empty'"
  * @generated
  */
-public interface FunctionalityModule extends EObject
-{
+public interface FunctionalityModule extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -137,5 +137,27 @@ public interface FunctionalityModule extends EObject
 	 * @generated
 	 */
 	void setScenarioSet(ScenarioSet value);
+
+	/**
+	 * Returns the value of the '<em><b>Used In Subset</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Used In Subset</em>' attribute.
+	 * @see #setUsedInSubset(boolean)
+	 * @see org.eclipse.efbt.cocalimo.core.model.functionality_module.Functionality_modulePackage#getFunctionalityModule_UsedInSubset()
+	 * @model
+	 * @generated
+	 */
+	boolean isUsedInSubset();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModule#isUsedInSubset <em>Used In Subset</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Used In Subset</em>' attribute.
+	 * @see #isUsedInSubset()
+	 * @generated
+	 */
+	void setUsedInSubset(boolean value);
 
 } // FunctionalityModule

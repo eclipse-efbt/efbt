@@ -21,12 +21,12 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.scenarios.impl.ScenarioImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.core.model.scenarios.impl.ScenarioImpl#isUsedInSubset <em>Used In Subset</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenario
-{
+public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenario {
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -48,12 +48,31 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
 	protected String name = NAME_EDEFAULT;
 
 	/**
+	 * The default value of the '{@link #isUsedInSubset() <em>Used In Subset</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isUsedInSubset()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean USED_IN_SUBSET_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isUsedInSubset() <em>Used In Subset</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isUsedInSubset()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean usedInSubset = USED_IN_SUBSET_EDEFAULT;
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ScenarioImpl()
-	{
+	protected ScenarioImpl() {
 		super();
 	}
 
@@ -63,8 +82,7 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return ScenariosPackage.Literals.SCENARIO;
 	}
 
@@ -74,8 +92,7 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
 	 * @generated
 	 */
 	@Override
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
@@ -85,8 +102,7 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
 	 * @generated
 	 */
 	@Override
-	public void setName(String newName)
-	{
+	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
@@ -99,11 +115,35 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public boolean isUsedInSubset() {
+		return usedInSubset;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setUsedInSubset(boolean newUsedInSubset) {
+		boolean oldUsedInSubset = usedInSubset;
+		usedInSubset = newUsedInSubset;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ScenariosPackage.SCENARIO__USED_IN_SUBSET, oldUsedInSubset, usedInSubset));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case ScenariosPackage.SCENARIO__NAME:
 				return getName();
+			case ScenariosPackage.SCENARIO__USED_IN_SUBSET:
+				return isUsedInSubset();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -114,11 +154,13 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case ScenariosPackage.SCENARIO__NAME:
 				setName((String)newValue);
+				return;
+			case ScenariosPackage.SCENARIO__USED_IN_SUBSET:
+				setUsedInSubset((Boolean)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -130,11 +172,13 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case ScenariosPackage.SCENARIO__NAME:
 				setName(NAME_EDEFAULT);
+				return;
+			case ScenariosPackage.SCENARIO__USED_IN_SUBSET:
+				setUsedInSubset(USED_IN_SUBSET_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -146,11 +190,12 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ScenariosPackage.SCENARIO__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+			case ScenariosPackage.SCENARIO__USED_IN_SUBSET:
+				return usedInSubset != USED_IN_SUBSET_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -161,13 +206,14 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (name: ");
 		result.append(name);
+		result.append(", usedInSubset: ");
+		result.append(usedInSubset);
 		result.append(')');
 		return result.toString();
 	}

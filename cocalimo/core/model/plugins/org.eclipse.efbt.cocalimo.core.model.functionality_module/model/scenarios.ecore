@@ -25,6 +25,7 @@
         <details key="name" value="name"/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="usedInSubset" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ScenarioSet">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">

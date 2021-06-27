@@ -36,8 +36,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class ScenarioSetImpl extends MinimalEObjectImpl.Container implements ScenarioSet
-{
+public class ScenarioSetImpl extends MinimalEObjectImpl.Container implements ScenarioSet {
 	/**
 	 * The cached value of the '{@link #getScenarios() <em>Scenarios</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -73,8 +72,7 @@ public class ScenarioSetImpl extends MinimalEObjectImpl.Container implements Sce
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ScenarioSetImpl()
-	{
+	protected ScenarioSetImpl() {
 		super();
 	}
 
@@ -84,8 +82,7 @@ public class ScenarioSetImpl extends MinimalEObjectImpl.Container implements Sce
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return ScenariosPackage.Literals.SCENARIO_SET;
 	}
 
@@ -95,8 +92,7 @@ public class ScenarioSetImpl extends MinimalEObjectImpl.Container implements Sce
 	 * @generated
 	 */
 	@Override
-	public EList<Scenario> getScenarios()
-	{
+	public EList<Scenario> getScenarios() {
 		if (scenarios == null) {
 			scenarios = new EObjectContainmentEList<Scenario>(Scenario.class, this, ScenariosPackage.SCENARIO_SET__SCENARIOS);
 		}
@@ -109,8 +105,7 @@ public class ScenarioSetImpl extends MinimalEObjectImpl.Container implements Sce
 	 * @generated
 	 */
 	@Override
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
@@ -120,8 +115,7 @@ public class ScenarioSetImpl extends MinimalEObjectImpl.Container implements Sce
 	 * @generated
 	 */
 	@Override
-	public void setName(String newName)
-	{
+	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
@@ -134,8 +128,7 @@ public class ScenarioSetImpl extends MinimalEObjectImpl.Container implements Sce
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case ScenariosPackage.SCENARIO_SET__SCENARIOS:
 				return ((InternalEList<?>)getScenarios()).basicRemove(otherEnd, msgs);
@@ -149,8 +142,7 @@ public class ScenarioSetImpl extends MinimalEObjectImpl.Container implements Sce
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case ScenariosPackage.SCENARIO_SET__SCENARIOS:
 				return getScenarios();
@@ -167,8 +159,7 @@ public class ScenarioSetImpl extends MinimalEObjectImpl.Container implements Sce
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case ScenariosPackage.SCENARIO_SET__SCENARIOS:
 				getScenarios().clear();
@@ -187,8 +178,7 @@ public class ScenarioSetImpl extends MinimalEObjectImpl.Container implements Sce
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case ScenariosPackage.SCENARIO_SET__SCENARIOS:
 				getScenarios().clear();
@@ -206,8 +196,7 @@ public class ScenarioSetImpl extends MinimalEObjectImpl.Container implements Sce
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ScenariosPackage.SCENARIO_SET__SCENARIOS:
 				return scenarios != null && !scenarios.isEmpty();
@@ -223,8 +212,7 @@ public class ScenarioSetImpl extends MinimalEObjectImpl.Container implements Sce
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

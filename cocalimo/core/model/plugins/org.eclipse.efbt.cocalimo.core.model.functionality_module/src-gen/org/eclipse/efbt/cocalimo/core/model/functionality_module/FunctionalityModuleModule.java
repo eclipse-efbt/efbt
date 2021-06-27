@@ -28,8 +28,7 @@ import org.eclipse.emf.common.util.EList;
  * @model extendedMetaData="name='FunctionalityModuleModule' kind='elementOnly'"
  * @generated
  */
-public interface FunctionalityModuleModule extends org.eclipse.efbt.cocalimo.core.model.module_management.Module
-{
+public interface FunctionalityModuleModule extends org.eclipse.efbt.cocalimo.core.model.module_management.Module {
 	/**
 	 * Returns the value of the '<em><b>Functionality Modules</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModule}.

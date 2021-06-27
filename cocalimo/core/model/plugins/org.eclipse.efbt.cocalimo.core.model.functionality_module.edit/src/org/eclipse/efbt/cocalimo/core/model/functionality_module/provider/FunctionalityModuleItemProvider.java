@@ -67,6 +67,7 @@ public class FunctionalityModuleItemProvider
 			addNamePropertyDescriptor(object);
 			addUsedModulePropertyDescriptor(object);
 			addScenarioPropertyDescriptor(object);
+			addUsedInSubsetPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -138,6 +139,28 @@ public class FunctionalityModuleItemProvider
 	}
 
 	/**
+	 * This adds a property descriptor for the Used In Subset feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addUsedInSubsetPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_FunctionalityModule_usedInSubset_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_FunctionalityModule_usedInSubset_feature", "_UI_FunctionalityModule_type"),
+				 Functionality_modulePackage.Literals.FUNCTIONALITY_MODULE__USED_IN_SUBSET,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
 	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
 	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
 	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
@@ -195,6 +218,7 @@ public class FunctionalityModuleItemProvider
 
 		switch (notification.getFeatureID(FunctionalityModule.class)) {
 			case Functionality_modulePackage.FUNCTIONALITY_MODULE__NAME:
+			case Functionality_modulePackage.FUNCTIONALITY_MODULE__USED_IN_SUBSET:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 			case Functionality_modulePackage.FUNCTIONALITY_MODULE__SCENARIO_SET:

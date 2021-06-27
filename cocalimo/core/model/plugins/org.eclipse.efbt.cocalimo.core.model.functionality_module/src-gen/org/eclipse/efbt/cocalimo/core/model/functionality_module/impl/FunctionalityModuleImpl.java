@@ -29,12 +29,12 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.functionality_module.impl.FunctionalityModuleImpl#getUsedModule <em>Used Module</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.functionality_module.impl.FunctionalityModuleImpl#getScenario <em>Scenario</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.functionality_module.impl.FunctionalityModuleImpl#getScenarioSet <em>Scenario Set</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.core.model.functionality_module.impl.FunctionalityModuleImpl#isUsedInSubset <em>Used In Subset</em>}</li>
  * </ul>
  *
  * @generated
  */
-public abstract class FunctionalityModuleImpl extends MinimalEObjectImpl.Container implements FunctionalityModule
-{
+public abstract class FunctionalityModuleImpl extends MinimalEObjectImpl.Container implements FunctionalityModule {
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -86,12 +86,31 @@ public abstract class FunctionalityModuleImpl extends MinimalEObjectImpl.Contain
 	protected ScenarioSet scenarioSet;
 
 	/**
+	 * The default value of the '{@link #isUsedInSubset() <em>Used In Subset</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isUsedInSubset()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean USED_IN_SUBSET_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isUsedInSubset() <em>Used In Subset</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isUsedInSubset()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean usedInSubset = USED_IN_SUBSET_EDEFAULT;
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected FunctionalityModuleImpl()
-	{
+	protected FunctionalityModuleImpl() {
 		super();
 	}
 
@@ -101,8 +120,7 @@ public abstract class FunctionalityModuleImpl extends MinimalEObjectImpl.Contain
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Functionality_modulePackage.Literals.FUNCTIONALITY_MODULE;
 	}
 
@@ -112,8 +130,7 @@ public abstract class FunctionalityModuleImpl extends MinimalEObjectImpl.Contain
 	 * @generated
 	 */
 	@Override
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
@@ -123,8 +140,7 @@ public abstract class FunctionalityModuleImpl extends MinimalEObjectImpl.Contain
 	 * @generated
 	 */
 	@Override
-	public void setName(String newName)
-	{
+	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
@@ -137,8 +153,7 @@ public abstract class FunctionalityModuleImpl extends MinimalEObjectImpl.Contain
 	 * @generated
 	 */
 	@Override
-	public FunctionalityModule getUsedModule()
-	{
+	public FunctionalityModule getUsedModule() {
 		if (usedModule != null && usedModule.eIsProxy()) {
 			InternalEObject oldUsedModule = (InternalEObject)usedModule;
 			usedModule = (FunctionalityModule)eResolveProxy(oldUsedModule);
@@ -155,8 +170,7 @@ public abstract class FunctionalityModuleImpl extends MinimalEObjectImpl.Contain
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public FunctionalityModule basicGetUsedModule()
-	{
+	public FunctionalityModule basicGetUsedModule() {
 		return usedModule;
 	}
 
@@ -166,8 +180,7 @@ public abstract class FunctionalityModuleImpl extends MinimalEObjectImpl.Contain
 	 * @generated
 	 */
 	@Override
-	public void setUsedModule(FunctionalityModule newUsedModule)
-	{
+	public void setUsedModule(FunctionalityModule newUsedModule) {
 		FunctionalityModule oldUsedModule = usedModule;
 		usedModule = newUsedModule;
 		if (eNotificationRequired())
@@ -180,8 +193,7 @@ public abstract class FunctionalityModuleImpl extends MinimalEObjectImpl.Contain
 	 * @generated
 	 */
 	@Override
-	public Scenario getScenario()
-	{
+	public Scenario getScenario() {
 		if (scenario != null && scenario.eIsProxy()) {
 			InternalEObject oldScenario = (InternalEObject)scenario;
 			scenario = (Scenario)eResolveProxy(oldScenario);
@@ -198,8 +210,7 @@ public abstract class FunctionalityModuleImpl extends MinimalEObjectImpl.Contain
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Scenario basicGetScenario()
-	{
+	public Scenario basicGetScenario() {
 		return scenario;
 	}
 
@@ -209,8 +220,7 @@ public abstract class FunctionalityModuleImpl extends MinimalEObjectImpl.Contain
 	 * @generated
 	 */
 	@Override
-	public void setScenario(Scenario newScenario)
-	{
+	public void setScenario(Scenario newScenario) {
 		Scenario oldScenario = scenario;
 		scenario = newScenario;
 		if (eNotificationRequired())
@@ -223,8 +233,7 @@ public abstract class FunctionalityModuleImpl extends MinimalEObjectImpl.Contain
 	 * @generated
 	 */
 	@Override
-	public ScenarioSet getScenarioSet()
-	{
+	public ScenarioSet getScenarioSet() {
 		return scenarioSet;
 	}
 
@@ -233,8 +242,7 @@ public abstract class FunctionalityModuleImpl extends MinimalEObjectImpl.Contain
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetScenarioSet(ScenarioSet newScenarioSet, NotificationChain msgs)
-	{
+	public NotificationChain basicSetScenarioSet(ScenarioSet newScenarioSet, NotificationChain msgs) {
 		ScenarioSet oldScenarioSet = scenarioSet;
 		scenarioSet = newScenarioSet;
 		if (eNotificationRequired()) {
@@ -250,8 +258,7 @@ public abstract class FunctionalityModuleImpl extends MinimalEObjectImpl.Contain
 	 * @generated
 	 */
 	@Override
-	public void setScenarioSet(ScenarioSet newScenarioSet)
-	{
+	public void setScenarioSet(ScenarioSet newScenarioSet) {
 		if (newScenarioSet != scenarioSet) {
 			NotificationChain msgs = null;
 			if (scenarioSet != null)
@@ -271,8 +278,30 @@ public abstract class FunctionalityModuleImpl extends MinimalEObjectImpl.Contain
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public boolean isUsedInSubset() {
+		return usedInSubset;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setUsedInSubset(boolean newUsedInSubset) {
+		boolean oldUsedInSubset = usedInSubset;
+		usedInSubset = newUsedInSubset;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, Functionality_modulePackage.FUNCTIONALITY_MODULE__USED_IN_SUBSET, oldUsedInSubset, usedInSubset));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case Functionality_modulePackage.FUNCTIONALITY_MODULE__SCENARIO_SET:
 				return basicSetScenarioSet(null, msgs);
@@ -286,8 +315,7 @@ public abstract class FunctionalityModuleImpl extends MinimalEObjectImpl.Contain
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Functionality_modulePackage.FUNCTIONALITY_MODULE__NAME:
 				return getName();
@@ -299,6 +327,8 @@ public abstract class FunctionalityModuleImpl extends MinimalEObjectImpl.Contain
 				return basicGetScenario();
 			case Functionality_modulePackage.FUNCTIONALITY_MODULE__SCENARIO_SET:
 				return getScenarioSet();
+			case Functionality_modulePackage.FUNCTIONALITY_MODULE__USED_IN_SUBSET:
+				return isUsedInSubset();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -309,8 +339,7 @@ public abstract class FunctionalityModuleImpl extends MinimalEObjectImpl.Contain
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Functionality_modulePackage.FUNCTIONALITY_MODULE__NAME:
 				setName((String)newValue);
@@ -324,6 +353,9 @@ public abstract class FunctionalityModuleImpl extends MinimalEObjectImpl.Contain
 			case Functionality_modulePackage.FUNCTIONALITY_MODULE__SCENARIO_SET:
 				setScenarioSet((ScenarioSet)newValue);
 				return;
+			case Functionality_modulePackage.FUNCTIONALITY_MODULE__USED_IN_SUBSET:
+				setUsedInSubset((Boolean)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -334,8 +366,7 @@ public abstract class FunctionalityModuleImpl extends MinimalEObjectImpl.Contain
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Functionality_modulePackage.FUNCTIONALITY_MODULE__NAME:
 				setName(NAME_EDEFAULT);
@@ -349,6 +380,9 @@ public abstract class FunctionalityModuleImpl extends MinimalEObjectImpl.Contain
 			case Functionality_modulePackage.FUNCTIONALITY_MODULE__SCENARIO_SET:
 				setScenarioSet((ScenarioSet)null);
 				return;
+			case Functionality_modulePackage.FUNCTIONALITY_MODULE__USED_IN_SUBSET:
+				setUsedInSubset(USED_IN_SUBSET_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -359,8 +393,7 @@ public abstract class FunctionalityModuleImpl extends MinimalEObjectImpl.Contain
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Functionality_modulePackage.FUNCTIONALITY_MODULE__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
@@ -370,6 +403,8 @@ public abstract class FunctionalityModuleImpl extends MinimalEObjectImpl.Contain
 				return scenario != null;
 			case Functionality_modulePackage.FUNCTIONALITY_MODULE__SCENARIO_SET:
 				return scenarioSet != null;
+			case Functionality_modulePackage.FUNCTIONALITY_MODULE__USED_IN_SUBSET:
+				return usedInSubset != USED_IN_SUBSET_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -380,13 +415,14 @@ public abstract class FunctionalityModuleImpl extends MinimalEObjectImpl.Contain
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (name: ");
 		result.append(name);
+		result.append(", usedInSubset: ");
+		result.append(usedInSubset);
 		result.append(')');
 		return result.toString();
 	}

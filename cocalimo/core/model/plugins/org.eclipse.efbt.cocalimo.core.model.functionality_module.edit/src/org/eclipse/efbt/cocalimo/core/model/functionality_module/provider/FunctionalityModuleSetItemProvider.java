@@ -180,6 +180,11 @@ public class FunctionalityModuleSetItemProvider extends FunctionalityModuleItemP
 			(createChildParameter
 				(Functionality_modulePackage.Literals.FUNCTIONALITY_MODULE_SET__SUB_MODULES,
 				 Functionality_moduleFactory.eINSTANCE.createValidationFunctionalityModule()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(Functionality_modulePackage.Literals.FUNCTIONALITY_MODULE_SET__SUB_MODULES,
+				 Functionality_moduleFactory.eINSTANCE.createParallelChoiceFunctionalityModule()));
 	}
 
 }
