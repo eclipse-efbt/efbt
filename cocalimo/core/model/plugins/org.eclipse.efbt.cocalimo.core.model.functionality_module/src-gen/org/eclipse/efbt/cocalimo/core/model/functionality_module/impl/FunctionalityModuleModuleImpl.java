@@ -38,8 +38,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class FunctionalityModuleModuleImpl extends ModuleImpl implements FunctionalityModuleModule
-{
+public class FunctionalityModuleModuleImpl extends ModuleImpl implements FunctionalityModuleModule {
 	/**
 	 * The cached value of the '{@link #getFunctionalityModules() <em>Functionality Modules</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -75,8 +74,7 @@ public class FunctionalityModuleModuleImpl extends ModuleImpl implements Functio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected FunctionalityModuleModuleImpl()
-	{
+	protected FunctionalityModuleModuleImpl() {
 		super();
 	}
 
@@ -86,8 +84,7 @@ public class FunctionalityModuleModuleImpl extends ModuleImpl implements Functio
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Functionality_modulePackage.Literals.FUNCTIONALITY_MODULE_MODULE;
 	}
 
@@ -97,8 +94,7 @@ public class FunctionalityModuleModuleImpl extends ModuleImpl implements Functio
 	 * @generated
 	 */
 	@Override
-	public EList<FunctionalityModule> getFunctionalityModules()
-	{
+	public EList<FunctionalityModule> getFunctionalityModules() {
 		if (functionalityModules == null) {
 			functionalityModules = new EObjectContainmentEList<FunctionalityModule>(FunctionalityModule.class, this, Functionality_modulePackage.FUNCTIONALITY_MODULE_MODULE__FUNCTIONALITY_MODULES);
 		}
@@ -111,8 +107,7 @@ public class FunctionalityModuleModuleImpl extends ModuleImpl implements Functio
 	 * @generated
 	 */
 	@Override
-	public EList<FunctionalityModuleTag> getFunctionalityModuleTags()
-	{
+	public EList<FunctionalityModuleTag> getFunctionalityModuleTags() {
 		if (functionalityModuleTags == null) {
 			functionalityModuleTags = new EObjectContainmentEList<FunctionalityModuleTag>(FunctionalityModuleTag.class, this, Functionality_modulePackage.FUNCTIONALITY_MODULE_MODULE__FUNCTIONALITY_MODULE_TAGS);
 		}
@@ -125,8 +120,7 @@ public class FunctionalityModuleModuleImpl extends ModuleImpl implements Functio
 	 * @generated
 	 */
 	@Override
-	public EList<ScenarioTag> getSceanrioTags()
-	{
+	public EList<ScenarioTag> getSceanrioTags() {
 		if (sceanrioTags == null) {
 			sceanrioTags = new EObjectContainmentEList<ScenarioTag>(ScenarioTag.class, this, Functionality_modulePackage.FUNCTIONALITY_MODULE_MODULE__SCEANRIO_TAGS);
 		}
@@ -139,8 +133,7 @@ public class FunctionalityModuleModuleImpl extends ModuleImpl implements Functio
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case Functionality_modulePackage.FUNCTIONALITY_MODULE_MODULE__FUNCTIONALITY_MODULES:
 				return ((InternalEList<?>)getFunctionalityModules()).basicRemove(otherEnd, msgs);
@@ -158,8 +151,7 @@ public class FunctionalityModuleModuleImpl extends ModuleImpl implements Functio
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Functionality_modulePackage.FUNCTIONALITY_MODULE_MODULE__FUNCTIONALITY_MODULES:
 				return getFunctionalityModules();
@@ -178,8 +170,7 @@ public class FunctionalityModuleModuleImpl extends ModuleImpl implements Functio
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Functionality_modulePackage.FUNCTIONALITY_MODULE_MODULE__FUNCTIONALITY_MODULES:
 				getFunctionalityModules().clear();
@@ -203,8 +194,7 @@ public class FunctionalityModuleModuleImpl extends ModuleImpl implements Functio
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Functionality_modulePackage.FUNCTIONALITY_MODULE_MODULE__FUNCTIONALITY_MODULES:
 				getFunctionalityModules().clear();
@@ -225,8 +215,7 @@ public class FunctionalityModuleModuleImpl extends ModuleImpl implements Functio
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Functionality_modulePackage.FUNCTIONALITY_MODULE_MODULE__FUNCTIONALITY_MODULES:
 				return functionalityModules != null && !functionalityModules.isEmpty();

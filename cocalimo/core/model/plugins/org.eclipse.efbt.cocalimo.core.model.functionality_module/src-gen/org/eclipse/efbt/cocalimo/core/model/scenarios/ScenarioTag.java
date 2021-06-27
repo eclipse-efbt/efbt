@@ -24,8 +24,7 @@ import org.eclipse.efbt.cocalimo.core.model.requirements_text.Tag;
  * @model
  * @generated
  */
-public interface ScenarioTag extends Tag
-{
+public interface ScenarioTag extends Tag {
 	/**
 	 * Returns the value of the '<em><b>Scenario</b></em>' reference.
 	 * <!-- begin-user-doc -->

@@ -24,8 +24,7 @@ import org.eclipse.emf.ecore.util.Switch;
  * @see org.eclipse.efbt.cocalimo.core.model.scenarios.ScenariosPackage
  * @generated
  */
-public class ScenariosSwitch<T> extends Switch<T>
-{
+public class ScenariosSwitch<T> extends Switch<T> {
 	/**
 	 * The cached model package
 	 * <!-- begin-user-doc -->
@@ -40,8 +39,7 @@ public class ScenariosSwitch<T> extends Switch<T>
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ScenariosSwitch()
-	{
+	public ScenariosSwitch() {
 		if (modelPackage == null) {
 			modelPackage = ScenariosPackage.eINSTANCE;
 		}
@@ -56,8 +54,7 @@ public class ScenariosSwitch<T> extends Switch<T>
 	 * @generated
 	 */
 	@Override
-	protected boolean isSwitchFor(EPackage ePackage)
-	{
+	protected boolean isSwitchFor(EPackage ePackage) {
 		return ePackage == modelPackage;
 	}
 
@@ -69,8 +66,7 @@ public class ScenariosSwitch<T> extends Switch<T>
 	 * @generated
 	 */
 	@Override
-	protected T doSwitch(int classifierID, EObject theEObject)
-	{
+	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
 			case ScenariosPackage.SCENARIO: {
 				Scenario scenario = (Scenario)theEObject;
@@ -113,8 +109,7 @@ public class ScenariosSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseScenario(Scenario object)
-	{
+	public T caseScenario(Scenario object) {
 		return null;
 	}
 
@@ -129,8 +124,7 @@ public class ScenariosSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseScenarioSet(ScenarioSet object)
-	{
+	public T caseScenarioSet(ScenarioSet object) {
 		return null;
 	}
 
@@ -145,8 +139,7 @@ public class ScenariosSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseScenarioTag(ScenarioTag object)
-	{
+	public T caseScenarioTag(ScenarioTag object) {
 		return null;
 	}
 
@@ -161,8 +154,7 @@ public class ScenariosSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseScenarioSetTag(ScenarioSetTag object)
-	{
+	public T caseScenarioSetTag(ScenarioSetTag object) {
 		return null;
 	}
 
@@ -177,8 +169,7 @@ public class ScenariosSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseTag(Tag object)
-	{
+	public T caseTag(Tag object) {
 		return null;
 	}
 
@@ -194,8 +185,7 @@ public class ScenariosSwitch<T> extends Switch<T>
 	 * @generated
 	 */
 	@Override
-	public T defaultCase(EObject object)
-	{
+	public T defaultCase(EObject object) {
 		return null;
 	}
 

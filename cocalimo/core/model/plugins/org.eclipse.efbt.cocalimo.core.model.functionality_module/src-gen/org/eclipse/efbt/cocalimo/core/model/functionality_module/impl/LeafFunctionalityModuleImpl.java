@@ -4,7 +4,6 @@ package org.eclipse.efbt.cocalimo.core.model.functionality_module.impl;
 
 import org.eclipse.efbt.cocalimo.core.model.functionality_module.Functionality_modulePackage;
 import org.eclipse.efbt.cocalimo.core.model.functionality_module.LeafFunctionalityModule;
-
 import org.eclipse.emf.ecore.EClass;
 
 /**
@@ -14,15 +13,13 @@ import org.eclipse.emf.ecore.EClass;
  *
  * @generated
  */
-public class LeafFunctionalityModuleImpl extends FunctionalityModuleImpl implements LeafFunctionalityModule
-{
+public class LeafFunctionalityModuleImpl extends FunctionalityModuleImpl implements LeafFunctionalityModule {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected LeafFunctionalityModuleImpl()
-	{
+	protected LeafFunctionalityModuleImpl() {
 		super();
 	}
 
@@ -32,8 +29,7 @@ public class LeafFunctionalityModuleImpl extends FunctionalityModuleImpl impleme
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Functionality_modulePackage.Literals.LEAF_FUNCTIONALITY_MODULE;
 	}
 

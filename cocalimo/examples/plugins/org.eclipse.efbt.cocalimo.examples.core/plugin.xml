@@ -33,8 +33,7 @@
         <example wizardID="org.eclipse.efbt.wizard.EFBTExampleWizard" pageImage="icons/EObject.gif">
             <projectDescriptor name="org.eclipse.efbt.example.standard" contentURI="examples/org.eclipse.efbt.example.standard/" description="EFBT Standard Example"/>
             <projectDescriptor name="org.eclipse.efbt.example.frtb" contentURI="examples/org.eclipse.efbt.example.frtb/" description="FRTB Example"/>
-            <projectDescriptor name="org.eclipse.efbt.cocason.example.bird_import" contentURI="examples/org.eclipse.efbt.cocason.example.bird_import/" description="CoCaSon BIRD Import Example 1"/>
-            <projectDescriptor name="org.eclipse.efbt.cocason.example.ldm" contentURI="examples/org.eclipse.efbt.cocason.example.ldm/" description="CoCaSon LDM Example 1"/>                              
+            <projectDescriptor name="org.eclipse.efbt.example.finrep" contentURI="examples/org.eclipse.efbt.example.finrep/" description="Finrep Example"/>
         </example>
     </extension>
 </plugin>

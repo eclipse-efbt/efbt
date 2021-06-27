@@ -1,5 +1,6 @@
+/**
+ */
 package org.eclipse.efbt.cocalimo.core.model.scenarios.util;
-
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;

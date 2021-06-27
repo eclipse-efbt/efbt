@@ -24,8 +24,7 @@ import org.eclipse.efbt.cocalimo.core.model.requirements_text.Tag;
  * @model
  * @generated
  */
-public interface FunctionalityModuleTag extends Tag
-{
+public interface FunctionalityModuleTag extends Tag {
 	/**
 	 * Returns the value of the '<em><b>Functionality Module</b></em>' reference.
 	 * <!-- begin-user-doc -->

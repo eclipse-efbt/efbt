@@ -14,15 +14,13 @@ import org.eclipse.emf.ecore.EClass;
  *
  * @generated
  */
-public class ParallelFunctionalityModuleImpl extends FunctionalityModuleSetImpl implements ParallelFunctionalityModule
-{
+public class ParallelFunctionalityModuleImpl extends FunctionalityModuleSetImpl implements ParallelFunctionalityModule {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ParallelFunctionalityModuleImpl()
-	{
+	protected ParallelFunctionalityModuleImpl() {
 		super();
 	}
 
@@ -32,8 +30,7 @@ public class ParallelFunctionalityModuleImpl extends FunctionalityModuleSetImpl 
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Functionality_modulePackage.Literals.PARALLEL_FUNCTIONALITY_MODULE;
 	}
 

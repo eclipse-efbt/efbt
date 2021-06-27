@@ -18,14 +18,14 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.scenarios.Scenario#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.core.model.scenarios.Scenario#isUsedInSubset <em>Used In Subset</em>}</li>
  * </ul>
  *
  * @see org.eclipse.efbt.cocalimo.core.model.scenarios.ScenariosPackage#getScenario()
  * @model extendedMetaData="name='Scenario' kind='empty'"
  * @generated
  */
-public interface Scenario extends EObject
-{
+public interface Scenario extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -51,5 +51,27 @@ public interface Scenario extends EObject
 	 * @generated
 	 */
 	void setName(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Used In Subset</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Used In Subset</em>' attribute.
+	 * @see #setUsedInSubset(boolean)
+	 * @see org.eclipse.efbt.cocalimo.core.model.scenarios.ScenariosPackage#getScenario_UsedInSubset()
+	 * @model
+	 * @generated
+	 */
+	boolean isUsedInSubset();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.core.model.scenarios.Scenario#isUsedInSubset <em>Used In Subset</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Used In Subset</em>' attribute.
+	 * @see #isUsedInSubset()
+	 * @generated
+	 */
+	void setUsedInSubset(boolean value);
 
 } // Scenario

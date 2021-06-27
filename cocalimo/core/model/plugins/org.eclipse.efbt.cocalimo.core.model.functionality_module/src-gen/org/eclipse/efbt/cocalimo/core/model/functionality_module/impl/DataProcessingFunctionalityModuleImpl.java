@@ -14,15 +14,13 @@ import org.eclipse.emf.ecore.EClass;
  *
  * @generated
  */
-public class DataProcessingFunctionalityModuleImpl extends LeafFunctionalityModuleImpl implements DataProcessingFunctionalityModule
-{
+public class DataProcessingFunctionalityModuleImpl extends LeafFunctionalityModuleImpl implements DataProcessingFunctionalityModule {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected DataProcessingFunctionalityModuleImpl()
-	{
+	protected DataProcessingFunctionalityModuleImpl() {
 		super();
 	}
 
@@ -32,8 +30,7 @@ public class DataProcessingFunctionalityModuleImpl extends LeafFunctionalityModu
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Functionality_modulePackage.Literals.DATA_PROCESSING_FUNCTIONALITY_MODULE;
 	}
 

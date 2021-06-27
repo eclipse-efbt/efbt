@@ -21,8 +21,7 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.eclipse.efbt.cocalimo.core.model.functionality_module.Functionality_modulePackage
  * @generated
  */
-public class Functionality_moduleAdapterFactory extends AdapterFactoryImpl
-{
+public class Functionality_moduleAdapterFactory extends AdapterFactoryImpl {
 	/**
 	 * The cached model package.
 	 * <!-- begin-user-doc -->
@@ -37,8 +36,7 @@ public class Functionality_moduleAdapterFactory extends AdapterFactoryImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Functionality_moduleAdapterFactory()
-	{
+	public Functionality_moduleAdapterFactory() {
 		if (modelPackage == null) {
 			modelPackage = Functionality_modulePackage.eINSTANCE;
 		}
@@ -53,8 +51,7 @@ public class Functionality_moduleAdapterFactory extends AdapterFactoryImpl
 	 * @generated
 	 */
 	@Override
-	public boolean isFactoryForType(Object object)
-	{
+	public boolean isFactoryForType(Object object) {
 		if (object == modelPackage) {
 			return true;
 		}
@@ -121,6 +118,10 @@ public class Functionality_moduleAdapterFactory extends AdapterFactoryImpl
 				return createValidationFunctionalityModuleAdapter();
 			}
 			@Override
+			public Adapter caseParallelChoiceFunctionalityModule(ParallelChoiceFunctionalityModule object) {
+				return createParallelChoiceFunctionalityModuleAdapter();
+			}
+			@Override
 			public Adapter caseModule(org.eclipse.efbt.cocalimo.core.model.module_management.Module object) {
 				return createModuleAdapter();
 			}
@@ -143,8 +144,7 @@ public class Functionality_moduleAdapterFactory extends AdapterFactoryImpl
 	 * @generated
 	 */
 	@Override
-	public Adapter createAdapter(Notifier target)
-	{
+	public Adapter createAdapter(Notifier target) {
 		return modelSwitch.doSwitch((EObject)target);
 	}
 
@@ -159,8 +159,7 @@ public class Functionality_moduleAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.core.model.functionality_module.DataProcessingFunctionalityModule
 	 * @generated
 	 */
-	public Adapter createDataProcessingFunctionalityModuleAdapter()
-	{
+	public Adapter createDataProcessingFunctionalityModuleAdapter() {
 		return null;
 	}
 
@@ -174,8 +173,7 @@ public class Functionality_moduleAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.core.model.functionality_module.LeafFunctionalityModule
 	 * @generated
 	 */
-	public Adapter createLeafFunctionalityModuleAdapter()
-	{
+	public Adapter createLeafFunctionalityModuleAdapter() {
 		return null;
 	}
 
@@ -189,8 +187,7 @@ public class Functionality_moduleAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.core.model.functionality_module.ParallelFunctionalityModule
 	 * @generated
 	 */
-	public Adapter createParallelFunctionalityModuleAdapter()
-	{
+	public Adapter createParallelFunctionalityModuleAdapter() {
 		return null;
 	}
 
@@ -204,8 +201,7 @@ public class Functionality_moduleAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.core.model.functionality_module.ScenarioSetFunctionalityModule
 	 * @generated
 	 */
-	public Adapter createScenarioSetFunctionalityModuleAdapter()
-	{
+	public Adapter createScenarioSetFunctionalityModuleAdapter() {
 		return null;
 	}
 
@@ -219,8 +215,7 @@ public class Functionality_moduleAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.core.model.functionality_module.SerialFunctionalityModule
 	 * @generated
 	 */
-	public Adapter createSerialFunctionalityModuleAdapter()
-	{
+	public Adapter createSerialFunctionalityModuleAdapter() {
 		return null;
 	}
 
@@ -234,8 +229,7 @@ public class Functionality_moduleAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModuleSet
 	 * @generated
 	 */
-	public Adapter createFunctionalityModuleSetAdapter()
-	{
+	public Adapter createFunctionalityModuleSetAdapter() {
 		return null;
 	}
 
@@ -249,8 +243,7 @@ public class Functionality_moduleAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.core.model.functionality_module.ReadDataSourceFunctionalityModule
 	 * @generated
 	 */
-	public Adapter createReadDataSourceFunctionalityModuleAdapter()
-	{
+	public Adapter createReadDataSourceFunctionalityModuleAdapter() {
 		return null;
 	}
 
@@ -264,8 +257,7 @@ public class Functionality_moduleAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.core.model.functionality_module.ReportCellCreationFunctionalityModule
 	 * @generated
 	 */
-	public Adapter createReportCellCreationFunctionalityModuleAdapter()
-	{
+	public Adapter createReportCellCreationFunctionalityModuleAdapter() {
 		return null;
 	}
 
@@ -279,8 +271,7 @@ public class Functionality_moduleAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModule
 	 * @generated
 	 */
-	public Adapter createFunctionalityModuleAdapter()
-	{
+	public Adapter createFunctionalityModuleAdapter() {
 		return null;
 	}
 
@@ -294,8 +285,7 @@ public class Functionality_moduleAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModuleModule
 	 * @generated
 	 */
-	public Adapter createFunctionalityModuleModuleAdapter()
-	{
+	public Adapter createFunctionalityModuleModuleAdapter() {
 		return null;
 	}
 
@@ -309,8 +299,7 @@ public class Functionality_moduleAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModuleTag
 	 * @generated
 	 */
-	public Adapter createFunctionalityModuleTagAdapter()
-	{
+	public Adapter createFunctionalityModuleTagAdapter() {
 		return null;
 	}
 
@@ -324,8 +313,21 @@ public class Functionality_moduleAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.core.model.functionality_module.ValidationFunctionalityModule
 	 * @generated
 	 */
-	public Adapter createValidationFunctionalityModuleAdapter()
-	{
+	public Adapter createValidationFunctionalityModuleAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.core.model.functionality_module.ParallelChoiceFunctionalityModule <em>Parallel Choice Functionality Module</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.core.model.functionality_module.ParallelChoiceFunctionalityModule
+	 * @generated
+	 */
+	public Adapter createParallelChoiceFunctionalityModuleAdapter() {
 		return null;
 	}
 
@@ -339,8 +341,7 @@ public class Functionality_moduleAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.core.model.module_management.Module
 	 * @generated
 	 */
-	public Adapter createModuleAdapter()
-	{
+	public Adapter createModuleAdapter() {
 		return null;
 	}
 
@@ -354,8 +355,7 @@ public class Functionality_moduleAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.core.model.requirements_text.Tag
 	 * @generated
 	 */
-	public Adapter createTagAdapter()
-	{
+	public Adapter createTagAdapter() {
 		return null;
 	}
 
@@ -367,8 +367,7 @@ public class Functionality_moduleAdapterFactory extends AdapterFactoryImpl
 	 * @return the new adapter.
 	 * @generated
 	 */
-	public Adapter createEObjectAdapter()
-	{
+	public Adapter createEObjectAdapter() {
 		return null;
 	}
 

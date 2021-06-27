@@ -14,15 +14,13 @@ import org.eclipse.emf.ecore.EClass;
  *
  * @generated
  */
-public class ValidationFunctionalityModuleImpl extends LeafFunctionalityModuleImpl implements ValidationFunctionalityModule
-{
+public class ValidationFunctionalityModuleImpl extends LeafFunctionalityModuleImpl implements ValidationFunctionalityModule {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ValidationFunctionalityModuleImpl()
-	{
+	protected ValidationFunctionalityModuleImpl() {
 		super();
 	}
 
@@ -32,8 +30,7 @@ public class ValidationFunctionalityModuleImpl extends LeafFunctionalityModuleIm
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Functionality_modulePackage.Literals.VALIDATION_FUNCTIONALITY_MODULE;
 	}
 

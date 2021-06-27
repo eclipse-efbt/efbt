@@ -21,8 +21,7 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.eclipse.efbt.cocalimo.core.model.scenarios.ScenariosPackage
  * @generated
  */
-public class ScenariosAdapterFactory extends AdapterFactoryImpl
-{
+public class ScenariosAdapterFactory extends AdapterFactoryImpl {
 	/**
 	 * The cached model package.
 	 * <!-- begin-user-doc -->
@@ -37,8 +36,7 @@ public class ScenariosAdapterFactory extends AdapterFactoryImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ScenariosAdapterFactory()
-	{
+	public ScenariosAdapterFactory() {
 		if (modelPackage == null) {
 			modelPackage = ScenariosPackage.eINSTANCE;
 		}
@@ -53,8 +51,7 @@ public class ScenariosAdapterFactory extends AdapterFactoryImpl
 	 * @generated
 	 */
 	@Override
-	public boolean isFactoryForType(Object object)
-	{
+	public boolean isFactoryForType(Object object) {
 		if (object == modelPackage) {
 			return true;
 		}
@@ -107,8 +104,7 @@ public class ScenariosAdapterFactory extends AdapterFactoryImpl
 	 * @generated
 	 */
 	@Override
-	public Adapter createAdapter(Notifier target)
-	{
+	public Adapter createAdapter(Notifier target) {
 		return modelSwitch.doSwitch((EObject)target);
 	}
 
@@ -123,8 +119,7 @@ public class ScenariosAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.core.model.scenarios.Scenario
 	 * @generated
 	 */
-	public Adapter createScenarioAdapter()
-	{
+	public Adapter createScenarioAdapter() {
 		return null;
 	}
 
@@ -138,8 +133,7 @@ public class ScenariosAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.core.model.scenarios.ScenarioSet
 	 * @generated
 	 */
-	public Adapter createScenarioSetAdapter()
-	{
+	public Adapter createScenarioSetAdapter() {
 		return null;
 	}
 
@@ -153,8 +147,7 @@ public class ScenariosAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.core.model.scenarios.ScenarioTag
 	 * @generated
 	 */
-	public Adapter createScenarioTagAdapter()
-	{
+	public Adapter createScenarioTagAdapter() {
 		return null;
 	}
 
@@ -168,8 +161,7 @@ public class ScenariosAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.core.model.scenarios.ScenarioSetTag
 	 * @generated
 	 */
-	public Adapter createScenarioSetTagAdapter()
-	{
+	public Adapter createScenarioSetTagAdapter() {
 		return null;
 	}
 
@@ -183,8 +175,7 @@ public class ScenariosAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.core.model.requirements_text.Tag
 	 * @generated
 	 */
-	public Adapter createTagAdapter()
-	{
+	public Adapter createTagAdapter() {
 		return null;
 	}
 
@@ -196,8 +187,7 @@ public class ScenariosAdapterFactory extends AdapterFactoryImpl
 	 * @return the new adapter.
 	 * @generated
 	 */
-	public Adapter createEObjectAdapter()
-	{
+	public Adapter createEObjectAdapter() {
 		return null;
 	}
 

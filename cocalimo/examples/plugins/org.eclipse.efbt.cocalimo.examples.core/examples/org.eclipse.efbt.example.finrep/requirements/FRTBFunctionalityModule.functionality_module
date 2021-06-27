@@ -1,0 +1,104 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//FunctionalityModuleModule",
+  "name" : "Finrep",
+  "FunctionalityModules" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
+    "name" : "FinrepProcesses",
+    "usedInSubset" : true,
+    "subModules" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
+      "name" : "FinrepProcessing",
+      "usedInSubset" : true,
+      "subModules" : [ {
+        "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelChoiceFunctionalityModule",
+        "name" : "ReadFinancialData",
+        "usedInSubset" : true,
+        "subModules" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
+          "name" : "ReadSecurities",
+          "usedInSubset" : true,
+          "subModules" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReadDataSourceFunctionalityModule",
+            "name" : "Read_DebtSecurity",
+            "usedInSubset" : true
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
+            "name" : "NetTradingBookSecurities",
+            "usedInSubset" : true
+          } ]
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelChoiceFunctionalityModule",
+          "name" : "ReadNonSecurities",
+          "subModules" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReadDataSourceFunctionalityModule",
+            "name" : "Read_Assets"
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReadDataSourceFunctionalityModule",
+            "name" : "Read_Liabilities"
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReadDataSourceFunctionalityModule",
+            "name" : "Read_ExchangeTradedDerivativePosition"
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReadDataSourceFunctionalityModule",
+            "name" : "Read_ProtectionArrangement"
+          } ]
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReadDataSourceFunctionalityModule",
+          "name" : "Read_Counterparty"
+        } ]
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
+        "name" : "ManadatoryFinrepProcessing",
+        "usedInSubset" : true,
+        "subModules" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
+          "name" : "CarryingAmountProcessing",
+          "usedInSubset" : true
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
+          "name" : "ImpairmentsProcessing",
+          "usedInSubset" : true
+        } ]
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelChoiceFunctionalityModule",
+        "name" : "FinrepProcessing",
+        "usedInSubset" : true,
+        "subModules" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
+          "name" : "ProtectionProcessing",
+          "scenarioSet" : {
+            "scenarios" : [ {
+              "name" : "FullProtection"
+            }, {
+              "name" : "PartProtection"
+            } ],
+            "name" : "ProtectionScenarios"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
+          "name" : "OtherFinrepProcessing",
+          "usedInSubset" : true
+        } ]
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelChoiceFunctionalityModule",
+        "usedInSubset" : true,
+        "subModules" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelChoiceFunctionalityModule",
+          "name" : "AssetLiabilityReports",
+          "usedInSubset" : true,
+          "subModules" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReportCellCreationFunctionalityModule",
+            "name" : "F01_01_Report",
+            "usedInSubset" : true
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReportCellCreationFunctionalityModule",
+            "name" : "F01_02_Report"
+          } ]
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReportCellCreationFunctionalityModule",
+          "name" : "Derivatives_F10_Report"
+        } ]
+      } ]
+    } ]
+  } ]
+}

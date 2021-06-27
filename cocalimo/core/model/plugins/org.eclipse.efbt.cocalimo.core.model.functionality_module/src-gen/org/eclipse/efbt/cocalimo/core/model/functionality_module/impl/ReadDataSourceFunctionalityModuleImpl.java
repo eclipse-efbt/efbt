@@ -14,15 +14,13 @@ import org.eclipse.emf.ecore.EClass;
  *
  * @generated
  */
-public class ReadDataSourceFunctionalityModuleImpl extends LeafFunctionalityModuleImpl implements ReadDataSourceFunctionalityModule
-{
+public class ReadDataSourceFunctionalityModuleImpl extends LeafFunctionalityModuleImpl implements ReadDataSourceFunctionalityModule {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ReadDataSourceFunctionalityModuleImpl()
-	{
+	protected ReadDataSourceFunctionalityModuleImpl() {
 		super();
 	}
 
@@ -32,8 +30,7 @@ public class ReadDataSourceFunctionalityModuleImpl extends LeafFunctionalityModu
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Functionality_modulePackage.Literals.READ_DATA_SOURCE_FUNCTIONALITY_MODULE;
 	}
 

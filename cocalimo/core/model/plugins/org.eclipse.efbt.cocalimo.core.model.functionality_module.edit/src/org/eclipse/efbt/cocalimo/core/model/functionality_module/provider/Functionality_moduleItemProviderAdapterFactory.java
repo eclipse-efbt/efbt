@@ -325,6 +325,29 @@ public class Functionality_moduleItemProviderAdapterFactory extends Functionalit
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.core.model.functionality_module.ParallelChoiceFunctionalityModule} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ParallelChoiceFunctionalityModuleItemProvider parallelChoiceFunctionalityModuleItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.core.model.functionality_module.ParallelChoiceFunctionalityModule}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createParallelChoiceFunctionalityModuleAdapter() {
+		if (parallelChoiceFunctionalityModuleItemProvider == null) {
+			parallelChoiceFunctionalityModuleItemProvider = new ParallelChoiceFunctionalityModuleItemProvider(this);
+		}
+
+		return parallelChoiceFunctionalityModuleItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -440,6 +463,7 @@ public class Functionality_moduleItemProviderAdapterFactory extends Functionalit
 		if (functionalityModuleModuleItemProvider != null) functionalityModuleModuleItemProvider.dispose();
 		if (functionalityModuleTagItemProvider != null) functionalityModuleTagItemProvider.dispose();
 		if (validationFunctionalityModuleItemProvider != null) validationFunctionalityModuleItemProvider.dispose();
+		if (parallelChoiceFunctionalityModuleItemProvider != null) parallelChoiceFunctionalityModuleItemProvider.dispose();
 	}
 
 }

@@ -14,15 +14,13 @@ import org.eclipse.emf.ecore.EClass;
  *
  * @generated
  */
-public class SerialFunctionalityModuleImpl extends FunctionalityModuleSetImpl implements SerialFunctionalityModule
-{
+public class SerialFunctionalityModuleImpl extends FunctionalityModuleSetImpl implements SerialFunctionalityModule {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected SerialFunctionalityModuleImpl()
-	{
+	protected SerialFunctionalityModuleImpl() {
 		super();
 	}
 
@@ -32,8 +30,7 @@ public class SerialFunctionalityModuleImpl extends FunctionalityModuleSetImpl im
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Functionality_modulePackage.Literals.SERIAL_FUNCTIONALITY_MODULE;
 	}
 

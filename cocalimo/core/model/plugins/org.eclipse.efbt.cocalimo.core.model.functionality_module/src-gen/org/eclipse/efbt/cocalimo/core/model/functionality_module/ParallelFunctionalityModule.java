@@ -17,6 +17,5 @@ package org.eclipse.efbt.cocalimo.core.model.functionality_module;
  * @model extendedMetaData="name='ParallelFunctionalityModule' kind='elementOnly'"
  * @generated
  */
-public interface ParallelFunctionalityModule extends FunctionalityModuleSet
-{
+public interface ParallelFunctionalityModule extends FunctionalityModuleSet {
 } // ParallelFunctionalityModule

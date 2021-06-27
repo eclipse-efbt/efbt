@@ -17,6 +17,5 @@ package org.eclipse.efbt.cocalimo.core.model.functionality_module;
  * @model extendedMetaData="name='ReportCellCreationFunctionalityModule' kind='elementOnly'"
  * @generated
  */
-public interface ReportCellCreationFunctionalityModule extends LeafFunctionalityModule
-{
+public interface ReportCellCreationFunctionalityModule extends LeafFunctionalityModule {
 } // ReportCellCreationFunctionalityModule

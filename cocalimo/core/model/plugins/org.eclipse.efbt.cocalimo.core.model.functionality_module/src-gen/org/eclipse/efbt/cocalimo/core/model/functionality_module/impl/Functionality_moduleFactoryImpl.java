@@ -18,16 +18,14 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
  * <!-- end-user-doc -->
  * @generated
  */
-public class Functionality_moduleFactoryImpl extends EFactoryImpl implements Functionality_moduleFactory
-{
+public class Functionality_moduleFactoryImpl extends EFactoryImpl implements Functionality_moduleFactory {
 	/**
 	 * Creates the default factory implementation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static Functionality_moduleFactory init()
-	{
+	public static Functionality_moduleFactory init() {
 		try {
 			Functionality_moduleFactory theFunctionality_moduleFactory = (Functionality_moduleFactory)EPackage.Registry.INSTANCE.getEFactory(Functionality_modulePackage.eNS_URI);
 			if (theFunctionality_moduleFactory != null) {
@@ -46,8 +44,7 @@ public class Functionality_moduleFactoryImpl extends EFactoryImpl implements Fun
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Functionality_moduleFactoryImpl()
-	{
+	public Functionality_moduleFactoryImpl() {
 		super();
 	}
 
@@ -57,8 +54,7 @@ public class Functionality_moduleFactoryImpl extends EFactoryImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public EObject create(EClass eClass)
-	{
+	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case Functionality_modulePackage.DATA_PROCESSING_FUNCTIONALITY_MODULE: return createDataProcessingFunctionalityModule();
 			case Functionality_modulePackage.LEAF_FUNCTIONALITY_MODULE: return createLeafFunctionalityModule();
@@ -71,6 +67,7 @@ public class Functionality_moduleFactoryImpl extends EFactoryImpl implements Fun
 			case Functionality_modulePackage.FUNCTIONALITY_MODULE_MODULE: return createFunctionalityModuleModule();
 			case Functionality_modulePackage.FUNCTIONALITY_MODULE_TAG: return createFunctionalityModuleTag();
 			case Functionality_modulePackage.VALIDATION_FUNCTIONALITY_MODULE: return createValidationFunctionalityModule();
+			case Functionality_modulePackage.PARALLEL_CHOICE_FUNCTIONALITY_MODULE: return createParallelChoiceFunctionalityModule();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -82,8 +79,7 @@ public class Functionality_moduleFactoryImpl extends EFactoryImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public DataProcessingFunctionalityModule createDataProcessingFunctionalityModule()
-	{
+	public DataProcessingFunctionalityModule createDataProcessingFunctionalityModule() {
 		DataProcessingFunctionalityModuleImpl dataProcessingFunctionalityModule = new DataProcessingFunctionalityModuleImpl();
 		return dataProcessingFunctionalityModule;
 	}
@@ -94,8 +90,7 @@ public class Functionality_moduleFactoryImpl extends EFactoryImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public LeafFunctionalityModule createLeafFunctionalityModule()
-	{
+	public LeafFunctionalityModule createLeafFunctionalityModule() {
 		LeafFunctionalityModuleImpl leafFunctionalityModule = new LeafFunctionalityModuleImpl();
 		return leafFunctionalityModule;
 	}
@@ -106,8 +101,7 @@ public class Functionality_moduleFactoryImpl extends EFactoryImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public ParallelFunctionalityModule createParallelFunctionalityModule()
-	{
+	public ParallelFunctionalityModule createParallelFunctionalityModule() {
 		ParallelFunctionalityModuleImpl parallelFunctionalityModule = new ParallelFunctionalityModuleImpl();
 		return parallelFunctionalityModule;
 	}
@@ -118,8 +112,7 @@ public class Functionality_moduleFactoryImpl extends EFactoryImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public ScenarioSetFunctionalityModule createScenarioSetFunctionalityModule()
-	{
+	public ScenarioSetFunctionalityModule createScenarioSetFunctionalityModule() {
 		ScenarioSetFunctionalityModuleImpl scenarioSetFunctionalityModule = new ScenarioSetFunctionalityModuleImpl();
 		return scenarioSetFunctionalityModule;
 	}
@@ -130,8 +123,7 @@ public class Functionality_moduleFactoryImpl extends EFactoryImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public SerialFunctionalityModule createSerialFunctionalityModule()
-	{
+	public SerialFunctionalityModule createSerialFunctionalityModule() {
 		SerialFunctionalityModuleImpl serialFunctionalityModule = new SerialFunctionalityModuleImpl();
 		return serialFunctionalityModule;
 	}
@@ -142,8 +134,7 @@ public class Functionality_moduleFactoryImpl extends EFactoryImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public FunctionalityModuleSet createFunctionalityModuleSet()
-	{
+	public FunctionalityModuleSet createFunctionalityModuleSet() {
 		FunctionalityModuleSetImpl functionalityModuleSet = new FunctionalityModuleSetImpl();
 		return functionalityModuleSet;
 	}
@@ -154,8 +145,7 @@ public class Functionality_moduleFactoryImpl extends EFactoryImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public ReadDataSourceFunctionalityModule createReadDataSourceFunctionalityModule()
-	{
+	public ReadDataSourceFunctionalityModule createReadDataSourceFunctionalityModule() {
 		ReadDataSourceFunctionalityModuleImpl readDataSourceFunctionalityModule = new ReadDataSourceFunctionalityModuleImpl();
 		return readDataSourceFunctionalityModule;
 	}
@@ -166,8 +156,7 @@ public class Functionality_moduleFactoryImpl extends EFactoryImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public ReportCellCreationFunctionalityModule createReportCellCreationFunctionalityModule()
-	{
+	public ReportCellCreationFunctionalityModule createReportCellCreationFunctionalityModule() {
 		ReportCellCreationFunctionalityModuleImpl reportCellCreationFunctionalityModule = new ReportCellCreationFunctionalityModuleImpl();
 		return reportCellCreationFunctionalityModule;
 	}
@@ -178,8 +167,7 @@ public class Functionality_moduleFactoryImpl extends EFactoryImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public FunctionalityModuleModule createFunctionalityModuleModule()
-	{
+	public FunctionalityModuleModule createFunctionalityModuleModule() {
 		FunctionalityModuleModuleImpl functionalityModuleModule = new FunctionalityModuleModuleImpl();
 		return functionalityModuleModule;
 	}
@@ -190,8 +178,7 @@ public class Functionality_moduleFactoryImpl extends EFactoryImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public FunctionalityModuleTag createFunctionalityModuleTag()
-	{
+	public FunctionalityModuleTag createFunctionalityModuleTag() {
 		FunctionalityModuleTagImpl functionalityModuleTag = new FunctionalityModuleTagImpl();
 		return functionalityModuleTag;
 	}
@@ -202,8 +189,7 @@ public class Functionality_moduleFactoryImpl extends EFactoryImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public ValidationFunctionalityModule createValidationFunctionalityModule()
-	{
+	public ValidationFunctionalityModule createValidationFunctionalityModule() {
 		ValidationFunctionalityModuleImpl validationFunctionalityModule = new ValidationFunctionalityModuleImpl();
 		return validationFunctionalityModule;
 	}
@@ -214,8 +200,18 @@ public class Functionality_moduleFactoryImpl extends EFactoryImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public Functionality_modulePackage getFunctionality_modulePackage()
-	{
+	public ParallelChoiceFunctionalityModule createParallelChoiceFunctionalityModule() {
+		ParallelChoiceFunctionalityModuleImpl parallelChoiceFunctionalityModule = new ParallelChoiceFunctionalityModuleImpl();
+		return parallelChoiceFunctionalityModule;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Functionality_modulePackage getFunctionality_modulePackage() {
 		return (Functionality_modulePackage)getEPackage();
 	}
 
@@ -226,8 +222,7 @@ public class Functionality_moduleFactoryImpl extends EFactoryImpl implements Fun
 	 * @generated
 	 */
 	@Deprecated
-	public static Functionality_modulePackage getPackage()
-	{
+	public static Functionality_modulePackage getPackage() {
 		return Functionality_modulePackage.eINSTANCE;
 	}
 

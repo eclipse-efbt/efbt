@@ -17,6 +17,5 @@ package org.eclipse.efbt.cocalimo.core.model.functionality_module;
  * @model extendedMetaData="name='SerialFunctionalityModule' kind='elementOnly'"
  * @generated
  */
-public interface SerialFunctionalityModule extends FunctionalityModuleSet
-{
+public interface SerialFunctionalityModule extends FunctionalityModuleSet {
 } // SerialFunctionalityModule
