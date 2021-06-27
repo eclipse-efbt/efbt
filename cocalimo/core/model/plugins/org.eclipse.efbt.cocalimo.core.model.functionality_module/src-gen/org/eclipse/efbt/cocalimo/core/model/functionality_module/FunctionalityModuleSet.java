@@ -25,8 +25,7 @@ import org.eclipse.emf.common.util.EList;
  * @model extendedMetaData="name='FunctionalityModuleSet' kind='elementOnly'"
  * @generated
  */
-public interface FunctionalityModuleSet extends FunctionalityModule
-{
+public interface FunctionalityModuleSet extends FunctionalityModule {
 	/**
 	 * Returns the value of the '<em><b>Sub Modules</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModule}.

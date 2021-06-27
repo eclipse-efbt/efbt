@@ -18,16 +18,14 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
  * <!-- end-user-doc -->
  * @generated
  */
-public class ScenariosFactoryImpl extends EFactoryImpl implements ScenariosFactory
-{
+public class ScenariosFactoryImpl extends EFactoryImpl implements ScenariosFactory {
 	/**
 	 * Creates the default factory implementation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static ScenariosFactory init()
-	{
+	public static ScenariosFactory init() {
 		try {
 			ScenariosFactory theScenariosFactory = (ScenariosFactory)EPackage.Registry.INSTANCE.getEFactory(ScenariosPackage.eNS_URI);
 			if (theScenariosFactory != null) {
@@ -46,8 +44,7 @@ public class ScenariosFactoryImpl extends EFactoryImpl implements ScenariosFacto
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ScenariosFactoryImpl()
-	{
+	public ScenariosFactoryImpl() {
 		super();
 	}
 
@@ -57,8 +54,7 @@ public class ScenariosFactoryImpl extends EFactoryImpl implements ScenariosFacto
 	 * @generated
 	 */
 	@Override
-	public EObject create(EClass eClass)
-	{
+	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case ScenariosPackage.SCENARIO: return createScenario();
 			case ScenariosPackage.SCENARIO_SET: return createScenarioSet();
@@ -75,8 +71,7 @@ public class ScenariosFactoryImpl extends EFactoryImpl implements ScenariosFacto
 	 * @generated
 	 */
 	@Override
-	public Scenario createScenario()
-	{
+	public Scenario createScenario() {
 		ScenarioImpl scenario = new ScenarioImpl();
 		return scenario;
 	}
@@ -87,8 +82,7 @@ public class ScenariosFactoryImpl extends EFactoryImpl implements ScenariosFacto
 	 * @generated
 	 */
 	@Override
-	public ScenarioSet createScenarioSet()
-	{
+	public ScenarioSet createScenarioSet() {
 		ScenarioSetImpl scenarioSet = new ScenarioSetImpl();
 		return scenarioSet;
 	}
@@ -99,8 +93,7 @@ public class ScenariosFactoryImpl extends EFactoryImpl implements ScenariosFacto
 	 * @generated
 	 */
 	@Override
-	public ScenarioTag createScenarioTag()
-	{
+	public ScenarioTag createScenarioTag() {
 		ScenarioTagImpl scenarioTag = new ScenarioTagImpl();
 		return scenarioTag;
 	}
@@ -111,8 +104,7 @@ public class ScenariosFactoryImpl extends EFactoryImpl implements ScenariosFacto
 	 * @generated
 	 */
 	@Override
-	public ScenarioSetTag createScenarioSetTag()
-	{
+	public ScenarioSetTag createScenarioSetTag() {
 		ScenarioSetTagImpl scenarioSetTag = new ScenarioSetTagImpl();
 		return scenarioSetTag;
 	}
@@ -123,8 +115,7 @@ public class ScenariosFactoryImpl extends EFactoryImpl implements ScenariosFacto
 	 * @generated
 	 */
 	@Override
-	public ScenariosPackage getScenariosPackage()
-	{
+	public ScenariosPackage getScenariosPackage() {
 		return (ScenariosPackage)getEPackage();
 	}
 
@@ -135,8 +126,7 @@ public class ScenariosFactoryImpl extends EFactoryImpl implements ScenariosFacto
 	 * @generated
 	 */
 	@Deprecated
-	public static ScenariosPackage getPackage()
-	{
+	public static ScenariosPackage getPackage() {
 		return ScenariosPackage.eINSTANCE;
 	}
 

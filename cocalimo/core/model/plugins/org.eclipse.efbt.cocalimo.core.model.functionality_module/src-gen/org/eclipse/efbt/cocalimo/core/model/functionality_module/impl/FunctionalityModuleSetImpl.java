@@ -31,8 +31,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class FunctionalityModuleSetImpl extends FunctionalityModuleImpl implements FunctionalityModuleSet
-{
+public class FunctionalityModuleSetImpl extends FunctionalityModuleImpl implements FunctionalityModuleSet {
 	/**
 	 * The cached value of the '{@link #getSubModules() <em>Sub Modules</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -48,8 +47,7 @@ public class FunctionalityModuleSetImpl extends FunctionalityModuleImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected FunctionalityModuleSetImpl()
-	{
+	protected FunctionalityModuleSetImpl() {
 		super();
 	}
 
@@ -59,8 +57,7 @@ public class FunctionalityModuleSetImpl extends FunctionalityModuleImpl implemen
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Functionality_modulePackage.Literals.FUNCTIONALITY_MODULE_SET;
 	}
 
@@ -70,8 +67,7 @@ public class FunctionalityModuleSetImpl extends FunctionalityModuleImpl implemen
 	 * @generated
 	 */
 	@Override
-	public EList<FunctionalityModule> getSubModules()
-	{
+	public EList<FunctionalityModule> getSubModules() {
 		if (subModules == null) {
 			subModules = new EObjectContainmentEList<FunctionalityModule>(FunctionalityModule.class, this, Functionality_modulePackage.FUNCTIONALITY_MODULE_SET__SUB_MODULES);
 		}
@@ -84,8 +80,7 @@ public class FunctionalityModuleSetImpl extends FunctionalityModuleImpl implemen
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case Functionality_modulePackage.FUNCTIONALITY_MODULE_SET__SUB_MODULES:
 				return ((InternalEList<?>)getSubModules()).basicRemove(otherEnd, msgs);
@@ -99,8 +94,7 @@ public class FunctionalityModuleSetImpl extends FunctionalityModuleImpl implemen
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Functionality_modulePackage.FUNCTIONALITY_MODULE_SET__SUB_MODULES:
 				return getSubModules();
@@ -115,8 +109,7 @@ public class FunctionalityModuleSetImpl extends FunctionalityModuleImpl implemen
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Functionality_modulePackage.FUNCTIONALITY_MODULE_SET__SUB_MODULES:
 				getSubModules().clear();
@@ -132,8 +125,7 @@ public class FunctionalityModuleSetImpl extends FunctionalityModuleImpl implemen
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Functionality_modulePackage.FUNCTIONALITY_MODULE_SET__SUB_MODULES:
 				getSubModules().clear();
@@ -148,8 +140,7 @@ public class FunctionalityModuleSetImpl extends FunctionalityModuleImpl implemen
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Functionality_modulePackage.FUNCTIONALITY_MODULE_SET__SUB_MODULES:
 				return subModules != null && !subModules.isEmpty();

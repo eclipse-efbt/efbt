@@ -28,8 +28,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  *
  * @generated
  */
-public class ScenarioSetFunctionalityModuleImpl extends FunctionalityModuleSetImpl implements ScenarioSetFunctionalityModule
-{
+public class ScenarioSetFunctionalityModuleImpl extends FunctionalityModuleSetImpl implements ScenarioSetFunctionalityModule {
 	/**
 	 * The cached value of the '{@link #getScenarioSetChoice() <em>Scenario Set Choice</em>}' containment reference.
 	 * <!-- begin-user-doc -->
@@ -45,8 +44,7 @@ public class ScenarioSetFunctionalityModuleImpl extends FunctionalityModuleSetIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ScenarioSetFunctionalityModuleImpl()
-	{
+	protected ScenarioSetFunctionalityModuleImpl() {
 		super();
 	}
 
@@ -56,8 +54,7 @@ public class ScenarioSetFunctionalityModuleImpl extends FunctionalityModuleSetIm
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Functionality_modulePackage.Literals.SCENARIO_SET_FUNCTIONALITY_MODULE;
 	}
 
@@ -67,8 +64,7 @@ public class ScenarioSetFunctionalityModuleImpl extends FunctionalityModuleSetIm
 	 * @generated
 	 */
 	@Override
-	public ScenarioSet getScenarioSetChoice()
-	{
+	public ScenarioSet getScenarioSetChoice() {
 		return scenarioSetChoice;
 	}
 
@@ -77,8 +73,7 @@ public class ScenarioSetFunctionalityModuleImpl extends FunctionalityModuleSetIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetScenarioSetChoice(ScenarioSet newScenarioSetChoice, NotificationChain msgs)
-	{
+	public NotificationChain basicSetScenarioSetChoice(ScenarioSet newScenarioSetChoice, NotificationChain msgs) {
 		ScenarioSet oldScenarioSetChoice = scenarioSetChoice;
 		scenarioSetChoice = newScenarioSetChoice;
 		if (eNotificationRequired()) {
@@ -94,8 +89,7 @@ public class ScenarioSetFunctionalityModuleImpl extends FunctionalityModuleSetIm
 	 * @generated
 	 */
 	@Override
-	public void setScenarioSetChoice(ScenarioSet newScenarioSetChoice)
-	{
+	public void setScenarioSetChoice(ScenarioSet newScenarioSetChoice) {
 		if (newScenarioSetChoice != scenarioSetChoice) {
 			NotificationChain msgs = null;
 			if (scenarioSetChoice != null)
@@ -115,8 +109,7 @@ public class ScenarioSetFunctionalityModuleImpl extends FunctionalityModuleSetIm
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case Functionality_modulePackage.SCENARIO_SET_FUNCTIONALITY_MODULE__SCENARIO_SET_CHOICE:
 				return basicSetScenarioSetChoice(null, msgs);
@@ -130,8 +123,7 @@ public class ScenarioSetFunctionalityModuleImpl extends FunctionalityModuleSetIm
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Functionality_modulePackage.SCENARIO_SET_FUNCTIONALITY_MODULE__SCENARIO_SET_CHOICE:
 				return getScenarioSetChoice();
@@ -145,8 +137,7 @@ public class ScenarioSetFunctionalityModuleImpl extends FunctionalityModuleSetIm
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Functionality_modulePackage.SCENARIO_SET_FUNCTIONALITY_MODULE__SCENARIO_SET_CHOICE:
 				setScenarioSetChoice((ScenarioSet)newValue);
@@ -161,8 +152,7 @@ public class ScenarioSetFunctionalityModuleImpl extends FunctionalityModuleSetIm
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Functionality_modulePackage.SCENARIO_SET_FUNCTIONALITY_MODULE__SCENARIO_SET_CHOICE:
 				setScenarioSetChoice((ScenarioSet)null);
@@ -177,8 +167,7 @@ public class ScenarioSetFunctionalityModuleImpl extends FunctionalityModuleSetIm
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Functionality_modulePackage.SCENARIO_SET_FUNCTIONALITY_MODULE__SCENARIO_SET_CHOICE:
 				return scenarioSetChoice != null;

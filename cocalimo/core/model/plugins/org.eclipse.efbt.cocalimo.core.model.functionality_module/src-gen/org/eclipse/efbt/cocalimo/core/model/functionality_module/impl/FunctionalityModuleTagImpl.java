@@ -28,8 +28,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  *
  * @generated
  */
-public class FunctionalityModuleTagImpl extends TagImpl implements FunctionalityModuleTag
-{
+public class FunctionalityModuleTagImpl extends TagImpl implements FunctionalityModuleTag {
 	/**
 	 * The cached value of the '{@link #getFunctionalityModule() <em>Functionality Module</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -45,8 +44,7 @@ public class FunctionalityModuleTagImpl extends TagImpl implements Functionality
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected FunctionalityModuleTagImpl()
-	{
+	protected FunctionalityModuleTagImpl() {
 		super();
 	}
 
@@ -56,8 +54,7 @@ public class FunctionalityModuleTagImpl extends TagImpl implements Functionality
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Functionality_modulePackage.Literals.FUNCTIONALITY_MODULE_TAG;
 	}
 
@@ -67,8 +64,7 @@ public class FunctionalityModuleTagImpl extends TagImpl implements Functionality
 	 * @generated
 	 */
 	@Override
-	public FunctionalityModule getFunctionalityModule()
-	{
+	public FunctionalityModule getFunctionalityModule() {
 		if (functionalityModule != null && functionalityModule.eIsProxy()) {
 			InternalEObject oldFunctionalityModule = (InternalEObject)functionalityModule;
 			functionalityModule = (FunctionalityModule)eResolveProxy(oldFunctionalityModule);
@@ -85,8 +81,7 @@ public class FunctionalityModuleTagImpl extends TagImpl implements Functionality
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public FunctionalityModule basicGetFunctionalityModule()
-	{
+	public FunctionalityModule basicGetFunctionalityModule() {
 		return functionalityModule;
 	}
 
@@ -96,8 +91,7 @@ public class FunctionalityModuleTagImpl extends TagImpl implements Functionality
 	 * @generated
 	 */
 	@Override
-	public void setFunctionalityModule(FunctionalityModule newFunctionalityModule)
-	{
+	public void setFunctionalityModule(FunctionalityModule newFunctionalityModule) {
 		FunctionalityModule oldFunctionalityModule = functionalityModule;
 		functionalityModule = newFunctionalityModule;
 		if (eNotificationRequired())
@@ -110,8 +104,7 @@ public class FunctionalityModuleTagImpl extends TagImpl implements Functionality
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Functionality_modulePackage.FUNCTIONALITY_MODULE_TAG__FUNCTIONALITY_MODULE:
 				if (resolve) return getFunctionalityModule();
@@ -126,8 +119,7 @@ public class FunctionalityModuleTagImpl extends TagImpl implements Functionality
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Functionality_modulePackage.FUNCTIONALITY_MODULE_TAG__FUNCTIONALITY_MODULE:
 				setFunctionalityModule((FunctionalityModule)newValue);
@@ -142,8 +134,7 @@ public class FunctionalityModuleTagImpl extends TagImpl implements Functionality
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Functionality_modulePackage.FUNCTIONALITY_MODULE_TAG__FUNCTIONALITY_MODULE:
 				setFunctionalityModule((FunctionalityModule)null);
@@ -158,8 +149,7 @@ public class FunctionalityModuleTagImpl extends TagImpl implements Functionality
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Functionality_modulePackage.FUNCTIONALITY_MODULE_TAG__FUNCTIONALITY_MODULE:
 				return functionalityModule != null;

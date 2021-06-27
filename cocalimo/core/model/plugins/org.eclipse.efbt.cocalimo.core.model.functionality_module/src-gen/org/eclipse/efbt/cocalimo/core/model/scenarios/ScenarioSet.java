@@ -27,8 +27,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='ScenarioSet' kind='elementOnly'"
  * @generated
  */
-public interface ScenarioSet extends EObject
-{
+public interface ScenarioSet extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Scenarios</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.core.model.scenarios.Scenario}.

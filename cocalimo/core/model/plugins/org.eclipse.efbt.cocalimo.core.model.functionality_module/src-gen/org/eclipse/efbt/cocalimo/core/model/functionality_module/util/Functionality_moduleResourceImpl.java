@@ -3,7 +3,7 @@
 package org.eclipse.efbt.cocalimo.core.model.functionality_module.util;
 
 import org.eclipse.emf.common.util.URI;
-import org.emfjson.jackson.resource.JsonResource;
+import  org.emfjson.jackson.resource.JsonResource;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**

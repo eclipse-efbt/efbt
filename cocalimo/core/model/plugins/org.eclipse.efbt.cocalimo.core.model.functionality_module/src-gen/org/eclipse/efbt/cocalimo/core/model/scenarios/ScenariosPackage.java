@@ -29,8 +29,7 @@ import org.eclipse.emf.ecore.EReference;
  *        annotation="license license='Copyright (c) 2019 Bird Software Solutions Ltd\n All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html\n\nSPDX-License-Identifier: EPL-2.0 \n\n Contributors:\n Neil Mackenzie - initial API and implementation\r'"
  * @generated
  */
-public interface ScenariosPackage extends EPackage
-{
+public interface ScenariosPackage extends EPackage {
 	/**
 	 * The package name.
 	 * <!-- begin-user-doc -->
@@ -83,13 +82,22 @@ public interface ScenariosPackage extends EPackage
 	int SCENARIO__NAME = 0;
 
 	/**
+	 * The feature id for the '<em><b>Used In Subset</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCENARIO__USED_IN_SUBSET = 1;
+
+	/**
 	 * The number of structural features of the '<em>Scenario</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SCENARIO_FEATURE_COUNT = 1;
+	int SCENARIO_FEATURE_COUNT = 2;
 
 	/**
 	 * The number of operations of the '<em>Scenario</em>' class.
@@ -297,6 +305,17 @@ public interface ScenariosPackage extends EPackage
 	EAttribute getScenario_Name();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.core.model.scenarios.Scenario#isUsedInSubset <em>Used In Subset</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Used In Subset</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.scenarios.Scenario#isUsedInSubset()
+	 * @see #getScenario()
+	 * @generated
+	 */
+	EAttribute getScenario_UsedInSubset();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.scenarios.ScenarioSet <em>Scenario Set</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -392,8 +411,7 @@ public interface ScenariosPackage extends EPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	interface Literals
-	{
+	interface Literals {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.scenarios.impl.ScenarioImpl <em>Scenario</em>}' class.
 		 * <!-- begin-user-doc -->
@@ -411,6 +429,14 @@ public interface ScenariosPackage extends EPackage
 		 * @generated
 		 */
 		EAttribute SCENARIO__NAME = eINSTANCE.getScenario_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Used In Subset</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SCENARIO__USED_IN_SUBSET = eINSTANCE.getScenario_UsedInSubset();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.scenarios.impl.ScenarioSetImpl <em>Scenario Set</em>}' class.

@@ -30,8 +30,7 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
  * <!-- end-user-doc -->
  * @generated
  */
-public class ScenariosPackageImpl extends EPackageImpl implements ScenariosPackage
-{
+public class ScenariosPackageImpl extends EPackageImpl implements ScenariosPackage {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -75,8 +74,7 @@ public class ScenariosPackageImpl extends EPackageImpl implements ScenariosPacka
 	 * @see #init()
 	 * @generated
 	 */
-	private ScenariosPackageImpl()
-	{
+	private ScenariosPackageImpl() {
 		super(eNS_URI, ScenariosFactory.eINSTANCE);
 	}
 
@@ -99,8 +97,7 @@ public class ScenariosPackageImpl extends EPackageImpl implements ScenariosPacka
 	 * @see #initializePackageContents()
 	 * @generated
 	 */
-	public static ScenariosPackage init()
-	{
+	public static ScenariosPackage init() {
 		if (isInited) return (ScenariosPackage)EPackage.Registry.INSTANCE.getEPackage(ScenariosPackage.eNS_URI);
 
 		// Obtain or create and register package
@@ -139,8 +136,7 @@ public class ScenariosPackageImpl extends EPackageImpl implements ScenariosPacka
 	 * @generated
 	 */
 	@Override
-	public EClass getScenario()
-	{
+	public EClass getScenario() {
 		return scenarioEClass;
 	}
 
@@ -150,8 +146,7 @@ public class ScenariosPackageImpl extends EPackageImpl implements ScenariosPacka
 	 * @generated
 	 */
 	@Override
-	public EAttribute getScenario_Name()
-	{
+	public EAttribute getScenario_Name() {
 		return (EAttribute)scenarioEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -161,8 +156,17 @@ public class ScenariosPackageImpl extends EPackageImpl implements ScenariosPacka
 	 * @generated
 	 */
 	@Override
-	public EClass getScenarioSet()
-	{
+	public EAttribute getScenario_UsedInSubset() {
+		return (EAttribute)scenarioEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getScenarioSet() {
 		return scenarioSetEClass;
 	}
 
@@ -172,8 +176,7 @@ public class ScenariosPackageImpl extends EPackageImpl implements ScenariosPacka
 	 * @generated
 	 */
 	@Override
-	public EReference getScenarioSet_Scenarios()
-	{
+	public EReference getScenarioSet_Scenarios() {
 		return (EReference)scenarioSetEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -183,8 +186,7 @@ public class ScenariosPackageImpl extends EPackageImpl implements ScenariosPacka
 	 * @generated
 	 */
 	@Override
-	public EAttribute getScenarioSet_Name()
-	{
+	public EAttribute getScenarioSet_Name() {
 		return (EAttribute)scenarioSetEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -194,8 +196,7 @@ public class ScenariosPackageImpl extends EPackageImpl implements ScenariosPacka
 	 * @generated
 	 */
 	@Override
-	public EClass getScenarioTag()
-	{
+	public EClass getScenarioTag() {
 		return scenarioTagEClass;
 	}
 
@@ -205,8 +206,7 @@ public class ScenariosPackageImpl extends EPackageImpl implements ScenariosPacka
 	 * @generated
 	 */
 	@Override
-	public EReference getScenarioTag_Scenario()
-	{
+	public EReference getScenarioTag_Scenario() {
 		return (EReference)scenarioTagEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -216,8 +216,7 @@ public class ScenariosPackageImpl extends EPackageImpl implements ScenariosPacka
 	 * @generated
 	 */
 	@Override
-	public EClass getScenarioSetTag()
-	{
+	public EClass getScenarioSetTag() {
 		return scenarioSetTagEClass;
 	}
 
@@ -227,8 +226,7 @@ public class ScenariosPackageImpl extends EPackageImpl implements ScenariosPacka
 	 * @generated
 	 */
 	@Override
-	public EReference getScenarioSetTag_ScenarioSet()
-	{
+	public EReference getScenarioSetTag_ScenarioSet() {
 		return (EReference)scenarioSetTagEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -238,8 +236,7 @@ public class ScenariosPackageImpl extends EPackageImpl implements ScenariosPacka
 	 * @generated
 	 */
 	@Override
-	public ScenariosFactory getScenariosFactory()
-	{
+	public ScenariosFactory getScenariosFactory() {
 		return (ScenariosFactory)getEFactoryInstance();
 	}
 
@@ -257,14 +254,14 @@ public class ScenariosPackageImpl extends EPackageImpl implements ScenariosPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void createPackageContents()
-	{
+	public void createPackageContents() {
 		if (isCreated) return;
 		isCreated = true;
 
 		// Create classes and their features
 		scenarioEClass = createEClass(SCENARIO);
 		createEAttribute(scenarioEClass, SCENARIO__NAME);
+		createEAttribute(scenarioEClass, SCENARIO__USED_IN_SUBSET);
 
 		scenarioSetEClass = createEClass(SCENARIO_SET);
 		createEReference(scenarioSetEClass, SCENARIO_SET__SCENARIOS);
@@ -291,8 +288,7 @@ public class ScenariosPackageImpl extends EPackageImpl implements ScenariosPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void initializePackageContents()
-	{
+	public void initializePackageContents() {
 		if (isInitialized) return;
 		isInitialized = true;
 
@@ -315,6 +311,7 @@ public class ScenariosPackageImpl extends EPackageImpl implements ScenariosPacka
 		// Initialize classes, features, and operations; add parameters
 		initEClass(scenarioEClass, Scenario.class, "Scenario", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getScenario_Name(), ecorePackage.getEString(), "name", null, 0, 1, Scenario.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getScenario_UsedInSubset(), ecorePackage.getEBoolean(), "usedInSubset", null, 0, 1, Scenario.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(scenarioSetEClass, ScenarioSet.class, "ScenarioSet", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getScenarioSet_Scenarios(), this.getScenario(), null, "scenarios", null, 0, -1, ScenarioSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -342,8 +339,7 @@ public class ScenariosPackageImpl extends EPackageImpl implements ScenariosPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void createLicenseAnnotations()
-	{
+	protected void createLicenseAnnotations() {
 		String source = "license";
 		addAnnotation
 		  (this,
@@ -359,8 +355,7 @@ public class ScenariosPackageImpl extends EPackageImpl implements ScenariosPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void createExtendedMetaDataAnnotations()
-	{
+	protected void createExtendedMetaDataAnnotations() {
 		String source = "http:///org/eclipse/emf/ecore/util/ExtendedMetaData";
 		addAnnotation
 		  (scenarioEClass,

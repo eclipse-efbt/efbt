@@ -24,8 +24,7 @@ import org.eclipse.efbt.cocalimo.core.model.scenarios.ScenarioSet;
  * @model extendedMetaData="name='ScenarioSetFunctionalityModule' kind='elementOnly'"
  * @generated
  */
-public interface ScenarioSetFunctionalityModule extends FunctionalityModuleSet
-{
+public interface ScenarioSetFunctionalityModule extends FunctionalityModuleSet {
 	/**
 	 * Returns the value of the '<em><b>Scenario Set Choice</b></em>' containment reference.
 	 * <!-- begin-user-doc -->

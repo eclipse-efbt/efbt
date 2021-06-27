@@ -14,15 +14,13 @@ import org.eclipse.emf.ecore.EClass;
  *
  * @generated
  */
-public class ReportCellCreationFunctionalityModuleImpl extends LeafFunctionalityModuleImpl implements ReportCellCreationFunctionalityModule
-{
+public class ReportCellCreationFunctionalityModuleImpl extends LeafFunctionalityModuleImpl implements ReportCellCreationFunctionalityModule {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ReportCellCreationFunctionalityModuleImpl()
-	{
+	protected ReportCellCreationFunctionalityModuleImpl() {
 		super();
 	}
 
@@ -32,8 +30,7 @@ public class ReportCellCreationFunctionalityModuleImpl extends LeafFunctionality
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Functionality_modulePackage.Literals.REPORT_CELL_CREATION_FUNCTIONALITY_MODULE;
 	}
 

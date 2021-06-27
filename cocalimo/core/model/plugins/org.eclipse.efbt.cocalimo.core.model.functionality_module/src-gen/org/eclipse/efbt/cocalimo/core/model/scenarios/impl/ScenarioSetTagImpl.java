@@ -28,8 +28,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  *
  * @generated
  */
-public class ScenarioSetTagImpl extends TagImpl implements ScenarioSetTag
-{
+public class ScenarioSetTagImpl extends TagImpl implements ScenarioSetTag {
 	/**
 	 * The cached value of the '{@link #getScenarioSet() <em>Scenario Set</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -45,8 +44,7 @@ public class ScenarioSetTagImpl extends TagImpl implements ScenarioSetTag
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ScenarioSetTagImpl()
-	{
+	protected ScenarioSetTagImpl() {
 		super();
 	}
 
@@ -56,8 +54,7 @@ public class ScenarioSetTagImpl extends TagImpl implements ScenarioSetTag
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return ScenariosPackage.Literals.SCENARIO_SET_TAG;
 	}
 
@@ -67,8 +64,7 @@ public class ScenarioSetTagImpl extends TagImpl implements ScenarioSetTag
 	 * @generated
 	 */
 	@Override
-	public ScenarioSet getScenarioSet()
-	{
+	public ScenarioSet getScenarioSet() {
 		if (scenarioSet != null && scenarioSet.eIsProxy()) {
 			InternalEObject oldScenarioSet = (InternalEObject)scenarioSet;
 			scenarioSet = (ScenarioSet)eResolveProxy(oldScenarioSet);
@@ -85,8 +81,7 @@ public class ScenarioSetTagImpl extends TagImpl implements ScenarioSetTag
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ScenarioSet basicGetScenarioSet()
-	{
+	public ScenarioSet basicGetScenarioSet() {
 		return scenarioSet;
 	}
 
@@ -96,8 +91,7 @@ public class ScenarioSetTagImpl extends TagImpl implements ScenarioSetTag
 	 * @generated
 	 */
 	@Override
-	public void setScenarioSet(ScenarioSet newScenarioSet)
-	{
+	public void setScenarioSet(ScenarioSet newScenarioSet) {
 		ScenarioSet oldScenarioSet = scenarioSet;
 		scenarioSet = newScenarioSet;
 		if (eNotificationRequired())
@@ -110,8 +104,7 @@ public class ScenarioSetTagImpl extends TagImpl implements ScenarioSetTag
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case ScenariosPackage.SCENARIO_SET_TAG__SCENARIO_SET:
 				if (resolve) return getScenarioSet();
@@ -126,8 +119,7 @@ public class ScenarioSetTagImpl extends TagImpl implements ScenarioSetTag
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case ScenariosPackage.SCENARIO_SET_TAG__SCENARIO_SET:
 				setScenarioSet((ScenarioSet)newValue);
@@ -142,8 +134,7 @@ public class ScenarioSetTagImpl extends TagImpl implements ScenarioSetTag
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case ScenariosPackage.SCENARIO_SET_TAG__SCENARIO_SET:
 				setScenarioSet((ScenarioSet)null);
@@ -158,8 +149,7 @@ public class ScenarioSetTagImpl extends TagImpl implements ScenarioSetTag
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ScenariosPackage.SCENARIO_SET_TAG__SCENARIO_SET:
 				return scenarioSet != null;

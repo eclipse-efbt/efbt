@@ -5,26 +5,28 @@ package org.eclipse.efbt.cocalimo.core.model.functionality_module.provider;
 
 import java.util.Collection;
 import java.util.List;
-import org.eclipse.efbt.cocalimo.core.model.functionality_module.LeafFunctionalityModule;
+
+import org.eclipse.efbt.cocalimo.core.model.functionality_module.ParallelChoiceFunctionalityModule;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
+
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.efbt.cocalimo.core.model.functionality_module.LeafFunctionalityModule} object.
+ * This is the item provider adapter for a {@link org.eclipse.efbt.cocalimo.core.model.functionality_module.ParallelChoiceFunctionalityModule} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class LeafFunctionalityModuleItemProvider extends FunctionalityModuleItemProvider {
+public class ParallelChoiceFunctionalityModuleItemProvider extends FunctionalityModuleSetItemProvider {
 	/**
 	 * This constructs an instance from a factory and a notifier.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public LeafFunctionalityModuleItemProvider(AdapterFactory adapterFactory) {
+	public ParallelChoiceFunctionalityModuleItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -44,14 +46,14 @@ public class LeafFunctionalityModuleItemProvider extends FunctionalityModuleItem
 	}
 
 	/**
-	 * This returns LeafFunctionalityModule.gif.
+	 * This returns ParallelChoiceFunctionalityModule.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/LeafFunctionalityModule"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/ParallelChoiceFunctionalityModule"));
 	}
 
 	/**
@@ -62,10 +64,10 @@ public class LeafFunctionalityModuleItemProvider extends FunctionalityModuleItem
 	 */
 	@Override
 	public String getText(Object object) {
-		String label = ((LeafFunctionalityModule)object).getName();
+		String label = ((ParallelChoiceFunctionalityModule)object).getName();
 		return label == null || label.length() == 0 ?
-			getString("_UI_LeafFunctionalityModule_type") :
-			getString("_UI_LeafFunctionalityModule_type") + " " + label;
+			getString("_UI_ParallelChoiceFunctionalityModule_type") :
+			getString("_UI_ParallelChoiceFunctionalityModule_type") + " " + label;
 	}
 
 

@@ -3,12 +3,15 @@
   "FunctionalityModules" : [ {
     "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
     "name" : "SBAProcesses",
+    "usedInSubset" : true,
     "subModules" : [ {
       "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
       "name" : "FRTBProcessing",
+      "usedInSubset" : true,
       "subModules" : [ {
         "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
         "name" : "PreNetting",
+        "usedInSubset" : true,
         "subModules" : [ {
           "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
           "name" : "DeltaNetting",
@@ -22,1162 +25,302 @@
         }, {
           "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
           "name" : "VegaNetting",
+          "usedInSubset" : true,
           "subModules" : [ {
             "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReadDataSourceFunctionalityModule",
-            "name" : "ReadVegaSensitivities"
+            "name" : "ReadVegaSensitivities",
+            "usedInSubset" : true
           }, {
             "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-            "name" : "NetVegaSensitivities"
+            "name" : "NetVegaSensitivities",
+            "usedInSubset" : true
           } ]
         } ]
       }, {
         "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
         "name" : "RiskClassProcessing",
+        "usedInSubset" : true,
         "subModules" : [ {
-          "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-          "name" : "GIRR_SBA",
+          "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
+          "name" : "DeltaAndCurvatureProcessing",
           "subModules" : [ {
             "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-            "name" : "GIRRDeltaAndGIRRCurvatureProcessing",
+            "name" : "DeltaProcessing",
             "subModules" : [ {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-              "name" : "GIRRDeltaProcessing",
+              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelChoiceFunctionalityModule",
+              "name" : "AssignBucket",
               "subModules" : [ {
                 "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
                 "name" : "GIRRDeltaAssignBucket"
               }, {
                 "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
+                "name" : "EquityDeltaAssignBucket"
+              } ]
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelChoiceFunctionalityModule",
+              "name" : "DeltaApplyWeighting",
+              "subModules" : [ {
+                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
                 "name" : "GIRRDeltaApplyWeighting"
               }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-                "name" : "GIRRDeltaIntraBucketProcessing",
+                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
+                "name" : "EquityDeltaApplyWeighting"
+              } ]
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
+              "name" : "DeltaIntraBucketProcessing",
+              "subModules" : [ {
+                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
+                "name" : "DeltaIntraBucketPairsAndSquares",
                 "subModules" : [ {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                  "name" : "GIRRDeltaIntraBucketPairsAndSquares",
+                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelChoiceFunctionalityModule",
+                  "name" : "DeltaCreateCorrelatedPairs",
                   "subModules" : [ {
                     "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
                     "name" : "GIRRDeltaCreateCorrelatedPairs"
                   }, {
                     "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "GIRRDeltaCreateSquares"
+                    "name" : "EquityDeltaCreateCorrelatedPairs"
                   } ]
                 }, {
                   "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "GIRRDeltaCreateBucketValue"
+                  "name" : "DeltaCreateSquares"
                 } ]
               }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-                "name" : "GIRRDeltaInterBucketProcessing",
+                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
+                "name" : "DeltaCreateBucketValue"
+              } ]
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
+              "name" : "DeltaInterBucketProcessing",
+              "subModules" : [ {
+                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
+                "name" : "DeltaInterBucketPairsAndSquares",
                 "subModules" : [ {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                  "name" : "GIRRDeltaInterBucketPairsAndSquares",
+                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelChoiceFunctionalityModule",
+                  "name" : "DeltaBucketsCreateCorrelatedPairs",
                   "subModules" : [ {
                     "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
                     "name" : "GIRRDeltaBucketsCreateCorrelatedPairs"
                   }, {
                     "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "GIRRDeltaBucketsCreateSquares"
+                    "name" : "EquityDeltaBucketsCreateCorrelatedPairs"
                   } ]
                 }, {
                   "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "GIRRDeltaCreateCapitalCharge"
+                  "name" : "DeltaBucketsCreateSquares"
                 } ]
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
+                "name" : "DeltaCreateCapitalCharge"
+              } ]
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelChoiceFunctionalityModule",
+              "name" : "createDeltaReportCells",
+              "subModules" : [ {
+                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReportCellCreationFunctionalityModule",
+                "name" : "createEquityDeltaReportCells"
               }, {
                 "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReportCellCreationFunctionalityModule",
                 "name" : "createGIRRDeltaReportCells"
               } ]
-            }, {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-              "name" : "GIRRCurvature",
+            } ]
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
+            "name" : "Curvature",
+            "subModules" : [ {
+              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelChoiceFunctionalityModule",
+              "name" : "ReadCurvatureData",
               "subModules" : [ {
                 "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReadDataSourceFunctionalityModule",
                 "name" : "ReadGIRRCurvatureData"
               }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "GIRRCurvatureDeltaStripping",
-                "scenarioSet" : {
-                  "scenarios" : [ {
-                    "name" : "GIRRCurvatureUpShocks"
-                  }, {
-                    "name" : "GIRRCurvatureDownShocks"
-                  } ],
-                  "name" : "GIRRCurvatureDeltaStrippingScenarios"
-                }
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "GIRRCurvatureCalculateCVR"
-              }, {
+                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReadDataSourceFunctionalityModule",
+                "name" : "ReadEquityCurvatureData"
+              } ]
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
+              "name" : "CurvatureDeltaStripping",
+              "scenarioSet" : {
+                "scenarios" : [ {
+                  "name" : "CurvatureUpShocks"
+                }, {
+                  "name" : "CurvatureDownShocks"
+                } ],
+                "name" : "CurvatureDeltaStrippingScenarios"
+              }
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
+              "name" : "CurvatureCalculateCVR"
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelChoiceFunctionalityModule",
+              "name" : "CurvatureAssignBucket",
+              "subModules" : [ {
                 "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
                 "name" : "GIRRCurvatureAssignBucket"
               }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-                "name" : "GIRRCurvatureIntraBucketProcessing",
+                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
+                "name" : "EquityCurvatureAssignBucket"
+              } ]
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
+              "name" : "CurvatureIntraBucketProcessing",
+              "subModules" : [ {
+                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
+                "name" : "CurvatureIntraBucketPairsAndSquares",
                 "subModules" : [ {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                  "name" : "GIRRCurvatureIntraBucketPairsAndSquares",
+                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelChoiceFunctionalityModule",
+                  "name" : "CurvatureCreateCorrelatedPairs",
                   "subModules" : [ {
                     "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
                     "name" : "GIRRCurvatureCreateCorrelatedPairs"
                   }, {
                     "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "GIRRCurvatureCreateSquares"
+                    "name" : "EquityCurvatureCreateCorrelatedPairs"
                   } ]
                 }, {
                   "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "GIRRCurvatureCreateBucketValue"
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-                  "name" : "GIRRCurvatureInterBucketProcessing",
+                  "name" : "CurvatureCreateSquares"
+                } ]
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
+                "name" : "CurvatureCreateBucketValue"
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
+                "name" : "CurvatureInterBucketProcessing",
+                "subModules" : [ {
+                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
+                  "name" : "CurvatureInterBucketPairsAndSquares",
                   "subModules" : [ {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                    "name" : "GIRRCurvatureInterBucketPairsAndSquares",
+                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelChoiceFunctionalityModule",
+                    "name" : "CurvatureBucketsCreateCorrelatedPairs",
                     "subModules" : [ {
                       "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
                       "name" : "GIRRCurvatureBucketsCreateCorrelatedPairs"
                     }, {
                       "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                      "name" : "GIRRCurvatureBucketsCreateSquares"
+                      "name" : "EquityCurvatureBucketsCreateCorrelatedPairs"
                     } ]
                   }, {
                     "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "GIRRCurvatureCreateCapitalCharge"
+                    "name" : "CurvatureBucketsCreateSquares"
                   } ]
+                }, {
+                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
+                  "name" : "CurvatureCreateCapitalCharge"
                 } ]
-              }, {
+              } ]
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelChoiceFunctionalityModule",
+              "name" : "createCurvatureReportCells",
+              "subModules" : [ {
                 "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReportCellCreationFunctionalityModule",
                 "name" : "createGIRRCurvatureReportCells"
-              } ]
-            } ]
-          }, {
-            "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-            "name" : "GIRRVegaProcessing",
-            "subModules" : [ {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-              "name" : "GIRRVegaAssignBucket"
-            }, {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-              "name" : "GIRRVegaApplyWeighting"
-            }, {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-              "name" : "GIRRVegaIntraBucketProcessing",
-              "subModules" : [ {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                "name" : "GIRRVegaIntraBucketPairsAndSquares",
-                "subModules" : [ {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "GIRRVegaCreateCorrelatedPairs"
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "GIRRVegaCreateSquares"
-                } ]
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "GIRRVegaCreateBucketValue"
-              } ]
-            }, {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-              "name" : "GIRRVegaInterBucketProcessing",
-              "subModules" : [ {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                "name" : "GIRRVegaInterBucketPairsAndSquares",
-                "subModules" : [ {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "GIRRVegaBucketsCreateCorrelatedPairs"
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "GIRRVegaBucketsCreateSquares"
-                } ]
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "GIRRVegaCreateCapitalCharge"
-              } ]
-            }, {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReportCellCreationFunctionalityModule",
-              "name" : "createGIRRVegaReportCells"
-            } ]
-          } ]
-        },
-        {
-          "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-          "name" : "Equity_SBA",
-          "subModules" : [ {
-            "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-            "name" : "EquityDeltaAndEquityCurvatureProcessing",
-            "subModules" : [ {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-              "name" : "EquityDeltaProcessing",
-              "subModules" : [ {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "EquityDeltaAssignBucket"
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "EquityDeltaApplyWeighting"
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-                "name" : "EquityDeltaIntraBucketProcessing",
-                "subModules" : [ {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                  "name" : "EquityDeltaIntraBucketPairsAndSquares",
-                  "subModules" : [ {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "EquityDeltaCreateCorrelatedPairs"
-                  }, {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "EquityDeltaCreateSquares"
-                  } ]
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "EquityDeltaCreateBucketValue"
-                } ]
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-                "name" : "EquityDeltaInterBucketProcessing",
-                "subModules" : [ {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                  "name" : "EquityDeltaInterBucketPairsAndSquares",
-                  "subModules" : [ {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "EquityDeltaBucketsCreateCorrelatedPairs"
-                  }, {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "EquityDeltaBucketsCreateSquares"
-                  } ]
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "EquityDeltaCreateCapitalCharge"
-                } ]
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReportCellCreationFunctionalityModule",
-                "name" : "createEquityDeltaReportCells"
-              } ]
-            }, {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-              "name" : "EquityCurvature",
-              "subModules" : [ {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReadDataSourceFunctionalityModule",
-                "name" : "ReadEquityCurvatureData"
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "EquityCurvatureDeltaStripping",
-                "scenarioSet" : {
-                  "scenarios" : [ {
-                    "name" : "EquityCurvatureUpShocks"
-                  }, {
-                    "name" : "EquityCurvatureDownShocks"
-                  } ],
-                  "name" : "EquityCurvatureDeltaStrippingScenarios"
-                }
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "EquityCurvatureCalculateCVR"
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "EquityCurvatureAssignBucket"
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-                "name" : "EquityCurvatureIntraBucketProcessing",
-                "subModules" : [ {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                  "name" : "EquityCurvatureIntraBucketPairsAndSquares",
-                  "subModules" : [ {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "EquityCurvatureCreateCorrelatedPairs"
-                  }, {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "EquityCurvatureCreateSquares"
-                  } ]
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "EquityCurvatureCreateBucketValue"
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-                  "name" : "EquityCurvatureInterBucketProcessing",
-                  "subModules" : [ {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                    "name" : "EquityCurvatureInterBucketPairsAndSquares",
-                    "subModules" : [ {
-                      "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                      "name" : "EquityCurvatureBucketsCreateCorrelatedPairs"
-                    }, {
-                      "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                      "name" : "EquityCurvatureBucketsCreateSquares"
-                    } ]
-                  }, {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "EquityCurvatureCreateCapitalCharge"
-                  } ]
-                } ]
               }, {
                 "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReportCellCreationFunctionalityModule",
                 "name" : "createEquityCurvatureReportCells"
               } ]
             } ]
-          }, {
-            "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-            "name" : "EquityVegaProcessing",
+          } ]
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
+          "name" : "VegaProcessing",
+          "usedInSubset" : true,
+          "subModules" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelChoiceFunctionalityModule",
+            "name" : "VegaAssignBucket",
+            "usedInSubset" : true,
             "subModules" : [ {
               "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
+              "name" : "GIRRVegaAssignBucket",
+              "usedInSubset" : true
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
               "name" : "EquityVegaAssignBucket"
+            } ]
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelChoiceFunctionalityModule",
+            "name" : "VegaApplyWeighting",
+            "usedInSubset" : true,
+            "subModules" : [ {
+              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
+              "name" : "GIRRVegaApplyWeighting",
+              "usedInSubset" : true
             }, {
               "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
               "name" : "EquityVegaApplyWeighting"
-            }, {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-              "name" : "EquityVegaIntraBucketProcessing",
+            } ]
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
+            "name" : "VegaIntraBucketProcessing",
+            "usedInSubset" : true,
+            "subModules" : [ {
+              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
+              "name" : "VegaIntraBucketPairsAndSquares",
+              "usedInSubset" : true,
               "subModules" : [ {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                "name" : "EquityVegaIntraBucketPairsAndSquares",
+                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelChoiceFunctionalityModule",
+                "name" : "VegaCreateCorrelatedPairs",
+                "usedInSubset" : true,
                 "subModules" : [ {
+                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
+                  "name" : "GIRRVegaCreateCorrelatedPairs",
+                  "usedInSubset" : true
+                }, {
                   "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
                   "name" : "EquityVegaCreateCorrelatedPairs"
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "EquityVegaCreateSquares"
                 } ]
               }, {
                 "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "EquityVegaCreateBucketValue"
+                "name" : "VegaCreateSquares",
+                "usedInSubset" : true
               } ]
             }, {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-              "name" : "EquityVegaInterBucketProcessing",
+              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
+              "name" : "VegaCreateBucketValue",
+              "usedInSubset" : true
+            } ]
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
+            "name" : "VegaInterBucketProcessing",
+            "usedInSubset" : true,
+            "subModules" : [ {
+              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
+              "name" : "VegaInterBucketPairsAndSquares",
+              "usedInSubset" : true,
               "subModules" : [ {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                "name" : "EquityVegaInterBucketPairsAndSquares",
+                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelChoiceFunctionalityModule",
+                "name" : "VegaBucketsCreateCorrelatedPairs",
+                "usedInSubset" : true,
                 "subModules" : [ {
                   "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "EquityVegaBucketsCreateCorrelatedPairs"
+                  "name" : "GIRRVegaBucketsCreateCorrelatedPairs",
+                  "usedInSubset" : true
                 }, {
                   "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "EquityVegaBucketsCreateSquares"
+                  "name" : "EquityVegaBucketsCreateCorrelatedPairs"
                 } ]
               }, {
                 "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "EquityVegaCreateCapitalCharge"
+                "name" : "VegaBucketsCreateSquares",
+                "usedInSubset" : true
               } ]
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
+              "name" : "VegaCreateCapitalCharge",
+              "usedInSubset" : true
+            } ]
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelChoiceFunctionalityModule",
+            "name" : "createVegaReportCells",
+            "usedInSubset" : true,
+            "subModules" : [ {
+              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReportCellCreationFunctionalityModule",
+              "name" : "createGIRRVegaReportCells",
+              "usedInSubset" : true
             }, {
               "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReportCellCreationFunctionalityModule",
               "name" : "createEquityVegaReportCells"
-            } ]
-          } ]
-        },
-        {
-          "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-          "name" : "Commodity_SBA",
-          "subModules" : [ {
-            "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-            "name" : "CommodityDeltaAndCommodityCurvatureProcessing",
-            "subModules" : [ {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-              "name" : "CommodityDeltaProcessing",
-              "subModules" : [ {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "CommodityDeltaAssignBucket"
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "CommodityDeltaApplyWeighting"
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-                "name" : "CommodityDeltaIntraBucketProcessing",
-                "subModules" : [ {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                  "name" : "CommodityDeltaIntraBucketPairsAndSquares",
-                  "subModules" : [ {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "CommodityDeltaCreateCorrelatedPairs"
-                  }, {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "CommodityDeltaCreateSquares"
-                  } ]
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "CommodityDeltaCreateBucketValue"
-                } ]
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-                "name" : "CommodityDeltaInterBucketProcessing",
-                "subModules" : [ {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                  "name" : "CommodityDeltaInterBucketPairsAndSquares",
-                  "subModules" : [ {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "CommodityDeltaBucketsCreateCorrelatedPairs"
-                  }, {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "CommodityDeltaBucketsCreateSquares"
-                  } ]
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "CommodityDeltaCreateCapitalCharge"
-                } ]
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReportCellCreationFunctionalityModule",
-                "name" : "createCommodityDeltaReportCells"
-              } ]
-            }, {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-              "name" : "CommodityCurvature",
-              "subModules" : [ {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReadDataSourceFunctionalityModule",
-                "name" : "ReadCommodityCurvatureData"
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "CommodityCurvatureDeltaStripping",
-                "scenarioSet" : {
-                  "scenarios" : [ {
-                    "name" : "CommodityCurvatureUpShocks"
-                  }, {
-                    "name" : "CommodityCurvatureDownShocks"
-                  } ],
-                  "name" : "CommodityCurvatureDeltaStrippingScenarios"
-                }
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "CommodityCurvatureCalculateCVR"
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "CommodityCurvatureAssignBucket"
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-                "name" : "CommodityCurvatureIntraBucketProcessing",
-                "subModules" : [ {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                  "name" : "CommodityCurvatureIntraBucketPairsAndSquares",
-                  "subModules" : [ {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "CommodityCurvatureCreateCorrelatedPairs"
-                  }, {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "CommodityCurvatureCreateSquares"
-                  } ]
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "CommodityCurvatureCreateBucketValue"
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-                  "name" : "CommodityCurvatureInterBucketProcessing",
-                  "subModules" : [ {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                    "name" : "CommodityCurvatureInterBucketPairsAndSquares",
-                    "subModules" : [ {
-                      "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                      "name" : "CommodityCurvatureBucketsCreateCorrelatedPairs"
-                    }, {
-                      "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                      "name" : "CommodityCurvatureBucketsCreateSquares"
-                    } ]
-                  }, {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "CommodityCurvatureCreateCapitalCharge"
-                  } ]
-                } ]
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReportCellCreationFunctionalityModule",
-                "name" : "createCommodityCurvatureReportCells"
-              } ]
-            } ]
-          }, {
-            "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-            "name" : "CommodityVegaProcessing",
-            "subModules" : [ {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-              "name" : "CommodityVegaAssignBucket"
-            }, {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-              "name" : "CommodityVegaApplyWeighting"
-            }, {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-              "name" : "CommodityVegaIntraBucketProcessing",
-              "subModules" : [ {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                "name" : "CommodityVegaIntraBucketPairsAndSquares",
-                "subModules" : [ {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "CommodityVegaCreateCorrelatedPairs"
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "CommodityVegaCreateSquares"
-                } ]
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "CommodityVegaCreateBucketValue"
-              } ]
-            }, {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-              "name" : "CommodityVegaInterBucketProcessing",
-              "subModules" : [ {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                "name" : "CommodityVegaInterBucketPairsAndSquares",
-                "subModules" : [ {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "CommodityVegaBucketsCreateCorrelatedPairs"
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "CommodityVegaBucketsCreateSquares"
-                } ]
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "CommodityVegaCreateCapitalCharge"
-              } ]
-            }, {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReportCellCreationFunctionalityModule",
-              "name" : "createCommodityVegaReportCells"
-            } ]
-          } ]
-        },
-        {
-          "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-          "name" : "CSRNonSecRisk_SBA",
-          "subModules" : [ {
-            "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-            "name" : "CSRNonSecRiskDeltaAndCSRNonSecRiskCurvatureProcessing",
-            "subModules" : [ {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-              "name" : "CSRNonSecRiskDeltaProcessing",
-              "subModules" : [ {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "CSRNonSecRiskDeltaAssignBucket"
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "CSRNonSecRiskDeltaApplyWeighting"
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-                "name" : "CSRNonSecRiskDeltaIntraBucketProcessing",
-                "subModules" : [ {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                  "name" : "CSRNonSecRiskDeltaIntraBucketPairsAndSquares",
-                  "subModules" : [ {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "CSRNonSecRiskDeltaCreateCorrelatedPairs"
-                  }, {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "CSRNonSecRiskDeltaCreateSquares"
-                  } ]
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "CSRNonSecRiskDeltaCreateBucketValue"
-                } ]
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-                "name" : "CSRNonSecRiskDeltaInterBucketProcessing",
-                "subModules" : [ {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                  "name" : "CSRNonSecRiskDeltaInterBucketPairsAndSquares",
-                  "subModules" : [ {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "CSRNonSecRiskDeltaBucketsCreateCorrelatedPairs"
-                  }, {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "CSRNonSecRiskDeltaBucketsCreateSquares"
-                  } ]
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "CSRNonSecRiskDeltaCreateCapitalCharge"
-                } ]
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReportCellCreationFunctionalityModule",
-                "name" : "createCSRNonSecRiskDeltaReportCells"
-              } ]
-            }, {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-              "name" : "CSRNonSecRiskCurvature",
-              "subModules" : [ {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReadDataSourceFunctionalityModule",
-                "name" : "ReadCSRNonSecRiskCurvatureData"
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "CSRNonSecRiskCurvatureDeltaStripping",
-                "scenarioSet" : {
-                  "scenarios" : [ {
-                    "name" : "CSRNonSecRiskCurvatureUpShocks"
-                  }, {
-                    "name" : "CSRNonSecRiskCurvatureDownShocks"
-                  } ],
-                  "name" : "CSRNonSecRiskCurvatureDeltaStrippingScenarios"
-                }
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "CSRNonSecRiskCurvatureCalculateCVR"
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "CSRNonSecRiskCurvatureAssignBucket"
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-                "name" : "CSRNonSecRiskCurvatureIntraBucketProcessing",
-                "subModules" : [ {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                  "name" : "CSRNonSecRiskCurvatureIntraBucketPairsAndSquares",
-                  "subModules" : [ {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "CSRNonSecRiskCurvatureCreateCorrelatedPairs"
-                  }, {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "CSRNonSecRiskCurvatureCreateSquares"
-                  } ]
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "CSRNonSecRiskCurvatureCreateBucketValue"
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-                  "name" : "CSRNonSecRiskCurvatureInterBucketProcessing",
-                  "subModules" : [ {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                    "name" : "CSRNonSecRiskCurvatureInterBucketPairsAndSquares",
-                    "subModules" : [ {
-                      "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                      "name" : "CSRNonSecRiskCurvatureBucketsCreateCorrelatedPairs"
-                    }, {
-                      "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                      "name" : "CSRNonSecRiskCurvatureBucketsCreateSquares"
-                    } ]
-                  }, {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "CSRNonSecRiskCurvatureCreateCapitalCharge"
-                  } ]
-                } ]
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReportCellCreationFunctionalityModule",
-                "name" : "createCSRNonSecRiskCurvatureReportCells"
-              } ]
-            } ]
-          }, {
-            "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-            "name" : "CSRNonSecRiskVegaProcessing",
-            "subModules" : [ {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-              "name" : "CSRNonSecRiskVegaAssignBucket"
-            }, {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-              "name" : "CSRNonSecRiskVegaApplyWeighting"
-            }, {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-              "name" : "CSRNonSecRiskVegaIntraBucketProcessing",
-              "subModules" : [ {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                "name" : "CSRNonSecRiskVegaIntraBucketPairsAndSquares",
-                "subModules" : [ {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "CSRNonSecRiskVegaCreateCorrelatedPairs"
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "CSRNonSecRiskVegaCreateSquares"
-                } ]
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "CSRNonSecRiskVegaCreateBucketValue"
-              } ]
-            }, {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-              "name" : "CSRNonSecRiskVegaInterBucketProcessing",
-              "subModules" : [ {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                "name" : "CSRNonSecRiskVegaInterBucketPairsAndSquares",
-                "subModules" : [ {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "CSRNonSecRiskVegaBucketsCreateCorrelatedPairs"
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "CSRNonSecRiskVegaBucketsCreateSquares"
-                } ]
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "CSRNonSecRiskVegaCreateCapitalCharge"
-              } ]
-            }, {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReportCellCreationFunctionalityModule",
-              "name" : "createCSRNonSecRiskVegaReportCells"
-            } ]
-          } ]
-        },
-        {
-          "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-          "name" : "CSRSecCTPRisk_SBA",
-          "subModules" : [ {
-            "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-            "name" : "CSRSecCTPRiskDeltaAndCSRSecCTPRiskCurvatureProcessing",
-            "subModules" : [ {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-              "name" : "CSRSecCTPRiskDeltaProcessing",
-              "subModules" : [ {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "CSRSecCTPRiskDeltaAssignBucket"
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "CSRSecCTPRiskDeltaApplyWeighting"
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-                "name" : "CSRSecCTPRiskDeltaIntraBucketProcessing",
-                "subModules" : [ {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                  "name" : "CSRSecCTPRiskDeltaIntraBucketPairsAndSquares",
-                  "subModules" : [ {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "CSRSecCTPRiskDeltaCreateCorrelatedPairs"
-                  }, {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "CSRSecCTPRiskDeltaCreateSquares"
-                  } ]
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "CSRSecCTPRiskDeltaCreateBucketValue"
-                } ]
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-                "name" : "CSRSecCTPRiskDeltaInterBucketProcessing",
-                "subModules" : [ {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                  "name" : "CSRSecCTPRiskDeltaInterBucketPairsAndSquares",
-                  "subModules" : [ {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "CSRSecCTPRiskDeltaBucketsCreateCorrelatedPairs"
-                  }, {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "CSRSecCTPRiskDeltaBucketsCreateSquares"
-                  } ]
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "CSRSecCTPRiskDeltaCreateCapitalCharge"
-                } ]
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReportCellCreationFunctionalityModule",
-                "name" : "createCSRSecCTPRiskDeltaReportCells"
-              } ]
-            }, {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-              "name" : "CSRSecCTPRiskCurvature",
-              "subModules" : [ {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReadDataSourceFunctionalityModule",
-                "name" : "ReadCSRSecCTPRiskCurvatureData"
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "CSRSecCTPRiskCurvatureDeltaStripping",
-                "scenarioSet" : {
-                  "scenarios" : [ {
-                    "name" : "CSRSecCTPRiskCurvatureUpShocks"
-                  }, {
-                    "name" : "CSRSecCTPRiskCurvatureDownShocks"
-                  } ],
-                  "name" : "CSRSecCTPRiskCurvatureDeltaStrippingScenarios"
-                }
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "CSRSecCTPRiskCurvatureCalculateCVR"
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "CSRSecCTPRiskCurvatureAssignBucket"
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-                "name" : "CSRSecCTPRiskCurvatureIntraBucketProcessing",
-                "subModules" : [ {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                  "name" : "CSRSecCTPRiskCurvatureIntraBucketPairsAndSquares",
-                  "subModules" : [ {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "CSRSecCTPRiskCurvatureCreateCorrelatedPairs"
-                  }, {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "CSRSecCTPRiskCurvatureCreateSquares"
-                  } ]
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "CSRSecCTPRiskCurvatureCreateBucketValue"
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-                  "name" : "CSRSecCTPRiskCurvatureInterBucketProcessing",
-                  "subModules" : [ {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                    "name" : "CSRSecCTPRiskCurvatureInterBucketPairsAndSquares",
-                    "subModules" : [ {
-                      "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                      "name" : "CSRSecCTPRiskCurvatureBucketsCreateCorrelatedPairs"
-                    }, {
-                      "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                      "name" : "CSRSecCTPRiskCurvatureBucketsCreateSquares"
-                    } ]
-                  }, {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "CSRSecCTPRiskCurvatureCreateCapitalCharge"
-                  } ]
-                } ]
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReportCellCreationFunctionalityModule",
-                "name" : "createCSRSecCTPRiskCurvatureReportCells"
-              } ]
-            } ]
-          }, {
-            "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-            "name" : "CSRSecCTPRiskVegaProcessing",
-            "subModules" : [ {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-              "name" : "CSRSecCTPRiskVegaAssignBucket"
-            }, {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-              "name" : "CSRSecCTPRiskVegaApplyWeighting"
-            }, {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-              "name" : "CSRSecCTPRiskVegaIntraBucketProcessing",
-              "subModules" : [ {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                "name" : "CSRSecCTPRiskVegaIntraBucketPairsAndSquares",
-                "subModules" : [ {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "CSRSecCTPRiskVegaCreateCorrelatedPairs"
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "CSRSecCTPRiskVegaCreateSquares"
-                } ]
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "CSRSecCTPRiskVegaCreateBucketValue"
-              } ]
-            }, {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-              "name" : "CSRSecCTPRiskVegaInterBucketProcessing",
-              "subModules" : [ {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                "name" : "CSRSecCTPRiskVegaInterBucketPairsAndSquares",
-                "subModules" : [ {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "CSRSecCTPRiskVegaBucketsCreateCorrelatedPairs"
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "CSRSecCTPRiskVegaBucketsCreateSquares"
-                } ]
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "CSRSecCTPRiskVegaCreateCapitalCharge"
-              } ]
-            }, {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReportCellCreationFunctionalityModule",
-              "name" : "createCSRSecCTPRiskVegaReportCells"
-            } ]
-          } ]
-        },
-        {
-          "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-          "name" : "CSRSecNonCTPRisk_SBA",
-          "subModules" : [ {
-            "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-            "name" : "CSRSecNonCTPRiskDeltaAndCSRSecNonCTPRiskCurvatureProcessing",
-            "subModules" : [ {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-              "name" : "CSRSecNonCTPRiskDeltaProcessing",
-              "subModules" : [ {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "CSRSecNonCTPRiskDeltaAssignBucket"
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "CSRSecNonCTPRiskDeltaApplyWeighting"
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-                "name" : "CSRSecNonCTPRiskDeltaIntraBucketProcessing",
-                "subModules" : [ {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                  "name" : "CSRSecNonCTPRiskDeltaIntraBucketPairsAndSquares",
-                  "subModules" : [ {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "CSRSecNonCTPRiskDeltaCreateCorrelatedPairs"
-                  }, {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "CSRSecNonCTPRiskDeltaCreateSquares"
-                  } ]
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "CSRSecNonCTPRiskDeltaCreateBucketValue"
-                } ]
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-                "name" : "CSRSecNonCTPRiskDeltaInterBucketProcessing",
-                "subModules" : [ {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                  "name" : "CSRSecNonCTPRiskDeltaInterBucketPairsAndSquares",
-                  "subModules" : [ {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "CSRSecNonCTPRiskDeltaBucketsCreateCorrelatedPairs"
-                  }, {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "CSRSecNonCTPRiskDeltaBucketsCreateSquares"
-                  } ]
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "CSRSecNonCTPRiskDeltaCreateCapitalCharge"
-                } ]
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReportCellCreationFunctionalityModule",
-                "name" : "createCSRSecNonCTPRiskDeltaReportCells"
-              } ]
-            }, {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-              "name" : "CSRSecNonCTPRiskCurvature",
-              "subModules" : [ {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReadDataSourceFunctionalityModule",
-                "name" : "ReadCSRSecNonCTPRiskCurvatureData"
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "CSRSecNonCTPRiskCurvatureDeltaStripping",
-                "scenarioSet" : {
-                  "scenarios" : [ {
-                    "name" : "CSRSecNonCTPRiskCurvatureUpShocks"
-                  }, {
-                    "name" : "CSRSecNonCTPRiskCurvatureDownShocks"
-                  } ],
-                  "name" : "CSRSecNonCTPRiskCurvatureDeltaStrippingScenarios"
-                }
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "CSRSecNonCTPRiskCurvatureCalculateCVR"
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "CSRSecNonCTPRiskCurvatureAssignBucket"
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-                "name" : "CSRSecNonCTPRiskCurvatureIntraBucketProcessing",
-                "subModules" : [ {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                  "name" : "CSRSecNonCTPRiskCurvatureIntraBucketPairsAndSquares",
-                  "subModules" : [ {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "CSRSecNonCTPRiskCurvatureCreateCorrelatedPairs"
-                  }, {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "CSRSecNonCTPRiskCurvatureCreateSquares"
-                  } ]
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "CSRSecNonCTPRiskCurvatureCreateBucketValue"
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-                  "name" : "CSRSecNonCTPRiskCurvatureInterBucketProcessing",
-                  "subModules" : [ {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                    "name" : "CSRSecNonCTPRiskCurvatureInterBucketPairsAndSquares",
-                    "subModules" : [ {
-                      "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                      "name" : "CSRSecNonCTPRiskCurvatureBucketsCreateCorrelatedPairs"
-                    }, {
-                      "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                      "name" : "CSRSecNonCTPRiskCurvatureBucketsCreateSquares"
-                    } ]
-                  }, {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "CSRSecNonCTPRiskCurvatureCreateCapitalCharge"
-                  } ]
-                } ]
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReportCellCreationFunctionalityModule",
-                "name" : "createCSRSecNonCTPRiskCurvatureReportCells"
-              } ]
-            } ]
-          }, {
-            "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-            "name" : "CSRSecNonCTPRiskVegaProcessing",
-            "subModules" : [ {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-              "name" : "CSRSecNonCTPRiskVegaAssignBucket"
-            }, {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-              "name" : "CSRSecNonCTPRiskVegaApplyWeighting"
-            }, {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-              "name" : "CSRSecNonCTPRiskVegaIntraBucketProcessing",
-              "subModules" : [ {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                "name" : "CSRSecNonCTPRiskVegaIntraBucketPairsAndSquares",
-                "subModules" : [ {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "CSRSecNonCTPRiskVegaCreateCorrelatedPairs"
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "CSRSecNonCTPRiskVegaCreateSquares"
-                } ]
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "CSRSecNonCTPRiskVegaCreateBucketValue"
-              } ]
-            }, {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-              "name" : "CSRSecNonCTPRiskVegaInterBucketProcessing",
-              "subModules" : [ {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                "name" : "CSRSecNonCTPRiskVegaInterBucketPairsAndSquares",
-                "subModules" : [ {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "CSRSecNonCTPRiskVegaBucketsCreateCorrelatedPairs"
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "CSRSecNonCTPRiskVegaBucketsCreateSquares"
-                } ]
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "CSRSecNonCTPRiskVegaCreateCapitalCharge"
-              } ]
-            }, {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReportCellCreationFunctionalityModule",
-              "name" : "createCSRSecNonCTPRiskVegaReportCells"
-            } ]
-          } ]
-        },
-        {
-          "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-          "name" : "FXRisk_SBA",
-          "subModules" : [ {
-            "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-            "name" : "FXRiskDeltaAndFXRiskCurvatureProcessing",
-            "subModules" : [ {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-              "name" : "FXRiskDeltaProcessing",
-              "subModules" : [ {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "FXRiskDeltaAssignBucket"
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "FXRiskDeltaApplyWeighting"
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-                "name" : "FXRiskDeltaIntraBucketProcessing",
-                "subModules" : [ {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                  "name" : "FXRiskDeltaIntraBucketPairsAndSquares",
-                  "subModules" : [ {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "FXRiskDeltaCreateCorrelatedPairs"
-                  }, {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "FXRiskDeltaCreateSquares"
-                  } ]
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "FXRiskDeltaCreateBucketValue"
-                } ]
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-                "name" : "FXRiskDeltaInterBucketProcessing",
-                "subModules" : [ {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                  "name" : "FXRiskDeltaInterBucketPairsAndSquares",
-                  "subModules" : [ {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "FXRiskDeltaBucketsCreateCorrelatedPairs"
-                  }, {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "FXRiskDeltaBucketsCreateSquares"
-                  } ]
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "FXRiskDeltaCreateCapitalCharge"
-                } ]
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReportCellCreationFunctionalityModule",
-                "name" : "createFXRiskDeltaReportCells"
-              } ]
-            }, {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-              "name" : "FXRiskCurvature",
-              "subModules" : [ {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReadDataSourceFunctionalityModule",
-                "name" : "ReadFXRiskCurvatureData"
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "FXRiskCurvatureDeltaStripping",
-                "scenarioSet" : {
-                  "scenarios" : [ {
-                    "name" : "FXRiskCurvatureUpShocks"
-                  }, {
-                    "name" : "FXRiskCurvatureDownShocks"
-                  } ],
-                  "name" : "FXRiskCurvatureDeltaStrippingScenarios"
-                }
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "FXRiskCurvatureCalculateCVR"
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "FXRiskCurvatureAssignBucket"
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-                "name" : "FXRiskCurvatureIntraBucketProcessing",
-                "subModules" : [ {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                  "name" : "FXRiskCurvatureIntraBucketPairsAndSquares",
-                  "subModules" : [ {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "FXRiskCurvatureCreateCorrelatedPairs"
-                  }, {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "FXRiskCurvatureCreateSquares"
-                  } ]
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "FXRiskCurvatureCreateBucketValue"
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-                  "name" : "FXRiskCurvatureInterBucketProcessing",
-                  "subModules" : [ {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                    "name" : "FXRiskCurvatureInterBucketPairsAndSquares",
-                    "subModules" : [ {
-                      "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                      "name" : "FXRiskCurvatureBucketsCreateCorrelatedPairs"
-                    }, {
-                      "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                      "name" : "FXRiskCurvatureBucketsCreateSquares"
-                    } ]
-                  }, {
-                    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                    "name" : "FXRiskCurvatureCreateCapitalCharge"
-                  } ]
-                } ]
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReportCellCreationFunctionalityModule",
-                "name" : "createFXRiskCurvatureReportCells"
-              } ]
-            } ]
-          }, {
-            "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-            "name" : "FXRiskVegaProcessing",
-            "subModules" : [ {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-              "name" : "FXRiskVegaAssignBucket"
-            }, {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-              "name" : "FXRiskVegaApplyWeighting"
-            }, {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-              "name" : "FXRiskVegaIntraBucketProcessing",
-              "subModules" : [ {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                "name" : "FXRiskVegaIntraBucketPairsAndSquares",
-                "subModules" : [ {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "FXRiskVegaCreateCorrelatedPairs"
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "FXRiskVegaCreateSquares"
-                } ]
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "FXRiskVegaCreateBucketValue"
-              } ]
-            }, {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//SerialFunctionalityModule",
-              "name" : "FXRiskVegaInterBucketProcessing",
-              "subModules" : [ {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ParallelFunctionalityModule",
-                "name" : "FXRiskVegaInterBucketPairsAndSquares",
-                "subModules" : [ {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "FXRiskVegaBucketsCreateCorrelatedPairs"
-                }, {
-                  "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                  "name" : "FXRiskVegaBucketsCreateSquares"
-                } ]
-              }, {
-                "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-                "name" : "FXRiskVegaCreateCapitalCharge"
-              } ]
-            }, {
-              "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReportCellCreationFunctionalityModule",
-              "name" : "createFXRiskVegaReportCells"
             } ]
           } ]
         } ]

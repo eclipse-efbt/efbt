@@ -10,6 +10,7 @@ import org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityMo
 import org.eclipse.efbt.cocalimo.core.model.functionality_module.Functionality_moduleFactory;
 import org.eclipse.efbt.cocalimo.core.model.functionality_module.Functionality_modulePackage;
 import org.eclipse.efbt.cocalimo.core.model.functionality_module.LeafFunctionalityModule;
+import org.eclipse.efbt.cocalimo.core.model.functionality_module.ParallelChoiceFunctionalityModule;
 import org.eclipse.efbt.cocalimo.core.model.functionality_module.ParallelFunctionalityModule;
 import org.eclipse.efbt.cocalimo.core.model.functionality_module.ReadDataSourceFunctionalityModule;
 import org.eclipse.efbt.cocalimo.core.model.functionality_module.ReportCellCreationFunctionalityModule;
@@ -38,8 +39,7 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
  * <!-- end-user-doc -->
  * @generated
  */
-public class Functionality_modulePackageImpl extends EPackageImpl implements Functionality_modulePackage
-{
+public class Functionality_modulePackageImpl extends EPackageImpl implements Functionality_modulePackage {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -125,6 +125,13 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 	private EClass validationFunctionalityModuleEClass = null;
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass parallelChoiceFunctionalityModuleEClass = null;
+
+	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
 	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
 	 * package URI value.
@@ -139,8 +146,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 	 * @see #init()
 	 * @generated
 	 */
-	private Functionality_modulePackageImpl()
-	{
+	private Functionality_modulePackageImpl() {
 		super(eNS_URI, Functionality_moduleFactory.eINSTANCE);
 	}
 
@@ -163,8 +169,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 	 * @see #initializePackageContents()
 	 * @generated
 	 */
-	public static Functionality_modulePackage init()
-	{
+	public static Functionality_modulePackage init() {
 		if (isInited) return (Functionality_modulePackage)EPackage.Registry.INSTANCE.getEPackage(Functionality_modulePackage.eNS_URI);
 
 		// Obtain or create and register package
@@ -203,8 +208,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public EClass getDataProcessingFunctionalityModule()
-	{
+	public EClass getDataProcessingFunctionalityModule() {
 		return dataProcessingFunctionalityModuleEClass;
 	}
 
@@ -214,8 +218,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public EClass getLeafFunctionalityModule()
-	{
+	public EClass getLeafFunctionalityModule() {
 		return leafFunctionalityModuleEClass;
 	}
 
@@ -225,8 +228,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public EClass getParallelFunctionalityModule()
-	{
+	public EClass getParallelFunctionalityModule() {
 		return parallelFunctionalityModuleEClass;
 	}
 
@@ -236,8 +238,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public EClass getScenarioSetFunctionalityModule()
-	{
+	public EClass getScenarioSetFunctionalityModule() {
 		return scenarioSetFunctionalityModuleEClass;
 	}
 
@@ -247,8 +248,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public EReference getScenarioSetFunctionalityModule_ScenarioSetChoice()
-	{
+	public EReference getScenarioSetFunctionalityModule_ScenarioSetChoice() {
 		return (EReference)scenarioSetFunctionalityModuleEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -258,8 +258,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public EClass getSerialFunctionalityModule()
-	{
+	public EClass getSerialFunctionalityModule() {
 		return serialFunctionalityModuleEClass;
 	}
 
@@ -269,8 +268,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public EClass getFunctionalityModuleSet()
-	{
+	public EClass getFunctionalityModuleSet() {
 		return functionalityModuleSetEClass;
 	}
 
@@ -280,8 +278,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public EReference getFunctionalityModuleSet_SubModules()
-	{
+	public EReference getFunctionalityModuleSet_SubModules() {
 		return (EReference)functionalityModuleSetEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -291,8 +288,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public EClass getReadDataSourceFunctionalityModule()
-	{
+	public EClass getReadDataSourceFunctionalityModule() {
 		return readDataSourceFunctionalityModuleEClass;
 	}
 
@@ -302,8 +298,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public EClass getReportCellCreationFunctionalityModule()
-	{
+	public EClass getReportCellCreationFunctionalityModule() {
 		return reportCellCreationFunctionalityModuleEClass;
 	}
 
@@ -313,8 +308,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public EClass getFunctionalityModule()
-	{
+	public EClass getFunctionalityModule() {
 		return functionalityModuleEClass;
 	}
 
@@ -324,8 +318,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public EAttribute getFunctionalityModule_Name()
-	{
+	public EAttribute getFunctionalityModule_Name() {
 		return (EAttribute)functionalityModuleEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -335,8 +328,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public EReference getFunctionalityModule_UsedModule()
-	{
+	public EReference getFunctionalityModule_UsedModule() {
 		return (EReference)functionalityModuleEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -346,8 +338,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public EReference getFunctionalityModule_Scenario()
-	{
+	public EReference getFunctionalityModule_Scenario() {
 		return (EReference)functionalityModuleEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -357,8 +348,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public EReference getFunctionalityModule_ScenarioSet()
-	{
+	public EReference getFunctionalityModule_ScenarioSet() {
 		return (EReference)functionalityModuleEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -368,8 +358,17 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public EClass getFunctionalityModuleModule()
-	{
+	public EAttribute getFunctionalityModule_UsedInSubset() {
+		return (EAttribute)functionalityModuleEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getFunctionalityModuleModule() {
 		return functionalityModuleModuleEClass;
 	}
 
@@ -379,8 +378,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public EReference getFunctionalityModuleModule_FunctionalityModules()
-	{
+	public EReference getFunctionalityModuleModule_FunctionalityModules() {
 		return (EReference)functionalityModuleModuleEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -390,8 +388,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public EReference getFunctionalityModuleModule_FunctionalityModuleTags()
-	{
+	public EReference getFunctionalityModuleModule_FunctionalityModuleTags() {
 		return (EReference)functionalityModuleModuleEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -401,8 +398,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public EReference getFunctionalityModuleModule_SceanrioTags()
-	{
+	public EReference getFunctionalityModuleModule_SceanrioTags() {
 		return (EReference)functionalityModuleModuleEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -412,8 +408,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public EClass getFunctionalityModuleTag()
-	{
+	public EClass getFunctionalityModuleTag() {
 		return functionalityModuleTagEClass;
 	}
 
@@ -423,8 +418,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public EReference getFunctionalityModuleTag_FunctionalityModule()
-	{
+	public EReference getFunctionalityModuleTag_FunctionalityModule() {
 		return (EReference)functionalityModuleTagEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -434,8 +428,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public EClass getValidationFunctionalityModule()
-	{
+	public EClass getValidationFunctionalityModule() {
 		return validationFunctionalityModuleEClass;
 	}
 
@@ -445,8 +438,17 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 	 * @generated
 	 */
 	@Override
-	public Functionality_moduleFactory getFunctionality_moduleFactory()
-	{
+	public EClass getParallelChoiceFunctionalityModule() {
+		return parallelChoiceFunctionalityModuleEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Functionality_moduleFactory getFunctionality_moduleFactory() {
 		return (Functionality_moduleFactory)getEFactoryInstance();
 	}
 
@@ -464,8 +466,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void createPackageContents()
-	{
+	public void createPackageContents() {
 		if (isCreated) return;
 		isCreated = true;
 
@@ -493,6 +494,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 		createEReference(functionalityModuleEClass, FUNCTIONALITY_MODULE__USED_MODULE);
 		createEReference(functionalityModuleEClass, FUNCTIONALITY_MODULE__SCENARIO);
 		createEReference(functionalityModuleEClass, FUNCTIONALITY_MODULE__SCENARIO_SET);
+		createEAttribute(functionalityModuleEClass, FUNCTIONALITY_MODULE__USED_IN_SUBSET);
 
 		functionalityModuleModuleEClass = createEClass(FUNCTIONALITY_MODULE_MODULE);
 		createEReference(functionalityModuleModuleEClass, FUNCTIONALITY_MODULE_MODULE__FUNCTIONALITY_MODULES);
@@ -503,6 +505,8 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 		createEReference(functionalityModuleTagEClass, FUNCTIONALITY_MODULE_TAG__FUNCTIONALITY_MODULE);
 
 		validationFunctionalityModuleEClass = createEClass(VALIDATION_FUNCTIONALITY_MODULE);
+
+		parallelChoiceFunctionalityModuleEClass = createEClass(PARALLEL_CHOICE_FUNCTIONALITY_MODULE);
 	}
 
 	/**
@@ -519,8 +523,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void initializePackageContents()
-	{
+	public void initializePackageContents() {
 		if (isInitialized) return;
 		isInitialized = true;
 
@@ -550,6 +553,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 		functionalityModuleModuleEClass.getESuperTypes().add(theModule_managementPackage.getModule());
 		functionalityModuleTagEClass.getESuperTypes().add(theRequirements_textPackage.getTag());
 		validationFunctionalityModuleEClass.getESuperTypes().add(this.getLeafFunctionalityModule());
+		parallelChoiceFunctionalityModuleEClass.getESuperTypes().add(this.getFunctionalityModuleSet());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(dataProcessingFunctionalityModuleEClass, DataProcessingFunctionalityModule.class, "DataProcessingFunctionalityModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -575,6 +579,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 		initEReference(getFunctionalityModule_UsedModule(), this.getFunctionalityModule(), null, "usedModule", null, 0, 1, FunctionalityModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFunctionalityModule_Scenario(), theScenariosPackage.getScenario(), null, "scenario", null, 0, 1, FunctionalityModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFunctionalityModule_ScenarioSet(), theScenariosPackage.getScenarioSet(), null, "scenarioSet", null, 0, 1, FunctionalityModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getFunctionalityModule_UsedInSubset(), ecorePackage.getEBoolean(), "usedInSubset", null, 0, 1, FunctionalityModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(functionalityModuleModuleEClass, FunctionalityModuleModule.class, "FunctionalityModuleModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getFunctionalityModuleModule_FunctionalityModules(), this.getFunctionalityModule(), null, "FunctionalityModules", null, 0, -1, FunctionalityModuleModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -585,6 +590,8 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 		initEReference(getFunctionalityModuleTag_FunctionalityModule(), this.getFunctionalityModule(), null, "FunctionalityModule", null, 0, 1, FunctionalityModuleTag.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(validationFunctionalityModuleEClass, ValidationFunctionalityModule.class, "ValidationFunctionalityModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(parallelChoiceFunctionalityModuleEClass, ParallelChoiceFunctionalityModule.class, "ParallelChoiceFunctionalityModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);
@@ -602,8 +609,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void createLicenseAnnotations()
-	{
+	protected void createLicenseAnnotations() {
 		String source = "license";
 		addAnnotation
 		  (this,
@@ -619,8 +625,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void createExtendedMetaDataAnnotations()
-	{
+	protected void createExtendedMetaDataAnnotations() {
 		String source = "http:///org/eclipse/emf/ecore/util/ExtendedMetaData";
 		addAnnotation
 		  (leafFunctionalityModuleEClass,
@@ -719,6 +724,13 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 		   new String[] {
 			   "kind", "element",
 			   "name", "FunctionalityModules"
+		   });
+		addAnnotation
+		  (parallelChoiceFunctionalityModuleEClass,
+		   source,
+		   new String[] {
+			   "name", "ParallelChoiceFunctionalityModule",
+			   "kind", "elementOnly"
 		   });
 	}
 

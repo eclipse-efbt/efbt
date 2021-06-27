@@ -17,6 +17,6 @@ package org.eclipse.efbt.cocalimo.core.model.functionality_module;
  * @model extendedMetaData="name='LeafFunctionalityModule' kind='elementOnly'"
  * @generated
  */
-public interface LeafFunctionalityModule extends FunctionalityModule
-{
+public interface LeafFunctionalityModule extends FunctionalityModule {
+
 } // LeafFunctionalityModule

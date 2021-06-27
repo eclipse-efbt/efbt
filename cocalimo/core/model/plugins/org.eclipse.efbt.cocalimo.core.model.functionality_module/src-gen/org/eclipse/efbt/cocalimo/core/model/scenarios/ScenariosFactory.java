@@ -12,8 +12,7 @@ import org.eclipse.emf.ecore.EFactory;
  * @see org.eclipse.efbt.cocalimo.core.model.scenarios.ScenariosPackage
  * @generated
  */
-public interface ScenariosFactory extends EFactory
-{
+public interface ScenariosFactory extends EFactory {
 	/**
 	 * The singleton instance of the factory.
 	 * <!-- begin-user-doc -->

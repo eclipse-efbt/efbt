@@ -31,8 +31,7 @@ import org.eclipse.emf.ecore.EReference;
  *        annotation="license license='Copyright (c) 2019 Bird Software Solutions Ltd\n All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html\n\nSPDX-License-Identifier: EPL-2.0 '"
  * @generated
  */
-public interface Functionality_modulePackage extends EPackage
-{
+public interface Functionality_modulePackage extends EPackage {
 	/**
 	 * The package name.
 	 * <!-- begin-user-doc -->
@@ -112,13 +111,22 @@ public interface Functionality_modulePackage extends EPackage
 	int FUNCTIONALITY_MODULE__SCENARIO_SET = 3;
 
 	/**
+	 * The feature id for the '<em><b>Used In Subset</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTIONALITY_MODULE__USED_IN_SUBSET = 4;
+
+	/**
 	 * The number of structural features of the '<em>Functionality Module</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTIONALITY_MODULE_FEATURE_COUNT = 4;
+	int FUNCTIONALITY_MODULE_FEATURE_COUNT = 5;
 
 	/**
 	 * The number of operations of the '<em>Functionality Module</em>' class.
@@ -174,6 +182,15 @@ public interface Functionality_modulePackage extends EPackage
 	 * @ordered
 	 */
 	int LEAF_FUNCTIONALITY_MODULE__SCENARIO_SET = FUNCTIONALITY_MODULE__SCENARIO_SET;
+
+	/**
+	 * The feature id for the '<em><b>Used In Subset</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LEAF_FUNCTIONALITY_MODULE__USED_IN_SUBSET = FUNCTIONALITY_MODULE__USED_IN_SUBSET;
 
 	/**
 	 * The number of structural features of the '<em>Leaf Functionality Module</em>' class.
@@ -240,6 +257,15 @@ public interface Functionality_modulePackage extends EPackage
 	int DATA_PROCESSING_FUNCTIONALITY_MODULE__SCENARIO_SET = LEAF_FUNCTIONALITY_MODULE__SCENARIO_SET;
 
 	/**
+	 * The feature id for the '<em><b>Used In Subset</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DATA_PROCESSING_FUNCTIONALITY_MODULE__USED_IN_SUBSET = LEAF_FUNCTIONALITY_MODULE__USED_IN_SUBSET;
+
+	/**
 	 * The number of structural features of the '<em>Data Processing Functionality Module</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -302,6 +328,15 @@ public interface Functionality_modulePackage extends EPackage
 	 * @ordered
 	 */
 	int FUNCTIONALITY_MODULE_SET__SCENARIO_SET = FUNCTIONALITY_MODULE__SCENARIO_SET;
+
+	/**
+	 * The feature id for the '<em><b>Used In Subset</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTIONALITY_MODULE_SET__USED_IN_SUBSET = FUNCTIONALITY_MODULE__USED_IN_SUBSET;
 
 	/**
 	 * The feature id for the '<em><b>Sub Modules</b></em>' containment reference list.
@@ -377,6 +412,15 @@ public interface Functionality_modulePackage extends EPackage
 	int PARALLEL_FUNCTIONALITY_MODULE__SCENARIO_SET = FUNCTIONALITY_MODULE_SET__SCENARIO_SET;
 
 	/**
+	 * The feature id for the '<em><b>Used In Subset</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARALLEL_FUNCTIONALITY_MODULE__USED_IN_SUBSET = FUNCTIONALITY_MODULE_SET__USED_IN_SUBSET;
+
+	/**
 	 * The feature id for the '<em><b>Sub Modules</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -448,6 +492,15 @@ public interface Functionality_modulePackage extends EPackage
 	 * @ordered
 	 */
 	int SCENARIO_SET_FUNCTIONALITY_MODULE__SCENARIO_SET = FUNCTIONALITY_MODULE_SET__SCENARIO_SET;
+
+	/**
+	 * The feature id for the '<em><b>Used In Subset</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCENARIO_SET_FUNCTIONALITY_MODULE__USED_IN_SUBSET = FUNCTIONALITY_MODULE_SET__USED_IN_SUBSET;
 
 	/**
 	 * The feature id for the '<em><b>Sub Modules</b></em>' containment reference list.
@@ -532,6 +585,15 @@ public interface Functionality_modulePackage extends EPackage
 	int SERIAL_FUNCTIONALITY_MODULE__SCENARIO_SET = FUNCTIONALITY_MODULE_SET__SCENARIO_SET;
 
 	/**
+	 * The feature id for the '<em><b>Used In Subset</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SERIAL_FUNCTIONALITY_MODULE__USED_IN_SUBSET = FUNCTIONALITY_MODULE_SET__USED_IN_SUBSET;
+
+	/**
 	 * The feature id for the '<em><b>Sub Modules</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -605,6 +667,15 @@ public interface Functionality_modulePackage extends EPackage
 	int READ_DATA_SOURCE_FUNCTIONALITY_MODULE__SCENARIO_SET = LEAF_FUNCTIONALITY_MODULE__SCENARIO_SET;
 
 	/**
+	 * The feature id for the '<em><b>Used In Subset</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int READ_DATA_SOURCE_FUNCTIONALITY_MODULE__USED_IN_SUBSET = LEAF_FUNCTIONALITY_MODULE__USED_IN_SUBSET;
+
+	/**
 	 * The number of structural features of the '<em>Read Data Source Functionality Module</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -667,6 +738,15 @@ public interface Functionality_modulePackage extends EPackage
 	 * @ordered
 	 */
 	int REPORT_CELL_CREATION_FUNCTIONALITY_MODULE__SCENARIO_SET = LEAF_FUNCTIONALITY_MODULE__SCENARIO_SET;
+
+	/**
+	 * The feature id for the '<em><b>Used In Subset</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT_CELL_CREATION_FUNCTIONALITY_MODULE__USED_IN_SUBSET = LEAF_FUNCTIONALITY_MODULE__USED_IN_SUBSET;
 
 	/**
 	 * The number of structural features of the '<em>Report Cell Creation Functionality Module</em>' class.
@@ -906,6 +986,15 @@ public interface Functionality_modulePackage extends EPackage
 	int VALIDATION_FUNCTIONALITY_MODULE__SCENARIO_SET = LEAF_FUNCTIONALITY_MODULE__SCENARIO_SET;
 
 	/**
+	 * The feature id for the '<em><b>Used In Subset</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VALIDATION_FUNCTIONALITY_MODULE__USED_IN_SUBSET = LEAF_FUNCTIONALITY_MODULE__USED_IN_SUBSET;
+
+	/**
 	 * The number of structural features of the '<em>Validation Functionality Module</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -922,6 +1011,88 @@ public interface Functionality_modulePackage extends EPackage
 	 * @ordered
 	 */
 	int VALIDATION_FUNCTIONALITY_MODULE_OPERATION_COUNT = LEAF_FUNCTIONALITY_MODULE_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.core.model.functionality_module.impl.ParallelChoiceFunctionalityModuleImpl <em>Parallel Choice Functionality Module</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.core.model.functionality_module.impl.ParallelChoiceFunctionalityModuleImpl
+	 * @see org.eclipse.efbt.cocalimo.core.model.functionality_module.impl.Functionality_modulePackageImpl#getParallelChoiceFunctionalityModule()
+	 * @generated
+	 */
+	int PARALLEL_CHOICE_FUNCTIONALITY_MODULE = 12;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARALLEL_CHOICE_FUNCTIONALITY_MODULE__NAME = FUNCTIONALITY_MODULE_SET__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Used Module</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARALLEL_CHOICE_FUNCTIONALITY_MODULE__USED_MODULE = FUNCTIONALITY_MODULE_SET__USED_MODULE;
+
+	/**
+	 * The feature id for the '<em><b>Scenario</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARALLEL_CHOICE_FUNCTIONALITY_MODULE__SCENARIO = FUNCTIONALITY_MODULE_SET__SCENARIO;
+
+	/**
+	 * The feature id for the '<em><b>Scenario Set</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARALLEL_CHOICE_FUNCTIONALITY_MODULE__SCENARIO_SET = FUNCTIONALITY_MODULE_SET__SCENARIO_SET;
+
+	/**
+	 * The feature id for the '<em><b>Used In Subset</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARALLEL_CHOICE_FUNCTIONALITY_MODULE__USED_IN_SUBSET = FUNCTIONALITY_MODULE_SET__USED_IN_SUBSET;
+
+	/**
+	 * The feature id for the '<em><b>Sub Modules</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARALLEL_CHOICE_FUNCTIONALITY_MODULE__SUB_MODULES = FUNCTIONALITY_MODULE_SET__SUB_MODULES;
+
+	/**
+	 * The number of structural features of the '<em>Parallel Choice Functionality Module</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARALLEL_CHOICE_FUNCTIONALITY_MODULE_FEATURE_COUNT = FUNCTIONALITY_MODULE_SET_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of operations of the '<em>Parallel Choice Functionality Module</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARALLEL_CHOICE_FUNCTIONALITY_MODULE_OPERATION_COUNT = FUNCTIONALITY_MODULE_SET_OPERATION_COUNT + 0;
 
 
 	/**
@@ -1081,6 +1252,17 @@ public interface Functionality_modulePackage extends EPackage
 	EReference getFunctionalityModule_ScenarioSet();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModule#isUsedInSubset <em>Used In Subset</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Used In Subset</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModule#isUsedInSubset()
+	 * @see #getFunctionalityModule()
+	 * @generated
+	 */
+	EAttribute getFunctionalityModule_UsedInSubset();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModuleModule <em>Functionality Module Module</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1155,6 +1337,16 @@ public interface Functionality_modulePackage extends EPackage
 	EClass getValidationFunctionalityModule();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.functionality_module.ParallelChoiceFunctionalityModule <em>Parallel Choice Functionality Module</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Parallel Choice Functionality Module</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.functionality_module.ParallelChoiceFunctionalityModule
+	 * @generated
+	 */
+	EClass getParallelChoiceFunctionalityModule();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1176,8 +1368,7 @@ public interface Functionality_modulePackage extends EPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	interface Literals
-	{
+	interface Literals {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.functionality_module.impl.DataProcessingFunctionalityModuleImpl <em>Data Processing Functionality Module</em>}' class.
 		 * <!-- begin-user-doc -->
@@ -1317,6 +1508,14 @@ public interface Functionality_modulePackage extends EPackage
 		EReference FUNCTIONALITY_MODULE__SCENARIO_SET = eINSTANCE.getFunctionalityModule_ScenarioSet();
 
 		/**
+		 * The meta object literal for the '<em><b>Used In Subset</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute FUNCTIONALITY_MODULE__USED_IN_SUBSET = eINSTANCE.getFunctionalityModule_UsedInSubset();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.functionality_module.impl.FunctionalityModuleModuleImpl <em>Functionality Module Module</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1377,6 +1576,16 @@ public interface Functionality_modulePackage extends EPackage
 		 * @generated
 		 */
 		EClass VALIDATION_FUNCTIONALITY_MODULE = eINSTANCE.getValidationFunctionalityModule();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.functionality_module.impl.ParallelChoiceFunctionalityModuleImpl <em>Parallel Choice Functionality Module</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.core.model.functionality_module.impl.ParallelChoiceFunctionalityModuleImpl
+		 * @see org.eclipse.efbt.cocalimo.core.model.functionality_module.impl.Functionality_modulePackageImpl#getParallelChoiceFunctionalityModule()
+		 * @generated
+		 */
+		EClass PARALLEL_CHOICE_FUNCTIONALITY_MODULE = eINSTANCE.getParallelChoiceFunctionalityModule();
 
 	}
 
