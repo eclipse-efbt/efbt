@@ -14,8 +14,11 @@ package org.eclipse.efbt.cocalimo.smcubes.query.core;
 
 import java.util.Iterator;
 
+import org.eclipse.efbt.cocalimo.core.model.module_management.Module;
+import org.eclipse.efbt.cocalimo.core.model.module_management.ModuleDependency;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.DOMAIN;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.MEMBER;
+import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.DomainModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.MemberModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.SmcubesModel;
 import org.eclipse.emf.common.util.BasicEList;
@@ -41,19 +44,26 @@ public class CustomQuery {
 
 		EList<MEMBER> members = new BasicEList<MEMBER>();
 
-		SmcubesModel bm = Util.getDefaultBirdModel(domain);
-		EList<MemberModule> birdMemberModules = bm.getMembers();
+		EList<ModuleDependency> dependantModules = ((DomainModule) domain.eContainer()).getDependencies().getTheModules();
 		
-		for (Iterator iterator = birdMemberModules.iterator(); iterator.hasNext();) {
-			MemberModule memberModule = (MemberModule) iterator.next();
-
-			EList<MEMBER> birdMembers = memberModule.getMembers();
-			for (Iterator iterator2 = birdMembers.iterator(); iterator2.hasNext();) {
-				MEMBER member = (MEMBER) iterator2.next();
-
-				if (member.getDomain_id().equals(domain))
-					members.add(member);
-
+		
+		
+		for (Iterator iterator = dependantModules.iterator(); iterator.hasNext();) {
+			ModuleDependency dependantModule =  (ModuleDependency) iterator.next();
+			Module module = dependantModule.getTheModule();
+					
+			if( module instanceof MemberModule )
+			{
+				MemberModule memberModule = (MemberModule) module;
+	
+				EList<MEMBER> birdMembers = memberModule.getMembers();
+				for (Iterator iterator2 = birdMembers.iterator(); iterator2.hasNext();) {
+					MEMBER member = (MEMBER) iterator2.next();
+	
+					if (member.getDomain_id().getDomain_id().equals(domain.getDomain_id()))
+						members.add(member);
+	
+				}
 			}
 
 		}

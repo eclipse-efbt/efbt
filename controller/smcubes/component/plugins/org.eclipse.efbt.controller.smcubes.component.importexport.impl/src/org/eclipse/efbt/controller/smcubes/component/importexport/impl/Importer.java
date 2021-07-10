@@ -13,14 +13,20 @@
 package org.eclipse.efbt.controller.smcubes.component.importexport.impl;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModule;
 import org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModuleModule;
 import org.eclipse.efbt.cocalimo.core.model.functionality_module.Functionality_moduleFactory;
+import org.eclipse.efbt.cocalimo.core.model.test_definition.RegFunctionalityTestDefinition;
+import org.eclipse.efbt.cocalimo.core.model.test_definition.RegFunctionalityTestDefinitionModule;
 import org.eclipse.efbt.controller.smcubes.component.importexport.api.BirdImporter;
 import org.eclipse.efbt.cocalimo.smcubes.model.program.ProgramFactory;
+import org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesRegFunctionalityTestModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel;
 import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.CombinationModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.CubeModule;
@@ -38,6 +44,10 @@ import org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.Transform
 import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.SmcubesModel;
 import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.Smcubes_modelFactory;
 import org.eclipse.emf.common.util.BasicEList;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.emfjson.jackson.resource.JsonResourceFactory;
+
 
 
 
@@ -62,10 +72,7 @@ public abstract class Importer implements BirdImporter {
 	 */
 	protected String outputFilepath;
 	
-	/**
-	 * A SMCubesStaticModel instance which contains just TestDefinitions
-	 */
-	public static SMCubesStaticModel testDefinitionProgram;
+	
 	/**
 	 * A SMCubesStaticModel instance which contains just TestTemplates,
 	 * note that the testTemplates can refer to TestDefintions 
@@ -82,11 +89,11 @@ public abstract class Importer implements BirdImporter {
 	 * A SMCubesStaticModel instance which contains just functionality Modules
 	 */
 	public static SMCubesStaticModel functionalityModulesProgram;
-	/**
-	 * A list of programs, each of which contains only Tests
-	 */
-	public static List<SMCubesStaticModel> testPrograms;
+	
 
+	public static  SMCubesRegFunctionalityTestModule testModule;
+	
+	public static RegFunctionalityTestDefinitionModule testDefinitionModule;
 	/**
 	 * The transformationSchemes
 	 */
@@ -199,9 +206,6 @@ public abstract class Importer implements BirdImporter {
 		birdModel.getFunctionalModules().add(transformationSchemes);
 		birdModel.getVariables().add(variables);
 		
-		testDefinitionProgram = ProgramFactory.eINSTANCE.createSMCubesStaticModel();
-		testTemplateProgram = ProgramFactory.eINSTANCE.createSMCubesStaticModel();
-		testConstraintsProgram = ProgramFactory.eINSTANCE.createSMCubesStaticModel();
 		functionalityModulesProgram = ProgramFactory.eINSTANCE.createSMCubesStaticModel();
 		FunctionalityModuleModule fmm = Functionality_moduleFactory.eINSTANCE.createFunctionalityModuleModule();
 		fmm.setName("functionalityModuleModule");
@@ -210,7 +214,7 @@ public abstract class Importer implements BirdImporter {
 		fmm.getFunctionalityModules().add(fm);
 		functionalityModulesProgram.setFunctionalityModules(fmm);
 		
-		testPrograms = new ArrayList<SMCubesStaticModel>();
+		
 	
 		 
 
@@ -281,14 +285,16 @@ public abstract class Importer implements BirdImporter {
 	/**
 	 * Serialize all the EObjects to files.
 	 */
-	/**public void saveArtifactsAsXML() {
-		FreeBirdToolsResourceFactory factory = new FreeBirdToolsResourceFactory();
+	public void saveArtifactsAsJSON() {
+		JsonResourceFactory factory = new JsonResourceFactory();
 		URI domainsURI = URI.createFileURI(outputFilepath + "domains.efbt_data_definition");
 		URI membersURI = URI.createFileURI(outputFilepath + "members.efbt_data_definition");
 		URI variablesURI = URI.createFileURI(outputFilepath + "variables.efbt_data_definition");
 		URI cubesURI = URI.createFileURI(outputFilepath + "cubes.efbt_data_definition");
 		URI cubestructuresURI = URI.createFileURI(outputFilepath + "cube_structures.efbt_data_definition");
 		URI cubestructureitemsURI = URI.createFileURI(outputFilepath + "cube_structure_items.efbt_data_definition");
+		URI testURI = URI.createFileURI(outputFilepath + "test.program");
+		URI testDefinitionURI = URI.createFileURI(outputFilepath + "test_def.test_definition");
 		// URI transformationsURI = URI.createFileURI(outputFilepath +
 		// "transformations.efbt_vtl_transformation");
 
@@ -301,7 +307,7 @@ public abstract class Importer implements BirdImporter {
 		// URI variableMappingURI = URI.createFileURI(outputFilepath +
 		// "variable_mapping.efbt_mapping");
 
-		URI birdURI = URI.createFileURI(outputFilepath + "bird.bird_model");
+		//URI birdURI = URI.createFileURI(outputFilepath + "bird.bird_model");
 
 		Resource domainsResource = factory.createResource(domainsURI);
 		Resource membersResource = factory.createResource(membersURI);
@@ -309,6 +315,8 @@ public abstract class Importer implements BirdImporter {
 		Resource cubesResource = factory.createResource(cubesURI);
 		Resource cubestructuresResource = factory.createResource(cubestructuresURI);
 		Resource cubestructureitemsResource = factory.createResource(cubestructureitemsURI);
+		Resource testResource = factory.createResource(testURI);
+		Resource testDefinitionResource = factory.createResource(testDefinitionURI);
 		// Resource transformationsResource =
 		// factory.createResource(transformationsURI);
 
@@ -327,6 +335,8 @@ public abstract class Importer implements BirdImporter {
 		cubesResource.getContents().add(cubesModule);
 		cubestructuresResource.getContents().add(cubeStructuresModule);
 		cubestructureitemsResource.getContents().add(cubeStructureItemsModule);
+		testResource.getContents().add(testModule);
+		testDefinitionResource.getContents().add(testDefinitionModule);
 		// transformationsResource.getContents().add(transformationSchemes);
 
 		// cubeMappingResource.getContents().add(cubeMappingModule);
@@ -342,7 +352,9 @@ public abstract class Importer implements BirdImporter {
 			variablesResource.save(Collections.EMPTY_MAP);
 			cubesResource.save(Collections.EMPTY_MAP);
 			cubestructuresResource.save(Collections.EMPTY_MAP);
-			cubestructureitemsResource.save(Collections.EMPTY_MAP);
+			cubestructureitemsResource.save(Collections.EMPTY_MAP);			
+			testDefinitionResource.save(Collections.EMPTY_MAP);
+			testResource.save(Collections.EMPTY_MAP);
 			// transformationsResource.save(Collections.EMPTY_MAP);
 			// cubeMappingResource.save(Collections.EMPTY_MAP);
 			// mappingDefinitionResource.save(Collections.EMPTY_MAP);
@@ -372,17 +384,12 @@ public abstract class Importer implements BirdImporter {
 
 		}
 
-	}*/
-	
-	public void importTestDataWithNewTestFormat() { }
-	
+	}
 	
 
 	/**
 	 * from Test data sored in CSV format , create all the model instances of
-	 * Test and Store them in the list of  testPrograms. Note that to do this
-	 * we will create instances of TestDefintions TestConstraints, 
-	 * and TestTemplates which the Test instance will refer to.
+	 * Test and Store them in the list of  testPrograms. 
 	 */
 	public void importTestDataWithOldTestFormat(String fileLocation) {
 		// TODO Auto-generated method stub
