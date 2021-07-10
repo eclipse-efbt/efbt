@@ -23,11 +23,6 @@ public class Controller {
 	
 	public static void executPlatfromCall (PlatformCall call)
 	{
-		
-		if (call instanceof TranslateBIRDWithOldTestFormatToCocason)
-		{
-			translateBIRDToCocason((TranslateBIRDWithOldTestFormatToCocason) call);
-		}
 		if (call instanceof TranslateBIRDWithNewTestFormatToCocason)
 		{
 			translateBIRDWithNewTestFormatToCocason((TranslateBIRDWithNewTestFormatToCocason) call);
@@ -43,13 +38,9 @@ public class Controller {
 
 	private static void translateBIRDWithNewTestFormatToCocason(TranslateBIRDWithNewTestFormatToCocason call) {
 		// TODO Auto-generated method stub
-		ImportAndExportSMCubesToNewCocason.translateBIRDWithNewTestFormatToCocason(call.getInputDirectory(), call.getOutputDirectory(), call.getTestDirectory());
+		ImportAndExportSMCubesToNewCocason.translateBIRDWithNewTestFormatToCoCaLiMo(call.getInputDirectory(), call.getOutputDirectory(), call.getTestDirectory());
 	}
-	
-	private static void translateBIRDToCocason(TranslateBIRDWithOldTestFormatToCocason call) {
-		// TODO Auto-generated method stub
-		ImportAndExportSMCubesToNewCocason.translateBIRDWithOldTestFormatToCocason(call.getInputDirectory(), call.getOutputDirectory(), call.getTestDirectory());
-	}
+
 	
 	private static void convertSQLDeveloperModelToEcore(ConvertSQLDeveloperModelToEcore call) {
 		// TODO Auto-generated method stub
