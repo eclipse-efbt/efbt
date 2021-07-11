@@ -31,6 +31,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
+import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
@@ -179,6 +180,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 		isInited = true;
 
 		// Initialize simple dependencies
+		EcorePackage.eINSTANCE.eClass();
 		Module_managementPackage.eINSTANCE.eClass();
 		Requirements_textPackage.eINSTANCE.eClass();
 
@@ -290,6 +292,16 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 	@Override
 	public EClass getReadDataSourceFunctionalityModule() {
 		return readDataSourceFunctionalityModuleEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getReadDataSourceFunctionalityModule_Entity() {
+		return (EReference)readDataSourceFunctionalityModuleEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -486,6 +498,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 		createEReference(functionalityModuleSetEClass, FUNCTIONALITY_MODULE_SET__SUB_MODULES);
 
 		readDataSourceFunctionalityModuleEClass = createEClass(READ_DATA_SOURCE_FUNCTIONALITY_MODULE);
+		createEReference(readDataSourceFunctionalityModuleEClass, READ_DATA_SOURCE_FUNCTIONALITY_MODULE__ENTITY);
 
 		reportCellCreationFunctionalityModuleEClass = createEClass(REPORT_CELL_CREATION_FUNCTIONALITY_MODULE);
 
@@ -534,6 +547,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 
 		// Obtain other dependent packages
 		ScenariosPackage theScenariosPackage = (ScenariosPackage)EPackage.Registry.INSTANCE.getEPackage(ScenariosPackage.eNS_URI);
+		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
 		Module_managementPackage theModule_managementPackage = (Module_managementPackage)EPackage.Registry.INSTANCE.getEPackage(Module_managementPackage.eNS_URI);
 		Requirements_textPackage theRequirements_textPackage = (Requirements_textPackage)EPackage.Registry.INSTANCE.getEPackage(Requirements_textPackage.eNS_URI);
 
@@ -571,6 +585,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 		initEReference(getFunctionalityModuleSet_SubModules(), this.getFunctionalityModule(), null, "subModules", null, 0, -1, FunctionalityModuleSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(readDataSourceFunctionalityModuleEClass, ReadDataSourceFunctionalityModule.class, "ReadDataSourceFunctionalityModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getReadDataSourceFunctionalityModule_Entity(), theEcorePackage.getEClass(), null, "entity", null, 0, 1, ReadDataSourceFunctionalityModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(reportCellCreationFunctionalityModuleEClass, ReportCellCreationFunctionalityModule.class, "ReportCellCreationFunctionalityModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

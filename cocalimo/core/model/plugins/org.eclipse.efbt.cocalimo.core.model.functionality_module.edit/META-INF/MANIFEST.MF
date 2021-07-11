@@ -14,6 +14,8 @@ Export-Package: org.eclipse.efbt.cocalimo.core.model.functionality_module.provid
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.efbt.cocalimo.core.model.functionality_module;visibility:=reexport,
  org.eclipse.emf.edit;visibility:=reexport,
+ org.eclipse.emf.ecore;visibility:=reexport,
+ org.eclipse.emf.ecore.edit;visibility:=reexport,
  org.eclipse.efbt.cocalimo.core.model.module_management;visibility:=reexport,
  org.eclipse.efbt.cocalimo.core.model.module_management.edit;visibility:=reexport,
  org.eclipse.efbt.cocalimo.core.model.requirements_text;visibility:=reexport,

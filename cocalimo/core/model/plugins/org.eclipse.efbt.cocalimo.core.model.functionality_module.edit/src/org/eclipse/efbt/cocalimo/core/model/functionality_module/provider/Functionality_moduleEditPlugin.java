@@ -9,6 +9,7 @@ import org.eclipse.efbt.cocalimo.core.model.requirements_text.provider.Requireme
 import org.eclipse.emf.common.EMFPlugin;
 
 import org.eclipse.emf.common.util.ResourceLocator;
+import org.eclipse.emf.ecore.provider.EcoreEditPlugin;
 
 /**
  * This is the central singleton for the Functionality_module edit plugin.
@@ -42,6 +43,7 @@ public final class Functionality_moduleEditPlugin extends EMFPlugin {
 	public Functionality_moduleEditPlugin() {
 		super
 		  (new ResourceLocator [] {
+		     EcoreEditPlugin.INSTANCE,
 		     Module_managementEditPlugin.INSTANCE,
 		     Requirements_textEditPlugin.INSTANCE,
 		   });

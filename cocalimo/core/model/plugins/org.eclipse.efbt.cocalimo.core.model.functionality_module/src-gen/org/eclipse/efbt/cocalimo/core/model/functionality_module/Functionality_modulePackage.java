@@ -676,13 +676,22 @@ public interface Functionality_modulePackage extends EPackage {
 	int READ_DATA_SOURCE_FUNCTIONALITY_MODULE__USED_IN_SUBSET = LEAF_FUNCTIONALITY_MODULE__USED_IN_SUBSET;
 
 	/**
+	 * The feature id for the '<em><b>Entity</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int READ_DATA_SOURCE_FUNCTIONALITY_MODULE__ENTITY = LEAF_FUNCTIONALITY_MODULE_FEATURE_COUNT + 0;
+
+	/**
 	 * The number of structural features of the '<em>Read Data Source Functionality Module</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int READ_DATA_SOURCE_FUNCTIONALITY_MODULE_FEATURE_COUNT = LEAF_FUNCTIONALITY_MODULE_FEATURE_COUNT + 0;
+	int READ_DATA_SOURCE_FUNCTIONALITY_MODULE_FEATURE_COUNT = LEAF_FUNCTIONALITY_MODULE_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of operations of the '<em>Read Data Source Functionality Module</em>' class.
@@ -1188,6 +1197,17 @@ public interface Functionality_modulePackage extends EPackage {
 	EClass getReadDataSourceFunctionalityModule();
 
 	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.core.model.functionality_module.ReadDataSourceFunctionalityModule#getEntity <em>Entity</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Entity</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.functionality_module.ReadDataSourceFunctionalityModule#getEntity()
+	 * @see #getReadDataSourceFunctionalityModule()
+	 * @generated
+	 */
+	EReference getReadDataSourceFunctionalityModule_Entity();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.functionality_module.ReportCellCreationFunctionalityModule <em>Report Cell Creation Functionality Module</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1454,6 +1474,14 @@ public interface Functionality_modulePackage extends EPackage {
 		 * @generated
 		 */
 		EClass READ_DATA_SOURCE_FUNCTIONALITY_MODULE = eINSTANCE.getReadDataSourceFunctionalityModule();
+
+		/**
+		 * The meta object literal for the '<em><b>Entity</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference READ_DATA_SOURCE_FUNCTIONALITY_MODULE__ENTITY = eINSTANCE.getReadDataSourceFunctionalityModule_Entity();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.functionality_module.impl.ReportCellCreationFunctionalityModuleImpl <em>Report Cell Creation Functionality Module</em>}' class.
