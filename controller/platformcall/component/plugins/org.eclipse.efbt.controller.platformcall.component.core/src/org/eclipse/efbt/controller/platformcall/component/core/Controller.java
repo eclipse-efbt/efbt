@@ -44,7 +44,7 @@ public class Controller {
 	
 	private static void convertSQLDeveloperModelToEcore(ConvertSQLDeveloperModelToEcore call) {
 		// TODO Auto-generated method stub
-		SQLDevConverter.convert(call.getInputDirectory());
+		SQLDevConverter.convert(call.getInputDirectory(), call.getOutputDirectory());
 	}
 	
 	

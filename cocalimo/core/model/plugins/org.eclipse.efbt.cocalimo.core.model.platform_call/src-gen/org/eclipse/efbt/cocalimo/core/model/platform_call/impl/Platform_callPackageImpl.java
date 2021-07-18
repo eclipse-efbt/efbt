@@ -251,6 +251,16 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 	 * @generated
 	 */
 	@Override
+	public EAttribute getConvertSQLDeveloperModelToEcore_OutputDirectory() {
+		return (EAttribute)convertSQLDeveloperModelToEcoreEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getTranslateBIRDWithNewTestFormatToCocason() {
 		return translateBIRDWithNewTestFormatToCocasonEClass;
 	}
@@ -329,6 +339,7 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 
 		convertSQLDeveloperModelToEcoreEClass = createEClass(CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE);
 		createEAttribute(convertSQLDeveloperModelToEcoreEClass, CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE__INPUT_DIRECTORY);
+		createEAttribute(convertSQLDeveloperModelToEcoreEClass, CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE__OUTPUT_DIRECTORY);
 
 		translateBIRDWithNewTestFormatToCocasonEClass = createEClass(TRANSLATE_BIRD_WITH_NEW_TEST_FORMAT_TO_COCASON);
 		createEAttribute(translateBIRDWithNewTestFormatToCocasonEClass, TRANSLATE_BIRD_WITH_NEW_TEST_FORMAT_TO_COCASON__INPUT_DIRECTORY);
@@ -388,6 +399,7 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 
 		initEClass(convertSQLDeveloperModelToEcoreEClass, ConvertSQLDeveloperModelToEcore.class, "ConvertSQLDeveloperModelToEcore", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getConvertSQLDeveloperModelToEcore_InputDirectory(), ecorePackage.getEString(), "inputDirectory", null, 0, 1, ConvertSQLDeveloperModelToEcore.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getConvertSQLDeveloperModelToEcore_OutputDirectory(), ecorePackage.getEString(), "outputDirectory", null, 0, 1, ConvertSQLDeveloperModelToEcore.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(translateBIRDWithNewTestFormatToCocasonEClass, TranslateBIRDWithNewTestFormatToCocason.class, "TranslateBIRDWithNewTestFormatToCocason", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTranslateBIRDWithNewTestFormatToCocason_InputDirectory(), ecorePackage.getEString(), "inputDirectory", null, 0, 1, TranslateBIRDWithNewTestFormatToCocason.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

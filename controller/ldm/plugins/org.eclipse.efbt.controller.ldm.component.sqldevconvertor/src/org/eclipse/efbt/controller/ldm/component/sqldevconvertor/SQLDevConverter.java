@@ -13,6 +13,7 @@
 package org.eclipse.efbt.controller.ldm.component.sqldevconvertor;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -57,15 +58,17 @@ import org.apache.commons.csv.CSVRecord;
  */
 public class SQLDevConverter {
 
+	public static StringBuffer logMessage = new StringBuffer();
 	/**
 	 * Convert the csv files in the directory into and Ecore model
 	 * 
 	 * @param fileDirectory
+	 * @param outputDirectory 
 	 */
-	public static void convert(String fileDirectory) {
+	public static void convert(String fileDirectory, String outputDirectory) {
 
 		// for each entity make an Ecore EClass
-		
+		logMessage = new StringBuffer();
 
 		EPackage birdpackage = EcoreFactory.eINSTANCE.createEPackage();
 		birdpackage.setName("bird");
@@ -174,7 +177,7 @@ public class SQLDevConverter {
 					headerSkipped = true;
 				else {
 					counter++;
-					//System.out.println("counter =" + counter);
+					
 					try {
 						
 						String enumID = csvRow.get(0);
@@ -184,7 +187,7 @@ public class SQLDevConverter {
 						String adaptedValue = replaceSpaceWithUnderscore(value);
 						EEnum theEnumeration = enumMap.get(enumID);
 						if (theEnumeration == null) {
-							System.out.println("missing domain: " + enumID);
+							logMessage.append( "missing domain: " + enumID + "\n");
 	
 						}
 						EList<EEnumLiteral> literals = theEnumeration.getELiterals();
@@ -198,8 +201,8 @@ public class SQLDevConverter {
 					}
 					catch(ArrayIndexOutOfBoundsException e) 
 					{
-						System.out.println("counter =" + counter);
-						System.out.println("row " + counter + " in DM_Domain_AVT.csv skipped  due to improper formatting");
+						
+						logMessage.append( "row " + counter + " in DM_Domain_AVT.csv skipped  due to improper formatting\n") ;
 					}
 
 				}
@@ -289,7 +292,7 @@ public class SQLDevConverter {
 						if (datatype != null) {
 							attribute.setEType(datatype);
 						} else {
-							System.out.println("missing datatype: " + dataTypeID);
+							logMessage.append( "missing datatype: " + dataTypeID + "\n");
 						}
 					}
 
@@ -300,7 +303,7 @@ public class SQLDevConverter {
 
 						theClass.getEStructuralFeatures().add(attribute);
 					} else {
-						System.out.println("missing class: " + classID);
+						logMessage.append( "missing class: " + classID);
 					}
 
 				}
@@ -332,7 +335,7 @@ public class SQLDevConverter {
 				for (Iterator iterator2 = featuresToDelete.iterator(); iterator2.hasNext();) {
 					EStructuralFeature eStructuralFeature = (EStructuralFeature) iterator2.next();
 					features.remove(eStructuralFeature);
-					System.out.println("removed " + eStructuralFeature  + "since it exists in the superclass");
+					logMessage.append( "removed " + eStructuralFeature  + "since it exists in the superclass" + "\n");
 				}
 			}
 		}
@@ -387,13 +390,13 @@ public class SQLDevConverter {
 					if (theClass != null) {
 						theClass.getEStructuralFeatures().add(reference);
 					} else {
-						System.out.println("missing class: " + sourceID);
+						logMessage.append("missing class: " + sourceID + "\n");
 					}
 					if (targetClass != null) {
 
 						reference.setEType(targetClass);
 					} else {
-						System.out.println("missing target class: " + sourceID);
+						logMessage.append("missing target class: " + sourceID + "\n");
 					}
 
 				}
@@ -405,12 +408,24 @@ public class SQLDevConverter {
 
 		// create a resource and save it
 		ResourceFactoryImpl resourceFactory = new XMIResourceFactoryImpl();
-		URI modelURI = URI.createFileURI(fileDirectory + "\\ldm.ecore");
+		URI modelURI = URI.createFileURI(outputDirectory + "\\ldm.ecore");
 
 		Resource ldmResource = resourceFactory.createResource(modelURI);
 		ldmResource.getContents().add(birdpackage);
 		try {
 			ldmResource.save(Collections.EMPTY_MAP);
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+		
+		try {
+			
+			
+			FileWriter fw = new FileWriter(outputDirectory + "\\logfile.txt");
+			fw.write(logMessage.toString());
+			fw.flush();
+
 		} catch (IOException e) {
 
 			e.printStackTrace();
@@ -423,8 +438,10 @@ public class SQLDevConverter {
 		if( (adaptedEnumName.equals("All_last_days_of_months___YYYY_MM")) ||
 			(adaptedEnumName.equals("All_last_days_of_quarters___YYYY_MM"))	||
 			(adaptedEnumName.equals("All_possible_dates_YYYY_MM_DD") ) )
-			
+		{
+			logMessage.append(" field in blacklist: " + adaptedEnumName + "\n");
 			return true;
+		}
 		else 
 			return false;
 						
@@ -515,6 +532,7 @@ public class SQLDevConverter {
 	 */
 	private static String replaceSpaceWithUnderscore(String className) {
 		
+		String originalClassName = className;
 		if(className.length() > 0)
 		{
 			if((className.charAt(0) >= '0') && (className.charAt(0) <= '9')) 
@@ -523,12 +541,17 @@ public class SQLDevConverter {
 			}
 		}
 		
-		return className.replace(' ', '_').replace((char) 65533, '_').replace(')', '_').replace('(', '_')
+		String newClassName =  className.replace(' ', '_').replace((char) 65533, '_').replace(')', '_').replace('(', '_')
 				.replace(',', '_').replace('\\', '_').replace('/', '_').replace('-', '_').replace(':', '_')
 				.replace('+', '_').replace('.', '_').replace('?', '_').replace('\'', '_').replace('>', '_')
 				.replace('<', '_').replace('\"', '_').replace(';', '_').replace('$', '_').replace('=', '_').replace('#', '_')
 				.replace('&', '_').replace('%', '_').replace('[', '_').replace(']', '_').replace((char) 0x2019, '_')
 				.replace((char) 0x2018, '_').replace((char) 0x0060, '_').replace((char) 0x00B4, '_');
+		
+		if(!originalClassName.equals(newClassName))
+			logMessage.append( " replaced identifier " + originalClassName +  " with " + newClassName +"\n");
+		
+		return newClassName;
 
 	}
 
@@ -539,7 +562,7 @@ public class SQLDevConverter {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		SQLDevConverter.convert(args[0]);
+		SQLDevConverter.convert(args[0],args[1]);
 	}
 
 }

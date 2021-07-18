@@ -46,6 +46,7 @@ public class ConvertSQLDeveloperModelToEcoreItemProvider extends PlatformCallIte
 			super.getPropertyDescriptors(object);
 
 			addInputDirectoryPropertyDescriptor(object);
+			addOutputDirectoryPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -64,6 +65,28 @@ public class ConvertSQLDeveloperModelToEcoreItemProvider extends PlatformCallIte
 				 getString("_UI_ConvertSQLDeveloperModelToEcore_inputDirectory_feature"),
 				 getString("_UI_PropertyDescriptor_description", "_UI_ConvertSQLDeveloperModelToEcore_inputDirectory_feature", "_UI_ConvertSQLDeveloperModelToEcore_type"),
 				 Platform_callPackage.Literals.CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE__INPUT_DIRECTORY,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Output Directory feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addOutputDirectoryPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_ConvertSQLDeveloperModelToEcore_outputDirectory_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_ConvertSQLDeveloperModelToEcore_outputDirectory_feature", "_UI_ConvertSQLDeveloperModelToEcore_type"),
+				 Platform_callPackage.Literals.CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE__OUTPUT_DIRECTORY,
 				 true,
 				 false,
 				 false,
@@ -111,6 +134,7 @@ public class ConvertSQLDeveloperModelToEcoreItemProvider extends PlatformCallIte
 
 		switch (notification.getFeatureID(ConvertSQLDeveloperModelToEcore.class)) {
 			case Platform_callPackage.CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE__INPUT_DIRECTORY:
+			case Platform_callPackage.CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE__OUTPUT_DIRECTORY:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 		}

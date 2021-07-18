@@ -339,13 +339,22 @@ public interface Platform_callPackage extends EPackage {
 	int CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE__INPUT_DIRECTORY = PLATFORM_CALL_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Output Directory</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE__OUTPUT_DIRECTORY = PLATFORM_CALL_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>Convert SQL Developer Model To Ecore</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE_FEATURE_COUNT = PLATFORM_CALL_FEATURE_COUNT + 1;
+	int CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE_FEATURE_COUNT = PLATFORM_CALL_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of operations of the '<em>Convert SQL Developer Model To Ecore</em>' class.
@@ -568,6 +577,17 @@ public interface Platform_callPackage extends EPackage {
 	EAttribute getConvertSQLDeveloperModelToEcore_InputDirectory();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.ConvertSQLDeveloperModelToEcore#getOutputDirectory <em>Output Directory</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Output Directory</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.ConvertSQLDeveloperModelToEcore#getOutputDirectory()
+	 * @see #getConvertSQLDeveloperModelToEcore()
+	 * @generated
+	 */
+	EAttribute getConvertSQLDeveloperModelToEcore_OutputDirectory();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.TranslateBIRDWithNewTestFormatToCocason <em>Translate BIRD With New Test Format To Cocason</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -736,6 +756,14 @@ public interface Platform_callPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE__INPUT_DIRECTORY = eINSTANCE.getConvertSQLDeveloperModelToEcore_InputDirectory();
+
+		/**
+		 * The meta object literal for the '<em><b>Output Directory</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE__OUTPUT_DIRECTORY = eINSTANCE.getConvertSQLDeveloperModelToEcore_OutputDirectory();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.impl.TranslateBIRDWithNewTestFormatToCocasonImpl <em>Translate BIRD With New Test Format To Cocason</em>}' class.
