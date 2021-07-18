@@ -1029,8 +1029,8 @@ public class BIRDImporterImpl extends Importer {
 								rowData.getCells().add(enumcell);
 
 							} else {
-								System.out.println("Cannot find member:" + testID + ":" + cube + ":"
-										+ record_no + ":" + variable + ":" + value);
+								logMessage = logMessage +"Cannot find member:" + testID + ":" + cube + ":"
+										+ record_no + ":" + variable + ":" + value +"\n";
 							}
 
 						} else {
@@ -1044,12 +1044,12 @@ public class BIRDImporterImpl extends Importer {
 						}
 
 					} else {
-						System.out.println("Cannot find column:" + testID + ":" + cube + ":" + record_no + ":"
-								+ variable);
+						logMessage = logMessage + "Cannot find column:" + testID + ":" + cube + ":" + record_no + ":"
+								+ variable + "\n";
 					}
 
 				} else {
-					System.out.println("Cannot find cube:" + testID + ":" + cube);
+					logMessage = logMessage + "Cannot find cube:" + testID + ":" + cube + "\n";
 				}
 
 			}
