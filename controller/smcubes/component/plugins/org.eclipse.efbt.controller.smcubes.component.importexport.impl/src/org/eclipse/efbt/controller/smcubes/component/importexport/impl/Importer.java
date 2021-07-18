@@ -13,6 +13,7 @@
 package org.eclipse.efbt.controller.smcubes.component.importexport.impl;
 
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,6 +23,9 @@ import java.util.List;
 import org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModule;
 import org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModuleModule;
 import org.eclipse.efbt.cocalimo.core.model.functionality_module.Functionality_moduleFactory;
+import org.eclipse.efbt.cocalimo.core.model.module_management.ModuleDependencies;
+import org.eclipse.efbt.cocalimo.core.model.module_management.ModuleDependency;
+import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementFactory;
 import org.eclipse.efbt.cocalimo.core.model.test_definition.RegFunctionalityTestDefinition;
 import org.eclipse.efbt.cocalimo.core.model.test_definition.RegFunctionalityTestDefinitionModule;
 import org.eclipse.efbt.controller.smcubes.component.importexport.api.BirdImporter;
@@ -145,6 +149,8 @@ public abstract class Importer implements BirdImporter {
 	 */
 	protected VariableMappingModule variableMappingModule;
 	
+	public String logMessage = "";
+	
 	
 
 	/**
@@ -206,6 +212,15 @@ public abstract class Importer implements BirdImporter {
 		birdModel.getFunctionalModules().add(transformationSchemes);
 		birdModel.getVariables().add(variables);
 		
+		ModuleDependencies dependencies = Module_managementFactory.eINSTANCE.createModuleDependencies();
+		
+		domains.setDependencies(dependencies);
+		
+		ModuleDependency dependency = Module_managementFactory.eINSTANCE.createModuleDependency();
+		
+		dependencies.getTheModules().add(dependency);
+		dependency.setTheModule(members);
+		
 		functionalityModulesProgram = ProgramFactory.eINSTANCE.createSMCubesStaticModel();
 		FunctionalityModuleModule fmm = Functionality_moduleFactory.eINSTANCE.createFunctionalityModuleModule();
 		fmm.setName("functionalityModuleModule");
@@ -213,6 +228,8 @@ public abstract class Importer implements BirdImporter {
 		fm.setName("functionalityModule");
 		fmm.getFunctionalityModules().add(fm);
 		functionalityModulesProgram.setFunctionalityModules(fmm);
+		
+		
 		
 		
 	
@@ -361,6 +378,10 @@ public abstract class Importer implements BirdImporter {
 			// memberMappingResource.save(Collections.EMPTY_MAP);
 			// variableMappingResource.save(Collections.EMPTY_MAP);
 			// birdResource.save(Collections.EMPTY_MAP);
+			
+			FileWriter fw = new FileWriter(outputFilepath + "logfile");
+			fw.write(logMessage);
+			fw.flush();
 
 		} catch (IOException e) {
 
