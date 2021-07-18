@@ -5,6 +5,7 @@ package org.eclipse.efbt.cocalimo.core.model.test_definition.impl;
 import java.util.Collection;
 
 import org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModule;
+import org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModuleSet;
 import org.eclipse.efbt.cocalimo.core.model.functionality_module.ReadDataSourceFunctionalityModule;
 import org.eclipse.efbt.cocalimo.core.model.functionality_module.ReportCellCreationFunctionalityModule;
 
@@ -13,10 +14,14 @@ import org.eclipse.efbt.cocalimo.core.model.scenarios.Scenario;
 import org.eclipse.efbt.cocalimo.core.model.test_definition.RegFunctionalityTestDefinition;
 import org.eclipse.efbt.cocalimo.core.model.test_definition.Test_definitionPackage;
 
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 
+import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 /**
@@ -31,6 +36,7 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.test_definition.impl.RegFunctionalityTestDefinitionImpl#getProcessingModules <em>Processing Modules</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.test_definition.impl.RegFunctionalityTestDefinitionImpl#getReportCellCreationModules <em>Report Cell Creation Modules</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.test_definition.impl.RegFunctionalityTestDefinitionImpl#getScenarios <em>Scenarios</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.core.model.test_definition.impl.RegFunctionalityTestDefinitionImpl#getPicture <em>Picture</em>}</li>
  * </ul>
  *
  * @generated
@@ -76,6 +82,16 @@ public class RegFunctionalityTestDefinitionImpl extends TestDefinitionImpl imple
 	 * @ordered
 	 */
 	protected EList<Scenario> scenarios;
+
+	/**
+	 * The cached value of the '{@link #getPicture() <em>Picture</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getPicture()
+	 * @generated
+	 * @ordered
+	 */
+	protected FunctionalityModuleSet picture;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -160,6 +176,65 @@ public class RegFunctionalityTestDefinitionImpl extends TestDefinitionImpl imple
 	 * @generated
 	 */
 	@Override
+	public FunctionalityModuleSet getPicture() {
+		return picture;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetPicture(FunctionalityModuleSet newPicture, NotificationChain msgs) {
+		FunctionalityModuleSet oldPicture = picture;
+		picture = newPicture;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, Test_definitionPackage.REG_FUNCTIONALITY_TEST_DEFINITION__PICTURE, oldPicture, newPicture);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setPicture(FunctionalityModuleSet newPicture) {
+		if (newPicture != picture) {
+			NotificationChain msgs = null;
+			if (picture != null)
+				msgs = ((InternalEObject)picture).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - Test_definitionPackage.REG_FUNCTIONALITY_TEST_DEFINITION__PICTURE, null, msgs);
+			if (newPicture != null)
+				msgs = ((InternalEObject)newPicture).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - Test_definitionPackage.REG_FUNCTIONALITY_TEST_DEFINITION__PICTURE, null, msgs);
+			msgs = basicSetPicture(newPicture, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, Test_definitionPackage.REG_FUNCTIONALITY_TEST_DEFINITION__PICTURE, newPicture, newPicture));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case Test_definitionPackage.REG_FUNCTIONALITY_TEST_DEFINITION__PICTURE:
+				return basicSetPicture(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType)
 	{
 		switch (featureID) {
@@ -171,6 +246,8 @@ public class RegFunctionalityTestDefinitionImpl extends TestDefinitionImpl imple
 				return getReportCellCreationModules();
 			case Test_definitionPackage.REG_FUNCTIONALITY_TEST_DEFINITION__SCENARIOS:
 				return getScenarios();
+			case Test_definitionPackage.REG_FUNCTIONALITY_TEST_DEFINITION__PICTURE:
+				return getPicture();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -201,6 +278,9 @@ public class RegFunctionalityTestDefinitionImpl extends TestDefinitionImpl imple
 				getScenarios().clear();
 				getScenarios().addAll((Collection<? extends Scenario>)newValue);
 				return;
+			case Test_definitionPackage.REG_FUNCTIONALITY_TEST_DEFINITION__PICTURE:
+				setPicture((FunctionalityModuleSet)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -226,6 +306,9 @@ public class RegFunctionalityTestDefinitionImpl extends TestDefinitionImpl imple
 			case Test_definitionPackage.REG_FUNCTIONALITY_TEST_DEFINITION__SCENARIOS:
 				getScenarios().clear();
 				return;
+			case Test_definitionPackage.REG_FUNCTIONALITY_TEST_DEFINITION__PICTURE:
+				setPicture((FunctionalityModuleSet)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -247,6 +330,8 @@ public class RegFunctionalityTestDefinitionImpl extends TestDefinitionImpl imple
 				return reportCellCreationModules != null && !reportCellCreationModules.isEmpty();
 			case Test_definitionPackage.REG_FUNCTIONALITY_TEST_DEFINITION__SCENARIOS:
 				return scenarios != null && !scenarios.isEmpty();
+			case Test_definitionPackage.REG_FUNCTIONALITY_TEST_DEFINITION__PICTURE:
+				return picture != null;
 		}
 		return super.eIsSet(featureID);
 	}

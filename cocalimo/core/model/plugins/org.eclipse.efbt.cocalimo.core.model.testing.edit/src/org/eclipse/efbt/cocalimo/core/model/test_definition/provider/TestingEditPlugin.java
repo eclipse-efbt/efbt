@@ -11,6 +11,7 @@ import org.eclipse.efbt.cocalimo.core.model.requirements_text.provider.Requireme
 import org.eclipse.emf.common.EMFPlugin;
 
 import org.eclipse.emf.common.util.ResourceLocator;
+import org.eclipse.emf.ecore.provider.EcoreEditPlugin;
 
 /**
  * This is the central singleton for the Testing edit plugin.
@@ -47,6 +48,7 @@ public final class TestingEditPlugin extends EMFPlugin {
 		     Functionality_moduleEditPlugin.INSTANCE,
 		     Module_managementEditPlugin.INSTANCE,
 		     Requirements_textEditPlugin.INSTANCE,
+		     EcoreEditPlugin.INSTANCE,
 		   });
 	}
 

@@ -3,7 +3,7 @@
     xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.cocalimo.core.model.testing/src-gen"
     modelPluginID="org.eclipse.efbt.cocalimo.core.model.testing" modelName="Testing"
     rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" importerID="org.eclipse.emf.importer.ecore"
-    complianceLevel="8.0" copyrightFields="false" usedGenPackages="../../org.eclipse.efbt.cocalimo.core.model.functionality_module/model/functionality_module.genmodel#//functionality_module ../../org.eclipse.efbt.cocalimo.core.model.functionality_module/model/functionality_module.genmodel#//scenarios ../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.cocalimo.core.model.requirements_text/model/requirements_text.genmodel#//requirements_text"
+    complianceLevel="8.0" copyrightFields="false" usedGenPackages="../../org.eclipse.efbt.cocalimo.core.model.functionality_module/model/functionality_module.genmodel#//functionality_module ../../org.eclipse.efbt.cocalimo.core.model.functionality_module/model/functionality_module.genmodel#//scenarios ../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.cocalimo.core.model.requirements_text/model/requirements_text.genmodel#//requirements_text ../../org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore"
     operationReflection="true" importOrganizing="true">
   <foreignModel>test_definition.ecore</foreignModel>
   <foreignModel>test_input_data.ecore</foreignModel>
@@ -74,6 +74,7 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test_definition.ecore#//RegFunctionalityTestDefinition/processingModules"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test_definition.ecore#//RegFunctionalityTestDefinition/reportCellCreationModules"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference test_definition.ecore#//RegFunctionalityTestDefinition/scenarios"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//RegFunctionalityTestDefinition/picture"/>
     </genClasses>
     <genClasses ecoreClass="test_definition.ecore#//RegFunctionalityTestDefinitionModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference test_definition.ecore#//RegFunctionalityTestDefinitionModule/testDefinitions"/>

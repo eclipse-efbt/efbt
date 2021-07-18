@@ -171,6 +171,7 @@ import org.eclipse.efbt.cocalimo.core.model.test_definition.presentation.Testing
 
 import org.eclipse.efbt.cocalimo.core.model.test_definition.provider.Test_definitionItemProviderAdapterFactory;
 
+import org.eclipse.emf.ecore.provider.EcoreItemProviderAdapterFactory;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 
@@ -731,6 +732,7 @@ public class Test_input_dataEditor
 		adapterFactory.addAdapterFactory(new ScenariosItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Module_managementItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Requirements_textItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new EcoreItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 
 		// Create the command stack that will notify this editor as commands are executed.

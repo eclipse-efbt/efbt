@@ -13,6 +13,7 @@ import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.common.ui.EclipseUIPlugin;
 
 import org.eclipse.emf.common.util.ResourceLocator;
+import org.eclipse.emf.ecore.provider.EcoreEditPlugin;
 
 /**
  * This is the central singleton for the Testing editor plugin.
@@ -49,6 +50,7 @@ public final class TestingEditorPlugin extends EMFPlugin {
 				Functionality_moduleEditPlugin.INSTANCE,
 				Module_managementEditPlugin.INSTANCE,
 				Requirements_textEditPlugin.INSTANCE,
+				EcoreEditPlugin.INSTANCE,
 			});
 	}
 
