@@ -13,6 +13,7 @@ package org.eclipse.efbt.cocalimo.core.model.platform_call;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.platform_call.ConvertSQLDeveloperModelToEcore#getInputDirectory <em>Input Directory</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.core.model.platform_call.ConvertSQLDeveloperModelToEcore#getOutputDirectory <em>Output Directory</em>}</li>
  * </ul>
  *
  * @see org.eclipse.efbt.cocalimo.core.model.platform_call.Platform_callPackage#getConvertSQLDeveloperModelToEcore()
@@ -41,5 +42,27 @@ public interface ConvertSQLDeveloperModelToEcore extends PlatformCall {
 	 * @generated
 	 */
 	void setInputDirectory(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Output Directory</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Output Directory</em>' attribute.
+	 * @see #setOutputDirectory(String)
+	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.Platform_callPackage#getConvertSQLDeveloperModelToEcore_OutputDirectory()
+	 * @model
+	 * @generated
+	 */
+	String getOutputDirectory();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.ConvertSQLDeveloperModelToEcore#getOutputDirectory <em>Output Directory</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Output Directory</em>' attribute.
+	 * @see #getOutputDirectory()
+	 * @generated
+	 */
+	void setOutputDirectory(String value);
 
 } // ConvertSQLDeveloperModelToEcore
