@@ -3,6 +3,7 @@
 package org.eclipse.efbt.cocalimo.core.model.test_definition;
 
 import org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModule;
+import org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModuleSet;
 import org.eclipse.efbt.cocalimo.core.model.functionality_module.ReadDataSourceFunctionalityModule;
 import org.eclipse.efbt.cocalimo.core.model.functionality_module.ReportCellCreationFunctionalityModule;
 
@@ -23,6 +24,7 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.test_definition.RegFunctionalityTestDefinition#getProcessingModules <em>Processing Modules</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.test_definition.RegFunctionalityTestDefinition#getReportCellCreationModules <em>Report Cell Creation Modules</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.test_definition.RegFunctionalityTestDefinition#getScenarios <em>Scenarios</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.core.model.test_definition.RegFunctionalityTestDefinition#getPicture <em>Picture</em>}</li>
  * </ul>
  *
  * @see org.eclipse.efbt.cocalimo.core.model.test_definition.Test_definitionPackage#getRegFunctionalityTestDefinition()
@@ -78,5 +80,27 @@ public interface RegFunctionalityTestDefinition extends TestDefinition
 	 * @generated
 	 */
 	EList<Scenario> getScenarios();
+
+	/**
+	 * Returns the value of the '<em><b>Picture</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Picture</em>' containment reference.
+	 * @see #setPicture(FunctionalityModuleSet)
+	 * @see org.eclipse.efbt.cocalimo.core.model.test_definition.Test_definitionPackage#getRegFunctionalityTestDefinition_Picture()
+	 * @model containment="true"
+	 * @generated
+	 */
+	FunctionalityModuleSet getPicture();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.core.model.test_definition.RegFunctionalityTestDefinition#getPicture <em>Picture</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Picture</em>' containment reference.
+	 * @see #getPicture()
+	 * @generated
+	 */
+	void setPicture(FunctionalityModuleSet value);
 
 } // RegFunctionalityTestDefinition

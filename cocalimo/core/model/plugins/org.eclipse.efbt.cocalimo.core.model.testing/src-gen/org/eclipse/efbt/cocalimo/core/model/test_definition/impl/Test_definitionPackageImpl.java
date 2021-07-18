@@ -45,6 +45,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
+import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
@@ -242,6 +243,7 @@ public class Test_definitionPackageImpl extends EPackageImpl implements Test_def
 		ScenariosPackage.eINSTANCE.eClass();
 		Module_managementPackage.eINSTANCE.eClass();
 		Requirements_textPackage.eINSTANCE.eClass();
+		EcorePackage.eINSTANCE.eClass();
 
 		// Obtain or create and register interdependencies
 		Object registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Test_input_dataPackage.eNS_URI);
@@ -845,6 +847,16 @@ public class Test_definitionPackageImpl extends EPackageImpl implements Test_def
 	 * @generated
 	 */
 	@Override
+	public EReference getRegFunctionalityTestDefinition_Picture() {
+		return (EReference)regFunctionalityTestDefinitionEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getRegFunctionalityTestDefinitionModule()
 	{
 		return regFunctionalityTestDefinitionModuleEClass;
@@ -961,6 +973,7 @@ public class Test_definitionPackageImpl extends EPackageImpl implements Test_def
 		createEReference(regFunctionalityTestDefinitionEClass, REG_FUNCTIONALITY_TEST_DEFINITION__PROCESSING_MODULES);
 		createEReference(regFunctionalityTestDefinitionEClass, REG_FUNCTIONALITY_TEST_DEFINITION__REPORT_CELL_CREATION_MODULES);
 		createEReference(regFunctionalityTestDefinitionEClass, REG_FUNCTIONALITY_TEST_DEFINITION__SCENARIOS);
+		createEReference(regFunctionalityTestDefinitionEClass, REG_FUNCTIONALITY_TEST_DEFINITION__PICTURE);
 
 		regFunctionalityTestDefinitionModuleEClass = createEClass(REG_FUNCTIONALITY_TEST_DEFINITION_MODULE);
 		createEReference(regFunctionalityTestDefinitionModuleEClass, REG_FUNCTIONALITY_TEST_DEFINITION_MODULE__TEST_DEFINITIONS);
@@ -1083,6 +1096,7 @@ public class Test_definitionPackageImpl extends EPackageImpl implements Test_def
 		initEReference(getRegFunctionalityTestDefinition_ProcessingModules(), theFunctionality_modulePackage.getFunctionalityModule(), null, "processingModules", null, 0, -1, RegFunctionalityTestDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getRegFunctionalityTestDefinition_ReportCellCreationModules(), theFunctionality_modulePackage.getReportCellCreationFunctionalityModule(), null, "reportCellCreationModules", null, 0, -1, RegFunctionalityTestDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getRegFunctionalityTestDefinition_Scenarios(), theScenariosPackage.getScenario(), null, "scenarios", null, 0, -1, RegFunctionalityTestDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getRegFunctionalityTestDefinition_Picture(), theFunctionality_modulePackage.getFunctionalityModuleSet(), null, "picture", null, 0, 1, RegFunctionalityTestDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(regFunctionalityTestDefinitionModuleEClass, RegFunctionalityTestDefinitionModule.class, "RegFunctionalityTestDefinitionModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getRegFunctionalityTestDefinitionModule_TestDefinitions(), this.getRegFunctionalityTestDefinition(), null, "testDefinitions", null, 0, -1, RegFunctionalityTestDefinitionModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

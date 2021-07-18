@@ -1213,13 +1213,22 @@ public interface Test_definitionPackage extends EPackage
 	int REG_FUNCTIONALITY_TEST_DEFINITION__SCENARIOS = TEST_DEFINITION_FEATURE_COUNT + 3;
 
 	/**
+	 * The feature id for the '<em><b>Picture</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REG_FUNCTIONALITY_TEST_DEFINITION__PICTURE = TEST_DEFINITION_FEATURE_COUNT + 4;
+
+	/**
 	 * The number of structural features of the '<em>Reg Functionality Test Definition</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REG_FUNCTIONALITY_TEST_DEFINITION_FEATURE_COUNT = TEST_DEFINITION_FEATURE_COUNT + 4;
+	int REG_FUNCTIONALITY_TEST_DEFINITION_FEATURE_COUNT = TEST_DEFINITION_FEATURE_COUNT + 5;
 
 	/**
 	 * The number of operations of the '<em>Reg Functionality Test Definition</em>' class.
@@ -1877,6 +1886,17 @@ public interface Test_definitionPackage extends EPackage
 	EReference getRegFunctionalityTestDefinition_Scenarios();
 
 	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.efbt.cocalimo.core.model.test_definition.RegFunctionalityTestDefinition#getPicture <em>Picture</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Picture</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.test_definition.RegFunctionalityTestDefinition#getPicture()
+	 * @see #getRegFunctionalityTestDefinition()
+	 * @generated
+	 */
+	EReference getRegFunctionalityTestDefinition_Picture();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.test_definition.RegFunctionalityTestDefinitionModule <em>Reg Functionality Test Definition Module</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2372,6 +2392,14 @@ public interface Test_definitionPackage extends EPackage
 		 * @generated
 		 */
 		EReference REG_FUNCTIONALITY_TEST_DEFINITION__SCENARIOS = eINSTANCE.getRegFunctionalityTestDefinition_Scenarios();
+
+		/**
+		 * The meta object literal for the '<em><b>Picture</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference REG_FUNCTIONALITY_TEST_DEFINITION__PICTURE = eINSTANCE.getRegFunctionalityTestDefinition_Picture();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.test_definition.impl.RegFunctionalityTestDefinitionModuleImpl <em>Reg Functionality Test Definition Module</em>}' class.
