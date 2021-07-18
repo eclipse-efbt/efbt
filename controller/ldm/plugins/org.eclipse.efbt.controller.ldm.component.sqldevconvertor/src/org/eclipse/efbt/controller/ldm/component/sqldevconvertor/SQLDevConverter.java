@@ -145,11 +145,13 @@ public class SQLDevConverter {
 					String enumID = csvRow.get(0);
 					String enumName = csvRow.get(1);
 					String adaptedEnumName = replaceSpaceWithUnderscore(enumName);
-
-					EEnum theEnumeration = EcoreFactory.eINSTANCE.createEEnum();
-					birdpackage.getEClassifiers().add(theEnumeration);
-					theEnumeration.setName(adaptedEnumName);
-					enumMap.put(enumID, theEnumeration);
+					if(!inEnumBlackList(adaptedEnumName))
+					{
+						EEnum theEnumeration = EcoreFactory.eINSTANCE.createEEnum();
+						birdpackage.getEClassifiers().add(theEnumeration);
+						theEnumeration.setName(adaptedEnumName);
+						enumMap.put(enumID, theEnumeration);
+					}
 
 				}
 
@@ -172,28 +174,37 @@ public class SQLDevConverter {
 					headerSkipped = true;
 				else {
 					counter++;
-					String enumID = csvRow.get(0);
-					String enumName = csvRow.get(5);
-					String adaptedEnumName = replaceSpaceWithUnderscore(enumName);
-					String value = csvRow.get(3);
-					String adaptedValue = replaceSpaceWithUnderscore(value);
-					EEnum theEnumeration = enumMap.get(enumID);
-					if (theEnumeration == null) {
-						System.out.println("missing domain: " + enumID);
-
+					//System.out.println("counter =" + counter);
+					try {
+						
+						String enumID = csvRow.get(0);
+						String enumName = csvRow.get(5);
+						String adaptedEnumName = replaceSpaceWithUnderscore(enumName);
+						String value = csvRow.get(3);
+						String adaptedValue = replaceSpaceWithUnderscore(value);
+						EEnum theEnumeration = enumMap.get(enumID);
+						if (theEnumeration == null) {
+							System.out.println("missing domain: " + enumID);
+	
+						}
+						EList<EEnumLiteral> literals = theEnumeration.getELiterals();
+						// if the literal does not exist already, then add it
+						if (!containsLiteral(literals, adaptedValue)) {
+							EEnumLiteral literal = EcoreFactory.eINSTANCE.createEEnumLiteral();
+							literal.setName(adaptedValue);
+							literal.setValue(counter);
+							literals.add(literal);
+						}
 					}
-					EList<EEnumLiteral> literals = theEnumeration.getELiterals();
-					// if the literal does not exist already, then add it
-					if (!containsLiteral(literals, adaptedValue)) {
-						EEnumLiteral literal = EcoreFactory.eINSTANCE.createEEnumLiteral();
-						literal.setName(adaptedValue);
-						literal.setValue(counter);
-						literals.add(literal);
+					catch(ArrayIndexOutOfBoundsException e) 
+					{
+						System.out.println("counter =" + counter);
+						System.out.println("row " + counter + " in DM_Domain_AVT.csv skipped  due to improper formatting");
 					}
 
 				}
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 
 			e.printStackTrace();
 		}
@@ -307,7 +318,9 @@ public class SQLDevConverter {
 			EClass theClass = entry.getValue();
 			EList<EClass> superclasses = theClass.getEAllSuperTypes();
 			if (superclasses.size() > 0) {
-				EClass theSuperClass = superclasses.get(0);
+				for (Iterator iterator_superclasses = superclasses.iterator(); iterator_superclasses.hasNext();) {
+
+				EClass theSuperClass = (EClass) iterator_superclasses.next();
 				EList<EStructuralFeature> features = theClass.getEStructuralFeatures();
 				List<EStructuralFeature> featuresToDelete = new ArrayList<EStructuralFeature>();
 				for (Iterator iterator2 = features.iterator(); iterator2.hasNext();) {
@@ -319,9 +332,13 @@ public class SQLDevConverter {
 				for (Iterator iterator2 = featuresToDelete.iterator(); iterator2.hasNext();) {
 					EStructuralFeature eStructuralFeature = (EStructuralFeature) iterator2.next();
 					features.remove(eStructuralFeature);
+					System.out.println("removed " + eStructuralFeature  + "since it exists in the superclass");
 				}
 			}
 		}
+		}
+			
+		
 		// for each relationship add a reference
 		try {
 			boolean headerSkipped = false;
@@ -401,6 +418,18 @@ public class SQLDevConverter {
 
 	}
 
+	private static boolean inEnumBlackList(String adaptedEnumName) {
+		// TODO currently invetigating why ecore is not likeing these and considering them as duplictes of similarly named enums
+		if( (adaptedEnumName.equals("All_last_days_of_months___YYYY_MM")) ||
+			(adaptedEnumName.equals("All_last_days_of_quarters___YYYY_MM"))	||
+			(adaptedEnumName.equals("All_possible_dates_YYYY_MM_DD") ) )
+			
+			return true;
+		else 
+			return false;
+						
+	}
+
 	private static List<CSVRecord> getCSVRowsFromFile(String fileName) throws IOException  {
 		// TODO Auto-generated method stub
 		File csvData = new File (fileName);
@@ -450,7 +479,7 @@ public class SQLDevConverter {
 		EList<EStructuralFeature> features = theSuperClass.getEAllStructuralFeatures();
 		boolean contains = false;
 		for (EStructuralFeature eStructuralFeature2 : features) {
-			if (eStructuralFeature2.getName().equals(eStructuralFeature.getName()))
+			if (eStructuralFeature2.getName().equalsIgnoreCase(eStructuralFeature.getName()))
 				contains = true;
 
 		}
@@ -468,7 +497,7 @@ public class SQLDevConverter {
 		boolean contains = false;
 		for (Iterator iterator = literals.iterator(); iterator.hasNext();) {
 			EEnumLiteral eEnumLiteral = (EEnumLiteral) iterator.next();
-			if (eEnumLiteral.getName().equals(adaptedValue)) {
+			if (eEnumLiteral.getName().equalsIgnoreCase(adaptedValue)) {
 				contains = true;
 			}
 		}
@@ -486,9 +515,18 @@ public class SQLDevConverter {
 	 */
 	private static String replaceSpaceWithUnderscore(String className) {
 		
+		if(className.length() > 0)
+		{
+			if((className.charAt(0) >= '0') && (className.charAt(0) <= '9')) 
+			{
+				className = "_" + className;
+			}
+		}
+		
 		return className.replace(' ', '_').replace((char) 65533, '_').replace(')', '_').replace('(', '_')
 				.replace(',', '_').replace('\\', '_').replace('/', '_').replace('-', '_').replace(':', '_')
 				.replace('+', '_').replace('.', '_').replace('?', '_').replace('\'', '_').replace('>', '_')
+				.replace('<', '_').replace('\"', '_').replace(';', '_').replace('$', '_').replace('=', '_').replace('#', '_')
 				.replace('&', '_').replace('%', '_').replace('[', '_').replace(']', '_').replace((char) 0x2019, '_')
 				.replace((char) 0x2018, '_').replace((char) 0x0060, '_').replace((char) 0x00B4, '_');
 
