@@ -37,6 +37,7 @@
             <projectDescriptor name="org.eclipse.efbt.example.ldm" contentURI="examples/org.eclipse.efbt.example.ldm/" description="LDM Example"/>
             <projectDescriptor name="org.eclipse.efbt.example.xcore" contentURI="examples/org.eclipse.efbt.example.xcore/" description="XCore LDM Example"/>
             <projectDescriptor name="org.eclipse.efbt.example.forward_engineering" contentURI="examples/org.eclipse.efbt.example.forward_engineering/" description="Forward Engineering Example"/>
+            <projectDescriptor name="org.eclipse.efbt.example.sdd" contentURI="examples/org.eclipse.efbt.example.sdd/" description="SDD BIRD Import Example"/>
         </example>
     </extension>
 </plugin>
