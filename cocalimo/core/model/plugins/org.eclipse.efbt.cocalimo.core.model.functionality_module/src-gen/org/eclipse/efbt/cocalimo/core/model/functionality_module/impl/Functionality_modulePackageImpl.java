@@ -220,6 +220,16 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 	 * @generated
 	 */
 	@Override
+	public EReference getDataProcessingFunctionalityModule_EnrichedAttribute() {
+		return (EReference)dataProcessingFunctionalityModuleEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getLeafFunctionalityModule() {
 		return leafFunctionalityModuleEClass;
 	}
@@ -484,6 +494,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 
 		// Create classes and their features
 		dataProcessingFunctionalityModuleEClass = createEClass(DATA_PROCESSING_FUNCTIONALITY_MODULE);
+		createEReference(dataProcessingFunctionalityModuleEClass, DATA_PROCESSING_FUNCTIONALITY_MODULE__ENRICHED_ATTRIBUTE);
 
 		leafFunctionalityModuleEClass = createEClass(LEAF_FUNCTIONALITY_MODULE);
 
@@ -546,8 +557,8 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 		setNsURI(eNS_URI);
 
 		// Obtain other dependent packages
-		ScenariosPackage theScenariosPackage = (ScenariosPackage)EPackage.Registry.INSTANCE.getEPackage(ScenariosPackage.eNS_URI);
 		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
+		ScenariosPackage theScenariosPackage = (ScenariosPackage)EPackage.Registry.INSTANCE.getEPackage(ScenariosPackage.eNS_URI);
 		Module_managementPackage theModule_managementPackage = (Module_managementPackage)EPackage.Registry.INSTANCE.getEPackage(Module_managementPackage.eNS_URI);
 		Requirements_textPackage theRequirements_textPackage = (Requirements_textPackage)EPackage.Registry.INSTANCE.getEPackage(Requirements_textPackage.eNS_URI);
 
@@ -571,6 +582,7 @@ public class Functionality_modulePackageImpl extends EPackageImpl implements Fun
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(dataProcessingFunctionalityModuleEClass, DataProcessingFunctionalityModule.class, "DataProcessingFunctionalityModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getDataProcessingFunctionalityModule_EnrichedAttribute(), theEcorePackage.getEAttribute(), null, "enrichedAttribute", null, 0, 1, DataProcessingFunctionalityModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(leafFunctionalityModuleEClass, LeafFunctionalityModule.class, "LeafFunctionalityModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

@@ -266,13 +266,22 @@ public interface Functionality_modulePackage extends EPackage {
 	int DATA_PROCESSING_FUNCTIONALITY_MODULE__USED_IN_SUBSET = LEAF_FUNCTIONALITY_MODULE__USED_IN_SUBSET;
 
 	/**
+	 * The feature id for the '<em><b>Enriched Attribute</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DATA_PROCESSING_FUNCTIONALITY_MODULE__ENRICHED_ATTRIBUTE = LEAF_FUNCTIONALITY_MODULE_FEATURE_COUNT + 0;
+
+	/**
 	 * The number of structural features of the '<em>Data Processing Functionality Module</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DATA_PROCESSING_FUNCTIONALITY_MODULE_FEATURE_COUNT = LEAF_FUNCTIONALITY_MODULE_FEATURE_COUNT + 0;
+	int DATA_PROCESSING_FUNCTIONALITY_MODULE_FEATURE_COUNT = LEAF_FUNCTIONALITY_MODULE_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of operations of the '<em>Data Processing Functionality Module</em>' class.
@@ -1115,6 +1124,17 @@ public interface Functionality_modulePackage extends EPackage {
 	EClass getDataProcessingFunctionalityModule();
 
 	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.core.model.functionality_module.DataProcessingFunctionalityModule#getEnrichedAttribute <em>Enriched Attribute</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Enriched Attribute</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.functionality_module.DataProcessingFunctionalityModule#getEnrichedAttribute()
+	 * @see #getDataProcessingFunctionalityModule()
+	 * @generated
+	 */
+	EReference getDataProcessingFunctionalityModule_EnrichedAttribute();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.functionality_module.LeafFunctionalityModule <em>Leaf Functionality Module</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1398,6 +1418,14 @@ public interface Functionality_modulePackage extends EPackage {
 		 * @generated
 		 */
 		EClass DATA_PROCESSING_FUNCTIONALITY_MODULE = eINSTANCE.getDataProcessingFunctionalityModule();
+
+		/**
+		 * The meta object literal for the '<em><b>Enriched Attribute</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DATA_PROCESSING_FUNCTIONALITY_MODULE__ENRICHED_ATTRIBUTE = eINSTANCE.getDataProcessingFunctionalityModule_EnrichedAttribute();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.functionality_module.impl.LeafFunctionalityModuleImpl <em>Leaf Functionality Module</em>}' class.

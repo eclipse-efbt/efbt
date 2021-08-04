@@ -8,9 +8,11 @@ import java.util.List;
 
 import org.eclipse.efbt.cocalimo.core.model.functionality_module.DataProcessingFunctionalityModule;
 
+import org.eclipse.efbt.cocalimo.core.model.functionality_module.Functionality_modulePackage;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 
 /**
@@ -41,8 +43,31 @@ public class DataProcessingFunctionalityModuleItemProvider extends LeafFunctiona
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
+			addEnrichedAttributePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
+	}
+
+	/**
+	 * This adds a property descriptor for the Enriched Attribute feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addEnrichedAttributePropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_DataProcessingFunctionalityModule_enrichedAttribute_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_DataProcessingFunctionalityModule_enrichedAttribute_feature", "_UI_DataProcessingFunctionalityModule_type"),
+				 Functionality_modulePackage.Literals.DATA_PROCESSING_FUNCTIONALITY_MODULE__ENRICHED_ATTRIBUTE,
+				 true,
+				 false,
+				 true,
+				 null,
+				 null,
+				 null));
 	}
 
 	/**
