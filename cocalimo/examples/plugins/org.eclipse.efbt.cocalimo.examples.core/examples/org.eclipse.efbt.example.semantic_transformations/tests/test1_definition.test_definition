@@ -1,5 +1,5 @@
 {
-  "eClass" : "http://www.eclipse.org/efbt/test_definition#//RegFunctionalityTestDefinitionModule",
+  "eClass" : "http://www.eclipse.org/efbt/test_definition#//RegTestDefinitionModule",
   "name" : "testDefinitionsModule",
   "testDefinitions" : [ {
     "name" : "standard_test",

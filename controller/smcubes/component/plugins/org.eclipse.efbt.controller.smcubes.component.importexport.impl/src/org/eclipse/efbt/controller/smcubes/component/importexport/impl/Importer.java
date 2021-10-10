@@ -26,12 +26,10 @@ import org.eclipse.efbt.cocalimo.core.model.task.TaskFactory;
 import org.eclipse.efbt.cocalimo.core.model.module_management.ModuleDependencies;
 import org.eclipse.efbt.cocalimo.core.model.module_management.ModuleDependency;
 import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementFactory;
-import org.eclipse.efbt.cocalimo.core.model.test_definition.RegFunctionalityTestDefinition;
-import org.eclipse.efbt.cocalimo.core.model.test_definition.RegFunctionalityTestDefinitionModule;
 import org.eclipse.efbt.controller.smcubes.component.importexport.api.BirdImporter;
-import org.eclipse.efbt.cocalimo.smcubes.model.program.ProgramFactory;
-import org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesRegFunctionalityTestModule;
-import org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel;
+import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.AortaSMCubesModel;
+import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinitionModule;
+import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.CombinationModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.CubeModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.DomainModule;
@@ -51,7 +49,7 @@ import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.emfjson.jackson.resource.JsonResourceFactory;
-
+import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.Aorta_smcubesFactory;
 
 
 
@@ -82,22 +80,22 @@ public abstract class Importer implements BirdImporter {
 	 * note that the testTemplates can refer to TestDefintions 
 	 * in testDefinitionProgram
 	 */
-	public static SMCubesStaticModel testTemplateProgram;
+	public static AortaSMCubesModel testTemplateProgram;
 	/**
 	 * A SMCubesStaticModel instance which contains just TestConstriants
 	 */
-	public static SMCubesStaticModel testConstraintsProgram;
+	public static AortaSMCubesModel testConstraintsProgram;
 	
 	
 	/**
 	 * A SMCubesStaticModel instance which contains just functionality Modules
 	 */
-	public static SMCubesStaticModel functionalityModulesProgram;
+	public static AortaSMCubesModel functionalityModulesProgram;
 	
 
-	public static  SMCubesRegFunctionalityTestModule testModule;
+	public static TestModule testModule;
 	
-	public static RegFunctionalityTestDefinitionModule testDefinitionModule;
+	public static TestDefinitionModule testDefinitionModule;
 	/**
 	 * The transformationSchemes
 	 */
@@ -221,13 +219,13 @@ public abstract class Importer implements BirdImporter {
 		dependencies.getTheModules().add(dependency);
 		dependency.setTheModule(members);
 		
-		functionalityModulesProgram = ProgramFactory.eINSTANCE.createSMCubesStaticModel();
+		functionalityModulesProgram = Aorta_smcubesFactory.eINSTANCE.createAortaSMCubesModel();
 		TaskModule fmm = TaskFactory.eINSTANCE.createTaskModule();
 		fmm.setName("functionalityModuleModule");
 		Task fm = TaskFactory.eINSTANCE.createDataProcessingTask();
 		fm.setName("functionalityModule");
 		fmm.getTasks().add(fm);
-		functionalityModulesProgram.setTasks(fmm);
+		functionalityModulesProgram.setTaskModules(fmm);
 		
 		
 		

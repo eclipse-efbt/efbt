@@ -19,9 +19,11 @@
     <semanticResources>platform:/resource/org.eclipse.efbt.cocalimo.smcubes.model.core/model/rendering.ecore</semanticResources>
     <semanticResources>platform:/resource/org.eclipse.efbt.cocalimo.smcubes.model.core/model/reports.ecore</semanticResources>
     <semanticResources>platform:/resource/org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes_model.ecore</semanticResources>
+    <semanticResources>platform:/resource/org.eclipse.emf.ecore/model/Ecore.ecore</semanticResources>
+    <semanticResources>platform:/resource/org.eclipse.emf.ecore/model/Ecore.genmodel</semanticResources>
     <ownedViews xmi:type="viewpoint:DView" uid="_enMFoC_6EeuYbYgLZS2rFw">
       <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']"/>
-      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_gwJWMC_6EeuYbYgLZS2rFw" name="task class diagram" repPath="#_gv2bQC_6EeuYbYgLZS2rFw" changeId="d26b4c3f-8adf-49b8-82f9-f7013da6b67a">
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_gwJWMC_6EeuYbYgLZS2rFw" name="task class diagram" repPath="#_gv2bQC_6EeuYbYgLZS2rFw" changeId="77bd6c54-9288-4703-b55f-f0768a67e4af">
         <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']"/>
         <target xmi:type="ecore:EPackage" href="task.ecore#/"/>
       </ownedRepresentationDescriptors>
@@ -54,7 +56,7 @@
             <styles xmi:type="notation:FilteringStyle" xmi:id="_hXV5Ei_6EeuYbYgLZS2rFw"/>
           </children>
           <styles xmi:type="notation:ShapeStyle" xmi:id="_hXUq8S_6EeuYbYgLZS2rFw" fontName="Segoe UI" fontHeight="8"/>
-          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_hXUq8i_6EeuYbYgLZS2rFw" x="565" y="320"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_hXUq8i_6EeuYbYgLZS2rFw" x="375" y="315"/>
         </children>
         <children xmi:type="notation:Node" xmi:id="_hXV5Ey_6EeuYbYgLZS2rFw" type="2003" element="_hWqjoC_6EeuYbYgLZS2rFw">
           <children xmi:type="notation:Node" xmi:id="_hXWgIC_6EeuYbYgLZS2rFw" type="5007"/>
@@ -103,7 +105,7 @@
             <styles xmi:type="notation:FilteringStyle" xmi:id="_hXaKgi_6EeuYbYgLZS2rFw"/>
           </children>
           <styles xmi:type="notation:ShapeStyle" xmi:id="_hXZjcS_6EeuYbYgLZS2rFw" fontName="Segoe UI" fontHeight="8"/>
-          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_hXZjci_6EeuYbYgLZS2rFw" x="290" y="320"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_hXZjci_6EeuYbYgLZS2rFw" x="225" y="315"/>
         </children>
         <children xmi:type="notation:Node" xmi:id="_hXaKgy_6EeuYbYgLZS2rFw" type="2003" element="_hWxRUC_6EeuYbYgLZS2rFw">
           <children xmi:type="notation:Node" xmi:id="_hXaxkC_6EeuYbYgLZS2rFw" type="5007"/>
@@ -112,7 +114,7 @@
             <styles xmi:type="notation:FilteringStyle" xmi:id="_hXaxky_6EeuYbYgLZS2rFw"/>
           </children>
           <styles xmi:type="notation:ShapeStyle" xmi:id="_hXaKhC_6EeuYbYgLZS2rFw" fontName="Segoe UI" fontHeight="8"/>
-          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_hXaKhS_6EeuYbYgLZS2rFw" y="320"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_hXaKhS_6EeuYbYgLZS2rFw" x="655" y="310"/>
         </children>
         <children xmi:type="notation:Node" xmi:id="_hXaxlC_6EeuYbYgLZS2rFw" type="2003" element="_hWyfcC_6EeuYbYgLZS2rFw">
           <children xmi:type="notation:Node" xmi:id="_hXaxly_6EeuYbYgLZS2rFw" type="5007"/>
@@ -222,7 +224,7 @@
             <styles xmi:type="notation:FilteringStyle" xmi:id="_fvTiktciEeuGJNfxty74hg"/>
           </children>
           <styles xmi:type="notation:ShapeStyle" xmi:id="_fvRGUdciEeuGJNfxty74hg" fontName="Segoe UI" fontHeight="8"/>
-          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_fvRGUtciEeuGJNfxty74hg" x="2055" y="320"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_fvRGUtciEeuGJNfxty74hg" x="1710" y="320"/>
         </children>
         <styles xmi:type="notation:DiagramStyle" xmi:id="_gwWxki_6EeuYbYgLZS2rFw"/>
         <edges xmi:type="notation:Edge" xmi:id="_hXlJoi_6EeuYbYgLZS2rFw" type="4001" element="_hXJExi_6EeuYbYgLZS2rFw" source="_hXYVVy_6EeuYbYgLZS2rFw" target="_hXaxlC_6EeuYbYgLZS2rFw">
@@ -243,7 +245,7 @@
         </edges>
         <edges xmi:type="notation:Edge" xmi:id="_hXlwti_6EeuYbYgLZS2rFw" type="4001" element="_hXKS6S_6EeuYbYgLZS2rFw" source="_hXbYoy_6EeuYbYgLZS2rFw" target="_hXaxlC_6EeuYbYgLZS2rFw">
           <children xmi:type="notation:Node" xmi:id="_hXlwui_6EeuYbYgLZS2rFw" type="6001">
-            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_hXlwuy_6EeuYbYgLZS2rFw" x="13" y="-15"/>
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_hXlwuy_6EeuYbYgLZS2rFw" x="7" y="-14"/>
           </children>
           <children xmi:type="notation:Node" xmi:id="_hXmXwC_6EeuYbYgLZS2rFw" type="6002">
             <layoutConstraint xmi:type="notation:Bounds" xmi:id="_hXmXwS_6EeuYbYgLZS2rFw" x="-28" y="10"/>
@@ -275,7 +277,7 @@
         </edges>
         <edges xmi:type="notation:Edge" xmi:id="_hXm-0i_6EeuYbYgLZS2rFw" type="4001" element="_hXMIEy_6EeuYbYgLZS2rFw" source="_hXbYqi_6EeuYbYgLZS2rFw" target="_hXaxlC_6EeuYbYgLZS2rFw">
           <children xmi:type="notation:Node" xmi:id="_hXm-1i_6EeuYbYgLZS2rFw" type="6001">
-            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_hXm-1y_6EeuYbYgLZS2rFw" x="-167" y="2"/>
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_hXm-1y_6EeuYbYgLZS2rFw" x="18" y="28"/>
           </children>
           <children xmi:type="notation:Node" xmi:id="_hXm-2C_6EeuYbYgLZS2rFw" type="6002">
             <layoutConstraint xmi:type="notation:Bounds" xmi:id="_hXm-2S_6EeuYbYgLZS2rFw" x="68" y="6"/>
@@ -467,6 +469,9 @@
     <ownedDiagramElements xmi:type="diagram:DNodeList" uid="_hWoHYC_6EeuYbYgLZS2rFw" name="DataProcessingTask" tooltipText="" outgoingEdges="_hXMvIC_6EeuYbYgLZS2rFw" width="12" height="10">
       <target xmi:type="ecore:EClass" href="task.ecore#//DataProcessingTask"/>
       <semanticElements xmi:type="ecore:EClass" href="task.ecore#//DataProcessingTask"/>
+      <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
+      <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
+      <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
       <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_hWpVgC_6EeuYbYgLZS2rFw" borderSize="1" borderSizeComputationExpression="1" backgroundStyle="Liquid" foregroundColor="255,252,216">
         <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@style"/>
       </ownedStyle>
@@ -529,6 +534,9 @@
     <ownedDiagramElements xmi:type="diagram:DNodeList" uid="_hWwDMS_6EeuYbYgLZS2rFw" name="ReadDataSourceTask" tooltipText="" outgoingEdges="_hXRAli_6EeuYbYgLZS2rFw" width="12" height="10">
       <target xmi:type="ecore:EClass" href="task.ecore#//ReadDataSourceTask"/>
       <semanticElements xmi:type="ecore:EClass" href="task.ecore#//ReadDataSourceTask"/>
+      <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
+      <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
+      <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
       <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_hWwqQC_6EeuYbYgLZS2rFw" borderSize="1" borderSizeComputationExpression="1" backgroundStyle="Liquid" foregroundColor="255,252,216">
         <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@style"/>
       </ownedStyle>
@@ -545,6 +553,9 @@
     <ownedDiagramElements xmi:type="diagram:DNodeList" uid="_hWxRUC_6EeuYbYgLZS2rFw" name="ReportCellCreationTask" tooltipText="" outgoingEdges="_hXRnoy_6EeuYbYgLZS2rFw" width="12" height="10">
       <target xmi:type="ecore:EClass" href="task.ecore#//ReportCellCreationTask"/>
       <semanticElements xmi:type="ecore:EClass" href="task.ecore#//ReportCellCreationTask"/>
+      <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
+      <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
+      <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
       <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_hWx4YC_6EeuYbYgLZS2rFw" borderSize="1" borderSizeComputationExpression="1" backgroundStyle="Liquid" foregroundColor="255,252,216">
         <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@style"/>
       </ownedStyle>

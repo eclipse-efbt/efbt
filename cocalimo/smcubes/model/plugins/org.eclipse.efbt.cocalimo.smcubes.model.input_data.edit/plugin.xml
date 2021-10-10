@@ -7,23 +7,10 @@
 <plugin>
 
    <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
-      <!-- @generated smcubes_input_data -->
+      <!-- @generated input_data -->
       <factory
-            uri="http://www.eclipse.org/efbt/base_column_structured_data"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.provider.Base_column_structured_dataItemProviderAdapterFactory"
-            supportedTypes=
-              "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
-               org.eclipse.emf.edit.provider.IStructuredItemContentProvider
-               org.eclipse.emf.edit.provider.ITreeItemContentProvider
-               org.eclipse.emf.edit.provider.IItemLabelProvider
-               org.eclipse.emf.edit.provider.IItemPropertySource"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
-      <!-- @generated smcubes_input_data -->
-      <factory
-            uri="http://www.eclipse.org/efbt/column_structured_data"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.column_structured_data.provider.Column_structured_dataItemProviderAdapterFactory"
+            uri="http://www.eclipse.org/efbt/input_data"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.input_data.provider.Input_dataItemProviderAdapterFactory"
             supportedTypes=
               "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
                org.eclipse.emf.edit.provider.IStructuredItemContentProvider

@@ -7,58 +7,30 @@
 <plugin>
 
    <extension point="org.eclipse.ui.newWizards">
-      <!-- @generated smcubes_input_data -->
+      <!-- @generated input_data -->
       <category
             id="org.eclipse.emf.ecore.Wizard.category.ID"
             name="%_UI_Wizard_category"/>
       <wizard
-            id="org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.presentation.Base_column_structured_dataModelWizardID"
-            name="%_UI_Base_column_structured_dataModelWizard_label"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.presentation.Base_column_structured_dataModelWizard"
+            id="org.eclipse.efbt.cocalimo.smcubes.model.input_data.presentation.Input_dataModelWizardID"
+            name="%_UI_Input_dataModelWizard_label"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.input_data.presentation.Input_dataModelWizard"
             category="org.eclipse.emf.ecore.Wizard.category.ID"
-            icon="icons/full/obj16/Base_column_structured_dataModelFile.gif">
-         <description>%_UI_Base_column_structured_dataModelWizard_description</description>
+            icon="icons/full/obj16/Input_dataModelFile.gif">
+         <description>%_UI_Input_dataModelWizard_description</description>
          <selection class="org.eclipse.core.resources.IResource"/>
       </wizard>
    </extension>
 
    <extension point="org.eclipse.ui.editors">
-      <!-- @generated smcubes_input_data -->
+      <!-- @generated input_data -->
       <editor
-            id="org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.presentation.Base_column_structured_dataEditorID"
-            name="%_UI_Base_column_structured_dataEditor_label"
-            icon="icons/full/obj16/Base_column_structured_dataModelFile.gif"
-            extensions="base_column_structured_data"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.presentation.Base_column_structured_dataEditor"
-            contributorClass="org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.presentation.Base_column_structured_dataActionBarContributor">
-      </editor>
-   </extension>
-
-   <extension point="org.eclipse.ui.newWizards">
-      <!-- @generated smcubes_input_data -->
-      <category
-            id="org.eclipse.emf.ecore.Wizard.category.ID"
-            name="%_UI_Wizard_category"/>
-      <wizard
-            id="org.eclipse.efbt.cocalimo.smcubes.model.column_structured_data.presentation.Column_structured_dataModelWizardID"
-            name="%_UI_Column_structured_dataModelWizard_label"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.column_structured_data.presentation.Column_structured_dataModelWizard"
-            category="org.eclipse.emf.ecore.Wizard.category.ID"
-            icon="icons/full/obj16/Column_structured_dataModelFile.gif">
-         <description>%_UI_Column_structured_dataModelWizard_description</description>
-         <selection class="org.eclipse.core.resources.IResource"/>
-      </wizard>
-   </extension>
-
-   <extension point="org.eclipse.ui.editors">
-      <!-- @generated smcubes_input_data -->
-      <editor
-            id="org.eclipse.efbt.cocalimo.smcubes.model.column_structured_data.presentation.Column_structured_dataEditorID"
-            name="%_UI_Column_structured_dataEditor_label"
-            icon="icons/full/obj16/Column_structured_dataModelFile.gif"
-            extensions="column_structured_data"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.column_structured_data.presentation.Column_structured_dataEditor"
-            contributorClass="org.eclipse.efbt.cocalimo.smcubes.model.column_structured_data.presentation.Column_structured_dataActionBarContributor">
+            id="org.eclipse.efbt.cocalimo.smcubes.model.input_data.presentation.Input_dataEditorID"
+            name="%_UI_Input_dataEditor_label"
+            icon="icons/full/obj16/Input_dataModelFile.gif"
+            extensions="input_data"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.input_data.presentation.Input_dataEditor"
+            contributorClass="org.eclipse.efbt.cocalimo.smcubes.model.input_data.presentation.Input_dataActionBarContributor">
       </editor>
    </extension>
 

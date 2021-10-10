@@ -1,5 +1,5 @@
 {
-  "eClass" : "http://www.eclipse.org/efbt/test_definition#//RegFunctionalityTestDefinition",
+  "eClass" : "http://www.eclipse.org/efbt/test_definition#//RegTestDefinition",
   "name" : "testdef1",
   "inputModules" : [ {
     "eClass" : "http://www.eclipse.org/efbt/task#//ReadDataSourceTask",

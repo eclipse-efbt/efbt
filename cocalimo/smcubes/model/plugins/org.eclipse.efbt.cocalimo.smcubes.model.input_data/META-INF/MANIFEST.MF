@@ -8,12 +8,9 @@ Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Export-Package: org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data,
- org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.impl,
- org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.util,
- org.eclipse.efbt.cocalimo.smcubes.model.column_structured_data,
- org.eclipse.efbt.cocalimo.smcubes.model.column_structured_data.impl,
- org.eclipse.efbt.cocalimo.smcubes.model.column_structured_data.util
+Export-Package: org.eclipse.efbt.cocalimo.smcubes.model.input_data,
+ org.eclipse.efbt.cocalimo.smcubes.model.input_data.impl,
+ org.eclipse.efbt.cocalimo.smcubes.model.input_data.util
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.emf.ecore.xmi;visibility:=reexport,

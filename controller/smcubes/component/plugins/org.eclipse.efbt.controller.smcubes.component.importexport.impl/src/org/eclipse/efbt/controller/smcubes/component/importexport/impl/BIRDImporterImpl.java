@@ -26,35 +26,19 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-
-import org.eclipse.efbt.cocalimo.core.model.test_definition.ClauseText;
-import org.eclipse.efbt.cocalimo.core.model.test_definition.E2EBDDTestDefinition;
-import org.eclipse.efbt.cocalimo.core.model.test_definition.Given;
-import org.eclipse.efbt.cocalimo.core.model.test_definition.Param;
-import org.eclipse.efbt.cocalimo.core.model.test_definition.RegFunctionalityTestDefinition;
-import org.eclipse.efbt.cocalimo.core.model.test_definition.RegFunctionalityTestDefinitionModule;
-import org.eclipse.efbt.cocalimo.core.model.test_definition.BDDTestContraints;
-import org.eclipse.efbt.cocalimo.core.model.test_definition.BDDTestDefinitionModule;
-import org.eclipse.efbt.cocalimo.core.model.test_definition.BDDTestTemplate;
-import org.eclipse.efbt.cocalimo.core.model.test_definition.BDDTestTemplateModule;
-import org.eclipse.efbt.cocalimo.core.model.test_definition.Test_definitionFactory;
-import org.eclipse.efbt.cocalimo.core.model.test_definition.Then;
-import org.eclipse.efbt.cocalimo.core.model.test_definition.When;
 import org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.access.api.AccessRow;
 import org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.access.api.AccessUtils;
 import org.eclipse.efbt.controller.smcubes.component.access.provider.AccessUtilProvider;
-import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.BaseCellWithEnumeratedValue;
-import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.BaseCellWithValue;
-import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.BaseColumnStructuredData;
-import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.BaseRowData;
-import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.Base_column_structured_dataFactory;
-import org.eclipse.efbt.cocalimo.smcubes.model.program.ProgramFactory;
-import org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesBDDTest;
-import org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesBDDTestModule;
-import org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesRegFunctionalityTest;
-import org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesRegFunctionalityTestModule;
-import org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel;
-import org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesTestInputData;
+import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.Aorta_smcubesFactory;
+import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.Test;
+import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinition;
+
+import org.eclipse.efbt.cocalimo.smcubes.model.input_data.CellWithEnumeratedValue;
+import org.eclipse.efbt.cocalimo.smcubes.model.input_data.CellWithValue;
+import org.eclipse.efbt.cocalimo.smcubes.model.input_data.CubeData;
+import org.eclipse.efbt.cocalimo.smcubes.model.input_data.RowData;
+import org.eclipse.efbt.cocalimo.smcubes.model.input_data.InputData;
+import org.eclipse.efbt.cocalimo.smcubes.model.input_data.Input_dataFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.CoreFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.DOMAIN;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.FACET_VALUE_TYPE;
@@ -931,9 +915,9 @@ public class BIRDImporterImpl extends Importer {
 			csvData = new FileReader(new File(fileLocation));			
 			List<CSVRecord> list = getCSVRowsFromFile(fileLocation);
 
-			HashMap<String, SMCubesRegFunctionalityTest> tests = new HashMap<String, SMCubesRegFunctionalityTest>();
-			HashMap<String, BaseColumnStructuredData> tables = new HashMap<String, BaseColumnStructuredData>();
-			HashMap<String, BaseRowData> rows = new HashMap<String, BaseRowData>();
+			HashMap<String, Test> tests = new HashMap<String, Test>();
+			HashMap<String, CubeData> tables = new HashMap<String, CubeData>();
+			HashMap<String, RowData> rows = new HashMap<String, RowData>();
 			int nameCounter = 0;
 			for (CSVRecord csvRecord : list) {
 				nameCounter++;
@@ -946,60 +930,60 @@ public class BIRDImporterImpl extends Importer {
 				String value = csvRecord.get(3);
 				
 				String testID = "exampleTest";
-				SMCubesRegFunctionalityTest test = (SMCubesRegFunctionalityTest) tests.get(testID);
+				Test test = (Test) tests.get(testID);
 				
 				if (test == null) {
 					//if we dont have aTest for this item of Test data, then 
 					//we create one and add it to the list of tests
 					
-					testModule = ProgramFactory.eINSTANCE.createSMCubesRegFunctionalityTestModule();
+					testModule = Aorta_smcubesFactory.eINSTANCE.createTestModule();
 					testModule.setName("TestModule" + nameCounter);
 				
-					testDefinitionModule = Test_definitionFactory.eINSTANCE.
-							createRegFunctionalityTestDefinitionModule();
+					testDefinitionModule = Aorta_smcubesFactory.eINSTANCE.
+							createTestDefinitionModule();
 					testDefinitionModule.setName("testDefinitionsModule");			
 
 
-					RegFunctionalityTestDefinition definition =
-								Test_definitionFactory.eINSTANCE.createRegFunctionalityTestDefinition();
+					TestDefinition definition =
+							Aorta_smcubesFactory.eINSTANCE.createTestDefinition();
 					definition.setName("standard_test");
 					testDefinitionModule.getTestDefinitions().add(definition);
 					
 					
 					
 					
-					test = ProgramFactory.eINSTANCE.createSMCubesRegFunctionalityTest();
+					test = Aorta_smcubesFactory.eINSTANCE.createTest();
 					test.setName(testID);
 					test.setTestDefinition( definition ); 
-					testModule.getRegFunctionalityTests().add(test);
+					testModule.getTests().add(test);
 					tests.put(testID, test);
-					SMCubesTestInputData inputData2 = ProgramFactory.eINSTANCE
-							.createSMCubesTestInputData();
+					InputData inputData2 = Input_dataFactory.eINSTANCE
+							.createInputData();
 					inputData2.setName(testID + ":Data");
 					test.setInputData(inputData2);
 				}
-				SMCubesTestInputData inputData = (SMCubesTestInputData) test.getInputData();
+				InputData inputData = (InputData) test.getInputData();
 				
 
 				// so we need a table for each table, then a row for each row, and a cell for
 				// each cell.
 				// so we make a hash map of sorts
 
-				BaseColumnStructuredData table = tables.get(testID + ":" + cube);
+				CubeData table = tables.get(testID + ":" + cube);
 				if (table == null) {
-					BaseColumnStructuredData structuredData = Base_column_structured_dataFactory.eINSTANCE
-							.createBaseColumnStructuredData();
+					CubeData structuredData = Input_dataFactory.eINSTANCE
+							.createCubeData();
 					structuredData.setName(testID + ":" + cube +":CubeData" );
 					structuredData.setCube(getCubeForCubeName(cube));
 					tables.put(testID + ":" + cube, structuredData);
-					inputData.getSmcubes_inputdata().add(structuredData);
+					inputData.getSourceTableData().add(structuredData);
 					table = structuredData;
 
 				}
 
-				BaseRowData rowData = rows.get(testID + ":" + cube + ":" + record_no);
+				RowData rowData = rows.get(testID + ":" + cube + ":" + record_no);
 				if (rowData == null) {
-					BaseRowData baseRow = Base_column_structured_dataFactory.eINSTANCE.createBaseRowData();
+					RowData baseRow = Input_dataFactory.eINSTANCE.createRowData();
 					baseRow.setRowID(testID + ":" + cube + ":" + record_no);
 					rows.put(testID + ":" + cube + ":" + record_no, baseRow);
 					table.getRows().add(baseRow);
@@ -1020,8 +1004,8 @@ public class BIRDImporterImpl extends Importer {
 							MEMBER member = getMember(cube, variable, value);
 							if (member != null) {
 
-								BaseCellWithEnumeratedValue enumcell = Base_column_structured_dataFactory.eINSTANCE
-										.createBaseCellWithEnumeratedValue();
+								CellWithEnumeratedValue enumcell = Input_dataFactory.eINSTANCE
+										.createCellWithEnumeratedValue();
 								enumcell.setColumn(theColumn);
 								enumcell.setValue(member);
 								enumcell.setCellID(testID + ":" + cube + ":"
@@ -1034,8 +1018,8 @@ public class BIRDImporterImpl extends Importer {
 							}
 
 						} else {
-							BaseCellWithValue cellWithValue = Base_column_structured_dataFactory.eINSTANCE
-									.createBaseCellWithValue();
+							CellWithValue cellWithValue = Input_dataFactory.eINSTANCE
+									.createCellWithValue();
 							cellWithValue.setValue(value);
 							cellWithValue.setColumn(theColumn);
 							cellWithValue.setCellID(testID + ":" + cube + ":"
