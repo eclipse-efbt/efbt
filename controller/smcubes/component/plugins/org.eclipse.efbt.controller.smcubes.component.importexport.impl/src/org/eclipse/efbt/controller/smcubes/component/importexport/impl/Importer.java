@@ -20,9 +20,9 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModule;
-import org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModuleModule;
-import org.eclipse.efbt.cocalimo.core.model.functionality_module.Functionality_moduleFactory;
+import org.eclipse.efbt.cocalimo.core.model.task.Task;
+import org.eclipse.efbt.cocalimo.core.model.task.TaskModule;
+import org.eclipse.efbt.cocalimo.core.model.task.TaskFactory;
 import org.eclipse.efbt.cocalimo.core.model.module_management.ModuleDependencies;
 import org.eclipse.efbt.cocalimo.core.model.module_management.ModuleDependency;
 import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementFactory;
@@ -222,12 +222,12 @@ public abstract class Importer implements BirdImporter {
 		dependency.setTheModule(members);
 		
 		functionalityModulesProgram = ProgramFactory.eINSTANCE.createSMCubesStaticModel();
-		FunctionalityModuleModule fmm = Functionality_moduleFactory.eINSTANCE.createFunctionalityModuleModule();
+		TaskModule fmm = TaskFactory.eINSTANCE.createTaskModule();
 		fmm.setName("functionalityModuleModule");
-		FunctionalityModule fm = Functionality_moduleFactory.eINSTANCE.createDataProcessingFunctionalityModule();
+		Task fm = TaskFactory.eINSTANCE.createDataProcessingTask();
 		fm.setName("functionalityModule");
-		fmm.getFunctionalityModules().add(fm);
-		functionalityModulesProgram.setFunctionalityModules(fmm);
+		fmm.getTasks().add(fm);
+		functionalityModulesProgram.setTasks(fmm);
 		
 		
 		

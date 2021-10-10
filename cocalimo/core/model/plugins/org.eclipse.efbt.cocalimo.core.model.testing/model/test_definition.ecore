@@ -263,14 +263,14 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RegFunctionalityTestDefinition" eSuperTypes="#//TestDefinition">
     <eStructuralFeatures xsi:type="ecore:EReference" name="inputModules" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.core.model.functionality_module/model/functionality_module.ecore#//ReadDataSourceFunctionalityModule"/>
+        eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.core.model.task/model/task.ecore#//ReadDataSourceTask"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="processingModules" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.core.model.functionality_module/model/functionality_module.ecore#//FunctionalityModule"/>
+        eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.core.model.task/model/task.ecore#//Task"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="reportCellCreationModules"
-        upperBound="-1" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.core.model.functionality_module/model/functionality_module.ecore#//ReportCellCreationFunctionalityModule"/>
+        upperBound="-1" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.core.model.task/model/task.ecore#//ReportCellCreationTask"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="scenarios" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.core.model.functionality_module/model/scenarios.ecore#//Scenario"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="picture" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.core.model.functionality_module/model/functionality_module.ecore#//FunctionalityModuleSet"
+        eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.core.model.task/model/scenarios.ecore#//Scenario"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="picture" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.core.model.task/model/task.ecore#//TaskSet"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RegFunctionalityTestDefinitionModule"

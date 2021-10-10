@@ -2,7 +2,7 @@
  */
 package org.eclipse.efbt.cocalimo.core.model.test_definition.presentation;
 
-import org.eclipse.efbt.cocalimo.core.model.functionality_module.provider.Functionality_moduleEditPlugin;
+import org.eclipse.efbt.cocalimo.core.model.task.provider.TaskEditPlugin;
 
 import org.eclipse.efbt.cocalimo.core.model.module_management.provider.Module_managementEditPlugin;
 
@@ -47,7 +47,7 @@ public final class TestingEditorPlugin extends EMFPlugin {
 	public TestingEditorPlugin() {
 		super
 			(new ResourceLocator [] {
-				Functionality_moduleEditPlugin.INSTANCE,
+				TaskEditPlugin.INSTANCE,
 				Module_managementEditPlugin.INSTANCE,
 				Requirements_textEditPlugin.INSTANCE,
 				EcoreEditPlugin.INSTANCE,

@@ -6,7 +6,7 @@ package org.eclipse.efbt.cocalimo.core.model.test_definition.provider;
 import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.efbt.cocalimo.core.model.functionality_module.Functionality_moduleFactory;
+import org.eclipse.efbt.cocalimo.core.model.task.TaskFactory;
 import org.eclipse.efbt.cocalimo.core.model.test_definition.RegFunctionalityTestDefinition;
 import org.eclipse.efbt.cocalimo.core.model.test_definition.Test_definitionPackage;
 
@@ -231,27 +231,27 @@ public class RegFunctionalityTestDefinitionItemProvider extends TestDefinitionIt
 		newChildDescriptors.add
 			(createChildParameter
 				(Test_definitionPackage.Literals.REG_FUNCTIONALITY_TEST_DEFINITION__PICTURE,
-				 Functionality_moduleFactory.eINSTANCE.createFunctionalityModuleSet()));
+				 TaskFactory.eINSTANCE.createTaskSet()));
 
 		newChildDescriptors.add
 			(createChildParameter
 				(Test_definitionPackage.Literals.REG_FUNCTIONALITY_TEST_DEFINITION__PICTURE,
-				 Functionality_moduleFactory.eINSTANCE.createParallelFunctionalityModule()));
+				 TaskFactory.eINSTANCE.createParallelTask()));
 
 		newChildDescriptors.add
 			(createChildParameter
 				(Test_definitionPackage.Literals.REG_FUNCTIONALITY_TEST_DEFINITION__PICTURE,
-				 Functionality_moduleFactory.eINSTANCE.createScenarioSetFunctionalityModule()));
+				 TaskFactory.eINSTANCE.createScenarioSetTask()));
 
 		newChildDescriptors.add
 			(createChildParameter
 				(Test_definitionPackage.Literals.REG_FUNCTIONALITY_TEST_DEFINITION__PICTURE,
-				 Functionality_moduleFactory.eINSTANCE.createSerialFunctionalityModule()));
+				 TaskFactory.eINSTANCE.createSerialTask()));
 
 		newChildDescriptors.add
 			(createChildParameter
 				(Test_definitionPackage.Literals.REG_FUNCTIONALITY_TEST_DEFINITION__PICTURE,
-				 Functionality_moduleFactory.eINSTANCE.createParallelChoiceFunctionalityModule()));
+				 TaskFactory.eINSTANCE.createParallelChoiceTask()));
 	}
 
 }

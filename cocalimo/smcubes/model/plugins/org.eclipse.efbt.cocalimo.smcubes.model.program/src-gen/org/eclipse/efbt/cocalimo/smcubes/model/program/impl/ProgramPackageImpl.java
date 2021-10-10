@@ -2,7 +2,7 @@
  */
 package org.eclipse.efbt.cocalimo.smcubes.model.program.impl;
 
-import org.eclipse.efbt.cocalimo.core.model.functionality_module.Functionality_modulePackage;
+import org.eclipse.efbt.cocalimo.core.model.task.TaskPackage;
 
 import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementPackage;
 
@@ -169,7 +169,7 @@ public class ProgramPackageImpl extends EPackageImpl implements ProgramPackage {
 		isInited = true;
 
 		// Initialize simple dependencies
-		Functionality_modulePackage.eINSTANCE.eClass();
+		TaskPackage.eINSTANCE.eClass();
 		ScenariosPackage.eINSTANCE.eClass();
 		Module_managementPackage.eINSTANCE.eClass();
 		Requirements_textPackage.eINSTANCE.eClass();
@@ -279,7 +279,7 @@ public class ProgramPackageImpl extends EPackageImpl implements ProgramPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getSMCubesStaticModel_FunctionalityModules() {
+	public EReference getSMCubesStaticModel_Tasks() {
 		return (EReference)smCubesStaticModelEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -499,7 +499,7 @@ public class ProgramPackageImpl extends EPackageImpl implements ProgramPackage {
 		createEReference(smCubesStaticModelEClass, SM_CUBES_STATIC_MODEL__TESTS);
 		createEReference(smCubesStaticModelEClass, SM_CUBES_STATIC_MODEL__TEST_TEMPLATES);
 		createEReference(smCubesStaticModelEClass, SM_CUBES_STATIC_MODEL__TEST_CONSTRIANTS);
-		createEReference(smCubesStaticModelEClass, SM_CUBES_STATIC_MODEL__FUNCTIONALITY_MODULES);
+		createEReference(smCubesStaticModelEClass, SM_CUBES_STATIC_MODEL__TASKS);
 		createEReference(smCubesStaticModelEClass, SM_CUBES_STATIC_MODEL__REG_FUNCTIONALITY_TESTS);
 		createEReference(smCubesStaticModelEClass, SM_CUBES_STATIC_MODEL__REG_FUNCTIONALITY_TEST_DEFINITIONS);
 
@@ -554,7 +554,7 @@ public class ProgramPackageImpl extends EPackageImpl implements ProgramPackage {
 		Smcubes_modelPackage theSmcubes_modelPackage = (Smcubes_modelPackage)EPackage.Registry.INSTANCE.getEPackage(Smcubes_modelPackage.eNS_URI);
 		Requirements_textPackage theRequirements_textPackage = (Requirements_textPackage)EPackage.Registry.INSTANCE.getEPackage(Requirements_textPackage.eNS_URI);
 		Test_definitionPackage theTest_definitionPackage = (Test_definitionPackage)EPackage.Registry.INSTANCE.getEPackage(Test_definitionPackage.eNS_URI);
-		Functionality_modulePackage theFunctionality_modulePackage = (Functionality_modulePackage)EPackage.Registry.INSTANCE.getEPackage(Functionality_modulePackage.eNS_URI);
+		TaskPackage theTaskPackage = (TaskPackage)EPackage.Registry.INSTANCE.getEPackage(TaskPackage.eNS_URI);
 		Test_input_dataPackage theTest_input_dataPackage = (Test_input_dataPackage)EPackage.Registry.INSTANCE.getEPackage(Test_input_dataPackage.eNS_URI);
 		Base_column_structured_dataPackage theBase_column_structured_dataPackage = (Base_column_structured_dataPackage)EPackage.Registry.INSTANCE.getEPackage(Base_column_structured_dataPackage.eNS_URI);
 		TestPackage theTestPackage = (TestPackage)EPackage.Registry.INSTANCE.getEPackage(TestPackage.eNS_URI);
@@ -581,7 +581,7 @@ public class ProgramPackageImpl extends EPackageImpl implements ProgramPackage {
 		initEReference(getSMCubesStaticModel_Tests(), this.getSMCubesBDDTestModule(), null, "tests", null, 0, 1, SMCubesStaticModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSMCubesStaticModel_TestTemplates(), theTest_definitionPackage.getBDDTestTemplateModule(), null, "testTemplates", null, 0, 1, SMCubesStaticModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSMCubesStaticModel_TestConstriants(), theTest_definitionPackage.getBDDTestContraints(), null, "testConstriants", null, 0, 1, SMCubesStaticModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getSMCubesStaticModel_FunctionalityModules(), theFunctionality_modulePackage.getFunctionalityModuleModule(), null, "functionalityModules", null, 0, 1, SMCubesStaticModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSMCubesStaticModel_Tasks(), theTaskPackage.getTaskModule(), null, "functionalityModules", null, 0, 1, SMCubesStaticModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSMCubesStaticModel_RegFunctionalityTests(), this.getSMCubesRegFunctionalityTestModule(), null, "regFunctionalityTests", null, 0, 1, SMCubesStaticModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSMCubesStaticModel_RegFunctionalityTestDefinitions(), theTest_definitionPackage.getRegFunctionalityTestDefinitionModule(), null, "regFunctionalityTestDefinitions", null, 0, 1, SMCubesStaticModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 

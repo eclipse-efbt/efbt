@@ -4,10 +4,10 @@ package org.eclipse.efbt.cocalimo.core.model.test_definition.impl;
 
 import java.util.Collection;
 
-import org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModule;
-import org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModuleSet;
-import org.eclipse.efbt.cocalimo.core.model.functionality_module.ReadDataSourceFunctionalityModule;
-import org.eclipse.efbt.cocalimo.core.model.functionality_module.ReportCellCreationFunctionalityModule;
+import org.eclipse.efbt.cocalimo.core.model.task.Task;
+import org.eclipse.efbt.cocalimo.core.model.task.TaskSet;
+import org.eclipse.efbt.cocalimo.core.model.task.ReadDataSourceTask;
+import org.eclipse.efbt.cocalimo.core.model.task.ReportCellCreationTask;
 
 import org.eclipse.efbt.cocalimo.core.model.scenarios.Scenario;
 
@@ -51,7 +51,7 @@ public class RegFunctionalityTestDefinitionImpl extends TestDefinitionImpl imple
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<ReadDataSourceFunctionalityModule> inputModules;
+	protected EList<ReadDataSourceTask> inputModules;
 
 	/**
 	 * The cached value of the '{@link #getProcessingModules() <em>Processing Modules</em>}' reference list.
@@ -61,7 +61,7 @@ public class RegFunctionalityTestDefinitionImpl extends TestDefinitionImpl imple
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<FunctionalityModule> processingModules;
+	protected EList<Task> processingModules;
 
 	/**
 	 * The cached value of the '{@link #getReportCellCreationModules() <em>Report Cell Creation Modules</em>}' reference list.
@@ -71,7 +71,7 @@ public class RegFunctionalityTestDefinitionImpl extends TestDefinitionImpl imple
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<ReportCellCreationFunctionalityModule> reportCellCreationModules;
+	protected EList<ReportCellCreationTask> reportCellCreationModules;
 
 	/**
 	 * The cached value of the '{@link #getScenarios() <em>Scenarios</em>}' reference list.
@@ -91,7 +91,7 @@ public class RegFunctionalityTestDefinitionImpl extends TestDefinitionImpl imple
 	 * @generated
 	 * @ordered
 	 */
-	protected FunctionalityModuleSet picture;
+	protected TaskSet picture;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -120,10 +120,10 @@ public class RegFunctionalityTestDefinitionImpl extends TestDefinitionImpl imple
 	 * @generated
 	 */
 	@Override
-	public EList<ReadDataSourceFunctionalityModule> getInputModules()
+	public EList<ReadDataSourceTask> getInputModules()
 	{
 		if (inputModules == null) {
-			inputModules = new EObjectResolvingEList<ReadDataSourceFunctionalityModule>(ReadDataSourceFunctionalityModule.class, this, Test_definitionPackage.REG_FUNCTIONALITY_TEST_DEFINITION__INPUT_MODULES);
+			inputModules = new EObjectResolvingEList<ReadDataSourceTask>(ReadDataSourceTask.class, this, Test_definitionPackage.REG_FUNCTIONALITY_TEST_DEFINITION__INPUT_MODULES);
 		}
 		return inputModules;
 	}
@@ -134,10 +134,10 @@ public class RegFunctionalityTestDefinitionImpl extends TestDefinitionImpl imple
 	 * @generated
 	 */
 	@Override
-	public EList<FunctionalityModule> getProcessingModules()
+	public EList<Task> getProcessingModules()
 	{
 		if (processingModules == null) {
-			processingModules = new EObjectResolvingEList<FunctionalityModule>(FunctionalityModule.class, this, Test_definitionPackage.REG_FUNCTIONALITY_TEST_DEFINITION__PROCESSING_MODULES);
+			processingModules = new EObjectResolvingEList<Task>(Task.class, this, Test_definitionPackage.REG_FUNCTIONALITY_TEST_DEFINITION__PROCESSING_MODULES);
 		}
 		return processingModules;
 	}
@@ -148,10 +148,10 @@ public class RegFunctionalityTestDefinitionImpl extends TestDefinitionImpl imple
 	 * @generated
 	 */
 	@Override
-	public EList<ReportCellCreationFunctionalityModule> getReportCellCreationModules()
+	public EList<ReportCellCreationTask> getReportCellCreationModules()
 	{
 		if (reportCellCreationModules == null) {
-			reportCellCreationModules = new EObjectResolvingEList<ReportCellCreationFunctionalityModule>(ReportCellCreationFunctionalityModule.class, this, Test_definitionPackage.REG_FUNCTIONALITY_TEST_DEFINITION__REPORT_CELL_CREATION_MODULES);
+			reportCellCreationModules = new EObjectResolvingEList<ReportCellCreationTask>(ReportCellCreationTask.class, this, Test_definitionPackage.REG_FUNCTIONALITY_TEST_DEFINITION__REPORT_CELL_CREATION_MODULES);
 		}
 		return reportCellCreationModules;
 	}
@@ -176,7 +176,7 @@ public class RegFunctionalityTestDefinitionImpl extends TestDefinitionImpl imple
 	 * @generated
 	 */
 	@Override
-	public FunctionalityModuleSet getPicture() {
+	public TaskSet getPicture() {
 		return picture;
 	}
 
@@ -185,8 +185,8 @@ public class RegFunctionalityTestDefinitionImpl extends TestDefinitionImpl imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetPicture(FunctionalityModuleSet newPicture, NotificationChain msgs) {
-		FunctionalityModuleSet oldPicture = picture;
+	public NotificationChain basicSetPicture(TaskSet newPicture, NotificationChain msgs) {
+		TaskSet oldPicture = picture;
 		picture = newPicture;
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, Test_definitionPackage.REG_FUNCTIONALITY_TEST_DEFINITION__PICTURE, oldPicture, newPicture);
@@ -201,7 +201,7 @@ public class RegFunctionalityTestDefinitionImpl extends TestDefinitionImpl imple
 	 * @generated
 	 */
 	@Override
-	public void setPicture(FunctionalityModuleSet newPicture) {
+	public void setPicture(TaskSet newPicture) {
 		if (newPicture != picture) {
 			NotificationChain msgs = null;
 			if (picture != null)
@@ -264,22 +264,22 @@ public class RegFunctionalityTestDefinitionImpl extends TestDefinitionImpl imple
 		switch (featureID) {
 			case Test_definitionPackage.REG_FUNCTIONALITY_TEST_DEFINITION__INPUT_MODULES:
 				getInputModules().clear();
-				getInputModules().addAll((Collection<? extends ReadDataSourceFunctionalityModule>)newValue);
+				getInputModules().addAll((Collection<? extends ReadDataSourceTask>)newValue);
 				return;
 			case Test_definitionPackage.REG_FUNCTIONALITY_TEST_DEFINITION__PROCESSING_MODULES:
 				getProcessingModules().clear();
-				getProcessingModules().addAll((Collection<? extends FunctionalityModule>)newValue);
+				getProcessingModules().addAll((Collection<? extends Task>)newValue);
 				return;
 			case Test_definitionPackage.REG_FUNCTIONALITY_TEST_DEFINITION__REPORT_CELL_CREATION_MODULES:
 				getReportCellCreationModules().clear();
-				getReportCellCreationModules().addAll((Collection<? extends ReportCellCreationFunctionalityModule>)newValue);
+				getReportCellCreationModules().addAll((Collection<? extends ReportCellCreationTask>)newValue);
 				return;
 			case Test_definitionPackage.REG_FUNCTIONALITY_TEST_DEFINITION__SCENARIOS:
 				getScenarios().clear();
 				getScenarios().addAll((Collection<? extends Scenario>)newValue);
 				return;
 			case Test_definitionPackage.REG_FUNCTIONALITY_TEST_DEFINITION__PICTURE:
-				setPicture((FunctionalityModuleSet)newValue);
+				setPicture((TaskSet)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -307,7 +307,7 @@ public class RegFunctionalityTestDefinitionImpl extends TestDefinitionImpl imple
 				getScenarios().clear();
 				return;
 			case Test_definitionPackage.REG_FUNCTIONALITY_TEST_DEFINITION__PICTURE:
-				setPicture((FunctionalityModuleSet)null);
+				setPicture((TaskSet)null);
 				return;
 		}
 		super.eUnset(featureID);

@@ -4,8 +4,8 @@
     <semanticResources>test_definition.ecore</semanticResources>
     <semanticResources>platform:/resource/org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.ecore</semanticResources>
     <semanticResources>platform:/resource/org.eclipse.efbt.cocalimo.core.model.requirements_text/model/requirements_text.ecore</semanticResources>
-    <semanticResources>platform:/resource/org.eclipse.efbt.cocalimo.core.model.functionality_module/model/functionality_module.ecore</semanticResources>
-    <semanticResources>platform:/resource/org.eclipse.efbt.cocalimo.core.model.functionality_module/model/scenarios.ecore</semanticResources>
+    <semanticResources>platform:/resource/org.eclipse.efbt.cocalimo.core.model.task/model/task.ecore</semanticResources>
+    <semanticResources>platform:/resource/org.eclipse.efbt.cocalimo.core.model.task/model/scenarios.ecore</semanticResources>
     <ownedViews xmi:type="viewpoint:DView" uid="_UB0AoJX7Eeuf37xcIYD_eA">
       <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']"/>
       <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_UsNogJX7Eeuf37xcIYD_eA" name="test_definition class diagram" repPath="#_UsGTwJX7Eeuf37xcIYD_eA" changeId="63d0e2a2-3899-484f-b3f5-425705568400">
@@ -1056,7 +1056,7 @@
         <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@style"/>
       </ownedStyle>
       <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']"/>
-      <ownedElements xmi:type="diagram:DNodeListElement" uid="_VITuoZX7Eeuf37xcIYD_eA" name=" inputModules : ReadDataSourceFunctionalityModule" tooltipText="">
+      <ownedElements xmi:type="diagram:DNodeListElement" uid="_VITuoZX7Eeuf37xcIYD_eA" name=" inputModules : ReadDataSourceTask" tooltipText="">
         <target xmi:type="ecore:EReference" href="test_definition.ecore#//RegFunctionalityTestDefinition/inputModules"/>
         <semanticElements xmi:type="ecore:EReference" href="test_definition.ecore#//RegFunctionalityTestDefinition/inputModules"/>
         <ownedStyle xmi:type="diagram:BundledImage" uid="_VIUVsJX7Eeuf37xcIYD_eA" labelAlignment="LEFT" color="114,159,207">
@@ -1064,7 +1064,7 @@
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EReferenceNode']"/>
       </ownedElements>
-      <ownedElements xmi:type="diagram:DNodeListElement" uid="_VIUVsZX7Eeuf37xcIYD_eA" name=" processingModules : FunctionalityModule" tooltipText="">
+      <ownedElements xmi:type="diagram:DNodeListElement" uid="_VIUVsZX7Eeuf37xcIYD_eA" name=" processingModules : Task" tooltipText="">
         <target xmi:type="ecore:EReference" href="test_definition.ecore#//RegFunctionalityTestDefinition/processingModules"/>
         <semanticElements xmi:type="ecore:EReference" href="test_definition.ecore#//RegFunctionalityTestDefinition/processingModules"/>
         <ownedStyle xmi:type="diagram:BundledImage" uid="_VIUVspX7Eeuf37xcIYD_eA" labelAlignment="LEFT" color="114,159,207">
@@ -1072,7 +1072,7 @@
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EReferenceNode']"/>
       </ownedElements>
-      <ownedElements xmi:type="diagram:DNodeListElement" uid="_VIUVs5X7Eeuf37xcIYD_eA" name=" reportCellCreationModules : ReportCellCreationFunctionalityModule" tooltipText="">
+      <ownedElements xmi:type="diagram:DNodeListElement" uid="_VIUVs5X7Eeuf37xcIYD_eA" name=" reportCellCreationModules : ReportCellCreationTask" tooltipText="">
         <target xmi:type="ecore:EReference" href="test_definition.ecore#//RegFunctionalityTestDefinition/reportCellCreationModules"/>
         <semanticElements xmi:type="ecore:EReference" href="test_definition.ecore#//RegFunctionalityTestDefinition/reportCellCreationModules"/>
         <ownedStyle xmi:type="diagram:BundledImage" uid="_VIU8wJX7Eeuf37xcIYD_eA" labelAlignment="LEFT" color="114,159,207">

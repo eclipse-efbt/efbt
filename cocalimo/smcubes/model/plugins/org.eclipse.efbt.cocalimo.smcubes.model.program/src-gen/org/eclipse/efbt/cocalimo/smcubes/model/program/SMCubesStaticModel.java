@@ -2,7 +2,7 @@
  */
 package org.eclipse.efbt.cocalimo.smcubes.model.program;
 
-import org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModuleModule;
+import org.eclipse.efbt.cocalimo.core.model.task.TaskModule;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.RequirementsModule;
 
@@ -33,7 +33,7 @@ import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.SmcubesModel;
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel#getTests <em>Tests</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel#getTestTemplates <em>Test Templates</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel#getTestConstriants <em>Test Constriants</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel#getFunctionalityModules <em>Functionality Modules</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel#getTasks <em>Functionality Modules</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel#getRegFunctionalityTests <em>Reg Functionality Tests</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel#getRegFunctionalityTestDefinitions <em>Reg Functionality Test Definitions</em>}</li>
  * </ul>
@@ -73,7 +73,7 @@ public interface SMCubesStaticModel extends StaticModel {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * The requirements associated with the program, these will be refrence by FunctionalityModules
+	 * The requirements associated with the program, these will be refrence by Tasks
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Requirements</em>' reference.
 	 * @see #setRequirements(RequirementsModule)
@@ -98,7 +98,7 @@ public interface SMCubesStaticModel extends StaticModel {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * The TestDefinitions associated with the program, these will be refrence by FunctionalityModules
+	 * The TestDefinitions associated with the program, these will be refrence by Tasks
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Bdd Test Definitions</em>' reference.
 	 * @see #setBddTestDefinitions(BDDTestDefinitionModule)
@@ -123,7 +123,7 @@ public interface SMCubesStaticModel extends StaticModel {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * The Tests associated with the program, these will be refrence by FunctionalityModules
+	 * The Tests associated with the program, these will be refrence by Tasks
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Tests</em>' reference.
 	 * @see #setTests(SMCubesBDDTestModule)
@@ -148,7 +148,7 @@ public interface SMCubesStaticModel extends StaticModel {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * The TestTemplates associated with the program, these will be refrence by FunctionalityModules
+	 * The TestTemplates associated with the program, these will be refrence by Tasks
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Test Templates</em>' reference.
 	 * @see #setTestTemplates(BDDTestTemplateModule)
@@ -173,7 +173,7 @@ public interface SMCubesStaticModel extends StaticModel {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * The TestConstraints associated with the program, these will be refrence by FunctionalityModules
+	 * The TestConstraints associated with the program, these will be refrence by Tasks
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Test Constriants</em>' reference.
 	 * @see #setTestConstriants(BDDTestContraints)
@@ -198,32 +198,32 @@ public interface SMCubesStaticModel extends StaticModel {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * The FunctionaltyModules associated with the program, these will be refrence by FunctionalityModules
+	 * The FunctionaltyModules associated with the program, these will be refrence by Tasks
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Functionality Modules</em>' reference.
-	 * @see #setFunctionalityModules(FunctionalityModuleModule)
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.program.ProgramPackage#getSMCubesStaticModel_FunctionalityModules()
+	 * @see #setTasks(TaskModule)
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.program.ProgramPackage#getSMCubesStaticModel_Tasks()
 	 * @model
 	 * @generated
 	 */
-	FunctionalityModuleModule getFunctionalityModules();
+	TaskModule getTasks();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel#getFunctionalityModules <em>Functionality Modules</em>}' reference.
+	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel#getTasks <em>Functionality Modules</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Functionality Modules</em>' reference.
-	 * @see #getFunctionalityModules()
+	 * @see #getTasks()
 	 * @generated
 	 */
-	void setFunctionalityModules(FunctionalityModuleModule value);
+	void setTasks(TaskModule value);
 
 	/**
 	 * Returns the value of the '<em><b>Reg Functionality Tests</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * The Tests associated with the program, these will be refrence by FunctionalityModules
+	 * The Tests associated with the program, these will be refrence by Tasks
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Reg Functionality Tests</em>' reference.
 	 * @see #setRegFunctionalityTests(SMCubesRegFunctionalityTestModule)
@@ -248,7 +248,7 @@ public interface SMCubesStaticModel extends StaticModel {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * The TestDefinitions associated with the program, these will be refrence by FunctionalityModules
+	 * The TestDefinitions associated with the program, these will be refrence by Tasks
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Reg Functionality Test Definitions</em>' reference.
 	 * @see #setRegFunctionalityTestDefinitions(RegFunctionalityTestDefinitionModule)

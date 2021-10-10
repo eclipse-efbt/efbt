@@ -14,10 +14,10 @@
   <semanticResources>bin/FRTBDerivedDimensions.efbt_data_definition</semanticResources>
   <semanticResources>bin/FRTBDerivedDomain.efbt_data_definition</semanticResources>
   <semanticResources>bin/FRTBDerivedDomainMembers.efbt_data_definition</semanticResources>
-  <semanticResources>bin/FRTBFunctionalityModule.functionality_module</semanticResources>
+  <semanticResources>bin/FRTBTask.task</semanticResources>
   <semanticResources>bin/GIRRCurvatureTest1.program</semanticResources>
   <semanticResources>bin/GIRRCurvatureTestDefinitions.test_definition</semanticResources>
-  <semanticResources>requirements/FRTBFunctionalityModule.functionality_module</semanticResources>
+  <semanticResources>requirements/FRTBTask.task</semanticResources>
   <semanticResources>sdd/FRTBCubes.efbt_data_definition</semanticResources>
   <semanticResources>sdd/FRTBCubeStructures.efbt_data_definition</semanticResources>
   <semanticResources>sdd/FRTBSourceIdentifiers.efbt_data_definition</semanticResources>

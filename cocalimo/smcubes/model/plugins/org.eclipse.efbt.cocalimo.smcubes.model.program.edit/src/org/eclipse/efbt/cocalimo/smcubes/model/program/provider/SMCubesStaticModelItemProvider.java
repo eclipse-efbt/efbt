@@ -49,7 +49,7 @@ public class SMCubesStaticModelItemProvider extends StaticModelItemProvider {
 			addTestsPropertyDescriptor(object);
 			addTestTemplatesPropertyDescriptor(object);
 			addTestConstriantsPropertyDescriptor(object);
-			addFunctionalityModulesPropertyDescriptor(object);
+			addTasksPropertyDescriptor(object);
 			addRegFunctionalityTestsPropertyDescriptor(object);
 			addRegFunctionalityTestDefinitionsPropertyDescriptor(object);
 		}
@@ -194,14 +194,14 @@ public class SMCubesStaticModelItemProvider extends StaticModelItemProvider {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addFunctionalityModulesPropertyDescriptor(Object object) {
+	protected void addTasksPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
 				 getString("_UI_SMCubesStaticModel_functionalityModules_feature"),
 				 getString("_UI_PropertyDescriptor_description", "_UI_SMCubesStaticModel_functionalityModules_feature", "_UI_SMCubesStaticModel_type"),
-				 ProgramPackage.Literals.SM_CUBES_STATIC_MODEL__FUNCTIONALITY_MODULES,
+				 ProgramPackage.Literals.SM_CUBES_STATIC_MODEL__TASKS,
 				 true,
 				 false,
 				 true,

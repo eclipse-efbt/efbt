@@ -157,7 +157,7 @@ import org.eclipse.emf.edit.ui.view.ExtendedPropertySheetPage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.program.provider.ProgramItemProviderAdapterFactory;
 
-import org.eclipse.efbt.cocalimo.core.model.functionality_module.provider.Functionality_moduleItemProviderAdapterFactory;
+import org.eclipse.efbt.cocalimo.core.model.task.provider.TaskItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.core.model.module_management.provider.Module_managementItemProviderAdapterFactory;
 
@@ -749,7 +749,7 @@ public class ProgramEditor
 
 		adapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new ProgramItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new Functionality_moduleItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new TaskItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new ScenariosItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Module_managementItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Requirements_textItemProviderAdapterFactory());

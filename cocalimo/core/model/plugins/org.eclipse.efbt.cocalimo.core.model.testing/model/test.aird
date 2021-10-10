@@ -5,8 +5,8 @@
     <semanticResources>test_definition.ecore</semanticResources>
     <semanticResources>platform:/resource/org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.ecore</semanticResources>
     <semanticResources>platform:/resource/org.eclipse.efbt.cocalimo.core.model.requirements_text/model/requirements_text.ecore</semanticResources>
-    <semanticResources>platform:/resource/org.eclipse.efbt.cocalimo.core.model.functionality_module/model/functionality_module.ecore</semanticResources>
-    <semanticResources>platform:/resource/org.eclipse.efbt.cocalimo.core.model.functionality_module/model/scenarios.ecore</semanticResources>
+    <semanticResources>platform:/resource/org.eclipse.efbt.cocalimo.core.model.task/model/task.ecore</semanticResources>
+    <semanticResources>platform:/resource/org.eclipse.efbt.cocalimo.core.model.task/model/scenarios.ecore</semanticResources>
     <ownedViews xmi:type="viewpoint:DView" uid="_tLyq4JX9Eeuf37xcIYD_eA">
       <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']"/>
       <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_tr8KkJX9Eeuf37xcIYD_eA" name="test class diagram" repPath="#_tr5HQJX9Eeuf37xcIYD_eA" changeId="d99f0217-1907-479c-a589-bf6e3dfd8d81">

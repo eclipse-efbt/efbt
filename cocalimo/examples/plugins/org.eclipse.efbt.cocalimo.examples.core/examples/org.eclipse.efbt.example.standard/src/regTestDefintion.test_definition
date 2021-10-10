@@ -2,19 +2,19 @@
   "eClass" : "http://www.eclipse.org/efbt/test_definition#//RegFunctionalityTestDefinition",
   "name" : "testdef1",
   "inputModules" : [ {
-    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReadDataSourceFunctionalityModule",
-    "$ref" : "functionality_modules.functionality_module#readInExampleData"
+    "eClass" : "http://www.eclipse.org/efbt/task#//ReadDataSourceTask",
+    "$ref" : "tasks.task#readInExampleData"
   } ],
   "processingModules" : [ {
-    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//DataProcessingFunctionalityModule",
-    "$ref" : "functionality_modules.functionality_module#processExampleData"
+    "eClass" : "http://www.eclipse.org/efbt/task#//DataProcessingTask",
+    "$ref" : "tasks.task#processExampleData"
   } ],
   "reportCellCreationModules" : [ {
-    "eClass" : "http://www.eclipse.org/efbt/functionality_module#//ReportCellCreationFunctionalityModule",
-    "$ref" : "functionality_modules.functionality_module#createReportCells"
+    "eClass" : "http://www.eclipse.org/efbt/task#//ReportCellCreationTask",
+    "$ref" : "tasks.task#createReportCells"
   } ],
   "scenarios" : [ {
     "eClass" : "http://www.eclipse.org/efbt/scenarios#//Scenario",
-    "$ref" : "functionality_modules.functionality_module#notAAA"
+    "$ref" : "tasks.task#notAAA"
   } ]
 }

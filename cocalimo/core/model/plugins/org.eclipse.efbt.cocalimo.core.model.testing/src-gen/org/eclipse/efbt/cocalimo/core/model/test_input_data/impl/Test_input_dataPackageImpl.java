@@ -2,7 +2,7 @@
  */
 package org.eclipse.efbt.cocalimo.core.model.test_input_data.impl;
 
-import org.eclipse.efbt.cocalimo.core.model.functionality_module.Functionality_modulePackage;
+import org.eclipse.efbt.cocalimo.core.model.task.TaskPackage;
 
 import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementPackage;
 
@@ -127,7 +127,7 @@ public class Test_input_dataPackageImpl extends EPackageImpl implements Test_inp
 		isInited = true;
 
 		// Initialize simple dependencies
-		Functionality_modulePackage.eINSTANCE.eClass();
+		TaskPackage.eINSTANCE.eClass();
 		ScenariosPackage.eINSTANCE.eClass();
 		Module_managementPackage.eINSTANCE.eClass();
 		Requirements_textPackage.eINSTANCE.eClass();

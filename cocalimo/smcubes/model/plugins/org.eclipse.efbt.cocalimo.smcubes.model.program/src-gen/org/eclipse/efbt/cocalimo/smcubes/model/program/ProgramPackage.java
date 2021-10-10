@@ -183,7 +183,7 @@ public interface ProgramPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SM_CUBES_STATIC_MODEL__FUNCTIONALITY_MODULES = STATIC_MODEL_FEATURE_COUNT + 6;
+	int SM_CUBES_STATIC_MODEL__TASKS = STATIC_MODEL_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Reg Functionality Tests</b></em>' reference.
@@ -692,15 +692,15 @@ public interface ProgramPackage extends EPackage {
 	EReference getSMCubesStaticModel_TestConstriants();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel#getFunctionalityModules <em>Functionality Modules</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel#getTasks <em>Functionality Modules</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Functionality Modules</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel#getFunctionalityModules()
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel#getTasks()
 	 * @see #getSMCubesStaticModel()
 	 * @generated
 	 */
-	EReference getSMCubesStaticModel_FunctionalityModules();
+	EReference getSMCubesStaticModel_Tasks();
 
 	/**
 	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel#getRegFunctionalityTests <em>Reg Functionality Tests</em>}'.
@@ -980,7 +980,7 @@ public interface ProgramPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference SM_CUBES_STATIC_MODEL__FUNCTIONALITY_MODULES = eINSTANCE.getSMCubesStaticModel_FunctionalityModules();
+		EReference SM_CUBES_STATIC_MODEL__TASKS = eINSTANCE.getSMCubesStaticModel_Tasks();
 
 		/**
 		 * The meta object literal for the '<em><b>Reg Functionality Tests</b></em>' reference feature.

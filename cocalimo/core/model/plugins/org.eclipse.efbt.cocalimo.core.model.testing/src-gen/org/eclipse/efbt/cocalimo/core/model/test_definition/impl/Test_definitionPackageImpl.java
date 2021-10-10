@@ -2,7 +2,7 @@
  */
 package org.eclipse.efbt.cocalimo.core.model.test_definition.impl;
 
-import org.eclipse.efbt.cocalimo.core.model.functionality_module.Functionality_modulePackage;
+import org.eclipse.efbt.cocalimo.core.model.task.TaskPackage;
 
 import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementPackage;
 
@@ -239,7 +239,7 @@ public class Test_definitionPackageImpl extends EPackageImpl implements Test_def
 		isInited = true;
 
 		// Initialize simple dependencies
-		Functionality_modulePackage.eINSTANCE.eClass();
+		TaskPackage.eINSTANCE.eClass();
 		ScenariosPackage.eINSTANCE.eClass();
 		Module_managementPackage.eINSTANCE.eClass();
 		Requirements_textPackage.eINSTANCE.eClass();
@@ -1006,7 +1006,7 @@ public class Test_definitionPackageImpl extends EPackageImpl implements Test_def
 		// Obtain other dependent packages
 		Module_managementPackage theModule_managementPackage = (Module_managementPackage)EPackage.Registry.INSTANCE.getEPackage(Module_managementPackage.eNS_URI);
 		Requirements_textPackage theRequirements_textPackage = (Requirements_textPackage)EPackage.Registry.INSTANCE.getEPackage(Requirements_textPackage.eNS_URI);
-		Functionality_modulePackage theFunctionality_modulePackage = (Functionality_modulePackage)EPackage.Registry.INSTANCE.getEPackage(Functionality_modulePackage.eNS_URI);
+		TaskPackage theTaskPackage = (TaskPackage)EPackage.Registry.INSTANCE.getEPackage(TaskPackage.eNS_URI);
 		ScenariosPackage theScenariosPackage = (ScenariosPackage)EPackage.Registry.INSTANCE.getEPackage(ScenariosPackage.eNS_URI);
 
 		// Create type parameters
@@ -1092,11 +1092,11 @@ public class Test_definitionPackageImpl extends EPackageImpl implements Test_def
 		initEAttribute(getTestDefinition_Name(), ecorePackage.getEString(), "name", null, 0, 1, TestDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(regFunctionalityTestDefinitionEClass, RegFunctionalityTestDefinition.class, "RegFunctionalityTestDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getRegFunctionalityTestDefinition_InputModules(), theFunctionality_modulePackage.getReadDataSourceFunctionalityModule(), null, "inputModules", null, 0, -1, RegFunctionalityTestDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getRegFunctionalityTestDefinition_ProcessingModules(), theFunctionality_modulePackage.getFunctionalityModule(), null, "processingModules", null, 0, -1, RegFunctionalityTestDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getRegFunctionalityTestDefinition_ReportCellCreationModules(), theFunctionality_modulePackage.getReportCellCreationFunctionalityModule(), null, "reportCellCreationModules", null, 0, -1, RegFunctionalityTestDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getRegFunctionalityTestDefinition_InputModules(), theTaskPackage.getReadDataSourceTask(), null, "inputModules", null, 0, -1, RegFunctionalityTestDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getRegFunctionalityTestDefinition_ProcessingModules(), theTaskPackage.getTask(), null, "processingModules", null, 0, -1, RegFunctionalityTestDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getRegFunctionalityTestDefinition_ReportCellCreationModules(), theTaskPackage.getReportCellCreationTask(), null, "reportCellCreationModules", null, 0, -1, RegFunctionalityTestDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getRegFunctionalityTestDefinition_Scenarios(), theScenariosPackage.getScenario(), null, "scenarios", null, 0, -1, RegFunctionalityTestDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getRegFunctionalityTestDefinition_Picture(), theFunctionality_modulePackage.getFunctionalityModuleSet(), null, "picture", null, 0, 1, RegFunctionalityTestDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getRegFunctionalityTestDefinition_Picture(), theTaskPackage.getTaskSet(), null, "picture", null, 0, 1, RegFunctionalityTestDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(regFunctionalityTestDefinitionModuleEClass, RegFunctionalityTestDefinitionModule.class, "RegFunctionalityTestDefinitionModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getRegFunctionalityTestDefinitionModule_TestDefinitions(), this.getRegFunctionalityTestDefinition(), null, "testDefinitions", null, 0, -1, RegFunctionalityTestDefinitionModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -2,7 +2,7 @@
  */
 package org.eclipse.efbt.cocalimo.smcubes.model.program.presentation;
 
-import org.eclipse.efbt.cocalimo.core.model.functionality_module.provider.Functionality_moduleEditPlugin;
+import org.eclipse.efbt.cocalimo.core.model.task.provider.TaskEditPlugin;
 
 import org.eclipse.efbt.cocalimo.core.model.module_management.provider.Module_managementEditPlugin;
 
@@ -52,7 +52,7 @@ public final class ProgramEditorPlugin extends EMFPlugin {
 	public ProgramEditorPlugin() {
 		super
 			(new ResourceLocator [] {
-				Functionality_moduleEditPlugin.INSTANCE,
+				TaskEditPlugin.INSTANCE,
 				Module_managementEditPlugin.INSTANCE,
 				Requirements_textEditPlugin.INSTANCE,
 				Smcubes_input_dataEditPlugin.INSTANCE,

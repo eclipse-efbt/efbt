@@ -2,10 +2,10 @@
  */
 package org.eclipse.efbt.cocalimo.core.model.test_definition;
 
-import org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModule;
-import org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModuleSet;
-import org.eclipse.efbt.cocalimo.core.model.functionality_module.ReadDataSourceFunctionalityModule;
-import org.eclipse.efbt.cocalimo.core.model.functionality_module.ReportCellCreationFunctionalityModule;
+import org.eclipse.efbt.cocalimo.core.model.task.Task;
+import org.eclipse.efbt.cocalimo.core.model.task.TaskSet;
+import org.eclipse.efbt.cocalimo.core.model.task.ReadDataSourceTask;
+import org.eclipse.efbt.cocalimo.core.model.task.ReportCellCreationTask;
 
 import org.eclipse.efbt.cocalimo.core.model.scenarios.Scenario;
 
@@ -35,7 +35,7 @@ public interface RegFunctionalityTestDefinition extends TestDefinition
 {
 	/**
 	 * Returns the value of the '<em><b>Input Modules</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.core.model.functionality_module.ReadDataSourceFunctionalityModule}.
+	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.core.model.task.ReadDataSourceTask}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Input Modules</em>' reference list.
@@ -43,11 +43,11 @@ public interface RegFunctionalityTestDefinition extends TestDefinition
 	 * @model
 	 * @generated
 	 */
-	EList<ReadDataSourceFunctionalityModule> getInputModules();
+	EList<ReadDataSourceTask> getInputModules();
 
 	/**
 	 * Returns the value of the '<em><b>Processing Modules</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModule}.
+	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.core.model.task.Task}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Processing Modules</em>' reference list.
@@ -55,11 +55,11 @@ public interface RegFunctionalityTestDefinition extends TestDefinition
 	 * @model
 	 * @generated
 	 */
-	EList<FunctionalityModule> getProcessingModules();
+	EList<Task> getProcessingModules();
 
 	/**
 	 * Returns the value of the '<em><b>Report Cell Creation Modules</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.core.model.functionality_module.ReportCellCreationFunctionalityModule}.
+	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.core.model.task.ReportCellCreationTask}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Report Cell Creation Modules</em>' reference list.
@@ -67,7 +67,7 @@ public interface RegFunctionalityTestDefinition extends TestDefinition
 	 * @model
 	 * @generated
 	 */
-	EList<ReportCellCreationFunctionalityModule> getReportCellCreationModules();
+	EList<ReportCellCreationTask> getReportCellCreationModules();
 
 	/**
 	 * Returns the value of the '<em><b>Scenarios</b></em>' reference list.
@@ -86,12 +86,12 @@ public interface RegFunctionalityTestDefinition extends TestDefinition
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Picture</em>' containment reference.
-	 * @see #setPicture(FunctionalityModuleSet)
+	 * @see #setPicture(TaskSet)
 	 * @see org.eclipse.efbt.cocalimo.core.model.test_definition.Test_definitionPackage#getRegFunctionalityTestDefinition_Picture()
 	 * @model containment="true"
 	 * @generated
 	 */
-	FunctionalityModuleSet getPicture();
+	TaskSet getPicture();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.core.model.test_definition.RegFunctionalityTestDefinition#getPicture <em>Picture</em>}' containment reference.
@@ -101,6 +101,6 @@ public interface RegFunctionalityTestDefinition extends TestDefinition
 	 * @see #getPicture()
 	 * @generated
 	 */
-	void setPicture(FunctionalityModuleSet value);
+	void setPicture(TaskSet value);
 
 } // RegFunctionalityTestDefinition

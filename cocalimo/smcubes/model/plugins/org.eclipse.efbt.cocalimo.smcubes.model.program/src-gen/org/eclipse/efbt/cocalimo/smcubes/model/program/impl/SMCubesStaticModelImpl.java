@@ -2,7 +2,7 @@
  */
 package org.eclipse.efbt.cocalimo.smcubes.model.program.impl;
 
-import org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModuleModule;
+import org.eclipse.efbt.cocalimo.core.model.task.TaskModule;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.RequirementsModule;
 
@@ -39,7 +39,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.program.impl.SMCubesStaticModelImpl#getTests <em>Tests</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.program.impl.SMCubesStaticModelImpl#getTestTemplates <em>Test Templates</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.program.impl.SMCubesStaticModelImpl#getTestConstriants <em>Test Constriants</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.program.impl.SMCubesStaticModelImpl#getFunctionalityModules <em>Functionality Modules</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.program.impl.SMCubesStaticModelImpl#getTasks <em>Functionality Modules</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.program.impl.SMCubesStaticModelImpl#getRegFunctionalityTests <em>Reg Functionality Tests</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.program.impl.SMCubesStaticModelImpl#getRegFunctionalityTestDefinitions <em>Reg Functionality Test Definitions</em>}</li>
  * </ul>
@@ -108,14 +108,14 @@ public class SMCubesStaticModelImpl extends StaticModelImpl implements SMCubesSt
 	protected BDDTestContraints testConstriants;
 
 	/**
-	 * The cached value of the '{@link #getFunctionalityModules() <em>Functionality Modules</em>}' reference.
+	 * The cached value of the '{@link #getTasks() <em>Functionality Modules</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getFunctionalityModules()
+	 * @see #getTasks()
 	 * @generated
 	 * @ordered
 	 */
-	protected FunctionalityModuleModule functionalityModules;
+	protected TaskModule functionalityModules;
 
 	/**
 	 * The cached value of the '{@link #getRegFunctionalityTests() <em>Reg Functionality Tests</em>}' reference.
@@ -402,13 +402,13 @@ public class SMCubesStaticModelImpl extends StaticModelImpl implements SMCubesSt
 	 * @generated
 	 */
 	@Override
-	public FunctionalityModuleModule getFunctionalityModules() {
+	public TaskModule getTasks() {
 		if (functionalityModules != null && functionalityModules.eIsProxy()) {
-			InternalEObject oldFunctionalityModules = (InternalEObject)functionalityModules;
-			functionalityModules = (FunctionalityModuleModule)eResolveProxy(oldFunctionalityModules);
-			if (functionalityModules != oldFunctionalityModules) {
+			InternalEObject oldTasks = (InternalEObject)functionalityModules;
+			functionalityModules = (TaskModule)eResolveProxy(oldTasks);
+			if (functionalityModules != oldTasks) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ProgramPackage.SM_CUBES_STATIC_MODEL__FUNCTIONALITY_MODULES, oldFunctionalityModules, functionalityModules));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ProgramPackage.SM_CUBES_STATIC_MODEL__TASKS, oldTasks, functionalityModules));
 			}
 		}
 		return functionalityModules;
@@ -419,7 +419,7 @@ public class SMCubesStaticModelImpl extends StaticModelImpl implements SMCubesSt
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public FunctionalityModuleModule basicGetFunctionalityModules() {
+	public TaskModule basicGetTasks() {
 		return functionalityModules;
 	}
 
@@ -429,11 +429,11 @@ public class SMCubesStaticModelImpl extends StaticModelImpl implements SMCubesSt
 	 * @generated
 	 */
 	@Override
-	public void setFunctionalityModules(FunctionalityModuleModule newFunctionalityModules) {
-		FunctionalityModuleModule oldFunctionalityModules = functionalityModules;
-		functionalityModules = newFunctionalityModules;
+	public void setTasks(TaskModule newTasks) {
+		TaskModule oldTasks = functionalityModules;
+		functionalityModules = newTasks;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProgramPackage.SM_CUBES_STATIC_MODEL__FUNCTIONALITY_MODULES, oldFunctionalityModules, functionalityModules));
+			eNotify(new ENotificationImpl(this, Notification.SET, ProgramPackage.SM_CUBES_STATIC_MODEL__TASKS, oldTasks, functionalityModules));
 	}
 
 	/**
@@ -542,9 +542,9 @@ public class SMCubesStaticModelImpl extends StaticModelImpl implements SMCubesSt
 			case ProgramPackage.SM_CUBES_STATIC_MODEL__TEST_CONSTRIANTS:
 				if (resolve) return getTestConstriants();
 				return basicGetTestConstriants();
-			case ProgramPackage.SM_CUBES_STATIC_MODEL__FUNCTIONALITY_MODULES:
-				if (resolve) return getFunctionalityModules();
-				return basicGetFunctionalityModules();
+			case ProgramPackage.SM_CUBES_STATIC_MODEL__TASKS:
+				if (resolve) return getTasks();
+				return basicGetTasks();
 			case ProgramPackage.SM_CUBES_STATIC_MODEL__REG_FUNCTIONALITY_TESTS:
 				if (resolve) return getRegFunctionalityTests();
 				return basicGetRegFunctionalityTests();
@@ -581,8 +581,8 @@ public class SMCubesStaticModelImpl extends StaticModelImpl implements SMCubesSt
 			case ProgramPackage.SM_CUBES_STATIC_MODEL__TEST_CONSTRIANTS:
 				setTestConstriants((BDDTestContraints)newValue);
 				return;
-			case ProgramPackage.SM_CUBES_STATIC_MODEL__FUNCTIONALITY_MODULES:
-				setFunctionalityModules((FunctionalityModuleModule)newValue);
+			case ProgramPackage.SM_CUBES_STATIC_MODEL__TASKS:
+				setTasks((TaskModule)newValue);
 				return;
 			case ProgramPackage.SM_CUBES_STATIC_MODEL__REG_FUNCTIONALITY_TESTS:
 				setRegFunctionalityTests((SMCubesRegFunctionalityTestModule)newValue);
@@ -620,8 +620,8 @@ public class SMCubesStaticModelImpl extends StaticModelImpl implements SMCubesSt
 			case ProgramPackage.SM_CUBES_STATIC_MODEL__TEST_CONSTRIANTS:
 				setTestConstriants((BDDTestContraints)null);
 				return;
-			case ProgramPackage.SM_CUBES_STATIC_MODEL__FUNCTIONALITY_MODULES:
-				setFunctionalityModules((FunctionalityModuleModule)null);
+			case ProgramPackage.SM_CUBES_STATIC_MODEL__TASKS:
+				setTasks((TaskModule)null);
 				return;
 			case ProgramPackage.SM_CUBES_STATIC_MODEL__REG_FUNCTIONALITY_TESTS:
 				setRegFunctionalityTests((SMCubesRegFunctionalityTestModule)null);
@@ -653,7 +653,7 @@ public class SMCubesStaticModelImpl extends StaticModelImpl implements SMCubesSt
 				return testTemplates != null;
 			case ProgramPackage.SM_CUBES_STATIC_MODEL__TEST_CONSTRIANTS:
 				return testConstriants != null;
-			case ProgramPackage.SM_CUBES_STATIC_MODEL__FUNCTIONALITY_MODULES:
+			case ProgramPackage.SM_CUBES_STATIC_MODEL__TASKS:
 				return functionalityModules != null;
 			case ProgramPackage.SM_CUBES_STATIC_MODEL__REG_FUNCTIONALITY_TESTS:
 				return regFunctionalityTests != null;

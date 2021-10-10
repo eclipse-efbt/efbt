@@ -2,10 +2,6 @@
  */
 package org.eclipse.efbt.cocalimo.core.model.scenarios.impl;
 
-import org.eclipse.efbt.cocalimo.core.model.functionality_module.Functionality_modulePackage;
-
-import org.eclipse.efbt.cocalimo.core.model.functionality_module.impl.Functionality_modulePackageImpl;
-
 import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementPackage;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.Requirements_textPackage;
@@ -17,12 +13,17 @@ import org.eclipse.efbt.cocalimo.core.model.scenarios.ScenarioTag;
 import org.eclipse.efbt.cocalimo.core.model.scenarios.ScenariosFactory;
 import org.eclipse.efbt.cocalimo.core.model.scenarios.ScenariosPackage;
 
+import org.eclipse.efbt.cocalimo.core.model.task.TaskPackage;
+
+import org.eclipse.efbt.cocalimo.core.model.task.impl.TaskPackageImpl;
+
+import org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-
 import org.eclipse.emf.ecore.EcorePackage;
+
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
@@ -111,18 +112,20 @@ public class ScenariosPackageImpl extends EPackageImpl implements ScenariosPacka
 		EcorePackage.eINSTANCE.eClass();
 		Module_managementPackage.eINSTANCE.eClass();
 		Requirements_textPackage.eINSTANCE.eClass();
+		CorePackage.eINSTANCE.eClass();
+		org.eclipse.efbt.cocalimo.smcubes.model.data_definition.Data_definitionPackage.eINSTANCE.eClass();
 
 		// Obtain or create and register interdependencies
-		Object registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Functionality_modulePackage.eNS_URI);
-		Functionality_modulePackageImpl theFunctionality_modulePackage = (Functionality_modulePackageImpl)(registeredPackage instanceof Functionality_modulePackageImpl ? registeredPackage : Functionality_modulePackage.eINSTANCE);
+		Object registeredPackage = EPackage.Registry.INSTANCE.getEPackage(TaskPackage.eNS_URI);
+		TaskPackageImpl theTaskPackage = (TaskPackageImpl)(registeredPackage instanceof TaskPackageImpl ? registeredPackage : TaskPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theScenariosPackage.createPackageContents();
-		theFunctionality_modulePackage.createPackageContents();
+		theTaskPackage.createPackageContents();
 
 		// Initialize created meta-data
 		theScenariosPackage.initializePackageContents();
-		theFunctionality_modulePackage.initializePackageContents();
+		theTaskPackage.initializePackageContents();
 
 		// Mark meta-data to indicate it can't be changed
 		theScenariosPackage.freeze();

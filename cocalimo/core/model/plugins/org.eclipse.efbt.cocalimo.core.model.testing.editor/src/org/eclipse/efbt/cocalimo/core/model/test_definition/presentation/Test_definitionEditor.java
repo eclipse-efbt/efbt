@@ -157,7 +157,7 @@ import org.eclipse.emf.edit.ui.view.ExtendedPropertySheetPage;
 
 import org.eclipse.efbt.cocalimo.core.model.test_definition.provider.Test_definitionItemProviderAdapterFactory;
 
-import org.eclipse.efbt.cocalimo.core.model.functionality_module.provider.Functionality_moduleItemProviderAdapterFactory;
+import org.eclipse.efbt.cocalimo.core.model.task.provider.TaskItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.core.model.module_management.provider.Module_managementItemProviderAdapterFactory;
 
@@ -726,7 +726,7 @@ public class Test_definitionEditor
 		adapterFactory.addAdapterFactory(new Test_definitionItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Test_input_dataItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new TestItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new Functionality_moduleItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new TaskItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new ScenariosItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Module_managementItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Requirements_textItemProviderAdapterFactory());

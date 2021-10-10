@@ -1,16 +1,16 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.eclipse.efbt.cocalimo.core.model.functionality_module;singleton:=true
-Automatic-Module-Name: org.eclipse.efbt.cocalimo.core.model.functionality_module
+Bundle-SymbolicName: org.eclipse.efbt.cocalimo.core.model.task;singleton:=true
+Automatic-Module-Name: org.eclipse.efbt.cocalimo.core.model.task
 Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Export-Package: org.eclipse.efbt.cocalimo.core.model.functionality_module,
- org.eclipse.efbt.cocalimo.core.model.functionality_module.impl,
- org.eclipse.efbt.cocalimo.core.model.functionality_module.util,
+Export-Package: org.eclipse.efbt.cocalimo.core.model.task,
+ org.eclipse.efbt.cocalimo.core.model.task.impl,
+ org.eclipse.efbt.cocalimo.core.model.task.util,
  org.eclipse.efbt.cocalimo.core.model.scenarios,
  org.eclipse.efbt.cocalimo.core.model.scenarios.impl,
  org.eclipse.efbt.cocalimo.core.model.scenarios.util
@@ -19,6 +19,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore.xmi;visibility:=reexport,
  org.eclipse.efbt.cocalimo.core.model.module_management;visibility:=reexport,
  org.eclipse.efbt.cocalimo.core.model.requirements_text;visibility:=reexport,
+ org.eclipse.efbt.cocalimo.smcubes.model.core;visibility:=reexport,
  org.emfjson.jackson,
  com.fasterxml.jackson.core.jackson-databind
 Bundle-ActivationPolicy: lazy
