@@ -5,10 +5,7 @@ package org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.impl;
 import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementPackage;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.Requirements_textPackage;
-
-import org.eclipse.efbt.cocalimo.core.model.scenarios.ScenariosPackage;
-
-import org.eclipse.efbt.cocalimo.core.model.task.TaskPackage;
+import org.eclipse.efbt.cocalimo.smcubes.model.task.TaskPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.AortaSMCubesModel;
 import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.Aorta_smcubesFactory;
@@ -159,7 +156,7 @@ public class Aorta_smcubesPackageImpl extends EPackageImpl implements Aorta_smcu
 		Smcubes_modelPackage.eINSTANCE.eClass();
 		Vtl_transformationPackage.eINSTANCE.eClass();
 		TaskPackage.eINSTANCE.eClass();
-		ScenariosPackage.eINSTANCE.eClass();
+		org.eclipse.efbt.cocalimo.smcubes.model.scenarios.ScenariosPackage.eINSTANCE.eClass();
 
 		// Create package meta-data objects
 		theAorta_smcubesPackage.createPackageContents();
@@ -516,7 +513,7 @@ public class Aorta_smcubesPackageImpl extends EPackageImpl implements Aorta_smcu
 		ReportsPackage theReportsPackage = (ReportsPackage)EPackage.Registry.INSTANCE.getEPackage(ReportsPackage.eNS_URI);
 		Input_dataPackage theInput_dataPackage = (Input_dataPackage)EPackage.Registry.INSTANCE.getEPackage(Input_dataPackage.eNS_URI);
 		Module_managementPackage theModule_managementPackage = (Module_managementPackage)EPackage.Registry.INSTANCE.getEPackage(Module_managementPackage.eNS_URI);
-		ScenariosPackage theScenariosPackage = (ScenariosPackage)EPackage.Registry.INSTANCE.getEPackage(ScenariosPackage.eNS_URI);
+		org.eclipse.efbt.cocalimo.smcubes.model.scenarios.ScenariosPackage theScenariosPackage = (org.eclipse.efbt.cocalimo.smcubes.model.scenarios.ScenariosPackage)EPackage.Registry.INSTANCE.getEPackage(org.eclipse.efbt.cocalimo.smcubes.model.scenarios.ScenariosPackage.eNS_URI);
 
 		// Create type parameters
 

@@ -6,7 +6,7 @@ import org.eclipse.efbt.cocalimo.core.model.module_management.provider.Module_ma
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.provider.Requirements_textEditPlugin;
 
-import org.eclipse.efbt.cocalimo.core.model.task.provider.TaskEditPlugin;
+import org.eclipse.efbt.cocalimo.smcubes.model.task.provider.TaskEditPlugin;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.provider.SmcubesEditPlugin;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.input_data.provider.Input_dataEditPlugin;

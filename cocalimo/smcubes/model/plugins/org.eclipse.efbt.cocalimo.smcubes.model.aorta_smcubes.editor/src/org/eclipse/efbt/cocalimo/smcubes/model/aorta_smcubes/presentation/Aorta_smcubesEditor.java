@@ -160,10 +160,7 @@ import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.provider.Aorta_smcu
 import org.eclipse.efbt.cocalimo.core.model.module_management.provider.Module_managementItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.provider.Requirements_textItemProviderAdapterFactory;
-
-import org.eclipse.efbt.cocalimo.core.model.scenarios.provider.ScenariosItemProviderAdapterFactory;
-
-import org.eclipse.efbt.cocalimo.core.model.task.provider.TaskItemProviderAdapterFactory;
+import org.eclipse.efbt.cocalimo.smcubes.model.task.provider.TaskItemProviderAdapterFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.input_data.provider.Input_dataItemProviderAdapterFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.provider.CoreItemProviderAdapterFactory;
 
@@ -756,7 +753,7 @@ public class Aorta_smcubesEditor
 		adapterFactory.addAdapterFactory(new Smcubes_modelItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Vtl_transformationItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new TaskItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new ScenariosItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new org.eclipse.efbt.cocalimo.smcubes.model.scenarios.provider.ScenariosItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 
 		// Create the command stack that will notify this editor as commands are executed.

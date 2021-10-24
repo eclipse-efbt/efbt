@@ -20,9 +20,9 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.efbt.cocalimo.core.model.task.Task;
-import org.eclipse.efbt.cocalimo.core.model.task.TaskModule;
-import org.eclipse.efbt.cocalimo.core.model.task.TaskFactory;
+import org.eclipse.efbt.cocalimo.smcubes.model.task.Task;
+import org.eclipse.efbt.cocalimo.smcubes.model.task.TaskModule;
+import org.eclipse.efbt.cocalimo.smcubes.model.task.TaskFactory;
 import org.eclipse.efbt.cocalimo.core.model.module_management.ModuleDependencies;
 import org.eclipse.efbt.cocalimo.core.model.module_management.ModuleDependency;
 import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementFactory;

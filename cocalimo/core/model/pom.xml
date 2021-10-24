@@ -35,16 +35,13 @@
 		<additionalTestArguments></additionalTestArguments>
 	</properties>
 	<modules>
-		<module>releng/org.eclipse.efbt.cocalimo.core.model.target</module>
-		<module>plugins/org.eclipse.efbt.cocalimo.core.model.task</module>		
+		<module>releng/org.eclipse.efbt.cocalimo.core.model.target</module>	
 		<module>plugins/org.eclipse.efbt.cocalimo.core.model.module_management</module>
 		<module>plugins/org.eclipse.efbt.cocalimo.core.model.requirements_text</module>
-		<module>plugins/org.eclipse.efbt.cocalimo.core.model.platform_call</module>
-		<module>plugins/org.eclipse.efbt.cocalimo.core.model.task.edit</module>		
+		<module>plugins/org.eclipse.efbt.cocalimo.core.model.platform_call</module>	
 		<module>plugins/org.eclipse.efbt.cocalimo.core.model.module_management.edit</module>
 		<module>plugins/org.eclipse.efbt.cocalimo.core.model.requirements_text.edit</module>
-		<module>plugins/org.eclipse.efbt.cocalimo.core.model.platform_call.edit</module>
-		<module>plugins/org.eclipse.efbt.cocalimo.core.model.task.editor</module>		
+		<module>plugins/org.eclipse.efbt.cocalimo.core.model.platform_call.edit</module>		
 		<module>plugins/org.eclipse.efbt.cocalimo.core.model.module_management.editor</module>
 		<module>plugins/org.eclipse.efbt.cocalimo.core.model.requirements_text.editor</module>
 		<module>plugins/org.eclipse.efbt.cocalimo.core.model.platform_call.editor</module>

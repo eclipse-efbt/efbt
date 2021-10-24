@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <!-- @generated task -->
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="org.eclipse.efbt.cocalimo.smcubes.model.task.presentation.TaskModelWizardID"
+            name="%_UI_TaskModelWizard_label"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.task.presentation.TaskModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/TaskModelFile.gif">
+         <description>%_UI_TaskModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <!-- @generated task -->
+      <editor
+            id="org.eclipse.efbt.cocalimo.smcubes.model.task.presentation.TaskEditorID"
+            name="%_UI_TaskEditor_label"
+            icon="icons/full/obj16/TaskModelFile.gif"
+            extensions="task"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.task.presentation.TaskEditor"
+            contributorClass="org.eclipse.efbt.cocalimo.smcubes.model.task.presentation.TaskActionBarContributor">
+      </editor>
+   </extension>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <!-- @generated task -->
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="org.eclipse.efbt.cocalimo.smcubes.model.scenarios.presentation.ScenariosModelWizardID"
+            name="%_UI_ScenariosModelWizard_label"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.scenarios.presentation.ScenariosModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/ScenariosModelFile.gif">
+         <description>%_UI_ScenariosModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <!-- @generated task -->
+      <editor
+            id="org.eclipse.efbt.cocalimo.smcubes.model.scenarios.presentation.ScenariosEditorID"
+            name="%_UI_ScenariosEditor_label"
+            icon="icons/full/obj16/ScenariosModelFile.gif"
+            extensions="scenarios"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.scenarios.presentation.ScenariosEditor"
+            contributorClass="org.eclipse.efbt.cocalimo.smcubes.model.scenarios.presentation.ScenariosActionBarContributor">
+      </editor>
+   </extension>
+
+</plugin>

@@ -2,12 +2,10 @@
  */
 package org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes;
 
-import org.eclipse.efbt.cocalimo.core.model.scenarios.Scenario;
-
-import org.eclipse.efbt.cocalimo.core.model.task.DataProcessingTask;
-import org.eclipse.efbt.cocalimo.core.model.task.ReadDataSourceTask;
-import org.eclipse.efbt.cocalimo.core.model.task.ReportCellCreationTask;
-import org.eclipse.efbt.cocalimo.core.model.task.TaskSet;
+import org.eclipse.efbt.cocalimo.smcubes.model.task.DataProcessingTask;
+import org.eclipse.efbt.cocalimo.smcubes.model.task.ReadDataSourceTask;
+import org.eclipse.efbt.cocalimo.smcubes.model.task.ReportCellCreationTask;
+import org.eclipse.efbt.cocalimo.smcubes.model.task.TaskSet;
 
 import org.eclipse.emf.common.util.EList;
 
@@ -41,7 +39,7 @@ import org.eclipse.emf.ecore.EObject;
 public interface TestDefinition extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Read Tasks</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.core.model.task.ReadDataSourceTask}.
+	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.smcubes.model.task.ReadDataSourceTask}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
@@ -56,7 +54,7 @@ public interface TestDefinition extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Processing Tasks</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.core.model.task.DataProcessingTask}.
+	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.smcubes.model.task.DataProcessingTask}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
@@ -71,7 +69,7 @@ public interface TestDefinition extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Report Cell Creation Tasks</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.core.model.task.ReportCellCreationTask}.
+	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.smcubes.model.task.ReportCellCreationTask}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
@@ -86,7 +84,7 @@ public interface TestDefinition extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Scenarios</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.core.model.scenarios.Scenario}.
+	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.smcubes.model.scenarios.Scenario}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
@@ -97,7 +95,7 @@ public interface TestDefinition extends EObject {
 	 * @model
 	 * @generated
 	 */
-	EList<Scenario> getScenarios();
+	EList<org.eclipse.efbt.cocalimo.smcubes.model.scenarios.Scenario> getScenarios();
 
 	/**
 	 * Returns the value of the '<em><b>Picture</b></em>' reference.
