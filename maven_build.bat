@@ -1,16 +1,16 @@
 cd cocalimo\core\model
 call mvn install
 cd ..\..\..
-cd cocalimo\core\ui_sirius
-call mvn install
-cd ..\..\..
 cd cocalimo\smcubes\model
 call mvn install
 cd ..\..\..
  cd cocalimo\smcubes\modelquery
 call mvn install
 cd ..\..\..
- cd cocalimo\smcubes\ui_sirius
+cd cocalimo\core\ui_sirius
+call mvn install
+cd ..\..\..
+cd cocalimo\smcubes\ui_sirius
 call mvn install
 cd ..\..\..
 cd cocalimo\examples
