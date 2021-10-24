@@ -192,7 +192,7 @@ public class Input_dataPackageImpl extends EPackageImpl implements Input_dataPac
 	 * @generated
 	 */
 	@Override
-	public EReference getInputData_SourceTableData() {
+	public EReference getInputData_SourceCubeData() {
 		return (EReference)inputDataEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -342,7 +342,7 @@ public class Input_dataPackageImpl extends EPackageImpl implements Input_dataPac
 		createEAttribute(cellWithValueEClass, CELL_WITH_VALUE__VALUE);
 
 		inputDataEClass = createEClass(INPUT_DATA);
-		createEReference(inputDataEClass, INPUT_DATA__SOURCE_TABLE_DATA);
+		createEReference(inputDataEClass, INPUT_DATA__SOURCE_CUBE_DATA);
 		createEAttribute(inputDataEClass, INPUT_DATA__NAME);
 
 		cellEClass = createEClass(CELL);
@@ -402,7 +402,7 @@ public class Input_dataPackageImpl extends EPackageImpl implements Input_dataPac
 		initEAttribute(getCellWithValue_Value(), ecorePackage.getEString(), "value", null, 0, 1, CellWithValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(inputDataEClass, InputData.class, "InputData", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getInputData_SourceTableData(), this.getCubeData(), null, "sourceCubeData", null, 0, -1, InputData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
+		initEReference(getInputData_SourceCubeData(), this.getCubeData(), null, "sourceCubeData", null, 0, -1, InputData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
 		initEAttribute(getInputData_Name(), ecorePackage.getEString(), "name", null, 0, 1, InputData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(cellEClass, Cell.class, "Cell", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -460,11 +460,11 @@ public class Input_dataPackageImpl extends EPackageImpl implements Input_dataPac
 			   "name", "value"
 		   });
 		addAnnotation
-		  (getInputData_SourceTableData(),
+		  (getInputData_SourceCubeData(),
 		   source,
 		   new String[] {
 			   "kind", "element",
-			   "name", "sourceCubeData"
+			   "name", "sourceTableData"
 		   });
 		addAnnotation
 		  (getInputData_Name(),

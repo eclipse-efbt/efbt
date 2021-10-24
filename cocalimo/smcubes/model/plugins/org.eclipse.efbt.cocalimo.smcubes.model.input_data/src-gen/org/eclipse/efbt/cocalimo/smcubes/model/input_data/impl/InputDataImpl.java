@@ -30,7 +30,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.input_data.impl.InputDataImpl#getSourceTableData <em>Source Table Data</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.input_data.impl.InputDataImpl#getSourceCubeData <em>Source Cube Data</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.input_data.impl.InputDataImpl#getName <em>Name</em>}</li>
  * </ul>
  *
@@ -38,10 +38,10 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class InputDataImpl extends MinimalEObjectImpl.Container implements InputData {
 	/**
-	 * The cached value of the '{@link #getSourceTableData() <em>Source Table Data</em>}' containment reference list.
+	 * The cached value of the '{@link #getSourceCubeData() <em>Source Cube Data</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getSourceTableData()
+	 * @see #getSourceCubeData()
 	 * @generated
 	 * @ordered
 	 */
@@ -92,9 +92,9 @@ public class InputDataImpl extends MinimalEObjectImpl.Container implements Input
 	 * @generated
 	 */
 	@Override
-	public EList<CubeData> getSourceTableData() {
+	public EList<CubeData> getSourceCubeData() {
 		if (sourceCubeData == null) {
-			sourceCubeData = new EObjectContainmentEList<CubeData>(CubeData.class, this, Input_dataPackage.INPUT_DATA__SOURCE_TABLE_DATA);
+			sourceCubeData = new EObjectContainmentEList<CubeData>(CubeData.class, this, Input_dataPackage.INPUT_DATA__SOURCE_CUBE_DATA);
 		}
 		return sourceCubeData;
 	}
@@ -130,8 +130,8 @@ public class InputDataImpl extends MinimalEObjectImpl.Container implements Input
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case Input_dataPackage.INPUT_DATA__SOURCE_TABLE_DATA:
-				return ((InternalEList<?>)getSourceTableData()).basicRemove(otherEnd, msgs);
+			case Input_dataPackage.INPUT_DATA__SOURCE_CUBE_DATA:
+				return ((InternalEList<?>)getSourceCubeData()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -144,8 +144,8 @@ public class InputDataImpl extends MinimalEObjectImpl.Container implements Input
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case Input_dataPackage.INPUT_DATA__SOURCE_TABLE_DATA:
-				return getSourceTableData();
+			case Input_dataPackage.INPUT_DATA__SOURCE_CUBE_DATA:
+				return getSourceCubeData();
 			case Input_dataPackage.INPUT_DATA__NAME:
 				return getName();
 		}
@@ -161,9 +161,9 @@ public class InputDataImpl extends MinimalEObjectImpl.Container implements Input
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case Input_dataPackage.INPUT_DATA__SOURCE_TABLE_DATA:
-				getSourceTableData().clear();
-				getSourceTableData().addAll((Collection<? extends CubeData>)newValue);
+			case Input_dataPackage.INPUT_DATA__SOURCE_CUBE_DATA:
+				getSourceCubeData().clear();
+				getSourceCubeData().addAll((Collection<? extends CubeData>)newValue);
 				return;
 			case Input_dataPackage.INPUT_DATA__NAME:
 				setName((String)newValue);
@@ -180,8 +180,8 @@ public class InputDataImpl extends MinimalEObjectImpl.Container implements Input
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case Input_dataPackage.INPUT_DATA__SOURCE_TABLE_DATA:
-				getSourceTableData().clear();
+			case Input_dataPackage.INPUT_DATA__SOURCE_CUBE_DATA:
+				getSourceCubeData().clear();
 				return;
 			case Input_dataPackage.INPUT_DATA__NAME:
 				setName(NAME_EDEFAULT);
@@ -198,7 +198,7 @@ public class InputDataImpl extends MinimalEObjectImpl.Container implements Input
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case Input_dataPackage.INPUT_DATA__SOURCE_TABLE_DATA:
+			case Input_dataPackage.INPUT_DATA__SOURCE_CUBE_DATA:
 				return sourceCubeData != null && !sourceCubeData.isEmpty();
 			case Input_dataPackage.INPUT_DATA__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);

@@ -228,13 +228,13 @@ public interface Input_dataPackage extends EPackage {
 	int INPUT_DATA = 2;
 
 	/**
-	 * The feature id for the '<em><b>Source Table Data</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Source Cube Data</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int INPUT_DATA__SOURCE_TABLE_DATA = 0;
+	int INPUT_DATA__SOURCE_CUBE_DATA = 0;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -418,15 +418,15 @@ public interface Input_dataPackage extends EPackage {
 	EClass getInputData();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.smcubes.model.input_data.InputData#getSourceTableData <em>Source Table Data</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.smcubes.model.input_data.InputData#getSourceCubeData <em>Source Cube Data</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Source Table Data</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.input_data.InputData#getSourceTableData()
+	 * @return the meta object for the containment reference list '<em>Source Cube Data</em>'.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.input_data.InputData#getSourceCubeData()
 	 * @see #getInputData()
 	 * @generated
 	 */
-	EReference getInputData_SourceTableData();
+	EReference getInputData_SourceCubeData();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.smcubes.model.input_data.InputData#getName <em>Name</em>}'.
@@ -616,12 +616,12 @@ public interface Input_dataPackage extends EPackage {
 		EClass INPUT_DATA = eINSTANCE.getInputData();
 
 		/**
-		 * The meta object literal for the '<em><b>Source Table Data</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Source Cube Data</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference INPUT_DATA__SOURCE_TABLE_DATA = eINSTANCE.getInputData_SourceTableData();
+		EReference INPUT_DATA__SOURCE_CUBE_DATA = eINSTANCE.getInputData_SourceCubeData();
 
 		/**
 		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.

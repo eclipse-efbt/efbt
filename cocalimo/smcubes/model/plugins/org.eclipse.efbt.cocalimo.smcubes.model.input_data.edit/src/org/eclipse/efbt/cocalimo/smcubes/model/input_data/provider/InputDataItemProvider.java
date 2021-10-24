@@ -102,7 +102,7 @@ public class InputDataItemProvider
 	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
-			childrenFeatures.add(Input_dataPackage.Literals.INPUT_DATA__SOURCE_TABLE_DATA);
+			childrenFeatures.add(Input_dataPackage.Literals.INPUT_DATA__SOURCE_CUBE_DATA);
 		}
 		return childrenFeatures;
 	}
@@ -161,7 +161,7 @@ public class InputDataItemProvider
 			case Input_dataPackage.INPUT_DATA__NAME:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
-			case Input_dataPackage.INPUT_DATA__SOURCE_TABLE_DATA:
+			case Input_dataPackage.INPUT_DATA__SOURCE_CUBE_DATA:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
@@ -181,7 +181,7 @@ public class InputDataItemProvider
 
 		newChildDescriptors.add
 			(createChildParameter
-				(Input_dataPackage.Literals.INPUT_DATA__SOURCE_TABLE_DATA,
+				(Input_dataPackage.Literals.INPUT_DATA__SOURCE_CUBE_DATA,
 				 Input_dataFactory.eINSTANCE.createCubeData()));
 	}
 

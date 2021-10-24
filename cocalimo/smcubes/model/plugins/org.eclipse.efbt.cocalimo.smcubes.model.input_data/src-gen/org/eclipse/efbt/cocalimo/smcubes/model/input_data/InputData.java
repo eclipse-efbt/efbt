@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.input_data.InputData#getSourceTableData <em>Source Table Data</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.input_data.InputData#getSourceCubeData <em>Source Cube Data</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.input_data.InputData#getName <em>Name</em>}</li>
  * </ul>
  *
@@ -29,20 +29,20 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface InputData extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Source Table Data</b></em>' containment reference list.
+	 * Returns the value of the '<em><b>Source Cube Data</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.smcubes.model.input_data.CubeData}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * The set of pupulated Cubes that represent the input data.
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Source Table Data</em>' containment reference list.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.input_data.Input_dataPackage#getInputData_SourceTableData()
+	 * @return the value of the '<em>Source Cube Data</em>' containment reference list.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.input_data.Input_dataPackage#getInputData_SourceCubeData()
 	 * @model containment="true" ordered="false"
-	 *        extendedMetaData="kind='element' name='sourceCubeData'"
+	 *        extendedMetaData="kind='element' name='sourceTableData'"
 	 * @generated
 	 */
-	EList<CubeData> getSourceTableData();
+	EList<CubeData> getSourceCubeData();
 
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
