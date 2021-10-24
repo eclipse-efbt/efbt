@@ -127,11 +127,11 @@ Exhibit A – Form of Secondary Licenses Notice
       <import plugin="org.eclipse.efbt.cocalimo.core.model.module_management"/>
       <import plugin="org.emfjson.jackson"/>
       <import plugin="com.fasterxml.jackson.core.jackson-databind" version="2.9.1" match="perfect"/>
-      <import plugin="org.eclipse.efbt.cocalimo.core.model.task"/>
+      <import plugin="org.eclipse.efbt.cocalimo.smcubes.model.task"/>
       <import plugin="org.eclipse.efbt.cocalimo.core.model.requirements_text"/>
       <import plugin="org.eclipse.emf.edit"/>
       <import plugin="org.eclipse.efbt.cocalimo.core.model.module_management.edit"/>
-      <import plugin="org.eclipse.efbt.cocalimo.core.model.task.edit"/>
+      <import plugin="org.eclipse.efbt.cocalimo.smcubes.model.task.edit"/>
       <import plugin="org.eclipse.efbt.cocalimo.core.model.requirements_text.edit"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.emf.edit.ui"/>
@@ -202,5 +202,26 @@ Exhibit A – Form of Secondary Licenses Notice
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
+        
+   <plugin
+         id="org.eclipse.efbt.cocalimo.smcubes.model.task"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+	     
+   <plugin
+         id="org.eclipse.efbt.cocalimo.smcubes.model.task.edit"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+	     
+   <plugin
+         id="org.eclipse.efbt.cocalimo.smcubes.model.task.editor"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+	
 </feature>

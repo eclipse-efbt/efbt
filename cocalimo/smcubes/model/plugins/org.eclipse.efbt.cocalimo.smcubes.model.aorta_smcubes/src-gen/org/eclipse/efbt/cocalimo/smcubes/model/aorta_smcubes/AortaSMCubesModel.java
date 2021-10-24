@@ -4,7 +4,7 @@ package org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.RequirementsModule;
 
-import org.eclipse.efbt.cocalimo.core.model.task.TaskModule;
+import org.eclipse.efbt.cocalimo.smcubes.model.task.TaskModule;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.SmcubesModel;
 

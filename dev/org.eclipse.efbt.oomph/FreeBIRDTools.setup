@@ -125,12 +125,6 @@
             xsi:type="predicates:NotPredicate">
           <operand
               xsi:type="predicates:NamePredicate"
-              pattern=".*\.eclipse.efbt.cocalimo.smcubes_with_lineage.*"/>
-        </operand>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
               pattern=".*\.edit"/>
         </operand>
         <operand

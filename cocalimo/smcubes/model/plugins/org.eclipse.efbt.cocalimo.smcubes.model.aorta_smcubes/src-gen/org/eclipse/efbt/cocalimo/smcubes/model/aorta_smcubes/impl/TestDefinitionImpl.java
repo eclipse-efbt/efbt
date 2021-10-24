@@ -3,13 +3,10 @@
 package org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.impl;
 
 import java.util.Collection;
-
-import org.eclipse.efbt.cocalimo.core.model.scenarios.Scenario;
-
-import org.eclipse.efbt.cocalimo.core.model.task.DataProcessingTask;
-import org.eclipse.efbt.cocalimo.core.model.task.ReadDataSourceTask;
-import org.eclipse.efbt.cocalimo.core.model.task.ReportCellCreationTask;
-import org.eclipse.efbt.cocalimo.core.model.task.TaskSet;
+import org.eclipse.efbt.cocalimo.smcubes.model.task.DataProcessingTask;
+import org.eclipse.efbt.cocalimo.smcubes.model.task.ReadDataSourceTask;
+import org.eclipse.efbt.cocalimo.smcubes.model.task.ReportCellCreationTask;
+import org.eclipse.efbt.cocalimo.smcubes.model.task.TaskSet;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.Aorta_smcubesPackage;
 import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinition;
@@ -83,7 +80,7 @@ public class TestDefinitionImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<Scenario> scenarios;
+	protected EList<org.eclipse.efbt.cocalimo.smcubes.model.scenarios.Scenario> scenarios;
 
 	/**
 	 * The cached value of the '{@link #getPicture() <em>Picture</em>}' reference.
@@ -179,9 +176,9 @@ public class TestDefinitionImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public EList<Scenario> getScenarios() {
+	public EList<org.eclipse.efbt.cocalimo.smcubes.model.scenarios.Scenario> getScenarios() {
 		if (scenarios == null) {
-			scenarios = new EObjectResolvingEList<Scenario>(Scenario.class, this, Aorta_smcubesPackage.TEST_DEFINITION__SCENARIOS);
+			scenarios = new EObjectResolvingEList<org.eclipse.efbt.cocalimo.smcubes.model.scenarios.Scenario>(org.eclipse.efbt.cocalimo.smcubes.model.scenarios.Scenario.class, this, Aorta_smcubesPackage.TEST_DEFINITION__SCENARIOS);
 		}
 		return scenarios;
 	}
@@ -297,7 +294,7 @@ public class TestDefinitionImpl extends MinimalEObjectImpl.Container implements 
 				return;
 			case Aorta_smcubesPackage.TEST_DEFINITION__SCENARIOS:
 				getScenarios().clear();
-				getScenarios().addAll((Collection<? extends Scenario>)newValue);
+				getScenarios().addAll((Collection<? extends org.eclipse.efbt.cocalimo.smcubes.model.scenarios.Scenario>)newValue);
 				return;
 			case Aorta_smcubesPackage.TEST_DEFINITION__PICTURE:
 				setPicture((TaskSet)newValue);

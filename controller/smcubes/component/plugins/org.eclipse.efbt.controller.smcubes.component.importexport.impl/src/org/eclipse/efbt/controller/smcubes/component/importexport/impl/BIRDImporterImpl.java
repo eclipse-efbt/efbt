@@ -976,7 +976,7 @@ public class BIRDImporterImpl extends Importer {
 					structuredData.setName(testID + ":" + cube +":CubeData" );
 					structuredData.setCube(getCubeForCubeName(cube));
 					tables.put(testID + ":" + cube, structuredData);
-					inputData.getSourceTableData().add(structuredData);
+					inputData.getSourceCubeData().add(structuredData);
 					table = structuredData;
 
 				}

@@ -23,6 +23,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.efbt.cocalimo.smcubes.model.input_data.edit;visibility:=reexport,
  org.eclipse.efbt.cocalimo.smcubes.model.core;visibility:=reexport,
  org.eclipse.efbt.cocalimo.smcubes.model.core.edit;visibility:=reexport,
- org.eclipse.efbt.cocalimo.core.model.task;visibility:=reexport,
- org.eclipse.efbt.cocalimo.core.model.task.edit;visibility:=reexport
+ org.eclipse.efbt.cocalimo.smcubes.model.task;visibility:=reexport,
+ org.eclipse.efbt.cocalimo.smcubes.model.task.edit;visibility:=reexport
 Bundle-ActivationPolicy: lazy

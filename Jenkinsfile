@@ -10,14 +10,14 @@ pipeline {
                 sh '''                                     
                     cd cocalimo/core/model
                     mvn install
-                    cd ../../..
-                    cd cocalimo/core/ui_sirius
-                    mvn install
-                    cd ../../..
+                    cd ../../..                    
                     cd cocalimo/smcubes/model
                     mvn install
                     cd ../../..
                     cd cocalimo/smcubes/modelquery
+                    mvn install
+                    cd ../../..
+                    cd cocalimo/core/ui_sirius
                     mvn install
                     cd ../../..
                     cd cocalimo/smcubes/ui_sirius

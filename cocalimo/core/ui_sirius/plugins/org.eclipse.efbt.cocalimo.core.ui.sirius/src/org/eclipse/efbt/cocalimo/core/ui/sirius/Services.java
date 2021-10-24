@@ -14,12 +14,11 @@ package org.eclipse.efbt.cocalimo.core.ui.sirius;
 
 import java.util.Iterator;
 
-import org.eclipse.efbt.cocalimo.core.model.task.Task;
-import org.eclipse.efbt.cocalimo.core.model.task.TaskTag;
-import org.eclipse.efbt.cocalimo.core.model.task.ScenarioSetTask;
-import org.eclipse.efbt.cocalimo.core.model.task.SerialTask;
-import org.eclipse.efbt.cocalimo.core.model.scenarios.Scenario;
-import org.eclipse.efbt.cocalimo.core.model.scenarios.ScenarioTag;
+import org.eclipse.efbt.cocalimo.smcubes.model.task.Task;
+import org.eclipse.efbt.cocalimo.smcubes.model.task.TaskTag;
+import org.eclipse.efbt.cocalimo.smcubes.model.task.SerialTask;
+import org.eclipse.efbt.cocalimo.smcubes.model.scenarios.Scenario;
+import org.eclipse.efbt.cocalimo.smcubes.model.scenarios.ScenarioTag;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
@@ -59,7 +58,7 @@ public class Services {
 
 		boolean addIt = false;
 		if (container != null && ((container instanceof SerialTask)
-				|| container instanceof ScenarioSetTask))
+				))
 		// why do we include ScenarioSetFunctionalModule in the if statement,
 		// there may be a good reason but should check.
 		{

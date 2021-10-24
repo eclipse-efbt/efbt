@@ -69,7 +69,7 @@ public class InputDataExporter {
 			Test e2eTest = (Test) iterator.next();
 
 			InputData inputData = (InputData) e2eTest.getInputData();
-			EList<CubeData> tables = inputData.getSourceTableData();
+			EList<CubeData> tables = inputData.getSourceCubeData();
 
 			// for each table find the header structure for the csv file, add this to the
 			// file
