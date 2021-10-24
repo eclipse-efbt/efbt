@@ -155,7 +155,7 @@ Exhibit A – Form of Secondary Licenses Notice
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.efbt.cocalimo.smcubes.model.program"
+         id="org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -176,7 +176,7 @@ Exhibit A – Form of Secondary Licenses Notice
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.efbt.cocalimo.smcubes.model.program.edit"
+         id="org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.edit"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -197,7 +197,7 @@ Exhibit A – Form of Secondary Licenses Notice
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.efbt.cocalimo.smcubes.model.program.editor"
+         id="org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.editor"
          download-size="0"
          install-size="0"
          version="0.0.0"

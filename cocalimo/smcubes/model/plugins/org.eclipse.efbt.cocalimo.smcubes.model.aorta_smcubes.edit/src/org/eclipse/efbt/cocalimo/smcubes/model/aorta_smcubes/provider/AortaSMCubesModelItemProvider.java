@@ -64,7 +64,7 @@ public class AortaSMCubesModelItemProvider
 			addRequirementsPropertyDescriptor(object);
 			addTestsPropertyDescriptor(object);
 			addTaskModulesPropertyDescriptor(object);
-			addRegFunctionalityTestDefinitionsPropertyDescriptor(object);
+			addTestDefinitionsPropertyDescriptor(object);
 			addNamePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
@@ -159,19 +159,19 @@ public class AortaSMCubesModelItemProvider
 	}
 
 	/**
-	 * This adds a property descriptor for the Reg Functionality Test Definitions feature.
+	 * This adds a property descriptor for the Test Definitions feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addRegFunctionalityTestDefinitionsPropertyDescriptor(Object object) {
+	protected void addTestDefinitionsPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_AortaSMCubesModel_regFunctionalityTestDefinitions_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_AortaSMCubesModel_regFunctionalityTestDefinitions_feature", "_UI_AortaSMCubesModel_type"),
-				 Aorta_smcubesPackage.Literals.AORTA_SM_CUBES_MODEL__REG_FUNCTIONALITY_TEST_DEFINITIONS,
+				 getString("_UI_AortaSMCubesModel_testDefinitions_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_AortaSMCubesModel_testDefinitions_feature", "_UI_AortaSMCubesModel_type"),
+				 Aorta_smcubesPackage.Literals.AORTA_SM_CUBES_MODEL__TEST_DEFINITIONS,
 				 true,
 				 false,
 				 true,

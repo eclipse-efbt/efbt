@@ -123,10 +123,9 @@ Exhibit A – Form of Secondary Licenses Notice
    <requires>
       <import plugin="org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.access.api" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.jackcess.impl"/>
-      <import plugin="org.eclipse.efbt.cocalimo.smcubes.model.program" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.ecore"/>
       <import plugin="org.eclipse.efbt.cocalimo.smcubes.model.input_data"/>
-      <import plugin="org.eclipse.efbt.cocalimo.core.model.testing"/>
       <import plugin="org.apache.commons.logging"/>
       <import plugin="org.eclipse.efbt.cocalimo.smcubes.model.core" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.efbt.controller.smcubes.component.access.provider" version="1.0.0" match="greaterOrEqual"/>

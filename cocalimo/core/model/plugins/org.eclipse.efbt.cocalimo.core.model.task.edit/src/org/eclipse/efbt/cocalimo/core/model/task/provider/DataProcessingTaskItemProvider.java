@@ -7,12 +7,8 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.efbt.cocalimo.core.model.task.DataProcessingTask;
-import org.eclipse.efbt.cocalimo.core.model.task.TaskPackage;
-
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-
-import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 
 /**
@@ -43,54 +39,8 @@ public class DataProcessingTaskItemProvider extends LeafTaskItemProvider {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addTargetAttributePropertyDescriptor(object);
-			addRequiredAttributesPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
-	}
-
-	/**
-	 * This adds a property descriptor for the Target Attribute feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addTargetAttributePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_DataProcessingTask_targetAttribute_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_DataProcessingTask_targetAttribute_feature", "_UI_DataProcessingTask_type"),
-				 TaskPackage.Literals.DATA_PROCESSING_TASK__TARGET_ATTRIBUTE,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Required Attributes feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addRequiredAttributesPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_DataProcessingTask_requiredAttributes_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_DataProcessingTask_requiredAttributes_feature", "_UI_DataProcessingTask_type"),
-				 TaskPackage.Literals.DATA_PROCESSING_TASK__REQUIRED_ATTRIBUTES,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
 	}
 
 	/**

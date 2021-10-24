@@ -163,8 +163,6 @@ import org.eclipse.efbt.cocalimo.core.model.requirements_text.provider.Requireme
 import org.eclipse.efbt.cocalimo.core.model.task.presentation.TaskEditorPlugin;
 
 import org.eclipse.efbt.cocalimo.core.model.task.provider.TaskItemProviderAdapterFactory;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.core.provider.CoreItemProviderAdapterFactory;
 import org.eclipse.emf.ecore.provider.EcoreItemProviderAdapterFactory;
 
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
@@ -725,8 +723,6 @@ public class ScenariosEditor
 		adapterFactory.addAdapterFactory(new EcoreItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Module_managementItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Requirements_textItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new CoreItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new org.eclipse.efbt.cocalimo.smcubes.model.data_definition.provider.Data_definitionItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 
 		// Create the command stack that will notify this editor as commands are executed.
