@@ -130,7 +130,7 @@ Exhibit A – Form of Secondary Licenses Notice
       <import plugin="org.apache.commons.logging"/>
       <import plugin="org.eclipse.efbt.cocalimo.smcubes.model.core" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.efbt.controller.smcubes.component.access.provider" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.efbt.cocalimo.core.model.functionality_module"/>
+      <import plugin="org.eclipse.efbt.cocalimo.core.model.task"/>
       <import plugin="org.eclipse.efbt.cocalimo.core.model.requirements_text"/>
       <import plugin="org.apache.commons.csv"/>
       <import plugin="org.eclipse.efbt.cocalimo.core.model.module_management"/>

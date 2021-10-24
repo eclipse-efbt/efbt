@@ -24,7 +24,7 @@
       <package
             uri="http://www.eclipse.org/efbt/program"
             class="org.eclipse.efbt.cocalimo.smcubes.model.program.ProgramPackage"
-            genModel="model/program.genmodel"/>
+            genModel="model/aorta_smcubes.genmodel"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.extension_parser">
@@ -33,4 +33,12 @@
             type="program"
             class="org.eclipse.efbt.cocalimo.smcubes.model.program.util.ProgramResourceFactoryImpl"/>
    </extension>
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated aorta_smcubes -->
+      <package
+            uri="http://www.eclipse.org/efbt/aorta_smcubes"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.Aorta_smcubesPackage"
+            genModel="model/aorta_smcubes.genmodel"/>
+   </extension>
+
 </plugin>

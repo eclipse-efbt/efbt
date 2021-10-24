@@ -1,0 +1,334 @@
+<!-- This file was created using the HTML documentation generator. -->
+<!-- Creation date: Sun Oct 10 14:08:39 BST 2021-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+      	<title>Metamodel Documentation (platform:/resource/org.eclipse.efbt.cocalimo.core.model.task/model/task.ecore)</title>
+    	<script type="text/javascript">
+//<![CDATA[				    	
+// TOC script based on code taken from http://www.quirksmode.org/dom/toc.html
+function makeTOC() {
+	
+	var toc = document.createElement('div')				
+	toc.id = "toc";
+	toc.innerHTML = "Table of Contents"				
+	document.body.appendChild(toc);
+				
+	var innertocDiv = createTOC()				
+	toc.appendChild(innertocDiv);
+}
+
+
+function createTOC() {
+	var y = document.createElement('div');
+	y.id = 'innertoc';
+	//var a = y.appendChild(document.createElement('span'));
+	//a.onclick = showhideTOC;
+	//a.id = 'contentheader';
+	//a.innerHTML = 'Show Table of Contents';
+	var z = y.appendChild(document.createElement('div'));
+	//z.onclick = showhideTOC;
+	var toBeTOCced = getElementsByTagNames('h1,h2,h3');
+	if (toBeTOCced.length < 2) return false;
+	var hCount = 0;
+	var hhCount = 0;
+	var hhhCount = 0;
+	for (var i=0;i<toBeTOCced.length;i++) {
+	var tmp = document.createElement('a');
+	tmp.className = 'page';
+	var text;
+	var textPre;
+	if (toBeTOCced[i].nodeName == 'h2'){
+		tmp.className += ' indent';
+		textPre = hCount + "."+ ++hhCount + ". "; 
+	}
+	else if (toBeTOCced[i].nodeName == 'h3'){
+		tmp.className += ' extraindent';
+		textPre = hCount + "."+ hhCount + "."+ ++hhhCount +". "; 
+	}
+	else {
+		textPre = ++hCount + ". "; 
+		hhCount = 0;
+		hhhCount = 0;
+	}
+	text = textPre + toBeTOCced[i].textContent;
+	toBeTOCced[i].innerHTML = textPre + toBeTOCced[i].innerHTML;
+	
+	tmp.innerHTML = text; 
+	z.appendChild(tmp);
+	var headerId = toBeTOCced[i].id || 'link' + i;
+	tmp.href = '#' + headerId;
+	toBeTOCced[i].id = headerId;
+	}
+	return y;
+}
+
+function getElementsByTagNames(list,obj) {
+	if (!obj) var obj = document;
+	var tagNames = list.split(',');
+	var resultArray = new Array();
+	for (var i=0;i<tagNames.length;i++) {
+		var tags = obj.getElementsByTagName(tagNames[i]);
+		for (var j=0;j<tags.length;j++) {
+			resultArray.push(tags[j]);
+		}
+	}
+	var testNode = resultArray[0];
+	if (!testNode) return [];
+	if (testNode.sourceIndex) {
+		resultArray.sort(function (a,b) {
+				return a.sourceIndex - b.sourceIndex;
+		});
+	}
+	else if (testNode.compareDocumentPosition) {
+		resultArray.sort(function (a,b) {
+				return 3 - (a.compareDocumentPosition(b) & 6);
+		});
+	}
+	return resultArray;
+}
+	    	
+//]]>				    	
+	    	</script>
+	    	<link rel="stylesheet" type="text/css" href="https://raw.github.com/necolas/normalize.css/master/normalize.css" /> 
+	    	<style>
+#toc {
+	position: fixed;
+	  right: 0;
+	  top: 0;
+	  background-color:#eee;
+	  overflow: scroll;
+	  border: 1px dashed;
+}
+
+#toc #innertoc { 
+	display: none;
+	height: 500px;
+} /* Hide the full TOC by default */
+
+#toc:hover #innertoc{
+	display: block; /* Show it on hover */
+}
+	td {
+	border: 1px solid;
+	}
+	.page{
+	display:table-row;
+	}
+	.indent {
+	text-indent:12pt;
+	}
+	.extraindent {
+	text-indent:14pt;
+	}
+
+	    	</style>
+	    	<link rel="stylesheet" type="text/css" href="style.css" />
+	</head>
+	<body onload="makeTOC();">
+<h1 id="task"><a href="#task"><span class="packageName">task</span> package</a></h1>
+
+<p>The task package describes Tasks which are sued to describe the functional breakdown and sceanrios of behaviour understood by a domain expert.</p>
+<div class="">EPackage properties:</div>
+<div class="keyValue"><span class="label">Namespace Prefix: </span><span class="teletype">task</span></div>
+<div class="keyValue"><span class="label">Namespace URI: </span><span class="teletype">http://www.eclipse.org/efbt/task</span></div>
+<h2 id="taskDataProcessingTask"><a href="#taskDataProcessingTask"><a href="#taskDataProcessingTask">DataProcessingTask</a></a></h2>
+
+<p>A DataProcessingTask is a Task related to processing of data.</p>
+<h4><b>Supertype:</b><a href="#taskLeafTask">LeafTask</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="taskDataProcessingTask.requiredAttributes" class="teletype">requiredAttributes</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#datadefinitionCUBESTRUCTUREITEM">CUBE_STRUCTURE_ITEM</a></span></div>
+<div class="label">Cardinality: [0..*]</div>
+</td> 
+<td> </td>
+		</tr><tr>	<td><div id="taskDataProcessingTask.targetAttribute" class="teletype">targetAttribute</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#datadefinitionCUBESTRUCTUREITEM">CUBE_STRUCTURE_ITEM</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+</td> 
+<td> </td>
+		</tr></table>
+<a href="#task.DataProcessingTask.ref"></a>
+<h2 id="taskLeafTask"><a href="#taskLeafTask"><a href="#taskLeafTask">LeafTask</a></a></h2>
+
+<p>A  LeafTask is a Task which does not contain any sub Tasks</p>
+<h4><b>Supertype:</b><a href="#taskTask">Task</a></h4><h2 id="taskParallelChoiceTask"><a href="#taskParallelChoiceTask"><a href="#taskParallelChoiceTask">ParallelChoiceTask</a></a></h2>
+
+<p>A TaskSet, where the sub Tasks can be run in parallel , or in any order, since there is no dependency between them whereby one needs to run before another. ParallelChoiceTask represents the case where one or more of the contained moduels are run, unlike ParallelTask where all should be run.</p>
+<h4><b>Supertype:</b><a href="#taskTaskSet">TaskSet</a></h4><h2 id="taskParallelTask"><a href="#taskParallelTask"><a href="#taskParallelTask">ParallelTask</a></a></h2>
+
+<p>A TaskSet, where the sub Tasks can be run in parallel , or in any order, since there is no dependency between them whereby one needs to run before another.</p>
+<h4><b>Supertype:</b><a href="#taskTaskSet">TaskSet</a></h4><h2 id="taskReadDataSourceTask"><a href="#taskReadDataSourceTask"><a href="#taskReadDataSourceTask">ReadDataSourceTask</a></a></h2>
+
+<p>A Task which represents the reading in of data.</p>
+<h4><b>Supertype:</b><a href="#taskLeafTask">LeafTask</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="taskReadDataSourceTask.entity" class="teletype">entity</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"></span></div>
+<div class="label">Cardinality: [0..1]</div>
+</td> 
+<td> </td>
+		</tr></table>
+<a href="#task.ReadDataSourceTask.ref"></a>
+<h2 id="taskReportCellCreationTask"><a href="#taskReportCellCreationTask"><a href="#taskReportCellCreationTask">ReportCellCreationTask</a></a></h2>
+
+<p>A Task which represents the generation of report cells.</p>
+<h4><b>Supertype:</b><a href="#taskLeafTask">LeafTask</a></h4><h2 id="taskSerialTask"><a href="#taskSerialTask"><a href="#taskSerialTask">SerialTask</a></a></h2>
+
+<p>A TaskSet, where the sub Tasks are an ordered set which must be executed in order.</p>
+<h4><b>Supertype:</b><a href="#taskTaskSet">TaskSet</a></h4><h2 id="taskTask"><a href="#taskTask"><a href="#taskTask">Task</a></a></h2>
+
+<p>Task is the super class of ReportCellTask,ReadDataSourceTask, and DataSetTransformationTask.
+It represents a set of processing.</p>
+<div class="eclassProps">EClass properties:<div class="eclassPropList"><span class="label">Abstract</span></div></div><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">Attributes</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="taskTask.name" class="teletype">name</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EString</span></div>
+<div class="label">Cardinality: [0..1]</div>
+<div class="label">Identifier</div>
+ </td> <td><p>The name of the Task</p>
+</td>
+		</tr><tr>	<td><div id="taskTask.usedInSubset" class="teletype">usedInSubset</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EBoolean</span></div>
+<div class="label">Cardinality: [0..1]</div>
+ </td> <td></td>
+		</tr></table>
+<a href="#task.Task.attr"></a>
+<table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="taskTask.scenario" class="teletype">scenario</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#scenariosScenario">Scenario</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+</td> 
+<td> <p>A Particular Scenario if the Task is assocuiated with a particular Scenario.</p>
+</td>
+		</tr><tr>	<td><div id="taskTask.scenarioSet" class="teletype">scenarioSet</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#scenariosScenarioSet">ScenarioSet</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+<div class="label">Containment</div>
+</td> 
+<td> <p>Any ScenarioSets associated with the  Task. 
+The individual Scenarios in such a ScenarioSet are associated with different behaviour in the Task that we would like to test seperately. 
+Scenarios can themsleves be linked to parts of the regulatory rulebook, allowing an annotation of the behaviour we wish to test.</p>
+</td>
+		</tr></table>
+<a href="#task.Task.ref"></a>
+<h2 id="taskTaskModule"><a href="#taskTaskModule"><a href="#taskTaskModule">TaskModule</a></a></h2>
+
+<p>A module containing a set of Tasks</p>
+<h4><b>Supertype:</b><a href="#modulemanagementModule">Module</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="taskTaskModule.SceanrioTags" class="teletype">SceanrioTags</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#scenariosScenarioTag">ScenarioTag</a></span></div>
+<div class="label">Cardinality: [0..*]</div>
+<div class="label">Containment</div>
+</td> 
+<td> <p>Any tags which link a Scenario to a set of requirements (liek regulatory paragraphs)</p>
+</td>
+		</tr><tr>	<td><div id="taskTaskModule.Tasks" class="teletype">Tasks</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#taskTask">Task</a></span></div>
+<div class="label">Cardinality: [0..*]</div>
+<div class="label">Containment</div>
+</td> 
+<td> <p>The  set of Tasks </p>
+</td>
+		</tr><tr>	<td><div id="taskTaskModule.taskTags" class="teletype">taskTags</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#taskTaskTag">TaskTag</a></span></div>
+<div class="label">Cardinality: [0..*]</div>
+<div class="label">Containment</div>
+</td> 
+<td> <p>Any tags which link a Task to a set of requirements (liek regulatory paragraphs)</p>
+</td>
+		</tr></table>
+<a href="#task.TaskModule.ref"></a>
+<h2 id="taskTaskSet"><a href="#taskTaskSet"><a href="#taskTaskSet">TaskSet</a></a></h2>
+
+<p>A set of Tasks.
+Note that TasksSet is also a subclass of Task, so the set can also include TasksSets</p>
+<h4><b>Supertype:</b><a href="#taskTask">Task</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="taskTaskSet.subTasks" class="teletype">subTasks</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#taskTask">Task</a></span></div>
+<div class="label">Cardinality: [0..*]</div>
+<div class="label">Containment</div>
+</td> 
+<td> <p>The  contained set of Tasks </p>
+</td>
+		</tr></table>
+<a href="#task.TaskSet.ref"></a>
+<h2 id="taskTaskTag"><a href="#taskTaskTag"><a href="#taskTaskTag">TaskTag</a></a></h2>
+
+<p>A Tag which tags a Task in order to link it with requirements.</p>
+<h4><b>Supertype:</b><a href="#requirementstextTag">Tag</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="taskTaskTag.Task" class="teletype">Task</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#taskTask">Task</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+</td> 
+<td> <p>The tagged Task.</p>
+</td>
+		</tr></table>
+<a href="#task.TaskTag.ref"></a>
+</body>
+</html>

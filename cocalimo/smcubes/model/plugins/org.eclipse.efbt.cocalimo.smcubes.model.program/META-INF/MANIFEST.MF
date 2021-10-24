@@ -1,25 +1,24 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.eclipse.efbt.cocalimo.smcubes.model.program;singleton:=true
-Automatic-Module-Name: org.eclipse.efbt.cocalimo.smcubes.model.program
+Bundle-SymbolicName: org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes;singleton:=true
+Automatic-Module-Name: org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes
 Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Export-Package: org.eclipse.efbt.cocalimo.smcubes.model.program,
- org.eclipse.efbt.cocalimo.smcubes.model.program.impl,
- org.eclipse.efbt.cocalimo.smcubes.model.program.util
+Export-Package: org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes,
+ org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.impl,
+ org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.util
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.emf.ecore.xmi;visibility:=reexport,
- org.eclipse.efbt.cocalimo.core.model.functionality_module;visibility:=reexport,
+ org.eclipse.efbt.cocalimo.core.model.task;visibility:=reexport,
  org.eclipse.efbt.cocalimo.core.model.module_management;visibility:=reexport,
  org.eclipse.efbt.cocalimo.core.model.requirements_text;visibility:=reexport,
  org.eclipse.efbt.cocalimo.smcubes.model.input_data;visibility:=reexport,
  org.eclipse.efbt.cocalimo.smcubes.model.core;visibility:=reexport,
- org.eclipse.efbt.cocalimo.core.model.testing;visibility:=reexport,
  com.fasterxml.jackson.core.jackson-databind,
  org.emfjson.jackson
 Bundle-ActivationPolicy: lazy

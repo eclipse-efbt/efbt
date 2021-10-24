@@ -140,7 +140,7 @@ Exhibit A – Form of Secondary Licenses Notice
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.efbt.cocalimo.core.model.functionality_module"
+         id="org.eclipse.efbt.cocalimo.core.model.task"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -175,7 +175,7 @@ Exhibit A – Form of Secondary Licenses Notice
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.efbt.cocalimo.core.model.functionality_module.edit"
+         id="org.eclipse.efbt.cocalimo.core.model.task.edit"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -210,7 +210,7 @@ Exhibit A – Form of Secondary Licenses Notice
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.efbt.cocalimo.core.model.functionality_module.editor"
+         id="org.eclipse.efbt.cocalimo.core.model.task.editor"
          download-size="0"
          install-size="0"
          version="0.0.0"

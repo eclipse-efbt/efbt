@@ -8,7 +8,7 @@
   <semanticResources>bin/cube_structure_items.efbt_data_definition</semanticResources>
   <semanticResources>bin/cube_structures.efbt_data_definition</semanticResources>
   <semanticResources>bin/cubes.efbt_data_definition</semanticResources>
-  <semanticResources>bin/functionality_modules.functionality_module</semanticResources>
+  <semanticResources>bin/tasks.task</semanticResources>
   <semanticResources>bin/regTestDefintion.test_definition</semanticResources>
   <semanticResources>bin/test.program</semanticResources>
   <semanticResources>src/combinations.efbt_data_definition</semanticResources>
@@ -19,7 +19,7 @@
   <semanticResources>src/cube_structure_items.efbt_data_definition</semanticResources>
   <semanticResources>src/cube_structures.efbt_data_definition</semanticResources>
   <semanticResources>src/cubes.efbt_data_definition</semanticResources>
-  <semanticResources>src/functionality_modules.functionality_module</semanticResources>
+  <semanticResources>src/tasks.task</semanticResources>
   <semanticResources>src/regTestDefintion.test_definition</semanticResources>
   <semanticResources>src/test.program</semanticResources>
 </viewpoint:DAnalysis>
