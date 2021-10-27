@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<platform_call:TranslateBIRDWithNewTestFormatToCocason xmlns:platform_call="http://www.eclipse.org/efbt/platform_call" name="load_bird" inputDirectory="C:\\Users\\Neil\\BIRD_5.0.2_VTL\\BIRD_5.0.2_VTL.accdb" outputDirectory="C:\\Users\\Neil\\workspacetest2\\org.eclipse.efbt.example.sdd\\src\\" testDirectory="C:\\Users\\Neil\\BirdExamples\\Finrep\\FinrepTestExamples\\LoanPlusGuaranteeToF04Example\\Input\\LoansPlusGuaranteeToF04TestCaseInputData.csv"/>

@@ -21,20 +21,19 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.AortaSMCubesModel;
+import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.Test;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.BaseCell;
-import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.BaseCellWithEnumeratedValue;
-import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.BaseCellWithValue;
-import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.BaseColumnStructuredData;
-import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.BaseRowData;
-import org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel;
-import org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesBDDTest;
-import org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesTestInputData;
-import org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesBDDTestModule;
+import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestModule;
+
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE_STRUCTURE_ITEM;
-
-
+import org.eclipse.efbt.cocalimo.smcubes.model.input_data.Cell;
+import org.eclipse.efbt.cocalimo.smcubes.model.input_data.CellWithEnumeratedValue;
+import org.eclipse.efbt.cocalimo.smcubes.model.input_data.CellWithValue;
+import org.eclipse.efbt.cocalimo.smcubes.model.input_data.CubeData;
+import org.eclipse.efbt.cocalimo.smcubes.model.input_data.InputData;
+import org.eclipse.efbt.cocalimo.smcubes.model.input_data.RowData;
 import org.eclipse.emf.common.util.EList;
 
 
@@ -60,25 +59,25 @@ public class InputDataExporter {
 	 * @param program
 	 * @param outputfileDirectory
 	 */
-	public void exportInputData(SMCubesStaticModel program, String outputfileDirectory) {
+	public void exportInputData(AortaSMCubesModel program, String outputfileDirectory) {
 
-		 SMCubesBDDTestModule testModule = program.getTests();
-		EList<SMCubesBDDTest> tests = testModule.getTests();
+		 TestModule testModule = program.getTests();
+		EList<Test> tests = testModule.getTests();
 
 		// for each test, export the input data, the input daa may be in multiple tables
 		for (Iterator iterator = tests.iterator(); iterator.hasNext();) {
-			SMCubesBDDTest e2eTest = (SMCubesBDDTest) iterator.next();
+			Test e2eTest = (Test) iterator.next();
 
-			SMCubesTestInputData inputData = (SMCubesTestInputData) e2eTest.getInputData();
-			EList<BaseColumnStructuredData> tables = inputData.getSmcubes_inputdata();
+			InputData inputData = (InputData) e2eTest.getInputData();
+			EList<CubeData> tables = inputData.getSourceCubeData();
 
 			// for each table find the header structure for the csv file, add this to the
 			// file
 			// and then add a row to the csv file for each row of input data
 			for (Iterator iterator2 = tables.iterator(); iterator2.hasNext();) {
-				BaseColumnStructuredData baseColumnStructuredData = (BaseColumnStructuredData) iterator2.next();
+				CubeData CubeData = (CubeData) iterator2.next();
 
-				CUBE columnStructuredEntity = baseColumnStructuredData.getCube();
+				CUBE columnStructuredEntity = CubeData.getCube();
 
 				EList<CUBE_STRUCTURE_ITEM> columns = getCubseStructureItems( columnStructuredEntity);
 				List<String> orderedColumns = getAlphabeticallyOrderedColumns(columns);
@@ -99,10 +98,10 @@ public class InputDataExporter {
 
 				// add the rows of data to the file, ensuring the columns are in the correct
 				// order
-				EList<BaseRowData> rows = baseColumnStructuredData.getRows();
+				EList<RowData> rows = CubeData.getRows();
 				for (Iterator iterator3 = rows.iterator(); iterator3.hasNext();) {
-					BaseRowData baseRowData = (BaseRowData) iterator3.next();
-					exportRowToCSV(theFile, baseRowData, orderedColumns, e2eTest.getName());
+					RowData RowData = (RowData) iterator3.next();
+					exportRowToCSV(theFile, RowData, orderedColumns, e2eTest.getName());
 
 				}
 
@@ -144,16 +143,16 @@ public class InputDataExporter {
 	 * Add a row of data to the file, ensuring the columns are in the correct order.
 	 * 
 	 * @param file
-	 * @param baseRowData
+	 * @param RowData
 	 * @param orderedColumns
 	 * @param testName
 	 */
-	private void exportRowToCSV(FileWriter file, BaseRowData baseRowData, List<String> orderedColumns,
+	private void exportRowToCSV(FileWriter file, RowData RowData, List<String> orderedColumns,
 			String testName) {
 		try {
-			String rowID = baseRowData.getRowID();
+			String rowID = RowData.getRowID();
 			file.append(testName + "," + rowID);
-			EList<BaseCell> cells = baseRowData.getCells();
+			EList<Cell> cells = RowData.getCells();
 
 			for (Iterator iterator2 = orderedColumns.iterator(); iterator2.hasNext();) {
 				String columnname = (String) iterator2.next();
@@ -177,28 +176,28 @@ public class InputDataExporter {
 	 * @param file
 	 * @throws IOException
 	 */
-	private void appendColumnToFile(String columnname, EList<BaseCell> cells, 
+	private void appendColumnToFile(String columnname, EList<Cell> cells, 
 			FileWriter file) throws IOException {
 
 		// fine the cell in the list of cells which is associated with the 
 		// column
-		BaseCell actualCell = null;
+		Cell actualCell = null;
 		for (Iterator iterator = cells.iterator(); iterator.hasNext();) {
-			BaseCell baseCell = (BaseCell) iterator.next();
-			if (baseCell.getColumn().getName().equalsIgnoreCase(columnname)) {
+			Cell Cell = (Cell) iterator.next();
+			if (Cell.getColumn().getName().equalsIgnoreCase(columnname)) {
 
-				actualCell = baseCell;
+				actualCell = Cell;
 			}
 		}
 		// get the value of the cell, which might be an enumerated value or
 		// just a value.
 		if (actualCell != null) {
 			file.append(',');
-			if (actualCell instanceof BaseCellWithEnumeratedValue)
-				file.append(((BaseCellWithEnumeratedValue) actualCell).
+			if (actualCell instanceof CellWithEnumeratedValue)
+				file.append(((CellWithEnumeratedValue) actualCell).
 						getValue().getCode());
-			else if (actualCell instanceof BaseCellWithValue)
-				file.append(((BaseCellWithValue) actualCell).getValue());
+			else if (actualCell instanceof CellWithValue)
+				file.append(((CellWithValue) actualCell).getValue());
 		} else {
 			file.append(',');
 		}

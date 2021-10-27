@@ -127,17 +127,17 @@ Exhibit A – Form of Secondary Licenses Notice
       <import plugin="org.eclipse.efbt.cocalimo.core.model.module_management"/>
       <import plugin="org.emfjson.jackson"/>
       <import plugin="com.fasterxml.jackson.core.jackson-databind" version="2.9.1" match="perfect"/>
-      <import plugin="org.eclipse.efbt.cocalimo.core.model.functionality_module"/>
+      <import plugin="org.eclipse.efbt.cocalimo.smcubes.model.task"/>
       <import plugin="org.eclipse.efbt.cocalimo.core.model.requirements_text"/>
-      <import plugin="org.eclipse.efbt.cocalimo.core.model.testing"/>
       <import plugin="org.eclipse.emf.edit"/>
       <import plugin="org.eclipse.efbt.cocalimo.core.model.module_management.edit"/>
-      <import plugin="org.eclipse.efbt.cocalimo.core.model.functionality_module.edit"/>
+      <import plugin="org.eclipse.efbt.cocalimo.smcubes.model.task.edit"/>
       <import plugin="org.eclipse.efbt.cocalimo.core.model.requirements_text.edit"/>
-      <import plugin="org.eclipse.efbt.cocalimo.core.model.testing.edit"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.emf.edit.ui"/>
       <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes"/>
+      <import plugin="org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.edit"/>
    </requires>
 
    <plugin
@@ -155,7 +155,7 @@ Exhibit A – Form of Secondary Licenses Notice
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.efbt.cocalimo.smcubes.model.program"
+         id="org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -176,7 +176,7 @@ Exhibit A – Form of Secondary Licenses Notice
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.efbt.cocalimo.smcubes.model.program.edit"
+         id="org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.edit"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -197,10 +197,31 @@ Exhibit A – Form of Secondary Licenses Notice
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.efbt.cocalimo.smcubes.model.program.editor"
+         id="org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.editor"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
+        
+   <plugin
+         id="org.eclipse.efbt.cocalimo.smcubes.model.task"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+	     
+   <plugin
+         id="org.eclipse.efbt.cocalimo.smcubes.model.task.edit"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+	     
+   <plugin
+         id="org.eclipse.efbt.cocalimo.smcubes.model.task.editor"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+	
 </feature>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <!-- @generated aorta_smcubes -->
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.presentation.Aorta_smcubesModelWizardID"
+            name="%_UI_Aorta_smcubesModelWizard_label"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.presentation.Aorta_smcubesModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/Aorta_smcubesModelFile.gif">
+         <description>%_UI_Aorta_smcubesModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <!-- @generated aorta_smcubes -->
+      <editor
+            id="org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.presentation.Aorta_smcubesEditorID"
+            name="%_UI_Aorta_smcubesEditor_label"
+            icon="icons/full/obj16/Aorta_smcubesModelFile.gif"
+            extensions="aorta_smcubes"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.presentation.Aorta_smcubesEditor"
+            contributorClass="org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.presentation.Aorta_smcubesActionBarContributor">
+      </editor>
+   </extension>
+</plugin>

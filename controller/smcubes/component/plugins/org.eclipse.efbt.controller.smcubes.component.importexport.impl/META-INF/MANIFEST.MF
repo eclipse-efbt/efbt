@@ -12,9 +12,10 @@ Require-Bundle: org.apache.commons.logging,
  org.eclipse.efbt.controller.smcubes.component.access.provider;bundle-version="1.0.0",
  org.eclipse.efbt.controller.smcubes.component.importexport.api,
  org.eclipse.efbt.cocalimo.smcubes.model.input_data,
- org.eclipse.efbt.cocalimo.core.model.functionality_module,
+ org.eclipse.efbt.cocalimo.smcubes.model.task,
  org.eclipse.efbt.cocalimo.core.model.requirements_text,
- org.eclipse.efbt.cocalimo.core.model.testing,
- org.eclipse.efbt.cocalimo.smcubes.model.program,
- org.apache.commons.csv
+ org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes,
+ org.apache.commons.csv,
+ org.emfjson.jackson,
+ org.eclipse.emf.ecore
 

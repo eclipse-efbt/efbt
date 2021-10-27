@@ -37,13 +37,16 @@
 	<modules>
 		<module>plugins/org.eclipse.efbt.cocalimo.smcubes.model.core</module>
 		<module>plugins/org.eclipse.efbt.cocalimo.smcubes.model.input_data</module>
-		<module>plugins/org.eclipse.efbt.cocalimo.smcubes.model.program</module>
+		<module>plugins/org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes</module>
+		<module>plugins/org.eclipse.efbt.cocalimo.smcubes.model.task</module>
 		<module>plugins/org.eclipse.efbt.cocalimo.smcubes.model.core.edit</module>
 		<module>plugins/org.eclipse.efbt.cocalimo.smcubes.model.input_data.edit</module>
-		<module>plugins/org.eclipse.efbt.cocalimo.smcubes.model.program.edit</module>
+		<module>plugins/org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.edit</module>
+		<module>plugins/org.eclipse.efbt.cocalimo.smcubes.model.task.edit</module>
 		<module>plugins/org.eclipse.efbt.cocalimo.smcubes.model.core.editor</module>
 		<module>plugins/org.eclipse.efbt.cocalimo.smcubes.model.input_data.editor</module>
-		<module>plugins/org.eclipse.efbt.cocalimo.smcubes.model.program.editor</module>
+		<module>plugins/org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.editor</module>
+		<module>plugins/org.eclipse.efbt.cocalimo.smcubes.model.task.editor</module>
 		<module>features/org.eclipse.efbt.cocalimo.smcubes.model.feature</module>
 	</modules>
 	

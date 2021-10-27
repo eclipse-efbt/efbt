@@ -26,31 +26,19 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-
-import org.eclipse.efbt.cocalimo.core.model.test_definition.ClauseText;
-import org.eclipse.efbt.cocalimo.core.model.test_definition.E2EBDDTestDefinition;
-import org.eclipse.efbt.cocalimo.core.model.test_definition.Given;
-import org.eclipse.efbt.cocalimo.core.model.test_definition.Param;
-import org.eclipse.efbt.cocalimo.core.model.test_definition.BDDTestContraints;
-import org.eclipse.efbt.cocalimo.core.model.test_definition.BDDTestDefinitionModule;
-import org.eclipse.efbt.cocalimo.core.model.test_definition.BDDTestTemplate;
-import org.eclipse.efbt.cocalimo.core.model.test_definition.BDDTestTemplateModule;
-import org.eclipse.efbt.cocalimo.core.model.test_definition.Test_definitionFactory;
-import org.eclipse.efbt.cocalimo.core.model.test_definition.Then;
-import org.eclipse.efbt.cocalimo.core.model.test_definition.When;
 import org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.access.api.AccessRow;
 import org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.access.api.AccessUtils;
 import org.eclipse.efbt.controller.smcubes.component.access.provider.AccessUtilProvider;
-import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.BaseCellWithEnumeratedValue;
-import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.BaseCellWithValue;
-import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.BaseColumnStructuredData;
-import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.BaseRowData;
-import org.eclipse.efbt.cocalimo.smcubes.model.base_column_structured_data.Base_column_structured_dataFactory;
-import org.eclipse.efbt.cocalimo.smcubes.model.program.ProgramFactory;
-import org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesBDDTest;
-import org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesBDDTestModule;
-import org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesStaticModel;
-import org.eclipse.efbt.cocalimo.smcubes.model.program.SMCubesTestInputData;
+import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.Aorta_smcubesFactory;
+import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.Test;
+import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinition;
+
+import org.eclipse.efbt.cocalimo.smcubes.model.input_data.CellWithEnumeratedValue;
+import org.eclipse.efbt.cocalimo.smcubes.model.input_data.CellWithValue;
+import org.eclipse.efbt.cocalimo.smcubes.model.input_data.CubeData;
+import org.eclipse.efbt.cocalimo.smcubes.model.input_data.RowData;
+import org.eclipse.efbt.cocalimo.smcubes.model.input_data.InputData;
+import org.eclipse.efbt.cocalimo.smcubes.model.input_data.Input_dataFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.CoreFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.DOMAIN;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.FACET_VALUE_TYPE;
@@ -79,7 +67,7 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
 /**
- * This class is respnsable for structure data taking data from the BIRD Access
+ * This class is responsable for structure data taking data from the BIRD Access
  * Database and also data in CSV defining Test data, and creates instances of
  * the cocamo SMCubesStaticModel model.
  * 
@@ -140,51 +128,7 @@ public class BIRDImporterImpl extends Importer {
 
 			}
 
-			/**
-			 * Note that TRANSFORMATION is not currently neded in our model, and that
-			 * Transmormation_Node was removed (perhaps temporarily) in BIRd 5.0 , we may
-			 * wish to add this code back in at a later date.
-			 * 
-			 * 
-			 * table = DatabaseBuilder.open(new File(filepath)).getTable("TRANSFORMATION");
-			 * for (Row row : table) { System.out.println("Column 'TRANSFORMATION_ID' has
-			 * value: " + row.getString("TRANSFORMATION_ID")); TRANSFORMATION transformation
-			 * = Vtl_transformationFactory.eINSTANCE.createTRANSFORMATION();
-			 * TRANSFORMATION_SCHEME scheme =
-			 * getTransformationScheme(row.getString("TRANSFORMATION_SCHEME_ID"));
-			 * 
-			 * transformation.setCode(row.getString("CODE"));
-			 * transformation.setTransformation_id(row.getString("TRANSFORMATION_ID"));
-			 * transformation.setDescription(row.getString("DESCRIPTION"));
-			 * transformation.setMaintenance_agency_id(row.getString("MAINTENANCE_AGENCY_ID"));
-			 * transformation.setName(row.getString("NAME"));
-			 * transformation.setExpression(row.getString("EXPRESSION"));
-			 * scheme.getTranformations().add(transformation);
-			 * System.out.println("transformation = " + transformation.toString());
-			 * 
-			 * }
-			 * 
-			 * table = DatabaseBuilder.open(new
-			 * File(filepath)).getTable("TRANSFORMATION_NODE"); for (Row row : table) {
-			 * System.out.println( "Column 'TRANSFORMATION_NODE_ID' has value: " +
-			 * row.getString("TRANSFORMATION_NODE_ID")); TRANSFORMATION_NODE node =
-			 * Vtl_transformationFactory.eINSTANCE.createTRANSFORMATION_NODE();
-			 * EList<TRANSFORMATION_NODE> nodelist = new BasicEList<TRANSFORMATION_NODE>();
-			 * 
-			 * node.setLevel((row.getInt("LEVEL"))); node.setOrder((row.getInt("ORDER")));
-			 * node.setTransformation_node_id((row.getString("TRANSFORMATION_NODE_ID")));
-			 * node.setParent_node_id(row.getString("PARENT_NODE_ID")); String tableID =
-			 * row.getString("TABLE_ID"); String elementID = row.getString("ELEMENT_ID");
-			 * MEMBER member = null; VARIABLE variable = null; if (tableID != null) { if
-			 * (tableID.equals("VARIABLE")) { variable = findVariableWithID(elementID);
-			 * node.setVariable(variable); } if (tableID.equals("MEMBER")) { member =
-			 * findMemberWithID(elementID); node.setMember(member); } }
-			 * 
-			 * node.setExpresssion(row.getString("EXPRESSION")); nodelist.add(node);
-			 * System.out.println("node = " + node.toString());
-			 * 
-			 * }
-			 */
+			
 
 		} catch (IOException e) {
 
@@ -964,75 +908,84 @@ public class BIRDImporterImpl extends Importer {
 	public void importTestDataWithOldTestFormat(String fileLocation) {
 		
 		prepareTestData();
-		
+		String inputDataFileLocation = fileLocation;
 		FileReader csvData;
 		try {
 
-			csvData = new FileReader(new File(fileLocation));
-
-			
-			
+			csvData = new FileReader(new File(fileLocation));			
 			List<CSVRecord> list = getCSVRowsFromFile(fileLocation);
 
-			HashMap<String, SMCubesBDDTest> tests = new HashMap<String, SMCubesBDDTest>();
-			HashMap<String, BaseColumnStructuredData> tables = new HashMap<String, BaseColumnStructuredData>();
-			HashMap<String, BaseRowData> rows = new HashMap<String, BaseRowData>();
+			HashMap<String, Test> tests = new HashMap<String, Test>();
+			HashMap<String, CubeData> tables = new HashMap<String, CubeData>();
+			HashMap<String, RowData> rows = new HashMap<String, RowData>();
 			int nameCounter = 0;
 			for (CSVRecord csvRecord : list) {
 				nameCounter++;
-				//get a row of data which wil relate to the value of one column
-				//in a cube
-				String id1 = csvRecord.get(0).trim();
-				String id2 = csvRecord.get(1).trim();
-				String record_no = csvRecord.get(2);
-				String cube = csvRecord.get(3);
-				String variable = csvRecord.get(4);
-				String value = csvRecord.get(5);
-				//check whhich test this value is for, and see 
-				//if we already have created a Test for that test
-				SMCubesBDDTest test = tests.get(id1 + ":" + id2);
+				
+				
+				
+				String cube = csvRecord.get(0);
+				String record_no = csvRecord.get(1);
+				String variable = csvRecord.get(2);
+				String value = csvRecord.get(3);
+				
+				String testID = "exampleTest";
+				Test test = (Test) tests.get(testID);
+				
 				if (test == null) {
 					//if we dont have aTest for this item of Test data, then 
 					//we create one and add it to the list of tests
-					SMCubesStaticModel testProgram = ProgramFactory.eINSTANCE.createSMCubesStaticModel();
-					testPrograms.add(testProgram);
-					SMCubesBDDTestModule testModule = ProgramFactory.eINSTANCE.createSMCubesBDDTestModule();
+					
+					testModule = Aorta_smcubesFactory.eINSTANCE.createTestModule();
 					testModule.setName("TestModule" + nameCounter);
-					testProgram.setTests(testModule);
-					test = ProgramFactory.eINSTANCE.createSMCubesBDDTest();
-					test.setName(id1 + ":" + id2);
-					test.setTestDefinition((E2EBDDTestDefinition) testDefinitionProgram.getBddTestDefinitions().getTestDefinitions().get(0)); 
+				
+					testDefinitionModule = Aorta_smcubesFactory.eINSTANCE.
+							createTestDefinitionModule();
+					testDefinitionModule.setName("testDefinitionsModule");			
+
+
+					TestDefinition definition =
+							Aorta_smcubesFactory.eINSTANCE.createTestDefinition();
+					definition.setName("standard_test");
+					testDefinitionModule.getTestDefinitions().add(definition);
+					
+					
+					
+					
+					test = Aorta_smcubesFactory.eINSTANCE.createTest();
+					test.setName(testID);
+					test.setTestDefinition( definition ); 
 					testModule.getTests().add(test);
-					tests.put(id1 + ":" + id2, test);
-					SMCubesTestInputData inputData2 = ProgramFactory.eINSTANCE
-							.createSMCubesTestInputData();
-					inputData2.setName(id1 + ":" + id2 + ":Data");
+					tests.put(testID, test);
+					InputData inputData2 = Input_dataFactory.eINSTANCE
+							.createInputData();
+					inputData2.setName(testID + ":Data");
 					test.setInputData(inputData2);
 				}
-				SMCubesTestInputData inputData = (SMCubesTestInputData) test.getInputData();
+				InputData inputData = (InputData) test.getInputData();
 				
 
 				// so we need a table for each table, then a row for each row, and a cell for
 				// each cell.
 				// so we make a hash map of sorts
 
-				BaseColumnStructuredData table = tables.get(id1 + ":" + id2 + ":" + cube);
+				CubeData table = tables.get(testID + ":" + cube);
 				if (table == null) {
-					BaseColumnStructuredData structuredData = Base_column_structured_dataFactory.eINSTANCE
-							.createBaseColumnStructuredData();
-					structuredData.setName(id1 + ":" + id2 + ":" + cube +":CubeData" );
+					CubeData structuredData = Input_dataFactory.eINSTANCE
+							.createCubeData();
+					structuredData.setName(testID + ":" + cube +":CubeData" );
 					structuredData.setCube(getCubeForCubeName(cube));
-					tables.put(id1 + ":" + id2 + ":" + cube, structuredData);
-					inputData.getSmcubes_inputdata().add(structuredData);
+					tables.put(testID + ":" + cube, structuredData);
+					inputData.getSourceCubeData().add(structuredData);
 					table = structuredData;
 
 				}
 
-				BaseRowData rowData = rows.get(id1 + ":" + id2 + ":" + cube + ":" + record_no);
+				RowData rowData = rows.get(testID + ":" + cube + ":" + record_no);
 				if (rowData == null) {
-					BaseRowData baseRow = Base_column_structured_dataFactory.eINSTANCE.createBaseRowData();
-					baseRow.setRowID(id1 + ":" + id2 + ":" + cube + ":" + record_no);
-					rows.put(id1 + ":" + id2 + ":" + cube + ":" + record_no, baseRow);
+					RowData baseRow = Input_dataFactory.eINSTANCE.createRowData();
+					baseRow.setRowID(testID + ":" + cube + ":" + record_no);
+					rows.put(testID + ":" + cube + ":" + record_no, baseRow);
 					table.getRows().add(baseRow);
 					rowData = baseRow;
 				}
@@ -1051,36 +1004,36 @@ public class BIRDImporterImpl extends Importer {
 							MEMBER member = getMember(cube, variable, value);
 							if (member != null) {
 
-								BaseCellWithEnumeratedValue enumcell = Base_column_structured_dataFactory.eINSTANCE
-										.createBaseCellWithEnumeratedValue();
+								CellWithEnumeratedValue enumcell = Input_dataFactory.eINSTANCE
+										.createCellWithEnumeratedValue();
 								enumcell.setColumn(theColumn);
 								enumcell.setValue(member);
-								enumcell.setCellID(id1 + ":" + id2 + ":" + cube + ":"
+								enumcell.setCellID(testID + ":" + cube + ":"
 										+ record_no + ":" +  variable);
 								rowData.getCells().add(enumcell);
 
 							} else {
-								System.out.println("Cannot find member:" + id1 + ":" + id2 + ":" + cube + ":"
-										+ record_no + ":" + variable + ":" + value);
+								logMessage = logMessage +"Cannot find member:" + testID + ":" + cube + ":"
+										+ record_no + ":" + variable + ":" + value +"\n";
 							}
 
 						} else {
-							BaseCellWithValue cellWithValue = Base_column_structured_dataFactory.eINSTANCE
-									.createBaseCellWithValue();
+							CellWithValue cellWithValue = Input_dataFactory.eINSTANCE
+									.createCellWithValue();
 							cellWithValue.setValue(value);
 							cellWithValue.setColumn(theColumn);
-							cellWithValue.setCellID(id1 + ":" + id2 + ":" + cube + ":"
+							cellWithValue.setCellID(testID + ":" + cube + ":"
 									+ record_no + ":" +  variable);
 							rowData.getCells().add(cellWithValue);
 						}
 
 					} else {
-						System.out.println("Cannot find column:" + id1 + ":" + id2 + ":" + cube + ":" + record_no + ":"
-								+ variable);
+						logMessage = logMessage + "Cannot find column:" + testID + ":" + cube + ":" + record_no + ":"
+								+ variable + "\n";
 					}
 
 				} else {
-					System.out.println("Cannot find cube:" + id1 + ":" + id2 + ":" + cube);
+					logMessage = logMessage + "Cannot find cube:" + testID + ":" + cube + "\n";
 				}
 
 			}
@@ -1097,154 +1050,15 @@ public class BIRDImporterImpl extends Importer {
 	
 	public void prepareTestData()
 	{
-		// get the csv file, use an open source csv library.
-		// create 1 test definition
-		// create mutliple tests, with that data.
+		
 		
 		//create the TestDefintion Module to hold the different TestDefinitions
-		BDDTestDefinitionModule definitionModule = Test_definitionFactory.eINSTANCE.
-				createBDDTestDefinitionModule();
-		definitionModule.setName("testDefinitionsModule");
-		
-		//create the TestTemplateModule to hold the different TestDefinitions
-		BDDTestTemplateModule testTemplateModule = Test_definitionFactory.eINSTANCE.
-				createBDDTestTemplateModule();
-		testTemplateModule.setName("testTemplateModule");
-		testTemplateProgram.setTestTemplates(testTemplateModule);
-		testDefinitionProgram.setBddTestDefinitions(definitionModule);
-
-		//create a TestTemplate and add it to the Test Template Module,
-		// all our tests are going to use the same template
-		BDDTestTemplate testTemplate = 
-				Test_definitionFactory.eINSTANCE.createBDDTestTemplate();
-		testTemplate.setName("testTemplate1");
-		Param templateparam = Test_definitionFactory.eINSTANCE.createParam();
-		templateparam.setParam(transformationSchemes.getSchemes().get(0)
-				);
-		testTemplate.getWhenParams().add(templateparam);
-		testTemplateModule.getTemplates().add(testTemplate);
-
-		//Set the given when then clauses of the Test Definition, all our 
-		//tests are going to use the same TestDefintion
-		ClauseText given_clauseText = 
-				Test_definitionFactory.eINSTANCE.createClauseText();
-		given_clauseText.setName("given_test_input_data");
-		testTemplate.setGivenText(given_clauseText);
-		ClauseText when_clauseText = 
-				Test_definitionFactory.eINSTANCE.createClauseText();
-		when_clauseText.setName("when_transformation_sheme_is_run");
-		testTemplate.setWhenText(when_clauseText);
-		ClauseText then_clauseText = 
-				Test_definitionFactory.eINSTANCE.createClauseText();
-		then_clauseText.setName("then_specific_output_data_is_expected");
-		testTemplate.setGivenText(then_clauseText);
-		testTemplateModule.getTemplates().add(testTemplate);
-		//create a TestConstraint and add it to the Test Constrinats Module,
-		// all our tests are going to use the same constriant
-		BDDTestContraints contraints = 
-				Test_definitionFactory.eINSTANCE.createBDDTestContraints();
-		contraints.setName("constraints");
-		
-		contraints.setTemplate(testTemplate);
-		// constraintsModule.getCoverageTestSets().add(contraints);
-		testConstraintsProgram.setTestConstriants(contraints);
 		
 		
-		Param contraintsparam = Test_definitionFactory.eINSTANCE.createParam();
-		contraintsparam
-				.setParam(transformationSchemes);
-		contraints.getWhenParams().add(contraintsparam);
-
-		E2EBDDTestDefinition definition =
-					Test_definitionFactory.eINSTANCE.createE2EBDDTestDefinition();
-		definition.setName("standard_test");
-		definitionModule.getTestDefinitions().add(definition);
-
-		Param defparam = Test_definitionFactory.eINSTANCE.createParam();
-		defparam.setParam(
-				transformationSchemes.getSchemes().get(1));
-		
-		When when = Test_definitionFactory.eINSTANCE.createWhen();
-		Then then = Test_definitionFactory.eINSTANCE.createThen();
-		Given given = Test_definitionFactory.eINSTANCE.createGiven();
-		definition.setWhen(when);
-		definition.setThen(then);
-		definition.setGiven(given);
-		definition.getWhen().getParams().add(defparam);
-
-		definition.setTestContraints(contraints);
-		testDefinitionProgram.setBddTestDefinitions(definitionModule);
-
-		//create the Test model instances from the CSV test data
-				
-	}
-	/**
-	 * from Test data sored in CSV format , create all the model instances of
-	 * Test and Store them in the list of  testPrograms. Note that to do this
-	 * we will create instances of TestDefintions TestConstraints, 
-	 * and TestTemplates which the Test instance will refer to.
-	 */
-	@Override
-	public void importTestDataWithNewTestFormat() {
-		
-		prepareTestData();
-		//for each file. run through it, and we should create the old style tests data, and then load it in.
-		try {
-			convertTestDataFromNewFormatToOldFormat();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		importTestDataWithOldTestFormat(outputFilepath + "/testsInOldFormat.csv");
 		
 		
 	}
 	
-	private void convertTestDataFromNewFormatToOldFormat() throws IOException {
-		
-		//create initial file
-		FileWriter testsInOldFormat = new FileWriter(outputFilepath + "/testsInOldFormat.csv",true);
-		
-		//for each import file, get its name and the columns, and export if there is a value.
-		File dir = new File(testdatafilepath);
-		  File[] directoryListing = dir.listFiles();
-		  if (directoryListing != null) {
-		    for (File child : directoryListing) {
-		    	
-		    	 StringBuffer sb = new StringBuffer();
-				 CSVParser parser = CSVParser.parse(child,StandardCharsets.UTF_8, CSVFormat.EXCEL.withFirstRecordAsHeader());
-				 boolean isHeader = true;
-				 for (CSVRecord csvRecord : parser) {
-					 if(!isHeader)
-					 {
-						 String testCaseID = csvRecord.get(0);
-					 
-						 String rowdID = csvRecord.get(1);
-						 Map<String, String> map = csvRecord.toMap();
-						 Set<Entry<String, String>> entrySet = map.entrySet();
-						 
-						 for (Iterator iterator = entrySet.iterator(); iterator.hasNext();) {
-							Entry<String, String> entry = (Entry<String, String>) iterator.next();
-							if(entry.getValue() != null && !entry.getValue().trim().equals("")
-									&& !entry.getKey().equals("TestCaseID") && !entry.getKey().equals("RowdID"))
-							{
-								//System.out.println(testCaseID + "," + rowdID  +"," + child.getName().substring(0,child.getName().length()-4) + "," + entry.getKey() + "," + entry.getValue() +'\n');
-								sb = sb.append( testCaseID.substring(0,testCaseID.indexOf(':')) + "," + testCaseID.substring(testCaseID.indexOf(':') +1,testCaseID.length()) + "," + rowdID  +"," + child.getName().substring(0,child.getName().length()-4) + "," + entry.getKey() + "," + entry.getValue() +'\n');
-
-							}
-						}
-					 }
-					 else
-						 isHeader = false;
-					
-				 }
-				 testsInOldFormat.append(sb).flush();
-
-		    }
-		  } else {
-		    // log an error if it is not a directory.
-		  }
-	}
 
 	/**
 	 * Get the related EnumMeber

@@ -14,12 +14,11 @@ package org.eclipse.efbt.cocalimo.core.ui.sirius;
 
 import java.util.Iterator;
 
-import org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModule;
-import org.eclipse.efbt.cocalimo.core.model.functionality_module.FunctionalityModuleTag;
-import org.eclipse.efbt.cocalimo.core.model.functionality_module.ScenarioSetFunctionalityModule;
-import org.eclipse.efbt.cocalimo.core.model.functionality_module.SerialFunctionalityModule;
-import org.eclipse.efbt.cocalimo.core.model.scenarios.Scenario;
-import org.eclipse.efbt.cocalimo.core.model.scenarios.ScenarioTag;
+import org.eclipse.efbt.cocalimo.smcubes.model.task.Task;
+import org.eclipse.efbt.cocalimo.smcubes.model.task.TaskTag;
+import org.eclipse.efbt.cocalimo.smcubes.model.task.SerialTask;
+import org.eclipse.efbt.cocalimo.smcubes.model.scenarios.Scenario;
+import org.eclipse.efbt.cocalimo.smcubes.model.scenarios.ScenarioTag;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
@@ -46,20 +45,20 @@ public class Services {
 	}
 
 	/**
-	 * Given an instance of a FunctionalityModule, this method returns the previous
+	 * Given an instance of a Task, this method returns the previous
 	 * functinalmodule in a chain, or null if there was not a previous one.
 	 * 
 	 * @param self
 	 * @return
 	 */
-	public EList<FunctionalityModule> getPreviousFunctionalModule(FunctionalityModule self) {
+	public EList<Task> getPreviousFunctionalModule(Task self) {
 
-		EList<FunctionalityModule> list = new BasicEList<FunctionalityModule>();
+		EList<Task> list = new BasicEList<Task>();
 		EObject container = self.eContainer();
 
 		boolean addIt = false;
-		if (container != null && ((container instanceof SerialFunctionalityModule)
-				|| container instanceof ScenarioSetFunctionalityModule))
+		if (container != null && ((container instanceof SerialTask)
+				))
 		// why do we include ScenarioSetFunctionalModule in the if statement,
 		// there may be a good reason but should check.
 		{
@@ -68,7 +67,7 @@ public class Services {
 				EObject eObject = (EObject) iterator.next();
 
 				if (addIt) {
-					list.add((FunctionalityModule) eObject);
+					list.add((Task) eObject);
 					addIt = false;
 				}
 				if (eObject == self)
@@ -79,7 +78,7 @@ public class Services {
 		return list;
 	}
 	
-	public FunctionalityModuleTag getFunctionalityModuleTag(FunctionalityModule self) {
+	public TaskTag getTaskTag(Task self) {
 
 		
 		EObject root = EcoreUtil.getRootContainer(self);
@@ -87,10 +86,10 @@ public class Services {
 		while (contents.hasNext() )
 		{
 			EObject o = contents.next();
-			if (o instanceof FunctionalityModuleTag)
+			if (o instanceof TaskTag)
 			{
-				if (((FunctionalityModuleTag) o).getFunctionalityModule().equals(self))
-					return (FunctionalityModuleTag) o;
+				if (((TaskTag) o).getTask().equals(self))
+					return (TaskTag) o;
 			}
 		}
 		return null;

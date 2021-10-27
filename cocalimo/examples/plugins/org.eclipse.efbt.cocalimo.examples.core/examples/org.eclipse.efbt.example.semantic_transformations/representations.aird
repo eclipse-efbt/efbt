@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" uid="_iJY2QOezEeuuS6cttIoRxQ" version="14.5.0.202104161500">
+  <semanticResources>requirements/CRR2.requirements_text</semanticResources>
+  <semanticResources>requirements/FRTBTask.task</semanticResources>
+  <semanticResources>tests/test1_definition.test_definition</semanticResources>
+</viewpoint:DAnalysis>
