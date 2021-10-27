@@ -1,5 +1,15 @@
 {
   "eClass" : "http://www.eclipse.org/efbt/efbt_data_definition#//DomainModule",
+  "dependencies" : {
+    "theModules" : [ {
+      "moduleName" : "memberModule",
+      "moduleVersion" : "1",
+      "theModule" : {
+        "eClass" : "http://www.eclipse.org/efbt/efbt_data_definition#//MemberModule",
+        "$ref" : "members.efbt_data_definition#memberModule"
+      }
+    } ]
+  },
   "name" : "domainModule",
   "domains" : [ {
     "code" : "CRRNCY",

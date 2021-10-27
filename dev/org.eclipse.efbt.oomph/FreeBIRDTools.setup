@@ -44,7 +44,7 @@
   <setupTask
       xsi:type="setup:VariableTask"
       name="eclipse.target.platform"
-      defaultValue="2021-06"
+      defaultValue="2021-09"
       storageURI="scope://Workspace"/>
   <setupTask
       xsi:type="setup.p2:P2Task">
@@ -155,6 +155,9 @@
           <operand
               xsi:type="predicates:NamePredicate"
               pattern=".*\.eclipse.efbt.cocalimo.examples.*"/>
+          <operand
+              xsi:type="predicates:NamePredicate"
+              pattern=".*\.eclipse.efbt.examples.*"/>
         </operand>
       </predicate>
     </workingSet>
