@@ -107,20 +107,6 @@ public class ServiceHelper {
 		dNode.getStyle().getCustomFeatures().remove(IS_EXTERNAL_LABEL);
 	}
 
-	public static boolean isDefaultPath(DEdge dEdge) {
-		boolean result = false;
-		if (dEdge.getTarget() instanceof SequenceFlow) {
-			EdgeTarget edgeTarget = dEdge.getSourceNode();
-			if (edgeTarget instanceof DNode) {
-				DNode dNode = (DNode) edgeTarget;
-				if ((dNode.getTarget() instanceof InclusiveGateway)) {
-					result = dEdge.getTarget().equals(((InclusiveGateway) dNode.getTarget()).getDefault());
-				} else if ((dNode.getTarget() instanceof ExclusiveGateway)) {
-					result = dEdge.getTarget().equals(((ExclusiveGateway) dNode.getTarget()).getDefault());
-				} 
-			}
-		}
-		return result;
-	}
+	
 
 }
