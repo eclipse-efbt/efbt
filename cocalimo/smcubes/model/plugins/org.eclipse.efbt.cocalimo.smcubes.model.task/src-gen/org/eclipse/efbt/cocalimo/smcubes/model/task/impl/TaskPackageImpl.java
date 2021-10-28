@@ -2,6 +2,8 @@
  */
 package org.eclipse.efbt.cocalimo.smcubes.model.task.impl;
 
+import bpmn2.Bpmn2Package;
+import bpmn2.impl.Bpmn2PackageImpl;
 import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementPackage;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.Requirements_textPackage;
@@ -175,14 +177,18 @@ public class TaskPackageImpl extends EPackageImpl implements TaskPackage {
 		// Obtain or create and register interdependencies
 		Object registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ScenariosPackage.eNS_URI);
 		ScenariosPackageImpl theScenariosPackage = (ScenariosPackageImpl)(registeredPackage instanceof ScenariosPackageImpl ? registeredPackage : ScenariosPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Bpmn2Package.eNS_URI);
+		Bpmn2PackageImpl theBpmn2Package = (Bpmn2PackageImpl)(registeredPackage instanceof Bpmn2PackageImpl ? registeredPackage : Bpmn2Package.eINSTANCE);
 
 		// Create package meta-data objects
 		theTaskPackage.createPackageContents();
 		theScenariosPackage.createPackageContents();
+		theBpmn2Package.createPackageContents();
 
 		// Initialize created meta-data
 		theTaskPackage.initializePackageContents();
 		theScenariosPackage.initializePackageContents();
+		theBpmn2Package.initializePackageContents();
 
 		// Mark meta-data to indicate it can't be changed
 		theTaskPackage.freeze();

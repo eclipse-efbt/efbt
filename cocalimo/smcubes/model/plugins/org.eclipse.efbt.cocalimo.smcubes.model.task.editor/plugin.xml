@@ -62,4 +62,32 @@
       </editor>
    </extension>
 
+   <extension point="org.eclipse.ui.newWizards">
+      <!-- @generated task -->
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="bpmn2.presentation.Bpmn2ModelWizardID"
+            name="%_UI_Bpmn2ModelWizard_label"
+            class="bpmn2.presentation.Bpmn2ModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/Bpmn2ModelFile.gif">
+         <description>%_UI_Bpmn2ModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <!-- @generated task -->
+      <editor
+            id="bpmn2.presentation.Bpmn2EditorID"
+            name="%_UI_Bpmn2Editor_label"
+            icon="icons/full/obj16/Bpmn2ModelFile.gif"
+            extensions="bpmn2"
+            class="bpmn2.presentation.Bpmn2Editor"
+            contributorClass="bpmn2.presentation.Bpmn2ActionBarContributor">
+      </editor>
+   </extension>
+
 </plugin>

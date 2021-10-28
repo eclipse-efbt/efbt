@@ -32,4 +32,17 @@
                org.eclipse.emf.edit.provider.IItemPropertySource"/>
    </extension>
 
+   <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
+      <!-- @generated task -->
+      <factory
+            uri="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI"
+            class="bpmn2.provider.Bpmn2ItemProviderAdapterFactory"
+            supportedTypes=
+              "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
+               org.eclipse.emf.edit.provider.IStructuredItemContentProvider
+               org.eclipse.emf.edit.provider.ITreeItemContentProvider
+               org.eclipse.emf.edit.provider.IItemLabelProvider
+               org.eclipse.emf.edit.provider.IItemPropertySource"/>
+   </extension>
+
 </plugin>

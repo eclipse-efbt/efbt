@@ -49,4 +49,12 @@
             class="org.eclipse.efbt.cocalimo.smcubes.model.scenarios.util.ScenariosResourceFactoryImpl"/>
    </extension>
 
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated task -->
+      <package
+            uri="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI"
+            class="bpmn2.Bpmn2Package"
+            genModel="model/task.genmodel"/>
+   </extension>
+
 </plugin>

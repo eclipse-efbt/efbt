@@ -157,6 +157,7 @@ import org.eclipse.emf.edit.ui.view.ExtendedPropertySheetPage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.task.provider.TaskItemProviderAdapterFactory;
 
+import bpmn2.provider.Bpmn2ItemProviderAdapterFactory;
 import org.eclipse.efbt.cocalimo.core.model.module_management.provider.Module_managementItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.provider.Requirements_textItemProviderAdapterFactory;
@@ -722,6 +723,7 @@ public class TaskEditor
 		adapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new TaskItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new ScenariosItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new Bpmn2ItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new EcoreItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Module_managementItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Requirements_textItemProviderAdapterFactory());

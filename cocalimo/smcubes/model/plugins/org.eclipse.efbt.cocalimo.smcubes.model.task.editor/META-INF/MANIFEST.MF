@@ -9,7 +9,8 @@ Bundle-Activator: org.eclipse.efbt.cocalimo.smcubes.model.task.presentation.Task
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Export-Package: org.eclipse.efbt.cocalimo.smcubes.model.scenarios.presentation,
+Export-Package: bpmn2.presentation,
+ org.eclipse.efbt.cocalimo.smcubes.model.scenarios.presentation,
  org.eclipse.efbt.cocalimo.smcubes.model.task.presentation
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources;visibility:=reexport,

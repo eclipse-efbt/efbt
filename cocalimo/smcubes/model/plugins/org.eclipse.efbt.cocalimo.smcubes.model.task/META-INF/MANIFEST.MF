@@ -8,7 +8,10 @@ Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Export-Package: org.eclipse.efbt.cocalimo.smcubes.model.scenarios,
+Export-Package: bpmn2,
+ bpmn2.impl,
+ bpmn2.util,
+ org.eclipse.efbt.cocalimo.smcubes.model.scenarios,
  org.eclipse.efbt.cocalimo.smcubes.model.scenarios.impl,
  org.eclipse.efbt.cocalimo.smcubes.model.scenarios.util,
  org.eclipse.efbt.cocalimo.smcubes.model.task,
