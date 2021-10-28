@@ -12,7 +12,6 @@ package bpmn2;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link bpmn2.SequenceFlow#isIsImmediate <em>Is Immediate</em>}</li>
  *   <li>{@link bpmn2.SequenceFlow#getTargetRef <em>Target Ref</em>}</li>
  *   <li>{@link bpmn2.SequenceFlow#getSourceRef <em>Source Ref</em>}</li>
  * </ul>
@@ -22,28 +21,6 @@ package bpmn2;
  * @generated
  */
 public interface SequenceFlow extends FlowElement {
-	/**
-	 * Returns the value of the '<em><b>Is Immediate</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Is Immediate</em>' attribute.
-	 * @see #setIsImmediate(boolean)
-	 * @see bpmn2.Bpmn2Package#getSequenceFlow_IsImmediate()
-	 * @model ordered="false"
-	 * @generated
-	 */
-	boolean isIsImmediate();
-
-	/**
-	 * Sets the value of the '{@link bpmn2.SequenceFlow#isIsImmediate <em>Is Immediate</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Is Immediate</em>' attribute.
-	 * @see #isIsImmediate()
-	 * @generated
-	 */
-	void setIsImmediate(boolean value);
-
 	/**
 	 * Returns the value of the '<em><b>Target Ref</b></em>' reference.
 	 * It is bidirectional and its opposite is '{@link bpmn2.FlowNode#getIncoming <em>Incoming</em>}'.

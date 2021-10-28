@@ -323,22 +323,13 @@ public interface Bpmn2Package extends EPackage {
 	int SEQUENCE_FLOW__NAME = FLOW_ELEMENT__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Is Immediate</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SEQUENCE_FLOW__IS_IMMEDIATE = FLOW_ELEMENT_FEATURE_COUNT + 0;
-
-	/**
 	 * The feature id for the '<em><b>Target Ref</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SEQUENCE_FLOW__TARGET_REF = FLOW_ELEMENT_FEATURE_COUNT + 1;
+	int SEQUENCE_FLOW__TARGET_REF = FLOW_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Source Ref</b></em>' reference.
@@ -347,7 +338,7 @@ public interface Bpmn2Package extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SEQUENCE_FLOW__SOURCE_REF = FLOW_ELEMENT_FEATURE_COUNT + 2;
+	int SEQUENCE_FLOW__SOURCE_REF = FLOW_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Sequence Flow</em>' class.
@@ -356,7 +347,7 @@ public interface Bpmn2Package extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SEQUENCE_FLOW_FEATURE_COUNT = FLOW_ELEMENT_FEATURE_COUNT + 3;
+	int SEQUENCE_FLOW_FEATURE_COUNT = FLOW_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of operations of the '<em>Sequence Flow</em>' class.
@@ -660,22 +651,13 @@ public interface Bpmn2Package extends EPackage {
 	int EXCLUSIVE_GATEWAY__INCOMING = GATEWAY__INCOMING;
 
 	/**
-	 * The feature id for the '<em><b>Default</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EXCLUSIVE_GATEWAY__DEFAULT = GATEWAY_FEATURE_COUNT + 0;
-
-	/**
 	 * The number of structural features of the '<em>Exclusive Gateway</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXCLUSIVE_GATEWAY_FEATURE_COUNT = GATEWAY_FEATURE_COUNT + 1;
+	int EXCLUSIVE_GATEWAY_FEATURE_COUNT = GATEWAY_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of operations of the '<em>Exclusive Gateway</em>' class.
@@ -742,22 +724,13 @@ public interface Bpmn2Package extends EPackage {
 	int INCLUSIVE_GATEWAY__INCOMING = GATEWAY__INCOMING;
 
 	/**
-	 * The feature id for the '<em><b>Default</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INCLUSIVE_GATEWAY__DEFAULT = GATEWAY_FEATURE_COUNT + 0;
-
-	/**
 	 * The number of structural features of the '<em>Inclusive Gateway</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int INCLUSIVE_GATEWAY_FEATURE_COUNT = GATEWAY_FEATURE_COUNT + 1;
+	int INCLUSIVE_GATEWAY_FEATURE_COUNT = GATEWAY_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of operations of the '<em>Inclusive Gateway</em>' class.
@@ -1132,17 +1105,6 @@ public interface Bpmn2Package extends EPackage {
 	EClass getSequenceFlow();
 
 	/**
-	 * Returns the meta object for the attribute '{@link bpmn2.SequenceFlow#isIsImmediate <em>Is Immediate</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Is Immediate</em>'.
-	 * @see bpmn2.SequenceFlow#isIsImmediate()
-	 * @see #getSequenceFlow()
-	 * @generated
-	 */
-	EAttribute getSequenceFlow_IsImmediate();
-
-	/**
 	 * Returns the meta object for the reference '{@link bpmn2.SequenceFlow#getTargetRef <em>Target Ref</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1216,17 +1178,6 @@ public interface Bpmn2Package extends EPackage {
 	EClass getExclusiveGateway();
 
 	/**
-	 * Returns the meta object for the reference '{@link bpmn2.ExclusiveGateway#getDefault <em>Default</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Default</em>'.
-	 * @see bpmn2.ExclusiveGateway#getDefault()
-	 * @see #getExclusiveGateway()
-	 * @generated
-	 */
-	EReference getExclusiveGateway_Default();
-
-	/**
 	 * Returns the meta object for class '{@link bpmn2.InclusiveGateway <em>Inclusive Gateway</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1235,17 +1186,6 @@ public interface Bpmn2Package extends EPackage {
 	 * @generated
 	 */
 	EClass getInclusiveGateway();
-
-	/**
-	 * Returns the meta object for the reference '{@link bpmn2.InclusiveGateway#getDefault <em>Default</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Default</em>'.
-	 * @see bpmn2.InclusiveGateway#getDefault()
-	 * @see #getInclusiveGateway()
-	 * @generated
-	 */
-	EReference getInclusiveGateway_Default();
 
 	/**
 	 * Returns the meta object for class '{@link bpmn2.ParallelGateway <em>Parallel Gateway</em>}'.
@@ -1399,14 +1339,6 @@ public interface Bpmn2Package extends EPackage {
 		EClass SEQUENCE_FLOW = eINSTANCE.getSequenceFlow();
 
 		/**
-		 * The meta object literal for the '<em><b>Is Immediate</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute SEQUENCE_FLOW__IS_IMMEDIATE = eINSTANCE.getSequenceFlow_IsImmediate();
-
-		/**
 		 * The meta object literal for the '<em><b>Target Ref</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1471,14 +1403,6 @@ public interface Bpmn2Package extends EPackage {
 		EClass EXCLUSIVE_GATEWAY = eINSTANCE.getExclusiveGateway();
 
 		/**
-		 * The meta object literal for the '<em><b>Default</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference EXCLUSIVE_GATEWAY__DEFAULT = eINSTANCE.getExclusiveGateway_Default();
-
-		/**
 		 * The meta object literal for the '{@link bpmn2.impl.InclusiveGatewayImpl <em>Inclusive Gateway</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1487,14 +1411,6 @@ public interface Bpmn2Package extends EPackage {
 		 * @generated
 		 */
 		EClass INCLUSIVE_GATEWAY = eINSTANCE.getInclusiveGateway();
-
-		/**
-		 * The meta object literal for the '<em><b>Default</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference INCLUSIVE_GATEWAY__DEFAULT = eINSTANCE.getInclusiveGateway_Default();
 
 		/**
 		 * The meta object literal for the '{@link bpmn2.impl.ParallelGatewayImpl <em>Parallel Gateway</em>}' class.

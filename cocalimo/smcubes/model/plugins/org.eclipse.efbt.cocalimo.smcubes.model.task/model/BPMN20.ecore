@@ -22,8 +22,6 @@
         upperBound="-1" eType="#//SequenceFlow" eOpposite="#//SequenceFlow/targetRef"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SequenceFlow" eSuperTypes="#//FlowElement">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isImmediate" ordered="false"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="targetRef" ordered="false"
         eType="#//FlowNode" eOpposite="#//FlowNode/incoming"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="sourceRef" ordered="false"
@@ -35,14 +33,8 @@
         eType="#//SequenceFlow"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Gateway" abstract="true" eSuperTypes="#//FlowNode"/>
-  <eClassifiers xsi:type="ecore:EClass" name="ExclusiveGateway" eSuperTypes="#//Gateway">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="default" ordered="false"
-        eType="#//SequenceFlow"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="InclusiveGateway" eSuperTypes="#//Gateway">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="default" ordered="false"
-        eType="#//SequenceFlow"/>
-  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ExclusiveGateway" eSuperTypes="#//Gateway"/>
+  <eClassifiers xsi:type="ecore:EClass" name="InclusiveGateway" eSuperTypes="#//Gateway"/>
   <eClassifiers xsi:type="ecore:EClass" name="ParallelGateway" eSuperTypes="#//Gateway"/>
   <eClassifiers xsi:type="ecore:EClass" name="ServiceTask" eSuperTypes="#//Task"/>
   <eClassifiers xsi:type="ecore:EClass" name="SubProcess" eSuperTypes="#//Activity #//FlowElementsContainer"/>

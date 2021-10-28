@@ -22,7 +22,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link bpmn2.impl.SequenceFlowImpl#isIsImmediate <em>Is Immediate</em>}</li>
  *   <li>{@link bpmn2.impl.SequenceFlowImpl#getTargetRef <em>Target Ref</em>}</li>
  *   <li>{@link bpmn2.impl.SequenceFlowImpl#getSourceRef <em>Source Ref</em>}</li>
  * </ul>
@@ -30,26 +29,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * @generated
  */
 public class SequenceFlowImpl extends FlowElementImpl implements SequenceFlow {
-	/**
-	 * The default value of the '{@link #isIsImmediate() <em>Is Immediate</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isIsImmediate()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final boolean IS_IMMEDIATE_EDEFAULT = false;
-
-	/**
-	 * The cached value of the '{@link #isIsImmediate() <em>Is Immediate</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isIsImmediate()
-	 * @generated
-	 * @ordered
-	 */
-	protected boolean isImmediate = IS_IMMEDIATE_EDEFAULT;
-
 	/**
 	 * The cached value of the '{@link #getTargetRef() <em>Target Ref</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -87,29 +66,6 @@ public class SequenceFlowImpl extends FlowElementImpl implements SequenceFlow {
 	@Override
 	protected EClass eStaticClass() {
 		return Bpmn2Package.Literals.SEQUENCE_FLOW;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public boolean isIsImmediate() {
-		return isImmediate;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setIsImmediate(boolean newIsImmediate) {
-		boolean oldIsImmediate = isImmediate;
-		isImmediate = newIsImmediate;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, Bpmn2Package.SEQUENCE_FLOW__IS_IMMEDIATE, oldIsImmediate, isImmediate));
 	}
 
 	/**
@@ -280,8 +236,6 @@ public class SequenceFlowImpl extends FlowElementImpl implements SequenceFlow {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case Bpmn2Package.SEQUENCE_FLOW__IS_IMMEDIATE:
-				return isIsImmediate();
 			case Bpmn2Package.SEQUENCE_FLOW__TARGET_REF:
 				if (resolve) return getTargetRef();
 				return basicGetTargetRef();
@@ -300,9 +254,6 @@ public class SequenceFlowImpl extends FlowElementImpl implements SequenceFlow {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case Bpmn2Package.SEQUENCE_FLOW__IS_IMMEDIATE:
-				setIsImmediate((Boolean)newValue);
-				return;
 			case Bpmn2Package.SEQUENCE_FLOW__TARGET_REF:
 				setTargetRef((FlowNode)newValue);
 				return;
@@ -321,9 +272,6 @@ public class SequenceFlowImpl extends FlowElementImpl implements SequenceFlow {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case Bpmn2Package.SEQUENCE_FLOW__IS_IMMEDIATE:
-				setIsImmediate(IS_IMMEDIATE_EDEFAULT);
-				return;
 			case Bpmn2Package.SEQUENCE_FLOW__TARGET_REF:
 				setTargetRef((FlowNode)null);
 				return;
@@ -342,30 +290,12 @@ public class SequenceFlowImpl extends FlowElementImpl implements SequenceFlow {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case Bpmn2Package.SEQUENCE_FLOW__IS_IMMEDIATE:
-				return isImmediate != IS_IMMEDIATE_EDEFAULT;
 			case Bpmn2Package.SEQUENCE_FLOW__TARGET_REF:
 				return targetRef != null;
 			case Bpmn2Package.SEQUENCE_FLOW__SOURCE_REF:
 				return sourceRef != null;
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (isImmediate: ");
-		result.append(isImmediate);
-		result.append(')');
-		return result.toString();
 	}
 
 } //SequenceFlowImpl

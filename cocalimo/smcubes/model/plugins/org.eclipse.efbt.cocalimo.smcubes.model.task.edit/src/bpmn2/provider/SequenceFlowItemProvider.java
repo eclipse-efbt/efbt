@@ -14,8 +14,6 @@ import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
-import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
-import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
  * This is the item provider adapter for a {@link bpmn2.SequenceFlow} object.
@@ -45,33 +43,10 @@ public class SequenceFlowItemProvider extends FlowElementItemProvider {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addIsImmediatePropertyDescriptor(object);
 			addTargetRefPropertyDescriptor(object);
 			addSourceRefPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
-	}
-
-	/**
-	 * This adds a property descriptor for the Is Immediate feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addIsImmediatePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_SequenceFlow_isImmediate_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_SequenceFlow_isImmediate_feature", "_UI_SequenceFlow_type"),
-				 Bpmn2Package.Literals.SEQUENCE_FLOW__IS_IMMEDIATE,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-				 null,
-				 null));
 	}
 
 	/**
@@ -154,12 +129,6 @@ public class SequenceFlowItemProvider extends FlowElementItemProvider {
 	@Override
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
-
-		switch (notification.getFeatureID(SequenceFlow.class)) {
-			case Bpmn2Package.SEQUENCE_FLOW__IS_IMMEDIATE:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
-				return;
-		}
 		super.notifyChanged(notification);
 	}
 

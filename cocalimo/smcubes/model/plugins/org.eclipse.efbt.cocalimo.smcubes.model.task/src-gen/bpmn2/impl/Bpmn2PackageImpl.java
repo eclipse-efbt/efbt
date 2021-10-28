@@ -334,18 +334,8 @@ public class Bpmn2PackageImpl extends EPackageImpl implements Bpmn2Package {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getSequenceFlow_IsImmediate() {
-		return (EAttribute)sequenceFlowEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EReference getSequenceFlow_TargetRef() {
-		return (EReference)sequenceFlowEClass.getEStructuralFeatures().get(1);
+		return (EReference)sequenceFlowEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -355,7 +345,7 @@ public class Bpmn2PackageImpl extends EPackageImpl implements Bpmn2Package {
 	 */
 	@Override
 	public EReference getSequenceFlow_SourceRef() {
-		return (EReference)sequenceFlowEClass.getEStructuralFeatures().get(2);
+		return (EReference)sequenceFlowEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -414,28 +404,8 @@ public class Bpmn2PackageImpl extends EPackageImpl implements Bpmn2Package {
 	 * @generated
 	 */
 	@Override
-	public EReference getExclusiveGateway_Default() {
-		return (EReference)exclusiveGatewayEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EClass getInclusiveGateway() {
 		return inclusiveGatewayEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getInclusiveGateway_Default() {
-		return (EReference)inclusiveGatewayEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -512,7 +482,6 @@ public class Bpmn2PackageImpl extends EPackageImpl implements Bpmn2Package {
 		createEReference(flowNodeEClass, FLOW_NODE__INCOMING);
 
 		sequenceFlowEClass = createEClass(SEQUENCE_FLOW);
-		createEAttribute(sequenceFlowEClass, SEQUENCE_FLOW__IS_IMMEDIATE);
 		createEReference(sequenceFlowEClass, SEQUENCE_FLOW__TARGET_REF);
 		createEReference(sequenceFlowEClass, SEQUENCE_FLOW__SOURCE_REF);
 
@@ -524,10 +493,8 @@ public class Bpmn2PackageImpl extends EPackageImpl implements Bpmn2Package {
 		gatewayEClass = createEClass(GATEWAY);
 
 		exclusiveGatewayEClass = createEClass(EXCLUSIVE_GATEWAY);
-		createEReference(exclusiveGatewayEClass, EXCLUSIVE_GATEWAY__DEFAULT);
 
 		inclusiveGatewayEClass = createEClass(INCLUSIVE_GATEWAY);
-		createEReference(inclusiveGatewayEClass, INCLUSIVE_GATEWAY__DEFAULT);
 
 		parallelGatewayEClass = createEClass(PARALLEL_GATEWAY);
 
@@ -594,7 +561,6 @@ public class Bpmn2PackageImpl extends EPackageImpl implements Bpmn2Package {
 		initEReference(getFlowNode_Incoming(), this.getSequenceFlow(), this.getSequenceFlow_TargetRef(), "incoming", null, 0, -1, FlowNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
 
 		initEClass(sequenceFlowEClass, SequenceFlow.class, "SequenceFlow", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getSequenceFlow_IsImmediate(), ecorePackage.getEBoolean(), "isImmediate", null, 0, 1, SequenceFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
 		initEReference(getSequenceFlow_TargetRef(), this.getFlowNode(), this.getFlowNode_Incoming(), "targetRef", null, 0, 1, SequenceFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
 		initEReference(getSequenceFlow_SourceRef(), this.getFlowNode(), this.getFlowNode_Outgoing(), "sourceRef", null, 0, 1, SequenceFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
 
@@ -606,10 +572,8 @@ public class Bpmn2PackageImpl extends EPackageImpl implements Bpmn2Package {
 		initEClass(gatewayEClass, Gateway.class, "Gateway", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(exclusiveGatewayEClass, ExclusiveGateway.class, "ExclusiveGateway", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getExclusiveGateway_Default(), this.getSequenceFlow(), null, "default", null, 0, 1, ExclusiveGateway.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
 
 		initEClass(inclusiveGatewayEClass, InclusiveGateway.class, "InclusiveGateway", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getInclusiveGateway_Default(), this.getSequenceFlow(), null, "default", null, 0, 1, InclusiveGateway.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
 
 		initEClass(parallelGatewayEClass, ParallelGateway.class, "ParallelGateway", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

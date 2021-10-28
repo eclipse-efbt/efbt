@@ -3,7 +3,6 @@
 package bpmn2.provider;
 
 
-import bpmn2.Bpmn2Package;
 import bpmn2.ExclusiveGateway;
 
 import java.util.Collection;
@@ -11,8 +10,6 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-
-import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 
 /**
@@ -43,31 +40,8 @@ public class ExclusiveGatewayItemProvider extends GatewayItemProvider {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addDefaultPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
-	}
-
-	/**
-	 * This adds a property descriptor for the Default feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addDefaultPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_ExclusiveGateway_default_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_ExclusiveGateway_default_feature", "_UI_ExclusiveGateway_type"),
-				 Bpmn2Package.Literals.EXCLUSIVE_GATEWAY__DEFAULT,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
 	}
 
 	/**
