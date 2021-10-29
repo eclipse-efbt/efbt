@@ -18,9 +18,6 @@
    <feature id="org.eclipse.efbt.cocalimo.core.model.feature">
       <category name="efbt"/>
    </feature>
-   <feature id="org.eclipse.efbt.cocalimo.core.ui.sirius.feature">
-      <category name="efbt"/>
-   </feature>
    <feature id="org.eclipse.efbt.controller.smcubes.component.feature">
       <category name="efbt"/>
    </feature>
