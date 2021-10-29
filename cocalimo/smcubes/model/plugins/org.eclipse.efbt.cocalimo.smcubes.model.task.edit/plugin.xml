@@ -7,10 +7,10 @@
 <plugin>
 
    <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
-      <!-- @generated task -->
+      <!-- @generated logical_transformations -->
       <factory
-            uri="http://www.eclipse.org/efbt/task"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.task.provider.TaskItemProviderAdapterFactory"
+            uri="http://www.eclipse.org/efbt/logical_transformations"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.logical_transformations.provider.Logical_transformationsItemProviderAdapterFactory"
             supportedTypes=
               "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
                org.eclipse.emf.edit.provider.IStructuredItemContentProvider
@@ -20,10 +20,23 @@
    </extension>
 
    <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
-      <!-- @generated task -->
+      <!-- @generated logical_transformations -->
       <factory
             uri="http://www.eclipse.org/efbt/scenarios"
             class="org.eclipse.efbt.cocalimo.smcubes.model.scenarios.provider.ScenariosItemProviderAdapterFactory"
+            supportedTypes=
+              "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
+               org.eclipse.emf.edit.provider.IStructuredItemContentProvider
+               org.eclipse.emf.edit.provider.ITreeItemContentProvider
+               org.eclipse.emf.edit.provider.IItemLabelProvider
+               org.eclipse.emf.edit.provider.IItemPropertySource"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
+      <!-- @generated logical_transformations -->
+      <factory
+            uri="http://www.eclipse.org/efbt/bpmn_lite"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.provider.Bpmn_liteItemProviderAdapterFactory"
             supportedTypes=
               "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
                org.eclipse.emf.edit.provider.IStructuredItemContentProvider

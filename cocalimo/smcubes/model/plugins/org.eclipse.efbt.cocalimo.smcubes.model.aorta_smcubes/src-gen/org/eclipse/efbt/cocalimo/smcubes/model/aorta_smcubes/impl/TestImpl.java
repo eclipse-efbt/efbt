@@ -6,7 +6,9 @@ import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.Aorta_smcubesPackag
 import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.ReportResults;
 import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.Test;
 import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinition;
+
 import org.eclipse.efbt.cocalimo.smcubes.model.input_data.InputData;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 

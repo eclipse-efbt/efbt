@@ -5,7 +5,7 @@ package org.eclipse.efbt.cocalimo.smcubes.model.scenarios.presentation;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.task.presentation.TaskEditorPlugin;
+import org.eclipse.efbt.cocalimo.smcubes.model.logical_transformations.presentation.TaskEditorPlugin;
 
 import org.eclipse.emf.common.ui.viewer.IViewerProvider;
 

@@ -15,14 +15,10 @@ package org.eclipse.efbt.controller.smcubes.component.importexport.impl;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.task.Task;
-import org.eclipse.efbt.cocalimo.smcubes.model.task.TaskModule;
-import org.eclipse.efbt.cocalimo.smcubes.model.task.TaskFactory;
 import org.eclipse.efbt.cocalimo.core.model.module_management.ModuleDependencies;
 import org.eclipse.efbt.cocalimo.core.model.module_management.ModuleDependency;
 import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementFactory;
@@ -220,20 +216,7 @@ public abstract class Importer implements BirdImporter {
 		dependency.setTheModule(members);
 		
 		functionalityModulesProgram = Aorta_smcubesFactory.eINSTANCE.createAortaSMCubesModel();
-		TaskModule fmm = TaskFactory.eINSTANCE.createTaskModule();
-		fmm.setName("functionalityModuleModule");
-		Task fm = TaskFactory.eINSTANCE.createDataProcessingTask();
-		fm.setName("functionalityModule");
-		fmm.getTasks().add(fm);
-		functionalityModulesProgram.setTaskModules(fmm);
-		
-		
-		
-		
-	
-		 
 
-		
 	}
 
 	/**

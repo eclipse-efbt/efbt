@@ -4,12 +4,12 @@ package org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.impl;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.RequirementsModule;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.task.TaskModule;
-
 import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.AortaSMCubesModel;
 import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.Aorta_smcubesPackage;
 import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinitionModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestModule;
+
+import org.eclipse.efbt.cocalimo.smcubes.model.logical_transformations.LogicalTransformationModule;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.SmcubesModel;
 
@@ -78,7 +78,7 @@ public class AortaSMCubesModelImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 * @ordered
 	 */
-	protected TaskModule taskModules;
+	protected LogicalTransformationModule taskModules;
 
 	/**
 	 * The cached value of the '{@link #getTestDefinitions() <em>Test Definitions</em>}' reference.
@@ -255,10 +255,10 @@ public class AortaSMCubesModelImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public TaskModule getTaskModules() {
+	public LogicalTransformationModule getTaskModules() {
 		if (taskModules != null && taskModules.eIsProxy()) {
 			InternalEObject oldTaskModules = (InternalEObject)taskModules;
-			taskModules = (TaskModule)eResolveProxy(oldTaskModules);
+			taskModules = (LogicalTransformationModule)eResolveProxy(oldTaskModules);
 			if (taskModules != oldTaskModules) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Aorta_smcubesPackage.AORTA_SM_CUBES_MODEL__TASK_MODULES, oldTaskModules, taskModules));
@@ -272,7 +272,7 @@ public class AortaSMCubesModelImpl extends MinimalEObjectImpl.Container implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public TaskModule basicGetTaskModules() {
+	public LogicalTransformationModule basicGetTaskModules() {
 		return taskModules;
 	}
 
@@ -282,8 +282,8 @@ public class AortaSMCubesModelImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public void setTaskModules(TaskModule newTaskModules) {
-		TaskModule oldTaskModules = taskModules;
+	public void setTaskModules(LogicalTransformationModule newTaskModules) {
+		LogicalTransformationModule oldTaskModules = taskModules;
 		taskModules = newTaskModules;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, Aorta_smcubesPackage.AORTA_SM_CUBES_MODEL__TASK_MODULES, oldTaskModules, taskModules));
@@ -399,7 +399,7 @@ public class AortaSMCubesModelImpl extends MinimalEObjectImpl.Container implemen
 				setTests((TestModule)newValue);
 				return;
 			case Aorta_smcubesPackage.AORTA_SM_CUBES_MODEL__TASK_MODULES:
-				setTaskModules((TaskModule)newValue);
+				setTaskModules((LogicalTransformationModule)newValue);
 				return;
 			case Aorta_smcubesPackage.AORTA_SM_CUBES_MODEL__TEST_DEFINITIONS:
 				setTestDefinitions((TestDefinitionModule)newValue);
@@ -429,7 +429,7 @@ public class AortaSMCubesModelImpl extends MinimalEObjectImpl.Container implemen
 				setTests((TestModule)null);
 				return;
 			case Aorta_smcubesPackage.AORTA_SM_CUBES_MODEL__TASK_MODULES:
-				setTaskModules((TaskModule)null);
+				setTaskModules((LogicalTransformationModule)null);
 				return;
 			case Aorta_smcubesPackage.AORTA_SM_CUBES_MODEL__TEST_DEFINITIONS:
 				setTestDefinitions((TestDefinitionModule)null);

@@ -7,9 +7,6 @@ cd ..\..\..
  cd cocalimo\smcubes\modelquery
 call mvn install
 cd ..\..\..
-cd cocalimo\core\ui_sirius
-call mvn install
-cd ..\..\..
 cd cocalimo\smcubes\ui_sirius
 call mvn install
 cd ..\..\..

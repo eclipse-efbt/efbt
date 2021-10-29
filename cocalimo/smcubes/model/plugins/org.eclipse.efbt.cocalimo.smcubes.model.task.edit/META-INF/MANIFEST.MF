@@ -5,12 +5,13 @@ Bundle-SymbolicName: org.eclipse.efbt.cocalimo.smcubes.model.task.edit;singleton
 Automatic-Module-Name: org.eclipse.efbt.cocalimo.smcubes.model.task.edit
 Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: .
-Bundle-Activator: org.eclipse.efbt.cocalimo.smcubes.model.task.provider.TaskEditPlugin$Implementation
+Bundle-Activator: org.eclipse.efbt.cocalimo.smcubes.model.logical_transformations.provider.TaskEditPlugin$Implementation
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Export-Package: org.eclipse.efbt.cocalimo.smcubes.model.scenarios.provider,
- org.eclipse.efbt.cocalimo.smcubes.model.task.provider
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Export-Package: org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.provider,
+ org.eclipse.efbt.cocalimo.smcubes.model.logical_transformations.provider,
+ org.eclipse.efbt.cocalimo.smcubes.model.scenarios.provider
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.efbt.cocalimo.smcubes.model.task;visibility:=reexport,
  org.eclipse.emf.edit;visibility:=reexport,
