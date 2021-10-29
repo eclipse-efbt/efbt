@@ -1,14 +1,15 @@
-/**
- * Copyright (c) 2011-2019 Obeo.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+/*******************************************************************************
+ * Copyright (c) 2020 Bird Software Solutions Ltd
+ * This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
  * Contributors:
- *     Obeo - initial API and implementation
- * 
- */
+ *    Neil Mackenzie - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.efbt.cocalimo.smcubes.ui.bpmnlite;
 
 import org.eclipse.sirius.business.api.componentization.ViewpointRegistry;
@@ -48,7 +49,7 @@ public class Activator extends AbstractUIPlugin {
 		plugin = this;
 		viewpoints = new HashSet<Viewpoint>();
 		viewpoints.addAll(ViewpointRegistry.getInstance().registerFromPlugin(
-				PLUGIN_ID + "/description/BPMN2.odesign"));
+				PLUGIN_ID + "/description/bpmn_lite.odesign"));
 	}
 
 	/*

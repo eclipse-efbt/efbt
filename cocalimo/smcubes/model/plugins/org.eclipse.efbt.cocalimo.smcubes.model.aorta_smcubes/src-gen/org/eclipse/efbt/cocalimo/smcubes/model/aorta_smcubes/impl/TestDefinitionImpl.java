@@ -2,26 +2,18 @@
  */
 package org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.impl;
 
-import java.util.Collection;
-import org.eclipse.efbt.cocalimo.smcubes.model.task.DataProcessingTask;
-import org.eclipse.efbt.cocalimo.smcubes.model.task.ReadDataSourceTask;
-import org.eclipse.efbt.cocalimo.smcubes.model.task.ReportCellCreationTask;
-import org.eclipse.efbt.cocalimo.smcubes.model.task.TaskSet;
-
 import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.Aorta_smcubesPackage;
 import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinition;
 
-import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.efbt.cocalimo.smcubes.model.scenarios.Scenario;
 
-import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -31,11 +23,7 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.impl.TestDefinitionImpl#getReadTasks <em>Read Tasks</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.impl.TestDefinitionImpl#getProcessingTasks <em>Processing Tasks</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.impl.TestDefinitionImpl#getReportCellCreationTasks <em>Report Cell Creation Tasks</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.impl.TestDefinitionImpl#getScenarios <em>Scenarios</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.impl.TestDefinitionImpl#getPicture <em>Picture</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.impl.TestDefinitionImpl#getScenario <em>Scenario</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.impl.TestDefinitionImpl#getName <em>Name</em>}</li>
  * </ul>
  *
@@ -43,54 +31,14 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  */
 public class TestDefinitionImpl extends MinimalEObjectImpl.Container implements TestDefinition {
 	/**
-	 * The cached value of the '{@link #getReadTasks() <em>Read Tasks</em>}' reference list.
+	 * The cached value of the '{@link #getScenario() <em>Scenario</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getReadTasks()
+	 * @see #getScenario()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<ReadDataSourceTask> readTasks;
-
-	/**
-	 * The cached value of the '{@link #getProcessingTasks() <em>Processing Tasks</em>}' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getProcessingTasks()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<DataProcessingTask> processingTasks;
-
-	/**
-	 * The cached value of the '{@link #getReportCellCreationTasks() <em>Report Cell Creation Tasks</em>}' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getReportCellCreationTasks()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<ReportCellCreationTask> reportCellCreationTasks;
-
-	/**
-	 * The cached value of the '{@link #getScenarios() <em>Scenarios</em>}' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getScenarios()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<org.eclipse.efbt.cocalimo.smcubes.model.scenarios.Scenario> scenarios;
-
-	/**
-	 * The cached value of the '{@link #getPicture() <em>Picture</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getPicture()
-	 * @generated
-	 * @ordered
-	 */
-	protected TaskSet picture;
+	protected Scenario scenario;
 
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
@@ -137,68 +85,16 @@ public class TestDefinitionImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public EList<ReadDataSourceTask> getReadTasks() {
-		if (readTasks == null) {
-			readTasks = new EObjectResolvingEList<ReadDataSourceTask>(ReadDataSourceTask.class, this, Aorta_smcubesPackage.TEST_DEFINITION__READ_TASKS);
-		}
-		return readTasks;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EList<DataProcessingTask> getProcessingTasks() {
-		if (processingTasks == null) {
-			processingTasks = new EObjectResolvingEList<DataProcessingTask>(DataProcessingTask.class, this, Aorta_smcubesPackage.TEST_DEFINITION__PROCESSING_TASKS);
-		}
-		return processingTasks;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EList<ReportCellCreationTask> getReportCellCreationTasks() {
-		if (reportCellCreationTasks == null) {
-			reportCellCreationTasks = new EObjectResolvingEList<ReportCellCreationTask>(ReportCellCreationTask.class, this, Aorta_smcubesPackage.TEST_DEFINITION__REPORT_CELL_CREATION_TASKS);
-		}
-		return reportCellCreationTasks;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EList<org.eclipse.efbt.cocalimo.smcubes.model.scenarios.Scenario> getScenarios() {
-		if (scenarios == null) {
-			scenarios = new EObjectResolvingEList<org.eclipse.efbt.cocalimo.smcubes.model.scenarios.Scenario>(org.eclipse.efbt.cocalimo.smcubes.model.scenarios.Scenario.class, this, Aorta_smcubesPackage.TEST_DEFINITION__SCENARIOS);
-		}
-		return scenarios;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public TaskSet getPicture() {
-		if (picture != null && picture.eIsProxy()) {
-			InternalEObject oldPicture = (InternalEObject)picture;
-			picture = (TaskSet)eResolveProxy(oldPicture);
-			if (picture != oldPicture) {
+	public Scenario getScenario() {
+		if (scenario != null && scenario.eIsProxy()) {
+			InternalEObject oldScenario = (InternalEObject)scenario;
+			scenario = (Scenario)eResolveProxy(oldScenario);
+			if (scenario != oldScenario) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Aorta_smcubesPackage.TEST_DEFINITION__PICTURE, oldPicture, picture));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Aorta_smcubesPackage.TEST_DEFINITION__SCENARIO, oldScenario, scenario));
 			}
 		}
-		return picture;
+		return scenario;
 	}
 
 	/**
@@ -206,8 +102,8 @@ public class TestDefinitionImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public TaskSet basicGetPicture() {
-		return picture;
+	public Scenario basicGetScenario() {
+		return scenario;
 	}
 
 	/**
@@ -216,11 +112,11 @@ public class TestDefinitionImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public void setPicture(TaskSet newPicture) {
-		TaskSet oldPicture = picture;
-		picture = newPicture;
+	public void setScenario(Scenario newScenario) {
+		Scenario oldScenario = scenario;
+		scenario = newScenario;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, Aorta_smcubesPackage.TEST_DEFINITION__PICTURE, oldPicture, picture));
+			eNotify(new ENotificationImpl(this, Notification.SET, Aorta_smcubesPackage.TEST_DEFINITION__SCENARIO, oldScenario, scenario));
 	}
 
 	/**
@@ -254,17 +150,9 @@ public class TestDefinitionImpl extends MinimalEObjectImpl.Container implements 
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case Aorta_smcubesPackage.TEST_DEFINITION__READ_TASKS:
-				return getReadTasks();
-			case Aorta_smcubesPackage.TEST_DEFINITION__PROCESSING_TASKS:
-				return getProcessingTasks();
-			case Aorta_smcubesPackage.TEST_DEFINITION__REPORT_CELL_CREATION_TASKS:
-				return getReportCellCreationTasks();
-			case Aorta_smcubesPackage.TEST_DEFINITION__SCENARIOS:
-				return getScenarios();
-			case Aorta_smcubesPackage.TEST_DEFINITION__PICTURE:
-				if (resolve) return getPicture();
-				return basicGetPicture();
+			case Aorta_smcubesPackage.TEST_DEFINITION__SCENARIO:
+				if (resolve) return getScenario();
+				return basicGetScenario();
 			case Aorta_smcubesPackage.TEST_DEFINITION__NAME:
 				return getName();
 		}
@@ -276,28 +164,11 @@ public class TestDefinitionImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case Aorta_smcubesPackage.TEST_DEFINITION__READ_TASKS:
-				getReadTasks().clear();
-				getReadTasks().addAll((Collection<? extends ReadDataSourceTask>)newValue);
-				return;
-			case Aorta_smcubesPackage.TEST_DEFINITION__PROCESSING_TASKS:
-				getProcessingTasks().clear();
-				getProcessingTasks().addAll((Collection<? extends DataProcessingTask>)newValue);
-				return;
-			case Aorta_smcubesPackage.TEST_DEFINITION__REPORT_CELL_CREATION_TASKS:
-				getReportCellCreationTasks().clear();
-				getReportCellCreationTasks().addAll((Collection<? extends ReportCellCreationTask>)newValue);
-				return;
-			case Aorta_smcubesPackage.TEST_DEFINITION__SCENARIOS:
-				getScenarios().clear();
-				getScenarios().addAll((Collection<? extends org.eclipse.efbt.cocalimo.smcubes.model.scenarios.Scenario>)newValue);
-				return;
-			case Aorta_smcubesPackage.TEST_DEFINITION__PICTURE:
-				setPicture((TaskSet)newValue);
+			case Aorta_smcubesPackage.TEST_DEFINITION__SCENARIO:
+				setScenario((Scenario)newValue);
 				return;
 			case Aorta_smcubesPackage.TEST_DEFINITION__NAME:
 				setName((String)newValue);
@@ -314,20 +185,8 @@ public class TestDefinitionImpl extends MinimalEObjectImpl.Container implements 
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case Aorta_smcubesPackage.TEST_DEFINITION__READ_TASKS:
-				getReadTasks().clear();
-				return;
-			case Aorta_smcubesPackage.TEST_DEFINITION__PROCESSING_TASKS:
-				getProcessingTasks().clear();
-				return;
-			case Aorta_smcubesPackage.TEST_DEFINITION__REPORT_CELL_CREATION_TASKS:
-				getReportCellCreationTasks().clear();
-				return;
-			case Aorta_smcubesPackage.TEST_DEFINITION__SCENARIOS:
-				getScenarios().clear();
-				return;
-			case Aorta_smcubesPackage.TEST_DEFINITION__PICTURE:
-				setPicture((TaskSet)null);
+			case Aorta_smcubesPackage.TEST_DEFINITION__SCENARIO:
+				setScenario((Scenario)null);
 				return;
 			case Aorta_smcubesPackage.TEST_DEFINITION__NAME:
 				setName(NAME_EDEFAULT);
@@ -344,16 +203,8 @@ public class TestDefinitionImpl extends MinimalEObjectImpl.Container implements 
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case Aorta_smcubesPackage.TEST_DEFINITION__READ_TASKS:
-				return readTasks != null && !readTasks.isEmpty();
-			case Aorta_smcubesPackage.TEST_DEFINITION__PROCESSING_TASKS:
-				return processingTasks != null && !processingTasks.isEmpty();
-			case Aorta_smcubesPackage.TEST_DEFINITION__REPORT_CELL_CREATION_TASKS:
-				return reportCellCreationTasks != null && !reportCellCreationTasks.isEmpty();
-			case Aorta_smcubesPackage.TEST_DEFINITION__SCENARIOS:
-				return scenarios != null && !scenarios.isEmpty();
-			case Aorta_smcubesPackage.TEST_DEFINITION__PICTURE:
-				return picture != null;
+			case Aorta_smcubesPackage.TEST_DEFINITION__SCENARIO:
+				return scenario != null;
 			case Aorta_smcubesPackage.TEST_DEFINITION__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 		}

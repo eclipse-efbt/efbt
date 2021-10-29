@@ -2,12 +2,7 @@
  */
 package org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.task.DataProcessingTask;
-import org.eclipse.efbt.cocalimo.smcubes.model.task.ReadDataSourceTask;
-import org.eclipse.efbt.cocalimo.smcubes.model.task.ReportCellCreationTask;
-import org.eclipse.efbt.cocalimo.smcubes.model.task.TaskSet;
-
-import org.eclipse.emf.common.util.EList;
+import org.eclipse.efbt.cocalimo.smcubes.model.scenarios.Scenario;
 
 import org.eclipse.emf.ecore.EObject;
 
@@ -24,11 +19,7 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinition#getReadTasks <em>Read Tasks</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinition#getProcessingTasks <em>Processing Tasks</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinition#getReportCellCreationTasks <em>Report Cell Creation Tasks</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinition#getScenarios <em>Scenarios</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinition#getPicture <em>Picture</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinition#getScenario <em>Scenario</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinition#getName <em>Name</em>}</li>
  * </ul>
  *
@@ -38,89 +29,29 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface TestDefinition extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Read Tasks</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.smcubes.model.task.ReadDataSourceTask}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The set of read tasks associated with the test definition
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Read Tasks</em>' reference list.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.Aorta_smcubesPackage#getTestDefinition_ReadTasks()
-	 * @model
-	 * @generated
-	 */
-	EList<ReadDataSourceTask> getReadTasks();
-
-	/**
-	 * Returns the value of the '<em><b>Processing Tasks</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.smcubes.model.task.DataProcessingTask}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The set of processing tasks associated with the test definition
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Processing Tasks</em>' reference list.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.Aorta_smcubesPackage#getTestDefinition_ProcessingTasks()
-	 * @model
-	 * @generated
-	 */
-	EList<DataProcessingTask> getProcessingTasks();
-
-	/**
-	 * Returns the value of the '<em><b>Report Cell Creation Tasks</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.smcubes.model.task.ReportCellCreationTask}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The set of generation  tasks associated with the test definition
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Report Cell Creation Tasks</em>' reference list.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.Aorta_smcubesPackage#getTestDefinition_ReportCellCreationTasks()
-	 * @model
-	 * @generated
-	 */
-	EList<ReportCellCreationTask> getReportCellCreationTasks();
-
-	/**
-	 * Returns the value of the '<em><b>Scenarios</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.smcubes.model.scenarios.Scenario}.
+	 * Returns the value of the '<em><b>Scenario</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * Any choice of sceanrios associated with this test definition
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Scenarios</em>' reference list.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.Aorta_smcubesPackage#getTestDefinition_Scenarios()
+	 * @return the value of the '<em>Scenario</em>' reference.
+	 * @see #setScenario(Scenario)
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.Aorta_smcubesPackage#getTestDefinition_Scenario()
 	 * @model
 	 * @generated
 	 */
-	EList<org.eclipse.efbt.cocalimo.smcubes.model.scenarios.Scenario> getScenarios();
+	Scenario getScenario();
 
 	/**
-	 * Returns the value of the '<em><b>Picture</b></em>' reference.
+	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinition#getScenario <em>Scenario</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * A task set withthe used flags set for appropriate tasks so that we can show a nice picture of this test definition
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Picture</em>' reference.
-	 * @see #setPicture(TaskSet)
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.Aorta_smcubesPackage#getTestDefinition_Picture()
-	 * @model
+	 * @param value the new value of the '<em>Scenario</em>' reference.
+	 * @see #getScenario()
 	 * @generated
 	 */
-	TaskSet getPicture();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinition#getPicture <em>Picture</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Picture</em>' reference.
-	 * @see #getPicture()
-	 * @generated
-	 */
-	void setPicture(TaskSet value);
+	void setScenario(Scenario value);
 
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.

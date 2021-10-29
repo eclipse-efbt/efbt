@@ -1,14 +1,15 @@
-/**
- * Copyright (c) 2011-2019 Obeo.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+/*******************************************************************************
+ * Copyright (c) 2020 Bird Software Solutions Ltd
+ * This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
  * Contributors:
- *     Obeo - initial API and implementation
- * 
- */
+ *    Neil Mackenzie - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.efbt.cocalimo.smcubes.ui.bpmnlite;
 
 import java.util.Set;
@@ -43,7 +44,7 @@ public class ElementsPositionService {
 	 * @param currentNode the node where the contextual menu displayed
 	 * @param newNode     the new element to create
 	 * 
-	 * @author atakarabt
+	 * @author Neil Mackenzie
 	 */
 	public void positionRelativeToCurrent(EObject currentNode, EObject newNode) {
 		if (currentNode instanceof DNode && newNode instanceof DNode) {

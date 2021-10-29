@@ -1,45 +1,28 @@
-/**
- * Copyright (c) 2011-2019 Obeo.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+/*******************************************************************************
+ * Copyright (c) 2020 Bird Software Solutions Ltd
+ * This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
  * Contributors:
- *     Obeo - initial API and implementation
- * 
- */
+ *    Neil Mackenzie - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.efbt.cocalimo.smcubes.ui.bpmnlite;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-
-
+import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.Bpmn_liteFactory;
+import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.ExclusiveGateway;
+import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.FlowElement;
+import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.FlowElementsContainer;
+import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.FlowNode;
+import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.InclusiveGateway;
+import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.ParallelGateway;
+import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.SubProcess;
+import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.Task;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
-
-import bpmn2.Bpmn2Factory;
-
-import bpmn2.ExclusiveGateway;
-import bpmn2.FlowElement;
-import bpmn2.FlowElementsContainer;
-import bpmn2.FlowNode;
-
-import bpmn2.InclusiveGateway;
-
-import bpmn2.ParallelGateway;
-
-import bpmn2.SequenceFlow;
-
-import bpmn2.SubProcess;
-import bpmn2.Task;
 
 public class ProcessService {
 
@@ -90,15 +73,15 @@ public class ProcessService {
 	private FlowNode createElement(String typeToCreate) {
 		FlowNode result = null;
 		if ("Task".equals(typeToCreate)) {
-			result = Bpmn2Factory.eINSTANCE.createTask();
+			result = Bpmn_liteFactory.eINSTANCE.createTask();
 		}  else if ("ServiceTask".equals(typeToCreate)) {
-			result = Bpmn2Factory.eINSTANCE.createServiceTask();
+			result = Bpmn_liteFactory.eINSTANCE.createServiceTask();
 		} else if ("ParallelGateway".equals(typeToCreate)) {
-			result = Bpmn2Factory.eINSTANCE.createParallelGateway();
+			result = Bpmn_liteFactory.eINSTANCE.createParallelGateway();
 		} else if ("ExclusiveGateway".equals(typeToCreate)) {
-			result = Bpmn2Factory.eINSTANCE.createExclusiveGateway();
+			result = Bpmn_liteFactory.eINSTANCE.createExclusiveGateway();
 		} else if ("InclusiveGateway".equals(typeToCreate)) {
-			result = Bpmn2Factory.eINSTANCE.createInclusiveGateway();
+			result = Bpmn_liteFactory.eINSTANCE.createInclusiveGateway();
 		} 
 		return result;
 	}

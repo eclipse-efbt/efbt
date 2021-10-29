@@ -16,8 +16,8 @@
 <plugin>
   <extension point="org.eclipse.sirius.componentization">
     <component class="org.eclipse.efbt.cocalimo.smcubes.ui.bpmnlite.Activator"
-               id="org.eclipse.efbt.cocalimo.smcubes.ui.bpnmlite"
-	       name="BPMN2">
+               id="org.eclipse.efbt.cocalimo.smcubes.ui.bpmnlite"
+	       name="bpmn_lite">
     </component>
   </extension>
   <extension

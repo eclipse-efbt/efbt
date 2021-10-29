@@ -157,16 +157,19 @@ import org.eclipse.emf.edit.ui.view.ExtendedPropertySheetPage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.scenarios.provider.ScenariosItemProviderAdapterFactory;
 
-import bpmn2.provider.Bpmn2ItemProviderAdapterFactory;
 import org.eclipse.efbt.cocalimo.core.model.module_management.provider.Module_managementItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.provider.Requirements_textItemProviderAdapterFactory;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.core.provider.CoreItemProviderAdapterFactory;
-import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.provider.Data_definitionItemProviderAdapterFactory;
-import org.eclipse.efbt.cocalimo.smcubes.model.task.presentation.TaskEditorPlugin;
+import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.provider.Bpmn_liteItemProviderAdapterFactory;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.task.provider.TaskItemProviderAdapterFactory;
+import org.eclipse.efbt.cocalimo.smcubes.model.core.provider.CoreItemProviderAdapterFactory;
+
+import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.provider.Data_definitionItemProviderAdapterFactory;
+
+import org.eclipse.efbt.cocalimo.smcubes.model.logical_transformations.presentation.TaskEditorPlugin;
+
+import org.eclipse.efbt.cocalimo.smcubes.model.logical_transformations.provider.Logical_transformationsItemProviderAdapterFactory;
 
 import org.eclipse.emf.ecore.provider.EcoreItemProviderAdapterFactory;
 
@@ -723,9 +726,9 @@ public class ScenariosEditor
 		adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
 
 		adapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new TaskItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new Logical_transformationsItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new ScenariosItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new Bpmn2ItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new Bpmn_liteItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new EcoreItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Module_managementItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Requirements_textItemProviderAdapterFactory());

@@ -6,11 +6,11 @@ package org.eclipse.efbt.cocalimo.smcubes.model.scenarios.provider;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.logical_transformations.provider.TaskEditPlugin;
+
 import org.eclipse.efbt.cocalimo.smcubes.model.scenarios.ScenarioSet;
 import org.eclipse.efbt.cocalimo.smcubes.model.scenarios.ScenariosFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.scenarios.ScenariosPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.task.provider.TaskEditPlugin;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;

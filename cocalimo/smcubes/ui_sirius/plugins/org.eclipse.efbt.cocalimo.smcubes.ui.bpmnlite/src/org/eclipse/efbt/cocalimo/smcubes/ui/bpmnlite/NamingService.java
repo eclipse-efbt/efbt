@@ -1,31 +1,32 @@
-/**
- * Copyright (c) 2011-2019 Obeo.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+/*******************************************************************************
+ * Copyright (c) 2020 Bird Software Solutions Ltd
+ * This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
  * Contributors:
- *     Obeo - initial API and implementation
- * 
- */
+ *    Neil Mackenzie - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.efbt.cocalimo.smcubes.ui.bpmnlite;
 
-import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.sirius.diagram.DNode;
-import bpmn2.BaseElement;
+import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.BaseElement;
 
-import bpmn2.FlowElement;
+import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.FlowElement;
 
 
 import com.google.common.base.Strings;
 
 /**
  * 
- * @author sdrapeau
+ * @author Neil Mackenzie
  *
  */
 public class NamingService {

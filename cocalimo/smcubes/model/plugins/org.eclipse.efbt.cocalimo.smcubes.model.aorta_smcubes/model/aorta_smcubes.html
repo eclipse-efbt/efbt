@@ -1,5 +1,5 @@
 <!-- This file was created using the HTML documentation generator. -->
-<!-- Creation date: Sun Oct 10 13:41:51 BST 2021-->
+<!-- Creation date: Fri Oct 29 12:22:25 BST 2021-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -179,7 +179,7 @@ A program relates to the group of artifacts, and we allow the contents of  Progr
 </td>
 		</tr><tr>	<td><div id="aortasmcubesAortaSMCubesModel.taskModules" class="teletype">taskModules</div>
 	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#taskTaskModule">TaskModule</a></span></div>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#logicaltransformationsLogicalTransformationModule">LogicalTransformationModule</a></span></div>
 <div class="label">Cardinality: [0..1]</div>
 </td> 
 <td> <p>The associated Tasks, and their workflow</p>
@@ -304,38 +304,10 @@ A program relates to the group of artifacts, and we allow the contents of  Progr
 	<th><div class="columnHeader">Properties</div></th>
 	<th><div class="columnHeader">Documentation</div></th>
 </tr>
-<tr>	<td><div id="aortasmcubesTestDefinition.picture" class="teletype">picture</div>
-	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#taskTaskSet">TaskSet</a></span></div>
-<div class="label">Cardinality: [0..1]</div>
-</td> 
-<td> <p>A task set withthe used flags set for appropriate tasks so that we can show a nice picture of this test definition</p>
-</td>
-		</tr><tr>	<td><div id="aortasmcubesTestDefinition.processingTasks" class="teletype">processingTasks</div>
-	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#taskDataProcessingTask">DataProcessingTask</a></span></div>
-<div class="label">Cardinality: [0..*]</div>
-</td> 
-<td> <p>The set of processing tasks associated with the test definition</p>
-</td>
-		</tr><tr>	<td><div id="aortasmcubesTestDefinition.readTasks" class="teletype">readTasks</div>
-	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#taskReadDataSourceTask">ReadDataSourceTask</a></span></div>
-<div class="label">Cardinality: [0..*]</div>
-</td> 
-<td> <p>The set of read tasks associated with the test definition</p>
-</td>
-		</tr><tr>	<td><div id="aortasmcubesTestDefinition.reportCellCreationTasks" class="teletype">reportCellCreationTasks</div>
-	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#taskReportCellCreationTask">ReportCellCreationTask</a></span></div>
-<div class="label">Cardinality: [0..*]</div>
-</td> 
-<td> <p>The set of generation  tasks associated with the test definition</p>
-</td>
-		</tr><tr>	<td><div id="aortasmcubesTestDefinition.scenarios" class="teletype">scenarios</div>
+<tr>	<td><div id="aortasmcubesTestDefinition.scenario" class="teletype">scenario</div>
 	</td>
 	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#scenariosScenario">Scenario</a></span></div>
-<div class="label">Cardinality: [0..*]</div>
+<div class="label">Cardinality: [0..1]</div>
 </td> 
 <td> <p>Any choice of sceanrios associated with this test definition</p>
 </td>

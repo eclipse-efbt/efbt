@@ -7,35 +7,35 @@
 <plugin>
 
    <extension point="org.eclipse.ui.newWizards">
-      <!-- @generated task -->
+      <!-- @generated logical_transformations -->
       <category
             id="org.eclipse.emf.ecore.Wizard.category.ID"
             name="%_UI_Wizard_category"/>
       <wizard
-            id="org.eclipse.efbt.cocalimo.smcubes.model.task.presentation.TaskModelWizardID"
-            name="%_UI_TaskModelWizard_label"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.task.presentation.TaskModelWizard"
+            id="org.eclipse.efbt.cocalimo.smcubes.model.logical_transformations.presentation.Logical_transformationsModelWizardID"
+            name="%_UI_Logical_transformationsModelWizard_label"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.logical_transformations.presentation.Logical_transformationsModelWizard"
             category="org.eclipse.emf.ecore.Wizard.category.ID"
-            icon="icons/full/obj16/TaskModelFile.gif">
-         <description>%_UI_TaskModelWizard_description</description>
+            icon="icons/full/obj16/Logical_transformationsModelFile.gif">
+         <description>%_UI_Logical_transformationsModelWizard_description</description>
          <selection class="org.eclipse.core.resources.IResource"/>
       </wizard>
    </extension>
 
    <extension point="org.eclipse.ui.editors">
-      <!-- @generated task -->
+      <!-- @generated logical_transformations -->
       <editor
-            id="org.eclipse.efbt.cocalimo.smcubes.model.task.presentation.TaskEditorID"
-            name="%_UI_TaskEditor_label"
-            icon="icons/full/obj16/TaskModelFile.gif"
-            extensions="task"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.task.presentation.TaskEditor"
-            contributorClass="org.eclipse.efbt.cocalimo.smcubes.model.task.presentation.TaskActionBarContributor">
+            id="org.eclipse.efbt.cocalimo.smcubes.model.logical_transformations.presentation.Logical_transformationsEditorID"
+            name="%_UI_Logical_transformationsEditor_label"
+            icon="icons/full/obj16/Logical_transformationsModelFile.gif"
+            extensions="logical_transformations"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.logical_transformations.presentation.Logical_transformationsEditor"
+            contributorClass="org.eclipse.efbt.cocalimo.smcubes.model.logical_transformations.presentation.Logical_transformationsActionBarContributor">
       </editor>
    </extension>
 
    <extension point="org.eclipse.ui.newWizards">
-      <!-- @generated task -->
+      <!-- @generated logical_transformations -->
       <category
             id="org.eclipse.emf.ecore.Wizard.category.ID"
             name="%_UI_Wizard_category"/>
@@ -51,7 +51,7 @@
    </extension>
 
    <extension point="org.eclipse.ui.editors">
-      <!-- @generated task -->
+      <!-- @generated logical_transformations -->
       <editor
             id="org.eclipse.efbt.cocalimo.smcubes.model.scenarios.presentation.ScenariosEditorID"
             name="%_UI_ScenariosEditor_label"
@@ -63,30 +63,30 @@
    </extension>
 
    <extension point="org.eclipse.ui.newWizards">
-      <!-- @generated task -->
+      <!-- @generated logical_transformations -->
       <category
             id="org.eclipse.emf.ecore.Wizard.category.ID"
             name="%_UI_Wizard_category"/>
       <wizard
-            id="bpmn2.presentation.Bpmn2ModelWizardID"
-            name="%_UI_Bpmn2ModelWizard_label"
-            class="bpmn2.presentation.Bpmn2ModelWizard"
+            id="org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.presentation.Bpmn_liteModelWizardID"
+            name="%_UI_Bpmn_liteModelWizard_label"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.presentation.Bpmn_liteModelWizard"
             category="org.eclipse.emf.ecore.Wizard.category.ID"
-            icon="icons/full/obj16/Bpmn2ModelFile.gif">
-         <description>%_UI_Bpmn2ModelWizard_description</description>
+            icon="icons/full/obj16/Bpmn_liteModelFile.gif">
+         <description>%_UI_Bpmn_liteModelWizard_description</description>
          <selection class="org.eclipse.core.resources.IResource"/>
       </wizard>
    </extension>
 
    <extension point="org.eclipse.ui.editors">
-      <!-- @generated task -->
+      <!-- @generated logical_transformations -->
       <editor
-            id="bpmn2.presentation.Bpmn2EditorID"
-            name="%_UI_Bpmn2Editor_label"
-            icon="icons/full/obj16/Bpmn2ModelFile.gif"
-            extensions="bpmn2"
-            class="bpmn2.presentation.Bpmn2Editor"
-            contributorClass="bpmn2.presentation.Bpmn2ActionBarContributor">
+            id="org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.presentation.Bpmn_liteEditorID"
+            name="%_UI_Bpmn_liteEditor_label"
+            icon="icons/full/obj16/Bpmn_liteModelFile.gif"
+            extensions="bpmn_lite"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.presentation.Bpmn_liteEditor"
+            contributorClass="org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.presentation.Bpmn_liteActionBarContributor">
       </editor>
    </extension>
 

@@ -8,7 +8,7 @@ Bundle-ClassPath: .
 Bundle-Activator: org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.presentation.Aorta_smcubesEditorPlugin$Implementation
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.presentation
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources;visibility:=reexport,
@@ -17,9 +17,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.edit.ui;visibility:=reexport,
  org.eclipse.ui.ide;visibility:=reexport,
  org.eclipse.emf.ecore.edit;visibility:=reexport,
+ org.eclipse.efbt.cocalimo.smcubes.model.input_data.edit;visibility:=reexport,
  org.eclipse.efbt.cocalimo.core.model.module_management.edit;visibility:=reexport,
  org.eclipse.efbt.cocalimo.core.model.requirements_text.edit;visibility:=reexport,
- org.eclipse.efbt.cocalimo.smcubes.model.input_data.edit;visibility:=reexport,
  org.eclipse.efbt.cocalimo.smcubes.model.core.edit;visibility:=reexport,
  org.eclipse.efbt.cocalimo.smcubes.model.task.edit;visibility:=reexport
 Bundle-ActivationPolicy: lazy

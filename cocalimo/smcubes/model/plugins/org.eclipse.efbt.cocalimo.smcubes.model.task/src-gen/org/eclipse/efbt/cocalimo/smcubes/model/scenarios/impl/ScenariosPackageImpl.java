@@ -2,25 +2,22 @@
  */
 package org.eclipse.efbt.cocalimo.smcubes.model.scenarios.impl;
 
-import bpmn2.Bpmn2Package;
-import bpmn2.impl.Bpmn2PackageImpl;
 import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementPackage;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.Requirements_textPackage;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.Bpmn_litePackage;
+import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.impl.Bpmn_litePackageImpl;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.Data_definitionPackage;
+import org.eclipse.efbt.cocalimo.smcubes.model.logical_transformations.Logical_transformationsPackage;
+import org.eclipse.efbt.cocalimo.smcubes.model.logical_transformations.impl.Logical_transformationsPackageImpl;
 import org.eclipse.efbt.cocalimo.smcubes.model.scenarios.Scenario;
 import org.eclipse.efbt.cocalimo.smcubes.model.scenarios.ScenarioSet;
 import org.eclipse.efbt.cocalimo.smcubes.model.scenarios.ScenarioSetTag;
 import org.eclipse.efbt.cocalimo.smcubes.model.scenarios.ScenarioTag;
 import org.eclipse.efbt.cocalimo.smcubes.model.scenarios.ScenariosFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.scenarios.ScenariosPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.task.TaskPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.task.impl.TaskPackageImpl;
-
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
@@ -119,20 +116,20 @@ public class ScenariosPackageImpl extends EPackageImpl implements ScenariosPacka
 		Data_definitionPackage.eINSTANCE.eClass();
 
 		// Obtain or create and register interdependencies
-		Object registeredPackage = EPackage.Registry.INSTANCE.getEPackage(TaskPackage.eNS_URI);
-		TaskPackageImpl theTaskPackage = (TaskPackageImpl)(registeredPackage instanceof TaskPackageImpl ? registeredPackage : TaskPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Bpmn2Package.eNS_URI);
-		Bpmn2PackageImpl theBpmn2Package = (Bpmn2PackageImpl)(registeredPackage instanceof Bpmn2PackageImpl ? registeredPackage : Bpmn2Package.eINSTANCE);
+		Object registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Logical_transformationsPackage.eNS_URI);
+		Logical_transformationsPackageImpl theLogical_transformationsPackage = (Logical_transformationsPackageImpl)(registeredPackage instanceof Logical_transformationsPackageImpl ? registeredPackage : Logical_transformationsPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Bpmn_litePackage.eNS_URI);
+		Bpmn_litePackageImpl theBpmn_litePackage = (Bpmn_litePackageImpl)(registeredPackage instanceof Bpmn_litePackageImpl ? registeredPackage : Bpmn_litePackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theScenariosPackage.createPackageContents();
-		theTaskPackage.createPackageContents();
-		theBpmn2Package.createPackageContents();
+		theLogical_transformationsPackage.createPackageContents();
+		theBpmn_litePackage.createPackageContents();
 
 		// Initialize created meta-data
 		theScenariosPackage.initializePackageContents();
-		theTaskPackage.initializePackageContents();
-		theBpmn2Package.initializePackageContents();
+		theLogical_transformationsPackage.initializePackageContents();
+		theBpmn_litePackage.initializePackageContents();
 
 		// Mark meta-data to indicate it can't be changed
 		theScenariosPackage.freeze();

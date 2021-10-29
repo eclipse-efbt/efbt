@@ -1,14 +1,15 @@
-/**
- * Copyright (c) 2011-2019 Obeo.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+/*******************************************************************************
+ * Copyright (c) 2020 Bird Software Solutions Ltd
+ * This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
  * Contributors:
- *     Obeo - initial API and implementation
- * 
- */
+ *    Neil Mackenzie - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.efbt.cocalimo.smcubes.ui.bpmnlite;
 
 import java.util.Collection;
@@ -19,17 +20,17 @@ import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.sirius.diagram.DNodeContainer;
 
-import bpmn2.Bpmn2Factory;
-import bpmn2.Bpmn2Package;
-import bpmn2.FlowElementsContainer;
-import bpmn2.ServiceTask;
-import bpmn2.Task;
-import bpmn2.impl.TaskImpl;
+import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.Bpmn_liteFactory;
+import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.Bpmn_litePackage;
+import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.FlowElementsContainer;
+import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.ServiceTask;
+import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.Task;
+import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.impl.TaskImpl;
 
 /**
  * Test and conversion services to operate on Task objects.
  * 
- * @author vrichard
+ * @author Neil Mackenzie
  *
  */
 public class TaskService {
@@ -68,7 +69,7 @@ public class TaskService {
 	public Task convertToTask(final DNodeContainer view) {
 		Task eObject = (Task) view.getTarget();
 		if (!eObject.getClass().isAssignableFrom(TaskImpl.class)) {
-			return (Task) convertToSpecificTask((Task) view.getTarget(), Bpmn2Package.eINSTANCE.getTask());
+			return (Task) convertToSpecificTask((Task) view.getTarget(), Bpmn_litePackage.eINSTANCE.getTask());
 		}
 		return eObject;
 	}
@@ -76,7 +77,7 @@ public class TaskService {
 
 
 	public ServiceTask convertToServiceTask(final DNodeContainer view) {
-		return (ServiceTask) convertToSpecificTask((Task) view.getTarget(), Bpmn2Package.eINSTANCE.getServiceTask());
+		return (ServiceTask) convertToSpecificTask((Task) view.getTarget(), Bpmn_litePackage.eINSTANCE.getServiceTask());
 	}
 
 	
@@ -85,7 +86,7 @@ public class TaskService {
 		if (eClass.equals(task.eClass())) {
 			return task;
 		} else {
-			Task cloneTask = clone(task, (Task) Bpmn2Factory.eINSTANCE.create(eClass));
+			Task cloneTask = clone(task, (Task) Bpmn_liteFactory.eINSTANCE.create(eClass));
 			return cloneTask;
 		}
 	}
@@ -94,7 +95,6 @@ public class TaskService {
 		
 		cloneTask.getIncoming().addAll(task.getIncoming());
 		cloneTask.getOutgoing().addAll(task.getOutgoing());
-		cloneTask.setDefault(task.getDefault());
 		cloneTask.setId(task.getId());
 		cloneTask.setName(task.getName());
 

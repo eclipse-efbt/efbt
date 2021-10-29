@@ -1,14 +1,15 @@
-/**
- * Copyright (c) 2011-2019 Obeo.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+/*******************************************************************************
+ * Copyright (c) 2020 Bird Software Solutions Ltd
+ * This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
  * Contributors:
- *     Obeo - initial API and implementation
- * 
- */
+ *    Neil Mackenzie - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.efbt.cocalimo.smcubes.ui.bpmnlite;
 
 import java.util.ArrayList;
@@ -23,13 +24,13 @@ import org.eclipse.sirius.diagram.DEdge;
 import org.eclipse.sirius.diagram.DNode;
 import org.eclipse.sirius.diagram.DNodeContainer;
 import org.eclipse.sirius.diagram.EdgeTarget;
-import bpmn2.BaseElement;
-import bpmn2.ExclusiveGateway;
-import bpmn2.Gateway;
-import bpmn2.InclusiveGateway;
-import bpmn2.SequenceFlow;
-import bpmn2.SubProcess;
-import bpmn2.Task;
+import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.BaseElement;
+import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.ExclusiveGateway;
+import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.Gateway;
+import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.InclusiveGateway;
+import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.SequenceFlow;
+import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.SubProcess;
+import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.Task;
 
 public class ServiceHelper {
 
