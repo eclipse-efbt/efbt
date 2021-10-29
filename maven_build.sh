@@ -9,9 +9,6 @@ cd ../../..
 cd cocalimo/smcubes/modelquery
 mvn install
 cd ../../..
-cd cocalimo/core/ui_sirius
-mvn install
-cd ../../..
 cd cocalimo/smcubes/ui_sirius
 mvn install
 cd ../../..

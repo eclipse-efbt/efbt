@@ -4,7 +4,7 @@ package org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.RequirementsModule;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.task.TaskModule;
+import org.eclipse.efbt.cocalimo.smcubes.model.logical_transformations.LogicalTransformationModule;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.SmcubesModel;
 
@@ -119,12 +119,12 @@ public interface AortaSMCubesModel extends EObject {
 	 * The associated Tasks, and their workflow
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Task Modules</em>' reference.
-	 * @see #setTaskModules(TaskModule)
+	 * @see #setTaskModules(LogicalTransformationModule)
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.Aorta_smcubesPackage#getAortaSMCubesModel_TaskModules()
 	 * @model
 	 * @generated
 	 */
-	TaskModule getTaskModules();
+	LogicalTransformationModule getTaskModules();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.AortaSMCubesModel#getTaskModules <em>Task Modules</em>}' reference.
@@ -134,7 +134,7 @@ public interface AortaSMCubesModel extends EObject {
 	 * @see #getTaskModules()
 	 * @generated
 	 */
-	void setTaskModules(TaskModule value);
+	void setTaskModules(LogicalTransformationModule value);
 
 	/**
 	 * Returns the value of the '<em><b>Test Definitions</b></em>' reference.

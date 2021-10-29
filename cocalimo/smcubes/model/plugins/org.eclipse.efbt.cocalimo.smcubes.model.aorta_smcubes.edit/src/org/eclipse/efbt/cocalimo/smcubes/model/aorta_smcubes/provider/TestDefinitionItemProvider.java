@@ -60,118 +60,26 @@ public class TestDefinitionItemProvider
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addReadTasksPropertyDescriptor(object);
-			addProcessingTasksPropertyDescriptor(object);
-			addReportCellCreationTasksPropertyDescriptor(object);
-			addScenariosPropertyDescriptor(object);
-			addPicturePropertyDescriptor(object);
+			addScenarioPropertyDescriptor(object);
 			addNamePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
 
 	/**
-	 * This adds a property descriptor for the Read Tasks feature.
+	 * This adds a property descriptor for the Scenario feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addReadTasksPropertyDescriptor(Object object) {
+	protected void addScenarioPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_TestDefinition_readTasks_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_TestDefinition_readTasks_feature", "_UI_TestDefinition_type"),
-				 Aorta_smcubesPackage.Literals.TEST_DEFINITION__READ_TASKS,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Processing Tasks feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addProcessingTasksPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_TestDefinition_processingTasks_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_TestDefinition_processingTasks_feature", "_UI_TestDefinition_type"),
-				 Aorta_smcubesPackage.Literals.TEST_DEFINITION__PROCESSING_TASKS,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Report Cell Creation Tasks feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addReportCellCreationTasksPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_TestDefinition_reportCellCreationTasks_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_TestDefinition_reportCellCreationTasks_feature", "_UI_TestDefinition_type"),
-				 Aorta_smcubesPackage.Literals.TEST_DEFINITION__REPORT_CELL_CREATION_TASKS,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Scenarios feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addScenariosPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_TestDefinition_scenarios_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_TestDefinition_scenarios_feature", "_UI_TestDefinition_type"),
-				 Aorta_smcubesPackage.Literals.TEST_DEFINITION__SCENARIOS,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Picture feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addPicturePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_TestDefinition_picture_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_TestDefinition_picture_feature", "_UI_TestDefinition_type"),
-				 Aorta_smcubesPackage.Literals.TEST_DEFINITION__PICTURE,
+				 getString("_UI_TestDefinition_scenario_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_TestDefinition_scenario_feature", "_UI_TestDefinition_type"),
+				 Aorta_smcubesPackage.Literals.TEST_DEFINITION__SCENARIO,
 				 true,
 				 false,
 				 true,

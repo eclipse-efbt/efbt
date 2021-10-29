@@ -8,10 +8,10 @@ import java.util.List;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.provider.TagItemProvider;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.logical_transformations.provider.TaskEditPlugin;
+
 import org.eclipse.efbt.cocalimo.smcubes.model.scenarios.ScenarioTag;
 import org.eclipse.efbt.cocalimo.smcubes.model.scenarios.ScenariosPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.task.provider.TaskEditPlugin;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;

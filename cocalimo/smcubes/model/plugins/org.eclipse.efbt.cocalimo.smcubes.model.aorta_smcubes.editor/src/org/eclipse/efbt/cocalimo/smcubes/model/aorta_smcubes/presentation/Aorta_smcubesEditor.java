@@ -160,8 +160,9 @@ import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.provider.Aorta_smcu
 import org.eclipse.efbt.cocalimo.core.model.module_management.provider.Module_managementItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.provider.Requirements_textItemProviderAdapterFactory;
-import org.eclipse.efbt.cocalimo.smcubes.model.task.provider.TaskItemProviderAdapterFactory;
-import org.eclipse.efbt.cocalimo.smcubes.model.input_data.provider.Input_dataItemProviderAdapterFactory;
+
+import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.provider.Bpmn_liteItemProviderAdapterFactory;
+
 import org.eclipse.efbt.cocalimo.smcubes.model.core.provider.CoreItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.provider.Data_definitionItemProviderAdapterFactory;
@@ -172,11 +173,17 @@ import org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.provider.Efbt_mappin
 
 import org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.provider.Efbt_vtl_transformationItemProviderAdapterFactory;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.input_data.provider.Input_dataItemProviderAdapterFactory;
+
+import org.eclipse.efbt.cocalimo.smcubes.model.logical_transformations.provider.Logical_transformationsItemProviderAdapterFactory;
+
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.provider.MappingItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.rendering.provider.RenderingItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.reports.provider.ReportsItemProviderAdapterFactory;
+
+import org.eclipse.efbt.cocalimo.smcubes.model.scenarios.provider.ScenariosItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.provider.Smcubes_modelItemProviderAdapterFactory;
 
@@ -752,8 +759,9 @@ public class Aorta_smcubesEditor
 		adapterFactory.addAdapterFactory(new ReportsItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Smcubes_modelItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Vtl_transformationItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new TaskItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new org.eclipse.efbt.cocalimo.smcubes.model.scenarios.provider.ScenariosItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new Logical_transformationsItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new ScenariosItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new Bpmn_liteItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 
 		// Create the command stack that will notify this editor as commands are executed.

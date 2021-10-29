@@ -5,7 +5,6 @@ package org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.impl;
 import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementPackage;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.Requirements_textPackage;
-import org.eclipse.efbt.cocalimo.smcubes.model.task.TaskPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.AortaSMCubesModel;
 import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.Aorta_smcubesFactory;
@@ -15,7 +14,9 @@ import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.Test;
 import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinition;
 import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinitionModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestModule;
-import org.eclipse.efbt.cocalimo.smcubes.model.input_data.Input_dataPackage;
+
+import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.Bpmn_litePackage;
+
 import org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.Data_definitionPackage;
@@ -26,11 +27,17 @@ import org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.Efbt_mappingPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.Efbt_vtl_transformationPackage;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.input_data.Input_dataPackage;
+
+import org.eclipse.efbt.cocalimo.smcubes.model.logical_transformations.Logical_transformationsPackage;
+
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MappingPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.rendering.RenderingPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.reports.ReportsPackage;
+
+import org.eclipse.efbt.cocalimo.smcubes.model.scenarios.ScenariosPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.Smcubes_modelPackage;
 
@@ -155,8 +162,9 @@ public class Aorta_smcubesPackageImpl extends EPackageImpl implements Aorta_smcu
 		ReportsPackage.eINSTANCE.eClass();
 		Smcubes_modelPackage.eINSTANCE.eClass();
 		Vtl_transformationPackage.eINSTANCE.eClass();
-		TaskPackage.eINSTANCE.eClass();
-		org.eclipse.efbt.cocalimo.smcubes.model.scenarios.ScenariosPackage.eINSTANCE.eClass();
+		Logical_transformationsPackage.eINSTANCE.eClass();
+		ScenariosPackage.eINSTANCE.eClass();
+		Bpmn_litePackage.eINSTANCE.eClass();
 
 		// Create package meta-data objects
 		theAorta_smcubesPackage.createPackageContents();
@@ -368,7 +376,7 @@ public class Aorta_smcubesPackageImpl extends EPackageImpl implements Aorta_smcu
 	 * @generated
 	 */
 	@Override
-	public EReference getTestDefinition_ReadTasks() {
+	public EReference getTestDefinition_Scenario() {
 		return (EReference)testDefinitionEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -378,48 +386,8 @@ public class Aorta_smcubesPackageImpl extends EPackageImpl implements Aorta_smcu
 	 * @generated
 	 */
 	@Override
-	public EReference getTestDefinition_ProcessingTasks() {
-		return (EReference)testDefinitionEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getTestDefinition_ReportCellCreationTasks() {
-		return (EReference)testDefinitionEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getTestDefinition_Scenarios() {
-		return (EReference)testDefinitionEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getTestDefinition_Picture() {
-		return (EReference)testDefinitionEClass.getEStructuralFeatures().get(4);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EAttribute getTestDefinition_Name() {
-		return (EAttribute)testDefinitionEClass.getEStructuralFeatures().get(5);
+		return (EAttribute)testDefinitionEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -475,11 +443,7 @@ public class Aorta_smcubesPackageImpl extends EPackageImpl implements Aorta_smcu
 		createEReference(testDefinitionModuleEClass, TEST_DEFINITION_MODULE__TEST_DEFINITIONS);
 
 		testDefinitionEClass = createEClass(TEST_DEFINITION);
-		createEReference(testDefinitionEClass, TEST_DEFINITION__READ_TASKS);
-		createEReference(testDefinitionEClass, TEST_DEFINITION__PROCESSING_TASKS);
-		createEReference(testDefinitionEClass, TEST_DEFINITION__REPORT_CELL_CREATION_TASKS);
-		createEReference(testDefinitionEClass, TEST_DEFINITION__SCENARIOS);
-		createEReference(testDefinitionEClass, TEST_DEFINITION__PICTURE);
+		createEReference(testDefinitionEClass, TEST_DEFINITION__SCENARIO);
 		createEAttribute(testDefinitionEClass, TEST_DEFINITION__NAME);
 	}
 
@@ -509,11 +473,11 @@ public class Aorta_smcubesPackageImpl extends EPackageImpl implements Aorta_smcu
 		// Obtain other dependent packages
 		Smcubes_modelPackage theSmcubes_modelPackage = (Smcubes_modelPackage)EPackage.Registry.INSTANCE.getEPackage(Smcubes_modelPackage.eNS_URI);
 		Requirements_textPackage theRequirements_textPackage = (Requirements_textPackage)EPackage.Registry.INSTANCE.getEPackage(Requirements_textPackage.eNS_URI);
-		TaskPackage theTaskPackage = (TaskPackage)EPackage.Registry.INSTANCE.getEPackage(TaskPackage.eNS_URI);
+		Logical_transformationsPackage theLogical_transformationsPackage = (Logical_transformationsPackage)EPackage.Registry.INSTANCE.getEPackage(Logical_transformationsPackage.eNS_URI);
 		ReportsPackage theReportsPackage = (ReportsPackage)EPackage.Registry.INSTANCE.getEPackage(ReportsPackage.eNS_URI);
 		Input_dataPackage theInput_dataPackage = (Input_dataPackage)EPackage.Registry.INSTANCE.getEPackage(Input_dataPackage.eNS_URI);
 		Module_managementPackage theModule_managementPackage = (Module_managementPackage)EPackage.Registry.INSTANCE.getEPackage(Module_managementPackage.eNS_URI);
-		org.eclipse.efbt.cocalimo.smcubes.model.scenarios.ScenariosPackage theScenariosPackage = (org.eclipse.efbt.cocalimo.smcubes.model.scenarios.ScenariosPackage)EPackage.Registry.INSTANCE.getEPackage(org.eclipse.efbt.cocalimo.smcubes.model.scenarios.ScenariosPackage.eNS_URI);
+		ScenariosPackage theScenariosPackage = (ScenariosPackage)EPackage.Registry.INSTANCE.getEPackage(ScenariosPackage.eNS_URI);
 
 		// Create type parameters
 
@@ -528,7 +492,7 @@ public class Aorta_smcubesPackageImpl extends EPackageImpl implements Aorta_smcu
 		initEReference(getAortaSMCubesModel_SmCubesModel(), theSmcubes_modelPackage.getSmcubesModel(), null, "smCubesModel", null, 0, 1, AortaSMCubesModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getAortaSMCubesModel_Requirements(), theRequirements_textPackage.getRequirementsModule(), null, "requirements", null, 0, 1, AortaSMCubesModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getAortaSMCubesModel_Tests(), this.getTestModule(), null, "tests", null, 0, 1, AortaSMCubesModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getAortaSMCubesModel_TaskModules(), theTaskPackage.getTaskModule(), null, "taskModules", null, 0, 1, AortaSMCubesModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getAortaSMCubesModel_TaskModules(), theLogical_transformationsPackage.getLogicalTransformationModule(), null, "taskModules", null, 0, 1, AortaSMCubesModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getAortaSMCubesModel_TestDefinitions(), this.getTestDefinitionModule(), null, "testDefinitions", null, 0, 1, AortaSMCubesModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getAortaSMCubesModel_Name(), ecorePackage.getEString(), "name", null, 0, 1, AortaSMCubesModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -548,11 +512,7 @@ public class Aorta_smcubesPackageImpl extends EPackageImpl implements Aorta_smcu
 		initEReference(getTestDefinitionModule_TestDefinitions(), this.getTestDefinition(), null, "testDefinitions", null, 0, -1, TestDefinitionModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(testDefinitionEClass, TestDefinition.class, "TestDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getTestDefinition_ReadTasks(), theTaskPackage.getReadDataSourceTask(), null, "readTasks", null, 0, -1, TestDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getTestDefinition_ProcessingTasks(), theTaskPackage.getDataProcessingTask(), null, "processingTasks", null, 0, -1, TestDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getTestDefinition_ReportCellCreationTasks(), theTaskPackage.getReportCellCreationTask(), null, "reportCellCreationTasks", null, 0, -1, TestDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getTestDefinition_Scenarios(), theScenariosPackage.getScenario(), null, "scenarios", null, 0, -1, TestDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getTestDefinition_Picture(), theTaskPackage.getTaskSet(), null, "picture", null, 0, 1, TestDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTestDefinition_Scenario(), theScenariosPackage.getScenario(), null, "scenario", null, 0, 1, TestDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTestDefinition_Name(), ecorePackage.getEString(), "name", null, 0, 1, TestDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource

@@ -71,12 +71,12 @@ import org.eclipse.ui.part.ISetSelectionTarget;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.scenarios.ScenariosFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.scenarios.ScenariosPackage;
-import org.eclipse.efbt.cocalimo.smcubes.model.task.provider.TaskEditPlugin;
+import org.eclipse.efbt.cocalimo.smcubes.model.logical_transformations.provider.TaskEditPlugin;
 
 
 import org.eclipse.core.runtime.Path;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.task.presentation.TaskEditorPlugin;
+import org.eclipse.efbt.cocalimo.smcubes.model.logical_transformations.presentation.TaskEditorPlugin;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -400,7 +400,8 @@ public class ScenariosModelWizard extends Wizard implements INewWizard {
 		 */
 		@Override
 		public void createControl(Composite parent) {
-			Composite composite = new Composite(parent, SWT.NONE); {
+			Composite composite = new Composite(parent, SWT.NONE);
+			{
 				GridLayout layout = new GridLayout();
 				layout.numColumns = 1;
 				layout.verticalSpacing = 12;

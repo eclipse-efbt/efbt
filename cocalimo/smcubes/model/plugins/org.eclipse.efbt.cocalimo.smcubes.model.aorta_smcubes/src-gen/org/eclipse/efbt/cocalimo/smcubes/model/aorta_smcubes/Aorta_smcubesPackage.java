@@ -440,49 +440,13 @@ public interface Aorta_smcubesPackage extends EPackage {
 	int TEST_DEFINITION = 5;
 
 	/**
-	 * The feature id for the '<em><b>Read Tasks</b></em>' reference list.
+	 * The feature id for the '<em><b>Scenario</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TEST_DEFINITION__READ_TASKS = 0;
-
-	/**
-	 * The feature id for the '<em><b>Processing Tasks</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TEST_DEFINITION__PROCESSING_TASKS = 1;
-
-	/**
-	 * The feature id for the '<em><b>Report Cell Creation Tasks</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TEST_DEFINITION__REPORT_CELL_CREATION_TASKS = 2;
-
-	/**
-	 * The feature id for the '<em><b>Scenarios</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TEST_DEFINITION__SCENARIOS = 3;
-
-	/**
-	 * The feature id for the '<em><b>Picture</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TEST_DEFINITION__PICTURE = 4;
+	int TEST_DEFINITION__SCENARIO = 0;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -491,7 +455,7 @@ public interface Aorta_smcubesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TEST_DEFINITION__NAME = 5;
+	int TEST_DEFINITION__NAME = 1;
 
 	/**
 	 * The number of structural features of the '<em>Test Definition</em>' class.
@@ -500,7 +464,7 @@ public interface Aorta_smcubesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TEST_DEFINITION_FEATURE_COUNT = 6;
+	int TEST_DEFINITION_FEATURE_COUNT = 2;
 
 	/**
 	 * The number of operations of the '<em>Test Definition</em>' class.
@@ -716,59 +680,15 @@ public interface Aorta_smcubesPackage extends EPackage {
 	EClass getTestDefinition();
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinition#getReadTasks <em>Read Tasks</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinition#getScenario <em>Scenario</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Read Tasks</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinition#getReadTasks()
+	 * @return the meta object for the reference '<em>Scenario</em>'.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinition#getScenario()
 	 * @see #getTestDefinition()
 	 * @generated
 	 */
-	EReference getTestDefinition_ReadTasks();
-
-	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinition#getProcessingTasks <em>Processing Tasks</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Processing Tasks</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinition#getProcessingTasks()
-	 * @see #getTestDefinition()
-	 * @generated
-	 */
-	EReference getTestDefinition_ProcessingTasks();
-
-	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinition#getReportCellCreationTasks <em>Report Cell Creation Tasks</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Report Cell Creation Tasks</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinition#getReportCellCreationTasks()
-	 * @see #getTestDefinition()
-	 * @generated
-	 */
-	EReference getTestDefinition_ReportCellCreationTasks();
-
-	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinition#getScenarios <em>Scenarios</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Scenarios</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinition#getScenarios()
-	 * @see #getTestDefinition()
-	 * @generated
-	 */
-	EReference getTestDefinition_Scenarios();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinition#getPicture <em>Picture</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Picture</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinition#getPicture()
-	 * @see #getTestDefinition()
-	 * @generated
-	 */
-	EReference getTestDefinition_Picture();
+	EReference getTestDefinition_Scenario();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinition#getName <em>Name</em>}'.
@@ -969,44 +889,12 @@ public interface Aorta_smcubesPackage extends EPackage {
 		EClass TEST_DEFINITION = eINSTANCE.getTestDefinition();
 
 		/**
-		 * The meta object literal for the '<em><b>Read Tasks</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Scenario</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference TEST_DEFINITION__READ_TASKS = eINSTANCE.getTestDefinition_ReadTasks();
-
-		/**
-		 * The meta object literal for the '<em><b>Processing Tasks</b></em>' reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference TEST_DEFINITION__PROCESSING_TASKS = eINSTANCE.getTestDefinition_ProcessingTasks();
-
-		/**
-		 * The meta object literal for the '<em><b>Report Cell Creation Tasks</b></em>' reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference TEST_DEFINITION__REPORT_CELL_CREATION_TASKS = eINSTANCE.getTestDefinition_ReportCellCreationTasks();
-
-		/**
-		 * The meta object literal for the '<em><b>Scenarios</b></em>' reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference TEST_DEFINITION__SCENARIOS = eINSTANCE.getTestDefinition_Scenarios();
-
-		/**
-		 * The meta object literal for the '<em><b>Picture</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference TEST_DEFINITION__PICTURE = eINSTANCE.getTestDefinition_Picture();
+		EReference TEST_DEFINITION__SCENARIO = eINSTANCE.getTestDefinition_Scenario();
 
 		/**
 		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
