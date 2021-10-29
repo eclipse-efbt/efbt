@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ASCII"?>
 <description:Group xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:properties="http://www.eclipse.org/sirius/properties/1.0.0" xmlns:style="http://www.eclipse.org/sirius/diagram/description/style/1.1.0" xmlns:tool="http://www.eclipse.org/sirius/diagram/description/tool/1.1.0" xmlns:tool_1="http://www.eclipse.org/sirius/description/tool/1.1.0" name="bpmn_lite" version="12.0.0.2017041100">
   <ownedViewpoints name="Process" label="bpmn_lite - Process" modelFileExtension="bpmn_lite">
-    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="SubProcessDiagram" label="SubProcess Diagram" titleExpression="aql:self.name" pasteDescriptions="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.0/@ownedTools[name='Paste']" domainClass="bpmn_lite.SubProcess" enablePopupBars="true">
+    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="SubProcessDiagram" label="SubProcess Diagram" titleExpression="aql:self.name" domainClass="bpmn_lite.SubProcess" enablePopupBars="true">
       <metamodel href="platform:/../org.eclipse.efbt.cocalimo.smcubes.model.task/model/bpmn_lite.ecore#/"/>
       <layout xsi:type="description_1:CompositeLayout" direction="LeftToRight"/>
       <defaultLayer name="Default">
@@ -21,7 +21,7 @@
             </centerLabelStyleDescription>
           </style>
         </edgeMappings>
-        <containerMappings name="SubProcess" pasteDescriptions="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.0/@ownedTools[name='Paste']" deletionDescription="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.0/@ownedTools[name='DeleteSubProcess']" labelDirectEdit="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.0/@ownedTools[name='FlowElementNameEdit']" semanticCandidatesExpression="aql:self" domainClass="bpmn_lite.SubProcess">
+        <containerMappings name="SubProcess" deletionDescription="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.0/@ownedTools[name='DeleteSubProcess']" labelDirectEdit="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.0/@ownedTools[name='FlowElementNameEdit']" semanticCandidatesExpression="aql:self" domainClass="bpmn_lite.SubProcess">
           <subNodeMappings name="SPExternalLabel" labelDirectEdit="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.0/@ownedTools[name='FlowElementNameEdit']" semanticCandidatesExpression="aql:containerView.getElementsWithExternalLabel()" semanticElements="aql:self.eventDefinitions->union(Sequence{self})" domainClass="bpmn_lite.BaseElement">
             <style xsi:type="style:SquareDescription" borderColor="//@userColorsPalettes[name='Colors']/@entries[name='LightYellow']" showIcon="false" labelExpression="aql:self.getExternalLabel()" labelColor="//@userColorsPalettes[name='Colors']/@entries[name='TextBackground']" labelAlignment="LEFT" sizeComputationExpression="aql:self.getExternalLabelSize()" labelPosition="node" resizeKind="NSEW" color="//@userColorsPalettes[name='Colors']/@entries[name='LightYellow']"/>
           </subNodeMappings>
@@ -71,33 +71,6 @@
               </firstModelOperations>
             </initialOperation>
           </ownedTools>
-          <ownedTools xsi:type="tool_1:PopupMenu" name="ConvertTask_Popup" label="%ConvertTaskTo" precondition="aql:self.oclIsKindOf(bpmn_lite::Task)" forceRefresh="true">
-            <menuItemDescription xsi:type="tool_1:OperationAction" name="ConvertTaskToTask_ContextAction" label="Task" forceRefresh="true" icon="/org.eclipse.efbt.cocalimo.smcubes.model.task.edit/icons/full/obj16/Task.png">
-              <view name="views"/>
-              <initialOperation>
-                <firstModelOperations xsi:type="tool_1:For" expression="aql:views" iteratorName="view">
-                  <subModelOperations xsi:type="tool_1:ChangeContext" browseExpression="aql:view.convertToTask()"/>
-                </firstModelOperations>
-              </initialOperation>
-            </menuItemDescription>
-            <menuItemDescription xsi:type="tool_1:OperationAction" name="ConvertTaskToServiceTask_ContextAction" label="Service Task" forceRefresh="true" icon="/org.eclipse.efbt.cocalimo.smcubes.model.task.edit/icons/full/obj16/ServiceTask.png">
-              <view name="views"/>
-              <initialOperation>
-                <firstModelOperations xsi:type="tool_1:For" expression="aql:views" iteratorName="view">
-                  <subModelOperations xsi:type="tool_1:ChangeContext" browseExpression="aql:view.convertToServiceTask()"/>
-                </firstModelOperations>
-              </initialOperation>
-            </menuItemDescription>
-          </ownedTools>
-          <ownedTools xsi:type="tool_1:PasteDescription" name="Paste" label="%Paste" forceRefresh="true">
-            <container name="container"/>
-            <containerView name="containerView"/>
-            <copiedView name="copiedView"/>
-            <copiedElement name="copiedElement"/>
-            <initialOperation>
-              <firstModelOperations xsi:type="tool_1:ChangeContext" browseExpression="service:container.paste(containerView, copiedView, copiedElement)"/>
-            </initialOperation>
-          </ownedTools>
           <ownedTools xsi:type="tool:DeleteElementDescription" name="DeleteSubProcess" forceRefresh="true">
             <element name="element"/>
             <elementView name="elementView"/>
@@ -105,14 +78,6 @@
             <initialOperation>
               <firstModelOperations xsi:type="tool_1:ChangeContext" browseExpression="aql:element.eContainer(bpmn_lite::FlowElementsContainer)">
                 <subModelOperations xsi:type="tool_1:Unset" featureName="flowElements" elementExpression="aql:element"/>
-              </firstModelOperations>
-            </initialOperation>
-          </ownedTools>
-          <ownedTools xsi:type="tool_1:OperationAction" name="ExternalLabel" label="%ExternalLabel" precondition="aql:self.oclIsKindOf(bpmn_lite::Event) or self.oclIsKindOf(bpmn_lite::Gateway)  or self.oclIsKindOf(bpmn_lite::ItemAwareElement)" forceRefresh="true">
-            <view name="views"/>
-            <initialOperation>
-              <firstModelOperations xsi:type="tool_1:ExternalJavaAction" name="SetUnsetExternalLabels" id="org.eclipse.efbt.cocalimo.smcubes.ui.bpmnlite.setUnsetExternalLabels">
-                <parameters name="views" value="aql:views"/>
               </firstModelOperations>
             </initialOperation>
           </ownedTools>
@@ -289,12 +254,10 @@
         <customization/>
       </defaultLayer>
     </ownedRepresentations>
-    <ownedJavaExtensions qualifiedClassName="org.eclipse.efbt.cocalimo.smcubes.ui.bpmnlite.ElementsPositionService"/>
     <ownedJavaExtensions qualifiedClassName="org.eclipse.efbt.cocalimo.smcubes.ui.bpmnlite.TaskService"/>
     <ownedJavaExtensions qualifiedClassName="org.eclipse.sirius.common.tools.api.interpreter.StandardServices"/>
     <ownedJavaExtensions qualifiedClassName="org.eclipse.efbt.cocalimo.smcubes.ui.bpmnlite.ProcessService"/>
     <ownedJavaExtensions qualifiedClassName="org.eclipse.efbt.cocalimo.smcubes.ui.bpmnlite.NamingService"/>
-    <ownedJavaExtensions qualifiedClassName="org.eclipse.efbt.cocalimo.smcubes.ui.bpmnlite.ServiceHelper"/>
   </ownedViewpoints>
   <userColorsPalettes name="Colors">
     <entries xsi:type="description:UserFixedColor" red="255" green="255" blue="255" name="LaneBackgroundRight"/>

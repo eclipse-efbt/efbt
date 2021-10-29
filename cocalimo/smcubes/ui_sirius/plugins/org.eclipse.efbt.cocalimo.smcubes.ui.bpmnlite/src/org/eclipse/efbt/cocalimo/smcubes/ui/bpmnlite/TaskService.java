@@ -37,9 +37,6 @@ public class TaskService {
 
 	public String getLabel(Task task, boolean borderedNodes) {
 		String result = " \n \n" + task.getName();
-		// if (borderedNodes) {
-		// result = " \n" + result;
-		// }
 		return result;
 	}
 
@@ -52,71 +49,5 @@ public class TaskService {
 
 
 
-
-
-	public boolean isLikeTask(final EObject eObject) {
-		return eObject instanceof Task && eObject.getClass().isAssignableFrom(TaskImpl.class);
-	}
-
-	
-
-	public boolean isLikeServiceTask(final EObject eObject) {
-		return eObject instanceof ServiceTask;
-	}
-
-	
-
-	public Task convertToTask(final DNodeContainer view) {
-		Task eObject = (Task) view.getTarget();
-		if (!eObject.getClass().isAssignableFrom(TaskImpl.class)) {
-			return (Task) convertToSpecificTask((Task) view.getTarget(), Bpmn_litePackage.eINSTANCE.getTask());
-		}
-		return eObject;
-	}
-
-
-
-	public ServiceTask convertToServiceTask(final DNodeContainer view) {
-		return (ServiceTask) convertToSpecificTask((Task) view.getTarget(), Bpmn_litePackage.eINSTANCE.getServiceTask());
-	}
-
-	
-
-	private Task convertToSpecificTask(Task task, EClass eClass) {
-		if (eClass.equals(task.eClass())) {
-			return task;
-		} else {
-			Task cloneTask = clone(task, (Task) Bpmn_liteFactory.eINSTANCE.create(eClass));
-			return cloneTask;
-		}
-	}
-
-	private Task clone(Task task, Task cloneTask) {
-		
-		cloneTask.getIncoming().addAll(task.getIncoming());
-		cloneTask.getOutgoing().addAll(task.getOutgoing());
-		cloneTask.setId(task.getId());
-		cloneTask.setName(task.getName());
-
-
-		updateMessageFlowsAndAssociations(task, cloneTask);
-
-		FlowElementsContainer container = (FlowElementsContainer) task.eContainer();
-		container.getFlowElements().remove(task);
-		container.getFlowElements().add(cloneTask);
-
-		return cloneTask;
-	}
-
-	private void updateMessageFlowsAndAssociations(Task task, Task cloneTask) {
-		ECrossReferenceAdapter eCrossReferenceAdapter = ServiceHelper.getCrossReferenceAdapter(task);
-		if (eCrossReferenceAdapter != null) {
-			Collection<Setting> inverseReferences = eCrossReferenceAdapter.getInverseReferences(task);
-			for (Setting setting : inverseReferences) {
-				EObject object = setting.getEObject();
-
-			}
-		}
-	}
 
 }

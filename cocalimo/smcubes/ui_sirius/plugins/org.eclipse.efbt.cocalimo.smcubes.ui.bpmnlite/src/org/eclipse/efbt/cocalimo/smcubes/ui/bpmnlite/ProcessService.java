@@ -27,7 +27,7 @@ import org.eclipse.emf.ecore.EObject;
 public class ProcessService {
 
 
-	public EList<FlowElement> getSubElements(EObject eo) {
+	public EList<FlowElement> getSubElements(EObject eo) { 
 		if (eo instanceof SubProcess) {
 			return ((SubProcess) eo).getFlowElements();
 		}
@@ -35,7 +35,7 @@ public class ProcessService {
 	}
 
 	public boolean isApplicableType(EObject element) {
-		return isEventTaskOrGateway(element) || isLaneChoregraphyTaskOrSubProcess(element);
+		return isEventTaskOrGateway(element) || isSubProcess(element);
 	}
 
 	private boolean isEventTaskOrGateway(EObject element) {
@@ -44,18 +44,14 @@ public class ProcessService {
 				
 	}
 
-	private boolean isLaneChoregraphyTaskOrSubProcess(EObject element) {
+	private boolean isSubProcess(EObject element) {
 		return  element instanceof SubProcess;
 	}
 
 	public EObject createFlowElement(EObject container, String typeToCreate) {
 		FlowElementsContainer flowElementsContainer = getFlowElementsContainer(container);
 		FlowNode newElement = createElement(typeToCreate);
-		flowElementsContainer.getFlowElements().add(newElement);
-
-		if (container instanceof SubProcess) {
-				// TODO Nothing in the odesign migrated
-			}
+		flowElementsContainer.getFlowElements().add(newElement);		
 		
 		return newElement;
 	}

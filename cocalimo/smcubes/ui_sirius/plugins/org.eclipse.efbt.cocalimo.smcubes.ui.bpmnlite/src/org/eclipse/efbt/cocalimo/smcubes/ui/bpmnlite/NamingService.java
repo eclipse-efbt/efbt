@@ -66,9 +66,9 @@ public class NamingService {
 	}
 
 	public static String getNonExternalLabel(BaseElement fn, DNode dNode) {
-		if (ServiceHelper.isExternalLabel(dNode)) {
-			return null;
-		}
+		//if (ServiceHelper.isExternalLabel(dNode)) {
+		//	return null;
+		//}
 
 		String name = getLabel(fn);
 
