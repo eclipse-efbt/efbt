@@ -28,8 +28,7 @@ import org.eclipse.emf.common.util.EList;
  * @model extendedMetaData="name='MemberHierarchyModule' kind='elementOnly'"
  * @generated
  */
-public interface MemberHierarchyModule extends org.eclipse.efbt.cocalimo.core.model.module_management.Module
-{
+public interface MemberHierarchyModule extends org.eclipse.efbt.cocalimo.core.model.module_management.Module {
 	/**
 	 * Returns the value of the '<em><b>Member Hierarchies</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.smcubes.model.core.MEMBER_HIERARCHY}.

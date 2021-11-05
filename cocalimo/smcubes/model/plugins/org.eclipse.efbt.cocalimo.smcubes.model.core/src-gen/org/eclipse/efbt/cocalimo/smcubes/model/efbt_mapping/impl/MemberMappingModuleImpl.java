@@ -34,8 +34,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class MemberMappingModuleImpl extends ModuleImpl implements MemberMappingModule
-{
+public class MemberMappingModuleImpl extends ModuleImpl implements MemberMappingModule {
 	/**
 	 * The cached value of the '{@link #getMemberMappings() <em>Member Mappings</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -51,8 +50,7 @@ public class MemberMappingModuleImpl extends ModuleImpl implements MemberMapping
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected MemberMappingModuleImpl()
-	{
+	protected MemberMappingModuleImpl() {
 		super();
 	}
 
@@ -62,8 +60,7 @@ public class MemberMappingModuleImpl extends ModuleImpl implements MemberMapping
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Efbt_mappingPackage.Literals.MEMBER_MAPPING_MODULE;
 	}
 
@@ -73,8 +70,7 @@ public class MemberMappingModuleImpl extends ModuleImpl implements MemberMapping
 	 * @generated
 	 */
 	@Override
-	public EList<MEMBER_MAPPING> getMemberMappings()
-	{
+	public EList<MEMBER_MAPPING> getMemberMappings() {
 		if (memberMappings == null) {
 			memberMappings = new EObjectContainmentEList<MEMBER_MAPPING>(MEMBER_MAPPING.class, this, Efbt_mappingPackage.MEMBER_MAPPING_MODULE__MEMBER_MAPPINGS);
 		}
@@ -87,8 +83,7 @@ public class MemberMappingModuleImpl extends ModuleImpl implements MemberMapping
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case Efbt_mappingPackage.MEMBER_MAPPING_MODULE__MEMBER_MAPPINGS:
 				return ((InternalEList<?>)getMemberMappings()).basicRemove(otherEnd, msgs);
@@ -102,8 +97,7 @@ public class MemberMappingModuleImpl extends ModuleImpl implements MemberMapping
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Efbt_mappingPackage.MEMBER_MAPPING_MODULE__MEMBER_MAPPINGS:
 				return getMemberMappings();
@@ -118,8 +112,7 @@ public class MemberMappingModuleImpl extends ModuleImpl implements MemberMapping
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Efbt_mappingPackage.MEMBER_MAPPING_MODULE__MEMBER_MAPPINGS:
 				getMemberMappings().clear();
@@ -135,8 +128,7 @@ public class MemberMappingModuleImpl extends ModuleImpl implements MemberMapping
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Efbt_mappingPackage.MEMBER_MAPPING_MODULE__MEMBER_MAPPINGS:
 				getMemberMappings().clear();
@@ -151,8 +143,7 @@ public class MemberMappingModuleImpl extends ModuleImpl implements MemberMapping
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Efbt_mappingPackage.MEMBER_MAPPING_MODULE__MEMBER_MAPPINGS:
 				return memberMappings != null && !memberMappings.isEmpty();

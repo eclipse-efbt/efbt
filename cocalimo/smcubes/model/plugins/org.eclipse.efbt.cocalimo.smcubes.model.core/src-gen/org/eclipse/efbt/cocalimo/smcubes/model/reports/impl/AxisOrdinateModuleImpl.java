@@ -34,8 +34,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class AxisOrdinateModuleImpl extends ModuleImpl implements AxisOrdinateModule
-{
+public class AxisOrdinateModuleImpl extends ModuleImpl implements AxisOrdinateModule {
 	/**
 	 * The cached value of the '{@link #getAxis_ordinates() <em>Axis ordinates</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -51,8 +50,7 @@ public class AxisOrdinateModuleImpl extends ModuleImpl implements AxisOrdinateMo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected AxisOrdinateModuleImpl()
-	{
+	protected AxisOrdinateModuleImpl() {
 		super();
 	}
 
@@ -62,8 +60,7 @@ public class AxisOrdinateModuleImpl extends ModuleImpl implements AxisOrdinateMo
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return ReportsPackage.Literals.AXIS_ORDINATE_MODULE;
 	}
 
@@ -73,8 +70,7 @@ public class AxisOrdinateModuleImpl extends ModuleImpl implements AxisOrdinateMo
 	 * @generated
 	 */
 	@Override
-	public EList<AXIS_ORDINATE> getAxis_ordinates()
-	{
+	public EList<AXIS_ORDINATE> getAxis_ordinates() {
 		if (axis_ordinates == null) {
 			axis_ordinates = new EObjectContainmentEList<AXIS_ORDINATE>(AXIS_ORDINATE.class, this, ReportsPackage.AXIS_ORDINATE_MODULE__AXIS_ORDINATES);
 		}
@@ -87,8 +83,7 @@ public class AxisOrdinateModuleImpl extends ModuleImpl implements AxisOrdinateMo
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case ReportsPackage.AXIS_ORDINATE_MODULE__AXIS_ORDINATES:
 				return ((InternalEList<?>)getAxis_ordinates()).basicRemove(otherEnd, msgs);
@@ -102,8 +97,7 @@ public class AxisOrdinateModuleImpl extends ModuleImpl implements AxisOrdinateMo
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case ReportsPackage.AXIS_ORDINATE_MODULE__AXIS_ORDINATES:
 				return getAxis_ordinates();
@@ -118,8 +112,7 @@ public class AxisOrdinateModuleImpl extends ModuleImpl implements AxisOrdinateMo
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case ReportsPackage.AXIS_ORDINATE_MODULE__AXIS_ORDINATES:
 				getAxis_ordinates().clear();
@@ -135,8 +128,7 @@ public class AxisOrdinateModuleImpl extends ModuleImpl implements AxisOrdinateMo
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case ReportsPackage.AXIS_ORDINATE_MODULE__AXIS_ORDINATES:
 				getAxis_ordinates().clear();
@@ -151,8 +143,7 @@ public class AxisOrdinateModuleImpl extends ModuleImpl implements AxisOrdinateMo
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ReportsPackage.AXIS_ORDINATE_MODULE__AXIS_ORDINATES:
 				return axis_ordinates != null && !axis_ordinates.isEmpty();

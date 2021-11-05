@@ -12,8 +12,7 @@ import org.eclipse.emf.ecore.EFactory;
  * @see org.eclipse.efbt.cocalimo.smcubes.model.mapping.MappingPackage
  * @generated
  */
-public interface MappingFactory extends EFactory
-{
+public interface MappingFactory extends EFactory {
 	/**
 	 * The singleton instance of the factory.
 	 * <!-- begin-user-doc -->

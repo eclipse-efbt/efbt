@@ -34,8 +34,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class MappingDefinitionModuleImpl extends ModuleImpl implements MappingDefinitionModule
-{
+public class MappingDefinitionModuleImpl extends ModuleImpl implements MappingDefinitionModule {
 	/**
 	 * The cached value of the '{@link #getMappings() <em>Mappings</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -51,8 +50,7 @@ public class MappingDefinitionModuleImpl extends ModuleImpl implements MappingDe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected MappingDefinitionModuleImpl()
-	{
+	protected MappingDefinitionModuleImpl() {
 		super();
 	}
 
@@ -62,8 +60,7 @@ public class MappingDefinitionModuleImpl extends ModuleImpl implements MappingDe
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Efbt_mappingPackage.Literals.MAPPING_DEFINITION_MODULE;
 	}
 
@@ -73,8 +70,7 @@ public class MappingDefinitionModuleImpl extends ModuleImpl implements MappingDe
 	 * @generated
 	 */
 	@Override
-	public EList<MAPPING_DEFINITION> getMappings()
-	{
+	public EList<MAPPING_DEFINITION> getMappings() {
 		if (mappings == null) {
 			mappings = new EObjectContainmentEList<MAPPING_DEFINITION>(MAPPING_DEFINITION.class, this, Efbt_mappingPackage.MAPPING_DEFINITION_MODULE__MAPPINGS);
 		}
@@ -87,8 +83,7 @@ public class MappingDefinitionModuleImpl extends ModuleImpl implements MappingDe
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case Efbt_mappingPackage.MAPPING_DEFINITION_MODULE__MAPPINGS:
 				return ((InternalEList<?>)getMappings()).basicRemove(otherEnd, msgs);
@@ -102,8 +97,7 @@ public class MappingDefinitionModuleImpl extends ModuleImpl implements MappingDe
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Efbt_mappingPackage.MAPPING_DEFINITION_MODULE__MAPPINGS:
 				return getMappings();
@@ -118,8 +112,7 @@ public class MappingDefinitionModuleImpl extends ModuleImpl implements MappingDe
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Efbt_mappingPackage.MAPPING_DEFINITION_MODULE__MAPPINGS:
 				getMappings().clear();
@@ -135,8 +128,7 @@ public class MappingDefinitionModuleImpl extends ModuleImpl implements MappingDe
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Efbt_mappingPackage.MAPPING_DEFINITION_MODULE__MAPPINGS:
 				getMappings().clear();
@@ -151,8 +143,7 @@ public class MappingDefinitionModuleImpl extends ModuleImpl implements MappingDe
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Efbt_mappingPackage.MAPPING_DEFINITION_MODULE__MAPPINGS:
 				return mappings != null && !mappings.isEmpty();

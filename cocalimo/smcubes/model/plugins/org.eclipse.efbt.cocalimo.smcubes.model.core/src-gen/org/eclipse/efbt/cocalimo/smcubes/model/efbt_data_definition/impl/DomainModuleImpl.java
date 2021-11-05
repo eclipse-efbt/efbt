@@ -34,8 +34,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class DomainModuleImpl extends ModuleImpl implements DomainModule
-{
+public class DomainModuleImpl extends ModuleImpl implements DomainModule {
 	/**
 	 * The cached value of the '{@link #getDomains() <em>Domains</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -51,8 +50,7 @@ public class DomainModuleImpl extends ModuleImpl implements DomainModule
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected DomainModuleImpl()
-	{
+	protected DomainModuleImpl() {
 		super();
 	}
 
@@ -62,8 +60,7 @@ public class DomainModuleImpl extends ModuleImpl implements DomainModule
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Efbt_data_definitionPackage.Literals.DOMAIN_MODULE;
 	}
 
@@ -73,8 +70,7 @@ public class DomainModuleImpl extends ModuleImpl implements DomainModule
 	 * @generated
 	 */
 	@Override
-	public EList<DOMAIN> getDomains()
-	{
+	public EList<DOMAIN> getDomains() {
 		if (domains == null) {
 			domains = new EObjectContainmentEList<DOMAIN>(DOMAIN.class, this, Efbt_data_definitionPackage.DOMAIN_MODULE__DOMAINS);
 		}
@@ -87,8 +83,7 @@ public class DomainModuleImpl extends ModuleImpl implements DomainModule
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case Efbt_data_definitionPackage.DOMAIN_MODULE__DOMAINS:
 				return ((InternalEList<?>)getDomains()).basicRemove(otherEnd, msgs);
@@ -102,8 +97,7 @@ public class DomainModuleImpl extends ModuleImpl implements DomainModule
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Efbt_data_definitionPackage.DOMAIN_MODULE__DOMAINS:
 				return getDomains();
@@ -118,8 +112,7 @@ public class DomainModuleImpl extends ModuleImpl implements DomainModule
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Efbt_data_definitionPackage.DOMAIN_MODULE__DOMAINS:
 				getDomains().clear();
@@ -135,8 +128,7 @@ public class DomainModuleImpl extends ModuleImpl implements DomainModule
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Efbt_data_definitionPackage.DOMAIN_MODULE__DOMAINS:
 				getDomains().clear();
@@ -151,8 +143,7 @@ public class DomainModuleImpl extends ModuleImpl implements DomainModule
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Efbt_data_definitionPackage.DOMAIN_MODULE__DOMAINS:
 				return domains != null && !domains.isEmpty();

@@ -170,9 +170,6 @@ import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.provider.Data_def
 import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.provider.Efbt_data_definitionItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.provider.Efbt_mappingItemProviderAdapterFactory;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.provider.Efbt_vtl_transformationItemProviderAdapterFactory;
-
 import org.eclipse.efbt.cocalimo.smcubes.model.input_data.provider.Input_dataItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.logical_transformations.provider.Logical_transformationsItemProviderAdapterFactory;
@@ -186,9 +183,6 @@ import org.eclipse.efbt.cocalimo.smcubes.model.reports.provider.ReportsItemProvi
 import org.eclipse.efbt.cocalimo.smcubes.model.scenarios.provider.ScenariosItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.provider.Smcubes_modelItemProviderAdapterFactory;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.provider.Vtl_transformationItemProviderAdapterFactory;
-
 import org.eclipse.emf.ecore.provider.EcoreItemProviderAdapterFactory;
 
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
@@ -753,12 +747,10 @@ public class Aorta_smcubesEditor
 		adapterFactory.addAdapterFactory(new Data_definitionItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Efbt_data_definitionItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Efbt_mappingItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new Efbt_vtl_transformationItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new MappingItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new RenderingItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new ReportsItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Smcubes_modelItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new Vtl_transformationItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Logical_transformationsItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new ScenariosItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Bpmn_liteItemProviderAdapterFactory());

@@ -27,8 +27,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class MAINTENANCE_AGENCYImpl extends MinimalEObjectImpl.Container implements MAINTENANCE_AGENCY
-{
+public class MAINTENANCE_AGENCYImpl extends MinimalEObjectImpl.Container implements MAINTENANCE_AGENCY {
 	/**
 	 * The default value of the '{@link #getCode() <em>Code</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -94,8 +93,7 @@ public class MAINTENANCE_AGENCYImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected MAINTENANCE_AGENCYImpl()
-	{
+	protected MAINTENANCE_AGENCYImpl() {
 		super();
 	}
 
@@ -105,8 +103,7 @@ public class MAINTENANCE_AGENCYImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return CorePackage.Literals.MAINTENANCE_AGENCY;
 	}
 
@@ -116,8 +113,7 @@ public class MAINTENANCE_AGENCYImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public String getCode()
-	{
+	public String getCode() {
 		return code;
 	}
 
@@ -127,8 +123,7 @@ public class MAINTENANCE_AGENCYImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public void setCode(String newCode)
-	{
+	public void setCode(String newCode) {
 		String oldCode = code;
 		code = newCode;
 		if (eNotificationRequired())
@@ -141,8 +136,7 @@ public class MAINTENANCE_AGENCYImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public String getMaintenance_agency_id()
-	{
+	public String getMaintenance_agency_id() {
 		return maintenance_agency_id;
 	}
 
@@ -152,8 +146,7 @@ public class MAINTENANCE_AGENCYImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public void setMaintenance_agency_id(String newMaintenance_agency_id)
-	{
+	public void setMaintenance_agency_id(String newMaintenance_agency_id) {
 		String oldMaintenance_agency_id = maintenance_agency_id;
 		maintenance_agency_id = newMaintenance_agency_id;
 		if (eNotificationRequired())
@@ -166,8 +159,7 @@ public class MAINTENANCE_AGENCYImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
@@ -177,8 +169,7 @@ public class MAINTENANCE_AGENCYImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public void setName(String newName)
-	{
+	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
@@ -191,8 +182,7 @@ public class MAINTENANCE_AGENCYImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case CorePackage.MAINTENANCE_AGENCY__CODE:
 				return getCode();
@@ -210,8 +200,7 @@ public class MAINTENANCE_AGENCYImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case CorePackage.MAINTENANCE_AGENCY__CODE:
 				setCode((String)newValue);
@@ -232,8 +221,7 @@ public class MAINTENANCE_AGENCYImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case CorePackage.MAINTENANCE_AGENCY__CODE:
 				setCode(CODE_EDEFAULT);
@@ -254,8 +242,7 @@ public class MAINTENANCE_AGENCYImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case CorePackage.MAINTENANCE_AGENCY__CODE:
 				return CODE_EDEFAULT == null ? code != null : !CODE_EDEFAULT.equals(code);
@@ -273,8 +260,7 @@ public class MAINTENANCE_AGENCYImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

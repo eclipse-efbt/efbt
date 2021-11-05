@@ -34,8 +34,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class CUBE_GROUP_ENUMERATIONImpl extends MinimalEObjectImpl.Container implements CUBE_GROUP_ENUMERATION
-{
+public class CUBE_GROUP_ENUMERATIONImpl extends MinimalEObjectImpl.Container implements CUBE_GROUP_ENUMERATION {
 	/**
 	 * The cached value of the '{@link #getCube_group_id() <em>Cube group id</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -121,8 +120,7 @@ public class CUBE_GROUP_ENUMERATIONImpl extends MinimalEObjectImpl.Container imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected CUBE_GROUP_ENUMERATIONImpl()
-	{
+	protected CUBE_GROUP_ENUMERATIONImpl() {
 		super();
 	}
 
@@ -132,8 +130,7 @@ public class CUBE_GROUP_ENUMERATIONImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Data_definitionPackage.Literals.CUBE_GROUP_ENUMERATION;
 	}
 
@@ -143,8 +140,7 @@ public class CUBE_GROUP_ENUMERATIONImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public CUBE_GROUP getCube_group_id()
-	{
+	public CUBE_GROUP getCube_group_id() {
 		if (cube_group_id != null && cube_group_id.eIsProxy()) {
 			InternalEObject oldCube_group_id = (InternalEObject)cube_group_id;
 			cube_group_id = (CUBE_GROUP)eResolveProxy(oldCube_group_id);
@@ -161,8 +157,7 @@ public class CUBE_GROUP_ENUMERATIONImpl extends MinimalEObjectImpl.Container imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public CUBE_GROUP basicGetCube_group_id()
-	{
+	public CUBE_GROUP basicGetCube_group_id() {
 		return cube_group_id;
 	}
 
@@ -172,8 +167,7 @@ public class CUBE_GROUP_ENUMERATIONImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public void setCube_group_id(CUBE_GROUP newCube_group_id)
-	{
+	public void setCube_group_id(CUBE_GROUP newCube_group_id) {
 		CUBE_GROUP oldCube_group_id = cube_group_id;
 		cube_group_id = newCube_group_id;
 		if (eNotificationRequired())
@@ -186,8 +180,7 @@ public class CUBE_GROUP_ENUMERATIONImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public CUBE getCube_id()
-	{
+	public CUBE getCube_id() {
 		if (cube_id != null && cube_id.eIsProxy()) {
 			InternalEObject oldCube_id = (InternalEObject)cube_id;
 			cube_id = (CUBE)eResolveProxy(oldCube_id);
@@ -204,8 +197,7 @@ public class CUBE_GROUP_ENUMERATIONImpl extends MinimalEObjectImpl.Container imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public CUBE basicGetCube_id()
-	{
+	public CUBE basicGetCube_id() {
 		return cube_id;
 	}
 
@@ -215,8 +207,7 @@ public class CUBE_GROUP_ENUMERATIONImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public void setCube_id(CUBE newCube_id)
-	{
+	public void setCube_id(CUBE newCube_id) {
 		CUBE oldCube_id = cube_id;
 		cube_id = newCube_id;
 		if (eNotificationRequired())
@@ -229,8 +220,7 @@ public class CUBE_GROUP_ENUMERATIONImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public int getOrder()
-	{
+	public int getOrder() {
 		return order;
 	}
 
@@ -240,8 +230,7 @@ public class CUBE_GROUP_ENUMERATIONImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public void setOrder(int newOrder)
-	{
+	public void setOrder(int newOrder) {
 		int oldOrder = order;
 		order = newOrder;
 		if (eNotificationRequired())
@@ -254,8 +243,7 @@ public class CUBE_GROUP_ENUMERATIONImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public Date getValid_from()
-	{
+	public Date getValid_from() {
 		return valid_from;
 	}
 
@@ -265,8 +253,7 @@ public class CUBE_GROUP_ENUMERATIONImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public void setValid_from(Date newValid_from)
-	{
+	public void setValid_from(Date newValid_from) {
 		Date oldValid_from = valid_from;
 		valid_from = newValid_from;
 		if (eNotificationRequired())
@@ -279,8 +266,7 @@ public class CUBE_GROUP_ENUMERATIONImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public Date getValid_to()
-	{
+	public Date getValid_to() {
 		return valid_to;
 	}
 
@@ -290,8 +276,7 @@ public class CUBE_GROUP_ENUMERATIONImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public void setValid_to(Date newValid_to)
-	{
+	public void setValid_to(Date newValid_to) {
 		Date oldValid_to = valid_to;
 		valid_to = newValid_to;
 		if (eNotificationRequired())
@@ -304,8 +289,7 @@ public class CUBE_GROUP_ENUMERATIONImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Data_definitionPackage.CUBE_GROUP_ENUMERATION__CUBE_GROUP_ID:
 				if (resolve) return getCube_group_id();
@@ -329,8 +313,7 @@ public class CUBE_GROUP_ENUMERATIONImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Data_definitionPackage.CUBE_GROUP_ENUMERATION__CUBE_GROUP_ID:
 				setCube_group_id((CUBE_GROUP)newValue);
@@ -357,8 +340,7 @@ public class CUBE_GROUP_ENUMERATIONImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Data_definitionPackage.CUBE_GROUP_ENUMERATION__CUBE_GROUP_ID:
 				setCube_group_id((CUBE_GROUP)null);
@@ -385,8 +367,7 @@ public class CUBE_GROUP_ENUMERATIONImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Data_definitionPackage.CUBE_GROUP_ENUMERATION__CUBE_GROUP_ID:
 				return cube_group_id != null;
@@ -408,8 +389,7 @@ public class CUBE_GROUP_ENUMERATIONImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

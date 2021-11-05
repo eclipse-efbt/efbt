@@ -169,15 +169,11 @@ import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.provider.Efb
 
 import org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.provider.Efbt_mappingItemProviderAdapterFactory;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.provider.Efbt_vtl_transformationItemProviderAdapterFactory;
-
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.provider.MappingItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.rendering.provider.RenderingItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.reports.provider.ReportsItemProviderAdapterFactory;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.provider.Vtl_transformationItemProviderAdapterFactory;
 
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
@@ -736,12 +732,10 @@ public class Smcubes_modelEditor
 		adapterFactory.addAdapterFactory(new Data_definitionItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Efbt_data_definitionItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Efbt_mappingItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new Efbt_vtl_transformationItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new MappingItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new RenderingItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new ReportsItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Smcubes_modelItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new Vtl_transformationItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Module_managementItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 

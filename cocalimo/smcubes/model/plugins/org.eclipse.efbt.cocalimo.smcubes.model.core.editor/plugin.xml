@@ -124,34 +124,6 @@
             id="org.eclipse.emf.ecore.Wizard.category.ID"
             name="%_UI_Wizard_category"/>
       <wizard
-            id="org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.presentation.Efbt_vtl_transformationModelWizardID"
-            name="%_UI_Efbt_vtl_transformationModelWizard_label"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.presentation.Efbt_vtl_transformationModelWizard"
-            category="org.eclipse.emf.ecore.Wizard.category.ID"
-            icon="icons/full/obj16/Efbt_vtl_transformationModelFile.gif">
-         <description>%_UI_Efbt_vtl_transformationModelWizard_description</description>
-         <selection class="org.eclipse.core.resources.IResource"/>
-      </wizard>
-   </extension>
-
-   <extension point="org.eclipse.ui.editors">
-      <!-- @generated smcubes -->
-      <editor
-            id="org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.presentation.Efbt_vtl_transformationEditorID"
-            name="%_UI_Efbt_vtl_transformationEditor_label"
-            icon="icons/full/obj16/Efbt_vtl_transformationModelFile.gif"
-            extensions="efbt_vtl_transformation"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.presentation.Efbt_vtl_transformationEditor"
-            contributorClass="org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.presentation.Efbt_vtl_transformationActionBarContributor">
-      </editor>
-   </extension>
-
-   <extension point="org.eclipse.ui.newWizards">
-      <!-- @generated smcubes -->
-      <category
-            id="org.eclipse.emf.ecore.Wizard.category.ID"
-            name="%_UI_Wizard_category"/>
-      <wizard
             id="org.eclipse.efbt.cocalimo.smcubes.model.mapping.presentation.MappingModelWizardID"
             name="%_UI_MappingModelWizard_label"
             class="org.eclipse.efbt.cocalimo.smcubes.model.mapping.presentation.MappingModelWizard"
@@ -255,34 +227,6 @@
             extensions="smcubes_model"
             class="org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.presentation.Smcubes_modelEditor"
             contributorClass="org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.presentation.Smcubes_modelActionBarContributor">
-      </editor>
-   </extension>
-
-   <extension point="org.eclipse.ui.newWizards">
-      <!-- @generated smcubes -->
-      <category
-            id="org.eclipse.emf.ecore.Wizard.category.ID"
-            name="%_UI_Wizard_category"/>
-      <wizard
-            id="org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.presentation.Vtl_transformationModelWizardID"
-            name="%_UI_Vtl_transformationModelWizard_label"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.presentation.Vtl_transformationModelWizard"
-            category="org.eclipse.emf.ecore.Wizard.category.ID"
-            icon="icons/full/obj16/Vtl_transformationModelFile.gif">
-         <description>%_UI_Vtl_transformationModelWizard_description</description>
-         <selection class="org.eclipse.core.resources.IResource"/>
-      </wizard>
-   </extension>
-
-   <extension point="org.eclipse.ui.editors">
-      <!-- @generated smcubes -->
-      <editor
-            id="org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.presentation.Vtl_transformationEditorID"
-            name="%_UI_Vtl_transformationEditor_label"
-            icon="icons/full/obj16/Vtl_transformationModelFile.gif"
-            extensions="vtl_transformation"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.presentation.Vtl_transformationEditor"
-            contributorClass="org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.presentation.Vtl_transformationActionBarContributor">
       </editor>
    </extension>
 

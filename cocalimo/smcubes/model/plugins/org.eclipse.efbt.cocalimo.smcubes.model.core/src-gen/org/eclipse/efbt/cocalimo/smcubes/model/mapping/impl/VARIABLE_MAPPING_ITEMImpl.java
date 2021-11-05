@@ -29,8 +29,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class VARIABLE_MAPPING_ITEMImpl extends MinimalEObjectImpl.Container implements VARIABLE_MAPPING_ITEM
-{
+public class VARIABLE_MAPPING_ITEMImpl extends MinimalEObjectImpl.Container implements VARIABLE_MAPPING_ITEM {
 	/**
 	 * The default value of the '{@link #getIsSource() <em>Is Source</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -66,8 +65,7 @@ public class VARIABLE_MAPPING_ITEMImpl extends MinimalEObjectImpl.Container impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected VARIABLE_MAPPING_ITEMImpl()
-	{
+	protected VARIABLE_MAPPING_ITEMImpl() {
 		super();
 	}
 
@@ -77,8 +75,7 @@ public class VARIABLE_MAPPING_ITEMImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return MappingPackage.Literals.VARIABLE_MAPPING_ITEM;
 	}
 
@@ -88,8 +85,7 @@ public class VARIABLE_MAPPING_ITEMImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public String getIsSource()
-	{
+	public String getIsSource() {
 		return isSource;
 	}
 
@@ -99,8 +95,7 @@ public class VARIABLE_MAPPING_ITEMImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public void setIsSource(String newIsSource)
-	{
+	public void setIsSource(String newIsSource) {
 		String oldIsSource = isSource;
 		isSource = newIsSource;
 		if (eNotificationRequired())
@@ -113,8 +108,7 @@ public class VARIABLE_MAPPING_ITEMImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public VARIABLE getVariable()
-	{
+	public VARIABLE getVariable() {
 		if (variable != null && variable.eIsProxy()) {
 			InternalEObject oldVariable = (InternalEObject)variable;
 			variable = (VARIABLE)eResolveProxy(oldVariable);
@@ -131,8 +125,7 @@ public class VARIABLE_MAPPING_ITEMImpl extends MinimalEObjectImpl.Container impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public VARIABLE basicGetVariable()
-	{
+	public VARIABLE basicGetVariable() {
 		return variable;
 	}
 
@@ -142,8 +135,7 @@ public class VARIABLE_MAPPING_ITEMImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public void setVariable(VARIABLE newVariable)
-	{
+	public void setVariable(VARIABLE newVariable) {
 		VARIABLE oldVariable = variable;
 		variable = newVariable;
 		if (eNotificationRequired())
@@ -156,8 +148,7 @@ public class VARIABLE_MAPPING_ITEMImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case MappingPackage.VARIABLE_MAPPING_ITEM__IS_SOURCE:
 				return getIsSource();
@@ -174,8 +165,7 @@ public class VARIABLE_MAPPING_ITEMImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case MappingPackage.VARIABLE_MAPPING_ITEM__IS_SOURCE:
 				setIsSource((String)newValue);
@@ -193,8 +183,7 @@ public class VARIABLE_MAPPING_ITEMImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case MappingPackage.VARIABLE_MAPPING_ITEM__IS_SOURCE:
 				setIsSource(IS_SOURCE_EDEFAULT);
@@ -212,8 +201,7 @@ public class VARIABLE_MAPPING_ITEMImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case MappingPackage.VARIABLE_MAPPING_ITEM__IS_SOURCE:
 				return IS_SOURCE_EDEFAULT == null ? isSource != null : !IS_SOURCE_EDEFAULT.equals(isSource);
@@ -229,8 +217,7 @@ public class VARIABLE_MAPPING_ITEMImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

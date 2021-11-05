@@ -24,9 +24,6 @@ import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.Data_definitionPa
 import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.Efbt_data_definitionPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.Efbt_mappingPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.Efbt_vtl_transformationPackage;
-
 import org.eclipse.efbt.cocalimo.smcubes.model.input_data.Input_dataPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.logical_transformations.Logical_transformationsPackage;
@@ -40,9 +37,6 @@ import org.eclipse.efbt.cocalimo.smcubes.model.reports.ReportsPackage;
 import org.eclipse.efbt.cocalimo.smcubes.model.scenarios.ScenariosPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.Smcubes_modelPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.Vtl_transformationPackage;
-
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
@@ -156,12 +150,10 @@ public class Aorta_smcubesPackageImpl extends EPackageImpl implements Aorta_smcu
 		Data_definitionPackage.eINSTANCE.eClass();
 		Efbt_data_definitionPackage.eINSTANCE.eClass();
 		Efbt_mappingPackage.eINSTANCE.eClass();
-		Efbt_vtl_transformationPackage.eINSTANCE.eClass();
 		MappingPackage.eINSTANCE.eClass();
 		RenderingPackage.eINSTANCE.eClass();
 		ReportsPackage.eINSTANCE.eClass();
 		Smcubes_modelPackage.eINSTANCE.eClass();
-		Vtl_transformationPackage.eINSTANCE.eClass();
 		Logical_transformationsPackage.eINSTANCE.eClass();
 		ScenariosPackage.eINSTANCE.eClass();
 		Bpmn_litePackage.eINSTANCE.eClass();

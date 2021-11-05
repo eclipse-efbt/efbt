@@ -29,8 +29,7 @@ import org.eclipse.emf.ecore.EReference;
  *        annotation="license license='Copyright (c) 2020 Bird Software Solutions Ltd\n All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html\n\nSPDX-License-Identifier: EPL-2.0 \n\n Contributors:\n Neil Mackenzie - initial API and implementation\r'"
  * @generated
  */
-public interface Smcubes_modelPackage extends EPackage
-{
+public interface Smcubes_modelPackage extends EPackage {
 	/**
 	 * The package name.
 	 * <!-- begin-user-doc -->
@@ -119,22 +118,13 @@ public interface Smcubes_modelPackage extends EPackage
 	int SMCUBES_MODEL__COMBINATIONS = 4;
 
 	/**
-	 * The feature id for the '<em><b>Functional Modules</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SMCUBES_MODEL__FUNCTIONAL_MODULES = 5;
-
-	/**
 	 * The feature id for the '<em><b>Mappings</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SMCUBES_MODEL__MAPPINGS = 6;
+	int SMCUBES_MODEL__MAPPINGS = 5;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -143,7 +133,7 @@ public interface Smcubes_modelPackage extends EPackage
 	 * @generated
 	 * @ordered
 	 */
-	int SMCUBES_MODEL__NAME = 7;
+	int SMCUBES_MODEL__NAME = 6;
 
 	/**
 	 * The number of structural features of the '<em>Smcubes Model</em>' class.
@@ -152,7 +142,7 @@ public interface Smcubes_modelPackage extends EPackage
 	 * @generated
 	 * @ordered
 	 */
-	int SMCUBES_MODEL_FEATURE_COUNT = 8;
+	int SMCUBES_MODEL_FEATURE_COUNT = 7;
 
 	/**
 	 * The number of operations of the '<em>Smcubes Model</em>' class.
@@ -230,17 +220,6 @@ public interface Smcubes_modelPackage extends EPackage
 	EReference getSmcubesModel_Combinations();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.SmcubesModel#getFunctionalModules <em>Functional Modules</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Functional Modules</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.SmcubesModel#getFunctionalModules()
-	 * @see #getSmcubesModel()
-	 * @generated
-	 */
-	EReference getSmcubesModel_FunctionalModules();
-
-	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.SmcubesModel#getMappings <em>Mappings</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -284,8 +263,7 @@ public interface Smcubes_modelPackage extends EPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	interface Literals
-	{
+	interface Literals {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.impl.SmcubesModelImpl <em>Smcubes Model</em>}' class.
 		 * <!-- begin-user-doc -->
@@ -335,14 +313,6 @@ public interface Smcubes_modelPackage extends EPackage
 		 * @generated
 		 */
 		EReference SMCUBES_MODEL__COMBINATIONS = eINSTANCE.getSmcubesModel_Combinations();
-
-		/**
-		 * The meta object literal for the '<em><b>Functional Modules</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference SMCUBES_MODEL__FUNCTIONAL_MODULES = eINSTANCE.getSmcubesModel_FunctionalModules();
 
 		/**
 		 * The meta object literal for the '<em><b>Mappings</b></em>' containment reference list feature.

@@ -29,8 +29,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class ReportCellImpl extends MinimalEObjectImpl.Container implements ReportCell
-{
+public class ReportCellImpl extends MinimalEObjectImpl.Container implements ReportCell {
 	/**
 	 * The cached value of the '{@link #getCombination() <em>Combination</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -66,8 +65,7 @@ public class ReportCellImpl extends MinimalEObjectImpl.Container implements Repo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ReportCellImpl()
-	{
+	protected ReportCellImpl() {
 		super();
 	}
 
@@ -77,8 +75,7 @@ public class ReportCellImpl extends MinimalEObjectImpl.Container implements Repo
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return ReportsPackage.Literals.REPORT_CELL;
 	}
 
@@ -88,8 +85,7 @@ public class ReportCellImpl extends MinimalEObjectImpl.Container implements Repo
 	 * @generated
 	 */
 	@Override
-	public COMBINATION getCombination()
-	{
+	public COMBINATION getCombination() {
 		if (combination != null && combination.eIsProxy()) {
 			InternalEObject oldCombination = (InternalEObject)combination;
 			combination = (COMBINATION)eResolveProxy(oldCombination);
@@ -106,8 +102,7 @@ public class ReportCellImpl extends MinimalEObjectImpl.Container implements Repo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public COMBINATION basicGetCombination()
-	{
+	public COMBINATION basicGetCombination() {
 		return combination;
 	}
 
@@ -117,8 +112,7 @@ public class ReportCellImpl extends MinimalEObjectImpl.Container implements Repo
 	 * @generated
 	 */
 	@Override
-	public void setCombination(COMBINATION newCombination)
-	{
+	public void setCombination(COMBINATION newCombination) {
 		COMBINATION oldCombination = combination;
 		combination = newCombination;
 		if (eNotificationRequired())
@@ -131,8 +125,7 @@ public class ReportCellImpl extends MinimalEObjectImpl.Container implements Repo
 	 * @generated
 	 */
 	@Override
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
@@ -142,8 +135,7 @@ public class ReportCellImpl extends MinimalEObjectImpl.Container implements Repo
 	 * @generated
 	 */
 	@Override
-	public void setName(String newName)
-	{
+	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
@@ -156,8 +148,7 @@ public class ReportCellImpl extends MinimalEObjectImpl.Container implements Repo
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case ReportsPackage.REPORT_CELL__COMBINATION:
 				if (resolve) return getCombination();
@@ -174,8 +165,7 @@ public class ReportCellImpl extends MinimalEObjectImpl.Container implements Repo
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case ReportsPackage.REPORT_CELL__COMBINATION:
 				setCombination((COMBINATION)newValue);
@@ -193,8 +183,7 @@ public class ReportCellImpl extends MinimalEObjectImpl.Container implements Repo
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case ReportsPackage.REPORT_CELL__COMBINATION:
 				setCombination((COMBINATION)null);
@@ -212,8 +201,7 @@ public class ReportCellImpl extends MinimalEObjectImpl.Container implements Repo
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ReportsPackage.REPORT_CELL__COMBINATION:
 				return combination != null;
@@ -229,8 +217,7 @@ public class ReportCellImpl extends MinimalEObjectImpl.Container implements Repo
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

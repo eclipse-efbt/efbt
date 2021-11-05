@@ -34,8 +34,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class AxisModuleImpl extends ModuleImpl implements AxisModule
-{
+public class AxisModuleImpl extends ModuleImpl implements AxisModule {
 	/**
 	 * The cached value of the '{@link #getAxes() <em>Axes</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -51,8 +50,7 @@ public class AxisModuleImpl extends ModuleImpl implements AxisModule
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected AxisModuleImpl()
-	{
+	protected AxisModuleImpl() {
 		super();
 	}
 
@@ -62,8 +60,7 @@ public class AxisModuleImpl extends ModuleImpl implements AxisModule
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return ReportsPackage.Literals.AXIS_MODULE;
 	}
 
@@ -73,8 +70,7 @@ public class AxisModuleImpl extends ModuleImpl implements AxisModule
 	 * @generated
 	 */
 	@Override
-	public EList<AXIS> getAxes()
-	{
+	public EList<AXIS> getAxes() {
 		if (axes == null) {
 			axes = new EObjectContainmentEList<AXIS>(AXIS.class, this, ReportsPackage.AXIS_MODULE__AXES);
 		}
@@ -87,8 +83,7 @@ public class AxisModuleImpl extends ModuleImpl implements AxisModule
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case ReportsPackage.AXIS_MODULE__AXES:
 				return ((InternalEList<?>)getAxes()).basicRemove(otherEnd, msgs);
@@ -102,8 +97,7 @@ public class AxisModuleImpl extends ModuleImpl implements AxisModule
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case ReportsPackage.AXIS_MODULE__AXES:
 				return getAxes();
@@ -118,8 +112,7 @@ public class AxisModuleImpl extends ModuleImpl implements AxisModule
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case ReportsPackage.AXIS_MODULE__AXES:
 				getAxes().clear();
@@ -135,8 +128,7 @@ public class AxisModuleImpl extends ModuleImpl implements AxisModule
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case ReportsPackage.AXIS_MODULE__AXES:
 				getAxes().clear();
@@ -151,8 +143,7 @@ public class AxisModuleImpl extends ModuleImpl implements AxisModule
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ReportsPackage.AXIS_MODULE__AXES:
 				return axes != null && !axes.isEmpty();

@@ -12,8 +12,6 @@ import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.VariableModu
 
 import org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.MappingDefinitionModule;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.TransformationSchemeModule;
-
 import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.SmcubesModel;
 import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.Smcubes_modelPackage;
 
@@ -44,15 +42,13 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.impl.SmcubesModelImpl#getVariables <em>Variables</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.impl.SmcubesModelImpl#getCubes <em>Cubes</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.impl.SmcubesModelImpl#getCombinations <em>Combinations</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.impl.SmcubesModelImpl#getFunctionalModules <em>Functional Modules</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.impl.SmcubesModelImpl#getMappings <em>Mappings</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.impl.SmcubesModelImpl#getName <em>Name</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class SmcubesModelImpl extends MinimalEObjectImpl.Container implements SmcubesModel
-{
+public class SmcubesModelImpl extends MinimalEObjectImpl.Container implements SmcubesModel {
 	/**
 	 * The cached value of the '{@link #getDomains() <em>Domains</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -104,16 +100,6 @@ public class SmcubesModelImpl extends MinimalEObjectImpl.Container implements Sm
 	protected EList<CombinationModule> combinations;
 
 	/**
-	 * The cached value of the '{@link #getFunctionalModules() <em>Functional Modules</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getFunctionalModules()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<TransformationSchemeModule> functionalModules;
-
-	/**
 	 * The cached value of the '{@link #getMappings() <em>Mappings</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -148,8 +134,7 @@ public class SmcubesModelImpl extends MinimalEObjectImpl.Container implements Sm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected SmcubesModelImpl()
-	{
+	protected SmcubesModelImpl() {
 		super();
 	}
 
@@ -159,8 +144,7 @@ public class SmcubesModelImpl extends MinimalEObjectImpl.Container implements Sm
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Smcubes_modelPackage.Literals.SMCUBES_MODEL;
 	}
 
@@ -170,8 +154,7 @@ public class SmcubesModelImpl extends MinimalEObjectImpl.Container implements Sm
 	 * @generated
 	 */
 	@Override
-	public EList<DomainModule> getDomains()
-	{
+	public EList<DomainModule> getDomains() {
 		if (domains == null) {
 			domains = new EObjectContainmentEList<DomainModule>(DomainModule.class, this, Smcubes_modelPackage.SMCUBES_MODEL__DOMAINS);
 		}
@@ -184,8 +167,7 @@ public class SmcubesModelImpl extends MinimalEObjectImpl.Container implements Sm
 	 * @generated
 	 */
 	@Override
-	public EList<MemberModule> getMembers()
-	{
+	public EList<MemberModule> getMembers() {
 		if (members == null) {
 			members = new EObjectContainmentEList<MemberModule>(MemberModule.class, this, Smcubes_modelPackage.SMCUBES_MODEL__MEMBERS);
 		}
@@ -198,8 +180,7 @@ public class SmcubesModelImpl extends MinimalEObjectImpl.Container implements Sm
 	 * @generated
 	 */
 	@Override
-	public EList<VariableModule> getVariables()
-	{
+	public EList<VariableModule> getVariables() {
 		if (variables == null) {
 			variables = new EObjectContainmentEList<VariableModule>(VariableModule.class, this, Smcubes_modelPackage.SMCUBES_MODEL__VARIABLES);
 		}
@@ -212,8 +193,7 @@ public class SmcubesModelImpl extends MinimalEObjectImpl.Container implements Sm
 	 * @generated
 	 */
 	@Override
-	public EList<CubeModule> getCubes()
-	{
+	public EList<CubeModule> getCubes() {
 		if (cubes == null) {
 			cubes = new EObjectContainmentEList<CubeModule>(CubeModule.class, this, Smcubes_modelPackage.SMCUBES_MODEL__CUBES);
 		}
@@ -226,8 +206,7 @@ public class SmcubesModelImpl extends MinimalEObjectImpl.Container implements Sm
 	 * @generated
 	 */
 	@Override
-	public EList<CombinationModule> getCombinations()
-	{
+	public EList<CombinationModule> getCombinations() {
 		if (combinations == null) {
 			combinations = new EObjectContainmentEList<CombinationModule>(CombinationModule.class, this, Smcubes_modelPackage.SMCUBES_MODEL__COMBINATIONS);
 		}
@@ -240,22 +219,7 @@ public class SmcubesModelImpl extends MinimalEObjectImpl.Container implements Sm
 	 * @generated
 	 */
 	@Override
-	public EList<TransformationSchemeModule> getFunctionalModules()
-	{
-		if (functionalModules == null) {
-			functionalModules = new EObjectContainmentEList<TransformationSchemeModule>(TransformationSchemeModule.class, this, Smcubes_modelPackage.SMCUBES_MODEL__FUNCTIONAL_MODULES);
-		}
-		return functionalModules;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EList<MappingDefinitionModule> getMappings()
-	{
+	public EList<MappingDefinitionModule> getMappings() {
 		if (mappings == null) {
 			mappings = new EObjectContainmentEList<MappingDefinitionModule>(MappingDefinitionModule.class, this, Smcubes_modelPackage.SMCUBES_MODEL__MAPPINGS);
 		}
@@ -268,8 +232,7 @@ public class SmcubesModelImpl extends MinimalEObjectImpl.Container implements Sm
 	 * @generated
 	 */
 	@Override
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
@@ -279,8 +242,7 @@ public class SmcubesModelImpl extends MinimalEObjectImpl.Container implements Sm
 	 * @generated
 	 */
 	@Override
-	public void setName(String newName)
-	{
+	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
@@ -293,8 +255,7 @@ public class SmcubesModelImpl extends MinimalEObjectImpl.Container implements Sm
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case Smcubes_modelPackage.SMCUBES_MODEL__DOMAINS:
 				return ((InternalEList<?>)getDomains()).basicRemove(otherEnd, msgs);
@@ -306,8 +267,6 @@ public class SmcubesModelImpl extends MinimalEObjectImpl.Container implements Sm
 				return ((InternalEList<?>)getCubes()).basicRemove(otherEnd, msgs);
 			case Smcubes_modelPackage.SMCUBES_MODEL__COMBINATIONS:
 				return ((InternalEList<?>)getCombinations()).basicRemove(otherEnd, msgs);
-			case Smcubes_modelPackage.SMCUBES_MODEL__FUNCTIONAL_MODULES:
-				return ((InternalEList<?>)getFunctionalModules()).basicRemove(otherEnd, msgs);
 			case Smcubes_modelPackage.SMCUBES_MODEL__MAPPINGS:
 				return ((InternalEList<?>)getMappings()).basicRemove(otherEnd, msgs);
 		}
@@ -320,8 +279,7 @@ public class SmcubesModelImpl extends MinimalEObjectImpl.Container implements Sm
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Smcubes_modelPackage.SMCUBES_MODEL__DOMAINS:
 				return getDomains();
@@ -333,8 +291,6 @@ public class SmcubesModelImpl extends MinimalEObjectImpl.Container implements Sm
 				return getCubes();
 			case Smcubes_modelPackage.SMCUBES_MODEL__COMBINATIONS:
 				return getCombinations();
-			case Smcubes_modelPackage.SMCUBES_MODEL__FUNCTIONAL_MODULES:
-				return getFunctionalModules();
 			case Smcubes_modelPackage.SMCUBES_MODEL__MAPPINGS:
 				return getMappings();
 			case Smcubes_modelPackage.SMCUBES_MODEL__NAME:
@@ -350,8 +306,7 @@ public class SmcubesModelImpl extends MinimalEObjectImpl.Container implements Sm
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Smcubes_modelPackage.SMCUBES_MODEL__DOMAINS:
 				getDomains().clear();
@@ -373,10 +328,6 @@ public class SmcubesModelImpl extends MinimalEObjectImpl.Container implements Sm
 				getCombinations().clear();
 				getCombinations().addAll((Collection<? extends CombinationModule>)newValue);
 				return;
-			case Smcubes_modelPackage.SMCUBES_MODEL__FUNCTIONAL_MODULES:
-				getFunctionalModules().clear();
-				getFunctionalModules().addAll((Collection<? extends TransformationSchemeModule>)newValue);
-				return;
 			case Smcubes_modelPackage.SMCUBES_MODEL__MAPPINGS:
 				getMappings().clear();
 				getMappings().addAll((Collection<? extends MappingDefinitionModule>)newValue);
@@ -394,8 +345,7 @@ public class SmcubesModelImpl extends MinimalEObjectImpl.Container implements Sm
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Smcubes_modelPackage.SMCUBES_MODEL__DOMAINS:
 				getDomains().clear();
@@ -411,9 +361,6 @@ public class SmcubesModelImpl extends MinimalEObjectImpl.Container implements Sm
 				return;
 			case Smcubes_modelPackage.SMCUBES_MODEL__COMBINATIONS:
 				getCombinations().clear();
-				return;
-			case Smcubes_modelPackage.SMCUBES_MODEL__FUNCTIONAL_MODULES:
-				getFunctionalModules().clear();
 				return;
 			case Smcubes_modelPackage.SMCUBES_MODEL__MAPPINGS:
 				getMappings().clear();
@@ -431,8 +378,7 @@ public class SmcubesModelImpl extends MinimalEObjectImpl.Container implements Sm
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Smcubes_modelPackage.SMCUBES_MODEL__DOMAINS:
 				return domains != null && !domains.isEmpty();
@@ -444,8 +390,6 @@ public class SmcubesModelImpl extends MinimalEObjectImpl.Container implements Sm
 				return cubes != null && !cubes.isEmpty();
 			case Smcubes_modelPackage.SMCUBES_MODEL__COMBINATIONS:
 				return combinations != null && !combinations.isEmpty();
-			case Smcubes_modelPackage.SMCUBES_MODEL__FUNCTIONAL_MODULES:
-				return functionalModules != null && !functionalModules.isEmpty();
 			case Smcubes_modelPackage.SMCUBES_MODEL__MAPPINGS:
 				return mappings != null && !mappings.isEmpty();
 			case Smcubes_modelPackage.SMCUBES_MODEL__NAME:
@@ -460,8 +404,7 @@ public class SmcubesModelImpl extends MinimalEObjectImpl.Container implements Sm
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

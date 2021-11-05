@@ -32,8 +32,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='facet_type' kind='empty'"
  * @generated
  */
-public interface facet_type extends EObject
-{
+public interface facet_type extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Decimals</b></em>' attribute.
 	 * <!-- begin-user-doc -->

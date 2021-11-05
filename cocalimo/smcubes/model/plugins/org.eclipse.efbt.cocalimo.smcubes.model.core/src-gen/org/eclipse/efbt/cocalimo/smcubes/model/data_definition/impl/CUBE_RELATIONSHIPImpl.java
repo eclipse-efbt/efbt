@@ -44,8 +44,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implements CUBE_RELATIONSHIP
-{
+public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implements CUBE_RELATIONSHIP {
 	/**
 	 * The default value of the '{@link #getCode() <em>Code</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -261,8 +260,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected CUBE_RELATIONSHIPImpl()
-	{
+	protected CUBE_RELATIONSHIPImpl() {
 		super();
 	}
 
@@ -272,8 +270,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Data_definitionPackage.Literals.CUBE_RELATIONSHIP;
 	}
 
@@ -283,8 +280,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public String getCode()
-	{
+	public String getCode() {
 		return code;
 	}
 
@@ -294,8 +290,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public void setCode(String newCode)
-	{
+	public void setCode(String newCode) {
 		String oldCode = code;
 		code = newCode;
 		if (eNotificationRequired())
@@ -308,8 +303,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public String getCube_relationship_id()
-	{
+	public String getCube_relationship_id() {
 		return cube_relationship_id;
 	}
 
@@ -319,8 +313,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public void setCube_relationship_id(String newCube_relationship_id)
-	{
+	public void setCube_relationship_id(String newCube_relationship_id) {
 		String oldCube_relationship_id = cube_relationship_id;
 		cube_relationship_id = newCube_relationship_id;
 		if (eNotificationRequired())
@@ -333,8 +326,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public String getDescription()
-	{
+	public String getDescription() {
 		return description;
 	}
 
@@ -344,8 +336,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public void setDescription(String newDescription)
-	{
+	public void setDescription(String newDescription) {
 		String oldDescription = description;
 		description = newDescription;
 		if (eNotificationRequired())
@@ -358,8 +349,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public boolean isEstablishes_integrity()
-	{
+	public boolean isEstablishes_integrity() {
 		return establishes_integrity;
 	}
 
@@ -369,8 +359,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public void setEstablishes_integrity(boolean newEstablishes_integrity)
-	{
+	public void setEstablishes_integrity(boolean newEstablishes_integrity) {
 		boolean oldEstablishes_integrity = establishes_integrity;
 		establishes_integrity = newEstablishes_integrity;
 		if (eNotificationRequired())
@@ -383,8 +372,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public CUBE getForeign_cube_id()
-	{
+	public CUBE getForeign_cube_id() {
 		if (foreign_cube_id != null && foreign_cube_id.eIsProxy()) {
 			InternalEObject oldForeign_cube_id = (InternalEObject)foreign_cube_id;
 			foreign_cube_id = (CUBE)eResolveProxy(oldForeign_cube_id);
@@ -401,8 +389,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public CUBE basicGetForeign_cube_id()
-	{
+	public CUBE basicGetForeign_cube_id() {
 		return foreign_cube_id;
 	}
 
@@ -412,8 +399,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public void setForeign_cube_id(CUBE newForeign_cube_id)
-	{
+	public void setForeign_cube_id(CUBE newForeign_cube_id) {
 		CUBE oldForeign_cube_id = foreign_cube_id;
 		foreign_cube_id = newForeign_cube_id;
 		if (eNotificationRequired())
@@ -426,8 +412,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public VARIABLE getForeign_cube_variable_code()
-	{
+	public VARIABLE getForeign_cube_variable_code() {
 		if (foreign_cube_variable_code != null && foreign_cube_variable_code.eIsProxy()) {
 			InternalEObject oldForeign_cube_variable_code = (InternalEObject)foreign_cube_variable_code;
 			foreign_cube_variable_code = (VARIABLE)eResolveProxy(oldForeign_cube_variable_code);
@@ -444,8 +429,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public VARIABLE basicGetForeign_cube_variable_code()
-	{
+	public VARIABLE basicGetForeign_cube_variable_code() {
 		return foreign_cube_variable_code;
 	}
 
@@ -455,8 +439,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public void setForeign_cube_variable_code(VARIABLE newForeign_cube_variable_code)
-	{
+	public void setForeign_cube_variable_code(VARIABLE newForeign_cube_variable_code) {
 		VARIABLE oldForeign_cube_variable_code = foreign_cube_variable_code;
 		foreign_cube_variable_code = newForeign_cube_variable_code;
 		if (eNotificationRequired())
@@ -469,8 +452,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public MAINTENANCE_AGENCY getMaintenance_agency_id()
-	{
+	public MAINTENANCE_AGENCY getMaintenance_agency_id() {
 		if (maintenance_agency_id != null && maintenance_agency_id.eIsProxy()) {
 			InternalEObject oldMaintenance_agency_id = (InternalEObject)maintenance_agency_id;
 			maintenance_agency_id = (MAINTENANCE_AGENCY)eResolveProxy(oldMaintenance_agency_id);
@@ -487,8 +469,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MAINTENANCE_AGENCY basicGetMaintenance_agency_id()
-	{
+	public MAINTENANCE_AGENCY basicGetMaintenance_agency_id() {
 		return maintenance_agency_id;
 	}
 
@@ -498,8 +479,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public void setMaintenance_agency_id(MAINTENANCE_AGENCY newMaintenance_agency_id)
-	{
+	public void setMaintenance_agency_id(MAINTENANCE_AGENCY newMaintenance_agency_id) {
 		MAINTENANCE_AGENCY oldMaintenance_agency_id = maintenance_agency_id;
 		maintenance_agency_id = newMaintenance_agency_id;
 		if (eNotificationRequired())
@@ -512,8 +492,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
@@ -523,8 +502,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public void setName(String newName)
-	{
+	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
@@ -537,8 +515,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public CUBE getPrimary_cube_id()
-	{
+	public CUBE getPrimary_cube_id() {
 		if (primary_cube_id != null && primary_cube_id.eIsProxy()) {
 			InternalEObject oldPrimary_cube_id = (InternalEObject)primary_cube_id;
 			primary_cube_id = (CUBE)eResolveProxy(oldPrimary_cube_id);
@@ -555,8 +532,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public CUBE basicGetPrimary_cube_id()
-	{
+	public CUBE basicGetPrimary_cube_id() {
 		return primary_cube_id;
 	}
 
@@ -566,8 +542,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public void setPrimary_cube_id(CUBE newPrimary_cube_id)
-	{
+	public void setPrimary_cube_id(CUBE newPrimary_cube_id) {
 		CUBE oldPrimary_cube_id = primary_cube_id;
 		primary_cube_id = newPrimary_cube_id;
 		if (eNotificationRequired())
@@ -580,8 +555,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public VARIABLE getPrimary_cube_variable_id()
-	{
+	public VARIABLE getPrimary_cube_variable_id() {
 		if (primary_cube_variable_id != null && primary_cube_variable_id.eIsProxy()) {
 			InternalEObject oldPrimary_cube_variable_id = (InternalEObject)primary_cube_variable_id;
 			primary_cube_variable_id = (VARIABLE)eResolveProxy(oldPrimary_cube_variable_id);
@@ -598,8 +572,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public VARIABLE basicGetPrimary_cube_variable_id()
-	{
+	public VARIABLE basicGetPrimary_cube_variable_id() {
 		return primary_cube_variable_id;
 	}
 
@@ -609,8 +582,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public void setPrimary_cube_variable_id(VARIABLE newPrimary_cube_variable_id)
-	{
+	public void setPrimary_cube_variable_id(VARIABLE newPrimary_cube_variable_id) {
 		VARIABLE oldPrimary_cube_variable_id = primary_cube_variable_id;
 		primary_cube_variable_id = newPrimary_cube_variable_id;
 		if (eNotificationRequired())
@@ -623,8 +595,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public Date getValid_from()
-	{
+	public Date getValid_from() {
 		return valid_from;
 	}
 
@@ -634,8 +605,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public void setValid_from(Date newValid_from)
-	{
+	public void setValid_from(Date newValid_from) {
 		Date oldValid_from = valid_from;
 		valid_from = newValid_from;
 		if (eNotificationRequired())
@@ -648,8 +618,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public Date getValid_to()
-	{
+	public Date getValid_to() {
 		return valid_to;
 	}
 
@@ -659,8 +628,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public void setValid_to(Date newValid_to)
-	{
+	public void setValid_to(Date newValid_to) {
 		Date oldValid_to = valid_to;
 		valid_to = newValid_to;
 		if (eNotificationRequired())
@@ -673,8 +641,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public String getVersion()
-	{
+	public String getVersion() {
 		return version;
 	}
 
@@ -684,8 +651,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public void setVersion(String newVersion)
-	{
+	public void setVersion(String newVersion) {
 		String oldVersion = version;
 		version = newVersion;
 		if (eNotificationRequired())
@@ -698,8 +664,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Data_definitionPackage.CUBE_RELATIONSHIP__CODE:
 				return getCode();
@@ -742,8 +707,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Data_definitionPackage.CUBE_RELATIONSHIP__CODE:
 				setCode((String)newValue);
@@ -794,8 +758,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Data_definitionPackage.CUBE_RELATIONSHIP__CODE:
 				setCode(CODE_EDEFAULT);
@@ -846,8 +809,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Data_definitionPackage.CUBE_RELATIONSHIP__CODE:
 				return CODE_EDEFAULT == null ? code != null : !CODE_EDEFAULT.equals(code);
@@ -885,8 +847,7 @@ public class CUBE_RELATIONSHIPImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

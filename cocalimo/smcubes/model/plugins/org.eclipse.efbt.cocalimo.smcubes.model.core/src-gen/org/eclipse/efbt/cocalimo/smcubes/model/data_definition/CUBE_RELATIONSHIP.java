@@ -37,8 +37,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='CUBE_RELATIONSHIP' kind='empty'"
  * @generated
  */
-public interface CUBE_RELATIONSHIP extends EObject
-{
+public interface CUBE_RELATIONSHIP extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Code</b></em>' attribute.
 	 * <!-- begin-user-doc -->

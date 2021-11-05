@@ -38,8 +38,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class CUBE_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container implements CUBE_HIERARCHY_NODE
-{
+public class CUBE_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container implements CUBE_HIERARCHY_NODE {
 	/**
 	 * The cached value of the '{@link #getCube_group_id() <em>Cube group id</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -195,8 +194,7 @@ public class CUBE_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected CUBE_HIERARCHY_NODEImpl()
-	{
+	protected CUBE_HIERARCHY_NODEImpl() {
 		super();
 	}
 
@@ -206,8 +204,7 @@ public class CUBE_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Data_definitionPackage.Literals.CUBE_HIERARCHY_NODE;
 	}
 
@@ -217,8 +214,7 @@ public class CUBE_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public CUBE_GROUP getCube_group_id()
-	{
+	public CUBE_GROUP getCube_group_id() {
 		if (cube_group_id != null && cube_group_id.eIsProxy()) {
 			InternalEObject oldCube_group_id = (InternalEObject)cube_group_id;
 			cube_group_id = (CUBE_GROUP)eResolveProxy(oldCube_group_id);
@@ -235,8 +231,7 @@ public class CUBE_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public CUBE_GROUP basicGetCube_group_id()
-	{
+	public CUBE_GROUP basicGetCube_group_id() {
 		return cube_group_id;
 	}
 
@@ -246,8 +241,7 @@ public class CUBE_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void setCube_group_id(CUBE_GROUP newCube_group_id)
-	{
+	public void setCube_group_id(CUBE_GROUP newCube_group_id) {
 		CUBE_GROUP oldCube_group_id = cube_group_id;
 		cube_group_id = newCube_group_id;
 		if (eNotificationRequired())
@@ -260,8 +254,7 @@ public class CUBE_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public CUBE_HIERARCHY getCube_hierarchy_id()
-	{
+	public CUBE_HIERARCHY getCube_hierarchy_id() {
 		if (cube_hierarchy_id != null && cube_hierarchy_id.eIsProxy()) {
 			InternalEObject oldCube_hierarchy_id = (InternalEObject)cube_hierarchy_id;
 			cube_hierarchy_id = (CUBE_HIERARCHY)eResolveProxy(oldCube_hierarchy_id);
@@ -278,8 +271,7 @@ public class CUBE_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public CUBE_HIERARCHY basicGetCube_hierarchy_id()
-	{
+	public CUBE_HIERARCHY basicGetCube_hierarchy_id() {
 		return cube_hierarchy_id;
 	}
 
@@ -289,8 +281,7 @@ public class CUBE_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void setCube_hierarchy_id(CUBE_HIERARCHY newCube_hierarchy_id)
-	{
+	public void setCube_hierarchy_id(CUBE_HIERARCHY newCube_hierarchy_id) {
 		CUBE_HIERARCHY oldCube_hierarchy_id = cube_hierarchy_id;
 		cube_hierarchy_id = newCube_hierarchy_id;
 		if (eNotificationRequired())
@@ -303,8 +294,7 @@ public class CUBE_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public int getLevel()
-	{
+	public int getLevel() {
 		return level;
 	}
 
@@ -314,8 +304,7 @@ public class CUBE_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void setLevel(int newLevel)
-	{
+	public void setLevel(int newLevel) {
 		int oldLevel = level;
 		level = newLevel;
 		if (eNotificationRequired())
@@ -328,8 +317,7 @@ public class CUBE_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public String getNODE_CODE()
-	{
+	public String getNODE_CODE() {
 		return nODE_CODE;
 	}
 
@@ -339,8 +327,7 @@ public class CUBE_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void setNODE_CODE(String newNODE_CODE)
-	{
+	public void setNODE_CODE(String newNODE_CODE) {
 		String oldNODE_CODE = nODE_CODE;
 		nODE_CODE = newNODE_CODE;
 		if (eNotificationRequired())
@@ -353,8 +340,7 @@ public class CUBE_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public String getNode_name()
-	{
+	public String getNode_name() {
 		return node_name;
 	}
 
@@ -364,8 +350,7 @@ public class CUBE_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void setNode_name(String newNode_name)
-	{
+	public void setNode_name(String newNode_name) {
 		String oldNode_name = node_name;
 		node_name = newNode_name;
 		if (eNotificationRequired())
@@ -378,8 +363,7 @@ public class CUBE_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public int getOrder()
-	{
+	public int getOrder() {
 		return order;
 	}
 
@@ -389,8 +373,7 @@ public class CUBE_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void setOrder(int newOrder)
-	{
+	public void setOrder(int newOrder) {
 		int oldOrder = order;
 		order = newOrder;
 		if (eNotificationRequired())
@@ -403,8 +386,7 @@ public class CUBE_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public CUBE_HIERARCHY_NODE getParent_node_code()
-	{
+	public CUBE_HIERARCHY_NODE getParent_node_code() {
 		if (parent_node_code != null && parent_node_code.eIsProxy()) {
 			InternalEObject oldParent_node_code = (InternalEObject)parent_node_code;
 			parent_node_code = (CUBE_HIERARCHY_NODE)eResolveProxy(oldParent_node_code);
@@ -421,8 +403,7 @@ public class CUBE_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public CUBE_HIERARCHY_NODE basicGetParent_node_code()
-	{
+	public CUBE_HIERARCHY_NODE basicGetParent_node_code() {
 		return parent_node_code;
 	}
 
@@ -432,8 +413,7 @@ public class CUBE_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void setParent_node_code(CUBE_HIERARCHY_NODE newParent_node_code)
-	{
+	public void setParent_node_code(CUBE_HIERARCHY_NODE newParent_node_code) {
 		CUBE_HIERARCHY_NODE oldParent_node_code = parent_node_code;
 		parent_node_code = newParent_node_code;
 		if (eNotificationRequired())
@@ -446,8 +426,7 @@ public class CUBE_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public Date getValid_from()
-	{
+	public Date getValid_from() {
 		return valid_from;
 	}
 
@@ -457,8 +436,7 @@ public class CUBE_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void setValid_from(Date newValid_from)
-	{
+	public void setValid_from(Date newValid_from) {
 		Date oldValid_from = valid_from;
 		valid_from = newValid_from;
 		if (eNotificationRequired())
@@ -471,8 +449,7 @@ public class CUBE_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public Date getValid_to()
-	{
+	public Date getValid_to() {
 		return valid_to;
 	}
 
@@ -482,8 +459,7 @@ public class CUBE_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void setValid_to(Date newValid_to)
-	{
+	public void setValid_to(Date newValid_to) {
 		Date oldValid_to = valid_to;
 		valid_to = newValid_to;
 		if (eNotificationRequired())
@@ -496,8 +472,7 @@ public class CUBE_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Data_definitionPackage.CUBE_HIERARCHY_NODE__CUBE_GROUP_ID:
 				if (resolve) return getCube_group_id();
@@ -530,8 +505,7 @@ public class CUBE_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Data_definitionPackage.CUBE_HIERARCHY_NODE__CUBE_GROUP_ID:
 				setCube_group_id((CUBE_GROUP)newValue);
@@ -570,8 +544,7 @@ public class CUBE_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Data_definitionPackage.CUBE_HIERARCHY_NODE__CUBE_GROUP_ID:
 				setCube_group_id((CUBE_GROUP)null);
@@ -610,8 +583,7 @@ public class CUBE_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Data_definitionPackage.CUBE_HIERARCHY_NODE__CUBE_GROUP_ID:
 				return cube_group_id != null;
@@ -641,8 +613,7 @@ public class CUBE_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

@@ -34,8 +34,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class MAPPING_DEFINITIONImpl extends MinimalEObjectImpl.Container implements MAPPING_DEFINITION
-{
+public class MAPPING_DEFINITIONImpl extends MinimalEObjectImpl.Container implements MAPPING_DEFINITION {
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -161,8 +160,7 @@ public class MAPPING_DEFINITIONImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected MAPPING_DEFINITIONImpl()
-	{
+	protected MAPPING_DEFINITIONImpl() {
 		super();
 	}
 
@@ -172,8 +170,7 @@ public class MAPPING_DEFINITIONImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return MappingPackage.Literals.MAPPING_DEFINITION;
 	}
 
@@ -183,8 +180,7 @@ public class MAPPING_DEFINITIONImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
@@ -194,8 +190,7 @@ public class MAPPING_DEFINITIONImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public void setName(String newName)
-	{
+	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
@@ -208,8 +203,7 @@ public class MAPPING_DEFINITIONImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public String getCode()
-	{
+	public String getCode() {
 		return code;
 	}
 
@@ -219,8 +213,7 @@ public class MAPPING_DEFINITIONImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public void setCode(String newCode)
-	{
+	public void setCode(String newCode) {
 		String oldCode = code;
 		code = newCode;
 		if (eNotificationRequired())
@@ -233,8 +226,7 @@ public class MAPPING_DEFINITIONImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public String getMaintenance_agency_id()
-	{
+	public String getMaintenance_agency_id() {
 		return maintenance_agency_id;
 	}
 
@@ -244,8 +236,7 @@ public class MAPPING_DEFINITIONImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public void setMaintenance_agency_id(String newMaintenance_agency_id)
-	{
+	public void setMaintenance_agency_id(String newMaintenance_agency_id) {
 		String oldMaintenance_agency_id = maintenance_agency_id;
 		maintenance_agency_id = newMaintenance_agency_id;
 		if (eNotificationRequired())
@@ -258,8 +249,7 @@ public class MAPPING_DEFINITIONImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public String getMapping_id()
-	{
+	public String getMapping_id() {
 		return mapping_id;
 	}
 
@@ -269,8 +259,7 @@ public class MAPPING_DEFINITIONImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public void setMapping_id(String newMapping_id)
-	{
+	public void setMapping_id(String newMapping_id) {
 		String oldMapping_id = mapping_id;
 		mapping_id = newMapping_id;
 		if (eNotificationRequired())
@@ -283,8 +272,7 @@ public class MAPPING_DEFINITIONImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public String getMapping_type()
-	{
+	public String getMapping_type() {
 		return mapping_type;
 	}
 
@@ -294,8 +282,7 @@ public class MAPPING_DEFINITIONImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public void setMapping_type(String newMapping_type)
-	{
+	public void setMapping_type(String newMapping_type) {
 		String oldMapping_type = mapping_type;
 		mapping_type = newMapping_type;
 		if (eNotificationRequired())
@@ -308,8 +295,7 @@ public class MAPPING_DEFINITIONImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public MEMBER_MAPPING getMemberMapping()
-	{
+	public MEMBER_MAPPING getMemberMapping() {
 		if (memberMapping != null && memberMapping.eIsProxy()) {
 			InternalEObject oldMemberMapping = (InternalEObject)memberMapping;
 			memberMapping = (MEMBER_MAPPING)eResolveProxy(oldMemberMapping);
@@ -326,8 +312,7 @@ public class MAPPING_DEFINITIONImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MEMBER_MAPPING basicGetMemberMapping()
-	{
+	public MEMBER_MAPPING basicGetMemberMapping() {
 		return memberMapping;
 	}
 
@@ -337,8 +322,7 @@ public class MAPPING_DEFINITIONImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public void setMemberMapping(MEMBER_MAPPING newMemberMapping)
-	{
+	public void setMemberMapping(MEMBER_MAPPING newMemberMapping) {
 		MEMBER_MAPPING oldMemberMapping = memberMapping;
 		memberMapping = newMemberMapping;
 		if (eNotificationRequired())
@@ -351,8 +335,7 @@ public class MAPPING_DEFINITIONImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public VARIABLE_MAPPING getVariableMapping()
-	{
+	public VARIABLE_MAPPING getVariableMapping() {
 		if (variableMapping != null && variableMapping.eIsProxy()) {
 			InternalEObject oldVariableMapping = (InternalEObject)variableMapping;
 			variableMapping = (VARIABLE_MAPPING)eResolveProxy(oldVariableMapping);
@@ -369,8 +352,7 @@ public class MAPPING_DEFINITIONImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public VARIABLE_MAPPING basicGetVariableMapping()
-	{
+	public VARIABLE_MAPPING basicGetVariableMapping() {
 		return variableMapping;
 	}
 
@@ -380,8 +362,7 @@ public class MAPPING_DEFINITIONImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public void setVariableMapping(VARIABLE_MAPPING newVariableMapping)
-	{
+	public void setVariableMapping(VARIABLE_MAPPING newVariableMapping) {
 		VARIABLE_MAPPING oldVariableMapping = variableMapping;
 		variableMapping = newVariableMapping;
 		if (eNotificationRequired())
@@ -394,8 +375,7 @@ public class MAPPING_DEFINITIONImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case MappingPackage.MAPPING_DEFINITION__NAME:
 				return getName();
@@ -423,8 +403,7 @@ public class MAPPING_DEFINITIONImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case MappingPackage.MAPPING_DEFINITION__NAME:
 				setName((String)newValue);
@@ -457,8 +436,7 @@ public class MAPPING_DEFINITIONImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case MappingPackage.MAPPING_DEFINITION__NAME:
 				setName(NAME_EDEFAULT);
@@ -491,8 +469,7 @@ public class MAPPING_DEFINITIONImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case MappingPackage.MAPPING_DEFINITION__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
@@ -518,8 +495,7 @@ public class MAPPING_DEFINITIONImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

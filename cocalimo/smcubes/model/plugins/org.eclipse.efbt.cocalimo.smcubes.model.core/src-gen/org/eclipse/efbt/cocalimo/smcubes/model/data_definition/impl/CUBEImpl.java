@@ -45,8 +45,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
-{
+public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE {
 	/**
 	 * The default value of the '{@link #getCode() <em>Code</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -302,8 +301,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected CUBEImpl()
-	{
+	protected CUBEImpl() {
 		super();
 	}
 
@@ -313,8 +311,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Data_definitionPackage.Literals.CUBE;
 	}
 
@@ -324,8 +321,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	public String getCode()
-	{
+	public String getCode() {
 		return code;
 	}
 
@@ -335,8 +331,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	public void setCode(String newCode)
-	{
+	public void setCode(String newCode) {
 		String oldCode = code;
 		code = newCode;
 		if (eNotificationRequired())
@@ -349,8 +344,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	public String getCube_id()
-	{
+	public String getCube_id() {
 		return cube_id;
 	}
 
@@ -360,8 +354,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	public void setCube_id(String newCube_id)
-	{
+	public void setCube_id(String newCube_id) {
 		String oldCube_id = cube_id;
 		cube_id = newCube_id;
 		if (eNotificationRequired())
@@ -374,8 +367,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	public CUBE_STRUCTURE getCube_structure_id()
-	{
+	public CUBE_STRUCTURE getCube_structure_id() {
 		if (cube_structure_id != null && cube_structure_id.eIsProxy()) {
 			InternalEObject oldCube_structure_id = (InternalEObject)cube_structure_id;
 			cube_structure_id = (CUBE_STRUCTURE)eResolveProxy(oldCube_structure_id);
@@ -392,8 +384,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public CUBE_STRUCTURE basicGetCube_structure_id()
-	{
+	public CUBE_STRUCTURE basicGetCube_structure_id() {
 		return cube_structure_id;
 	}
 
@@ -403,8 +394,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	public void setCube_structure_id(CUBE_STRUCTURE newCube_structure_id)
-	{
+	public void setCube_structure_id(CUBE_STRUCTURE newCube_structure_id) {
 		CUBE_STRUCTURE oldCube_structure_id = cube_structure_id;
 		cube_structure_id = newCube_structure_id;
 		if (eNotificationRequired())
@@ -417,8 +407,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	public String getCube_type()
-	{
+	public String getCube_type() {
 		return cube_type;
 	}
 
@@ -428,8 +417,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	public void setCube_type(String newCube_type)
-	{
+	public void setCube_type(String newCube_type) {
 		String oldCube_type = cube_type;
 		cube_type = newCube_type;
 		if (eNotificationRequired())
@@ -442,8 +430,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	public String getDescription()
-	{
+	public String getDescription() {
 		return description;
 	}
 
@@ -453,8 +440,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	public void setDescription(String newDescription)
-	{
+	public void setDescription(String newDescription) {
 		String oldDescription = description;
 		description = newDescription;
 		if (eNotificationRequired())
@@ -467,8 +453,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	public FRAMEWORK getFramework_id()
-	{
+	public FRAMEWORK getFramework_id() {
 		if (framework_id != null && framework_id.eIsProxy()) {
 			InternalEObject oldFramework_id = (InternalEObject)framework_id;
 			framework_id = (FRAMEWORK)eResolveProxy(oldFramework_id);
@@ -485,8 +470,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public FRAMEWORK basicGetFramework_id()
-	{
+	public FRAMEWORK basicGetFramework_id() {
 		return framework_id;
 	}
 
@@ -496,8 +480,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	public void setFramework_id(FRAMEWORK newFramework_id)
-	{
+	public void setFramework_id(FRAMEWORK newFramework_id) {
 		FRAMEWORK oldFramework_id = framework_id;
 		framework_id = newFramework_id;
 		if (eNotificationRequired())
@@ -510,8 +493,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	public boolean isIs_allowed()
-	{
+	public boolean isIs_allowed() {
 		return is_allowed;
 	}
 
@@ -521,8 +503,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	public void setIs_allowed(boolean newIs_allowed)
-	{
+	public void setIs_allowed(boolean newIs_allowed) {
 		boolean oldIs_allowed = is_allowed;
 		is_allowed = newIs_allowed;
 		if (eNotificationRequired())
@@ -535,8 +516,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	public MAINTENANCE_AGENCY getMaintenance_agency_id()
-	{
+	public MAINTENANCE_AGENCY getMaintenance_agency_id() {
 		if (maintenance_agency_id != null && maintenance_agency_id.eIsProxy()) {
 			InternalEObject oldMaintenance_agency_id = (InternalEObject)maintenance_agency_id;
 			maintenance_agency_id = (MAINTENANCE_AGENCY)eResolveProxy(oldMaintenance_agency_id);
@@ -553,8 +533,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MAINTENANCE_AGENCY basicGetMaintenance_agency_id()
-	{
+	public MAINTENANCE_AGENCY basicGetMaintenance_agency_id() {
 		return maintenance_agency_id;
 	}
 
@@ -564,8 +543,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	public void setMaintenance_agency_id(MAINTENANCE_AGENCY newMaintenance_agency_id)
-	{
+	public void setMaintenance_agency_id(MAINTENANCE_AGENCY newMaintenance_agency_id) {
 		MAINTENANCE_AGENCY oldMaintenance_agency_id = maintenance_agency_id;
 		maintenance_agency_id = newMaintenance_agency_id;
 		if (eNotificationRequired())
@@ -578,8 +556,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
@@ -589,8 +566,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	public void setName(String newName)
-	{
+	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
@@ -603,8 +579,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	public boolean isPublished()
-	{
+	public boolean isPublished() {
 		return published;
 	}
 
@@ -614,8 +589,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	public void setPublished(boolean newPublished)
-	{
+	public void setPublished(boolean newPublished) {
 		boolean oldPublished = published;
 		published = newPublished;
 		if (eNotificationRequired())
@@ -628,8 +602,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	public Date getValid_from()
-	{
+	public Date getValid_from() {
 		return valid_from;
 	}
 
@@ -639,8 +612,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	public void setValid_from(Date newValid_from)
-	{
+	public void setValid_from(Date newValid_from) {
 		Date oldValid_from = valid_from;
 		valid_from = newValid_from;
 		if (eNotificationRequired())
@@ -653,8 +625,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	public Date getValid_to()
-	{
+	public Date getValid_to() {
 		return valid_to;
 	}
 
@@ -664,8 +635,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	public void setValid_to(Date newValid_to)
-	{
+	public void setValid_to(Date newValid_to) {
 		Date oldValid_to = valid_to;
 		valid_to = newValid_to;
 		if (eNotificationRequired())
@@ -678,8 +648,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	public String getVersion()
-	{
+	public String getVersion() {
 		return version;
 	}
 
@@ -689,8 +658,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	public void setVersion(String newVersion)
-	{
+	public void setVersion(String newVersion) {
 		String oldVersion = version;
 		version = newVersion;
 		if (eNotificationRequired())
@@ -703,8 +671,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	public String getDisplayName()
-	{
+	public String getDisplayName() {
 		return displayName;
 	}
 
@@ -714,8 +681,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	public void setDisplayName(String newDisplayName)
-	{
+	public void setDisplayName(String newDisplayName) {
 		String oldDisplayName = displayName;
 		displayName = newDisplayName;
 		if (eNotificationRequired())
@@ -728,8 +694,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Data_definitionPackage.CUBE__CODE:
 				return getCode();
@@ -772,8 +737,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Data_definitionPackage.CUBE__CODE:
 				setCode((String)newValue);
@@ -827,8 +791,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Data_definitionPackage.CUBE__CODE:
 				setCode(CODE_EDEFAULT);
@@ -882,8 +845,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Data_definitionPackage.CUBE__CODE:
 				return CODE_EDEFAULT == null ? code != null : !CODE_EDEFAULT.equals(code);
@@ -923,8 +885,7 @@ public class CUBEImpl extends MinimalEObjectImpl.Container implements CUBE
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

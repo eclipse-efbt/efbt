@@ -18,16 +18,14 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
  * <!-- end-user-doc -->
  * @generated
  */
-public class Smcubes_modelFactoryImpl extends EFactoryImpl implements Smcubes_modelFactory
-{
+public class Smcubes_modelFactoryImpl extends EFactoryImpl implements Smcubes_modelFactory {
 	/**
 	 * Creates the default factory implementation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static Smcubes_modelFactory init()
-	{
+	public static Smcubes_modelFactory init() {
 		try {
 			Smcubes_modelFactory theSmcubes_modelFactory = (Smcubes_modelFactory)EPackage.Registry.INSTANCE.getEFactory(Smcubes_modelPackage.eNS_URI);
 			if (theSmcubes_modelFactory != null) {
@@ -46,8 +44,7 @@ public class Smcubes_modelFactoryImpl extends EFactoryImpl implements Smcubes_mo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Smcubes_modelFactoryImpl()
-	{
+	public Smcubes_modelFactoryImpl() {
 		super();
 	}
 
@@ -57,8 +54,7 @@ public class Smcubes_modelFactoryImpl extends EFactoryImpl implements Smcubes_mo
 	 * @generated
 	 */
 	@Override
-	public EObject create(EClass eClass)
-	{
+	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case Smcubes_modelPackage.SMCUBES_MODEL: return createSmcubesModel();
 			default:
@@ -72,8 +68,7 @@ public class Smcubes_modelFactoryImpl extends EFactoryImpl implements Smcubes_mo
 	 * @generated
 	 */
 	@Override
-	public SmcubesModel createSmcubesModel()
-	{
+	public SmcubesModel createSmcubesModel() {
 		SmcubesModelImpl smcubesModel = new SmcubesModelImpl();
 		return smcubesModel;
 	}
@@ -84,8 +79,7 @@ public class Smcubes_modelFactoryImpl extends EFactoryImpl implements Smcubes_mo
 	 * @generated
 	 */
 	@Override
-	public Smcubes_modelPackage getSmcubes_modelPackage()
-	{
+	public Smcubes_modelPackage getSmcubes_modelPackage() {
 		return (Smcubes_modelPackage)getEPackage();
 	}
 
@@ -96,8 +90,7 @@ public class Smcubes_modelFactoryImpl extends EFactoryImpl implements Smcubes_mo
 	 * @generated
 	 */
 	@Deprecated
-	public static Smcubes_modelPackage getPackage()
-	{
+	public static Smcubes_modelPackage getPackage() {
 		return Smcubes_modelPackage.eINSTANCE;
 	}
 

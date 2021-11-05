@@ -22,8 +22,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='FACET_ENUMERATION' kind='empty'"
  * @generated
  */
-public interface FACET_ENUMERATION extends EObject
-{
+public interface FACET_ENUMERATION extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Facet id</b></em>' reference.
 	 * <!-- begin-user-doc -->

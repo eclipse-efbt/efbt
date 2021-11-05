@@ -18,16 +18,14 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
  * <!-- end-user-doc -->
  * @generated
  */
-public class Efbt_mappingFactoryImpl extends EFactoryImpl implements Efbt_mappingFactory
-{
+public class Efbt_mappingFactoryImpl extends EFactoryImpl implements Efbt_mappingFactory {
 	/**
 	 * Creates the default factory implementation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static Efbt_mappingFactory init()
-	{
+	public static Efbt_mappingFactory init() {
 		try {
 			Efbt_mappingFactory theEfbt_mappingFactory = (Efbt_mappingFactory)EPackage.Registry.INSTANCE.getEFactory(Efbt_mappingPackage.eNS_URI);
 			if (theEfbt_mappingFactory != null) {
@@ -46,8 +44,7 @@ public class Efbt_mappingFactoryImpl extends EFactoryImpl implements Efbt_mappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Efbt_mappingFactoryImpl()
-	{
+	public Efbt_mappingFactoryImpl() {
 		super();
 	}
 
@@ -57,8 +54,7 @@ public class Efbt_mappingFactoryImpl extends EFactoryImpl implements Efbt_mappin
 	 * @generated
 	 */
 	@Override
-	public EObject create(EClass eClass)
-	{
+	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case Efbt_mappingPackage.MAPPING_DEFINITION_MODULE: return createMappingDefinitionModule();
 			case Efbt_mappingPackage.CUBE_MAPPING_MODULE: return createCubeMappingModule();
@@ -75,8 +71,7 @@ public class Efbt_mappingFactoryImpl extends EFactoryImpl implements Efbt_mappin
 	 * @generated
 	 */
 	@Override
-	public MappingDefinitionModule createMappingDefinitionModule()
-	{
+	public MappingDefinitionModule createMappingDefinitionModule() {
 		MappingDefinitionModuleImpl mappingDefinitionModule = new MappingDefinitionModuleImpl();
 		return mappingDefinitionModule;
 	}
@@ -87,8 +82,7 @@ public class Efbt_mappingFactoryImpl extends EFactoryImpl implements Efbt_mappin
 	 * @generated
 	 */
 	@Override
-	public CubeMappingModule createCubeMappingModule()
-	{
+	public CubeMappingModule createCubeMappingModule() {
 		CubeMappingModuleImpl cubeMappingModule = new CubeMappingModuleImpl();
 		return cubeMappingModule;
 	}
@@ -99,8 +93,7 @@ public class Efbt_mappingFactoryImpl extends EFactoryImpl implements Efbt_mappin
 	 * @generated
 	 */
 	@Override
-	public MemberMappingModule createMemberMappingModule()
-	{
+	public MemberMappingModule createMemberMappingModule() {
 		MemberMappingModuleImpl memberMappingModule = new MemberMappingModuleImpl();
 		return memberMappingModule;
 	}
@@ -111,8 +104,7 @@ public class Efbt_mappingFactoryImpl extends EFactoryImpl implements Efbt_mappin
 	 * @generated
 	 */
 	@Override
-	public VariableMappingModule createVariableMappingModule()
-	{
+	public VariableMappingModule createVariableMappingModule() {
 		VariableMappingModuleImpl variableMappingModule = new VariableMappingModuleImpl();
 		return variableMappingModule;
 	}
@@ -123,8 +115,7 @@ public class Efbt_mappingFactoryImpl extends EFactoryImpl implements Efbt_mappin
 	 * @generated
 	 */
 	@Override
-	public Efbt_mappingPackage getEfbt_mappingPackage()
-	{
+	public Efbt_mappingPackage getEfbt_mappingPackage() {
 		return (Efbt_mappingPackage)getEPackage();
 	}
 
@@ -135,8 +126,7 @@ public class Efbt_mappingFactoryImpl extends EFactoryImpl implements Efbt_mappin
 	 * @generated
 	 */
 	@Deprecated
-	public static Efbt_mappingPackage getPackage()
-	{
+	public static Efbt_mappingPackage getPackage() {
 		return Efbt_mappingPackage.eINSTANCE;
 	}
 

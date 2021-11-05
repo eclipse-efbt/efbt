@@ -18,16 +18,14 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
  * <!-- end-user-doc -->
  * @generated
  */
-public class MappingFactoryImpl extends EFactoryImpl implements MappingFactory
-{
+public class MappingFactoryImpl extends EFactoryImpl implements MappingFactory {
 	/**
 	 * Creates the default factory implementation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static MappingFactory init()
-	{
+	public static MappingFactory init() {
 		try {
 			MappingFactory theMappingFactory = (MappingFactory)EPackage.Registry.INSTANCE.getEFactory(MappingPackage.eNS_URI);
 			if (theMappingFactory != null) {
@@ -46,8 +44,7 @@ public class MappingFactoryImpl extends EFactoryImpl implements MappingFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MappingFactoryImpl()
-	{
+	public MappingFactoryImpl() {
 		super();
 	}
 
@@ -57,8 +54,7 @@ public class MappingFactoryImpl extends EFactoryImpl implements MappingFactory
 	 * @generated
 	 */
 	@Override
-	public EObject create(EClass eClass)
-	{
+	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case MappingPackage.CUBE_MAPPING: return createCUBE_MAPPING();
 			case MappingPackage.MEMBER_MAPPING: return createMEMBER_MAPPING();
@@ -79,8 +75,7 @@ public class MappingFactoryImpl extends EFactoryImpl implements MappingFactory
 	 * @generated
 	 */
 	@Override
-	public CUBE_MAPPING createCUBE_MAPPING()
-	{
+	public CUBE_MAPPING createCUBE_MAPPING() {
 		CUBE_MAPPINGImpl cubE_MAPPING = new CUBE_MAPPINGImpl();
 		return cubE_MAPPING;
 	}
@@ -91,8 +86,7 @@ public class MappingFactoryImpl extends EFactoryImpl implements MappingFactory
 	 * @generated
 	 */
 	@Override
-	public MEMBER_MAPPING createMEMBER_MAPPING()
-	{
+	public MEMBER_MAPPING createMEMBER_MAPPING() {
 		MEMBER_MAPPINGImpl membeR_MAPPING = new MEMBER_MAPPINGImpl();
 		return membeR_MAPPING;
 	}
@@ -103,8 +97,7 @@ public class MappingFactoryImpl extends EFactoryImpl implements MappingFactory
 	 * @generated
 	 */
 	@Override
-	public MEMBER_MAPPING_ITEM createMEMBER_MAPPING_ITEM()
-	{
+	public MEMBER_MAPPING_ITEM createMEMBER_MAPPING_ITEM() {
 		MEMBER_MAPPING_ITEMImpl membeR_MAPPING_ITEM = new MEMBER_MAPPING_ITEMImpl();
 		return membeR_MAPPING_ITEM;
 	}
@@ -115,8 +108,7 @@ public class MappingFactoryImpl extends EFactoryImpl implements MappingFactory
 	 * @generated
 	 */
 	@Override
-	public VARIABLE_MAPPING_ITEM createVARIABLE_MAPPING_ITEM()
-	{
+	public VARIABLE_MAPPING_ITEM createVARIABLE_MAPPING_ITEM() {
 		VARIABLE_MAPPING_ITEMImpl variablE_MAPPING_ITEM = new VARIABLE_MAPPING_ITEMImpl();
 		return variablE_MAPPING_ITEM;
 	}
@@ -127,8 +119,7 @@ public class MappingFactoryImpl extends EFactoryImpl implements MappingFactory
 	 * @generated
 	 */
 	@Override
-	public VARIABLE_MAPPING createVARIABLE_MAPPING()
-	{
+	public VARIABLE_MAPPING createVARIABLE_MAPPING() {
 		VARIABLE_MAPPINGImpl variablE_MAPPING = new VARIABLE_MAPPINGImpl();
 		return variablE_MAPPING;
 	}
@@ -139,8 +130,7 @@ public class MappingFactoryImpl extends EFactoryImpl implements MappingFactory
 	 * @generated
 	 */
 	@Override
-	public MAPPING_TO_CUBE createMAPPING_TO_CUBE()
-	{
+	public MAPPING_TO_CUBE createMAPPING_TO_CUBE() {
 		MAPPING_TO_CUBEImpl mappinG_TO_CUBE = new MAPPING_TO_CUBEImpl();
 		return mappinG_TO_CUBE;
 	}
@@ -151,8 +141,7 @@ public class MappingFactoryImpl extends EFactoryImpl implements MappingFactory
 	 * @generated
 	 */
 	@Override
-	public VARIABLE_SET_MAPPING createVARIABLE_SET_MAPPING()
-	{
+	public VARIABLE_SET_MAPPING createVARIABLE_SET_MAPPING() {
 		VARIABLE_SET_MAPPINGImpl variablE_SET_MAPPING = new VARIABLE_SET_MAPPINGImpl();
 		return variablE_SET_MAPPING;
 	}
@@ -163,8 +152,7 @@ public class MappingFactoryImpl extends EFactoryImpl implements MappingFactory
 	 * @generated
 	 */
 	@Override
-	public MAPPING_DEFINITION createMAPPING_DEFINITION()
-	{
+	public MAPPING_DEFINITION createMAPPING_DEFINITION() {
 		MAPPING_DEFINITIONImpl mappinG_DEFINITION = new MAPPING_DEFINITIONImpl();
 		return mappinG_DEFINITION;
 	}
@@ -175,8 +163,7 @@ public class MappingFactoryImpl extends EFactoryImpl implements MappingFactory
 	 * @generated
 	 */
 	@Override
-	public MappingPackage getMappingPackage()
-	{
+	public MappingPackage getMappingPackage() {
 		return (MappingPackage)getEPackage();
 	}
 
@@ -187,8 +174,7 @@ public class MappingFactoryImpl extends EFactoryImpl implements MappingFactory
 	 * @generated
 	 */
 	@Deprecated
-	public static MappingPackage getPackage()
-	{
+	public static MappingPackage getPackage() {
 		return MappingPackage.eINSTANCE;
 	}
 

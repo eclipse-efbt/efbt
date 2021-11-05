@@ -29,8 +29,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='ORDINATE_ITEM' kind='empty'"
  * @generated
  */
-public interface ORDINATE_ITEM extends EObject
-{
+public interface ORDINATE_ITEM extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Axis ordinate id</b></em>' reference.
 	 * <!-- begin-user-doc -->

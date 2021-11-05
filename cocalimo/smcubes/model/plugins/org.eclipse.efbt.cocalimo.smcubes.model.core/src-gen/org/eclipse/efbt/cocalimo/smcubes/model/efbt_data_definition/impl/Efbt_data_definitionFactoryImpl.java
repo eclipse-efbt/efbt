@@ -18,16 +18,14 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
  * <!-- end-user-doc -->
  * @generated
  */
-public class Efbt_data_definitionFactoryImpl extends EFactoryImpl implements Efbt_data_definitionFactory
-{
+public class Efbt_data_definitionFactoryImpl extends EFactoryImpl implements Efbt_data_definitionFactory {
 	/**
 	 * Creates the default factory implementation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static Efbt_data_definitionFactory init()
-	{
+	public static Efbt_data_definitionFactory init() {
 		try {
 			Efbt_data_definitionFactory theEfbt_data_definitionFactory = (Efbt_data_definitionFactory)EPackage.Registry.INSTANCE.getEFactory(Efbt_data_definitionPackage.eNS_URI);
 			if (theEfbt_data_definitionFactory != null) {
@@ -46,8 +44,7 @@ public class Efbt_data_definitionFactoryImpl extends EFactoryImpl implements Efb
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Efbt_data_definitionFactoryImpl()
-	{
+	public Efbt_data_definitionFactoryImpl() {
 		super();
 	}
 
@@ -57,8 +54,7 @@ public class Efbt_data_definitionFactoryImpl extends EFactoryImpl implements Efb
 	 * @generated
 	 */
 	@Override
-	public EObject create(EClass eClass)
-	{
+	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case Efbt_data_definitionPackage.COMBINATION_MODULE: return createCombinationModule();
 			case Efbt_data_definitionPackage.CUBE_MODULE: return createCubeModule();
@@ -77,8 +73,7 @@ public class Efbt_data_definitionFactoryImpl extends EFactoryImpl implements Efb
 	 * @generated
 	 */
 	@Override
-	public CombinationModule createCombinationModule()
-	{
+	public CombinationModule createCombinationModule() {
 		CombinationModuleImpl combinationModule = new CombinationModuleImpl();
 		return combinationModule;
 	}
@@ -89,8 +84,7 @@ public class Efbt_data_definitionFactoryImpl extends EFactoryImpl implements Efb
 	 * @generated
 	 */
 	@Override
-	public CubeModule createCubeModule()
-	{
+	public CubeModule createCubeModule() {
 		CubeModuleImpl cubeModule = new CubeModuleImpl();
 		return cubeModule;
 	}
@@ -101,8 +95,7 @@ public class Efbt_data_definitionFactoryImpl extends EFactoryImpl implements Efb
 	 * @generated
 	 */
 	@Override
-	public DomainModule createDomainModule()
-	{
+	public DomainModule createDomainModule() {
 		DomainModuleImpl domainModule = new DomainModuleImpl();
 		return domainModule;
 	}
@@ -113,8 +106,7 @@ public class Efbt_data_definitionFactoryImpl extends EFactoryImpl implements Efb
 	 * @generated
 	 */
 	@Override
-	public MemberHierarchyModule createMemberHierarchyModule()
-	{
+	public MemberHierarchyModule createMemberHierarchyModule() {
 		MemberHierarchyModuleImpl memberHierarchyModule = new MemberHierarchyModuleImpl();
 		return memberHierarchyModule;
 	}
@@ -125,8 +117,7 @@ public class Efbt_data_definitionFactoryImpl extends EFactoryImpl implements Efb
 	 * @generated
 	 */
 	@Override
-	public MemberModule createMemberModule()
-	{
+	public MemberModule createMemberModule() {
 		MemberModuleImpl memberModule = new MemberModuleImpl();
 		return memberModule;
 	}
@@ -137,8 +128,7 @@ public class Efbt_data_definitionFactoryImpl extends EFactoryImpl implements Efb
 	 * @generated
 	 */
 	@Override
-	public VariableModule createVariableModule()
-	{
+	public VariableModule createVariableModule() {
 		VariableModuleImpl variableModule = new VariableModuleImpl();
 		return variableModule;
 	}
@@ -149,8 +139,7 @@ public class Efbt_data_definitionFactoryImpl extends EFactoryImpl implements Efb
 	 * @generated
 	 */
 	@Override
-	public Efbt_data_definitionPackage getEfbt_data_definitionPackage()
-	{
+	public Efbt_data_definitionPackage getEfbt_data_definitionPackage() {
 		return (Efbt_data_definitionPackage)getEPackage();
 	}
 
@@ -161,8 +150,7 @@ public class Efbt_data_definitionFactoryImpl extends EFactoryImpl implements Efb
 	 * @generated
 	 */
 	@Deprecated
-	public static Efbt_data_definitionPackage getPackage()
-	{
+	public static Efbt_data_definitionPackage getPackage() {
 		return Efbt_data_definitionPackage.eINSTANCE;
 	}
 

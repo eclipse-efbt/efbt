@@ -27,8 +27,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class MAPPING_TO_CUBEImpl extends MinimalEObjectImpl.Container implements MAPPING_TO_CUBE
-{
+public class MAPPING_TO_CUBEImpl extends MinimalEObjectImpl.Container implements MAPPING_TO_CUBE {
 	/**
 	 * The cached value of the '{@link #getMapping() <em>Mapping</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -44,8 +43,7 @@ public class MAPPING_TO_CUBEImpl extends MinimalEObjectImpl.Container implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected MAPPING_TO_CUBEImpl()
-	{
+	protected MAPPING_TO_CUBEImpl() {
 		super();
 	}
 
@@ -55,8 +53,7 @@ public class MAPPING_TO_CUBEImpl extends MinimalEObjectImpl.Container implements
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return MappingPackage.Literals.MAPPING_TO_CUBE;
 	}
 
@@ -66,8 +63,7 @@ public class MAPPING_TO_CUBEImpl extends MinimalEObjectImpl.Container implements
 	 * @generated
 	 */
 	@Override
-	public MAPPING_DEFINITION getMapping()
-	{
+	public MAPPING_DEFINITION getMapping() {
 		if (mapping != null && mapping.eIsProxy()) {
 			InternalEObject oldMapping = (InternalEObject)mapping;
 			mapping = (MAPPING_DEFINITION)eResolveProxy(oldMapping);
@@ -84,8 +80,7 @@ public class MAPPING_TO_CUBEImpl extends MinimalEObjectImpl.Container implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MAPPING_DEFINITION basicGetMapping()
-	{
+	public MAPPING_DEFINITION basicGetMapping() {
 		return mapping;
 	}
 
@@ -95,8 +90,7 @@ public class MAPPING_TO_CUBEImpl extends MinimalEObjectImpl.Container implements
 	 * @generated
 	 */
 	@Override
-	public void setMapping(MAPPING_DEFINITION newMapping)
-	{
+	public void setMapping(MAPPING_DEFINITION newMapping) {
 		MAPPING_DEFINITION oldMapping = mapping;
 		mapping = newMapping;
 		if (eNotificationRequired())
@@ -109,8 +103,7 @@ public class MAPPING_TO_CUBEImpl extends MinimalEObjectImpl.Container implements
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case MappingPackage.MAPPING_TO_CUBE__MAPPING:
 				if (resolve) return getMapping();
@@ -125,8 +118,7 @@ public class MAPPING_TO_CUBEImpl extends MinimalEObjectImpl.Container implements
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case MappingPackage.MAPPING_TO_CUBE__MAPPING:
 				setMapping((MAPPING_DEFINITION)newValue);
@@ -141,8 +133,7 @@ public class MAPPING_TO_CUBEImpl extends MinimalEObjectImpl.Container implements
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case MappingPackage.MAPPING_TO_CUBE__MAPPING:
 				setMapping((MAPPING_DEFINITION)null);
@@ -157,8 +148,7 @@ public class MAPPING_TO_CUBEImpl extends MinimalEObjectImpl.Container implements
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case MappingPackage.MAPPING_TO_CUBE__MAPPING:
 				return mapping != null;

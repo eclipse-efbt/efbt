@@ -37,8 +37,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class VARIABLE_SET_ENUMERATIONImpl extends MinimalEObjectImpl.Container implements VARIABLE_SET_ENUMERATION
-{
+public class VARIABLE_SET_ENUMERATIONImpl extends MinimalEObjectImpl.Container implements VARIABLE_SET_ENUMERATION {
 	/**
 	 * The default value of the '{@link #isIs_flow() <em>Is flow</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -154,8 +153,7 @@ public class VARIABLE_SET_ENUMERATIONImpl extends MinimalEObjectImpl.Container i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected VARIABLE_SET_ENUMERATIONImpl()
-	{
+	protected VARIABLE_SET_ENUMERATIONImpl() {
 		super();
 	}
 
@@ -165,8 +163,7 @@ public class VARIABLE_SET_ENUMERATIONImpl extends MinimalEObjectImpl.Container i
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return CorePackage.Literals.VARIABLE_SET_ENUMERATION;
 	}
 
@@ -176,8 +173,7 @@ public class VARIABLE_SET_ENUMERATIONImpl extends MinimalEObjectImpl.Container i
 	 * @generated
 	 */
 	@Override
-	public boolean isIs_flow()
-	{
+	public boolean isIs_flow() {
 		return is_flow;
 	}
 
@@ -187,8 +183,7 @@ public class VARIABLE_SET_ENUMERATIONImpl extends MinimalEObjectImpl.Container i
 	 * @generated
 	 */
 	@Override
-	public void setIs_flow(boolean newIs_flow)
-	{
+	public void setIs_flow(boolean newIs_flow) {
 		boolean oldIs_flow = is_flow;
 		is_flow = newIs_flow;
 		if (eNotificationRequired())
@@ -201,8 +196,7 @@ public class VARIABLE_SET_ENUMERATIONImpl extends MinimalEObjectImpl.Container i
 	 * @generated
 	 */
 	@Override
-	public int getOrder()
-	{
+	public int getOrder() {
 		return order;
 	}
 
@@ -212,8 +206,7 @@ public class VARIABLE_SET_ENUMERATIONImpl extends MinimalEObjectImpl.Container i
 	 * @generated
 	 */
 	@Override
-	public void setOrder(int newOrder)
-	{
+	public void setOrder(int newOrder) {
 		int oldOrder = order;
 		order = newOrder;
 		if (eNotificationRequired())
@@ -226,8 +219,7 @@ public class VARIABLE_SET_ENUMERATIONImpl extends MinimalEObjectImpl.Container i
 	 * @generated
 	 */
 	@Override
-	public SUBDOMAIN getSubdomain_id()
-	{
+	public SUBDOMAIN getSubdomain_id() {
 		if (subdomain_id != null && subdomain_id.eIsProxy()) {
 			InternalEObject oldSubdomain_id = (InternalEObject)subdomain_id;
 			subdomain_id = (SUBDOMAIN)eResolveProxy(oldSubdomain_id);
@@ -244,8 +236,7 @@ public class VARIABLE_SET_ENUMERATIONImpl extends MinimalEObjectImpl.Container i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public SUBDOMAIN basicGetSubdomain_id()
-	{
+	public SUBDOMAIN basicGetSubdomain_id() {
 		return subdomain_id;
 	}
 
@@ -255,8 +246,7 @@ public class VARIABLE_SET_ENUMERATIONImpl extends MinimalEObjectImpl.Container i
 	 * @generated
 	 */
 	@Override
-	public void setSubdomain_id(SUBDOMAIN newSubdomain_id)
-	{
+	public void setSubdomain_id(SUBDOMAIN newSubdomain_id) {
 		SUBDOMAIN oldSubdomain_id = subdomain_id;
 		subdomain_id = newSubdomain_id;
 		if (eNotificationRequired())
@@ -269,8 +259,7 @@ public class VARIABLE_SET_ENUMERATIONImpl extends MinimalEObjectImpl.Container i
 	 * @generated
 	 */
 	@Override
-	public Date getValid_from()
-	{
+	public Date getValid_from() {
 		return valid_from;
 	}
 
@@ -280,8 +269,7 @@ public class VARIABLE_SET_ENUMERATIONImpl extends MinimalEObjectImpl.Container i
 	 * @generated
 	 */
 	@Override
-	public void setValid_from(Date newValid_from)
-	{
+	public void setValid_from(Date newValid_from) {
 		Date oldValid_from = valid_from;
 		valid_from = newValid_from;
 		if (eNotificationRequired())
@@ -294,8 +282,7 @@ public class VARIABLE_SET_ENUMERATIONImpl extends MinimalEObjectImpl.Container i
 	 * @generated
 	 */
 	@Override
-	public Date getValid_to()
-	{
+	public Date getValid_to() {
 		return valid_to;
 	}
 
@@ -305,8 +292,7 @@ public class VARIABLE_SET_ENUMERATIONImpl extends MinimalEObjectImpl.Container i
 	 * @generated
 	 */
 	@Override
-	public void setValid_to(Date newValid_to)
-	{
+	public void setValid_to(Date newValid_to) {
 		Date oldValid_to = valid_to;
 		valid_to = newValid_to;
 		if (eNotificationRequired())
@@ -319,8 +305,7 @@ public class VARIABLE_SET_ENUMERATIONImpl extends MinimalEObjectImpl.Container i
 	 * @generated
 	 */
 	@Override
-	public VARIABLE getVariable_id()
-	{
+	public VARIABLE getVariable_id() {
 		if (variable_id != null && variable_id.eIsProxy()) {
 			InternalEObject oldVariable_id = (InternalEObject)variable_id;
 			variable_id = (VARIABLE)eResolveProxy(oldVariable_id);
@@ -337,8 +322,7 @@ public class VARIABLE_SET_ENUMERATIONImpl extends MinimalEObjectImpl.Container i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public VARIABLE basicGetVariable_id()
-	{
+	public VARIABLE basicGetVariable_id() {
 		return variable_id;
 	}
 
@@ -348,8 +332,7 @@ public class VARIABLE_SET_ENUMERATIONImpl extends MinimalEObjectImpl.Container i
 	 * @generated
 	 */
 	@Override
-	public void setVariable_id(VARIABLE newVariable_id)
-	{
+	public void setVariable_id(VARIABLE newVariable_id) {
 		VARIABLE oldVariable_id = variable_id;
 		variable_id = newVariable_id;
 		if (eNotificationRequired())
@@ -362,8 +345,7 @@ public class VARIABLE_SET_ENUMERATIONImpl extends MinimalEObjectImpl.Container i
 	 * @generated
 	 */
 	@Override
-	public VARIABLE_SET getVariable_set_id()
-	{
+	public VARIABLE_SET getVariable_set_id() {
 		if (variable_set_id != null && variable_set_id.eIsProxy()) {
 			InternalEObject oldVariable_set_id = (InternalEObject)variable_set_id;
 			variable_set_id = (VARIABLE_SET)eResolveProxy(oldVariable_set_id);
@@ -380,8 +362,7 @@ public class VARIABLE_SET_ENUMERATIONImpl extends MinimalEObjectImpl.Container i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public VARIABLE_SET basicGetVariable_set_id()
-	{
+	public VARIABLE_SET basicGetVariable_set_id() {
 		return variable_set_id;
 	}
 
@@ -391,8 +372,7 @@ public class VARIABLE_SET_ENUMERATIONImpl extends MinimalEObjectImpl.Container i
 	 * @generated
 	 */
 	@Override
-	public void setVariable_set_id(VARIABLE_SET newVariable_set_id)
-	{
+	public void setVariable_set_id(VARIABLE_SET newVariable_set_id) {
 		VARIABLE_SET oldVariable_set_id = variable_set_id;
 		variable_set_id = newVariable_set_id;
 		if (eNotificationRequired())
@@ -405,8 +385,7 @@ public class VARIABLE_SET_ENUMERATIONImpl extends MinimalEObjectImpl.Container i
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case CorePackage.VARIABLE_SET_ENUMERATION__IS_FLOW:
 				return isIs_flow();
@@ -435,8 +414,7 @@ public class VARIABLE_SET_ENUMERATIONImpl extends MinimalEObjectImpl.Container i
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case CorePackage.VARIABLE_SET_ENUMERATION__IS_FLOW:
 				setIs_flow((Boolean)newValue);
@@ -469,8 +447,7 @@ public class VARIABLE_SET_ENUMERATIONImpl extends MinimalEObjectImpl.Container i
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case CorePackage.VARIABLE_SET_ENUMERATION__IS_FLOW:
 				setIs_flow(IS_FLOW_EDEFAULT);
@@ -503,8 +480,7 @@ public class VARIABLE_SET_ENUMERATIONImpl extends MinimalEObjectImpl.Container i
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case CorePackage.VARIABLE_SET_ENUMERATION__IS_FLOW:
 				return is_flow != IS_FLOW_EDEFAULT;
@@ -530,8 +506,7 @@ public class VARIABLE_SET_ENUMERATIONImpl extends MinimalEObjectImpl.Container i
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

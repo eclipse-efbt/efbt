@@ -38,8 +38,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='CUBE_STRUCTURE_ITEM' kind='empty'"
  * @generated
  */
-public interface CUBE_STRUCTURE_ITEM extends EObject
-{
+public interface CUBE_STRUCTURE_ITEM extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Attribute associated variable</b></em>' reference.
 	 * <!-- begin-user-doc -->

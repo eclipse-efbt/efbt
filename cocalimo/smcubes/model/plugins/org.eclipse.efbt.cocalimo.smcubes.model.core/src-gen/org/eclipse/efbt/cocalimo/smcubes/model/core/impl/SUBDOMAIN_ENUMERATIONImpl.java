@@ -34,8 +34,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container implements SUBDOMAIN_ENUMERATION
-{
+public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container implements SUBDOMAIN_ENUMERATION {
 	/**
 	 * The cached value of the '{@link #getMember_id() <em>Member id</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -121,8 +120,7 @@ public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected SUBDOMAIN_ENUMERATIONImpl()
-	{
+	protected SUBDOMAIN_ENUMERATIONImpl() {
 		super();
 	}
 
@@ -132,8 +130,7 @@ public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return CorePackage.Literals.SUBDOMAIN_ENUMERATION;
 	}
 
@@ -143,8 +140,7 @@ public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public MEMBER getMember_id()
-	{
+	public MEMBER getMember_id() {
 		if (member_id != null && member_id.eIsProxy()) {
 			InternalEObject oldMember_id = (InternalEObject)member_id;
 			member_id = (MEMBER)eResolveProxy(oldMember_id);
@@ -161,8 +157,7 @@ public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MEMBER basicGetMember_id()
-	{
+	public MEMBER basicGetMember_id() {
 		return member_id;
 	}
 
@@ -172,8 +167,7 @@ public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public void setMember_id(MEMBER newMember_id)
-	{
+	public void setMember_id(MEMBER newMember_id) {
 		MEMBER oldMember_id = member_id;
 		member_id = newMember_id;
 		if (eNotificationRequired())
@@ -186,8 +180,7 @@ public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public int getOrder()
-	{
+	public int getOrder() {
 		return order;
 	}
 
@@ -197,8 +190,7 @@ public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public void setOrder(int newOrder)
-	{
+	public void setOrder(int newOrder) {
 		int oldOrder = order;
 		order = newOrder;
 		if (eNotificationRequired())
@@ -211,8 +203,7 @@ public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public SUBDOMAIN getSubdomain_id()
-	{
+	public SUBDOMAIN getSubdomain_id() {
 		if (subdomain_id != null && subdomain_id.eIsProxy()) {
 			InternalEObject oldSubdomain_id = (InternalEObject)subdomain_id;
 			subdomain_id = (SUBDOMAIN)eResolveProxy(oldSubdomain_id);
@@ -229,8 +220,7 @@ public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public SUBDOMAIN basicGetSubdomain_id()
-	{
+	public SUBDOMAIN basicGetSubdomain_id() {
 		return subdomain_id;
 	}
 
@@ -240,8 +230,7 @@ public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public void setSubdomain_id(SUBDOMAIN newSubdomain_id)
-	{
+	public void setSubdomain_id(SUBDOMAIN newSubdomain_id) {
 		SUBDOMAIN oldSubdomain_id = subdomain_id;
 		subdomain_id = newSubdomain_id;
 		if (eNotificationRequired())
@@ -254,8 +243,7 @@ public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public Date getValid_from()
-	{
+	public Date getValid_from() {
 		return valid_from;
 	}
 
@@ -265,8 +253,7 @@ public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public void setValid_from(Date newValid_from)
-	{
+	public void setValid_from(Date newValid_from) {
 		Date oldValid_from = valid_from;
 		valid_from = newValid_from;
 		if (eNotificationRequired())
@@ -279,8 +266,7 @@ public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public Date getValid_to()
-	{
+	public Date getValid_to() {
 		return valid_to;
 	}
 
@@ -290,8 +276,7 @@ public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public void setValid_to(Date newValid_to)
-	{
+	public void setValid_to(Date newValid_to) {
 		Date oldValid_to = valid_to;
 		valid_to = newValid_to;
 		if (eNotificationRequired())
@@ -304,8 +289,7 @@ public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case CorePackage.SUBDOMAIN_ENUMERATION__MEMBER_ID:
 				if (resolve) return getMember_id();
@@ -329,8 +313,7 @@ public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case CorePackage.SUBDOMAIN_ENUMERATION__MEMBER_ID:
 				setMember_id((MEMBER)newValue);
@@ -357,8 +340,7 @@ public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case CorePackage.SUBDOMAIN_ENUMERATION__MEMBER_ID:
 				setMember_id((MEMBER)null);
@@ -385,8 +367,7 @@ public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case CorePackage.SUBDOMAIN_ENUMERATION__MEMBER_ID:
 				return member_id != null;
@@ -408,8 +389,7 @@ public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

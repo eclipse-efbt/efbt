@@ -39,8 +39,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class VARIABLE_MAPPINGImpl extends MinimalEObjectImpl.Container implements VARIABLE_MAPPING
-{
+public class VARIABLE_MAPPINGImpl extends MinimalEObjectImpl.Container implements VARIABLE_MAPPING {
 	/**
 	 * The cached value of the '{@link #getVaraibleMappingItems() <em>Varaible Mapping Items</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -136,8 +135,7 @@ public class VARIABLE_MAPPINGImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected VARIABLE_MAPPINGImpl()
-	{
+	protected VARIABLE_MAPPINGImpl() {
 		super();
 	}
 
@@ -147,8 +145,7 @@ public class VARIABLE_MAPPINGImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return MappingPackage.Literals.VARIABLE_MAPPING;
 	}
 
@@ -158,8 +155,7 @@ public class VARIABLE_MAPPINGImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public EList<VARIABLE_MAPPING_ITEM> getVaraibleMappingItems()
-	{
+	public EList<VARIABLE_MAPPING_ITEM> getVaraibleMappingItems() {
 		if (varaibleMappingItems == null) {
 			varaibleMappingItems = new EObjectContainmentEList<VARIABLE_MAPPING_ITEM>(VARIABLE_MAPPING_ITEM.class, this, MappingPackage.VARIABLE_MAPPING__VARAIBLE_MAPPING_ITEMS);
 		}
@@ -172,8 +168,7 @@ public class VARIABLE_MAPPINGImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
@@ -183,8 +178,7 @@ public class VARIABLE_MAPPINGImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public void setName(String newName)
-	{
+	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
@@ -197,8 +191,7 @@ public class VARIABLE_MAPPINGImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public String getCode()
-	{
+	public String getCode() {
 		return code;
 	}
 
@@ -208,8 +201,7 @@ public class VARIABLE_MAPPINGImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public void setCode(String newCode)
-	{
+	public void setCode(String newCode) {
 		String oldCode = code;
 		code = newCode;
 		if (eNotificationRequired())
@@ -222,8 +214,7 @@ public class VARIABLE_MAPPINGImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public String getMaintenance_agency_id()
-	{
+	public String getMaintenance_agency_id() {
 		return maintenance_agency_id;
 	}
 
@@ -233,8 +224,7 @@ public class VARIABLE_MAPPINGImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public void setMaintenance_agency_id(String newMaintenance_agency_id)
-	{
+	public void setMaintenance_agency_id(String newMaintenance_agency_id) {
 		String oldMaintenance_agency_id = maintenance_agency_id;
 		maintenance_agency_id = newMaintenance_agency_id;
 		if (eNotificationRequired())
@@ -247,8 +237,7 @@ public class VARIABLE_MAPPINGImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public String getVariable_mapping_id()
-	{
+	public String getVariable_mapping_id() {
 		return variable_mapping_id;
 	}
 
@@ -258,8 +247,7 @@ public class VARIABLE_MAPPINGImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public void setVariable_mapping_id(String newVariable_mapping_id)
-	{
+	public void setVariable_mapping_id(String newVariable_mapping_id) {
 		String oldVariable_mapping_id = variable_mapping_id;
 		variable_mapping_id = newVariable_mapping_id;
 		if (eNotificationRequired())
@@ -272,8 +260,7 @@ public class VARIABLE_MAPPINGImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case MappingPackage.VARIABLE_MAPPING__VARAIBLE_MAPPING_ITEMS:
 				return ((InternalEList<?>)getVaraibleMappingItems()).basicRemove(otherEnd, msgs);
@@ -287,8 +274,7 @@ public class VARIABLE_MAPPINGImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case MappingPackage.VARIABLE_MAPPING__VARAIBLE_MAPPING_ITEMS:
 				return getVaraibleMappingItems();
@@ -311,8 +297,7 @@ public class VARIABLE_MAPPINGImpl extends MinimalEObjectImpl.Container implement
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case MappingPackage.VARIABLE_MAPPING__VARAIBLE_MAPPING_ITEMS:
 				getVaraibleMappingItems().clear();
@@ -340,8 +325,7 @@ public class VARIABLE_MAPPINGImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case MappingPackage.VARIABLE_MAPPING__VARAIBLE_MAPPING_ITEMS:
 				getVaraibleMappingItems().clear();
@@ -368,8 +352,7 @@ public class VARIABLE_MAPPINGImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case MappingPackage.VARIABLE_MAPPING__VARAIBLE_MAPPING_ITEMS:
 				return varaibleMappingItems != null && !varaibleMappingItems.isEmpty();
@@ -391,8 +374,7 @@ public class VARIABLE_MAPPINGImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

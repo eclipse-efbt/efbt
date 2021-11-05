@@ -58,8 +58,6 @@ import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MAPPING_TO_CUBE;
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MEMBER_MAPPING;
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MappingFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.VARIABLE_MAPPING;
-import org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.TRANSFORMATION_SCHEME;
-import org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.Vtl_transformationFactory;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.apache.commons.csv.CSVFormat;
@@ -102,41 +100,7 @@ public class BIRDImporterImpl extends Importer {
 		this.filepath = filepath;
 	}
 
-	/**
-	 * create the TRANSFORMATION_SCHEME model instances from the BIRD Access
-	 * Database
-	 */
-	public void createAllTransformationSchemes() {
-
-		try {
-
-			AccessUtils accessUtils = AccessUtilProvider.getAccessUtils();
-			List<AccessRow> list = accessUtils.getRowsForTable(filepath, "TRANSFORMATION_SCHEME");
-
-			for (AccessRow row : list) {
-
-				TRANSFORMATION_SCHEME scheme = Vtl_transformationFactory.eINSTANCE.createTRANSFORMATION_SCHEME();
-				scheme.setCode(row.getString("CODE"));
-				scheme.setTransformation_scheme_id(replaceDots(row.getString("TRANSFORMATION_SCHEME_ID")));
-				scheme.setName(replaceDots(row.getString("TRANSFORMATION_SCHEME_ID")));
-				scheme.setDescription(row.getString("DESCRIPTION"));
-				scheme.setDisplayName(row.getString("NAME"));
-				scheme.setValid_to(row.getDate("VALID_TO"));
-				scheme.setValid_from(row.getDate("VALID_FROM"));
-
-				transformationSchemes.getSchemes().add(scheme);
-
-			}
-
-			
-
-		} catch (IOException e) {
-
-			e.printStackTrace();
-		}
-
-	}
-
+	
 	private String replaceDots(String string) {
 		// TODO Auto-generated method stub
 		return string.replace('.','_');
@@ -176,25 +140,6 @@ public class BIRDImporterImpl extends Importer {
 		return returnVariable;
 	}
 
-	/**
-	 * get the TRANSFORMATION_SCHEME instance which corresponds to the String ID of
-	 * the TRANSFORMATION_SCHEME
-	 * 
-	 * @param scheme_id
-	 * @return
-	 */
-	private TRANSFORMATION_SCHEME getTransformationScheme(String scheme_id) {
-
-		EList<TRANSFORMATION_SCHEME> schemes = transformationSchemes.getSchemes();
-		TRANSFORMATION_SCHEME returnScheme = null;
-		for (Iterator iterator = schemes.iterator(); iterator.hasNext();) {
-			TRANSFORMATION_SCHEME transformation_SCHEME = (TRANSFORMATION_SCHEME) iterator.next();
-			if (scheme_id.equals(transformation_SCHEME.getTransformation_scheme_id()))
-				returnScheme = transformation_SCHEME;
-		}
-		return returnScheme;
-
-	}
 
 	/**
 	 * create the MEMBER_MAPPING , VARIABLE_MAPPING , MAPPING_DEFINITION ,

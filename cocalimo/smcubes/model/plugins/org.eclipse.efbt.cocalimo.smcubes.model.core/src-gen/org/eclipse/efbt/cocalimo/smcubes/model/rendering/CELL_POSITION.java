@@ -21,8 +21,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='CELL_POSITION' kind='empty'"
  * @generated
  */
-public interface CELL_POSITION extends EObject
-{
+public interface CELL_POSITION extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Axis ordinate id</b></em>' reference.
 	 * <!-- begin-user-doc -->

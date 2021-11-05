@@ -26,8 +26,7 @@ import org.eclipse.emf.common.util.EList;
  * @model extendedMetaData="name='ReportTableModule' kind='elementOnly'"
  * @generated
  */
-public interface ReportTableModule extends org.eclipse.efbt.cocalimo.core.model.module_management.Module
-{
+public interface ReportTableModule extends org.eclipse.efbt.cocalimo.core.model.module_management.Module {
 	/**
 	 * Returns the value of the '<em><b>Report Tables</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.smcubes.model.rendering.TABLE}.

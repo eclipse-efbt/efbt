@@ -26,8 +26,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='CUBE_GROUP_ENUMERATION' kind='empty'"
  * @generated
  */
-public interface CUBE_GROUP_ENUMERATION extends EObject
-{
+public interface CUBE_GROUP_ENUMERATION extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Cube group id</b></em>' reference.
 	 * <!-- begin-user-doc -->

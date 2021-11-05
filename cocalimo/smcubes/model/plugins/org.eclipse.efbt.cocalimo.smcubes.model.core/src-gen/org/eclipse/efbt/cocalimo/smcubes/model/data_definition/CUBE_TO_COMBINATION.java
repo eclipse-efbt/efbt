@@ -21,8 +21,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='CUBE_TO_COMBINATION' kind='empty'"
  * @generated
  */
-public interface CUBE_TO_COMBINATION extends EObject
-{
+public interface CUBE_TO_COMBINATION extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Combination id</b></em>' reference.
 	 * <!-- begin-user-doc -->

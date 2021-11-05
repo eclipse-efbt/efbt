@@ -28,8 +28,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class ReportCellValueImpl extends MinimalEObjectImpl.Container implements ReportCellValue
-{
+public class ReportCellValueImpl extends MinimalEObjectImpl.Container implements ReportCellValue {
 	/**
 	 * The cached value of the '{@link #getReportCell() <em>Report Cell</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -65,8 +64,7 @@ public class ReportCellValueImpl extends MinimalEObjectImpl.Container implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ReportCellValueImpl()
-	{
+	protected ReportCellValueImpl() {
 		super();
 	}
 
@@ -76,8 +74,7 @@ public class ReportCellValueImpl extends MinimalEObjectImpl.Container implements
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return ReportsPackage.Literals.REPORT_CELL_VALUE;
 	}
 
@@ -87,8 +84,7 @@ public class ReportCellValueImpl extends MinimalEObjectImpl.Container implements
 	 * @generated
 	 */
 	@Override
-	public ReportCell getReportCell()
-	{
+	public ReportCell getReportCell() {
 		if (reportCell != null && reportCell.eIsProxy()) {
 			InternalEObject oldReportCell = (InternalEObject)reportCell;
 			reportCell = (ReportCell)eResolveProxy(oldReportCell);
@@ -105,8 +101,7 @@ public class ReportCellValueImpl extends MinimalEObjectImpl.Container implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ReportCell basicGetReportCell()
-	{
+	public ReportCell basicGetReportCell() {
 		return reportCell;
 	}
 
@@ -116,8 +111,7 @@ public class ReportCellValueImpl extends MinimalEObjectImpl.Container implements
 	 * @generated
 	 */
 	@Override
-	public void setReportCell(ReportCell newReportCell)
-	{
+	public void setReportCell(ReportCell newReportCell) {
 		ReportCell oldReportCell = reportCell;
 		reportCell = newReportCell;
 		if (eNotificationRequired())
@@ -130,8 +124,7 @@ public class ReportCellValueImpl extends MinimalEObjectImpl.Container implements
 	 * @generated
 	 */
 	@Override
-	public String getValue()
-	{
+	public String getValue() {
 		return value;
 	}
 
@@ -141,8 +134,7 @@ public class ReportCellValueImpl extends MinimalEObjectImpl.Container implements
 	 * @generated
 	 */
 	@Override
-	public void setValue(String newValue)
-	{
+	public void setValue(String newValue) {
 		String oldValue = value;
 		value = newValue;
 		if (eNotificationRequired())
@@ -155,8 +147,7 @@ public class ReportCellValueImpl extends MinimalEObjectImpl.Container implements
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case ReportsPackage.REPORT_CELL_VALUE__REPORT_CELL:
 				if (resolve) return getReportCell();
@@ -173,8 +164,7 @@ public class ReportCellValueImpl extends MinimalEObjectImpl.Container implements
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case ReportsPackage.REPORT_CELL_VALUE__REPORT_CELL:
 				setReportCell((ReportCell)newValue);
@@ -192,8 +182,7 @@ public class ReportCellValueImpl extends MinimalEObjectImpl.Container implements
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case ReportsPackage.REPORT_CELL_VALUE__REPORT_CELL:
 				setReportCell((ReportCell)null);
@@ -211,8 +200,7 @@ public class ReportCellValueImpl extends MinimalEObjectImpl.Container implements
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ReportsPackage.REPORT_CELL_VALUE__REPORT_CELL:
 				return reportCell != null;
@@ -228,8 +216,7 @@ public class ReportCellValueImpl extends MinimalEObjectImpl.Container implements
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

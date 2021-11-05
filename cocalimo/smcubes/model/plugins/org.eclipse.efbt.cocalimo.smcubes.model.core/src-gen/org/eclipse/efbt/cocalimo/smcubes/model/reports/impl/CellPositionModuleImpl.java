@@ -34,8 +34,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class CellPositionModuleImpl extends ModuleImpl implements CellPositionModule
-{
+public class CellPositionModuleImpl extends ModuleImpl implements CellPositionModule {
 	/**
 	 * The cached value of the '{@link #getReportTables() <em>Report Tables</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -51,8 +50,7 @@ public class CellPositionModuleImpl extends ModuleImpl implements CellPositionMo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected CellPositionModuleImpl()
-	{
+	protected CellPositionModuleImpl() {
 		super();
 	}
 
@@ -62,8 +60,7 @@ public class CellPositionModuleImpl extends ModuleImpl implements CellPositionMo
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return ReportsPackage.Literals.CELL_POSITION_MODULE;
 	}
 
@@ -73,8 +70,7 @@ public class CellPositionModuleImpl extends ModuleImpl implements CellPositionMo
 	 * @generated
 	 */
 	@Override
-	public EList<CELL_POSITION> getReportTables()
-	{
+	public EList<CELL_POSITION> getReportTables() {
 		if (reportTables == null) {
 			reportTables = new EObjectContainmentEList<CELL_POSITION>(CELL_POSITION.class, this, ReportsPackage.CELL_POSITION_MODULE__REPORT_TABLES);
 		}
@@ -87,8 +83,7 @@ public class CellPositionModuleImpl extends ModuleImpl implements CellPositionMo
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case ReportsPackage.CELL_POSITION_MODULE__REPORT_TABLES:
 				return ((InternalEList<?>)getReportTables()).basicRemove(otherEnd, msgs);
@@ -102,8 +97,7 @@ public class CellPositionModuleImpl extends ModuleImpl implements CellPositionMo
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case ReportsPackage.CELL_POSITION_MODULE__REPORT_TABLES:
 				return getReportTables();
@@ -118,8 +112,7 @@ public class CellPositionModuleImpl extends ModuleImpl implements CellPositionMo
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case ReportsPackage.CELL_POSITION_MODULE__REPORT_TABLES:
 				getReportTables().clear();
@@ -135,8 +128,7 @@ public class CellPositionModuleImpl extends ModuleImpl implements CellPositionMo
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case ReportsPackage.CELL_POSITION_MODULE__REPORT_TABLES:
 				getReportTables().clear();
@@ -151,8 +143,7 @@ public class CellPositionModuleImpl extends ModuleImpl implements CellPositionMo
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ReportsPackage.CELL_POSITION_MODULE__REPORT_TABLES:
 				return reportTables != null && !reportTables.isEmpty();

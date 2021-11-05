@@ -38,8 +38,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class CubeModuleImpl extends ModuleImpl implements CubeModule
-{
+public class CubeModuleImpl extends ModuleImpl implements CubeModule {
 	/**
 	 * The cached value of the '{@link #getCubes() <em>Cubes</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -75,8 +74,7 @@ public class CubeModuleImpl extends ModuleImpl implements CubeModule
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected CubeModuleImpl()
-	{
+	protected CubeModuleImpl() {
 		super();
 	}
 
@@ -86,8 +84,7 @@ public class CubeModuleImpl extends ModuleImpl implements CubeModule
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Efbt_data_definitionPackage.Literals.CUBE_MODULE;
 	}
 
@@ -97,8 +94,7 @@ public class CubeModuleImpl extends ModuleImpl implements CubeModule
 	 * @generated
 	 */
 	@Override
-	public EList<CUBE> getCubes()
-	{
+	public EList<CUBE> getCubes() {
 		if (cubes == null) {
 			cubes = new EObjectContainmentEList<CUBE>(CUBE.class, this, Efbt_data_definitionPackage.CUBE_MODULE__CUBES);
 		}
@@ -111,8 +107,7 @@ public class CubeModuleImpl extends ModuleImpl implements CubeModule
 	 * @generated
 	 */
 	@Override
-	public EList<CUBE_STRUCTURE> getCubeStructures()
-	{
+	public EList<CUBE_STRUCTURE> getCubeStructures() {
 		if (cubeStructures == null) {
 			cubeStructures = new EObjectContainmentEList<CUBE_STRUCTURE>(CUBE_STRUCTURE.class, this, Efbt_data_definitionPackage.CUBE_MODULE__CUBE_STRUCTURES);
 		}
@@ -125,8 +120,7 @@ public class CubeModuleImpl extends ModuleImpl implements CubeModule
 	 * @generated
 	 */
 	@Override
-	public EList<CUBE_STRUCTURE_ITEM> getCubeStructureItems()
-	{
+	public EList<CUBE_STRUCTURE_ITEM> getCubeStructureItems() {
 		if (cubeStructureItems == null) {
 			cubeStructureItems = new EObjectContainmentEList<CUBE_STRUCTURE_ITEM>(CUBE_STRUCTURE_ITEM.class, this, Efbt_data_definitionPackage.CUBE_MODULE__CUBE_STRUCTURE_ITEMS);
 		}
@@ -139,8 +133,7 @@ public class CubeModuleImpl extends ModuleImpl implements CubeModule
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case Efbt_data_definitionPackage.CUBE_MODULE__CUBES:
 				return ((InternalEList<?>)getCubes()).basicRemove(otherEnd, msgs);
@@ -158,8 +151,7 @@ public class CubeModuleImpl extends ModuleImpl implements CubeModule
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Efbt_data_definitionPackage.CUBE_MODULE__CUBES:
 				return getCubes();
@@ -178,8 +170,7 @@ public class CubeModuleImpl extends ModuleImpl implements CubeModule
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Efbt_data_definitionPackage.CUBE_MODULE__CUBES:
 				getCubes().clear();
@@ -203,8 +194,7 @@ public class CubeModuleImpl extends ModuleImpl implements CubeModule
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Efbt_data_definitionPackage.CUBE_MODULE__CUBES:
 				getCubes().clear();
@@ -225,8 +215,7 @@ public class CubeModuleImpl extends ModuleImpl implements CubeModule
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Efbt_data_definitionPackage.CUBE_MODULE__CUBES:
 				return cubes != null && !cubes.isEmpty();

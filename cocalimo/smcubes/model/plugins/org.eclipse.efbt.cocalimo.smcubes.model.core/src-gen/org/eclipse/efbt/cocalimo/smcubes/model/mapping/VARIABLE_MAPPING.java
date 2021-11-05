@@ -26,8 +26,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface VARIABLE_MAPPING extends EObject
-{
+public interface VARIABLE_MAPPING extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Varaible Mapping Items</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.smcubes.model.mapping.VARIABLE_MAPPING_ITEM}.

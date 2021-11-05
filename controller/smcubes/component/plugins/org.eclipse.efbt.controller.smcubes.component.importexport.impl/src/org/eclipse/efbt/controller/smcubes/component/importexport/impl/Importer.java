@@ -37,8 +37,6 @@ import org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.Efbt_mappingFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.MappingDefinitionModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.MemberMappingModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.VariableMappingModule;
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.Efbt_vtl_transformationFactory;
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.TransformationSchemeModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.SmcubesModel;
 import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.Smcubes_modelFactory;
 import org.eclipse.emf.common.util.BasicEList;
@@ -59,22 +57,11 @@ public abstract class Importer implements BirdImporter {
 
 
 	
-//	@Inject
-//	private ISerializer serializer;
-
-
-	//@Inject public EFactoryServiceProvider serviceProvider;
-	
 	/**
 	 * The file location to output the SMCubes artefacts
 	 */
 	protected String outputFilepath;
 	
-
-	/**
-	 * The transformationSchemes
-	 */
-	protected TransformationSchemeModule transformationSchemes;
 
 	/**
 	 * The domains
@@ -148,8 +135,6 @@ public abstract class Importer implements BirdImporter {
 	 * Constructor
 	 */
 	public Importer() {
-		transformationSchemes = Efbt_vtl_transformationFactory.eINSTANCE.createTransformationSchemeModule();
-		transformationSchemes.setName("TransformationSchemesModule");
 		domains = Efbt_data_definitionFactory.eINSTANCE.createDomainModule();
 		domains.setName("domainsModule");
 		variables = Efbt_data_definitionFactory.eINSTANCE.createVariableModule();
@@ -178,8 +163,6 @@ public abstract class Importer implements BirdImporter {
 		birdModel.getDomains().add(domains);
 		birdModel.getMappings().add(mappingDefinitionModule);
 		birdModel.getMembers().add(members);
-		// must rename this to getTranformationSchemes
-		birdModel.getFunctionalModules().add(transformationSchemes);
 		birdModel.getVariables().add(variables);
 		
 		ModuleDependencies dependencies = Module_managementFactory.eINSTANCE.createModuleDependencies();
@@ -219,10 +202,6 @@ public abstract class Importer implements BirdImporter {
 	 */
 	public abstract void createAllMembers();
 
-	/**
-	 * Create all the Transformation Scheme EObjects
-	 */
-	public abstract void createAllTransformationSchemes();
 
 	/**
 	 * Create all the Variable EObjects
@@ -246,7 +225,6 @@ public abstract class Importer implements BirdImporter {
 		createAllVariables();
 		createAllCubes();	
 		createAllCombinations();		
-		createAllTransformationSchemes();
 	
 		
 		
@@ -302,8 +280,6 @@ public abstract class Importer implements BirdImporter {
 		cubesResource.getContents().add(cubesModule);
 		cubestructuresResource.getContents().add(cubeStructuresModule);
 		cubestructureitemsResource.getContents().add(cubeStructureItemsModule);
-		// transformationsResource.getContents().add(transformationSchemes);
-
 		// cubeMappingResource.getContents().add(cubeMappingModule);
 		// mappingDefinitionResource.getContents().add(mappingDefinitionModule);
 		// memberMappingResource.getContents().add(memberMappingModule);
@@ -318,7 +294,6 @@ public abstract class Importer implements BirdImporter {
 			cubesResource.save(Collections.EMPTY_MAP);
 			cubestructuresResource.save(Collections.EMPTY_MAP);
 			cubestructureitemsResource.save(Collections.EMPTY_MAP);			
-			// transformationsResource.save(Collections.EMPTY_MAP);
 			// cubeMappingResource.save(Collections.EMPTY_MAP);
 			// mappingDefinitionResource.save(Collections.EMPTY_MAP);
 			// memberMappingResource.save(Collections.EMPTY_MAP);

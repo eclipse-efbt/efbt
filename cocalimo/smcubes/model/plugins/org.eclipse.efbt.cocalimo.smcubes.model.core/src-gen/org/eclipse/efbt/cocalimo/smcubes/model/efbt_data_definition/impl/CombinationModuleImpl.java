@@ -38,8 +38,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class CombinationModuleImpl extends ModuleImpl implements CombinationModule
-{
+public class CombinationModuleImpl extends ModuleImpl implements CombinationModule {
 	/**
 	 * The cached value of the '{@link #getCombinations() <em>Combinations</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -75,8 +74,7 @@ public class CombinationModuleImpl extends ModuleImpl implements CombinationModu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected CombinationModuleImpl()
-	{
+	protected CombinationModuleImpl() {
 		super();
 	}
 
@@ -86,8 +84,7 @@ public class CombinationModuleImpl extends ModuleImpl implements CombinationModu
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Efbt_data_definitionPackage.Literals.COMBINATION_MODULE;
 	}
 
@@ -97,8 +94,7 @@ public class CombinationModuleImpl extends ModuleImpl implements CombinationModu
 	 * @generated
 	 */
 	@Override
-	public EList<COMBINATION> getCombinations()
-	{
+	public EList<COMBINATION> getCombinations() {
 		if (combinations == null) {
 			combinations = new EObjectContainmentEList<COMBINATION>(COMBINATION.class, this, Efbt_data_definitionPackage.COMBINATION_MODULE__COMBINATIONS);
 		}
@@ -111,8 +107,7 @@ public class CombinationModuleImpl extends ModuleImpl implements CombinationModu
 	 * @generated
 	 */
 	@Override
-	public EList<COMBINATION_ITEM> getCombination_items()
-	{
+	public EList<COMBINATION_ITEM> getCombination_items() {
 		if (combination_items == null) {
 			combination_items = new EObjectContainmentEList<COMBINATION_ITEM>(COMBINATION_ITEM.class, this, Efbt_data_definitionPackage.COMBINATION_MODULE__COMBINATION_ITEMS);
 		}
@@ -125,8 +120,7 @@ public class CombinationModuleImpl extends ModuleImpl implements CombinationModu
 	 * @generated
 	 */
 	@Override
-	public EList<CUBE_TO_COMBINATION> getCubeToCombinationLinks()
-	{
+	public EList<CUBE_TO_COMBINATION> getCubeToCombinationLinks() {
 		if (cubeToCombinationLinks == null) {
 			cubeToCombinationLinks = new EObjectContainmentEList<CUBE_TO_COMBINATION>(CUBE_TO_COMBINATION.class, this, Efbt_data_definitionPackage.COMBINATION_MODULE__CUBE_TO_COMBINATION_LINKS);
 		}
@@ -139,8 +133,7 @@ public class CombinationModuleImpl extends ModuleImpl implements CombinationModu
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case Efbt_data_definitionPackage.COMBINATION_MODULE__COMBINATIONS:
 				return ((InternalEList<?>)getCombinations()).basicRemove(otherEnd, msgs);
@@ -158,8 +151,7 @@ public class CombinationModuleImpl extends ModuleImpl implements CombinationModu
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Efbt_data_definitionPackage.COMBINATION_MODULE__COMBINATIONS:
 				return getCombinations();
@@ -178,8 +170,7 @@ public class CombinationModuleImpl extends ModuleImpl implements CombinationModu
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Efbt_data_definitionPackage.COMBINATION_MODULE__COMBINATIONS:
 				getCombinations().clear();
@@ -203,8 +194,7 @@ public class CombinationModuleImpl extends ModuleImpl implements CombinationModu
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Efbt_data_definitionPackage.COMBINATION_MODULE__COMBINATIONS:
 				getCombinations().clear();
@@ -225,8 +215,7 @@ public class CombinationModuleImpl extends ModuleImpl implements CombinationModu
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Efbt_data_definitionPackage.COMBINATION_MODULE__COMBINATIONS:
 				return combinations != null && !combinations.isEmpty();

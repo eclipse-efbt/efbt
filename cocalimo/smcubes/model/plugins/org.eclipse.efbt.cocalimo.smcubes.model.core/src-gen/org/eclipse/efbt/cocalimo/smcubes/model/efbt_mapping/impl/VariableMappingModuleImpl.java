@@ -34,8 +34,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class VariableMappingModuleImpl extends ModuleImpl implements VariableMappingModule
-{
+public class VariableMappingModuleImpl extends ModuleImpl implements VariableMappingModule {
 	/**
 	 * The cached value of the '{@link #getVariableMappings() <em>Variable Mappings</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -51,8 +50,7 @@ public class VariableMappingModuleImpl extends ModuleImpl implements VariableMap
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected VariableMappingModuleImpl()
-	{
+	protected VariableMappingModuleImpl() {
 		super();
 	}
 
@@ -62,8 +60,7 @@ public class VariableMappingModuleImpl extends ModuleImpl implements VariableMap
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Efbt_mappingPackage.Literals.VARIABLE_MAPPING_MODULE;
 	}
 
@@ -73,8 +70,7 @@ public class VariableMappingModuleImpl extends ModuleImpl implements VariableMap
 	 * @generated
 	 */
 	@Override
-	public EList<VARIABLE_MAPPING> getVariableMappings()
-	{
+	public EList<VARIABLE_MAPPING> getVariableMappings() {
 		if (variableMappings == null) {
 			variableMappings = new EObjectContainmentEList<VARIABLE_MAPPING>(VARIABLE_MAPPING.class, this, Efbt_mappingPackage.VARIABLE_MAPPING_MODULE__VARIABLE_MAPPINGS);
 		}
@@ -87,8 +83,7 @@ public class VariableMappingModuleImpl extends ModuleImpl implements VariableMap
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case Efbt_mappingPackage.VARIABLE_MAPPING_MODULE__VARIABLE_MAPPINGS:
 				return ((InternalEList<?>)getVariableMappings()).basicRemove(otherEnd, msgs);
@@ -102,8 +97,7 @@ public class VariableMappingModuleImpl extends ModuleImpl implements VariableMap
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Efbt_mappingPackage.VARIABLE_MAPPING_MODULE__VARIABLE_MAPPINGS:
 				return getVariableMappings();
@@ -118,8 +112,7 @@ public class VariableMappingModuleImpl extends ModuleImpl implements VariableMap
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Efbt_mappingPackage.VARIABLE_MAPPING_MODULE__VARIABLE_MAPPINGS:
 				getVariableMappings().clear();
@@ -135,8 +128,7 @@ public class VariableMappingModuleImpl extends ModuleImpl implements VariableMap
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Efbt_mappingPackage.VARIABLE_MAPPING_MODULE__VARIABLE_MAPPINGS:
 				getVariableMappings().clear();
@@ -151,8 +143,7 @@ public class VariableMappingModuleImpl extends ModuleImpl implements VariableMap
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Efbt_mappingPackage.VARIABLE_MAPPING_MODULE__VARIABLE_MAPPINGS:
 				return variableMappings != null && !variableMappings.isEmpty();

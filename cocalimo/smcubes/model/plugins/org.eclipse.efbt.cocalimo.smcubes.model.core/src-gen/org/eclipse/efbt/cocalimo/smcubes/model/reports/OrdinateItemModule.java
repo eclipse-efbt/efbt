@@ -26,8 +26,7 @@ import org.eclipse.emf.common.util.EList;
  * @model extendedMetaData="name='OrdinateItemModule' kind='elementOnly'"
  * @generated
  */
-public interface OrdinateItemModule extends org.eclipse.efbt.cocalimo.core.model.module_management.Module
-{
+public interface OrdinateItemModule extends org.eclipse.efbt.cocalimo.core.model.module_management.Module {
 	/**
 	 * Returns the value of the '<em><b>Ordinate Items</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.smcubes.model.rendering.ORDINATE_ITEM}.

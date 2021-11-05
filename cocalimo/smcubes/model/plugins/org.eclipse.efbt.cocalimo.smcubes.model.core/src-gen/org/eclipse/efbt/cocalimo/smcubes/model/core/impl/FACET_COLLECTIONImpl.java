@@ -32,8 +32,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class FACET_COLLECTIONImpl extends MinimalEObjectImpl.Container implements FACET_COLLECTION
-{
+public class FACET_COLLECTIONImpl extends MinimalEObjectImpl.Container implements FACET_COLLECTION {
 	/**
 	 * The default value of the '{@link #getCode() <em>Code</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -129,8 +128,7 @@ public class FACET_COLLECTIONImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected FACET_COLLECTIONImpl()
-	{
+	protected FACET_COLLECTIONImpl() {
 		super();
 	}
 
@@ -140,8 +138,7 @@ public class FACET_COLLECTIONImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return CorePackage.Literals.FACET_COLLECTION;
 	}
 
@@ -151,8 +148,7 @@ public class FACET_COLLECTIONImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public String getCode()
-	{
+	public String getCode() {
 		return code;
 	}
 
@@ -162,8 +158,7 @@ public class FACET_COLLECTIONImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public void setCode(String newCode)
-	{
+	public void setCode(String newCode) {
 		String oldCode = code;
 		code = newCode;
 		if (eNotificationRequired())
@@ -176,8 +171,7 @@ public class FACET_COLLECTIONImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public String getFacet_id()
-	{
+	public String getFacet_id() {
 		return facet_id;
 	}
 
@@ -187,8 +181,7 @@ public class FACET_COLLECTIONImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public void setFacet_id(String newFacet_id)
-	{
+	public void setFacet_id(String newFacet_id) {
 		String oldFacet_id = facet_id;
 		facet_id = newFacet_id;
 		if (eNotificationRequired())
@@ -201,8 +194,7 @@ public class FACET_COLLECTIONImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public FACET_VALUE_TYPE getFacet_value_type()
-	{
+	public FACET_VALUE_TYPE getFacet_value_type() {
 		return facet_value_type;
 	}
 
@@ -212,8 +204,7 @@ public class FACET_COLLECTIONImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public void setFacet_value_type(FACET_VALUE_TYPE newFacet_value_type)
-	{
+	public void setFacet_value_type(FACET_VALUE_TYPE newFacet_value_type) {
 		FACET_VALUE_TYPE oldFacet_value_type = facet_value_type;
 		facet_value_type = newFacet_value_type == null ? FACET_VALUE_TYPE_EDEFAULT : newFacet_value_type;
 		if (eNotificationRequired())
@@ -226,8 +217,7 @@ public class FACET_COLLECTIONImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public MAINTENANCE_AGENCY getMaintenance_agency_id()
-	{
+	public MAINTENANCE_AGENCY getMaintenance_agency_id() {
 		if (maintenance_agency_id != null && maintenance_agency_id.eIsProxy()) {
 			InternalEObject oldMaintenance_agency_id = (InternalEObject)maintenance_agency_id;
 			maintenance_agency_id = (MAINTENANCE_AGENCY)eResolveProxy(oldMaintenance_agency_id);
@@ -244,8 +234,7 @@ public class FACET_COLLECTIONImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MAINTENANCE_AGENCY basicGetMaintenance_agency_id()
-	{
+	public MAINTENANCE_AGENCY basicGetMaintenance_agency_id() {
 		return maintenance_agency_id;
 	}
 
@@ -255,8 +244,7 @@ public class FACET_COLLECTIONImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public void setMaintenance_agency_id(MAINTENANCE_AGENCY newMaintenance_agency_id)
-	{
+	public void setMaintenance_agency_id(MAINTENANCE_AGENCY newMaintenance_agency_id) {
 		MAINTENANCE_AGENCY oldMaintenance_agency_id = maintenance_agency_id;
 		maintenance_agency_id = newMaintenance_agency_id;
 		if (eNotificationRequired())
@@ -269,8 +257,7 @@ public class FACET_COLLECTIONImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
@@ -280,8 +267,7 @@ public class FACET_COLLECTIONImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public void setName(String newName)
-	{
+	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
@@ -294,8 +280,7 @@ public class FACET_COLLECTIONImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case CorePackage.FACET_COLLECTION__CODE:
 				return getCode();
@@ -318,8 +303,7 @@ public class FACET_COLLECTIONImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case CorePackage.FACET_COLLECTION__CODE:
 				setCode((String)newValue);
@@ -346,8 +330,7 @@ public class FACET_COLLECTIONImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case CorePackage.FACET_COLLECTION__CODE:
 				setCode(CODE_EDEFAULT);
@@ -374,8 +357,7 @@ public class FACET_COLLECTIONImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case CorePackage.FACET_COLLECTION__CODE:
 				return CODE_EDEFAULT == null ? code != null : !CODE_EDEFAULT.equals(code);
@@ -397,8 +379,7 @@ public class FACET_COLLECTIONImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

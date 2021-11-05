@@ -19,16 +19,14 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
  * <!-- end-user-doc -->
  * @generated
  */
-public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory
-{
+public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
 	/**
 	 * Creates the default factory implementation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static CoreFactory init()
-	{
+	public static CoreFactory init() {
 		try {
 			CoreFactory theCoreFactory = (CoreFactory)EPackage.Registry.INSTANCE.getEFactory(CorePackage.eNS_URI);
 			if (theCoreFactory != null) {
@@ -47,8 +45,7 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public CoreFactoryImpl()
-	{
+	public CoreFactoryImpl() {
 		super();
 	}
 
@@ -58,8 +55,7 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory
 	 * @generated
 	 */
 	@Override
-	public EObject create(EClass eClass)
-	{
+	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case CorePackage.DOMAIN: return createDOMAIN();
 			case CorePackage.FACET_COLLECTION: return createFACET_COLLECTION();
@@ -85,8 +81,7 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory
 	 * @generated
 	 */
 	@Override
-	public Object createFromString(EDataType eDataType, String initialValue)
-	{
+	public Object createFromString(EDataType eDataType, String initialValue) {
 		switch (eDataType.getClassifierID()) {
 			case CorePackage.FACET_VALUE_TYPE:
 				return createFACET_VALUE_TYPEFromString(eDataType, initialValue);
@@ -103,8 +98,7 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory
 	 * @generated
 	 */
 	@Override
-	public String convertToString(EDataType eDataType, Object instanceValue)
-	{
+	public String convertToString(EDataType eDataType, Object instanceValue) {
 		switch (eDataType.getClassifierID()) {
 			case CorePackage.FACET_VALUE_TYPE:
 				return convertFACET_VALUE_TYPEToString(eDataType, instanceValue);
@@ -121,8 +115,7 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory
 	 * @generated
 	 */
 	@Override
-	public DOMAIN createDOMAIN()
-	{
+	public DOMAIN createDOMAIN() {
 		DOMAINImpl domain = new DOMAINImpl();
 		return domain;
 	}
@@ -133,8 +126,7 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory
 	 * @generated
 	 */
 	@Override
-	public FACET_COLLECTION createFACET_COLLECTION()
-	{
+	public FACET_COLLECTION createFACET_COLLECTION() {
 		FACET_COLLECTIONImpl faceT_COLLECTION = new FACET_COLLECTIONImpl();
 		return faceT_COLLECTION;
 	}
@@ -145,8 +137,7 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory
 	 * @generated
 	 */
 	@Override
-	public FACET_ENUMERATION createFACET_ENUMERATION()
-	{
+	public FACET_ENUMERATION createFACET_ENUMERATION() {
 		FACET_ENUMERATIONImpl faceT_ENUMERATION = new FACET_ENUMERATIONImpl();
 		return faceT_ENUMERATION;
 	}
@@ -157,8 +148,7 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory
 	 * @generated
 	 */
 	@Override
-	public facet_type createfacet_type()
-	{
+	public facet_type createfacet_type() {
 		facet_typeImpl facet_type = new facet_typeImpl();
 		return facet_type;
 	}
@@ -169,8 +159,7 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory
 	 * @generated
 	 */
 	@Override
-	public MAINTENANCE_AGENCY createMAINTENANCE_AGENCY()
-	{
+	public MAINTENANCE_AGENCY createMAINTENANCE_AGENCY() {
 		MAINTENANCE_AGENCYImpl maintenancE_AGENCY = new MAINTENANCE_AGENCYImpl();
 		return maintenancE_AGENCY;
 	}
@@ -181,8 +170,7 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory
 	 * @generated
 	 */
 	@Override
-	public MEMBER createMEMBER()
-	{
+	public MEMBER createMEMBER() {
 		MEMBERImpl member = new MEMBERImpl();
 		return member;
 	}
@@ -193,8 +181,7 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory
 	 * @generated
 	 */
 	@Override
-	public MEMBER_HIERARCHY createMEMBER_HIERARCHY()
-	{
+	public MEMBER_HIERARCHY createMEMBER_HIERARCHY() {
 		MEMBER_HIERARCHYImpl membeR_HIERARCHY = new MEMBER_HIERARCHYImpl();
 		return membeR_HIERARCHY;
 	}
@@ -205,8 +192,7 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory
 	 * @generated
 	 */
 	@Override
-	public MEMBER_HIERARCHY_NODE createMEMBER_HIERARCHY_NODE()
-	{
+	public MEMBER_HIERARCHY_NODE createMEMBER_HIERARCHY_NODE() {
 		MEMBER_HIERARCHY_NODEImpl membeR_HIERARCHY_NODE = new MEMBER_HIERARCHY_NODEImpl();
 		return membeR_HIERARCHY_NODE;
 	}
@@ -217,8 +203,7 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory
 	 * @generated
 	 */
 	@Override
-	public SUBDOMAIN createSUBDOMAIN()
-	{
+	public SUBDOMAIN createSUBDOMAIN() {
 		SUBDOMAINImpl subdomain = new SUBDOMAINImpl();
 		return subdomain;
 	}
@@ -229,8 +214,7 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory
 	 * @generated
 	 */
 	@Override
-	public SUBDOMAIN_ENUMERATION createSUBDOMAIN_ENUMERATION()
-	{
+	public SUBDOMAIN_ENUMERATION createSUBDOMAIN_ENUMERATION() {
 		SUBDOMAIN_ENUMERATIONImpl subdomaiN_ENUMERATION = new SUBDOMAIN_ENUMERATIONImpl();
 		return subdomaiN_ENUMERATION;
 	}
@@ -241,8 +225,7 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory
 	 * @generated
 	 */
 	@Override
-	public VARIABLE createVARIABLE()
-	{
+	public VARIABLE createVARIABLE() {
 		VARIABLEImpl variable = new VARIABLEImpl();
 		return variable;
 	}
@@ -253,8 +236,7 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory
 	 * @generated
 	 */
 	@Override
-	public VARIABLE_SET createVARIABLE_SET()
-	{
+	public VARIABLE_SET createVARIABLE_SET() {
 		VARIABLE_SETImpl variablE_SET = new VARIABLE_SETImpl();
 		return variablE_SET;
 	}
@@ -265,8 +247,7 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory
 	 * @generated
 	 */
 	@Override
-	public VARIABLE_SET_ENUMERATION createVARIABLE_SET_ENUMERATION()
-	{
+	public VARIABLE_SET_ENUMERATION createVARIABLE_SET_ENUMERATION() {
 		VARIABLE_SET_ENUMERATIONImpl variablE_SET_ENUMERATION = new VARIABLE_SET_ENUMERATIONImpl();
 		return variablE_SET_ENUMERATION;
 	}
@@ -276,8 +257,7 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public FACET_VALUE_TYPE createFACET_VALUE_TYPEFromString(EDataType eDataType, String initialValue)
-	{
+	public FACET_VALUE_TYPE createFACET_VALUE_TYPEFromString(EDataType eDataType, String initialValue) {
 		FACET_VALUE_TYPE result = FACET_VALUE_TYPE.get(initialValue);
 		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
 		return result;
@@ -288,8 +268,7 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String convertFACET_VALUE_TYPEToString(EDataType eDataType, Object instanceValue)
-	{
+	public String convertFACET_VALUE_TYPEToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 
@@ -298,8 +277,7 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public FACET_VALUE_TYPE createFACET_VALUE_TYPEObjectFromString(EDataType eDataType, String initialValue)
-	{
+	public FACET_VALUE_TYPE createFACET_VALUE_TYPEObjectFromString(EDataType eDataType, String initialValue) {
 		return createFACET_VALUE_TYPEFromString(CorePackage.Literals.FACET_VALUE_TYPE, initialValue);
 	}
 
@@ -308,8 +286,7 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String convertFACET_VALUE_TYPEObjectToString(EDataType eDataType, Object instanceValue)
-	{
+	public String convertFACET_VALUE_TYPEObjectToString(EDataType eDataType, Object instanceValue) {
 		return convertFACET_VALUE_TYPEToString(CorePackage.Literals.FACET_VALUE_TYPE, instanceValue);
 	}
 
@@ -319,8 +296,7 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory
 	 * @generated
 	 */
 	@Override
-	public CorePackage getCorePackage()
-	{
+	public CorePackage getCorePackage() {
 		return (CorePackage)getEPackage();
 	}
 
@@ -331,8 +307,7 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory
 	 * @generated
 	 */
 	@Deprecated
-	public static CorePackage getPackage()
-	{
+	public static CorePackage getPackage() {
 		return CorePackage.eINSTANCE;
 	}
 

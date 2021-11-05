@@ -36,8 +36,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class MemberHierarchyModuleImpl extends ModuleImpl implements MemberHierarchyModule
-{
+public class MemberHierarchyModuleImpl extends ModuleImpl implements MemberHierarchyModule {
 	/**
 	 * The cached value of the '{@link #getMemberHierarchies() <em>Member Hierarchies</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -63,8 +62,7 @@ public class MemberHierarchyModuleImpl extends ModuleImpl implements MemberHiera
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected MemberHierarchyModuleImpl()
-	{
+	protected MemberHierarchyModuleImpl() {
 		super();
 	}
 
@@ -74,8 +72,7 @@ public class MemberHierarchyModuleImpl extends ModuleImpl implements MemberHiera
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Efbt_data_definitionPackage.Literals.MEMBER_HIERARCHY_MODULE;
 	}
 
@@ -85,8 +82,7 @@ public class MemberHierarchyModuleImpl extends ModuleImpl implements MemberHiera
 	 * @generated
 	 */
 	@Override
-	public EList<MEMBER_HIERARCHY> getMemberHierarchies()
-	{
+	public EList<MEMBER_HIERARCHY> getMemberHierarchies() {
 		if (memberHierarchies == null) {
 			memberHierarchies = new EObjectContainmentEList<MEMBER_HIERARCHY>(MEMBER_HIERARCHY.class, this, Efbt_data_definitionPackage.MEMBER_HIERARCHY_MODULE__MEMBER_HIERARCHIES);
 		}
@@ -99,8 +95,7 @@ public class MemberHierarchyModuleImpl extends ModuleImpl implements MemberHiera
 	 * @generated
 	 */
 	@Override
-	public EList<MEMBER_HIERARCHY_NODE> getMemberHierarchiesNodes()
-	{
+	public EList<MEMBER_HIERARCHY_NODE> getMemberHierarchiesNodes() {
 		if (memberHierarchiesNodes == null) {
 			memberHierarchiesNodes = new EObjectContainmentEList<MEMBER_HIERARCHY_NODE>(MEMBER_HIERARCHY_NODE.class, this, Efbt_data_definitionPackage.MEMBER_HIERARCHY_MODULE__MEMBER_HIERARCHIES_NODES);
 		}
@@ -113,8 +108,7 @@ public class MemberHierarchyModuleImpl extends ModuleImpl implements MemberHiera
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case Efbt_data_definitionPackage.MEMBER_HIERARCHY_MODULE__MEMBER_HIERARCHIES:
 				return ((InternalEList<?>)getMemberHierarchies()).basicRemove(otherEnd, msgs);
@@ -130,8 +124,7 @@ public class MemberHierarchyModuleImpl extends ModuleImpl implements MemberHiera
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Efbt_data_definitionPackage.MEMBER_HIERARCHY_MODULE__MEMBER_HIERARCHIES:
 				return getMemberHierarchies();
@@ -148,8 +141,7 @@ public class MemberHierarchyModuleImpl extends ModuleImpl implements MemberHiera
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Efbt_data_definitionPackage.MEMBER_HIERARCHY_MODULE__MEMBER_HIERARCHIES:
 				getMemberHierarchies().clear();
@@ -169,8 +161,7 @@ public class MemberHierarchyModuleImpl extends ModuleImpl implements MemberHiera
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Efbt_data_definitionPackage.MEMBER_HIERARCHY_MODULE__MEMBER_HIERARCHIES:
 				getMemberHierarchies().clear();
@@ -188,8 +179,7 @@ public class MemberHierarchyModuleImpl extends ModuleImpl implements MemberHiera
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Efbt_data_definitionPackage.MEMBER_HIERARCHY_MODULE__MEMBER_HIERARCHIES:
 				return memberHierarchies != null && !memberHierarchies.isEmpty();

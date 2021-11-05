@@ -24,8 +24,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='VARIABLE_SET' kind='empty'"
  * @generated
  */
-public interface VARIABLE_SET extends EObject
-{
+public interface VARIABLE_SET extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Code</b></em>' attribute.
 	 * <!-- begin-user-doc -->
