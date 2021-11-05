@@ -44,8 +44,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class CUBE_MAPPINGImpl extends MinimalEObjectImpl.Container implements CUBE_MAPPING
-{
+public class CUBE_MAPPINGImpl extends MinimalEObjectImpl.Container implements CUBE_MAPPING {
 	/**
 	 * The default value of the '{@link #getCube_mapping_id() <em>Cube mapping id</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -181,8 +180,7 @@ public class CUBE_MAPPINGImpl extends MinimalEObjectImpl.Container implements CU
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected CUBE_MAPPINGImpl()
-	{
+	protected CUBE_MAPPINGImpl() {
 		super();
 	}
 
@@ -192,8 +190,7 @@ public class CUBE_MAPPINGImpl extends MinimalEObjectImpl.Container implements CU
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return MappingPackage.Literals.CUBE_MAPPING;
 	}
 
@@ -203,8 +200,7 @@ public class CUBE_MAPPINGImpl extends MinimalEObjectImpl.Container implements CU
 	 * @generated
 	 */
 	@Override
-	public String getCube_mapping_id()
-	{
+	public String getCube_mapping_id() {
 		return cube_mapping_id;
 	}
 
@@ -214,8 +210,7 @@ public class CUBE_MAPPINGImpl extends MinimalEObjectImpl.Container implements CU
 	 * @generated
 	 */
 	@Override
-	public void setCube_mapping_id(String newCube_mapping_id)
-	{
+	public void setCube_mapping_id(String newCube_mapping_id) {
 		String oldCube_mapping_id = cube_mapping_id;
 		cube_mapping_id = newCube_mapping_id;
 		if (eNotificationRequired())
@@ -228,8 +223,7 @@ public class CUBE_MAPPINGImpl extends MinimalEObjectImpl.Container implements CU
 	 * @generated
 	 */
 	@Override
-	public String getDescription()
-	{
+	public String getDescription() {
 		return description;
 	}
 
@@ -239,8 +233,7 @@ public class CUBE_MAPPINGImpl extends MinimalEObjectImpl.Container implements CU
 	 * @generated
 	 */
 	@Override
-	public void setDescription(String newDescription)
-	{
+	public void setDescription(String newDescription) {
 		String oldDescription = description;
 		description = newDescription;
 		if (eNotificationRequired())
@@ -253,8 +246,7 @@ public class CUBE_MAPPINGImpl extends MinimalEObjectImpl.Container implements CU
 	 * @generated
 	 */
 	@Override
-	public CUBE getSource_cube()
-	{
+	public CUBE getSource_cube() {
 		if (source_cube != null && source_cube.eIsProxy()) {
 			InternalEObject oldSource_cube = (InternalEObject)source_cube;
 			source_cube = (CUBE)eResolveProxy(oldSource_cube);
@@ -271,8 +263,7 @@ public class CUBE_MAPPINGImpl extends MinimalEObjectImpl.Container implements CU
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public CUBE basicGetSource_cube()
-	{
+	public CUBE basicGetSource_cube() {
 		return source_cube;
 	}
 
@@ -282,8 +273,7 @@ public class CUBE_MAPPINGImpl extends MinimalEObjectImpl.Container implements CU
 	 * @generated
 	 */
 	@Override
-	public void setSource_cube(CUBE newSource_cube)
-	{
+	public void setSource_cube(CUBE newSource_cube) {
 		CUBE oldSource_cube = source_cube;
 		source_cube = newSource_cube;
 		if (eNotificationRequired())
@@ -296,8 +286,7 @@ public class CUBE_MAPPINGImpl extends MinimalEObjectImpl.Container implements CU
 	 * @generated
 	 */
 	@Override
-	public CUBE getTarget_cube()
-	{
+	public CUBE getTarget_cube() {
 		if (target_cube != null && target_cube.eIsProxy()) {
 			InternalEObject oldTarget_cube = (InternalEObject)target_cube;
 			target_cube = (CUBE)eResolveProxy(oldTarget_cube);
@@ -314,8 +303,7 @@ public class CUBE_MAPPINGImpl extends MinimalEObjectImpl.Container implements CU
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public CUBE basicGetTarget_cube()
-	{
+	public CUBE basicGetTarget_cube() {
 		return target_cube;
 	}
 
@@ -325,8 +313,7 @@ public class CUBE_MAPPINGImpl extends MinimalEObjectImpl.Container implements CU
 	 * @generated
 	 */
 	@Override
-	public void setTarget_cube(CUBE newTarget_cube)
-	{
+	public void setTarget_cube(CUBE newTarget_cube) {
 		CUBE oldTarget_cube = target_cube;
 		target_cube = newTarget_cube;
 		if (eNotificationRequired())
@@ -339,8 +326,7 @@ public class CUBE_MAPPINGImpl extends MinimalEObjectImpl.Container implements CU
 	 * @generated
 	 */
 	@Override
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
@@ -350,8 +336,7 @@ public class CUBE_MAPPINGImpl extends MinimalEObjectImpl.Container implements CU
 	 * @generated
 	 */
 	@Override
-	public void setName(String newName)
-	{
+	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
@@ -364,8 +349,7 @@ public class CUBE_MAPPINGImpl extends MinimalEObjectImpl.Container implements CU
 	 * @generated
 	 */
 	@Override
-	public String getCode()
-	{
+	public String getCode() {
 		return code;
 	}
 
@@ -375,8 +359,7 @@ public class CUBE_MAPPINGImpl extends MinimalEObjectImpl.Container implements CU
 	 * @generated
 	 */
 	@Override
-	public void setCode(String newCode)
-	{
+	public void setCode(String newCode) {
 		String oldCode = code;
 		code = newCode;
 		if (eNotificationRequired())
@@ -389,8 +372,7 @@ public class CUBE_MAPPINGImpl extends MinimalEObjectImpl.Container implements CU
 	 * @generated
 	 */
 	@Override
-	public String getMaintenance_agency_id()
-	{
+	public String getMaintenance_agency_id() {
 		return maintenance_agency_id;
 	}
 
@@ -400,8 +382,7 @@ public class CUBE_MAPPINGImpl extends MinimalEObjectImpl.Container implements CU
 	 * @generated
 	 */
 	@Override
-	public void setMaintenance_agency_id(String newMaintenance_agency_id)
-	{
+	public void setMaintenance_agency_id(String newMaintenance_agency_id) {
 		String oldMaintenance_agency_id = maintenance_agency_id;
 		maintenance_agency_id = newMaintenance_agency_id;
 		if (eNotificationRequired())
@@ -414,8 +395,7 @@ public class CUBE_MAPPINGImpl extends MinimalEObjectImpl.Container implements CU
 	 * @generated
 	 */
 	@Override
-	public EList<MAPPING_TO_CUBE> getMappingsToCube()
-	{
+	public EList<MAPPING_TO_CUBE> getMappingsToCube() {
 		if (mappingsToCube == null) {
 			mappingsToCube = new EObjectContainmentEList<MAPPING_TO_CUBE>(MAPPING_TO_CUBE.class, this, MappingPackage.CUBE_MAPPING__MAPPINGS_TO_CUBE);
 		}
@@ -428,8 +408,7 @@ public class CUBE_MAPPINGImpl extends MinimalEObjectImpl.Container implements CU
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case MappingPackage.CUBE_MAPPING__MAPPINGS_TO_CUBE:
 				return ((InternalEList<?>)getMappingsToCube()).basicRemove(otherEnd, msgs);
@@ -443,8 +422,7 @@ public class CUBE_MAPPINGImpl extends MinimalEObjectImpl.Container implements CU
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case MappingPackage.CUBE_MAPPING__CUBE_MAPPING_ID:
 				return getCube_mapping_id();
@@ -475,8 +453,7 @@ public class CUBE_MAPPINGImpl extends MinimalEObjectImpl.Container implements CU
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case MappingPackage.CUBE_MAPPING__CUBE_MAPPING_ID:
 				setCube_mapping_id((String)newValue);
@@ -513,8 +490,7 @@ public class CUBE_MAPPINGImpl extends MinimalEObjectImpl.Container implements CU
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case MappingPackage.CUBE_MAPPING__CUBE_MAPPING_ID:
 				setCube_mapping_id(CUBE_MAPPING_ID_EDEFAULT);
@@ -550,8 +526,7 @@ public class CUBE_MAPPINGImpl extends MinimalEObjectImpl.Container implements CU
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case MappingPackage.CUBE_MAPPING__CUBE_MAPPING_ID:
 				return CUBE_MAPPING_ID_EDEFAULT == null ? cube_mapping_id != null : !CUBE_MAPPING_ID_EDEFAULT.equals(cube_mapping_id);
@@ -579,8 +554,7 @@ public class CUBE_MAPPINGImpl extends MinimalEObjectImpl.Container implements CU
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

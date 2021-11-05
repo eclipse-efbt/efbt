@@ -25,8 +25,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='ReportCellValue' kind='empty'"
  * @generated
  */
-public interface ReportCellValue extends EObject
-{
+public interface ReportCellValue extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Report Cell</b></em>' reference.
 	 * <!-- begin-user-doc -->

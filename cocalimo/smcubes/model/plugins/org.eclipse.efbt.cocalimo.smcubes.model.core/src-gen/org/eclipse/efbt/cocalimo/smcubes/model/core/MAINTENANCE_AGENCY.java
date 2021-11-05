@@ -22,8 +22,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='MAINTENANCE_AGENCY' kind='empty'"
  * @generated
  */
-public interface MAINTENANCE_AGENCY extends EObject
-{
+public interface MAINTENANCE_AGENCY extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Code</b></em>' attribute.
 	 * <!-- begin-user-doc -->

@@ -20,10 +20,6 @@ import org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.Efbt_mappingPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.impl.Efbt_mappingPackageImpl;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.Efbt_vtl_transformationPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.impl.Efbt_vtl_transformationPackageImpl;
-
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MappingPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.impl.MappingPackageImpl;
@@ -48,10 +44,6 @@ import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.Smcubes_modelPackag
 
 import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.impl.Smcubes_modelPackageImpl;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.Vtl_transformationPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.impl.Vtl_transformationPackageImpl;
-
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
@@ -65,8 +57,7 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
  * <!-- end-user-doc -->
  * @generated
  */
-public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage
-{
+public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -145,8 +136,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage
 	 * @see #init()
 	 * @generated
 	 */
-	private ReportsPackageImpl()
-	{
+	private ReportsPackageImpl() {
 		super(eNS_URI, ReportsFactory.eINSTANCE);
 	}
 
@@ -169,8 +159,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage
 	 * @see #initializePackageContents()
 	 * @generated
 	 */
-	public static ReportsPackage init()
-	{
+	public static ReportsPackage init() {
 		if (isInited) return (ReportsPackage)EPackage.Registry.INSTANCE.getEPackage(ReportsPackage.eNS_URI);
 
 		// Obtain or create and register package
@@ -191,16 +180,12 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage
 		Efbt_data_definitionPackageImpl theEfbt_data_definitionPackage = (Efbt_data_definitionPackageImpl)(registeredPackage instanceof Efbt_data_definitionPackageImpl ? registeredPackage : Efbt_data_definitionPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Efbt_mappingPackage.eNS_URI);
 		Efbt_mappingPackageImpl theEfbt_mappingPackage = (Efbt_mappingPackageImpl)(registeredPackage instanceof Efbt_mappingPackageImpl ? registeredPackage : Efbt_mappingPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Efbt_vtl_transformationPackage.eNS_URI);
-		Efbt_vtl_transformationPackageImpl theEfbt_vtl_transformationPackage = (Efbt_vtl_transformationPackageImpl)(registeredPackage instanceof Efbt_vtl_transformationPackageImpl ? registeredPackage : Efbt_vtl_transformationPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(MappingPackage.eNS_URI);
 		MappingPackageImpl theMappingPackage = (MappingPackageImpl)(registeredPackage instanceof MappingPackageImpl ? registeredPackage : MappingPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(RenderingPackage.eNS_URI);
 		RenderingPackageImpl theRenderingPackage = (RenderingPackageImpl)(registeredPackage instanceof RenderingPackageImpl ? registeredPackage : RenderingPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Smcubes_modelPackage.eNS_URI);
 		Smcubes_modelPackageImpl theSmcubes_modelPackage = (Smcubes_modelPackageImpl)(registeredPackage instanceof Smcubes_modelPackageImpl ? registeredPackage : Smcubes_modelPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Vtl_transformationPackage.eNS_URI);
-		Vtl_transformationPackageImpl theVtl_transformationPackage = (Vtl_transformationPackageImpl)(registeredPackage instanceof Vtl_transformationPackageImpl ? registeredPackage : Vtl_transformationPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theReportsPackage.createPackageContents();
@@ -208,11 +193,9 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage
 		theData_definitionPackage.createPackageContents();
 		theEfbt_data_definitionPackage.createPackageContents();
 		theEfbt_mappingPackage.createPackageContents();
-		theEfbt_vtl_transformationPackage.createPackageContents();
 		theMappingPackage.createPackageContents();
 		theRenderingPackage.createPackageContents();
 		theSmcubes_modelPackage.createPackageContents();
-		theVtl_transformationPackage.createPackageContents();
 
 		// Initialize created meta-data
 		theReportsPackage.initializePackageContents();
@@ -220,11 +203,9 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage
 		theData_definitionPackage.initializePackageContents();
 		theEfbt_data_definitionPackage.initializePackageContents();
 		theEfbt_mappingPackage.initializePackageContents();
-		theEfbt_vtl_transformationPackage.initializePackageContents();
 		theMappingPackage.initializePackageContents();
 		theRenderingPackage.initializePackageContents();
 		theSmcubes_modelPackage.initializePackageContents();
-		theVtl_transformationPackage.initializePackageContents();
 
 		// Mark meta-data to indicate it can't be changed
 		theReportsPackage.freeze();
@@ -240,8 +221,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage
 	 * @generated
 	 */
 	@Override
-	public EClass getAxisModule()
-	{
+	public EClass getAxisModule() {
 		return axisModuleEClass;
 	}
 
@@ -251,8 +231,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage
 	 * @generated
 	 */
 	@Override
-	public EReference getAxisModule_Axes()
-	{
+	public EReference getAxisModule_Axes() {
 		return (EReference)axisModuleEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -262,8 +241,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage
 	 * @generated
 	 */
 	@Override
-	public EClass getAxisOrdinateModule()
-	{
+	public EClass getAxisOrdinateModule() {
 		return axisOrdinateModuleEClass;
 	}
 
@@ -273,8 +251,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage
 	 * @generated
 	 */
 	@Override
-	public EReference getAxisOrdinateModule_Axis_ordinates()
-	{
+	public EReference getAxisOrdinateModule_Axis_ordinates() {
 		return (EReference)axisOrdinateModuleEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -284,8 +261,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage
 	 * @generated
 	 */
 	@Override
-	public EClass getCellPositionModule()
-	{
+	public EClass getCellPositionModule() {
 		return cellPositionModuleEClass;
 	}
 
@@ -295,8 +271,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage
 	 * @generated
 	 */
 	@Override
-	public EReference getCellPositionModule_ReportTables()
-	{
+	public EReference getCellPositionModule_ReportTables() {
 		return (EReference)cellPositionModuleEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -306,8 +281,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage
 	 * @generated
 	 */
 	@Override
-	public EClass getOrdinateItemModule()
-	{
+	public EClass getOrdinateItemModule() {
 		return ordinateItemModuleEClass;
 	}
 
@@ -317,8 +291,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage
 	 * @generated
 	 */
 	@Override
-	public EReference getOrdinateItemModule_OrdinateItems()
-	{
+	public EReference getOrdinateItemModule_OrdinateItems() {
 		return (EReference)ordinateItemModuleEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -328,8 +301,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage
 	 * @generated
 	 */
 	@Override
-	public EClass getPopulatedReport()
-	{
+	public EClass getPopulatedReport() {
 		return populatedReportEClass;
 	}
 
@@ -339,8 +311,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage
 	 * @generated
 	 */
 	@Override
-	public EReference getPopulatedReport_ReportCellValues()
-	{
+	public EReference getPopulatedReport_ReportCellValues() {
 		return (EReference)populatedReportEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -350,8 +321,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getPopulatedReport_Name()
-	{
+	public EAttribute getPopulatedReport_Name() {
 		return (EAttribute)populatedReportEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -361,8 +331,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage
 	 * @generated
 	 */
 	@Override
-	public EClass getReportCell()
-	{
+	public EClass getReportCell() {
 		return reportCellEClass;
 	}
 
@@ -372,8 +341,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage
 	 * @generated
 	 */
 	@Override
-	public EReference getReportCell_Combination()
-	{
+	public EReference getReportCell_Combination() {
 		return (EReference)reportCellEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -383,8 +351,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getReportCell_Name()
-	{
+	public EAttribute getReportCell_Name() {
 		return (EAttribute)reportCellEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -394,8 +361,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage
 	 * @generated
 	 */
 	@Override
-	public EClass getReportCellValue()
-	{
+	public EClass getReportCellValue() {
 		return reportCellValueEClass;
 	}
 
@@ -405,8 +371,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage
 	 * @generated
 	 */
 	@Override
-	public EReference getReportCellValue_ReportCell()
-	{
+	public EReference getReportCellValue_ReportCell() {
 		return (EReference)reportCellValueEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -416,8 +381,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getReportCellValue_Value()
-	{
+	public EAttribute getReportCellValue_Value() {
 		return (EAttribute)reportCellValueEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -427,8 +391,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage
 	 * @generated
 	 */
 	@Override
-	public EClass getReportTableModule()
-	{
+	public EClass getReportTableModule() {
 		return reportTableModuleEClass;
 	}
 
@@ -438,8 +401,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage
 	 * @generated
 	 */
 	@Override
-	public EReference getReportTableModule_ReportTables()
-	{
+	public EReference getReportTableModule_ReportTables() {
 		return (EReference)reportTableModuleEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -449,8 +411,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage
 	 * @generated
 	 */
 	@Override
-	public EClass getTableCellModule()
-	{
+	public EClass getTableCellModule() {
 		return tableCellModuleEClass;
 	}
 
@@ -460,8 +421,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage
 	 * @generated
 	 */
 	@Override
-	public EReference getTableCellModule_TableCells()
-	{
+	public EReference getTableCellModule_TableCells() {
 		return (EReference)tableCellModuleEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -471,8 +431,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage
 	 * @generated
 	 */
 	@Override
-	public ReportsFactory getReportsFactory()
-	{
+	public ReportsFactory getReportsFactory() {
 		return (ReportsFactory)getEFactoryInstance();
 	}
 
@@ -490,8 +449,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void createPackageContents()
-	{
+	public void createPackageContents() {
 		if (isCreated) return;
 		isCreated = true;
 
@@ -541,8 +499,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void initializePackageContents()
-	{
+	public void initializePackageContents() {
 		if (isInitialized) return;
 		isInitialized = true;
 
@@ -615,8 +572,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void createLicenseAnnotations()
-	{
+	protected void createLicenseAnnotations() {
 		String source = "license";
 		addAnnotation
 		  (this,
@@ -632,8 +588,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void createExtendedMetaDataAnnotations()
-	{
+	protected void createExtendedMetaDataAnnotations() {
 		String source = "http:///org/eclipse/emf/ecore/util/ExtendedMetaData";
 		addAnnotation
 		  (axisModuleEClass,

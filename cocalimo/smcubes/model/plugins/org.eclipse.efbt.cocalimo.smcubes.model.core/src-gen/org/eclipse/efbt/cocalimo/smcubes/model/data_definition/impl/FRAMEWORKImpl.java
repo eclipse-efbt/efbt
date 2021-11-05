@@ -32,8 +32,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class FRAMEWORKImpl extends MinimalEObjectImpl.Container implements FRAMEWORK
-{
+public class FRAMEWORKImpl extends MinimalEObjectImpl.Container implements FRAMEWORK {
 	/**
 	 * The default value of the '{@link #getCode() <em>Code</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -129,8 +128,7 @@ public class FRAMEWORKImpl extends MinimalEObjectImpl.Container implements FRAME
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected FRAMEWORKImpl()
-	{
+	protected FRAMEWORKImpl() {
 		super();
 	}
 
@@ -140,8 +138,7 @@ public class FRAMEWORKImpl extends MinimalEObjectImpl.Container implements FRAME
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Data_definitionPackage.Literals.FRAMEWORK;
 	}
 
@@ -151,8 +148,7 @@ public class FRAMEWORKImpl extends MinimalEObjectImpl.Container implements FRAME
 	 * @generated
 	 */
 	@Override
-	public String getCode()
-	{
+	public String getCode() {
 		return code;
 	}
 
@@ -162,8 +158,7 @@ public class FRAMEWORKImpl extends MinimalEObjectImpl.Container implements FRAME
 	 * @generated
 	 */
 	@Override
-	public void setCode(String newCode)
-	{
+	public void setCode(String newCode) {
 		String oldCode = code;
 		code = newCode;
 		if (eNotificationRequired())
@@ -176,8 +171,7 @@ public class FRAMEWORKImpl extends MinimalEObjectImpl.Container implements FRAME
 	 * @generated
 	 */
 	@Override
-	public String getDescription()
-	{
+	public String getDescription() {
 		return description;
 	}
 
@@ -187,8 +181,7 @@ public class FRAMEWORKImpl extends MinimalEObjectImpl.Container implements FRAME
 	 * @generated
 	 */
 	@Override
-	public void setDescription(String newDescription)
-	{
+	public void setDescription(String newDescription) {
 		String oldDescription = description;
 		description = newDescription;
 		if (eNotificationRequired())
@@ -201,8 +194,7 @@ public class FRAMEWORKImpl extends MinimalEObjectImpl.Container implements FRAME
 	 * @generated
 	 */
 	@Override
-	public String getFramework_id()
-	{
+	public String getFramework_id() {
 		return framework_id;
 	}
 
@@ -212,8 +204,7 @@ public class FRAMEWORKImpl extends MinimalEObjectImpl.Container implements FRAME
 	 * @generated
 	 */
 	@Override
-	public void setFramework_id(String newFramework_id)
-	{
+	public void setFramework_id(String newFramework_id) {
 		String oldFramework_id = framework_id;
 		framework_id = newFramework_id;
 		if (eNotificationRequired())
@@ -226,8 +217,7 @@ public class FRAMEWORKImpl extends MinimalEObjectImpl.Container implements FRAME
 	 * @generated
 	 */
 	@Override
-	public MAINTENANCE_AGENCY getMaintenance_agency_id()
-	{
+	public MAINTENANCE_AGENCY getMaintenance_agency_id() {
 		if (maintenance_agency_id != null && maintenance_agency_id.eIsProxy()) {
 			InternalEObject oldMaintenance_agency_id = (InternalEObject)maintenance_agency_id;
 			maintenance_agency_id = (MAINTENANCE_AGENCY)eResolveProxy(oldMaintenance_agency_id);
@@ -244,8 +234,7 @@ public class FRAMEWORKImpl extends MinimalEObjectImpl.Container implements FRAME
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MAINTENANCE_AGENCY basicGetMaintenance_agency_id()
-	{
+	public MAINTENANCE_AGENCY basicGetMaintenance_agency_id() {
 		return maintenance_agency_id;
 	}
 
@@ -255,8 +244,7 @@ public class FRAMEWORKImpl extends MinimalEObjectImpl.Container implements FRAME
 	 * @generated
 	 */
 	@Override
-	public void setMaintenance_agency_id(MAINTENANCE_AGENCY newMaintenance_agency_id)
-	{
+	public void setMaintenance_agency_id(MAINTENANCE_AGENCY newMaintenance_agency_id) {
 		MAINTENANCE_AGENCY oldMaintenance_agency_id = maintenance_agency_id;
 		maintenance_agency_id = newMaintenance_agency_id;
 		if (eNotificationRequired())
@@ -269,8 +257,7 @@ public class FRAMEWORKImpl extends MinimalEObjectImpl.Container implements FRAME
 	 * @generated
 	 */
 	@Override
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
@@ -280,8 +267,7 @@ public class FRAMEWORKImpl extends MinimalEObjectImpl.Container implements FRAME
 	 * @generated
 	 */
 	@Override
-	public void setName(String newName)
-	{
+	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
@@ -294,8 +280,7 @@ public class FRAMEWORKImpl extends MinimalEObjectImpl.Container implements FRAME
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Data_definitionPackage.FRAMEWORK__CODE:
 				return getCode();
@@ -318,8 +303,7 @@ public class FRAMEWORKImpl extends MinimalEObjectImpl.Container implements FRAME
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Data_definitionPackage.FRAMEWORK__CODE:
 				setCode((String)newValue);
@@ -346,8 +330,7 @@ public class FRAMEWORKImpl extends MinimalEObjectImpl.Container implements FRAME
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Data_definitionPackage.FRAMEWORK__CODE:
 				setCode(CODE_EDEFAULT);
@@ -374,8 +357,7 @@ public class FRAMEWORKImpl extends MinimalEObjectImpl.Container implements FRAME
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Data_definitionPackage.FRAMEWORK__CODE:
 				return CODE_EDEFAULT == null ? code != null : !CODE_EDEFAULT.equals(code);
@@ -397,8 +379,7 @@ public class FRAMEWORKImpl extends MinimalEObjectImpl.Container implements FRAME
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

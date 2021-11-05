@@ -34,8 +34,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class TableCellModuleImpl extends ModuleImpl implements TableCellModule
-{
+public class TableCellModuleImpl extends ModuleImpl implements TableCellModule {
 	/**
 	 * The cached value of the '{@link #getTableCells() <em>Table Cells</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -51,8 +50,7 @@ public class TableCellModuleImpl extends ModuleImpl implements TableCellModule
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected TableCellModuleImpl()
-	{
+	protected TableCellModuleImpl() {
 		super();
 	}
 
@@ -62,8 +60,7 @@ public class TableCellModuleImpl extends ModuleImpl implements TableCellModule
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return ReportsPackage.Literals.TABLE_CELL_MODULE;
 	}
 
@@ -73,8 +70,7 @@ public class TableCellModuleImpl extends ModuleImpl implements TableCellModule
 	 * @generated
 	 */
 	@Override
-	public EList<TABLE_CELL> getTableCells()
-	{
+	public EList<TABLE_CELL> getTableCells() {
 		if (tableCells == null) {
 			tableCells = new EObjectContainmentEList<TABLE_CELL>(TABLE_CELL.class, this, ReportsPackage.TABLE_CELL_MODULE__TABLE_CELLS);
 		}
@@ -87,8 +83,7 @@ public class TableCellModuleImpl extends ModuleImpl implements TableCellModule
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case ReportsPackage.TABLE_CELL_MODULE__TABLE_CELLS:
 				return ((InternalEList<?>)getTableCells()).basicRemove(otherEnd, msgs);
@@ -102,8 +97,7 @@ public class TableCellModuleImpl extends ModuleImpl implements TableCellModule
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case ReportsPackage.TABLE_CELL_MODULE__TABLE_CELLS:
 				return getTableCells();
@@ -118,8 +112,7 @@ public class TableCellModuleImpl extends ModuleImpl implements TableCellModule
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case ReportsPackage.TABLE_CELL_MODULE__TABLE_CELLS:
 				getTableCells().clear();
@@ -135,8 +128,7 @@ public class TableCellModuleImpl extends ModuleImpl implements TableCellModule
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case ReportsPackage.TABLE_CELL_MODULE__TABLE_CELLS:
 				getTableCells().clear();
@@ -151,8 +143,7 @@ public class TableCellModuleImpl extends ModuleImpl implements TableCellModule
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ReportsPackage.TABLE_CELL_MODULE__TABLE_CELLS:
 				return tableCells != null && !tableCells.isEmpty();

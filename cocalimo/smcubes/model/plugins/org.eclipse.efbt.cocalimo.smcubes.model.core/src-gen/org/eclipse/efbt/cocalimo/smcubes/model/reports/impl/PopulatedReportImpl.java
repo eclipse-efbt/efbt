@@ -29,8 +29,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class PopulatedReportImpl extends MinimalEObjectImpl.Container implements PopulatedReport
-{
+public class PopulatedReportImpl extends MinimalEObjectImpl.Container implements PopulatedReport {
 	/**
 	 * The cached value of the '{@link #getReportCellValues() <em>Report Cell Values</em>}' containment reference.
 	 * <!-- begin-user-doc -->
@@ -66,8 +65,7 @@ public class PopulatedReportImpl extends MinimalEObjectImpl.Container implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected PopulatedReportImpl()
-	{
+	protected PopulatedReportImpl() {
 		super();
 	}
 
@@ -77,8 +75,7 @@ public class PopulatedReportImpl extends MinimalEObjectImpl.Container implements
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return ReportsPackage.Literals.POPULATED_REPORT;
 	}
 
@@ -88,8 +85,7 @@ public class PopulatedReportImpl extends MinimalEObjectImpl.Container implements
 	 * @generated
 	 */
 	@Override
-	public ReportCellValue getReportCellValues()
-	{
+	public ReportCellValue getReportCellValues() {
 		return reportCellValues;
 	}
 
@@ -98,8 +94,7 @@ public class PopulatedReportImpl extends MinimalEObjectImpl.Container implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetReportCellValues(ReportCellValue newReportCellValues, NotificationChain msgs)
-	{
+	public NotificationChain basicSetReportCellValues(ReportCellValue newReportCellValues, NotificationChain msgs) {
 		ReportCellValue oldReportCellValues = reportCellValues;
 		reportCellValues = newReportCellValues;
 		if (eNotificationRequired()) {
@@ -115,8 +110,7 @@ public class PopulatedReportImpl extends MinimalEObjectImpl.Container implements
 	 * @generated
 	 */
 	@Override
-	public void setReportCellValues(ReportCellValue newReportCellValues)
-	{
+	public void setReportCellValues(ReportCellValue newReportCellValues) {
 		if (newReportCellValues != reportCellValues) {
 			NotificationChain msgs = null;
 			if (reportCellValues != null)
@@ -136,8 +130,7 @@ public class PopulatedReportImpl extends MinimalEObjectImpl.Container implements
 	 * @generated
 	 */
 	@Override
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
@@ -147,8 +140,7 @@ public class PopulatedReportImpl extends MinimalEObjectImpl.Container implements
 	 * @generated
 	 */
 	@Override
-	public void setName(String newName)
-	{
+	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
@@ -161,8 +153,7 @@ public class PopulatedReportImpl extends MinimalEObjectImpl.Container implements
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case ReportsPackage.POPULATED_REPORT__REPORT_CELL_VALUES:
 				return basicSetReportCellValues(null, msgs);
@@ -176,8 +167,7 @@ public class PopulatedReportImpl extends MinimalEObjectImpl.Container implements
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case ReportsPackage.POPULATED_REPORT__REPORT_CELL_VALUES:
 				return getReportCellValues();
@@ -193,8 +183,7 @@ public class PopulatedReportImpl extends MinimalEObjectImpl.Container implements
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case ReportsPackage.POPULATED_REPORT__REPORT_CELL_VALUES:
 				setReportCellValues((ReportCellValue)newValue);
@@ -212,8 +201,7 @@ public class PopulatedReportImpl extends MinimalEObjectImpl.Container implements
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case ReportsPackage.POPULATED_REPORT__REPORT_CELL_VALUES:
 				setReportCellValues((ReportCellValue)null);
@@ -231,8 +219,7 @@ public class PopulatedReportImpl extends MinimalEObjectImpl.Container implements
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ReportsPackage.POPULATED_REPORT__REPORT_CELL_VALUES:
 				return reportCellValues != null;
@@ -248,8 +235,7 @@ public class PopulatedReportImpl extends MinimalEObjectImpl.Container implements
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

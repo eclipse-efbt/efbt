@@ -33,8 +33,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class MEMBER_HIERARCHYImpl extends MinimalEObjectImpl.Container implements MEMBER_HIERARCHY
-{
+public class MEMBER_HIERARCHYImpl extends MinimalEObjectImpl.Container implements MEMBER_HIERARCHY {
 	/**
 	 * The default value of the '{@link #getCode() <em>Code</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -140,8 +139,7 @@ public class MEMBER_HIERARCHYImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected MEMBER_HIERARCHYImpl()
-	{
+	protected MEMBER_HIERARCHYImpl() {
 		super();
 	}
 
@@ -151,8 +149,7 @@ public class MEMBER_HIERARCHYImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return CorePackage.Literals.MEMBER_HIERARCHY;
 	}
 
@@ -162,8 +159,7 @@ public class MEMBER_HIERARCHYImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public String getCode()
-	{
+	public String getCode() {
 		return code;
 	}
 
@@ -173,8 +169,7 @@ public class MEMBER_HIERARCHYImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public void setCode(String newCode)
-	{
+	public void setCode(String newCode) {
 		String oldCode = code;
 		code = newCode;
 		if (eNotificationRequired())
@@ -187,8 +182,7 @@ public class MEMBER_HIERARCHYImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public String getDescription()
-	{
+	public String getDescription() {
 		return description;
 	}
 
@@ -198,8 +192,7 @@ public class MEMBER_HIERARCHYImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public void setDescription(String newDescription)
-	{
+	public void setDescription(String newDescription) {
 		String oldDescription = description;
 		description = newDescription;
 		if (eNotificationRequired())
@@ -212,8 +205,7 @@ public class MEMBER_HIERARCHYImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public DOMAIN getDomain_id()
-	{
+	public DOMAIN getDomain_id() {
 		if (domain_id != null && domain_id.eIsProxy()) {
 			InternalEObject oldDomain_id = (InternalEObject)domain_id;
 			domain_id = (DOMAIN)eResolveProxy(oldDomain_id);
@@ -230,8 +222,7 @@ public class MEMBER_HIERARCHYImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public DOMAIN basicGetDomain_id()
-	{
+	public DOMAIN basicGetDomain_id() {
 		return domain_id;
 	}
 
@@ -241,8 +232,7 @@ public class MEMBER_HIERARCHYImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public void setDomain_id(DOMAIN newDomain_id)
-	{
+	public void setDomain_id(DOMAIN newDomain_id) {
 		DOMAIN oldDomain_id = domain_id;
 		domain_id = newDomain_id;
 		if (eNotificationRequired())
@@ -255,8 +245,7 @@ public class MEMBER_HIERARCHYImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public MAINTENANCE_AGENCY getMaintenance_agency_id()
-	{
+	public MAINTENANCE_AGENCY getMaintenance_agency_id() {
 		if (maintenance_agency_id != null && maintenance_agency_id.eIsProxy()) {
 			InternalEObject oldMaintenance_agency_id = (InternalEObject)maintenance_agency_id;
 			maintenance_agency_id = (MAINTENANCE_AGENCY)eResolveProxy(oldMaintenance_agency_id);
@@ -273,8 +262,7 @@ public class MEMBER_HIERARCHYImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MAINTENANCE_AGENCY basicGetMaintenance_agency_id()
-	{
+	public MAINTENANCE_AGENCY basicGetMaintenance_agency_id() {
 		return maintenance_agency_id;
 	}
 
@@ -284,8 +272,7 @@ public class MEMBER_HIERARCHYImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public void setMaintenance_agency_id(MAINTENANCE_AGENCY newMaintenance_agency_id)
-	{
+	public void setMaintenance_agency_id(MAINTENANCE_AGENCY newMaintenance_agency_id) {
 		MAINTENANCE_AGENCY oldMaintenance_agency_id = maintenance_agency_id;
 		maintenance_agency_id = newMaintenance_agency_id;
 		if (eNotificationRequired())
@@ -298,8 +285,7 @@ public class MEMBER_HIERARCHYImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public String getMember_hierarchy_id()
-	{
+	public String getMember_hierarchy_id() {
 		return member_hierarchy_id;
 	}
 
@@ -309,8 +295,7 @@ public class MEMBER_HIERARCHYImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public void setMember_hierarchy_id(String newMember_hierarchy_id)
-	{
+	public void setMember_hierarchy_id(String newMember_hierarchy_id) {
 		String oldMember_hierarchy_id = member_hierarchy_id;
 		member_hierarchy_id = newMember_hierarchy_id;
 		if (eNotificationRequired())
@@ -323,8 +308,7 @@ public class MEMBER_HIERARCHYImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
@@ -334,8 +318,7 @@ public class MEMBER_HIERARCHYImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public void setName(String newName)
-	{
+	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
@@ -348,8 +331,7 @@ public class MEMBER_HIERARCHYImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case CorePackage.MEMBER_HIERARCHY__CODE:
 				return getCode();
@@ -375,8 +357,7 @@ public class MEMBER_HIERARCHYImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case CorePackage.MEMBER_HIERARCHY__CODE:
 				setCode((String)newValue);
@@ -406,8 +387,7 @@ public class MEMBER_HIERARCHYImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case CorePackage.MEMBER_HIERARCHY__CODE:
 				setCode(CODE_EDEFAULT);
@@ -437,8 +417,7 @@ public class MEMBER_HIERARCHYImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case CorePackage.MEMBER_HIERARCHY__CODE:
 				return CODE_EDEFAULT == null ? code != null : !CODE_EDEFAULT.equals(code);
@@ -462,8 +441,7 @@ public class MEMBER_HIERARCHYImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

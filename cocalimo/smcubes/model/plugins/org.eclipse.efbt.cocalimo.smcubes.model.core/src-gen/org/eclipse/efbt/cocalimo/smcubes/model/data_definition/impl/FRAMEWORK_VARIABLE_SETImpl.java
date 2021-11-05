@@ -30,8 +30,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class FRAMEWORK_VARIABLE_SETImpl extends MinimalEObjectImpl.Container implements FRAMEWORK_VARIABLE_SET
-{
+public class FRAMEWORK_VARIABLE_SETImpl extends MinimalEObjectImpl.Container implements FRAMEWORK_VARIABLE_SET {
 	/**
 	 * The cached value of the '{@link #getFramework_id() <em>Framework id</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -57,8 +56,7 @@ public class FRAMEWORK_VARIABLE_SETImpl extends MinimalEObjectImpl.Container imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected FRAMEWORK_VARIABLE_SETImpl()
-	{
+	protected FRAMEWORK_VARIABLE_SETImpl() {
 		super();
 	}
 
@@ -68,8 +66,7 @@ public class FRAMEWORK_VARIABLE_SETImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Data_definitionPackage.Literals.FRAMEWORK_VARIABLE_SET;
 	}
 
@@ -79,8 +76,7 @@ public class FRAMEWORK_VARIABLE_SETImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public FRAMEWORK getFramework_id()
-	{
+	public FRAMEWORK getFramework_id() {
 		if (framework_id != null && framework_id.eIsProxy()) {
 			InternalEObject oldFramework_id = (InternalEObject)framework_id;
 			framework_id = (FRAMEWORK)eResolveProxy(oldFramework_id);
@@ -97,8 +93,7 @@ public class FRAMEWORK_VARIABLE_SETImpl extends MinimalEObjectImpl.Container imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public FRAMEWORK basicGetFramework_id()
-	{
+	public FRAMEWORK basicGetFramework_id() {
 		return framework_id;
 	}
 
@@ -108,8 +103,7 @@ public class FRAMEWORK_VARIABLE_SETImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public void setFramework_id(FRAMEWORK newFramework_id)
-	{
+	public void setFramework_id(FRAMEWORK newFramework_id) {
 		FRAMEWORK oldFramework_id = framework_id;
 		framework_id = newFramework_id;
 		if (eNotificationRequired())
@@ -122,8 +116,7 @@ public class FRAMEWORK_VARIABLE_SETImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public VARIABLE_SET getVariable_set_id()
-	{
+	public VARIABLE_SET getVariable_set_id() {
 		if (variable_set_id != null && variable_set_id.eIsProxy()) {
 			InternalEObject oldVariable_set_id = (InternalEObject)variable_set_id;
 			variable_set_id = (VARIABLE_SET)eResolveProxy(oldVariable_set_id);
@@ -140,8 +133,7 @@ public class FRAMEWORK_VARIABLE_SETImpl extends MinimalEObjectImpl.Container imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public VARIABLE_SET basicGetVariable_set_id()
-	{
+	public VARIABLE_SET basicGetVariable_set_id() {
 		return variable_set_id;
 	}
 
@@ -151,8 +143,7 @@ public class FRAMEWORK_VARIABLE_SETImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public void setVariable_set_id(VARIABLE_SET newVariable_set_id)
-	{
+	public void setVariable_set_id(VARIABLE_SET newVariable_set_id) {
 		VARIABLE_SET oldVariable_set_id = variable_set_id;
 		variable_set_id = newVariable_set_id;
 		if (eNotificationRequired())
@@ -165,8 +156,7 @@ public class FRAMEWORK_VARIABLE_SETImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Data_definitionPackage.FRAMEWORK_VARIABLE_SET__FRAMEWORK_ID:
 				if (resolve) return getFramework_id();
@@ -184,8 +174,7 @@ public class FRAMEWORK_VARIABLE_SETImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Data_definitionPackage.FRAMEWORK_VARIABLE_SET__FRAMEWORK_ID:
 				setFramework_id((FRAMEWORK)newValue);
@@ -203,8 +192,7 @@ public class FRAMEWORK_VARIABLE_SETImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Data_definitionPackage.FRAMEWORK_VARIABLE_SET__FRAMEWORK_ID:
 				setFramework_id((FRAMEWORK)null);
@@ -222,8 +210,7 @@ public class FRAMEWORK_VARIABLE_SETImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Data_definitionPackage.FRAMEWORK_VARIABLE_SET__FRAMEWORK_ID:
 				return framework_id != null;

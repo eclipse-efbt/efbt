@@ -28,8 +28,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class VARIABLE_SET_MAPPINGImpl extends MinimalEObjectImpl.Container implements VARIABLE_SET_MAPPING
-{
+public class VARIABLE_SET_MAPPINGImpl extends MinimalEObjectImpl.Container implements VARIABLE_SET_MAPPING {
 	/**
 	 * The cached value of the '{@link #getSourceMapping() <em>Source Mapping</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -55,8 +54,7 @@ public class VARIABLE_SET_MAPPINGImpl extends MinimalEObjectImpl.Container imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected VARIABLE_SET_MAPPINGImpl()
-	{
+	protected VARIABLE_SET_MAPPINGImpl() {
 		super();
 	}
 
@@ -66,8 +64,7 @@ public class VARIABLE_SET_MAPPINGImpl extends MinimalEObjectImpl.Container imple
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return MappingPackage.Literals.VARIABLE_SET_MAPPING;
 	}
 
@@ -77,8 +74,7 @@ public class VARIABLE_SET_MAPPINGImpl extends MinimalEObjectImpl.Container imple
 	 * @generated
 	 */
 	@Override
-	public MAPPING_DEFINITION getSourceMapping()
-	{
+	public MAPPING_DEFINITION getSourceMapping() {
 		if (sourceMapping != null && sourceMapping.eIsProxy()) {
 			InternalEObject oldSourceMapping = (InternalEObject)sourceMapping;
 			sourceMapping = (MAPPING_DEFINITION)eResolveProxy(oldSourceMapping);
@@ -95,8 +91,7 @@ public class VARIABLE_SET_MAPPINGImpl extends MinimalEObjectImpl.Container imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MAPPING_DEFINITION basicGetSourceMapping()
-	{
+	public MAPPING_DEFINITION basicGetSourceMapping() {
 		return sourceMapping;
 	}
 
@@ -106,8 +101,7 @@ public class VARIABLE_SET_MAPPINGImpl extends MinimalEObjectImpl.Container imple
 	 * @generated
 	 */
 	@Override
-	public void setSourceMapping(MAPPING_DEFINITION newSourceMapping)
-	{
+	public void setSourceMapping(MAPPING_DEFINITION newSourceMapping) {
 		MAPPING_DEFINITION oldSourceMapping = sourceMapping;
 		sourceMapping = newSourceMapping;
 		if (eNotificationRequired())
@@ -120,8 +114,7 @@ public class VARIABLE_SET_MAPPINGImpl extends MinimalEObjectImpl.Container imple
 	 * @generated
 	 */
 	@Override
-	public MAPPING_DEFINITION getTargetMapping()
-	{
+	public MAPPING_DEFINITION getTargetMapping() {
 		if (targetMapping != null && targetMapping.eIsProxy()) {
 			InternalEObject oldTargetMapping = (InternalEObject)targetMapping;
 			targetMapping = (MAPPING_DEFINITION)eResolveProxy(oldTargetMapping);
@@ -138,8 +131,7 @@ public class VARIABLE_SET_MAPPINGImpl extends MinimalEObjectImpl.Container imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MAPPING_DEFINITION basicGetTargetMapping()
-	{
+	public MAPPING_DEFINITION basicGetTargetMapping() {
 		return targetMapping;
 	}
 
@@ -149,8 +141,7 @@ public class VARIABLE_SET_MAPPINGImpl extends MinimalEObjectImpl.Container imple
 	 * @generated
 	 */
 	@Override
-	public void setTargetMapping(MAPPING_DEFINITION newTargetMapping)
-	{
+	public void setTargetMapping(MAPPING_DEFINITION newTargetMapping) {
 		MAPPING_DEFINITION oldTargetMapping = targetMapping;
 		targetMapping = newTargetMapping;
 		if (eNotificationRequired())
@@ -163,8 +154,7 @@ public class VARIABLE_SET_MAPPINGImpl extends MinimalEObjectImpl.Container imple
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case MappingPackage.VARIABLE_SET_MAPPING__SOURCE_MAPPING:
 				if (resolve) return getSourceMapping();
@@ -182,8 +172,7 @@ public class VARIABLE_SET_MAPPINGImpl extends MinimalEObjectImpl.Container imple
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case MappingPackage.VARIABLE_SET_MAPPING__SOURCE_MAPPING:
 				setSourceMapping((MAPPING_DEFINITION)newValue);
@@ -201,8 +190,7 @@ public class VARIABLE_SET_MAPPINGImpl extends MinimalEObjectImpl.Container imple
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case MappingPackage.VARIABLE_SET_MAPPING__SOURCE_MAPPING:
 				setSourceMapping((MAPPING_DEFINITION)null);
@@ -220,8 +208,7 @@ public class VARIABLE_SET_MAPPINGImpl extends MinimalEObjectImpl.Container imple
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case MappingPackage.VARIABLE_SET_MAPPING__SOURCE_MAPPING:
 				return sourceMapping != null;

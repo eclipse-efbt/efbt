@@ -21,8 +21,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface VARIABLE_SET_MAPPING extends EObject
-{
+public interface VARIABLE_SET_MAPPING extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Source Mapping</b></em>' reference.
 	 * <!-- begin-user-doc -->

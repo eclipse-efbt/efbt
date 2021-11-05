@@ -10,8 +10,6 @@ import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.VariableModu
 
 import org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.MappingDefinitionModule;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.TransformationSchemeModule;
-
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EObject;
@@ -34,7 +32,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.SmcubesModel#getVariables <em>Variables</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.SmcubesModel#getCubes <em>Cubes</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.SmcubesModel#getCombinations <em>Combinations</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.SmcubesModel#getFunctionalModules <em>Functional Modules</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.SmcubesModel#getMappings <em>Mappings</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.SmcubesModel#getName <em>Name</em>}</li>
  * </ul>
@@ -43,8 +40,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface SmcubesModel extends EObject
-{
+public interface SmcubesModel extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Domains</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.DomainModule}.
@@ -119,21 +115,6 @@ public interface SmcubesModel extends EObject
 	 * @generated
 	 */
 	EList<CombinationModule> getCombinations();
-
-	/**
-	 * Returns the value of the '<em><b>Functional Modules</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.TransformationSchemeModule}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The Tranformation Schemes and contained Transformations
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Functional Modules</em>' containment reference list.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.Smcubes_modelPackage#getSmcubesModel_FunctionalModules()
-	 * @model containment="true"
-	 * @generated
-	 */
-	EList<TransformationSchemeModule> getFunctionalModules();
 
 	/**
 	 * Returns the value of the '<em><b>Mappings</b></em>' containment reference list.

@@ -23,8 +23,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='FRAMEWORK_VARIABLE_SET' kind='empty'"
  * @generated
  */
-public interface FRAMEWORK_VARIABLE_SET extends EObject
-{
+public interface FRAMEWORK_VARIABLE_SET extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Framework id</b></em>' reference.
 	 * <!-- begin-user-doc -->

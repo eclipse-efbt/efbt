@@ -37,8 +37,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class MEMBER_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container implements MEMBER_HIERARCHY_NODE
-{
+public class MEMBER_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container implements MEMBER_HIERARCHY_NODE {
 	/**
 	 * The default value of the '{@link #getComparator() <em>Comparator</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -174,8 +173,7 @@ public class MEMBER_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected MEMBER_HIERARCHY_NODEImpl()
-	{
+	protected MEMBER_HIERARCHY_NODEImpl() {
 		super();
 	}
 
@@ -185,8 +183,7 @@ public class MEMBER_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return CorePackage.Literals.MEMBER_HIERARCHY_NODE;
 	}
 
@@ -196,8 +193,7 @@ public class MEMBER_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public String getComparator()
-	{
+	public String getComparator() {
 		return comparator;
 	}
 
@@ -207,8 +203,7 @@ public class MEMBER_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public void setComparator(String newComparator)
-	{
+	public void setComparator(String newComparator) {
 		String oldComparator = comparator;
 		comparator = newComparator;
 		if (eNotificationRequired())
@@ -221,8 +216,7 @@ public class MEMBER_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public int getLevel()
-	{
+	public int getLevel() {
 		return level;
 	}
 
@@ -232,8 +226,7 @@ public class MEMBER_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public void setLevel(int newLevel)
-	{
+	public void setLevel(int newLevel) {
 		int oldLevel = level;
 		level = newLevel;
 		if (eNotificationRequired())
@@ -246,8 +239,7 @@ public class MEMBER_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public MEMBER_HIERARCHY getMember_hierarchy_id()
-	{
+	public MEMBER_HIERARCHY getMember_hierarchy_id() {
 		if (member_hierarchy_id != null && member_hierarchy_id.eIsProxy()) {
 			InternalEObject oldMember_hierarchy_id = (InternalEObject)member_hierarchy_id;
 			member_hierarchy_id = (MEMBER_HIERARCHY)eResolveProxy(oldMember_hierarchy_id);
@@ -264,8 +256,7 @@ public class MEMBER_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MEMBER_HIERARCHY basicGetMember_hierarchy_id()
-	{
+	public MEMBER_HIERARCHY basicGetMember_hierarchy_id() {
 		return member_hierarchy_id;
 	}
 
@@ -275,8 +266,7 @@ public class MEMBER_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public void setMember_hierarchy_id(MEMBER_HIERARCHY newMember_hierarchy_id)
-	{
+	public void setMember_hierarchy_id(MEMBER_HIERARCHY newMember_hierarchy_id) {
 		MEMBER_HIERARCHY oldMember_hierarchy_id = member_hierarchy_id;
 		member_hierarchy_id = newMember_hierarchy_id;
 		if (eNotificationRequired())
@@ -289,8 +279,7 @@ public class MEMBER_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public MEMBER getMember_id()
-	{
+	public MEMBER getMember_id() {
 		if (member_id != null && member_id.eIsProxy()) {
 			InternalEObject oldMember_id = (InternalEObject)member_id;
 			member_id = (MEMBER)eResolveProxy(oldMember_id);
@@ -307,8 +296,7 @@ public class MEMBER_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MEMBER basicGetMember_id()
-	{
+	public MEMBER basicGetMember_id() {
 		return member_id;
 	}
 
@@ -318,8 +306,7 @@ public class MEMBER_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public void setMember_id(MEMBER newMember_id)
-	{
+	public void setMember_id(MEMBER newMember_id) {
 		MEMBER oldMember_id = member_id;
 		member_id = newMember_id;
 		if (eNotificationRequired())
@@ -332,8 +319,7 @@ public class MEMBER_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public String getOperator()
-	{
+	public String getOperator() {
 		return operator;
 	}
 
@@ -343,8 +329,7 @@ public class MEMBER_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public void setOperator(String newOperator)
-	{
+	public void setOperator(String newOperator) {
 		String oldOperator = operator;
 		operator = newOperator;
 		if (eNotificationRequired())
@@ -357,8 +342,7 @@ public class MEMBER_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public MEMBER getParent_member_id()
-	{
+	public MEMBER getParent_member_id() {
 		if (parent_member_id != null && parent_member_id.eIsProxy()) {
 			InternalEObject oldParent_member_id = (InternalEObject)parent_member_id;
 			parent_member_id = (MEMBER)eResolveProxy(oldParent_member_id);
@@ -375,8 +359,7 @@ public class MEMBER_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MEMBER basicGetParent_member_id()
-	{
+	public MEMBER basicGetParent_member_id() {
 		return parent_member_id;
 	}
 
@@ -386,8 +369,7 @@ public class MEMBER_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public void setParent_member_id(MEMBER newParent_member_id)
-	{
+	public void setParent_member_id(MEMBER newParent_member_id) {
 		MEMBER oldParent_member_id = parent_member_id;
 		parent_member_id = newParent_member_id;
 		if (eNotificationRequired())
@@ -400,8 +382,7 @@ public class MEMBER_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public Date getValid_from()
-	{
+	public Date getValid_from() {
 		return valid_from;
 	}
 
@@ -411,8 +392,7 @@ public class MEMBER_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public void setValid_from(Date newValid_from)
-	{
+	public void setValid_from(Date newValid_from) {
 		Date oldValid_from = valid_from;
 		valid_from = newValid_from;
 		if (eNotificationRequired())
@@ -425,8 +405,7 @@ public class MEMBER_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public Date getValid_to()
-	{
+	public Date getValid_to() {
 		return valid_to;
 	}
 
@@ -436,8 +415,7 @@ public class MEMBER_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public void setValid_to(Date newValid_to)
-	{
+	public void setValid_to(Date newValid_to) {
 		Date oldValid_to = valid_to;
 		valid_to = newValid_to;
 		if (eNotificationRequired())
@@ -450,8 +428,7 @@ public class MEMBER_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case CorePackage.MEMBER_HIERARCHY_NODE__COMPARATOR:
 				return getComparator();
@@ -482,8 +459,7 @@ public class MEMBER_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case CorePackage.MEMBER_HIERARCHY_NODE__COMPARATOR:
 				setComparator((String)newValue);
@@ -519,8 +495,7 @@ public class MEMBER_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case CorePackage.MEMBER_HIERARCHY_NODE__COMPARATOR:
 				setComparator(COMPARATOR_EDEFAULT);
@@ -556,8 +531,7 @@ public class MEMBER_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case CorePackage.MEMBER_HIERARCHY_NODE__COMPARATOR:
 				return COMPARATOR_EDEFAULT == null ? comparator != null : !COMPARATOR_EDEFAULT.equals(comparator);
@@ -585,8 +559,7 @@ public class MEMBER_HIERARCHY_NODEImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

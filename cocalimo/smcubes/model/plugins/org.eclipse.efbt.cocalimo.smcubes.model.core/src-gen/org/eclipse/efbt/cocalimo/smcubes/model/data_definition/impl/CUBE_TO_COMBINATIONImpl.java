@@ -29,8 +29,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class CUBE_TO_COMBINATIONImpl extends MinimalEObjectImpl.Container implements CUBE_TO_COMBINATION
-{
+public class CUBE_TO_COMBINATIONImpl extends MinimalEObjectImpl.Container implements CUBE_TO_COMBINATION {
 	/**
 	 * The cached value of the '{@link #getCombination_id() <em>Combination id</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -56,8 +55,7 @@ public class CUBE_TO_COMBINATIONImpl extends MinimalEObjectImpl.Container implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected CUBE_TO_COMBINATIONImpl()
-	{
+	protected CUBE_TO_COMBINATIONImpl() {
 		super();
 	}
 
@@ -67,8 +65,7 @@ public class CUBE_TO_COMBINATIONImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Data_definitionPackage.Literals.CUBE_TO_COMBINATION;
 	}
 
@@ -78,8 +75,7 @@ public class CUBE_TO_COMBINATIONImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public COMBINATION getCombination_id()
-	{
+	public COMBINATION getCombination_id() {
 		if (combination_id != null && combination_id.eIsProxy()) {
 			InternalEObject oldCombination_id = (InternalEObject)combination_id;
 			combination_id = (COMBINATION)eResolveProxy(oldCombination_id);
@@ -96,8 +92,7 @@ public class CUBE_TO_COMBINATIONImpl extends MinimalEObjectImpl.Container implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public COMBINATION basicGetCombination_id()
-	{
+	public COMBINATION basicGetCombination_id() {
 		return combination_id;
 	}
 
@@ -107,8 +102,7 @@ public class CUBE_TO_COMBINATIONImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void setCombination_id(COMBINATION newCombination_id)
-	{
+	public void setCombination_id(COMBINATION newCombination_id) {
 		COMBINATION oldCombination_id = combination_id;
 		combination_id = newCombination_id;
 		if (eNotificationRequired())
@@ -121,8 +115,7 @@ public class CUBE_TO_COMBINATIONImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public CUBE getCube_id()
-	{
+	public CUBE getCube_id() {
 		if (cube_id != null && cube_id.eIsProxy()) {
 			InternalEObject oldCube_id = (InternalEObject)cube_id;
 			cube_id = (CUBE)eResolveProxy(oldCube_id);
@@ -139,8 +132,7 @@ public class CUBE_TO_COMBINATIONImpl extends MinimalEObjectImpl.Container implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public CUBE basicGetCube_id()
-	{
+	public CUBE basicGetCube_id() {
 		return cube_id;
 	}
 
@@ -150,8 +142,7 @@ public class CUBE_TO_COMBINATIONImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void setCube_id(CUBE newCube_id)
-	{
+	public void setCube_id(CUBE newCube_id) {
 		CUBE oldCube_id = cube_id;
 		cube_id = newCube_id;
 		if (eNotificationRequired())
@@ -164,8 +155,7 @@ public class CUBE_TO_COMBINATIONImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Data_definitionPackage.CUBE_TO_COMBINATION__COMBINATION_ID:
 				if (resolve) return getCombination_id();
@@ -183,8 +173,7 @@ public class CUBE_TO_COMBINATIONImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Data_definitionPackage.CUBE_TO_COMBINATION__COMBINATION_ID:
 				setCombination_id((COMBINATION)newValue);
@@ -202,8 +191,7 @@ public class CUBE_TO_COMBINATIONImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Data_definitionPackage.CUBE_TO_COMBINATION__COMBINATION_ID:
 				setCombination_id((COMBINATION)null);
@@ -221,8 +209,7 @@ public class CUBE_TO_COMBINATIONImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Data_definitionPackage.CUBE_TO_COMBINATION__COMBINATION_ID:
 				return combination_id != null;

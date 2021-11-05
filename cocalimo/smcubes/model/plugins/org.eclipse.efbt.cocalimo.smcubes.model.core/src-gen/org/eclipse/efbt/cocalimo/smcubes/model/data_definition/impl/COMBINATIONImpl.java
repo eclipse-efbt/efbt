@@ -45,8 +45,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class COMBINATIONImpl extends MinimalEObjectImpl.Container implements COMBINATION
-{
+public class COMBINATIONImpl extends MinimalEObjectImpl.Container implements COMBINATION {
 	/**
 	 * The default value of the '{@link #getCode() <em>Code</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -192,8 +191,7 @@ public class COMBINATIONImpl extends MinimalEObjectImpl.Container implements COM
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected COMBINATIONImpl()
-	{
+	protected COMBINATIONImpl() {
 		super();
 	}
 
@@ -203,8 +201,7 @@ public class COMBINATIONImpl extends MinimalEObjectImpl.Container implements COM
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Data_definitionPackage.Literals.COMBINATION;
 	}
 
@@ -214,8 +211,7 @@ public class COMBINATIONImpl extends MinimalEObjectImpl.Container implements COM
 	 * @generated
 	 */
 	@Override
-	public String getCode()
-	{
+	public String getCode() {
 		return code;
 	}
 
@@ -225,8 +221,7 @@ public class COMBINATIONImpl extends MinimalEObjectImpl.Container implements COM
 	 * @generated
 	 */
 	@Override
-	public void setCode(String newCode)
-	{
+	public void setCode(String newCode) {
 		String oldCode = code;
 		code = newCode;
 		if (eNotificationRequired())
@@ -239,8 +234,7 @@ public class COMBINATIONImpl extends MinimalEObjectImpl.Container implements COM
 	 * @generated
 	 */
 	@Override
-	public String getCombination_id()
-	{
+	public String getCombination_id() {
 		return combination_id;
 	}
 
@@ -250,8 +244,7 @@ public class COMBINATIONImpl extends MinimalEObjectImpl.Container implements COM
 	 * @generated
 	 */
 	@Override
-	public void setCombination_id(String newCombination_id)
-	{
+	public void setCombination_id(String newCombination_id) {
 		String oldCombination_id = combination_id;
 		combination_id = newCombination_id;
 		if (eNotificationRequired())
@@ -264,8 +257,7 @@ public class COMBINATIONImpl extends MinimalEObjectImpl.Container implements COM
 	 * @generated
 	 */
 	@Override
-	public MAINTENANCE_AGENCY getMaintenance_agency_id()
-	{
+	public MAINTENANCE_AGENCY getMaintenance_agency_id() {
 		if (maintenance_agency_id != null && maintenance_agency_id.eIsProxy()) {
 			InternalEObject oldMaintenance_agency_id = (InternalEObject)maintenance_agency_id;
 			maintenance_agency_id = (MAINTENANCE_AGENCY)eResolveProxy(oldMaintenance_agency_id);
@@ -282,8 +274,7 @@ public class COMBINATIONImpl extends MinimalEObjectImpl.Container implements COM
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MAINTENANCE_AGENCY basicGetMaintenance_agency_id()
-	{
+	public MAINTENANCE_AGENCY basicGetMaintenance_agency_id() {
 		return maintenance_agency_id;
 	}
 
@@ -293,8 +284,7 @@ public class COMBINATIONImpl extends MinimalEObjectImpl.Container implements COM
 	 * @generated
 	 */
 	@Override
-	public void setMaintenance_agency_id(MAINTENANCE_AGENCY newMaintenance_agency_id)
-	{
+	public void setMaintenance_agency_id(MAINTENANCE_AGENCY newMaintenance_agency_id) {
 		MAINTENANCE_AGENCY oldMaintenance_agency_id = maintenance_agency_id;
 		maintenance_agency_id = newMaintenance_agency_id;
 		if (eNotificationRequired())
@@ -307,8 +297,7 @@ public class COMBINATIONImpl extends MinimalEObjectImpl.Container implements COM
 	 * @generated
 	 */
 	@Override
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
@@ -318,8 +307,7 @@ public class COMBINATIONImpl extends MinimalEObjectImpl.Container implements COM
 	 * @generated
 	 */
 	@Override
-	public void setName(String newName)
-	{
+	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
@@ -332,8 +320,7 @@ public class COMBINATIONImpl extends MinimalEObjectImpl.Container implements COM
 	 * @generated
 	 */
 	@Override
-	public Date getValid_from()
-	{
+	public Date getValid_from() {
 		return valid_from;
 	}
 
@@ -343,8 +330,7 @@ public class COMBINATIONImpl extends MinimalEObjectImpl.Container implements COM
 	 * @generated
 	 */
 	@Override
-	public void setValid_from(Date newValid_from)
-	{
+	public void setValid_from(Date newValid_from) {
 		Date oldValid_from = valid_from;
 		valid_from = newValid_from;
 		if (eNotificationRequired())
@@ -357,8 +343,7 @@ public class COMBINATIONImpl extends MinimalEObjectImpl.Container implements COM
 	 * @generated
 	 */
 	@Override
-	public Date getValid_to()
-	{
+	public Date getValid_to() {
 		return valid_to;
 	}
 
@@ -368,8 +353,7 @@ public class COMBINATIONImpl extends MinimalEObjectImpl.Container implements COM
 	 * @generated
 	 */
 	@Override
-	public void setValid_to(Date newValid_to)
-	{
+	public void setValid_to(Date newValid_to) {
 		Date oldValid_to = valid_to;
 		valid_to = newValid_to;
 		if (eNotificationRequired())
@@ -382,8 +366,7 @@ public class COMBINATIONImpl extends MinimalEObjectImpl.Container implements COM
 	 * @generated
 	 */
 	@Override
-	public String getVersion()
-	{
+	public String getVersion() {
 		return version;
 	}
 
@@ -393,8 +376,7 @@ public class COMBINATIONImpl extends MinimalEObjectImpl.Container implements COM
 	 * @generated
 	 */
 	@Override
-	public void setVersion(String newVersion)
-	{
+	public void setVersion(String newVersion) {
 		String oldVersion = version;
 		version = newVersion;
 		if (eNotificationRequired())
@@ -407,8 +389,7 @@ public class COMBINATIONImpl extends MinimalEObjectImpl.Container implements COM
 	 * @generated
 	 */
 	@Override
-	public EList<COMBINATION_ITEM> getCombination_items()
-	{
+	public EList<COMBINATION_ITEM> getCombination_items() {
 		if (combination_items == null) {
 			combination_items = new EObjectContainmentEList<COMBINATION_ITEM>(COMBINATION_ITEM.class, this, Data_definitionPackage.COMBINATION__COMBINATION_ITEMS);
 		}
@@ -421,8 +402,7 @@ public class COMBINATIONImpl extends MinimalEObjectImpl.Container implements COM
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case Data_definitionPackage.COMBINATION__COMBINATION_ITEMS:
 				return ((InternalEList<?>)getCombination_items()).basicRemove(otherEnd, msgs);
@@ -436,8 +416,7 @@ public class COMBINATIONImpl extends MinimalEObjectImpl.Container implements COM
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Data_definitionPackage.COMBINATION__CODE:
 				return getCode();
@@ -467,8 +446,7 @@ public class COMBINATIONImpl extends MinimalEObjectImpl.Container implements COM
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Data_definitionPackage.COMBINATION__CODE:
 				setCode((String)newValue);
@@ -505,8 +483,7 @@ public class COMBINATIONImpl extends MinimalEObjectImpl.Container implements COM
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Data_definitionPackage.COMBINATION__CODE:
 				setCode(CODE_EDEFAULT);
@@ -542,8 +519,7 @@ public class COMBINATIONImpl extends MinimalEObjectImpl.Container implements COM
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Data_definitionPackage.COMBINATION__CODE:
 				return CODE_EDEFAULT == null ? code != null : !CODE_EDEFAULT.equals(code);
@@ -571,8 +547,7 @@ public class COMBINATIONImpl extends MinimalEObjectImpl.Container implements COM
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

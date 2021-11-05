@@ -31,8 +31,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface CUBE_MAPPING extends EObject
-{
+public interface CUBE_MAPPING extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Cube mapping id</b></em>' attribute.
 	 * <!-- begin-user-doc -->

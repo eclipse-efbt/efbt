@@ -18,16 +18,14 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
  * <!-- end-user-doc -->
  * @generated
  */
-public class ReportsFactoryImpl extends EFactoryImpl implements ReportsFactory
-{
+public class ReportsFactoryImpl extends EFactoryImpl implements ReportsFactory {
 	/**
 	 * Creates the default factory implementation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static ReportsFactory init()
-	{
+	public static ReportsFactory init() {
 		try {
 			ReportsFactory theReportsFactory = (ReportsFactory)EPackage.Registry.INSTANCE.getEFactory(ReportsPackage.eNS_URI);
 			if (theReportsFactory != null) {
@@ -46,8 +44,7 @@ public class ReportsFactoryImpl extends EFactoryImpl implements ReportsFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ReportsFactoryImpl()
-	{
+	public ReportsFactoryImpl() {
 		super();
 	}
 
@@ -57,8 +54,7 @@ public class ReportsFactoryImpl extends EFactoryImpl implements ReportsFactory
 	 * @generated
 	 */
 	@Override
-	public EObject create(EClass eClass)
-	{
+	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case ReportsPackage.AXIS_MODULE: return createAxisModule();
 			case ReportsPackage.AXIS_ORDINATE_MODULE: return createAxisOrdinateModule();
@@ -80,8 +76,7 @@ public class ReportsFactoryImpl extends EFactoryImpl implements ReportsFactory
 	 * @generated
 	 */
 	@Override
-	public AxisModule createAxisModule()
-	{
+	public AxisModule createAxisModule() {
 		AxisModuleImpl axisModule = new AxisModuleImpl();
 		return axisModule;
 	}
@@ -92,8 +87,7 @@ public class ReportsFactoryImpl extends EFactoryImpl implements ReportsFactory
 	 * @generated
 	 */
 	@Override
-	public AxisOrdinateModule createAxisOrdinateModule()
-	{
+	public AxisOrdinateModule createAxisOrdinateModule() {
 		AxisOrdinateModuleImpl axisOrdinateModule = new AxisOrdinateModuleImpl();
 		return axisOrdinateModule;
 	}
@@ -104,8 +98,7 @@ public class ReportsFactoryImpl extends EFactoryImpl implements ReportsFactory
 	 * @generated
 	 */
 	@Override
-	public CellPositionModule createCellPositionModule()
-	{
+	public CellPositionModule createCellPositionModule() {
 		CellPositionModuleImpl cellPositionModule = new CellPositionModuleImpl();
 		return cellPositionModule;
 	}
@@ -116,8 +109,7 @@ public class ReportsFactoryImpl extends EFactoryImpl implements ReportsFactory
 	 * @generated
 	 */
 	@Override
-	public OrdinateItemModule createOrdinateItemModule()
-	{
+	public OrdinateItemModule createOrdinateItemModule() {
 		OrdinateItemModuleImpl ordinateItemModule = new OrdinateItemModuleImpl();
 		return ordinateItemModule;
 	}
@@ -128,8 +120,7 @@ public class ReportsFactoryImpl extends EFactoryImpl implements ReportsFactory
 	 * @generated
 	 */
 	@Override
-	public PopulatedReport createPopulatedReport()
-	{
+	public PopulatedReport createPopulatedReport() {
 		PopulatedReportImpl populatedReport = new PopulatedReportImpl();
 		return populatedReport;
 	}
@@ -140,8 +131,7 @@ public class ReportsFactoryImpl extends EFactoryImpl implements ReportsFactory
 	 * @generated
 	 */
 	@Override
-	public ReportCell createReportCell()
-	{
+	public ReportCell createReportCell() {
 		ReportCellImpl reportCell = new ReportCellImpl();
 		return reportCell;
 	}
@@ -152,8 +142,7 @@ public class ReportsFactoryImpl extends EFactoryImpl implements ReportsFactory
 	 * @generated
 	 */
 	@Override
-	public ReportCellValue createReportCellValue()
-	{
+	public ReportCellValue createReportCellValue() {
 		ReportCellValueImpl reportCellValue = new ReportCellValueImpl();
 		return reportCellValue;
 	}
@@ -164,8 +153,7 @@ public class ReportsFactoryImpl extends EFactoryImpl implements ReportsFactory
 	 * @generated
 	 */
 	@Override
-	public ReportTableModule createReportTableModule()
-	{
+	public ReportTableModule createReportTableModule() {
 		ReportTableModuleImpl reportTableModule = new ReportTableModuleImpl();
 		return reportTableModule;
 	}
@@ -176,8 +164,7 @@ public class ReportsFactoryImpl extends EFactoryImpl implements ReportsFactory
 	 * @generated
 	 */
 	@Override
-	public TableCellModule createTableCellModule()
-	{
+	public TableCellModule createTableCellModule() {
 		TableCellModuleImpl tableCellModule = new TableCellModuleImpl();
 		return tableCellModule;
 	}
@@ -188,8 +175,7 @@ public class ReportsFactoryImpl extends EFactoryImpl implements ReportsFactory
 	 * @generated
 	 */
 	@Override
-	public ReportsPackage getReportsPackage()
-	{
+	public ReportsPackage getReportsPackage() {
 		return (ReportsPackage)getEPackage();
 	}
 
@@ -200,8 +186,7 @@ public class ReportsFactoryImpl extends EFactoryImpl implements ReportsFactory
 	 * @generated
 	 */
 	@Deprecated
-	public static ReportsPackage getPackage()
-	{
+	public static ReportsPackage getPackage() {
 		return ReportsPackage.eINSTANCE;
 	}
 

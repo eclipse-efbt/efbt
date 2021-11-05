@@ -23,8 +23,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='FRAMEWORK_SUBDOMAIN' kind='empty'"
  * @generated
  */
-public interface FRAMEWORK_SUBDOMAIN extends EObject
-{
+public interface FRAMEWORK_SUBDOMAIN extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Framework id</b></em>' reference.
 	 * <!-- begin-user-doc -->

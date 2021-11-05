@@ -31,8 +31,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class MEMBER_MAPPING_ITEMImpl extends MinimalEObjectImpl.Container implements MEMBER_MAPPING_ITEM
-{
+public class MEMBER_MAPPING_ITEMImpl extends MinimalEObjectImpl.Container implements MEMBER_MAPPING_ITEM {
 	/**
 	 * The default value of the '{@link #getIsSource() <em>Is Source</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -78,8 +77,7 @@ public class MEMBER_MAPPING_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected MEMBER_MAPPING_ITEMImpl()
-	{
+	protected MEMBER_MAPPING_ITEMImpl() {
 		super();
 	}
 
@@ -89,8 +87,7 @@ public class MEMBER_MAPPING_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return MappingPackage.Literals.MEMBER_MAPPING_ITEM;
 	}
 
@@ -100,8 +97,7 @@ public class MEMBER_MAPPING_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public String getIsSource()
-	{
+	public String getIsSource() {
 		return isSource;
 	}
 
@@ -111,8 +107,7 @@ public class MEMBER_MAPPING_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void setIsSource(String newIsSource)
-	{
+	public void setIsSource(String newIsSource) {
 		String oldIsSource = isSource;
 		isSource = newIsSource;
 		if (eNotificationRequired())
@@ -125,8 +120,7 @@ public class MEMBER_MAPPING_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public MEMBER getMember()
-	{
+	public MEMBER getMember() {
 		if (member != null && member.eIsProxy()) {
 			InternalEObject oldMember = (InternalEObject)member;
 			member = (MEMBER)eResolveProxy(oldMember);
@@ -143,8 +137,7 @@ public class MEMBER_MAPPING_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MEMBER basicGetMember()
-	{
+	public MEMBER basicGetMember() {
 		return member;
 	}
 
@@ -154,8 +147,7 @@ public class MEMBER_MAPPING_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void setMember(MEMBER newMember)
-	{
+	public void setMember(MEMBER newMember) {
 		MEMBER oldMember = member;
 		member = newMember;
 		if (eNotificationRequired())
@@ -168,8 +160,7 @@ public class MEMBER_MAPPING_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public VARIABLE getVariable()
-	{
+	public VARIABLE getVariable() {
 		if (variable != null && variable.eIsProxy()) {
 			InternalEObject oldVariable = (InternalEObject)variable;
 			variable = (VARIABLE)eResolveProxy(oldVariable);
@@ -186,8 +177,7 @@ public class MEMBER_MAPPING_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public VARIABLE basicGetVariable()
-	{
+	public VARIABLE basicGetVariable() {
 		return variable;
 	}
 
@@ -197,8 +187,7 @@ public class MEMBER_MAPPING_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void setVariable(VARIABLE newVariable)
-	{
+	public void setVariable(VARIABLE newVariable) {
 		VARIABLE oldVariable = variable;
 		variable = newVariable;
 		if (eNotificationRequired())
@@ -211,8 +200,7 @@ public class MEMBER_MAPPING_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case MappingPackage.MEMBER_MAPPING_ITEM__IS_SOURCE:
 				return getIsSource();
@@ -232,8 +220,7 @@ public class MEMBER_MAPPING_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case MappingPackage.MEMBER_MAPPING_ITEM__IS_SOURCE:
 				setIsSource((String)newValue);
@@ -254,8 +241,7 @@ public class MEMBER_MAPPING_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case MappingPackage.MEMBER_MAPPING_ITEM__IS_SOURCE:
 				setIsSource(IS_SOURCE_EDEFAULT);
@@ -276,8 +262,7 @@ public class MEMBER_MAPPING_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case MappingPackage.MEMBER_MAPPING_ITEM__IS_SOURCE:
 				return IS_SOURCE_EDEFAULT == null ? isSource != null : !IS_SOURCE_EDEFAULT.equals(isSource);
@@ -295,8 +280,7 @@ public class MEMBER_MAPPING_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

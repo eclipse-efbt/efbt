@@ -38,8 +38,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class DOMAINImpl extends MinimalEObjectImpl.Container implements DOMAIN
-{
+public class DOMAINImpl extends MinimalEObjectImpl.Container implements DOMAIN {
 	/**
 	 * The default value of the '{@link #getCode() <em>Code</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -225,8 +224,7 @@ public class DOMAINImpl extends MinimalEObjectImpl.Container implements DOMAIN
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected DOMAINImpl()
-	{
+	protected DOMAINImpl() {
 		super();
 	}
 
@@ -236,8 +234,7 @@ public class DOMAINImpl extends MinimalEObjectImpl.Container implements DOMAIN
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return CorePackage.Literals.DOMAIN;
 	}
 
@@ -247,8 +244,7 @@ public class DOMAINImpl extends MinimalEObjectImpl.Container implements DOMAIN
 	 * @generated
 	 */
 	@Override
-	public String getCode()
-	{
+	public String getCode() {
 		return code;
 	}
 
@@ -258,8 +254,7 @@ public class DOMAINImpl extends MinimalEObjectImpl.Container implements DOMAIN
 	 * @generated
 	 */
 	@Override
-	public void setCode(String newCode)
-	{
+	public void setCode(String newCode) {
 		String oldCode = code;
 		code = newCode;
 		if (eNotificationRequired())
@@ -272,8 +267,7 @@ public class DOMAINImpl extends MinimalEObjectImpl.Container implements DOMAIN
 	 * @generated
 	 */
 	@Override
-	public FACET_VALUE_TYPE getData_type()
-	{
+	public FACET_VALUE_TYPE getData_type() {
 		return data_type;
 	}
 
@@ -283,8 +277,7 @@ public class DOMAINImpl extends MinimalEObjectImpl.Container implements DOMAIN
 	 * @generated
 	 */
 	@Override
-	public void setData_type(FACET_VALUE_TYPE newData_type)
-	{
+	public void setData_type(FACET_VALUE_TYPE newData_type) {
 		FACET_VALUE_TYPE oldData_type = data_type;
 		data_type = newData_type == null ? DATA_TYPE_EDEFAULT : newData_type;
 		if (eNotificationRequired())
@@ -297,8 +290,7 @@ public class DOMAINImpl extends MinimalEObjectImpl.Container implements DOMAIN
 	 * @generated
 	 */
 	@Override
-	public String getDescription()
-	{
+	public String getDescription() {
 		return description;
 	}
 
@@ -308,8 +300,7 @@ public class DOMAINImpl extends MinimalEObjectImpl.Container implements DOMAIN
 	 * @generated
 	 */
 	@Override
-	public void setDescription(String newDescription)
-	{
+	public void setDescription(String newDescription) {
 		String oldDescription = description;
 		description = newDescription;
 		if (eNotificationRequired())
@@ -322,8 +313,7 @@ public class DOMAINImpl extends MinimalEObjectImpl.Container implements DOMAIN
 	 * @generated
 	 */
 	@Override
-	public String getDomain_id()
-	{
+	public String getDomain_id() {
 		return domain_id;
 	}
 
@@ -333,8 +323,7 @@ public class DOMAINImpl extends MinimalEObjectImpl.Container implements DOMAIN
 	 * @generated
 	 */
 	@Override
-	public void setDomain_id(String newDomain_id)
-	{
+	public void setDomain_id(String newDomain_id) {
 		String oldDomain_id = domain_id;
 		domain_id = newDomain_id;
 		if (eNotificationRequired())
@@ -347,8 +336,7 @@ public class DOMAINImpl extends MinimalEObjectImpl.Container implements DOMAIN
 	 * @generated
 	 */
 	@Override
-	public FACET_COLLECTION getFacet_id()
-	{
+	public FACET_COLLECTION getFacet_id() {
 		if (facet_id != null && facet_id.eIsProxy()) {
 			InternalEObject oldFacet_id = (InternalEObject)facet_id;
 			facet_id = (FACET_COLLECTION)eResolveProxy(oldFacet_id);
@@ -365,8 +353,7 @@ public class DOMAINImpl extends MinimalEObjectImpl.Container implements DOMAIN
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public FACET_COLLECTION basicGetFacet_id()
-	{
+	public FACET_COLLECTION basicGetFacet_id() {
 		return facet_id;
 	}
 
@@ -376,8 +363,7 @@ public class DOMAINImpl extends MinimalEObjectImpl.Container implements DOMAIN
 	 * @generated
 	 */
 	@Override
-	public void setFacet_id(FACET_COLLECTION newFacet_id)
-	{
+	public void setFacet_id(FACET_COLLECTION newFacet_id) {
 		FACET_COLLECTION oldFacet_id = facet_id;
 		facet_id = newFacet_id;
 		if (eNotificationRequired())
@@ -390,8 +376,7 @@ public class DOMAINImpl extends MinimalEObjectImpl.Container implements DOMAIN
 	 * @generated
 	 */
 	@Override
-	public boolean isIs_enumerated()
-	{
+	public boolean isIs_enumerated() {
 		return is_enumerated;
 	}
 
@@ -401,8 +386,7 @@ public class DOMAINImpl extends MinimalEObjectImpl.Container implements DOMAIN
 	 * @generated
 	 */
 	@Override
-	public void setIs_enumerated(boolean newIs_enumerated)
-	{
+	public void setIs_enumerated(boolean newIs_enumerated) {
 		boolean oldIs_enumerated = is_enumerated;
 		is_enumerated = newIs_enumerated;
 		if (eNotificationRequired())
@@ -415,8 +399,7 @@ public class DOMAINImpl extends MinimalEObjectImpl.Container implements DOMAIN
 	 * @generated
 	 */
 	@Override
-	public boolean isIs_reference()
-	{
+	public boolean isIs_reference() {
 		return is_reference;
 	}
 
@@ -426,8 +409,7 @@ public class DOMAINImpl extends MinimalEObjectImpl.Container implements DOMAIN
 	 * @generated
 	 */
 	@Override
-	public void setIs_reference(boolean newIs_reference)
-	{
+	public void setIs_reference(boolean newIs_reference) {
 		boolean oldIs_reference = is_reference;
 		is_reference = newIs_reference;
 		if (eNotificationRequired())
@@ -440,8 +422,7 @@ public class DOMAINImpl extends MinimalEObjectImpl.Container implements DOMAIN
 	 * @generated
 	 */
 	@Override
-	public MAINTENANCE_AGENCY getMaintenance_agency_id()
-	{
+	public MAINTENANCE_AGENCY getMaintenance_agency_id() {
 		if (maintenance_agency_id != null && maintenance_agency_id.eIsProxy()) {
 			InternalEObject oldMaintenance_agency_id = (InternalEObject)maintenance_agency_id;
 			maintenance_agency_id = (MAINTENANCE_AGENCY)eResolveProxy(oldMaintenance_agency_id);
@@ -458,8 +439,7 @@ public class DOMAINImpl extends MinimalEObjectImpl.Container implements DOMAIN
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MAINTENANCE_AGENCY basicGetMaintenance_agency_id()
-	{
+	public MAINTENANCE_AGENCY basicGetMaintenance_agency_id() {
 		return maintenance_agency_id;
 	}
 
@@ -469,8 +449,7 @@ public class DOMAINImpl extends MinimalEObjectImpl.Container implements DOMAIN
 	 * @generated
 	 */
 	@Override
-	public void setMaintenance_agency_id(MAINTENANCE_AGENCY newMaintenance_agency_id)
-	{
+	public void setMaintenance_agency_id(MAINTENANCE_AGENCY newMaintenance_agency_id) {
 		MAINTENANCE_AGENCY oldMaintenance_agency_id = maintenance_agency_id;
 		maintenance_agency_id = newMaintenance_agency_id;
 		if (eNotificationRequired())
@@ -483,8 +462,7 @@ public class DOMAINImpl extends MinimalEObjectImpl.Container implements DOMAIN
 	 * @generated
 	 */
 	@Override
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
@@ -494,8 +472,7 @@ public class DOMAINImpl extends MinimalEObjectImpl.Container implements DOMAIN
 	 * @generated
 	 */
 	@Override
-	public void setName(String newName)
-	{
+	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
@@ -508,8 +485,7 @@ public class DOMAINImpl extends MinimalEObjectImpl.Container implements DOMAIN
 	 * @generated
 	 */
 	@Override
-	public String getDisplayName()
-	{
+	public String getDisplayName() {
 		return displayName;
 	}
 
@@ -519,8 +495,7 @@ public class DOMAINImpl extends MinimalEObjectImpl.Container implements DOMAIN
 	 * @generated
 	 */
 	@Override
-	public void setDisplayName(String newDisplayName)
-	{
+	public void setDisplayName(String newDisplayName) {
 		String oldDisplayName = displayName;
 		displayName = newDisplayName;
 		if (eNotificationRequired())
@@ -533,8 +508,7 @@ public class DOMAINImpl extends MinimalEObjectImpl.Container implements DOMAIN
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case CorePackage.DOMAIN__CODE:
 				return getCode();
@@ -568,8 +542,7 @@ public class DOMAINImpl extends MinimalEObjectImpl.Container implements DOMAIN
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case CorePackage.DOMAIN__CODE:
 				setCode((String)newValue);
@@ -611,8 +584,7 @@ public class DOMAINImpl extends MinimalEObjectImpl.Container implements DOMAIN
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case CorePackage.DOMAIN__CODE:
 				setCode(CODE_EDEFAULT);
@@ -654,8 +626,7 @@ public class DOMAINImpl extends MinimalEObjectImpl.Container implements DOMAIN
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case CorePackage.DOMAIN__CODE:
 				return CODE_EDEFAULT == null ? code != null : !CODE_EDEFAULT.equals(code);
@@ -687,8 +658,7 @@ public class DOMAINImpl extends MinimalEObjectImpl.Container implements DOMAIN
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

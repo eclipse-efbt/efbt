@@ -20,10 +20,6 @@ import org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.Efbt_mappingPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.impl.Efbt_mappingPackageImpl;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.Efbt_vtl_transformationPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.impl.Efbt_vtl_transformationPackageImpl;
-
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MappingPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.impl.MappingPackageImpl;
@@ -40,10 +36,6 @@ import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.SmcubesModel;
 import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.Smcubes_modelFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.Smcubes_modelPackage;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.Vtl_transformationPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.impl.Vtl_transformationPackageImpl;
-
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
@@ -57,8 +49,7 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
  * <!-- end-user-doc -->
  * @generated
  */
-public class Smcubes_modelPackageImpl extends EPackageImpl implements Smcubes_modelPackage
-{
+public class Smcubes_modelPackageImpl extends EPackageImpl implements Smcubes_modelPackage {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -81,8 +72,7 @@ public class Smcubes_modelPackageImpl extends EPackageImpl implements Smcubes_mo
 	 * @see #init()
 	 * @generated
 	 */
-	private Smcubes_modelPackageImpl()
-	{
+	private Smcubes_modelPackageImpl() {
 		super(eNS_URI, Smcubes_modelFactory.eINSTANCE);
 	}
 
@@ -105,8 +95,7 @@ public class Smcubes_modelPackageImpl extends EPackageImpl implements Smcubes_mo
 	 * @see #initializePackageContents()
 	 * @generated
 	 */
-	public static Smcubes_modelPackage init()
-	{
+	public static Smcubes_modelPackage init() {
 		if (isInited) return (Smcubes_modelPackage)EPackage.Registry.INSTANCE.getEPackage(Smcubes_modelPackage.eNS_URI);
 
 		// Obtain or create and register package
@@ -127,16 +116,12 @@ public class Smcubes_modelPackageImpl extends EPackageImpl implements Smcubes_mo
 		Efbt_data_definitionPackageImpl theEfbt_data_definitionPackage = (Efbt_data_definitionPackageImpl)(registeredPackage instanceof Efbt_data_definitionPackageImpl ? registeredPackage : Efbt_data_definitionPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Efbt_mappingPackage.eNS_URI);
 		Efbt_mappingPackageImpl theEfbt_mappingPackage = (Efbt_mappingPackageImpl)(registeredPackage instanceof Efbt_mappingPackageImpl ? registeredPackage : Efbt_mappingPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Efbt_vtl_transformationPackage.eNS_URI);
-		Efbt_vtl_transformationPackageImpl theEfbt_vtl_transformationPackage = (Efbt_vtl_transformationPackageImpl)(registeredPackage instanceof Efbt_vtl_transformationPackageImpl ? registeredPackage : Efbt_vtl_transformationPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(MappingPackage.eNS_URI);
 		MappingPackageImpl theMappingPackage = (MappingPackageImpl)(registeredPackage instanceof MappingPackageImpl ? registeredPackage : MappingPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(RenderingPackage.eNS_URI);
 		RenderingPackageImpl theRenderingPackage = (RenderingPackageImpl)(registeredPackage instanceof RenderingPackageImpl ? registeredPackage : RenderingPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ReportsPackage.eNS_URI);
 		ReportsPackageImpl theReportsPackage = (ReportsPackageImpl)(registeredPackage instanceof ReportsPackageImpl ? registeredPackage : ReportsPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Vtl_transformationPackage.eNS_URI);
-		Vtl_transformationPackageImpl theVtl_transformationPackage = (Vtl_transformationPackageImpl)(registeredPackage instanceof Vtl_transformationPackageImpl ? registeredPackage : Vtl_transformationPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theSmcubes_modelPackage.createPackageContents();
@@ -144,11 +129,9 @@ public class Smcubes_modelPackageImpl extends EPackageImpl implements Smcubes_mo
 		theData_definitionPackage.createPackageContents();
 		theEfbt_data_definitionPackage.createPackageContents();
 		theEfbt_mappingPackage.createPackageContents();
-		theEfbt_vtl_transformationPackage.createPackageContents();
 		theMappingPackage.createPackageContents();
 		theRenderingPackage.createPackageContents();
 		theReportsPackage.createPackageContents();
-		theVtl_transformationPackage.createPackageContents();
 
 		// Initialize created meta-data
 		theSmcubes_modelPackage.initializePackageContents();
@@ -156,11 +139,9 @@ public class Smcubes_modelPackageImpl extends EPackageImpl implements Smcubes_mo
 		theData_definitionPackage.initializePackageContents();
 		theEfbt_data_definitionPackage.initializePackageContents();
 		theEfbt_mappingPackage.initializePackageContents();
-		theEfbt_vtl_transformationPackage.initializePackageContents();
 		theMappingPackage.initializePackageContents();
 		theRenderingPackage.initializePackageContents();
 		theReportsPackage.initializePackageContents();
-		theVtl_transformationPackage.initializePackageContents();
 
 		// Mark meta-data to indicate it can't be changed
 		theSmcubes_modelPackage.freeze();
@@ -176,8 +157,7 @@ public class Smcubes_modelPackageImpl extends EPackageImpl implements Smcubes_mo
 	 * @generated
 	 */
 	@Override
-	public EClass getSmcubesModel()
-	{
+	public EClass getSmcubesModel() {
 		return smcubesModelEClass;
 	}
 
@@ -187,8 +167,7 @@ public class Smcubes_modelPackageImpl extends EPackageImpl implements Smcubes_mo
 	 * @generated
 	 */
 	@Override
-	public EReference getSmcubesModel_Domains()
-	{
+	public EReference getSmcubesModel_Domains() {
 		return (EReference)smcubesModelEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -198,8 +177,7 @@ public class Smcubes_modelPackageImpl extends EPackageImpl implements Smcubes_mo
 	 * @generated
 	 */
 	@Override
-	public EReference getSmcubesModel_Members()
-	{
+	public EReference getSmcubesModel_Members() {
 		return (EReference)smcubesModelEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -209,8 +187,7 @@ public class Smcubes_modelPackageImpl extends EPackageImpl implements Smcubes_mo
 	 * @generated
 	 */
 	@Override
-	public EReference getSmcubesModel_Variables()
-	{
+	public EReference getSmcubesModel_Variables() {
 		return (EReference)smcubesModelEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -220,8 +197,7 @@ public class Smcubes_modelPackageImpl extends EPackageImpl implements Smcubes_mo
 	 * @generated
 	 */
 	@Override
-	public EReference getSmcubesModel_Cubes()
-	{
+	public EReference getSmcubesModel_Cubes() {
 		return (EReference)smcubesModelEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -231,8 +207,7 @@ public class Smcubes_modelPackageImpl extends EPackageImpl implements Smcubes_mo
 	 * @generated
 	 */
 	@Override
-	public EReference getSmcubesModel_Combinations()
-	{
+	public EReference getSmcubesModel_Combinations() {
 		return (EReference)smcubesModelEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -242,8 +217,7 @@ public class Smcubes_modelPackageImpl extends EPackageImpl implements Smcubes_mo
 	 * @generated
 	 */
 	@Override
-	public EReference getSmcubesModel_FunctionalModules()
-	{
+	public EReference getSmcubesModel_Mappings() {
 		return (EReference)smcubesModelEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -253,9 +227,8 @@ public class Smcubes_modelPackageImpl extends EPackageImpl implements Smcubes_mo
 	 * @generated
 	 */
 	@Override
-	public EReference getSmcubesModel_Mappings()
-	{
-		return (EReference)smcubesModelEClass.getEStructuralFeatures().get(6);
+	public EAttribute getSmcubesModel_Name() {
+		return (EAttribute)smcubesModelEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -264,19 +237,7 @@ public class Smcubes_modelPackageImpl extends EPackageImpl implements Smcubes_mo
 	 * @generated
 	 */
 	@Override
-	public EAttribute getSmcubesModel_Name()
-	{
-		return (EAttribute)smcubesModelEClass.getEStructuralFeatures().get(7);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Smcubes_modelFactory getSmcubes_modelFactory()
-	{
+	public Smcubes_modelFactory getSmcubes_modelFactory() {
 		return (Smcubes_modelFactory)getEFactoryInstance();
 	}
 
@@ -294,8 +255,7 @@ public class Smcubes_modelPackageImpl extends EPackageImpl implements Smcubes_mo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void createPackageContents()
-	{
+	public void createPackageContents() {
 		if (isCreated) return;
 		isCreated = true;
 
@@ -306,7 +266,6 @@ public class Smcubes_modelPackageImpl extends EPackageImpl implements Smcubes_mo
 		createEReference(smcubesModelEClass, SMCUBES_MODEL__VARIABLES);
 		createEReference(smcubesModelEClass, SMCUBES_MODEL__CUBES);
 		createEReference(smcubesModelEClass, SMCUBES_MODEL__COMBINATIONS);
-		createEReference(smcubesModelEClass, SMCUBES_MODEL__FUNCTIONAL_MODULES);
 		createEReference(smcubesModelEClass, SMCUBES_MODEL__MAPPINGS);
 		createEAttribute(smcubesModelEClass, SMCUBES_MODEL__NAME);
 	}
@@ -325,8 +284,7 @@ public class Smcubes_modelPackageImpl extends EPackageImpl implements Smcubes_mo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void initializePackageContents()
-	{
+	public void initializePackageContents() {
 		if (isInitialized) return;
 		isInitialized = true;
 
@@ -337,7 +295,6 @@ public class Smcubes_modelPackageImpl extends EPackageImpl implements Smcubes_mo
 
 		// Obtain other dependent packages
 		Efbt_data_definitionPackage theEfbt_data_definitionPackage = (Efbt_data_definitionPackage)EPackage.Registry.INSTANCE.getEPackage(Efbt_data_definitionPackage.eNS_URI);
-		Efbt_vtl_transformationPackage theEfbt_vtl_transformationPackage = (Efbt_vtl_transformationPackage)EPackage.Registry.INSTANCE.getEPackage(Efbt_vtl_transformationPackage.eNS_URI);
 		Efbt_mappingPackage theEfbt_mappingPackage = (Efbt_mappingPackage)EPackage.Registry.INSTANCE.getEPackage(Efbt_mappingPackage.eNS_URI);
 
 		// Create type parameters
@@ -353,7 +310,6 @@ public class Smcubes_modelPackageImpl extends EPackageImpl implements Smcubes_mo
 		initEReference(getSmcubesModel_Variables(), theEfbt_data_definitionPackage.getVariableModule(), null, "variables", null, 0, -1, SmcubesModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSmcubesModel_Cubes(), theEfbt_data_definitionPackage.getCubeModule(), null, "cubes", null, 0, -1, SmcubesModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSmcubesModel_Combinations(), theEfbt_data_definitionPackage.getCombinationModule(), null, "combinations", null, 0, -1, SmcubesModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getSmcubesModel_FunctionalModules(), theEfbt_vtl_transformationPackage.getTransformationSchemeModule(), null, "functionalModules", null, 0, -1, SmcubesModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSmcubesModel_Mappings(), theEfbt_mappingPackage.getMappingDefinitionModule(), null, "mappings", null, 0, -1, SmcubesModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSmcubesModel_Name(), ecorePackage.getEString(), "name", null, 0, 1, SmcubesModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -371,8 +327,7 @@ public class Smcubes_modelPackageImpl extends EPackageImpl implements Smcubes_mo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void createLicenseAnnotations()
-	{
+	protected void createLicenseAnnotations() {
 		String source = "license";
 		addAnnotation
 		  (this,

@@ -26,8 +26,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='SUBDOMAIN_ENUMERATION' kind='empty'"
  * @generated
  */
-public interface SUBDOMAIN_ENUMERATION extends EObject
-{
+public interface SUBDOMAIN_ENUMERATION extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Member id</b></em>' reference.
 	 * <!-- begin-user-doc -->

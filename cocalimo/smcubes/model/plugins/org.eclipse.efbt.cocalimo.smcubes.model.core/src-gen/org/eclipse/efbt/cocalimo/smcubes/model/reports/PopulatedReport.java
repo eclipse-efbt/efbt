@@ -26,8 +26,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='PopulatedReport' kind='elementOnly'"
  * @generated
  */
-public interface PopulatedReport extends EObject
-{
+public interface PopulatedReport extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Report Cell Values</b></em>' containment reference.
 	 * <!-- begin-user-doc -->

@@ -26,8 +26,7 @@ import org.eclipse.emf.common.util.EList;
  * @model extendedMetaData="name='DomainModule' kind='elementOnly'"
  * @generated
  */
-public interface DomainModule extends org.eclipse.efbt.cocalimo.core.model.module_management.Module
-{
+public interface DomainModule extends org.eclipse.efbt.cocalimo.core.model.module_management.Module {
 	/**
 	 * Returns the value of the '<em><b>Domains</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.smcubes.model.core.DOMAIN}.

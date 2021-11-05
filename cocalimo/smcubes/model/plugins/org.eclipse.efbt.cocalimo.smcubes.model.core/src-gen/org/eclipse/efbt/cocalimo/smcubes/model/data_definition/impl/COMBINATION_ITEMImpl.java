@@ -34,8 +34,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class COMBINATION_ITEMImpl extends MinimalEObjectImpl.Container implements COMBINATION_ITEM
-{
+public class COMBINATION_ITEMImpl extends MinimalEObjectImpl.Container implements COMBINATION_ITEM {
 	/**
 	 * The cached value of the '{@link #getMember_id() <em>Member id</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -81,8 +80,7 @@ public class COMBINATION_ITEMImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected COMBINATION_ITEMImpl()
-	{
+	protected COMBINATION_ITEMImpl() {
 		super();
 	}
 
@@ -92,8 +90,7 @@ public class COMBINATION_ITEMImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Data_definitionPackage.Literals.COMBINATION_ITEM;
 	}
 
@@ -103,8 +100,7 @@ public class COMBINATION_ITEMImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public MEMBER getMember_id()
-	{
+	public MEMBER getMember_id() {
 		if (member_id != null && member_id.eIsProxy()) {
 			InternalEObject oldMember_id = (InternalEObject)member_id;
 			member_id = (MEMBER)eResolveProxy(oldMember_id);
@@ -121,8 +117,7 @@ public class COMBINATION_ITEMImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MEMBER basicGetMember_id()
-	{
+	public MEMBER basicGetMember_id() {
 		return member_id;
 	}
 
@@ -132,8 +127,7 @@ public class COMBINATION_ITEMImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public void setMember_id(MEMBER newMember_id)
-	{
+	public void setMember_id(MEMBER newMember_id) {
 		MEMBER oldMember_id = member_id;
 		member_id = newMember_id;
 		if (eNotificationRequired())
@@ -146,8 +140,7 @@ public class COMBINATION_ITEMImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public SUBDOMAIN getSubdomain_id()
-	{
+	public SUBDOMAIN getSubdomain_id() {
 		if (subdomain_id != null && subdomain_id.eIsProxy()) {
 			InternalEObject oldSubdomain_id = (InternalEObject)subdomain_id;
 			subdomain_id = (SUBDOMAIN)eResolveProxy(oldSubdomain_id);
@@ -164,8 +157,7 @@ public class COMBINATION_ITEMImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public SUBDOMAIN basicGetSubdomain_id()
-	{
+	public SUBDOMAIN basicGetSubdomain_id() {
 		return subdomain_id;
 	}
 
@@ -175,8 +167,7 @@ public class COMBINATION_ITEMImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public void setSubdomain_id(SUBDOMAIN newSubdomain_id)
-	{
+	public void setSubdomain_id(SUBDOMAIN newSubdomain_id) {
 		SUBDOMAIN oldSubdomain_id = subdomain_id;
 		subdomain_id = newSubdomain_id;
 		if (eNotificationRequired())
@@ -189,8 +180,7 @@ public class COMBINATION_ITEMImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public VARIABLE getVariable_id()
-	{
+	public VARIABLE getVariable_id() {
 		if (variable_id != null && variable_id.eIsProxy()) {
 			InternalEObject oldVariable_id = (InternalEObject)variable_id;
 			variable_id = (VARIABLE)eResolveProxy(oldVariable_id);
@@ -207,8 +197,7 @@ public class COMBINATION_ITEMImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public VARIABLE basicGetVariable_id()
-	{
+	public VARIABLE basicGetVariable_id() {
 		return variable_id;
 	}
 
@@ -218,8 +207,7 @@ public class COMBINATION_ITEMImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public void setVariable_id(VARIABLE newVariable_id)
-	{
+	public void setVariable_id(VARIABLE newVariable_id) {
 		VARIABLE oldVariable_id = variable_id;
 		variable_id = newVariable_id;
 		if (eNotificationRequired())
@@ -232,8 +220,7 @@ public class COMBINATION_ITEMImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public VARIABLE_SET getVariable_set_id()
-	{
+	public VARIABLE_SET getVariable_set_id() {
 		if (variable_set_id != null && variable_set_id.eIsProxy()) {
 			InternalEObject oldVariable_set_id = (InternalEObject)variable_set_id;
 			variable_set_id = (VARIABLE_SET)eResolveProxy(oldVariable_set_id);
@@ -250,8 +237,7 @@ public class COMBINATION_ITEMImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public VARIABLE_SET basicGetVariable_set_id()
-	{
+	public VARIABLE_SET basicGetVariable_set_id() {
 		return variable_set_id;
 	}
 
@@ -261,8 +247,7 @@ public class COMBINATION_ITEMImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public void setVariable_set_id(VARIABLE_SET newVariable_set_id)
-	{
+	public void setVariable_set_id(VARIABLE_SET newVariable_set_id) {
 		VARIABLE_SET oldVariable_set_id = variable_set_id;
 		variable_set_id = newVariable_set_id;
 		if (eNotificationRequired())
@@ -275,8 +260,7 @@ public class COMBINATION_ITEMImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Data_definitionPackage.COMBINATION_ITEM__MEMBER_ID:
 				if (resolve) return getMember_id();
@@ -300,8 +284,7 @@ public class COMBINATION_ITEMImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Data_definitionPackage.COMBINATION_ITEM__MEMBER_ID:
 				setMember_id((MEMBER)newValue);
@@ -325,8 +308,7 @@ public class COMBINATION_ITEMImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Data_definitionPackage.COMBINATION_ITEM__MEMBER_ID:
 				setMember_id((MEMBER)null);
@@ -350,8 +332,7 @@ public class COMBINATION_ITEMImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Data_definitionPackage.COMBINATION_ITEM__MEMBER_ID:
 				return member_id != null;

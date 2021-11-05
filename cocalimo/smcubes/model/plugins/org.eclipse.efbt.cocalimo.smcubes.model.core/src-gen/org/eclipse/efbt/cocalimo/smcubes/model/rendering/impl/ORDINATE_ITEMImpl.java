@@ -36,8 +36,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class ORDINATE_ITEMImpl extends MinimalEObjectImpl.Container implements ORDINATE_ITEM
-{
+public class ORDINATE_ITEMImpl extends MinimalEObjectImpl.Container implements ORDINATE_ITEM {
 	/**
 	 * The cached value of the '{@link #getAxis_ordinate_id() <em>Axis ordinate id</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -113,8 +112,7 @@ public class ORDINATE_ITEMImpl extends MinimalEObjectImpl.Container implements O
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ORDINATE_ITEMImpl()
-	{
+	protected ORDINATE_ITEMImpl() {
 		super();
 	}
 
@@ -124,8 +122,7 @@ public class ORDINATE_ITEMImpl extends MinimalEObjectImpl.Container implements O
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return RenderingPackage.Literals.ORDINATE_ITEM;
 	}
 
@@ -135,8 +132,7 @@ public class ORDINATE_ITEMImpl extends MinimalEObjectImpl.Container implements O
 	 * @generated
 	 */
 	@Override
-	public AXIS_ORDINATE getAxis_ordinate_id()
-	{
+	public AXIS_ORDINATE getAxis_ordinate_id() {
 		if (axis_ordinate_id != null && axis_ordinate_id.eIsProxy()) {
 			InternalEObject oldAxis_ordinate_id = (InternalEObject)axis_ordinate_id;
 			axis_ordinate_id = (AXIS_ORDINATE)eResolveProxy(oldAxis_ordinate_id);
@@ -153,8 +149,7 @@ public class ORDINATE_ITEMImpl extends MinimalEObjectImpl.Container implements O
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public AXIS_ORDINATE basicGetAxis_ordinate_id()
-	{
+	public AXIS_ORDINATE basicGetAxis_ordinate_id() {
 		return axis_ordinate_id;
 	}
 
@@ -164,8 +159,7 @@ public class ORDINATE_ITEMImpl extends MinimalEObjectImpl.Container implements O
 	 * @generated
 	 */
 	@Override
-	public void setAxis_ordinate_id(AXIS_ORDINATE newAxis_ordinate_id)
-	{
+	public void setAxis_ordinate_id(AXIS_ORDINATE newAxis_ordinate_id) {
 		AXIS_ORDINATE oldAxis_ordinate_id = axis_ordinate_id;
 		axis_ordinate_id = newAxis_ordinate_id;
 		if (eNotificationRequired())
@@ -178,8 +172,7 @@ public class ORDINATE_ITEMImpl extends MinimalEObjectImpl.Container implements O
 	 * @generated
 	 */
 	@Override
-	public Boolean getIs_starting_member_included()
-	{
+	public Boolean getIs_starting_member_included() {
 		return is_starting_member_included;
 	}
 
@@ -189,8 +182,7 @@ public class ORDINATE_ITEMImpl extends MinimalEObjectImpl.Container implements O
 	 * @generated
 	 */
 	@Override
-	public void setIs_starting_member_included(Boolean newIs_starting_member_included)
-	{
+	public void setIs_starting_member_included(Boolean newIs_starting_member_included) {
 		Boolean oldIs_starting_member_included = is_starting_member_included;
 		is_starting_member_included = newIs_starting_member_included;
 		if (eNotificationRequired())
@@ -203,8 +195,7 @@ public class ORDINATE_ITEMImpl extends MinimalEObjectImpl.Container implements O
 	 * @generated
 	 */
 	@Override
-	public MEMBER_HIERARCHY getMember_hierarchy_id()
-	{
+	public MEMBER_HIERARCHY getMember_hierarchy_id() {
 		if (member_hierarchy_id != null && member_hierarchy_id.eIsProxy()) {
 			InternalEObject oldMember_hierarchy_id = (InternalEObject)member_hierarchy_id;
 			member_hierarchy_id = (MEMBER_HIERARCHY)eResolveProxy(oldMember_hierarchy_id);
@@ -221,8 +212,7 @@ public class ORDINATE_ITEMImpl extends MinimalEObjectImpl.Container implements O
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MEMBER_HIERARCHY basicGetMember_hierarchy_id()
-	{
+	public MEMBER_HIERARCHY basicGetMember_hierarchy_id() {
 		return member_hierarchy_id;
 	}
 
@@ -232,8 +222,7 @@ public class ORDINATE_ITEMImpl extends MinimalEObjectImpl.Container implements O
 	 * @generated
 	 */
 	@Override
-	public void setMember_hierarchy_id(MEMBER_HIERARCHY newMember_hierarchy_id)
-	{
+	public void setMember_hierarchy_id(MEMBER_HIERARCHY newMember_hierarchy_id) {
 		MEMBER_HIERARCHY oldMember_hierarchy_id = member_hierarchy_id;
 		member_hierarchy_id = newMember_hierarchy_id;
 		if (eNotificationRequired())
@@ -246,8 +235,7 @@ public class ORDINATE_ITEMImpl extends MinimalEObjectImpl.Container implements O
 	 * @generated
 	 */
 	@Override
-	public MEMBER getMember_id()
-	{
+	public MEMBER getMember_id() {
 		if (member_id != null && member_id.eIsProxy()) {
 			InternalEObject oldMember_id = (InternalEObject)member_id;
 			member_id = (MEMBER)eResolveProxy(oldMember_id);
@@ -264,8 +252,7 @@ public class ORDINATE_ITEMImpl extends MinimalEObjectImpl.Container implements O
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MEMBER basicGetMember_id()
-	{
+	public MEMBER basicGetMember_id() {
 		return member_id;
 	}
 
@@ -275,8 +262,7 @@ public class ORDINATE_ITEMImpl extends MinimalEObjectImpl.Container implements O
 	 * @generated
 	 */
 	@Override
-	public void setMember_id(MEMBER newMember_id)
-	{
+	public void setMember_id(MEMBER newMember_id) {
 		MEMBER oldMember_id = member_id;
 		member_id = newMember_id;
 		if (eNotificationRequired())
@@ -289,8 +275,7 @@ public class ORDINATE_ITEMImpl extends MinimalEObjectImpl.Container implements O
 	 * @generated
 	 */
 	@Override
-	public MEMBER getStarting_member_id()
-	{
+	public MEMBER getStarting_member_id() {
 		if (starting_member_id != null && starting_member_id.eIsProxy()) {
 			InternalEObject oldStarting_member_id = (InternalEObject)starting_member_id;
 			starting_member_id = (MEMBER)eResolveProxy(oldStarting_member_id);
@@ -307,8 +292,7 @@ public class ORDINATE_ITEMImpl extends MinimalEObjectImpl.Container implements O
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MEMBER basicGetStarting_member_id()
-	{
+	public MEMBER basicGetStarting_member_id() {
 		return starting_member_id;
 	}
 
@@ -318,8 +302,7 @@ public class ORDINATE_ITEMImpl extends MinimalEObjectImpl.Container implements O
 	 * @generated
 	 */
 	@Override
-	public void setStarting_member_id(MEMBER newStarting_member_id)
-	{
+	public void setStarting_member_id(MEMBER newStarting_member_id) {
 		MEMBER oldStarting_member_id = starting_member_id;
 		starting_member_id = newStarting_member_id;
 		if (eNotificationRequired())
@@ -332,8 +315,7 @@ public class ORDINATE_ITEMImpl extends MinimalEObjectImpl.Container implements O
 	 * @generated
 	 */
 	@Override
-	public VARIABLE getVariable_id()
-	{
+	public VARIABLE getVariable_id() {
 		if (variable_id != null && variable_id.eIsProxy()) {
 			InternalEObject oldVariable_id = (InternalEObject)variable_id;
 			variable_id = (VARIABLE)eResolveProxy(oldVariable_id);
@@ -350,8 +332,7 @@ public class ORDINATE_ITEMImpl extends MinimalEObjectImpl.Container implements O
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public VARIABLE basicGetVariable_id()
-	{
+	public VARIABLE basicGetVariable_id() {
 		return variable_id;
 	}
 
@@ -361,8 +342,7 @@ public class ORDINATE_ITEMImpl extends MinimalEObjectImpl.Container implements O
 	 * @generated
 	 */
 	@Override
-	public void setVariable_id(VARIABLE newVariable_id)
-	{
+	public void setVariable_id(VARIABLE newVariable_id) {
 		VARIABLE oldVariable_id = variable_id;
 		variable_id = newVariable_id;
 		if (eNotificationRequired())
@@ -375,8 +355,7 @@ public class ORDINATE_ITEMImpl extends MinimalEObjectImpl.Container implements O
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case RenderingPackage.ORDINATE_ITEM__AXIS_ORDINATE_ID:
 				if (resolve) return getAxis_ordinate_id();
@@ -405,8 +384,7 @@ public class ORDINATE_ITEMImpl extends MinimalEObjectImpl.Container implements O
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case RenderingPackage.ORDINATE_ITEM__AXIS_ORDINATE_ID:
 				setAxis_ordinate_id((AXIS_ORDINATE)newValue);
@@ -436,8 +414,7 @@ public class ORDINATE_ITEMImpl extends MinimalEObjectImpl.Container implements O
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case RenderingPackage.ORDINATE_ITEM__AXIS_ORDINATE_ID:
 				setAxis_ordinate_id((AXIS_ORDINATE)null);
@@ -467,8 +444,7 @@ public class ORDINATE_ITEMImpl extends MinimalEObjectImpl.Container implements O
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case RenderingPackage.ORDINATE_ITEM__AXIS_ORDINATE_ID:
 				return axis_ordinate_id != null;
@@ -492,8 +468,7 @@ public class ORDINATE_ITEMImpl extends MinimalEObjectImpl.Container implements O
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

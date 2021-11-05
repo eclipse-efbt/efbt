@@ -30,8 +30,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class FACET_ENUMERATIONImpl extends MinimalEObjectImpl.Container implements FACET_ENUMERATION
-{
+public class FACET_ENUMERATIONImpl extends MinimalEObjectImpl.Container implements FACET_ENUMERATION {
 	/**
 	 * The cached value of the '{@link #getFacet_id() <em>Facet id</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -77,8 +76,7 @@ public class FACET_ENUMERATIONImpl extends MinimalEObjectImpl.Container implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected FACET_ENUMERATIONImpl()
-	{
+	protected FACET_ENUMERATIONImpl() {
 		super();
 	}
 
@@ -88,8 +86,7 @@ public class FACET_ENUMERATIONImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return CorePackage.Literals.FACET_ENUMERATION;
 	}
 
@@ -99,8 +96,7 @@ public class FACET_ENUMERATIONImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public FACET_COLLECTION getFacet_id()
-	{
+	public FACET_COLLECTION getFacet_id() {
 		if (facet_id != null && facet_id.eIsProxy()) {
 			InternalEObject oldFacet_id = (InternalEObject)facet_id;
 			facet_id = (FACET_COLLECTION)eResolveProxy(oldFacet_id);
@@ -117,8 +113,7 @@ public class FACET_ENUMERATIONImpl extends MinimalEObjectImpl.Container implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public FACET_COLLECTION basicGetFacet_id()
-	{
+	public FACET_COLLECTION basicGetFacet_id() {
 		return facet_id;
 	}
 
@@ -128,8 +123,7 @@ public class FACET_ENUMERATIONImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public void setFacet_id(FACET_COLLECTION newFacet_id)
-	{
+	public void setFacet_id(FACET_COLLECTION newFacet_id) {
 		FACET_COLLECTION oldFacet_id = facet_id;
 		facet_id = newFacet_id;
 		if (eNotificationRequired())
@@ -142,8 +136,7 @@ public class FACET_ENUMERATIONImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public facet_type getFacet_type()
-	{
+	public facet_type getFacet_type() {
 		if (facet_type != null && facet_type.eIsProxy()) {
 			InternalEObject oldFacet_type = (InternalEObject)facet_type;
 			facet_type = (facet_type)eResolveProxy(oldFacet_type);
@@ -160,8 +153,7 @@ public class FACET_ENUMERATIONImpl extends MinimalEObjectImpl.Container implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public facet_type basicGetFacet_type()
-	{
+	public facet_type basicGetFacet_type() {
 		return facet_type;
 	}
 
@@ -171,8 +163,7 @@ public class FACET_ENUMERATIONImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public void setFacet_type(facet_type newFacet_type)
-	{
+	public void setFacet_type(facet_type newFacet_type) {
 		facet_type oldFacet_type = facet_type;
 		facet_type = newFacet_type;
 		if (eNotificationRequired())
@@ -185,8 +176,7 @@ public class FACET_ENUMERATIONImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public String getObservation_value()
-	{
+	public String getObservation_value() {
 		return observation_value;
 	}
 
@@ -196,8 +186,7 @@ public class FACET_ENUMERATIONImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public void setObservation_value(String newObservation_value)
-	{
+	public void setObservation_value(String newObservation_value) {
 		String oldObservation_value = observation_value;
 		observation_value = newObservation_value;
 		if (eNotificationRequired())
@@ -210,8 +199,7 @@ public class FACET_ENUMERATIONImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case CorePackage.FACET_ENUMERATION__FACET_ID:
 				if (resolve) return getFacet_id();
@@ -231,8 +219,7 @@ public class FACET_ENUMERATIONImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case CorePackage.FACET_ENUMERATION__FACET_ID:
 				setFacet_id((FACET_COLLECTION)newValue);
@@ -253,8 +240,7 @@ public class FACET_ENUMERATIONImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case CorePackage.FACET_ENUMERATION__FACET_ID:
 				setFacet_id((FACET_COLLECTION)null);
@@ -275,8 +261,7 @@ public class FACET_ENUMERATIONImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case CorePackage.FACET_ENUMERATION__FACET_ID:
 				return facet_id != null;
@@ -294,8 +279,7 @@ public class FACET_ENUMERATIONImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

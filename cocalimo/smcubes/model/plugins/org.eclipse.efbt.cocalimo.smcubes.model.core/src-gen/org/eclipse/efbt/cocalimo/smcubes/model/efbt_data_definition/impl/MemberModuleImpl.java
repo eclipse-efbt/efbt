@@ -34,8 +34,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class MemberModuleImpl extends ModuleImpl implements MemberModule
-{
+public class MemberModuleImpl extends ModuleImpl implements MemberModule {
 	/**
 	 * The cached value of the '{@link #getMembers() <em>Members</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -51,8 +50,7 @@ public class MemberModuleImpl extends ModuleImpl implements MemberModule
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected MemberModuleImpl()
-	{
+	protected MemberModuleImpl() {
 		super();
 	}
 
@@ -62,8 +60,7 @@ public class MemberModuleImpl extends ModuleImpl implements MemberModule
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Efbt_data_definitionPackage.Literals.MEMBER_MODULE;
 	}
 
@@ -73,8 +70,7 @@ public class MemberModuleImpl extends ModuleImpl implements MemberModule
 	 * @generated
 	 */
 	@Override
-	public EList<MEMBER> getMembers()
-	{
+	public EList<MEMBER> getMembers() {
 		if (members == null) {
 			members = new EObjectContainmentEList<MEMBER>(MEMBER.class, this, Efbt_data_definitionPackage.MEMBER_MODULE__MEMBERS);
 		}
@@ -87,8 +83,7 @@ public class MemberModuleImpl extends ModuleImpl implements MemberModule
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case Efbt_data_definitionPackage.MEMBER_MODULE__MEMBERS:
 				return ((InternalEList<?>)getMembers()).basicRemove(otherEnd, msgs);
@@ -102,8 +97,7 @@ public class MemberModuleImpl extends ModuleImpl implements MemberModule
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Efbt_data_definitionPackage.MEMBER_MODULE__MEMBERS:
 				return getMembers();
@@ -118,8 +112,7 @@ public class MemberModuleImpl extends ModuleImpl implements MemberModule
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Efbt_data_definitionPackage.MEMBER_MODULE__MEMBERS:
 				getMembers().clear();
@@ -135,8 +128,7 @@ public class MemberModuleImpl extends ModuleImpl implements MemberModule
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Efbt_data_definitionPackage.MEMBER_MODULE__MEMBERS:
 				getMembers().clear();
@@ -151,8 +143,7 @@ public class MemberModuleImpl extends ModuleImpl implements MemberModule
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Efbt_data_definitionPackage.MEMBER_MODULE__MEMBERS:
 				return members != null && !members.isEmpty();

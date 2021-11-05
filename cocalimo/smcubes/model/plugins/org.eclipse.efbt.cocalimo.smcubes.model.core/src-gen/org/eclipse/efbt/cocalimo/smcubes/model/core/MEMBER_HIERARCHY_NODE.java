@@ -29,8 +29,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='MEMBER_HIERARCHY_NODE' kind='empty'"
  * @generated
  */
-public interface MEMBER_HIERARCHY_NODE extends EObject
-{
+public interface MEMBER_HIERARCHY_NODE extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Comparator</b></em>' attribute.
 	 * <!-- begin-user-doc -->

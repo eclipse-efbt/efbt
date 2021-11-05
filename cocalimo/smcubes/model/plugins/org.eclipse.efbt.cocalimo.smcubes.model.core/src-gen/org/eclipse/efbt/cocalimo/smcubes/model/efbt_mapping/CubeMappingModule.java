@@ -26,8 +26,7 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface CubeMappingModule extends org.eclipse.efbt.cocalimo.core.model.module_management.Module
-{
+public interface CubeMappingModule extends org.eclipse.efbt.cocalimo.core.model.module_management.Module {
 	/**
 	 * Returns the value of the '<em><b>Cube Mappings</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.smcubes.model.mapping.CUBE_MAPPING}.

@@ -30,8 +30,7 @@ import org.eclipse.emf.ecore.EReference;
  *        annotation="license license='Copyright (c) 2020 Bird Software Solutions Ltd\n All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html\n\nSPDX-License-Identifier: EPL-2.0 \n\n Contributors:\n Neil Mackenzie - initial API and implementation\r'"
  * @generated
  */
-public interface ReportsPackage extends EPackage
-{
+public interface ReportsPackage extends EPackage {
 	/**
 	 * The package name.
 	 * <!-- begin-user-doc -->
@@ -993,8 +992,7 @@ public interface ReportsPackage extends EPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	interface Literals
-	{
+	interface Literals {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.reports.impl.AxisModuleImpl <em>Axis Module</em>}' class.
 		 * <!-- begin-user-doc -->

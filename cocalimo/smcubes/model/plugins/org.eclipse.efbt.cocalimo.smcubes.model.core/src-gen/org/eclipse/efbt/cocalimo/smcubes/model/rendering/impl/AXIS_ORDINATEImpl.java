@@ -36,8 +36,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class AXIS_ORDINATEImpl extends MinimalEObjectImpl.Container implements AXIS_ORDINATE
-{
+public class AXIS_ORDINATEImpl extends MinimalEObjectImpl.Container implements AXIS_ORDINATE {
 	/**
 	 * The cached value of the '{@link #getAxis_id() <em>Axis id</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -223,8 +222,7 @@ public class AXIS_ORDINATEImpl extends MinimalEObjectImpl.Container implements A
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected AXIS_ORDINATEImpl()
-	{
+	protected AXIS_ORDINATEImpl() {
 		super();
 	}
 
@@ -234,8 +232,7 @@ public class AXIS_ORDINATEImpl extends MinimalEObjectImpl.Container implements A
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return RenderingPackage.Literals.AXIS_ORDINATE;
 	}
 
@@ -245,8 +242,7 @@ public class AXIS_ORDINATEImpl extends MinimalEObjectImpl.Container implements A
 	 * @generated
 	 */
 	@Override
-	public AXIS getAxis_id()
-	{
+	public AXIS getAxis_id() {
 		if (axis_id != null && axis_id.eIsProxy()) {
 			InternalEObject oldAxis_id = (InternalEObject)axis_id;
 			axis_id = (AXIS)eResolveProxy(oldAxis_id);
@@ -263,8 +259,7 @@ public class AXIS_ORDINATEImpl extends MinimalEObjectImpl.Container implements A
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public AXIS basicGetAxis_id()
-	{
+	public AXIS basicGetAxis_id() {
 		return axis_id;
 	}
 
@@ -274,8 +269,7 @@ public class AXIS_ORDINATEImpl extends MinimalEObjectImpl.Container implements A
 	 * @generated
 	 */
 	@Override
-	public void setAxis_id(AXIS newAxis_id)
-	{
+	public void setAxis_id(AXIS newAxis_id) {
 		AXIS oldAxis_id = axis_id;
 		axis_id = newAxis_id;
 		if (eNotificationRequired())
@@ -288,8 +282,7 @@ public class AXIS_ORDINATEImpl extends MinimalEObjectImpl.Container implements A
 	 * @generated
 	 */
 	@Override
-	public String getAxis_ordinate_id()
-	{
+	public String getAxis_ordinate_id() {
 		return axis_ordinate_id;
 	}
 
@@ -299,8 +292,7 @@ public class AXIS_ORDINATEImpl extends MinimalEObjectImpl.Container implements A
 	 * @generated
 	 */
 	@Override
-	public void setAxis_ordinate_id(String newAxis_ordinate_id)
-	{
+	public void setAxis_ordinate_id(String newAxis_ordinate_id) {
 		String oldAxis_ordinate_id = axis_ordinate_id;
 		axis_ordinate_id = newAxis_ordinate_id;
 		if (eNotificationRequired())
@@ -313,8 +305,7 @@ public class AXIS_ORDINATEImpl extends MinimalEObjectImpl.Container implements A
 	 * @generated
 	 */
 	@Override
-	public String getCode()
-	{
+	public String getCode() {
 		return code;
 	}
 
@@ -324,8 +315,7 @@ public class AXIS_ORDINATEImpl extends MinimalEObjectImpl.Container implements A
 	 * @generated
 	 */
 	@Override
-	public void setCode(String newCode)
-	{
+	public void setCode(String newCode) {
 		String oldCode = code;
 		code = newCode;
 		if (eNotificationRequired())
@@ -338,8 +328,7 @@ public class AXIS_ORDINATEImpl extends MinimalEObjectImpl.Container implements A
 	 * @generated
 	 */
 	@Override
-	public String getDescription()
-	{
+	public String getDescription() {
 		return description;
 	}
 
@@ -349,8 +338,7 @@ public class AXIS_ORDINATEImpl extends MinimalEObjectImpl.Container implements A
 	 * @generated
 	 */
 	@Override
-	public void setDescription(String newDescription)
-	{
+	public void setDescription(String newDescription) {
 		String oldDescription = description;
 		description = newDescription;
 		if (eNotificationRequired())
@@ -363,8 +351,7 @@ public class AXIS_ORDINATEImpl extends MinimalEObjectImpl.Container implements A
 	 * @generated
 	 */
 	@Override
-	public Boolean getIs_abstract_header()
-	{
+	public Boolean getIs_abstract_header() {
 		return is_abstract_header;
 	}
 
@@ -374,8 +361,7 @@ public class AXIS_ORDINATEImpl extends MinimalEObjectImpl.Container implements A
 	 * @generated
 	 */
 	@Override
-	public void setIs_abstract_header(Boolean newIs_abstract_header)
-	{
+	public void setIs_abstract_header(Boolean newIs_abstract_header) {
 		Boolean oldIs_abstract_header = is_abstract_header;
 		is_abstract_header = newIs_abstract_header;
 		if (eNotificationRequired())
@@ -388,8 +374,7 @@ public class AXIS_ORDINATEImpl extends MinimalEObjectImpl.Container implements A
 	 * @generated
 	 */
 	@Override
-	public int getLevel()
-	{
+	public int getLevel() {
 		return level;
 	}
 
@@ -399,8 +384,7 @@ public class AXIS_ORDINATEImpl extends MinimalEObjectImpl.Container implements A
 	 * @generated
 	 */
 	@Override
-	public void setLevel(int newLevel)
-	{
+	public void setLevel(int newLevel) {
 		int oldLevel = level;
 		level = newLevel;
 		if (eNotificationRequired())
@@ -413,8 +397,7 @@ public class AXIS_ORDINATEImpl extends MinimalEObjectImpl.Container implements A
 	 * @generated
 	 */
 	@Override
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
@@ -424,8 +407,7 @@ public class AXIS_ORDINATEImpl extends MinimalEObjectImpl.Container implements A
 	 * @generated
 	 */
 	@Override
-	public void setName(String newName)
-	{
+	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
@@ -438,8 +420,7 @@ public class AXIS_ORDINATEImpl extends MinimalEObjectImpl.Container implements A
 	 * @generated
 	 */
 	@Override
-	public int getOrder()
-	{
+	public int getOrder() {
 		return order;
 	}
 
@@ -449,8 +430,7 @@ public class AXIS_ORDINATEImpl extends MinimalEObjectImpl.Container implements A
 	 * @generated
 	 */
 	@Override
-	public void setOrder(int newOrder)
-	{
+	public void setOrder(int newOrder) {
 		int oldOrder = order;
 		order = newOrder;
 		if (eNotificationRequired())
@@ -463,8 +443,7 @@ public class AXIS_ORDINATEImpl extends MinimalEObjectImpl.Container implements A
 	 * @generated
 	 */
 	@Override
-	public AXIS_ORDINATE getParent_axis_ordinate_id()
-	{
+	public AXIS_ORDINATE getParent_axis_ordinate_id() {
 		if (parent_axis_ordinate_id != null && parent_axis_ordinate_id.eIsProxy()) {
 			InternalEObject oldParent_axis_ordinate_id = (InternalEObject)parent_axis_ordinate_id;
 			parent_axis_ordinate_id = (AXIS_ORDINATE)eResolveProxy(oldParent_axis_ordinate_id);
@@ -481,8 +460,7 @@ public class AXIS_ORDINATEImpl extends MinimalEObjectImpl.Container implements A
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public AXIS_ORDINATE basicGetParent_axis_ordinate_id()
-	{
+	public AXIS_ORDINATE basicGetParent_axis_ordinate_id() {
 		return parent_axis_ordinate_id;
 	}
 
@@ -492,8 +470,7 @@ public class AXIS_ORDINATEImpl extends MinimalEObjectImpl.Container implements A
 	 * @generated
 	 */
 	@Override
-	public void setParent_axis_ordinate_id(AXIS_ORDINATE newParent_axis_ordinate_id)
-	{
+	public void setParent_axis_ordinate_id(AXIS_ORDINATE newParent_axis_ordinate_id) {
 		AXIS_ORDINATE oldParent_axis_ordinate_id = parent_axis_ordinate_id;
 		parent_axis_ordinate_id = newParent_axis_ordinate_id;
 		if (eNotificationRequired())
@@ -506,8 +483,7 @@ public class AXIS_ORDINATEImpl extends MinimalEObjectImpl.Container implements A
 	 * @generated
 	 */
 	@Override
-	public String getPath()
-	{
+	public String getPath() {
 		return path;
 	}
 
@@ -517,8 +493,7 @@ public class AXIS_ORDINATEImpl extends MinimalEObjectImpl.Container implements A
 	 * @generated
 	 */
 	@Override
-	public void setPath(String newPath)
-	{
+	public void setPath(String newPath) {
 		String oldPath = path;
 		path = newPath;
 		if (eNotificationRequired())
@@ -531,8 +506,7 @@ public class AXIS_ORDINATEImpl extends MinimalEObjectImpl.Container implements A
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case RenderingPackage.AXIS_ORDINATE__AXIS_ID:
 				if (resolve) return getAxis_id();
@@ -566,8 +540,7 @@ public class AXIS_ORDINATEImpl extends MinimalEObjectImpl.Container implements A
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case RenderingPackage.AXIS_ORDINATE__AXIS_ID:
 				setAxis_id((AXIS)newValue);
@@ -609,8 +582,7 @@ public class AXIS_ORDINATEImpl extends MinimalEObjectImpl.Container implements A
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case RenderingPackage.AXIS_ORDINATE__AXIS_ID:
 				setAxis_id((AXIS)null);
@@ -652,8 +624,7 @@ public class AXIS_ORDINATEImpl extends MinimalEObjectImpl.Container implements A
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case RenderingPackage.AXIS_ORDINATE__AXIS_ID:
 				return axis_id != null;
@@ -685,8 +656,7 @@ public class AXIS_ORDINATEImpl extends MinimalEObjectImpl.Container implements A
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

@@ -23,8 +23,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface VARIABLE_MAPPING_ITEM extends EObject
-{
+public interface VARIABLE_MAPPING_ITEM extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Is Source</b></em>' attribute.
 	 * <!-- begin-user-doc -->

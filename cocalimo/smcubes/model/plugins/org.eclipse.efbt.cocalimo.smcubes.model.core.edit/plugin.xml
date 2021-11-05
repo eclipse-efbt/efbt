@@ -61,19 +61,6 @@
    <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
       <!-- @generated smcubes -->
       <factory
-            uri="http://www.eclipse.org/efbt/efbt_vtl_transformation"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.provider.Efbt_vtl_transformationItemProviderAdapterFactory"
-            supportedTypes=
-              "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
-               org.eclipse.emf.edit.provider.IStructuredItemContentProvider
-               org.eclipse.emf.edit.provider.ITreeItemContentProvider
-               org.eclipse.emf.edit.provider.IItemLabelProvider
-               org.eclipse.emf.edit.provider.IItemPropertySource"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
-      <!-- @generated smcubes -->
-      <factory
             uri="http://www.eclipse.org/efbt/mapping"
             class="org.eclipse.efbt.cocalimo.smcubes.model.mapping.provider.MappingItemProviderAdapterFactory"
             supportedTypes=
@@ -115,19 +102,6 @@
       <factory
             uri="http://www.eclipse.org/efbt/smcubes_model"
             class="org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.provider.Smcubes_modelItemProviderAdapterFactory"
-            supportedTypes=
-              "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
-               org.eclipse.emf.edit.provider.IStructuredItemContentProvider
-               org.eclipse.emf.edit.provider.ITreeItemContentProvider
-               org.eclipse.emf.edit.provider.IItemLabelProvider
-               org.eclipse.emf.edit.provider.IItemPropertySource"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
-      <!-- @generated smcubes -->
-      <factory
-            uri="http://www.eclipse.org/efbt/vtl_transformation"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.provider.Vtl_transformationItemProviderAdapterFactory"
             supportedTypes=
               "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
                org.eclipse.emf.edit.provider.IStructuredItemContentProvider

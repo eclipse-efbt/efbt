@@ -34,8 +34,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class VariableModuleImpl extends ModuleImpl implements VariableModule
-{
+public class VariableModuleImpl extends ModuleImpl implements VariableModule {
 	/**
 	 * The cached value of the '{@link #getVariables() <em>Variables</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -51,8 +50,7 @@ public class VariableModuleImpl extends ModuleImpl implements VariableModule
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected VariableModuleImpl()
-	{
+	protected VariableModuleImpl() {
 		super();
 	}
 
@@ -62,8 +60,7 @@ public class VariableModuleImpl extends ModuleImpl implements VariableModule
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Efbt_data_definitionPackage.Literals.VARIABLE_MODULE;
 	}
 
@@ -73,8 +70,7 @@ public class VariableModuleImpl extends ModuleImpl implements VariableModule
 	 * @generated
 	 */
 	@Override
-	public EList<VARIABLE> getVariables()
-	{
+	public EList<VARIABLE> getVariables() {
 		if (variables == null) {
 			variables = new EObjectContainmentEList<VARIABLE>(VARIABLE.class, this, Efbt_data_definitionPackage.VARIABLE_MODULE__VARIABLES);
 		}
@@ -87,8 +83,7 @@ public class VariableModuleImpl extends ModuleImpl implements VariableModule
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case Efbt_data_definitionPackage.VARIABLE_MODULE__VARIABLES:
 				return ((InternalEList<?>)getVariables()).basicRemove(otherEnd, msgs);
@@ -102,8 +97,7 @@ public class VariableModuleImpl extends ModuleImpl implements VariableModule
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Efbt_data_definitionPackage.VARIABLE_MODULE__VARIABLES:
 				return getVariables();
@@ -118,8 +112,7 @@ public class VariableModuleImpl extends ModuleImpl implements VariableModule
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Efbt_data_definitionPackage.VARIABLE_MODULE__VARIABLES:
 				getVariables().clear();
@@ -135,8 +128,7 @@ public class VariableModuleImpl extends ModuleImpl implements VariableModule
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Efbt_data_definitionPackage.VARIABLE_MODULE__VARIABLES:
 				getVariables().clear();
@@ -151,8 +143,7 @@ public class VariableModuleImpl extends ModuleImpl implements VariableModule
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Efbt_data_definitionPackage.VARIABLE_MODULE__VARIABLES:
 				return variables != null && !variables.isEmpty();

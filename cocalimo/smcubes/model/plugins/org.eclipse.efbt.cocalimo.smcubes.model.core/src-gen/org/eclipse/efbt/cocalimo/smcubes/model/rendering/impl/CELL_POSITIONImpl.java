@@ -29,8 +29,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class CELL_POSITIONImpl extends MinimalEObjectImpl.Container implements CELL_POSITION
-{
+public class CELL_POSITIONImpl extends MinimalEObjectImpl.Container implements CELL_POSITION {
 	/**
 	 * The cached value of the '{@link #getAxis_ordinate_id() <em>Axis ordinate id</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -56,8 +55,7 @@ public class CELL_POSITIONImpl extends MinimalEObjectImpl.Container implements C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected CELL_POSITIONImpl()
-	{
+	protected CELL_POSITIONImpl() {
 		super();
 	}
 
@@ -67,8 +65,7 @@ public class CELL_POSITIONImpl extends MinimalEObjectImpl.Container implements C
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return RenderingPackage.Literals.CELL_POSITION;
 	}
 
@@ -78,8 +75,7 @@ public class CELL_POSITIONImpl extends MinimalEObjectImpl.Container implements C
 	 * @generated
 	 */
 	@Override
-	public AXIS_ORDINATE getAxis_ordinate_id()
-	{
+	public AXIS_ORDINATE getAxis_ordinate_id() {
 		if (axis_ordinate_id != null && axis_ordinate_id.eIsProxy()) {
 			InternalEObject oldAxis_ordinate_id = (InternalEObject)axis_ordinate_id;
 			axis_ordinate_id = (AXIS_ORDINATE)eResolveProxy(oldAxis_ordinate_id);
@@ -96,8 +92,7 @@ public class CELL_POSITIONImpl extends MinimalEObjectImpl.Container implements C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public AXIS_ORDINATE basicGetAxis_ordinate_id()
-	{
+	public AXIS_ORDINATE basicGetAxis_ordinate_id() {
 		return axis_ordinate_id;
 	}
 
@@ -107,8 +102,7 @@ public class CELL_POSITIONImpl extends MinimalEObjectImpl.Container implements C
 	 * @generated
 	 */
 	@Override
-	public void setAxis_ordinate_id(AXIS_ORDINATE newAxis_ordinate_id)
-	{
+	public void setAxis_ordinate_id(AXIS_ORDINATE newAxis_ordinate_id) {
 		AXIS_ORDINATE oldAxis_ordinate_id = axis_ordinate_id;
 		axis_ordinate_id = newAxis_ordinate_id;
 		if (eNotificationRequired())
@@ -121,8 +115,7 @@ public class CELL_POSITIONImpl extends MinimalEObjectImpl.Container implements C
 	 * @generated
 	 */
 	@Override
-	public TABLE_CELL getCell_id()
-	{
+	public TABLE_CELL getCell_id() {
 		if (cell_id != null && cell_id.eIsProxy()) {
 			InternalEObject oldCell_id = (InternalEObject)cell_id;
 			cell_id = (TABLE_CELL)eResolveProxy(oldCell_id);
@@ -139,8 +132,7 @@ public class CELL_POSITIONImpl extends MinimalEObjectImpl.Container implements C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public TABLE_CELL basicGetCell_id()
-	{
+	public TABLE_CELL basicGetCell_id() {
 		return cell_id;
 	}
 
@@ -150,8 +142,7 @@ public class CELL_POSITIONImpl extends MinimalEObjectImpl.Container implements C
 	 * @generated
 	 */
 	@Override
-	public void setCell_id(TABLE_CELL newCell_id)
-	{
+	public void setCell_id(TABLE_CELL newCell_id) {
 		TABLE_CELL oldCell_id = cell_id;
 		cell_id = newCell_id;
 		if (eNotificationRequired())
@@ -164,8 +155,7 @@ public class CELL_POSITIONImpl extends MinimalEObjectImpl.Container implements C
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case RenderingPackage.CELL_POSITION__AXIS_ORDINATE_ID:
 				if (resolve) return getAxis_ordinate_id();
@@ -183,8 +173,7 @@ public class CELL_POSITIONImpl extends MinimalEObjectImpl.Container implements C
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case RenderingPackage.CELL_POSITION__AXIS_ORDINATE_ID:
 				setAxis_ordinate_id((AXIS_ORDINATE)newValue);
@@ -202,8 +191,7 @@ public class CELL_POSITIONImpl extends MinimalEObjectImpl.Container implements C
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case RenderingPackage.CELL_POSITION__AXIS_ORDINATE_ID:
 				setAxis_ordinate_id((AXIS_ORDINATE)null);
@@ -221,8 +209,7 @@ public class CELL_POSITIONImpl extends MinimalEObjectImpl.Container implements C
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case RenderingPackage.CELL_POSITION__AXIS_ORDINATE_ID:
 				return axis_ordinate_id != null;

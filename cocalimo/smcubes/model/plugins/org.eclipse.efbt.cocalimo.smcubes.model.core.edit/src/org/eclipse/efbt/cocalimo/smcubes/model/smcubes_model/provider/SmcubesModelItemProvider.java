@@ -67,7 +67,6 @@ public class SmcubesModelItemProvider
 			addVariablesPropertyDescriptor(object);
 			addCubesPropertyDescriptor(object);
 			addCombinationsPropertyDescriptor(object);
-			addFunctionalModulesPropertyDescriptor(object);
 			addMappingsPropertyDescriptor(object);
 			addNamePropertyDescriptor(object);
 		}
@@ -176,28 +175,6 @@ public class SmcubesModelItemProvider
 				 getString("_UI_SmcubesModel_combinations_feature"),
 				 getString("_UI_PropertyDescriptor_description", "_UI_SmcubesModel_combinations_feature", "_UI_SmcubesModel_type"),
 				 Smcubes_modelPackage.Literals.SMCUBES_MODEL__COMBINATIONS,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Functional Modules feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addFunctionalModulesPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_SmcubesModel_functionalModules_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_SmcubesModel_functionalModules_feature", "_UI_SmcubesModel_type"),
-				 Smcubes_modelPackage.Literals.SMCUBES_MODEL__FUNCTIONAL_MODULES,
 				 true,
 				 false,
 				 true,

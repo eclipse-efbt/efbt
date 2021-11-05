@@ -34,8 +34,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class ReportTableModuleImpl extends ModuleImpl implements ReportTableModule
-{
+public class ReportTableModuleImpl extends ModuleImpl implements ReportTableModule {
 	/**
 	 * The cached value of the '{@link #getReportTables() <em>Report Tables</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -51,8 +50,7 @@ public class ReportTableModuleImpl extends ModuleImpl implements ReportTableModu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ReportTableModuleImpl()
-	{
+	protected ReportTableModuleImpl() {
 		super();
 	}
 
@@ -62,8 +60,7 @@ public class ReportTableModuleImpl extends ModuleImpl implements ReportTableModu
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return ReportsPackage.Literals.REPORT_TABLE_MODULE;
 	}
 
@@ -73,8 +70,7 @@ public class ReportTableModuleImpl extends ModuleImpl implements ReportTableModu
 	 * @generated
 	 */
 	@Override
-	public EList<TABLE> getReportTables()
-	{
+	public EList<TABLE> getReportTables() {
 		if (reportTables == null) {
 			reportTables = new EObjectContainmentEList<TABLE>(TABLE.class, this, ReportsPackage.REPORT_TABLE_MODULE__REPORT_TABLES);
 		}
@@ -87,8 +83,7 @@ public class ReportTableModuleImpl extends ModuleImpl implements ReportTableModu
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case ReportsPackage.REPORT_TABLE_MODULE__REPORT_TABLES:
 				return ((InternalEList<?>)getReportTables()).basicRemove(otherEnd, msgs);
@@ -102,8 +97,7 @@ public class ReportTableModuleImpl extends ModuleImpl implements ReportTableModu
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case ReportsPackage.REPORT_TABLE_MODULE__REPORT_TABLES:
 				return getReportTables();
@@ -118,8 +112,7 @@ public class ReportTableModuleImpl extends ModuleImpl implements ReportTableModu
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case ReportsPackage.REPORT_TABLE_MODULE__REPORT_TABLES:
 				getReportTables().clear();
@@ -135,8 +128,7 @@ public class ReportTableModuleImpl extends ModuleImpl implements ReportTableModu
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case ReportsPackage.REPORT_TABLE_MODULE__REPORT_TABLES:
 				getReportTables().clear();
@@ -151,8 +143,7 @@ public class ReportTableModuleImpl extends ModuleImpl implements ReportTableModu
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ReportsPackage.REPORT_TABLE_MODULE__REPORT_TABLES:
 				return reportTables != null && !reportTables.isEmpty();

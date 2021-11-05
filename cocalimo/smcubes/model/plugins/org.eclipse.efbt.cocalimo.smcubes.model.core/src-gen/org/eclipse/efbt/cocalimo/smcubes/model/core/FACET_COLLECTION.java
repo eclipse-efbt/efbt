@@ -24,8 +24,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='FACET_COLLECTION' kind='empty'"
  * @generated
  */
-public interface FACET_COLLECTION extends EObject
-{
+public interface FACET_COLLECTION extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Code</b></em>' attribute.
 	 * <!-- begin-user-doc -->

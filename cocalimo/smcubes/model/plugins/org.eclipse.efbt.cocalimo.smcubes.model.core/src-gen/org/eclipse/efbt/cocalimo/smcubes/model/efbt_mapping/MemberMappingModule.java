@@ -26,8 +26,7 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface MemberMappingModule extends org.eclipse.efbt.cocalimo.core.model.module_management.Module
-{
+public interface MemberMappingModule extends org.eclipse.efbt.cocalimo.core.model.module_management.Module {
 	/**
 	 * Returns the value of the '<em><b>Member Mappings</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.smcubes.model.mapping.MEMBER_MAPPING}.

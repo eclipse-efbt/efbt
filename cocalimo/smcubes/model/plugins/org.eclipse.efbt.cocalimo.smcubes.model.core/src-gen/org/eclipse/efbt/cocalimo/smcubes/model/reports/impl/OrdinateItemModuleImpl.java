@@ -34,8 +34,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class OrdinateItemModuleImpl extends ModuleImpl implements OrdinateItemModule
-{
+public class OrdinateItemModuleImpl extends ModuleImpl implements OrdinateItemModule {
 	/**
 	 * The cached value of the '{@link #getOrdinateItems() <em>Ordinate Items</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -51,8 +50,7 @@ public class OrdinateItemModuleImpl extends ModuleImpl implements OrdinateItemMo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected OrdinateItemModuleImpl()
-	{
+	protected OrdinateItemModuleImpl() {
 		super();
 	}
 
@@ -62,8 +60,7 @@ public class OrdinateItemModuleImpl extends ModuleImpl implements OrdinateItemMo
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return ReportsPackage.Literals.ORDINATE_ITEM_MODULE;
 	}
 
@@ -73,8 +70,7 @@ public class OrdinateItemModuleImpl extends ModuleImpl implements OrdinateItemMo
 	 * @generated
 	 */
 	@Override
-	public EList<ORDINATE_ITEM> getOrdinateItems()
-	{
+	public EList<ORDINATE_ITEM> getOrdinateItems() {
 		if (ordinateItems == null) {
 			ordinateItems = new EObjectContainmentEList<ORDINATE_ITEM>(ORDINATE_ITEM.class, this, ReportsPackage.ORDINATE_ITEM_MODULE__ORDINATE_ITEMS);
 		}
@@ -87,8 +83,7 @@ public class OrdinateItemModuleImpl extends ModuleImpl implements OrdinateItemMo
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case ReportsPackage.ORDINATE_ITEM_MODULE__ORDINATE_ITEMS:
 				return ((InternalEList<?>)getOrdinateItems()).basicRemove(otherEnd, msgs);
@@ -102,8 +97,7 @@ public class OrdinateItemModuleImpl extends ModuleImpl implements OrdinateItemMo
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case ReportsPackage.ORDINATE_ITEM_MODULE__ORDINATE_ITEMS:
 				return getOrdinateItems();
@@ -118,8 +112,7 @@ public class OrdinateItemModuleImpl extends ModuleImpl implements OrdinateItemMo
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case ReportsPackage.ORDINATE_ITEM_MODULE__ORDINATE_ITEMS:
 				getOrdinateItems().clear();
@@ -135,8 +128,7 @@ public class OrdinateItemModuleImpl extends ModuleImpl implements OrdinateItemMo
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case ReportsPackage.ORDINATE_ITEM_MODULE__ORDINATE_ITEMS:
 				getOrdinateItems().clear();
@@ -151,8 +143,7 @@ public class OrdinateItemModuleImpl extends ModuleImpl implements OrdinateItemMo
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ReportsPackage.ORDINATE_ITEM_MODULE__ORDINATE_ITEMS:
 				return ordinateItems != null && !ordinateItems.isEmpty();

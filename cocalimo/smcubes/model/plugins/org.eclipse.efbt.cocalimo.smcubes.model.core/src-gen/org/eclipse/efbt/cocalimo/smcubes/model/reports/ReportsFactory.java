@@ -12,8 +12,7 @@ import org.eclipse.emf.ecore.EFactory;
  * @see org.eclipse.efbt.cocalimo.smcubes.model.reports.ReportsPackage
  * @generated
  */
-public interface ReportsFactory extends EFactory
-{
+public interface ReportsFactory extends EFactory {
 	/**
 	 * The singleton instance of the factory.
 	 * <!-- begin-user-doc -->

@@ -34,8 +34,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class CubeMappingModuleImpl extends ModuleImpl implements CubeMappingModule
-{
+public class CubeMappingModuleImpl extends ModuleImpl implements CubeMappingModule {
 	/**
 	 * The cached value of the '{@link #getCubeMappings() <em>Cube Mappings</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -51,8 +50,7 @@ public class CubeMappingModuleImpl extends ModuleImpl implements CubeMappingModu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected CubeMappingModuleImpl()
-	{
+	protected CubeMappingModuleImpl() {
 		super();
 	}
 
@@ -62,8 +60,7 @@ public class CubeMappingModuleImpl extends ModuleImpl implements CubeMappingModu
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Efbt_mappingPackage.Literals.CUBE_MAPPING_MODULE;
 	}
 
@@ -73,8 +70,7 @@ public class CubeMappingModuleImpl extends ModuleImpl implements CubeMappingModu
 	 * @generated
 	 */
 	@Override
-	public EList<CUBE_MAPPING> getCubeMappings()
-	{
+	public EList<CUBE_MAPPING> getCubeMappings() {
 		if (cubeMappings == null) {
 			cubeMappings = new EObjectContainmentEList<CUBE_MAPPING>(CUBE_MAPPING.class, this, Efbt_mappingPackage.CUBE_MAPPING_MODULE__CUBE_MAPPINGS);
 		}
@@ -87,8 +83,7 @@ public class CubeMappingModuleImpl extends ModuleImpl implements CubeMappingModu
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case Efbt_mappingPackage.CUBE_MAPPING_MODULE__CUBE_MAPPINGS:
 				return ((InternalEList<?>)getCubeMappings()).basicRemove(otherEnd, msgs);
@@ -102,8 +97,7 @@ public class CubeMappingModuleImpl extends ModuleImpl implements CubeMappingModu
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Efbt_mappingPackage.CUBE_MAPPING_MODULE__CUBE_MAPPINGS:
 				return getCubeMappings();
@@ -118,8 +112,7 @@ public class CubeMappingModuleImpl extends ModuleImpl implements CubeMappingModu
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Efbt_mappingPackage.CUBE_MAPPING_MODULE__CUBE_MAPPINGS:
 				getCubeMappings().clear();
@@ -135,8 +128,7 @@ public class CubeMappingModuleImpl extends ModuleImpl implements CubeMappingModu
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Efbt_mappingPackage.CUBE_MAPPING_MODULE__CUBE_MAPPINGS:
 				getCubeMappings().clear();
@@ -151,8 +143,7 @@ public class CubeMappingModuleImpl extends ModuleImpl implements CubeMappingModu
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Efbt_mappingPackage.CUBE_MAPPING_MODULE__CUBE_MAPPINGS:
 				return cubeMappings != null && !cubeMappings.isEmpty();

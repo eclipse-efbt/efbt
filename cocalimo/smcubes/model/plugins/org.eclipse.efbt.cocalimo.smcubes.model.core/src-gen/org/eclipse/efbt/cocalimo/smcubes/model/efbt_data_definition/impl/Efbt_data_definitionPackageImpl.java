@@ -25,10 +25,6 @@ import org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.Efbt_mappingPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.impl.Efbt_mappingPackageImpl;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.Efbt_vtl_transformationPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.impl.Efbt_vtl_transformationPackageImpl;
-
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MappingPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.impl.MappingPackageImpl;
@@ -45,10 +41,6 @@ import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.Smcubes_modelPackag
 
 import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.impl.Smcubes_modelPackageImpl;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.Vtl_transformationPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.impl.Vtl_transformationPackageImpl;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
@@ -61,8 +53,7 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
  * <!-- end-user-doc -->
  * @generated
  */
-public class Efbt_data_definitionPackageImpl extends EPackageImpl implements Efbt_data_definitionPackage
-{
+public class Efbt_data_definitionPackageImpl extends EPackageImpl implements Efbt_data_definitionPackage {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -120,8 +111,7 @@ public class Efbt_data_definitionPackageImpl extends EPackageImpl implements Efb
 	 * @see #init()
 	 * @generated
 	 */
-	private Efbt_data_definitionPackageImpl()
-	{
+	private Efbt_data_definitionPackageImpl() {
 		super(eNS_URI, Efbt_data_definitionFactory.eINSTANCE);
 	}
 
@@ -144,8 +134,7 @@ public class Efbt_data_definitionPackageImpl extends EPackageImpl implements Efb
 	 * @see #initializePackageContents()
 	 * @generated
 	 */
-	public static Efbt_data_definitionPackage init()
-	{
+	public static Efbt_data_definitionPackage init() {
 		if (isInited) return (Efbt_data_definitionPackage)EPackage.Registry.INSTANCE.getEPackage(Efbt_data_definitionPackage.eNS_URI);
 
 		// Obtain or create and register package
@@ -164,8 +153,6 @@ public class Efbt_data_definitionPackageImpl extends EPackageImpl implements Efb
 		Data_definitionPackageImpl theData_definitionPackage = (Data_definitionPackageImpl)(registeredPackage instanceof Data_definitionPackageImpl ? registeredPackage : Data_definitionPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Efbt_mappingPackage.eNS_URI);
 		Efbt_mappingPackageImpl theEfbt_mappingPackage = (Efbt_mappingPackageImpl)(registeredPackage instanceof Efbt_mappingPackageImpl ? registeredPackage : Efbt_mappingPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Efbt_vtl_transformationPackage.eNS_URI);
-		Efbt_vtl_transformationPackageImpl theEfbt_vtl_transformationPackage = (Efbt_vtl_transformationPackageImpl)(registeredPackage instanceof Efbt_vtl_transformationPackageImpl ? registeredPackage : Efbt_vtl_transformationPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(MappingPackage.eNS_URI);
 		MappingPackageImpl theMappingPackage = (MappingPackageImpl)(registeredPackage instanceof MappingPackageImpl ? registeredPackage : MappingPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(RenderingPackage.eNS_URI);
@@ -174,32 +161,26 @@ public class Efbt_data_definitionPackageImpl extends EPackageImpl implements Efb
 		ReportsPackageImpl theReportsPackage = (ReportsPackageImpl)(registeredPackage instanceof ReportsPackageImpl ? registeredPackage : ReportsPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Smcubes_modelPackage.eNS_URI);
 		Smcubes_modelPackageImpl theSmcubes_modelPackage = (Smcubes_modelPackageImpl)(registeredPackage instanceof Smcubes_modelPackageImpl ? registeredPackage : Smcubes_modelPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Vtl_transformationPackage.eNS_URI);
-		Vtl_transformationPackageImpl theVtl_transformationPackage = (Vtl_transformationPackageImpl)(registeredPackage instanceof Vtl_transformationPackageImpl ? registeredPackage : Vtl_transformationPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theEfbt_data_definitionPackage.createPackageContents();
 		theCorePackage.createPackageContents();
 		theData_definitionPackage.createPackageContents();
 		theEfbt_mappingPackage.createPackageContents();
-		theEfbt_vtl_transformationPackage.createPackageContents();
 		theMappingPackage.createPackageContents();
 		theRenderingPackage.createPackageContents();
 		theReportsPackage.createPackageContents();
 		theSmcubes_modelPackage.createPackageContents();
-		theVtl_transformationPackage.createPackageContents();
 
 		// Initialize created meta-data
 		theEfbt_data_definitionPackage.initializePackageContents();
 		theCorePackage.initializePackageContents();
 		theData_definitionPackage.initializePackageContents();
 		theEfbt_mappingPackage.initializePackageContents();
-		theEfbt_vtl_transformationPackage.initializePackageContents();
 		theMappingPackage.initializePackageContents();
 		theRenderingPackage.initializePackageContents();
 		theReportsPackage.initializePackageContents();
 		theSmcubes_modelPackage.initializePackageContents();
-		theVtl_transformationPackage.initializePackageContents();
 
 		// Mark meta-data to indicate it can't be changed
 		theEfbt_data_definitionPackage.freeze();
@@ -215,8 +196,7 @@ public class Efbt_data_definitionPackageImpl extends EPackageImpl implements Efb
 	 * @generated
 	 */
 	@Override
-	public EClass getCombinationModule()
-	{
+	public EClass getCombinationModule() {
 		return combinationModuleEClass;
 	}
 
@@ -226,8 +206,7 @@ public class Efbt_data_definitionPackageImpl extends EPackageImpl implements Efb
 	 * @generated
 	 */
 	@Override
-	public EReference getCombinationModule_Combinations()
-	{
+	public EReference getCombinationModule_Combinations() {
 		return (EReference)combinationModuleEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -237,8 +216,7 @@ public class Efbt_data_definitionPackageImpl extends EPackageImpl implements Efb
 	 * @generated
 	 */
 	@Override
-	public EReference getCombinationModule_Combination_items()
-	{
+	public EReference getCombinationModule_Combination_items() {
 		return (EReference)combinationModuleEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -248,8 +226,7 @@ public class Efbt_data_definitionPackageImpl extends EPackageImpl implements Efb
 	 * @generated
 	 */
 	@Override
-	public EReference getCombinationModule_CubeToCombinationLinks()
-	{
+	public EReference getCombinationModule_CubeToCombinationLinks() {
 		return (EReference)combinationModuleEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -259,8 +236,7 @@ public class Efbt_data_definitionPackageImpl extends EPackageImpl implements Efb
 	 * @generated
 	 */
 	@Override
-	public EClass getCubeModule()
-	{
+	public EClass getCubeModule() {
 		return cubeModuleEClass;
 	}
 
@@ -270,8 +246,7 @@ public class Efbt_data_definitionPackageImpl extends EPackageImpl implements Efb
 	 * @generated
 	 */
 	@Override
-	public EReference getCubeModule_Cubes()
-	{
+	public EReference getCubeModule_Cubes() {
 		return (EReference)cubeModuleEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -281,8 +256,7 @@ public class Efbt_data_definitionPackageImpl extends EPackageImpl implements Efb
 	 * @generated
 	 */
 	@Override
-	public EReference getCubeModule_CubeStructures()
-	{
+	public EReference getCubeModule_CubeStructures() {
 		return (EReference)cubeModuleEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -292,8 +266,7 @@ public class Efbt_data_definitionPackageImpl extends EPackageImpl implements Efb
 	 * @generated
 	 */
 	@Override
-	public EReference getCubeModule_CubeStructureItems()
-	{
+	public EReference getCubeModule_CubeStructureItems() {
 		return (EReference)cubeModuleEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -303,8 +276,7 @@ public class Efbt_data_definitionPackageImpl extends EPackageImpl implements Efb
 	 * @generated
 	 */
 	@Override
-	public EClass getDomainModule()
-	{
+	public EClass getDomainModule() {
 		return domainModuleEClass;
 	}
 
@@ -314,8 +286,7 @@ public class Efbt_data_definitionPackageImpl extends EPackageImpl implements Efb
 	 * @generated
 	 */
 	@Override
-	public EReference getDomainModule_Domains()
-	{
+	public EReference getDomainModule_Domains() {
 		return (EReference)domainModuleEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -325,8 +296,7 @@ public class Efbt_data_definitionPackageImpl extends EPackageImpl implements Efb
 	 * @generated
 	 */
 	@Override
-	public EClass getMemberHierarchyModule()
-	{
+	public EClass getMemberHierarchyModule() {
 		return memberHierarchyModuleEClass;
 	}
 
@@ -336,8 +306,7 @@ public class Efbt_data_definitionPackageImpl extends EPackageImpl implements Efb
 	 * @generated
 	 */
 	@Override
-	public EReference getMemberHierarchyModule_MemberHierarchies()
-	{
+	public EReference getMemberHierarchyModule_MemberHierarchies() {
 		return (EReference)memberHierarchyModuleEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -347,8 +316,7 @@ public class Efbt_data_definitionPackageImpl extends EPackageImpl implements Efb
 	 * @generated
 	 */
 	@Override
-	public EReference getMemberHierarchyModule_MemberHierarchiesNodes()
-	{
+	public EReference getMemberHierarchyModule_MemberHierarchiesNodes() {
 		return (EReference)memberHierarchyModuleEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -358,8 +326,7 @@ public class Efbt_data_definitionPackageImpl extends EPackageImpl implements Efb
 	 * @generated
 	 */
 	@Override
-	public EClass getMemberModule()
-	{
+	public EClass getMemberModule() {
 		return memberModuleEClass;
 	}
 
@@ -369,8 +336,7 @@ public class Efbt_data_definitionPackageImpl extends EPackageImpl implements Efb
 	 * @generated
 	 */
 	@Override
-	public EReference getMemberModule_Members()
-	{
+	public EReference getMemberModule_Members() {
 		return (EReference)memberModuleEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -380,8 +346,7 @@ public class Efbt_data_definitionPackageImpl extends EPackageImpl implements Efb
 	 * @generated
 	 */
 	@Override
-	public EClass getVariableModule()
-	{
+	public EClass getVariableModule() {
 		return variableModuleEClass;
 	}
 
@@ -391,8 +356,7 @@ public class Efbt_data_definitionPackageImpl extends EPackageImpl implements Efb
 	 * @generated
 	 */
 	@Override
-	public EReference getVariableModule_Variables()
-	{
+	public EReference getVariableModule_Variables() {
 		return (EReference)variableModuleEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -402,8 +366,7 @@ public class Efbt_data_definitionPackageImpl extends EPackageImpl implements Efb
 	 * @generated
 	 */
 	@Override
-	public Efbt_data_definitionFactory getEfbt_data_definitionFactory()
-	{
+	public Efbt_data_definitionFactory getEfbt_data_definitionFactory() {
 		return (Efbt_data_definitionFactory)getEFactoryInstance();
 	}
 
@@ -421,8 +384,7 @@ public class Efbt_data_definitionPackageImpl extends EPackageImpl implements Efb
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void createPackageContents()
-	{
+	public void createPackageContents() {
 		if (isCreated) return;
 		isCreated = true;
 
@@ -465,8 +427,7 @@ public class Efbt_data_definitionPackageImpl extends EPackageImpl implements Efb
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void initializePackageContents()
-	{
+	public void initializePackageContents() {
 		if (isInitialized) return;
 		isInitialized = true;
 
@@ -532,8 +493,7 @@ public class Efbt_data_definitionPackageImpl extends EPackageImpl implements Efb
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void createLicenseAnnotations()
-	{
+	protected void createLicenseAnnotations() {
 		String source = "license";
 		addAnnotation
 		  (this,
@@ -549,8 +509,7 @@ public class Efbt_data_definitionPackageImpl extends EPackageImpl implements Efb
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void createExtendedMetaDataAnnotations()
-	{
+	protected void createExtendedMetaDataAnnotations() {
 		String source = "http:///org/eclipse/emf/ecore/util/ExtendedMetaData";
 		addAnnotation
 		  (combinationModuleEClass,

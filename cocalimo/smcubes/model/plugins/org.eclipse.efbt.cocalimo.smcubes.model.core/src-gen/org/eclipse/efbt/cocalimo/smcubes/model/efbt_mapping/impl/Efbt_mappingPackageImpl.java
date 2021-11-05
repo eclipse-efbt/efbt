@@ -23,10 +23,6 @@ import org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.MappingDefinitionMod
 import org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.MemberMappingModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.VariableMappingModule;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.Efbt_vtl_transformationPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.impl.Efbt_vtl_transformationPackageImpl;
-
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MappingPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.impl.MappingPackageImpl;
@@ -43,10 +39,6 @@ import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.Smcubes_modelPackag
 
 import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.impl.Smcubes_modelPackageImpl;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.Vtl_transformationPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.impl.Vtl_transformationPackageImpl;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
@@ -59,8 +51,7 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
  * <!-- end-user-doc -->
  * @generated
  */
-public class Efbt_mappingPackageImpl extends EPackageImpl implements Efbt_mappingPackage
-{
+public class Efbt_mappingPackageImpl extends EPackageImpl implements Efbt_mappingPackage {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -104,8 +95,7 @@ public class Efbt_mappingPackageImpl extends EPackageImpl implements Efbt_mappin
 	 * @see #init()
 	 * @generated
 	 */
-	private Efbt_mappingPackageImpl()
-	{
+	private Efbt_mappingPackageImpl() {
 		super(eNS_URI, Efbt_mappingFactory.eINSTANCE);
 	}
 
@@ -128,8 +118,7 @@ public class Efbt_mappingPackageImpl extends EPackageImpl implements Efbt_mappin
 	 * @see #initializePackageContents()
 	 * @generated
 	 */
-	public static Efbt_mappingPackage init()
-	{
+	public static Efbt_mappingPackage init() {
 		if (isInited) return (Efbt_mappingPackage)EPackage.Registry.INSTANCE.getEPackage(Efbt_mappingPackage.eNS_URI);
 
 		// Obtain or create and register package
@@ -148,8 +137,6 @@ public class Efbt_mappingPackageImpl extends EPackageImpl implements Efbt_mappin
 		Data_definitionPackageImpl theData_definitionPackage = (Data_definitionPackageImpl)(registeredPackage instanceof Data_definitionPackageImpl ? registeredPackage : Data_definitionPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Efbt_data_definitionPackage.eNS_URI);
 		Efbt_data_definitionPackageImpl theEfbt_data_definitionPackage = (Efbt_data_definitionPackageImpl)(registeredPackage instanceof Efbt_data_definitionPackageImpl ? registeredPackage : Efbt_data_definitionPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Efbt_vtl_transformationPackage.eNS_URI);
-		Efbt_vtl_transformationPackageImpl theEfbt_vtl_transformationPackage = (Efbt_vtl_transformationPackageImpl)(registeredPackage instanceof Efbt_vtl_transformationPackageImpl ? registeredPackage : Efbt_vtl_transformationPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(MappingPackage.eNS_URI);
 		MappingPackageImpl theMappingPackage = (MappingPackageImpl)(registeredPackage instanceof MappingPackageImpl ? registeredPackage : MappingPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(RenderingPackage.eNS_URI);
@@ -158,32 +145,26 @@ public class Efbt_mappingPackageImpl extends EPackageImpl implements Efbt_mappin
 		ReportsPackageImpl theReportsPackage = (ReportsPackageImpl)(registeredPackage instanceof ReportsPackageImpl ? registeredPackage : ReportsPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Smcubes_modelPackage.eNS_URI);
 		Smcubes_modelPackageImpl theSmcubes_modelPackage = (Smcubes_modelPackageImpl)(registeredPackage instanceof Smcubes_modelPackageImpl ? registeredPackage : Smcubes_modelPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Vtl_transformationPackage.eNS_URI);
-		Vtl_transformationPackageImpl theVtl_transformationPackage = (Vtl_transformationPackageImpl)(registeredPackage instanceof Vtl_transformationPackageImpl ? registeredPackage : Vtl_transformationPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theEfbt_mappingPackage.createPackageContents();
 		theCorePackage.createPackageContents();
 		theData_definitionPackage.createPackageContents();
 		theEfbt_data_definitionPackage.createPackageContents();
-		theEfbt_vtl_transformationPackage.createPackageContents();
 		theMappingPackage.createPackageContents();
 		theRenderingPackage.createPackageContents();
 		theReportsPackage.createPackageContents();
 		theSmcubes_modelPackage.createPackageContents();
-		theVtl_transformationPackage.createPackageContents();
 
 		// Initialize created meta-data
 		theEfbt_mappingPackage.initializePackageContents();
 		theCorePackage.initializePackageContents();
 		theData_definitionPackage.initializePackageContents();
 		theEfbt_data_definitionPackage.initializePackageContents();
-		theEfbt_vtl_transformationPackage.initializePackageContents();
 		theMappingPackage.initializePackageContents();
 		theRenderingPackage.initializePackageContents();
 		theReportsPackage.initializePackageContents();
 		theSmcubes_modelPackage.initializePackageContents();
-		theVtl_transformationPackage.initializePackageContents();
 
 		// Mark meta-data to indicate it can't be changed
 		theEfbt_mappingPackage.freeze();
@@ -199,8 +180,7 @@ public class Efbt_mappingPackageImpl extends EPackageImpl implements Efbt_mappin
 	 * @generated
 	 */
 	@Override
-	public EClass getMappingDefinitionModule()
-	{
+	public EClass getMappingDefinitionModule() {
 		return mappingDefinitionModuleEClass;
 	}
 
@@ -210,8 +190,7 @@ public class Efbt_mappingPackageImpl extends EPackageImpl implements Efbt_mappin
 	 * @generated
 	 */
 	@Override
-	public EReference getMappingDefinitionModule_Mappings()
-	{
+	public EReference getMappingDefinitionModule_Mappings() {
 		return (EReference)mappingDefinitionModuleEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -221,8 +200,7 @@ public class Efbt_mappingPackageImpl extends EPackageImpl implements Efbt_mappin
 	 * @generated
 	 */
 	@Override
-	public EClass getCubeMappingModule()
-	{
+	public EClass getCubeMappingModule() {
 		return cubeMappingModuleEClass;
 	}
 
@@ -232,8 +210,7 @@ public class Efbt_mappingPackageImpl extends EPackageImpl implements Efbt_mappin
 	 * @generated
 	 */
 	@Override
-	public EReference getCubeMappingModule_CubeMappings()
-	{
+	public EReference getCubeMappingModule_CubeMappings() {
 		return (EReference)cubeMappingModuleEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -243,8 +220,7 @@ public class Efbt_mappingPackageImpl extends EPackageImpl implements Efbt_mappin
 	 * @generated
 	 */
 	@Override
-	public EClass getMemberMappingModule()
-	{
+	public EClass getMemberMappingModule() {
 		return memberMappingModuleEClass;
 	}
 
@@ -254,8 +230,7 @@ public class Efbt_mappingPackageImpl extends EPackageImpl implements Efbt_mappin
 	 * @generated
 	 */
 	@Override
-	public EReference getMemberMappingModule_MemberMappings()
-	{
+	public EReference getMemberMappingModule_MemberMappings() {
 		return (EReference)memberMappingModuleEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -265,8 +240,7 @@ public class Efbt_mappingPackageImpl extends EPackageImpl implements Efbt_mappin
 	 * @generated
 	 */
 	@Override
-	public EClass getVariableMappingModule()
-	{
+	public EClass getVariableMappingModule() {
 		return variableMappingModuleEClass;
 	}
 
@@ -276,8 +250,7 @@ public class Efbt_mappingPackageImpl extends EPackageImpl implements Efbt_mappin
 	 * @generated
 	 */
 	@Override
-	public EReference getVariableMappingModule_VariableMappings()
-	{
+	public EReference getVariableMappingModule_VariableMappings() {
 		return (EReference)variableMappingModuleEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -287,8 +260,7 @@ public class Efbt_mappingPackageImpl extends EPackageImpl implements Efbt_mappin
 	 * @generated
 	 */
 	@Override
-	public Efbt_mappingFactory getEfbt_mappingFactory()
-	{
+	public Efbt_mappingFactory getEfbt_mappingFactory() {
 		return (Efbt_mappingFactory)getEFactoryInstance();
 	}
 
@@ -306,8 +278,7 @@ public class Efbt_mappingPackageImpl extends EPackageImpl implements Efbt_mappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void createPackageContents()
-	{
+	public void createPackageContents() {
 		if (isCreated) return;
 		isCreated = true;
 
@@ -339,8 +310,7 @@ public class Efbt_mappingPackageImpl extends EPackageImpl implements Efbt_mappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void initializePackageContents()
-	{
+	public void initializePackageContents() {
 		if (isInitialized) return;
 		isInitialized = true;
 
@@ -390,8 +360,7 @@ public class Efbt_mappingPackageImpl extends EPackageImpl implements Efbt_mappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void createLicenseAnnotations()
-	{
+	protected void createLicenseAnnotations() {
 		String source = "license";
 		addAnnotation
 		  (this,
