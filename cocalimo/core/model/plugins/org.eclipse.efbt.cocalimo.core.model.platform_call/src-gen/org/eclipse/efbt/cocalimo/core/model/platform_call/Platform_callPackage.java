@@ -211,88 +211,6 @@ public interface Platform_callPackage extends EPackage {
 	int PLATFORM_CALL_MODULE_OPERATION_COUNT = Module_managementPackage.MODULE_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.impl.TranslateBIRDWithOldTestFormatToCocasonImpl <em>Translate BIRD With Old Test Format To Cocason</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.impl.TranslateBIRDWithOldTestFormatToCocasonImpl
-	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.impl.Platform_callPackageImpl#getTranslateBIRDWithOldTestFormatToCocason()
-	 * @generated
-	 */
-	int TRANSLATE_BIRD_WITH_OLD_TEST_FORMAT_TO_COCASON = 2;
-
-	/**
-	 * The feature id for the '<em><b>Error Message</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TRANSLATE_BIRD_WITH_OLD_TEST_FORMAT_TO_COCASON__ERROR_MESSAGE = PLATFORM_CALL__ERROR_MESSAGE;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TRANSLATE_BIRD_WITH_OLD_TEST_FORMAT_TO_COCASON__NAME = PLATFORM_CALL__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Return Status</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TRANSLATE_BIRD_WITH_OLD_TEST_FORMAT_TO_COCASON__RETURN_STATUS = PLATFORM_CALL__RETURN_STATUS;
-
-	/**
-	 * The feature id for the '<em><b>Input Directory</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TRANSLATE_BIRD_WITH_OLD_TEST_FORMAT_TO_COCASON__INPUT_DIRECTORY = PLATFORM_CALL_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Output Directory</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TRANSLATE_BIRD_WITH_OLD_TEST_FORMAT_TO_COCASON__OUTPUT_DIRECTORY = PLATFORM_CALL_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Test Directory</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TRANSLATE_BIRD_WITH_OLD_TEST_FORMAT_TO_COCASON__TEST_DIRECTORY = PLATFORM_CALL_FEATURE_COUNT + 2;
-
-	/**
-	 * The number of structural features of the '<em>Translate BIRD With Old Test Format To Cocason</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TRANSLATE_BIRD_WITH_OLD_TEST_FORMAT_TO_COCASON_FEATURE_COUNT = PLATFORM_CALL_FEATURE_COUNT + 3;
-
-	/**
-	 * The number of operations of the '<em>Translate BIRD With Old Test Format To Cocason</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TRANSLATE_BIRD_WITH_OLD_TEST_FORMAT_TO_COCASON_OPERATION_COUNT = PLATFORM_CALL_OPERATION_COUNT + 0;
-
-	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.impl.ConvertSQLDeveloperModelToEcoreImpl <em>Convert SQL Developer Model To Ecore</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -300,7 +218,7 @@ public interface Platform_callPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.impl.Platform_callPackageImpl#getConvertSQLDeveloperModelToEcore()
 	 * @generated
 	 */
-	int CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE = 3;
+	int CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE = 2;
 
 	/**
 	 * The feature id for the '<em><b>Error Message</b></em>' attribute.
@@ -366,14 +284,14 @@ public interface Platform_callPackage extends EPackage {
 	int CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE_OPERATION_COUNT = PLATFORM_CALL_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.impl.TranslateBIRDWithNewTestFormatToCocasonImpl <em>Translate BIRD With New Test Format To Cocason</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.impl.ImportBIRDFromMSAccessImpl <em>Import BIRD From MS Access</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.impl.TranslateBIRDWithNewTestFormatToCocasonImpl
-	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.impl.Platform_callPackageImpl#getTranslateBIRDWithNewTestFormatToCocason()
+	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.impl.ImportBIRDFromMSAccessImpl
+	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.impl.Platform_callPackageImpl#getImportBIRDFromMSAccess()
 	 * @generated
 	 */
-	int TRANSLATE_BIRD_WITH_NEW_TEST_FORMAT_TO_COCASON = 4;
+	int IMPORT_BIRD_FROM_MS_ACCESS = 3;
 
 	/**
 	 * The feature id for the '<em><b>Error Message</b></em>' attribute.
@@ -382,7 +300,7 @@ public interface Platform_callPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TRANSLATE_BIRD_WITH_NEW_TEST_FORMAT_TO_COCASON__ERROR_MESSAGE = PLATFORM_CALL__ERROR_MESSAGE;
+	int IMPORT_BIRD_FROM_MS_ACCESS__ERROR_MESSAGE = PLATFORM_CALL__ERROR_MESSAGE;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -391,7 +309,7 @@ public interface Platform_callPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TRANSLATE_BIRD_WITH_NEW_TEST_FORMAT_TO_COCASON__NAME = PLATFORM_CALL__NAME;
+	int IMPORT_BIRD_FROM_MS_ACCESS__NAME = PLATFORM_CALL__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Return Status</b></em>' attribute.
@@ -400,7 +318,7 @@ public interface Platform_callPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TRANSLATE_BIRD_WITH_NEW_TEST_FORMAT_TO_COCASON__RETURN_STATUS = PLATFORM_CALL__RETURN_STATUS;
+	int IMPORT_BIRD_FROM_MS_ACCESS__RETURN_STATUS = PLATFORM_CALL__RETURN_STATUS;
 
 	/**
 	 * The feature id for the '<em><b>Input Directory</b></em>' attribute.
@@ -409,7 +327,7 @@ public interface Platform_callPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TRANSLATE_BIRD_WITH_NEW_TEST_FORMAT_TO_COCASON__INPUT_DIRECTORY = PLATFORM_CALL_FEATURE_COUNT + 0;
+	int IMPORT_BIRD_FROM_MS_ACCESS__INPUT_DIRECTORY = PLATFORM_CALL_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Output Directory</b></em>' attribute.
@@ -418,35 +336,25 @@ public interface Platform_callPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TRANSLATE_BIRD_WITH_NEW_TEST_FORMAT_TO_COCASON__OUTPUT_DIRECTORY = PLATFORM_CALL_FEATURE_COUNT + 1;
+	int IMPORT_BIRD_FROM_MS_ACCESS__OUTPUT_DIRECTORY = PLATFORM_CALL_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Test Directory</b></em>' attribute.
+	 * The number of structural features of the '<em>Import BIRD From MS Access</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TRANSLATE_BIRD_WITH_NEW_TEST_FORMAT_TO_COCASON__TEST_DIRECTORY = PLATFORM_CALL_FEATURE_COUNT + 2;
+	int IMPORT_BIRD_FROM_MS_ACCESS_FEATURE_COUNT = PLATFORM_CALL_FEATURE_COUNT + 2;
 
 	/**
-	 * The number of structural features of the '<em>Translate BIRD With New Test Format To Cocason</em>' class.
+	 * The number of operations of the '<em>Import BIRD From MS Access</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TRANSLATE_BIRD_WITH_NEW_TEST_FORMAT_TO_COCASON_FEATURE_COUNT = PLATFORM_CALL_FEATURE_COUNT + 3;
-
-	/**
-	 * The number of operations of the '<em>Translate BIRD With New Test Format To Cocason</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TRANSLATE_BIRD_WITH_NEW_TEST_FORMAT_TO_COCASON_OPERATION_COUNT = PLATFORM_CALL_OPERATION_COUNT + 0;
-
+	int IMPORT_BIRD_FROM_MS_ACCESS_OPERATION_COUNT = PLATFORM_CALL_OPERATION_COUNT + 0;
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.PlatformCall <em>Platform Call</em>}'.
@@ -513,49 +421,6 @@ public interface Platform_callPackage extends EPackage {
 	EReference getPlatformCallModule_PlatformCalls();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.TranslateBIRDWithOldTestFormatToCocason <em>Translate BIRD With Old Test Format To Cocason</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Translate BIRD With Old Test Format To Cocason</em>'.
-	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.TranslateBIRDWithOldTestFormatToCocason
-	 * @generated
-	 */
-	EClass getTranslateBIRDWithOldTestFormatToCocason();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.TranslateBIRDWithOldTestFormatToCocason#getInputDirectory <em>Input Directory</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Input Directory</em>'.
-	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.TranslateBIRDWithOldTestFormatToCocason#getInputDirectory()
-	 * @see #getTranslateBIRDWithOldTestFormatToCocason()
-	 * @generated
-	 */
-	EAttribute getTranslateBIRDWithOldTestFormatToCocason_InputDirectory();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.TranslateBIRDWithOldTestFormatToCocason#getOutputDirectory <em>Output Directory</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Output Directory</em>'.
-	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.TranslateBIRDWithOldTestFormatToCocason#getOutputDirectory()
-	 * @see #getTranslateBIRDWithOldTestFormatToCocason()
-	 * @generated
-	 */
-	EAttribute getTranslateBIRDWithOldTestFormatToCocason_OutputDirectory();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.TranslateBIRDWithOldTestFormatToCocason#getTestDirectory <em>Test Directory</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Test Directory</em>'.
-	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.TranslateBIRDWithOldTestFormatToCocason#getTestDirectory()
-	 * @see #getTranslateBIRDWithOldTestFormatToCocason()
-	 * @generated
-	 */
-	EAttribute getTranslateBIRDWithOldTestFormatToCocason_TestDirectory();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.ConvertSQLDeveloperModelToEcore <em>Convert SQL Developer Model To Ecore</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -588,47 +453,36 @@ public interface Platform_callPackage extends EPackage {
 	EAttribute getConvertSQLDeveloperModelToEcore_OutputDirectory();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.TranslateBIRDWithNewTestFormatToCocason <em>Translate BIRD With New Test Format To Cocason</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.ImportBIRDFromMSAccess <em>Import BIRD From MS Access</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Translate BIRD With New Test Format To Cocason</em>'.
-	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.TranslateBIRDWithNewTestFormatToCocason
+	 * @return the meta object for class '<em>Import BIRD From MS Access</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.ImportBIRDFromMSAccess
 	 * @generated
 	 */
-	EClass getTranslateBIRDWithNewTestFormatToCocason();
+	EClass getImportBIRDFromMSAccess();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.TranslateBIRDWithNewTestFormatToCocason#getInputDirectory <em>Input Directory</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.ImportBIRDFromMSAccess#getInputDirectory <em>Input Directory</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Input Directory</em>'.
-	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.TranslateBIRDWithNewTestFormatToCocason#getInputDirectory()
-	 * @see #getTranslateBIRDWithNewTestFormatToCocason()
+	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.ImportBIRDFromMSAccess#getInputDirectory()
+	 * @see #getImportBIRDFromMSAccess()
 	 * @generated
 	 */
-	EAttribute getTranslateBIRDWithNewTestFormatToCocason_InputDirectory();
+	EAttribute getImportBIRDFromMSAccess_InputDirectory();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.TranslateBIRDWithNewTestFormatToCocason#getOutputDirectory <em>Output Directory</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.ImportBIRDFromMSAccess#getOutputDirectory <em>Output Directory</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Output Directory</em>'.
-	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.TranslateBIRDWithNewTestFormatToCocason#getOutputDirectory()
-	 * @see #getTranslateBIRDWithNewTestFormatToCocason()
+	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.ImportBIRDFromMSAccess#getOutputDirectory()
+	 * @see #getImportBIRDFromMSAccess()
 	 * @generated
 	 */
-	EAttribute getTranslateBIRDWithNewTestFormatToCocason_OutputDirectory();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.TranslateBIRDWithNewTestFormatToCocason#getTestDirectory <em>Test Directory</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Test Directory</em>'.
-	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.TranslateBIRDWithNewTestFormatToCocason#getTestDirectory()
-	 * @see #getTranslateBIRDWithNewTestFormatToCocason()
-	 * @generated
-	 */
-	EAttribute getTranslateBIRDWithNewTestFormatToCocason_TestDirectory();
+	EAttribute getImportBIRDFromMSAccess_OutputDirectory();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -706,40 +560,6 @@ public interface Platform_callPackage extends EPackage {
 		EReference PLATFORM_CALL_MODULE__PLATFORM_CALLS = eINSTANCE.getPlatformCallModule_PlatformCalls();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.impl.TranslateBIRDWithOldTestFormatToCocasonImpl <em>Translate BIRD With Old Test Format To Cocason</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.impl.TranslateBIRDWithOldTestFormatToCocasonImpl
-		 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.impl.Platform_callPackageImpl#getTranslateBIRDWithOldTestFormatToCocason()
-		 * @generated
-		 */
-		EClass TRANSLATE_BIRD_WITH_OLD_TEST_FORMAT_TO_COCASON = eINSTANCE.getTranslateBIRDWithOldTestFormatToCocason();
-
-		/**
-		 * The meta object literal for the '<em><b>Input Directory</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute TRANSLATE_BIRD_WITH_OLD_TEST_FORMAT_TO_COCASON__INPUT_DIRECTORY = eINSTANCE.getTranslateBIRDWithOldTestFormatToCocason_InputDirectory();
-
-		/**
-		 * The meta object literal for the '<em><b>Output Directory</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute TRANSLATE_BIRD_WITH_OLD_TEST_FORMAT_TO_COCASON__OUTPUT_DIRECTORY = eINSTANCE.getTranslateBIRDWithOldTestFormatToCocason_OutputDirectory();
-
-		/**
-		 * The meta object literal for the '<em><b>Test Directory</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute TRANSLATE_BIRD_WITH_OLD_TEST_FORMAT_TO_COCASON__TEST_DIRECTORY = eINSTANCE.getTranslateBIRDWithOldTestFormatToCocason_TestDirectory();
-
-		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.impl.ConvertSQLDeveloperModelToEcoreImpl <em>Convert SQL Developer Model To Ecore</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -766,14 +586,14 @@ public interface Platform_callPackage extends EPackage {
 		EAttribute CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE__OUTPUT_DIRECTORY = eINSTANCE.getConvertSQLDeveloperModelToEcore_OutputDirectory();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.impl.TranslateBIRDWithNewTestFormatToCocasonImpl <em>Translate BIRD With New Test Format To Cocason</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.impl.ImportBIRDFromMSAccessImpl <em>Import BIRD From MS Access</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.impl.TranslateBIRDWithNewTestFormatToCocasonImpl
-		 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.impl.Platform_callPackageImpl#getTranslateBIRDWithNewTestFormatToCocason()
+		 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.impl.ImportBIRDFromMSAccessImpl
+		 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.impl.Platform_callPackageImpl#getImportBIRDFromMSAccess()
 		 * @generated
 		 */
-		EClass TRANSLATE_BIRD_WITH_NEW_TEST_FORMAT_TO_COCASON = eINSTANCE.getTranslateBIRDWithNewTestFormatToCocason();
+		EClass IMPORT_BIRD_FROM_MS_ACCESS = eINSTANCE.getImportBIRDFromMSAccess();
 
 		/**
 		 * The meta object literal for the '<em><b>Input Directory</b></em>' attribute feature.
@@ -781,7 +601,7 @@ public interface Platform_callPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute TRANSLATE_BIRD_WITH_NEW_TEST_FORMAT_TO_COCASON__INPUT_DIRECTORY = eINSTANCE.getTranslateBIRDWithNewTestFormatToCocason_InputDirectory();
+		EAttribute IMPORT_BIRD_FROM_MS_ACCESS__INPUT_DIRECTORY = eINSTANCE.getImportBIRDFromMSAccess_InputDirectory();
 
 		/**
 		 * The meta object literal for the '<em><b>Output Directory</b></em>' attribute feature.
@@ -789,15 +609,7 @@ public interface Platform_callPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute TRANSLATE_BIRD_WITH_NEW_TEST_FORMAT_TO_COCASON__OUTPUT_DIRECTORY = eINSTANCE.getTranslateBIRDWithNewTestFormatToCocason_OutputDirectory();
-
-		/**
-		 * The meta object literal for the '<em><b>Test Directory</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute TRANSLATE_BIRD_WITH_NEW_TEST_FORMAT_TO_COCASON__TEST_DIRECTORY = eINSTANCE.getTranslateBIRDWithNewTestFormatToCocason_TestDirectory();
+		EAttribute IMPORT_BIRD_FROM_MS_ACCESS__OUTPUT_DIRECTORY = eINSTANCE.getImportBIRDFromMSAccess_OutputDirectory();
 
 	}
 

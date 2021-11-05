@@ -79,13 +79,6 @@ public class Platform_callSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case Platform_callPackage.TRANSLATE_BIRD_WITH_OLD_TEST_FORMAT_TO_COCASON: {
-				TranslateBIRDWithOldTestFormatToCocason translateBIRDWithOldTestFormatToCocason = (TranslateBIRDWithOldTestFormatToCocason)theEObject;
-				T result = caseTranslateBIRDWithOldTestFormatToCocason(translateBIRDWithOldTestFormatToCocason);
-				if (result == null) result = casePlatformCall(translateBIRDWithOldTestFormatToCocason);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case Platform_callPackage.CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE: {
 				ConvertSQLDeveloperModelToEcore convertSQLDeveloperModelToEcore = (ConvertSQLDeveloperModelToEcore)theEObject;
 				T result = caseConvertSQLDeveloperModelToEcore(convertSQLDeveloperModelToEcore);
@@ -93,10 +86,10 @@ public class Platform_callSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case Platform_callPackage.TRANSLATE_BIRD_WITH_NEW_TEST_FORMAT_TO_COCASON: {
-				TranslateBIRDWithNewTestFormatToCocason translateBIRDWithNewTestFormatToCocason = (TranslateBIRDWithNewTestFormatToCocason)theEObject;
-				T result = caseTranslateBIRDWithNewTestFormatToCocason(translateBIRDWithNewTestFormatToCocason);
-				if (result == null) result = casePlatformCall(translateBIRDWithNewTestFormatToCocason);
+			case Platform_callPackage.IMPORT_BIRD_FROM_MS_ACCESS: {
+				ImportBIRDFromMSAccess importBIRDFromMSAccess = (ImportBIRDFromMSAccess)theEObject;
+				T result = caseImportBIRDFromMSAccess(importBIRDFromMSAccess);
+				if (result == null) result = casePlatformCall(importBIRDFromMSAccess);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -135,21 +128,6 @@ public class Platform_callSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Translate BIRD With Old Test Format To Cocason</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Translate BIRD With Old Test Format To Cocason</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseTranslateBIRDWithOldTestFormatToCocason(TranslateBIRDWithOldTestFormatToCocason object) {
-		return null;
-	}
-
-	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Convert SQL Developer Model To Ecore</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -165,17 +143,17 @@ public class Platform_callSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Translate BIRD With New Test Format To Cocason</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Import BIRD From MS Access</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Translate BIRD With New Test Format To Cocason</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Import BIRD From MS Access</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseTranslateBIRDWithNewTestFormatToCocason(TranslateBIRDWithNewTestFormatToCocason object) {
+	public T caseImportBIRDFromMSAccess(ImportBIRDFromMSAccess object) {
 		return null;
 	}
 

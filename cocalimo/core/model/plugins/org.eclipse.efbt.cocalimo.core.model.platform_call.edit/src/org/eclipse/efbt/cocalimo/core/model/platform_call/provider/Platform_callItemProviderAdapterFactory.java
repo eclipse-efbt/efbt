@@ -118,29 +118,6 @@ public class Platform_callItemProviderAdapterFactory extends Platform_callAdapte
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.core.model.platform_call.TranslateBIRDWithOldTestFormatToCocason} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected TranslateBIRDWithOldTestFormatToCocasonItemProvider translateBIRDWithOldTestFormatToCocasonItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.core.model.platform_call.TranslateBIRDWithOldTestFormatToCocason}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createTranslateBIRDWithOldTestFormatToCocasonAdapter() {
-		if (translateBIRDWithOldTestFormatToCocasonItemProvider == null) {
-			translateBIRDWithOldTestFormatToCocasonItemProvider = new TranslateBIRDWithOldTestFormatToCocasonItemProvider(this);
-		}
-
-		return translateBIRDWithOldTestFormatToCocasonItemProvider;
-	}
-
-	/**
 	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.core.model.platform_call.ConvertSQLDeveloperModelToEcore} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -164,26 +141,26 @@ public class Platform_callItemProviderAdapterFactory extends Platform_callAdapte
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.core.model.platform_call.TranslateBIRDWithNewTestFormatToCocason} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.core.model.platform_call.ImportBIRDFromMSAccess} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected TranslateBIRDWithNewTestFormatToCocasonItemProvider translateBIRDWithNewTestFormatToCocasonItemProvider;
+	protected ImportBIRDFromMSAccessItemProvider importBIRDFromMSAccessItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.core.model.platform_call.TranslateBIRDWithNewTestFormatToCocason}.
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.core.model.platform_call.ImportBIRDFromMSAccess}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	public Adapter createTranslateBIRDWithNewTestFormatToCocasonAdapter() {
-		if (translateBIRDWithNewTestFormatToCocasonItemProvider == null) {
-			translateBIRDWithNewTestFormatToCocasonItemProvider = new TranslateBIRDWithNewTestFormatToCocasonItemProvider(this);
+	public Adapter createImportBIRDFromMSAccessAdapter() {
+		if (importBIRDFromMSAccessItemProvider == null) {
+			importBIRDFromMSAccessItemProvider = new ImportBIRDFromMSAccessItemProvider(this);
 		}
 
-		return translateBIRDWithNewTestFormatToCocasonItemProvider;
+		return importBIRDFromMSAccessItemProvider;
 	}
 
 	/**
@@ -293,9 +270,8 @@ public class Platform_callItemProviderAdapterFactory extends Platform_callAdapte
 	public void dispose() {
 		if (platformCallItemProvider != null) platformCallItemProvider.dispose();
 		if (platformCallModuleItemProvider != null) platformCallModuleItemProvider.dispose();
-		if (translateBIRDWithOldTestFormatToCocasonItemProvider != null) translateBIRDWithOldTestFormatToCocasonItemProvider.dispose();
 		if (convertSQLDeveloperModelToEcoreItemProvider != null) convertSQLDeveloperModelToEcoreItemProvider.dispose();
-		if (translateBIRDWithNewTestFormatToCocasonItemProvider != null) translateBIRDWithNewTestFormatToCocasonItemProvider.dispose();
+		if (importBIRDFromMSAccessItemProvider != null) importBIRDFromMSAccessItemProvider.dispose();
 	}
 
 }

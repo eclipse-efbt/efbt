@@ -58,9 +58,8 @@ public class Platform_callFactoryImpl extends EFactoryImpl implements Platform_c
 		switch (eClass.getClassifierID()) {
 			case Platform_callPackage.PLATFORM_CALL: return createPlatformCall();
 			case Platform_callPackage.PLATFORM_CALL_MODULE: return createPlatformCallModule();
-			case Platform_callPackage.TRANSLATE_BIRD_WITH_OLD_TEST_FORMAT_TO_COCASON: return createTranslateBIRDWithOldTestFormatToCocason();
 			case Platform_callPackage.CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE: return createConvertSQLDeveloperModelToEcore();
-			case Platform_callPackage.TRANSLATE_BIRD_WITH_NEW_TEST_FORMAT_TO_COCASON: return createTranslateBIRDWithNewTestFormatToCocason();
+			case Platform_callPackage.IMPORT_BIRD_FROM_MS_ACCESS: return createImportBIRDFromMSAccess();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -94,17 +93,6 @@ public class Platform_callFactoryImpl extends EFactoryImpl implements Platform_c
 	 * @generated
 	 */
 	@Override
-	public TranslateBIRDWithOldTestFormatToCocason createTranslateBIRDWithOldTestFormatToCocason() {
-		TranslateBIRDWithOldTestFormatToCocasonImpl translateBIRDWithOldTestFormatToCocason = new TranslateBIRDWithOldTestFormatToCocasonImpl();
-		return translateBIRDWithOldTestFormatToCocason;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public ConvertSQLDeveloperModelToEcore createConvertSQLDeveloperModelToEcore() {
 		ConvertSQLDeveloperModelToEcoreImpl convertSQLDeveloperModelToEcore = new ConvertSQLDeveloperModelToEcoreImpl();
 		return convertSQLDeveloperModelToEcore;
@@ -116,9 +104,9 @@ public class Platform_callFactoryImpl extends EFactoryImpl implements Platform_c
 	 * @generated
 	 */
 	@Override
-	public TranslateBIRDWithNewTestFormatToCocason createTranslateBIRDWithNewTestFormatToCocason() {
-		TranslateBIRDWithNewTestFormatToCocasonImpl translateBIRDWithNewTestFormatToCocason = new TranslateBIRDWithNewTestFormatToCocasonImpl();
-		return translateBIRDWithNewTestFormatToCocason;
+	public ImportBIRDFromMSAccess createImportBIRDFromMSAccess() {
+		ImportBIRDFromMSAccessImpl importBIRDFromMSAccess = new ImportBIRDFromMSAccessImpl();
+		return importBIRDFromMSAccess;
 	}
 
 	/**
