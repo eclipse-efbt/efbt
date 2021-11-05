@@ -40,15 +40,6 @@ public interface Platform_callFactory extends EFactory {
 	PlatformCallModule createPlatformCallModule();
 
 	/**
-	 * Returns a new object of class '<em>Translate BIRD With Old Test Format To Cocason</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Translate BIRD With Old Test Format To Cocason</em>'.
-	 * @generated
-	 */
-	TranslateBIRDWithOldTestFormatToCocason createTranslateBIRDWithOldTestFormatToCocason();
-
-	/**
 	 * Returns a new object of class '<em>Convert SQL Developer Model To Ecore</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -58,13 +49,13 @@ public interface Platform_callFactory extends EFactory {
 	ConvertSQLDeveloperModelToEcore createConvertSQLDeveloperModelToEcore();
 
 	/**
-	 * Returns a new object of class '<em>Translate BIRD With New Test Format To Cocason</em>'.
+	 * Returns a new object of class '<em>Import BIRD From MS Access</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Translate BIRD With New Test Format To Cocason</em>'.
+	 * @return a new object of class '<em>Import BIRD From MS Access</em>'.
 	 * @generated
 	 */
-	TranslateBIRDWithNewTestFormatToCocason createTranslateBIRDWithNewTestFormatToCocason();
+	ImportBIRDFromMSAccess createImportBIRDFromMSAccess();
 
 	/**
 	 * Returns the package supported by this factory.

@@ -76,16 +76,12 @@ public class Platform_callAdapterFactory extends AdapterFactoryImpl {
 				return createPlatformCallModuleAdapter();
 			}
 			@Override
-			public Adapter caseTranslateBIRDWithOldTestFormatToCocason(TranslateBIRDWithOldTestFormatToCocason object) {
-				return createTranslateBIRDWithOldTestFormatToCocasonAdapter();
-			}
-			@Override
 			public Adapter caseConvertSQLDeveloperModelToEcore(ConvertSQLDeveloperModelToEcore object) {
 				return createConvertSQLDeveloperModelToEcoreAdapter();
 			}
 			@Override
-			public Adapter caseTranslateBIRDWithNewTestFormatToCocason(TranslateBIRDWithNewTestFormatToCocason object) {
-				return createTranslateBIRDWithNewTestFormatToCocasonAdapter();
+			public Adapter caseImportBIRDFromMSAccess(ImportBIRDFromMSAccess object) {
+				return createImportBIRDFromMSAccessAdapter();
 			}
 			@Override
 			public Adapter caseModule(org.eclipse.efbt.cocalimo.core.model.module_management.Module object) {
@@ -140,20 +136,6 @@ public class Platform_callAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.TranslateBIRDWithOldTestFormatToCocason <em>Translate BIRD With Old Test Format To Cocason</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.TranslateBIRDWithOldTestFormatToCocason
-	 * @generated
-	 */
-	public Adapter createTranslateBIRDWithOldTestFormatToCocasonAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.ConvertSQLDeveloperModelToEcore <em>Convert SQL Developer Model To Ecore</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -168,16 +150,16 @@ public class Platform_callAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.TranslateBIRDWithNewTestFormatToCocason <em>Translate BIRD With New Test Format To Cocason</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.ImportBIRDFromMSAccess <em>Import BIRD From MS Access</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.TranslateBIRDWithNewTestFormatToCocason
+	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.ImportBIRDFromMSAccess
 	 * @generated
 	 */
-	public Adapter createTranslateBIRDWithNewTestFormatToCocasonAdapter() {
+	public Adapter createImportBIRDFromMSAccessAdapter() {
 		return null;
 	}
 

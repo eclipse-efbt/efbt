@@ -70,28 +70,7 @@ public abstract class Importer implements BirdImporter {
 	 */
 	protected String outputFilepath;
 	
-	
-	/**
-	 * A SMCubesStaticModel instance which contains just TestTemplates,
-	 * note that the testTemplates can refer to TestDefintions 
-	 * in testDefinitionProgram
-	 */
-	public static AortaSMCubesModel testTemplateProgram;
-	/**
-	 * A SMCubesStaticModel instance which contains just TestConstriants
-	 */
-	public static AortaSMCubesModel testConstraintsProgram;
-	
-	
-	/**
-	 * A SMCubesStaticModel instance which contains just functionality Modules
-	 */
-	public static AortaSMCubesModel functionalityModulesProgram;
-	
 
-	public static TestModule testModule;
-	
-	public static TestDefinitionModule testDefinitionModule;
 	/**
 	 * The transformationSchemes
 	 */
@@ -163,10 +142,7 @@ public abstract class Importer implements BirdImporter {
 	 * The file path of the access database
 	 */
 	public  String filepath;
-	/**
-	 * The file path of the input test data
-	 */
-	public  String testdatafilepath;
+	
 
 	/**
 	 * Constructor
@@ -215,7 +191,6 @@ public abstract class Importer implements BirdImporter {
 		dependencies.getTheModules().add(dependency);
 		dependency.setTheModule(members);
 		
-		functionalityModulesProgram = Aorta_smcubesFactory.eINSTANCE.createAortaSMCubesModel();
 
 	}
 
@@ -256,17 +231,15 @@ public abstract class Importer implements BirdImporter {
 
 	/**
 	 * Import all the SMCubes information and store is as EObjects
-	 * @param testdatafilepath 
 	 * @param outputFilepath2 
 	 * @param filepath 
 	 */
 	
-	public void doImport(String theFilepath, String theOutputFilepath, String theTestdatafilepath)
+	public void doImport(String theFilepath, String theOutputFilepath)
 	{
 		
 		filepath = theFilepath;
 		outputFilepath = theOutputFilepath;
-		testdatafilepath = theTestdatafilepath;
 		
 		createAllDomains();  
 		createAllMembers();
@@ -291,8 +264,6 @@ public abstract class Importer implements BirdImporter {
 		URI cubesURI = URI.createFileURI(outputFilepath + "cubes.efbt_data_definition");
 		URI cubestructuresURI = URI.createFileURI(outputFilepath + "cube_structures.efbt_data_definition");
 		URI cubestructureitemsURI = URI.createFileURI(outputFilepath + "cube_structure_items.efbt_data_definition");
-		URI testURI = URI.createFileURI(outputFilepath + "test.program");
-		URI testDefinitionURI = URI.createFileURI(outputFilepath + "test_def.test_definition");
 		// URI transformationsURI = URI.createFileURI(outputFilepath +
 		// "transformations.efbt_vtl_transformation");
 
@@ -313,8 +284,6 @@ public abstract class Importer implements BirdImporter {
 		Resource cubesResource = factory.createResource(cubesURI);
 		Resource cubestructuresResource = factory.createResource(cubestructuresURI);
 		Resource cubestructureitemsResource = factory.createResource(cubestructureitemsURI);
-		Resource testResource = factory.createResource(testURI);
-		Resource testDefinitionResource = factory.createResource(testDefinitionURI);
 		// Resource transformationsResource =
 		// factory.createResource(transformationsURI);
 
@@ -333,8 +302,6 @@ public abstract class Importer implements BirdImporter {
 		cubesResource.getContents().add(cubesModule);
 		cubestructuresResource.getContents().add(cubeStructuresModule);
 		cubestructureitemsResource.getContents().add(cubeStructureItemsModule);
-		testResource.getContents().add(testModule);
-		testDefinitionResource.getContents().add(testDefinitionModule);
 		// transformationsResource.getContents().add(transformationSchemes);
 
 		// cubeMappingResource.getContents().add(cubeMappingModule);
@@ -351,8 +318,6 @@ public abstract class Importer implements BirdImporter {
 			cubesResource.save(Collections.EMPTY_MAP);
 			cubestructuresResource.save(Collections.EMPTY_MAP);
 			cubestructureitemsResource.save(Collections.EMPTY_MAP);			
-			testDefinitionResource.save(Collections.EMPTY_MAP);
-			testResource.save(Collections.EMPTY_MAP);
 			// transformationsResource.save(Collections.EMPTY_MAP);
 			// cubeMappingResource.save(Collections.EMPTY_MAP);
 			// mappingDefinitionResource.save(Collections.EMPTY_MAP);
@@ -388,14 +353,4 @@ public abstract class Importer implements BirdImporter {
 
 	}
 	
-
-	/**
-	 * from Test data sored in CSV format , create all the model instances of
-	 * Test and Store them in the list of  testPrograms. 
-	 */
-	public void importTestDataWithOldTestFormat(String fileLocation) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

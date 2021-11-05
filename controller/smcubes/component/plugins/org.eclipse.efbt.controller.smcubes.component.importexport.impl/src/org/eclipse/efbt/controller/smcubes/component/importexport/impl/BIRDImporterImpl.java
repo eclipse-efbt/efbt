@@ -80,9 +80,9 @@ public class BIRDImporterImpl extends Importer {
 		super();
 	}
 
-	public void doImport(String theFilepath, String theOutputFilepath, String theTestdatafilepath) {
+	public void doImport(String theFilepath, String theOutputFilepath) {
 
-		super.doImport(theFilepath, theOutputFilepath, theTestdatafilepath);
+		super.doImport(theFilepath, theOutputFilepath);
 	}
 
 	/**
@@ -904,7 +904,7 @@ public class BIRDImporterImpl extends Importer {
 	 * we will create instances of TestDefintions TestConstraints, 
 	 * and TestTemplates which the Test instance will refer to.
 	 */
-	@Override
+	/**
 	public void importTestDataWithOldTestFormat(String fileLocation) {
 		
 		prepareTestData();
@@ -1059,7 +1059,7 @@ public class BIRDImporterImpl extends Importer {
 		
 	}
 	
-
+*/
 	/**
 	 * Get the related EnumMeber
 	 * 
@@ -1250,8 +1250,7 @@ public class BIRDImporterImpl extends Importer {
 
 		String filepath = args[0];
 		String outputFilepath = args[1];
-		String testdatafilepath = args[2];
-		importer.doImport(filepath, outputFilepath, testdatafilepath);
+		importer.doImport(filepath, outputFilepath);
 
 	}
 

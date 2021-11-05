@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.efbt.controller.smcubes.component.export_smcubes.test;
 
-import org.eclipse.efbt.controller.smcubes.component.export_smcubes.ImportAndExportSMCubesToNewCocason;
+import org.eclipse.efbt.controller.smcubes.component.export_smcubes.ImportOfBIRDFromMSAccess;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 //import org.eclipse.emf.eson.EFactoryStandaloneSetup;
@@ -24,7 +24,7 @@ public class ImportExportSMCubesTest {
     public void exampleTest() {
 		
 		
-		ImportAndExportSMCubesToNewCocason tester = new ImportAndExportSMCubesToNewCocason(); // BirdImporter is tested
+		ImportOfBIRDFromMSAccess tester = new ImportOfBIRDFromMSAccess(); // BirdImporter is tested
 
 	/**	
 	// need to move this to resources

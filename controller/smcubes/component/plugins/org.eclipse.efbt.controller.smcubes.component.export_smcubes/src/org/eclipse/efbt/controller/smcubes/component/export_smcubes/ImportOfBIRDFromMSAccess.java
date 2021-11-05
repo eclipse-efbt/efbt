@@ -19,16 +19,15 @@ import org.eclipse.efbt.controller.smcubes.component.importexport.impl.Importer;
 
 
 
-public class ImportAndExportSMCubesToNewCocason {
+public class ImportOfBIRDFromMSAccess {
 
 	
 	
 	
-	public static void translateBIRDWithNewTestFormatToCoCaLiMo(String filepath, String outputFilepath, String testdatafilepath)
+	public static void importBIRDFromMSAccess(String filepath, String outputFilepath)
 	{
 		Importer  importer = new BIRDImporterImpl(); 
-		importer.doImport(filepath,outputFilepath,testdatafilepath);
-		importer.importTestDataWithOldTestFormat(testdatafilepath);
+		importer.doImport(filepath,outputFilepath);
 		importer.saveArtifactsAsJSON();
 	}
 	
