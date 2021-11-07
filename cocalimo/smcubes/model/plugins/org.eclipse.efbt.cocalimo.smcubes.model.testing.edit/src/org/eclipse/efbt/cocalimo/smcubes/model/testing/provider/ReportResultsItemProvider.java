@@ -6,8 +6,7 @@ package org.eclipse.efbt.cocalimo.smcubes.model.testing.provider;
 import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.reports.ReportsFactory;
-
+import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.Cocalimo_smcubes_extensionFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.testing.ReportResults;
 import org.eclipse.efbt.cocalimo.smcubes.model.testing.TestingPackage;
 
@@ -152,7 +151,7 @@ public class ReportResultsItemProvider
 		newChildDescriptors.add
 			(createChildParameter
 				(TestingPackage.Literals.REPORT_RESULTS__REPORT_RESULTS,
-				 ReportsFactory.eINSTANCE.createReportCellValue()));
+				 Cocalimo_smcubes_extensionFactory.eINSTANCE.createReportCellValue()));
 	}
 
 	/**

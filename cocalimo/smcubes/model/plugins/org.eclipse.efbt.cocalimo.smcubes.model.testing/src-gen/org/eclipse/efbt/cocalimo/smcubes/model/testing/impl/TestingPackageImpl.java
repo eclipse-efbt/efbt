@@ -12,22 +12,13 @@ import org.eclipse.efbt.cocalimo.core.model.requirements_text.Requirements_textP
 
 import org.eclipse.efbt.cocalimo.core.model.scenarios.ScenariosPackage;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.Cocalimo_smcubes_extensionPackage;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.Data_definitionPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.Efbt_data_definitionPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.Efbt_mappingPackage;
-
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MappingPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.rendering.RenderingPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.reports.ReportsPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.Smcubes_modelPackage;
-
 import org.eclipse.efbt.cocalimo.smcubes.model.testing.Cell;
 import org.eclipse.efbt.cocalimo.smcubes.model.testing.CellWithEnumeratedValue;
 import org.eclipse.efbt.cocalimo.smcubes.model.testing.CellWithValue;
@@ -174,12 +165,9 @@ public class TestingPackageImpl extends EPackageImpl implements TestingPackage {
 		Requirements_textPackage.eINSTANCE.eClass();
 		CorePackage.eINSTANCE.eClass();
 		Data_definitionPackage.eINSTANCE.eClass();
-		Efbt_data_definitionPackage.eINSTANCE.eClass();
-		Efbt_mappingPackage.eINSTANCE.eClass();
 		MappingPackage.eINSTANCE.eClass();
 		RenderingPackage.eINSTANCE.eClass();
-		ReportsPackage.eINSTANCE.eClass();
-		Smcubes_modelPackage.eINSTANCE.eClass();
+		Cocalimo_smcubes_extensionPackage.eINSTANCE.eClass();
 
 		// Create package meta-data objects
 		theTestingPackage.createPackageContents();
@@ -568,9 +556,8 @@ public class TestingPackageImpl extends EPackageImpl implements TestingPackage {
 		// Obtain other dependent packages
 		CorePackage theCorePackage = (CorePackage)EPackage.Registry.INSTANCE.getEPackage(CorePackage.eNS_URI);
 		Data_definitionPackage theData_definitionPackage = (Data_definitionPackage)EPackage.Registry.INSTANCE.getEPackage(Data_definitionPackage.eNS_URI);
-		Smcubes_modelPackage theSmcubes_modelPackage = (Smcubes_modelPackage)EPackage.Registry.INSTANCE.getEPackage(Smcubes_modelPackage.eNS_URI);
+		Cocalimo_smcubes_extensionPackage theCocalimo_smcubes_extensionPackage = (Cocalimo_smcubes_extensionPackage)EPackage.Registry.INSTANCE.getEPackage(Cocalimo_smcubes_extensionPackage.eNS_URI);
 		Logical_transformationsPackage theLogical_transformationsPackage = (Logical_transformationsPackage)EPackage.Registry.INSTANCE.getEPackage(Logical_transformationsPackage.eNS_URI);
-		ReportsPackage theReportsPackage = (ReportsPackage)EPackage.Registry.INSTANCE.getEPackage(ReportsPackage.eNS_URI);
 		ScenariosPackage theScenariosPackage = (ScenariosPackage)EPackage.Registry.INSTANCE.getEPackage(ScenariosPackage.eNS_URI);
 
 		// Create type parameters
@@ -606,12 +593,12 @@ public class TestingPackageImpl extends EPackageImpl implements TestingPackage {
 		initEReference(getRowData_Cells(), this.getCell(), null, "cells", null, 0, -1, RowData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(testModuleEClass, TestModule.class, "TestModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getTestModule_SMCubesModel(), theSmcubes_modelPackage.getSmcubesModel(), null, "SMCubesModel", null, 0, -1, TestModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTestModule_SMCubesModel(), theCocalimo_smcubes_extensionPackage.getSmcubesModel(), null, "SMCubesModel", null, 0, -1, TestModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTestModule_Tests(), this.getTest(), null, "tests", null, 0, -1, TestModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTestModule_LogicalTransformations(), theLogical_transformationsPackage.getLogicalTransformationModule(), null, "logicalTransformations", null, 0, 1, TestModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(reportResultsEClass, ReportResults.class, "ReportResults", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getReportResults_ReportResults(), theReportsPackage.getReportCellValue(), null, "reportResults", null, 0, -1, ReportResults.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getReportResults_ReportResults(), theCocalimo_smcubes_extensionPackage.getReportCellValue(), null, "reportResults", null, 0, -1, ReportResults.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(testEClass, Test.class, "Test", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getTest_InputData(), this.getInputData(), null, "inputData", null, 0, 1, Test.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -5,9 +5,6 @@ package org.eclipse.efbt.cocalimo.smcubes.model.testing.impl;
 import java.util.Collection;
 
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.SmcubesModel;
-
 import org.eclipse.efbt.cocalimo.smcubes.model.testing.Test;
 import org.eclipse.efbt.cocalimo.smcubes.model.testing.TestModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.testing.TestingPackage;
@@ -51,7 +48,7 @@ public class TestModuleImpl extends MinimalEObjectImpl.Container implements Test
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<SmcubesModel> smCubesModel;
+	protected EList<org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel> smCubesModel;
 
 	/**
 	 * The cached value of the '{@link #getTests() <em>Tests</em>}' containment reference list.
@@ -98,9 +95,9 @@ public class TestModuleImpl extends MinimalEObjectImpl.Container implements Test
 	 * @generated
 	 */
 	@Override
-	public EList<SmcubesModel> getSMCubesModel() {
+	public EList<org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel> getSMCubesModel() {
 		if (smCubesModel == null) {
-			smCubesModel = new EObjectResolvingEList<SmcubesModel>(SmcubesModel.class, this, TestingPackage.TEST_MODULE__SM_CUBES_MODEL);
+			smCubesModel = new EObjectResolvingEList<org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel>(org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel.class, this, TestingPackage.TEST_MODULE__SM_CUBES_MODEL);
 		}
 		return smCubesModel;
 	}
@@ -202,7 +199,7 @@ public class TestModuleImpl extends MinimalEObjectImpl.Container implements Test
 		switch (featureID) {
 			case TestingPackage.TEST_MODULE__SM_CUBES_MODEL:
 				getSMCubesModel().clear();
-				getSMCubesModel().addAll((Collection<? extends SmcubesModel>)newValue);
+				getSMCubesModel().addAll((Collection<? extends org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel>)newValue);
 				return;
 			case TestingPackage.TEST_MODULE__TESTS:
 				getTests().clear();

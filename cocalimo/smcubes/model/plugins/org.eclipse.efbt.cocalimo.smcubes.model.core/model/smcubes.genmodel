@@ -8,12 +8,9 @@
     operationReflection="true" importOrganizing="true">
   <foreignModel>core.ecore</foreignModel>
   <foreignModel>data_definition.ecore</foreignModel>
-  <foreignModel>efbt_data_definition.ecore</foreignModel>
-  <foreignModel>efbt_mapping.ecore</foreignModel>
   <foreignModel>mapping.ecore</foreignModel>
   <foreignModel>rendering.ecore</foreignModel>
-  <foreignModel>reports.ecore</foreignModel>
-  <foreignModel>smcubes_model.ecore</foreignModel>
+  <foreignModel>cocalimo_smcubes_extension.ecore</foreignModel>
   <genPackages prefix="Core" basePackage="org.eclipse.efbt.cocalimo.smcubes.model"
       resource="XMI" disposableProviderFactory="true" ecorePackage="core.ecore#/">
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="core.ecore#//FACET_VALUE_TYPE">
@@ -294,47 +291,6 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_definition.ecore#//FRAMEWORK_VARIABLE_SET/variable_set_id"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Efbt_data_definition" basePackage="org.eclipse.efbt.cocalimo.smcubes.model"
-      resource="XMI" disposableProviderFactory="true" ecorePackage="efbt_data_definition.ecore#/">
-    <genClasses ecoreClass="efbt_data_definition.ecore#//CombinationModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_data_definition.ecore#//CombinationModule/combinations"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_data_definition.ecore#//CombinationModule/combination_items"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_data_definition.ecore#//CombinationModule/cubeToCombinationLinks"/>
-    </genClasses>
-    <genClasses ecoreClass="efbt_data_definition.ecore#//CubeModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_data_definition.ecore#//CubeModule/cubes"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_data_definition.ecore#//CubeModule/cubeStructures"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_data_definition.ecore#//CubeModule/cubeStructureItems"/>
-    </genClasses>
-    <genClasses ecoreClass="efbt_data_definition.ecore#//DomainModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_data_definition.ecore#//DomainModule/domains"/>
-    </genClasses>
-    <genClasses ecoreClass="efbt_data_definition.ecore#//MemberHierarchyModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_data_definition.ecore#//MemberHierarchyModule/memberHierarchies"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_data_definition.ecore#//MemberHierarchyModule/memberHierarchiesNodes"/>
-    </genClasses>
-    <genClasses ecoreClass="efbt_data_definition.ecore#//MemberModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_data_definition.ecore#//MemberModule/members"/>
-    </genClasses>
-    <genClasses ecoreClass="efbt_data_definition.ecore#//VariableModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_data_definition.ecore#//VariableModule/variables"/>
-    </genClasses>
-  </genPackages>
-  <genPackages prefix="Efbt_mapping" basePackage="org.eclipse.efbt.cocalimo.smcubes.model"
-      resource="XMI" disposableProviderFactory="true" ecorePackage="efbt_mapping.ecore#/">
-    <genClasses ecoreClass="efbt_mapping.ecore#//MappingDefinitionModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_mapping.ecore#//MappingDefinitionModule/mappings"/>
-    </genClasses>
-    <genClasses ecoreClass="efbt_mapping.ecore#//CubeMappingModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_mapping.ecore#//CubeMappingModule/cubeMappings"/>
-    </genClasses>
-    <genClasses ecoreClass="efbt_mapping.ecore#//MemberMappingModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_mapping.ecore#//MemberMappingModule/memberMappings"/>
-    </genClasses>
-    <genClasses ecoreClass="efbt_mapping.ecore#//VariableMappingModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference efbt_mapping.ecore#//VariableMappingModule/variableMappings"/>
-    </genClasses>
-  </genPackages>
   <genPackages prefix="Mapping" basePackage="org.eclipse.efbt.cocalimo.smcubes.model"
       resource="XMI" disposableProviderFactory="true" ecorePackage="mapping.ecore#/">
     <genClasses ecoreClass="mapping.ecore#//CUBE_MAPPING">
@@ -440,49 +396,77 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference rendering.ecore#//TABLE_CELL/table_id"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Reports" basePackage="org.eclipse.efbt.cocalimo.smcubes.model"
-      resource="XMI" disposableProviderFactory="true" ecorePackage="reports.ecore#/">
-    <genClasses ecoreClass="reports.ecore#//AxisModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reports.ecore#//AxisModule/axes"/>
+  <genPackages prefix="Cocalimo_smcubes_extension" basePackage="org.eclipse.efbt.cocalimo.smcubes.model"
+      resource="XMI" disposableProviderFactory="true" ecorePackage="cocalimo_smcubes_extension.ecore#/">
+    <genClasses ecoreClass="cocalimo_smcubes_extension.ecore#//SmcubesModel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocalimo_smcubes_extension.ecore#//SmcubesModel/domains"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocalimo_smcubes_extension.ecore#//SmcubesModel/members"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocalimo_smcubes_extension.ecore#//SmcubesModel/variables"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocalimo_smcubes_extension.ecore#//SmcubesModel/cubes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocalimo_smcubes_extension.ecore#//SmcubesModel/combinations"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocalimo_smcubes_extension.ecore#//SmcubesModel/mappings"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cocalimo_smcubes_extension.ecore#//SmcubesModel/name"/>
     </genClasses>
-    <genClasses ecoreClass="reports.ecore#//AxisOrdinateModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reports.ecore#//AxisOrdinateModule/axis_ordinates"/>
+    <genClasses ecoreClass="cocalimo_smcubes_extension.ecore#//CombinationModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocalimo_smcubes_extension.ecore#//CombinationModule/combinations"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocalimo_smcubes_extension.ecore#//CombinationModule/combination_items"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocalimo_smcubes_extension.ecore#//CombinationModule/cubeToCombinationLinks"/>
     </genClasses>
-    <genClasses ecoreClass="reports.ecore#//CellPositionModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reports.ecore#//CellPositionModule/reportTables"/>
+    <genClasses ecoreClass="cocalimo_smcubes_extension.ecore#//CubeModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocalimo_smcubes_extension.ecore#//CubeModule/cubes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocalimo_smcubes_extension.ecore#//CubeModule/cubeStructures"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocalimo_smcubes_extension.ecore#//CubeModule/cubeStructureItems"/>
     </genClasses>
-    <genClasses ecoreClass="reports.ecore#//OrdinateItemModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reports.ecore#//OrdinateItemModule/ordinateItems"/>
+    <genClasses ecoreClass="cocalimo_smcubes_extension.ecore#//DomainModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocalimo_smcubes_extension.ecore#//DomainModule/domains"/>
     </genClasses>
-    <genClasses ecoreClass="reports.ecore#//PopulatedReport">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reports.ecore#//PopulatedReport/reportCellValues"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reports.ecore#//PopulatedReport/name"/>
+    <genClasses ecoreClass="cocalimo_smcubes_extension.ecore#//MemberHierarchyModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocalimo_smcubes_extension.ecore#//MemberHierarchyModule/memberHierarchies"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocalimo_smcubes_extension.ecore#//MemberHierarchyModule/memberHierarchiesNodes"/>
     </genClasses>
-    <genClasses ecoreClass="reports.ecore#//ReportCell">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference reports.ecore#//ReportCell/combination"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reports.ecore#//ReportCell/name"/>
+    <genClasses ecoreClass="cocalimo_smcubes_extension.ecore#//MemberModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocalimo_smcubes_extension.ecore#//MemberModule/members"/>
     </genClasses>
-    <genClasses ecoreClass="reports.ecore#//ReportCellValue">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference reports.ecore#//ReportCellValue/reportCell"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reports.ecore#//ReportCellValue/value"/>
+    <genClasses ecoreClass="cocalimo_smcubes_extension.ecore#//VariableModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocalimo_smcubes_extension.ecore#//VariableModule/variables"/>
     </genClasses>
-    <genClasses ecoreClass="reports.ecore#//ReportTableModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reports.ecore#//ReportTableModule/reportTables"/>
+    <genClasses ecoreClass="cocalimo_smcubes_extension.ecore#//MappingDefinitionModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocalimo_smcubes_extension.ecore#//MappingDefinitionModule/mappings"/>
     </genClasses>
-    <genClasses ecoreClass="reports.ecore#//TableCellModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference reports.ecore#//TableCellModule/tableCells"/>
+    <genClasses ecoreClass="cocalimo_smcubes_extension.ecore#//CubeMappingModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocalimo_smcubes_extension.ecore#//CubeMappingModule/cubeMappings"/>
     </genClasses>
-  </genPackages>
-  <genPackages prefix="Smcubes_model" basePackage="org.eclipse.efbt.cocalimo.smcubes.model"
-      resource="XMI" disposableProviderFactory="true" ecorePackage="smcubes_model.ecore#/">
-    <genClasses ecoreClass="smcubes_model.ecore#//SmcubesModel">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference smcubes_model.ecore#//SmcubesModel/domains"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference smcubes_model.ecore#//SmcubesModel/members"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference smcubes_model.ecore#//SmcubesModel/variables"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference smcubes_model.ecore#//SmcubesModel/cubes"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference smcubes_model.ecore#//SmcubesModel/combinations"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference smcubes_model.ecore#//SmcubesModel/mappings"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute smcubes_model.ecore#//SmcubesModel/name"/>
+    <genClasses ecoreClass="cocalimo_smcubes_extension.ecore#//MemberMappingModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocalimo_smcubes_extension.ecore#//MemberMappingModule/memberMappings"/>
+    </genClasses>
+    <genClasses ecoreClass="cocalimo_smcubes_extension.ecore#//VariableMappingModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocalimo_smcubes_extension.ecore#//VariableMappingModule/variableMappings"/>
+    </genClasses>
+    <genClasses ecoreClass="cocalimo_smcubes_extension.ecore#//AxisModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocalimo_smcubes_extension.ecore#//AxisModule/axes"/>
+    </genClasses>
+    <genClasses ecoreClass="cocalimo_smcubes_extension.ecore#//AxisOrdinateModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocalimo_smcubes_extension.ecore#//AxisOrdinateModule/axis_ordinates"/>
+    </genClasses>
+    <genClasses ecoreClass="cocalimo_smcubes_extension.ecore#//CellPositionModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocalimo_smcubes_extension.ecore#//CellPositionModule/reportTables"/>
+    </genClasses>
+    <genClasses ecoreClass="cocalimo_smcubes_extension.ecore#//OrdinateItemModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocalimo_smcubes_extension.ecore#//OrdinateItemModule/ordinateItems"/>
+    </genClasses>
+    <genClasses ecoreClass="cocalimo_smcubes_extension.ecore#//ReportCell">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cocalimo_smcubes_extension.ecore#//ReportCell/combination"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cocalimo_smcubes_extension.ecore#//ReportCell/name"/>
+    </genClasses>
+    <genClasses ecoreClass="cocalimo_smcubes_extension.ecore#//ReportCellValue">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference cocalimo_smcubes_extension.ecore#//ReportCellValue/reportCell"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute cocalimo_smcubes_extension.ecore#//ReportCellValue/value"/>
+    </genClasses>
+    <genClasses ecoreClass="cocalimo_smcubes_extension.ecore#//ReportTableModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocalimo_smcubes_extension.ecore#//ReportTableModule/reportTables"/>
+    </genClasses>
+    <genClasses ecoreClass="cocalimo_smcubes_extension.ecore#//TableCellModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocalimo_smcubes_extension.ecore#//TableCellModule/tableCells"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

@@ -2,8 +2,6 @@
  */
 package org.eclipse.efbt.cocalimo.smcubes.model.testing;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.reports.ReportCellValue;
-
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EObject;
@@ -27,7 +25,7 @@ import org.eclipse.emf.ecore.EObject;
 public interface ReportResults extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Report Results</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.smcubes.model.reports.ReportCellValue}.
+	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.ReportCellValue}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Report Results</em>' containment reference list.
@@ -35,6 +33,6 @@ public interface ReportResults extends EObject {
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<ReportCellValue> getReportResults();
+	EList<org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.ReportCellValue> getReportResults();
 
 } // ReportResults

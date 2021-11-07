@@ -140,7 +140,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TestModule">
     <eStructuralFeatures xsi:type="ecore:EReference" name="SMCubesModel" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes_model.ecore#//SmcubesModel"/>
+        eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/cocalimo_smcubes_extension.ecore#//SmcubesModel"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="tests" upperBound="-1"
         eType="#//Test" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="logicalTransformations"
@@ -148,7 +148,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ReportResults">
     <eStructuralFeatures xsi:type="ecore:EReference" name="reportResults" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/reports.ecore#//ReportCellValue"
+        eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/cocalimo_smcubes_extension.ecore#//ReportCellValue"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Test">

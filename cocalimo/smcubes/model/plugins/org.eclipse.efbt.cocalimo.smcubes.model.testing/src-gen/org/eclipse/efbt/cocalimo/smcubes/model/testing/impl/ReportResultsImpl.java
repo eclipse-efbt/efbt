@@ -3,9 +3,6 @@
 package org.eclipse.efbt.cocalimo.smcubes.model.testing.impl;
 
 import java.util.Collection;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.reports.ReportCellValue;
-
 import org.eclipse.efbt.cocalimo.smcubes.model.testing.ReportResults;
 import org.eclipse.efbt.cocalimo.smcubes.model.testing.TestingPackage;
 
@@ -43,7 +40,7 @@ public class ReportResultsImpl extends MinimalEObjectImpl.Container implements R
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<ReportCellValue> reportResults;
+	protected EList<org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.ReportCellValue> reportResults;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -70,9 +67,9 @@ public class ReportResultsImpl extends MinimalEObjectImpl.Container implements R
 	 * @generated
 	 */
 	@Override
-	public EList<ReportCellValue> getReportResults() {
+	public EList<org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.ReportCellValue> getReportResults() {
 		if (reportResults == null) {
-			reportResults = new EObjectContainmentEList<ReportCellValue>(ReportCellValue.class, this, TestingPackage.REPORT_RESULTS__REPORT_RESULTS);
+			reportResults = new EObjectContainmentEList<org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.ReportCellValue>(org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.ReportCellValue.class, this, TestingPackage.REPORT_RESULTS__REPORT_RESULTS);
 		}
 		return reportResults;
 	}
@@ -116,7 +113,7 @@ public class ReportResultsImpl extends MinimalEObjectImpl.Container implements R
 		switch (featureID) {
 			case TestingPackage.REPORT_RESULTS__REPORT_RESULTS:
 				getReportResults().clear();
-				getReportResults().addAll((Collection<? extends ReportCellValue>)newValue);
+				getReportResults().addAll((Collection<? extends org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.ReportCellValue>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);

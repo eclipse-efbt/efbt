@@ -159,18 +159,11 @@ import org.eclipse.efbt.cocalimo.smcubes.model.core.provider.CoreItemProviderAda
 
 import org.eclipse.efbt.cocalimo.core.model.module_management.provider.Module_managementItemProviderAdapterFactory;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.provider.Cocalimo_smcubes_extensionItemProviderAdapterFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.provider.Data_definitionItemProviderAdapterFactory;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.provider.Efbt_data_definitionItemProviderAdapterFactory;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.provider.Efbt_mappingItemProviderAdapterFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.provider.MappingItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.rendering.provider.RenderingItemProviderAdapterFactory;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.reports.provider.ReportsItemProviderAdapterFactory;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.provider.Smcubes_modelItemProviderAdapterFactory;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 
@@ -726,12 +719,9 @@ public class CoreEditor
 		adapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new CoreItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Data_definitionItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new Efbt_data_definitionItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new Efbt_mappingItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new MappingItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new RenderingItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new ReportsItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new Smcubes_modelItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new Cocalimo_smcubes_extensionItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Module_managementItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 

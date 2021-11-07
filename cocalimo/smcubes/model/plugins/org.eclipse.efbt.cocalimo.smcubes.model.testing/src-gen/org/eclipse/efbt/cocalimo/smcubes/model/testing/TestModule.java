@@ -3,9 +3,6 @@
 package org.eclipse.efbt.cocalimo.smcubes.model.testing;
 
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.SmcubesModel;
-
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EObject;
@@ -31,7 +28,7 @@ import org.eclipse.emf.ecore.EObject;
 public interface TestModule extends EObject {
 	/**
 	 * Returns the value of the '<em><b>SM Cubes Model</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.SmcubesModel}.
+	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>SM Cubes Model</em>' reference list.
@@ -39,7 +36,7 @@ public interface TestModule extends EObject {
 	 * @model
 	 * @generated
 	 */
-	EList<SmcubesModel> getSMCubesModel();
+	EList<org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel> getSMCubesModel();
 
 	/**
 	 * Returns the value of the '<em><b>Tests</b></em>' containment reference list.
