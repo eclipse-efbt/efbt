@@ -20,12 +20,12 @@ import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.sirius.diagram.DNodeContainer;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.Bpmn_liteFactory;
-import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.Bpmn_litePackage;
-import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.FlowElementsContainer;
-import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.ServiceTask;
-import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.Task;
-import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.impl.TaskImpl;
+import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Bpmn_liteFactory;
+import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Bpmn_litePackage;
+import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.FlowElementsContainer;
+import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ServiceTask;
+import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Task;
+import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.impl.TaskImpl;
 
 /**
  * Test and conversion services to operate on Task objects.

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <!-- @generated logical_transformations -->
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="org.eclipse.efbt.cocalimo.core.model.logical_transformations.presentation.Logical_transformationsModelWizardID"
+            name="%_UI_Logical_transformationsModelWizard_label"
+            class="org.eclipse.efbt.cocalimo.core.model.logical_transformations.presentation.Logical_transformationsModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/Logical_transformationsModelFile.gif">
+         <description>%_UI_Logical_transformationsModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <!-- @generated logical_transformations -->
+      <editor
+            id="org.eclipse.efbt.cocalimo.core.model.logical_transformations.presentation.Logical_transformationsEditorID"
+            name="%_UI_Logical_transformationsEditor_label"
+            icon="icons/full/obj16/Logical_transformationsModelFile.gif"
+            extensions="logical_transformations"
+            class="org.eclipse.efbt.cocalimo.core.model.logical_transformations.presentation.Logical_transformationsEditor"
+            contributorClass="org.eclipse.efbt.cocalimo.core.model.logical_transformations.presentation.Logical_transformationsActionBarContributor">
+      </editor>
+   </extension>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <!-- @generated logical_transformations -->
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="org.eclipse.efbt.cocalimo.core.model.scenarios.presentation.ScenariosModelWizardID"
+            name="%_UI_ScenariosModelWizard_label"
+            class="org.eclipse.efbt.cocalimo.core.model.scenarios.presentation.ScenariosModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/ScenariosModelFile.gif">
+         <description>%_UI_ScenariosModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <!-- @generated logical_transformations -->
+      <editor
+            id="org.eclipse.efbt.cocalimo.core.model.scenarios.presentation.ScenariosEditorID"
+            name="%_UI_ScenariosEditor_label"
+            icon="icons/full/obj16/ScenariosModelFile.gif"
+            extensions="scenarios"
+            class="org.eclipse.efbt.cocalimo.core.model.scenarios.presentation.ScenariosEditor"
+            contributorClass="org.eclipse.efbt.cocalimo.core.model.scenarios.presentation.ScenariosActionBarContributor">
+      </editor>
+   </extension>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <!-- @generated logical_transformations -->
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="org.eclipse.efbt.cocalimo.core.model.bpmn_lite.presentation.Bpmn_liteModelWizardID"
+            name="%_UI_Bpmn_liteModelWizard_label"
+            class="org.eclipse.efbt.cocalimo.core.model.bpmn_lite.presentation.Bpmn_liteModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/Bpmn_liteModelFile.gif">
+         <description>%_UI_Bpmn_liteModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <!-- @generated logical_transformations -->
+      <editor
+            id="org.eclipse.efbt.cocalimo.core.model.bpmn_lite.presentation.Bpmn_liteEditorID"
+            name="%_UI_Bpmn_liteEditor_label"
+            icon="icons/full/obj16/Bpmn_liteModelFile.gif"
+            extensions="bpmn_lite"
+            class="org.eclipse.efbt.cocalimo.core.model.bpmn_lite.presentation.Bpmn_liteEditor"
+            contributorClass="org.eclipse.efbt.cocalimo.core.model.bpmn_lite.presentation.Bpmn_liteActionBarContributor">
+      </editor>
+   </extension>
+
+</plugin>

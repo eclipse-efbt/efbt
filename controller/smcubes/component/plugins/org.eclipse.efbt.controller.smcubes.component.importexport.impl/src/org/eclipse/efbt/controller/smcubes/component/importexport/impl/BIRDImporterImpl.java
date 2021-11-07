@@ -13,32 +13,15 @@
 package org.eclipse.efbt.controller.smcubes.component.importexport.impl;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
-import org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.access.api.AccessRow;
-import org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.access.api.AccessUtils;
-import org.eclipse.efbt.controller.smcubes.component.access.provider.AccessUtilProvider;
-import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.Aorta_smcubesFactory;
-import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.Test;
-import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinition;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.input_data.CellWithEnumeratedValue;
-import org.eclipse.efbt.cocalimo.smcubes.model.input_data.CellWithValue;
-import org.eclipse.efbt.cocalimo.smcubes.model.input_data.CubeData;
-import org.eclipse.efbt.cocalimo.smcubes.model.input_data.RowData;
-import org.eclipse.efbt.cocalimo.smcubes.model.input_data.InputData;
-import org.eclipse.efbt.cocalimo.smcubes.model.input_data.Input_dataFactory;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.CoreFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.DOMAIN;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.FACET_VALUE_TYPE;
@@ -58,11 +41,11 @@ import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MAPPING_TO_CUBE;
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MEMBER_MAPPING;
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MappingFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.VARIABLE_MAPPING;
+import org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.access.api.AccessRow;
+import org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.access.api.AccessUtils;
+import org.eclipse.efbt.controller.smcubes.component.access.provider.AccessUtilProvider;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
 
 /**
  * This class is responsable for structure data taking data from the BIRD Access

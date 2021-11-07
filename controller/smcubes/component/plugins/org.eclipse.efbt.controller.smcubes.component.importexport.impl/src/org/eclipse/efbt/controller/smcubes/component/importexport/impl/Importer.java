@@ -22,10 +22,6 @@ import java.util.List;
 import org.eclipse.efbt.cocalimo.core.model.module_management.ModuleDependencies;
 import org.eclipse.efbt.cocalimo.core.model.module_management.ModuleDependency;
 import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementFactory;
-import org.eclipse.efbt.controller.smcubes.component.importexport.api.BirdImporter;
-import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.AortaSMCubesModel;
-import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinitionModule;
-import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.CombinationModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.CubeModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.DomainModule;
@@ -39,11 +35,11 @@ import org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.MemberMappingModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.VariableMappingModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.SmcubesModel;
 import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.Smcubes_modelFactory;
+import org.eclipse.efbt.controller.smcubes.component.importexport.api.BirdImporter;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.emfjson.jackson.resource.JsonResourceFactory;
-import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.Aorta_smcubesFactory;
 
 
 
