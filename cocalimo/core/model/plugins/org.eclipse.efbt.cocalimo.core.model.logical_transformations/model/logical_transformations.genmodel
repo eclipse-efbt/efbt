@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.cocalimo.core.model.logical_transformations/src-gen"
+    editDirectory="/org.eclipse.efbt.cocalimo.core.model.logical_transformations.edit/src"
+    editorDirectory="/org.eclipse.efbt.cocalimo.core.model.logical_transformations.editor/src"
+    modelPluginID="org.eclipse.efbt.cocalimo.core.model.logical_transformations" modelName="Logical_transformations"
+    editPluginClass="org.eclipse.efbt.cocalimo.core.model.logical_transformations.provider.TaskEditPlugin"
+    editorPluginClass="org.eclipse.efbt.cocalimo.core.model.logical_transformations.presentation.TaskEditorPlugin"
+    rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" testSuiteClass="org.eclipse.efbt.cocalimo.core.model.logical_transformations.tests.TaskAllTests"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="8.0" copyrightFields="false"
+    editPluginID="org.eclipse.efbt.cocalimo.core.model.logical_transformations.edit"
+    editorPluginID="org.eclipse.efbt.cocalimo.core.model.logical_transformations.editor"
+    testsPluginID="org.eclipse.efbt.cocalimo.core.model.logical_transformations.tests"
+    usedGenPackages="../../org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore ../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.cocalimo.core.model.requirements_text/model/requirements_text.genmodel#//requirements_text"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>logical_transformations.ecore</foreignModel>
+  <foreignModel>bpmn_lite.ecore</foreignModel>
+  <genPackages prefix="Logical_transformations" basePackage="org.eclipse.efbt.cocalimo.core.model"
+      resource="XMI" disposableProviderFactory="true" ecorePackage="logical_transformations.ecore#/">
+    <genClasses ecoreClass="logical_transformations.ecore#//LogicalTransformationModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference logical_transformations.ecore#//LogicalTransformationModule/taskTags"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference logical_transformations.ecore#//LogicalTransformationModule/scenarioTags"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference logical_transformations.ecore#//LogicalTransformationModule/subProcesses"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference logical_transformations.ecore#//LogicalTransformationModule/requirements"/>
+    </genClasses>
+    <genClasses ecoreClass="logical_transformations.ecore#//TaskTag"/>
+    <genClasses ecoreClass="logical_transformations.ecore#//Scenario">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute logical_transformations.ecore#//Scenario/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute logical_transformations.ecore#//Scenario/invisible"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute logical_transformations.ecore#//Scenario/description"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference logical_transformations.ecore#//Scenario/requiredAttributes"/>
+    </genClasses>
+    <genClasses ecoreClass="logical_transformations.ecore#//ScenarioTag">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference logical_transformations.ecore#//ScenarioTag/scenario"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Bpmn_lite" basePackage="org.eclipse.efbt.cocalimo.core.model"
+      resource="XMI" disposableProviderFactory="true" ecorePackage="bpmn_lite.ecore#/">
+    <genClasses ecoreClass="bpmn_lite.ecore#//BaseElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn_lite.ecore#//BaseElement/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn_lite.ecore#//BaseElement/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn_lite.ecore#//BaseElement/invisible"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn_lite.ecore#//FlowElementsContainer">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn_lite.ecore#//FlowElementsContainer/flowElements"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn_lite.ecore#//FlowElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn_lite.ecore#//FlowElement/name"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn_lite.ecore#//FlowNode">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bpmn_lite.ecore#//FlowNode/outgoing"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bpmn_lite.ecore#//FlowNode/incoming"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn_lite.ecore#//SequenceFlow">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bpmn_lite.ecore#//SequenceFlow/targetRef"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bpmn_lite.ecore#//SequenceFlow/sourceRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn_lite.ecore#//Task">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bpmn_lite.ecore#//Task/entity"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn_lite.ecore#//Activity"/>
+    <genClasses ecoreClass="bpmn_lite.ecore#//Gateway"/>
+    <genClasses ecoreClass="bpmn_lite.ecore#//ExclusiveGateway"/>
+    <genClasses ecoreClass="bpmn_lite.ecore#//InclusiveGateway"/>
+    <genClasses ecoreClass="bpmn_lite.ecore#//ParallelGateway"/>
+    <genClasses ecoreClass="bpmn_lite.ecore#//ServiceTask">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bpmn_lite.ecore#//ServiceTask/enrichedAttribute"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn_lite.ecore#//ServiceTask/scenarios"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bpmn_lite.ecore#//ServiceTask/linkedAttributes"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn_lite.ecore#//SubProcess"/>
+  </genPackages>
+</genmodel:GenModel>

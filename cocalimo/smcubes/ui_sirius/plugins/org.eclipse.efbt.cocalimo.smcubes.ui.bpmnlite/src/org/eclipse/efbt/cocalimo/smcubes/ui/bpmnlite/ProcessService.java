@@ -12,15 +12,15 @@
  *******************************************************************************/
 package org.eclipse.efbt.cocalimo.smcubes.ui.bpmnlite;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.Bpmn_liteFactory;
-import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.ExclusiveGateway;
-import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.FlowElement;
-import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.FlowElementsContainer;
-import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.FlowNode;
-import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.InclusiveGateway;
-import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.ParallelGateway;
-import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.SubProcess;
-import org.eclipse.efbt.cocalimo.smcubes.model.bpmn_lite.Task;
+import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Bpmn_liteFactory;
+import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ExclusiveGateway;
+import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.FlowElement;
+import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.FlowElementsContainer;
+import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.FlowNode;
+import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.InclusiveGateway;
+import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ParallelGateway;
+import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.SubProcess;
+import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Task;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
