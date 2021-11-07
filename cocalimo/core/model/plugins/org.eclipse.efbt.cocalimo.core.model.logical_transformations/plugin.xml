@@ -24,21 +24,6 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated logical_transformations -->
       <package
-            uri="http://www.eclipse.org/efbt/scenarios"
-            class="org.eclipse.efbt.cocalimo.core.model.scenarios.ScenariosPackage"
-            genModel="model/logical_transformations.genmodel"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.extension_parser">
-      <!-- @generated logical_transformations -->
-      <parser
-            type="scenarios"
-            class="org.eclipse.efbt.cocalimo.core.model.scenarios.util.ScenariosResourceFactoryImpl"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated logical_transformations -->
-      <package
             uri="http://www.eclipse.org/efbt/bpmn_lite"
             class="org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Bpmn_litePackage"
             genModel="model/logical_transformations.genmodel"/>

@@ -78,6 +78,14 @@ public class Logical_transformationsAdapterFactory extends AdapterFactoryImpl {
 				return createTaskTagAdapter();
 			}
 			@Override
+			public Adapter caseScenario(Scenario object) {
+				return createScenarioAdapter();
+			}
+			@Override
+			public Adapter caseScenarioTag(ScenarioTag object) {
+				return createScenarioTagAdapter();
+			}
+			@Override
 			public Adapter caseModule(org.eclipse.efbt.cocalimo.core.model.module_management.Module object) {
 				return createModuleAdapter();
 			}
@@ -130,6 +138,34 @@ public class Logical_transformationsAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createTaskTagAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario <em>Scenario</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario
+	 * @generated
+	 */
+	public Adapter createScenarioAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.ScenarioTag <em>Scenario Tag</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.ScenarioTag
+	 * @generated
+	 */
+	public Adapter createScenarioTagAdapter() {
 		return null;
 	}
 

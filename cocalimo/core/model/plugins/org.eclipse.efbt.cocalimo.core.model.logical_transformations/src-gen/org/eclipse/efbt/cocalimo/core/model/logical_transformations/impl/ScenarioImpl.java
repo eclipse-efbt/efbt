@@ -1,11 +1,11 @@
 /**
  */
-package org.eclipse.efbt.cocalimo.core.model.scenarios.impl;
+package org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl;
 
 import java.util.Collection;
 
-import org.eclipse.efbt.cocalimo.core.model.scenarios.Scenario;
-import org.eclipse.efbt.cocalimo.core.model.scenarios.ScenariosPackage;
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsPackage;
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario;
 
 import org.eclipse.emf.common.notify.Notification;
 
@@ -27,10 +27,10 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.efbt.cocalimo.core.model.scenarios.impl.ScenarioImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.core.model.scenarios.impl.ScenarioImpl#isInvisible <em>Invisible</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.core.model.scenarios.impl.ScenarioImpl#getDescription <em>Description</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.core.model.scenarios.impl.ScenarioImpl#getRequiredAttributes <em>Required Attributes</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.ScenarioImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.ScenarioImpl#isInvisible <em>Invisible</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.ScenarioImpl#getDescription <em>Description</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.ScenarioImpl#getRequiredAttributes <em>Required Attributes</em>}</li>
  * </ul>
  *
  * @generated
@@ -122,7 +122,7 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return ScenariosPackage.Literals.SCENARIO;
+		return Logical_transformationsPackage.Literals.SCENARIO;
 	}
 
 	/**
@@ -145,7 +145,7 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ScenariosPackage.SCENARIO__NAME, oldName, name));
+			eNotify(new ENotificationImpl(this, Notification.SET, Logical_transformationsPackage.SCENARIO__NAME, oldName, name));
 	}
 
 	/**
@@ -168,7 +168,7 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
 		boolean oldInvisible = invisible;
 		invisible = newInvisible;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ScenariosPackage.SCENARIO__INVISIBLE, oldInvisible, invisible));
+			eNotify(new ENotificationImpl(this, Notification.SET, Logical_transformationsPackage.SCENARIO__INVISIBLE, oldInvisible, invisible));
 	}
 
 	/**
@@ -191,7 +191,7 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
 		String oldDescription = description;
 		description = newDescription;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ScenariosPackage.SCENARIO__DESCRIPTION, oldDescription, description));
+			eNotify(new ENotificationImpl(this, Notification.SET, Logical_transformationsPackage.SCENARIO__DESCRIPTION, oldDescription, description));
 	}
 
 	/**
@@ -202,7 +202,7 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
 	@Override
 	public EList<EAttribute> getRequiredAttributes() {
 		if (requiredAttributes == null) {
-			requiredAttributes = new EObjectResolvingEList<EAttribute>(EAttribute.class, this, ScenariosPackage.SCENARIO__REQUIRED_ATTRIBUTES);
+			requiredAttributes = new EObjectResolvingEList<EAttribute>(EAttribute.class, this, Logical_transformationsPackage.SCENARIO__REQUIRED_ATTRIBUTES);
 		}
 		return requiredAttributes;
 	}
@@ -215,13 +215,13 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ScenariosPackage.SCENARIO__NAME:
+			case Logical_transformationsPackage.SCENARIO__NAME:
 				return getName();
-			case ScenariosPackage.SCENARIO__INVISIBLE:
+			case Logical_transformationsPackage.SCENARIO__INVISIBLE:
 				return isInvisible();
-			case ScenariosPackage.SCENARIO__DESCRIPTION:
+			case Logical_transformationsPackage.SCENARIO__DESCRIPTION:
 				return getDescription();
-			case ScenariosPackage.SCENARIO__REQUIRED_ATTRIBUTES:
+			case Logical_transformationsPackage.SCENARIO__REQUIRED_ATTRIBUTES:
 				return getRequiredAttributes();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -236,16 +236,16 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ScenariosPackage.SCENARIO__NAME:
+			case Logical_transformationsPackage.SCENARIO__NAME:
 				setName((String)newValue);
 				return;
-			case ScenariosPackage.SCENARIO__INVISIBLE:
+			case Logical_transformationsPackage.SCENARIO__INVISIBLE:
 				setInvisible((Boolean)newValue);
 				return;
-			case ScenariosPackage.SCENARIO__DESCRIPTION:
+			case Logical_transformationsPackage.SCENARIO__DESCRIPTION:
 				setDescription((String)newValue);
 				return;
-			case ScenariosPackage.SCENARIO__REQUIRED_ATTRIBUTES:
+			case Logical_transformationsPackage.SCENARIO__REQUIRED_ATTRIBUTES:
 				getRequiredAttributes().clear();
 				getRequiredAttributes().addAll((Collection<? extends EAttribute>)newValue);
 				return;
@@ -261,16 +261,16 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ScenariosPackage.SCENARIO__NAME:
+			case Logical_transformationsPackage.SCENARIO__NAME:
 				setName(NAME_EDEFAULT);
 				return;
-			case ScenariosPackage.SCENARIO__INVISIBLE:
+			case Logical_transformationsPackage.SCENARIO__INVISIBLE:
 				setInvisible(INVISIBLE_EDEFAULT);
 				return;
-			case ScenariosPackage.SCENARIO__DESCRIPTION:
+			case Logical_transformationsPackage.SCENARIO__DESCRIPTION:
 				setDescription(DESCRIPTION_EDEFAULT);
 				return;
-			case ScenariosPackage.SCENARIO__REQUIRED_ATTRIBUTES:
+			case Logical_transformationsPackage.SCENARIO__REQUIRED_ATTRIBUTES:
 				getRequiredAttributes().clear();
 				return;
 		}
@@ -285,13 +285,13 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ScenariosPackage.SCENARIO__NAME:
+			case Logical_transformationsPackage.SCENARIO__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-			case ScenariosPackage.SCENARIO__INVISIBLE:
+			case Logical_transformationsPackage.SCENARIO__INVISIBLE:
 				return invisible != INVISIBLE_EDEFAULT;
-			case ScenariosPackage.SCENARIO__DESCRIPTION:
+			case Logical_transformationsPackage.SCENARIO__DESCRIPTION:
 				return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
-			case ScenariosPackage.SCENARIO__REQUIRED_ATTRIBUTES:
+			case Logical_transformationsPackage.SCENARIO__REQUIRED_ATTRIBUTES:
 				return requiredAttributes != null && !requiredAttributes.isEmpty();
 		}
 		return super.eIsSet(featureID);

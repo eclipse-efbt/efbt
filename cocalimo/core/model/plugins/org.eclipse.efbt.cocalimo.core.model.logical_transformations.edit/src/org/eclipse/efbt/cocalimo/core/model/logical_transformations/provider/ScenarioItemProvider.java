@@ -1,15 +1,13 @@
 /**
  */
-package org.eclipse.efbt.cocalimo.core.model.scenarios.provider;
+package org.eclipse.efbt.cocalimo.core.model.logical_transformations.provider;
 
 
 import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.efbt.cocalimo.core.model.logical_transformations.provider.TaskEditPlugin;
-
-import org.eclipse.efbt.cocalimo.core.model.scenarios.Scenario;
-import org.eclipse.efbt.cocalimo.core.model.scenarios.ScenariosPackage;
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsPackage;
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
@@ -28,7 +26,7 @@ import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.efbt.cocalimo.core.model.scenarios.Scenario} object.
+ * This is the item provider adapter for a {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
@@ -83,7 +81,7 @@ public class ScenarioItemProvider
 				 getResourceLocator(),
 				 getString("_UI_Scenario_name_feature"),
 				 getString("_UI_PropertyDescriptor_description", "_UI_Scenario_name_feature", "_UI_Scenario_type"),
-				 ScenariosPackage.Literals.SCENARIO__NAME,
+				 Logical_transformationsPackage.Literals.SCENARIO__NAME,
 				 true,
 				 false,
 				 false,
@@ -105,7 +103,7 @@ public class ScenarioItemProvider
 				 getResourceLocator(),
 				 getString("_UI_Scenario_invisible_feature"),
 				 getString("_UI_PropertyDescriptor_description", "_UI_Scenario_invisible_feature", "_UI_Scenario_type"),
-				 ScenariosPackage.Literals.SCENARIO__INVISIBLE,
+				 Logical_transformationsPackage.Literals.SCENARIO__INVISIBLE,
 				 true,
 				 false,
 				 false,
@@ -127,7 +125,7 @@ public class ScenarioItemProvider
 				 getResourceLocator(),
 				 getString("_UI_Scenario_description_feature"),
 				 getString("_UI_PropertyDescriptor_description", "_UI_Scenario_description_feature", "_UI_Scenario_type"),
-				 ScenariosPackage.Literals.SCENARIO__DESCRIPTION,
+				 Logical_transformationsPackage.Literals.SCENARIO__DESCRIPTION,
 				 true,
 				 false,
 				 false,
@@ -149,7 +147,7 @@ public class ScenarioItemProvider
 				 getResourceLocator(),
 				 getString("_UI_Scenario_requiredAttributes_feature"),
 				 getString("_UI_PropertyDescriptor_description", "_UI_Scenario_requiredAttributes_feature", "_UI_Scenario_type"),
-				 ScenariosPackage.Literals.SCENARIO__REQUIRED_ATTRIBUTES,
+				 Logical_transformationsPackage.Literals.SCENARIO__REQUIRED_ATTRIBUTES,
 				 true,
 				 false,
 				 true,
@@ -196,9 +194,9 @@ public class ScenarioItemProvider
 		updateChildren(notification);
 
 		switch (notification.getFeatureID(Scenario.class)) {
-			case ScenariosPackage.SCENARIO__NAME:
-			case ScenariosPackage.SCENARIO__INVISIBLE:
-			case ScenariosPackage.SCENARIO__DESCRIPTION:
+			case Logical_transformationsPackage.SCENARIO__NAME:
+			case Logical_transformationsPackage.SCENARIO__INVISIBLE:
+			case Logical_transformationsPackage.SCENARIO__DESCRIPTION:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 		}

@@ -40,6 +40,24 @@ public interface Logical_transformationsFactory extends EFactory {
 	TaskTag createTaskTag();
 
 	/**
+	 * Returns a new object of class '<em>Scenario</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Scenario</em>'.
+	 * @generated
+	 */
+	Scenario createScenario();
+
+	/**
+	 * Returns a new object of class '<em>Scenario Tag</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Scenario Tag</em>'.
+	 * @generated
+	 */
+	ScenarioTag createScenarioTag();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

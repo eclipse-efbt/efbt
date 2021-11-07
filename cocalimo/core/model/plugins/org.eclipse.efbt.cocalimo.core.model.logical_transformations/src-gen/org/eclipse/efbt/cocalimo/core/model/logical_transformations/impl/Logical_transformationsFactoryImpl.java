@@ -58,6 +58,8 @@ public class Logical_transformationsFactoryImpl extends EFactoryImpl implements 
 		switch (eClass.getClassifierID()) {
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE: return createLogicalTransformationModule();
 			case Logical_transformationsPackage.TASK_TAG: return createTaskTag();
+			case Logical_transformationsPackage.SCENARIO: return createScenario();
+			case Logical_transformationsPackage.SCENARIO_TAG: return createScenarioTag();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -83,6 +85,28 @@ public class Logical_transformationsFactoryImpl extends EFactoryImpl implements 
 	public TaskTag createTaskTag() {
 		TaskTagImpl taskTag = new TaskTagImpl();
 		return taskTag;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Scenario createScenario() {
+		ScenarioImpl scenario = new ScenarioImpl();
+		return scenario;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public ScenarioTag createScenarioTag() {
+		ScenarioTagImpl scenarioTag = new ScenarioTagImpl();
+		return scenarioTag;
 	}
 
 	/**

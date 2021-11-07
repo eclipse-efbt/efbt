@@ -13,10 +13,7 @@ Export-Package: org.eclipse.efbt.cocalimo.core.model.bpmn_lite,
  org.eclipse.efbt.cocalimo.core.model.bpmn_lite.util,
  org.eclipse.efbt.cocalimo.core.model.logical_transformations,
  org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl,
- org.eclipse.efbt.cocalimo.core.model.logical_transformations.util,
- org.eclipse.efbt.cocalimo.core.model.scenarios,
- org.eclipse.efbt.cocalimo.core.model.scenarios.impl,
- org.eclipse.efbt.cocalimo.core.model.scenarios.util
+ org.eclipse.efbt.cocalimo.core.model.logical_transformations.util
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.emf.ecore.xmi;visibility:=reexport,

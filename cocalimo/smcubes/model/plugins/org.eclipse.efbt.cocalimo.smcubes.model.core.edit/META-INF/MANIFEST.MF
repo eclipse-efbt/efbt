@@ -8,7 +8,7 @@ Bundle-ClassPath: .
 Bundle-Activator: org.eclipse.efbt.cocalimo.smcubes.model.core.provider.SmcubesEditPlugin$Implementation
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.provider,
  org.eclipse.efbt.cocalimo.smcubes.model.core.provider,
  org.eclipse.efbt.cocalimo.smcubes.model.data_definition.provider,

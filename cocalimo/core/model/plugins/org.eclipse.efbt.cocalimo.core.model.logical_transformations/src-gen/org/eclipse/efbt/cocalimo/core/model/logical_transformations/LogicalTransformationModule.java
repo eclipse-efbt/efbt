@@ -5,9 +5,6 @@ package org.eclipse.efbt.cocalimo.core.model.logical_transformations;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.SubProcess;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.RequirementsModule;
-
-import org.eclipse.efbt.cocalimo.core.model.scenarios.ScenarioTag;
-
 import org.eclipse.emf.common.util.EList;
 
 /**
@@ -44,7 +41,7 @@ public interface LogicalTransformationModule extends org.eclipse.efbt.cocalimo.c
 
 	/**
 	 * Returns the value of the '<em><b>Scenario Tags</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.core.model.scenarios.ScenarioTag}.
+	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.ScenarioTag}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Scenario Tags</em>' containment reference list.
@@ -52,7 +49,7 @@ public interface LogicalTransformationModule extends org.eclipse.efbt.cocalimo.c
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<ScenarioTag> getScenarioTags();
+	EList<org.eclipse.efbt.cocalimo.core.model.logical_transformations.ScenarioTag> getScenarioTags();
 
 	/**
 	 * Returns the value of the '<em><b>Sub Processes</b></em>' containment reference list.

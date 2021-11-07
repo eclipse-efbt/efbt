@@ -107,6 +107,7 @@ public class TestingSwitch<T> extends Switch<T> {
 			case TestingPackage.TEST_MODULE: {
 				TestModule testModule = (TestModule)theEObject;
 				T result = caseTestModule(testModule);
+				if (result == null) result = caseModule(testModule);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -258,6 +259,21 @@ public class TestingSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseTest(Test object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Module</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Module</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseModule(org.eclipse.efbt.cocalimo.core.model.module_management.Module object) {
 		return null;
 	}
 

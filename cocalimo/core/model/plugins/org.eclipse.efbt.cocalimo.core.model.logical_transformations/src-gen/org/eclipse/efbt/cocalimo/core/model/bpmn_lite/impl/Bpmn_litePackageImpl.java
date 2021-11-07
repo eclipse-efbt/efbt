@@ -23,10 +23,6 @@ import org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.Logical
 import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementPackage;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.Requirements_textPackage;
-
-import org.eclipse.efbt.cocalimo.core.model.scenarios.ScenariosPackage;
-
-import org.eclipse.efbt.cocalimo.core.model.scenarios.impl.ScenariosPackageImpl;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
@@ -188,18 +184,14 @@ public class Bpmn_litePackageImpl extends EPackageImpl implements Bpmn_litePacka
 		// Obtain or create and register interdependencies
 		Object registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Logical_transformationsPackage.eNS_URI);
 		Logical_transformationsPackageImpl theLogical_transformationsPackage = (Logical_transformationsPackageImpl)(registeredPackage instanceof Logical_transformationsPackageImpl ? registeredPackage : Logical_transformationsPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ScenariosPackage.eNS_URI);
-		ScenariosPackageImpl theScenariosPackage = (ScenariosPackageImpl)(registeredPackage instanceof ScenariosPackageImpl ? registeredPackage : ScenariosPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theBpmn_litePackage.createPackageContents();
 		theLogical_transformationsPackage.createPackageContents();
-		theScenariosPackage.createPackageContents();
 
 		// Initialize created meta-data
 		theBpmn_litePackage.initializePackageContents();
 		theLogical_transformationsPackage.initializePackageContents();
-		theScenariosPackage.initializePackageContents();
 
 		// Mark meta-data to indicate it can't be changed
 		theBpmn_litePackage.freeze();
@@ -455,6 +447,16 @@ public class Bpmn_litePackageImpl extends EPackageImpl implements Bpmn_litePacka
 	 * @generated
 	 */
 	@Override
+	public EReference getServiceTask_LinkedAttributes() {
+		return (EReference)serviceTaskEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getSubProcess() {
 		return subProcessEClass;
 	}
@@ -523,6 +525,7 @@ public class Bpmn_litePackageImpl extends EPackageImpl implements Bpmn_litePacka
 		serviceTaskEClass = createEClass(SERVICE_TASK);
 		createEReference(serviceTaskEClass, SERVICE_TASK__ENRICHED_ATTRIBUTE);
 		createEReference(serviceTaskEClass, SERVICE_TASK__SCENARIOS);
+		createEReference(serviceTaskEClass, SERVICE_TASK__LINKED_ATTRIBUTES);
 
 		subProcessEClass = createEClass(SUB_PROCESS);
 	}
@@ -552,7 +555,7 @@ public class Bpmn_litePackageImpl extends EPackageImpl implements Bpmn_litePacka
 
 		// Obtain other dependent packages
 		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
-		ScenariosPackage theScenariosPackage = (ScenariosPackage)EPackage.Registry.INSTANCE.getEPackage(ScenariosPackage.eNS_URI);
+		Logical_transformationsPackage theLogical_transformationsPackage = (Logical_transformationsPackage)EPackage.Registry.INSTANCE.getEPackage(Logical_transformationsPackage.eNS_URI);
 
 		// Create type parameters
 
@@ -608,7 +611,8 @@ public class Bpmn_litePackageImpl extends EPackageImpl implements Bpmn_litePacka
 
 		initEClass(serviceTaskEClass, ServiceTask.class, "ServiceTask", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getServiceTask_EnrichedAttribute(), theEcorePackage.getEAttribute(), null, "enrichedAttribute", null, 0, 1, ServiceTask.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getServiceTask_Scenarios(), theScenariosPackage.getScenario(), null, "scenarios", null, 0, -1, ServiceTask.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getServiceTask_Scenarios(), theLogical_transformationsPackage.getScenario(), null, "scenarios", null, 0, -1, ServiceTask.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getServiceTask_LinkedAttributes(), theEcorePackage.getEAttribute(), null, "linkedAttributes", null, 0, -1, ServiceTask.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(subProcessEClass, SubProcess.class, "SubProcess", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

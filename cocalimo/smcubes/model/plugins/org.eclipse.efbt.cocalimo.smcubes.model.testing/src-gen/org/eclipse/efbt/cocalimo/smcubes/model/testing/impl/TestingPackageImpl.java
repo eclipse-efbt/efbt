@@ -9,9 +9,6 @@ import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_tran
 import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementPackage;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.Requirements_textPackage;
-
-import org.eclipse.efbt.cocalimo.core.model.scenarios.ScenariosPackage;
-
 import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.Cocalimo_smcubes_extensionPackage;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage;
 
@@ -159,7 +156,6 @@ public class TestingPackageImpl extends EPackageImpl implements TestingPackage {
 		// Initialize simple dependencies
 		EcorePackage.eINSTANCE.eClass();
 		Logical_transformationsPackage.eINSTANCE.eClass();
-		ScenariosPackage.eINSTANCE.eClass();
 		Bpmn_litePackage.eINSTANCE.eClass();
 		Module_managementPackage.eINSTANCE.eClass();
 		Requirements_textPackage.eINSTANCE.eClass();
@@ -556,9 +552,9 @@ public class TestingPackageImpl extends EPackageImpl implements TestingPackage {
 		// Obtain other dependent packages
 		CorePackage theCorePackage = (CorePackage)EPackage.Registry.INSTANCE.getEPackage(CorePackage.eNS_URI);
 		Data_definitionPackage theData_definitionPackage = (Data_definitionPackage)EPackage.Registry.INSTANCE.getEPackage(Data_definitionPackage.eNS_URI);
+		Module_managementPackage theModule_managementPackage = (Module_managementPackage)EPackage.Registry.INSTANCE.getEPackage(Module_managementPackage.eNS_URI);
 		Cocalimo_smcubes_extensionPackage theCocalimo_smcubes_extensionPackage = (Cocalimo_smcubes_extensionPackage)EPackage.Registry.INSTANCE.getEPackage(Cocalimo_smcubes_extensionPackage.eNS_URI);
 		Logical_transformationsPackage theLogical_transformationsPackage = (Logical_transformationsPackage)EPackage.Registry.INSTANCE.getEPackage(Logical_transformationsPackage.eNS_URI);
-		ScenariosPackage theScenariosPackage = (ScenariosPackage)EPackage.Registry.INSTANCE.getEPackage(ScenariosPackage.eNS_URI);
 
 		// Create type parameters
 
@@ -567,6 +563,7 @@ public class TestingPackageImpl extends EPackageImpl implements TestingPackage {
 		// Add supertypes to classes
 		cellWithEnumeratedValueEClass.getESuperTypes().add(this.getCell());
 		cellWithValueEClass.getESuperTypes().add(this.getCell());
+		testModuleEClass.getESuperTypes().add(theModule_managementPackage.getModule());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(cellWithEnumeratedValueEClass, CellWithEnumeratedValue.class, "CellWithEnumeratedValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -604,7 +601,7 @@ public class TestingPackageImpl extends EPackageImpl implements TestingPackage {
 		initEReference(getTest_InputData(), this.getInputData(), null, "inputData", null, 0, 1, Test.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTest_ReportResults(), this.getReportResults(), null, "reportResults", null, 0, 1, Test.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTest_Name(), ecorePackage.getEString(), "name", null, 0, 1, Test.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getTest_Scenario(), theScenariosPackage.getScenario(), null, "scenario", null, 0, 1, Test.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTest_Scenario(), theLogical_transformationsPackage.getScenario(), null, "scenario", null, 0, 1, Test.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

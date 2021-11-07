@@ -15,9 +15,6 @@ import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_tran
 import org.eclipse.efbt.cocalimo.core.model.module_management.provider.ModuleItemProvider;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.Requirements_textFactory;
-
-import org.eclipse.efbt.cocalimo.core.model.scenarios.ScenariosFactory;
-
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 
@@ -160,7 +157,7 @@ public class LogicalTransformationModuleItemProvider extends ModuleItemProvider 
 		newChildDescriptors.add
 			(createChildParameter
 				(Logical_transformationsPackage.Literals.LOGICAL_TRANSFORMATION_MODULE__SCENARIO_TAGS,
-				 ScenariosFactory.eINSTANCE.createScenarioTag()));
+				 Logical_transformationsFactory.eINSTANCE.createScenarioTag()));
 
 		newChildDescriptors.add
 			(createChildParameter

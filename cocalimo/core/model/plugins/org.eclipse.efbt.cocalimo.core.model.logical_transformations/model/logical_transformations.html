@@ -1,9 +1,9 @@
 <!-- This file was created using the HTML documentation generator. -->
-<!-- Creation date: Fri Oct 29 12:00:20 BST 2021-->
+<!-- Creation date: Sun Nov 07 16:29:36 GMT 2021-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-      	<title>Metamodel Documentation (platform:/resource/org.eclipse.efbt.cocalimo.smcubes.model.logical_transformation/model/logical_transformations.ecore)</title>
+      	<title>Metamodel Documentation (platform:/resource/org.eclipse.efbt.cocalimo.core.model.logical_transformations/model/logical_transformations.ecore)</title>
     	<script type="text/javascript">
 //<![CDATA[				    	
 // TOC script based on code taken from http://www.quirksmode.org/dom/toc.html
@@ -142,16 +142,16 @@ function getElementsByTagNames(list,obj) {
 	<th><div class="columnHeader">Properties</div></th>
 	<th><div class="columnHeader">Documentation</div></th>
 </tr>
-<tr>	<td><div id="logicaltransformationsLogicalTransformationModule.scenarioSetTags" class="teletype">scenarioSetTags</div>
+<tr>	<td><div id="logicaltransformationsLogicalTransformationModule.requirements" class="teletype">requirements</div>
 	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#scenariosScenarioSetTag">ScenarioSetTag</a></span></div>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#requirementstextRequirementsModule">RequirementsModule</a></span></div>
 <div class="label">Cardinality: [0..*]</div>
 <div class="label">Containment</div>
 </td> 
 <td> </td>
 		</tr><tr>	<td><div id="logicaltransformationsLogicalTransformationModule.scenarioTags" class="teletype">scenarioTags</div>
 	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#scenariosScenarioTag">ScenarioTag</a></span></div>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#logicaltransformationsScenarioTag">ScenarioTag</a></span></div>
 <div class="label">Cardinality: [0..*]</div>
 <div class="label">Containment</div>
 </td> 
@@ -172,6 +172,76 @@ function getElementsByTagNames(list,obj) {
 <td> </td>
 		</tr></table>
 <a href="#logical_transformations.LogicalTransformationModule.ref"></a>
+<h2 id="logicaltransformationsScenario"><a href="#logicaltransformationsScenario"><a href="#logicaltransformationsScenario">Scenario</a></a></h2>
+
+<p>A Scenario</p>
+<table>
+<tr>
+	<th colspan="3"><div class="tableHeader">Attributes</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="logicaltransformationsScenario.description" class="teletype">description</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EString</span></div>
+<div class="label">Cardinality: [0..1]</div>
+ </td> <td><p>The name of the Scenario</p>
+</td>
+		</tr><tr>	<td><div id="logicaltransformationsScenario.invisible" class="teletype">invisible</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EBoolean</span></div>
+<div class="label">Cardinality: [0..1]</div>
+ </td> <td></td>
+		</tr><tr>	<td><div id="logicaltransformationsScenario.name" class="teletype">name</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EString</span></div>
+<div class="label">Cardinality: [0..1]</div>
+<div class="label">Identifier</div>
+ </td> <td><p>The name of the Scenario</p>
+</td>
+		</tr></table>
+<a href="#logical_transformations.Scenario.attr"></a>
+<table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="logicaltransformationsScenario.requiredAttributes" class="teletype">requiredAttributes</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"></span></div>
+<div class="label">Cardinality: [0..*]</div>
+</td> 
+<td> </td>
+		</tr></table>
+<a href="#logical_transformations.Scenario.ref"></a>
+<h2 id="logicaltransformationsScenarioTag"><a href="#logicaltransformationsScenarioTag"><a href="#logicaltransformationsScenarioTag">ScenarioTag</a></a></h2>
+
+<p>A Tag which tags a Scenario in order to link it with requirements.</p>
+<h4><b>Supertype:</b><a href="#requirementstextTag">Tag</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="logicaltransformationsScenarioTag.scenario" class="teletype">scenario</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#logicaltransformationsScenario">Scenario</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+</td> 
+<td> <p>The tagged Scenario.</p>
+</td>
+		</tr></table>
+<a href="#logical_transformations.ScenarioTag.ref"></a>
 <h2 id="logicaltransformationsTaskTag"><a href="#logicaltransformationsTaskTag"><a href="#logicaltransformationsTaskTag">TaskTag</a></a></h2>
 
 <h4><b>Supertype:</b><a href="#requirementstextTag">Tag</a></h4></body>

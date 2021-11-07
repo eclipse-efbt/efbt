@@ -138,7 +138,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TestModule">
+  <eClassifiers xsi:type="ecore:EClass" name="TestModule" eSuperTypes="../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.ecore#//Module">
     <eStructuralFeatures xsi:type="ecore:EReference" name="SMCubesModel" upperBound="-1"
         eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/cocalimo_smcubes_extension.ecore#//SmcubesModel"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="tests" upperBound="-1"
@@ -156,6 +156,6 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="reportResults" eType="#//ReportResults"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="scenario" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.core.model.logical_transformations/model/scenarios.ecore#//Scenario"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="scenario" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.core.model.logical_transformations/model/logical_transformations.ecore#//Scenario"/>
   </eClassifiers>
 </ecore:EPackage>

@@ -2,6 +2,7 @@
  */
 package org.eclipse.efbt.cocalimo.smcubes.model.testing;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.ReportCellValue;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EObject;
@@ -33,6 +34,6 @@ public interface ReportResults extends EObject {
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.ReportCellValue> getReportResults();
+	EList<ReportCellValue> getReportResults();
 
 } // ReportResults

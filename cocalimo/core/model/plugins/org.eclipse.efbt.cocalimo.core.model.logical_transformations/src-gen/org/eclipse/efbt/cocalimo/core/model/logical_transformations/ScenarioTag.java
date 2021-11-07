@@ -1,6 +1,6 @@
 /**
  */
-package org.eclipse.efbt.cocalimo.core.model.scenarios;
+package org.eclipse.efbt.cocalimo.core.model.logical_transformations;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.Tag;
 
@@ -17,10 +17,10 @@ import org.eclipse.efbt.cocalimo.core.model.requirements_text.Tag;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.efbt.cocalimo.core.model.scenarios.ScenarioTag#getScenario <em>Scenario</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.ScenarioTag#getScenario <em>Scenario</em>}</li>
  * </ul>
  *
- * @see org.eclipse.efbt.cocalimo.core.model.scenarios.ScenariosPackage#getScenarioTag()
+ * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsPackage#getScenarioTag()
  * @model
  * @generated
  */
@@ -34,14 +34,14 @@ public interface ScenarioTag extends Tag {
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Scenario</em>' reference.
 	 * @see #setScenario(Scenario)
-	 * @see org.eclipse.efbt.cocalimo.core.model.scenarios.ScenariosPackage#getScenarioTag_Scenario()
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsPackage#getScenarioTag_Scenario()
 	 * @model
 	 * @generated
 	 */
 	Scenario getScenario();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.core.model.scenarios.ScenarioTag#getScenario <em>Scenario</em>}' reference.
+	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.ScenarioTag#getScenario <em>Scenario</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Scenario</em>' reference.

@@ -996,13 +996,22 @@ public interface Bpmn_litePackage extends EPackage {
 	int SERVICE_TASK__SCENARIOS = TASK_FEATURE_COUNT + 1;
 
 	/**
+	 * The feature id for the '<em><b>Linked Attributes</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SERVICE_TASK__LINKED_ATTRIBUTES = TASK_FEATURE_COUNT + 2;
+
+	/**
 	 * The number of structural features of the '<em>Service Task</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SERVICE_TASK_FEATURE_COUNT = TASK_FEATURE_COUNT + 2;
+	int SERVICE_TASK_FEATURE_COUNT = TASK_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of operations of the '<em>Service Task</em>' class.
@@ -1358,6 +1367,17 @@ public interface Bpmn_litePackage extends EPackage {
 	EReference getServiceTask_Scenarios();
 
 	/**
+	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ServiceTask#getLinkedAttributes <em>Linked Attributes</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Linked Attributes</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ServiceTask#getLinkedAttributes()
+	 * @see #getServiceTask()
+	 * @generated
+	 */
+	EReference getServiceTask_LinkedAttributes();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.bpmn_lite.SubProcess <em>Sub Process</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1605,6 +1625,14 @@ public interface Bpmn_litePackage extends EPackage {
 		 * @generated
 		 */
 		EReference SERVICE_TASK__SCENARIOS = eINSTANCE.getServiceTask_Scenarios();
+
+		/**
+		 * The meta object literal for the '<em><b>Linked Attributes</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SERVICE_TASK__LINKED_ATTRIBUTES = eINSTANCE.getServiceTask_LinkedAttributes();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.bpmn_lite.impl.SubProcessImpl <em>Sub Process</em>}' class.

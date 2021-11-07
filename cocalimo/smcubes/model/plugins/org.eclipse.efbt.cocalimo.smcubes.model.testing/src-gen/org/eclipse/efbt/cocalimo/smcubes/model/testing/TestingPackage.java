@@ -2,6 +2,7 @@
  */
 package org.eclipse.efbt.cocalimo.smcubes.model.testing;
 
+import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementPackage;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
@@ -375,13 +376,67 @@ public interface TestingPackage extends EPackage {
 	int TEST_MODULE = 6;
 
 	/**
+	 * The feature id for the '<em><b>Dependencies</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEST_MODULE__DEPENDENCIES = Module_managementPackage.MODULE__DEPENDENCIES;
+
+	/**
+	 * The feature id for the '<em><b>The Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEST_MODULE__THE_DESCRIPTION = Module_managementPackage.MODULE__THE_DESCRIPTION;
+
+	/**
+	 * The feature id for the '<em><b>License</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEST_MODULE__LICENSE = Module_managementPackage.MODULE__LICENSE;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEST_MODULE__NAME = Module_managementPackage.MODULE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Version</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEST_MODULE__VERSION = Module_managementPackage.MODULE__VERSION;
+
+	/**
+	 * The feature id for the '<em><b>Long Name</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEST_MODULE__LONG_NAME = Module_managementPackage.MODULE__LONG_NAME;
+
+	/**
 	 * The feature id for the '<em><b>SM Cubes Model</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TEST_MODULE__SM_CUBES_MODEL = 0;
+	int TEST_MODULE__SM_CUBES_MODEL = Module_managementPackage.MODULE_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Tests</b></em>' containment reference list.
@@ -390,7 +445,7 @@ public interface TestingPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TEST_MODULE__TESTS = 1;
+	int TEST_MODULE__TESTS = Module_managementPackage.MODULE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Logical Transformations</b></em>' reference.
@@ -399,7 +454,7 @@ public interface TestingPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TEST_MODULE__LOGICAL_TRANSFORMATIONS = 2;
+	int TEST_MODULE__LOGICAL_TRANSFORMATIONS = Module_managementPackage.MODULE_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of structural features of the '<em>Test Module</em>' class.
@@ -408,7 +463,7 @@ public interface TestingPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TEST_MODULE_FEATURE_COUNT = 3;
+	int TEST_MODULE_FEATURE_COUNT = Module_managementPackage.MODULE_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of operations of the '<em>Test Module</em>' class.
@@ -417,7 +472,7 @@ public interface TestingPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TEST_MODULE_OPERATION_COUNT = 0;
+	int TEST_MODULE_OPERATION_COUNT = Module_managementPackage.MODULE_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.testing.impl.ReportResultsImpl <em>Report Results</em>}' class.

@@ -1,12 +1,12 @@
 /**
  */
-package org.eclipse.efbt.cocalimo.core.model.scenarios.impl;
+package org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl;
+
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsPackage;
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario;
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.ScenarioTag;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.impl.TagImpl;
-
-import org.eclipse.efbt.cocalimo.core.model.scenarios.Scenario;
-import org.eclipse.efbt.cocalimo.core.model.scenarios.ScenarioTag;
-import org.eclipse.efbt.cocalimo.core.model.scenarios.ScenariosPackage;
 
 import org.eclipse.emf.common.notify.Notification;
 
@@ -23,7 +23,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.efbt.cocalimo.core.model.scenarios.impl.ScenarioTagImpl#getScenario <em>Scenario</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.ScenarioTagImpl#getScenario <em>Scenario</em>}</li>
  * </ul>
  *
  * @generated
@@ -55,7 +55,7 @@ public class ScenarioTagImpl extends TagImpl implements ScenarioTag {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return ScenariosPackage.Literals.SCENARIO_TAG;
+		return Logical_transformationsPackage.Literals.SCENARIO_TAG;
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class ScenarioTagImpl extends TagImpl implements ScenarioTag {
 			scenario = (Scenario)eResolveProxy(oldScenario);
 			if (scenario != oldScenario) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ScenariosPackage.SCENARIO_TAG__SCENARIO, oldScenario, scenario));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Logical_transformationsPackage.SCENARIO_TAG__SCENARIO, oldScenario, scenario));
 			}
 		}
 		return scenario;
@@ -95,7 +95,7 @@ public class ScenarioTagImpl extends TagImpl implements ScenarioTag {
 		Scenario oldScenario = scenario;
 		scenario = newScenario;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ScenariosPackage.SCENARIO_TAG__SCENARIO, oldScenario, scenario));
+			eNotify(new ENotificationImpl(this, Notification.SET, Logical_transformationsPackage.SCENARIO_TAG__SCENARIO, oldScenario, scenario));
 	}
 
 	/**
@@ -106,7 +106,7 @@ public class ScenarioTagImpl extends TagImpl implements ScenarioTag {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ScenariosPackage.SCENARIO_TAG__SCENARIO:
+			case Logical_transformationsPackage.SCENARIO_TAG__SCENARIO:
 				if (resolve) return getScenario();
 				return basicGetScenario();
 		}
@@ -121,7 +121,7 @@ public class ScenarioTagImpl extends TagImpl implements ScenarioTag {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ScenariosPackage.SCENARIO_TAG__SCENARIO:
+			case Logical_transformationsPackage.SCENARIO_TAG__SCENARIO:
 				setScenario((Scenario)newValue);
 				return;
 		}
@@ -136,7 +136,7 @@ public class ScenarioTagImpl extends TagImpl implements ScenarioTag {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ScenariosPackage.SCENARIO_TAG__SCENARIO:
+			case Logical_transformationsPackage.SCENARIO_TAG__SCENARIO:
 				setScenario((Scenario)null);
 				return;
 		}
@@ -151,7 +151,7 @@ public class ScenarioTagImpl extends TagImpl implements ScenarioTag {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ScenariosPackage.SCENARIO_TAG__SCENARIO:
+			case Logical_transformationsPackage.SCENARIO_TAG__SCENARIO:
 				return scenario != null;
 		}
 		return super.eIsSet(featureID);

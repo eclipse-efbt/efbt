@@ -9,8 +9,7 @@ import java.util.List;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Bpmn_litePackage;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ServiceTask;
 
-import org.eclipse.efbt.cocalimo.core.model.scenarios.ScenariosFactory;
-
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsFactory;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 
@@ -49,6 +48,7 @@ public class ServiceTaskItemProvider extends TaskItemProvider {
 			super.getPropertyDescriptors(object);
 
 			addEnrichedAttributePropertyDescriptor(object);
+			addLinkedAttributesPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -67,6 +67,28 @@ public class ServiceTaskItemProvider extends TaskItemProvider {
 				 getString("_UI_ServiceTask_enrichedAttribute_feature"),
 				 getString("_UI_PropertyDescriptor_description", "_UI_ServiceTask_enrichedAttribute_feature", "_UI_ServiceTask_type"),
 				 Bpmn_litePackage.Literals.SERVICE_TASK__ENRICHED_ATTRIBUTE,
+				 true,
+				 false,
+				 true,
+				 null,
+				 null,
+				 null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Linked Attributes feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addLinkedAttributesPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_ServiceTask_linkedAttributes_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_ServiceTask_linkedAttributes_feature", "_UI_ServiceTask_type"),
+				 Bpmn_litePackage.Literals.SERVICE_TASK__LINKED_ATTRIBUTES,
 				 true,
 				 false,
 				 true,
@@ -164,7 +186,7 @@ public class ServiceTaskItemProvider extends TaskItemProvider {
 		newChildDescriptors.add
 			(createChildParameter
 				(Bpmn_litePackage.Literals.SERVICE_TASK__SCENARIOS,
-				 ScenariosFactory.eINSTANCE.createScenario()));
+				 Logical_transformationsFactory.eINSTANCE.createScenario()));
 	}
 
 }

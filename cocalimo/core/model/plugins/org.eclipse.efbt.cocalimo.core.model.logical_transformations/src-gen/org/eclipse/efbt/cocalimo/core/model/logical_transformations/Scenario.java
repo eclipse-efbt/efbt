@@ -1,6 +1,6 @@
 /**
  */
-package org.eclipse.efbt.cocalimo.core.model.scenarios;
+package org.eclipse.efbt.cocalimo.core.model.logical_transformations;
 
 import org.eclipse.emf.common.util.EList;
 
@@ -20,13 +20,13 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.efbt.cocalimo.core.model.scenarios.Scenario#getName <em>Name</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.core.model.scenarios.Scenario#isInvisible <em>Invisible</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.core.model.scenarios.Scenario#getDescription <em>Description</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.core.model.scenarios.Scenario#getRequiredAttributes <em>Required Attributes</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario#isInvisible <em>Invisible</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario#getDescription <em>Description</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario#getRequiredAttributes <em>Required Attributes</em>}</li>
  * </ul>
  *
- * @see org.eclipse.efbt.cocalimo.core.model.scenarios.ScenariosPackage#getScenario()
+ * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsPackage#getScenario()
  * @model extendedMetaData="name='Scenario' kind='empty'"
  * @generated
  */
@@ -40,7 +40,7 @@ public interface Scenario extends EObject {
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Name</em>' attribute.
 	 * @see #setName(String)
-	 * @see org.eclipse.efbt.cocalimo.core.model.scenarios.ScenariosPackage#getScenario_Name()
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsPackage#getScenario_Name()
 	 * @model id="true"
 	 *        extendedMetaData="kind='attribute' name='name'"
 	 * @generated
@@ -48,7 +48,7 @@ public interface Scenario extends EObject {
 	String getName();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.core.model.scenarios.Scenario#getName <em>Name</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario#getName <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Name</em>' attribute.
@@ -63,14 +63,14 @@ public interface Scenario extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Invisible</em>' attribute.
 	 * @see #setInvisible(boolean)
-	 * @see org.eclipse.efbt.cocalimo.core.model.scenarios.ScenariosPackage#getScenario_Invisible()
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsPackage#getScenario_Invisible()
 	 * @model
 	 * @generated
 	 */
 	boolean isInvisible();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.core.model.scenarios.Scenario#isInvisible <em>Invisible</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario#isInvisible <em>Invisible</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Invisible</em>' attribute.
@@ -88,14 +88,14 @@ public interface Scenario extends EObject {
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Description</em>' attribute.
 	 * @see #setDescription(String)
-	 * @see org.eclipse.efbt.cocalimo.core.model.scenarios.ScenariosPackage#getScenario_Description()
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsPackage#getScenario_Description()
 	 * @model extendedMetaData="kind='attribute' name='name'"
 	 * @generated
 	 */
 	String getDescription();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.core.model.scenarios.Scenario#getDescription <em>Description</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario#getDescription <em>Description</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Description</em>' attribute.
@@ -110,7 +110,7 @@ public interface Scenario extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Required Attributes</em>' reference list.
-	 * @see org.eclipse.efbt.cocalimo.core.model.scenarios.ScenariosPackage#getScenario_RequiredAttributes()
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsPackage#getScenario_RequiredAttributes()
 	 * @model
 	 * @generated
 	 */

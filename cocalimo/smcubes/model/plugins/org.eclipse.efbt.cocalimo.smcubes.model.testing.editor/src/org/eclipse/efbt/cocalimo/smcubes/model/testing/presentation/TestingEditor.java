@@ -164,9 +164,6 @@ import org.eclipse.efbt.cocalimo.core.model.logical_transformations.provider.Log
 import org.eclipse.efbt.cocalimo.core.model.module_management.provider.Module_managementItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.provider.Requirements_textItemProviderAdapterFactory;
-
-import org.eclipse.efbt.cocalimo.core.model.scenarios.provider.ScenariosItemProviderAdapterFactory;
-
 import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.provider.Cocalimo_smcubes_extensionItemProviderAdapterFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.provider.CoreItemProviderAdapterFactory;
 
@@ -732,7 +729,6 @@ public class TestingEditor
 		adapterFactory.addAdapterFactory(new TestingItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new EcoreItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Logical_transformationsItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new ScenariosItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Bpmn_liteItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Module_managementItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Requirements_textItemProviderAdapterFactory());

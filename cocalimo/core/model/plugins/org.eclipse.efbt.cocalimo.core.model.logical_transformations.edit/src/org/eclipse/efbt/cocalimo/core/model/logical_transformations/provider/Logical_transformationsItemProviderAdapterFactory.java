@@ -118,6 +118,52 @@ public class Logical_transformationsItemProviderAdapterFactory extends Logical_t
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ScenarioItemProvider scenarioItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createScenarioAdapter() {
+		if (scenarioItemProvider == null) {
+			scenarioItemProvider = new ScenarioItemProvider(this);
+		}
+
+		return scenarioItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.ScenarioTag} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ScenarioTagItemProvider scenarioTagItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.ScenarioTag}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createScenarioTagAdapter() {
+		if (scenarioTagItemProvider == null) {
+			scenarioTagItemProvider = new ScenarioTagItemProvider(this);
+		}
+
+		return scenarioTagItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -224,6 +270,8 @@ public class Logical_transformationsItemProviderAdapterFactory extends Logical_t
 	public void dispose() {
 		if (logicalTransformationModuleItemProvider != null) logicalTransformationModuleItemProvider.dispose();
 		if (taskTagItemProvider != null) taskTagItemProvider.dispose();
+		if (scenarioItemProvider != null) scenarioItemProvider.dispose();
+		if (scenarioTagItemProvider != null) scenarioTagItemProvider.dispose();
 	}
 
 }

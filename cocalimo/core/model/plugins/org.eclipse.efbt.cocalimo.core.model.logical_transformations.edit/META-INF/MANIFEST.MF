@@ -8,10 +8,9 @@ Bundle-ClassPath: .
 Bundle-Activator: org.eclipse.efbt.cocalimo.core.model.logical_transformations.provider.TaskEditPlugin$Implementation
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.efbt.cocalimo.core.model.bpmn_lite.provider,
- org.eclipse.efbt.cocalimo.core.model.logical_transformations.provider,
- org.eclipse.efbt.cocalimo.core.model.scenarios.provider
+ org.eclipse.efbt.cocalimo.core.model.logical_transformations.provider
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.efbt.cocalimo.core.model.logical_transformations;visibility:=reexport,
  org.eclipse.emf.edit;visibility:=reexport,

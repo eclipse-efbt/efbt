@@ -2,8 +2,7 @@
  */
 package org.eclipse.efbt.cocalimo.smcubes.model.testing.impl;
 
-import org.eclipse.efbt.cocalimo.core.model.scenarios.Scenario;
-
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario;
 import org.eclipse.efbt.cocalimo.smcubes.model.testing.InputData;
 import org.eclipse.efbt.cocalimo.smcubes.model.testing.ReportResults;
 import org.eclipse.efbt.cocalimo.smcubes.model.testing.Test;

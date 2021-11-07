@@ -1,17 +1,15 @@
 /**
  */
-package org.eclipse.efbt.cocalimo.core.model.scenarios.provider;
+package org.eclipse.efbt.cocalimo.core.model.logical_transformations.provider;
 
 
 import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.efbt.cocalimo.core.model.logical_transformations.provider.TaskEditPlugin;
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsPackage;
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.ScenarioTag;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.provider.TagItemProvider;
-
-import org.eclipse.efbt.cocalimo.core.model.scenarios.ScenarioTag;
-import org.eclipse.efbt.cocalimo.core.model.scenarios.ScenariosPackage;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
@@ -22,7 +20,7 @@ import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.efbt.cocalimo.core.model.scenarios.ScenarioTag} object.
+ * This is the item provider adapter for a {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.ScenarioTag} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
@@ -67,7 +65,7 @@ public class ScenarioTagItemProvider extends TagItemProvider {
 				 getResourceLocator(),
 				 getString("_UI_ScenarioTag_scenario_feature"),
 				 getString("_UI_PropertyDescriptor_description", "_UI_ScenarioTag_scenario_feature", "_UI_ScenarioTag_type"),
-				 ScenariosPackage.Literals.SCENARIO_TAG__SCENARIO,
+				 Logical_transformationsPackage.Literals.SCENARIO_TAG__SCENARIO,
 				 true,
 				 false,
 				 true,

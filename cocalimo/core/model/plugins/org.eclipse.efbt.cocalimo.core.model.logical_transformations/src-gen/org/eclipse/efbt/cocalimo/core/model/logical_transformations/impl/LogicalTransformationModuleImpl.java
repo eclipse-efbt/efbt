@@ -13,9 +13,6 @@ import org.eclipse.efbt.cocalimo.core.model.logical_transformations.TaskTag;
 import org.eclipse.efbt.cocalimo.core.model.module_management.impl.ModuleImpl;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.RequirementsModule;
-
-import org.eclipse.efbt.cocalimo.core.model.scenarios.ScenarioTag;
-
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
@@ -61,7 +58,7 @@ public class LogicalTransformationModuleImpl extends ModuleImpl implements Logic
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<ScenarioTag> scenarioTags;
+	protected EList<org.eclipse.efbt.cocalimo.core.model.logical_transformations.ScenarioTag> scenarioTags;
 
 	/**
 	 * The cached value of the '{@link #getSubProcesses() <em>Sub Processes</em>}' containment reference list.
@@ -121,9 +118,9 @@ public class LogicalTransformationModuleImpl extends ModuleImpl implements Logic
 	 * @generated
 	 */
 	@Override
-	public EList<ScenarioTag> getScenarioTags() {
+	public EList<org.eclipse.efbt.cocalimo.core.model.logical_transformations.ScenarioTag> getScenarioTags() {
 		if (scenarioTags == null) {
-			scenarioTags = new EObjectContainmentEList<ScenarioTag>(ScenarioTag.class, this, Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SCENARIO_TAGS);
+			scenarioTags = new EObjectContainmentEList<org.eclipse.efbt.cocalimo.core.model.logical_transformations.ScenarioTag>(org.eclipse.efbt.cocalimo.core.model.logical_transformations.ScenarioTag.class, this, Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SCENARIO_TAGS);
 		}
 		return scenarioTags;
 	}
@@ -209,7 +206,7 @@ public class LogicalTransformationModuleImpl extends ModuleImpl implements Logic
 				return;
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SCENARIO_TAGS:
 				getScenarioTags().clear();
-				getScenarioTags().addAll((Collection<? extends ScenarioTag>)newValue);
+				getScenarioTags().addAll((Collection<? extends org.eclipse.efbt.cocalimo.core.model.logical_transformations.ScenarioTag>)newValue);
 				return;
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESSES:
 				getSubProcesses().clear();
