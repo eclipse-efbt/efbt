@@ -230,12 +230,12 @@ public abstract class Importer implements BirdImporter {
 	 */
 	public void saveArtifactsAsJSON() {
 		JsonResourceFactory factory = new JsonResourceFactory();
-		URI domainsURI = URI.createFileURI(outputFilepath + "domains.efbt_data_definition");
-		URI membersURI = URI.createFileURI(outputFilepath + "members.efbt_data_definition");
-		URI variablesURI = URI.createFileURI(outputFilepath + "variables.efbt_data_definition");
-		URI cubesURI = URI.createFileURI(outputFilepath + "cubes.efbt_data_definition");
-		URI cubestructuresURI = URI.createFileURI(outputFilepath + "cube_structures.efbt_data_definition");
-		URI cubestructureitemsURI = URI.createFileURI(outputFilepath + "cube_structure_items.efbt_data_definition");
+		URI domainsURI = URI.createFileURI(outputFilepath + "domains.cocalimo_smcubes_extension");
+		URI membersURI = URI.createFileURI(outputFilepath + "members.cocalimo_smcubes_extension");
+		URI variablesURI = URI.createFileURI(outputFilepath + "variables.cocalimo_smcubes_extension");
+		URI cubesURI = URI.createFileURI(outputFilepath + "cubes.cocalimo_smcubes_extension");
+		URI cubestructuresURI = URI.createFileURI(outputFilepath + "cube_structures.cocalimo_smcubes_extension");
+		URI cubestructureitemsURI = URI.createFileURI(outputFilepath + "cube_structure_items.cocalimo_smcubes_extension");
 		// URI transformationsURI = URI.createFileURI(outputFilepath +
 		// "transformations.efbt_vtl_transformation");
 
@@ -307,7 +307,7 @@ public abstract class Importer implements BirdImporter {
 		for (Iterator iterator = combinationsModules.iterator(); iterator.hasNext();) {
 			CombinationModule combinationModule = (CombinationModule) iterator.next();
 			URI combinationsURI = URI
-					.createFileURI(outputFilepath + "\\combinations\\combinations" + counter + ".efbt_data_definition");
+					.createFileURI(outputFilepath + "\\combinations\\combinations" + counter + ".cocalimo_smcubes_extension");
 			counter++;
 			Resource combinationsResource = factory.createResource(combinationsURI);
 			combinationsResource.getContents().add(combinationModule);

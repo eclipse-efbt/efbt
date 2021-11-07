@@ -12,8 +12,8 @@
        Neil Mackenzie - initial API and implementation
  -->
 <feature
-      id="org.eclipse.efbt.cocalimo.smcubes.model.feature"
-      label="CoCaLiMo SMCubes Model"
+      id="org.eclipse.efbt.cocalimo.core.model.feature"
+      label="CoCaLiMo Core Model"
       version="1.0.0.qualifier"
       provider-name="Bird Software Solutions">
 
@@ -124,58 +124,94 @@ Exhibit A – Form of Secondary Licenses Notice
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.emf.ecore"/>
       <import plugin="org.eclipse.emf.ecore.xmi"/>
-      <import plugin="org.eclipse.efbt.cocalimo.core.model.module_management"/>
       <import plugin="org.emfjson.jackson"/>
       <import plugin="com.fasterxml.jackson.core.jackson-databind" version="2.9.1" match="perfect"/>
-      <import plugin="org.eclipse.efbt.cocalimo.core.model.requirements_text"/>
       <import plugin="org.eclipse.emf.edit"/>
-      <import plugin="org.eclipse.efbt.cocalimo.core.model.module_management.edit"/>
-      <import plugin="org.eclipse.efbt.cocalimo.core.model.requirements_text.edit"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.emf.edit.ui"/>
       <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.eclipse.efbt.cocalimo.core.model.logical_transformations"/>
-      <import plugin="org.eclipse.emf.ecore.edit"/>
-      <import plugin="org.eclipse.efbt.cocalimo.core.model.logical_transformations.edit"/>
+      <import plugin="org.eclipse.efbt.cocalimo.core.model.module_management" version="1.0.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
-         id="org.eclipse.efbt.cocalimo.smcubes.model.core"
+         id="org.eclipse.efbt.cocalimo.core.model.module_management"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.efbt.cocalimo.smcubes.model.testing"
+         id="org.eclipse.efbt.cocalimo.core.model.requirements_text"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.efbt.cocalimo.smcubes.model.core.edit"
+         id="org.eclipse.efbt.cocalimo.core.model.platform_call"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.efbt.cocalimo.smcubes.model.testing.edit"
+         id="org.eclipse.efbt.cocalimo.core.model.logical_transformations"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.efbt.cocalimo.smcubes.model.core.editor"
+         id="org.eclipse.efbt.cocalimo.core.model.module_management.edit"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.efbt.cocalimo.smcubes.model.testing.editor"
+         id="org.eclipse.efbt.cocalimo.core.model.requirements_text.edit"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.efbt.cocalimo.core.model.platform_call.edit"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.efbt.cocalimo.core.model.logical_transformations.edit"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.efbt.cocalimo.core.model.module_management.editor"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.efbt.cocalimo.core.model.requirements_text.editor"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.efbt.cocalimo.core.model.platform_call.editor"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.efbt.cocalimo.core.model.logical_transformations.editor"
          download-size="0"
          install-size="0"
          version="0.0.0"
