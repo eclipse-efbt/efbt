@@ -19,7 +19,6 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
@@ -32,7 +31,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <ul>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.bpmn_lite.impl.ServiceTaskImpl#getEnrichedAttribute <em>Enriched Attribute</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.bpmn_lite.impl.ServiceTaskImpl#getScenarios <em>Scenarios</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.core.model.bpmn_lite.impl.ServiceTaskImpl#getLinkedAttributes <em>Linked Attributes</em>}</li>
  * </ul>
  *
  * @generated
@@ -57,16 +55,6 @@ public class ServiceTaskImpl extends TaskImpl implements ServiceTask {
 	 * @ordered
 	 */
 	protected EList<Scenario> scenarios;
-
-	/**
-	 * The cached value of the '{@link #getLinkedAttributes() <em>Linked Attributes</em>}' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getLinkedAttributes()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<EAttribute> linkedAttributes;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -146,19 +134,6 @@ public class ServiceTaskImpl extends TaskImpl implements ServiceTask {
 	 * @generated
 	 */
 	@Override
-	public EList<EAttribute> getLinkedAttributes() {
-		if (linkedAttributes == null) {
-			linkedAttributes = new EObjectResolvingEList<EAttribute>(EAttribute.class, this, Bpmn_litePackage.SERVICE_TASK__LINKED_ATTRIBUTES);
-		}
-		return linkedAttributes;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case Bpmn_litePackage.SERVICE_TASK__SCENARIOS:
@@ -180,8 +155,6 @@ public class ServiceTaskImpl extends TaskImpl implements ServiceTask {
 				return basicGetEnrichedAttribute();
 			case Bpmn_litePackage.SERVICE_TASK__SCENARIOS:
 				return getScenarios();
-			case Bpmn_litePackage.SERVICE_TASK__LINKED_ATTRIBUTES:
-				return getLinkedAttributes();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -202,10 +175,6 @@ public class ServiceTaskImpl extends TaskImpl implements ServiceTask {
 				getScenarios().clear();
 				getScenarios().addAll((Collection<? extends Scenario>)newValue);
 				return;
-			case Bpmn_litePackage.SERVICE_TASK__LINKED_ATTRIBUTES:
-				getLinkedAttributes().clear();
-				getLinkedAttributes().addAll((Collection<? extends EAttribute>)newValue);
-				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -224,9 +193,6 @@ public class ServiceTaskImpl extends TaskImpl implements ServiceTask {
 			case Bpmn_litePackage.SERVICE_TASK__SCENARIOS:
 				getScenarios().clear();
 				return;
-			case Bpmn_litePackage.SERVICE_TASK__LINKED_ATTRIBUTES:
-				getLinkedAttributes().clear();
-				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -243,8 +209,6 @@ public class ServiceTaskImpl extends TaskImpl implements ServiceTask {
 				return enrichedAttribute != null;
 			case Bpmn_litePackage.SERVICE_TASK__SCENARIOS:
 				return scenarios != null && !scenarios.isEmpty();
-			case Bpmn_litePackage.SERVICE_TASK__LINKED_ATTRIBUTES:
-				return linkedAttributes != null && !linkedAttributes.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

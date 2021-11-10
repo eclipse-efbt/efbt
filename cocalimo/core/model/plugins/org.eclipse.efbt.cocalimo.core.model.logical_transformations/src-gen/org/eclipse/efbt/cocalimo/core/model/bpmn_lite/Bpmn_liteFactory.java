@@ -85,6 +85,15 @@ public interface Bpmn_liteFactory extends EFactory {
 	SubProcess createSubProcess();
 
 	/**
+	 * Returns a new object of class '<em>Script Task</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Script Task</em>'.
+	 * @generated
+	 */
+	ScriptTask createScriptTask();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

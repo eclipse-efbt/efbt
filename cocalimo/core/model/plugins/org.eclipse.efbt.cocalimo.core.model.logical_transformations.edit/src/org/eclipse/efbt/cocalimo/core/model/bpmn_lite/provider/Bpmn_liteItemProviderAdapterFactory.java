@@ -233,6 +233,29 @@ public class Bpmn_liteItemProviderAdapterFactory extends Bpmn_liteAdapterFactory
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ScriptTask} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ScriptTaskItemProvider scriptTaskItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ScriptTask}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createScriptTaskAdapter() {
+		if (scriptTaskItemProvider == null) {
+			scriptTaskItemProvider = new ScriptTaskItemProvider(this);
+		}
+
+		return scriptTaskItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -344,6 +367,7 @@ public class Bpmn_liteItemProviderAdapterFactory extends Bpmn_liteAdapterFactory
 		if (parallelGatewayItemProvider != null) parallelGatewayItemProvider.dispose();
 		if (serviceTaskItemProvider != null) serviceTaskItemProvider.dispose();
 		if (subProcessItemProvider != null) subProcessItemProvider.dispose();
+		if (scriptTaskItemProvider != null) scriptTaskItemProvider.dispose();
 	}
 
 }

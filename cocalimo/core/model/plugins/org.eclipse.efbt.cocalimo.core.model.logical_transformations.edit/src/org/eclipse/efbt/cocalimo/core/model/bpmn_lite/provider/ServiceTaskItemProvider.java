@@ -48,7 +48,6 @@ public class ServiceTaskItemProvider extends TaskItemProvider {
 			super.getPropertyDescriptors(object);
 
 			addEnrichedAttributePropertyDescriptor(object);
-			addLinkedAttributesPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -67,28 +66,6 @@ public class ServiceTaskItemProvider extends TaskItemProvider {
 				 getString("_UI_ServiceTask_enrichedAttribute_feature"),
 				 getString("_UI_PropertyDescriptor_description", "_UI_ServiceTask_enrichedAttribute_feature", "_UI_ServiceTask_type"),
 				 Bpmn_litePackage.Literals.SERVICE_TASK__ENRICHED_ATTRIBUTE,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Linked Attributes feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addLinkedAttributesPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_ServiceTask_linkedAttributes_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_ServiceTask_linkedAttributes_feature", "_UI_ServiceTask_type"),
-				 Bpmn_litePackage.Literals.SERVICE_TASK__LINKED_ATTRIBUTES,
 				 true,
 				 false,
 				 true,
