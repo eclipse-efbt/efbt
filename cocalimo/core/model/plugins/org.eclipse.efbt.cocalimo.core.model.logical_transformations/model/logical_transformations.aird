@@ -12,7 +12,7 @@
     <semanticResources>platform:/resource/org.eclipse.efbt.cocalimo.core.model.requirements_text/model/requirements_text.genmodel</semanticResources>
     <ownedViews xmi:type="viewpoint:DView" uid="_NxDWcD_fEey9NNjLH8xBBg">
       <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']"/>
-      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_OTvMwD_fEey9NNjLH8xBBg" name="logical_transformations class diagram" repPath="#_OTriYD_fEey9NNjLH8xBBg" changeId="1a282715-ce47-430d-8cc2-7fa2229f722e">
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_OTvMwD_fEey9NNjLH8xBBg" name="logical_transformations class diagram" repPath="#_OTriYD_fEey9NNjLH8xBBg" changeId="0b6d4800-58f8-45cb-b32d-9fba8ff72c74">
         <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']"/>
         <target xmi:type="ecore:EPackage" href="logical_transformations.ecore#/"/>
       </ownedRepresentationDescriptors>
@@ -301,7 +301,7 @@
         </edges>
         <edges xmi:type="notation:Edge" xmi:id="_3X5XYEI0EeynIYoaeMHI1w" type="4001" element="_3XnDjEI0EeynIYoaeMHI1w" source="_vfcNYEI0EeynIYoaeMHI1w" target="_3XzQwEI0EeynIYoaeMHI1w">
           <children xmi:type="notation:Node" xmi:id="_3X5XZEI0EeynIYoaeMHI1w" type="6001">
-            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_3X5XZUI0EeynIYoaeMHI1w" x="77" y="-86"/>
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_3X5XZUI0EeynIYoaeMHI1w" x="167" y="31"/>
           </children>
           <children xmi:type="notation:Node" xmi:id="_3X5XZkI0EeynIYoaeMHI1w" type="6002">
             <layoutConstraint xmi:type="notation:Bounds" xmi:id="_3X5XZ0I0EeynIYoaeMHI1w" y="10"/>

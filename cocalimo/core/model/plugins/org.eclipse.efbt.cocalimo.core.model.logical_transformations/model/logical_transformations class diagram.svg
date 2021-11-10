@@ -306,7 +306,7 @@
                 <path d="M627 404 L637 404 L637 413 L627 413 L627 404 Z"/>
             </clipPath>
             <clipPath clipPathUnits="userSpaceOnUse" id="clipPath91">
-                <path d="M742 229 L796 229 L796 244 L742 244 L742 229 Z"/>
+                <path d="M859 139 L913 139 L913 154 L859 154 L859 139 Z"/>
             </clipPath>
             <clipPath clipPathUnits="userSpaceOnUse" id="clipPath92">
                 <path d="M752 401 L767 401 L767 410 L752 410 L752 401 Z"/>
@@ -465,7 +465,7 @@
             <polygon fill="none" clip-path="url(#clipPath87)" points=" 664 295 668 303 660 303" stroke="rgb(136,136,136)"/>
             <line clip-path="url(#clipPath77)" fill="none" x1="753" x2="854" y1="405" y2="405"/>
             <line clip-path="url(#clipPath77)" fill="none" x1="854" x2="854" y1="405" y2="118"/>
-            <text xml:space="preserve" x="743" y="241" clip-path="url(#clipPath91)" stroke="none">[0..*] tests</text>
+            <text xml:space="preserve" x="860" y="151" clip-path="url(#clipPath91)" stroke="none">[0..*] tests</text>
             <polygon clip-path="url(#clipPath92)" points=" 753 405 759 402 765 405 759 408" stroke="none"/>
             <polygon fill="none" clip-path="url(#clipPath92)" points=" 753 405 759 402 765 405 759 408"/>
             <line clip-path="url(#clipPath93)" fill="none" x1="857" x2="854" y1="125" y2="118"/>
