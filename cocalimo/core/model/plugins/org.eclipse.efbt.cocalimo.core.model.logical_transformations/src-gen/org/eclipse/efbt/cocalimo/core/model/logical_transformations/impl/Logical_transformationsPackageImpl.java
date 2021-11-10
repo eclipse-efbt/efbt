@@ -13,6 +13,8 @@ import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.ScenarioTag;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.TaskTag;
 
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Test;
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.TestModule;
 import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementPackage;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.Requirements_textPackage;
@@ -58,6 +60,20 @@ public class Logical_transformationsPackageImpl extends EPackageImpl implements 
 	 * @generated
 	 */
 	private EClass scenarioTagEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass testEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass testModuleEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -187,6 +203,16 @@ public class Logical_transformationsPackageImpl extends EPackageImpl implements 
 	 * @generated
 	 */
 	@Override
+	public EReference getLogicalTransformationModule_TestModules() {
+		return (EReference)logicalTransformationModuleEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getTaskTag() {
 		return taskTagEClass;
 	}
@@ -267,6 +293,66 @@ public class Logical_transformationsPackageImpl extends EPackageImpl implements 
 	 * @generated
 	 */
 	@Override
+	public EClass getTest() {
+		return testEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getTest_Scenarios() {
+		return (EReference)testEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getTest_InputData() {
+		return (EReference)testEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getTest_ExpectedResult() {
+		return (EReference)testEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getTestModule() {
+		return testModuleEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getTestModule_Tests() {
+		return (EReference)testModuleEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Logical_transformationsFactory getLogical_transformationsFactory() {
 		return (Logical_transformationsFactory)getEFactoryInstance();
 	}
@@ -295,6 +381,7 @@ public class Logical_transformationsPackageImpl extends EPackageImpl implements 
 		createEReference(logicalTransformationModuleEClass, LOGICAL_TRANSFORMATION_MODULE__SCENARIO_TAGS);
 		createEReference(logicalTransformationModuleEClass, LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESSES);
 		createEReference(logicalTransformationModuleEClass, LOGICAL_TRANSFORMATION_MODULE__REQUIREMENTS);
+		createEReference(logicalTransformationModuleEClass, LOGICAL_TRANSFORMATION_MODULE__TEST_MODULES);
 
 		taskTagEClass = createEClass(TASK_TAG);
 
@@ -306,6 +393,14 @@ public class Logical_transformationsPackageImpl extends EPackageImpl implements 
 
 		scenarioTagEClass = createEClass(SCENARIO_TAG);
 		createEReference(scenarioTagEClass, SCENARIO_TAG__SCENARIO);
+
+		testEClass = createEClass(TEST);
+		createEReference(testEClass, TEST__SCENARIOS);
+		createEReference(testEClass, TEST__INPUT_DATA);
+		createEReference(testEClass, TEST__EXPECTED_RESULT);
+
+		testModuleEClass = createEClass(TEST_MODULE);
+		createEReference(testModuleEClass, TEST_MODULE__TESTS);
 	}
 
 	/**
@@ -345,6 +440,7 @@ public class Logical_transformationsPackageImpl extends EPackageImpl implements 
 		logicalTransformationModuleEClass.getESuperTypes().add(theModule_managementPackage.getModule());
 		taskTagEClass.getESuperTypes().add(theRequirements_textPackage.getTag());
 		scenarioTagEClass.getESuperTypes().add(theRequirements_textPackage.getTag());
+		testModuleEClass.getESuperTypes().add(theModule_managementPackage.getModule());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(logicalTransformationModuleEClass, LogicalTransformationModule.class, "LogicalTransformationModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -352,6 +448,7 @@ public class Logical_transformationsPackageImpl extends EPackageImpl implements 
 		initEReference(getLogicalTransformationModule_ScenarioTags(), this.getScenarioTag(), null, "scenarioTags", null, 0, -1, LogicalTransformationModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getLogicalTransformationModule_SubProcesses(), theBpmn_litePackage.getSubProcess(), null, "subProcesses", null, 0, -1, LogicalTransformationModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getLogicalTransformationModule_Requirements(), theRequirements_textPackage.getRequirementsModule(), null, "requirements", null, 0, -1, LogicalTransformationModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getLogicalTransformationModule_TestModules(), this.getTestModule(), null, "testModules", null, 0, -1, LogicalTransformationModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(taskTagEClass, TaskTag.class, "TaskTag", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -363,6 +460,14 @@ public class Logical_transformationsPackageImpl extends EPackageImpl implements 
 
 		initEClass(scenarioTagEClass, ScenarioTag.class, "ScenarioTag", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getScenarioTag_Scenario(), this.getScenario(), null, "scenario", null, 0, 1, ScenarioTag.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(testEClass, Test.class, "Test", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getTest_Scenarios(), this.getScenario(), null, "scenarios", null, 0, 1, Test.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTest_InputData(), theEcorePackage.getEObject(), null, "inputData", null, 0, -1, Test.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTest_ExpectedResult(), theEcorePackage.getEObject(), null, "expectedResult", null, 0, -1, Test.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(testModuleEClass, TestModule.class, "TestModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getTestModule_Tests(), this.getTest(), null, "tests", null, 0, -1, TestModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

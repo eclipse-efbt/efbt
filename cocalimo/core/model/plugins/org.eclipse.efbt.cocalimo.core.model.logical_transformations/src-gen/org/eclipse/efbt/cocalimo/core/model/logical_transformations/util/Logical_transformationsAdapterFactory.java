@@ -86,6 +86,14 @@ public class Logical_transformationsAdapterFactory extends AdapterFactoryImpl {
 				return createScenarioTagAdapter();
 			}
 			@Override
+			public Adapter caseTest(Test object) {
+				return createTestAdapter();
+			}
+			@Override
+			public Adapter caseTestModule(TestModule object) {
+				return createTestModuleAdapter();
+			}
+			@Override
 			public Adapter caseModule(org.eclipse.efbt.cocalimo.core.model.module_management.Module object) {
 				return createModuleAdapter();
 			}
@@ -166,6 +174,34 @@ public class Logical_transformationsAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createScenarioTagAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Test <em>Test</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.Test
+	 * @generated
+	 */
+	public Adapter createTestAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.TestModule <em>Test Module</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.TestModule
+	 * @generated
+	 */
+	public Adapter createTestModuleAdapter() {
 		return null;
 	}
 

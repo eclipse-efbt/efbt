@@ -60,6 +60,8 @@ public class Logical_transformationsFactoryImpl extends EFactoryImpl implements 
 			case Logical_transformationsPackage.TASK_TAG: return createTaskTag();
 			case Logical_transformationsPackage.SCENARIO: return createScenario();
 			case Logical_transformationsPackage.SCENARIO_TAG: return createScenarioTag();
+			case Logical_transformationsPackage.TEST: return createTest();
+			case Logical_transformationsPackage.TEST_MODULE: return createTestModule();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -107,6 +109,28 @@ public class Logical_transformationsFactoryImpl extends EFactoryImpl implements 
 	public ScenarioTag createScenarioTag() {
 		ScenarioTagImpl scenarioTag = new ScenarioTagImpl();
 		return scenarioTag;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Test createTest() {
+		TestImpl test = new TestImpl();
+		return test;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TestModule createTestModule() {
+		TestModuleImpl testModule = new TestModuleImpl();
+		return testModule;
 	}
 
 	/**

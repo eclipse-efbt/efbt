@@ -161,13 +161,22 @@ public interface Logical_transformationsPackage extends EPackage {
 	int LOGICAL_TRANSFORMATION_MODULE__REQUIREMENTS = Module_managementPackage.MODULE_FEATURE_COUNT + 3;
 
 	/**
+	 * The feature id for the '<em><b>Test Modules</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LOGICAL_TRANSFORMATION_MODULE__TEST_MODULES = Module_managementPackage.MODULE_FEATURE_COUNT + 4;
+
+	/**
 	 * The number of structural features of the '<em>Logical Transformation Module</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int LOGICAL_TRANSFORMATION_MODULE_FEATURE_COUNT = Module_managementPackage.MODULE_FEATURE_COUNT + 4;
+	int LOGICAL_TRANSFORMATION_MODULE_FEATURE_COUNT = Module_managementPackage.MODULE_FEATURE_COUNT + 5;
 
 	/**
 	 * The number of operations of the '<em>Logical Transformation Module</em>' class.
@@ -364,6 +373,153 @@ public interface Logical_transformationsPackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.TestImpl <em>Test</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.TestImpl
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.Logical_transformationsPackageImpl#getTest()
+	 * @generated
+	 */
+	int TEST = 4;
+
+	/**
+	 * The feature id for the '<em><b>Scenarios</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEST__SCENARIOS = 0;
+
+	/**
+	 * The feature id for the '<em><b>Input Data</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEST__INPUT_DATA = 1;
+
+	/**
+	 * The feature id for the '<em><b>Expected Result</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEST__EXPECTED_RESULT = 2;
+
+	/**
+	 * The number of structural features of the '<em>Test</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEST_FEATURE_COUNT = 3;
+
+	/**
+	 * The number of operations of the '<em>Test</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEST_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.TestModuleImpl <em>Test Module</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.TestModuleImpl
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.Logical_transformationsPackageImpl#getTestModule()
+	 * @generated
+	 */
+	int TEST_MODULE = 5;
+
+	/**
+	 * The feature id for the '<em><b>Dependencies</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEST_MODULE__DEPENDENCIES = Module_managementPackage.MODULE__DEPENDENCIES;
+
+	/**
+	 * The feature id for the '<em><b>The Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEST_MODULE__THE_DESCRIPTION = Module_managementPackage.MODULE__THE_DESCRIPTION;
+
+	/**
+	 * The feature id for the '<em><b>License</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEST_MODULE__LICENSE = Module_managementPackage.MODULE__LICENSE;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEST_MODULE__NAME = Module_managementPackage.MODULE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Version</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEST_MODULE__VERSION = Module_managementPackage.MODULE__VERSION;
+
+	/**
+	 * The feature id for the '<em><b>Long Name</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEST_MODULE__LONG_NAME = Module_managementPackage.MODULE__LONG_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Tests</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEST_MODULE__TESTS = Module_managementPackage.MODULE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Test Module</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEST_MODULE_FEATURE_COUNT = Module_managementPackage.MODULE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of operations of the '<em>Test Module</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEST_MODULE_OPERATION_COUNT = Module_managementPackage.MODULE_OPERATION_COUNT + 0;
+
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule <em>Logical Transformation Module</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -416,6 +572,17 @@ public interface Logical_transformationsPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getLogicalTransformationModule_Requirements();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule#getTestModules <em>Test Modules</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Test Modules</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule#getTestModules()
+	 * @see #getLogicalTransformationModule()
+	 * @generated
+	 */
+	EReference getLogicalTransformationModule_TestModules();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.TaskTag <em>Task Tag</em>}'.
@@ -503,6 +670,70 @@ public interface Logical_transformationsPackage extends EPackage {
 	EReference getScenarioTag_Scenario();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Test <em>Test</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Test</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.Test
+	 * @generated
+	 */
+	EClass getTest();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Test#getScenarios <em>Scenarios</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Scenarios</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.Test#getScenarios()
+	 * @see #getTest()
+	 * @generated
+	 */
+	EReference getTest_Scenarios();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Test#getInputData <em>Input Data</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Input Data</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.Test#getInputData()
+	 * @see #getTest()
+	 * @generated
+	 */
+	EReference getTest_InputData();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Test#getExpectedResult <em>Expected Result</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Expected Result</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.Test#getExpectedResult()
+	 * @see #getTest()
+	 * @generated
+	 */
+	EReference getTest_ExpectedResult();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.TestModule <em>Test Module</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Test Module</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.TestModule
+	 * @generated
+	 */
+	EClass getTestModule();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.TestModule#getTests <em>Tests</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Tests</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.TestModule#getTests()
+	 * @see #getTestModule()
+	 * @generated
+	 */
+	EReference getTestModule_Tests();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -566,6 +797,14 @@ public interface Logical_transformationsPackage extends EPackage {
 		 * @generated
 		 */
 		EReference LOGICAL_TRANSFORMATION_MODULE__REQUIREMENTS = eINSTANCE.getLogicalTransformationModule_Requirements();
+
+		/**
+		 * The meta object literal for the '<em><b>Test Modules</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference LOGICAL_TRANSFORMATION_MODULE__TEST_MODULES = eINSTANCE.getLogicalTransformationModule_TestModules();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.TaskTagImpl <em>Task Tag</em>}' class.
@@ -636,6 +875,58 @@ public interface Logical_transformationsPackage extends EPackage {
 		 * @generated
 		 */
 		EReference SCENARIO_TAG__SCENARIO = eINSTANCE.getScenarioTag_Scenario();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.TestImpl <em>Test</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.TestImpl
+		 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.Logical_transformationsPackageImpl#getTest()
+		 * @generated
+		 */
+		EClass TEST = eINSTANCE.getTest();
+
+		/**
+		 * The meta object literal for the '<em><b>Scenarios</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TEST__SCENARIOS = eINSTANCE.getTest_Scenarios();
+
+		/**
+		 * The meta object literal for the '<em><b>Input Data</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TEST__INPUT_DATA = eINSTANCE.getTest_InputData();
+
+		/**
+		 * The meta object literal for the '<em><b>Expected Result</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TEST__EXPECTED_RESULT = eINSTANCE.getTest_ExpectedResult();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.TestModuleImpl <em>Test Module</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.TestModuleImpl
+		 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.Logical_transformationsPackageImpl#getTestModule()
+		 * @generated
+		 */
+		EClass TEST_MODULE = eINSTANCE.getTestModule();
+
+		/**
+		 * The meta object literal for the '<em><b>Tests</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TEST_MODULE__TESTS = eINSTANCE.getTestModule_Tests();
 
 	}
 
