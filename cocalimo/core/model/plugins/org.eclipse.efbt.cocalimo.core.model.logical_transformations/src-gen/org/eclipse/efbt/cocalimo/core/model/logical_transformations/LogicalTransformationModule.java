@@ -20,6 +20,7 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule#getScenarioTags <em>Scenario Tags</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule#getSubProcesses <em>Sub Processes</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule#getRequirements <em>Requirements</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule#getTestModules <em>Test Modules</em>}</li>
  * </ul>
  *
  * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsPackage#getLogicalTransformationModule()
@@ -49,7 +50,7 @@ public interface LogicalTransformationModule extends org.eclipse.efbt.cocalimo.c
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<org.eclipse.efbt.cocalimo.core.model.logical_transformations.ScenarioTag> getScenarioTags();
+	EList<ScenarioTag> getScenarioTags();
 
 	/**
 	 * Returns the value of the '<em><b>Sub Processes</b></em>' containment reference list.
@@ -74,5 +75,17 @@ public interface LogicalTransformationModule extends org.eclipse.efbt.cocalimo.c
 	 * @generated
 	 */
 	EList<RequirementsModule> getRequirements();
+
+	/**
+	 * Returns the value of the '<em><b>Test Modules</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.TestModule}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Test Modules</em>' containment reference list.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsPackage#getLogicalTransformationModule_TestModules()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<TestModule> getTestModules();
 
 } // LogicalTransformationModule

@@ -95,6 +95,19 @@ public class Logical_transformationsSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case Logical_transformationsPackage.TEST: {
+				Test test = (Test)theEObject;
+				T result = caseTest(test);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Logical_transformationsPackage.TEST_MODULE: {
+				TestModule testModule = (TestModule)theEObject;
+				T result = caseTestModule(testModule);
+				if (result == null) result = caseModule(testModule);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -156,6 +169,36 @@ public class Logical_transformationsSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseScenarioTag(ScenarioTag object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Test</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Test</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseTest(Test object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Test Module</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Test Module</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseTestModule(TestModule object) {
 		return null;
 	}
 

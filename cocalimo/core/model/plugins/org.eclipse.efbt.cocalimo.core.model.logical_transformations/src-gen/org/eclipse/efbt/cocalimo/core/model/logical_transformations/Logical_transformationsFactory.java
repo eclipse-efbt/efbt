@@ -58,6 +58,24 @@ public interface Logical_transformationsFactory extends EFactory {
 	ScenarioTag createScenarioTag();
 
 	/**
+	 * Returns a new object of class '<em>Test</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Test</em>'.
+	 * @generated
+	 */
+	Test createTest();
+
+	/**
+	 * Returns a new object of class '<em>Test Module</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Test Module</em>'.
+	 * @generated
+	 */
+	TestModule createTestModule();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

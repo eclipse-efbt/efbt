@@ -8,8 +8,10 @@ import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.SubProcess;
 
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsPackage;
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.ScenarioTag;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.TaskTag;
 
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.TestModule;
 import org.eclipse.efbt.cocalimo.core.model.module_management.impl.ModuleImpl;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.RequirementsModule;
@@ -35,6 +37,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.LogicalTransformationModuleImpl#getScenarioTags <em>Scenario Tags</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.LogicalTransformationModuleImpl#getSubProcesses <em>Sub Processes</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.LogicalTransformationModuleImpl#getRequirements <em>Requirements</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.LogicalTransformationModuleImpl#getTestModules <em>Test Modules</em>}</li>
  * </ul>
  *
  * @generated
@@ -58,7 +61,7 @@ public class LogicalTransformationModuleImpl extends ModuleImpl implements Logic
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<org.eclipse.efbt.cocalimo.core.model.logical_transformations.ScenarioTag> scenarioTags;
+	protected EList<ScenarioTag> scenarioTags;
 
 	/**
 	 * The cached value of the '{@link #getSubProcesses() <em>Sub Processes</em>}' containment reference list.
@@ -79,6 +82,16 @@ public class LogicalTransformationModuleImpl extends ModuleImpl implements Logic
 	 * @ordered
 	 */
 	protected EList<RequirementsModule> requirements;
+
+	/**
+	 * The cached value of the '{@link #getTestModules() <em>Test Modules</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTestModules()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<TestModule> testModules;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -118,9 +131,9 @@ public class LogicalTransformationModuleImpl extends ModuleImpl implements Logic
 	 * @generated
 	 */
 	@Override
-	public EList<org.eclipse.efbt.cocalimo.core.model.logical_transformations.ScenarioTag> getScenarioTags() {
+	public EList<ScenarioTag> getScenarioTags() {
 		if (scenarioTags == null) {
-			scenarioTags = new EObjectContainmentEList<org.eclipse.efbt.cocalimo.core.model.logical_transformations.ScenarioTag>(org.eclipse.efbt.cocalimo.core.model.logical_transformations.ScenarioTag.class, this, Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SCENARIO_TAGS);
+			scenarioTags = new EObjectContainmentEList<ScenarioTag>(ScenarioTag.class, this, Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SCENARIO_TAGS);
 		}
 		return scenarioTags;
 	}
@@ -157,6 +170,19 @@ public class LogicalTransformationModuleImpl extends ModuleImpl implements Logic
 	 * @generated
 	 */
 	@Override
+	public EList<TestModule> getTestModules() {
+		if (testModules == null) {
+			testModules = new EObjectContainmentEList<TestModule>(TestModule.class, this, Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__TEST_MODULES);
+		}
+		return testModules;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__TASK_TAGS:
@@ -167,6 +193,8 @@ public class LogicalTransformationModuleImpl extends ModuleImpl implements Logic
 				return ((InternalEList<?>)getSubProcesses()).basicRemove(otherEnd, msgs);
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__REQUIREMENTS:
 				return ((InternalEList<?>)getRequirements()).basicRemove(otherEnd, msgs);
+			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__TEST_MODULES:
+				return ((InternalEList<?>)getTestModules()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -187,6 +215,8 @@ public class LogicalTransformationModuleImpl extends ModuleImpl implements Logic
 				return getSubProcesses();
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__REQUIREMENTS:
 				return getRequirements();
+			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__TEST_MODULES:
+				return getTestModules();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -206,7 +236,7 @@ public class LogicalTransformationModuleImpl extends ModuleImpl implements Logic
 				return;
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SCENARIO_TAGS:
 				getScenarioTags().clear();
-				getScenarioTags().addAll((Collection<? extends org.eclipse.efbt.cocalimo.core.model.logical_transformations.ScenarioTag>)newValue);
+				getScenarioTags().addAll((Collection<? extends ScenarioTag>)newValue);
 				return;
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESSES:
 				getSubProcesses().clear();
@@ -215,6 +245,10 @@ public class LogicalTransformationModuleImpl extends ModuleImpl implements Logic
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__REQUIREMENTS:
 				getRequirements().clear();
 				getRequirements().addAll((Collection<? extends RequirementsModule>)newValue);
+				return;
+			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__TEST_MODULES:
+				getTestModules().clear();
+				getTestModules().addAll((Collection<? extends TestModule>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -240,6 +274,9 @@ public class LogicalTransformationModuleImpl extends ModuleImpl implements Logic
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__REQUIREMENTS:
 				getRequirements().clear();
 				return;
+			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__TEST_MODULES:
+				getTestModules().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -260,6 +297,8 @@ public class LogicalTransformationModuleImpl extends ModuleImpl implements Logic
 				return subProcesses != null && !subProcesses.isEmpty();
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__REQUIREMENTS:
 				return requirements != null && !requirements.isEmpty();
+			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__TEST_MODULES:
+				return testModules != null && !testModules.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

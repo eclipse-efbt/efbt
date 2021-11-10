@@ -6,15 +6,12 @@ package org.eclipse.efbt.cocalimo.core.model.logical_transformations.provider;
 import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Bpmn_liteFactory;
-
-import org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsFactory;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsPackage;
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.TestModule;
 
 import org.eclipse.efbt.cocalimo.core.model.module_management.provider.ModuleItemProvider;
 
-import org.eclipse.efbt.cocalimo.core.model.requirements_text.Requirements_textFactory;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 
@@ -22,24 +19,23 @@ import org.eclipse.emf.common.util.ResourceLocator;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 
-import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule} object.
+ * This is the item provider adapter for a {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.TestModule} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class LogicalTransformationModuleItemProvider extends ModuleItemProvider {
+public class TestModuleItemProvider extends ModuleItemProvider {
 	/**
 	 * This constructs an instance from a factory and a notifier.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public LogicalTransformationModuleItemProvider(AdapterFactory adapterFactory) {
+	public TestModuleItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -54,31 +50,8 @@ public class LogicalTransformationModuleItemProvider extends ModuleItemProvider 
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addTestModulesPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
-	}
-
-	/**
-	 * This adds a property descriptor for the Test Modules feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addTestModulesPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_LogicalTransformationModule_testModules_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_LogicalTransformationModule_testModules_feature", "_UI_LogicalTransformationModule_type"),
-				 Logical_transformationsPackage.Literals.LOGICAL_TRANSFORMATION_MODULE__TEST_MODULES,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
 	}
 
 	/**
@@ -93,10 +66,7 @@ public class LogicalTransformationModuleItemProvider extends ModuleItemProvider 
 	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
-			childrenFeatures.add(Logical_transformationsPackage.Literals.LOGICAL_TRANSFORMATION_MODULE__TASK_TAGS);
-			childrenFeatures.add(Logical_transformationsPackage.Literals.LOGICAL_TRANSFORMATION_MODULE__SCENARIO_TAGS);
-			childrenFeatures.add(Logical_transformationsPackage.Literals.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESSES);
-			childrenFeatures.add(Logical_transformationsPackage.Literals.LOGICAL_TRANSFORMATION_MODULE__REQUIREMENTS);
+			childrenFeatures.add(Logical_transformationsPackage.Literals.TEST_MODULE__TESTS);
 		}
 		return childrenFeatures;
 	}
@@ -115,14 +85,14 @@ public class LogicalTransformationModuleItemProvider extends ModuleItemProvider 
 	}
 
 	/**
-	 * This returns LogicalTransformationModule.gif.
+	 * This returns TestModule.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/LogicalTransformationModule"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/TestModule"));
 	}
 
 	/**
@@ -133,10 +103,10 @@ public class LogicalTransformationModuleItemProvider extends ModuleItemProvider 
 	 */
 	@Override
 	public String getText(Object object) {
-		String label = ((LogicalTransformationModule)object).getName();
+		String label = ((TestModule)object).getName();
 		return label == null || label.length() == 0 ?
-			getString("_UI_LogicalTransformationModule_type") :
-			getString("_UI_LogicalTransformationModule_type") + " " + label;
+			getString("_UI_TestModule_type") :
+			getString("_UI_TestModule_type") + " " + label;
 	}
 
 
@@ -151,11 +121,8 @@ public class LogicalTransformationModuleItemProvider extends ModuleItemProvider 
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 
-		switch (notification.getFeatureID(LogicalTransformationModule.class)) {
-			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__TASK_TAGS:
-			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SCENARIO_TAGS:
-			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESSES:
-			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__REQUIREMENTS:
+		switch (notification.getFeatureID(TestModule.class)) {
+			case Logical_transformationsPackage.TEST_MODULE__TESTS:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
@@ -175,23 +142,8 @@ public class LogicalTransformationModuleItemProvider extends ModuleItemProvider 
 
 		newChildDescriptors.add
 			(createChildParameter
-				(Logical_transformationsPackage.Literals.LOGICAL_TRANSFORMATION_MODULE__TASK_TAGS,
-				 Logical_transformationsFactory.eINSTANCE.createTaskTag()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(Logical_transformationsPackage.Literals.LOGICAL_TRANSFORMATION_MODULE__SCENARIO_TAGS,
-				 Logical_transformationsFactory.eINSTANCE.createScenarioTag()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(Logical_transformationsPackage.Literals.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESSES,
-				 Bpmn_liteFactory.eINSTANCE.createSubProcess()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(Logical_transformationsPackage.Literals.LOGICAL_TRANSFORMATION_MODULE__REQUIREMENTS,
-				 Requirements_textFactory.eINSTANCE.createRequirementsModule()));
+				(Logical_transformationsPackage.Literals.TEST_MODULE__TESTS,
+				 Logical_transformationsFactory.eINSTANCE.createTest()));
 	}
 
 	/**

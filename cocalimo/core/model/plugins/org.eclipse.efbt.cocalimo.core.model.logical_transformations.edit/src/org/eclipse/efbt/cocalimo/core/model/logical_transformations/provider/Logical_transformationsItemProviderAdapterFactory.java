@@ -164,6 +164,52 @@ public class Logical_transformationsItemProviderAdapterFactory extends Logical_t
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Test} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected TestItemProvider testItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Test}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createTestAdapter() {
+		if (testItemProvider == null) {
+			testItemProvider = new TestItemProvider(this);
+		}
+
+		return testItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.TestModule} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected TestModuleItemProvider testModuleItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.TestModule}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createTestModuleAdapter() {
+		if (testModuleItemProvider == null) {
+			testModuleItemProvider = new TestModuleItemProvider(this);
+		}
+
+		return testModuleItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -272,6 +318,8 @@ public class Logical_transformationsItemProviderAdapterFactory extends Logical_t
 		if (taskTagItemProvider != null) taskTagItemProvider.dispose();
 		if (scenarioItemProvider != null) scenarioItemProvider.dispose();
 		if (scenarioTagItemProvider != null) scenarioTagItemProvider.dispose();
+		if (testItemProvider != null) testItemProvider.dispose();
+		if (testModuleItemProvider != null) testModuleItemProvider.dispose();
 	}
 
 }

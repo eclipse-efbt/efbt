@@ -2,6 +2,7 @@
  */
 package org.eclipse.efbt.cocalimo.core.model.bpmn_lite;
 
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EAttribute;
@@ -57,7 +58,7 @@ public interface ServiceTask extends Task {
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario> getScenarios();
+	EList<Scenario> getScenarios();
 
 	/**
 	 * Returns the value of the '<em><b>Linked Attributes</b></em>' reference list.

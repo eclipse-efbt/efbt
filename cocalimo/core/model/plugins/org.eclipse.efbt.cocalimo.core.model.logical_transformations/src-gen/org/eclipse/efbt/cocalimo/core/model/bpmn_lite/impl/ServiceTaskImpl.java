@@ -6,6 +6,7 @@ import java.util.Collection;
 
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Bpmn_litePackage;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ServiceTask;
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
@@ -55,7 +56,7 @@ public class ServiceTaskImpl extends TaskImpl implements ServiceTask {
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario> scenarios;
+	protected EList<Scenario> scenarios;
 
 	/**
 	 * The cached value of the '{@link #getLinkedAttributes() <em>Linked Attributes</em>}' reference list.
@@ -132,9 +133,9 @@ public class ServiceTaskImpl extends TaskImpl implements ServiceTask {
 	 * @generated
 	 */
 	@Override
-	public EList<org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario> getScenarios() {
+	public EList<Scenario> getScenarios() {
 		if (scenarios == null) {
-			scenarios = new EObjectContainmentEList<org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario>(org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario.class, this, Bpmn_litePackage.SERVICE_TASK__SCENARIOS);
+			scenarios = new EObjectContainmentEList<Scenario>(Scenario.class, this, Bpmn_litePackage.SERVICE_TASK__SCENARIOS);
 		}
 		return scenarios;
 	}
@@ -199,7 +200,7 @@ public class ServiceTaskImpl extends TaskImpl implements ServiceTask {
 				return;
 			case Bpmn_litePackage.SERVICE_TASK__SCENARIOS:
 				getScenarios().clear();
-				getScenarios().addAll((Collection<? extends org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario>)newValue);
+				getScenarios().addAll((Collection<? extends Scenario>)newValue);
 				return;
 			case Bpmn_litePackage.SERVICE_TASK__LINKED_ATTRIBUTES:
 				getLinkedAttributes().clear();
