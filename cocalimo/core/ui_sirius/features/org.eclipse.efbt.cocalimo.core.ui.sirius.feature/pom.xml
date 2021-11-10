@@ -14,8 +14,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.eclipse.efbt.cocalimo.cure.ui_sirius</groupId>
-		<artifactId>org.eclipse.efbt.core.smcubes.ui_sirius</artifactId>
+		<groupId>org.eclipse.efbt.cocalimo.core.ui_sirius</groupId>
+		<artifactId>org.eclipse.efbt.core.core.ui_sirius</artifactId>
 		<version>1.0.0-SNAPSHOT</version>  <relativePath>../../pom.xml</relativePath>
 	</parent>
 	<artifactId>org.eclipse.efbt.cocalimo.cure.ui.sirius.feature</artifactId>
