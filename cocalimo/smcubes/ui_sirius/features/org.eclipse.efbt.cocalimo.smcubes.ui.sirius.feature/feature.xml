@@ -137,7 +137,7 @@ Exhibit A – Form of Secondary Licenses Notice
          version="0.0.0"
          unpack="false"/>
    <plugin
-         id="org.eclipse.efbt.cocalimo.smcubes.ui.bpmnlite"
+         id="org.eclipse.efbt.cocalimo.core.ui.bpmnlite"
          download-size="0"
          install-size="0"
          version="0.0.0"

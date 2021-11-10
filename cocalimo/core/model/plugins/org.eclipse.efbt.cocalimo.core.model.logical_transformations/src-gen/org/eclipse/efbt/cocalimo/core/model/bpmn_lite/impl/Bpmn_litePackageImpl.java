@@ -13,6 +13,7 @@ import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.FlowNode;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Gateway;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.InclusiveGateway;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ParallelGateway;
+import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ScriptTask;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.SequenceFlow;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ServiceTask;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.SubProcess;
@@ -128,6 +129,13 @@ public class Bpmn_litePackageImpl extends EPackageImpl implements Bpmn_litePacka
 	 * @generated
 	 */
 	private EClass subProcessEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass scriptTaskEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -447,8 +455,8 @@ public class Bpmn_litePackageImpl extends EPackageImpl implements Bpmn_litePacka
 	 * @generated
 	 */
 	@Override
-	public EReference getServiceTask_LinkedAttributes() {
-		return (EReference)serviceTaskEClass.getEStructuralFeatures().get(2);
+	public EClass getSubProcess() {
+		return subProcessEClass;
 	}
 
 	/**
@@ -457,8 +465,18 @@ public class Bpmn_litePackageImpl extends EPackageImpl implements Bpmn_litePacka
 	 * @generated
 	 */
 	@Override
-	public EClass getSubProcess() {
-		return subProcessEClass;
+	public EClass getScriptTask() {
+		return scriptTaskEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getScriptTask_LinkedAttributes() {
+		return (EReference)scriptTaskEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -525,9 +543,11 @@ public class Bpmn_litePackageImpl extends EPackageImpl implements Bpmn_litePacka
 		serviceTaskEClass = createEClass(SERVICE_TASK);
 		createEReference(serviceTaskEClass, SERVICE_TASK__ENRICHED_ATTRIBUTE);
 		createEReference(serviceTaskEClass, SERVICE_TASK__SCENARIOS);
-		createEReference(serviceTaskEClass, SERVICE_TASK__LINKED_ATTRIBUTES);
 
 		subProcessEClass = createEClass(SUB_PROCESS);
+
+		scriptTaskEClass = createEClass(SCRIPT_TASK);
+		createEReference(scriptTaskEClass, SCRIPT_TASK__LINKED_ATTRIBUTES);
 	}
 
 	/**
@@ -575,6 +595,7 @@ public class Bpmn_litePackageImpl extends EPackageImpl implements Bpmn_litePacka
 		serviceTaskEClass.getESuperTypes().add(this.getTask());
 		subProcessEClass.getESuperTypes().add(this.getActivity());
 		subProcessEClass.getESuperTypes().add(this.getFlowElementsContainer());
+		scriptTaskEClass.getESuperTypes().add(this.getTask());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(baseElementEClass, BaseElement.class, "BaseElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -612,9 +633,11 @@ public class Bpmn_litePackageImpl extends EPackageImpl implements Bpmn_litePacka
 		initEClass(serviceTaskEClass, ServiceTask.class, "ServiceTask", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getServiceTask_EnrichedAttribute(), theEcorePackage.getEAttribute(), null, "enrichedAttribute", null, 0, 1, ServiceTask.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getServiceTask_Scenarios(), theLogical_transformationsPackage.getScenario(), null, "scenarios", null, 0, -1, ServiceTask.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getServiceTask_LinkedAttributes(), theEcorePackage.getEAttribute(), null, "linkedAttributes", null, 0, -1, ServiceTask.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(subProcessEClass, SubProcess.class, "SubProcess", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(scriptTaskEClass, ScriptTask.class, "ScriptTask", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getScriptTask_LinkedAttributes(), theEcorePackage.getEAttribute(), null, "linkedAttributes", null, 0, -1, ScriptTask.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

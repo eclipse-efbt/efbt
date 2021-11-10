@@ -75,8 +75,10 @@
     <genClasses ecoreClass="bpmn_lite.ecore#//ServiceTask">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bpmn_lite.ecore#//ServiceTask/enrichedAttribute"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn_lite.ecore#//ServiceTask/scenarios"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bpmn_lite.ecore#//ServiceTask/linkedAttributes"/>
     </genClasses>
     <genClasses ecoreClass="bpmn_lite.ecore#//SubProcess"/>
+    <genClasses ecoreClass="bpmn_lite.ecore#//ScriptTask">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bpmn_lite.ecore#//ScriptTask/linkedAttributes"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>
