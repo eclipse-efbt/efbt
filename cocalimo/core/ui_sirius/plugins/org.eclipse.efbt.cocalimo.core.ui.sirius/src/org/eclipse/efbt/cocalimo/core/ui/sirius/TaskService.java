@@ -10,7 +10,7 @@
  * Contributors:
  *    Neil Mackenzie - initial API and implementation
  *******************************************************************************/
-package org.eclipse.efbt.cocalimo.core.ui.bpmnlite;
+package org.eclipse.efbt.cocalimo.core.ui.sirius;
 
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ScriptTask;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ServiceTask;

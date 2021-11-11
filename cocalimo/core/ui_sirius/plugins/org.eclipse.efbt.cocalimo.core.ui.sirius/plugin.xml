@@ -15,8 +15,8 @@
 
 <plugin>
   <extension point="org.eclipse.sirius.componentization">
-    <component class="org.eclipse.efbt.cocalimo.core.ui.bpmnlite.Activator"
-               id="org.eclipse.efbt.cocalimo.core.ui.bpmnlite"
+    <component class="org.eclipse.efbt.cocalimo.core.ui.sirius.Activator"
+               id="org.eclipse.efbt.cocalimo.core.ui.sirius"
 	       name="bpmn_lite">
     </component>
   </extension>
@@ -31,8 +31,8 @@
     <extension
         point="org.eclipse.sirius.externalJavaAction">
      <javaActions
-           actionClass="org.eclipse.efbt.cocalimo.core.ui.bpmnlite.SetUnsetExternalLabels"
-           id="org.eclipse.efbt.cocalimo.core.ui.bpmnlite.setUnsetExternalLabels">
+           actionClass="org.eclipse.efbt.cocalimo.core.ui.sirius.SetUnsetExternalLabels"
+           id="org.eclipse.efbt.cocalimo.core.ui.sirius.setUnsetExternalLabels">
      </javaActions>
   </extension>
 </plugin>
