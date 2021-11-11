@@ -37,7 +37,7 @@
 		<additionalTestArguments></additionalTestArguments>
 	</properties>
 	<modules>	
-		<module>plugins/org.eclipse.efbt.cocalimo.core.ui.bpmnlite</module>
+		<module>plugins/org.eclipse.efbt.cocalimo.core.ui.sirius</module>
 		<module>features/org.eclipse.efbt.cocalimo.core.ui.sirius.feature</module>
 	</modules>
 	<build>

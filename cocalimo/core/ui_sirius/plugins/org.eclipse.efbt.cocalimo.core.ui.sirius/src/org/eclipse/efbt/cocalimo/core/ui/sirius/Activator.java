@@ -10,7 +10,7 @@
  * Contributors:
  *    Neil Mackenzie - initial API and implementation
  *******************************************************************************/
-package org.eclipse.efbt.cocalimo.core.ui.bpmnlite;
+package org.eclipse.efbt.cocalimo.core.ui.sirius;
 
 import org.eclipse.sirius.business.api.componentization.ViewpointRegistry;
 import org.eclipse.sirius.viewpoint.description.Viewpoint;

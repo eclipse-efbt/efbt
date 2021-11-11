@@ -126,8 +126,6 @@ Exhibit A – Form of Secondary Licenses Notice
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.sirius"/>
       <import plugin="org.eclipse.sirius.common.acceleo.aql"/>
-      <import plugin="org.eclipse.efbt.cocalimo.smcubes.model.core" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.efbt.cocalimo.smcubes.query.core" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.efbt.cocalimo.core.model.logical_transformations" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.edit"/>
       <import plugin="org.eclipse.emf.transaction"/>
@@ -142,7 +140,7 @@ Exhibit A – Form of Secondary Licenses Notice
    </requires>
 
    <plugin
-         id="org.eclipse.efbt.cocalimo.core.ui.bpmnlite"
+         id="org.eclipse.efbt.cocalimo.core.ui.sirius"
          download-size="0"
          install-size="0"
          version="0.0.0"

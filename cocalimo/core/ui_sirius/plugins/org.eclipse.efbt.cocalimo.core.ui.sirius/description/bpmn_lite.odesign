@@ -288,10 +288,10 @@
         <customization/>
       </defaultLayer>
     </ownedRepresentations>
-    <ownedJavaExtensions qualifiedClassName="org.eclipse.efbt.cocalimo.core.ui.bpmnlite.TaskService"/>
+    <ownedJavaExtensions qualifiedClassName="org.eclipse.efbt.cocalimo.core.ui.sirius.TaskService"/>
     <ownedJavaExtensions qualifiedClassName="org.eclipse.sirius.common.tools.api.interpreter.StandardServices"/>
-    <ownedJavaExtensions qualifiedClassName="org.eclipse.efbt.cocalimo.core.ui.bpmnlite.ProcessService"/>
-    <ownedJavaExtensions qualifiedClassName="org.eclipse.efbt.cocalimo.core.ui.bpmnlite.NamingService"/>
+    <ownedJavaExtensions qualifiedClassName="org.eclipse.efbt.cocalimo.core.ui.sirius.ProcessService"/>
+    <ownedJavaExtensions qualifiedClassName="org.eclipse.efbt.cocalimo.core.ui.sirius.NamingService"/>
   </ownedViewpoints>
   <userColorsPalettes name="Colors">
     <entries xsi:type="description:UserFixedColor" red="255" green="255" blue="255" name="LaneBackgroundRight"/>
