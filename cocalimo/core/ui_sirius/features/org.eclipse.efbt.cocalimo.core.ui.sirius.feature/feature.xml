@@ -12,7 +12,7 @@
        Neil Mackenzie - initial API and implementation
  -->
 <feature
-      id="org.eclipse.efbt.cocalimo.smcubes.ui.sirius.feature"
+      id="org.eclipse.efbt.cocalimo.core.ui.sirius.feature"
       label="CoCaLiMo Core UI Sirius"
       version="1.0.0.qualifier"
       provider-name="Bird Software Solutions">
