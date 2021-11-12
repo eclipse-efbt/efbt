@@ -37,8 +37,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class TABLEImpl extends MinimalEObjectImpl.Container implements TABLE
-{
+public class TABLEImpl extends MinimalEObjectImpl.Container implements TABLE {
 	/**
 	 * The default value of the '{@link #getCode() <em>Code</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -194,8 +193,7 @@ public class TABLEImpl extends MinimalEObjectImpl.Container implements TABLE
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected TABLEImpl()
-	{
+	protected TABLEImpl() {
 		super();
 	}
 
@@ -205,8 +203,7 @@ public class TABLEImpl extends MinimalEObjectImpl.Container implements TABLE
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return RenderingPackage.Literals.TABLE;
 	}
 
@@ -216,8 +213,7 @@ public class TABLEImpl extends MinimalEObjectImpl.Container implements TABLE
 	 * @generated
 	 */
 	@Override
-	public String getCode()
-	{
+	public String getCode() {
 		return code;
 	}
 
@@ -227,8 +223,7 @@ public class TABLEImpl extends MinimalEObjectImpl.Container implements TABLE
 	 * @generated
 	 */
 	@Override
-	public void setCode(String newCode)
-	{
+	public void setCode(String newCode) {
 		String oldCode = code;
 		code = newCode;
 		if (eNotificationRequired())
@@ -241,8 +236,7 @@ public class TABLEImpl extends MinimalEObjectImpl.Container implements TABLE
 	 * @generated
 	 */
 	@Override
-	public String getDescription()
-	{
+	public String getDescription() {
 		return description;
 	}
 
@@ -252,8 +246,7 @@ public class TABLEImpl extends MinimalEObjectImpl.Container implements TABLE
 	 * @generated
 	 */
 	@Override
-	public void setDescription(String newDescription)
-	{
+	public void setDescription(String newDescription) {
 		String oldDescription = description;
 		description = newDescription;
 		if (eNotificationRequired())
@@ -266,8 +259,7 @@ public class TABLEImpl extends MinimalEObjectImpl.Container implements TABLE
 	 * @generated
 	 */
 	@Override
-	public MAINTENANCE_AGENCY getMaintenance_agency_id()
-	{
+	public MAINTENANCE_AGENCY getMaintenance_agency_id() {
 		if (maintenance_agency_id != null && maintenance_agency_id.eIsProxy()) {
 			InternalEObject oldMaintenance_agency_id = (InternalEObject)maintenance_agency_id;
 			maintenance_agency_id = (MAINTENANCE_AGENCY)eResolveProxy(oldMaintenance_agency_id);
@@ -284,8 +276,7 @@ public class TABLEImpl extends MinimalEObjectImpl.Container implements TABLE
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MAINTENANCE_AGENCY basicGetMaintenance_agency_id()
-	{
+	public MAINTENANCE_AGENCY basicGetMaintenance_agency_id() {
 		return maintenance_agency_id;
 	}
 
@@ -295,8 +286,7 @@ public class TABLEImpl extends MinimalEObjectImpl.Container implements TABLE
 	 * @generated
 	 */
 	@Override
-	public void setMaintenance_agency_id(MAINTENANCE_AGENCY newMaintenance_agency_id)
-	{
+	public void setMaintenance_agency_id(MAINTENANCE_AGENCY newMaintenance_agency_id) {
 		MAINTENANCE_AGENCY oldMaintenance_agency_id = maintenance_agency_id;
 		maintenance_agency_id = newMaintenance_agency_id;
 		if (eNotificationRequired())
@@ -309,8 +299,7 @@ public class TABLEImpl extends MinimalEObjectImpl.Container implements TABLE
 	 * @generated
 	 */
 	@Override
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
@@ -320,8 +309,7 @@ public class TABLEImpl extends MinimalEObjectImpl.Container implements TABLE
 	 * @generated
 	 */
 	@Override
-	public void setName(String newName)
-	{
+	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
@@ -334,8 +322,7 @@ public class TABLEImpl extends MinimalEObjectImpl.Container implements TABLE
 	 * @generated
 	 */
 	@Override
-	public String getTable_id()
-	{
+	public String getTable_id() {
 		return table_id;
 	}
 
@@ -345,8 +332,7 @@ public class TABLEImpl extends MinimalEObjectImpl.Container implements TABLE
 	 * @generated
 	 */
 	@Override
-	public void setTable_id(String newTable_id)
-	{
+	public void setTable_id(String newTable_id) {
 		String oldTable_id = table_id;
 		table_id = newTable_id;
 		if (eNotificationRequired())
@@ -359,8 +345,7 @@ public class TABLEImpl extends MinimalEObjectImpl.Container implements TABLE
 	 * @generated
 	 */
 	@Override
-	public Date getValid_from()
-	{
+	public Date getValid_from() {
 		return valid_from;
 	}
 
@@ -370,8 +355,7 @@ public class TABLEImpl extends MinimalEObjectImpl.Container implements TABLE
 	 * @generated
 	 */
 	@Override
-	public void setValid_from(Date newValid_from)
-	{
+	public void setValid_from(Date newValid_from) {
 		Date oldValid_from = valid_from;
 		valid_from = newValid_from;
 		if (eNotificationRequired())
@@ -384,8 +368,7 @@ public class TABLEImpl extends MinimalEObjectImpl.Container implements TABLE
 	 * @generated
 	 */
 	@Override
-	public Date getValid_to()
-	{
+	public Date getValid_to() {
 		return valid_to;
 	}
 
@@ -395,8 +378,7 @@ public class TABLEImpl extends MinimalEObjectImpl.Container implements TABLE
 	 * @generated
 	 */
 	@Override
-	public void setValid_to(Date newValid_to)
-	{
+	public void setValid_to(Date newValid_to) {
 		Date oldValid_to = valid_to;
 		valid_to = newValid_to;
 		if (eNotificationRequired())
@@ -409,8 +391,7 @@ public class TABLEImpl extends MinimalEObjectImpl.Container implements TABLE
 	 * @generated
 	 */
 	@Override
-	public String getVersion()
-	{
+	public String getVersion() {
 		return version;
 	}
 
@@ -420,8 +401,7 @@ public class TABLEImpl extends MinimalEObjectImpl.Container implements TABLE
 	 * @generated
 	 */
 	@Override
-	public void setVersion(String newVersion)
-	{
+	public void setVersion(String newVersion) {
 		String oldVersion = version;
 		version = newVersion;
 		if (eNotificationRequired())
@@ -434,8 +414,7 @@ public class TABLEImpl extends MinimalEObjectImpl.Container implements TABLE
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case RenderingPackage.TABLE__CODE:
 				return getCode();
@@ -464,8 +443,7 @@ public class TABLEImpl extends MinimalEObjectImpl.Container implements TABLE
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case RenderingPackage.TABLE__CODE:
 				setCode((String)newValue);
@@ -501,8 +479,7 @@ public class TABLEImpl extends MinimalEObjectImpl.Container implements TABLE
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case RenderingPackage.TABLE__CODE:
 				setCode(CODE_EDEFAULT);
@@ -538,8 +515,7 @@ public class TABLEImpl extends MinimalEObjectImpl.Container implements TABLE
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case RenderingPackage.TABLE__CODE:
 				return CODE_EDEFAULT == null ? code != null : !CODE_EDEFAULT.equals(code);
@@ -567,8 +543,7 @@ public class TABLEImpl extends MinimalEObjectImpl.Container implements TABLE
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

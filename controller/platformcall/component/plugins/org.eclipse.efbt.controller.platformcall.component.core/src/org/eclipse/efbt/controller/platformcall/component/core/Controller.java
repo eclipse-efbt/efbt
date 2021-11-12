@@ -13,32 +13,35 @@
 package org.eclipse.efbt.controller.platformcall.component.core;
 
 import org.eclipse.efbt.cocalimo.core.model.platform_call.ConvertSQLDeveloperModelToEcore;
+import org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope;
 import org.eclipse.efbt.cocalimo.core.model.platform_call.PlatformCall;
-import org.eclipse.efbt.cocalimo.core.model.platform_call.TranslateBIRDWithOldTestFormatToCocason;
-import org.eclipse.efbt.cocalimo.core.model.platform_call.TranslateBIRDWithNewTestFormatToCocason;
+import org.eclipse.efbt.cocalimo.core.model.platform_call.ImportBIRDFromMSAccess;
+import org.eclipse.efbt.controller.ldm.component.logical_transformations.LogicalTransformationViews;
 import org.eclipse.efbt.controller.ldm.component.sqldevconvertor.SQLDevConverter;
-import org.eclipse.efbt.controller.smcubes.component.export_smcubes.ImportAndExportSMCubesToNewCocason;
+import org.eclipse.efbt.controller.smcubes.component.export_smcubes.ImportOfBIRDFromMSAccess;
 
 public class Controller {
 	
 	public static void executPlatfromCall (PlatformCall call)
 	{
-		if (call instanceof TranslateBIRDWithNewTestFormatToCocason)
+		if (call instanceof ImportBIRDFromMSAccess)
 		{
-			translateBIRDWithNewTestFormatToCocason((TranslateBIRDWithNewTestFormatToCocason) call);
+			ImportBIRDFromMSAccess((ImportBIRDFromMSAccess) call);
 		}
 		if (call instanceof ConvertSQLDeveloperModelToEcore)
 		{
 			convertSQLDeveloperModelToEcore((ConvertSQLDeveloperModelToEcore) call);
 		}
+		if (call instanceof CreateLogicalTransformationViewForScope)
+		{
+			createLogicalTransformationViewForScope((CreateLogicalTransformationViewForScope) call);
+		}
 		
 	}
-	
-	
 
-	private static void translateBIRDWithNewTestFormatToCocason(TranslateBIRDWithNewTestFormatToCocason call) {
+	private static void ImportBIRDFromMSAccess(ImportBIRDFromMSAccess call) {
 		// TODO Auto-generated method stub
-		ImportAndExportSMCubesToNewCocason.translateBIRDWithNewTestFormatToCoCaLiMo(call.getInputDirectory(), call.getOutputDirectory(), call.getTestDirectory());
+		ImportOfBIRDFromMSAccess.importBIRDFromMSAccess(call.getInputDirectory(), call.getOutputDirectory());
 	}
 
 	
@@ -47,10 +50,13 @@ public class Controller {
 		SQLDevConverter.convert(call.getInputDirectory(), call.getOutputDirectory());
 	}
 	
-	
-
-
-
+	private static void createLogicalTransformationViewForScope(CreateLogicalTransformationViewForScope call) {
+		// TODO Auto-generated method stub
+		LogicalTransformationViews.createLogicalTransformationViewForScope(call.getLogicalTransformationModule(),
+																			call.getScriptTasksInScope(),
+																			call.getScenariosOutOfScope(),
+																			call.isKeepLayout());
+	}
 	
 
 

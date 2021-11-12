@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <!-- @generated testing -->
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="org.eclipse.efbt.cocalimo.smcubes.model.testing.presentation.TestingModelWizardID"
+            name="%_UI_TestingModelWizard_label"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.testing.presentation.TestingModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/TestingModelFile.gif">
+         <description>%_UI_TestingModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <!-- @generated testing -->
+      <editor
+            id="org.eclipse.efbt.cocalimo.smcubes.model.testing.presentation.TestingEditorID"
+            name="%_UI_TestingEditor_label"
+            icon="icons/full/obj16/TestingModelFile.gif"
+            extensions="testing"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.testing.presentation.TestingEditor"
+            contributorClass="org.eclipse.efbt.cocalimo.smcubes.model.testing.presentation.TestingActionBarContributor">
+      </editor>
+   </extension>
+</plugin>

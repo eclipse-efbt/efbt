@@ -25,8 +25,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='MEMBER_HIERARCHY' kind='empty'"
  * @generated
  */
-public interface MEMBER_HIERARCHY extends EObject
-{
+public interface MEMBER_HIERARCHY extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Code</b></em>' attribute.
 	 * <!-- begin-user-doc -->

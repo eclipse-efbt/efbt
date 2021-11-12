@@ -33,8 +33,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='COMBINATION' kind='empty'"
  * @generated
  */
-public interface COMBINATION extends EObject
-{
+public interface COMBINATION extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Code</b></em>' attribute.
 	 * <!-- begin-user-doc -->

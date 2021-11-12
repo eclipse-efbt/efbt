@@ -4,8 +4,7 @@ Bundle-Name: Exporter
 Bundle-SymbolicName: org.eclipse.efbt.controller.smcubes.component.exporter
 Bundle-Version: 1.0.0.qualifier
 Export-Package: org.eclipse.efbt.controller.smcubes.component.exporter
-Require-Bundle: org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes;bundle-version="1.0.0",
- org.eclipse.emf.ecore,
- org.eclipse.efbt.cocalimo.smcubes.model.input_data
+Require-Bundle: org.eclipse.emf.ecore,
+ org.eclipse.efbt.cocalimo.smcubes.model.testing
 
 

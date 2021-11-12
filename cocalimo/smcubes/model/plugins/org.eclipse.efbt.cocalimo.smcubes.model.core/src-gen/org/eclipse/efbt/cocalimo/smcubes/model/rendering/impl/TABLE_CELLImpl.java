@@ -32,8 +32,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class TABLE_CELLImpl extends MinimalEObjectImpl.Container implements TABLE_CELL
-{
+public class TABLE_CELLImpl extends MinimalEObjectImpl.Container implements TABLE_CELL {
 	/**
 	 * The default value of the '{@link #getCell_id() <em>Cell id</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -99,8 +98,7 @@ public class TABLE_CELLImpl extends MinimalEObjectImpl.Container implements TABL
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected TABLE_CELLImpl()
-	{
+	protected TABLE_CELLImpl() {
 		super();
 	}
 
@@ -110,8 +108,7 @@ public class TABLE_CELLImpl extends MinimalEObjectImpl.Container implements TABL
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return RenderingPackage.Literals.TABLE_CELL;
 	}
 
@@ -121,8 +118,7 @@ public class TABLE_CELLImpl extends MinimalEObjectImpl.Container implements TABL
 	 * @generated
 	 */
 	@Override
-	public String getCell_id()
-	{
+	public String getCell_id() {
 		return cell_id;
 	}
 
@@ -132,8 +128,7 @@ public class TABLE_CELLImpl extends MinimalEObjectImpl.Container implements TABL
 	 * @generated
 	 */
 	@Override
-	public void setCell_id(String newCell_id)
-	{
+	public void setCell_id(String newCell_id) {
 		String oldCell_id = cell_id;
 		cell_id = newCell_id;
 		if (eNotificationRequired())
@@ -146,8 +141,7 @@ public class TABLE_CELLImpl extends MinimalEObjectImpl.Container implements TABL
 	 * @generated
 	 */
 	@Override
-	public COMBINATION getCombination_id()
-	{
+	public COMBINATION getCombination_id() {
 		if (combination_id != null && combination_id.eIsProxy()) {
 			InternalEObject oldCombination_id = (InternalEObject)combination_id;
 			combination_id = (COMBINATION)eResolveProxy(oldCombination_id);
@@ -164,8 +158,7 @@ public class TABLE_CELLImpl extends MinimalEObjectImpl.Container implements TABL
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public COMBINATION basicGetCombination_id()
-	{
+	public COMBINATION basicGetCombination_id() {
 		return combination_id;
 	}
 
@@ -175,8 +168,7 @@ public class TABLE_CELLImpl extends MinimalEObjectImpl.Container implements TABL
 	 * @generated
 	 */
 	@Override
-	public void setCombination_id(COMBINATION newCombination_id)
-	{
+	public void setCombination_id(COMBINATION newCombination_id) {
 		COMBINATION oldCombination_id = combination_id;
 		combination_id = newCombination_id;
 		if (eNotificationRequired())
@@ -189,8 +181,7 @@ public class TABLE_CELLImpl extends MinimalEObjectImpl.Container implements TABL
 	 * @generated
 	 */
 	@Override
-	public Boolean getIs_shaded()
-	{
+	public Boolean getIs_shaded() {
 		return is_shaded;
 	}
 
@@ -200,8 +191,7 @@ public class TABLE_CELLImpl extends MinimalEObjectImpl.Container implements TABL
 	 * @generated
 	 */
 	@Override
-	public void setIs_shaded(Boolean newIs_shaded)
-	{
+	public void setIs_shaded(Boolean newIs_shaded) {
 		Boolean oldIs_shaded = is_shaded;
 		is_shaded = newIs_shaded;
 		if (eNotificationRequired())
@@ -214,8 +204,7 @@ public class TABLE_CELLImpl extends MinimalEObjectImpl.Container implements TABL
 	 * @generated
 	 */
 	@Override
-	public TABLE getTable_id()
-	{
+	public TABLE getTable_id() {
 		if (table_id != null && table_id.eIsProxy()) {
 			InternalEObject oldTable_id = (InternalEObject)table_id;
 			table_id = (TABLE)eResolveProxy(oldTable_id);
@@ -232,8 +221,7 @@ public class TABLE_CELLImpl extends MinimalEObjectImpl.Container implements TABL
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public TABLE basicGetTable_id()
-	{
+	public TABLE basicGetTable_id() {
 		return table_id;
 	}
 
@@ -243,8 +231,7 @@ public class TABLE_CELLImpl extends MinimalEObjectImpl.Container implements TABL
 	 * @generated
 	 */
 	@Override
-	public void setTable_id(TABLE newTable_id)
-	{
+	public void setTable_id(TABLE newTable_id) {
 		TABLE oldTable_id = table_id;
 		table_id = newTable_id;
 		if (eNotificationRequired())
@@ -257,8 +244,7 @@ public class TABLE_CELLImpl extends MinimalEObjectImpl.Container implements TABL
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case RenderingPackage.TABLE_CELL__CELL_ID:
 				return getCell_id();
@@ -280,8 +266,7 @@ public class TABLE_CELLImpl extends MinimalEObjectImpl.Container implements TABL
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case RenderingPackage.TABLE_CELL__CELL_ID:
 				setCell_id((String)newValue);
@@ -305,8 +290,7 @@ public class TABLE_CELLImpl extends MinimalEObjectImpl.Container implements TABL
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case RenderingPackage.TABLE_CELL__CELL_ID:
 				setCell_id(CELL_ID_EDEFAULT);
@@ -330,8 +314,7 @@ public class TABLE_CELLImpl extends MinimalEObjectImpl.Container implements TABL
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case RenderingPackage.TABLE_CELL__CELL_ID:
 				return CELL_ID_EDEFAULT == null ? cell_id != null : !CELL_ID_EDEFAULT.equals(cell_id);
@@ -351,8 +334,7 @@ public class TABLE_CELLImpl extends MinimalEObjectImpl.Container implements TABL
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

@@ -26,8 +26,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='FRAMEWORK' kind='empty'"
  * @generated
  */
-public interface FRAMEWORK extends EObject
-{
+public interface FRAMEWORK extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Code</b></em>' attribute.
 	 * <!-- begin-user-doc -->

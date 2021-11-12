@@ -4,6 +4,8 @@ package org.eclipse.efbt.cocalimo.smcubes.model.rendering.impl;
 
 import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementPackage;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.Cocalimo_smcubes_extensionPackage;
+import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.impl.Cocalimo_smcubes_extensionPackageImpl;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.core.impl.CorePackageImpl;
@@ -11,38 +13,12 @@ import org.eclipse.efbt.cocalimo.smcubes.model.core.impl.CorePackageImpl;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.Data_definitionPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.impl.Data_definitionPackageImpl;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.Efbt_data_definitionPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.impl.Efbt_data_definitionPackageImpl;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.Efbt_mappingPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.impl.Efbt_mappingPackageImpl;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.Efbt_vtl_transformationPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.impl.Efbt_vtl_transformationPackageImpl;
-
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MappingPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.impl.MappingPackageImpl;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.rendering.RenderingFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.rendering.RenderingPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.reports.ReportsPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.reports.impl.ReportsPackageImpl;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.Smcubes_modelPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.impl.Smcubes_modelPackageImpl;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.Vtl_transformationPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.impl.Vtl_transformationPackageImpl;
-
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
@@ -56,8 +32,7 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
  * <!-- end-user-doc -->
  * @generated
  */
-public class RenderingPackageImpl extends EPackageImpl implements RenderingPackage
-{
+public class RenderingPackageImpl extends EPackageImpl implements RenderingPackage {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -115,8 +90,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @see #init()
 	 * @generated
 	 */
-	private RenderingPackageImpl()
-	{
+	private RenderingPackageImpl() {
 		super(eNS_URI, RenderingFactory.eINSTANCE);
 	}
 
@@ -139,8 +113,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @see #initializePackageContents()
 	 * @generated
 	 */
-	public static RenderingPackage init()
-	{
+	public static RenderingPackage init() {
 		if (isInited) return (RenderingPackage)EPackage.Registry.INSTANCE.getEPackage(RenderingPackage.eNS_URI);
 
 		// Obtain or create and register package
@@ -157,44 +130,24 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 		CorePackageImpl theCorePackage = (CorePackageImpl)(registeredPackage instanceof CorePackageImpl ? registeredPackage : CorePackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Data_definitionPackage.eNS_URI);
 		Data_definitionPackageImpl theData_definitionPackage = (Data_definitionPackageImpl)(registeredPackage instanceof Data_definitionPackageImpl ? registeredPackage : Data_definitionPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Efbt_data_definitionPackage.eNS_URI);
-		Efbt_data_definitionPackageImpl theEfbt_data_definitionPackage = (Efbt_data_definitionPackageImpl)(registeredPackage instanceof Efbt_data_definitionPackageImpl ? registeredPackage : Efbt_data_definitionPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Efbt_mappingPackage.eNS_URI);
-		Efbt_mappingPackageImpl theEfbt_mappingPackage = (Efbt_mappingPackageImpl)(registeredPackage instanceof Efbt_mappingPackageImpl ? registeredPackage : Efbt_mappingPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Efbt_vtl_transformationPackage.eNS_URI);
-		Efbt_vtl_transformationPackageImpl theEfbt_vtl_transformationPackage = (Efbt_vtl_transformationPackageImpl)(registeredPackage instanceof Efbt_vtl_transformationPackageImpl ? registeredPackage : Efbt_vtl_transformationPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(MappingPackage.eNS_URI);
 		MappingPackageImpl theMappingPackage = (MappingPackageImpl)(registeredPackage instanceof MappingPackageImpl ? registeredPackage : MappingPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ReportsPackage.eNS_URI);
-		ReportsPackageImpl theReportsPackage = (ReportsPackageImpl)(registeredPackage instanceof ReportsPackageImpl ? registeredPackage : ReportsPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Smcubes_modelPackage.eNS_URI);
-		Smcubes_modelPackageImpl theSmcubes_modelPackage = (Smcubes_modelPackageImpl)(registeredPackage instanceof Smcubes_modelPackageImpl ? registeredPackage : Smcubes_modelPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Vtl_transformationPackage.eNS_URI);
-		Vtl_transformationPackageImpl theVtl_transformationPackage = (Vtl_transformationPackageImpl)(registeredPackage instanceof Vtl_transformationPackageImpl ? registeredPackage : Vtl_transformationPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Cocalimo_smcubes_extensionPackage.eNS_URI);
+		Cocalimo_smcubes_extensionPackageImpl theCocalimo_smcubes_extensionPackage = (Cocalimo_smcubes_extensionPackageImpl)(registeredPackage instanceof Cocalimo_smcubes_extensionPackageImpl ? registeredPackage : Cocalimo_smcubes_extensionPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theRenderingPackage.createPackageContents();
 		theCorePackage.createPackageContents();
 		theData_definitionPackage.createPackageContents();
-		theEfbt_data_definitionPackage.createPackageContents();
-		theEfbt_mappingPackage.createPackageContents();
-		theEfbt_vtl_transformationPackage.createPackageContents();
 		theMappingPackage.createPackageContents();
-		theReportsPackage.createPackageContents();
-		theSmcubes_modelPackage.createPackageContents();
-		theVtl_transformationPackage.createPackageContents();
+		theCocalimo_smcubes_extensionPackage.createPackageContents();
 
 		// Initialize created meta-data
 		theRenderingPackage.initializePackageContents();
 		theCorePackage.initializePackageContents();
 		theData_definitionPackage.initializePackageContents();
-		theEfbt_data_definitionPackage.initializePackageContents();
-		theEfbt_mappingPackage.initializePackageContents();
-		theEfbt_vtl_transformationPackage.initializePackageContents();
 		theMappingPackage.initializePackageContents();
-		theReportsPackage.initializePackageContents();
-		theSmcubes_modelPackage.initializePackageContents();
-		theVtl_transformationPackage.initializePackageContents();
+		theCocalimo_smcubes_extensionPackage.initializePackageContents();
 
 		// Mark meta-data to indicate it can't be changed
 		theRenderingPackage.freeze();
@@ -210,8 +163,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EClass getAXIS()
-	{
+	public EClass getAXIS() {
 		return axisEClass;
 	}
 
@@ -221,8 +173,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EAttribute getAXIS_Axis_id()
-	{
+	public EAttribute getAXIS_Axis_id() {
 		return (EAttribute)axisEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -232,8 +183,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EAttribute getAXIS_Code()
-	{
+	public EAttribute getAXIS_Code() {
 		return (EAttribute)axisEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -243,8 +193,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EAttribute getAXIS_Description()
-	{
+	public EAttribute getAXIS_Description() {
 		return (EAttribute)axisEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -254,8 +203,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EAttribute getAXIS_Is_open_axis()
-	{
+	public EAttribute getAXIS_Is_open_axis() {
 		return (EAttribute)axisEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -265,8 +213,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EAttribute getAXIS_Name()
-	{
+	public EAttribute getAXIS_Name() {
 		return (EAttribute)axisEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -276,8 +223,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EAttribute getAXIS_Order()
-	{
+	public EAttribute getAXIS_Order() {
 		return (EAttribute)axisEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -287,8 +233,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EAttribute getAXIS_Orientation()
-	{
+	public EAttribute getAXIS_Orientation() {
 		return (EAttribute)axisEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -298,8 +243,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EReference getAXIS_Table_id()
-	{
+	public EReference getAXIS_Table_id() {
 		return (EReference)axisEClass.getEStructuralFeatures().get(7);
 	}
 
@@ -309,8 +253,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EClass getAXIS_ORDINATE()
-	{
+	public EClass getAXIS_ORDINATE() {
 		return axiS_ORDINATEEClass;
 	}
 
@@ -320,8 +263,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EReference getAXIS_ORDINATE_Axis_id()
-	{
+	public EReference getAXIS_ORDINATE_Axis_id() {
 		return (EReference)axiS_ORDINATEEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -331,8 +273,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EAttribute getAXIS_ORDINATE_Axis_ordinate_id()
-	{
+	public EAttribute getAXIS_ORDINATE_Axis_ordinate_id() {
 		return (EAttribute)axiS_ORDINATEEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -342,8 +283,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EAttribute getAXIS_ORDINATE_Code()
-	{
+	public EAttribute getAXIS_ORDINATE_Code() {
 		return (EAttribute)axiS_ORDINATEEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -353,8 +293,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EAttribute getAXIS_ORDINATE_Description()
-	{
+	public EAttribute getAXIS_ORDINATE_Description() {
 		return (EAttribute)axiS_ORDINATEEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -364,8 +303,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EAttribute getAXIS_ORDINATE_Is_abstract_header()
-	{
+	public EAttribute getAXIS_ORDINATE_Is_abstract_header() {
 		return (EAttribute)axiS_ORDINATEEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -375,8 +313,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EAttribute getAXIS_ORDINATE_Level()
-	{
+	public EAttribute getAXIS_ORDINATE_Level() {
 		return (EAttribute)axiS_ORDINATEEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -386,8 +323,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EAttribute getAXIS_ORDINATE_Name()
-	{
+	public EAttribute getAXIS_ORDINATE_Name() {
 		return (EAttribute)axiS_ORDINATEEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -397,8 +333,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EAttribute getAXIS_ORDINATE_Order()
-	{
+	public EAttribute getAXIS_ORDINATE_Order() {
 		return (EAttribute)axiS_ORDINATEEClass.getEStructuralFeatures().get(7);
 	}
 
@@ -408,8 +343,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EReference getAXIS_ORDINATE_Parent_axis_ordinate_id()
-	{
+	public EReference getAXIS_ORDINATE_Parent_axis_ordinate_id() {
 		return (EReference)axiS_ORDINATEEClass.getEStructuralFeatures().get(8);
 	}
 
@@ -419,8 +353,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EAttribute getAXIS_ORDINATE_Path()
-	{
+	public EAttribute getAXIS_ORDINATE_Path() {
 		return (EAttribute)axiS_ORDINATEEClass.getEStructuralFeatures().get(9);
 	}
 
@@ -430,8 +363,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EClass getCELL_POSITION()
-	{
+	public EClass getCELL_POSITION() {
 		return celL_POSITIONEClass;
 	}
 
@@ -441,8 +373,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EReference getCELL_POSITION_Axis_ordinate_id()
-	{
+	public EReference getCELL_POSITION_Axis_ordinate_id() {
 		return (EReference)celL_POSITIONEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -452,8 +383,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EReference getCELL_POSITION_Cell_id()
-	{
+	public EReference getCELL_POSITION_Cell_id() {
 		return (EReference)celL_POSITIONEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -463,8 +393,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EClass getORDINATE_ITEM()
-	{
+	public EClass getORDINATE_ITEM() {
 		return ordinatE_ITEMEClass;
 	}
 
@@ -474,8 +403,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EReference getORDINATE_ITEM_Axis_ordinate_id()
-	{
+	public EReference getORDINATE_ITEM_Axis_ordinate_id() {
 		return (EReference)ordinatE_ITEMEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -485,8 +413,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EAttribute getORDINATE_ITEM_Is_starting_member_included()
-	{
+	public EAttribute getORDINATE_ITEM_Is_starting_member_included() {
 		return (EAttribute)ordinatE_ITEMEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -496,8 +423,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EReference getORDINATE_ITEM_Member_hierarchy_id()
-	{
+	public EReference getORDINATE_ITEM_Member_hierarchy_id() {
 		return (EReference)ordinatE_ITEMEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -507,8 +433,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EReference getORDINATE_ITEM_Member_id()
-	{
+	public EReference getORDINATE_ITEM_Member_id() {
 		return (EReference)ordinatE_ITEMEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -518,8 +443,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EReference getORDINATE_ITEM_Starting_member_id()
-	{
+	public EReference getORDINATE_ITEM_Starting_member_id() {
 		return (EReference)ordinatE_ITEMEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -529,8 +453,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EReference getORDINATE_ITEM_Variable_id()
-	{
+	public EReference getORDINATE_ITEM_Variable_id() {
 		return (EReference)ordinatE_ITEMEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -540,8 +463,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EClass getTABLE()
-	{
+	public EClass getTABLE() {
 		return tableEClass;
 	}
 
@@ -551,8 +473,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTABLE_Code()
-	{
+	public EAttribute getTABLE_Code() {
 		return (EAttribute)tableEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -562,8 +483,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTABLE_Description()
-	{
+	public EAttribute getTABLE_Description() {
 		return (EAttribute)tableEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -573,8 +493,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EReference getTABLE_Maintenance_agency_id()
-	{
+	public EReference getTABLE_Maintenance_agency_id() {
 		return (EReference)tableEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -584,8 +503,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTABLE_Name()
-	{
+	public EAttribute getTABLE_Name() {
 		return (EAttribute)tableEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -595,8 +513,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTABLE_Table_id()
-	{
+	public EAttribute getTABLE_Table_id() {
 		return (EAttribute)tableEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -606,8 +523,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTABLE_Valid_from()
-	{
+	public EAttribute getTABLE_Valid_from() {
 		return (EAttribute)tableEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -617,8 +533,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTABLE_Valid_to()
-	{
+	public EAttribute getTABLE_Valid_to() {
 		return (EAttribute)tableEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -628,8 +543,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTABLE_Version()
-	{
+	public EAttribute getTABLE_Version() {
 		return (EAttribute)tableEClass.getEStructuralFeatures().get(7);
 	}
 
@@ -639,8 +553,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EClass getTABLE_CELL()
-	{
+	public EClass getTABLE_CELL() {
 		return tablE_CELLEClass;
 	}
 
@@ -650,8 +563,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTABLE_CELL_Cell_id()
-	{
+	public EAttribute getTABLE_CELL_Cell_id() {
 		return (EAttribute)tablE_CELLEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -661,8 +573,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EReference getTABLE_CELL_Combination_id()
-	{
+	public EReference getTABLE_CELL_Combination_id() {
 		return (EReference)tablE_CELLEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -672,8 +583,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTABLE_CELL_Is_shaded()
-	{
+	public EAttribute getTABLE_CELL_Is_shaded() {
 		return (EAttribute)tablE_CELLEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -683,8 +593,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public EReference getTABLE_CELL_Table_id()
-	{
+	public EReference getTABLE_CELL_Table_id() {
 		return (EReference)tablE_CELLEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -694,8 +603,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * @generated
 	 */
 	@Override
-	public RenderingFactory getRenderingFactory()
-	{
+	public RenderingFactory getRenderingFactory() {
 		return (RenderingFactory)getEFactoryInstance();
 	}
 
@@ -713,8 +621,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void createPackageContents()
-	{
+	public void createPackageContents() {
 		if (isCreated) return;
 		isCreated = true;
 
@@ -784,8 +691,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void initializePackageContents()
-	{
+	public void initializePackageContents() {
 		if (isInitialized) return;
 		isInitialized = true;
 
@@ -871,8 +777,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void createLicenseAnnotations()
-	{
+	protected void createLicenseAnnotations() {
 		String source = "license";
 		addAnnotation
 		  (this,
@@ -888,8 +793,7 @@ public class RenderingPackageImpl extends EPackageImpl implements RenderingPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void createExtendedMetaDataAnnotations()
-	{
+	protected void createExtendedMetaDataAnnotations() {
 		String source = "http:///org/eclipse/emf/ecore/util/ExtendedMetaData";
 		addAnnotation
 		  (axisEClass,

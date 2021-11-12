@@ -13,32 +13,15 @@
 package org.eclipse.efbt.controller.smcubes.component.importexport.impl;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
-import org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.access.api.AccessRow;
-import org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.access.api.AccessUtils;
-import org.eclipse.efbt.controller.smcubes.component.access.provider.AccessUtilProvider;
-import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.Aorta_smcubesFactory;
-import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.Test;
-import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestDefinition;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.input_data.CellWithEnumeratedValue;
-import org.eclipse.efbt.cocalimo.smcubes.model.input_data.CellWithValue;
-import org.eclipse.efbt.cocalimo.smcubes.model.input_data.CubeData;
-import org.eclipse.efbt.cocalimo.smcubes.model.input_data.RowData;
-import org.eclipse.efbt.cocalimo.smcubes.model.input_data.InputData;
-import org.eclipse.efbt.cocalimo.smcubes.model.input_data.Input_dataFactory;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.CoreFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.DOMAIN;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.FACET_VALUE_TYPE;
@@ -50,21 +33,19 @@ import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE_STRUCTURE;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE_STRUCTURE_ITEM;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.Data_definitionFactory;
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.CombinationModule;
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.Efbt_data_definitionFactory;
+import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.Cocalimo_smcubes_extensionFactory;
+import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.CombinationModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.CUBE_MAPPING;
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MAPPING_DEFINITION;
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MAPPING_TO_CUBE;
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MEMBER_MAPPING;
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MappingFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.VARIABLE_MAPPING;
-import org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.TRANSFORMATION_SCHEME;
-import org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.Vtl_transformationFactory;
+import org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.access.api.AccessRow;
+import org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.access.api.AccessUtils;
+import org.eclipse.efbt.controller.smcubes.component.access.provider.AccessUtilProvider;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
 
 /**
  * This class is responsable for structure data taking data from the BIRD Access
@@ -80,9 +61,9 @@ public class BIRDImporterImpl extends Importer {
 		super();
 	}
 
-	public void doImport(String theFilepath, String theOutputFilepath, String theTestdatafilepath) {
+	public void doImport(String theFilepath, String theOutputFilepath) {
 
-		super.doImport(theFilepath, theOutputFilepath, theTestdatafilepath);
+		super.doImport(theFilepath, theOutputFilepath);
 	}
 
 	/**
@@ -102,41 +83,7 @@ public class BIRDImporterImpl extends Importer {
 		this.filepath = filepath;
 	}
 
-	/**
-	 * create the TRANSFORMATION_SCHEME model instances from the BIRD Access
-	 * Database
-	 */
-	public void createAllTransformationSchemes() {
-
-		try {
-
-			AccessUtils accessUtils = AccessUtilProvider.getAccessUtils();
-			List<AccessRow> list = accessUtils.getRowsForTable(filepath, "TRANSFORMATION_SCHEME");
-
-			for (AccessRow row : list) {
-
-				TRANSFORMATION_SCHEME scheme = Vtl_transformationFactory.eINSTANCE.createTRANSFORMATION_SCHEME();
-				scheme.setCode(row.getString("CODE"));
-				scheme.setTransformation_scheme_id(replaceDots(row.getString("TRANSFORMATION_SCHEME_ID")));
-				scheme.setName(replaceDots(row.getString("TRANSFORMATION_SCHEME_ID")));
-				scheme.setDescription(row.getString("DESCRIPTION"));
-				scheme.setDisplayName(row.getString("NAME"));
-				scheme.setValid_to(row.getDate("VALID_TO"));
-				scheme.setValid_from(row.getDate("VALID_FROM"));
-
-				transformationSchemes.getSchemes().add(scheme);
-
-			}
-
-			
-
-		} catch (IOException e) {
-
-			e.printStackTrace();
-		}
-
-	}
-
+	
 	private String replaceDots(String string) {
 		// TODO Auto-generated method stub
 		return string.replace('.','_');
@@ -176,25 +123,6 @@ public class BIRDImporterImpl extends Importer {
 		return returnVariable;
 	}
 
-	/**
-	 * get the TRANSFORMATION_SCHEME instance which corresponds to the String ID of
-	 * the TRANSFORMATION_SCHEME
-	 * 
-	 * @param scheme_id
-	 * @return
-	 */
-	private TRANSFORMATION_SCHEME getTransformationScheme(String scheme_id) {
-
-		EList<TRANSFORMATION_SCHEME> schemes = transformationSchemes.getSchemes();
-		TRANSFORMATION_SCHEME returnScheme = null;
-		for (Iterator iterator = schemes.iterator(); iterator.hasNext();) {
-			TRANSFORMATION_SCHEME transformation_SCHEME = (TRANSFORMATION_SCHEME) iterator.next();
-			if (scheme_id.equals(transformation_SCHEME.getTransformation_scheme_id()))
-				returnScheme = transformation_SCHEME;
-		}
-		return returnScheme;
-
-	}
 
 	/**
 	 * create the MEMBER_MAPPING , VARIABLE_MAPPING , MAPPING_DEFINITION ,
@@ -647,7 +575,7 @@ public class BIRDImporterImpl extends Importer {
 			for (AccessRow row : list) {
 
 				if (counter == 0) {
-					combinationsModule = Efbt_data_definitionFactory.eINSTANCE.createCombinationModule();
+					combinationsModule = Cocalimo_smcubes_extensionFactory.eINSTANCE.createCombinationModule();
 					combinationsModules.add(combinationsModule);
 					birdModel.getCombinations().add(combinationsModule);
 				}
@@ -904,7 +832,7 @@ public class BIRDImporterImpl extends Importer {
 	 * we will create instances of TestDefintions TestConstraints, 
 	 * and TestTemplates which the Test instance will refer to.
 	 */
-	@Override
+	/**
 	public void importTestDataWithOldTestFormat(String fileLocation) {
 		
 		prepareTestData();
@@ -1059,7 +987,7 @@ public class BIRDImporterImpl extends Importer {
 		
 	}
 	
-
+*/
 	/**
 	 * Get the related EnumMeber
 	 * 
@@ -1250,8 +1178,7 @@ public class BIRDImporterImpl extends Importer {
 
 		String filepath = args[0];
 		String outputFilepath = args[1];
-		String testdatafilepath = args[2];
-		importer.doImport(filepath, outputFilepath, testdatafilepath);
+		importer.doImport(filepath, outputFilepath);
 
 	}
 

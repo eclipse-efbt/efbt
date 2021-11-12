@@ -10,7 +10,10 @@ pipeline {
                 sh '''                                     
                     cd cocalimo/core/model
                     mvn install
-                    cd ../../..                    
+                    cd ../../.. 
+                    cd cocalimo/core/ui_sirius
+                    mvn install                    
+                    cd ../../..                   
                     cd cocalimo/smcubes/model
                     mvn install
                     cd ../../..
@@ -66,13 +69,13 @@ pipeline {
             emailext subject: 'Build $BUILD_STATUS $PROJECT_NAME #$BUILD_NUMBER!', 
             body: '''Check console output at $BUILD_URL to view the results.''',
             recipientProviders: [culprits(), requestor()], 
-            to: 'other.recipient@domain.org'
+            to: 'neil@birdsoftwaresolutions.com'
         }
         fixed { // back to normal
             emailext subject: 'Build $BUILD_STATUS $PROJECT_NAME #$BUILD_NUMBER!', 
             body: '''Check console output at $BUILD_URL to view the results.''',
             recipientProviders: [culprits(), requestor()], 
-            to: 'other.recipient@domain.org'
+            to: 'neil@birdsoftwaresolutions.com'
         }
     }
 }

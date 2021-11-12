@@ -28,8 +28,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='VARIABLE_SET_ENUMERATION' kind='empty'"
  * @generated
  */
-public interface VARIABLE_SET_ENUMERATION extends EObject
-{
+public interface VARIABLE_SET_ENUMERATION extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Is flow</b></em>' attribute.
 	 * <!-- begin-user-doc -->

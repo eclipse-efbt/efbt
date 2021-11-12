@@ -39,8 +39,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class MEMBER_MAPPINGImpl extends MinimalEObjectImpl.Container implements MEMBER_MAPPING
-{
+public class MEMBER_MAPPINGImpl extends MinimalEObjectImpl.Container implements MEMBER_MAPPING {
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -136,8 +135,7 @@ public class MEMBER_MAPPINGImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected MEMBER_MAPPINGImpl()
-	{
+	protected MEMBER_MAPPINGImpl() {
 		super();
 	}
 
@@ -147,8 +145,7 @@ public class MEMBER_MAPPINGImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return MappingPackage.Literals.MEMBER_MAPPING;
 	}
 
@@ -158,8 +155,7 @@ public class MEMBER_MAPPINGImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
@@ -169,8 +165,7 @@ public class MEMBER_MAPPINGImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public void setName(String newName)
-	{
+	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
@@ -183,8 +178,7 @@ public class MEMBER_MAPPINGImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public String getCode()
-	{
+	public String getCode() {
 		return code;
 	}
 
@@ -194,8 +188,7 @@ public class MEMBER_MAPPINGImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public void setCode(String newCode)
-	{
+	public void setCode(String newCode) {
 		String oldCode = code;
 		code = newCode;
 		if (eNotificationRequired())
@@ -208,8 +201,7 @@ public class MEMBER_MAPPINGImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public String getMaintenance_agency_id()
-	{
+	public String getMaintenance_agency_id() {
 		return maintenance_agency_id;
 	}
 
@@ -219,8 +211,7 @@ public class MEMBER_MAPPINGImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public void setMaintenance_agency_id(String newMaintenance_agency_id)
-	{
+	public void setMaintenance_agency_id(String newMaintenance_agency_id) {
 		String oldMaintenance_agency_id = maintenance_agency_id;
 		maintenance_agency_id = newMaintenance_agency_id;
 		if (eNotificationRequired())
@@ -233,8 +224,7 @@ public class MEMBER_MAPPINGImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public String getMember_mapping_id()
-	{
+	public String getMember_mapping_id() {
 		return member_mapping_id;
 	}
 
@@ -244,8 +234,7 @@ public class MEMBER_MAPPINGImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public void setMember_mapping_id(String newMember_mapping_id)
-	{
+	public void setMember_mapping_id(String newMember_mapping_id) {
 		String oldMember_mapping_id = member_mapping_id;
 		member_mapping_id = newMember_mapping_id;
 		if (eNotificationRequired())
@@ -258,8 +247,7 @@ public class MEMBER_MAPPINGImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public EList<MEMBER_MAPPING_ITEM> getMemberMappingItems()
-	{
+	public EList<MEMBER_MAPPING_ITEM> getMemberMappingItems() {
 		if (memberMappingItems == null) {
 			memberMappingItems = new EObjectContainmentEList<MEMBER_MAPPING_ITEM>(MEMBER_MAPPING_ITEM.class, this, MappingPackage.MEMBER_MAPPING__MEMBER_MAPPING_ITEMS);
 		}
@@ -272,8 +260,7 @@ public class MEMBER_MAPPINGImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-	{
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case MappingPackage.MEMBER_MAPPING__MEMBER_MAPPING_ITEMS:
 				return ((InternalEList<?>)getMemberMappingItems()).basicRemove(otherEnd, msgs);
@@ -287,8 +274,7 @@ public class MEMBER_MAPPINGImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case MappingPackage.MEMBER_MAPPING__NAME:
 				return getName();
@@ -311,8 +297,7 @@ public class MEMBER_MAPPINGImpl extends MinimalEObjectImpl.Container implements 
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case MappingPackage.MEMBER_MAPPING__NAME:
 				setName((String)newValue);
@@ -340,8 +325,7 @@ public class MEMBER_MAPPINGImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case MappingPackage.MEMBER_MAPPING__NAME:
 				setName(NAME_EDEFAULT);
@@ -368,8 +352,7 @@ public class MEMBER_MAPPINGImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case MappingPackage.MEMBER_MAPPING__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
@@ -391,8 +374,7 @@ public class MEMBER_MAPPINGImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

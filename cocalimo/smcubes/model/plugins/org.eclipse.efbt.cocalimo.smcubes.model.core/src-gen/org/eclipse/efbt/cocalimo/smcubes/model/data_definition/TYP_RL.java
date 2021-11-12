@@ -17,8 +17,7 @@ import org.eclipse.emf.common.util.Enumerator;
  * @model extendedMetaData="name='TYP_RL'"
  * @generated
  */
-public enum TYP_RL implements Enumerator
-{
+public enum TYP_RL implements Enumerator {
 	/**
 	 * The '<em><b>O</b></em>' literal object.
 	 * <!-- begin-user-doc -->
@@ -111,8 +110,7 @@ public enum TYP_RL implements Enumerator
 	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
-	public static TYP_RL get(String literal)
-	{
+	public static TYP_RL get(String literal) {
 		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
 			TYP_RL result = VALUES_ARRAY[i];
 			if (result.toString().equals(literal)) {
@@ -130,8 +128,7 @@ public enum TYP_RL implements Enumerator
 	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
-	public static TYP_RL getByName(String name)
-	{
+	public static TYP_RL getByName(String name) {
 		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
 			TYP_RL result = VALUES_ARRAY[i];
 			if (result.getName().equals(name)) {
@@ -149,8 +146,7 @@ public enum TYP_RL implements Enumerator
 	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
-	public static TYP_RL get(int value)
-	{
+	public static TYP_RL get(int value) {
 		switch (value) {
 			case O_VALUE: return O;
 			case A_VALUE: return A;
@@ -186,8 +182,7 @@ public enum TYP_RL implements Enumerator
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private TYP_RL(int value, String name, String literal)
-	{
+	private TYP_RL(int value, String name, String literal) {
 		this.value = value;
 		this.name = name;
 		this.literal = literal;
@@ -199,8 +194,7 @@ public enum TYP_RL implements Enumerator
 	 * @generated
 	 */
 	@Override
-	public int getValue()
-	{
+	public int getValue() {
 	  return value;
 	}
 
@@ -210,8 +204,7 @@ public enum TYP_RL implements Enumerator
 	 * @generated
 	 */
 	@Override
-	public String getName()
-	{
+	public String getName() {
 	  return name;
 	}
 
@@ -221,8 +214,7 @@ public enum TYP_RL implements Enumerator
 	 * @generated
 	 */
 	@Override
-	public String getLiteral()
-	{
+	public String getLiteral() {
 	  return literal;
 	}
 
@@ -233,8 +225,7 @@ public enum TYP_RL implements Enumerator
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return literal;
 	}
 	

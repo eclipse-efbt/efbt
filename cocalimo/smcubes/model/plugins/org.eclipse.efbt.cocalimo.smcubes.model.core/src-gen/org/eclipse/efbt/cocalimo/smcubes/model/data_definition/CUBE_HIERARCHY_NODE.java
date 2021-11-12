@@ -30,8 +30,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='CUBE_HIERARCHY_NODE' kind='empty'"
  * @generated
  */
-public interface CUBE_HIERARCHY_NODE extends EObject
-{
+public interface CUBE_HIERARCHY_NODE extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Cube group id</b></em>' reference.
 	 * <!-- begin-user-doc -->

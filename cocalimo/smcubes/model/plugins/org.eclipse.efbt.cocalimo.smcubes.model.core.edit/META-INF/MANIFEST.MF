@@ -9,16 +9,11 @@ Bundle-Activator: org.eclipse.efbt.cocalimo.smcubes.model.core.provider.SmcubesE
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Export-Package: org.eclipse.efbt.cocalimo.smcubes.model.core.provider,
+Export-Package: org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.provider,
+ org.eclipse.efbt.cocalimo.smcubes.model.core.provider,
  org.eclipse.efbt.cocalimo.smcubes.model.data_definition.provider,
- org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.provider,
- org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.provider,
- org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.provider,
  org.eclipse.efbt.cocalimo.smcubes.model.mapping.provider,
- org.eclipse.efbt.cocalimo.smcubes.model.rendering.provider,
- org.eclipse.efbt.cocalimo.smcubes.model.reports.provider,
- org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.provider,
- org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.provider
+ org.eclipse.efbt.cocalimo.smcubes.model.rendering.provider
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.efbt.cocalimo.smcubes.model.core;visibility:=reexport,
  org.eclipse.emf.edit;visibility:=reexport,

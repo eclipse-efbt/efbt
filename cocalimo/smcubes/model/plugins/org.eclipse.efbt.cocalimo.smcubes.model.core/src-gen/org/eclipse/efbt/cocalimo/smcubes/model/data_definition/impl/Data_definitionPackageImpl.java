@@ -4,25 +4,14 @@ package org.eclipse.efbt.cocalimo.smcubes.model.data_definition.impl;
 
 import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementPackage;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.Cocalimo_smcubes_extensionPackage;
+import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.impl.Cocalimo_smcubes_extensionPackageImpl;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.core.impl.CorePackageImpl;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.Data_definitionFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.Data_definitionPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.Efbt_data_definitionPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.impl.Efbt_data_definitionPackageImpl;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.Efbt_mappingPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.impl.Efbt_mappingPackageImpl;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.Efbt_vtl_transformationPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.impl.Efbt_vtl_transformationPackageImpl;
-
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MappingPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.impl.MappingPackageImpl;
@@ -30,19 +19,6 @@ import org.eclipse.efbt.cocalimo.smcubes.model.mapping.impl.MappingPackageImpl;
 import org.eclipse.efbt.cocalimo.smcubes.model.rendering.RenderingPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.rendering.impl.RenderingPackageImpl;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.reports.ReportsPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.reports.impl.ReportsPackageImpl;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.Smcubes_modelPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.impl.Smcubes_modelPackageImpl;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.Vtl_transformationPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.impl.Vtl_transformationPackageImpl;
-
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -58,8 +34,7 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
  * <!-- end-user-doc -->
  * @generated
  */
-public class Data_definitionPackageImpl extends EPackageImpl implements Data_definitionPackage
-{
+public class Data_definitionPackageImpl extends EPackageImpl implements Data_definitionPackage {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -201,8 +176,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @see #init()
 	 * @generated
 	 */
-	private Data_definitionPackageImpl()
-	{
+	private Data_definitionPackageImpl() {
 		super(eNS_URI, Data_definitionFactory.eINSTANCE);
 	}
 
@@ -225,8 +199,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @see #initializePackageContents()
 	 * @generated
 	 */
-	public static Data_definitionPackage init()
-	{
+	public static Data_definitionPackage init() {
 		if (isInited) return (Data_definitionPackage)EPackage.Registry.INSTANCE.getEPackage(Data_definitionPackage.eNS_URI);
 
 		// Obtain or create and register package
@@ -241,46 +214,26 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 		// Obtain or create and register interdependencies
 		Object registeredPackage = EPackage.Registry.INSTANCE.getEPackage(CorePackage.eNS_URI);
 		CorePackageImpl theCorePackage = (CorePackageImpl)(registeredPackage instanceof CorePackageImpl ? registeredPackage : CorePackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Efbt_data_definitionPackage.eNS_URI);
-		Efbt_data_definitionPackageImpl theEfbt_data_definitionPackage = (Efbt_data_definitionPackageImpl)(registeredPackage instanceof Efbt_data_definitionPackageImpl ? registeredPackage : Efbt_data_definitionPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Efbt_mappingPackage.eNS_URI);
-		Efbt_mappingPackageImpl theEfbt_mappingPackage = (Efbt_mappingPackageImpl)(registeredPackage instanceof Efbt_mappingPackageImpl ? registeredPackage : Efbt_mappingPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Efbt_vtl_transformationPackage.eNS_URI);
-		Efbt_vtl_transformationPackageImpl theEfbt_vtl_transformationPackage = (Efbt_vtl_transformationPackageImpl)(registeredPackage instanceof Efbt_vtl_transformationPackageImpl ? registeredPackage : Efbt_vtl_transformationPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(MappingPackage.eNS_URI);
 		MappingPackageImpl theMappingPackage = (MappingPackageImpl)(registeredPackage instanceof MappingPackageImpl ? registeredPackage : MappingPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(RenderingPackage.eNS_URI);
 		RenderingPackageImpl theRenderingPackage = (RenderingPackageImpl)(registeredPackage instanceof RenderingPackageImpl ? registeredPackage : RenderingPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ReportsPackage.eNS_URI);
-		ReportsPackageImpl theReportsPackage = (ReportsPackageImpl)(registeredPackage instanceof ReportsPackageImpl ? registeredPackage : ReportsPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Smcubes_modelPackage.eNS_URI);
-		Smcubes_modelPackageImpl theSmcubes_modelPackage = (Smcubes_modelPackageImpl)(registeredPackage instanceof Smcubes_modelPackageImpl ? registeredPackage : Smcubes_modelPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Vtl_transformationPackage.eNS_URI);
-		Vtl_transformationPackageImpl theVtl_transformationPackage = (Vtl_transformationPackageImpl)(registeredPackage instanceof Vtl_transformationPackageImpl ? registeredPackage : Vtl_transformationPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Cocalimo_smcubes_extensionPackage.eNS_URI);
+		Cocalimo_smcubes_extensionPackageImpl theCocalimo_smcubes_extensionPackage = (Cocalimo_smcubes_extensionPackageImpl)(registeredPackage instanceof Cocalimo_smcubes_extensionPackageImpl ? registeredPackage : Cocalimo_smcubes_extensionPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theData_definitionPackage.createPackageContents();
 		theCorePackage.createPackageContents();
-		theEfbt_data_definitionPackage.createPackageContents();
-		theEfbt_mappingPackage.createPackageContents();
-		theEfbt_vtl_transformationPackage.createPackageContents();
 		theMappingPackage.createPackageContents();
 		theRenderingPackage.createPackageContents();
-		theReportsPackage.createPackageContents();
-		theSmcubes_modelPackage.createPackageContents();
-		theVtl_transformationPackage.createPackageContents();
+		theCocalimo_smcubes_extensionPackage.createPackageContents();
 
 		// Initialize created meta-data
 		theData_definitionPackage.initializePackageContents();
 		theCorePackage.initializePackageContents();
-		theEfbt_data_definitionPackage.initializePackageContents();
-		theEfbt_mappingPackage.initializePackageContents();
-		theEfbt_vtl_transformationPackage.initializePackageContents();
 		theMappingPackage.initializePackageContents();
 		theRenderingPackage.initializePackageContents();
-		theReportsPackage.initializePackageContents();
-		theSmcubes_modelPackage.initializePackageContents();
-		theVtl_transformationPackage.initializePackageContents();
+		theCocalimo_smcubes_extensionPackage.initializePackageContents();
 
 		// Mark meta-data to indicate it can't be changed
 		theData_definitionPackage.freeze();
@@ -296,8 +249,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EClass getCOMBINATION()
-	{
+	public EClass getCOMBINATION() {
 		return combinationEClass;
 	}
 
@@ -307,8 +259,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCOMBINATION_Code()
-	{
+	public EAttribute getCOMBINATION_Code() {
 		return (EAttribute)combinationEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -318,8 +269,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCOMBINATION_Combination_id()
-	{
+	public EAttribute getCOMBINATION_Combination_id() {
 		return (EAttribute)combinationEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -329,8 +279,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getCOMBINATION_Maintenance_agency_id()
-	{
+	public EReference getCOMBINATION_Maintenance_agency_id() {
 		return (EReference)combinationEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -340,8 +289,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCOMBINATION_Name()
-	{
+	public EAttribute getCOMBINATION_Name() {
 		return (EAttribute)combinationEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -351,8 +299,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCOMBINATION_Valid_from()
-	{
+	public EAttribute getCOMBINATION_Valid_from() {
 		return (EAttribute)combinationEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -362,8 +309,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCOMBINATION_Valid_to()
-	{
+	public EAttribute getCOMBINATION_Valid_to() {
 		return (EAttribute)combinationEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -373,8 +319,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCOMBINATION_Version()
-	{
+	public EAttribute getCOMBINATION_Version() {
 		return (EAttribute)combinationEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -384,8 +329,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getCOMBINATION_Combination_items()
-	{
+	public EReference getCOMBINATION_Combination_items() {
 		return (EReference)combinationEClass.getEStructuralFeatures().get(7);
 	}
 
@@ -395,8 +339,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EClass getCOMBINATION_ITEM()
-	{
+	public EClass getCOMBINATION_ITEM() {
 		return combinatioN_ITEMEClass;
 	}
 
@@ -406,8 +349,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getCOMBINATION_ITEM_Member_id()
-	{
+	public EReference getCOMBINATION_ITEM_Member_id() {
 		return (EReference)combinatioN_ITEMEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -417,8 +359,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getCOMBINATION_ITEM_Subdomain_id()
-	{
+	public EReference getCOMBINATION_ITEM_Subdomain_id() {
 		return (EReference)combinatioN_ITEMEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -428,8 +369,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getCOMBINATION_ITEM_Variable_id()
-	{
+	public EReference getCOMBINATION_ITEM_Variable_id() {
 		return (EReference)combinatioN_ITEMEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -439,8 +379,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getCOMBINATION_ITEM_Variable_set_id()
-	{
+	public EReference getCOMBINATION_ITEM_Variable_set_id() {
 		return (EReference)combinatioN_ITEMEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -450,8 +389,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EClass getCUBE()
-	{
+	public EClass getCUBE() {
 		return cubeEClass;
 	}
 
@@ -461,8 +399,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_Code()
-	{
+	public EAttribute getCUBE_Code() {
 		return (EAttribute)cubeEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -472,8 +409,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_Cube_id()
-	{
+	public EAttribute getCUBE_Cube_id() {
 		return (EAttribute)cubeEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -483,8 +419,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getCUBE_Cube_structure_id()
-	{
+	public EReference getCUBE_Cube_structure_id() {
 		return (EReference)cubeEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -494,8 +429,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_Cube_type()
-	{
+	public EAttribute getCUBE_Cube_type() {
 		return (EAttribute)cubeEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -505,8 +439,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_Description()
-	{
+	public EAttribute getCUBE_Description() {
 		return (EAttribute)cubeEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -516,8 +449,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getCUBE_Framework_id()
-	{
+	public EReference getCUBE_Framework_id() {
 		return (EReference)cubeEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -527,8 +459,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_Is_allowed()
-	{
+	public EAttribute getCUBE_Is_allowed() {
 		return (EAttribute)cubeEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -538,8 +469,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getCUBE_Maintenance_agency_id()
-	{
+	public EReference getCUBE_Maintenance_agency_id() {
 		return (EReference)cubeEClass.getEStructuralFeatures().get(7);
 	}
 
@@ -549,8 +479,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_Name()
-	{
+	public EAttribute getCUBE_Name() {
 		return (EAttribute)cubeEClass.getEStructuralFeatures().get(8);
 	}
 
@@ -560,8 +489,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_Published()
-	{
+	public EAttribute getCUBE_Published() {
 		return (EAttribute)cubeEClass.getEStructuralFeatures().get(9);
 	}
 
@@ -571,8 +499,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_Valid_from()
-	{
+	public EAttribute getCUBE_Valid_from() {
 		return (EAttribute)cubeEClass.getEStructuralFeatures().get(10);
 	}
 
@@ -582,8 +509,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_Valid_to()
-	{
+	public EAttribute getCUBE_Valid_to() {
 		return (EAttribute)cubeEClass.getEStructuralFeatures().get(11);
 	}
 
@@ -593,8 +519,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_Version()
-	{
+	public EAttribute getCUBE_Version() {
 		return (EAttribute)cubeEClass.getEStructuralFeatures().get(12);
 	}
 
@@ -604,8 +529,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_DisplayName()
-	{
+	public EAttribute getCUBE_DisplayName() {
 		return (EAttribute)cubeEClass.getEStructuralFeatures().get(13);
 	}
 
@@ -615,8 +539,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EClass getCUBE_GROUP()
-	{
+	public EClass getCUBE_GROUP() {
 		return cubE_GROUPEClass;
 	}
 
@@ -626,8 +549,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_GROUP_Code()
-	{
+	public EAttribute getCUBE_GROUP_Code() {
 		return (EAttribute)cubE_GROUPEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -637,8 +559,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_GROUP_Cube_group_id()
-	{
+	public EAttribute getCUBE_GROUP_Cube_group_id() {
 		return (EAttribute)cubE_GROUPEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -648,8 +569,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_GROUP_Description()
-	{
+	public EAttribute getCUBE_GROUP_Description() {
 		return (EAttribute)cubE_GROUPEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -659,8 +579,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getCUBE_GROUP_Maintenance_agency_id()
-	{
+	public EReference getCUBE_GROUP_Maintenance_agency_id() {
 		return (EReference)cubE_GROUPEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -670,8 +589,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_GROUP_Name()
-	{
+	public EAttribute getCUBE_GROUP_Name() {
 		return (EAttribute)cubE_GROUPEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -681,8 +599,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EClass getCUBE_GROUP_ENUMERATION()
-	{
+	public EClass getCUBE_GROUP_ENUMERATION() {
 		return cubE_GROUP_ENUMERATIONEClass;
 	}
 
@@ -692,8 +609,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getCUBE_GROUP_ENUMERATION_Cube_group_id()
-	{
+	public EReference getCUBE_GROUP_ENUMERATION_Cube_group_id() {
 		return (EReference)cubE_GROUP_ENUMERATIONEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -703,8 +619,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getCUBE_GROUP_ENUMERATION_Cube_id()
-	{
+	public EReference getCUBE_GROUP_ENUMERATION_Cube_id() {
 		return (EReference)cubE_GROUP_ENUMERATIONEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -714,8 +629,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_GROUP_ENUMERATION_Order()
-	{
+	public EAttribute getCUBE_GROUP_ENUMERATION_Order() {
 		return (EAttribute)cubE_GROUP_ENUMERATIONEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -725,8 +639,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_GROUP_ENUMERATION_Valid_from()
-	{
+	public EAttribute getCUBE_GROUP_ENUMERATION_Valid_from() {
 		return (EAttribute)cubE_GROUP_ENUMERATIONEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -736,8 +649,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_GROUP_ENUMERATION_Valid_to()
-	{
+	public EAttribute getCUBE_GROUP_ENUMERATION_Valid_to() {
 		return (EAttribute)cubE_GROUP_ENUMERATIONEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -747,8 +659,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EClass getCUBE_HIERARCHY()
-	{
+	public EClass getCUBE_HIERARCHY() {
 		return cubE_HIERARCHYEClass;
 	}
 
@@ -758,8 +669,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_HIERARCHY_Code()
-	{
+	public EAttribute getCUBE_HIERARCHY_Code() {
 		return (EAttribute)cubE_HIERARCHYEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -769,8 +679,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_HIERARCHY_Cube_hierarchy_id()
-	{
+	public EAttribute getCUBE_HIERARCHY_Cube_hierarchy_id() {
 		return (EAttribute)cubE_HIERARCHYEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -780,8 +689,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_HIERARCHY_Cube_hierarchy_type()
-	{
+	public EAttribute getCUBE_HIERARCHY_Cube_hierarchy_type() {
 		return (EAttribute)cubE_HIERARCHYEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -791,8 +699,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getCUBE_HIERARCHY_Framework_id()
-	{
+	public EReference getCUBE_HIERARCHY_Framework_id() {
 		return (EReference)cubE_HIERARCHYEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -802,8 +709,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getCUBE_HIERARCHY_Maintenance_agency_id()
-	{
+	public EReference getCUBE_HIERARCHY_Maintenance_agency_id() {
 		return (EReference)cubE_HIERARCHYEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -813,8 +719,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_HIERARCHY_Name()
-	{
+	public EAttribute getCUBE_HIERARCHY_Name() {
 		return (EAttribute)cubE_HIERARCHYEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -824,8 +729,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EClass getCUBE_HIERARCHY_NODE()
-	{
+	public EClass getCUBE_HIERARCHY_NODE() {
 		return cubE_HIERARCHY_NODEEClass;
 	}
 
@@ -835,8 +739,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getCUBE_HIERARCHY_NODE_Cube_group_id()
-	{
+	public EReference getCUBE_HIERARCHY_NODE_Cube_group_id() {
 		return (EReference)cubE_HIERARCHY_NODEEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -846,8 +749,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getCUBE_HIERARCHY_NODE_Cube_hierarchy_id()
-	{
+	public EReference getCUBE_HIERARCHY_NODE_Cube_hierarchy_id() {
 		return (EReference)cubE_HIERARCHY_NODEEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -857,8 +759,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_HIERARCHY_NODE_Level()
-	{
+	public EAttribute getCUBE_HIERARCHY_NODE_Level() {
 		return (EAttribute)cubE_HIERARCHY_NODEEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -868,8 +769,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_HIERARCHY_NODE_NODE_CODE()
-	{
+	public EAttribute getCUBE_HIERARCHY_NODE_NODE_CODE() {
 		return (EAttribute)cubE_HIERARCHY_NODEEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -879,8 +779,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_HIERARCHY_NODE_Node_name()
-	{
+	public EAttribute getCUBE_HIERARCHY_NODE_Node_name() {
 		return (EAttribute)cubE_HIERARCHY_NODEEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -890,8 +789,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_HIERARCHY_NODE_Order()
-	{
+	public EAttribute getCUBE_HIERARCHY_NODE_Order() {
 		return (EAttribute)cubE_HIERARCHY_NODEEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -901,8 +799,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getCUBE_HIERARCHY_NODE_Parent_node_code()
-	{
+	public EReference getCUBE_HIERARCHY_NODE_Parent_node_code() {
 		return (EReference)cubE_HIERARCHY_NODEEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -912,8 +809,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_HIERARCHY_NODE_Valid_from()
-	{
+	public EAttribute getCUBE_HIERARCHY_NODE_Valid_from() {
 		return (EAttribute)cubE_HIERARCHY_NODEEClass.getEStructuralFeatures().get(7);
 	}
 
@@ -923,8 +819,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_HIERARCHY_NODE_Valid_to()
-	{
+	public EAttribute getCUBE_HIERARCHY_NODE_Valid_to() {
 		return (EAttribute)cubE_HIERARCHY_NODEEClass.getEStructuralFeatures().get(8);
 	}
 
@@ -934,8 +829,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EClass getCUBE_RELATIONSHIP()
-	{
+	public EClass getCUBE_RELATIONSHIP() {
 		return cubE_RELATIONSHIPEClass;
 	}
 
@@ -945,8 +839,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_RELATIONSHIP_Code()
-	{
+	public EAttribute getCUBE_RELATIONSHIP_Code() {
 		return (EAttribute)cubE_RELATIONSHIPEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -956,8 +849,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_RELATIONSHIP_Cube_relationship_id()
-	{
+	public EAttribute getCUBE_RELATIONSHIP_Cube_relationship_id() {
 		return (EAttribute)cubE_RELATIONSHIPEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -967,8 +859,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_RELATIONSHIP_Description()
-	{
+	public EAttribute getCUBE_RELATIONSHIP_Description() {
 		return (EAttribute)cubE_RELATIONSHIPEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -978,8 +869,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_RELATIONSHIP_Establishes_integrity()
-	{
+	public EAttribute getCUBE_RELATIONSHIP_Establishes_integrity() {
 		return (EAttribute)cubE_RELATIONSHIPEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -989,8 +879,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getCUBE_RELATIONSHIP_Foreign_cube_id()
-	{
+	public EReference getCUBE_RELATIONSHIP_Foreign_cube_id() {
 		return (EReference)cubE_RELATIONSHIPEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -1000,8 +889,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getCUBE_RELATIONSHIP_Foreign_cube_variable_code()
-	{
+	public EReference getCUBE_RELATIONSHIP_Foreign_cube_variable_code() {
 		return (EReference)cubE_RELATIONSHIPEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -1011,8 +899,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getCUBE_RELATIONSHIP_Maintenance_agency_id()
-	{
+	public EReference getCUBE_RELATIONSHIP_Maintenance_agency_id() {
 		return (EReference)cubE_RELATIONSHIPEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -1022,8 +909,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_RELATIONSHIP_Name()
-	{
+	public EAttribute getCUBE_RELATIONSHIP_Name() {
 		return (EAttribute)cubE_RELATIONSHIPEClass.getEStructuralFeatures().get(7);
 	}
 
@@ -1033,8 +919,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getCUBE_RELATIONSHIP_Primary_cube_id()
-	{
+	public EReference getCUBE_RELATIONSHIP_Primary_cube_id() {
 		return (EReference)cubE_RELATIONSHIPEClass.getEStructuralFeatures().get(8);
 	}
 
@@ -1044,8 +929,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getCUBE_RELATIONSHIP_Primary_cube_variable_id()
-	{
+	public EReference getCUBE_RELATIONSHIP_Primary_cube_variable_id() {
 		return (EReference)cubE_RELATIONSHIPEClass.getEStructuralFeatures().get(9);
 	}
 
@@ -1055,8 +939,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_RELATIONSHIP_Valid_from()
-	{
+	public EAttribute getCUBE_RELATIONSHIP_Valid_from() {
 		return (EAttribute)cubE_RELATIONSHIPEClass.getEStructuralFeatures().get(10);
 	}
 
@@ -1066,8 +949,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_RELATIONSHIP_Valid_to()
-	{
+	public EAttribute getCUBE_RELATIONSHIP_Valid_to() {
 		return (EAttribute)cubE_RELATIONSHIPEClass.getEStructuralFeatures().get(11);
 	}
 
@@ -1077,8 +959,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_RELATIONSHIP_Version()
-	{
+	public EAttribute getCUBE_RELATIONSHIP_Version() {
 		return (EAttribute)cubE_RELATIONSHIPEClass.getEStructuralFeatures().get(12);
 	}
 
@@ -1088,8 +969,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EClass getCUBE_STRUCTURE()
-	{
+	public EClass getCUBE_STRUCTURE() {
 		return cubE_STRUCTUREEClass;
 	}
 
@@ -1099,8 +979,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_STRUCTURE_Code()
-	{
+	public EAttribute getCUBE_STRUCTURE_Code() {
 		return (EAttribute)cubE_STRUCTUREEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -1110,8 +989,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_STRUCTURE_Cube_structure_id()
-	{
+	public EAttribute getCUBE_STRUCTURE_Cube_structure_id() {
 		return (EAttribute)cubE_STRUCTUREEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -1121,8 +999,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_STRUCTURE_Description()
-	{
+	public EAttribute getCUBE_STRUCTURE_Description() {
 		return (EAttribute)cubE_STRUCTUREEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -1132,8 +1009,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getCUBE_STRUCTURE_Maintenance_agency_id()
-	{
+	public EReference getCUBE_STRUCTURE_Maintenance_agency_id() {
 		return (EReference)cubE_STRUCTUREEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -1143,8 +1019,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_STRUCTURE_Name()
-	{
+	public EAttribute getCUBE_STRUCTURE_Name() {
 		return (EAttribute)cubE_STRUCTUREEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -1154,8 +1029,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_STRUCTURE_Valid_from()
-	{
+	public EAttribute getCUBE_STRUCTURE_Valid_from() {
 		return (EAttribute)cubE_STRUCTUREEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -1165,8 +1039,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_STRUCTURE_Valid_to()
-	{
+	public EAttribute getCUBE_STRUCTURE_Valid_to() {
 		return (EAttribute)cubE_STRUCTUREEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -1176,8 +1049,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_STRUCTURE_Version()
-	{
+	public EAttribute getCUBE_STRUCTURE_Version() {
 		return (EAttribute)cubE_STRUCTUREEClass.getEStructuralFeatures().get(7);
 	}
 
@@ -1187,8 +1059,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_STRUCTURE_DisplayName()
-	{
+	public EAttribute getCUBE_STRUCTURE_DisplayName() {
 		return (EAttribute)cubE_STRUCTUREEClass.getEStructuralFeatures().get(8);
 	}
 
@@ -1198,8 +1069,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EClass getCUBE_STRUCTURE_ITEM()
-	{
+	public EClass getCUBE_STRUCTURE_ITEM() {
 		return cubE_STRUCTURE_ITEMEClass;
 	}
 
@@ -1209,8 +1079,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getCUBE_STRUCTURE_ITEM_Attribute_associated_variable()
-	{
+	public EReference getCUBE_STRUCTURE_ITEM_Attribute_associated_variable() {
 		return (EReference)cubE_STRUCTURE_ITEMEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -1220,8 +1089,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getCUBE_STRUCTURE_ITEM_Cube_structure_id()
-	{
+	public EReference getCUBE_STRUCTURE_ITEM_Cube_structure_id() {
 		return (EReference)cubE_STRUCTURE_ITEMEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -1231,8 +1099,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_STRUCTURE_ITEM_Description()
-	{
+	public EAttribute getCUBE_STRUCTURE_ITEM_Description() {
 		return (EAttribute)cubE_STRUCTURE_ITEMEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -1242,8 +1109,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_STRUCTURE_ITEM_Dimension_type()
-	{
+	public EAttribute getCUBE_STRUCTURE_ITEM_Dimension_type() {
 		return (EAttribute)cubE_STRUCTURE_ITEMEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -1253,8 +1119,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_STRUCTURE_ITEM_Is_flow()
-	{
+	public EAttribute getCUBE_STRUCTURE_ITEM_Is_flow() {
 		return (EAttribute)cubE_STRUCTURE_ITEMEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -1264,8 +1129,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_STRUCTURE_ITEM_Is_mandatory()
-	{
+	public EAttribute getCUBE_STRUCTURE_ITEM_Is_mandatory() {
 		return (EAttribute)cubE_STRUCTURE_ITEMEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -1275,8 +1139,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getCUBE_STRUCTURE_ITEM_Member_id()
-	{
+	public EReference getCUBE_STRUCTURE_ITEM_Member_id() {
 		return (EReference)cubE_STRUCTURE_ITEMEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -1286,8 +1149,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_STRUCTURE_ITEM_Order()
-	{
+	public EAttribute getCUBE_STRUCTURE_ITEM_Order() {
 		return (EAttribute)cubE_STRUCTURE_ITEMEClass.getEStructuralFeatures().get(7);
 	}
 
@@ -1297,8 +1159,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_STRUCTURE_ITEM_Role()
-	{
+	public EAttribute getCUBE_STRUCTURE_ITEM_Role() {
 		return (EAttribute)cubE_STRUCTURE_ITEMEClass.getEStructuralFeatures().get(8);
 	}
 
@@ -1308,8 +1169,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getCUBE_STRUCTURE_ITEM_Subdomain_id()
-	{
+	public EReference getCUBE_STRUCTURE_ITEM_Subdomain_id() {
 		return (EReference)cubE_STRUCTURE_ITEMEClass.getEStructuralFeatures().get(9);
 	}
 
@@ -1319,8 +1179,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getCUBE_STRUCTURE_ITEM_Variable_id()
-	{
+	public EReference getCUBE_STRUCTURE_ITEM_Variable_id() {
 		return (EReference)cubE_STRUCTURE_ITEMEClass.getEStructuralFeatures().get(10);
 	}
 
@@ -1330,8 +1189,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getCUBE_STRUCTURE_ITEM_Variable_set_id()
-	{
+	public EReference getCUBE_STRUCTURE_ITEM_Variable_set_id() {
 		return (EReference)cubE_STRUCTURE_ITEMEClass.getEStructuralFeatures().get(11);
 	}
 
@@ -1341,8 +1199,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_STRUCTURE_ITEM_IsIdentifier()
-	{
+	public EAttribute getCUBE_STRUCTURE_ITEM_IsIdentifier() {
 		return (EAttribute)cubE_STRUCTURE_ITEMEClass.getEStructuralFeatures().get(12);
 	}
 
@@ -1352,8 +1209,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_STRUCTURE_ITEM_Cube_variable_code()
-	{
+	public EAttribute getCUBE_STRUCTURE_ITEM_Cube_variable_code() {
 		return (EAttribute)cubE_STRUCTURE_ITEMEClass.getEStructuralFeatures().get(13);
 	}
 
@@ -1363,8 +1219,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EClass getCUBE_TO_COMBINATION()
-	{
+	public EClass getCUBE_TO_COMBINATION() {
 		return cubE_TO_COMBINATIONEClass;
 	}
 
@@ -1374,8 +1229,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getCUBE_TO_COMBINATION_Combination_id()
-	{
+	public EReference getCUBE_TO_COMBINATION_Combination_id() {
 		return (EReference)cubE_TO_COMBINATIONEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -1385,8 +1239,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getCUBE_TO_COMBINATION_Cube_id()
-	{
+	public EReference getCUBE_TO_COMBINATION_Cube_id() {
 		return (EReference)cubE_TO_COMBINATIONEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -1396,8 +1249,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EClass getFRAMEWORK()
-	{
+	public EClass getFRAMEWORK() {
 		return frameworkEClass;
 	}
 
@@ -1407,8 +1259,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getFRAMEWORK_Code()
-	{
+	public EAttribute getFRAMEWORK_Code() {
 		return (EAttribute)frameworkEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -1418,8 +1269,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getFRAMEWORK_Description()
-	{
+	public EAttribute getFRAMEWORK_Description() {
 		return (EAttribute)frameworkEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -1429,8 +1279,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getFRAMEWORK_Framework_id()
-	{
+	public EAttribute getFRAMEWORK_Framework_id() {
 		return (EAttribute)frameworkEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -1440,8 +1289,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getFRAMEWORK_Maintenance_agency_id()
-	{
+	public EReference getFRAMEWORK_Maintenance_agency_id() {
 		return (EReference)frameworkEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -1451,8 +1299,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EAttribute getFRAMEWORK_Name()
-	{
+	public EAttribute getFRAMEWORK_Name() {
 		return (EAttribute)frameworkEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -1462,8 +1309,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EClass getFRAMEWORK_SUBDOMAIN()
-	{
+	public EClass getFRAMEWORK_SUBDOMAIN() {
 		return frameworK_SUBDOMAINEClass;
 	}
 
@@ -1473,8 +1319,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getFRAMEWORK_SUBDOMAIN_Framework_id()
-	{
+	public EReference getFRAMEWORK_SUBDOMAIN_Framework_id() {
 		return (EReference)frameworK_SUBDOMAINEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -1484,8 +1329,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getFRAMEWORK_SUBDOMAIN_Subdomain_id()
-	{
+	public EReference getFRAMEWORK_SUBDOMAIN_Subdomain_id() {
 		return (EReference)frameworK_SUBDOMAINEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -1495,8 +1339,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EClass getFRAMEWORK_VARIABLE_SET()
-	{
+	public EClass getFRAMEWORK_VARIABLE_SET() {
 		return frameworK_VARIABLE_SETEClass;
 	}
 
@@ -1506,8 +1349,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getFRAMEWORK_VARIABLE_SET_Framework_id()
-	{
+	public EReference getFRAMEWORK_VARIABLE_SET_Framework_id() {
 		return (EReference)frameworK_VARIABLE_SETEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -1517,8 +1359,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EReference getFRAMEWORK_VARIABLE_SET_Variable_set_id()
-	{
+	public EReference getFRAMEWORK_VARIABLE_SET_Variable_set_id() {
 		return (EReference)frameworK_VARIABLE_SETEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -1528,8 +1369,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EEnum getTYP_DMNSN()
-	{
+	public EEnum getTYP_DMNSN() {
 		return tyP_DMNSNEEnum;
 	}
 
@@ -1539,8 +1379,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EEnum getTYP_RL()
-	{
+	public EEnum getTYP_RL() {
 		return tyP_RLEEnum;
 	}
 
@@ -1550,8 +1389,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EDataType getTYP_DMNSNObject()
-	{
+	public EDataType getTYP_DMNSNObject() {
 		return tyP_DMNSNObjectEDataType;
 	}
 
@@ -1561,8 +1399,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public EDataType getTYP_RLObject()
-	{
+	public EDataType getTYP_RLObject() {
 		return tyP_RLObjectEDataType;
 	}
 
@@ -1572,8 +1409,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * @generated
 	 */
 	@Override
-	public Data_definitionFactory getData_definitionFactory()
-	{
+	public Data_definitionFactory getData_definitionFactory() {
 		return (Data_definitionFactory)getEFactoryInstance();
 	}
 
@@ -1591,8 +1427,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void createPackageContents()
-	{
+	public void createPackageContents() {
 		if (isCreated) return;
 		isCreated = true;
 
@@ -1746,8 +1581,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void initializePackageContents()
-	{
+	public void initializePackageContents() {
 		if (isInitialized) return;
 		isInitialized = true;
 
@@ -1924,8 +1758,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void createLicenseAnnotations()
-	{
+	protected void createLicenseAnnotations() {
 		String source = "license";
 		addAnnotation
 		  (this,
@@ -1941,8 +1774,7 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void createExtendedMetaDataAnnotations()
-	{
+	protected void createExtendedMetaDataAnnotations() {
 		String source = "http:///org/eclipse/emf/ecore/util/ExtendedMetaData";
 		addAnnotation
 		  (combinationEClass,

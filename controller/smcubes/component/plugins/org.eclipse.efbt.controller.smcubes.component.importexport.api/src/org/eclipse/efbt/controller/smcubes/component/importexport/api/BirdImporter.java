@@ -14,5 +14,5 @@ package org.eclipse.efbt.controller.smcubes.component.importexport.api;
 
 public interface BirdImporter {
 
-	public void doImport(String filepath, String outputFilepath2, String testdatafilepath) ;
+	public void doImport(String filepath, String outputFilepath2) ;
 }

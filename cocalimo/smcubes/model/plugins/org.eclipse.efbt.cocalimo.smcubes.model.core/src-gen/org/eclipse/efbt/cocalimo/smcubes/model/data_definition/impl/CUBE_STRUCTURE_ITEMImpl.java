@@ -47,8 +47,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implements CUBE_STRUCTURE_ITEM
-{
+public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implements CUBE_STRUCTURE_ITEM {
 	/**
 	 * The cached value of the '{@link #getAttribute_associated_variable() <em>Attribute associated variable</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -274,8 +273,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected CUBE_STRUCTURE_ITEMImpl()
-	{
+	protected CUBE_STRUCTURE_ITEMImpl() {
 		super();
 	}
 
@@ -285,8 +283,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Data_definitionPackage.Literals.CUBE_STRUCTURE_ITEM;
 	}
 
@@ -296,8 +293,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public VARIABLE getAttribute_associated_variable()
-	{
+	public VARIABLE getAttribute_associated_variable() {
 		if (attribute_associated_variable != null && attribute_associated_variable.eIsProxy()) {
 			InternalEObject oldAttribute_associated_variable = (InternalEObject)attribute_associated_variable;
 			attribute_associated_variable = (VARIABLE)eResolveProxy(oldAttribute_associated_variable);
@@ -314,8 +310,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public VARIABLE basicGetAttribute_associated_variable()
-	{
+	public VARIABLE basicGetAttribute_associated_variable() {
 		return attribute_associated_variable;
 	}
 
@@ -325,8 +320,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void setAttribute_associated_variable(VARIABLE newAttribute_associated_variable)
-	{
+	public void setAttribute_associated_variable(VARIABLE newAttribute_associated_variable) {
 		VARIABLE oldAttribute_associated_variable = attribute_associated_variable;
 		attribute_associated_variable = newAttribute_associated_variable;
 		if (eNotificationRequired())
@@ -339,8 +333,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public CUBE_STRUCTURE getCube_structure_id()
-	{
+	public CUBE_STRUCTURE getCube_structure_id() {
 		if (cube_structure_id != null && cube_structure_id.eIsProxy()) {
 			InternalEObject oldCube_structure_id = (InternalEObject)cube_structure_id;
 			cube_structure_id = (CUBE_STRUCTURE)eResolveProxy(oldCube_structure_id);
@@ -357,8 +350,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public CUBE_STRUCTURE basicGetCube_structure_id()
-	{
+	public CUBE_STRUCTURE basicGetCube_structure_id() {
 		return cube_structure_id;
 	}
 
@@ -368,8 +360,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void setCube_structure_id(CUBE_STRUCTURE newCube_structure_id)
-	{
+	public void setCube_structure_id(CUBE_STRUCTURE newCube_structure_id) {
 		CUBE_STRUCTURE oldCube_structure_id = cube_structure_id;
 		cube_structure_id = newCube_structure_id;
 		if (eNotificationRequired())
@@ -382,8 +373,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public String getDescription()
-	{
+	public String getDescription() {
 		return description;
 	}
 
@@ -393,8 +383,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void setDescription(String newDescription)
-	{
+	public void setDescription(String newDescription) {
 		String oldDescription = description;
 		description = newDescription;
 		if (eNotificationRequired())
@@ -407,8 +396,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public TYP_DMNSN getDimension_type()
-	{
+	public TYP_DMNSN getDimension_type() {
 		return dimension_type;
 	}
 
@@ -418,8 +406,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void setDimension_type(TYP_DMNSN newDimension_type)
-	{
+	public void setDimension_type(TYP_DMNSN newDimension_type) {
 		TYP_DMNSN oldDimension_type = dimension_type;
 		dimension_type = newDimension_type == null ? DIMENSION_TYPE_EDEFAULT : newDimension_type;
 		if (eNotificationRequired())
@@ -432,8 +419,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public boolean isIs_flow()
-	{
+	public boolean isIs_flow() {
 		return is_flow;
 	}
 
@@ -443,8 +429,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void setIs_flow(boolean newIs_flow)
-	{
+	public void setIs_flow(boolean newIs_flow) {
 		boolean oldIs_flow = is_flow;
 		is_flow = newIs_flow;
 		if (eNotificationRequired())
@@ -457,8 +442,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public boolean isIs_mandatory()
-	{
+	public boolean isIs_mandatory() {
 		return is_mandatory;
 	}
 
@@ -468,8 +452,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void setIs_mandatory(boolean newIs_mandatory)
-	{
+	public void setIs_mandatory(boolean newIs_mandatory) {
 		boolean oldIs_mandatory = is_mandatory;
 		is_mandatory = newIs_mandatory;
 		if (eNotificationRequired())
@@ -482,8 +465,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public MEMBER getMember_id()
-	{
+	public MEMBER getMember_id() {
 		if (member_id != null && member_id.eIsProxy()) {
 			InternalEObject oldMember_id = (InternalEObject)member_id;
 			member_id = (MEMBER)eResolveProxy(oldMember_id);
@@ -500,8 +482,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MEMBER basicGetMember_id()
-	{
+	public MEMBER basicGetMember_id() {
 		return member_id;
 	}
 
@@ -511,8 +492,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void setMember_id(MEMBER newMember_id)
-	{
+	public void setMember_id(MEMBER newMember_id) {
 		MEMBER oldMember_id = member_id;
 		member_id = newMember_id;
 		if (eNotificationRequired())
@@ -525,8 +505,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public int getOrder()
-	{
+	public int getOrder() {
 		return order;
 	}
 
@@ -536,8 +515,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void setOrder(int newOrder)
-	{
+	public void setOrder(int newOrder) {
 		int oldOrder = order;
 		order = newOrder;
 		if (eNotificationRequired())
@@ -550,8 +528,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public TYP_RL getRole()
-	{
+	public TYP_RL getRole() {
 		return role;
 	}
 
@@ -561,8 +538,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void setRole(TYP_RL newRole)
-	{
+	public void setRole(TYP_RL newRole) {
 		TYP_RL oldRole = role;
 		role = newRole == null ? ROLE_EDEFAULT : newRole;
 		if (eNotificationRequired())
@@ -575,8 +551,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public SUBDOMAIN getSubdomain_id()
-	{
+	public SUBDOMAIN getSubdomain_id() {
 		if (subdomain_id != null && subdomain_id.eIsProxy()) {
 			InternalEObject oldSubdomain_id = (InternalEObject)subdomain_id;
 			subdomain_id = (SUBDOMAIN)eResolveProxy(oldSubdomain_id);
@@ -593,8 +568,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public SUBDOMAIN basicGetSubdomain_id()
-	{
+	public SUBDOMAIN basicGetSubdomain_id() {
 		return subdomain_id;
 	}
 
@@ -604,8 +578,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void setSubdomain_id(SUBDOMAIN newSubdomain_id)
-	{
+	public void setSubdomain_id(SUBDOMAIN newSubdomain_id) {
 		SUBDOMAIN oldSubdomain_id = subdomain_id;
 		subdomain_id = newSubdomain_id;
 		if (eNotificationRequired())
@@ -618,8 +591,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public VARIABLE getVariable_id()
-	{
+	public VARIABLE getVariable_id() {
 		if (variable_id != null && variable_id.eIsProxy()) {
 			InternalEObject oldVariable_id = (InternalEObject)variable_id;
 			variable_id = (VARIABLE)eResolveProxy(oldVariable_id);
@@ -636,8 +608,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public VARIABLE basicGetVariable_id()
-	{
+	public VARIABLE basicGetVariable_id() {
 		return variable_id;
 	}
 
@@ -647,8 +618,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void setVariable_id(VARIABLE newVariable_id)
-	{
+	public void setVariable_id(VARIABLE newVariable_id) {
 		VARIABLE oldVariable_id = variable_id;
 		variable_id = newVariable_id;
 		if (eNotificationRequired())
@@ -661,8 +631,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public VARIABLE_SET getVariable_set_id()
-	{
+	public VARIABLE_SET getVariable_set_id() {
 		if (variable_set_id != null && variable_set_id.eIsProxy()) {
 			InternalEObject oldVariable_set_id = (InternalEObject)variable_set_id;
 			variable_set_id = (VARIABLE_SET)eResolveProxy(oldVariable_set_id);
@@ -679,8 +648,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public VARIABLE_SET basicGetVariable_set_id()
-	{
+	public VARIABLE_SET basicGetVariable_set_id() {
 		return variable_set_id;
 	}
 
@@ -690,8 +658,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void setVariable_set_id(VARIABLE_SET newVariable_set_id)
-	{
+	public void setVariable_set_id(VARIABLE_SET newVariable_set_id) {
 		VARIABLE_SET oldVariable_set_id = variable_set_id;
 		variable_set_id = newVariable_set_id;
 		if (eNotificationRequired())
@@ -704,8 +671,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public boolean isIsIdentifier()
-	{
+	public boolean isIsIdentifier() {
 		return isIdentifier;
 	}
 
@@ -715,8 +681,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void setIsIdentifier(boolean newIsIdentifier)
-	{
+	public void setIsIdentifier(boolean newIsIdentifier) {
 		boolean oldIsIdentifier = isIdentifier;
 		isIdentifier = newIsIdentifier;
 		if (eNotificationRequired())
@@ -729,8 +694,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public String getCube_variable_code()
-	{
+	public String getCube_variable_code() {
 		return cube_variable_code;
 	}
 
@@ -740,8 +704,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void setCube_variable_code(String newCube_variable_code)
-	{
+	public void setCube_variable_code(String newCube_variable_code) {
 		String oldCube_variable_code = cube_variable_code;
 		cube_variable_code = newCube_variable_code;
 		if (eNotificationRequired())
@@ -754,8 +717,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Data_definitionPackage.CUBE_STRUCTURE_ITEM__ATTRIBUTE_ASSOCIATED_VARIABLE:
 				if (resolve) return getAttribute_associated_variable();
@@ -801,8 +763,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Data_definitionPackage.CUBE_STRUCTURE_ITEM__ATTRIBUTE_ASSOCIATED_VARIABLE:
 				setAttribute_associated_variable((VARIABLE)newValue);
@@ -856,8 +817,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Data_definitionPackage.CUBE_STRUCTURE_ITEM__ATTRIBUTE_ASSOCIATED_VARIABLE:
 				setAttribute_associated_variable((VARIABLE)null);
@@ -911,8 +871,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Data_definitionPackage.CUBE_STRUCTURE_ITEM__ATTRIBUTE_ASSOCIATED_VARIABLE:
 				return attribute_associated_variable != null;
@@ -952,8 +911,7 @@ public class CUBE_STRUCTURE_ITEMImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

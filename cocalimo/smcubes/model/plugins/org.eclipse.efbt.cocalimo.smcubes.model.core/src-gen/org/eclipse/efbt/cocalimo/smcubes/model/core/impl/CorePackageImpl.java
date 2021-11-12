@@ -4,6 +4,8 @@ package org.eclipse.efbt.cocalimo.smcubes.model.core.impl;
 
 import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementPackage;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.Cocalimo_smcubes_extensionPackage;
+import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.impl.Cocalimo_smcubes_extensionPackageImpl;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.CoreFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.facet_type;
@@ -11,19 +13,6 @@ import org.eclipse.efbt.cocalimo.smcubes.model.core.facet_type;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.Data_definitionPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.impl.Data_definitionPackageImpl;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.Efbt_data_definitionPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.impl.Efbt_data_definitionPackageImpl;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.Efbt_mappingPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.impl.Efbt_mappingPackageImpl;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.Efbt_vtl_transformationPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.impl.Efbt_vtl_transformationPackageImpl;
-
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MappingPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.impl.MappingPackageImpl;
@@ -31,19 +20,6 @@ import org.eclipse.efbt.cocalimo.smcubes.model.mapping.impl.MappingPackageImpl;
 import org.eclipse.efbt.cocalimo.smcubes.model.rendering.RenderingPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.rendering.impl.RenderingPackageImpl;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.reports.ReportsPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.reports.impl.ReportsPackageImpl;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.Smcubes_modelPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.impl.Smcubes_modelPackageImpl;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.Vtl_transformationPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.impl.Vtl_transformationPackageImpl;
-
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -59,8 +35,7 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
  * <!-- end-user-doc -->
  * @generated
  */
-public class CorePackageImpl extends EPackageImpl implements CorePackage
-{
+public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -181,8 +156,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @see #init()
 	 * @generated
 	 */
-	private CorePackageImpl()
-	{
+	private CorePackageImpl() {
 		super(eNS_URI, CoreFactory.eINSTANCE);
 	}
 
@@ -205,8 +179,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @see #initializePackageContents()
 	 * @generated
 	 */
-	public static CorePackage init()
-	{
+	public static CorePackage init() {
 		if (isInited) return (CorePackage)EPackage.Registry.INSTANCE.getEPackage(CorePackage.eNS_URI);
 
 		// Obtain or create and register package
@@ -221,46 +194,26 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 		// Obtain or create and register interdependencies
 		Object registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Data_definitionPackage.eNS_URI);
 		Data_definitionPackageImpl theData_definitionPackage = (Data_definitionPackageImpl)(registeredPackage instanceof Data_definitionPackageImpl ? registeredPackage : Data_definitionPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Efbt_data_definitionPackage.eNS_URI);
-		Efbt_data_definitionPackageImpl theEfbt_data_definitionPackage = (Efbt_data_definitionPackageImpl)(registeredPackage instanceof Efbt_data_definitionPackageImpl ? registeredPackage : Efbt_data_definitionPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Efbt_mappingPackage.eNS_URI);
-		Efbt_mappingPackageImpl theEfbt_mappingPackage = (Efbt_mappingPackageImpl)(registeredPackage instanceof Efbt_mappingPackageImpl ? registeredPackage : Efbt_mappingPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Efbt_vtl_transformationPackage.eNS_URI);
-		Efbt_vtl_transformationPackageImpl theEfbt_vtl_transformationPackage = (Efbt_vtl_transformationPackageImpl)(registeredPackage instanceof Efbt_vtl_transformationPackageImpl ? registeredPackage : Efbt_vtl_transformationPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(MappingPackage.eNS_URI);
 		MappingPackageImpl theMappingPackage = (MappingPackageImpl)(registeredPackage instanceof MappingPackageImpl ? registeredPackage : MappingPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(RenderingPackage.eNS_URI);
 		RenderingPackageImpl theRenderingPackage = (RenderingPackageImpl)(registeredPackage instanceof RenderingPackageImpl ? registeredPackage : RenderingPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ReportsPackage.eNS_URI);
-		ReportsPackageImpl theReportsPackage = (ReportsPackageImpl)(registeredPackage instanceof ReportsPackageImpl ? registeredPackage : ReportsPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Smcubes_modelPackage.eNS_URI);
-		Smcubes_modelPackageImpl theSmcubes_modelPackage = (Smcubes_modelPackageImpl)(registeredPackage instanceof Smcubes_modelPackageImpl ? registeredPackage : Smcubes_modelPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Vtl_transformationPackage.eNS_URI);
-		Vtl_transformationPackageImpl theVtl_transformationPackage = (Vtl_transformationPackageImpl)(registeredPackage instanceof Vtl_transformationPackageImpl ? registeredPackage : Vtl_transformationPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Cocalimo_smcubes_extensionPackage.eNS_URI);
+		Cocalimo_smcubes_extensionPackageImpl theCocalimo_smcubes_extensionPackage = (Cocalimo_smcubes_extensionPackageImpl)(registeredPackage instanceof Cocalimo_smcubes_extensionPackageImpl ? registeredPackage : Cocalimo_smcubes_extensionPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theCorePackage.createPackageContents();
 		theData_definitionPackage.createPackageContents();
-		theEfbt_data_definitionPackage.createPackageContents();
-		theEfbt_mappingPackage.createPackageContents();
-		theEfbt_vtl_transformationPackage.createPackageContents();
 		theMappingPackage.createPackageContents();
 		theRenderingPackage.createPackageContents();
-		theReportsPackage.createPackageContents();
-		theSmcubes_modelPackage.createPackageContents();
-		theVtl_transformationPackage.createPackageContents();
+		theCocalimo_smcubes_extensionPackage.createPackageContents();
 
 		// Initialize created meta-data
 		theCorePackage.initializePackageContents();
 		theData_definitionPackage.initializePackageContents();
-		theEfbt_data_definitionPackage.initializePackageContents();
-		theEfbt_mappingPackage.initializePackageContents();
-		theEfbt_vtl_transformationPackage.initializePackageContents();
 		theMappingPackage.initializePackageContents();
 		theRenderingPackage.initializePackageContents();
-		theReportsPackage.initializePackageContents();
-		theSmcubes_modelPackage.initializePackageContents();
-		theVtl_transformationPackage.initializePackageContents();
+		theCocalimo_smcubes_extensionPackage.initializePackageContents();
 
 		// Mark meta-data to indicate it can't be changed
 		theCorePackage.freeze();
@@ -276,8 +229,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EClass getDOMAIN()
-	{
+	public EClass getDOMAIN() {
 		return domainEClass;
 	}
 
@@ -287,8 +239,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getDOMAIN_Code()
-	{
+	public EAttribute getDOMAIN_Code() {
 		return (EAttribute)domainEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -298,8 +249,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getDOMAIN_Data_type()
-	{
+	public EAttribute getDOMAIN_Data_type() {
 		return (EAttribute)domainEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -309,8 +259,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getDOMAIN_Description()
-	{
+	public EAttribute getDOMAIN_Description() {
 		return (EAttribute)domainEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -320,8 +269,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getDOMAIN_Domain_id()
-	{
+	public EAttribute getDOMAIN_Domain_id() {
 		return (EAttribute)domainEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -331,8 +279,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EReference getDOMAIN_Facet_id()
-	{
+	public EReference getDOMAIN_Facet_id() {
 		return (EReference)domainEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -342,8 +289,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getDOMAIN_Is_enumerated()
-	{
+	public EAttribute getDOMAIN_Is_enumerated() {
 		return (EAttribute)domainEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -353,8 +299,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getDOMAIN_Is_reference()
-	{
+	public EAttribute getDOMAIN_Is_reference() {
 		return (EAttribute)domainEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -364,8 +309,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EReference getDOMAIN_Maintenance_agency_id()
-	{
+	public EReference getDOMAIN_Maintenance_agency_id() {
 		return (EReference)domainEClass.getEStructuralFeatures().get(7);
 	}
 
@@ -375,8 +319,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getDOMAIN_Name()
-	{
+	public EAttribute getDOMAIN_Name() {
 		return (EAttribute)domainEClass.getEStructuralFeatures().get(8);
 	}
 
@@ -386,8 +329,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getDOMAIN_DisplayName()
-	{
+	public EAttribute getDOMAIN_DisplayName() {
 		return (EAttribute)domainEClass.getEStructuralFeatures().get(9);
 	}
 
@@ -397,8 +339,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EClass getFACET_COLLECTION()
-	{
+	public EClass getFACET_COLLECTION() {
 		return faceT_COLLECTIONEClass;
 	}
 
@@ -408,8 +349,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getFACET_COLLECTION_Code()
-	{
+	public EAttribute getFACET_COLLECTION_Code() {
 		return (EAttribute)faceT_COLLECTIONEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -419,8 +359,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getFACET_COLLECTION_Facet_id()
-	{
+	public EAttribute getFACET_COLLECTION_Facet_id() {
 		return (EAttribute)faceT_COLLECTIONEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -430,8 +369,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getFACET_COLLECTION_Facet_value_type()
-	{
+	public EAttribute getFACET_COLLECTION_Facet_value_type() {
 		return (EAttribute)faceT_COLLECTIONEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -441,8 +379,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EReference getFACET_COLLECTION_Maintenance_agency_id()
-	{
+	public EReference getFACET_COLLECTION_Maintenance_agency_id() {
 		return (EReference)faceT_COLLECTIONEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -452,8 +389,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getFACET_COLLECTION_Name()
-	{
+	public EAttribute getFACET_COLLECTION_Name() {
 		return (EAttribute)faceT_COLLECTIONEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -463,8 +399,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EClass getFACET_ENUMERATION()
-	{
+	public EClass getFACET_ENUMERATION() {
 		return faceT_ENUMERATIONEClass;
 	}
 
@@ -474,8 +409,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EReference getFACET_ENUMERATION_Facet_id()
-	{
+	public EReference getFACET_ENUMERATION_Facet_id() {
 		return (EReference)faceT_ENUMERATIONEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -485,8 +419,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EReference getFACET_ENUMERATION_Facet_type()
-	{
+	public EReference getFACET_ENUMERATION_Facet_type() {
 		return (EReference)faceT_ENUMERATIONEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -496,8 +429,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getFACET_ENUMERATION_Observation_value()
-	{
+	public EAttribute getFACET_ENUMERATION_Observation_value() {
 		return (EAttribute)faceT_ENUMERATIONEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -507,8 +439,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EClass getfacet_type()
-	{
+	public EClass getfacet_type() {
 		return facet_typeEClass;
 	}
 
@@ -518,8 +449,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getfacet_type_Decimals()
-	{
+	public EAttribute getfacet_type_Decimals() {
 		return (EAttribute)facet_typeEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -529,8 +459,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getfacet_type_EndTime()
-	{
+	public EAttribute getfacet_type_EndTime() {
 		return (EAttribute)facet_typeEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -540,8 +469,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getfacet_type_EndValue()
-	{
+	public EAttribute getfacet_type_EndValue() {
 		return (EAttribute)facet_typeEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -551,8 +479,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getfacet_type_Interval()
-	{
+	public EAttribute getfacet_type_Interval() {
 		return (EAttribute)facet_typeEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -562,8 +489,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getfacet_type_IsSequence()
-	{
+	public EAttribute getfacet_type_IsSequence() {
 		return (EAttribute)facet_typeEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -573,8 +499,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getfacet_type_MaxLength()
-	{
+	public EAttribute getfacet_type_MaxLength() {
 		return (EAttribute)facet_typeEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -584,8 +509,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getfacet_type_MaxValue()
-	{
+	public EAttribute getfacet_type_MaxValue() {
 		return (EAttribute)facet_typeEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -595,8 +519,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getfacet_type_MinLength()
-	{
+	public EAttribute getfacet_type_MinLength() {
 		return (EAttribute)facet_typeEClass.getEStructuralFeatures().get(7);
 	}
 
@@ -606,8 +529,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getfacet_type_MinValue()
-	{
+	public EAttribute getfacet_type_MinValue() {
 		return (EAttribute)facet_typeEClass.getEStructuralFeatures().get(8);
 	}
 
@@ -617,8 +539,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getfacet_type_Pattern()
-	{
+	public EAttribute getfacet_type_Pattern() {
 		return (EAttribute)facet_typeEClass.getEStructuralFeatures().get(9);
 	}
 
@@ -628,8 +549,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getfacet_type_StartTime()
-	{
+	public EAttribute getfacet_type_StartTime() {
 		return (EAttribute)facet_typeEClass.getEStructuralFeatures().get(10);
 	}
 
@@ -639,8 +559,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getfacet_type_StartValue()
-	{
+	public EAttribute getfacet_type_StartValue() {
 		return (EAttribute)facet_typeEClass.getEStructuralFeatures().get(11);
 	}
 
@@ -650,8 +569,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getfacet_type_TimeInterval()
-	{
+	public EAttribute getfacet_type_TimeInterval() {
 		return (EAttribute)facet_typeEClass.getEStructuralFeatures().get(12);
 	}
 
@@ -661,8 +579,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EClass getMAINTENANCE_AGENCY()
-	{
+	public EClass getMAINTENANCE_AGENCY() {
 		return maintenancE_AGENCYEClass;
 	}
 
@@ -672,8 +589,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getMAINTENANCE_AGENCY_Code()
-	{
+	public EAttribute getMAINTENANCE_AGENCY_Code() {
 		return (EAttribute)maintenancE_AGENCYEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -683,8 +599,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getMAINTENANCE_AGENCY_Maintenance_agency_id()
-	{
+	public EAttribute getMAINTENANCE_AGENCY_Maintenance_agency_id() {
 		return (EAttribute)maintenancE_AGENCYEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -694,8 +609,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getMAINTENANCE_AGENCY_Name()
-	{
+	public EAttribute getMAINTENANCE_AGENCY_Name() {
 		return (EAttribute)maintenancE_AGENCYEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -705,8 +619,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EClass getMEMBER()
-	{
+	public EClass getMEMBER() {
 		return memberEClass;
 	}
 
@@ -716,8 +629,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getMEMBER_Code()
-	{
+	public EAttribute getMEMBER_Code() {
 		return (EAttribute)memberEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -727,8 +639,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getMEMBER_Description()
-	{
+	public EAttribute getMEMBER_Description() {
 		return (EAttribute)memberEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -738,8 +649,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EReference getMEMBER_Domain_id()
-	{
+	public EReference getMEMBER_Domain_id() {
 		return (EReference)memberEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -749,8 +659,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EReference getMEMBER_Maintenance_agency_id()
-	{
+	public EReference getMEMBER_Maintenance_agency_id() {
 		return (EReference)memberEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -760,8 +669,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getMEMBER_Member_id()
-	{
+	public EAttribute getMEMBER_Member_id() {
 		return (EAttribute)memberEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -771,8 +679,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getMEMBER_Name()
-	{
+	public EAttribute getMEMBER_Name() {
 		return (EAttribute)memberEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -782,8 +689,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getMEMBER_DisplayName()
-	{
+	public EAttribute getMEMBER_DisplayName() {
 		return (EAttribute)memberEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -793,8 +699,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EClass getMEMBER_HIERARCHY()
-	{
+	public EClass getMEMBER_HIERARCHY() {
 		return membeR_HIERARCHYEClass;
 	}
 
@@ -804,8 +709,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getMEMBER_HIERARCHY_Code()
-	{
+	public EAttribute getMEMBER_HIERARCHY_Code() {
 		return (EAttribute)membeR_HIERARCHYEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -815,8 +719,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getMEMBER_HIERARCHY_Description()
-	{
+	public EAttribute getMEMBER_HIERARCHY_Description() {
 		return (EAttribute)membeR_HIERARCHYEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -826,8 +729,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EReference getMEMBER_HIERARCHY_Domain_id()
-	{
+	public EReference getMEMBER_HIERARCHY_Domain_id() {
 		return (EReference)membeR_HIERARCHYEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -837,8 +739,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EReference getMEMBER_HIERARCHY_Maintenance_agency_id()
-	{
+	public EReference getMEMBER_HIERARCHY_Maintenance_agency_id() {
 		return (EReference)membeR_HIERARCHYEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -848,8 +749,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getMEMBER_HIERARCHY_Member_hierarchy_id()
-	{
+	public EAttribute getMEMBER_HIERARCHY_Member_hierarchy_id() {
 		return (EAttribute)membeR_HIERARCHYEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -859,8 +759,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getMEMBER_HIERARCHY_Name()
-	{
+	public EAttribute getMEMBER_HIERARCHY_Name() {
 		return (EAttribute)membeR_HIERARCHYEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -870,8 +769,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EClass getMEMBER_HIERARCHY_NODE()
-	{
+	public EClass getMEMBER_HIERARCHY_NODE() {
 		return membeR_HIERARCHY_NODEEClass;
 	}
 
@@ -881,8 +779,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getMEMBER_HIERARCHY_NODE_Comparator()
-	{
+	public EAttribute getMEMBER_HIERARCHY_NODE_Comparator() {
 		return (EAttribute)membeR_HIERARCHY_NODEEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -892,8 +789,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getMEMBER_HIERARCHY_NODE_Level()
-	{
+	public EAttribute getMEMBER_HIERARCHY_NODE_Level() {
 		return (EAttribute)membeR_HIERARCHY_NODEEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -903,8 +799,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EReference getMEMBER_HIERARCHY_NODE_Member_hierarchy_id()
-	{
+	public EReference getMEMBER_HIERARCHY_NODE_Member_hierarchy_id() {
 		return (EReference)membeR_HIERARCHY_NODEEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -914,8 +809,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EReference getMEMBER_HIERARCHY_NODE_Member_id()
-	{
+	public EReference getMEMBER_HIERARCHY_NODE_Member_id() {
 		return (EReference)membeR_HIERARCHY_NODEEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -925,8 +819,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getMEMBER_HIERARCHY_NODE_Operator()
-	{
+	public EAttribute getMEMBER_HIERARCHY_NODE_Operator() {
 		return (EAttribute)membeR_HIERARCHY_NODEEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -936,8 +829,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EReference getMEMBER_HIERARCHY_NODE_Parent_member_id()
-	{
+	public EReference getMEMBER_HIERARCHY_NODE_Parent_member_id() {
 		return (EReference)membeR_HIERARCHY_NODEEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -947,8 +839,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getMEMBER_HIERARCHY_NODE_Valid_from()
-	{
+	public EAttribute getMEMBER_HIERARCHY_NODE_Valid_from() {
 		return (EAttribute)membeR_HIERARCHY_NODEEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -958,8 +849,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getMEMBER_HIERARCHY_NODE_Valid_to()
-	{
+	public EAttribute getMEMBER_HIERARCHY_NODE_Valid_to() {
 		return (EAttribute)membeR_HIERARCHY_NODEEClass.getEStructuralFeatures().get(7);
 	}
 
@@ -969,8 +859,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EClass getSUBDOMAIN()
-	{
+	public EClass getSUBDOMAIN() {
 		return subdomainEClass;
 	}
 
@@ -980,8 +869,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getSUBDOMAIN_Code()
-	{
+	public EAttribute getSUBDOMAIN_Code() {
 		return (EAttribute)subdomainEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -991,8 +879,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getSUBDOMAIN_Description()
-	{
+	public EAttribute getSUBDOMAIN_Description() {
 		return (EAttribute)subdomainEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -1002,8 +889,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EReference getSUBDOMAIN_Domain_id()
-	{
+	public EReference getSUBDOMAIN_Domain_id() {
 		return (EReference)subdomainEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -1013,8 +899,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EReference getSUBDOMAIN_Facet_id()
-	{
+	public EReference getSUBDOMAIN_Facet_id() {
 		return (EReference)subdomainEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -1024,8 +909,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getSUBDOMAIN_Is_listed()
-	{
+	public EAttribute getSUBDOMAIN_Is_listed() {
 		return (EAttribute)subdomainEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -1035,8 +919,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getSUBDOMAIN_Is_natural()
-	{
+	public EAttribute getSUBDOMAIN_Is_natural() {
 		return (EAttribute)subdomainEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -1046,8 +929,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EReference getSUBDOMAIN_Maintenance_agency_id()
-	{
+	public EReference getSUBDOMAIN_Maintenance_agency_id() {
 		return (EReference)subdomainEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -1057,8 +939,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getSUBDOMAIN_Name()
-	{
+	public EAttribute getSUBDOMAIN_Name() {
 		return (EAttribute)subdomainEClass.getEStructuralFeatures().get(7);
 	}
 
@@ -1068,8 +949,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getSUBDOMAIN_Subdomain_id()
-	{
+	public EAttribute getSUBDOMAIN_Subdomain_id() {
 		return (EAttribute)subdomainEClass.getEStructuralFeatures().get(8);
 	}
 
@@ -1079,8 +959,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EClass getSUBDOMAIN_ENUMERATION()
-	{
+	public EClass getSUBDOMAIN_ENUMERATION() {
 		return subdomaiN_ENUMERATIONEClass;
 	}
 
@@ -1090,8 +969,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EReference getSUBDOMAIN_ENUMERATION_Member_id()
-	{
+	public EReference getSUBDOMAIN_ENUMERATION_Member_id() {
 		return (EReference)subdomaiN_ENUMERATIONEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -1101,8 +979,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getSUBDOMAIN_ENUMERATION_Order()
-	{
+	public EAttribute getSUBDOMAIN_ENUMERATION_Order() {
 		return (EAttribute)subdomaiN_ENUMERATIONEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -1112,8 +989,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EReference getSUBDOMAIN_ENUMERATION_Subdomain_id()
-	{
+	public EReference getSUBDOMAIN_ENUMERATION_Subdomain_id() {
 		return (EReference)subdomaiN_ENUMERATIONEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -1123,8 +999,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getSUBDOMAIN_ENUMERATION_Valid_from()
-	{
+	public EAttribute getSUBDOMAIN_ENUMERATION_Valid_from() {
 		return (EAttribute)subdomaiN_ENUMERATIONEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -1134,8 +1009,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getSUBDOMAIN_ENUMERATION_Valid_to()
-	{
+	public EAttribute getSUBDOMAIN_ENUMERATION_Valid_to() {
 		return (EAttribute)subdomaiN_ENUMERATIONEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -1145,8 +1019,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EClass getVARIABLE()
-	{
+	public EClass getVARIABLE() {
 		return variableEClass;
 	}
 
@@ -1156,8 +1029,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getVARIABLE_Code()
-	{
+	public EAttribute getVARIABLE_Code() {
 		return (EAttribute)variableEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -1167,8 +1039,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getVARIABLE_Description()
-	{
+	public EAttribute getVARIABLE_Description() {
 		return (EAttribute)variableEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -1178,8 +1049,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EReference getVARIABLE_Domain_id()
-	{
+	public EReference getVARIABLE_Domain_id() {
 		return (EReference)variableEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -1189,8 +1059,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EReference getVARIABLE_Maintenance_agency_id()
-	{
+	public EReference getVARIABLE_Maintenance_agency_id() {
 		return (EReference)variableEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -1200,8 +1069,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getVARIABLE_Primary_concept()
-	{
+	public EAttribute getVARIABLE_Primary_concept() {
 		return (EAttribute)variableEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -1211,8 +1079,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getVARIABLE_Variable_id()
-	{
+	public EAttribute getVARIABLE_Variable_id() {
 		return (EAttribute)variableEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -1222,8 +1089,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getVARIABLE_Name()
-	{
+	public EAttribute getVARIABLE_Name() {
 		return (EAttribute)variableEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -1233,8 +1099,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getVARIABLE_DisplayName()
-	{
+	public EAttribute getVARIABLE_DisplayName() {
 		return (EAttribute)variableEClass.getEStructuralFeatures().get(7);
 	}
 
@@ -1244,8 +1109,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EClass getVARIABLE_SET()
-	{
+	public EClass getVARIABLE_SET() {
 		return variablE_SETEClass;
 	}
 
@@ -1255,8 +1119,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getVARIABLE_SET_Code()
-	{
+	public EAttribute getVARIABLE_SET_Code() {
 		return (EAttribute)variablE_SETEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -1266,8 +1129,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getVARIABLE_SET_Description()
-	{
+	public EAttribute getVARIABLE_SET_Description() {
 		return (EAttribute)variablE_SETEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -1277,8 +1139,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EReference getVARIABLE_SET_Maintenance_agency_id()
-	{
+	public EReference getVARIABLE_SET_Maintenance_agency_id() {
 		return (EReference)variablE_SETEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -1288,8 +1149,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getVARIABLE_SET_Name()
-	{
+	public EAttribute getVARIABLE_SET_Name() {
 		return (EAttribute)variablE_SETEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -1299,8 +1159,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getVARIABLE_SET_Variable_set_id()
-	{
+	public EAttribute getVARIABLE_SET_Variable_set_id() {
 		return (EAttribute)variablE_SETEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -1310,8 +1169,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EClass getVARIABLE_SET_ENUMERATION()
-	{
+	public EClass getVARIABLE_SET_ENUMERATION() {
 		return variablE_SET_ENUMERATIONEClass;
 	}
 
@@ -1321,8 +1179,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getVARIABLE_SET_ENUMERATION_Is_flow()
-	{
+	public EAttribute getVARIABLE_SET_ENUMERATION_Is_flow() {
 		return (EAttribute)variablE_SET_ENUMERATIONEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -1332,8 +1189,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getVARIABLE_SET_ENUMERATION_Order()
-	{
+	public EAttribute getVARIABLE_SET_ENUMERATION_Order() {
 		return (EAttribute)variablE_SET_ENUMERATIONEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -1343,8 +1199,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EReference getVARIABLE_SET_ENUMERATION_Subdomain_id()
-	{
+	public EReference getVARIABLE_SET_ENUMERATION_Subdomain_id() {
 		return (EReference)variablE_SET_ENUMERATIONEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -1354,8 +1209,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getVARIABLE_SET_ENUMERATION_Valid_from()
-	{
+	public EAttribute getVARIABLE_SET_ENUMERATION_Valid_from() {
 		return (EAttribute)variablE_SET_ENUMERATIONEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -1365,8 +1219,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getVARIABLE_SET_ENUMERATION_Valid_to()
-	{
+	public EAttribute getVARIABLE_SET_ENUMERATION_Valid_to() {
 		return (EAttribute)variablE_SET_ENUMERATIONEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -1376,8 +1229,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EReference getVARIABLE_SET_ENUMERATION_Variable_id()
-	{
+	public EReference getVARIABLE_SET_ENUMERATION_Variable_id() {
 		return (EReference)variablE_SET_ENUMERATIONEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -1387,8 +1239,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EReference getVARIABLE_SET_ENUMERATION_Variable_set_id()
-	{
+	public EReference getVARIABLE_SET_ENUMERATION_Variable_set_id() {
 		return (EReference)variablE_SET_ENUMERATIONEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -1398,8 +1249,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EEnum getFACET_VALUE_TYPE()
-	{
+	public EEnum getFACET_VALUE_TYPE() {
 		return faceT_VALUE_TYPEEEnum;
 	}
 
@@ -1409,8 +1259,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public EDataType getFACET_VALUE_TYPEObject()
-	{
+	public EDataType getFACET_VALUE_TYPEObject() {
 		return faceT_VALUE_TYPEObjectEDataType;
 	}
 
@@ -1420,8 +1269,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * @generated
 	 */
 	@Override
-	public CoreFactory getCoreFactory()
-	{
+	public CoreFactory getCoreFactory() {
 		return (CoreFactory)getEFactoryInstance();
 	}
 
@@ -1439,8 +1287,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void createPackageContents()
-	{
+	public void createPackageContents() {
 		if (isCreated) return;
 		isCreated = true;
 
@@ -1581,8 +1428,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void initializePackageContents()
-	{
+	public void initializePackageContents() {
 		if (isInitialized) return;
 		isInitialized = true;
 
@@ -1752,8 +1598,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void createLicenseAnnotations()
-	{
+	protected void createLicenseAnnotations() {
 		String source = "license";
 		addAnnotation
 		  (this,
@@ -1769,8 +1614,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void createExtendedMetaDataAnnotations()
-	{
+	protected void createExtendedMetaDataAnnotations() {
 		String source = "http:///org/eclipse/emf/ecore/util/ExtendedMetaData";
 		addAnnotation
 		  (domainEClass,

@@ -34,8 +34,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class CUBE_HIERARCHYImpl extends MinimalEObjectImpl.Container implements CUBE_HIERARCHY
-{
+public class CUBE_HIERARCHYImpl extends MinimalEObjectImpl.Container implements CUBE_HIERARCHY {
 	/**
 	 * The default value of the '{@link #getCode() <em>Code</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -141,8 +140,7 @@ public class CUBE_HIERARCHYImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected CUBE_HIERARCHYImpl()
-	{
+	protected CUBE_HIERARCHYImpl() {
 		super();
 	}
 
@@ -152,8 +150,7 @@ public class CUBE_HIERARCHYImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return Data_definitionPackage.Literals.CUBE_HIERARCHY;
 	}
 
@@ -163,8 +160,7 @@ public class CUBE_HIERARCHYImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public String getCode()
-	{
+	public String getCode() {
 		return code;
 	}
 
@@ -174,8 +170,7 @@ public class CUBE_HIERARCHYImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public void setCode(String newCode)
-	{
+	public void setCode(String newCode) {
 		String oldCode = code;
 		code = newCode;
 		if (eNotificationRequired())
@@ -188,8 +183,7 @@ public class CUBE_HIERARCHYImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public String getCube_hierarchy_id()
-	{
+	public String getCube_hierarchy_id() {
 		return cube_hierarchy_id;
 	}
 
@@ -199,8 +193,7 @@ public class CUBE_HIERARCHYImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public void setCube_hierarchy_id(String newCube_hierarchy_id)
-	{
+	public void setCube_hierarchy_id(String newCube_hierarchy_id) {
 		String oldCube_hierarchy_id = cube_hierarchy_id;
 		cube_hierarchy_id = newCube_hierarchy_id;
 		if (eNotificationRequired())
@@ -213,8 +206,7 @@ public class CUBE_HIERARCHYImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public String getCube_hierarchy_type()
-	{
+	public String getCube_hierarchy_type() {
 		return cube_hierarchy_type;
 	}
 
@@ -224,8 +216,7 @@ public class CUBE_HIERARCHYImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public void setCube_hierarchy_type(String newCube_hierarchy_type)
-	{
+	public void setCube_hierarchy_type(String newCube_hierarchy_type) {
 		String oldCube_hierarchy_type = cube_hierarchy_type;
 		cube_hierarchy_type = newCube_hierarchy_type;
 		if (eNotificationRequired())
@@ -238,8 +229,7 @@ public class CUBE_HIERARCHYImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public FRAMEWORK getFramework_id()
-	{
+	public FRAMEWORK getFramework_id() {
 		if (framework_id != null && framework_id.eIsProxy()) {
 			InternalEObject oldFramework_id = (InternalEObject)framework_id;
 			framework_id = (FRAMEWORK)eResolveProxy(oldFramework_id);
@@ -256,8 +246,7 @@ public class CUBE_HIERARCHYImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public FRAMEWORK basicGetFramework_id()
-	{
+	public FRAMEWORK basicGetFramework_id() {
 		return framework_id;
 	}
 
@@ -267,8 +256,7 @@ public class CUBE_HIERARCHYImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public void setFramework_id(FRAMEWORK newFramework_id)
-	{
+	public void setFramework_id(FRAMEWORK newFramework_id) {
 		FRAMEWORK oldFramework_id = framework_id;
 		framework_id = newFramework_id;
 		if (eNotificationRequired())
@@ -281,8 +269,7 @@ public class CUBE_HIERARCHYImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public MAINTENANCE_AGENCY getMaintenance_agency_id()
-	{
+	public MAINTENANCE_AGENCY getMaintenance_agency_id() {
 		if (maintenance_agency_id != null && maintenance_agency_id.eIsProxy()) {
 			InternalEObject oldMaintenance_agency_id = (InternalEObject)maintenance_agency_id;
 			maintenance_agency_id = (MAINTENANCE_AGENCY)eResolveProxy(oldMaintenance_agency_id);
@@ -299,8 +286,7 @@ public class CUBE_HIERARCHYImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MAINTENANCE_AGENCY basicGetMaintenance_agency_id()
-	{
+	public MAINTENANCE_AGENCY basicGetMaintenance_agency_id() {
 		return maintenance_agency_id;
 	}
 
@@ -310,8 +296,7 @@ public class CUBE_HIERARCHYImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public void setMaintenance_agency_id(MAINTENANCE_AGENCY newMaintenance_agency_id)
-	{
+	public void setMaintenance_agency_id(MAINTENANCE_AGENCY newMaintenance_agency_id) {
 		MAINTENANCE_AGENCY oldMaintenance_agency_id = maintenance_agency_id;
 		maintenance_agency_id = newMaintenance_agency_id;
 		if (eNotificationRequired())
@@ -324,8 +309,7 @@ public class CUBE_HIERARCHYImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
@@ -335,8 +319,7 @@ public class CUBE_HIERARCHYImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public void setName(String newName)
-	{
+	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
@@ -349,8 +332,7 @@ public class CUBE_HIERARCHYImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Data_definitionPackage.CUBE_HIERARCHY__CODE:
 				return getCode();
@@ -376,8 +358,7 @@ public class CUBE_HIERARCHYImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Data_definitionPackage.CUBE_HIERARCHY__CODE:
 				setCode((String)newValue);
@@ -407,8 +388,7 @@ public class CUBE_HIERARCHYImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Data_definitionPackage.CUBE_HIERARCHY__CODE:
 				setCode(CODE_EDEFAULT);
@@ -438,8 +418,7 @@ public class CUBE_HIERARCHYImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Data_definitionPackage.CUBE_HIERARCHY__CODE:
 				return CODE_EDEFAULT == null ? code != null : !CODE_EDEFAULT.equals(code);
@@ -463,8 +442,7 @@ public class CUBE_HIERARCHYImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

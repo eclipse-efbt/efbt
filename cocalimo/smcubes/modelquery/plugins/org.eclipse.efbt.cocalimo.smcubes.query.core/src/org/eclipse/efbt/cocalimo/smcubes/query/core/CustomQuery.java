@@ -18,9 +18,9 @@ import org.eclipse.efbt.cocalimo.core.model.module_management.Module;
 import org.eclipse.efbt.cocalimo.core.model.module_management.ModuleDependency;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.DOMAIN;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.MEMBER;
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.DomainModule;
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.MemberModule;
-import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.SmcubesModel;
+import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.DomainModule;
+import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.MemberModule;
+import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 

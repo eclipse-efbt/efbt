@@ -1,0 +1,6 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/platform_call#//ImportBIRDFromMSAccess",
+  "name" : "import_bird",
+  "inputDirectory" : "C:\\\\Users\\\\Neil\\\\BIRD_5.0.2_VTL\\\\BIRD_5.0.2_VTL.accdb",
+  "outputDirectory" : "C:\\\\Users\\\\Neil\\\\freebirdtools-developSeptember21\\\\runtime-efbt\\\\org.eclipse.efbt.example.sdd\\\\src\\\\"
+}

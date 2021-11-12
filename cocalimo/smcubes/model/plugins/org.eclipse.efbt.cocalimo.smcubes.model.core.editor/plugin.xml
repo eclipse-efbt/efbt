@@ -68,90 +68,6 @@
             id="org.eclipse.emf.ecore.Wizard.category.ID"
             name="%_UI_Wizard_category"/>
       <wizard
-            id="org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.presentation.Efbt_data_definitionModelWizardID"
-            name="%_UI_Efbt_data_definitionModelWizard_label"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.presentation.Efbt_data_definitionModelWizard"
-            category="org.eclipse.emf.ecore.Wizard.category.ID"
-            icon="icons/full/obj16/Efbt_data_definitionModelFile.gif">
-         <description>%_UI_Efbt_data_definitionModelWizard_description</description>
-         <selection class="org.eclipse.core.resources.IResource"/>
-      </wizard>
-   </extension>
-
-   <extension point="org.eclipse.ui.editors">
-      <!-- @generated smcubes -->
-      <editor
-            id="org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.presentation.Efbt_data_definitionEditorID"
-            name="%_UI_Efbt_data_definitionEditor_label"
-            icon="icons/full/obj16/Efbt_data_definitionModelFile.gif"
-            extensions="efbt_data_definition"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.presentation.Efbt_data_definitionEditor"
-            contributorClass="org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.presentation.Efbt_data_definitionActionBarContributor">
-      </editor>
-   </extension>
-
-   <extension point="org.eclipse.ui.newWizards">
-      <!-- @generated smcubes -->
-      <category
-            id="org.eclipse.emf.ecore.Wizard.category.ID"
-            name="%_UI_Wizard_category"/>
-      <wizard
-            id="org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.presentation.Efbt_mappingModelWizardID"
-            name="%_UI_Efbt_mappingModelWizard_label"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.presentation.Efbt_mappingModelWizard"
-            category="org.eclipse.emf.ecore.Wizard.category.ID"
-            icon="icons/full/obj16/Efbt_mappingModelFile.gif">
-         <description>%_UI_Efbt_mappingModelWizard_description</description>
-         <selection class="org.eclipse.core.resources.IResource"/>
-      </wizard>
-   </extension>
-
-   <extension point="org.eclipse.ui.editors">
-      <!-- @generated smcubes -->
-      <editor
-            id="org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.presentation.Efbt_mappingEditorID"
-            name="%_UI_Efbt_mappingEditor_label"
-            icon="icons/full/obj16/Efbt_mappingModelFile.gif"
-            extensions="efbt_mapping"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.presentation.Efbt_mappingEditor"
-            contributorClass="org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.presentation.Efbt_mappingActionBarContributor">
-      </editor>
-   </extension>
-
-   <extension point="org.eclipse.ui.newWizards">
-      <!-- @generated smcubes -->
-      <category
-            id="org.eclipse.emf.ecore.Wizard.category.ID"
-            name="%_UI_Wizard_category"/>
-      <wizard
-            id="org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.presentation.Efbt_vtl_transformationModelWizardID"
-            name="%_UI_Efbt_vtl_transformationModelWizard_label"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.presentation.Efbt_vtl_transformationModelWizard"
-            category="org.eclipse.emf.ecore.Wizard.category.ID"
-            icon="icons/full/obj16/Efbt_vtl_transformationModelFile.gif">
-         <description>%_UI_Efbt_vtl_transformationModelWizard_description</description>
-         <selection class="org.eclipse.core.resources.IResource"/>
-      </wizard>
-   </extension>
-
-   <extension point="org.eclipse.ui.editors">
-      <!-- @generated smcubes -->
-      <editor
-            id="org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.presentation.Efbt_vtl_transformationEditorID"
-            name="%_UI_Efbt_vtl_transformationEditor_label"
-            icon="icons/full/obj16/Efbt_vtl_transformationModelFile.gif"
-            extensions="efbt_vtl_transformation"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.presentation.Efbt_vtl_transformationEditor"
-            contributorClass="org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.presentation.Efbt_vtl_transformationActionBarContributor">
-      </editor>
-   </extension>
-
-   <extension point="org.eclipse.ui.newWizards">
-      <!-- @generated smcubes -->
-      <category
-            id="org.eclipse.emf.ecore.Wizard.category.ID"
-            name="%_UI_Wizard_category"/>
-      <wizard
             id="org.eclipse.efbt.cocalimo.smcubes.model.mapping.presentation.MappingModelWizardID"
             name="%_UI_MappingModelWizard_label"
             class="org.eclipse.efbt.cocalimo.smcubes.model.mapping.presentation.MappingModelWizard"
@@ -208,12 +124,12 @@
             id="org.eclipse.emf.ecore.Wizard.category.ID"
             name="%_UI_Wizard_category"/>
       <wizard
-            id="org.eclipse.efbt.cocalimo.smcubes.model.reports.presentation.ReportsModelWizardID"
-            name="%_UI_ReportsModelWizard_label"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.reports.presentation.ReportsModelWizard"
+            id="org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.presentation.Cocalimo_smcubes_extensionModelWizardID"
+            name="%_UI_Cocalimo_smcubes_extensionModelWizard_label"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.presentation.Cocalimo_smcubes_extensionModelWizard"
             category="org.eclipse.emf.ecore.Wizard.category.ID"
-            icon="icons/full/obj16/ReportsModelFile.gif">
-         <description>%_UI_ReportsModelWizard_description</description>
+            icon="icons/full/obj16/Cocalimo_smcubes_extensionModelFile.gif">
+         <description>%_UI_Cocalimo_smcubes_extensionModelWizard_description</description>
          <selection class="org.eclipse.core.resources.IResource"/>
       </wizard>
    </extension>
@@ -221,68 +137,12 @@
    <extension point="org.eclipse.ui.editors">
       <!-- @generated smcubes -->
       <editor
-            id="org.eclipse.efbt.cocalimo.smcubes.model.reports.presentation.ReportsEditorID"
-            name="%_UI_ReportsEditor_label"
-            icon="icons/full/obj16/ReportsModelFile.gif"
-            extensions="reports"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.reports.presentation.ReportsEditor"
-            contributorClass="org.eclipse.efbt.cocalimo.smcubes.model.reports.presentation.ReportsActionBarContributor">
-      </editor>
-   </extension>
-
-   <extension point="org.eclipse.ui.newWizards">
-      <!-- @generated smcubes -->
-      <category
-            id="org.eclipse.emf.ecore.Wizard.category.ID"
-            name="%_UI_Wizard_category"/>
-      <wizard
-            id="org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.presentation.Smcubes_modelModelWizardID"
-            name="%_UI_Smcubes_modelModelWizard_label"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.presentation.Smcubes_modelModelWizard"
-            category="org.eclipse.emf.ecore.Wizard.category.ID"
-            icon="icons/full/obj16/Smcubes_modelModelFile.gif">
-         <description>%_UI_Smcubes_modelModelWizard_description</description>
-         <selection class="org.eclipse.core.resources.IResource"/>
-      </wizard>
-   </extension>
-
-   <extension point="org.eclipse.ui.editors">
-      <!-- @generated smcubes -->
-      <editor
-            id="org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.presentation.Smcubes_modelEditorID"
-            name="%_UI_Smcubes_modelEditor_label"
-            icon="icons/full/obj16/Smcubes_modelModelFile.gif"
-            extensions="smcubes_model"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.presentation.Smcubes_modelEditor"
-            contributorClass="org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.presentation.Smcubes_modelActionBarContributor">
-      </editor>
-   </extension>
-
-   <extension point="org.eclipse.ui.newWizards">
-      <!-- @generated smcubes -->
-      <category
-            id="org.eclipse.emf.ecore.Wizard.category.ID"
-            name="%_UI_Wizard_category"/>
-      <wizard
-            id="org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.presentation.Vtl_transformationModelWizardID"
-            name="%_UI_Vtl_transformationModelWizard_label"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.presentation.Vtl_transformationModelWizard"
-            category="org.eclipse.emf.ecore.Wizard.category.ID"
-            icon="icons/full/obj16/Vtl_transformationModelFile.gif">
-         <description>%_UI_Vtl_transformationModelWizard_description</description>
-         <selection class="org.eclipse.core.resources.IResource"/>
-      </wizard>
-   </extension>
-
-   <extension point="org.eclipse.ui.editors">
-      <!-- @generated smcubes -->
-      <editor
-            id="org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.presentation.Vtl_transformationEditorID"
-            name="%_UI_Vtl_transformationEditor_label"
-            icon="icons/full/obj16/Vtl_transformationModelFile.gif"
-            extensions="vtl_transformation"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.presentation.Vtl_transformationEditor"
-            contributorClass="org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.presentation.Vtl_transformationActionBarContributor">
+            id="org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.presentation.Cocalimo_smcubes_extensionEditorID"
+            name="%_UI_Cocalimo_smcubes_extensionEditor_label"
+            icon="icons/full/obj16/Cocalimo_smcubes_extensionModelFile.gif"
+            extensions="cocalimo_smcubes_extension"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.presentation.Cocalimo_smcubes_extensionEditor"
+            contributorClass="org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.presentation.Cocalimo_smcubes_extensionActionBarContributor">
       </editor>
    </extension>
 

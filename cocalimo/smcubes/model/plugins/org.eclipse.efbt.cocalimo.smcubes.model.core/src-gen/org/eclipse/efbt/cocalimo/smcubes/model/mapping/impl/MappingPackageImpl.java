@@ -4,6 +4,8 @@ package org.eclipse.efbt.cocalimo.smcubes.model.mapping.impl;
 
 import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementPackage;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.Cocalimo_smcubes_extensionPackage;
+import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.impl.Cocalimo_smcubes_extensionPackageImpl;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.core.impl.CorePackageImpl;
@@ -11,38 +13,12 @@ import org.eclipse.efbt.cocalimo.smcubes.model.core.impl.CorePackageImpl;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.Data_definitionPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.impl.Data_definitionPackageImpl;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.Efbt_data_definitionPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_data_definition.impl.Efbt_data_definitionPackageImpl;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.Efbt_mappingPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_mapping.impl.Efbt_mappingPackageImpl;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.Efbt_vtl_transformationPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.efbt_vtl_transformation.impl.Efbt_vtl_transformationPackageImpl;
-
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MappingFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MappingPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.rendering.RenderingPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.rendering.impl.RenderingPackageImpl;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.reports.ReportsPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.reports.impl.ReportsPackageImpl;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.Smcubes_modelPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.impl.Smcubes_modelPackageImpl;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.Vtl_transformationPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.vtl_transformation.impl.Vtl_transformationPackageImpl;
-
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
@@ -56,8 +32,7 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
  * <!-- end-user-doc -->
  * @generated
  */
-public class MappingPackageImpl extends EPackageImpl implements MappingPackage
-{
+public class MappingPackageImpl extends EPackageImpl implements MappingPackage {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -129,8 +104,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @see #init()
 	 * @generated
 	 */
-	private MappingPackageImpl()
-	{
+	private MappingPackageImpl() {
 		super(eNS_URI, MappingFactory.eINSTANCE);
 	}
 
@@ -153,8 +127,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @see #initializePackageContents()
 	 * @generated
 	 */
-	public static MappingPackage init()
-	{
+	public static MappingPackage init() {
 		if (isInited) return (MappingPackage)EPackage.Registry.INSTANCE.getEPackage(MappingPackage.eNS_URI);
 
 		// Obtain or create and register package
@@ -171,44 +144,24 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 		CorePackageImpl theCorePackage = (CorePackageImpl)(registeredPackage instanceof CorePackageImpl ? registeredPackage : CorePackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Data_definitionPackage.eNS_URI);
 		Data_definitionPackageImpl theData_definitionPackage = (Data_definitionPackageImpl)(registeredPackage instanceof Data_definitionPackageImpl ? registeredPackage : Data_definitionPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Efbt_data_definitionPackage.eNS_URI);
-		Efbt_data_definitionPackageImpl theEfbt_data_definitionPackage = (Efbt_data_definitionPackageImpl)(registeredPackage instanceof Efbt_data_definitionPackageImpl ? registeredPackage : Efbt_data_definitionPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Efbt_mappingPackage.eNS_URI);
-		Efbt_mappingPackageImpl theEfbt_mappingPackage = (Efbt_mappingPackageImpl)(registeredPackage instanceof Efbt_mappingPackageImpl ? registeredPackage : Efbt_mappingPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Efbt_vtl_transformationPackage.eNS_URI);
-		Efbt_vtl_transformationPackageImpl theEfbt_vtl_transformationPackage = (Efbt_vtl_transformationPackageImpl)(registeredPackage instanceof Efbt_vtl_transformationPackageImpl ? registeredPackage : Efbt_vtl_transformationPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(RenderingPackage.eNS_URI);
 		RenderingPackageImpl theRenderingPackage = (RenderingPackageImpl)(registeredPackage instanceof RenderingPackageImpl ? registeredPackage : RenderingPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ReportsPackage.eNS_URI);
-		ReportsPackageImpl theReportsPackage = (ReportsPackageImpl)(registeredPackage instanceof ReportsPackageImpl ? registeredPackage : ReportsPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Smcubes_modelPackage.eNS_URI);
-		Smcubes_modelPackageImpl theSmcubes_modelPackage = (Smcubes_modelPackageImpl)(registeredPackage instanceof Smcubes_modelPackageImpl ? registeredPackage : Smcubes_modelPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Vtl_transformationPackage.eNS_URI);
-		Vtl_transformationPackageImpl theVtl_transformationPackage = (Vtl_transformationPackageImpl)(registeredPackage instanceof Vtl_transformationPackageImpl ? registeredPackage : Vtl_transformationPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Cocalimo_smcubes_extensionPackage.eNS_URI);
+		Cocalimo_smcubes_extensionPackageImpl theCocalimo_smcubes_extensionPackage = (Cocalimo_smcubes_extensionPackageImpl)(registeredPackage instanceof Cocalimo_smcubes_extensionPackageImpl ? registeredPackage : Cocalimo_smcubes_extensionPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theMappingPackage.createPackageContents();
 		theCorePackage.createPackageContents();
 		theData_definitionPackage.createPackageContents();
-		theEfbt_data_definitionPackage.createPackageContents();
-		theEfbt_mappingPackage.createPackageContents();
-		theEfbt_vtl_transformationPackage.createPackageContents();
 		theRenderingPackage.createPackageContents();
-		theReportsPackage.createPackageContents();
-		theSmcubes_modelPackage.createPackageContents();
-		theVtl_transformationPackage.createPackageContents();
+		theCocalimo_smcubes_extensionPackage.createPackageContents();
 
 		// Initialize created meta-data
 		theMappingPackage.initializePackageContents();
 		theCorePackage.initializePackageContents();
 		theData_definitionPackage.initializePackageContents();
-		theEfbt_data_definitionPackage.initializePackageContents();
-		theEfbt_mappingPackage.initializePackageContents();
-		theEfbt_vtl_transformationPackage.initializePackageContents();
 		theRenderingPackage.initializePackageContents();
-		theReportsPackage.initializePackageContents();
-		theSmcubes_modelPackage.initializePackageContents();
-		theVtl_transformationPackage.initializePackageContents();
+		theCocalimo_smcubes_extensionPackage.initializePackageContents();
 
 		// Mark meta-data to indicate it can't be changed
 		theMappingPackage.freeze();
@@ -224,8 +177,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EClass getCUBE_MAPPING()
-	{
+	public EClass getCUBE_MAPPING() {
 		return cubE_MAPPINGEClass;
 	}
 
@@ -235,8 +187,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_MAPPING_Cube_mapping_id()
-	{
+	public EAttribute getCUBE_MAPPING_Cube_mapping_id() {
 		return (EAttribute)cubE_MAPPINGEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -246,8 +197,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_MAPPING_Description()
-	{
+	public EAttribute getCUBE_MAPPING_Description() {
 		return (EAttribute)cubE_MAPPINGEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -257,8 +207,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EReference getCUBE_MAPPING_Source_cube()
-	{
+	public EReference getCUBE_MAPPING_Source_cube() {
 		return (EReference)cubE_MAPPINGEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -268,8 +217,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EReference getCUBE_MAPPING_Target_cube()
-	{
+	public EReference getCUBE_MAPPING_Target_cube() {
 		return (EReference)cubE_MAPPINGEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -279,8 +227,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_MAPPING_Name()
-	{
+	public EAttribute getCUBE_MAPPING_Name() {
 		return (EAttribute)cubE_MAPPINGEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -290,8 +237,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_MAPPING_Code()
-	{
+	public EAttribute getCUBE_MAPPING_Code() {
 		return (EAttribute)cubE_MAPPINGEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -301,8 +247,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCUBE_MAPPING_Maintenance_agency_id()
-	{
+	public EAttribute getCUBE_MAPPING_Maintenance_agency_id() {
 		return (EAttribute)cubE_MAPPINGEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -312,8 +257,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EReference getCUBE_MAPPING_MappingsToCube()
-	{
+	public EReference getCUBE_MAPPING_MappingsToCube() {
 		return (EReference)cubE_MAPPINGEClass.getEStructuralFeatures().get(7);
 	}
 
@@ -323,8 +267,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EClass getMEMBER_MAPPING()
-	{
+	public EClass getMEMBER_MAPPING() {
 		return membeR_MAPPINGEClass;
 	}
 
@@ -334,8 +277,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getMEMBER_MAPPING_Name()
-	{
+	public EAttribute getMEMBER_MAPPING_Name() {
 		return (EAttribute)membeR_MAPPINGEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -345,8 +287,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getMEMBER_MAPPING_Code()
-	{
+	public EAttribute getMEMBER_MAPPING_Code() {
 		return (EAttribute)membeR_MAPPINGEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -356,8 +297,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getMEMBER_MAPPING_Maintenance_agency_id()
-	{
+	public EAttribute getMEMBER_MAPPING_Maintenance_agency_id() {
 		return (EAttribute)membeR_MAPPINGEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -367,8 +307,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getMEMBER_MAPPING_Member_mapping_id()
-	{
+	public EAttribute getMEMBER_MAPPING_Member_mapping_id() {
 		return (EAttribute)membeR_MAPPINGEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -378,8 +317,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EReference getMEMBER_MAPPING_MemberMappingItems()
-	{
+	public EReference getMEMBER_MAPPING_MemberMappingItems() {
 		return (EReference)membeR_MAPPINGEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -389,8 +327,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EClass getMEMBER_MAPPING_ITEM()
-	{
+	public EClass getMEMBER_MAPPING_ITEM() {
 		return membeR_MAPPING_ITEMEClass;
 	}
 
@@ -400,8 +337,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getMEMBER_MAPPING_ITEM_IsSource()
-	{
+	public EAttribute getMEMBER_MAPPING_ITEM_IsSource() {
 		return (EAttribute)membeR_MAPPING_ITEMEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -411,8 +347,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EReference getMEMBER_MAPPING_ITEM_Member()
-	{
+	public EReference getMEMBER_MAPPING_ITEM_Member() {
 		return (EReference)membeR_MAPPING_ITEMEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -422,8 +357,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EReference getMEMBER_MAPPING_ITEM_Variable()
-	{
+	public EReference getMEMBER_MAPPING_ITEM_Variable() {
 		return (EReference)membeR_MAPPING_ITEMEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -433,8 +367,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EClass getVARIABLE_MAPPING_ITEM()
-	{
+	public EClass getVARIABLE_MAPPING_ITEM() {
 		return variablE_MAPPING_ITEMEClass;
 	}
 
@@ -444,8 +377,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getVARIABLE_MAPPING_ITEM_IsSource()
-	{
+	public EAttribute getVARIABLE_MAPPING_ITEM_IsSource() {
 		return (EAttribute)variablE_MAPPING_ITEMEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -455,8 +387,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EReference getVARIABLE_MAPPING_ITEM_Variable()
-	{
+	public EReference getVARIABLE_MAPPING_ITEM_Variable() {
 		return (EReference)variablE_MAPPING_ITEMEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -466,8 +397,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EClass getVARIABLE_MAPPING()
-	{
+	public EClass getVARIABLE_MAPPING() {
 		return variablE_MAPPINGEClass;
 	}
 
@@ -477,8 +407,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EReference getVARIABLE_MAPPING_VaraibleMappingItems()
-	{
+	public EReference getVARIABLE_MAPPING_VaraibleMappingItems() {
 		return (EReference)variablE_MAPPINGEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -488,8 +417,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getVARIABLE_MAPPING_Name()
-	{
+	public EAttribute getVARIABLE_MAPPING_Name() {
 		return (EAttribute)variablE_MAPPINGEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -499,8 +427,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getVARIABLE_MAPPING_Code()
-	{
+	public EAttribute getVARIABLE_MAPPING_Code() {
 		return (EAttribute)variablE_MAPPINGEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -510,8 +437,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getVARIABLE_MAPPING_Maintenance_agency_id()
-	{
+	public EAttribute getVARIABLE_MAPPING_Maintenance_agency_id() {
 		return (EAttribute)variablE_MAPPINGEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -521,8 +447,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getVARIABLE_MAPPING_Variable_mapping_id()
-	{
+	public EAttribute getVARIABLE_MAPPING_Variable_mapping_id() {
 		return (EAttribute)variablE_MAPPINGEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -532,8 +457,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EClass getMAPPING_TO_CUBE()
-	{
+	public EClass getMAPPING_TO_CUBE() {
 		return mappinG_TO_CUBEEClass;
 	}
 
@@ -543,8 +467,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EReference getMAPPING_TO_CUBE_Mapping()
-	{
+	public EReference getMAPPING_TO_CUBE_Mapping() {
 		return (EReference)mappinG_TO_CUBEEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -554,8 +477,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EClass getVARIABLE_SET_MAPPING()
-	{
+	public EClass getVARIABLE_SET_MAPPING() {
 		return variablE_SET_MAPPINGEClass;
 	}
 
@@ -565,8 +487,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EReference getVARIABLE_SET_MAPPING_SourceMapping()
-	{
+	public EReference getVARIABLE_SET_MAPPING_SourceMapping() {
 		return (EReference)variablE_SET_MAPPINGEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -576,8 +497,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EReference getVARIABLE_SET_MAPPING_TargetMapping()
-	{
+	public EReference getVARIABLE_SET_MAPPING_TargetMapping() {
 		return (EReference)variablE_SET_MAPPINGEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -587,8 +507,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EClass getMAPPING_DEFINITION()
-	{
+	public EClass getMAPPING_DEFINITION() {
 		return mappinG_DEFINITIONEClass;
 	}
 
@@ -598,8 +517,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getMAPPING_DEFINITION_Name()
-	{
+	public EAttribute getMAPPING_DEFINITION_Name() {
 		return (EAttribute)mappinG_DEFINITIONEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -609,8 +527,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getMAPPING_DEFINITION_Code()
-	{
+	public EAttribute getMAPPING_DEFINITION_Code() {
 		return (EAttribute)mappinG_DEFINITIONEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -620,8 +537,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getMAPPING_DEFINITION_Maintenance_agency_id()
-	{
+	public EAttribute getMAPPING_DEFINITION_Maintenance_agency_id() {
 		return (EAttribute)mappinG_DEFINITIONEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -631,8 +547,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getMAPPING_DEFINITION_Mapping_id()
-	{
+	public EAttribute getMAPPING_DEFINITION_Mapping_id() {
 		return (EAttribute)mappinG_DEFINITIONEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -642,8 +557,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getMAPPING_DEFINITION_Mapping_type()
-	{
+	public EAttribute getMAPPING_DEFINITION_Mapping_type() {
 		return (EAttribute)mappinG_DEFINITIONEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -653,8 +567,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EReference getMAPPING_DEFINITION_MemberMapping()
-	{
+	public EReference getMAPPING_DEFINITION_MemberMapping() {
 		return (EReference)mappinG_DEFINITIONEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -664,8 +577,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public EReference getMAPPING_DEFINITION_VariableMapping()
-	{
+	public EReference getMAPPING_DEFINITION_VariableMapping() {
 		return (EReference)mappinG_DEFINITIONEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -675,8 +587,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * @generated
 	 */
 	@Override
-	public MappingFactory getMappingFactory()
-	{
+	public MappingFactory getMappingFactory() {
 		return (MappingFactory)getEFactoryInstance();
 	}
 
@@ -694,8 +605,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void createPackageContents()
-	{
+	public void createPackageContents() {
 		if (isCreated) return;
 		isCreated = true;
 
@@ -764,8 +674,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void initializePackageContents()
-	{
+	public void initializePackageContents() {
 		if (isInitialized) return;
 		isInitialized = true;
 
@@ -848,8 +757,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void createLicenseAnnotations()
-	{
+	protected void createLicenseAnnotations() {
 		String source = "license";
 		addAnnotation
 		  (this,

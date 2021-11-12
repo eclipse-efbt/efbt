@@ -30,6 +30,9 @@
    <feature id="org.eclipse.efbt.cocalimo.smcubes.ui.sirius.feature">
       <category name="efbt"/>
    </feature>
+   <feature id="org.eclipse.efbt.cocalimo.core.ui.sirius.feature">
+      <category name="efbt"/>
+   </feature>
    <feature id="org.eclipse.efbt.controller.platformcall.ui.sirius.core.feature">
       <category name="efbt"/>
    </feature>

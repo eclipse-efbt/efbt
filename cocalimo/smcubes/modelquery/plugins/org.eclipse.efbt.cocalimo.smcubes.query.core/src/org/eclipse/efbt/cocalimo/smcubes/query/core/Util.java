@@ -14,7 +14,7 @@ package org.eclipse.efbt.cocalimo.smcubes.query.core;
 
 import java.io.File;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.smcubes_model.SmcubesModel;
+import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;

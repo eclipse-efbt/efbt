@@ -17,8 +17,7 @@ import org.eclipse.emf.common.util.Enumerator;
  * @model extendedMetaData="name='FACET_VALUE_TYPE'"
  * @generated
  */
-public enum FACET_VALUE_TYPE implements Enumerator
-{
+public enum FACET_VALUE_TYPE implements Enumerator {
 	/**
 	 * The '<em><b>Big Integer</b></em>' literal object.
 	 * <!-- begin-user-doc -->
@@ -419,8 +418,7 @@ public enum FACET_VALUE_TYPE implements Enumerator
 	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
-	public static FACET_VALUE_TYPE get(String literal)
-	{
+	public static FACET_VALUE_TYPE get(String literal) {
 		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
 			FACET_VALUE_TYPE result = VALUES_ARRAY[i];
 			if (result.toString().equals(literal)) {
@@ -438,8 +436,7 @@ public enum FACET_VALUE_TYPE implements Enumerator
 	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
-	public static FACET_VALUE_TYPE getByName(String name)
-	{
+	public static FACET_VALUE_TYPE getByName(String name) {
 		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
 			FACET_VALUE_TYPE result = VALUES_ARRAY[i];
 			if (result.getName().equals(name)) {
@@ -457,8 +454,7 @@ public enum FACET_VALUE_TYPE implements Enumerator
 	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
-	public static FACET_VALUE_TYPE get(int value)
-	{
+	public static FACET_VALUE_TYPE get(int value) {
 		switch (value) {
 			case BIG_INTEGER_VALUE: return BIG_INTEGER;
 			case BOOLEAN_VALUE: return BOOLEAN;
@@ -508,8 +504,7 @@ public enum FACET_VALUE_TYPE implements Enumerator
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private FACET_VALUE_TYPE(int value, String name, String literal)
-	{
+	private FACET_VALUE_TYPE(int value, String name, String literal) {
 		this.value = value;
 		this.name = name;
 		this.literal = literal;
@@ -521,8 +516,7 @@ public enum FACET_VALUE_TYPE implements Enumerator
 	 * @generated
 	 */
 	@Override
-	public int getValue()
-	{
+	public int getValue() {
 	  return value;
 	}
 
@@ -532,8 +526,7 @@ public enum FACET_VALUE_TYPE implements Enumerator
 	 * @generated
 	 */
 	@Override
-	public String getName()
-	{
+	public String getName() {
 	  return name;
 	}
 
@@ -543,8 +536,7 @@ public enum FACET_VALUE_TYPE implements Enumerator
 	 * @generated
 	 */
 	@Override
-	public String getLiteral()
-	{
+	public String getLiteral() {
 	  return literal;
 	}
 
@@ -555,8 +547,7 @@ public enum FACET_VALUE_TYPE implements Enumerator
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return literal;
 	}
 	

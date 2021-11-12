@@ -18,16 +18,14 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
  * <!-- end-user-doc -->
  * @generated
  */
-public class RenderingFactoryImpl extends EFactoryImpl implements RenderingFactory
-{
+public class RenderingFactoryImpl extends EFactoryImpl implements RenderingFactory {
 	/**
 	 * Creates the default factory implementation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static RenderingFactory init()
-	{
+	public static RenderingFactory init() {
 		try {
 			RenderingFactory theRenderingFactory = (RenderingFactory)EPackage.Registry.INSTANCE.getEFactory(RenderingPackage.eNS_URI);
 			if (theRenderingFactory != null) {
@@ -46,8 +44,7 @@ public class RenderingFactoryImpl extends EFactoryImpl implements RenderingFacto
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public RenderingFactoryImpl()
-	{
+	public RenderingFactoryImpl() {
 		super();
 	}
 
@@ -57,8 +54,7 @@ public class RenderingFactoryImpl extends EFactoryImpl implements RenderingFacto
 	 * @generated
 	 */
 	@Override
-	public EObject create(EClass eClass)
-	{
+	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case RenderingPackage.AXIS: return createAXIS();
 			case RenderingPackage.AXIS_ORDINATE: return createAXIS_ORDINATE();
@@ -77,8 +73,7 @@ public class RenderingFactoryImpl extends EFactoryImpl implements RenderingFacto
 	 * @generated
 	 */
 	@Override
-	public AXIS createAXIS()
-	{
+	public AXIS createAXIS() {
 		AXISImpl axis = new AXISImpl();
 		return axis;
 	}
@@ -89,8 +84,7 @@ public class RenderingFactoryImpl extends EFactoryImpl implements RenderingFacto
 	 * @generated
 	 */
 	@Override
-	public AXIS_ORDINATE createAXIS_ORDINATE()
-	{
+	public AXIS_ORDINATE createAXIS_ORDINATE() {
 		AXIS_ORDINATEImpl axiS_ORDINATE = new AXIS_ORDINATEImpl();
 		return axiS_ORDINATE;
 	}
@@ -101,8 +95,7 @@ public class RenderingFactoryImpl extends EFactoryImpl implements RenderingFacto
 	 * @generated
 	 */
 	@Override
-	public CELL_POSITION createCELL_POSITION()
-	{
+	public CELL_POSITION createCELL_POSITION() {
 		CELL_POSITIONImpl celL_POSITION = new CELL_POSITIONImpl();
 		return celL_POSITION;
 	}
@@ -113,8 +106,7 @@ public class RenderingFactoryImpl extends EFactoryImpl implements RenderingFacto
 	 * @generated
 	 */
 	@Override
-	public ORDINATE_ITEM createORDINATE_ITEM()
-	{
+	public ORDINATE_ITEM createORDINATE_ITEM() {
 		ORDINATE_ITEMImpl ordinatE_ITEM = new ORDINATE_ITEMImpl();
 		return ordinatE_ITEM;
 	}
@@ -125,8 +117,7 @@ public class RenderingFactoryImpl extends EFactoryImpl implements RenderingFacto
 	 * @generated
 	 */
 	@Override
-	public TABLE createTABLE()
-	{
+	public TABLE createTABLE() {
 		TABLEImpl table = new TABLEImpl();
 		return table;
 	}
@@ -137,8 +128,7 @@ public class RenderingFactoryImpl extends EFactoryImpl implements RenderingFacto
 	 * @generated
 	 */
 	@Override
-	public TABLE_CELL createTABLE_CELL()
-	{
+	public TABLE_CELL createTABLE_CELL() {
 		TABLE_CELLImpl tablE_CELL = new TABLE_CELLImpl();
 		return tablE_CELL;
 	}
@@ -149,8 +139,7 @@ public class RenderingFactoryImpl extends EFactoryImpl implements RenderingFacto
 	 * @generated
 	 */
 	@Override
-	public RenderingPackage getRenderingPackage()
-	{
+	public RenderingPackage getRenderingPackage() {
 		return (RenderingPackage)getEPackage();
 	}
 
@@ -161,8 +150,7 @@ public class RenderingFactoryImpl extends EFactoryImpl implements RenderingFacto
 	 * @generated
 	 */
 	@Deprecated
-	public static RenderingPackage getPackage()
-	{
+	public static RenderingPackage getPackage() {
 		return RenderingPackage.eINSTANCE;
 	}
 

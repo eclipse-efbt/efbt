@@ -20,8 +20,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface MAPPING_TO_CUBE extends EObject
-{
+public interface MAPPING_TO_CUBE extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Mapping</b></em>' reference.
 	 * <!-- begin-user-doc -->

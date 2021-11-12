@@ -21,19 +21,18 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.AortaSMCubesModel;
-import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.Test;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.aorta_smcubes.TestModule;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE_STRUCTURE_ITEM;
-import org.eclipse.efbt.cocalimo.smcubes.model.input_data.Cell;
-import org.eclipse.efbt.cocalimo.smcubes.model.input_data.CellWithEnumeratedValue;
-import org.eclipse.efbt.cocalimo.smcubes.model.input_data.CellWithValue;
-import org.eclipse.efbt.cocalimo.smcubes.model.input_data.CubeData;
-import org.eclipse.efbt.cocalimo.smcubes.model.input_data.InputData;
-import org.eclipse.efbt.cocalimo.smcubes.model.input_data.RowData;
+import org.eclipse.efbt.cocalimo.smcubes.model.testing.Cell;
+import org.eclipse.efbt.cocalimo.smcubes.model.testing.CellWithEnumeratedValue;
+import org.eclipse.efbt.cocalimo.smcubes.model.testing.CellWithValue;
+import org.eclipse.efbt.cocalimo.smcubes.model.testing.CubeData;
+import org.eclipse.efbt.cocalimo.smcubes.model.testing.InputData;
+import org.eclipse.efbt.cocalimo.smcubes.model.testing.RowData;
+import org.eclipse.efbt.cocalimo.smcubes.model.testing.Test;
+import org.eclipse.efbt.cocalimo.smcubes.model.testing.TestModule;
 import org.eclipse.emf.common.util.EList;
 
 
@@ -59,9 +58,8 @@ public class InputDataExporter {
 	 * @param program
 	 * @param outputfileDirectory
 	 */
-	public void exportInputData(AortaSMCubesModel program, String outputfileDirectory) {
+	public void exportInputData(TestModule testModule, String outputfileDirectory) {
 
-		 TestModule testModule = program.getTests();
 		EList<Test> tests = testModule.getTests();
 
 		// for each test, export the input data, the input daa may be in multiple tables

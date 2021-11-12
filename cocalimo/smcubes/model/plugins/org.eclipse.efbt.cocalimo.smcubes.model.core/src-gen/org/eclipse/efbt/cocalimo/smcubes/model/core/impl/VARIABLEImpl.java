@@ -35,8 +35,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class VARIABLEImpl extends MinimalEObjectImpl.Container implements VARIABLE
-{
+public class VARIABLEImpl extends MinimalEObjectImpl.Container implements VARIABLE {
 	/**
 	 * The default value of the '{@link #getCode() <em>Code</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -182,8 +181,7 @@ public class VARIABLEImpl extends MinimalEObjectImpl.Container implements VARIAB
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected VARIABLEImpl()
-	{
+	protected VARIABLEImpl() {
 		super();
 	}
 
@@ -193,8 +191,7 @@ public class VARIABLEImpl extends MinimalEObjectImpl.Container implements VARIAB
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return CorePackage.Literals.VARIABLE;
 	}
 
@@ -204,8 +201,7 @@ public class VARIABLEImpl extends MinimalEObjectImpl.Container implements VARIAB
 	 * @generated
 	 */
 	@Override
-	public String getCode()
-	{
+	public String getCode() {
 		return code;
 	}
 
@@ -215,8 +211,7 @@ public class VARIABLEImpl extends MinimalEObjectImpl.Container implements VARIAB
 	 * @generated
 	 */
 	@Override
-	public void setCode(String newCode)
-	{
+	public void setCode(String newCode) {
 		String oldCode = code;
 		code = newCode;
 		if (eNotificationRequired())
@@ -229,8 +224,7 @@ public class VARIABLEImpl extends MinimalEObjectImpl.Container implements VARIAB
 	 * @generated
 	 */
 	@Override
-	public String getDescription()
-	{
+	public String getDescription() {
 		return description;
 	}
 
@@ -240,8 +234,7 @@ public class VARIABLEImpl extends MinimalEObjectImpl.Container implements VARIAB
 	 * @generated
 	 */
 	@Override
-	public void setDescription(String newDescription)
-	{
+	public void setDescription(String newDescription) {
 		String oldDescription = description;
 		description = newDescription;
 		if (eNotificationRequired())
@@ -254,8 +247,7 @@ public class VARIABLEImpl extends MinimalEObjectImpl.Container implements VARIAB
 	 * @generated
 	 */
 	@Override
-	public DOMAIN getDomain_id()
-	{
+	public DOMAIN getDomain_id() {
 		if (domain_id != null && domain_id.eIsProxy()) {
 			InternalEObject oldDomain_id = (InternalEObject)domain_id;
 			domain_id = (DOMAIN)eResolveProxy(oldDomain_id);
@@ -272,8 +264,7 @@ public class VARIABLEImpl extends MinimalEObjectImpl.Container implements VARIAB
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public DOMAIN basicGetDomain_id()
-	{
+	public DOMAIN basicGetDomain_id() {
 		return domain_id;
 	}
 
@@ -283,8 +274,7 @@ public class VARIABLEImpl extends MinimalEObjectImpl.Container implements VARIAB
 	 * @generated
 	 */
 	@Override
-	public void setDomain_id(DOMAIN newDomain_id)
-	{
+	public void setDomain_id(DOMAIN newDomain_id) {
 		DOMAIN oldDomain_id = domain_id;
 		domain_id = newDomain_id;
 		if (eNotificationRequired())
@@ -297,8 +287,7 @@ public class VARIABLEImpl extends MinimalEObjectImpl.Container implements VARIAB
 	 * @generated
 	 */
 	@Override
-	public MAINTENANCE_AGENCY getMaintenance_agency_id()
-	{
+	public MAINTENANCE_AGENCY getMaintenance_agency_id() {
 		if (maintenance_agency_id != null && maintenance_agency_id.eIsProxy()) {
 			InternalEObject oldMaintenance_agency_id = (InternalEObject)maintenance_agency_id;
 			maintenance_agency_id = (MAINTENANCE_AGENCY)eResolveProxy(oldMaintenance_agency_id);
@@ -315,8 +304,7 @@ public class VARIABLEImpl extends MinimalEObjectImpl.Container implements VARIAB
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MAINTENANCE_AGENCY basicGetMaintenance_agency_id()
-	{
+	public MAINTENANCE_AGENCY basicGetMaintenance_agency_id() {
 		return maintenance_agency_id;
 	}
 
@@ -326,8 +314,7 @@ public class VARIABLEImpl extends MinimalEObjectImpl.Container implements VARIAB
 	 * @generated
 	 */
 	@Override
-	public void setMaintenance_agency_id(MAINTENANCE_AGENCY newMaintenance_agency_id)
-	{
+	public void setMaintenance_agency_id(MAINTENANCE_AGENCY newMaintenance_agency_id) {
 		MAINTENANCE_AGENCY oldMaintenance_agency_id = maintenance_agency_id;
 		maintenance_agency_id = newMaintenance_agency_id;
 		if (eNotificationRequired())
@@ -340,8 +327,7 @@ public class VARIABLEImpl extends MinimalEObjectImpl.Container implements VARIAB
 	 * @generated
 	 */
 	@Override
-	public String getPrimary_concept()
-	{
+	public String getPrimary_concept() {
 		return primary_concept;
 	}
 
@@ -351,8 +337,7 @@ public class VARIABLEImpl extends MinimalEObjectImpl.Container implements VARIAB
 	 * @generated
 	 */
 	@Override
-	public void setPrimary_concept(String newPrimary_concept)
-	{
+	public void setPrimary_concept(String newPrimary_concept) {
 		String oldPrimary_concept = primary_concept;
 		primary_concept = newPrimary_concept;
 		if (eNotificationRequired())
@@ -365,8 +350,7 @@ public class VARIABLEImpl extends MinimalEObjectImpl.Container implements VARIAB
 	 * @generated
 	 */
 	@Override
-	public String getVariable_id()
-	{
+	public String getVariable_id() {
 		return variable_id;
 	}
 
@@ -376,8 +360,7 @@ public class VARIABLEImpl extends MinimalEObjectImpl.Container implements VARIAB
 	 * @generated
 	 */
 	@Override
-	public void setVariable_id(String newVariable_id)
-	{
+	public void setVariable_id(String newVariable_id) {
 		String oldVariable_id = variable_id;
 		variable_id = newVariable_id;
 		if (eNotificationRequired())
@@ -390,8 +373,7 @@ public class VARIABLEImpl extends MinimalEObjectImpl.Container implements VARIAB
 	 * @generated
 	 */
 	@Override
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
@@ -401,8 +383,7 @@ public class VARIABLEImpl extends MinimalEObjectImpl.Container implements VARIAB
 	 * @generated
 	 */
 	@Override
-	public void setName(String newName)
-	{
+	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
@@ -415,8 +396,7 @@ public class VARIABLEImpl extends MinimalEObjectImpl.Container implements VARIAB
 	 * @generated
 	 */
 	@Override
-	public String getDisplayName()
-	{
+	public String getDisplayName() {
 		return displayName;
 	}
 
@@ -426,8 +406,7 @@ public class VARIABLEImpl extends MinimalEObjectImpl.Container implements VARIAB
 	 * @generated
 	 */
 	@Override
-	public void setDisplayName(String newDisplayName)
-	{
+	public void setDisplayName(String newDisplayName) {
 		String oldDisplayName = displayName;
 		displayName = newDisplayName;
 		if (eNotificationRequired())
@@ -440,8 +419,7 @@ public class VARIABLEImpl extends MinimalEObjectImpl.Container implements VARIAB
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case CorePackage.VARIABLE__CODE:
 				return getCode();
@@ -471,8 +449,7 @@ public class VARIABLEImpl extends MinimalEObjectImpl.Container implements VARIAB
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case CorePackage.VARIABLE__CODE:
 				setCode((String)newValue);
@@ -508,8 +485,7 @@ public class VARIABLEImpl extends MinimalEObjectImpl.Container implements VARIAB
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case CorePackage.VARIABLE__CODE:
 				setCode(CODE_EDEFAULT);
@@ -545,8 +521,7 @@ public class VARIABLEImpl extends MinimalEObjectImpl.Container implements VARIAB
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case CorePackage.VARIABLE__CODE:
 				return CODE_EDEFAULT == null ? code != null : !CODE_EDEFAULT.equals(code);
@@ -574,8 +549,7 @@ public class VARIABLEImpl extends MinimalEObjectImpl.Container implements VARIAB
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

@@ -25,8 +25,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='TABLE_CELL' kind='empty'"
  * @generated
  */
-public interface TABLE_CELL extends EObject
-{
+public interface TABLE_CELL extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Cell id</b></em>' attribute.
 	 * <!-- begin-user-doc -->

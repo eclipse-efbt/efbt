@@ -37,8 +37,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class facet_typeImpl extends MinimalEObjectImpl.Container implements facet_type
-{
+public class facet_typeImpl extends MinimalEObjectImpl.Container implements facet_type {
 	/**
 	 * The default value of the '{@link #getDecimals() <em>Decimals</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -304,8 +303,7 @@ public class facet_typeImpl extends MinimalEObjectImpl.Container implements face
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected facet_typeImpl()
-	{
+	protected facet_typeImpl() {
 		super();
 	}
 
@@ -315,8 +313,7 @@ public class facet_typeImpl extends MinimalEObjectImpl.Container implements face
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass()
-	{
+	protected EClass eStaticClass() {
 		return CorePackage.Literals.FACET_TYPE;
 	}
 
@@ -326,8 +323,7 @@ public class facet_typeImpl extends MinimalEObjectImpl.Container implements face
 	 * @generated
 	 */
 	@Override
-	public int getDecimals()
-	{
+	public int getDecimals() {
 		return decimals;
 	}
 
@@ -337,8 +333,7 @@ public class facet_typeImpl extends MinimalEObjectImpl.Container implements face
 	 * @generated
 	 */
 	@Override
-	public void setDecimals(int newDecimals)
-	{
+	public void setDecimals(int newDecimals) {
 		int oldDecimals = decimals;
 		decimals = newDecimals;
 		if (eNotificationRequired())
@@ -351,8 +346,7 @@ public class facet_typeImpl extends MinimalEObjectImpl.Container implements face
 	 * @generated
 	 */
 	@Override
-	public String getEndTime()
-	{
+	public String getEndTime() {
 		return endTime;
 	}
 
@@ -362,8 +356,7 @@ public class facet_typeImpl extends MinimalEObjectImpl.Container implements face
 	 * @generated
 	 */
 	@Override
-	public void setEndTime(String newEndTime)
-	{
+	public void setEndTime(String newEndTime) {
 		String oldEndTime = endTime;
 		endTime = newEndTime;
 		if (eNotificationRequired())
@@ -376,8 +369,7 @@ public class facet_typeImpl extends MinimalEObjectImpl.Container implements face
 	 * @generated
 	 */
 	@Override
-	public int getEndValue()
-	{
+	public int getEndValue() {
 		return endValue;
 	}
 
@@ -387,8 +379,7 @@ public class facet_typeImpl extends MinimalEObjectImpl.Container implements face
 	 * @generated
 	 */
 	@Override
-	public void setEndValue(int newEndValue)
-	{
+	public void setEndValue(int newEndValue) {
 		int oldEndValue = endValue;
 		endValue = newEndValue;
 		if (eNotificationRequired())
@@ -401,8 +392,7 @@ public class facet_typeImpl extends MinimalEObjectImpl.Container implements face
 	 * @generated
 	 */
 	@Override
-	public String getInterval()
-	{
+	public String getInterval() {
 		return interval;
 	}
 
@@ -412,8 +402,7 @@ public class facet_typeImpl extends MinimalEObjectImpl.Container implements face
 	 * @generated
 	 */
 	@Override
-	public void setInterval(String newInterval)
-	{
+	public void setInterval(String newInterval) {
 		String oldInterval = interval;
 		interval = newInterval;
 		if (eNotificationRequired())
@@ -426,8 +415,7 @@ public class facet_typeImpl extends MinimalEObjectImpl.Container implements face
 	 * @generated
 	 */
 	@Override
-	public String getIsSequence()
-	{
+	public String getIsSequence() {
 		return isSequence;
 	}
 
@@ -437,8 +425,7 @@ public class facet_typeImpl extends MinimalEObjectImpl.Container implements face
 	 * @generated
 	 */
 	@Override
-	public void setIsSequence(String newIsSequence)
-	{
+	public void setIsSequence(String newIsSequence) {
 		String oldIsSequence = isSequence;
 		isSequence = newIsSequence;
 		if (eNotificationRequired())
@@ -451,8 +438,7 @@ public class facet_typeImpl extends MinimalEObjectImpl.Container implements face
 	 * @generated
 	 */
 	@Override
-	public int getMaxLength()
-	{
+	public int getMaxLength() {
 		return maxLength;
 	}
 
@@ -462,8 +448,7 @@ public class facet_typeImpl extends MinimalEObjectImpl.Container implements face
 	 * @generated
 	 */
 	@Override
-	public void setMaxLength(int newMaxLength)
-	{
+	public void setMaxLength(int newMaxLength) {
 		int oldMaxLength = maxLength;
 		maxLength = newMaxLength;
 		if (eNotificationRequired())
@@ -476,8 +461,7 @@ public class facet_typeImpl extends MinimalEObjectImpl.Container implements face
 	 * @generated
 	 */
 	@Override
-	public int getMaxValue()
-	{
+	public int getMaxValue() {
 		return maxValue;
 	}
 
@@ -487,8 +471,7 @@ public class facet_typeImpl extends MinimalEObjectImpl.Container implements face
 	 * @generated
 	 */
 	@Override
-	public void setMaxValue(int newMaxValue)
-	{
+	public void setMaxValue(int newMaxValue) {
 		int oldMaxValue = maxValue;
 		maxValue = newMaxValue;
 		if (eNotificationRequired())
@@ -501,8 +484,7 @@ public class facet_typeImpl extends MinimalEObjectImpl.Container implements face
 	 * @generated
 	 */
 	@Override
-	public int getMinLength()
-	{
+	public int getMinLength() {
 		return minLength;
 	}
 
@@ -512,8 +494,7 @@ public class facet_typeImpl extends MinimalEObjectImpl.Container implements face
 	 * @generated
 	 */
 	@Override
-	public void setMinLength(int newMinLength)
-	{
+	public void setMinLength(int newMinLength) {
 		int oldMinLength = minLength;
 		minLength = newMinLength;
 		if (eNotificationRequired())
@@ -526,8 +507,7 @@ public class facet_typeImpl extends MinimalEObjectImpl.Container implements face
 	 * @generated
 	 */
 	@Override
-	public int getMinValue()
-	{
+	public int getMinValue() {
 		return minValue;
 	}
 
@@ -537,8 +517,7 @@ public class facet_typeImpl extends MinimalEObjectImpl.Container implements face
 	 * @generated
 	 */
 	@Override
-	public void setMinValue(int newMinValue)
-	{
+	public void setMinValue(int newMinValue) {
 		int oldMinValue = minValue;
 		minValue = newMinValue;
 		if (eNotificationRequired())
@@ -551,8 +530,7 @@ public class facet_typeImpl extends MinimalEObjectImpl.Container implements face
 	 * @generated
 	 */
 	@Override
-	public String getPattern()
-	{
+	public String getPattern() {
 		return pattern;
 	}
 
@@ -562,8 +540,7 @@ public class facet_typeImpl extends MinimalEObjectImpl.Container implements face
 	 * @generated
 	 */
 	@Override
-	public void setPattern(String newPattern)
-	{
+	public void setPattern(String newPattern) {
 		String oldPattern = pattern;
 		pattern = newPattern;
 		if (eNotificationRequired())
@@ -576,8 +553,7 @@ public class facet_typeImpl extends MinimalEObjectImpl.Container implements face
 	 * @generated
 	 */
 	@Override
-	public String getStartTime()
-	{
+	public String getStartTime() {
 		return startTime;
 	}
 
@@ -587,8 +563,7 @@ public class facet_typeImpl extends MinimalEObjectImpl.Container implements face
 	 * @generated
 	 */
 	@Override
-	public void setStartTime(String newStartTime)
-	{
+	public void setStartTime(String newStartTime) {
 		String oldStartTime = startTime;
 		startTime = newStartTime;
 		if (eNotificationRequired())
@@ -601,8 +576,7 @@ public class facet_typeImpl extends MinimalEObjectImpl.Container implements face
 	 * @generated
 	 */
 	@Override
-	public int getStartValue()
-	{
+	public int getStartValue() {
 		return startValue;
 	}
 
@@ -612,8 +586,7 @@ public class facet_typeImpl extends MinimalEObjectImpl.Container implements face
 	 * @generated
 	 */
 	@Override
-	public void setStartValue(int newStartValue)
-	{
+	public void setStartValue(int newStartValue) {
 		int oldStartValue = startValue;
 		startValue = newStartValue;
 		if (eNotificationRequired())
@@ -626,8 +599,7 @@ public class facet_typeImpl extends MinimalEObjectImpl.Container implements face
 	 * @generated
 	 */
 	@Override
-	public String getTimeInterval()
-	{
+	public String getTimeInterval() {
 		return timeInterval;
 	}
 
@@ -637,8 +609,7 @@ public class facet_typeImpl extends MinimalEObjectImpl.Container implements face
 	 * @generated
 	 */
 	@Override
-	public void setTimeInterval(String newTimeInterval)
-	{
+	public void setTimeInterval(String newTimeInterval) {
 		String oldTimeInterval = timeInterval;
 		timeInterval = newTimeInterval;
 		if (eNotificationRequired())
@@ -651,8 +622,7 @@ public class facet_typeImpl extends MinimalEObjectImpl.Container implements face
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType)
-	{
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case CorePackage.FACET_TYPE__DECIMALS:
 				return getDecimals();
@@ -690,8 +660,7 @@ public class facet_typeImpl extends MinimalEObjectImpl.Container implements face
 	 * @generated
 	 */
 	@Override
-	public void eSet(int featureID, Object newValue)
-	{
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case CorePackage.FACET_TYPE__DECIMALS:
 				setDecimals((Integer)newValue);
@@ -742,8 +711,7 @@ public class facet_typeImpl extends MinimalEObjectImpl.Container implements face
 	 * @generated
 	 */
 	@Override
-	public void eUnset(int featureID)
-	{
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case CorePackage.FACET_TYPE__DECIMALS:
 				setDecimals(DECIMALS_EDEFAULT);
@@ -794,8 +762,7 @@ public class facet_typeImpl extends MinimalEObjectImpl.Container implements face
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID)
-	{
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case CorePackage.FACET_TYPE__DECIMALS:
 				return decimals != DECIMALS_EDEFAULT;
@@ -833,8 +800,7 @@ public class facet_typeImpl extends MinimalEObjectImpl.Container implements face
 	 * @generated
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

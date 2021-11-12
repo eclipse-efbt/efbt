@@ -27,8 +27,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='AXIS' kind='empty'"
  * @generated
  */
-public interface AXIS extends EObject
-{
+public interface AXIS extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Axis id</b></em>' attribute.
 	 * <!-- begin-user-doc -->
