@@ -15,6 +15,7 @@ import org.eclipse.efbt.cocalimo.core.model.logical_transformations.TestModule;
 import org.eclipse.efbt.cocalimo.core.model.module_management.impl.ModuleImpl;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.RequirementsModule;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
@@ -22,7 +23,9 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
@@ -35,7 +38,8 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <ul>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.LogicalTransformationModuleImpl#getTaskTags <em>Task Tags</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.LogicalTransformationModuleImpl#getScenarioTags <em>Scenario Tags</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.LogicalTransformationModuleImpl#getSubProcesses <em>Sub Processes</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.LogicalTransformationModuleImpl#getSubProcess <em>Sub Process</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.LogicalTransformationModuleImpl#getSubProcessViews <em>Sub Process Views</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.LogicalTransformationModuleImpl#getRequirements <em>Requirements</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.LogicalTransformationModuleImpl#getTestModules <em>Test Modules</em>}</li>
  * </ul>
@@ -64,14 +68,24 @@ public class LogicalTransformationModuleImpl extends ModuleImpl implements Logic
 	protected EList<ScenarioTag> scenarioTags;
 
 	/**
-	 * The cached value of the '{@link #getSubProcesses() <em>Sub Processes</em>}' containment reference list.
+	 * The cached value of the '{@link #getSubProcess() <em>Sub Process</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getSubProcesses()
+	 * @see #getSubProcess()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<SubProcess> subProcesses;
+	protected SubProcess subProcess;
+
+	/**
+	 * The cached value of the '{@link #getSubProcessViews() <em>Sub Process Views</em>}' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSubProcessViews()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<SubProcess> subProcessViews;
 
 	/**
 	 * The cached value of the '{@link #getRequirements() <em>Requirements</em>}' containment reference list.
@@ -144,11 +158,56 @@ public class LogicalTransformationModuleImpl extends ModuleImpl implements Logic
 	 * @generated
 	 */
 	@Override
-	public EList<SubProcess> getSubProcesses() {
-		if (subProcesses == null) {
-			subProcesses = new EObjectContainmentEList<SubProcess>(SubProcess.class, this, Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESSES);
+	public SubProcess getSubProcess() {
+		return subProcess;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetSubProcess(SubProcess newSubProcess, NotificationChain msgs) {
+		SubProcess oldSubProcess = subProcess;
+		subProcess = newSubProcess;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESS, oldSubProcess, newSubProcess);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
-		return subProcesses;
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setSubProcess(SubProcess newSubProcess) {
+		if (newSubProcess != subProcess) {
+			NotificationChain msgs = null;
+			if (subProcess != null)
+				msgs = ((InternalEObject)subProcess).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESS, null, msgs);
+			if (newSubProcess != null)
+				msgs = ((InternalEObject)newSubProcess).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESS, null, msgs);
+			msgs = basicSetSubProcess(newSubProcess, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESS, newSubProcess, newSubProcess));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EList<SubProcess> getSubProcessViews() {
+		if (subProcessViews == null) {
+			subProcessViews = new EObjectResolvingEList<SubProcess>(SubProcess.class, this, Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESS_VIEWS);
+		}
+		return subProcessViews;
 	}
 
 	/**
@@ -189,8 +248,8 @@ public class LogicalTransformationModuleImpl extends ModuleImpl implements Logic
 				return ((InternalEList<?>)getTaskTags()).basicRemove(otherEnd, msgs);
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SCENARIO_TAGS:
 				return ((InternalEList<?>)getScenarioTags()).basicRemove(otherEnd, msgs);
-			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESSES:
-				return ((InternalEList<?>)getSubProcesses()).basicRemove(otherEnd, msgs);
+			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESS:
+				return basicSetSubProcess(null, msgs);
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__REQUIREMENTS:
 				return ((InternalEList<?>)getRequirements()).basicRemove(otherEnd, msgs);
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__TEST_MODULES:
@@ -211,8 +270,10 @@ public class LogicalTransformationModuleImpl extends ModuleImpl implements Logic
 				return getTaskTags();
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SCENARIO_TAGS:
 				return getScenarioTags();
-			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESSES:
-				return getSubProcesses();
+			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESS:
+				return getSubProcess();
+			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESS_VIEWS:
+				return getSubProcessViews();
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__REQUIREMENTS:
 				return getRequirements();
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__TEST_MODULES:
@@ -238,9 +299,12 @@ public class LogicalTransformationModuleImpl extends ModuleImpl implements Logic
 				getScenarioTags().clear();
 				getScenarioTags().addAll((Collection<? extends ScenarioTag>)newValue);
 				return;
-			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESSES:
-				getSubProcesses().clear();
-				getSubProcesses().addAll((Collection<? extends SubProcess>)newValue);
+			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESS:
+				setSubProcess((SubProcess)newValue);
+				return;
+			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESS_VIEWS:
+				getSubProcessViews().clear();
+				getSubProcessViews().addAll((Collection<? extends SubProcess>)newValue);
 				return;
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__REQUIREMENTS:
 				getRequirements().clear();
@@ -268,8 +332,11 @@ public class LogicalTransformationModuleImpl extends ModuleImpl implements Logic
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SCENARIO_TAGS:
 				getScenarioTags().clear();
 				return;
-			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESSES:
-				getSubProcesses().clear();
+			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESS:
+				setSubProcess((SubProcess)null);
+				return;
+			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESS_VIEWS:
+				getSubProcessViews().clear();
 				return;
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__REQUIREMENTS:
 				getRequirements().clear();
@@ -293,8 +360,10 @@ public class LogicalTransformationModuleImpl extends ModuleImpl implements Logic
 				return taskTags != null && !taskTags.isEmpty();
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SCENARIO_TAGS:
 				return scenarioTags != null && !scenarioTags.isEmpty();
-			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESSES:
-				return subProcesses != null && !subProcesses.isEmpty();
+			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESS:
+				return subProcess != null;
+			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESS_VIEWS:
+				return subProcessViews != null && !subProcessViews.isEmpty();
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__REQUIREMENTS:
 				return requirements != null && !requirements.isEmpty();
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__TEST_MODULES:

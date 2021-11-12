@@ -93,6 +93,13 @@ public class Platform_callSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE: {
+				CreateLogicalTransformationViewForScope createLogicalTransformationViewForScope = (CreateLogicalTransformationViewForScope)theEObject;
+				T result = caseCreateLogicalTransformationViewForScope(createLogicalTransformationViewForScope);
+				if (result == null) result = casePlatformCall(createLogicalTransformationViewForScope);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -154,6 +161,21 @@ public class Platform_callSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseImportBIRDFromMSAccess(ImportBIRDFromMSAccess object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Create Logical Transformation View For Scope</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Create Logical Transformation View For Scope</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseCreateLogicalTransformationViewForScope(CreateLogicalTransformationViewForScope object) {
 		return null;
 	}
 

@@ -13,8 +13,10 @@
 package org.eclipse.efbt.controller.platformcall.component.core;
 
 import org.eclipse.efbt.cocalimo.core.model.platform_call.ConvertSQLDeveloperModelToEcore;
+import org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope;
 import org.eclipse.efbt.cocalimo.core.model.platform_call.PlatformCall;
 import org.eclipse.efbt.cocalimo.core.model.platform_call.ImportBIRDFromMSAccess;
+import org.eclipse.efbt.controller.ldm.component.logical_transformations.LogicalTransformationViews;
 import org.eclipse.efbt.controller.ldm.component.sqldevconvertor.SQLDevConverter;
 import org.eclipse.efbt.controller.smcubes.component.export_smcubes.ImportOfBIRDFromMSAccess;
 
@@ -30,10 +32,12 @@ public class Controller {
 		{
 			convertSQLDeveloperModelToEcore((ConvertSQLDeveloperModelToEcore) call);
 		}
+		if (call instanceof CreateLogicalTransformationViewForScope)
+		{
+			createLogicalTransformationViewForScope((CreateLogicalTransformationViewForScope) call);
+		}
 		
 	}
-	
-	
 
 	private static void ImportBIRDFromMSAccess(ImportBIRDFromMSAccess call) {
 		// TODO Auto-generated method stub
@@ -46,10 +50,13 @@ public class Controller {
 		SQLDevConverter.convert(call.getInputDirectory(), call.getOutputDirectory());
 	}
 	
-	
-
-
-
+	private static void createLogicalTransformationViewForScope(CreateLogicalTransformationViewForScope call) {
+		// TODO Auto-generated method stub
+		LogicalTransformationViews.createLogicalTransformationViewForScope(call.getLogicalTransformationModule(),
+																			call.getScriptTasksInScope(),
+																			call.getScenariosOutOfScope(),
+																			call.isKeepLayout());
+	}
 	
 
 

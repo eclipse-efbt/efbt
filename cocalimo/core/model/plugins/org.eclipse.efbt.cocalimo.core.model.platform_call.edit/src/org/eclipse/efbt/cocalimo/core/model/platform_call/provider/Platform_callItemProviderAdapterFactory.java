@@ -164,6 +164,29 @@ public class Platform_callItemProviderAdapterFactory extends Platform_callAdapte
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected CreateLogicalTransformationViewForScopeItemProvider createLogicalTransformationViewForScopeItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createCreateLogicalTransformationViewForScopeAdapter() {
+		if (createLogicalTransformationViewForScopeItemProvider == null) {
+			createLogicalTransformationViewForScopeItemProvider = new CreateLogicalTransformationViewForScopeItemProvider(this);
+		}
+
+		return createLogicalTransformationViewForScopeItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -272,6 +295,7 @@ public class Platform_callItemProviderAdapterFactory extends Platform_callAdapte
 		if (platformCallModuleItemProvider != null) platformCallModuleItemProvider.dispose();
 		if (convertSQLDeveloperModelToEcoreItemProvider != null) convertSQLDeveloperModelToEcoreItemProvider.dispose();
 		if (importBIRDFromMSAccessItemProvider != null) importBIRDFromMSAccessItemProvider.dispose();
+		if (createLogicalTransformationViewForScopeItemProvider != null) createLogicalTransformationViewForScopeItemProvider.dispose();
 	}
 
 }

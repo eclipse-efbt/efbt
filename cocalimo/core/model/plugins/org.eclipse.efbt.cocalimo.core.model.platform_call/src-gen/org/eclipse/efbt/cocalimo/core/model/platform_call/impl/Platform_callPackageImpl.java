@@ -2,19 +2,24 @@
  */
 package org.eclipse.efbt.cocalimo.core.model.platform_call.impl;
 
+import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Bpmn_litePackage;
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsPackage;
 import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementPackage;
 
 import org.eclipse.efbt.cocalimo.core.model.platform_call.ConvertSQLDeveloperModelToEcore;
+import org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope;
 import org.eclipse.efbt.cocalimo.core.model.platform_call.PlatformCall;
 import org.eclipse.efbt.cocalimo.core.model.platform_call.PlatformCallModule;
 import org.eclipse.efbt.cocalimo.core.model.platform_call.Platform_callFactory;
 import org.eclipse.efbt.cocalimo.core.model.platform_call.Platform_callPackage;
+import org.eclipse.efbt.cocalimo.core.model.requirements_text.Requirements_textPackage;
 import org.eclipse.efbt.cocalimo.core.model.platform_call.ImportBIRDFromMSAccess;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
+import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
@@ -51,6 +56,13 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 	 * @generated
 	 */
 	private EClass importBIRDFromMSAccessEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass createLogicalTransformationViewForScopeEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -100,7 +112,11 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 		isInited = true;
 
 		// Initialize simple dependencies
+		EcorePackage.eINSTANCE.eClass();
+		Logical_transformationsPackage.eINSTANCE.eClass();
+		Bpmn_litePackage.eINSTANCE.eClass();
 		Module_managementPackage.eINSTANCE.eClass();
+		Requirements_textPackage.eINSTANCE.eClass();
 
 		// Create package meta-data objects
 		thePlatform_callPackage.createPackageContents();
@@ -242,6 +258,56 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 	 * @generated
 	 */
 	@Override
+	public EClass getCreateLogicalTransformationViewForScope() {
+		return createLogicalTransformationViewForScopeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getCreateLogicalTransformationViewForScope_ScriptTasksInScope() {
+		return (EReference)createLogicalTransformationViewForScopeEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getCreateLogicalTransformationViewForScope_ScenariosOutOfScope() {
+		return (EReference)createLogicalTransformationViewForScopeEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getCreateLogicalTransformationViewForScope_LogicalTransformationModule() {
+		return (EReference)createLogicalTransformationViewForScopeEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getCreateLogicalTransformationViewForScope_KeepLayout() {
+		return (EAttribute)createLogicalTransformationViewForScopeEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Platform_callFactory getPlatform_callFactory() {
 		return (Platform_callFactory)getEFactoryInstance();
 	}
@@ -280,6 +346,12 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 		importBIRDFromMSAccessEClass = createEClass(IMPORT_BIRD_FROM_MS_ACCESS);
 		createEAttribute(importBIRDFromMSAccessEClass, IMPORT_BIRD_FROM_MS_ACCESS__INPUT_DIRECTORY);
 		createEAttribute(importBIRDFromMSAccessEClass, IMPORT_BIRD_FROM_MS_ACCESS__OUTPUT_DIRECTORY);
+
+		createLogicalTransformationViewForScopeEClass = createEClass(CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE);
+		createEReference(createLogicalTransformationViewForScopeEClass, CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__SCRIPT_TASKS_IN_SCOPE);
+		createEReference(createLogicalTransformationViewForScopeEClass, CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__SCENARIOS_OUT_OF_SCOPE);
+		createEReference(createLogicalTransformationViewForScopeEClass, CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__LOGICAL_TRANSFORMATION_MODULE);
+		createEAttribute(createLogicalTransformationViewForScopeEClass, CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__KEEP_LAYOUT);
 	}
 
 	/**
@@ -307,6 +379,8 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 
 		// Obtain other dependent packages
 		Module_managementPackage theModule_managementPackage = (Module_managementPackage)EPackage.Registry.INSTANCE.getEPackage(Module_managementPackage.eNS_URI);
+		Bpmn_litePackage theBpmn_litePackage = (Bpmn_litePackage)EPackage.Registry.INSTANCE.getEPackage(Bpmn_litePackage.eNS_URI);
+		Logical_transformationsPackage theLogical_transformationsPackage = (Logical_transformationsPackage)EPackage.Registry.INSTANCE.getEPackage(Logical_transformationsPackage.eNS_URI);
 
 		// Create type parameters
 
@@ -316,6 +390,7 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 		platformCallModuleEClass.getESuperTypes().add(theModule_managementPackage.getModule());
 		convertSQLDeveloperModelToEcoreEClass.getESuperTypes().add(this.getPlatformCall());
 		importBIRDFromMSAccessEClass.getESuperTypes().add(this.getPlatformCall());
+		createLogicalTransformationViewForScopeEClass.getESuperTypes().add(this.getPlatformCall());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(platformCallEClass, PlatformCall.class, "PlatformCall", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -333,6 +408,12 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 		initEClass(importBIRDFromMSAccessEClass, ImportBIRDFromMSAccess.class, "ImportBIRDFromMSAccess", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getImportBIRDFromMSAccess_InputDirectory(), ecorePackage.getEString(), "inputDirectory", null, 0, 1, ImportBIRDFromMSAccess.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getImportBIRDFromMSAccess_OutputDirectory(), ecorePackage.getEString(), "outputDirectory", null, 0, 1, ImportBIRDFromMSAccess.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(createLogicalTransformationViewForScopeEClass, CreateLogicalTransformationViewForScope.class, "CreateLogicalTransformationViewForScope", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getCreateLogicalTransformationViewForScope_ScriptTasksInScope(), theBpmn_litePackage.getScriptTask(), null, "scriptTasksInScope", null, 0, -1, CreateLogicalTransformationViewForScope.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getCreateLogicalTransformationViewForScope_ScenariosOutOfScope(), theLogical_transformationsPackage.getScenario(), null, "scenariosOutOfScope", null, 0, -1, CreateLogicalTransformationViewForScope.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getCreateLogicalTransformationViewForScope_LogicalTransformationModule(), theLogical_transformationsPackage.getLogicalTransformationModule(), null, "logicalTransformationModule", null, 0, 1, CreateLogicalTransformationViewForScope.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getCreateLogicalTransformationViewForScope_KeepLayout(), ecorePackage.getEBoolean(), "keepLayout", null, 0, 1, CreateLogicalTransformationViewForScope.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);
