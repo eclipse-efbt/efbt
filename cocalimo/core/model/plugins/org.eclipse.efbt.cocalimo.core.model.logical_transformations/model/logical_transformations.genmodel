@@ -20,7 +20,8 @@
     <genClasses ecoreClass="logical_transformations.ecore#//LogicalTransformationModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference logical_transformations.ecore#//LogicalTransformationModule/taskTags"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference logical_transformations.ecore#//LogicalTransformationModule/scenarioTags"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference logical_transformations.ecore#//LogicalTransformationModule/subProcesses"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference logical_transformations.ecore#//LogicalTransformationModule/subProcess"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference logical_transformations.ecore#//LogicalTransformationModule/subProcessViews"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference logical_transformations.ecore#//LogicalTransformationModule/requirements"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference logical_transformations.ecore#//LogicalTransformationModule/testModules"/>
     </genClasses>

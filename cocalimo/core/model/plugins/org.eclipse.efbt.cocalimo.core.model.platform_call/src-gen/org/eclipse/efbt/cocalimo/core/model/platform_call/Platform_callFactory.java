@@ -58,6 +58,15 @@ public interface Platform_callFactory extends EFactory {
 	ImportBIRDFromMSAccess createImportBIRDFromMSAccess();
 
 	/**
+	 * Returns a new object of class '<em>Create Logical Transformation View For Scope</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Create Logical Transformation View For Scope</em>'.
+	 * @generated
+	 */
+	CreateLogicalTransformationViewForScope createCreateLogicalTransformationViewForScope();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

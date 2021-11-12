@@ -357,6 +357,97 @@ public interface Platform_callPackage extends EPackage {
 	int IMPORT_BIRD_FROM_MS_ACCESS_OPERATION_COUNT = PLATFORM_CALL_OPERATION_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.impl.CreateLogicalTransformationViewForScopeImpl <em>Create Logical Transformation View For Scope</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.impl.CreateLogicalTransformationViewForScopeImpl
+	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.impl.Platform_callPackageImpl#getCreateLogicalTransformationViewForScope()
+	 * @generated
+	 */
+	int CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE = 4;
+
+	/**
+	 * The feature id for the '<em><b>Error Message</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__ERROR_MESSAGE = PLATFORM_CALL__ERROR_MESSAGE;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__NAME = PLATFORM_CALL__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Return Status</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__RETURN_STATUS = PLATFORM_CALL__RETURN_STATUS;
+
+	/**
+	 * The feature id for the '<em><b>Script Tasks In Scope</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__SCRIPT_TASKS_IN_SCOPE = PLATFORM_CALL_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Scenarios Out Of Scope</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__SCENARIOS_OUT_OF_SCOPE = PLATFORM_CALL_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Logical Transformation Module</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__LOGICAL_TRANSFORMATION_MODULE = PLATFORM_CALL_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Keep Layout</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__KEEP_LAYOUT = PLATFORM_CALL_FEATURE_COUNT + 3;
+
+	/**
+	 * The number of structural features of the '<em>Create Logical Transformation View For Scope</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE_FEATURE_COUNT = PLATFORM_CALL_FEATURE_COUNT + 4;
+
+	/**
+	 * The number of operations of the '<em>Create Logical Transformation View For Scope</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE_OPERATION_COUNT = PLATFORM_CALL_OPERATION_COUNT + 0;
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.PlatformCall <em>Platform Call</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -485,6 +576,60 @@ public interface Platform_callPackage extends EPackage {
 	EAttribute getImportBIRDFromMSAccess_OutputDirectory();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope <em>Create Logical Transformation View For Scope</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Create Logical Transformation View For Scope</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope
+	 * @generated
+	 */
+	EClass getCreateLogicalTransformationViewForScope();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope#getScriptTasksInScope <em>Script Tasks In Scope</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Script Tasks In Scope</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope#getScriptTasksInScope()
+	 * @see #getCreateLogicalTransformationViewForScope()
+	 * @generated
+	 */
+	EReference getCreateLogicalTransformationViewForScope_ScriptTasksInScope();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope#getScenariosOutOfScope <em>Scenarios Out Of Scope</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Scenarios Out Of Scope</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope#getScenariosOutOfScope()
+	 * @see #getCreateLogicalTransformationViewForScope()
+	 * @generated
+	 */
+	EReference getCreateLogicalTransformationViewForScope_ScenariosOutOfScope();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope#getLogicalTransformationModule <em>Logical Transformation Module</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Logical Transformation Module</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope#getLogicalTransformationModule()
+	 * @see #getCreateLogicalTransformationViewForScope()
+	 * @generated
+	 */
+	EReference getCreateLogicalTransformationViewForScope_LogicalTransformationModule();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope#isKeepLayout <em>Keep Layout</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Keep Layout</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope#isKeepLayout()
+	 * @see #getCreateLogicalTransformationViewForScope()
+	 * @generated
+	 */
+	EAttribute getCreateLogicalTransformationViewForScope_KeepLayout();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -610,6 +755,48 @@ public interface Platform_callPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IMPORT_BIRD_FROM_MS_ACCESS__OUTPUT_DIRECTORY = eINSTANCE.getImportBIRDFromMSAccess_OutputDirectory();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.impl.CreateLogicalTransformationViewForScopeImpl <em>Create Logical Transformation View For Scope</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.impl.CreateLogicalTransformationViewForScopeImpl
+		 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.impl.Platform_callPackageImpl#getCreateLogicalTransformationViewForScope()
+		 * @generated
+		 */
+		EClass CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE = eINSTANCE.getCreateLogicalTransformationViewForScope();
+
+		/**
+		 * The meta object literal for the '<em><b>Script Tasks In Scope</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__SCRIPT_TASKS_IN_SCOPE = eINSTANCE.getCreateLogicalTransformationViewForScope_ScriptTasksInScope();
+
+		/**
+		 * The meta object literal for the '<em><b>Scenarios Out Of Scope</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__SCENARIOS_OUT_OF_SCOPE = eINSTANCE.getCreateLogicalTransformationViewForScope_ScenariosOutOfScope();
+
+		/**
+		 * The meta object literal for the '<em><b>Logical Transformation Module</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__LOGICAL_TRANSFORMATION_MODULE = eINSTANCE.getCreateLogicalTransformationViewForScope_LogicalTransformationModule();
+
+		/**
+		 * The meta object literal for the '<em><b>Keep Layout</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__KEEP_LAYOUT = eINSTANCE.getCreateLogicalTransformationViewForScope_KeepLayout();
 
 	}
 

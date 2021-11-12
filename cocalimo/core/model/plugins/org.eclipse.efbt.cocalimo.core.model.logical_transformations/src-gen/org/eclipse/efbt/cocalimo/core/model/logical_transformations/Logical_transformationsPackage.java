@@ -143,13 +143,22 @@ public interface Logical_transformationsPackage extends EPackage {
 	int LOGICAL_TRANSFORMATION_MODULE__SCENARIO_TAGS = Module_managementPackage.MODULE_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Sub Processes</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Sub Process</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESSES = Module_managementPackage.MODULE_FEATURE_COUNT + 2;
+	int LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESS = Module_managementPackage.MODULE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Sub Process Views</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESS_VIEWS = Module_managementPackage.MODULE_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Requirements</b></em>' containment reference list.
@@ -158,7 +167,7 @@ public interface Logical_transformationsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LOGICAL_TRANSFORMATION_MODULE__REQUIREMENTS = Module_managementPackage.MODULE_FEATURE_COUNT + 3;
+	int LOGICAL_TRANSFORMATION_MODULE__REQUIREMENTS = Module_managementPackage.MODULE_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Test Modules</b></em>' containment reference list.
@@ -167,7 +176,7 @@ public interface Logical_transformationsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LOGICAL_TRANSFORMATION_MODULE__TEST_MODULES = Module_managementPackage.MODULE_FEATURE_COUNT + 4;
+	int LOGICAL_TRANSFORMATION_MODULE__TEST_MODULES = Module_managementPackage.MODULE_FEATURE_COUNT + 5;
 
 	/**
 	 * The number of structural features of the '<em>Logical Transformation Module</em>' class.
@@ -176,7 +185,7 @@ public interface Logical_transformationsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LOGICAL_TRANSFORMATION_MODULE_FEATURE_COUNT = Module_managementPackage.MODULE_FEATURE_COUNT + 5;
+	int LOGICAL_TRANSFORMATION_MODULE_FEATURE_COUNT = Module_managementPackage.MODULE_FEATURE_COUNT + 6;
 
 	/**
 	 * The number of operations of the '<em>Logical Transformation Module</em>' class.
@@ -552,15 +561,26 @@ public interface Logical_transformationsPackage extends EPackage {
 	EReference getLogicalTransformationModule_ScenarioTags();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule#getSubProcesses <em>Sub Processes</em>}'.
+	 * Returns the meta object for the containment reference '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule#getSubProcess <em>Sub Process</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Sub Processes</em>'.
-	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule#getSubProcesses()
+	 * @return the meta object for the containment reference '<em>Sub Process</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule#getSubProcess()
 	 * @see #getLogicalTransformationModule()
 	 * @generated
 	 */
-	EReference getLogicalTransformationModule_SubProcesses();
+	EReference getLogicalTransformationModule_SubProcess();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule#getSubProcessViews <em>Sub Process Views</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Sub Process Views</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule#getSubProcessViews()
+	 * @see #getLogicalTransformationModule()
+	 * @generated
+	 */
+	EReference getLogicalTransformationModule_SubProcessViews();
 
 	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule#getRequirements <em>Requirements</em>}'.
@@ -783,12 +803,20 @@ public interface Logical_transformationsPackage extends EPackage {
 		EReference LOGICAL_TRANSFORMATION_MODULE__SCENARIO_TAGS = eINSTANCE.getLogicalTransformationModule_ScenarioTags();
 
 		/**
-		 * The meta object literal for the '<em><b>Sub Processes</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Sub Process</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESSES = eINSTANCE.getLogicalTransformationModule_SubProcesses();
+		EReference LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESS = eINSTANCE.getLogicalTransformationModule_SubProcess();
+
+		/**
+		 * The meta object literal for the '<em><b>Sub Process Views</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESS_VIEWS = eINSTANCE.getLogicalTransformationModule_SubProcessViews();
 
 		/**
 		 * The meta object literal for the '<em><b>Requirements</b></em>' containment reference list feature.

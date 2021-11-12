@@ -36,7 +36,9 @@
 	</properties>
 	<modules>
 		<module>plugins/org.eclipse.efbt.controller.ldm.component.sqldevconvertor</module>
-		<module>features/org.eclipse.efbt.controller.ldm.component.sqldevconvertor.feature</module>		
+		<module>plugins/org.eclipse.efbt.controller.ldm.component.logical_transformations</module>
+		<module>features/org.eclipse.efbt.controller.ldm.component.sqldevconvertor.feature</module>	
+		<module>features/org.eclipse.efbt.controller.ldm.component.logical_transformations.feature</module>
 		<module>tests/org.eclipse.efbt.controller.ldm.component.sqldevconvertor.test</module>
 
 	</modules>

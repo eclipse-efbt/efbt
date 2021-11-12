@@ -54,9 +54,32 @@ public class LogicalTransformationModuleItemProvider extends ModuleItemProvider 
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
+			addSubProcessViewsPropertyDescriptor(object);
 			addTestModulesPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
+	}
+
+	/**
+	 * This adds a property descriptor for the Sub Process Views feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addSubProcessViewsPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_LogicalTransformationModule_subProcessViews_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_LogicalTransformationModule_subProcessViews_feature", "_UI_LogicalTransformationModule_type"),
+				 Logical_transformationsPackage.Literals.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESS_VIEWS,
+				 true,
+				 false,
+				 true,
+				 null,
+				 null,
+				 null));
 	}
 
 	/**
@@ -95,7 +118,7 @@ public class LogicalTransformationModuleItemProvider extends ModuleItemProvider 
 			super.getChildrenFeatures(object);
 			childrenFeatures.add(Logical_transformationsPackage.Literals.LOGICAL_TRANSFORMATION_MODULE__TASK_TAGS);
 			childrenFeatures.add(Logical_transformationsPackage.Literals.LOGICAL_TRANSFORMATION_MODULE__SCENARIO_TAGS);
-			childrenFeatures.add(Logical_transformationsPackage.Literals.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESSES);
+			childrenFeatures.add(Logical_transformationsPackage.Literals.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESS);
 			childrenFeatures.add(Logical_transformationsPackage.Literals.LOGICAL_TRANSFORMATION_MODULE__REQUIREMENTS);
 		}
 		return childrenFeatures;
@@ -154,7 +177,7 @@ public class LogicalTransformationModuleItemProvider extends ModuleItemProvider 
 		switch (notification.getFeatureID(LogicalTransformationModule.class)) {
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__TASK_TAGS:
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SCENARIO_TAGS:
-			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESSES:
+			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESS:
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__REQUIREMENTS:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
@@ -185,7 +208,7 @@ public class LogicalTransformationModuleItemProvider extends ModuleItemProvider 
 
 		newChildDescriptors.add
 			(createChildParameter
-				(Logical_transformationsPackage.Literals.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESSES,
+				(Logical_transformationsPackage.Literals.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESS,
 				 Bpmn_liteFactory.eINSTANCE.createSubProcess()));
 
 		newChildDescriptors.add
