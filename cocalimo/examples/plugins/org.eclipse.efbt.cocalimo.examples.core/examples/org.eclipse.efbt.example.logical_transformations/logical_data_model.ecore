@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="logical_data_model" nsURI="logical_data_model" nsPrefix="logical_data_model">
+  <eClassifiers xsi:type="ecore:EClass" name="Instrument">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="instrument_id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="mkt_value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="issuer" eType="#//Entity"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BondInstrument" eSuperTypes="#//Instrument">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="coupon_rate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EquityInstrument" eSuperTypes="#//Instrument"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Entity">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="entity_id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="market_cap" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="credit_quality" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Trade">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="counteparty" eType="#//Entity"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="instrument" eType="#//Instrument"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="quantity" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="trade_id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Entity_derived">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="size" eType="#//EntitySize"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entity" eType="#//Entity"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="EntitySize">
+    <eLiterals name="LARGE"/>
+    <eLiterals name="MEDIUM" value="1"/>
+    <eLiterals name="SMALL" value="2"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Trade_derived">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="exposure_at_defualt" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="trade" eType="#//Trade"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="risk_weight" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BondInstrument_derived">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="duration" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bondinstrument" eType="#//BondInstrument"/>
+  </eClassifiers>
+</ecore:EPackage>

@@ -2,6 +2,8 @@ package org.eclipse.efbt.controller.ldm.component.logical_transformations;
 
 import java.util.Iterator;
 
+import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Activity;
+import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.FlowElement;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Gateway;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ScriptTask;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.SequenceFlow;
@@ -26,8 +28,41 @@ public class LogicalTransformationViews {
 		EList<EAttribute> requiredAttributes = getListOfRequiredAttributes(logicalTransformationModule, scriptTasksInScope,scenariosOutOfScope);
 		markDependantServiceTasksAsInvisible(logicalTransformationModule,requiredAttributes);
 		markDependantTasksAsInvisible(logicalTransformationModule,requiredAttributes);
-		markGatewaysPointingToInvisibleTasksAsInvisible(logicalTransformationModule,logicalTransformationModule);
+		markGatewaysPointingToInvisibleTasksAsInvisible(logicalTransformationModule);
+		markEmptySubProcessesAsInvisible(logicalTransformationModule.getSubProcess());
 
+	}
+
+	private static void markEmptySubProcessesAsInvisible(SubProcess subProcess) {
+
+
+		TreeIterator<Object> subProcessContents = EcoreUtil.getAllContents(subProcess, true);
+		while (subProcessContents.hasNext())
+		{
+			Object o = subProcessContents.next();
+			if (o instanceof SubProcess)
+			{
+				SubProcess theSubProcess = (SubProcess) o;
+				markEmptySubProcessesAsInvisible(theSubProcess);
+			}
+		}
+		
+		 EList<FlowElement> flowElements = subProcess.getFlowElements();
+		 boolean allActivityInvisible = true;
+		 for (FlowElement flowElement : flowElements) 
+		 {
+			if((flowElement instanceof Activity) && !flowElement.isInvisible())
+				allActivityInvisible = false;
+		 }
+		 if ( allActivityInvisible)
+		 {
+			 subProcess.setInvisible(true);
+		 }
+		 else
+		 {
+			 subProcess.setInvisible(false);
+		 }
+		
 	}
 
 	private static void markDependantTasksAsInvisible(LogicalTransformationModule logicalTransformationModule, EList<EAttribute> requiredAttributes) {
@@ -41,7 +76,7 @@ public class LogicalTransformationViews {
 			{
 				Task task = (Task) o;
 				EClass entity = task.getEntity();
-				EList<EAttribute> entityAttributes = entity.getEAllAttributes();
+				EList<EAttribute> entityAttributes = entity.getEAttributes();
 				boolean entityContainsRequiredAttributes = false;
 				for (EAttribute eAttribute : entityAttributes) 
 				{
@@ -179,7 +214,7 @@ public class LogicalTransformationViews {
 	}
 
 	private static void markGatewaysPointingToInvisibleTasksAsInvisible(
-			LogicalTransformationModule logicalTransformationModule, LogicalTransformationModule logicalTransformationModule2) {
+			LogicalTransformationModule logicalTransformationModule) {
 
 		SubProcess subProcess = logicalTransformationModule.getSubProcess();
 		TreeIterator<Object> subProcessContents = EcoreUtil.getAllContents(subProcess, true);
@@ -189,14 +224,14 @@ public class LogicalTransformationViews {
 			if (o instanceof Gateway)
 			{
 				 Gateway gateway = (Gateway) o;
-				 EList<Task> tasks = getTasksPointedToByGateway(gateway, subProcess);
-				 boolean allTasksInvisible = true;
-				 for (Task task : tasks) 
+				 EList<Activity> activies = getActivitiesPointedToByGateway(gateway, subProcess);
+				 boolean allActivityInvisible = true;
+				 for (Activity activity : activies) 
 				 {
-					if(!task.isInvisible())
-						allTasksInvisible = false;
+					if(!activity.isInvisible())
+						allActivityInvisible = false;
 				 }
-				 if ( allTasksInvisible)
+				 if ( allActivityInvisible)
 				 {
 					 gateway.setInvisible(true);
 				 }
@@ -210,25 +245,25 @@ public class LogicalTransformationViews {
 	}
 
 
-	private static EList<Task> getTasksPointedToByGateway(Gateway gateway, SubProcess subProcess) {
+	private static EList<Activity> getActivitiesPointedToByGateway(Gateway gateway, SubProcess subProcess) {
 		
 		TreeIterator<Object> subProcessContents = EcoreUtil.getAllContents(subProcess, true);
-		EList<Task> tasks = new BasicEList<Task>();
+		EList<Activity> activities = new BasicEList<Activity>();
 		while (subProcessContents.hasNext())
 		{
 			Object o = subProcessContents.next();
 			if (o instanceof SequenceFlow)
 			{
 				SequenceFlow flow = (SequenceFlow) o;
-				if (flow.getSourceRef().equals(gateway) && (flow.getTargetRef() instanceof Task))
+				if (flow.getSourceRef().equals(gateway) && (flow.getTargetRef() instanceof Activity))
 				{
-					tasks.add((Task) flow.getTargetRef());
+					activities.add((Activity) flow.getTargetRef());
 				}
 			
 			}
 		}
 		
-		return tasks;
+		return activities;
 		
 	}
 
