@@ -43,7 +43,7 @@
               <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             </style>
           </subNodeMappings>
-          <subContainerMappings name="SPTask" detailDescriptions="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.5/@ownedTools[name='TheServiceTaskLink']" labelDirectEdit="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.0/@ownedTools[name='FlowElementNameEdit']" semanticCandidatesExpression="aql:self.flowElements->filter(bpmn_lite::Task)" domainClass="bpmn_lite.Task">
+          <subContainerMappings name="SPTask" detailDescriptions="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.5/@ownedTools[name='TheServiceTaskLink'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.5/@ownedTools[name='TheScriptTaskLink'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.5/@ownedTools[name='TheTaskLink']" labelDirectEdit="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.0/@ownedTools[name='FlowElementNameEdit']" semanticCandidatesExpression="aql:self.flowElements->filter(bpmn_lite::Task)" domainClass="bpmn_lite.Task">
             <style xsi:type="style:FlatContainerStyleDescription" arcWidth="20" arcHeight="20" borderSizeComputationExpression="1" borderColor="//@userColorsPalettes[name='Colors']/@entries[name='TextBackground']" labelSize="9" showIcon="false" labelExpression="aql:self.getLabel(not view.ownedBorderedNodes->isEmpty())" labelColor="//@userColorsPalettes[name='Colors']/@entries[name='TextBackground']" roundedCorner="true" backgroundColor="//@userColorsPalettes[name='Colors']/@entries[name='Yellow']" foregroundColor="//@userColorsPalettes[name='Colors']/@entries[name='Yellow']">
               <labelFormat>bold</labelFormat>
             </style>
@@ -284,6 +284,16 @@
         </toolSections>
         <toolSections name="ServiceTaskLink">
           <ownedTools xsi:type="tool:DiagramCreationDescription" name="TheServiceTaskLink" precondition="true" browseExpression="aql:self" diagramDescription="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ServiceTask']">
+            <initialOperation/>
+            <containerViewVariable name="containerView"/>
+            <representationNameVariable name="diagramName"/>
+          </ownedTools>
+          <ownedTools xsi:type="tool:DiagramCreationDescription" name="TheScriptTaskLink" precondition="true" browseExpression="aql:self" diagramDescription="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ScriptTask']">
+            <initialOperation/>
+            <containerViewVariable name="containerView"/>
+            <representationNameVariable name="diagramName"/>
+          </ownedTools>
+          <ownedTools xsi:type="tool:DiagramCreationDescription" name="TheTaskLink" precondition="true" browseExpression="aql:self" diagramDescription="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='Task']">
             <initialOperation/>
             <containerViewVariable name="containerView"/>
             <representationNameVariable name="diagramName"/>
@@ -564,6 +574,91 @@
             </centerLabelStyleDescription>
           </style>
         </edgeMappings>
+      </defaultLayer>
+    </ownedRepresentations>
+    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="ScriptTask" domainClass="ScriptTask" enablePopupBars="true">
+      <metamodel href="../../org.eclipse.efbt.cocalimo.core.model.logical_transformations/model/bpmn_lite.ecore#/"/>
+      <metamodel href="../../org.eclipse.efbt.cocalimo.core.model.logical_transformations/model/logical_transformations.ecore#/"/>
+      <defaultLayer name="Default">
+        <nodeMappings name="ScriptTask" semanticCandidatesExpression="aql:self" domainClass="ScriptTask">
+          <style xsi:type="style:SquareDescription" labelSize="12" sizeComputationExpression="15" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="LinkedAttribute" semanticCandidatesExpression="feature:linkedAttributes" domainClass="EAttribute">
+          <style xsi:type="style:SquareDescription" labelSize="12" sizeComputationExpression="15" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_purple']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="TaskTag" detailDescriptions="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ScriptTask']/@defaultLayer/@toolSections.0/@ownedTools[name='CreateTagDiagram']" semanticCandidatesExpression="service:getTaskTag()" domainClass="TaskTag">
+          <style xsi:type="style:SquareDescription" labelSize="12" sizeComputationExpression="15" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_green']"/>
+          </style>
+        </nodeMappings>
+        <edgeMappings name="taskToLinkedAttribute" sourceMapping="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ScriptTask']/@defaultLayer/@nodeMappings[name='ScriptTask']" targetMapping="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ScriptTask']/@defaultLayer/@nodeMappings[name='LinkedAttribute']" targetFinderExpression="feature:linkedAttributes">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <edgeMappings name="TaskToTagLink" sourceMapping="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ScriptTask']/@defaultLayer/@nodeMappings[name='ScriptTask']" targetMapping="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ScriptTask']/@defaultLayer/@nodeMappings[name='TaskTag']" targetFinderExpression="service:getTaskTag">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <toolSections>
+          <ownedTools xsi:type="tool:DiagramCreationDescription" name="CreateTagDiagram" precondition="true" diagramDescription="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='TaskTag']">
+            <initialOperation/>
+            <containerViewVariable name="containerView"/>
+            <representationNameVariable name="diagramName"/>
+          </ownedTools>
+        </toolSections>
+      </defaultLayer>
+    </ownedRepresentations>
+    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="Task" domainClass="Task" enablePopupBars="true">
+      <metamodel href="../../org.eclipse.efbt.cocalimo.core.model.logical_transformations/model/bpmn_lite.ecore#/"/>
+      <metamodel href="../../org.eclipse.efbt.cocalimo.core.model.logical_transformations/model/logical_transformations.ecore#/"/>
+      <defaultLayer name="Default">
+        <nodeMappings name="Task" semanticCandidatesExpression="aql:self" domainClass="Task">
+          <style xsi:type="style:SquareDescription" labelSize="12" sizeComputationExpression="15" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="Attribute" semanticCandidatesExpression="aql:self.entity.eAttributes" domainClass="EAttribute">
+          <style xsi:type="style:SquareDescription" labelSize="12" sizeComputationExpression="15" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_purple']"/>
+          </style>
+        </nodeMappings>
+        <edgeMappings name="taskToAttribute" sourceMapping="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='Task']/@defaultLayer/@nodeMappings[name='Task']" targetMapping="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='Task']/@defaultLayer/@nodeMappings[name='Attribute']" targetFinderExpression="aql:self.entity.eAttributes">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <toolSections>
+          <ownedTools xsi:type="tool:DiagramCreationDescription" name="CreateTagDiagram" precondition="true" diagramDescription="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='TaskTag']">
+            <initialOperation/>
+            <containerViewVariable name="containerView"/>
+            <representationNameVariable name="diagramName"/>
+          </ownedTools>
+        </toolSections>
       </defaultLayer>
     </ownedRepresentations>
     <ownedJavaExtensions qualifiedClassName="org.eclipse.efbt.cocalimo.core.ui.sirius.TaskService"/>
