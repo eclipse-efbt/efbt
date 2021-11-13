@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsPackage;
 
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Test;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 
@@ -20,7 +21,9 @@ import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
+import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
+import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
  * This is the item provider adapter for a {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Test} object.
@@ -60,6 +63,7 @@ public class TestItemProvider
 			addScenariosPropertyDescriptor(object);
 			addInputDataPropertyDescriptor(object);
 			addExpectedResultPropertyDescriptor(object);
+			addNamePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -131,6 +135,28 @@ public class TestItemProvider
 	}
 
 	/**
+	 * This adds a property descriptor for the Name feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addNamePropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_Test_name_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_Test_name_feature", "_UI_Test_type"),
+				 Logical_transformationsPackage.Literals.TEST__NAME,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
 	 * This returns Test.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -149,7 +175,10 @@ public class TestItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		return getString("_UI_Test_type");
+		String label = ((Test)object).getName();
+		return label == null || label.length() == 0 ?
+			getString("_UI_Test_type") :
+			getString("_UI_Test_type") + " " + label;
 	}
 
 
@@ -163,6 +192,12 @@ public class TestItemProvider
 	@Override
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
+
+		switch (notification.getFeatureID(Test.class)) {
+			case Logical_transformationsPackage.TEST__NAME:
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+				return;
+		}
 		super.notifyChanged(notification);
 	}
 

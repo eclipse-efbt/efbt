@@ -6,6 +6,7 @@ package org.eclipse.efbt.cocalimo.core.model.logical_transformations.provider;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsPackage;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.TaskTag;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.provider.TagItemProvider;
@@ -15,6 +16,7 @@ import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.common.util.ResourceLocator;
 
+import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 
 /**
@@ -45,8 +47,31 @@ public class TaskTagItemProvider extends TagItemProvider {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
+			addTaskPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
+	}
+
+	/**
+	 * This adds a property descriptor for the Task feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addTaskPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_TaskTag_task_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_TaskTag_task_feature", "_UI_TaskTag_type"),
+				 Logical_transformationsPackage.Literals.TASK_TAG__TASK,
+				 true,
+				 false,
+				 true,
+				 null,
+				 null,
+				 null));
 	}
 
 	/**

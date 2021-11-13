@@ -32,6 +32,7 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.TestImpl#getScenarios <em>Scenarios</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.TestImpl#getInputData <em>Input Data</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.TestImpl#getExpectedResult <em>Expected Result</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.TestImpl#getName <em>Name</em>}</li>
  * </ul>
  *
  * @generated
@@ -66,6 +67,26 @@ public class TestImpl extends MinimalEObjectImpl.Container implements Test {
 	 * @ordered
 	 */
 	protected EList<EObject> expectedResult;
+
+	/**
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getName()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String NAME_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getName()
+	 * @generated
+	 * @ordered
+	 */
+	protected String name = NAME_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -158,6 +179,29 @@ public class TestImpl extends MinimalEObjectImpl.Container implements Test {
 	 * @generated
 	 */
 	@Override
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setName(String newName) {
+		String oldName = name;
+		name = newName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, Logical_transformationsPackage.TEST__NAME, oldName, name));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Logical_transformationsPackage.TEST__SCENARIOS:
@@ -167,6 +211,8 @@ public class TestImpl extends MinimalEObjectImpl.Container implements Test {
 				return getInputData();
 			case Logical_transformationsPackage.TEST__EXPECTED_RESULT:
 				return getExpectedResult();
+			case Logical_transformationsPackage.TEST__NAME:
+				return getName();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -191,6 +237,9 @@ public class TestImpl extends MinimalEObjectImpl.Container implements Test {
 				getExpectedResult().clear();
 				getExpectedResult().addAll((Collection<? extends EObject>)newValue);
 				return;
+			case Logical_transformationsPackage.TEST__NAME:
+				setName((String)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -212,6 +261,9 @@ public class TestImpl extends MinimalEObjectImpl.Container implements Test {
 			case Logical_transformationsPackage.TEST__EXPECTED_RESULT:
 				getExpectedResult().clear();
 				return;
+			case Logical_transformationsPackage.TEST__NAME:
+				setName(NAME_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -230,8 +282,26 @@ public class TestImpl extends MinimalEObjectImpl.Container implements Test {
 				return inputData != null && !inputData.isEmpty();
 			case Logical_transformationsPackage.TEST__EXPECTED_RESULT:
 				return expectedResult != null && !expectedResult.isEmpty();
+			case Logical_transformationsPackage.TEST__NAME:
+				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy()) return super.toString();
+
+		StringBuilder result = new StringBuilder(super.toString());
+		result.append(" (name: ");
+		result.append(name);
+		result.append(')');
+		return result.toString();
 	}
 
 } //TestImpl

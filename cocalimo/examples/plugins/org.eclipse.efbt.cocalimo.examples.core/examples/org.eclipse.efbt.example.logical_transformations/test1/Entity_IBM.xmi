@@ -1,2 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<logical_data_model:Entity xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:logical_data_model="logical_data_model" xsi:schemaLocation="logical_data_model ../logical_data_model.ecore" entity_id="IBM" market_cap="10000.0" credit_quality="2"/>

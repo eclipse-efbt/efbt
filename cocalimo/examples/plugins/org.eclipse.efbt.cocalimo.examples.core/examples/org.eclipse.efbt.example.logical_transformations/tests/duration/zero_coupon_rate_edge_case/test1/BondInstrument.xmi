@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<logical_data_model:BondInstrument xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:logical_data_model="logical_data_model" xsi:schemaLocation="logical_data_model ../../../../logical_data_model.ecore" instrument_id="IBM_Bond_instrument" mkt_value="120.0">
+  <issuer href="IBMEntity.xmi#IBM"/>
+</logical_data_model:BondInstrument>

@@ -234,13 +234,22 @@ public interface Logical_transformationsPackage extends EPackage {
 	int TASK_TAG__REQUIREMENTS = Requirements_textPackage.TAG__REQUIREMENTS;
 
 	/**
+	 * The feature id for the '<em><b>Task</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TASK_TAG__TASK = Requirements_textPackage.TAG_FEATURE_COUNT + 0;
+
+	/**
 	 * The number of structural features of the '<em>Task Tag</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TASK_TAG_FEATURE_COUNT = Requirements_textPackage.TAG_FEATURE_COUNT + 0;
+	int TASK_TAG_FEATURE_COUNT = Requirements_textPackage.TAG_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of operations of the '<em>Task Tag</em>' class.
@@ -419,13 +428,22 @@ public interface Logical_transformationsPackage extends EPackage {
 	int TEST__EXPECTED_RESULT = 2;
 
 	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEST__NAME = 3;
+
+	/**
 	 * The number of structural features of the '<em>Test</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TEST_FEATURE_COUNT = 3;
+	int TEST_FEATURE_COUNT = 4;
 
 	/**
 	 * The number of operations of the '<em>Test</em>' class.
@@ -615,6 +633,17 @@ public interface Logical_transformationsPackage extends EPackage {
 	EClass getTaskTag();
 
 	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.TaskTag#getTask <em>Task</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Task</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.TaskTag#getTask()
+	 * @see #getTaskTag()
+	 * @generated
+	 */
+	EReference getTaskTag_Task();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario <em>Scenario</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -733,6 +762,17 @@ public interface Logical_transformationsPackage extends EPackage {
 	EReference getTest_ExpectedResult();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Test#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.Test#getName()
+	 * @see #getTest()
+	 * @generated
+	 */
+	EAttribute getTest_Name();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.TestModule <em>Test Module</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -845,6 +885,14 @@ public interface Logical_transformationsPackage extends EPackage {
 		EClass TASK_TAG = eINSTANCE.getTaskTag();
 
 		/**
+		 * The meta object literal for the '<em><b>Task</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TASK_TAG__TASK = eINSTANCE.getTaskTag_Task();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.ScenarioImpl <em>Scenario</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -937,6 +985,14 @@ public interface Logical_transformationsPackage extends EPackage {
 		 * @generated
 		 */
 		EReference TEST__EXPECTED_RESULT = eINSTANCE.getTest_ExpectedResult();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TEST__NAME = eINSTANCE.getTest_Name();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.TestModuleImpl <em>Test Module</em>}' class.

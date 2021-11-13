@@ -1,6 +1,21 @@
 {
   "eClass" : "http://www.eclipse.org/efbt/logical_transformations#//LogicalTransformationModule",
   "name" : "transformations",
+  "taskTags" : [ {
+    "displayName" : "duration_tag",
+    "name" : "duration_tag",
+    "requirements" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/requirements_text#//TitledRequirementsSection",
+      "$ref" : "requirements/CRR2.requirements_text#Article_325_1_a"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/requirements_text#//TitledRequirementsSection",
+      "$ref" : "requirements/CRR2.requirements_text#Article_325_1_b"
+    } ],
+    "task" : {
+      "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ServiceTask",
+      "$ref" : "//@subProcess/@flowElements.0/@flowElements.3/@flowElements.4"
+    }
+  } ],
   "subProcess" : {
     "id" : "process",
     "name" : "process",
@@ -35,7 +50,6 @@
         }
       }, {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
-        "invisible" : true,
         "name" : "Read And Enrich Entity",
         "incoming" : [ {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -43,7 +57,6 @@
         } ],
         "flowElements" : [ {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
-          "invisible" : true,
           "outgoing" : [ {
             "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
             "$ref" : "//@subProcess/@flowElements.0/@flowElements.2/@flowElements.3"
@@ -53,7 +66,6 @@
           } ]
         }, {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//Task",
-          "invisible" : true,
           "name" : "Read_Entity",
           "incoming" : [ {
             "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -74,7 +86,7 @@
           } ],
           "scenarios" : [ {
             "name" : "entity_size_main_scenario",
-            "name" : "entity_size_main_scenario",
+            "description" : "entity_size_main_scenario",
             "requiredAttributes" : [ {
               "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
               "$ref" : "logical_data_model.ecore#//Entity/market_cap"
@@ -103,7 +115,6 @@
         } ]
       }, {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
-        "invisible" : true,
         "name" : "Read And Enrich Bond Instrument",
         "incoming" : [ {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -111,7 +122,6 @@
         } ],
         "flowElements" : [ {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
-          "invisible" : true,
           "outgoing" : [ {
             "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
             "$ref" : "//@subProcess/@flowElements.0/@flowElements.3/@flowElements.2"
@@ -124,7 +134,6 @@
           } ]
         }, {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//Task",
-          "invisible" : true,
           "name" : "Read_Bond_Instrument",
           "incoming" : [ {
             "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -152,7 +161,6 @@
           }
         }, {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ServiceTask",
-          "invisible" : true,
           "name" : "Calculate_Duration",
           "incoming" : [ {
             "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -163,15 +171,15 @@
             "$ref" : "logical_data_model.ecore#//BondInstrument_derived/duration"
           },
           "scenarios" : [ {
-            "name" : "main duration sceanrio",
-            "name" : "main duration sceanrio",
+            "name" : "main_duration_scenario",
+            "description" : "main_duration_scenario",
             "requiredAttributes" : [ {
               "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
               "$ref" : "logical_data_model.ecore#//BondInstrument/coupon_rate"
             } ]
           }, {
             "name" : "zero_coupon_rate_edge_case",
-            "name" : "zero_coupon_rate_edge_case",
+            "description" : "zero_coupon_rate_edge_case",
             "requiredAttributes" : [ {
               "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
               "$ref" : "logical_data_model.ecore#//BondInstrument/coupon_rate"
@@ -292,7 +300,7 @@
         },
         "scenarios" : [ {
           "name" : "primaryRiskWeightScenario",
-          "name" : "primaryRiskWeightScenario",
+          "description" : "primaryRiskWeightScenario",
           "requiredAttributes" : [ {
             "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
             "$ref" : "logical_data_model.ecore#//Entity/credit_quality"
@@ -313,7 +321,7 @@
         },
         "scenarios" : [ {
           "name" : "primaryEADScenario",
-          "name" : "primaryEADScenario",
+          "description" : "primaryEADScenario",
           "requiredAttributes" : [ {
             "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
             "$ref" : "logical_data_model.ecore#//Instrument/mkt_value"
@@ -408,7 +416,6 @@
         } ]
       }, {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ScriptTask",
-        "invisible" : true,
         "name" : "Generate Market Risk Report",
         "linkedAttributes" : [ {
           "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
@@ -419,9 +426,13 @@
         }, {
           "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
           "$ref" : "logical_data_model.ecore#//Trade/trade_id"
+        }, {
+          "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
+          "$ref" : "logical_data_model.ecore#//Entity/entity_id"
         } ]
       }, {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ScriptTask",
+        "invisible" : true,
         "name" : "Generat Trade Report",
         "linkedAttributes" : [ {
           "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
