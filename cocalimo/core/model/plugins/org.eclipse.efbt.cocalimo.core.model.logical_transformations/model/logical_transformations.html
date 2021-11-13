@@ -1,5 +1,5 @@
 <!-- This file was created using the HTML documentation generator. -->
-<!-- Creation date: Sun Nov 07 16:29:36 GMT 2021-->
+<!-- Creation date: Sat Nov 13 20:40:26 GMT 2021-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -156,16 +156,23 @@ function getElementsByTagNames(list,obj) {
 <div class="label">Containment</div>
 </td> 
 <td> </td>
-		</tr><tr>	<td><div id="logicaltransformationsLogicalTransformationModule.subProcesses" class="teletype">subProcesses</div>
+		</tr><tr>	<td><div id="logicaltransformationsLogicalTransformationModule.subProcess" class="teletype">subProcess</div>
 	</td>
 	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#bpmnliteSubProcess">SubProcess</a></span></div>
-<div class="label">Cardinality: [0..*]</div>
+<div class="label">Cardinality: [0..1]</div>
 <div class="label">Containment</div>
 </td> 
 <td> </td>
 		</tr><tr>	<td><div id="logicaltransformationsLogicalTransformationModule.taskTags" class="teletype">taskTags</div>
 	</td>
 	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#logicaltransformationsTaskTag">TaskTag</a></span></div>
+<div class="label">Cardinality: [0..*]</div>
+<div class="label">Containment</div>
+</td> 
+<td> </td>
+		</tr><tr>	<td><div id="logicaltransformationsLogicalTransformationModule.testModules" class="teletype">testModules</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#logicaltransformationsTestModule">TestModule</a></span></div>
 <div class="label">Cardinality: [0..*]</div>
 <div class="label">Containment</div>
 </td> 
@@ -244,5 +251,90 @@ function getElementsByTagNames(list,obj) {
 <a href="#logical_transformations.ScenarioTag.ref"></a>
 <h2 id="logicaltransformationsTaskTag"><a href="#logicaltransformationsTaskTag"><a href="#logicaltransformationsTaskTag">TaskTag</a></a></h2>
 
-<h4><b>Supertype:</b><a href="#requirementstextTag">Tag</a></h4></body>
+<h4><b>Supertype:</b><a href="#requirementstextTag">Tag</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="logicaltransformationsTaskTag.task" class="teletype">task</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#bpmnliteTask">Task</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+</td> 
+<td> </td>
+		</tr></table>
+<a href="#logical_transformations.TaskTag.ref"></a>
+<h2 id="logicaltransformationsTest"><a href="#logicaltransformationsTest"><a href="#logicaltransformationsTest">Test</a></a></h2>
+
+<table>
+<tr>
+	<th colspan="3"><div class="tableHeader">Attributes</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="logicaltransformationsTest.name" class="teletype">name</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EString</span></div>
+<div class="label">Cardinality: [0..1]</div>
+<div class="label">Identifier</div>
+ </td> <td></td>
+		</tr></table>
+<a href="#logical_transformations.Test.attr"></a>
+<table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="logicaltransformationsTest.expectedResult" class="teletype">expectedResult</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"></span></div>
+<div class="label">Cardinality: [0..*]</div>
+</td> 
+<td> </td>
+		</tr><tr>	<td><div id="logicaltransformationsTest.inputData" class="teletype">inputData</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"></span></div>
+<div class="label">Cardinality: [0..*]</div>
+</td> 
+<td> </td>
+		</tr><tr>	<td><div id="logicaltransformationsTest.scenarios" class="teletype">scenarios</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#logicaltransformationsScenario">Scenario</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+</td> 
+<td> </td>
+		</tr></table>
+<a href="#logical_transformations.Test.ref"></a>
+<h2 id="logicaltransformationsTestModule"><a href="#logicaltransformationsTestModule"><a href="#logicaltransformationsTestModule">TestModule</a></a></h2>
+
+<h4><b>Supertype:</b><a href="#modulemanagementModule">Module</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="logicaltransformationsTestModule.tests" class="teletype">tests</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#logicaltransformationsTest">Test</a></span></div>
+<div class="label">Cardinality: [0..*]</div>
+<div class="label">Containment</div>
+</td> 
+<td> </td>
+		</tr></table>
+<a href="#logical_transformations.TestModule.ref"></a>
+</body>
 </html>

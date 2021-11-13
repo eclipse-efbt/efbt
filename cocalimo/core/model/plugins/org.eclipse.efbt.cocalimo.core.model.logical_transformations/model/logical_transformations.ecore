@@ -9,8 +9,6 @@
         eType="#//ScenarioTag" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="subProcess" eType="ecore:EClass bpmn_lite.ecore#//SubProcess"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="subProcessViews" upperBound="-1"
-        eType="ecore:EClass bpmn_lite.ecore#//SubProcess"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="requirements" upperBound="-1"
         eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.core.model.requirements_text/model/requirements_text.ecore#//RequirementsModule"
         containment="true"/>
