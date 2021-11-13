@@ -3,7 +3,7 @@
   "name" : "limited_scope",
   "scriptTasksInScope" : [ {
     "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ScriptTask",
-    "$ref" : "BIRD_transformations.logical_transformations#//@subProcess/@flowElements.5/@flowElements.0"
+    "$ref" : "BIRD_transformations.logical_transformations#//@subProcess/@flowElements.5/@flowElements.1"
   } ],
   "logicalTransformationModule" : {
     "eClass" : "http://www.eclipse.org/efbt/logical_transformations#//LogicalTransformationModule",

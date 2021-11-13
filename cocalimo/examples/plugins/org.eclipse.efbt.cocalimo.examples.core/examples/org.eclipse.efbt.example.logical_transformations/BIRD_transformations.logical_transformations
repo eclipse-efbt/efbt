@@ -1,6 +1,21 @@
 {
   "eClass" : "http://www.eclipse.org/efbt/logical_transformations#//LogicalTransformationModule",
   "name" : "transformations",
+  "taskTags" : [ {
+    "displayName" : "duration_tag",
+    "name" : "duration_tag",
+    "requirements" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/requirements_text#//TitledRequirementsSection",
+      "$ref" : "requirements/CRR2.requirements_text#Article_325_1_a"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/requirements_text#//TitledRequirementsSection",
+      "$ref" : "requirements/CRR2.requirements_text#Article_325_1_b"
+    } ],
+    "task" : {
+      "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ServiceTask",
+      "$ref" : "//@subProcess/@flowElements.0/@flowElements.3/@flowElements.4"
+    }
+  } ],
   "subProcess" : {
     "id" : "process",
     "name" : "process",
@@ -24,7 +39,6 @@
         }
       }, {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//Task",
-        "invisible" : true,
         "name" : "Read Instrument",
         "incoming" : [ {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -36,7 +50,6 @@
         }
       }, {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
-        "invisible" : true,
         "name" : "Read And Enrich Entity",
         "incoming" : [ {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -44,7 +57,6 @@
         } ],
         "flowElements" : [ {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
-          "invisible" : true,
           "outgoing" : [ {
             "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
             "$ref" : "//@subProcess/@flowElements.0/@flowElements.2/@flowElements.3"
@@ -54,7 +66,6 @@
           } ]
         }, {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//Task",
-          "invisible" : true,
           "name" : "Read_Entity",
           "incoming" : [ {
             "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -74,7 +85,8 @@
             "$ref" : "//@subProcess/@flowElements.0/@flowElements.2/@flowElements.4"
           } ],
           "scenarios" : [ {
-            "name" : "This is the main case",
+            "name" : "entity_size_main_scenario",
+            "description" : "entity_size_main_scenario",
             "requiredAttributes" : [ {
               "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
               "$ref" : "logical_data_model.ecore#//Entity/market_cap"
@@ -103,7 +115,6 @@
         } ]
       }, {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
-        "invisible" : true,
         "name" : "Read And Enrich Bond Instrument",
         "incoming" : [ {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -111,7 +122,6 @@
         } ],
         "flowElements" : [ {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
-          "invisible" : true,
           "outgoing" : [ {
             "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
             "$ref" : "//@subProcess/@flowElements.0/@flowElements.3/@flowElements.2"
@@ -124,7 +134,6 @@
           } ]
         }, {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//Task",
-          "invisible" : true,
           "name" : "Read_Bond_Instrument",
           "incoming" : [ {
             "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -152,7 +161,6 @@
           }
         }, {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ServiceTask",
-          "invisible" : true,
           "name" : "Calculate_Duration",
           "incoming" : [ {
             "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -163,13 +171,15 @@
             "$ref" : "logical_data_model.ecore#//BondInstrument_derived/duration"
           },
           "scenarios" : [ {
-            "name" : "main duration sceanrio",
+            "name" : "main_duration_scenario",
+            "description" : "main_duration_scenario",
             "requiredAttributes" : [ {
               "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
               "$ref" : "logical_data_model.ecore#//BondInstrument/coupon_rate"
             } ]
           }, {
-            "name" : "Edge case where the couponRate is Zero or non existant",
+            "name" : "zero_coupon_rate_edge_case",
+            "description" : "zero_coupon_rate_edge_case",
             "requiredAttributes" : [ {
               "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
               "$ref" : "logical_data_model.ecore#//BondInstrument/coupon_rate"
@@ -200,6 +210,9 @@
         }, {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
           "$ref" : "//@subProcess/@flowElements.0/@flowElements.8"
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "//@subProcess/@flowElements.0/@flowElements.10"
         } ]
       }, {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -241,9 +254,32 @@
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
           "$ref" : "//@subProcess/@flowElements.0/@flowElements.4"
         }
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//Task",
+        "invisible" : true,
+        "name" : "Read Equity Instrument",
+        "incoming" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "//@subProcess/@flowElements.0/@flowElements.10"
+        } ],
+        "entity" : {
+          "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EClass",
+          "$ref" : "logical_data_model.ecore#//EquityInstrument"
+        }
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+        "targetRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//Task",
+          "$ref" : "//@subProcess/@flowElements.0/@flowElements.9"
+        },
+        "sourceRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+          "$ref" : "//@subProcess/@flowElements.0/@flowElements.4"
+        }
       } ]
     }, {
       "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+      "invisible" : true,
       "name" : "Credit Risk Processing",
       "incoming" : [ {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -251,6 +287,8 @@
       } ],
       "flowElements" : [ {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ServiceTask",
+        "description" : "Calculate_Risk_Weight",
+        "invisible" : true,
         "name" : "Calculate_Risk_Weight",
         "incoming" : [ {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -262,6 +300,7 @@
         },
         "scenarios" : [ {
           "name" : "primaryRiskWeightScenario",
+          "description" : "primaryRiskWeightScenario",
           "requiredAttributes" : [ {
             "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
             "$ref" : "logical_data_model.ecore#//Entity/credit_quality"
@@ -269,6 +308,8 @@
         } ]
       }, {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ServiceTask",
+        "id" : "Calculate_Exposure_At_Default",
+        "invisible" : true,
         "name" : "Calculate_Exposure_At_Default",
         "incoming" : [ {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -280,6 +321,7 @@
         },
         "scenarios" : [ {
           "name" : "primaryEADScenario",
+          "description" : "primaryEADScenario",
           "requiredAttributes" : [ {
             "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
             "$ref" : "logical_data_model.ecore#//Instrument/mkt_value"
@@ -290,6 +332,7 @@
         } ]
       }, {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+        "invisible" : true,
         "outgoing" : [ {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
           "$ref" : "//@subProcess/@flowElements.1/@flowElements.3"
@@ -311,7 +354,7 @@
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
         "targetRef" : {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ServiceTask",
-          "$ref" : "//@subProcess/@flowElements.1/@flowElements.1"
+          "$ref" : "Calculate_Exposure_At_Default"
         },
         "sourceRef" : {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
@@ -359,6 +402,7 @@
       } ],
       "flowElements" : [ {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ScriptTask",
+        "invisible" : true,
         "name" : "Generate Credit Risk Report",
         "linkedAttributes" : [ {
           "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
@@ -372,7 +416,6 @@
         } ]
       }, {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ScriptTask",
-        "invisible" : true,
         "name" : "Generate Market Risk Report",
         "linkedAttributes" : [ {
           "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
@@ -383,6 +426,9 @@
         }, {
           "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
           "$ref" : "logical_data_model.ecore#//Trade/trade_id"
+        }, {
+          "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
+          "$ref" : "logical_data_model.ecore#//Entity/entity_id"
         } ]
       }, {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ScriptTask",
