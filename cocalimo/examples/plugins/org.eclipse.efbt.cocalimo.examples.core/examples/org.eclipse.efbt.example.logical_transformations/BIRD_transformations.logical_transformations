@@ -16,6 +16,18 @@
       "$ref" : "//@subProcess/@flowElements.0/@flowElements.3/@flowElements.4"
     }
   } ],
+  "scenarioTags" : [ {
+    "displayName" : "zero_coupon_rate_scenarioTag",
+    "name" : "zero_coupon_rate_scenarioTag",
+    "requirements" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/requirements_text#//TitledRequirementsSection",
+      "$ref" : "requirements/CRR2.requirements_text#Article_325"
+    } ],
+    "scenario" : {
+      "eClass" : "http://www.eclipse.org/efbt/logical_transformations#//Scenario",
+      "$ref" : "zero_coupon_rate_edge_case"
+    }
+  } ],
   "subProcess" : {
     "id" : "process",
     "name" : "process",
@@ -456,5 +468,38 @@
         "$ref" : "//@subProcess/@flowElements.2"
       }
     } ]
-  }
+  },
+  "testModules" : [ {
+    "name" : "testModule1",
+    "tests" : [ {
+      "scenarios" : {
+        "eClass" : "http://www.eclipse.org/efbt/logical_transformations#//Scenario",
+        "$ref" : "main_duration_scenario"
+      },
+      "inputData" : [ {
+        "eClass" : "platform:/resource/org.eclipse.efbt.example.logical_transformations/logical_data_model.ecore#//BondInstrument",
+        "$ref" : "tests/duration/zero_coupon_rate_edge_case/test1/BondInstrument.xmi#IBM_Bond_instrument"
+      }, {
+        "eClass" : "platform:/resource/org.eclipse.efbt.example.logical_transformations/logical_data_model.ecore#//Trade",
+        "$ref" : "tests/duration/zero_coupon_rate_edge_case/test1/Trade.xmi#/"
+      }, {
+        "eClass" : "platform:/resource/org.eclipse.efbt.example.logical_transformations/logical_data_model.ecore#//Entity",
+        "$ref" : "tests/duration/zero_coupon_rate_edge_case/test1/RBSEntity.xmi#RBS"
+      }, {
+        "eClass" : "platform:/resource/org.eclipse.efbt.example.logical_transformations/logical_data_model.ecore#//Entity",
+        "$ref" : "tests/duration/zero_coupon_rate_edge_case/test1/IBMEntity.xmi#IBM"
+      } ],
+      "expectedResult" : [ {
+        "eClass" : "platform:/resource/org.eclipse.efbt.example.logical_transformations/logical_data_model.ecore#//BondInstrument_derived",
+        "$ref" : "tests/duration/zero_coupon_rate_edge_case/test1/BondInstrument_derived.xmi#/"
+      } ],
+      "name" : "duration_test1"
+    }, {
+      "scenarios" : {
+        "eClass" : "http://www.eclipse.org/efbt/logical_transformations#//Scenario",
+        "$ref" : "zero_coupon_rate_edge_case"
+      },
+      "name" : "duration_zero_coupon_rate_edge_case"
+    } ]
+  } ]
 }
