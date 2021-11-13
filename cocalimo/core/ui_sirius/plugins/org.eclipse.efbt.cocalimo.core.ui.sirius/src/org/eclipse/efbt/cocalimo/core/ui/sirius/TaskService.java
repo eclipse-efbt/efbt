@@ -15,7 +15,17 @@ package org.eclipse.efbt.cocalimo.core.ui.sirius;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ScriptTask;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ServiceTask;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Task;
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule;
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario;
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.ScenarioTag;
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.TaskTag;
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Test;
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.TestModule;
+import org.eclipse.emf.common.util.BasicEList;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * Test and conversion services to operate on Task objects.
@@ -45,8 +55,67 @@ public class TaskService {
 	public boolean isLikeServiceTask(final EObject eObject) {
 		return eObject instanceof ServiceTask;
 	}
+	
+	public ScenarioTag getScenarioTag(Scenario self) {
 
+		
+		EObject root = EcoreUtil.getRootContainer(self);
+		TreeIterator<EObject> contents = root.eAllContents();
+		while (contents.hasNext() )
+		{
+			EObject o = contents.next();
+			if (o instanceof ScenarioTag)
+			{
+				if (((ScenarioTag) o).getScenario().equals(self))
+					return (ScenarioTag) o;
+			}
+		}
+		return null;
+		
+	}
+	
+	public TaskTag getTaskTag(Task self) {
 
+		
+		EObject root = EcoreUtil.getRootContainer(self);
+		TreeIterator<EObject> contents = root.eAllContents();
+		while (contents.hasNext() )
+		{
+			EObject o = contents.next();
+			if (o instanceof TaskTag)
+			{
+				if (((TaskTag) o).getTask().equals(self))
+					return (TaskTag) o;
+			}
+		}
+		return null;
+		
+	}
+	
+public EList<Test> getTests(Scenario self) {
+
+		EList<Test> tests = new BasicEList<Test>();
+		EObject root = EcoreUtil.getRootContainer(self);
+		LogicalTransformationModule theRoot = (LogicalTransformationModule) root;
+		EList<TestModule> testModules = theRoot.getTestModules();
+		for (TestModule testModule : testModules)
+		{
+		
+			EList<Test> theTests = testModule.getTests();
+			for (Test test : theTests) {
+				
+				if (test.getScenarios().equals(self))
+				{
+					tests.add(test);
+				}
+			}
+		
+		
+		}
+	
+		return tests;
+		
+	}
 
 
 }
