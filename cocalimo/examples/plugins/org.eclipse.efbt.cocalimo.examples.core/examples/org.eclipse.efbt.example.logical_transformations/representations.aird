@@ -5,6 +5,11 @@
     <semanticResources>logical_data_model.ecore</semanticResources>
     <semanticResources>BIRD_transformations.logical_transformations</semanticResources>
     <semanticResources>transformation_view.platform_call</semanticResources>
+    <semanticResources>testModule1.logical_transformations</semanticResources>
+    <semanticResources>test1/Trade.xmi</semanticResources>
+    <semanticResources>test1/Instrument.xmi</semanticResources>
+    <semanticResources>test1/Entity_IBM.xmi</semanticResources>
+    <semanticResources>test1/Entity_RBS.xmi</semanticResources>
     <ownedViews xmi:type="viewpoint:DView" uid="_5VrLMEO_Eeyqp45FidSqVw">
       <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.efbt.cocalimo.smcubes.ui.sirius/description/bird.odesign#//@ownedViewpoints[name='BIRDViewpoint']"/>
     </ownedViews>
@@ -21,7 +26,7 @@
         <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']"/>
         <target xmi:type="bpmn_lite:SubProcess" href="BIRD.logical_transformations#//@subProcess"/>
       </ownedRepresentationDescriptors>
-      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_Q1E4EEPEEeyeNL1HjQQM2w" name="process" repPath="#_Q1Dp8EPEEeyeNL1HjQQM2w" changeId="497d45dd-2afc-469b-a7f6-e5d520cd2252">
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_Q1E4EEPEEeyeNL1HjQQM2w" name="process" repPath="#_Q1Dp8EPEEeyeNL1HjQQM2w" changeId="f30527bc-bafc-4cdf-a64c-b2de0db8b374">
         <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']"/>
         <target xmi:type="bpmn_lite:SubProcess" href="BIRD_transformations.logical_transformations#process"/>
       </ownedRepresentationDescriptors>
@@ -701,9 +706,9 @@
                     <styles xmi:type="notation:FilteringStyle" xmi:id="_HWrOhkPFEeyeNL1HjQQM2w"/>
                   </children>
                   <styles xmi:type="notation:ShapeStyle" xmi:id="_HWrOgUPFEeyeNL1HjQQM2w" fontColor="10560" fontName="Segoe UI" bold="true"/>
-                  <layoutConstraint xmi:type="notation:Bounds" xmi:id="_HWrOgkPFEeyeNL1HjQQM2w" x="163" y="542"/>
+                  <layoutConstraint xmi:type="notation:Bounds" xmi:id="_HWrOgkPFEeyeNL1HjQQM2w" x="168" y="602"/>
                 </children>
-                <children xmi:type="notation:Node" xmi:id="_JsE_oEPFEeyeNL1HjQQM2w" visible="false" type="3008" element="_JsBVQkPFEeyeNL1HjQQM2w">
+                <children xmi:type="notation:Node" xmi:id="_JsE_oEPFEeyeNL1HjQQM2w" type="3008" element="_JsBVQkPFEeyeNL1HjQQM2w">
                   <children xmi:type="notation:Node" xmi:id="_JsE_o0PFEeyeNL1HjQQM2w" type="5005"/>
                   <children xmi:type="notation:Node" xmi:id="_JsE_pEPFEeyeNL1HjQQM2w" type="7002">
                     <styles xmi:type="notation:SortingStyle" xmi:id="_JsE_pUPFEeyeNL1HjQQM2w"/>
@@ -786,7 +791,7 @@
                     <styles xmi:type="notation:FilteringStyle" xmi:id="_tYva8kPGEeyeNL1HjQQM2w"/>
                   </children>
                   <styles xmi:type="notation:ShapeStyle" xmi:id="_tYuz4UPGEeyeNL1HjQQM2w" fontName="Segoe UI" bold="true"/>
-                  <layoutConstraint xmi:type="notation:Bounds" xmi:id="_tYuz4kPGEeyeNL1HjQQM2w" x="158" y="332" width="448" height="198"/>
+                  <layoutConstraint xmi:type="notation:Bounds" xmi:id="_tYuz4kPGEeyeNL1HjQQM2w" x="158" y="332" width="448" height="173"/>
                 </children>
                 <children xmi:type="notation:Node" xmi:id="_WhdrwEPHEeyeNL1HjQQM2w" type="3007" element="_WhcdoEPHEeyeNL1HjQQM2w">
                   <children xmi:type="notation:Node" xmi:id="_WheS0EPHEeyeNL1HjQQM2w" type="5003">
@@ -799,16 +804,25 @@
                   <styles xmi:type="notation:ShapeStyle" xmi:id="_WhdrwUPHEeyeNL1HjQQM2w" fontColor="10560" fontName="Segoe UI" fontHeight="8"/>
                   <layoutConstraint xmi:type="notation:Bounds" xmi:id="_WhdrwkPHEeyeNL1HjQQM2w" x="38" y="269" width="41" height="41"/>
                 </children>
+                <children xmi:type="notation:Node" xmi:id="_jgglwERvEeydrr4MVh_iJA" visible="false" type="3008" element="_jgL1o0RvEeydrr4MVh_iJA">
+                  <children xmi:type="notation:Node" xmi:id="_jgjCAERvEeydrr4MVh_iJA" type="5005"/>
+                  <children xmi:type="notation:Node" xmi:id="_jgjpEERvEeydrr4MVh_iJA" type="7002">
+                    <styles xmi:type="notation:SortingStyle" xmi:id="_jgjpEURvEeydrr4MVh_iJA"/>
+                    <styles xmi:type="notation:FilteringStyle" xmi:id="_jgjpEkRvEeydrr4MVh_iJA"/>
+                  </children>
+                  <styles xmi:type="notation:ShapeStyle" xmi:id="_jgglwURvEeydrr4MVh_iJA" fontColor="10560" fontName="Segoe UI" bold="true"/>
+                  <layoutConstraint xmi:type="notation:Bounds" xmi:id="_jgglwkRvEeydrr4MVh_iJA" x="168" y="512"/>
+                </children>
                 <styles xmi:type="notation:SortingStyle" xmi:id="_YJ37YkPEEeyeNL1HjQQM2w"/>
                 <styles xmi:type="notation:FilteringStyle" xmi:id="_YJ37Y0PEEeyeNL1HjQQM2w"/>
               </children>
               <styles xmi:type="notation:ShapeStyle" xmi:id="_YJ3UVEPEEeyeNL1HjQQM2w" fontName="Segoe UI" bold="true"/>
-              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_YJ3UVUPEEeyeNL1HjQQM2w" x="13" y="127" width="623" height="633"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_YJ3UVUPEEeyeNL1HjQQM2w" x="13" y="127" width="623" height="713"/>
             </children>
-            <children xmi:type="notation:Node" xmi:id="_CjT7REPHEeyeNL1HjQQM2w" type="3008" element="_CjPC00PHEeyeNL1HjQQM2w">
+            <children xmi:type="notation:Node" xmi:id="_CjT7REPHEeyeNL1HjQQM2w" visible="false" type="3008" element="_CjPC00PHEeyeNL1HjQQM2w">
               <children xmi:type="notation:Node" xmi:id="_CjUiUEPHEeyeNL1HjQQM2w" type="5005"/>
               <children xmi:type="notation:Node" xmi:id="_CjVJYEPHEeyeNL1HjQQM2w" type="7002">
-                <children xmi:type="notation:Node" xmi:id="_jw1QEEPHEeyeNL1HjQQM2w" type="3008" element="_jwza5UPHEeyeNL1HjQQM2w">
+                <children xmi:type="notation:Node" xmi:id="_jw1QEEPHEeyeNL1HjQQM2w" visible="false" type="3008" element="_jwza5UPHEeyeNL1HjQQM2w">
                   <children xmi:type="notation:Node" xmi:id="_jw13IEPHEeyeNL1HjQQM2w" type="5005"/>
                   <children xmi:type="notation:Node" xmi:id="_jw13IUPHEeyeNL1HjQQM2w" type="7002">
                     <styles xmi:type="notation:SortingStyle" xmi:id="_jw13IkPHEeyeNL1HjQQM2w"/>
@@ -817,7 +831,7 @@
                   <styles xmi:type="notation:ShapeStyle" xmi:id="_jw1QEUPHEeyeNL1HjQQM2w" fontColor="10560" fontName="Segoe UI" bold="true"/>
                   <layoutConstraint xmi:type="notation:Bounds" xmi:id="_jw1QEkPHEeyeNL1HjQQM2w" x="8" y="87"/>
                 </children>
-                <children xmi:type="notation:Node" xmi:id="_mZAMMEPHEeyeNL1HjQQM2w" type="3008" element="_mY8h3kPHEeyeNL1HjQQM2w">
+                <children xmi:type="notation:Node" xmi:id="_mZAMMEPHEeyeNL1HjQQM2w" visible="false" type="3008" element="_mY8h3kPHEeyeNL1HjQQM2w">
                   <children xmi:type="notation:Node" xmi:id="_mZAzQEPHEeyeNL1HjQQM2w" type="5005"/>
                   <children xmi:type="notation:Node" xmi:id="_mZAzQUPHEeyeNL1HjQQM2w" type="7002">
                     <styles xmi:type="notation:SortingStyle" xmi:id="_mZAzQkPHEeyeNL1HjQQM2w"/>
@@ -826,7 +840,7 @@
                   <styles xmi:type="notation:ShapeStyle" xmi:id="_mZAMMUPHEeyeNL1HjQQM2w" fontColor="10560" fontName="Segoe UI" bold="true"/>
                   <layoutConstraint xmi:type="notation:Bounds" xmi:id="_mZAMMkPHEeyeNL1HjQQM2w" x="203" y="87"/>
                 </children>
-                <children xmi:type="notation:Node" xmi:id="_nf3GkEPHEeyeNL1HjQQM2w" type="3007" element="_nf0qY0PHEeyeNL1HjQQM2w">
+                <children xmi:type="notation:Node" xmi:id="_nf3GkEPHEeyeNL1HjQQM2w" visible="false" type="3007" element="_nf0qY0PHEeyeNL1HjQQM2w">
                   <children xmi:type="notation:Node" xmi:id="_nf3Gk0PHEeyeNL1HjQQM2w" type="5003">
                     <layoutConstraint xmi:type="notation:Location" xmi:id="_nf3GlEPHEeyeNL1HjQQM2w" x="-1"/>
                   </children>
@@ -857,7 +871,7 @@
             <children xmi:type="notation:Node" xmi:id="_7v7thEPHEeyeNL1HjQQM2w" type="3008" element="_7v4DNEPHEeyeNL1HjQQM2w">
               <children xmi:type="notation:Node" xmi:id="_7v7th0PHEeyeNL1HjQQM2w" type="5005"/>
               <children xmi:type="notation:Node" xmi:id="_7v7tiEPHEeyeNL1HjQQM2w" type="7002">
-                <children xmi:type="notation:Node" xmi:id="__ewvsEPHEeyeNL1HjQQM2w" type="3008" element="__erQOEPHEeyeNL1HjQQM2w">
+                <children xmi:type="notation:Node" xmi:id="__ewvsEPHEeyeNL1HjQQM2w" visible="false" type="3008" element="__erQOEPHEeyeNL1HjQQM2w">
                   <children xmi:type="notation:Node" xmi:id="__ewvs0PHEeyeNL1HjQQM2w" type="5005"/>
                   <children xmi:type="notation:Node" xmi:id="__ewvtEPHEeyeNL1HjQQM2w" type="7002">
                     <styles xmi:type="notation:SortingStyle" xmi:id="__ewvtUPHEeyeNL1HjQQM2w"/>
@@ -875,7 +889,7 @@
                   <styles xmi:type="notation:ShapeStyle" xmi:id="_BXi2QUPIEeyeNL1HjQQM2w" fontColor="10560" fontName="Segoe UI" bold="true"/>
                   <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BXi2QkPIEeyeNL1HjQQM2w" x="29" y="162"/>
                 </children>
-                <children xmi:type="notation:Node" xmi:id="_HMTqMEPIEeyeNL1HjQQM2w" visible="false" type="3008" element="_HMQm9kPIEeyeNL1HjQQM2w">
+                <children xmi:type="notation:Node" xmi:id="_HMTqMEPIEeyeNL1HjQQM2w" type="3008" element="_HMQm9kPIEeyeNL1HjQQM2w">
                   <children xmi:type="notation:Node" xmi:id="_HMTqM0PIEeyeNL1HjQQM2w" type="5005"/>
                   <children xmi:type="notation:Node" xmi:id="_HMTqNEPIEeyeNL1HjQQM2w" type="7002">
                     <styles xmi:type="notation:SortingStyle" xmi:id="_HMTqNUPIEeyeNL1HjQQM2w"/>
@@ -1003,6 +1017,15 @@
               </children>
               <styles xmi:type="notation:ShapeStyle" xmi:id="_WhncxEPHEeyeNL1HjQQM2w" fontColor="10560" fontName="Segoe UI" fontHeight="8"/>
               <layoutConstraint xmi:type="notation:Bounds" xmi:id="_WhncxUPHEeyeNL1HjQQM2w" width="41" height="41"/>
+            </children>
+            <children xmi:type="notation:Node" xmi:id="_jgn6gERvEeydrr4MVh_iJA" visible="false" type="3008" element="_jgCEpERvEeydrr4MVh_iJA">
+              <children xmi:type="notation:Node" xmi:id="_jgohkERvEeydrr4MVh_iJA" type="5005"/>
+              <children xmi:type="notation:Node" xmi:id="_jgohkURvEeydrr4MVh_iJA" type="7002">
+                <styles xmi:type="notation:SortingStyle" xmi:id="_jgohkkRvEeydrr4MVh_iJA"/>
+                <styles xmi:type="notation:FilteringStyle" xmi:id="_jgohk0RvEeydrr4MVh_iJA"/>
+              </children>
+              <styles xmi:type="notation:ShapeStyle" xmi:id="_jgn6gURvEeydrr4MVh_iJA" fontColor="10560" fontName="Segoe UI" bold="true"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_jgn6gkRvEeydrr4MVh_iJA"/>
             </children>
             <styles xmi:type="notation:SortingStyle" xmi:id="_YJ3UUUPEEeyeNL1HjQQM2w"/>
             <styles xmi:type="notation:FilteringStyle" xmi:id="_YJ3UUkPEEeyeNL1HjQQM2w"/>
@@ -1405,7 +1428,7 @@
           <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_YFdOEEPHEeyeNL1HjQQM2w" id="(0.5,0.5)"/>
           <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_YFdOEUPHEeyeNL1HjQQM2w" id="(0.5,0.5)"/>
         </edges>
-        <edges xmi:type="notation:Edge" xmi:id="_Y0bM4EPHEeyeNL1HjQQM2w" visible="false" type="4001" element="_Y0MjiEPHEeyeNL1HjQQM2w" source="_WhdrwEPHEeyeNL1HjQQM2w" target="_JsE_oEPFEeyeNL1HjQQM2w">
+        <edges xmi:type="notation:Edge" xmi:id="_Y0bM4EPHEeyeNL1HjQQM2w" type="4001" element="_Y0MjiEPHEeyeNL1HjQQM2w" source="_WhdrwEPHEeyeNL1HjQQM2w" target="_JsE_oEPFEeyeNL1HjQQM2w">
           <children xmi:type="notation:Node" xmi:id="_Y0bz8EPHEeyeNL1HjQQM2w" type="6001">
             <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Y0bz8UPHEeyeNL1HjQQM2w" y="-10"/>
           </children>
@@ -1483,7 +1506,7 @@
           <styles xmi:type="notation:FontStyle" xmi:id="_ZkD6EkPHEeyeNL1HjQQM2w" fontName="Segoe UI" fontHeight="8" italic="true"/>
           <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_ZkD6E0PHEeyeNL1HjQQM2w" points="[-9, 8, -88, -150]$[34, 8, -45, -150]$[34, 158, -45, 0]$[79, 158, 0, 0]"/>
           <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_ZkD6GkPHEeyeNL1HjQQM2w" id="(1.0,0.4878048780487805)"/>
-          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_ZkD6G0PHEeyeNL1HjQQM2w" id="(0.0,0.5867346938775511)"/>
+          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_ZkD6G0PHEeyeNL1HjQQM2w" id="(0.0,0.6725146198830411)"/>
         </edges>
         <edges xmi:type="notation:Edge" xmi:id="_ZkEhIEPHEeyeNL1HjQQM2w" visible="false" type="4001" element="_Zj8lkUPHEeyeNL1HjQQM2w" source="_WhdrwEPHEeyeNL1HjQQM2w" target="_tYva80PGEeyeNL1HjQQM2w">
           <children xmi:type="notation:Node" xmi:id="_ZkEhJEPHEeyeNL1HjQQM2w" type="6001">
@@ -1515,7 +1538,7 @@
           <styles xmi:type="notation:FontStyle" xmi:id="_ZkEhLkPHEeyeNL1HjQQM2w" fontName="Segoe UI" fontHeight="8" italic="true"/>
           <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_ZkEhL0PHEeyeNL1HjQQM2w" points="[0, 0, -84, -75]$[84, 75, 0, 0]"/>
           <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_ZkEhNkPHEeyeNL1HjQQM2w" id="(1.0,0.4878048780487805)"/>
-          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_ZkEhN0PHEeyeNL1HjQQM2w" id="(0.0,0.5867346938775511)"/>
+          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_ZkEhN0PHEeyeNL1HjQQM2w" id="(0.0,0.6725146198830411)"/>
         </edges>
         <edges xmi:type="notation:Edge" xmi:id="_ZkEhOEPHEeyeNL1HjQQM2w" visible="false" type="4001" element="_Zj9MaUPHEeyeNL1HjQQM2w" source="_Whncw0PHEeyeNL1HjQQM2w" target="_tYva80PGEeyeNL1HjQQM2w">
           <children xmi:type="notation:Node" xmi:id="_ZkEhPEPHEeyeNL1HjQQM2w" type="6001">
@@ -1535,17 +1558,17 @@
         </edges>
         <edges xmi:type="notation:Edge" xmi:id="_b_BgoEPHEeyeNL1HjQQM2w" type="4001" element="_b-49_EPHEeyeNL1HjQQM2w" source="_WhdrwEPHEeyeNL1HjQQM2w" target="_HWrOgEPFEeyeNL1HjQQM2w">
           <children xmi:type="notation:Node" xmi:id="_b_CHsEPHEeyeNL1HjQQM2w" type="6001">
-            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_b_CHsUPHEeyeNL1HjQQM2w" y="-10"/>
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_b_CHsUPHEeyeNL1HjQQM2w" x="-32" y="-10"/>
           </children>
           <children xmi:type="notation:Node" xmi:id="_b_CHskPHEeyeNL1HjQQM2w" type="6002">
-            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_b_CHs0PHEeyeNL1HjQQM2w" y="10"/>
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_b_CHs0PHEeyeNL1HjQQM2w" x="-10" y="10"/>
           </children>
           <children xmi:type="notation:Node" xmi:id="_b_CHtEPHEeyeNL1HjQQM2w" type="6003">
-            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_b_CHtUPHEeyeNL1HjQQM2w" y="10"/>
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_b_CHtUPHEeyeNL1HjQQM2w" x="5" y="10"/>
           </children>
           <styles xmi:type="notation:ConnectorStyle" xmi:id="_b_BgoUPHEeyeNL1HjQQM2w" routing="Rectilinear"/>
           <styles xmi:type="notation:FontStyle" xmi:id="_b_BgokPHEeyeNL1HjQQM2w" fontName="Segoe UI" fontHeight="8" italic="true"/>
-          <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_b_Bgo0PHEeyeNL1HjQQM2w" points="[0, 0, -105, -266]$[0, 266, -105, 0]$[105, 266, 0, 0]"/>
+          <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_b_Bgo0PHEeyeNL1HjQQM2w" points="[0, -1, -110, -327]$[0, 326, -110, 0]$[110, 326, 0, 0]"/>
           <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_b_CHtkPHEeyeNL1HjQQM2w" id="(0.4878048780487805,1.0)"/>
           <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_b_CHt0PHEeyeNL1HjQQM2w" id="(0.0,0.5)"/>
         </edges>
@@ -1597,7 +1620,7 @@
           <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_b_Cu0kPHEeyeNL1HjQQM2w" id="(0.5,0.5)"/>
           <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_b_Cu00PHEeyeNL1HjQQM2w" id="(0.5,0.5)"/>
         </edges>
-        <edges xmi:type="notation:Edge" xmi:id="_oNj6EEPHEeyeNL1HjQQM2w" type="4001" element="_oNYUAEPHEeyeNL1HjQQM2w" source="_nf3GkEPHEeyeNL1HjQQM2w" target="_jw1QEEPHEeyeNL1HjQQM2w">
+        <edges xmi:type="notation:Edge" xmi:id="_oNj6EEPHEeyeNL1HjQQM2w" visible="false" type="4001" element="_oNYUAEPHEeyeNL1HjQQM2w" source="_nf3GkEPHEeyeNL1HjQQM2w" target="_jw1QEEPHEeyeNL1HjQQM2w">
           <children xmi:type="notation:Node" xmi:id="_oNj6FEPHEeyeNL1HjQQM2w" type="6001">
             <layoutConstraint xmi:type="notation:Bounds" xmi:id="_oNj6FUPHEeyeNL1HjQQM2w" y="-10"/>
           </children>
@@ -1661,7 +1684,7 @@
           <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_oNkhPkPHEeyeNL1HjQQM2w" id="(0.5,0.5)"/>
           <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_oNkhP0PHEeyeNL1HjQQM2w" id="(0.5,0.5)"/>
         </edges>
-        <edges xmi:type="notation:Edge" xmi:id="_ooj0AEPHEeyeNL1HjQQM2w" type="4001" element="_oobRZEPHEeyeNL1HjQQM2w" source="_nf3GkEPHEeyeNL1HjQQM2w" target="_mZAMMEPHEeyeNL1HjQQM2w">
+        <edges xmi:type="notation:Edge" xmi:id="_ooj0AEPHEeyeNL1HjQQM2w" visible="false" type="4001" element="_oobRZEPHEeyeNL1HjQQM2w" source="_nf3GkEPHEeyeNL1HjQQM2w" target="_mZAMMEPHEeyeNL1HjQQM2w">
           <children xmi:type="notation:Node" xmi:id="_ookbEEPHEeyeNL1HjQQM2w" type="6001">
             <layoutConstraint xmi:type="notation:Bounds" xmi:id="_ookbEUPHEeyeNL1HjQQM2w" y="-10"/>
           </children>
@@ -1757,7 +1780,7 @@
           <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_s5Cx0kPHEeyeNL1HjQQM2w" id="(0.0,0.36585365853658536)"/>
           <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_s5Cx00PHEeyeNL1HjQQM2w" id="(0.6038647342995169,0.0)"/>
         </edges>
-        <edges xmi:type="notation:Edge" xmi:id="_tn40wEPHEeyeNL1HjQQM2w" type="4001" element="_tnpkNEPHEeyeNL1HjQQM2w" source="_sUmA4EPHEeyeNL1HjQQM2w" target="_CjT7REPHEeyeNL1HjQQM2w">
+        <edges xmi:type="notation:Edge" xmi:id="_tn40wEPHEeyeNL1HjQQM2w" visible="false" type="4001" element="_tnpkNEPHEeyeNL1HjQQM2w" source="_sUmA4EPHEeyeNL1HjQQM2w" target="_CjT7REPHEeyeNL1HjQQM2w">
           <children xmi:type="notation:Node" xmi:id="_tn40xEPHEeyeNL1HjQQM2w" type="6001">
             <layoutConstraint xmi:type="notation:Bounds" xmi:id="_tn40xUPHEeyeNL1HjQQM2w" x="-2" y="3"/>
           </children>
@@ -1821,6 +1844,70 @@
           <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_IIoIkkPIEeyeNL1HjQQM2w" id="(1.0,0.36585365853658536)"/>
           <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_IIoIk0PIEeyeNL1HjQQM2w" id="(0.5023696682464455,0.0)"/>
         </edges>
+        <edges xmi:type="notation:Edge" xmi:id="_kcE2IERvEeydrr4MVh_iJA" visible="false" type="4001" element="_kbtp1ERvEeydrr4MVh_iJA" source="_WhdrwEPHEeyeNL1HjQQM2w" target="_jgglwERvEeydrr4MVh_iJA">
+          <children xmi:type="notation:Node" xmi:id="_kcGrUERvEeydrr4MVh_iJA" type="6001">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_kcGrUURvEeydrr4MVh_iJA" y="-10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_kcHSYERvEeydrr4MVh_iJA" type="6002">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_kcH5cERvEeydrr4MVh_iJA" y="10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_kcIggERvEeydrr4MVh_iJA" type="6003">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_kcIggURvEeydrr4MVh_iJA" y="10"/>
+          </children>
+          <styles xmi:type="notation:ConnectorStyle" xmi:id="_kcE2IURvEeydrr4MVh_iJA" routing="Rectilinear"/>
+          <styles xmi:type="notation:FontStyle" xmi:id="_kcE2IkRvEeydrr4MVh_iJA" fontName="Segoe UI" fontHeight="8" italic="true"/>
+          <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_kcE2I0RvEeydrr4MVh_iJA" points="[0, 0, -105, -232]$[0, 232, -105, 0]$[105, 232, 0, 0]"/>
+          <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_kcLj0ERvEeydrr4MVh_iJA" id="(0.6097560975609756,1.0)"/>
+          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_kcLj0URvEeydrr4MVh_iJA" id="(0.0,0.4411764705882353)"/>
+        </edges>
+        <edges xmi:type="notation:Edge" xmi:id="_kcMK4ERvEeydrr4MVh_iJA" visible="false" type="4001" element="_kbuQ0kRvEeydrr4MVh_iJA" source="_WhdrwEPHEeyeNL1HjQQM2w" target="_jgn6gERvEeydrr4MVh_iJA">
+          <children xmi:type="notation:Node" xmi:id="_kcMx8ERvEeydrr4MVh_iJA" type="6001">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_kcMx8URvEeydrr4MVh_iJA" y="-10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_kcMx8kRvEeydrr4MVh_iJA" type="6002">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_kcMx80RvEeydrr4MVh_iJA" y="10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_kcMx9ERvEeydrr4MVh_iJA" type="6003">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_kcNZAERvEeydrr4MVh_iJA" y="10"/>
+          </children>
+          <styles xmi:type="notation:ConnectorStyle" xmi:id="_kcMK4URvEeydrr4MVh_iJA" routing="Rectilinear"/>
+          <styles xmi:type="notation:FontStyle" xmi:id="_kcMK4kRvEeydrr4MVh_iJA" fontName="Segoe UI" fontHeight="8" italic="true"/>
+          <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_kcMK40RvEeydrr4MVh_iJA" points="[0, 0, -105, -232]$[105, 232, 0, 0]"/>
+          <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_kcNZAURvEeydrr4MVh_iJA" id="(0.6097560975609756,1.0)"/>
+          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_kcNZAkRvEeydrr4MVh_iJA" id="(0.0,0.4411764705882353)"/>
+        </edges>
+        <edges xmi:type="notation:Edge" xmi:id="_kcNZA0RvEeydrr4MVh_iJA" visible="false" type="4001" element="_kbuQ10RvEeydrr4MVh_iJA" source="_Whncw0PHEeyeNL1HjQQM2w" target="_jgglwERvEeydrr4MVh_iJA">
+          <children xmi:type="notation:Node" xmi:id="_kcOAEERvEeydrr4MVh_iJA" type="6001">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_kcOAEURvEeydrr4MVh_iJA" y="-10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_kcOAEkRvEeydrr4MVh_iJA" type="6002">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_kcOAE0RvEeydrr4MVh_iJA" y="10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_kcOAFERvEeydrr4MVh_iJA" type="6003">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_kcOAFURvEeydrr4MVh_iJA" y="10"/>
+          </children>
+          <styles xmi:type="notation:ConnectorStyle" xmi:id="_kcNZBERvEeydrr4MVh_iJA" routing="Rectilinear"/>
+          <styles xmi:type="notation:FontStyle" xmi:id="_kcNZBURvEeydrr4MVh_iJA" fontName="Segoe UI" fontHeight="8" italic="true"/>
+          <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_kcNZBkRvEeydrr4MVh_iJA" points="[0, 0, -105, -232]$[105, 232, 0, 0]"/>
+          <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_kcOAFkRvEeydrr4MVh_iJA" id="(0.6097560975609756,1.0)"/>
+          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_kcOnIERvEeydrr4MVh_iJA" id="(0.0,0.4411764705882353)"/>
+        </edges>
+        <edges xmi:type="notation:Edge" xmi:id="_kcOnIURvEeydrr4MVh_iJA" visible="false" type="4001" element="_kbu35ERvEeydrr4MVh_iJA" source="_Whncw0PHEeyeNL1HjQQM2w" target="_jgn6gERvEeydrr4MVh_iJA">
+          <children xmi:type="notation:Node" xmi:id="_kcOnJURvEeydrr4MVh_iJA" type="6001">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_kcOnJkRvEeydrr4MVh_iJA" y="-10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_kcOnJ0RvEeydrr4MVh_iJA" type="6002">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_kcOnKERvEeydrr4MVh_iJA" y="10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_kcPOMERvEeydrr4MVh_iJA" type="6003">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_kcPOMURvEeydrr4MVh_iJA" y="10"/>
+          </children>
+          <styles xmi:type="notation:ConnectorStyle" xmi:id="_kcOnIkRvEeydrr4MVh_iJA" routing="Rectilinear"/>
+          <styles xmi:type="notation:FontStyle" xmi:id="_kcOnI0RvEeydrr4MVh_iJA" fontName="Segoe UI" fontHeight="8" italic="true"/>
+          <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_kcOnJERvEeydrr4MVh_iJA" points="[0, 0, 1, 1]$[-1, 0, 0, 1]"/>
+          <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_kcRqcERvEeydrr4MVh_iJA" id="(0.5,0.5)"/>
+          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_kcRqcURvEeydrr4MVh_iJA" id="(0.5,0.5)"/>
+        </edges>
       </data>
     </ownedAnnotationEntries>
     <ownedAnnotationEntries xmi:type="description:AnnotationEntry" uid="_Q1RsYEPEEeyeNL1HjQQM2w" source="DANNOTATION_CUSTOMIZATION_KEY">
@@ -1857,12 +1944,9 @@
           </ownedStyle>
           <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']"/>
         </ownedDiagramElements>
-        <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_JsBVQkPFEeyeNL1HjQQM2w" name=" &#xA; &#xA;Read Instrument" visible="false" incomingEdges="_Y0MjiEPHEeyeNL1HjQQM2w _Y0NxhEPHEeyeNL1HjQQM2w">
+        <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_JsBVQkPFEeyeNL1HjQQM2w" name=" &#xA; &#xA;Read Instrument" incomingEdges="_Y0MjiEPHEeyeNL1HjQQM2w _Y0NxhEPHEeyeNL1HjQQM2w">
           <target xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.1"/>
           <semanticElements xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.1"/>
-          <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_i_XLUUPREey5h42sD_zaOw">
-            <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
-          </graphicalFilters>
           <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
           <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
           <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
@@ -1875,7 +1959,7 @@
         <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_Saln4kPFEeyeNL1HjQQM2w" name="Read And Enrich Entity" visible="false" incomingEdges="_YFN9gEPHEeyeNL1HjQQM2w _YFOklUPHEeyeNL1HjQQM2w">
           <target xmi:type="bpmn_lite:SubProcess" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.2"/>
           <semanticElements xmi:type="bpmn_lite:SubProcess" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.2"/>
-          <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_ZT2IQEPREey5h42sD_zaOw">
+          <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_DigipERwEeydrr4MVh_iJA">
             <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
           </graphicalFilters>
           <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
@@ -1889,7 +1973,7 @@
           <ownedDiagramElements xmi:type="diagram:DNode" uid="_T4RG2UPFEeyeNL1HjQQM2w" visible="false" outgoingEdges="_bEg1oEPGEeyeNL1HjQQM2w _bEhcskPGEeyeNL1HjQQM2w _boJuPkPGEeyeNL1HjQQM2w _boJuQ0PGEeyeNL1HjQQM2w" width="-1" height="-1">
             <target xmi:type="bpmn_lite:InclusiveGateway" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.2/@flowElements.0"/>
             <semanticElements xmi:type="bpmn_lite:InclusiveGateway" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.2/@flowElements.0"/>
-            <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_-T9sUEPOEeyI--MDGNODPQ">
+            <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_DigioERwEeydrr4MVh_iJA">
               <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
             </graphicalFilters>
             <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
@@ -1903,7 +1987,7 @@
           <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_WqNC-0PFEeyeNL1HjQQM2w" name=" &#xA; &#xA;Read_Entity" visible="false" incomingEdges="_bEg1oEPGEeyeNL1HjQQM2w _bEhct0PGEeyeNL1HjQQM2w">
             <target xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.2/@flowElements.1"/>
             <semanticElements xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.2/@flowElements.1"/>
-            <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_-T-TYEPOEeyI--MDGNODPQ">
+            <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_DigipURwEeydrr4MVh_iJA">
               <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
             </graphicalFilters>
             <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
@@ -1921,7 +2005,7 @@
             <decorations xmi:type="viewpoint:Decoration" uid="_ZFBDFkPGEeyeNL1HjQQM2w">
               <description xmi:type="description_1:MappingBasedDecoration" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@decorationDescriptionsSet/@decorationDescriptions[name='ServiceTask']"/>
             </decorations>
-            <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_-T-TYUPOEeyI--MDGNODPQ">
+            <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_qc-Bk0RvEeydrr4MVh_iJA">
               <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
             </graphicalFilters>
             <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
@@ -1937,7 +2021,7 @@
         <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_tYs-skPGEeyeNL1HjQQM2w" name="Read And Enrich Bond Instrument" visible="false" incomingEdges="_Zj8ljEPHEeyeNL1HjQQM2w _Zj9MZEPHEeyeNL1HjQQM2w">
           <target xmi:type="bpmn_lite:SubProcess" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.3"/>
           <semanticElements xmi:type="bpmn_lite:SubProcess" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.3"/>
-          <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_i_XLUkPREey5h42sD_zaOw">
+          <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_6Rvh4kRvEeydrr4MVh_iJA">
             <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
           </graphicalFilters>
           <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
@@ -1951,7 +2035,7 @@
           <ownedDiagramElements xmi:type="diagram:DNode" uid="_vCxT1UPGEeyeNL1HjQQM2w" visible="false" outgoingEdges="_5HW-UEPGEeyeNL1HjQQM2w _5HW-VUPGEeyeNL1HjQQM2w _IeC0XEPHEeyeNL1HjQQM2w _IeDbZEPHEeyeNL1HjQQM2w" width="-1" height="-1">
             <target xmi:type="bpmn_lite:InclusiveGateway" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.3/@flowElements.0"/>
             <semanticElements xmi:type="bpmn_lite:InclusiveGateway" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.3/@flowElements.0"/>
-            <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_i_WkQEPREey5h42sD_zaOw">
+            <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_6Rvh4ERvEeydrr4MVh_iJA">
               <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
             </graphicalFilters>
             <ownedStyle xmi:type="diagram:WorkspaceImage" uid="_vCx64EPGEeyeNL1HjQQM2w" showIcon="false" labelColor="64,41,0" workspacePath="/org.eclipse.efbt.cocalimo.core.ui.sirius/icons2/nodes/gateway/inclusive-gateway.svg">
@@ -1962,7 +2046,7 @@
           <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_yFOYQUPGEeyeNL1HjQQM2w" name=" &#xA; &#xA;Read_Bond_Instrument" visible="false" incomingEdges="_5HW-UEPGEeyeNL1HjQQM2w _5HW-WkPGEeyeNL1HjQQM2w">
             <target xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.3/@flowElements.1"/>
             <semanticElements xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.3/@flowElements.1"/>
-            <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_-T-TYkPOEeyI--MDGNODPQ">
+            <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_6Rvh40RvEeydrr4MVh_iJA">
               <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
             </graphicalFilters>
             <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
@@ -1980,7 +2064,7 @@
             <decorations xmi:type="viewpoint:Decoration" uid="_HHTq7kPHEeyeNL1HjQQM2w">
               <description xmi:type="description_1:MappingBasedDecoration" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@decorationDescriptionsSet/@decorationDescriptions[name='ServiceTask']"/>
             </decorations>
-            <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_i_XLU0PREey5h42sD_zaOw">
+            <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_6Rvh5ERvEeydrr4MVh_iJA">
               <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
             </graphicalFilters>
             <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
@@ -1993,7 +2077,7 @@
             <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']"/>
           </ownedDiagramElements>
         </ownedDiagramElements>
-        <ownedDiagramElements xmi:type="diagram:DNode" uid="_WhcdoEPHEeyeNL1HjQQM2w" outgoingEdges="_YFN9gEPHEeyeNL1HjQQM2w _YFOkkEPHEeyeNL1HjQQM2w _Y0MjiEPHEeyeNL1HjQQM2w _Y0NKdEPHEeyeNL1HjQQM2w _Zj8ljEPHEeyeNL1HjQQM2w _Zj8lkUPHEeyeNL1HjQQM2w _b-49_EPHEeyeNL1HjQQM2w _b-4-AUPHEeyeNL1HjQQM2w" width="-1" height="-1">
+        <ownedDiagramElements xmi:type="diagram:DNode" uid="_WhcdoEPHEeyeNL1HjQQM2w" outgoingEdges="_YFN9gEPHEeyeNL1HjQQM2w _YFOkkEPHEeyeNL1HjQQM2w _Y0MjiEPHEeyeNL1HjQQM2w _Y0NKdEPHEeyeNL1HjQQM2w _Zj8ljEPHEeyeNL1HjQQM2w _Zj8lkUPHEeyeNL1HjQQM2w _b-49_EPHEeyeNL1HjQQM2w _b-4-AUPHEeyeNL1HjQQM2w _kbtp1ERvEeydrr4MVh_iJA _kbuQ0kRvEeydrr4MVh_iJA" width="-1" height="-1">
           <target xmi:type="bpmn_lite:ParallelGateway" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.4"/>
           <semanticElements xmi:type="bpmn_lite:ParallelGateway" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.4"/>
           <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
@@ -2004,10 +2088,28 @@
           </ownedStyle>
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPParallelGateway']"/>
         </ownedDiagramElements>
+        <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_jgL1o0RvEeydrr4MVh_iJA" name=" &#xA; &#xA;Read Equity Instrument" visible="false" incomingEdges="_kbtp1ERvEeydrr4MVh_iJA _kbuQ10RvEeydrr4MVh_iJA">
+          <target xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.9"/>
+          <semanticElements xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.9"/>
+          <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_yej5cERvEeydrr4MVh_iJA">
+            <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
+          </graphicalFilters>
+          <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
+          <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
+          <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
+          <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_jgL1pERvEeydrr4MVh_iJA" labelSize="9" showIcon="false" labelColor="64,41,0" borderSize="1" borderSizeComputationExpression="1" borderColor="64,41,0" backgroundColor="255,243,171" foregroundColor="255,243,171">
+            <labelFormat>bold</labelFormat>
+            <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']/@style"/>
+          </ownedStyle>
+          <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']"/>
+        </ownedDiagramElements>
       </ownedDiagramElements>
-      <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_CjPC00PHEeyeNL1HjQQM2w" name="Credit Risk Processing" incomingEdges="_tnpkNEPHEeyeNL1HjQQM2w">
+      <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_CjPC00PHEeyeNL1HjQQM2w" name="Credit Risk Processing" visible="false" incomingEdges="_tnpkNEPHEeyeNL1HjQQM2w">
         <target xmi:type="bpmn_lite:SubProcess" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1"/>
         <semanticElements xmi:type="bpmn_lite:SubProcess" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1"/>
+        <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_DigipkRwEeydrr4MVh_iJA">
+          <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
+        </graphicalFilters>
         <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
         <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
         <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
@@ -2016,12 +2118,15 @@
           <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@style"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:ContainerMappingImport" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPSubProcess']"/>
-        <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_jwza5UPHEeyeNL1HjQQM2w" name=" &#xA; &#xA;Calculate_Risk_Weight" incomingEdges="_oNYUAEPHEeyeNL1HjQQM2w _oNZiAkPHEeyeNL1HjQQM2w">
+        <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_jwza5UPHEeyeNL1HjQQM2w" name=" &#xA; &#xA;Calculate_Risk_Weight" visible="false" incomingEdges="_oNYUAEPHEeyeNL1HjQQM2w _oNZiAkPHEeyeNL1HjQQM2w">
           <target xmi:type="bpmn_lite:ServiceTask" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1/@flowElements.0"/>
           <semanticElements xmi:type="bpmn_lite:ServiceTask" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1/@flowElements.0"/>
           <decorations xmi:type="viewpoint:Decoration" uid="_jwza50PHEeyeNL1HjQQM2w">
             <description xmi:type="description_1:MappingBasedDecoration" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@decorationDescriptionsSet/@decorationDescriptions[name='ServiceTask']"/>
           </decorations>
+          <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_Digip0RwEeydrr4MVh_iJA">
+            <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
+          </graphicalFilters>
           <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
           <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
           <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
@@ -2031,12 +2136,15 @@
           </ownedStyle>
           <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']"/>
         </ownedDiagramElements>
-        <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_mY8h3kPHEeyeNL1HjQQM2w" name=" &#xA; &#xA;Calculate_Exposure_At_Default" incomingEdges="_oobRZEPHEeyeNL1HjQQM2w _oob4NEPHEeyeNL1HjQQM2w">
-          <target xmi:type="bpmn_lite:ServiceTask" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1/@flowElements.1"/>
-          <semanticElements xmi:type="bpmn_lite:ServiceTask" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1/@flowElements.1"/>
+        <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_mY8h3kPHEeyeNL1HjQQM2w" name=" &#xA; &#xA;Calculate_Exposure_At_Default" visible="false" incomingEdges="_oobRZEPHEeyeNL1HjQQM2w _oob4NEPHEeyeNL1HjQQM2w">
+          <target xmi:type="bpmn_lite:ServiceTask" href="BIRD_transformations.logical_transformations#Calculate_Exposure_At_Default"/>
+          <semanticElements xmi:type="bpmn_lite:ServiceTask" href="BIRD_transformations.logical_transformations#Calculate_Exposure_At_Default"/>
           <decorations xmi:type="viewpoint:Decoration" uid="_mY9I4UPHEeyeNL1HjQQM2w">
             <description xmi:type="description_1:MappingBasedDecoration" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@decorationDescriptionsSet/@decorationDescriptions[name='ServiceTask']"/>
           </decorations>
+          <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_DigiqERwEeydrr4MVh_iJA">
+            <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
+          </graphicalFilters>
           <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
           <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
           <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
@@ -2046,9 +2154,12 @@
           </ownedStyle>
           <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']"/>
         </ownedDiagramElements>
-        <ownedDiagramElements xmi:type="diagram:DNode" uid="_nf0qY0PHEeyeNL1HjQQM2w" outgoingEdges="_oNYUAEPHEeyeNL1HjQQM2w _oNY69EPHEeyeNL1HjQQM2w _oobRZEPHEeyeNL1HjQQM2w _oobRaUPHEeyeNL1HjQQM2w" width="-1" height="-1">
+        <ownedDiagramElements xmi:type="diagram:DNode" uid="_nf0qY0PHEeyeNL1HjQQM2w" visible="false" outgoingEdges="_oNYUAEPHEeyeNL1HjQQM2w _oNY69EPHEeyeNL1HjQQM2w _oobRZEPHEeyeNL1HjQQM2w _oobRaUPHEeyeNL1HjQQM2w" width="-1" height="-1">
           <target xmi:type="bpmn_lite:InclusiveGateway" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1/@flowElements.2"/>
           <semanticElements xmi:type="bpmn_lite:InclusiveGateway" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1/@flowElements.2"/>
+          <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_DigioURwEeydrr4MVh_iJA">
+            <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
+          </graphicalFilters>
           <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
           <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
           <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
@@ -2077,12 +2188,15 @@
           <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@style"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:ContainerMappingImport" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPSubProcess']"/>
-        <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="__erQOEPHEeyeNL1HjQQM2w" name=" &#xA; &#xA;Generate Credit Risk Report">
+        <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="__erQOEPHEeyeNL1HjQQM2w" name=" &#xA; &#xA;Generate Credit Risk Report" visible="false">
           <target xmi:type="bpmn_lite:ScriptTask" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.5/@flowElements.0"/>
           <semanticElements xmi:type="bpmn_lite:ScriptTask" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.5/@flowElements.0"/>
           <decorations xmi:type="viewpoint:Decoration" uid="__er3MUPHEeyeNL1HjQQM2w">
             <description xmi:type="description_1:MappingBasedDecoration" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@decorationDescriptionsSet/@decorationDescriptions[name='ScriptTask']"/>
           </decorations>
+          <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_DigiqURwEeydrr4MVh_iJA">
+            <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
+          </graphicalFilters>
           <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
           <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
           <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
@@ -2098,7 +2212,7 @@
           <decorations xmi:type="viewpoint:Decoration" uid="_BXek0EPIEeyeNL1HjQQM2w">
             <description xmi:type="description_1:MappingBasedDecoration" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@decorationDescriptionsSet/@decorationDescriptions[name='ScriptTask']"/>
           </decorations>
-          <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_i_XyYEPREey5h42sD_zaOw">
+          <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_6RwI8ERvEeydrr4MVh_iJA">
             <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
           </graphicalFilters>
           <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_BXd900PIEeyeNL1HjQQM2w" labelSize="9" showIcon="false" labelColor="64,41,0" borderSize="1" borderSizeComputationExpression="1" borderColor="64,41,0" backgroundColor="255,243,171" foregroundColor="255,243,171">
@@ -2107,15 +2221,12 @@
           </ownedStyle>
           <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']"/>
         </ownedDiagramElements>
-        <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_HMQm9kPIEeyeNL1HjQQM2w" name=" &#xA; &#xA;Generat Trade Report" visible="false">
+        <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_HMQm9kPIEeyeNL1HjQQM2w" name=" &#xA; &#xA;Generat Trade Report">
           <target xmi:type="bpmn_lite:ScriptTask" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.5/@flowElements.2"/>
           <semanticElements xmi:type="bpmn_lite:ScriptTask" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.5/@flowElements.2"/>
           <decorations xmi:type="viewpoint:Decoration" uid="_HMQm-EPIEeyeNL1HjQQM2w">
             <description xmi:type="description_1:MappingBasedDecoration" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@decorationDescriptionsSet/@decorationDescriptions[name='ScriptTask']"/>
           </decorations>
-          <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_eTjjgEPREey5h42sD_zaOw">
-            <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
-          </graphicalFilters>
           <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
           <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
           <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
@@ -2147,9 +2258,6 @@
       <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_JsAHJEPFEeyeNL1HjQQM2w" name=" &#xA; &#xA;Read Instrument" visible="false" incomingEdges="_Y0NKdEPHEeyeNL1HjQQM2w _Y0NxiUPHEeyeNL1HjQQM2w">
         <target xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.1"/>
         <semanticElements xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.1"/>
-        <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_i_XyYUPREey5h42sD_zaOw">
-          <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
-        </graphicalFilters>
         <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_JsAHJUPFEeyeNL1HjQQM2w" labelSize="9" showIcon="false" labelColor="64,41,0" borderSize="1" borderSizeComputationExpression="1" borderColor="64,41,0" backgroundColor="255,243,171" foregroundColor="255,243,171">
           <labelFormat>bold</labelFormat>
           <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']/@style"/>
@@ -2159,7 +2267,7 @@
       <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_SajyskPFEeyeNL1HjQQM2w" name="Read And Enrich Entity" visible="false" incomingEdges="_YFOkkEPHEeyeNL1HjQQM2w _YFPLokPHEeyeNL1HjQQM2w">
         <target xmi:type="bpmn_lite:SubProcess" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.2"/>
         <semanticElements xmi:type="bpmn_lite:SubProcess" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.2"/>
-        <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_ZT2vUUPREey5h42sD_zaOw">
+        <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_DigiqkRwEeydrr4MVh_iJA">
           <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
         </graphicalFilters>
         <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_Sajys0PFEeyeNL1HjQQM2w" labelSize="9" showIcon="false" borderSize="3" borderSizeComputationExpression="3" borderColor="245,233,73" backgroundColor="255,249,225" foregroundColor="255,249,225">
@@ -2170,7 +2278,7 @@
         <ownedDiagramElements xmi:type="diagram:DNode" uid="_T4P4tEPFEeyeNL1HjQQM2w" visible="false" outgoingEdges="_bEhct0PGEeyeNL1HjQQM2w _bEiDwkPGEeyeNL1HjQQM2w _boJuSEPGEeyeNL1HjQQM2w _boKVREPGEeyeNL1HjQQM2w" width="-1" height="-1">
           <target xmi:type="bpmn_lite:InclusiveGateway" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.2/@flowElements.0"/>
           <semanticElements xmi:type="bpmn_lite:InclusiveGateway" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.2/@flowElements.0"/>
-          <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_-T9sU0POEeyI--MDGNODPQ">
+          <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_DigiokRwEeydrr4MVh_iJA">
             <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
           </graphicalFilters>
           <ownedStyle xmi:type="diagram:WorkspaceImage" uid="_T4QfwEPFEeyeNL1HjQQM2w" showIcon="false" labelColor="64,41,0" workspacePath="/org.eclipse.efbt.cocalimo.core.ui.sirius/icons2/nodes/gateway/inclusive-gateway.svg">
@@ -2181,7 +2289,7 @@
         <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_WqMb40PFEeyeNL1HjQQM2w" name=" &#xA; &#xA;Read_Entity" visible="false" incomingEdges="_bEhcskPGEeyeNL1HjQQM2w _bEiDwkPGEeyeNL1HjQQM2w">
           <target xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.2/@flowElements.1"/>
           <semanticElements xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.2/@flowElements.1"/>
-          <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_-T-TaEPOEeyI--MDGNODPQ">
+          <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_Digiq0RwEeydrr4MVh_iJA">
             <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
           </graphicalFilters>
           <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_WqMb5EPFEeyeNL1HjQQM2w" labelSize="9" showIcon="false" labelColor="64,41,0" borderSize="1" borderSizeComputationExpression="1" borderColor="64,41,0" backgroundColor="255,243,171" foregroundColor="255,243,171">
@@ -2196,7 +2304,7 @@
           <decorations xmi:type="viewpoint:Decoration" uid="_ZE9YsEPGEeyeNL1HjQQM2w">
             <description xmi:type="description_1:MappingBasedDecoration" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@decorationDescriptionsSet/@decorationDescriptions[name='ServiceTask']"/>
           </decorations>
-          <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_-T-TaUPOEeyI--MDGNODPQ">
+          <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_qc-ookRvEeydrr4MVh_iJA">
             <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
           </graphicalFilters>
           <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_ZE7jgkPGEeyeNL1HjQQM2w" labelSize="9" showIcon="false" labelColor="64,41,0" borderSize="1" borderSizeComputationExpression="1" borderColor="64,41,0" backgroundColor="255,243,171" foregroundColor="255,243,171">
@@ -2209,7 +2317,7 @@
       <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_tYrwlEPGEeyeNL1HjQQM2w" name="Read And Enrich Bond Instrument" visible="false" incomingEdges="_Zj8lkUPHEeyeNL1HjQQM2w _Zj9MaUPHEeyeNL1HjQQM2w">
         <target xmi:type="bpmn_lite:SubProcess" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.3"/>
         <semanticElements xmi:type="bpmn_lite:SubProcess" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.3"/>
-        <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_i_XyYkPREey5h42sD_zaOw">
+        <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_6RwI8URvEeydrr4MVh_iJA">
           <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
         </graphicalFilters>
         <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_tYrwlUPGEeyeNL1HjQQM2w" labelSize="9" showIcon="false" borderSize="3" borderSizeComputationExpression="3" borderColor="245,233,73" backgroundColor="255,249,225" foregroundColor="255,249,225">
@@ -2220,7 +2328,7 @@
         <ownedDiagramElements xmi:type="diagram:DNode" uid="_vCvepEPGEeyeNL1HjQQM2w" visible="false" outgoingEdges="_5HW-WkPGEeyeNL1HjQQM2w _5HXlREPGEeyeNL1HjQQM2w _IeECckPHEeyeNL1HjQQM2w _IeECd0PHEeyeNL1HjQQM2w" width="-1" height="-1">
           <target xmi:type="bpmn_lite:InclusiveGateway" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.3/@flowElements.0"/>
           <semanticElements xmi:type="bpmn_lite:InclusiveGateway" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.3/@flowElements.0"/>
-          <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_i_XLUEPREey5h42sD_zaOw">
+          <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_6Rvh4URvEeydrr4MVh_iJA">
             <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
           </graphicalFilters>
           <ownedStyle xmi:type="diagram:WorkspaceImage" uid="_vCvepUPGEeyeNL1HjQQM2w" showIcon="false" labelColor="64,41,0" workspacePath="/org.eclipse.efbt.cocalimo.core.ui.sirius/icons2/nodes/gateway/inclusive-gateway.svg">
@@ -2231,7 +2339,7 @@
         <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_yFNxJkPGEeyeNL1HjQQM2w" name=" &#xA; &#xA;Read_Bond_Instrument" visible="false" incomingEdges="_5HW-VUPGEeyeNL1HjQQM2w _5HXlREPGEeyeNL1HjQQM2w">
           <target xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.3/@flowElements.1"/>
           <semanticElements xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.3/@flowElements.1"/>
-          <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_-T-TakPOEeyI--MDGNODPQ">
+          <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_6RwI8kRvEeydrr4MVh_iJA">
             <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
           </graphicalFilters>
           <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_yFNxJ0PGEeyeNL1HjQQM2w" labelSize="9" showIcon="false" labelColor="64,41,0" borderSize="1" borderSizeComputationExpression="1" borderColor="64,41,0" backgroundColor="255,243,171" foregroundColor="255,243,171">
@@ -2246,7 +2354,7 @@
           <decorations xmi:type="viewpoint:Decoration" uid="_HHSc0EPHEeyeNL1HjQQM2w">
             <description xmi:type="description_1:MappingBasedDecoration" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@decorationDescriptionsSet/@decorationDescriptions[name='ServiceTask']"/>
           </decorations>
-          <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_i_XyY0PREey5h42sD_zaOw">
+          <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_6RwI80RvEeydrr4MVh_iJA">
             <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
           </graphicalFilters>
           <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_HHScz0PHEeyeNL1HjQQM2w" labelSize="9" showIcon="false" labelColor="64,41,0" borderSize="1" borderSizeComputationExpression="1" borderColor="64,41,0" backgroundColor="255,243,171" foregroundColor="255,243,171">
@@ -2256,13 +2364,25 @@
           <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']"/>
         </ownedDiagramElements>
       </ownedDiagramElements>
-      <ownedDiagramElements xmi:type="diagram:DNode" uid="_WhbPi0PHEeyeNL1HjQQM2w" visible="false" outgoingEdges="_YFOklUPHEeyeNL1HjQQM2w _YFPLokPHEeyeNL1HjQQM2w _Y0NxhEPHEeyeNL1HjQQM2w _Y0NxiUPHEeyeNL1HjQQM2w _Zj9MZEPHEeyeNL1HjQQM2w _Zj9MaUPHEeyeNL1HjQQM2w _b-4-BkPHEeyeNL1HjQQM2w _b-5k1EPHEeyeNL1HjQQM2w" width="-1" height="-1">
+      <ownedDiagramElements xmi:type="diagram:DNode" uid="_WhbPi0PHEeyeNL1HjQQM2w" visible="false" outgoingEdges="_YFOklUPHEeyeNL1HjQQM2w _YFPLokPHEeyeNL1HjQQM2w _Y0NxhEPHEeyeNL1HjQQM2w _Y0NxiUPHEeyeNL1HjQQM2w _Zj9MZEPHEeyeNL1HjQQM2w _Zj9MaUPHEeyeNL1HjQQM2w _b-4-BkPHEeyeNL1HjQQM2w _b-5k1EPHEeyeNL1HjQQM2w _kbuQ10RvEeydrr4MVh_iJA _kbu35ERvEeydrr4MVh_iJA" width="-1" height="-1">
         <target xmi:type="bpmn_lite:ParallelGateway" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.4"/>
         <semanticElements xmi:type="bpmn_lite:ParallelGateway" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.4"/>
         <ownedStyle xmi:type="diagram:WorkspaceImage" uid="_WhbPjEPHEeyeNL1HjQQM2w" showIcon="false" labelColor="64,41,0" workspacePath="/org.eclipse.efbt.cocalimo.core.ui.sirius/icons2/nodes/gateway/parallel-gateway.svg">
           <description xmi:type="style:WorkspaceImageDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPParallelGateway']/@style"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPParallelGateway']"/>
+      </ownedDiagramElements>
+      <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_jgCEpERvEeydrr4MVh_iJA" name=" &#xA; &#xA;Read Equity Instrument" visible="false" incomingEdges="_kbuQ0kRvEeydrr4MVh_iJA _kbu35ERvEeydrr4MVh_iJA">
+        <target xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.9"/>
+        <semanticElements xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.9"/>
+        <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_yekggERvEeydrr4MVh_iJA">
+          <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
+        </graphicalFilters>
+        <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_jgCrsERvEeydrr4MVh_iJA" labelSize="9" showIcon="false" labelColor="64,41,0" borderSize="1" borderSizeComputationExpression="1" borderColor="64,41,0" backgroundColor="255,243,171" foregroundColor="255,243,171">
+          <labelFormat>bold</labelFormat>
+          <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']"/>
       </ownedDiagramElements>
     </ownedDiagramElements>
     <ownedDiagramElements xmi:type="diagram:DEdge" uid="_bEg1oEPGEeyeNL1HjQQM2w" visible="false" sourceNode="_T4RG2UPFEeyeNL1HjQQM2w" targetNode="_WqNC-0PFEeyeNL1HjQQM2w">
@@ -2400,6 +2520,9 @@
     <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_CjObskPHEeyeNL1HjQQM2w" name="Credit Risk Processing" visible="false" incomingEdges="_tnpkOUPHEeyeNL1HjQQM2w">
       <target xmi:type="bpmn_lite:SubProcess" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1"/>
       <semanticElements xmi:type="bpmn_lite:SubProcess" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1"/>
+      <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_DihJsERwEeydrr4MVh_iJA">
+        <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
+      </graphicalFilters>
       <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_CjObs0PHEeyeNL1HjQQM2w" labelSize="9" showIcon="false" borderSize="3" borderSizeComputationExpression="3" borderColor="245,233,73" backgroundColor="255,249,225" foregroundColor="255,249,225">
         <labelFormat>bold</labelFormat>
         <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@style"/>
@@ -2411,6 +2534,9 @@
         <decorations xmi:type="viewpoint:Decoration" uid="_jwyM0EPHEeyeNL1HjQQM2w">
           <description xmi:type="description_1:MappingBasedDecoration" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@decorationDescriptionsSet/@decorationDescriptions[name='ServiceTask']"/>
         </decorations>
+        <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_DihJsURwEeydrr4MVh_iJA">
+          <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
+        </graphicalFilters>
         <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_jwyMz0PHEeyeNL1HjQQM2w" labelSize="9" showIcon="false" labelColor="64,41,0" borderSize="1" borderSizeComputationExpression="1" borderColor="64,41,0" backgroundColor="255,243,171" foregroundColor="255,243,171">
           <labelFormat>bold</labelFormat>
           <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']/@style"/>
@@ -2418,11 +2544,14 @@
         <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']"/>
       </ownedDiagramElements>
       <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_mY6sq0PHEeyeNL1HjQQM2w" name=" &#xA; &#xA;Calculate_Exposure_At_Default" visible="false" incomingEdges="_oobRaUPHEeyeNL1HjQQM2w _oob4OUPHEeyeNL1HjQQM2w">
-        <target xmi:type="bpmn_lite:ServiceTask" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1/@flowElements.1"/>
-        <semanticElements xmi:type="bpmn_lite:ServiceTask" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1/@flowElements.1"/>
+        <target xmi:type="bpmn_lite:ServiceTask" href="BIRD_transformations.logical_transformations#Calculate_Exposure_At_Default"/>
+        <semanticElements xmi:type="bpmn_lite:ServiceTask" href="BIRD_transformations.logical_transformations#Calculate_Exposure_At_Default"/>
         <decorations xmi:type="viewpoint:Decoration" uid="_mY6srUPHEeyeNL1HjQQM2w">
           <description xmi:type="description_1:MappingBasedDecoration" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@decorationDescriptionsSet/@decorationDescriptions[name='ServiceTask']"/>
         </decorations>
+        <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_DihJskRwEeydrr4MVh_iJA">
+          <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
+        </graphicalFilters>
         <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_mY6srEPHEeyeNL1HjQQM2w" labelSize="9" showIcon="false" labelColor="64,41,0" borderSize="1" borderSizeComputationExpression="1" borderColor="64,41,0" backgroundColor="255,243,171" foregroundColor="255,243,171">
           <labelFormat>bold</labelFormat>
           <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']/@style"/>
@@ -2432,6 +2561,9 @@
       <ownedDiagramElements xmi:type="diagram:DNode" uid="_nf0DQEPHEeyeNL1HjQQM2w" visible="false" outgoingEdges="_oNZiAkPHEeyeNL1HjQQM2w _oNZiB0PHEeyeNL1HjQQM2w _oob4NEPHEeyeNL1HjQQM2w _oob4OUPHEeyeNL1HjQQM2w" width="-1" height="-1">
         <target xmi:type="bpmn_lite:InclusiveGateway" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1/@flowElements.2"/>
         <semanticElements xmi:type="bpmn_lite:InclusiveGateway" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1/@flowElements.2"/>
+        <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_Digio0RwEeydrr4MVh_iJA">
+          <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
+        </graphicalFilters>
         <ownedStyle xmi:type="diagram:WorkspaceImage" uid="_nf0DQUPHEeyeNL1HjQQM2w" showIcon="false" labelColor="64,41,0" workspacePath="/org.eclipse.efbt.cocalimo.core.ui.sirius/icons2/nodes/gateway/inclusive-gateway.svg">
           <description xmi:type="style:WorkspaceImageDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPInclusiveGateway']/@style"/>
         </ownedStyle>
@@ -2526,7 +2658,7 @@
       </ownedStyle>
       <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='SequenceFlow']"/>
     </ownedDiagramElements>
-    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_Y0MjiEPHEeyeNL1HjQQM2w" visible="false" sourceNode="_WhcdoEPHEeyeNL1HjQQM2w" targetNode="_JsBVQkPFEeyeNL1HjQQM2w">
+    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_Y0MjiEPHEeyeNL1HjQQM2w" sourceNode="_WhcdoEPHEeyeNL1HjQQM2w" targetNode="_JsBVQkPFEeyeNL1HjQQM2w">
       <target xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.6"/>
       <semanticElements xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.6"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="_Y0NKcEPHEeyeNL1HjQQM2w" targetArrow="InputFillClosedArrow" size="2" routingStyle="manhattan" strokeColor="125,125,125">
@@ -2658,7 +2790,7 @@
       </ownedStyle>
       <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='SequenceFlow']"/>
     </ownedDiagramElements>
-    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_oNYUAEPHEeyeNL1HjQQM2w" sourceNode="_nf0qY0PHEeyeNL1HjQQM2w" targetNode="_jwza5UPHEeyeNL1HjQQM2w">
+    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_oNYUAEPHEeyeNL1HjQQM2w" visible="false" sourceNode="_nf0qY0PHEeyeNL1HjQQM2w" targetNode="_jwza5UPHEeyeNL1HjQQM2w">
       <target xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1/@flowElements.3"/>
       <semanticElements xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1/@flowElements.3"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="_oNY68EPHEeyeNL1HjQQM2w" targetArrow="InputFillClosedArrow" size="2" routingStyle="manhattan" strokeColor="125,125,125">
@@ -2702,7 +2834,7 @@
       </ownedStyle>
       <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='SequenceFlow']"/>
     </ownedDiagramElements>
-    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_oobRZEPHEeyeNL1HjQQM2w" sourceNode="_nf0qY0PHEeyeNL1HjQQM2w" targetNode="_mY8h3kPHEeyeNL1HjQQM2w">
+    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_oobRZEPHEeyeNL1HjQQM2w" visible="false" sourceNode="_nf0qY0PHEeyeNL1HjQQM2w" targetNode="_mY8h3kPHEeyeNL1HjQQM2w">
       <target xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1/@flowElements.4"/>
       <semanticElements xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1/@flowElements.4"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="_oobRZUPHEeyeNL1HjQQM2w" targetArrow="InputFillClosedArrow" size="2" routingStyle="manhattan" strokeColor="125,125,125">
@@ -2768,7 +2900,7 @@
       </ownedStyle>
       <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='SequenceFlow']"/>
     </ownedDiagramElements>
-    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_tnpkNEPHEeyeNL1HjQQM2w" sourceNode="_sUjkr0PHEeyeNL1HjQQM2w" targetNode="_CjPC00PHEeyeNL1HjQQM2w">
+    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_tnpkNEPHEeyeNL1HjQQM2w" visible="false" sourceNode="_sUjkr0PHEeyeNL1HjQQM2w" targetNode="_CjPC00PHEeyeNL1HjQQM2w">
       <target xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.4"/>
       <semanticElements xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.4"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="_tnpkNUPHEeyeNL1HjQQM2w" targetArrow="InputFillClosedArrow" size="2" routingStyle="manhattan" strokeColor="125,125,125">
@@ -2804,6 +2936,9 @@
         <decorations xmi:type="viewpoint:Decoration" uid="__eqpEUPHEeyeNL1HjQQM2w">
           <description xmi:type="description_1:MappingBasedDecoration" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@decorationDescriptionsSet/@decorationDescriptions[name='ScriptTask']"/>
         </decorations>
+        <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_DihJs0RwEeydrr4MVh_iJA">
+          <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
+        </graphicalFilters>
         <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="__eqpEEPHEeyeNL1HjQQM2w" labelSize="9" showIcon="false" labelColor="64,41,0" borderSize="1" borderSizeComputationExpression="1" borderColor="64,41,0" backgroundColor="255,243,171" foregroundColor="255,243,171">
           <labelFormat>bold</labelFormat>
           <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']/@style"/>
@@ -2816,7 +2951,7 @@
         <decorations xmi:type="viewpoint:Decoration" uid="_BXcvtkPIEeyeNL1HjQQM2w">
           <description xmi:type="description_1:MappingBasedDecoration" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@decorationDescriptionsSet/@decorationDescriptions[name='ScriptTask']"/>
         </decorations>
-        <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_i_XyZEPREey5h42sD_zaOw">
+        <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_6RwI9ERvEeydrr4MVh_iJA">
           <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
         </graphicalFilters>
         <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_BXcvtUPIEeyeNL1HjQQM2w" labelSize="9" showIcon="false" labelColor="64,41,0" borderSize="1" borderSizeComputationExpression="1" borderColor="64,41,0" backgroundColor="255,243,171" foregroundColor="255,243,171">
@@ -2831,9 +2966,6 @@
         <decorations xmi:type="viewpoint:Decoration" uid="_HMP_0UPIEeyeNL1HjQQM2w">
           <description xmi:type="description_1:MappingBasedDecoration" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@decorationDescriptionsSet/@decorationDescriptions[name='ScriptTask']"/>
         </decorations>
-        <graphicalFilters xmi:type="diagram:AppliedCompositeFilters" uid="_eTjjgUPREey5h42sD_zaOw">
-          <compositeFilterDescriptions xmi:type="filter:CompositeFilterDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@filters[name='FitlerOnVisibility']"/>
-        </graphicalFilters>
         <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_HMP_0EPIEeyeNL1HjQQM2w" labelSize="9" showIcon="false" labelColor="64,41,0" borderSize="1" borderSizeComputationExpression="1" borderColor="64,41,0" backgroundColor="255,243,171" foregroundColor="255,243,171">
           <labelFormat>bold</labelFormat>
           <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']/@style"/>
@@ -2858,6 +2990,50 @@
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="_IIfl1kPIEeyeNL1HjQQM2w" targetArrow="InputFillClosedArrow" size="2" routingStyle="manhattan" strokeColor="125,125,125">
         <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='SequenceFlow']/@style"/>
         <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_IIfl10PIEeyeNL1HjQQM2w" showIcon="false">
+          <labelFormat>italic</labelFormat>
+        </centerLabelStyle>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='SequenceFlow']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_kbtp1ERvEeydrr4MVh_iJA" visible="false" sourceNode="_WhcdoEPHEeyeNL1HjQQM2w" targetNode="_jgL1o0RvEeydrr4MVh_iJA">
+      <target xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.10"/>
+      <semanticElements xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.10"/>
+      <ownedStyle xmi:type="diagram:EdgeStyle" uid="_kbtp1URvEeydrr4MVh_iJA" targetArrow="InputFillClosedArrow" size="2" routingStyle="manhattan" strokeColor="125,125,125">
+        <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='SequenceFlow']/@style"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_kbtp1kRvEeydrr4MVh_iJA" showIcon="false">
+          <labelFormat>italic</labelFormat>
+        </centerLabelStyle>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='SequenceFlow']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_kbuQ0kRvEeydrr4MVh_iJA" visible="false" sourceNode="_WhcdoEPHEeyeNL1HjQQM2w" targetNode="_jgCEpERvEeydrr4MVh_iJA">
+      <target xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.10"/>
+      <semanticElements xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.10"/>
+      <ownedStyle xmi:type="diagram:EdgeStyle" uid="_kbuQ00RvEeydrr4MVh_iJA" targetArrow="InputFillClosedArrow" size="2" routingStyle="manhattan" strokeColor="125,125,125">
+        <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='SequenceFlow']/@style"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_kbuQ1ERvEeydrr4MVh_iJA" showIcon="false">
+          <labelFormat>italic</labelFormat>
+        </centerLabelStyle>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='SequenceFlow']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_kbuQ10RvEeydrr4MVh_iJA" visible="false" sourceNode="_WhbPi0PHEeyeNL1HjQQM2w" targetNode="_jgL1o0RvEeydrr4MVh_iJA">
+      <target xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.10"/>
+      <semanticElements xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.10"/>
+      <ownedStyle xmi:type="diagram:EdgeStyle" uid="_kbu34ERvEeydrr4MVh_iJA" targetArrow="InputFillClosedArrow" size="2" routingStyle="manhattan" strokeColor="125,125,125">
+        <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='SequenceFlow']/@style"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_kbu34URvEeydrr4MVh_iJA" showIcon="false">
+          <labelFormat>italic</labelFormat>
+        </centerLabelStyle>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='SequenceFlow']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_kbu35ERvEeydrr4MVh_iJA" visible="false" sourceNode="_WhbPi0PHEeyeNL1HjQQM2w" targetNode="_jgCEpERvEeydrr4MVh_iJA">
+      <target xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.10"/>
+      <semanticElements xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.10"/>
+      <ownedStyle xmi:type="diagram:EdgeStyle" uid="_kbu35URvEeydrr4MVh_iJA" targetArrow="InputFillClosedArrow" size="2" routingStyle="manhattan" strokeColor="125,125,125">
+        <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='SequenceFlow']/@style"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_kbu35kRvEeydrr4MVh_iJA" showIcon="false">
           <labelFormat>italic</labelFormat>
         </centerLabelStyle>
       </ownedStyle>

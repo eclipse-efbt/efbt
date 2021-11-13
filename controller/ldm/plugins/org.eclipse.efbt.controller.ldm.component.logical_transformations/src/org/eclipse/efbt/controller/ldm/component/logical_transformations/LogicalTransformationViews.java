@@ -148,6 +148,12 @@ public class LogicalTransformationViews {
 						{
 							requiredAttributesList.add(eAttribute);
 							EList<EAttribute> transientDependantAttributes = getTransientDependantAttributes(subProcess,eAttribute,scenariosOutOfScope);
+							for (EAttribute eAttribute2 : transientDependantAttributes) {
+								if(!requiredAttributesList.contains(eAttribute2))
+								{
+									requiredAttributesList.add(eAttribute2);
+								}
+							}
 						}
 							
 						
