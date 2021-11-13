@@ -25,7 +25,9 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference logical_transformations.ecore#//LogicalTransformationModule/requirements"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference logical_transformations.ecore#//LogicalTransformationModule/testModules"/>
     </genClasses>
-    <genClasses ecoreClass="logical_transformations.ecore#//TaskTag"/>
+    <genClasses ecoreClass="logical_transformations.ecore#//TaskTag">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference logical_transformations.ecore#//TaskTag/task"/>
+    </genClasses>
     <genClasses ecoreClass="logical_transformations.ecore#//Scenario">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute logical_transformations.ecore#//Scenario/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute logical_transformations.ecore#//Scenario/invisible"/>
@@ -39,6 +41,7 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference logical_transformations.ecore#//Test/scenarios"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference logical_transformations.ecore#//Test/inputData"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference logical_transformations.ecore#//Test/expectedResult"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute logical_transformations.ecore#//Test/name"/>
     </genClasses>
     <genClasses ecoreClass="logical_transformations.ecore#//TestModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference logical_transformations.ecore#//TestModule/tests"/>

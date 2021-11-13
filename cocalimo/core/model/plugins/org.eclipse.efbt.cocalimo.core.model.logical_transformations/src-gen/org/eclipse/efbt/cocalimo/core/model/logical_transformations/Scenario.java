@@ -89,7 +89,7 @@ public interface Scenario extends EObject {
 	 * @return the value of the '<em>Description</em>' attribute.
 	 * @see #setDescription(String)
 	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsPackage#getScenario_Description()
-	 * @model extendedMetaData="kind='attribute' name='name'"
+	 * @model extendedMetaData="kind='attribute' name='description'"
 	 * @generated
 	 */
 	String getDescription();
