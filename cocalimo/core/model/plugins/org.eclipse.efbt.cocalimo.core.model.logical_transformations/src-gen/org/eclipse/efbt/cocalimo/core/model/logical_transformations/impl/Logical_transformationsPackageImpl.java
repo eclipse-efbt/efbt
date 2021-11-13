@@ -516,7 +516,7 @@ public class Logical_transformationsPackageImpl extends EPackageImpl implements 
 		   source,
 		   new String[] {
 			   "kind", "attribute",
-			   "name", "name"
+			   "name", "description"
 		   });
 	}
 
