@@ -152,22 +152,13 @@ public interface Logical_transformationsPackage extends EPackage {
 	int LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESS = Module_managementPackage.MODULE_FEATURE_COUNT + 2;
 
 	/**
-	 * The feature id for the '<em><b>Sub Process Views</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESS_VIEWS = Module_managementPackage.MODULE_FEATURE_COUNT + 3;
-
-	/**
 	 * The feature id for the '<em><b>Requirements</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int LOGICAL_TRANSFORMATION_MODULE__REQUIREMENTS = Module_managementPackage.MODULE_FEATURE_COUNT + 4;
+	int LOGICAL_TRANSFORMATION_MODULE__REQUIREMENTS = Module_managementPackage.MODULE_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Test Modules</b></em>' containment reference list.
@@ -176,7 +167,7 @@ public interface Logical_transformationsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LOGICAL_TRANSFORMATION_MODULE__TEST_MODULES = Module_managementPackage.MODULE_FEATURE_COUNT + 5;
+	int LOGICAL_TRANSFORMATION_MODULE__TEST_MODULES = Module_managementPackage.MODULE_FEATURE_COUNT + 4;
 
 	/**
 	 * The number of structural features of the '<em>Logical Transformation Module</em>' class.
@@ -185,7 +176,7 @@ public interface Logical_transformationsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LOGICAL_TRANSFORMATION_MODULE_FEATURE_COUNT = Module_managementPackage.MODULE_FEATURE_COUNT + 6;
+	int LOGICAL_TRANSFORMATION_MODULE_FEATURE_COUNT = Module_managementPackage.MODULE_FEATURE_COUNT + 5;
 
 	/**
 	 * The number of operations of the '<em>Logical Transformation Module</em>' class.
@@ -197,14 +188,14 @@ public interface Logical_transformationsPackage extends EPackage {
 	int LOGICAL_TRANSFORMATION_MODULE_OPERATION_COUNT = Module_managementPackage.MODULE_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.TaskTagImpl <em>Task Tag</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.ActivityTagImpl <em>Activity Tag</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.TaskTagImpl
-	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.Logical_transformationsPackageImpl#getTaskTag()
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.ActivityTagImpl
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.Logical_transformationsPackageImpl#getActivityTag()
 	 * @generated
 	 */
-	int TASK_TAG = 1;
+	int ACTIVITY_TAG = 1;
 
 	/**
 	 * The feature id for the '<em><b>Display Name</b></em>' attribute.
@@ -213,7 +204,7 @@ public interface Logical_transformationsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TASK_TAG__DISPLAY_NAME = Requirements_textPackage.TAG__DISPLAY_NAME;
+	int ACTIVITY_TAG__DISPLAY_NAME = Requirements_textPackage.TAG__DISPLAY_NAME;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -222,7 +213,7 @@ public interface Logical_transformationsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TASK_TAG__NAME = Requirements_textPackage.TAG__NAME;
+	int ACTIVITY_TAG__NAME = Requirements_textPackage.TAG__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Requirements</b></em>' reference list.
@@ -231,35 +222,34 @@ public interface Logical_transformationsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TASK_TAG__REQUIREMENTS = Requirements_textPackage.TAG__REQUIREMENTS;
+	int ACTIVITY_TAG__REQUIREMENTS = Requirements_textPackage.TAG__REQUIREMENTS;
 
 	/**
-	 * The feature id for the '<em><b>Task</b></em>' reference.
+	 * The feature id for the '<em><b>Activity</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TASK_TAG__TASK = Requirements_textPackage.TAG_FEATURE_COUNT + 0;
+	int ACTIVITY_TAG__ACTIVITY = Requirements_textPackage.TAG_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the '<em>Task Tag</em>' class.
+	 * The number of structural features of the '<em>Activity Tag</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TASK_TAG_FEATURE_COUNT = Requirements_textPackage.TAG_FEATURE_COUNT + 1;
+	int ACTIVITY_TAG_FEATURE_COUNT = Requirements_textPackage.TAG_FEATURE_COUNT + 1;
 
 	/**
-	 * The number of operations of the '<em>Task Tag</em>' class.
+	 * The number of operations of the '<em>Activity Tag</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TASK_TAG_OPERATION_COUNT = Requirements_textPackage.TAG_OPERATION_COUNT + 0;
-
+	int ACTIVITY_TAG_OPERATION_COUNT = Requirements_textPackage.TAG_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.ScenarioImpl <em>Scenario</em>}' class.
@@ -590,17 +580,6 @@ public interface Logical_transformationsPackage extends EPackage {
 	EReference getLogicalTransformationModule_SubProcess();
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule#getSubProcessViews <em>Sub Process Views</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Sub Process Views</em>'.
-	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule#getSubProcessViews()
-	 * @see #getLogicalTransformationModule()
-	 * @generated
-	 */
-	EReference getLogicalTransformationModule_SubProcessViews();
-
-	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule#getRequirements <em>Requirements</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -623,25 +602,25 @@ public interface Logical_transformationsPackage extends EPackage {
 	EReference getLogicalTransformationModule_TestModules();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.TaskTag <em>Task Tag</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.ActivityTag <em>Activity Tag</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Task Tag</em>'.
-	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.TaskTag
+	 * @return the meta object for class '<em>Activity Tag</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.ActivityTag
 	 * @generated
 	 */
-	EClass getTaskTag();
+	EClass getActivityTag();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.TaskTag#getTask <em>Task</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.ActivityTag#getActivity <em>Activity</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Task</em>'.
-	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.TaskTag#getTask()
-	 * @see #getTaskTag()
+	 * @return the meta object for the reference '<em>Activity</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.ActivityTag#getActivity()
+	 * @see #getActivityTag()
 	 * @generated
 	 */
-	EReference getTaskTag_Task();
+	EReference getActivityTag_Activity();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario <em>Scenario</em>}'.
@@ -851,14 +830,6 @@ public interface Logical_transformationsPackage extends EPackage {
 		EReference LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESS = eINSTANCE.getLogicalTransformationModule_SubProcess();
 
 		/**
-		 * The meta object literal for the '<em><b>Sub Process Views</b></em>' reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESS_VIEWS = eINSTANCE.getLogicalTransformationModule_SubProcessViews();
-
-		/**
 		 * The meta object literal for the '<em><b>Requirements</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -875,22 +846,22 @@ public interface Logical_transformationsPackage extends EPackage {
 		EReference LOGICAL_TRANSFORMATION_MODULE__TEST_MODULES = eINSTANCE.getLogicalTransformationModule_TestModules();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.TaskTagImpl <em>Task Tag</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.ActivityTagImpl <em>Activity Tag</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.TaskTagImpl
-		 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.Logical_transformationsPackageImpl#getTaskTag()
+		 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.ActivityTagImpl
+		 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.Logical_transformationsPackageImpl#getActivityTag()
 		 * @generated
 		 */
-		EClass TASK_TAG = eINSTANCE.getTaskTag();
+		EClass ACTIVITY_TAG = eINSTANCE.getActivityTag();
 
 		/**
-		 * The meta object literal for the '<em><b>Task</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Activity</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference TASK_TAG__TASK = eINSTANCE.getTaskTag_Task();
+		EReference ACTIVITY_TAG__ACTIVITY = eINSTANCE.getActivityTag_Activity();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.ScenarioImpl <em>Scenario</em>}' class.

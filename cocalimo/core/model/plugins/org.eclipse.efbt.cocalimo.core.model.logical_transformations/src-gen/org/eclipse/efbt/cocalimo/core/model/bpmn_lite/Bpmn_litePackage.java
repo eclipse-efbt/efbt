@@ -550,22 +550,13 @@ public interface Bpmn_litePackage extends EPackage {
 	int TASK__INCOMING = ACTIVITY__INCOMING;
 
 	/**
-	 * The feature id for the '<em><b>Entity</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__ENTITY = ACTIVITY_FEATURE_COUNT + 0;
-
-	/**
 	 * The number of structural features of the '<em>Task</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TASK_FEATURE_COUNT = ACTIVITY_FEATURE_COUNT + 1;
+	int TASK_FEATURE_COUNT = ACTIVITY_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of operations of the '<em>Task</em>' class.
@@ -969,15 +960,6 @@ public interface Bpmn_litePackage extends EPackage {
 	int SERVICE_TASK__INCOMING = TASK__INCOMING;
 
 	/**
-	 * The feature id for the '<em><b>Entity</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SERVICE_TASK__ENTITY = TASK__ENTITY;
-
-	/**
 	 * The feature id for the '<em><b>Enriched Attribute</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1170,15 +1152,6 @@ public interface Bpmn_litePackage extends EPackage {
 	int SCRIPT_TASK__INCOMING = TASK__INCOMING;
 
 	/**
-	 * The feature id for the '<em><b>Entity</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SCRIPT_TASK__ENTITY = TASK__ENTITY;
-
-	/**
 	 * The feature id for the '<em><b>Linked Attributes</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1204,6 +1177,98 @@ public interface Bpmn_litePackage extends EPackage {
 	 * @ordered
 	 */
 	int SCRIPT_TASK_OPERATION_COUNT = TASK_OPERATION_COUNT + 0;
+
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.core.model.bpmn_lite.impl.UserTaskImpl <em>User Task</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.core.model.bpmn_lite.impl.UserTaskImpl
+	 * @see org.eclipse.efbt.cocalimo.core.model.bpmn_lite.impl.Bpmn_litePackageImpl#getUserTask()
+	 * @generated
+	 */
+	int USER_TASK = 14;
+
+	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int USER_TASK__ID = TASK__ID;
+
+	/**
+	 * The feature id for the '<em><b>Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int USER_TASK__DESCRIPTION = TASK__DESCRIPTION;
+
+	/**
+	 * The feature id for the '<em><b>Invisible</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int USER_TASK__INVISIBLE = TASK__INVISIBLE;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int USER_TASK__NAME = TASK__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Outgoing</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int USER_TASK__OUTGOING = TASK__OUTGOING;
+
+	/**
+	 * The feature id for the '<em><b>Incoming</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int USER_TASK__INCOMING = TASK__INCOMING;
+
+	/**
+	 * The feature id for the '<em><b>Entity</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int USER_TASK__ENTITY = TASK_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>User Task</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int USER_TASK_FEATURE_COUNT = TASK_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of operations of the '<em>User Task</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int USER_TASK_OPERATION_COUNT = TASK_OPERATION_COUNT + 0;
 
 
 	/**
@@ -1366,17 +1431,6 @@ public interface Bpmn_litePackage extends EPackage {
 	EClass getTask();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Task#getEntity <em>Entity</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Entity</em>'.
-	 * @see org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Task#getEntity()
-	 * @see #getTask()
-	 * @generated
-	 */
-	EReference getTask_Entity();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Activity <em>Activity</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1488,6 +1542,27 @@ public interface Bpmn_litePackage extends EPackage {
 	 * @generated
 	 */
 	EReference getScriptTask_LinkedAttributes();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.bpmn_lite.UserTask <em>User Task</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>User Task</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.bpmn_lite.UserTask
+	 * @generated
+	 */
+	EClass getUserTask();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.core.model.bpmn_lite.UserTask#getEntity <em>Entity</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Entity</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.bpmn_lite.UserTask#getEntity()
+	 * @see #getUserTask()
+	 * @generated
+	 */
+	EReference getUserTask_Entity();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -1645,14 +1720,6 @@ public interface Bpmn_litePackage extends EPackage {
 		EClass TASK = eINSTANCE.getTask();
 
 		/**
-		 * The meta object literal for the '<em><b>Entity</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference TASK__ENTITY = eINSTANCE.getTask_Entity();
-
-		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.bpmn_lite.impl.ActivityImpl <em>Activity</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1755,6 +1822,24 @@ public interface Bpmn_litePackage extends EPackage {
 		 * @generated
 		 */
 		EReference SCRIPT_TASK__LINKED_ATTRIBUTES = eINSTANCE.getScriptTask_LinkedAttributes();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.bpmn_lite.impl.UserTaskImpl <em>User Task</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.core.model.bpmn_lite.impl.UserTaskImpl
+		 * @see org.eclipse.efbt.cocalimo.core.model.bpmn_lite.impl.Bpmn_litePackageImpl#getUserTask()
+		 * @generated
+		 */
+		EClass USER_TASK = eINSTANCE.getUserTask();
+
+		/**
+		 * The meta object literal for the '<em><b>Entity</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference USER_TASK__ENTITY = eINSTANCE.getUserTask_Entity();
 
 	}
 

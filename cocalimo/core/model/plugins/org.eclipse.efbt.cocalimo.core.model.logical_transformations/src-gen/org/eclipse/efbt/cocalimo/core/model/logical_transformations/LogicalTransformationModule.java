@@ -19,7 +19,6 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule#getTaskTags <em>Task Tags</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule#getScenarioTags <em>Scenario Tags</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule#getSubProcess <em>Sub Process</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule#getSubProcessViews <em>Sub Process Views</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule#getRequirements <em>Requirements</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule#getTestModules <em>Test Modules</em>}</li>
  * </ul>
@@ -31,7 +30,7 @@ import org.eclipse.emf.common.util.EList;
 public interface LogicalTransformationModule extends org.eclipse.efbt.cocalimo.core.model.module_management.Module {
 	/**
 	 * Returns the value of the '<em><b>Task Tags</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.TaskTag}.
+	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.ActivityTag}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Task Tags</em>' containment reference list.
@@ -39,7 +38,7 @@ public interface LogicalTransformationModule extends org.eclipse.efbt.cocalimo.c
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<TaskTag> getTaskTags();
+	EList<ActivityTag> getTaskTags();
 
 	/**
 	 * Returns the value of the '<em><b>Scenario Tags</b></em>' containment reference list.
@@ -74,18 +73,6 @@ public interface LogicalTransformationModule extends org.eclipse.efbt.cocalimo.c
 	 * @generated
 	 */
 	void setSubProcess(SubProcess value);
-
-	/**
-	 * Returns the value of the '<em><b>Sub Process Views</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.core.model.bpmn_lite.SubProcess}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Sub Process Views</em>' reference list.
-	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsPackage#getLogicalTransformationModule_SubProcessViews()
-	 * @model
-	 * @generated
-	 */
-	EList<SubProcess> getSubProcessViews();
 
 	/**
 	 * Returns the value of the '<em><b>Requirements</b></em>' containment reference list.

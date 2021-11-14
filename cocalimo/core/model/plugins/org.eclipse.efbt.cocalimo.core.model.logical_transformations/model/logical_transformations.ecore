@@ -4,7 +4,7 @@
     nsPrefix="logical_transformations">
   <eClassifiers xsi:type="ecore:EClass" name="LogicalTransformationModule" eSuperTypes="../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.ecore#//Module">
     <eStructuralFeatures xsi:type="ecore:EReference" name="taskTags" upperBound="-1"
-        eType="#//TaskTag" containment="true"/>
+        eType="#//ActivityTag" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="scenarioTags" upperBound="-1"
         eType="#//ScenarioTag" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="subProcess" eType="ecore:EClass bpmn_lite.ecore#//SubProcess"
@@ -15,8 +15,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="testModules" upperBound="-1"
         eType="#//TestModule" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TaskTag" eSuperTypes="../../org.eclipse.efbt.cocalimo.core.model.requirements_text/model/requirements_text.ecore#//Tag">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="task" eType="ecore:EClass bpmn_lite.ecore#//Task"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ActivityTag" eSuperTypes="../../org.eclipse.efbt.cocalimo.core.model.requirements_text/model/requirements_text.ecore#//Tag">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="activity" eType="ecore:EClass bpmn_lite.ecore#//Activity"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Scenario">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">

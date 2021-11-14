@@ -64,6 +64,7 @@ public class Bpmn_liteFactoryImpl extends EFactoryImpl implements Bpmn_liteFacto
 			case Bpmn_litePackage.SERVICE_TASK: return createServiceTask();
 			case Bpmn_litePackage.SUB_PROCESS: return createSubProcess();
 			case Bpmn_litePackage.SCRIPT_TASK: return createScriptTask();
+			case Bpmn_litePackage.USER_TASK: return createUserTask();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -155,6 +156,17 @@ public class Bpmn_liteFactoryImpl extends EFactoryImpl implements Bpmn_liteFacto
 	public ScriptTask createScriptTask() {
 		ScriptTaskImpl scriptTask = new ScriptTaskImpl();
 		return scriptTask;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public UserTask createUserTask() {
+		UserTaskImpl userTask = new UserTaskImpl();
+		return userTask;
 	}
 
 	/**

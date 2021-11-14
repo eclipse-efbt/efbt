@@ -95,26 +95,26 @@ public class Logical_transformationsItemProviderAdapterFactory extends Logical_t
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.TaskTag} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.ActivityTag} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected TaskTagItemProvider taskTagItemProvider;
+	protected ActivityTagItemProvider activityTagItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.TaskTag}.
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.ActivityTag}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	public Adapter createTaskTagAdapter() {
-		if (taskTagItemProvider == null) {
-			taskTagItemProvider = new TaskTagItemProvider(this);
+	public Adapter createActivityTagAdapter() {
+		if (activityTagItemProvider == null) {
+			activityTagItemProvider = new ActivityTagItemProvider(this);
 		}
 
-		return taskTagItemProvider;
+		return activityTagItemProvider;
 	}
 
 	/**
@@ -315,7 +315,7 @@ public class Logical_transformationsItemProviderAdapterFactory extends Logical_t
 	@Override
 	public void dispose() {
 		if (logicalTransformationModuleItemProvider != null) logicalTransformationModuleItemProvider.dispose();
-		if (taskTagItemProvider != null) taskTagItemProvider.dispose();
+		if (activityTagItemProvider != null) activityTagItemProvider.dispose();
 		if (scenarioItemProvider != null) scenarioItemProvider.dispose();
 		if (scenarioTagItemProvider != null) scenarioTagItemProvider.dispose();
 		if (testItemProvider != null) testItemProvider.dispose();

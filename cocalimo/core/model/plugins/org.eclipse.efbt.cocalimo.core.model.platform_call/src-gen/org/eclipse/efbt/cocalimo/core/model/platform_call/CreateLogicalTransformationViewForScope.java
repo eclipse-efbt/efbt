@@ -8,6 +8,7 @@ import org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTrans
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EAttribute;
 
 /**
  * <!-- begin-user-doc -->
@@ -21,7 +22,7 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope#getScriptTasksInScope <em>Script Tasks In Scope</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope#getScenariosOutOfScope <em>Scenarios Out Of Scope</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope#getLogicalTransformationModule <em>Logical Transformation Module</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope#isKeepLayout <em>Keep Layout</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope#getAttributeLineage <em>Attribute Lineage</em>}</li>
  * </ul>
  *
  * @see org.eclipse.efbt.cocalimo.core.model.platform_call.Platform_callPackage#getCreateLogicalTransformationViewForScope()
@@ -76,25 +77,15 @@ public interface CreateLogicalTransformationViewForScope extends PlatformCall {
 	void setLogicalTransformationModule(LogicalTransformationModule value);
 
 	/**
-	 * Returns the value of the '<em><b>Keep Layout</b></em>' attribute.
+	 * Returns the value of the '<em><b>Attribute Lineage</b></em>' reference list.
+	 * The list contents are of type {@link org.eclipse.emf.ecore.EAttribute}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Keep Layout</em>' attribute.
-	 * @see #setKeepLayout(boolean)
-	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.Platform_callPackage#getCreateLogicalTransformationViewForScope_KeepLayout()
+	 * @return the value of the '<em>Attribute Lineage</em>' reference list.
+	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.Platform_callPackage#getCreateLogicalTransformationViewForScope_AttributeLineage()
 	 * @model
 	 * @generated
 	 */
-	boolean isKeepLayout();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope#isKeepLayout <em>Keep Layout</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Keep Layout</em>' attribute.
-	 * @see #isKeepLayout()
-	 * @generated
-	 */
-	void setKeepLayout(boolean value);
+	EList<EAttribute> getAttributeLineage();
 
 } // CreateLogicalTransformationViewForScope
