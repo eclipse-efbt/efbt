@@ -55,7 +55,7 @@ public class Controller {
 		LogicalTransformationViews.createLogicalTransformationViewForScope(call.getLogicalTransformationModule(),
 																			call.getScriptTasksInScope(),
 																			call.getScenariosOutOfScope(),
-																			call.isKeepLayout());
+																			call);
 	}
 	
 

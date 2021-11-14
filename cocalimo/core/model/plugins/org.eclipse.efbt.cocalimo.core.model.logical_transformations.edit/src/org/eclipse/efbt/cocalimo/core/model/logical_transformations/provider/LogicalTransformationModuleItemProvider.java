@@ -54,32 +54,9 @@ public class LogicalTransformationModuleItemProvider extends ModuleItemProvider 
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addSubProcessViewsPropertyDescriptor(object);
 			addTestModulesPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
-	}
-
-	/**
-	 * This adds a property descriptor for the Sub Process Views feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addSubProcessViewsPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_LogicalTransformationModule_subProcessViews_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_LogicalTransformationModule_subProcessViews_feature", "_UI_LogicalTransformationModule_type"),
-				 Logical_transformationsPackage.Literals.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESS_VIEWS,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
 	}
 
 	/**
@@ -199,7 +176,7 @@ public class LogicalTransformationModuleItemProvider extends ModuleItemProvider 
 		newChildDescriptors.add
 			(createChildParameter
 				(Logical_transformationsPackage.Literals.LOGICAL_TRANSFORMATION_MODULE__TASK_TAGS,
-				 Logical_transformationsFactory.eINSTANCE.createTaskTag()));
+				 Logical_transformationsFactory.eINSTANCE.createActivityTag()));
 
 		newChildDescriptors.add
 			(createChildParameter

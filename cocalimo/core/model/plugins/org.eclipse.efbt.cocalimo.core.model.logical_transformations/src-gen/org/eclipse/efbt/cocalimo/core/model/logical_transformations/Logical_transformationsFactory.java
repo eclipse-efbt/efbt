@@ -31,13 +31,13 @@ public interface Logical_transformationsFactory extends EFactory {
 	LogicalTransformationModule createLogicalTransformationModule();
 
 	/**
-	 * Returns a new object of class '<em>Task Tag</em>'.
+	 * Returns a new object of class '<em>Activity Tag</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Task Tag</em>'.
+	 * @return a new object of class '<em>Activity Tag</em>'.
 	 * @generated
 	 */
-	TaskTag createTaskTag();
+	ActivityTag createActivityTag();
 
 	/**
 	 * Returns a new object of class '<em>Scenario</em>'.

@@ -13,8 +13,6 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
-import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
-import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
  * This is the item provider adapter for a {@link org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope} object.
@@ -48,7 +46,7 @@ public class CreateLogicalTransformationViewForScopeItemProvider
 			addScriptTasksInScopePropertyDescriptor(object);
 			addScenariosOutOfScopePropertyDescriptor(object);
 			addLogicalTransformationModulePropertyDescriptor(object);
-			addKeepLayoutPropertyDescriptor(object);
+			addAttributeLineagePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -120,23 +118,23 @@ public class CreateLogicalTransformationViewForScopeItemProvider
 	}
 
 	/**
-	 * This adds a property descriptor for the Keep Layout feature.
+	 * This adds a property descriptor for the Attribute Lineage feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addKeepLayoutPropertyDescriptor(Object object) {
+	protected void addAttributeLineagePropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_CreateLogicalTransformationViewForScope_keepLayout_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_CreateLogicalTransformationViewForScope_keepLayout_feature", "_UI_CreateLogicalTransformationViewForScope_type"),
-				 Platform_callPackage.Literals.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__KEEP_LAYOUT,
+				 getString("_UI_CreateLogicalTransformationViewForScope_attributeLineage_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_CreateLogicalTransformationViewForScope_attributeLineage_feature", "_UI_CreateLogicalTransformationViewForScope_type"),
+				 Platform_callPackage.Literals.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__ATTRIBUTE_LINEAGE,
 				 true,
 				 false,
-				 false,
-				 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+				 true,
+				 null,
 				 null,
 				 null));
 	}
@@ -177,12 +175,6 @@ public class CreateLogicalTransformationViewForScopeItemProvider
 	@Override
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
-
-		switch (notification.getFeatureID(CreateLogicalTransformationViewForScope.class)) {
-			case Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__KEEP_LAYOUT:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
-				return;
-		}
 		super.notifyChanged(notification);
 	}
 

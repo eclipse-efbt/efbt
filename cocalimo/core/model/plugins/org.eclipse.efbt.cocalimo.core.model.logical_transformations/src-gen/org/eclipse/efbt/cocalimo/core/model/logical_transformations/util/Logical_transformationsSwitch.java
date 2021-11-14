@@ -75,10 +75,10 @@ public class Logical_transformationsSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case Logical_transformationsPackage.TASK_TAG: {
-				TaskTag taskTag = (TaskTag)theEObject;
-				T result = caseTaskTag(taskTag);
-				if (result == null) result = caseTag(taskTag);
+			case Logical_transformationsPackage.ACTIVITY_TAG: {
+				ActivityTag activityTag = (ActivityTag)theEObject;
+				T result = caseActivityTag(activityTag);
+				if (result == null) result = caseTag(activityTag);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -128,17 +128,17 @@ public class Logical_transformationsSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Task Tag</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Activity Tag</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Task Tag</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Activity Tag</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseTaskTag(TaskTag object) {
+	public T caseActivityTag(ActivityTag object) {
 		return null;
 	}
 

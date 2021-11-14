@@ -12,13 +12,15 @@
  *******************************************************************************/
 package org.eclipse.efbt.cocalimo.core.ui.sirius;
 
+import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Activity;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ScriptTask;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ServiceTask;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Task;
+import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.UserTask;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.ScenarioTag;
-import org.eclipse.efbt.cocalimo.core.model.logical_transformations.TaskTag;
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.ActivityTag;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Test;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.TestModule;
 import org.eclipse.emf.common.util.BasicEList;
@@ -56,6 +58,10 @@ public class TaskService {
 		return eObject instanceof ServiceTask;
 	}
 	
+	public boolean isLikeUserTask(final EObject eObject) {
+		return eObject instanceof UserTask;
+	}
+	
 	public ScenarioTag getScenarioTag(Scenario self) {
 
 		
@@ -74,7 +80,7 @@ public class TaskService {
 		
 	}
 	
-	public TaskTag getTaskTag(Task self) {
+	public ActivityTag getActivityTag(Activity self) {
 
 		
 		EObject root = EcoreUtil.getRootContainer(self);
@@ -82,10 +88,10 @@ public class TaskService {
 		while (contents.hasNext() )
 		{
 			EObject o = contents.next();
-			if (o instanceof TaskTag)
+			if (o instanceof ActivityTag)
 			{
-				if (((TaskTag) o).getTask().equals(self))
-					return (TaskTag) o;
+				if (((ActivityTag) o).getActivity().equals(self))
+					return (ActivityTag) o;
 			}
 		}
 		return null;

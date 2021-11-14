@@ -30,7 +30,7 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform_call.ecore#//CreateLogicalTransformationViewForScope/scriptTasksInScope"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform_call.ecore#//CreateLogicalTransformationViewForScope/scenariosOutOfScope"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform_call.ecore#//CreateLogicalTransformationViewForScope/logicalTransformationModule"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//CreateLogicalTransformationViewForScope/keepLayout"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform_call.ecore#//CreateLogicalTransformationViewForScope/attributeLineage"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

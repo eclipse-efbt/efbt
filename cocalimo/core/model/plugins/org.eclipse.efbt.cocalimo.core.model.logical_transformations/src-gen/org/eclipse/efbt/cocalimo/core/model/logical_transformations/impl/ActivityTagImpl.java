@@ -2,47 +2,50 @@
  */
 package org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl;
 
-import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Task;
+import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Activity;
+
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.ActivityTag;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsPackage;
-import org.eclipse.efbt.cocalimo.core.model.logical_transformations.TaskTag;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.impl.TagImpl;
 
 import org.eclipse.emf.common.notify.Notification;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Task Tag</b></em>'.
+ * An implementation of the model object '<em><b>Activity Tag</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.TaskTagImpl#getTask <em>Task</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.ActivityTagImpl#getActivity <em>Activity</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class TaskTagImpl extends TagImpl implements TaskTag {
+public class ActivityTagImpl extends TagImpl implements ActivityTag {
 	/**
-	 * The cached value of the '{@link #getTask() <em>Task</em>}' reference.
+	 * The cached value of the '{@link #getActivity() <em>Activity</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getTask()
+	 * @see #getActivity()
 	 * @generated
 	 * @ordered
 	 */
-	protected Task task;
+	protected Activity activity;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected TaskTagImpl() {
+	protected ActivityTagImpl() {
 		super();
 	}
 
@@ -53,7 +56,7 @@ public class TaskTagImpl extends TagImpl implements TaskTag {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return Logical_transformationsPackage.Literals.TASK_TAG;
+		return Logical_transformationsPackage.Literals.ACTIVITY_TAG;
 	}
 
 	/**
@@ -62,16 +65,16 @@ public class TaskTagImpl extends TagImpl implements TaskTag {
 	 * @generated
 	 */
 	@Override
-	public Task getTask() {
-		if (task != null && task.eIsProxy()) {
-			InternalEObject oldTask = (InternalEObject)task;
-			task = (Task)eResolveProxy(oldTask);
-			if (task != oldTask) {
+	public Activity getActivity() {
+		if (activity != null && activity.eIsProxy()) {
+			InternalEObject oldActivity = (InternalEObject)activity;
+			activity = (Activity)eResolveProxy(oldActivity);
+			if (activity != oldActivity) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Logical_transformationsPackage.TASK_TAG__TASK, oldTask, task));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Logical_transformationsPackage.ACTIVITY_TAG__ACTIVITY, oldActivity, activity));
 			}
 		}
-		return task;
+		return activity;
 	}
 
 	/**
@@ -79,8 +82,8 @@ public class TaskTagImpl extends TagImpl implements TaskTag {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Task basicGetTask() {
-		return task;
+	public Activity basicGetActivity() {
+		return activity;
 	}
 
 	/**
@@ -89,11 +92,11 @@ public class TaskTagImpl extends TagImpl implements TaskTag {
 	 * @generated
 	 */
 	@Override
-	public void setTask(Task newTask) {
-		Task oldTask = task;
-		task = newTask;
+	public void setActivity(Activity newActivity) {
+		Activity oldActivity = activity;
+		activity = newActivity;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, Logical_transformationsPackage.TASK_TAG__TASK, oldTask, task));
+			eNotify(new ENotificationImpl(this, Notification.SET, Logical_transformationsPackage.ACTIVITY_TAG__ACTIVITY, oldActivity, activity));
 	}
 
 	/**
@@ -104,9 +107,9 @@ public class TaskTagImpl extends TagImpl implements TaskTag {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case Logical_transformationsPackage.TASK_TAG__TASK:
-				if (resolve) return getTask();
-				return basicGetTask();
+			case Logical_transformationsPackage.ACTIVITY_TAG__ACTIVITY:
+				if (resolve) return getActivity();
+				return basicGetActivity();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -119,8 +122,8 @@ public class TaskTagImpl extends TagImpl implements TaskTag {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case Logical_transformationsPackage.TASK_TAG__TASK:
-				setTask((Task)newValue);
+			case Logical_transformationsPackage.ACTIVITY_TAG__ACTIVITY:
+				setActivity((Activity)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -134,8 +137,8 @@ public class TaskTagImpl extends TagImpl implements TaskTag {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case Logical_transformationsPackage.TASK_TAG__TASK:
-				setTask((Task)null);
+			case Logical_transformationsPackage.ACTIVITY_TAG__ACTIVITY:
+				setActivity((Activity)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -149,10 +152,10 @@ public class TaskTagImpl extends TagImpl implements TaskTag {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case Logical_transformationsPackage.TASK_TAG__TASK:
-				return task != null;
+			case Logical_transformationsPackage.ACTIVITY_TAG__ACTIVITY:
+				return activity != null;
 		}
 		return super.eIsSet(featureID);
 	}
 
-} //TaskTagImpl
+} //ActivityTagImpl

@@ -57,7 +57,7 @@ public class Logical_transformationsFactoryImpl extends EFactoryImpl implements 
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE: return createLogicalTransformationModule();
-			case Logical_transformationsPackage.TASK_TAG: return createTaskTag();
+			case Logical_transformationsPackage.ACTIVITY_TAG: return createActivityTag();
 			case Logical_transformationsPackage.SCENARIO: return createScenario();
 			case Logical_transformationsPackage.SCENARIO_TAG: return createScenarioTag();
 			case Logical_transformationsPackage.TEST: return createTest();
@@ -84,9 +84,9 @@ public class Logical_transformationsFactoryImpl extends EFactoryImpl implements 
 	 * @generated
 	 */
 	@Override
-	public TaskTag createTaskTag() {
-		TaskTagImpl taskTag = new TaskTagImpl();
-		return taskTag;
+	public ActivityTag createActivityTag() {
+		ActivityTagImpl activityTag = new ActivityTagImpl();
+		return activityTag;
 	}
 
 	/**

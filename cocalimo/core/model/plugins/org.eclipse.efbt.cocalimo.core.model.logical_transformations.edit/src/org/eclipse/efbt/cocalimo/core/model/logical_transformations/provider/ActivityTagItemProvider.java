@@ -6,8 +6,8 @@ package org.eclipse.efbt.cocalimo.core.model.logical_transformations.provider;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.ActivityTag;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsPackage;
-import org.eclipse.efbt.cocalimo.core.model.logical_transformations.TaskTag;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.provider.TagItemProvider;
 
@@ -20,19 +20,19 @@ import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.TaskTag} object.
+ * This is the item provider adapter for a {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.ActivityTag} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class TaskTagItemProvider extends TagItemProvider {
+public class ActivityTagItemProvider extends TagItemProvider {
 	/**
 	 * This constructs an instance from a factory and a notifier.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public TaskTagItemProvider(AdapterFactory adapterFactory) {
+	public ActivityTagItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -47,25 +47,25 @@ public class TaskTagItemProvider extends TagItemProvider {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addTaskPropertyDescriptor(object);
+			addActivityPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
 
 	/**
-	 * This adds a property descriptor for the Task feature.
+	 * This adds a property descriptor for the Activity feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addTaskPropertyDescriptor(Object object) {
+	protected void addActivityPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_TaskTag_task_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_TaskTag_task_feature", "_UI_TaskTag_type"),
-				 Logical_transformationsPackage.Literals.TASK_TAG__TASK,
+				 getString("_UI_ActivityTag_activity_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_ActivityTag_activity_feature", "_UI_ActivityTag_type"),
+				 Logical_transformationsPackage.Literals.ACTIVITY_TAG__ACTIVITY,
 				 true,
 				 false,
 				 true,
@@ -75,14 +75,14 @@ public class TaskTagItemProvider extends TagItemProvider {
 	}
 
 	/**
-	 * This returns TaskTag.gif.
+	 * This returns ActivityTag.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/TaskTag"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/ActivityTag"));
 	}
 
 	/**
@@ -93,10 +93,10 @@ public class TaskTagItemProvider extends TagItemProvider {
 	 */
 	@Override
 	public String getText(Object object) {
-		String label = ((TaskTag)object).getName();
+		String label = ((ActivityTag)object).getName();
 		return label == null || label.length() == 0 ?
-			getString("_UI_TaskTag_type") :
-			getString("_UI_TaskTag_type") + " " + label;
+			getString("_UI_ActivityTag_type") :
+			getString("_UI_ActivityTag_type") + " " + label;
 	}
 
 

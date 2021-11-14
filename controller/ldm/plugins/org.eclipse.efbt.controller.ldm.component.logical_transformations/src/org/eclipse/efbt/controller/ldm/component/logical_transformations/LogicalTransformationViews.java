@@ -9,9 +9,10 @@ import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ScriptTask;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.SequenceFlow;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ServiceTask;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.SubProcess;
-import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Task;
+import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.UserTask;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario;
+import org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
@@ -22,10 +23,13 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 public class LogicalTransformationViews {
 
 	public static void createLogicalTransformationViewForScope(LogicalTransformationModule logicalTransformationModule,
-			EList<ScriptTask> scriptTasksInScope, EList<Scenario> scenariosOutOfScope, boolean keepLayout) {
+			EList<ScriptTask> scriptTasksInScope, EList<Scenario> scenariosOutOfScope, CreateLogicalTransformationViewForScope call) {
 		
 		markScriptTaskAsInvisible(logicalTransformationModule, scriptTasksInScope);
 		EList<EAttribute> requiredAttributes = getListOfRequiredAttributes(logicalTransformationModule, scriptTasksInScope,scenariosOutOfScope);
+		for (EAttribute eAttribute : requiredAttributes) {
+			call.getAttributeLineage().add(eAttribute);
+		}
 		markDependantServiceTasksAsInvisible(logicalTransformationModule,requiredAttributes);
 		markDependantTasksAsInvisible(logicalTransformationModule,requiredAttributes);
 		markGatewaysPointingToInvisibleTasksAsInvisible(logicalTransformationModule);
@@ -72,9 +76,9 @@ public class LogicalTransformationViews {
 		while (subProcessContents.hasNext())
 		{
 			Object o = subProcessContents.next();
-			if ((o instanceof Task) && !(o instanceof ServiceTask) && !(o instanceof ScriptTask))
+			if (o instanceof UserTask)
 			{
-				Task task = (Task) o;
+				UserTask task = (UserTask) o;
 				EClass entity = task.getEntity();
 				EList<EAttribute> entityAttributes = entity.getEAttributes();
 				boolean entityContainsRequiredAttributes = false;

@@ -74,8 +74,8 @@ public class Logical_transformationsAdapterFactory extends AdapterFactoryImpl {
 				return createLogicalTransformationModuleAdapter();
 			}
 			@Override
-			public Adapter caseTaskTag(TaskTag object) {
-				return createTaskTagAdapter();
+			public Adapter caseActivityTag(ActivityTag object) {
+				return createActivityTagAdapter();
 			}
 			@Override
 			public Adapter caseScenario(Scenario object) {
@@ -136,16 +136,16 @@ public class Logical_transformationsAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.TaskTag <em>Task Tag</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.ActivityTag <em>Activity Tag</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.TaskTag
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.ActivityTag
 	 * @generated
 	 */
-	public Adapter createTaskTagAdapter() {
+	public Adapter createActivityTagAdapter() {
 		return null;
 	}
 
