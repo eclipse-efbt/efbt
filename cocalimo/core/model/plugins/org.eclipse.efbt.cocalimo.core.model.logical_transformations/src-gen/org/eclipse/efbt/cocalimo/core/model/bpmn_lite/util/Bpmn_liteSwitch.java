@@ -193,6 +193,17 @@ public class Bpmn_liteSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case Bpmn_litePackage.USER_TASK: {
+				UserTask userTask = (UserTask)theEObject;
+				T result = caseUserTask(userTask);
+				if (result == null) result = caseTask(userTask);
+				if (result == null) result = caseActivity(userTask);
+				if (result == null) result = caseFlowNode(userTask);
+				if (result == null) result = caseFlowElement(userTask);
+				if (result == null) result = caseBaseElement(userTask);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -404,6 +415,21 @@ public class Bpmn_liteSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseScriptTask(ScriptTask object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>User Task</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>User Task</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUserTask(UserTask object) {
 		return null;
 	}
 

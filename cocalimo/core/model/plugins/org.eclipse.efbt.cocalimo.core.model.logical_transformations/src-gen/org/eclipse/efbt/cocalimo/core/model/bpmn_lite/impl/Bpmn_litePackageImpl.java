@@ -19,6 +19,7 @@ import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ServiceTask;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.SubProcess;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Task;
 
+import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.UserTask;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsPackage;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.Logical_transformationsPackageImpl;
 import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementPackage;
@@ -136,6 +137,13 @@ public class Bpmn_litePackageImpl extends EPackageImpl implements Bpmn_litePacka
 	 * @generated
 	 */
 	private EClass scriptTaskEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass userTaskEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -365,16 +373,6 @@ public class Bpmn_litePackageImpl extends EPackageImpl implements Bpmn_litePacka
 	 * @generated
 	 */
 	@Override
-	public EReference getTask_Entity() {
-		return (EReference)taskEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EClass getActivity() {
 		return activityEClass;
 	}
@@ -485,6 +483,26 @@ public class Bpmn_litePackageImpl extends EPackageImpl implements Bpmn_litePacka
 	 * @generated
 	 */
 	@Override
+	public EClass getUserTask() {
+		return userTaskEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getUserTask_Entity() {
+		return (EReference)userTaskEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Bpmn_liteFactory getBpmn_liteFactory() {
 		return (Bpmn_liteFactory)getEFactoryInstance();
 	}
@@ -528,7 +546,6 @@ public class Bpmn_litePackageImpl extends EPackageImpl implements Bpmn_litePacka
 		createEReference(sequenceFlowEClass, SEQUENCE_FLOW__SOURCE_REF);
 
 		taskEClass = createEClass(TASK);
-		createEReference(taskEClass, TASK__ENTITY);
 
 		activityEClass = createEClass(ACTIVITY);
 
@@ -548,6 +565,9 @@ public class Bpmn_litePackageImpl extends EPackageImpl implements Bpmn_litePacka
 
 		scriptTaskEClass = createEClass(SCRIPT_TASK);
 		createEReference(scriptTaskEClass, SCRIPT_TASK__LINKED_ATTRIBUTES);
+
+		userTaskEClass = createEClass(USER_TASK);
+		createEReference(userTaskEClass, USER_TASK__ENTITY);
 	}
 
 	/**
@@ -596,6 +616,7 @@ public class Bpmn_litePackageImpl extends EPackageImpl implements Bpmn_litePacka
 		subProcessEClass.getESuperTypes().add(this.getActivity());
 		subProcessEClass.getESuperTypes().add(this.getFlowElementsContainer());
 		scriptTaskEClass.getESuperTypes().add(this.getTask());
+		userTaskEClass.getESuperTypes().add(this.getTask());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(baseElementEClass, BaseElement.class, "BaseElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -618,7 +639,6 @@ public class Bpmn_litePackageImpl extends EPackageImpl implements Bpmn_litePacka
 		initEReference(getSequenceFlow_SourceRef(), this.getFlowNode(), this.getFlowNode_Outgoing(), "sourceRef", null, 0, 1, SequenceFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
 
 		initEClass(taskEClass, Task.class, "Task", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getTask_Entity(), theEcorePackage.getEClass(), null, "entity", null, 0, 1, Task.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(activityEClass, Activity.class, "Activity", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -638,6 +658,9 @@ public class Bpmn_litePackageImpl extends EPackageImpl implements Bpmn_litePacka
 
 		initEClass(scriptTaskEClass, ScriptTask.class, "ScriptTask", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getScriptTask_LinkedAttributes(), theEcorePackage.getEAttribute(), null, "linkedAttributes", null, 0, -1, ScriptTask.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(userTaskEClass, UserTask.class, "UserTask", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getUserTask_Entity(), theEcorePackage.getEClass(), null, "entity", null, 0, 1, UserTask.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

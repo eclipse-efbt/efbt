@@ -124,6 +124,10 @@ public class Bpmn_liteAdapterFactory extends AdapterFactoryImpl {
 				return createScriptTaskAdapter();
 			}
 			@Override
+			public Adapter caseUserTask(UserTask object) {
+				return createUserTaskAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -336,6 +340,20 @@ public class Bpmn_liteAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createScriptTaskAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.core.model.bpmn_lite.UserTask <em>User Task</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.core.model.bpmn_lite.UserTask
+	 * @generated
+	 */
+	public Adapter createUserTaskAdapter() {
 		return null;
 	}
 

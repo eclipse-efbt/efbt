@@ -21,6 +21,10 @@
         <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.efbt.controller.platformcall.ui.sirius.core/description/controller.odesign#//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='PlatformCall']"/>
         <target xmi:type="platform_call:CreateLogicalTransformationViewForScope" href="transformation_view.platform_call#limited_scope"/>
       </ownedRepresentationDescriptors>
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_ilpVYEUyEey_xYfTrU34-w" name="new PlatformCall" repPath="#_ilmSEEUyEey_xYfTrU34-w" changeId="ff1e16e3-3781-42c1-99d3-3a46ed0f7119">
+        <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.efbt.controller.platformcall.ui.sirius.core/description/controller.odesign#//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='PlatformCall']"/>
+        <target xmi:type="platform_call:CreateLogicalTransformationViewForScope" href="transformation_view_description.platform_call#limited_scope"/>
+      </ownedRepresentationDescriptors>
     </ownedViews>
     <ownedViews xmi:type="viewpoint:DView" uid="_illCEEPAEeyeNL1HjQQM2w">
       <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']"/>
@@ -28,7 +32,7 @@
         <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']"/>
         <target xmi:type="bpmn_lite:SubProcess" href="BIRD.logical_transformations#//@subProcess"/>
       </ownedRepresentationDescriptors>
-      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_Q1E4EEPEEeyeNL1HjQQM2w" name="process" repPath="#_Q1Dp8EPEEeyeNL1HjQQM2w" changeId="9d6ca2a5-c2bd-45fc-b412-455195274ade">
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_Q1E4EEPEEeyeNL1HjQQM2w" name="process" repPath="#_Q1Dp8EPEEeyeNL1HjQQM2w" changeId="9a10cf9c-2f99-492b-90b5-392f9af68949">
         <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']"/>
         <target xmi:type="bpmn_lite:SubProcess" href="BIRD_transformations.logical_transformations#process"/>
       </ownedRepresentationDescriptors>
@@ -1935,8 +1939,11 @@
         </ownedStyle>
         <actualMapping xmi:type="description_1:ContainerMappingImport" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPSubProcess']"/>
         <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_HWoLMkPFEeyeNL1HjQQM2w" name=" &#xA; &#xA;Read_Trade" incomingEdges="_b-49_EPHEeyeNL1HjQQM2w _b-4-BkPHEeyeNL1HjQQM2w">
-          <target xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.0"/>
-          <semanticElements xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.0"/>
+          <target xmi:type="bpmn_lite:UserTask" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.0"/>
+          <semanticElements xmi:type="bpmn_lite:UserTask" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.0"/>
+          <decorations xmi:type="viewpoint:Decoration" uid="_-cmOJkUyEey_xYfTrU34-w">
+            <description xmi:type="description_1:MappingBasedDecoration" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@decorationDescriptionsSet/@decorationDescriptions[name='UserTask']"/>
+          </decorations>
           <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
           <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
           <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
@@ -1947,8 +1954,11 @@
           <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']"/>
         </ownedDiagramElements>
         <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_JsBVQkPFEeyeNL1HjQQM2w" name=" &#xA; &#xA;Read Instrument" incomingEdges="_Y0MjiEPHEeyeNL1HjQQM2w _Y0NxhEPHEeyeNL1HjQQM2w">
-          <target xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.1"/>
-          <semanticElements xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.1"/>
+          <target xmi:type="bpmn_lite:UserTask" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.1"/>
+          <semanticElements xmi:type="bpmn_lite:UserTask" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.1"/>
+          <decorations xmi:type="viewpoint:Decoration" uid="_-cm1MkUyEey_xYfTrU34-w">
+            <description xmi:type="description_1:MappingBasedDecoration" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@decorationDescriptionsSet/@decorationDescriptions[name='UserTask']"/>
+          </decorations>
           <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
           <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
           <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
@@ -1981,8 +1991,11 @@
             <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPInclusiveGateway']"/>
           </ownedDiagramElements>
           <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_WqNC-0PFEeyeNL1HjQQM2w" name=" &#xA; &#xA;Read_Entity" incomingEdges="_bEg1oEPGEeyeNL1HjQQM2w _bEhct0PGEeyeNL1HjQQM2w">
-            <target xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.2/@flowElements.1"/>
-            <semanticElements xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.2/@flowElements.1"/>
+            <target xmi:type="bpmn_lite:UserTask" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.2/@flowElements.1"/>
+            <semanticElements xmi:type="bpmn_lite:UserTask" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.2/@flowElements.1"/>
+            <decorations xmi:type="viewpoint:Decoration" uid="_-clAAUUyEey_xYfTrU34-w">
+              <description xmi:type="description_1:MappingBasedDecoration" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@decorationDescriptionsSet/@decorationDescriptions[name='UserTask']"/>
+            </decorations>
             <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
             <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
             <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
@@ -2028,8 +2041,11 @@
             <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPInclusiveGateway']"/>
           </ownedDiagramElements>
           <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_yFOYQUPGEeyeNL1HjQQM2w" name=" &#xA; &#xA;Read_Bond_Instrument" incomingEdges="_5HW-UEPGEeyeNL1HjQQM2w _5HW-WkPGEeyeNL1HjQQM2w">
-            <target xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.3/@flowElements.1"/>
-            <semanticElements xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.3/@flowElements.1"/>
+            <target xmi:type="bpmn_lite:UserTask" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.3/@flowElements.1"/>
+            <semanticElements xmi:type="bpmn_lite:UserTask" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.3/@flowElements.1"/>
+            <decorations xmi:type="viewpoint:Decoration" uid="_-clnFEUyEey_xYfTrU34-w">
+              <description xmi:type="description_1:MappingBasedDecoration" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@decorationDescriptionsSet/@decorationDescriptions[name='UserTask']"/>
+            </decorations>
             <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
             <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
             <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
@@ -2067,8 +2083,11 @@
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPParallelGateway']"/>
         </ownedDiagramElements>
         <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_jgL1o0RvEeydrr4MVh_iJA" name=" &#xA; &#xA;Read Equity Instrument" incomingEdges="_kbtp1ERvEeydrr4MVh_iJA _kbuQ10RvEeydrr4MVh_iJA">
-          <target xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.9"/>
-          <semanticElements xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.9"/>
+          <target xmi:type="bpmn_lite:UserTask" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.9"/>
+          <semanticElements xmi:type="bpmn_lite:UserTask" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.9"/>
+          <decorations xmi:type="viewpoint:Decoration" uid="_-cm1NUUyEey_xYfTrU34-w">
+            <description xmi:type="description_1:MappingBasedDecoration" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@decorationDescriptionsSet/@decorationDescriptions[name='UserTask']"/>
+          </decorations>
           <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
           <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
           <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
@@ -2204,8 +2223,11 @@
       </ownedStyle>
       <actualMapping xmi:type="description_1:ContainerMappingImport" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPSubProcess']"/>
       <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_HWmWAkPFEeyeNL1HjQQM2w" name=" &#xA; &#xA;Read_Trade" visible="false" incomingEdges="_b-4-AUPHEeyeNL1HjQQM2w _b-5k1EPHEeyeNL1HjQQM2w">
-        <target xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.0"/>
-        <semanticElements xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.0"/>
+        <target xmi:type="bpmn_lite:UserTask" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.0"/>
+        <semanticElements xmi:type="bpmn_lite:UserTask" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.0"/>
+        <decorations xmi:type="viewpoint:Decoration" uid="_-cgukUUyEey_xYfTrU34-w">
+          <description xmi:type="description_1:MappingBasedDecoration" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@decorationDescriptionsSet/@decorationDescriptions[name='UserTask']"/>
+        </decorations>
         <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_HWmWA0PFEeyeNL1HjQQM2w" labelSize="9" showIcon="false" labelColor="64,41,0" borderSize="1" borderSizeComputationExpression="1" borderColor="64,41,0" backgroundColor="255,243,171" foregroundColor="255,243,171">
           <labelFormat>bold</labelFormat>
           <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']/@style"/>
@@ -2213,8 +2235,11 @@
         <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']"/>
       </ownedDiagramElements>
       <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_JsAHJEPFEeyeNL1HjQQM2w" name=" &#xA; &#xA;Read Instrument" visible="false" incomingEdges="_Y0NKdEPHEeyeNL1HjQQM2w _Y0NxiUPHEeyeNL1HjQQM2w">
-        <target xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.1"/>
-        <semanticElements xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.1"/>
+        <target xmi:type="bpmn_lite:UserTask" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.1"/>
+        <semanticElements xmi:type="bpmn_lite:UserTask" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.1"/>
+        <decorations xmi:type="viewpoint:Decoration" uid="_-cgulEUyEey_xYfTrU34-w">
+          <description xmi:type="description_1:MappingBasedDecoration" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@decorationDescriptionsSet/@decorationDescriptions[name='UserTask']"/>
+        </decorations>
         <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_JsAHJUPFEeyeNL1HjQQM2w" labelSize="9" showIcon="false" labelColor="64,41,0" borderSize="1" borderSizeComputationExpression="1" borderColor="64,41,0" backgroundColor="255,243,171" foregroundColor="255,243,171">
           <labelFormat>bold</labelFormat>
           <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']/@style"/>
@@ -2238,8 +2263,11 @@
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPInclusiveGateway']"/>
         </ownedDiagramElements>
         <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_WqMb40PFEeyeNL1HjQQM2w" name=" &#xA; &#xA;Read_Entity" visible="false" incomingEdges="_bEhcskPGEeyeNL1HjQQM2w _bEiDwkPGEeyeNL1HjQQM2w">
-          <target xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.2/@flowElements.1"/>
-          <semanticElements xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.2/@flowElements.1"/>
+          <target xmi:type="bpmn_lite:UserTask" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.2/@flowElements.1"/>
+          <semanticElements xmi:type="bpmn_lite:UserTask" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.2/@flowElements.1"/>
+          <decorations xmi:type="viewpoint:Decoration" uid="_-ce5YUUyEey_xYfTrU34-w">
+            <description xmi:type="description_1:MappingBasedDecoration" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@decorationDescriptionsSet/@decorationDescriptions[name='UserTask']"/>
+          </decorations>
           <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_WqMb5EPFEeyeNL1HjQQM2w" labelSize="9" showIcon="false" labelColor="64,41,0" borderSize="1" borderSizeComputationExpression="1" borderColor="64,41,0" backgroundColor="255,243,171" foregroundColor="255,243,171">
             <labelFormat>bold</labelFormat>
             <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']/@style"/>
@@ -2276,8 +2304,11 @@
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPInclusiveGateway']"/>
         </ownedDiagramElements>
         <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_yFNxJkPGEeyeNL1HjQQM2w" name=" &#xA; &#xA;Read_Bond_Instrument" visible="false" incomingEdges="_5HW-VUPGEeyeNL1HjQQM2w _5HXlREPGEeyeNL1HjQQM2w">
-          <target xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.3/@flowElements.1"/>
-          <semanticElements xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.3/@flowElements.1"/>
+          <target xmi:type="bpmn_lite:UserTask" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.3/@flowElements.1"/>
+          <semanticElements xmi:type="bpmn_lite:UserTask" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.3/@flowElements.1"/>
+          <decorations xmi:type="viewpoint:Decoration" uid="_-cgHgEUyEey_xYfTrU34-w">
+            <description xmi:type="description_1:MappingBasedDecoration" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@decorationDescriptionsSet/@decorationDescriptions[name='UserTask']"/>
+          </decorations>
           <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_yFNxJ0PGEeyeNL1HjQQM2w" labelSize="9" showIcon="false" labelColor="64,41,0" borderSize="1" borderSizeComputationExpression="1" borderColor="64,41,0" backgroundColor="255,243,171" foregroundColor="255,243,171">
             <labelFormat>bold</labelFormat>
             <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']/@style"/>
@@ -2306,8 +2337,11 @@
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPParallelGateway']"/>
       </ownedDiagramElements>
       <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_jgCEpERvEeydrr4MVh_iJA" name=" &#xA; &#xA;Read Equity Instrument" visible="false" incomingEdges="_kbuQ0kRvEeydrr4MVh_iJA _kbu35ERvEeydrr4MVh_iJA">
-        <target xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.9"/>
-        <semanticElements xmi:type="bpmn_lite:Task" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.9"/>
+        <target xmi:type="bpmn_lite:UserTask" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.9"/>
+        <semanticElements xmi:type="bpmn_lite:UserTask" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.0/@flowElements.9"/>
+        <decorations xmi:type="viewpoint:Decoration" uid="_-cgul0UyEey_xYfTrU34-w">
+          <description xmi:type="description_1:MappingBasedDecoration" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@decorationDescriptionsSet/@decorationDescriptions[name='UserTask']"/>
+        </decorations>
         <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_jgCrsERvEeydrr4MVh_iJA" labelSize="9" showIcon="false" labelColor="64,41,0" borderSize="1" borderSizeComputationExpression="1" borderColor="64,41,0" backgroundColor="255,243,171" foregroundColor="255,243,171">
           <labelFormat>bold</labelFormat>
           <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.core.ui.sirius/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']/@style"/>
@@ -2969,5 +3003,19 @@
     <filterVariableHistory xmi:type="diagram:FilterVariableHistory" uid="_Gw7OYUPLEeyeNL1HjQQM2w"/>
     <activatedLayers xmi:type="description_1:Layer" href="platform:/plugin/org.eclipse.efbt.controller.platformcall.ui.sirius.core/description/controller.odesign#//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='PlatformCall']/@defaultLayer"/>
     <target xmi:type="platform_call:CreateLogicalTransformationViewForScope" href="transformation_view.platform_call#limited_scope"/>
+  </diagram:DSemanticDiagram>
+  <diagram:DSemanticDiagram uid="_ilmSEEUyEey_xYfTrU34-w">
+    <ownedAnnotationEntries xmi:type="description:AnnotationEntry" uid="_imBv4EUyEey_xYfTrU34-w" source="GMF_DIAGRAMS">
+      <data xmi:type="notation:Diagram" xmi:id="_imBv4UUyEey_xYfTrU34-w" type="Sirius" element="_ilmSEEUyEey_xYfTrU34-w" measurementUnit="Pixel">
+        <styles xmi:type="notation:DiagramStyle" xmi:id="_imBv4kUyEey_xYfTrU34-w"/>
+      </data>
+    </ownedAnnotationEntries>
+    <ownedAnnotationEntries xmi:type="description:AnnotationEntry" uid="_imC-AEUyEey_xYfTrU34-w" source="DANNOTATION_CUSTOMIZATION_KEY">
+      <data xmi:type="diagram:ComputedStyleDescriptionRegistry" uid="_imC-AUUyEey_xYfTrU34-w"/>
+    </ownedAnnotationEntries>
+    <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.efbt.controller.platformcall.ui.sirius.core/description/controller.odesign#//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='PlatformCall']"/>
+    <filterVariableHistory xmi:type="diagram:FilterVariableHistory" uid="_ilngMEUyEey_xYfTrU34-w"/>
+    <activatedLayers xmi:type="description_1:Layer" href="platform:/plugin/org.eclipse.efbt.controller.platformcall.ui.sirius.core/description/controller.odesign#//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='PlatformCall']/@defaultLayer"/>
+    <target xmi:type="platform_call:CreateLogicalTransformationViewForScope" href="transformation_view_description.platform_call#limited_scope"/>
   </diagram:DSemanticDiagram>
 </xmi:XMI>

@@ -94,6 +94,15 @@ public interface Bpmn_liteFactory extends EFactory {
 	ScriptTask createScriptTask();
 
 	/**
+	 * Returns a new object of class '<em>User Task</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>User Task</em>'.
+	 * @generated
+	 */
+	UserTask createUserTask();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

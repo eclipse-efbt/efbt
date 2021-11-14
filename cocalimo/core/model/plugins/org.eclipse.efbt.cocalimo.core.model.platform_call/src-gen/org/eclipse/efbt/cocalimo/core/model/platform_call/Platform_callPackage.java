@@ -421,13 +421,13 @@ public interface Platform_callPackage extends EPackage {
 	int CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__LOGICAL_TRANSFORMATION_MODULE = PLATFORM_CALL_FEATURE_COUNT + 2;
 
 	/**
-	 * The feature id for the '<em><b>Keep Layout</b></em>' attribute.
+	 * The feature id for the '<em><b>Attribute Lineage</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__KEEP_LAYOUT = PLATFORM_CALL_FEATURE_COUNT + 3;
+	int CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__ATTRIBUTE_LINEAGE = PLATFORM_CALL_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of structural features of the '<em>Create Logical Transformation View For Scope</em>' class.
@@ -619,15 +619,15 @@ public interface Platform_callPackage extends EPackage {
 	EReference getCreateLogicalTransformationViewForScope_LogicalTransformationModule();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope#isKeepLayout <em>Keep Layout</em>}'.
+	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope#getAttributeLineage <em>Attribute Lineage</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Keep Layout</em>'.
-	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope#isKeepLayout()
+	 * @return the meta object for the reference list '<em>Attribute Lineage</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope#getAttributeLineage()
 	 * @see #getCreateLogicalTransformationViewForScope()
 	 * @generated
 	 */
-	EAttribute getCreateLogicalTransformationViewForScope_KeepLayout();
+	EReference getCreateLogicalTransformationViewForScope_AttributeLineage();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -791,12 +791,12 @@ public interface Platform_callPackage extends EPackage {
 		EReference CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__LOGICAL_TRANSFORMATION_MODULE = eINSTANCE.getCreateLogicalTransformationViewForScope_LogicalTransformationModule();
 
 		/**
-		 * The meta object literal for the '<em><b>Keep Layout</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Attribute Lineage</b></em>' reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__KEEP_LAYOUT = eINSTANCE.getCreateLogicalTransformationViewForScope_KeepLayout();
+		EReference CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__ATTRIBUTE_LINEAGE = eINSTANCE.getCreateLogicalTransformationViewForScope_AttributeLineage();
 
 	}
 

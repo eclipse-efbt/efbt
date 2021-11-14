@@ -74,7 +74,9 @@ public class ProcessService {
 			result = Bpmn_liteFactory.eINSTANCE.createServiceTask();
 		}  else if ("ScriptTask".equals(typeToCreate)) {
 			result = Bpmn_liteFactory.eINSTANCE.createScriptTask();
-		} else if ("ParallelGateway".equals(typeToCreate)) {
+		} else if ("UserTask".equals(typeToCreate)) {
+			result = Bpmn_liteFactory.eINSTANCE.createUserTask();
+		}else if ("ParallelGateway".equals(typeToCreate)) {
 			result = Bpmn_liteFactory.eINSTANCE.createParallelGateway();
 		} else if ("ExclusiveGateway".equals(typeToCreate)) {
 			result = Bpmn_liteFactory.eINSTANCE.createExclusiveGateway();

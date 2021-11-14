@@ -256,6 +256,29 @@ public class Bpmn_liteItemProviderAdapterFactory extends Bpmn_liteAdapterFactory
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.core.model.bpmn_lite.UserTask} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected UserTaskItemProvider userTaskItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.core.model.bpmn_lite.UserTask}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createUserTaskAdapter() {
+		if (userTaskItemProvider == null) {
+			userTaskItemProvider = new UserTaskItemProvider(this);
+		}
+
+		return userTaskItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -368,6 +391,7 @@ public class Bpmn_liteItemProviderAdapterFactory extends Bpmn_liteAdapterFactory
 		if (serviceTaskItemProvider != null) serviceTaskItemProvider.dispose();
 		if (subProcessItemProvider != null) subProcessItemProvider.dispose();
 		if (scriptTaskItemProvider != null) scriptTaskItemProvider.dispose();
+		if (userTaskItemProvider != null) userTaskItemProvider.dispose();
 	}
 
 }

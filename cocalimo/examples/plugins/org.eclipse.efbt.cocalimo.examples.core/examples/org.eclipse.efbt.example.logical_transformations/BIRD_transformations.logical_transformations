@@ -10,11 +10,7 @@
     }, {
       "eClass" : "http://www.eclipse.org/efbt/requirements_text#//TitledRequirementsSection",
       "$ref" : "requirements/CRR2.requirements_text#Article_325_1_b"
-    } ],
-    "task" : {
-      "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ServiceTask",
-      "$ref" : "//@subProcess/@flowElements.0/@flowElements.3/@flowElements.4"
-    }
+    } ]
   } ],
   "scenarioTags" : [ {
     "displayName" : "zero_coupon_rate_scenarioTag",
@@ -39,7 +35,7 @@
         "$ref" : "//@subProcess/@flowElements.3"
       } ],
       "flowElements" : [ {
-        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//Task",
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
         "name" : "Read_Trade",
         "incoming" : [ {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -50,7 +46,7 @@
           "$ref" : "logical_data_model.ecore#//Trade"
         }
       }, {
-        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//Task",
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
         "name" : "Read Instrument",
         "incoming" : [ {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -77,7 +73,7 @@
             "$ref" : "//@subProcess/@flowElements.0/@flowElements.2/@flowElements.4"
           } ]
         }, {
-          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//Task",
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
           "name" : "Read_Entity",
           "incoming" : [ {
             "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -107,7 +103,7 @@
         }, {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
           "targetRef" : {
-            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//Task",
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
             "$ref" : "//@subProcess/@flowElements.0/@flowElements.2/@flowElements.1"
           },
           "sourceRef" : {
@@ -145,7 +141,7 @@
             "$ref" : "//@subProcess/@flowElements.0/@flowElements.3/@flowElements.5"
           } ]
         }, {
-          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//Task",
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
           "name" : "Read_Bond_Instrument",
           "incoming" : [ {
             "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -158,7 +154,7 @@
         }, {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
           "targetRef" : {
-            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//Task",
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
             "$ref" : "//@subProcess/@flowElements.0/@flowElements.3/@flowElements.1"
           },
           "sourceRef" : {
@@ -173,6 +169,7 @@
           }
         }, {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ServiceTask",
+          "description" : "Here we have the business requirements for the task, duration is measure of sensitivity of a bond to interest rates etc, etc",
           "name" : "Calculate_Duration",
           "incoming" : [ {
             "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -184,14 +181,14 @@
           },
           "scenarios" : [ {
             "name" : "main_duration_scenario",
-            "description" : "main_duration_scenario",
+            "description" : "Here we have the business requirments for the sceanrio, duration is a measure if sensitivity ot the bond, etc, etc.",
             "requiredAttributes" : [ {
               "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
               "$ref" : "logical_data_model.ecore#//BondInstrument/coupon_rate"
             } ]
           }, {
             "name" : "zero_coupon_rate_edge_case",
-            "description" : "zero_coupon_rate_edge_case",
+            "description" : "Here we have the business requirements for the task, duration is measure of sensitivity of a bond to interest rates but in the sepcial case of zero coupon bonds we calculate as etc,etc",
             "requiredAttributes" : [ {
               "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
               "$ref" : "logical_data_model.ecore#//BondInstrument/coupon_rate"
@@ -239,7 +236,7 @@
       }, {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
         "targetRef" : {
-          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//Task",
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
           "$ref" : "//@subProcess/@flowElements.0/@flowElements.1"
         },
         "sourceRef" : {
@@ -259,7 +256,7 @@
       }, {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
         "targetRef" : {
-          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//Task",
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
           "$ref" : "//@subProcess/@flowElements.0/@flowElements.0"
         },
         "sourceRef" : {
@@ -267,7 +264,7 @@
           "$ref" : "//@subProcess/@flowElements.0/@flowElements.4"
         }
       }, {
-        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//Task",
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
         "invisible" : true,
         "name" : "Read Equity Instrument",
         "incoming" : [ {
@@ -281,7 +278,7 @@
       }, {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
         "targetRef" : {
-          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//Task",
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
           "$ref" : "//@subProcess/@flowElements.0/@flowElements.9"
         },
         "sourceRef" : {
@@ -333,7 +330,7 @@
         },
         "scenarios" : [ {
           "name" : "primaryEADScenario",
-          "description" : "primaryEADScenario",
+          "description" : "The is the primary sceanrio which is calculateing EAD, EAD is exposure at default ..etc...etc",
           "requiredAttributes" : [ {
             "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
             "$ref" : "logical_data_model.ecore#//Instrument/mkt_value"

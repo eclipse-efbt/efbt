@@ -16,6 +16,7 @@ import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.common.util.EList;
 
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
@@ -33,7 +34,7 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.platform_call.impl.CreateLogicalTransformationViewForScopeImpl#getScriptTasksInScope <em>Script Tasks In Scope</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.platform_call.impl.CreateLogicalTransformationViewForScopeImpl#getScenariosOutOfScope <em>Scenarios Out Of Scope</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.platform_call.impl.CreateLogicalTransformationViewForScopeImpl#getLogicalTransformationModule <em>Logical Transformation Module</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.core.model.platform_call.impl.CreateLogicalTransformationViewForScopeImpl#isKeepLayout <em>Keep Layout</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.core.model.platform_call.impl.CreateLogicalTransformationViewForScopeImpl#getAttributeLineage <em>Attribute Lineage</em>}</li>
  * </ul>
  *
  * @generated
@@ -70,24 +71,14 @@ public class CreateLogicalTransformationViewForScopeImpl extends PlatformCallImp
 	protected LogicalTransformationModule logicalTransformationModule;
 
 	/**
-	 * The default value of the '{@link #isKeepLayout() <em>Keep Layout</em>}' attribute.
+	 * The cached value of the '{@link #getAttributeLineage() <em>Attribute Lineage</em>}' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isKeepLayout()
+	 * @see #getAttributeLineage()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final boolean KEEP_LAYOUT_EDEFAULT = false;
-
-	/**
-	 * The cached value of the '{@link #isKeepLayout() <em>Keep Layout</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isKeepLayout()
-	 * @generated
-	 * @ordered
-	 */
-	protected boolean keepLayout = KEEP_LAYOUT_EDEFAULT;
+	protected EList<EAttribute> attributeLineage;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -180,21 +171,11 @@ public class CreateLogicalTransformationViewForScopeImpl extends PlatformCallImp
 	 * @generated
 	 */
 	@Override
-	public boolean isKeepLayout() {
-		return keepLayout;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setKeepLayout(boolean newKeepLayout) {
-		boolean oldKeepLayout = keepLayout;
-		keepLayout = newKeepLayout;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__KEEP_LAYOUT, oldKeepLayout, keepLayout));
+	public EList<EAttribute> getAttributeLineage() {
+		if (attributeLineage == null) {
+			attributeLineage = new EObjectResolvingEList<EAttribute>(EAttribute.class, this, Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__ATTRIBUTE_LINEAGE);
+		}
+		return attributeLineage;
 	}
 
 	/**
@@ -212,8 +193,8 @@ public class CreateLogicalTransformationViewForScopeImpl extends PlatformCallImp
 			case Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__LOGICAL_TRANSFORMATION_MODULE:
 				if (resolve) return getLogicalTransformationModule();
 				return basicGetLogicalTransformationModule();
-			case Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__KEEP_LAYOUT:
-				return isKeepLayout();
+			case Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__ATTRIBUTE_LINEAGE:
+				return getAttributeLineage();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -238,8 +219,9 @@ public class CreateLogicalTransformationViewForScopeImpl extends PlatformCallImp
 			case Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__LOGICAL_TRANSFORMATION_MODULE:
 				setLogicalTransformationModule((LogicalTransformationModule)newValue);
 				return;
-			case Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__KEEP_LAYOUT:
-				setKeepLayout((Boolean)newValue);
+			case Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__ATTRIBUTE_LINEAGE:
+				getAttributeLineage().clear();
+				getAttributeLineage().addAll((Collection<? extends EAttribute>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -262,8 +244,8 @@ public class CreateLogicalTransformationViewForScopeImpl extends PlatformCallImp
 			case Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__LOGICAL_TRANSFORMATION_MODULE:
 				setLogicalTransformationModule((LogicalTransformationModule)null);
 				return;
-			case Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__KEEP_LAYOUT:
-				setKeepLayout(KEEP_LAYOUT_EDEFAULT);
+			case Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__ATTRIBUTE_LINEAGE:
+				getAttributeLineage().clear();
 				return;
 		}
 		super.eUnset(featureID);
@@ -283,26 +265,10 @@ public class CreateLogicalTransformationViewForScopeImpl extends PlatformCallImp
 				return scenariosOutOfScope != null && !scenariosOutOfScope.isEmpty();
 			case Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__LOGICAL_TRANSFORMATION_MODULE:
 				return logicalTransformationModule != null;
-			case Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__KEEP_LAYOUT:
-				return keepLayout != KEEP_LAYOUT_EDEFAULT;
+			case Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__ATTRIBUTE_LINEAGE:
+				return attributeLineage != null && !attributeLineage.isEmpty();
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (keepLayout: ");
-		result.append(keepLayout);
-		result.append(')');
-		return result.toString();
 	}
 
 } //CreateLogicalTransformationViewForScopeImpl

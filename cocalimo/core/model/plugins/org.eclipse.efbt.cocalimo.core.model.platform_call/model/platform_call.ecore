@@ -80,6 +80,7 @@
         eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.core.model.logical_transformations/model/logical_transformations.ecore#//Scenario"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="logicalTransformationModule"
         eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.core.model.logical_transformations/model/logical_transformations.ecore#//LogicalTransformationModule"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="keepLayout" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attributeLineage" upperBound="-1"
+        eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EAttribute"/>
   </eClassifiers>
 </ecore:EPackage>

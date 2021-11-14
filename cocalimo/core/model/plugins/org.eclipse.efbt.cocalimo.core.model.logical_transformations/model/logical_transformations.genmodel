@@ -21,12 +21,11 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference logical_transformations.ecore#//LogicalTransformationModule/taskTags"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference logical_transformations.ecore#//LogicalTransformationModule/scenarioTags"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference logical_transformations.ecore#//LogicalTransformationModule/subProcess"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference logical_transformations.ecore#//LogicalTransformationModule/subProcessViews"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference logical_transformations.ecore#//LogicalTransformationModule/requirements"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference logical_transformations.ecore#//LogicalTransformationModule/testModules"/>
     </genClasses>
-    <genClasses ecoreClass="logical_transformations.ecore#//TaskTag">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference logical_transformations.ecore#//TaskTag/task"/>
+    <genClasses ecoreClass="logical_transformations.ecore#//ActivityTag">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference logical_transformations.ecore#//ActivityTag/activity"/>
     </genClasses>
     <genClasses ecoreClass="logical_transformations.ecore#//Scenario">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute logical_transformations.ecore#//Scenario/name"/>
@@ -68,9 +67,7 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bpmn_lite.ecore#//SequenceFlow/targetRef"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bpmn_lite.ecore#//SequenceFlow/sourceRef"/>
     </genClasses>
-    <genClasses ecoreClass="bpmn_lite.ecore#//Task">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bpmn_lite.ecore#//Task/entity"/>
-    </genClasses>
+    <genClasses ecoreClass="bpmn_lite.ecore#//Task"/>
     <genClasses ecoreClass="bpmn_lite.ecore#//Activity"/>
     <genClasses ecoreClass="bpmn_lite.ecore#//Gateway"/>
     <genClasses ecoreClass="bpmn_lite.ecore#//ExclusiveGateway"/>
@@ -83,6 +80,9 @@
     <genClasses ecoreClass="bpmn_lite.ecore#//SubProcess"/>
     <genClasses ecoreClass="bpmn_lite.ecore#//ScriptTask">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bpmn_lite.ecore#//ScriptTask/linkedAttributes"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn_lite.ecore#//UserTask">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bpmn_lite.ecore#//UserTask/entity"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

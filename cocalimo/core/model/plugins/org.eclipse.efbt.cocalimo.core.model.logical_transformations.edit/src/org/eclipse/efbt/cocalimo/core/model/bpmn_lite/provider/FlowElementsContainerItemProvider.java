@@ -175,6 +175,11 @@ public class FlowElementsContainerItemProvider extends BaseElementItemProvider {
 			(createChildParameter
 				(Bpmn_litePackage.Literals.FLOW_ELEMENTS_CONTAINER__FLOW_ELEMENTS,
 				 Bpmn_liteFactory.eINSTANCE.createScriptTask()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(Bpmn_litePackage.Literals.FLOW_ELEMENTS_CONTAINER__FLOW_ELEMENTS,
+				 Bpmn_liteFactory.eINSTANCE.createUserTask()));
 	}
 
 }
