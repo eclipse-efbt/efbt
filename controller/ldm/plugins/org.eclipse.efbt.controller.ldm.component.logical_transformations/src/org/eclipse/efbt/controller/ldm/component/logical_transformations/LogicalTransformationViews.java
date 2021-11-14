@@ -27,6 +27,7 @@ public class LogicalTransformationViews {
 		
 		markScriptTaskAsInvisible(logicalTransformationModule, scriptTasksInScope);
 		EList<EAttribute> requiredAttributes = getListOfRequiredAttributes(logicalTransformationModule, scriptTasksInScope,scenariosOutOfScope);
+		call.getAttributeLineage().clear();
 		for (EAttribute eAttribute : requiredAttributes) {
 			call.getAttributeLineage().add(eAttribute);
 		}
