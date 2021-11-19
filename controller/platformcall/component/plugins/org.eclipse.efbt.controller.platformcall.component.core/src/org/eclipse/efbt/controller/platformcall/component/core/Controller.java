@@ -18,7 +18,7 @@ import org.eclipse.efbt.cocalimo.core.model.platform_call.PlatformCall;
 import org.eclipse.efbt.cocalimo.core.model.platform_call.ImportBIRDFromMSAccess;
 import org.eclipse.efbt.controller.ldm.component.logical_transformations.LogicalTransformationViews;
 import org.eclipse.efbt.controller.ldm.component.sqldevconvertor.SQLDevConverter;
-import org.eclipse.efbt.controller.smcubes.component.export_smcubes.ImportOfBIRDFromMSAccess;
+import org.eclipse.efbt.controller.smcubes.component.importexport.impl.ImportOfBIRDFromMSAccess;
 
 public class Controller {
 	
