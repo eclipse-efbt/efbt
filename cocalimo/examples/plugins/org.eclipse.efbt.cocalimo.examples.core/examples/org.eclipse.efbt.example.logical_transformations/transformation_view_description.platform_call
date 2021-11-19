@@ -8,5 +8,21 @@
   "logicalTransformationModule" : {
     "eClass" : "http://www.eclipse.org/efbt/logical_transformations#//LogicalTransformationModule",
     "$ref" : "BIRD_transformations.logical_transformations#transformations"
-  }
+  },
+  "attributeLineage" : [ {
+    "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
+    "$ref" : "logical_data_model.ecore#//BondInstrument_derived/duration"
+  }, {
+    "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
+    "$ref" : "logical_data_model.ecore#//BondInstrument/coupon_rate"
+  }, {
+    "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
+    "$ref" : "logical_data_model.ecore#//Instrument/instrument_id"
+  }, {
+    "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
+    "$ref" : "logical_data_model.ecore#//Trade/trade_id"
+  }, {
+    "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
+    "$ref" : "logical_data_model.ecore#//Entity/entity_id"
+  } ]
 }

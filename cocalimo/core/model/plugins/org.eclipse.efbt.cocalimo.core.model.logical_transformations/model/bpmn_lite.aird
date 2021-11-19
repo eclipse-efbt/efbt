@@ -8,7 +8,7 @@
     <semanticResources>logical_transformations.ecore</semanticResources>
     <ownedViews xmi:type="viewpoint:DView" uid="_9Zm40D_cEey9NNjLH8xBBg">
       <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']"/>
-      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_94oXID_cEey9NNjLH8xBBg" name="bpmn_lite class diagram" repPath="#_94EWcD_cEey9NNjLH8xBBg" changeId="0f3438c3-dfe8-4568-8ba7-08b693bfeecb">
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_94oXID_cEey9NNjLH8xBBg" name="bpmn_lite class diagram" repPath="#_94EWcD_cEey9NNjLH8xBBg" changeId="b6a4f3af-abd8-4a53-80c1-bc05ecd70ad8">
         <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']"/>
         <target xmi:type="ecore:EPackage" href="bpmn_lite.ecore#/"/>
       </ownedRepresentationDescriptors>
@@ -178,7 +178,7 @@
             <styles xmi:type="notation:FilteringStyle" xmi:id="_q_AfYkS2EeycALYiCFhkhw"/>
           </children>
           <styles xmi:type="notation:ShapeStyle" xmi:id="_q-8N8US2EeycALYiCFhkhw" fontName="Segoe UI" fontHeight="8"/>
-          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_q-8N8kS2EeycALYiCFhkhw" x="395" y="960"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_q-8N8kS2EeycALYiCFhkhw" x="444" y="960"/>
         </children>
         <children xmi:type="notation:Node" xmi:id="_eHUeAEU0Eeycr4Ra9GsNGQ" type="2003" element="_eGmFQEU0Eeycr4Ra9GsNGQ">
           <children xmi:type="notation:Node" xmi:id="_eHcZ0EU0Eeycr4Ra9GsNGQ" type="5007"/>
@@ -639,7 +639,7 @@
         <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@style"/>
       </ownedStyle>
       <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']"/>
-      <ownedElements xmi:type="diagram:DNodeListElement" uid="_-nK4ID_cEey9NNjLH8xBBg" name=" enrichedAttribute : EAttribute" tooltipText="">
+      <ownedElements xmi:type="diagram:DNodeListElement" uid="_-nK4ID_cEey9NNjLH8xBBg" name=" enrichedAttribute : EStructuralFeature" tooltipText="">
         <target xmi:type="ecore:EReference" href="bpmn_lite.ecore#//ServiceTask/enrichedAttribute"/>
         <semanticElements xmi:type="ecore:EReference" href="bpmn_lite.ecore#//ServiceTask/enrichedAttribute"/>
         <ownedStyle xmi:type="diagram:BundledImage" uid="_-nK4IT_cEey9NNjLH8xBBg" labelAlignment="LEFT" color="114,159,207">
@@ -865,7 +865,7 @@
         <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@style"/>
       </ownedStyle>
       <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']"/>
-      <ownedElements xmi:type="diagram:DNodeListElement" uid="_q-ilUES2EeycALYiCFhkhw" name=" linkedAttributes : EAttribute" tooltipText="">
+      <ownedElements xmi:type="diagram:DNodeListElement" uid="_q-ilUES2EeycALYiCFhkhw" name=" linkedAttributes : EStructuralFeature" tooltipText="">
         <target xmi:type="ecore:EReference" href="bpmn_lite.ecore#//ScriptTask/linkedAttributes"/>
         <semanticElements xmi:type="ecore:EReference" href="bpmn_lite.ecore#//ScriptTask/linkedAttributes"/>
         <ownedStyle xmi:type="diagram:BundledImage" uid="_q-jMYES2EeycALYiCFhkhw" labelAlignment="LEFT" color="114,159,207">

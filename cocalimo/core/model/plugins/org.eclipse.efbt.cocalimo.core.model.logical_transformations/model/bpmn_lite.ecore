@@ -34,14 +34,14 @@
   <eClassifiers xsi:type="ecore:EClass" name="InclusiveGateway" eSuperTypes="#//Gateway"/>
   <eClassifiers xsi:type="ecore:EClass" name="ParallelGateway" eSuperTypes="#//Gateway"/>
   <eClassifiers xsi:type="ecore:EClass" name="ServiceTask" eSuperTypes="#//Task">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="enrichedAttribute" eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EAttribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="enrichedAttribute" eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EStructuralFeature"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="scenarios" upperBound="-1"
         eType="ecore:EClass logical_transformations.ecore#//Scenario" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SubProcess" eSuperTypes="#//Activity #//FlowElementsContainer"/>
   <eClassifiers xsi:type="ecore:EClass" name="ScriptTask" eSuperTypes="#//Task">
     <eStructuralFeatures xsi:type="ecore:EReference" name="linkedAttributes" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EAttribute"/>
+        eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EStructuralFeature"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UserTask" eSuperTypes="#//Task">
     <eStructuralFeatures xsi:type="ecore:EReference" name="entity" eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EClass"/>

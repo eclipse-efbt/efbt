@@ -11,9 +11,8 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
-
-import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -44,7 +43,7 @@ public class ServiceTaskImpl extends TaskImpl implements ServiceTask {
 	 * @generated
 	 * @ordered
 	 */
-	protected EAttribute enrichedAttribute;
+	protected EStructuralFeature enrichedAttribute;
 
 	/**
 	 * The cached value of the '{@link #getScenarios() <em>Scenarios</em>}' containment reference list.
@@ -81,10 +80,10 @@ public class ServiceTaskImpl extends TaskImpl implements ServiceTask {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getEnrichedAttribute() {
+	public EStructuralFeature getEnrichedAttribute() {
 		if (enrichedAttribute != null && enrichedAttribute.eIsProxy()) {
 			InternalEObject oldEnrichedAttribute = (InternalEObject)enrichedAttribute;
-			enrichedAttribute = (EAttribute)eResolveProxy(oldEnrichedAttribute);
+			enrichedAttribute = (EStructuralFeature)eResolveProxy(oldEnrichedAttribute);
 			if (enrichedAttribute != oldEnrichedAttribute) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Bpmn_litePackage.SERVICE_TASK__ENRICHED_ATTRIBUTE, oldEnrichedAttribute, enrichedAttribute));
@@ -98,7 +97,7 @@ public class ServiceTaskImpl extends TaskImpl implements ServiceTask {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute basicGetEnrichedAttribute() {
+	public EStructuralFeature basicGetEnrichedAttribute() {
 		return enrichedAttribute;
 	}
 
@@ -108,8 +107,8 @@ public class ServiceTaskImpl extends TaskImpl implements ServiceTask {
 	 * @generated
 	 */
 	@Override
-	public void setEnrichedAttribute(EAttribute newEnrichedAttribute) {
-		EAttribute oldEnrichedAttribute = enrichedAttribute;
+	public void setEnrichedAttribute(EStructuralFeature newEnrichedAttribute) {
+		EStructuralFeature oldEnrichedAttribute = enrichedAttribute;
 		enrichedAttribute = newEnrichedAttribute;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, Bpmn_litePackage.SERVICE_TASK__ENRICHED_ATTRIBUTE, oldEnrichedAttribute, enrichedAttribute));
@@ -169,7 +168,7 @@ public class ServiceTaskImpl extends TaskImpl implements ServiceTask {
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Bpmn_litePackage.SERVICE_TASK__ENRICHED_ATTRIBUTE:
-				setEnrichedAttribute((EAttribute)newValue);
+				setEnrichedAttribute((EStructuralFeature)newValue);
 				return;
 			case Bpmn_litePackage.SERVICE_TASK__SCENARIOS:
 				getScenarios().clear();
@@ -188,7 +187,7 @@ public class ServiceTaskImpl extends TaskImpl implements ServiceTask {
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Bpmn_litePackage.SERVICE_TASK__ENRICHED_ATTRIBUTE:
-				setEnrichedAttribute((EAttribute)null);
+				setEnrichedAttribute((EStructuralFeature)null);
 				return;
 			case Bpmn_litePackage.SERVICE_TASK__SCENARIOS:
 				getScenarios().clear();

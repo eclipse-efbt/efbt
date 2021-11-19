@@ -8,7 +8,7 @@ import org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTrans
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EStructuralFeature;
 
 /**
  * <!-- begin-user-doc -->
@@ -78,7 +78,7 @@ public interface CreateLogicalTransformationViewForScope extends PlatformCall {
 
 	/**
 	 * Returns the value of the '<em><b>Attribute Lineage</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.emf.ecore.EAttribute}.
+	 * The list contents are of type {@link org.eclipse.emf.ecore.EStructuralFeature}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Attribute Lineage</em>' reference list.
@@ -86,6 +86,6 @@ public interface CreateLogicalTransformationViewForScope extends PlatformCall {
 	 * @model
 	 * @generated
 	 */
-	EList<EAttribute> getAttributeLineage();
+	EList<EStructuralFeature> getAttributeLineage();
 
 } // CreateLogicalTransformationViewForScope

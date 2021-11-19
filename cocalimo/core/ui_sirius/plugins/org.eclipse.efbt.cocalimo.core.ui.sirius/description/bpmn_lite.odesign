@@ -346,7 +346,7 @@
       <metamodel href="../../org.eclipse.efbt.cocalimo.core.model.logical_transformations/model/logical_transformations.ecore#/"/>
       <metamodel href="../../org.eclipse.efbt.cocalimo.core.model.requirements_text/model/requirements_text.ecore#/"/>
       <defaultLayer name="Default">
-        <nodeMappings name="Task" semanticCandidatesExpression="feature:task" domainClass="Task">
+        <nodeMappings name="Activity" semanticCandidatesExpression="feature:activity" domainClass="Activity">
           <style xsi:type="style:SquareDescription" labelSize="12" sizeComputationExpression="15" labelPosition="node" resizeKind="NSEW">
             <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
@@ -360,14 +360,14 @@
             <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
           </style>
         </nodeMappings>
-        <nodeMappings name="TaskTag" semanticCandidatesExpression="aql:self" domainClass="TaskTag">
+        <nodeMappings name="ActivityTag" semanticCandidatesExpression="aql:self" domainClass="ActivityTag">
           <style xsi:type="style:SquareDescription" labelSize="12" sizeComputationExpression="15" labelPosition="node" resizeKind="NSEW">
             <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_blue']"/>
           </style>
         </nodeMappings>
-        <edgeMappings name="Link" sourceMapping="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ActivityTag']/@defaultLayer/@nodeMappings[name='TaskTag']" targetMapping="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ActivityTag']/@defaultLayer/@nodeMappings[name='Task']" targetFinderExpression="feature:task">
+        <edgeMappings name="Link" sourceMapping="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ActivityTag']/@defaultLayer/@nodeMappings[name='ActivityTag']" targetMapping="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ActivityTag']/@defaultLayer/@nodeMappings[name='Activity']" targetFinderExpression="feature:activity">
           <style sizeComputationExpression="2">
             <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
             <centerLabelStyleDescription labelSize="12">
@@ -375,7 +375,7 @@
             </centerLabelStyleDescription>
           </style>
         </edgeMappings>
-        <edgeMappings name="Link2" sourceMapping="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ActivityTag']/@defaultLayer/@nodeMappings[name='TaskTag']" targetMapping="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ActivityTag']/@defaultLayer/@nodeMappings[name='TitledRequirementsSection']" targetFinderExpression="feature:requirements">
+        <edgeMappings name="Link2" sourceMapping="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ActivityTag']/@defaultLayer/@nodeMappings[name='ActivityTag']" targetMapping="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ActivityTag']/@defaultLayer/@nodeMappings[name='TitledRequirementsSection']" targetFinderExpression="feature:requirements">
           <style sizeComputationExpression="2">
             <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
             <centerLabelStyleDescription labelSize="12">
@@ -509,7 +509,7 @@
             <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='red']"/>
           </style>
         </nodeMappings>
-        <nodeMappings name="RequiredAttribute" semanticCandidatesExpression="feature:requiredAttributes" domainClass="EAttribute">
+        <nodeMappings name="RequiredAttribute" semanticCandidatesExpression="feature:requiredAttributes" domainClass="EStructuralFeature">
           <style xsi:type="style:SquareDescription" labelSize="12" sizeComputationExpression="15" labelPosition="node" resizeKind="NSEW">
             <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
@@ -621,7 +621,7 @@
             <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
           </style>
         </nodeMappings>
-        <nodeMappings name="LinkedAttribute" semanticCandidatesExpression="feature:linkedAttributes" domainClass="EAttribute">
+        <nodeMappings name="LinkedAttribute" semanticCandidatesExpression="feature:linkedAttributes" domainClass="EStructuralFeature">
           <style xsi:type="style:SquareDescription" labelSize="12" sizeComputationExpression="15" labelPosition="node" resizeKind="NSEW">
             <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
@@ -671,14 +671,14 @@
             <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
           </style>
         </nodeMappings>
-        <nodeMappings name="Attribute" semanticCandidatesExpression="aql:self.entity.eAttributes" domainClass="EAttribute">
+        <nodeMappings name="EStructuralFeature" semanticCandidatesExpression="aql:self.entity.eStructuralFeatures" domainClass="EStructuralFeature">
           <style xsi:type="style:SquareDescription" labelSize="12" sizeComputationExpression="15" labelPosition="node" resizeKind="NSEW">
             <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_purple']"/>
           </style>
         </nodeMappings>
-        <edgeMappings name="taskToAttribute" sourceMapping="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='UserTask']/@defaultLayer/@nodeMappings[name='UserTask']" targetMapping="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='UserTask']/@defaultLayer/@nodeMappings[name='Attribute']" targetFinderExpression="aql:self.entity.eAttributes">
+        <edgeMappings name="taskToFeature" sourceMapping="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='UserTask']/@defaultLayer/@nodeMappings[name='UserTask']" targetMapping="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='UserTask']/@defaultLayer/@nodeMappings[name='EStructuralFeature']" targetFinderExpression="aql:self.entity.eStructuralFeatures">
           <style sizeComputationExpression="2">
             <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
             <centerLabelStyleDescription labelSize="12">

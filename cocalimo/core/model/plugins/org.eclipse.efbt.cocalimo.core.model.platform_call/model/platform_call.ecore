@@ -81,6 +81,6 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="logicalTransformationModule"
         eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.core.model.logical_transformations/model/logical_transformations.ecore#//LogicalTransformationModule"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="attributeLineage" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EAttribute"/>
+        eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EStructuralFeature"/>
   </eClassifiers>
 </ecore:EPackage>
