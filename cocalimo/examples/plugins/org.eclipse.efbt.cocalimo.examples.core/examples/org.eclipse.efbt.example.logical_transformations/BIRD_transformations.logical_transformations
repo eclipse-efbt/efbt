@@ -92,7 +92,6 @@
         }, {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ServiceTask",
           "description" : "",
-          "invisible" : true,
           "name" : "Calculate_Entity_Size",
           "incoming" : [ {
             "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -275,7 +274,6 @@
         }
       }, {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
-        "invisible" : true,
         "name" : "Read Equity Instrument",
         "incoming" : [ {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -298,7 +296,6 @@
       } ]
     }, {
       "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
-      "invisible" : true,
       "name" : "Credit Risk Processing",
       "incoming" : [ {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -307,7 +304,6 @@
       "flowElements" : [ {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ServiceTask",
         "description" : "Calculate_Risk_Weight",
-        "invisible" : true,
         "name" : "Calculate_Risk_Weight",
         "incoming" : [ {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -328,7 +324,6 @@
       }, {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ServiceTask",
         "id" : "Calculate_Exposure_At_Default",
-        "invisible" : true,
         "name" : "Calculate_Exposure_At_Default",
         "incoming" : [ {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -351,7 +346,6 @@
         } ]
       }, {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
-        "invisible" : true,
         "outgoing" : [ {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
           "$ref" : "//@subProcess/@flowElements.1/@flowElements.3"
@@ -421,7 +415,6 @@
       } ],
       "flowElements" : [ {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ScriptTask",
-        "invisible" : true,
         "name" : "Generate Credit Risk Report",
         "linkedAttributes" : [ {
           "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
@@ -451,7 +444,6 @@
         } ]
       }, {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ScriptTask",
-        "invisible" : true,
         "name" : "Generat Trade Report",
         "linkedAttributes" : [ {
           "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
