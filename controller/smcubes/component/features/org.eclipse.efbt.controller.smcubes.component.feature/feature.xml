@@ -144,13 +144,6 @@ Exhibit A – Form of Secondary Licenses Notice
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.efbt.controller.smcubes.component.exporter"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.efbt.controller.smcubes.component.importexport.api"
          download-size="0"
          install-size="0"
@@ -164,11 +157,5 @@ Exhibit A – Form of Secondary Licenses Notice
          version="0.0.0"
          unpack="false"/>
 
-   <plugin
-         id="org.eclipse.efbt.controller.smcubes.component.export_smcubes"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
 </feature>

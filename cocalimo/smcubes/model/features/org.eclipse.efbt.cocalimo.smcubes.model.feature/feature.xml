@@ -147,13 +147,6 @@ Exhibit A – Form of Secondary Licenses Notice
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.efbt.cocalimo.smcubes.model.testing"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.efbt.cocalimo.smcubes.model.core.edit"
          download-size="0"
          install-size="0"
@@ -161,21 +154,7 @@ Exhibit A – Form of Secondary Licenses Notice
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.efbt.cocalimo.smcubes.model.testing.edit"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.efbt.cocalimo.smcubes.model.core.editor"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.efbt.cocalimo.smcubes.model.testing.editor"
          download-size="0"
          install-size="0"
          version="0.0.0"
