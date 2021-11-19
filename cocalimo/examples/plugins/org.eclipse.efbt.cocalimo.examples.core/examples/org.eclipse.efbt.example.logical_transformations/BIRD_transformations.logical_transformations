@@ -10,7 +10,11 @@
     }, {
       "eClass" : "http://www.eclipse.org/efbt/requirements_text#//TitledRequirementsSection",
       "$ref" : "requirements/CRR2.requirements_text#Article_325_1_b"
-    } ]
+    } ],
+    "activity" : {
+      "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ServiceTask",
+      "$ref" : "//@subProcess/@flowElements.0/@flowElements.3/@flowElements.4"
+    }
   } ],
   "scenarioTags" : [ {
     "displayName" : "zero_coupon_rate_scenarioTag",
@@ -92,6 +96,10 @@
             "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
             "$ref" : "//@subProcess/@flowElements.0/@flowElements.2/@flowElements.4"
           } ],
+          "enrichedAttribute" : {
+            "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
+            "$ref" : "logical_data_model.ecore#//Entity_derived/size"
+          },
           "scenarios" : [ {
             "name" : "entity_size_main_scenario",
             "description" : "entity_size_main_scenario",

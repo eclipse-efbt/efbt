@@ -12,7 +12,7 @@
     <semanticResources>platform:/resource/org.eclipse.efbt.cocalimo.core.model.requirements_text/model/requirements_text.genmodel</semanticResources>
     <ownedViews xmi:type="viewpoint:DView" uid="_NxDWcD_fEey9NNjLH8xBBg">
       <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']"/>
-      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_OTvMwD_fEey9NNjLH8xBBg" name="logical_transformations class diagram" repPath="#_OTriYD_fEey9NNjLH8xBBg" changeId="adae062c-f57e-4534-9e24-e7693730ecd7">
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_OTvMwD_fEey9NNjLH8xBBg" name="logical_transformations class diagram" repPath="#_OTriYD_fEey9NNjLH8xBBg" changeId="0acac8ce-a86a-441b-91ec-8c5ff3f9c358">
         <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']"/>
         <target xmi:type="ecore:EPackage" href="logical_transformations.ecore#/"/>
       </ownedRepresentationDescriptors>
@@ -293,7 +293,7 @@
         </edges>
         <edges xmi:type="notation:Edge" xmi:id="_3X5-dEI0EeynIYoaeMHI1w" type="4001" element="_3Xo4sEI0EeynIYoaeMHI1w" source="_3XzQwEI0EeynIYoaeMHI1w" target="_OmMOuz_fEey9NNjLH8xBBg">
           <children xmi:type="notation:Node" xmi:id="_3X6lgEI0EeynIYoaeMHI1w" type="6001">
-            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_3X6lgUI0EeynIYoaeMHI1w" x="90" y="-11"/>
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_3X6lgUI0EeynIYoaeMHI1w" x="66" y="-8"/>
           </children>
           <children xmi:type="notation:Node" xmi:id="_3X6lgkI0EeynIYoaeMHI1w" type="6002">
             <layoutConstraint xmi:type="notation:Bounds" xmi:id="_3X6lg0I0EeynIYoaeMHI1w" y="-10"/>
@@ -412,7 +412,7 @@
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']"/>
       </ownedElements>
-      <ownedElements xmi:type="diagram:DNodeListElement" uid="_OmIkUz_fEey9NNjLH8xBBg" name=" requiredAttributes : EAttribute" tooltipText="">
+      <ownedElements xmi:type="diagram:DNodeListElement" uid="_OmIkUz_fEey9NNjLH8xBBg" name=" requiredAttributes : EStructuralFeature" tooltipText="">
         <target xmi:type="ecore:EReference" href="logical_transformations.ecore#//Scenario/requiredAttributes"/>
         <semanticElements xmi:type="ecore:EReference" href="logical_transformations.ecore#//Scenario/requiredAttributes"/>
         <ownedStyle xmi:type="diagram:BundledImage" uid="_OmJLYD_fEey9NNjLH8xBBg" labelAlignment="LEFT" color="114,159,207">

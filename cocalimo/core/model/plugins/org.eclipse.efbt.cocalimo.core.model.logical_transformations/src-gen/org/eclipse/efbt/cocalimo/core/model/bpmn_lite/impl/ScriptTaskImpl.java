@@ -8,10 +8,9 @@ import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Bpmn_litePackage;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ScriptTask;
 
 import org.eclipse.emf.common.util.EList;
-
-import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 /**
@@ -36,7 +35,7 @@ public class ScriptTaskImpl extends TaskImpl implements ScriptTask {
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<EAttribute> linkedAttributes;
+	protected EList<EStructuralFeature> linkedAttributes;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -63,9 +62,9 @@ public class ScriptTaskImpl extends TaskImpl implements ScriptTask {
 	 * @generated
 	 */
 	@Override
-	public EList<EAttribute> getLinkedAttributes() {
+	public EList<EStructuralFeature> getLinkedAttributes() {
 		if (linkedAttributes == null) {
-			linkedAttributes = new EObjectResolvingEList<EAttribute>(EAttribute.class, this, Bpmn_litePackage.SCRIPT_TASK__LINKED_ATTRIBUTES);
+			linkedAttributes = new EObjectResolvingEList<EStructuralFeature>(EStructuralFeature.class, this, Bpmn_litePackage.SCRIPT_TASK__LINKED_ATTRIBUTES);
 		}
 		return linkedAttributes;
 	}
@@ -95,7 +94,7 @@ public class ScriptTaskImpl extends TaskImpl implements ScriptTask {
 		switch (featureID) {
 			case Bpmn_litePackage.SCRIPT_TASK__LINKED_ATTRIBUTES:
 				getLinkedAttributes().clear();
-				getLinkedAttributes().addAll((Collection<? extends EAttribute>)newValue);
+				getLinkedAttributes().addAll((Collection<? extends EStructuralFeature>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);

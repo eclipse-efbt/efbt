@@ -15,9 +15,8 @@ import org.eclipse.efbt.cocalimo.core.model.platform_call.Platform_callPackage;
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.common.util.EList;
-
-import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -78,7 +77,7 @@ public class CreateLogicalTransformationViewForScopeImpl extends PlatformCallImp
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<EAttribute> attributeLineage;
+	protected EList<EStructuralFeature> attributeLineage;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -171,9 +170,9 @@ public class CreateLogicalTransformationViewForScopeImpl extends PlatformCallImp
 	 * @generated
 	 */
 	@Override
-	public EList<EAttribute> getAttributeLineage() {
+	public EList<EStructuralFeature> getAttributeLineage() {
 		if (attributeLineage == null) {
-			attributeLineage = new EObjectResolvingEList<EAttribute>(EAttribute.class, this, Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__ATTRIBUTE_LINEAGE);
+			attributeLineage = new EObjectResolvingEList<EStructuralFeature>(EStructuralFeature.class, this, Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__ATTRIBUTE_LINEAGE);
 		}
 		return attributeLineage;
 	}
@@ -221,7 +220,7 @@ public class CreateLogicalTransformationViewForScopeImpl extends PlatformCallImp
 				return;
 			case Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__ATTRIBUTE_LINEAGE:
 				getAttributeLineage().clear();
-				getAttributeLineage().addAll((Collection<? extends EAttribute>)newValue);
+				getAttributeLineage().addAll((Collection<? extends EStructuralFeature>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);

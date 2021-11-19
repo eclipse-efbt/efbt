@@ -10,10 +10,9 @@ import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario;
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.common.util.EList;
-
-import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
@@ -104,7 +103,7 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<EAttribute> requiredAttributes;
+	protected EList<EStructuralFeature> requiredAttributes;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -200,9 +199,9 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
 	 * @generated
 	 */
 	@Override
-	public EList<EAttribute> getRequiredAttributes() {
+	public EList<EStructuralFeature> getRequiredAttributes() {
 		if (requiredAttributes == null) {
-			requiredAttributes = new EObjectResolvingEList<EAttribute>(EAttribute.class, this, Logical_transformationsPackage.SCENARIO__REQUIRED_ATTRIBUTES);
+			requiredAttributes = new EObjectResolvingEList<EStructuralFeature>(EStructuralFeature.class, this, Logical_transformationsPackage.SCENARIO__REQUIRED_ATTRIBUTES);
 		}
 		return requiredAttributes;
 	}
@@ -247,7 +246,7 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
 				return;
 			case Logical_transformationsPackage.SCENARIO__REQUIRED_ATTRIBUTES:
 				getRequiredAttributes().clear();
-				getRequiredAttributes().addAll((Collection<? extends EAttribute>)newValue);
+				getRequiredAttributes().addAll((Collection<? extends EStructuralFeature>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);

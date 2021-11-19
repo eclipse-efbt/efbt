@@ -47,7 +47,7 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="requiredAttributes" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EAttribute"/>
+        eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EStructuralFeature"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ScenarioTag" eSuperTypes="../../org.eclipse.efbt.cocalimo.core.model.requirements_text/model/requirements_text.ecore#//Tag">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">

@@ -3,8 +3,7 @@
 package org.eclipse.efbt.cocalimo.core.model.bpmn_lite;
 
 import org.eclipse.emf.common.util.EList;
-
-import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EStructuralFeature;
 
 /**
  * <!-- begin-user-doc -->
@@ -25,7 +24,7 @@ import org.eclipse.emf.ecore.EAttribute;
 public interface ScriptTask extends Task {
 	/**
 	 * Returns the value of the '<em><b>Linked Attributes</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.emf.ecore.EAttribute}.
+	 * The list contents are of type {@link org.eclipse.emf.ecore.EStructuralFeature}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Linked Attributes</em>' reference list.
@@ -33,6 +32,6 @@ public interface ScriptTask extends Task {
 	 * @model
 	 * @generated
 	 */
-	EList<EAttribute> getLinkedAttributes();
+	EList<EStructuralFeature> getLinkedAttributes();
 
 } // ScriptTask
