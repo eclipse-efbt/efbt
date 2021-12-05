@@ -3,10 +3,10 @@
   "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
   "name" : "testModule1",
   "tests" : [ {
-    "scenarios" : {
+    "scenarios" : [ {
       "eClass" : "http://www.eclipse.org/efbt/logical_transformations#//Scenario",
       "$ref" : "BIRD_transformations.logical_transformations#main_duration_scenario"
-    },
+    } ],
     "inputData" : [ {
       "eClass" : "platform:/resource/org.eclipse.efbt.example.logical_transformations/logical_data_model.ecore#//BondInstrument",
       "$ref" : "tests/duration/zero_coupon_rate_edge_case/test1/BondInstrument.xmi#IBM_Bond_instrument"
@@ -26,10 +26,10 @@
     } ],
     "name" : "duration_test1"
   }, {
-    "scenarios" : {
+    "scenarios" : [ {
       "eClass" : "http://www.eclipse.org/efbt/logical_transformations#//Scenario",
       "$ref" : "BIRD_transformations.logical_transformations#zero_coupon_rate_edge_case"
-    },
+    } ],
     "name" : "duration_zero_coupon_rate_edge_case"
   } ]
 }

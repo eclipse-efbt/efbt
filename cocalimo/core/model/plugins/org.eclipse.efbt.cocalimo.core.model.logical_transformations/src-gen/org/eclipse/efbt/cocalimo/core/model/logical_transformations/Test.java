@@ -27,26 +27,16 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface Test extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Scenarios</b></em>' reference.
+	 * Returns the value of the '<em><b>Scenarios</b></em>' reference list.
+	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Scenarios</em>' reference.
-	 * @see #setScenarios(Scenario)
+	 * @return the value of the '<em>Scenarios</em>' reference list.
 	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsPackage#getTest_Scenarios()
 	 * @model
 	 * @generated
 	 */
-	Scenario getScenarios();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Test#getScenarios <em>Scenarios</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Scenarios</em>' reference.
-	 * @see #getScenarios()
-	 * @generated
-	 */
-	void setScenarios(Scenario value);
+	EList<Scenario> getScenarios();
 
 	/**
 	 * Returns the value of the '<em><b>Input Data</b></em>' reference list.

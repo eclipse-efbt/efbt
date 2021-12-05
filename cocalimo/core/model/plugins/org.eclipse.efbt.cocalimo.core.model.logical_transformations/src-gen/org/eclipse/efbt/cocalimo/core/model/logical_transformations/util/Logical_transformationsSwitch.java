@@ -108,6 +108,12 @@ public class Logical_transformationsSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case Logical_transformationsPackage.DATA_CONSTRAINT: {
+				DataConstraint dataConstraint = (DataConstraint)theEObject;
+				T result = caseDataConstraint(dataConstraint);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -199,6 +205,21 @@ public class Logical_transformationsSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseTestModule(TestModule object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Data Constraint</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Data Constraint</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseDataConstraint(DataConstraint object) {
 		return null;
 	}
 

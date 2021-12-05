@@ -5,6 +5,7 @@ package org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.*;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 
@@ -62,8 +63,39 @@ public class Logical_transformationsFactoryImpl extends EFactoryImpl implements 
 			case Logical_transformationsPackage.SCENARIO_TAG: return createScenarioTag();
 			case Logical_transformationsPackage.TEST: return createTest();
 			case Logical_transformationsPackage.TEST_MODULE: return createTestModule();
+			case Logical_transformationsPackage.DATA_CONSTRAINT: return createDataConstraint();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object createFromString(EDataType eDataType, String initialValue) {
+		switch (eDataType.getClassifierID()) {
+			case Logical_transformationsPackage.ATTR_COMPARISON:
+				return createAttrComparisonFromString(eDataType, initialValue);
+			default:
+				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String convertToString(EDataType eDataType, Object instanceValue) {
+		switch (eDataType.getClassifierID()) {
+			case Logical_transformationsPackage.ATTR_COMPARISON:
+				return convertAttrComparisonToString(eDataType, instanceValue);
+			default:
+				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
 	}
 
@@ -131,6 +163,37 @@ public class Logical_transformationsFactoryImpl extends EFactoryImpl implements 
 	public TestModule createTestModule() {
 		TestModuleImpl testModule = new TestModuleImpl();
 		return testModule;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public DataConstraint createDataConstraint() {
+		DataConstraintImpl dataConstraint = new DataConstraintImpl();
+		return dataConstraint;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public AttrComparison createAttrComparisonFromString(EDataType eDataType, String initialValue) {
+		AttrComparison result = AttrComparison.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertAttrComparisonToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
 	}
 
 	/**

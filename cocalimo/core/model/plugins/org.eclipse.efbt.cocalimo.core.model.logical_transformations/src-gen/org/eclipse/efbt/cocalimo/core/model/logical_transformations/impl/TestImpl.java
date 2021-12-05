@@ -14,8 +14,6 @@ import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
@@ -39,14 +37,14 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  */
 public class TestImpl extends MinimalEObjectImpl.Container implements Test {
 	/**
-	 * The cached value of the '{@link #getScenarios() <em>Scenarios</em>}' reference.
+	 * The cached value of the '{@link #getScenarios() <em>Scenarios</em>}' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getScenarios()
 	 * @generated
 	 * @ordered
 	 */
-	protected Scenario scenarios;
+	protected EList<Scenario> scenarios;
 
 	/**
 	 * The cached value of the '{@link #getInputData() <em>Input Data</em>}' reference list.
@@ -113,38 +111,11 @@ public class TestImpl extends MinimalEObjectImpl.Container implements Test {
 	 * @generated
 	 */
 	@Override
-	public Scenario getScenarios() {
-		if (scenarios != null && scenarios.eIsProxy()) {
-			InternalEObject oldScenarios = (InternalEObject)scenarios;
-			scenarios = (Scenario)eResolveProxy(oldScenarios);
-			if (scenarios != oldScenarios) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Logical_transformationsPackage.TEST__SCENARIOS, oldScenarios, scenarios));
-			}
+	public EList<Scenario> getScenarios() {
+		if (scenarios == null) {
+			scenarios = new EObjectResolvingEList<Scenario>(Scenario.class, this, Logical_transformationsPackage.TEST__SCENARIOS);
 		}
 		return scenarios;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Scenario basicGetScenarios() {
-		return scenarios;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setScenarios(Scenario newScenarios) {
-		Scenario oldScenarios = scenarios;
-		scenarios = newScenarios;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, Logical_transformationsPackage.TEST__SCENARIOS, oldScenarios, scenarios));
 	}
 
 	/**
@@ -205,8 +176,7 @@ public class TestImpl extends MinimalEObjectImpl.Container implements Test {
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Logical_transformationsPackage.TEST__SCENARIOS:
-				if (resolve) return getScenarios();
-				return basicGetScenarios();
+				return getScenarios();
 			case Logical_transformationsPackage.TEST__INPUT_DATA:
 				return getInputData();
 			case Logical_transformationsPackage.TEST__EXPECTED_RESULT:
@@ -227,7 +197,8 @@ public class TestImpl extends MinimalEObjectImpl.Container implements Test {
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Logical_transformationsPackage.TEST__SCENARIOS:
-				setScenarios((Scenario)newValue);
+				getScenarios().clear();
+				getScenarios().addAll((Collection<? extends Scenario>)newValue);
 				return;
 			case Logical_transformationsPackage.TEST__INPUT_DATA:
 				getInputData().clear();
@@ -253,7 +224,7 @@ public class TestImpl extends MinimalEObjectImpl.Container implements Test {
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Logical_transformationsPackage.TEST__SCENARIOS:
-				setScenarios((Scenario)null);
+				getScenarios().clear();
 				return;
 			case Logical_transformationsPackage.TEST__INPUT_DATA:
 				getInputData().clear();
@@ -277,7 +248,7 @@ public class TestImpl extends MinimalEObjectImpl.Container implements Test {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Logical_transformationsPackage.TEST__SCENARIOS:
-				return scenarios != null;
+				return scenarios != null && !scenarios.isEmpty();
 			case Logical_transformationsPackage.TEST__INPUT_DATA:
 				return inputData != null && !inputData.isEmpty();
 			case Logical_transformationsPackage.TEST__EXPECTED_RESULT:

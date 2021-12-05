@@ -7,6 +7,8 @@ import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Bpmn_litePackage;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.impl.Bpmn_litePackageImpl;
 
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.ActivityTag;
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.AttrComparison;
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.DataConstraint;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsFactory;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsPackage;
@@ -19,6 +21,7 @@ import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementP
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.Requirements_textPackage;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
@@ -73,6 +76,20 @@ public class Logical_transformationsPackageImpl extends EPackageImpl implements 
 	 * @generated
 	 */
 	private EClass testModuleEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass dataConstraintEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum attrComparisonEEnum = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -282,6 +299,16 @@ public class Logical_transformationsPackageImpl extends EPackageImpl implements 
 	 * @generated
 	 */
 	@Override
+	public EReference getScenario_Data_constraints() {
+		return (EReference)scenarioEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getScenarioTag() {
 		return scenarioTagEClass;
 	}
@@ -372,6 +399,56 @@ public class Logical_transformationsPackageImpl extends EPackageImpl implements 
 	 * @generated
 	 */
 	@Override
+	public EClass getDataConstraint() {
+		return dataConstraintEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getDataConstraint_Attr1() {
+		return (EReference)dataConstraintEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getDataConstraint_Attr2() {
+		return (EReference)dataConstraintEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getDataConstraint_Comparison() {
+		return (EAttribute)dataConstraintEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EEnum getAttrComparison() {
+		return attrComparisonEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Logical_transformationsFactory getLogical_transformationsFactory() {
 		return (Logical_transformationsFactory)getEFactoryInstance();
 	}
@@ -410,6 +487,7 @@ public class Logical_transformationsPackageImpl extends EPackageImpl implements 
 		createEAttribute(scenarioEClass, SCENARIO__INVISIBLE);
 		createEAttribute(scenarioEClass, SCENARIO__DESCRIPTION);
 		createEReference(scenarioEClass, SCENARIO__REQUIRED_ATTRIBUTES);
+		createEReference(scenarioEClass, SCENARIO__DATA_CONSTRAINTS);
 
 		scenarioTagEClass = createEClass(SCENARIO_TAG);
 		createEReference(scenarioTagEClass, SCENARIO_TAG__SCENARIO);
@@ -422,6 +500,14 @@ public class Logical_transformationsPackageImpl extends EPackageImpl implements 
 
 		testModuleEClass = createEClass(TEST_MODULE);
 		createEReference(testModuleEClass, TEST_MODULE__TESTS);
+
+		dataConstraintEClass = createEClass(DATA_CONSTRAINT);
+		createEReference(dataConstraintEClass, DATA_CONSTRAINT__ATTR1);
+		createEReference(dataConstraintEClass, DATA_CONSTRAINT__ATTR2);
+		createEAttribute(dataConstraintEClass, DATA_CONSTRAINT__COMPARISON);
+
+		// Create enums
+		attrComparisonEEnum = createEEnum(ATTR_COMPARISON);
 	}
 
 	/**
@@ -469,7 +555,7 @@ public class Logical_transformationsPackageImpl extends EPackageImpl implements 
 		initEReference(getLogicalTransformationModule_ScenarioTags(), this.getScenarioTag(), null, "scenarioTags", null, 0, -1, LogicalTransformationModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getLogicalTransformationModule_SubProcess(), theBpmn_litePackage.getSubProcess(), null, "subProcess", null, 0, 1, LogicalTransformationModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getLogicalTransformationModule_Requirements(), theRequirements_textPackage.getRequirementsModule(), null, "requirements", null, 0, -1, LogicalTransformationModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getLogicalTransformationModule_TestModules(), this.getTestModule(), null, "testModules", null, 0, -1, LogicalTransformationModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getLogicalTransformationModule_TestModules(), this.getTestModule(), null, "testModules", null, 0, -1, LogicalTransformationModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(activityTagEClass, ActivityTag.class, "ActivityTag", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getActivityTag_Activity(), theBpmn_litePackage.getActivity(), null, "activity", null, 0, 1, ActivityTag.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -479,12 +565,13 @@ public class Logical_transformationsPackageImpl extends EPackageImpl implements 
 		initEAttribute(getScenario_Invisible(), ecorePackage.getEBoolean(), "invisible", null, 0, 1, Scenario.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getScenario_Description(), ecorePackage.getEString(), "description", null, 0, 1, Scenario.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getScenario_RequiredAttributes(), theEcorePackage.getEStructuralFeature(), null, "requiredAttributes", null, 0, -1, Scenario.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getScenario_Data_constraints(), this.getDataConstraint(), null, "data_constraints", null, 0, 1, Scenario.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(scenarioTagEClass, ScenarioTag.class, "ScenarioTag", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getScenarioTag_Scenario(), this.getScenario(), null, "scenario", null, 0, 1, ScenarioTag.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(testEClass, Test.class, "Test", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getTest_Scenarios(), this.getScenario(), null, "scenarios", null, 0, 1, Test.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTest_Scenarios(), this.getScenario(), null, "scenarios", null, 0, -1, Test.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTest_InputData(), theEcorePackage.getEObject(), null, "inputData", null, 0, -1, Test.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTest_ExpectedResult(), theEcorePackage.getEObject(), null, "expectedResult", null, 0, -1, Test.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTest_Name(), ecorePackage.getEString(), "name", null, 0, 1, Test.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -492,12 +579,41 @@ public class Logical_transformationsPackageImpl extends EPackageImpl implements 
 		initEClass(testModuleEClass, TestModule.class, "TestModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getTestModule_Tests(), this.getTest(), null, "tests", null, 0, -1, TestModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		initEClass(dataConstraintEClass, DataConstraint.class, "DataConstraint", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getDataConstraint_Attr1(), theEcorePackage.getEStructuralFeature(), null, "attr1", null, 0, 1, DataConstraint.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDataConstraint_Attr2(), theEcorePackage.getEStructuralFeature(), null, "attr2", null, 0, 1, DataConstraint.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getDataConstraint_Comparison(), this.getAttrComparison(), "comparison", null, 0, 1, DataConstraint.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		// Initialize enums and add enum literals
+		initEEnum(attrComparisonEEnum, AttrComparison.class, "AttrComparison");
+		addEEnumLiteral(attrComparisonEEnum, AttrComparison.EQUALS);
+		addEEnumLiteral(attrComparisonEEnum, AttrComparison.LESS_THAN);
+		addEEnumLiteral(attrComparisonEEnum, AttrComparison.GREATER_THAN);
+
 		// Create resource
 		createResource(eNS_URI);
 
 		// Create annotations
+		// license
+		createLicenseAnnotations();
 		// http:///org/eclipse/emf/ecore/util/ExtendedMetaData
 		createExtendedMetaDataAnnotations();
+	}
+
+	/**
+	 * Initializes the annotations for <b>license</b>.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void createLicenseAnnotations() {
+		String source = "license";
+		addAnnotation
+		  (this,
+		   source,
+		   new String[] {
+			   "license", "Copyright (c) 2020 Bird Software Solutions Ltd\n All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html\n\nSPDX-License-Identifier: EPL-2.0 \n\n Contributors:\n Neil Mackenzie - initial API and implementation\r"
+		   });
 	}
 
 	/**

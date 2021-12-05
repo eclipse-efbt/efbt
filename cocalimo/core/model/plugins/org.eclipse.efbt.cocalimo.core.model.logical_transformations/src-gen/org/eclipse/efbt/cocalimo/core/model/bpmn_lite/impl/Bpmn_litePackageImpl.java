@@ -664,6 +664,26 @@ public class Bpmn_litePackageImpl extends EPackageImpl implements Bpmn_litePacka
 
 		// Create resource
 		createResource(eNS_URI);
+
+		// Create annotations
+		// license
+		createLicenseAnnotations();
+	}
+
+	/**
+	 * Initializes the annotations for <b>license</b>.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void createLicenseAnnotations() {
+		String source = "license";
+		addAnnotation
+		  (this,
+		   source,
+		   new String[] {
+			   "license", "Copyright (c) 2020 Bird Software Solutions Ltd\n All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html\n\nSPDX-License-Identifier: EPL-2.0 \n\n Contributors:\n Neil Mackenzie - initial API and implementation\r"
+		   });
 	}
 
 } //Bpmn_litePackageImpl

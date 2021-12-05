@@ -87,13 +87,13 @@ public interface LogicalTransformationModule extends org.eclipse.efbt.cocalimo.c
 	EList<RequirementsModule> getRequirements();
 
 	/**
-	 * Returns the value of the '<em><b>Test Modules</b></em>' containment reference list.
+	 * Returns the value of the '<em><b>Test Modules</b></em>' reference list.
 	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.TestModule}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Test Modules</em>' containment reference list.
+	 * @return the value of the '<em>Test Modules</em>' reference list.
 	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsPackage#getLogicalTransformationModule_TestModules()
-	 * @model containment="true"
+	 * @model
 	 * @generated
 	 */
 	EList<TestModule> getTestModules();

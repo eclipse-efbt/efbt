@@ -210,6 +210,29 @@ public class Logical_transformationsItemProviderAdapterFactory extends Logical_t
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.DataConstraint} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected DataConstraintItemProvider dataConstraintItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.DataConstraint}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createDataConstraintAdapter() {
+		if (dataConstraintItemProvider == null) {
+			dataConstraintItemProvider = new DataConstraintItemProvider(this);
+		}
+
+		return dataConstraintItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -320,6 +343,7 @@ public class Logical_transformationsItemProviderAdapterFactory extends Logical_t
 		if (scenarioTagItemProvider != null) scenarioTagItemProvider.dispose();
 		if (testItemProvider != null) testItemProvider.dispose();
 		if (testModuleItemProvider != null) testModuleItemProvider.dispose();
+		if (dataConstraintItemProvider != null) dataConstraintItemProvider.dispose();
 	}
 
 }

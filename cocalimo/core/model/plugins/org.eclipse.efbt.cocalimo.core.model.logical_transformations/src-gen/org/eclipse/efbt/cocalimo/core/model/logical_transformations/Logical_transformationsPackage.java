@@ -8,6 +8,7 @@ import org.eclipse.efbt.cocalimo.core.model.requirements_text.Requirements_textP
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
@@ -25,6 +26,7 @@ import org.eclipse.emf.ecore.EReference;
  * <!-- end-user-doc -->
  * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsFactory
  * @model kind="package"
+ *        annotation="license license='Copyright (c) 2020 Bird Software Solutions Ltd\n All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html\n\nSPDX-License-Identifier: EPL-2.0 \n\n Contributors:\n Neil Mackenzie - initial API and implementation\r'"
  * @generated
  */
 public interface Logical_transformationsPackage extends EPackage {
@@ -161,7 +163,7 @@ public interface Logical_transformationsPackage extends EPackage {
 	int LOGICAL_TRANSFORMATION_MODULE__REQUIREMENTS = Module_managementPackage.MODULE_FEATURE_COUNT + 3;
 
 	/**
-	 * The feature id for the '<em><b>Test Modules</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Test Modules</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -298,13 +300,22 @@ public interface Logical_transformationsPackage extends EPackage {
 	int SCENARIO__REQUIRED_ATTRIBUTES = 3;
 
 	/**
+	 * The feature id for the '<em><b>Data constraints</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCENARIO__DATA_CONSTRAINTS = 4;
+
+	/**
 	 * The number of structural features of the '<em>Scenario</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SCENARIO_FEATURE_COUNT = 4;
+	int SCENARIO_FEATURE_COUNT = 5;
 
 	/**
 	 * The number of operations of the '<em>Scenario</em>' class.
@@ -391,7 +402,7 @@ public interface Logical_transformationsPackage extends EPackage {
 	int TEST = 4;
 
 	/**
-	 * The feature id for the '<em><b>Scenarios</b></em>' reference.
+	 * The feature id for the '<em><b>Scenarios</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -537,6 +548,72 @@ public interface Logical_transformationsPackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.DataConstraintImpl <em>Data Constraint</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.DataConstraintImpl
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.Logical_transformationsPackageImpl#getDataConstraint()
+	 * @generated
+	 */
+	int DATA_CONSTRAINT = 6;
+
+	/**
+	 * The feature id for the '<em><b>Attr1</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DATA_CONSTRAINT__ATTR1 = 0;
+
+	/**
+	 * The feature id for the '<em><b>Attr2</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DATA_CONSTRAINT__ATTR2 = 1;
+
+	/**
+	 * The feature id for the '<em><b>Comparison</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DATA_CONSTRAINT__COMPARISON = 2;
+
+	/**
+	 * The number of structural features of the '<em>Data Constraint</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DATA_CONSTRAINT_FEATURE_COUNT = 3;
+
+	/**
+	 * The number of operations of the '<em>Data Constraint</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DATA_CONSTRAINT_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.AttrComparison <em>Attr Comparison</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.AttrComparison
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.Logical_transformationsPackageImpl#getAttrComparison()
+	 * @generated
+	 */
+	int ATTR_COMPARISON = 7;
+
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule <em>Logical Transformation Module</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -591,10 +668,10 @@ public interface Logical_transformationsPackage extends EPackage {
 	EReference getLogicalTransformationModule_Requirements();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule#getTestModules <em>Test Modules</em>}'.
+	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule#getTestModules <em>Test Modules</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Test Modules</em>'.
+	 * @return the meta object for the reference list '<em>Test Modules</em>'.
 	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule#getTestModules()
 	 * @see #getLogicalTransformationModule()
 	 * @generated
@@ -677,6 +754,17 @@ public interface Logical_transformationsPackage extends EPackage {
 	EReference getScenario_RequiredAttributes();
 
 	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario#getData_constraints <em>Data constraints</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Data constraints</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario#getData_constraints()
+	 * @see #getScenario()
+	 * @generated
+	 */
+	EReference getScenario_Data_constraints();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.ScenarioTag <em>Scenario Tag</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -708,10 +796,10 @@ public interface Logical_transformationsPackage extends EPackage {
 	EClass getTest();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Test#getScenarios <em>Scenarios</em>}'.
+	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Test#getScenarios <em>Scenarios</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Scenarios</em>'.
+	 * @return the meta object for the reference list '<em>Scenarios</em>'.
 	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.Test#getScenarios()
 	 * @see #getTest()
 	 * @generated
@@ -771,6 +859,59 @@ public interface Logical_transformationsPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getTestModule_Tests();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.DataConstraint <em>Data Constraint</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Data Constraint</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.DataConstraint
+	 * @generated
+	 */
+	EClass getDataConstraint();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.DataConstraint#getAttr1 <em>Attr1</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Attr1</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.DataConstraint#getAttr1()
+	 * @see #getDataConstraint()
+	 * @generated
+	 */
+	EReference getDataConstraint_Attr1();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.DataConstraint#getAttr2 <em>Attr2</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Attr2</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.DataConstraint#getAttr2()
+	 * @see #getDataConstraint()
+	 * @generated
+	 */
+	EReference getDataConstraint_Attr2();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.DataConstraint#getComparison <em>Comparison</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Comparison</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.DataConstraint#getComparison()
+	 * @see #getDataConstraint()
+	 * @generated
+	 */
+	EAttribute getDataConstraint_Comparison();
+
+	/**
+	 * Returns the meta object for enum '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.AttrComparison <em>Attr Comparison</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>Attr Comparison</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.AttrComparison
+	 * @generated
+	 */
+	EEnum getAttrComparison();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -838,7 +979,7 @@ public interface Logical_transformationsPackage extends EPackage {
 		EReference LOGICAL_TRANSFORMATION_MODULE__REQUIREMENTS = eINSTANCE.getLogicalTransformationModule_Requirements();
 
 		/**
-		 * The meta object literal for the '<em><b>Test Modules</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Test Modules</b></em>' reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -906,6 +1047,14 @@ public interface Logical_transformationsPackage extends EPackage {
 		EReference SCENARIO__REQUIRED_ATTRIBUTES = eINSTANCE.getScenario_RequiredAttributes();
 
 		/**
+		 * The meta object literal for the '<em><b>Data constraints</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SCENARIO__DATA_CONSTRAINTS = eINSTANCE.getScenario_Data_constraints();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.ScenarioTagImpl <em>Scenario Tag</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -934,7 +1083,7 @@ public interface Logical_transformationsPackage extends EPackage {
 		EClass TEST = eINSTANCE.getTest();
 
 		/**
-		 * The meta object literal for the '<em><b>Scenarios</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Scenarios</b></em>' reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -982,6 +1131,50 @@ public interface Logical_transformationsPackage extends EPackage {
 		 * @generated
 		 */
 		EReference TEST_MODULE__TESTS = eINSTANCE.getTestModule_Tests();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.DataConstraintImpl <em>Data Constraint</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.DataConstraintImpl
+		 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.Logical_transformationsPackageImpl#getDataConstraint()
+		 * @generated
+		 */
+		EClass DATA_CONSTRAINT = eINSTANCE.getDataConstraint();
+
+		/**
+		 * The meta object literal for the '<em><b>Attr1</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DATA_CONSTRAINT__ATTR1 = eINSTANCE.getDataConstraint_Attr1();
+
+		/**
+		 * The meta object literal for the '<em><b>Attr2</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DATA_CONSTRAINT__ATTR2 = eINSTANCE.getDataConstraint_Attr2();
+
+		/**
+		 * The meta object literal for the '<em><b>Comparison</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DATA_CONSTRAINT__COMPARISON = eINSTANCE.getDataConstraint_Comparison();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.AttrComparison <em>Attr Comparison</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.AttrComparison
+		 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.Logical_transformationsPackageImpl#getAttrComparison()
+		 * @generated
+		 */
+		EEnum ATTR_COMPARISON = eINSTANCE.getAttrComparison();
 
 	}
 
