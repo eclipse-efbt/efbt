@@ -16,7 +16,7 @@
         eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.core.model.requirements_text/model/requirements_text.ecore#//RequirementsModule"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="testModules" upperBound="-1"
-        eType="#//TestModule" containment="true"/>
+        eType="#//TestModule"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ActivityTag" eSuperTypes="../../org.eclipse.efbt.cocalimo.core.model.requirements_text/model/requirements_text.ecore#//Tag">
     <eStructuralFeatures xsi:type="ecore:EReference" name="activity" eType="ecore:EClass bpmn_lite.ecore#//Activity"/>
@@ -51,6 +51,8 @@
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="requiredAttributes" upperBound="-1"
         eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EStructuralFeature"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="data_constraints" eType="#//DataConstraint"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ScenarioTag" eSuperTypes="../../org.eclipse.efbt.cocalimo.core.model.requirements_text/model/requirements_text.ecore#//Tag">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -63,16 +65,47 @@
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Test">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="scenarios" eType="#//Scenario"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="inputData" upperBound="-1"
         eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="expectedResult" upperBound="-1"
         eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="scope" eType="#//TestScope"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TestModule" eSuperTypes="../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.ecore#//Module">
     <eStructuralFeatures xsi:type="ecore:EReference" name="tests" upperBound="-1"
         eType="#//Test" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DataConstraint">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attr1" eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EStructuralFeature"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attr2" eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EStructuralFeature"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="comparison" eType="#//AttrComparison"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="AttrComparison">
+    <eLiterals name="equals"/>
+    <eLiterals name="less_than" value="1"/>
+    <eLiterals name="greater_than" value="2"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SelectionLayer">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="requiredAttributes" upperBound="-1"
+        eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EStructuralFeature"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="invisible" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TestScope">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UnitTestScope" eSuperTypes="#//TestScope">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="scenarios" eType="#//Scenario"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="E2ETestScope" eSuperTypes="#//TestScope">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="scenarios" upperBound="-1"
+        eType="#//Scenario"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="layer" eType="#//SelectionLayer"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="scriptTask" eType="ecore:EClass bpmn_lite.ecore#//ScriptTask"/>
   </eClassifiers>
 </ecore:EPackage>

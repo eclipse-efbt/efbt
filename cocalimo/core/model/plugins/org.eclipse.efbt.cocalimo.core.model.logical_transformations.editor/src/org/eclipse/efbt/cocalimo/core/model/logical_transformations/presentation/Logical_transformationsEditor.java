@@ -162,6 +162,7 @@ import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.provider.Bpmn_liteItemProv
 import org.eclipse.efbt.cocalimo.core.model.module_management.provider.Module_managementItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.provider.Requirements_textItemProviderAdapterFactory;
+
 import org.eclipse.emf.ecore.provider.EcoreItemProviderAdapterFactory;
 
 import org.eclipse.ui.actions.WorkspaceModifyOperation;

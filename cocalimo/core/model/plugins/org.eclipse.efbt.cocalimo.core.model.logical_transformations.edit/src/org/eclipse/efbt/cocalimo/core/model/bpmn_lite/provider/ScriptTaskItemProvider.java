@@ -9,11 +9,16 @@ import java.util.List;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Bpmn_litePackage;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ScriptTask;
 
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsFactory;
+
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.ecore.EStructuralFeature;
+
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
+import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
  * This is the item provider adapter for a {@link org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ScriptTask} object.
@@ -43,31 +48,61 @@ public class ScriptTaskItemProvider extends TaskItemProvider {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addLinkedAttributesPropertyDescriptor(object);
+			addOutputLayerPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
 
 	/**
-	 * This adds a property descriptor for the Linked Attributes feature.
+	 * This adds a property descriptor for the Output Layer feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addLinkedAttributesPropertyDescriptor(Object object) {
+	protected void addOutputLayerPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_ScriptTask_linkedAttributes_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_ScriptTask_linkedAttributes_feature", "_UI_ScriptTask_type"),
-				 Bpmn_litePackage.Literals.SCRIPT_TASK__LINKED_ATTRIBUTES,
+				 getString("_UI_ScriptTask_outputLayer_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_ScriptTask_outputLayer_feature", "_UI_ScriptTask_type"),
+				 Bpmn_litePackage.Literals.SCRIPT_TASK__OUTPUT_LAYER,
 				 true,
 				 false,
 				 true,
 				 null,
 				 null,
 				 null));
+	}
+
+	/**
+	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
+	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
+	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
+		if (childrenFeatures == null) {
+			super.getChildrenFeatures(object);
+			childrenFeatures.add(Bpmn_litePackage.Literals.SCRIPT_TASK__SELECTION_LAYERS);
+		}
+		return childrenFeatures;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	protected EStructuralFeature getChildFeature(Object object, Object child) {
+		// Check the type of the specified child object and return the proper feature to use for
+		// adding (see {@link AddCommand}) it as a child.
+
+		return super.getChildFeature(object, child);
 	}
 
 	/**
@@ -106,6 +141,12 @@ public class ScriptTaskItemProvider extends TaskItemProvider {
 	@Override
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
+
+		switch (notification.getFeatureID(ScriptTask.class)) {
+			case Bpmn_litePackage.SCRIPT_TASK__SELECTION_LAYERS:
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
+				return;
+		}
 		super.notifyChanged(notification);
 	}
 
@@ -119,6 +160,11 @@ public class ScriptTaskItemProvider extends TaskItemProvider {
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
+
+		newChildDescriptors.add
+			(createChildParameter
+				(Bpmn_litePackage.Literals.SCRIPT_TASK__SELECTION_LAYERS,
+				 Logical_transformationsFactory.eINSTANCE.createSelectionLayer()));
 	}
 
 }

@@ -8,6 +8,7 @@ import org.eclipse.efbt.cocalimo.core.model.requirements_text.Requirements_textP
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
@@ -25,6 +26,7 @@ import org.eclipse.emf.ecore.EReference;
  * <!-- end-user-doc -->
  * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsFactory
  * @model kind="package"
+ *        annotation="license license='Copyright (c) 2020 Bird Software Solutions Ltd\n All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html\n\nSPDX-License-Identifier: EPL-2.0 \n\n Contributors:\n Neil Mackenzie - initial API and implementation\r'"
  * @generated
  */
 public interface Logical_transformationsPackage extends EPackage {
@@ -161,7 +163,7 @@ public interface Logical_transformationsPackage extends EPackage {
 	int LOGICAL_TRANSFORMATION_MODULE__REQUIREMENTS = Module_managementPackage.MODULE_FEATURE_COUNT + 3;
 
 	/**
-	 * The feature id for the '<em><b>Test Modules</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Test Modules</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -298,13 +300,22 @@ public interface Logical_transformationsPackage extends EPackage {
 	int SCENARIO__REQUIRED_ATTRIBUTES = 3;
 
 	/**
+	 * The feature id for the '<em><b>Data constraints</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCENARIO__DATA_CONSTRAINTS = 4;
+
+	/**
 	 * The number of structural features of the '<em>Scenario</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SCENARIO_FEATURE_COUNT = 4;
+	int SCENARIO_FEATURE_COUNT = 5;
 
 	/**
 	 * The number of operations of the '<em>Scenario</em>' class.
@@ -379,7 +390,6 @@ public interface Logical_transformationsPackage extends EPackage {
 	 */
 	int SCENARIO_TAG_OPERATION_COUNT = Requirements_textPackage.TAG_OPERATION_COUNT + 0;
 
-
 	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.TestImpl <em>Test</em>}' class.
 	 * <!-- begin-user-doc -->
@@ -391,22 +401,13 @@ public interface Logical_transformationsPackage extends EPackage {
 	int TEST = 4;
 
 	/**
-	 * The feature id for the '<em><b>Scenarios</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TEST__SCENARIOS = 0;
-
-	/**
 	 * The feature id for the '<em><b>Input Data</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TEST__INPUT_DATA = 1;
+	int TEST__INPUT_DATA = 0;
 
 	/**
 	 * The feature id for the '<em><b>Expected Result</b></em>' reference list.
@@ -415,7 +416,7 @@ public interface Logical_transformationsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TEST__EXPECTED_RESULT = 2;
+	int TEST__EXPECTED_RESULT = 1;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -424,7 +425,16 @@ public interface Logical_transformationsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TEST__NAME = 3;
+	int TEST__NAME = 2;
+
+	/**
+	 * The feature id for the '<em><b>Scope</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEST__SCOPE = 3;
 
 	/**
 	 * The number of structural features of the '<em>Test</em>' class.
@@ -535,6 +545,273 @@ public interface Logical_transformationsPackage extends EPackage {
 	 */
 	int TEST_MODULE_OPERATION_COUNT = Module_managementPackage.MODULE_OPERATION_COUNT + 0;
 
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.DataConstraintImpl <em>Data Constraint</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.DataConstraintImpl
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.Logical_transformationsPackageImpl#getDataConstraint()
+	 * @generated
+	 */
+	int DATA_CONSTRAINT = 6;
+
+	/**
+	 * The feature id for the '<em><b>Attr1</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DATA_CONSTRAINT__ATTR1 = 0;
+
+	/**
+	 * The feature id for the '<em><b>Attr2</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DATA_CONSTRAINT__ATTR2 = 1;
+
+	/**
+	 * The feature id for the '<em><b>Comparison</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DATA_CONSTRAINT__COMPARISON = 2;
+
+	/**
+	 * The number of structural features of the '<em>Data Constraint</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DATA_CONSTRAINT_FEATURE_COUNT = 3;
+
+	/**
+	 * The number of operations of the '<em>Data Constraint</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DATA_CONSTRAINT_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.SelectionLayerImpl <em>Selection Layer</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.SelectionLayerImpl
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.Logical_transformationsPackageImpl#getSelectionLayer()
+	 * @generated
+	 */
+	int SELECTION_LAYER = 7;
+
+	/**
+	 * The feature id for the '<em><b>Required Attributes</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SELECTION_LAYER__REQUIRED_ATTRIBUTES = 0;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SELECTION_LAYER__NAME = 1;
+
+	/**
+	 * The feature id for the '<em><b>Invisible</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SELECTION_LAYER__INVISIBLE = 2;
+
+	/**
+	 * The number of structural features of the '<em>Selection Layer</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SELECTION_LAYER_FEATURE_COUNT = 3;
+
+	/**
+	 * The number of operations of the '<em>Selection Layer</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SELECTION_LAYER_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.TestScopeImpl <em>Test Scope</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.TestScopeImpl
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.Logical_transformationsPackageImpl#getTestScope()
+	 * @generated
+	 */
+	int TEST_SCOPE = 8;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEST_SCOPE__NAME = 0;
+
+	/**
+	 * The number of structural features of the '<em>Test Scope</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEST_SCOPE_FEATURE_COUNT = 1;
+
+	/**
+	 * The number of operations of the '<em>Test Scope</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEST_SCOPE_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.UnitTestScopeImpl <em>Unit Test Scope</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.UnitTestScopeImpl
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.Logical_transformationsPackageImpl#getUnitTestScope()
+	 * @generated
+	 */
+	int UNIT_TEST_SCOPE = 9;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNIT_TEST_SCOPE__NAME = TEST_SCOPE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Scenarios</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNIT_TEST_SCOPE__SCENARIOS = TEST_SCOPE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Unit Test Scope</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNIT_TEST_SCOPE_FEATURE_COUNT = TEST_SCOPE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of operations of the '<em>Unit Test Scope</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNIT_TEST_SCOPE_OPERATION_COUNT = TEST_SCOPE_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.E2ETestScopeImpl <em>E2E Test Scope</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.E2ETestScopeImpl
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.Logical_transformationsPackageImpl#getE2ETestScope()
+	 * @generated
+	 */
+	int E2E_TEST_SCOPE = 10;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int E2E_TEST_SCOPE__NAME = TEST_SCOPE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Scenarios</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int E2E_TEST_SCOPE__SCENARIOS = TEST_SCOPE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Layer</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int E2E_TEST_SCOPE__LAYER = TEST_SCOPE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Script Task</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int E2E_TEST_SCOPE__SCRIPT_TASK = TEST_SCOPE_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of structural features of the '<em>E2E Test Scope</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int E2E_TEST_SCOPE_FEATURE_COUNT = TEST_SCOPE_FEATURE_COUNT + 3;
+
+	/**
+	 * The number of operations of the '<em>E2E Test Scope</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int E2E_TEST_SCOPE_OPERATION_COUNT = TEST_SCOPE_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.AttrComparison <em>Attr Comparison</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.AttrComparison
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.Logical_transformationsPackageImpl#getAttrComparison()
+	 * @generated
+	 */
+	int ATTR_COMPARISON = 11;
+
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule <em>Logical Transformation Module</em>}'.
@@ -591,10 +868,10 @@ public interface Logical_transformationsPackage extends EPackage {
 	EReference getLogicalTransformationModule_Requirements();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule#getTestModules <em>Test Modules</em>}'.
+	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule#getTestModules <em>Test Modules</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Test Modules</em>'.
+	 * @return the meta object for the reference list '<em>Test Modules</em>'.
 	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule#getTestModules()
 	 * @see #getLogicalTransformationModule()
 	 * @generated
@@ -677,6 +954,17 @@ public interface Logical_transformationsPackage extends EPackage {
 	EReference getScenario_RequiredAttributes();
 
 	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario#getData_constraints <em>Data constraints</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Data constraints</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario#getData_constraints()
+	 * @see #getScenario()
+	 * @generated
+	 */
+	EReference getScenario_Data_constraints();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.ScenarioTag <em>Scenario Tag</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -706,17 +994,6 @@ public interface Logical_transformationsPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getTest();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Test#getScenarios <em>Scenarios</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Scenarios</em>'.
-	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.Test#getScenarios()
-	 * @see #getTest()
-	 * @generated
-	 */
-	EReference getTest_Scenarios();
 
 	/**
 	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Test#getInputData <em>Input Data</em>}'.
@@ -752,6 +1029,17 @@ public interface Logical_transformationsPackage extends EPackage {
 	EAttribute getTest_Name();
 
 	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Test#getScope <em>Scope</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Scope</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.Test#getScope()
+	 * @see #getTest()
+	 * @generated
+	 */
+	EReference getTest_Scope();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.TestModule <em>Test Module</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -771,6 +1059,187 @@ public interface Logical_transformationsPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getTestModule_Tests();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.DataConstraint <em>Data Constraint</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Data Constraint</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.DataConstraint
+	 * @generated
+	 */
+	EClass getDataConstraint();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.DataConstraint#getAttr1 <em>Attr1</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Attr1</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.DataConstraint#getAttr1()
+	 * @see #getDataConstraint()
+	 * @generated
+	 */
+	EReference getDataConstraint_Attr1();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.DataConstraint#getAttr2 <em>Attr2</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Attr2</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.DataConstraint#getAttr2()
+	 * @see #getDataConstraint()
+	 * @generated
+	 */
+	EReference getDataConstraint_Attr2();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.DataConstraint#getComparison <em>Comparison</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Comparison</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.DataConstraint#getComparison()
+	 * @see #getDataConstraint()
+	 * @generated
+	 */
+	EAttribute getDataConstraint_Comparison();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.SelectionLayer <em>Selection Layer</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Selection Layer</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.SelectionLayer
+	 * @generated
+	 */
+	EClass getSelectionLayer();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.SelectionLayer#getRequiredAttributes <em>Required Attributes</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Required Attributes</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.SelectionLayer#getRequiredAttributes()
+	 * @see #getSelectionLayer()
+	 * @generated
+	 */
+	EReference getSelectionLayer_RequiredAttributes();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.SelectionLayer#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.SelectionLayer#getName()
+	 * @see #getSelectionLayer()
+	 * @generated
+	 */
+	EAttribute getSelectionLayer_Name();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.SelectionLayer#getInvisible <em>Invisible</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Invisible</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.SelectionLayer#getInvisible()
+	 * @see #getSelectionLayer()
+	 * @generated
+	 */
+	EAttribute getSelectionLayer_Invisible();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.TestScope <em>Test Scope</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Test Scope</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.TestScope
+	 * @generated
+	 */
+	EClass getTestScope();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.TestScope#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.TestScope#getName()
+	 * @see #getTestScope()
+	 * @generated
+	 */
+	EAttribute getTestScope_Name();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.UnitTestScope <em>Unit Test Scope</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Unit Test Scope</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.UnitTestScope
+	 * @generated
+	 */
+	EClass getUnitTestScope();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.UnitTestScope#getScenarios <em>Scenarios</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Scenarios</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.UnitTestScope#getScenarios()
+	 * @see #getUnitTestScope()
+	 * @generated
+	 */
+	EReference getUnitTestScope_Scenarios();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.E2ETestScope <em>E2E Test Scope</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>E2E Test Scope</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.E2ETestScope
+	 * @generated
+	 */
+	EClass getE2ETestScope();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.E2ETestScope#getScenarios <em>Scenarios</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Scenarios</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.E2ETestScope#getScenarios()
+	 * @see #getE2ETestScope()
+	 * @generated
+	 */
+	EReference getE2ETestScope_Scenarios();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.E2ETestScope#getLayer <em>Layer</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Layer</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.E2ETestScope#getLayer()
+	 * @see #getE2ETestScope()
+	 * @generated
+	 */
+	EReference getE2ETestScope_Layer();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.E2ETestScope#getScriptTask <em>Script Task</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Script Task</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.E2ETestScope#getScriptTask()
+	 * @see #getE2ETestScope()
+	 * @generated
+	 */
+	EReference getE2ETestScope_ScriptTask();
+
+	/**
+	 * Returns the meta object for enum '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.AttrComparison <em>Attr Comparison</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>Attr Comparison</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.AttrComparison
+	 * @generated
+	 */
+	EEnum getAttrComparison();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -838,7 +1307,7 @@ public interface Logical_transformationsPackage extends EPackage {
 		EReference LOGICAL_TRANSFORMATION_MODULE__REQUIREMENTS = eINSTANCE.getLogicalTransformationModule_Requirements();
 
 		/**
-		 * The meta object literal for the '<em><b>Test Modules</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Test Modules</b></em>' reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -906,6 +1375,14 @@ public interface Logical_transformationsPackage extends EPackage {
 		EReference SCENARIO__REQUIRED_ATTRIBUTES = eINSTANCE.getScenario_RequiredAttributes();
 
 		/**
+		 * The meta object literal for the '<em><b>Data constraints</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SCENARIO__DATA_CONSTRAINTS = eINSTANCE.getScenario_Data_constraints();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.ScenarioTagImpl <em>Scenario Tag</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -934,14 +1411,6 @@ public interface Logical_transformationsPackage extends EPackage {
 		EClass TEST = eINSTANCE.getTest();
 
 		/**
-		 * The meta object literal for the '<em><b>Scenarios</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference TEST__SCENARIOS = eINSTANCE.getTest_Scenarios();
-
-		/**
 		 * The meta object literal for the '<em><b>Input Data</b></em>' reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -966,6 +1435,14 @@ public interface Logical_transformationsPackage extends EPackage {
 		EAttribute TEST__NAME = eINSTANCE.getTest_Name();
 
 		/**
+		 * The meta object literal for the '<em><b>Scope</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TEST__SCOPE = eINSTANCE.getTest_Scope();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.TestModuleImpl <em>Test Module</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -982,6 +1459,154 @@ public interface Logical_transformationsPackage extends EPackage {
 		 * @generated
 		 */
 		EReference TEST_MODULE__TESTS = eINSTANCE.getTestModule_Tests();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.DataConstraintImpl <em>Data Constraint</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.DataConstraintImpl
+		 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.Logical_transformationsPackageImpl#getDataConstraint()
+		 * @generated
+		 */
+		EClass DATA_CONSTRAINT = eINSTANCE.getDataConstraint();
+
+		/**
+		 * The meta object literal for the '<em><b>Attr1</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DATA_CONSTRAINT__ATTR1 = eINSTANCE.getDataConstraint_Attr1();
+
+		/**
+		 * The meta object literal for the '<em><b>Attr2</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DATA_CONSTRAINT__ATTR2 = eINSTANCE.getDataConstraint_Attr2();
+
+		/**
+		 * The meta object literal for the '<em><b>Comparison</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DATA_CONSTRAINT__COMPARISON = eINSTANCE.getDataConstraint_Comparison();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.SelectionLayerImpl <em>Selection Layer</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.SelectionLayerImpl
+		 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.Logical_transformationsPackageImpl#getSelectionLayer()
+		 * @generated
+		 */
+		EClass SELECTION_LAYER = eINSTANCE.getSelectionLayer();
+
+		/**
+		 * The meta object literal for the '<em><b>Required Attributes</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SELECTION_LAYER__REQUIRED_ATTRIBUTES = eINSTANCE.getSelectionLayer_RequiredAttributes();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SELECTION_LAYER__NAME = eINSTANCE.getSelectionLayer_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Invisible</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SELECTION_LAYER__INVISIBLE = eINSTANCE.getSelectionLayer_Invisible();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.TestScopeImpl <em>Test Scope</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.TestScopeImpl
+		 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.Logical_transformationsPackageImpl#getTestScope()
+		 * @generated
+		 */
+		EClass TEST_SCOPE = eINSTANCE.getTestScope();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TEST_SCOPE__NAME = eINSTANCE.getTestScope_Name();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.UnitTestScopeImpl <em>Unit Test Scope</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.UnitTestScopeImpl
+		 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.Logical_transformationsPackageImpl#getUnitTestScope()
+		 * @generated
+		 */
+		EClass UNIT_TEST_SCOPE = eINSTANCE.getUnitTestScope();
+
+		/**
+		 * The meta object literal for the '<em><b>Scenarios</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference UNIT_TEST_SCOPE__SCENARIOS = eINSTANCE.getUnitTestScope_Scenarios();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.E2ETestScopeImpl <em>E2E Test Scope</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.E2ETestScopeImpl
+		 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.Logical_transformationsPackageImpl#getE2ETestScope()
+		 * @generated
+		 */
+		EClass E2E_TEST_SCOPE = eINSTANCE.getE2ETestScope();
+
+		/**
+		 * The meta object literal for the '<em><b>Scenarios</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference E2E_TEST_SCOPE__SCENARIOS = eINSTANCE.getE2ETestScope_Scenarios();
+
+		/**
+		 * The meta object literal for the '<em><b>Layer</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference E2E_TEST_SCOPE__LAYER = eINSTANCE.getE2ETestScope_Layer();
+
+		/**
+		 * The meta object literal for the '<em><b>Script Task</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference E2E_TEST_SCOPE__SCRIPT_TASK = eINSTANCE.getE2ETestScope_ScriptTask();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.AttrComparison <em>Attr Comparison</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.AttrComparison
+		 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.Logical_transformationsPackageImpl#getAttrComparison()
+		 * @generated
+		 */
+		EEnum ATTR_COMPARISON = eINSTANCE.getAttrComparison();
 
 	}
 

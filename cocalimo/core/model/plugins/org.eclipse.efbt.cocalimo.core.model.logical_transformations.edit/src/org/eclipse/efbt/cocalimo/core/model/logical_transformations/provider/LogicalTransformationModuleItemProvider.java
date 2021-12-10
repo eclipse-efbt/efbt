@@ -15,6 +15,7 @@ import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_tran
 import org.eclipse.efbt.cocalimo.core.model.module_management.provider.ModuleItemProvider;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.Requirements_textFactory;
+
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 

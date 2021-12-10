@@ -43,8 +43,9 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SubProcess" eSuperTypes="#//Activity #//FlowElementsContainer"/>
   <eClassifiers xsi:type="ecore:EClass" name="ScriptTask" eSuperTypes="#//Task">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="linkedAttributes" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EStructuralFeature"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="selectionLayers" upperBound="-1"
+        eType="ecore:EClass logical_transformations.ecore#//SelectionLayer" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="outputLayer" eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EClass"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UserTask" eSuperTypes="#//Task">
     <eStructuralFeatures xsi:type="ecore:EReference" name="entity" eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EClass"/>

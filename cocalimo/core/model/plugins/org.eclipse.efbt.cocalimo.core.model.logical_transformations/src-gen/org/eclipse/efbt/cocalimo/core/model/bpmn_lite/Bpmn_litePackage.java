@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.EReference;
  * <!-- end-user-doc -->
  * @see org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Bpmn_liteFactory
  * @model kind="package"
+ *        annotation="license license='Copyright (c) 2020 Bird Software Solutions Ltd\n All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html\n\nSPDX-License-Identifier: EPL-2.0 \n\n Contributors:\n Neil Mackenzie - initial API and implementation\r'"
  * @generated
  */
 public interface Bpmn_litePackage extends EPackage {
@@ -1152,13 +1153,22 @@ public interface Bpmn_litePackage extends EPackage {
 	int SCRIPT_TASK__INCOMING = TASK__INCOMING;
 
 	/**
-	 * The feature id for the '<em><b>Linked Attributes</b></em>' reference list.
+	 * The feature id for the '<em><b>Selection Layers</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SCRIPT_TASK__LINKED_ATTRIBUTES = TASK_FEATURE_COUNT + 0;
+	int SCRIPT_TASK__SELECTION_LAYERS = TASK_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Output Layer</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCRIPT_TASK__OUTPUT_LAYER = TASK_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Script Task</em>' class.
@@ -1167,7 +1177,7 @@ public interface Bpmn_litePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCRIPT_TASK_FEATURE_COUNT = TASK_FEATURE_COUNT + 1;
+	int SCRIPT_TASK_FEATURE_COUNT = TASK_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of operations of the '<em>Script Task</em>' class.
@@ -1533,15 +1543,26 @@ public interface Bpmn_litePackage extends EPackage {
 	EClass getScriptTask();
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ScriptTask#getLinkedAttributes <em>Linked Attributes</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ScriptTask#getSelectionLayers <em>Selection Layers</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Linked Attributes</em>'.
-	 * @see org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ScriptTask#getLinkedAttributes()
+	 * @return the meta object for the containment reference list '<em>Selection Layers</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ScriptTask#getSelectionLayers()
 	 * @see #getScriptTask()
 	 * @generated
 	 */
-	EReference getScriptTask_LinkedAttributes();
+	EReference getScriptTask_SelectionLayers();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ScriptTask#getOutputLayer <em>Output Layer</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Output Layer</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ScriptTask#getOutputLayer()
+	 * @see #getScriptTask()
+	 * @generated
+	 */
+	EReference getScriptTask_OutputLayer();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.bpmn_lite.UserTask <em>User Task</em>}'.
@@ -1816,12 +1837,20 @@ public interface Bpmn_litePackage extends EPackage {
 		EClass SCRIPT_TASK = eINSTANCE.getScriptTask();
 
 		/**
-		 * The meta object literal for the '<em><b>Linked Attributes</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Selection Layers</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference SCRIPT_TASK__LINKED_ATTRIBUTES = eINSTANCE.getScriptTask_LinkedAttributes();
+		EReference SCRIPT_TASK__SELECTION_LAYERS = eINSTANCE.getScriptTask_SelectionLayers();
+
+		/**
+		 * The meta object literal for the '<em><b>Output Layer</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SCRIPT_TASK__OUTPUT_LAYER = eINSTANCE.getScriptTask_OutputLayer();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.bpmn_lite.impl.UserTaskImpl <em>User Task</em>}' class.

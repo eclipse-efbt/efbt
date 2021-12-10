@@ -11,9 +11,11 @@ import org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTrans
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsPackage;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.ScenarioTag;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.TestModule;
+
 import org.eclipse.efbt.cocalimo.core.model.module_management.impl.ModuleImpl;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.RequirementsModule;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
@@ -23,7 +25,9 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
@@ -85,7 +89,7 @@ public class LogicalTransformationModuleImpl extends ModuleImpl implements Logic
 	protected EList<RequirementsModule> requirements;
 
 	/**
-	 * The cached value of the '{@link #getTestModules() <em>Test Modules</em>}' containment reference list.
+	 * The cached value of the '{@link #getTestModules() <em>Test Modules</em>}' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getTestModules()
@@ -205,7 +209,7 @@ public class LogicalTransformationModuleImpl extends ModuleImpl implements Logic
 	@Override
 	public EList<TestModule> getTestModules() {
 		if (testModules == null) {
-			testModules = new EObjectContainmentEList<TestModule>(TestModule.class, this, Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__TEST_MODULES);
+			testModules = new EObjectResolvingEList<TestModule>(TestModule.class, this, Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__TEST_MODULES);
 		}
 		return testModules;
 	}
@@ -226,8 +230,6 @@ public class LogicalTransformationModuleImpl extends ModuleImpl implements Logic
 				return basicSetSubProcess(null, msgs);
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__REQUIREMENTS:
 				return ((InternalEList<?>)getRequirements()).basicRemove(otherEnd, msgs);
-			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__TEST_MODULES:
-				return ((InternalEList<?>)getTestModules()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}

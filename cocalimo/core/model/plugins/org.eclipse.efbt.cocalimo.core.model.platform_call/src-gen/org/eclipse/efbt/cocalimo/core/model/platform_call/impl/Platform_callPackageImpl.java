@@ -268,7 +268,7 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 	 * @generated
 	 */
 	@Override
-	public EReference getCreateLogicalTransformationViewForScope_ScriptTasksInScope() {
+	public EReference getCreateLogicalTransformationViewForScope_LogicalTransformationModule() {
 		return (EReference)createLogicalTransformationViewForScopeEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -278,7 +278,7 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 	 * @generated
 	 */
 	@Override
-	public EReference getCreateLogicalTransformationViewForScope_ScenariosOutOfScope() {
+	public EReference getCreateLogicalTransformationViewForScope_AttributeLineage() {
 		return (EReference)createLogicalTransformationViewForScopeEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -288,18 +288,8 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 	 * @generated
 	 */
 	@Override
-	public EReference getCreateLogicalTransformationViewForScope_LogicalTransformationModule() {
+	public EReference getCreateLogicalTransformationViewForScope_TestScope() {
 		return (EReference)createLogicalTransformationViewForScopeEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getCreateLogicalTransformationViewForScope_AttributeLineage() {
-		return (EReference)createLogicalTransformationViewForScopeEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -348,10 +338,9 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 		createEAttribute(importBIRDFromMSAccessEClass, IMPORT_BIRD_FROM_MS_ACCESS__OUTPUT_DIRECTORY);
 
 		createLogicalTransformationViewForScopeEClass = createEClass(CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE);
-		createEReference(createLogicalTransformationViewForScopeEClass, CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__SCRIPT_TASKS_IN_SCOPE);
-		createEReference(createLogicalTransformationViewForScopeEClass, CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__SCENARIOS_OUT_OF_SCOPE);
 		createEReference(createLogicalTransformationViewForScopeEClass, CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__LOGICAL_TRANSFORMATION_MODULE);
 		createEReference(createLogicalTransformationViewForScopeEClass, CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__ATTRIBUTE_LINEAGE);
+		createEReference(createLogicalTransformationViewForScopeEClass, CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__TEST_SCOPE);
 	}
 
 	/**
@@ -379,7 +368,6 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 
 		// Obtain other dependent packages
 		Module_managementPackage theModule_managementPackage = (Module_managementPackage)EPackage.Registry.INSTANCE.getEPackage(Module_managementPackage.eNS_URI);
-		Bpmn_litePackage theBpmn_litePackage = (Bpmn_litePackage)EPackage.Registry.INSTANCE.getEPackage(Bpmn_litePackage.eNS_URI);
 		Logical_transformationsPackage theLogical_transformationsPackage = (Logical_transformationsPackage)EPackage.Registry.INSTANCE.getEPackage(Logical_transformationsPackage.eNS_URI);
 		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
 
@@ -411,10 +399,9 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 		initEAttribute(getImportBIRDFromMSAccess_OutputDirectory(), ecorePackage.getEString(), "outputDirectory", null, 0, 1, ImportBIRDFromMSAccess.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(createLogicalTransformationViewForScopeEClass, CreateLogicalTransformationViewForScope.class, "CreateLogicalTransformationViewForScope", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getCreateLogicalTransformationViewForScope_ScriptTasksInScope(), theBpmn_litePackage.getScriptTask(), null, "scriptTasksInScope", null, 0, -1, CreateLogicalTransformationViewForScope.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getCreateLogicalTransformationViewForScope_ScenariosOutOfScope(), theLogical_transformationsPackage.getScenario(), null, "scenariosOutOfScope", null, 0, -1, CreateLogicalTransformationViewForScope.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getCreateLogicalTransformationViewForScope_LogicalTransformationModule(), theLogical_transformationsPackage.getLogicalTransformationModule(), null, "logicalTransformationModule", null, 0, 1, CreateLogicalTransformationViewForScope.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getCreateLogicalTransformationViewForScope_AttributeLineage(), theEcorePackage.getEStructuralFeature(), null, "attributeLineage", null, 0, -1, CreateLogicalTransformationViewForScope.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getCreateLogicalTransformationViewForScope_TestScope(), theLogical_transformationsPackage.getE2ETestScope(), null, "testScope", null, 0, -1, CreateLogicalTransformationViewForScope.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

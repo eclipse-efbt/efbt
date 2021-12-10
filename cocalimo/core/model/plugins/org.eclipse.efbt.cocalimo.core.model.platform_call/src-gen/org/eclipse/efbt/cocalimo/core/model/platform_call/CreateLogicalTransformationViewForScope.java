@@ -2,11 +2,8 @@
  */
 package org.eclipse.efbt.cocalimo.core.model.platform_call;
 
-import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ScriptTask;
-
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.E2ETestScope;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule;
-import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario;
-
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
@@ -19,10 +16,9 @@ import org.eclipse.emf.ecore.EStructuralFeature;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope#getScriptTasksInScope <em>Script Tasks In Scope</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope#getScenariosOutOfScope <em>Scenarios Out Of Scope</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope#getLogicalTransformationModule <em>Logical Transformation Module</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope#getAttributeLineage <em>Attribute Lineage</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope#getTestScope <em>Test Scope</em>}</li>
  * </ul>
  *
  * @see org.eclipse.efbt.cocalimo.core.model.platform_call.Platform_callPackage#getCreateLogicalTransformationViewForScope()
@@ -30,30 +26,6 @@ import org.eclipse.emf.ecore.EStructuralFeature;
  * @generated
  */
 public interface CreateLogicalTransformationViewForScope extends PlatformCall {
-	/**
-	 * Returns the value of the '<em><b>Script Tasks In Scope</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ScriptTask}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Script Tasks In Scope</em>' reference list.
-	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.Platform_callPackage#getCreateLogicalTransformationViewForScope_ScriptTasksInScope()
-	 * @model
-	 * @generated
-	 */
-	EList<ScriptTask> getScriptTasksInScope();
-
-	/**
-	 * Returns the value of the '<em><b>Scenarios Out Of Scope</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Scenarios Out Of Scope</em>' reference list.
-	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.Platform_callPackage#getCreateLogicalTransformationViewForScope_ScenariosOutOfScope()
-	 * @model
-	 * @generated
-	 */
-	EList<Scenario> getScenariosOutOfScope();
-
 	/**
 	 * Returns the value of the '<em><b>Logical Transformation Module</b></em>' reference.
 	 * <!-- begin-user-doc -->
@@ -87,5 +59,17 @@ public interface CreateLogicalTransformationViewForScope extends PlatformCall {
 	 * @generated
 	 */
 	EList<EStructuralFeature> getAttributeLineage();
+
+	/**
+	 * Returns the value of the '<em><b>Test Scope</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.E2ETestScope}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Test Scope</em>' containment reference list.
+	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.Platform_callPackage#getCreateLogicalTransformationViewForScope_TestScope()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<E2ETestScope> getTestScope();
 
 } // CreateLogicalTransformationViewForScope

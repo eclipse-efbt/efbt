@@ -22,8 +22,11 @@ import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.SequenceFlow;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ServiceTask;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.SubProcess;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.UserTask;
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.E2ETestScope;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario;
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.SelectionLayer;
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.TestScope;
 import org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
@@ -35,13 +38,19 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 public class LogicalTransformationViews {
 
 	public static void createLogicalTransformationViewForScope(LogicalTransformationModule logicalTransformationModule,
-			EList<ScriptTask> scriptTasksInScope, EList<Scenario> scenariosOutOfScope, CreateLogicalTransformationViewForScope call) {
-		
-		markScriptTaskAsInvisible(logicalTransformationModule, scriptTasksInScope);
-		EList<EStructuralFeature> requiredAttributes = getListOfRequiredAttributes(logicalTransformationModule, scriptTasksInScope,scenariosOutOfScope);
+			EList<E2ETestScope> eList, CreateLogicalTransformationViewForScope call) {
+		markScriptTaskAsInvisible(logicalTransformationModule, eList);
+
+		EList<EStructuralFeature> requiredAttributes = 
+				getListOfRequiredAttributes(logicalTransformationModule,
+						eList);
 		call.getAttributeLineage().clear();
+		
+		setAllAttributesAsOrdered(logicalTransformationModule);
+		
 		for (EStructuralFeature eAttribute : requiredAttributes) {
 			call.getAttributeLineage().add(eAttribute);
+			eAttribute.setOrdered(false);
 		}
 		markDependantServiceTasksAsInvisible(logicalTransformationModule,requiredAttributes);
 		markDependantTasksAsInvisible(logicalTransformationModule,requiredAttributes);
@@ -49,6 +58,36 @@ public class LogicalTransformationViews {
 		markEmptySubProcessesAsInvisible(logicalTransformationModule.getSubProcess());
 
 	}
+
+	
+
+	private static void setAllAttributesAsOrdered(LogicalTransformationModule logicalTransformationModule) {
+		SubProcess subProcess = logicalTransformationModule.getSubProcess();
+		
+		
+		TreeIterator<Object> subProcessContents = EcoreUtil.getAllContents(subProcess, true);
+		
+			while (subProcessContents.hasNext())
+			{
+				Object o = subProcessContents.next();
+				if (o instanceof ServiceTask)
+				{
+					EStructuralFeature attr = ((ServiceTask)o).getEnrichedAttribute();
+					attr.setOrdered(true);
+				}
+				if (o instanceof UserTask)
+				{
+					EList<EStructuralFeature> attributes = ((UserTask)o).getEntity().getEStructuralFeatures();
+					for (EStructuralFeature eStructuralFeature : attributes) {
+						eStructuralFeature.setOrdered(true);
+					}
+				}
+			}	
+					
+		
+	}
+
+
 
 	private static void markEmptySubProcessesAsInvisible(SubProcess subProcess) {
 
@@ -142,52 +181,59 @@ public class LogicalTransformationViews {
 	}
 
 	private static EList<EStructuralFeature> getListOfRequiredAttributes(
-			LogicalTransformationModule logicalTransformationModule, EList<ScriptTask> scriptTasksInScope,
-			EList<Scenario> scenariosOutOfScope) {
+			LogicalTransformationModule logicalTransformationModule, EList<E2ETestScope> e2eTestScopes) {
 		EList<EStructuralFeature> requiredAttributesList = new BasicEList<EStructuralFeature>();
 		
 		SubProcess subProcess = logicalTransformationModule.getSubProcess();
 		
+		
 		TreeIterator<Object> subProcessContents = EcoreUtil.getAllContents(subProcess, true);
-		while (subProcessContents.hasNext())
-		{
-			Object o = subProcessContents.next();
-			if (o instanceof ScriptTask)
+		for (E2ETestScope scope : e2eTestScopes) {
+			
+			ScriptTask scriptTaskInScope = scope.getScriptTask();
+			SelectionLayer layer = scope.getLayer();
+			EList<Scenario> scenariosInScope = scope.getScenarios();
+			while (subProcessContents.hasNext())
 			{
-				if (scriptTasksInScope.contains(o))
+				Object o = subProcessContents.next();
+				if (o instanceof ScriptTask)
 				{
-					
-					EList<EStructuralFeature> scriptTaskAttributes = ( (ScriptTask) o).getLinkedAttributes();
-					for (Iterator iterator = scriptTaskAttributes.iterator(); iterator.hasNext();) {
-						EStructuralFeature eAttribute = (EStructuralFeature) iterator.next();
-						
-						if(!requiredAttributesList.contains(eAttribute))
-						{
-							requiredAttributesList.add(eAttribute);
-							EList<EStructuralFeature> transientDependantAttributes = getTransientDependantAttributes(subProcess,eAttribute,scenariosOutOfScope);
-							for (EStructuralFeature eAttribute2 : transientDependantAttributes) {
-								if(!requiredAttributesList.contains(eAttribute2))
+					if (scriptTaskInScope.equals(o))
+					{										
+							EList<EStructuralFeature> scriptTaskAttributes = layer.getRequiredAttributes();
+							for (Iterator iterator = scriptTaskAttributes.iterator(); iterator.hasNext();) {
+								EStructuralFeature eAttribute = (EStructuralFeature) iterator.next();
+								
+								if(!requiredAttributesList.contains(eAttribute))
 								{
-									requiredAttributesList.add(eAttribute2);
+									requiredAttributesList.add(eAttribute);
+									EList<EStructuralFeature> transientDependantAttributes = 
+											getTransientDependantAttributes(subProcess,
+																			eAttribute,
+																			scenariosInScope);
+									for (EStructuralFeature eAttribute2 : transientDependantAttributes) {
+										if(!requiredAttributesList.contains(eAttribute2))
+										{
+											requiredAttributesList.add(eAttribute2);
+										}
+									}
 								}
+									
+								
 							}
-						}
-							
 						
 					}
 					
 				}
-				
 			}
-		}
+			}
 		
 		
 		return requiredAttributesList;
 	}
 
 	private static EList<EStructuralFeature> getTransientDependantAttributes(SubProcess subProcess, 
-			EStructuralFeature eAttribute,
-																		EList<Scenario> scenariosOutOfScope) {
+			EStructuralFeature eAttribute,EList<Scenario> scenariosInScope) {
 		// find any ServiceTasks that are calculating that attribute
 		// for each scenario of that attribute (unless it is out of scope), we further get the 
 		// transient dependant attributes of that too and add to the list.
@@ -205,7 +251,7 @@ public class LogicalTransformationViews {
 				{
 					EList<Scenario> scenarios = serviceTask.getScenarios();
 					for (Scenario scenario : scenarios) {
-						if (!scenariosOutOfScope.contains(scenario))
+						if (scenariosInScope.contains(scenario))
 						{
 							EList<EStructuralFeature> requiredAttributes = scenario.getRequiredAttributes();
 							for (EStructuralFeature requiredAttribute : requiredAttributes) {
@@ -215,7 +261,7 @@ public class LogicalTransformationViews {
 									transientDependantAttributes.add(requiredAttribute);
 									EList<EStructuralFeature> furtherTransientDependantAttributes = getTransientDependantAttributes(subProcess,
 																	requiredAttribute,
-																	scenariosOutOfScope);
+																	scenariosInScope);
 											
 									for (EStructuralFeature eAttribute2 : furtherTransientDependantAttributes) 
 									{
@@ -291,27 +337,74 @@ public class LogicalTransformationViews {
 	}
 
 	private static void markScriptTaskAsInvisible(LogicalTransformationModule logicalTransformationModule,
-			EList<ScriptTask> scriptTasksInScope) {
+			EList<E2ETestScope> eList) {
 				//create the view as a straight copy of the subProcess if keepLayout is False
 				//set visible on the script tasks
 				SubProcess subProcess = logicalTransformationModule.getSubProcess();
 				//get AllScript task, if they are in the list set invisable as false
 				TreeIterator<Object> subProcessContents = EcoreUtil.getAllContents(subProcess, true);
+				
 				while (subProcessContents.hasNext())
 				{
 					Object o = subProcessContents.next();
 					if (o instanceof ScriptTask)
 					{
-						if (scriptTasksInScope.contains(o))
+						if (testScopesContainsScriptTask(eList, (ScriptTask) o))
 						{
+							EList<SelectionLayer> layers = ((ScriptTask) o).getSelectionLayers();
+							for (SelectionLayer selectionLayer : layers) {
+								if (testScopesContainsLayer(eList,(ScriptTask) o,  selectionLayer))
+									selectionLayer.setInvisible(false);
+								else
+									selectionLayer.setInvisible(true);
+							}
 							( (ScriptTask) o).setInvisible(false);
 						}
 						else
 						{
 							( (ScriptTask) o).setInvisible(true);
+							EList<SelectionLayer> layers = ((ScriptTask) o).getSelectionLayers();
+							for (SelectionLayer selectionLayer : layers) {								
+									selectionLayer.setInvisible(true);
+							}
 						}
 					}
 				}
+	}
+
+	private static boolean testScopesContainsScriptTask(EList<E2ETestScope> eList, ScriptTask o) {
+		// TODO Auto-generated method stub
+		boolean returnValue = false;
+		for (E2ETestScope testScope : eList) {
+			
+			if ((testScope).getScriptTask().equals(o))
+			{
+				returnValue =true;
+			}
+		
+		}
+		return returnValue;
+		
+	}
+	
+	private static boolean testScopesContainsLayer(EList<E2ETestScope> eList, ScriptTask o, SelectionLayer layer) {
+		// TODO Auto-generated method stub
+		boolean returnValue = false;
+		for (E2ETestScope testScope : eList) {
+			
+			if ((testScope).getScriptTask().equals(o))
+			{
+				EList<SelectionLayer> layers = ((ScriptTask) o).getSelectionLayers();
+				for (SelectionLayer selectionLayer : layers) {
+					if(selectionLayer.equals(layer))
+						returnValue =true;
+				}
+				
+			}
+		
+		}
+		return returnValue;
+		
 	}
 
 }
