@@ -94,6 +94,26 @@ public class Logical_transformationsAdapterFactory extends AdapterFactoryImpl {
 				return createTestModuleAdapter();
 			}
 			@Override
+			public Adapter caseDataConstraint(DataConstraint object) {
+				return createDataConstraintAdapter();
+			}
+			@Override
+			public Adapter caseSelectionLayer(SelectionLayer object) {
+				return createSelectionLayerAdapter();
+			}
+			@Override
+			public Adapter caseTestScope(TestScope object) {
+				return createTestScopeAdapter();
+			}
+			@Override
+			public Adapter caseUnitTestScope(UnitTestScope object) {
+				return createUnitTestScopeAdapter();
+			}
+			@Override
+			public Adapter caseE2ETestScope(E2ETestScope object) {
+				return createE2ETestScopeAdapter();
+			}
+			@Override
 			public Adapter caseModule(org.eclipse.efbt.cocalimo.core.model.module_management.Module object) {
 				return createModuleAdapter();
 			}
@@ -202,6 +222,76 @@ public class Logical_transformationsAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createTestModuleAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.DataConstraint <em>Data Constraint</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.DataConstraint
+	 * @generated
+	 */
+	public Adapter createDataConstraintAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.SelectionLayer <em>Selection Layer</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.SelectionLayer
+	 * @generated
+	 */
+	public Adapter createSelectionLayerAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.TestScope <em>Test Scope</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.TestScope
+	 * @generated
+	 */
+	public Adapter createTestScopeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.UnitTestScope <em>Unit Test Scope</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.UnitTestScope
+	 * @generated
+	 */
+	public Adapter createUnitTestScopeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.E2ETestScope <em>E2E Test Scope</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.E2ETestScope
+	 * @generated
+	 */
+	public Adapter createE2ETestScopeAdapter() {
 		return null;
 	}
 

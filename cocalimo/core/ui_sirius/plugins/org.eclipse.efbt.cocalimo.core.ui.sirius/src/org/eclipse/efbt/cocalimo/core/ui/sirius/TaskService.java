@@ -15,18 +15,24 @@ package org.eclipse.efbt.cocalimo.core.ui.sirius;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Activity;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ScriptTask;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ServiceTask;
+import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.SubProcess;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Task;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.UserTask;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.ScenarioTag;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.ActivityTag;
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.E2ETestScope;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Test;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.TestModule;
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.TestScope;
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.UnitTestScope;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
@@ -97,8 +103,66 @@ public class TaskService {
 		return null;
 		
 	}
+	public EList<Task> getDependantTasks(Task self) 
+	{
+		EList<Task> returnTasks = new BasicEList<Task>();
+		
+		if (self instanceof ServiceTask)
+		{
+			ServiceTask serviceTask = (ServiceTask) self;
+			EStructuralFeature attr = serviceTask.getEnrichedAttribute();
+			EList<Scenario> scenarios = serviceTask.getScenarios();
+			for (Scenario scenario : scenarios) {
+				scenario.getRequiredAttributes();
+				//get the other service tasks and user tasks that contain theis atribute, then add them to the list of they dont exist.
+			}
+		}
+		return returnTasks;
+	}
 	
-public EList<Test> getTests(Scenario self) {
+	public EList<EStructuralFeature> getILAttributes(SubProcess self)
+	{
+		EList<EStructuralFeature> returnAttributes = new BasicEList<EStructuralFeature>();
+		TreeIterator<EObject> contents = self.eAllContents();
+		while(contents.hasNext())
+		{
+			EObject item = contents.next();
+			if(item instanceof UserTask )
+			{
+				UserTask userTask= (UserTask) item;
+				EClass eclass = userTask.getEntity();
+				EList<EStructuralFeature> attributes = eclass.getEAllStructuralFeatures();
+				returnAttributes.addAll(attributes);
+			}
+		}
+		
+		return returnAttributes;
+		
+	}
+	
+	public EList<EStructuralFeature> getEILAttributes(SubProcess self)
+	{
+		EList<EStructuralFeature> returnAttributes = new BasicEList<EStructuralFeature>();
+		TreeIterator<EObject> contents = self.eAllContents();
+		while(contents.hasNext())
+		{
+			EObject item = contents.next();
+			if(item instanceof ServiceTask )
+			{
+				ServiceTask serviceTask= (ServiceTask) item;
+				
+				EStructuralFeature attribute = serviceTask.getEnrichedAttribute();
+				returnAttributes.add(attribute);
+			}
+		}
+		
+		return returnAttributes;
+		
+	}
+	
+	
+		
+	public EList<Test> getTests(Scenario self) {
 
 		EList<Test> tests = new BasicEList<Test>();
 		EObject root = EcoreUtil.getRootContainer(self);
@@ -106,14 +170,30 @@ public EList<Test> getTests(Scenario self) {
 		EList<TestModule> testModules = theRoot.getTestModules();
 		for (TestModule testModule : testModules)
 		{
-		
+			
 			EList<Test> theTests = testModule.getTests();
 			for (Test test : theTests) {
-				
-				if (test.getScenarios().equals(self))
+				TestScope testScope = test.getScope();
+		
+				if(testScope instanceof E2ETestScope)
 				{
-					tests.add(test);
+					EList<Scenario> testScenarios = ((E2ETestScope) testScope).getScenarios();
+				
+					if (testScenarios.contains(self))
+					{
+						tests.add(test);
+					}
 				}
+				if(testScope instanceof UnitTestScope)
+				{
+					Scenario testScenario = ((UnitTestScope) testScope).getScenarios();
+				
+					if (testScenario.equals(self))
+					{
+						tests.add(test);
+					}
+				}
+				
 			}
 		
 		

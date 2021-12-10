@@ -4,8 +4,8 @@ package org.eclipse.efbt.cocalimo.core.model.logical_transformations;
 
 import org.eclipse.emf.common.util.EList;
 
-import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 
 /**
  * <!-- begin-user-doc -->
@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario#isInvisible <em>Invisible</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario#getDescription <em>Description</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario#getRequiredAttributes <em>Required Attributes</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario#getData_constraints <em>Data constraints</em>}</li>
  * </ul>
  *
  * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsPackage#getScenario()
@@ -106,7 +107,7 @@ public interface Scenario extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Required Attributes</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.emf.ecore.EAttribute}.
+	 * The list contents are of type {@link org.eclipse.emf.ecore.EStructuralFeature}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Required Attributes</em>' reference list.
@@ -114,6 +115,28 @@ public interface Scenario extends EObject {
 	 * @model
 	 * @generated
 	 */
-	EList<EAttribute> getRequiredAttributes();
+	EList<EStructuralFeature> getRequiredAttributes();
+
+	/**
+	 * Returns the value of the '<em><b>Data constraints</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Data constraints</em>' containment reference.
+	 * @see #setData_constraints(DataConstraint)
+	 * @see org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsPackage#getScenario_Data_constraints()
+	 * @model containment="true"
+	 * @generated
+	 */
+	DataConstraint getData_constraints();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario#getData_constraints <em>Data constraints</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Data constraints</em>' containment reference.
+	 * @see #getData_constraints()
+	 * @generated
+	 */
+	void setData_constraints(DataConstraint value);
 
 } // Scenario

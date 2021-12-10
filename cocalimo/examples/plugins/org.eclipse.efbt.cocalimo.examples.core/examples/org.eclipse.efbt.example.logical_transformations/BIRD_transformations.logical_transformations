@@ -1,5 +1,7 @@
 {
   "eClass" : "http://www.eclipse.org/efbt/logical_transformations#//LogicalTransformationModule",
+  "theDescription" : "",
+  "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
   "name" : "transformations",
   "taskTags" : [ {
     "displayName" : "duration_tag",
@@ -10,7 +12,11 @@
     }, {
       "eClass" : "http://www.eclipse.org/efbt/requirements_text#//TitledRequirementsSection",
       "$ref" : "requirements/CRR2.requirements_text#Article_325_1_b"
-    } ]
+    } ],
+    "activity" : {
+      "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ServiceTask",
+      "$ref" : "//@subProcess/@flowElements.0/@flowElements.3/@flowElements.4"
+    }
   } ],
   "scenarioTags" : [ {
     "displayName" : "zero_coupon_rate_scenarioTag",
@@ -21,7 +27,7 @@
     } ],
     "scenario" : {
       "eClass" : "http://www.eclipse.org/efbt/logical_transformations#//Scenario",
-      "$ref" : "zero_coupon_rate_edge_case"
+      "$ref" : "zero coupon rate edge case"
     }
   } ],
   "subProcess" : {
@@ -92,9 +98,13 @@
             "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
             "$ref" : "//@subProcess/@flowElements.0/@flowElements.2/@flowElements.4"
           } ],
+          "enrichedAttribute" : {
+            "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
+            "$ref" : "logical_data_model.ecore#//Entity_derived/size"
+          },
           "scenarios" : [ {
-            "name" : "entity_size_main_scenario",
-            "description" : "entity_size_main_scenario",
+            "name" : "entity size main scenario",
+            "description" : "entity size main scenario",
             "requiredAttributes" : [ {
               "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
               "$ref" : "logical_data_model.ecore#//Entity/market_cap"
@@ -123,6 +133,7 @@
         } ]
       }, {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+        "invisible" : true,
         "name" : "Read And Enrich Bond Instrument",
         "incoming" : [ {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -130,6 +141,7 @@
         } ],
         "flowElements" : [ {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+          "invisible" : true,
           "outgoing" : [ {
             "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
             "$ref" : "//@subProcess/@flowElements.0/@flowElements.3/@flowElements.2"
@@ -142,6 +154,7 @@
           } ]
         }, {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
+          "invisible" : true,
           "name" : "Read_Bond_Instrument",
           "incoming" : [ {
             "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -170,6 +183,7 @@
         }, {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ServiceTask",
           "description" : "Here we have the business requirements for the task, duration is measure of sensitivity of a bond to interest rates etc, etc",
+          "invisible" : true,
           "name" : "Calculate_Duration",
           "incoming" : [ {
             "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -180,14 +194,14 @@
             "$ref" : "logical_data_model.ecore#//BondInstrument_derived/duration"
           },
           "scenarios" : [ {
-            "name" : "main_duration_scenario",
+            "name" : "main duration scenario",
             "description" : "Here we have the business requirments for the sceanrio, duration is a measure if sensitivity ot the bond, etc, etc.",
             "requiredAttributes" : [ {
               "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
               "$ref" : "logical_data_model.ecore#//BondInstrument/coupon_rate"
             } ]
           }, {
-            "name" : "zero_coupon_rate_edge_case",
+            "name" : "zero coupon rate edge case",
             "description" : "Here we have the business requirements for the task, duration is measure of sensitivity of a bond to interest rates but in the sepcial case of zero coupon bonds we calculate as etc,etc",
             "requiredAttributes" : [ {
               "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
@@ -288,7 +302,6 @@
       } ]
     }, {
       "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
-      "invisible" : true,
       "name" : "Credit Risk Processing",
       "incoming" : [ {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -297,7 +310,6 @@
       "flowElements" : [ {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ServiceTask",
         "description" : "Calculate_Risk_Weight",
-        "invisible" : true,
         "name" : "Calculate_Risk_Weight",
         "incoming" : [ {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -308,7 +320,7 @@
           "$ref" : "logical_data_model.ecore#//Trade_derived/risk_weight"
         },
         "scenarios" : [ {
-          "name" : "primaryRiskWeightScenario",
+          "name" : "primary Risk Weight Scenario",
           "description" : "primaryRiskWeightScenario",
           "requiredAttributes" : [ {
             "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
@@ -318,7 +330,6 @@
       }, {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ServiceTask",
         "id" : "Calculate_Exposure_At_Default",
-        "invisible" : true,
         "name" : "Calculate_Exposure_At_Default",
         "incoming" : [ {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -329,7 +340,7 @@
           "$ref" : "logical_data_model.ecore#//Trade_derived/exposure_at_defualt"
         },
         "scenarios" : [ {
-          "name" : "primaryEADScenario",
+          "name" : "primary EAD Scenario",
           "description" : "The is the primary sceanrio which is calculateing EAD, EAD is exposure at default ..etc...etc",
           "requiredAttributes" : [ {
             "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
@@ -341,7 +352,6 @@
         } ]
       }, {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
-        "invisible" : true,
         "outgoing" : [ {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
           "$ref" : "//@subProcess/@flowElements.1/@flowElements.3"
@@ -411,48 +421,72 @@
       } ],
       "flowElements" : [ {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ScriptTask",
-        "invisible" : true,
         "name" : "Generate Credit Risk Report",
-        "linkedAttributes" : [ {
-          "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
-          "$ref" : "logical_data_model.ecore#//Trade_derived/exposure_at_defualt"
-        }, {
-          "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
-          "$ref" : "logical_data_model.ecore#//Trade_derived/risk_weight"
-        }, {
-          "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
-          "$ref" : "logical_data_model.ecore#//Trade/trade_id"
-        } ]
+        "selectionLayers" : [ {
+          "requiredAttributes" : [ {
+            "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
+            "$ref" : "logical_data_model.ecore#//Trade_derived/exposure_at_defualt"
+          }, {
+            "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
+            "$ref" : "logical_data_model.ecore#//Trade_derived/risk_weight"
+          }, {
+            "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
+            "$ref" : "logical_data_model.ecore#//Trade/trade_id"
+          } ],
+          "name" : "credit_risk_report$layer1",
+          "invisible" : false
+        } ],
+        "outputLayer" : {
+          "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EClass",
+          "$ref" : "logical_data_model.ecore#//OUTPUT_LAYER_CREDIT_RISK"
+        }
       }, {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ScriptTask",
+        "invisible" : true,
         "name" : "Generate Market Risk Report",
-        "linkedAttributes" : [ {
-          "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
-          "$ref" : "logical_data_model.ecore#//BondInstrument_derived/duration"
-        }, {
-          "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
-          "$ref" : "logical_data_model.ecore#//Instrument/instrument_id"
-        }, {
-          "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
-          "$ref" : "logical_data_model.ecore#//Trade/trade_id"
-        }, {
-          "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
-          "$ref" : "logical_data_model.ecore#//Entity/entity_id"
-        } ]
+        "selectionLayers" : [ {
+          "requiredAttributes" : [ {
+            "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
+            "$ref" : "logical_data_model.ecore#//BondInstrument_derived/duration"
+          }, {
+            "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
+            "$ref" : "logical_data_model.ecore#//Trade/trade_id"
+          }, {
+            "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
+            "$ref" : "logical_data_model.ecore#//Instrument/instrument_id"
+          }, {
+            "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
+            "$ref" : "logical_data_model.ecore#//Entity/entity_id"
+          } ],
+          "name" : "market_risk_report$layer1",
+          "invisible" : true
+        } ],
+        "outputLayer" : {
+          "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EClass",
+          "$ref" : "logical_data_model.ecore#//OUTPUT_LAYER_MARKET_RISK"
+        }
       }, {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ScriptTask",
         "invisible" : true,
         "name" : "Generat Trade Report",
-        "linkedAttributes" : [ {
-          "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
-          "$ref" : "logical_data_model.ecore#//Instrument/instrument_id"
-        }, {
-          "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
-          "$ref" : "logical_data_model.ecore#//Instrument/mkt_value"
-        }, {
-          "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
-          "$ref" : "logical_data_model.ecore#//Trade/trade_id"
-        } ]
+        "selectionLayers" : [ {
+          "requiredAttributes" : [ {
+            "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
+            "$ref" : "logical_data_model.ecore#//Trade/trade_id"
+          }, {
+            "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
+            "$ref" : "logical_data_model.ecore#//Instrument/mkt_value"
+          }, {
+            "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
+            "$ref" : "logical_data_model.ecore#//Instrument/instrument_id"
+          } ],
+          "name" : "trade_report_layer1",
+          "invisible" : true
+        } ],
+        "outputLayer" : {
+          "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EClass",
+          "$ref" : "logical_data_model.ecore#//OUTPUT_LAYER_TRADE_REPORT"
+        }
       } ]
     }, {
       "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -467,36 +501,7 @@
     } ]
   },
   "testModules" : [ {
-    "name" : "testModule1",
-    "tests" : [ {
-      "scenarios" : {
-        "eClass" : "http://www.eclipse.org/efbt/logical_transformations#//Scenario",
-        "$ref" : "main_duration_scenario"
-      },
-      "inputData" : [ {
-        "eClass" : "platform:/resource/org.eclipse.efbt.example.logical_transformations/logical_data_model.ecore#//BondInstrument",
-        "$ref" : "tests/duration/zero_coupon_rate_edge_case/test1/BondInstrument.xmi#IBM_Bond_instrument"
-      }, {
-        "eClass" : "platform:/resource/org.eclipse.efbt.example.logical_transformations/logical_data_model.ecore#//Trade",
-        "$ref" : "tests/duration/zero_coupon_rate_edge_case/test1/Trade.xmi#/"
-      }, {
-        "eClass" : "platform:/resource/org.eclipse.efbt.example.logical_transformations/logical_data_model.ecore#//Entity",
-        "$ref" : "tests/duration/zero_coupon_rate_edge_case/test1/RBSEntity.xmi#RBS"
-      }, {
-        "eClass" : "platform:/resource/org.eclipse.efbt.example.logical_transformations/logical_data_model.ecore#//Entity",
-        "$ref" : "tests/duration/zero_coupon_rate_edge_case/test1/IBMEntity.xmi#IBM"
-      } ],
-      "expectedResult" : [ {
-        "eClass" : "platform:/resource/org.eclipse.efbt.example.logical_transformations/logical_data_model.ecore#//BondInstrument_derived",
-        "$ref" : "tests/duration/zero_coupon_rate_edge_case/test1/BondInstrument_derived.xmi#/"
-      } ],
-      "name" : "duration_test1"
-    }, {
-      "scenarios" : {
-        "eClass" : "http://www.eclipse.org/efbt/logical_transformations#//Scenario",
-        "$ref" : "zero_coupon_rate_edge_case"
-      },
-      "name" : "duration_zero_coupon_rate_edge_case"
-    } ]
+    "eClass" : "http://www.eclipse.org/efbt/logical_transformations#//TestModule",
+    "$ref" : "testModule1.logical_transformations#testModule1"
   } ]
 }

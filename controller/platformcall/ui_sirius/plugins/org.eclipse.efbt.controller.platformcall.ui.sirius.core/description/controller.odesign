@@ -3,6 +3,13 @@
   <ownedViewpoints name="Modules">
     <ownedRepresentations xsi:type="description_1:DiagramDescription" name="PlatformCall" domainClass="platform_call::PlatformCall" enablePopupBars="true">
       <defaultLayer name="Default">
+        <nodeMappings name="PlatformCall" semanticCandidatesExpression="aql:self" domainClass="PlatformCall">
+          <style xsi:type="style:LozengeNodeDescription" labelSize="12" labelExpression="PlatformCall" sizeComputationExpression="15" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='red']"/>
+          </style>
+        </nodeMappings>
         <toolSections name="tools">
           <ownedTools xsi:type="tool:OperationAction" name="platformCall">
             <view name="views"/>

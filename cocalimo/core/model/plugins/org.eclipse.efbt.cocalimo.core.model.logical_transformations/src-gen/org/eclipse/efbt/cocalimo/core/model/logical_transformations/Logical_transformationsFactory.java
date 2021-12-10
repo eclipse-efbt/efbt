@@ -76,6 +76,51 @@ public interface Logical_transformationsFactory extends EFactory {
 	TestModule createTestModule();
 
 	/**
+	 * Returns a new object of class '<em>Data Constraint</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Data Constraint</em>'.
+	 * @generated
+	 */
+	DataConstraint createDataConstraint();
+
+	/**
+	 * Returns a new object of class '<em>Selection Layer</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Selection Layer</em>'.
+	 * @generated
+	 */
+	SelectionLayer createSelectionLayer();
+
+	/**
+	 * Returns a new object of class '<em>Test Scope</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Test Scope</em>'.
+	 * @generated
+	 */
+	TestScope createTestScope();
+
+	/**
+	 * Returns a new object of class '<em>Unit Test Scope</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Unit Test Scope</em>'.
+	 * @generated
+	 */
+	UnitTestScope createUnitTestScope();
+
+	/**
+	 * Returns a new object of class '<em>E2E Test Scope</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>E2E Test Scope</em>'.
+	 * @generated
+	 */
+	E2ETestScope createE2ETestScope();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

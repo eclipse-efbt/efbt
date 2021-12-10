@@ -210,6 +210,121 @@ public class Logical_transformationsItemProviderAdapterFactory extends Logical_t
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.DataConstraint} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected DataConstraintItemProvider dataConstraintItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.DataConstraint}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createDataConstraintAdapter() {
+		if (dataConstraintItemProvider == null) {
+			dataConstraintItemProvider = new DataConstraintItemProvider(this);
+		}
+
+		return dataConstraintItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.SelectionLayer} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected SelectionLayerItemProvider selectionLayerItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.SelectionLayer}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createSelectionLayerAdapter() {
+		if (selectionLayerItemProvider == null) {
+			selectionLayerItemProvider = new SelectionLayerItemProvider(this);
+		}
+
+		return selectionLayerItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.TestScope} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected TestScopeItemProvider testScopeItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.TestScope}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createTestScopeAdapter() {
+		if (testScopeItemProvider == null) {
+			testScopeItemProvider = new TestScopeItemProvider(this);
+		}
+
+		return testScopeItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.UnitTestScope} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected UnitTestScopeItemProvider unitTestScopeItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.UnitTestScope}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createUnitTestScopeAdapter() {
+		if (unitTestScopeItemProvider == null) {
+			unitTestScopeItemProvider = new UnitTestScopeItemProvider(this);
+		}
+
+		return unitTestScopeItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.E2ETestScope} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected E2ETestScopeItemProvider e2ETestScopeItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.E2ETestScope}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createE2ETestScopeAdapter() {
+		if (e2ETestScopeItemProvider == null) {
+			e2ETestScopeItemProvider = new E2ETestScopeItemProvider(this);
+		}
+
+		return e2ETestScopeItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -320,6 +435,11 @@ public class Logical_transformationsItemProviderAdapterFactory extends Logical_t
 		if (scenarioTagItemProvider != null) scenarioTagItemProvider.dispose();
 		if (testItemProvider != null) testItemProvider.dispose();
 		if (testModuleItemProvider != null) testModuleItemProvider.dispose();
+		if (dataConstraintItemProvider != null) dataConstraintItemProvider.dispose();
+		if (selectionLayerItemProvider != null) selectionLayerItemProvider.dispose();
+		if (testScopeItemProvider != null) testScopeItemProvider.dispose();
+		if (unitTestScopeItemProvider != null) unitTestScopeItemProvider.dispose();
+		if (e2ETestScopeItemProvider != null) e2ETestScopeItemProvider.dispose();
 	}
 
 }

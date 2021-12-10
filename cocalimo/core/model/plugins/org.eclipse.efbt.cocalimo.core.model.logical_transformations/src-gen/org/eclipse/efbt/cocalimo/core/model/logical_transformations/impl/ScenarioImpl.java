@@ -4,15 +4,18 @@ package org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl;
 
 import java.util.Collection;
 
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.DataConstraint;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsPackage;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
 
-import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
@@ -31,6 +34,7 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.ScenarioImpl#isInvisible <em>Invisible</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.ScenarioImpl#getDescription <em>Description</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.ScenarioImpl#getRequiredAttributes <em>Required Attributes</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.impl.ScenarioImpl#getData_constraints <em>Data constraints</em>}</li>
  * </ul>
  *
  * @generated
@@ -104,7 +108,17 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<EAttribute> requiredAttributes;
+	protected EList<EStructuralFeature> requiredAttributes;
+
+	/**
+	 * The cached value of the '{@link #getData_constraints() <em>Data constraints</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getData_constraints()
+	 * @generated
+	 * @ordered
+	 */
+	protected DataConstraint data_constraints;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -200,11 +214,70 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
 	 * @generated
 	 */
 	@Override
-	public EList<EAttribute> getRequiredAttributes() {
+	public EList<EStructuralFeature> getRequiredAttributes() {
 		if (requiredAttributes == null) {
-			requiredAttributes = new EObjectResolvingEList<EAttribute>(EAttribute.class, this, Logical_transformationsPackage.SCENARIO__REQUIRED_ATTRIBUTES);
+			requiredAttributes = new EObjectResolvingEList<EStructuralFeature>(EStructuralFeature.class, this, Logical_transformationsPackage.SCENARIO__REQUIRED_ATTRIBUTES);
 		}
 		return requiredAttributes;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public DataConstraint getData_constraints() {
+		return data_constraints;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetData_constraints(DataConstraint newData_constraints, NotificationChain msgs) {
+		DataConstraint oldData_constraints = data_constraints;
+		data_constraints = newData_constraints;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, Logical_transformationsPackage.SCENARIO__DATA_CONSTRAINTS, oldData_constraints, newData_constraints);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setData_constraints(DataConstraint newData_constraints) {
+		if (newData_constraints != data_constraints) {
+			NotificationChain msgs = null;
+			if (data_constraints != null)
+				msgs = ((InternalEObject)data_constraints).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - Logical_transformationsPackage.SCENARIO__DATA_CONSTRAINTS, null, msgs);
+			if (newData_constraints != null)
+				msgs = ((InternalEObject)newData_constraints).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - Logical_transformationsPackage.SCENARIO__DATA_CONSTRAINTS, null, msgs);
+			msgs = basicSetData_constraints(newData_constraints, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, Logical_transformationsPackage.SCENARIO__DATA_CONSTRAINTS, newData_constraints, newData_constraints));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case Logical_transformationsPackage.SCENARIO__DATA_CONSTRAINTS:
+				return basicSetData_constraints(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -223,6 +296,8 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
 				return getDescription();
 			case Logical_transformationsPackage.SCENARIO__REQUIRED_ATTRIBUTES:
 				return getRequiredAttributes();
+			case Logical_transformationsPackage.SCENARIO__DATA_CONSTRAINTS:
+				return getData_constraints();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -247,7 +322,10 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
 				return;
 			case Logical_transformationsPackage.SCENARIO__REQUIRED_ATTRIBUTES:
 				getRequiredAttributes().clear();
-				getRequiredAttributes().addAll((Collection<? extends EAttribute>)newValue);
+				getRequiredAttributes().addAll((Collection<? extends EStructuralFeature>)newValue);
+				return;
+			case Logical_transformationsPackage.SCENARIO__DATA_CONSTRAINTS:
+				setData_constraints((DataConstraint)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -273,6 +351,9 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
 			case Logical_transformationsPackage.SCENARIO__REQUIRED_ATTRIBUTES:
 				getRequiredAttributes().clear();
 				return;
+			case Logical_transformationsPackage.SCENARIO__DATA_CONSTRAINTS:
+				setData_constraints((DataConstraint)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -293,6 +374,8 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
 				return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
 			case Logical_transformationsPackage.SCENARIO__REQUIRED_ATTRIBUTES:
 				return requiredAttributes != null && !requiredAttributes.isEmpty();
+			case Logical_transformationsPackage.SCENARIO__DATA_CONSTRAINTS:
+				return data_constraints != null;
 		}
 		return super.eIsSet(featureID);
 	}

@@ -394,31 +394,13 @@ public interface Platform_callPackage extends EPackage {
 	int CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__RETURN_STATUS = PLATFORM_CALL__RETURN_STATUS;
 
 	/**
-	 * The feature id for the '<em><b>Script Tasks In Scope</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__SCRIPT_TASKS_IN_SCOPE = PLATFORM_CALL_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Scenarios Out Of Scope</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__SCENARIOS_OUT_OF_SCOPE = PLATFORM_CALL_FEATURE_COUNT + 1;
-
-	/**
 	 * The feature id for the '<em><b>Logical Transformation Module</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__LOGICAL_TRANSFORMATION_MODULE = PLATFORM_CALL_FEATURE_COUNT + 2;
+	int CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__LOGICAL_TRANSFORMATION_MODULE = PLATFORM_CALL_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Attribute Lineage</b></em>' reference list.
@@ -427,7 +409,16 @@ public interface Platform_callPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__ATTRIBUTE_LINEAGE = PLATFORM_CALL_FEATURE_COUNT + 3;
+	int CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__ATTRIBUTE_LINEAGE = PLATFORM_CALL_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Test Scope</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__TEST_SCOPE = PLATFORM_CALL_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of structural features of the '<em>Create Logical Transformation View For Scope</em>' class.
@@ -436,7 +427,7 @@ public interface Platform_callPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE_FEATURE_COUNT = PLATFORM_CALL_FEATURE_COUNT + 4;
+	int CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE_FEATURE_COUNT = PLATFORM_CALL_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of operations of the '<em>Create Logical Transformation View For Scope</em>' class.
@@ -586,28 +577,6 @@ public interface Platform_callPackage extends EPackage {
 	EClass getCreateLogicalTransformationViewForScope();
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope#getScriptTasksInScope <em>Script Tasks In Scope</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Script Tasks In Scope</em>'.
-	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope#getScriptTasksInScope()
-	 * @see #getCreateLogicalTransformationViewForScope()
-	 * @generated
-	 */
-	EReference getCreateLogicalTransformationViewForScope_ScriptTasksInScope();
-
-	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope#getScenariosOutOfScope <em>Scenarios Out Of Scope</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Scenarios Out Of Scope</em>'.
-	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope#getScenariosOutOfScope()
-	 * @see #getCreateLogicalTransformationViewForScope()
-	 * @generated
-	 */
-	EReference getCreateLogicalTransformationViewForScope_ScenariosOutOfScope();
-
-	/**
 	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope#getLogicalTransformationModule <em>Logical Transformation Module</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -628,6 +597,17 @@ public interface Platform_callPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getCreateLogicalTransformationViewForScope_AttributeLineage();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope#getTestScope <em>Test Scope</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Test Scope</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope#getTestScope()
+	 * @see #getCreateLogicalTransformationViewForScope()
+	 * @generated
+	 */
+	EReference getCreateLogicalTransformationViewForScope_TestScope();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -767,22 +747,6 @@ public interface Platform_callPackage extends EPackage {
 		EClass CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE = eINSTANCE.getCreateLogicalTransformationViewForScope();
 
 		/**
-		 * The meta object literal for the '<em><b>Script Tasks In Scope</b></em>' reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__SCRIPT_TASKS_IN_SCOPE = eINSTANCE.getCreateLogicalTransformationViewForScope_ScriptTasksInScope();
-
-		/**
-		 * The meta object literal for the '<em><b>Scenarios Out Of Scope</b></em>' reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__SCENARIOS_OUT_OF_SCOPE = eINSTANCE.getCreateLogicalTransformationViewForScope_ScenariosOutOfScope();
-
-		/**
 		 * The meta object literal for the '<em><b>Logical Transformation Module</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -797,6 +761,14 @@ public interface Platform_callPackage extends EPackage {
 		 * @generated
 		 */
 		EReference CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__ATTRIBUTE_LINEAGE = eINSTANCE.getCreateLogicalTransformationViewForScope_AttributeLineage();
+
+		/**
+		 * The meta object literal for the '<em><b>Test Scope</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__TEST_SCOPE = eINSTANCE.getCreateLogicalTransformationViewForScope_TestScope();
 
 	}
 

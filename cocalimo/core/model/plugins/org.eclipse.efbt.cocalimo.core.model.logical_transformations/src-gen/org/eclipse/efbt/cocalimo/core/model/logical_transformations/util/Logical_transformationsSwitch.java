@@ -108,6 +108,38 @@ public class Logical_transformationsSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case Logical_transformationsPackage.DATA_CONSTRAINT: {
+				DataConstraint dataConstraint = (DataConstraint)theEObject;
+				T result = caseDataConstraint(dataConstraint);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Logical_transformationsPackage.SELECTION_LAYER: {
+				SelectionLayer selectionLayer = (SelectionLayer)theEObject;
+				T result = caseSelectionLayer(selectionLayer);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Logical_transformationsPackage.TEST_SCOPE: {
+				TestScope testScope = (TestScope)theEObject;
+				T result = caseTestScope(testScope);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Logical_transformationsPackage.UNIT_TEST_SCOPE: {
+				UnitTestScope unitTestScope = (UnitTestScope)theEObject;
+				T result = caseUnitTestScope(unitTestScope);
+				if (result == null) result = caseTestScope(unitTestScope);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Logical_transformationsPackage.E2E_TEST_SCOPE: {
+				E2ETestScope e2ETestScope = (E2ETestScope)theEObject;
+				T result = caseE2ETestScope(e2ETestScope);
+				if (result == null) result = caseTestScope(e2ETestScope);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -199,6 +231,81 @@ public class Logical_transformationsSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseTestModule(TestModule object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Data Constraint</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Data Constraint</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseDataConstraint(DataConstraint object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Selection Layer</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Selection Layer</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseSelectionLayer(SelectionLayer object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Test Scope</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Test Scope</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseTestScope(TestScope object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Unit Test Scope</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Unit Test Scope</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUnitTestScope(UnitTestScope object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>E2E Test Scope</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>E2E Test Scope</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseE2ETestScope(E2ETestScope object) {
 		return null;
 	}
 
