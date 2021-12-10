@@ -473,8 +473,18 @@ public class Bpmn_litePackageImpl extends EPackageImpl implements Bpmn_litePacka
 	 * @generated
 	 */
 	@Override
-	public EReference getScriptTask_LinkedAttributes() {
+	public EReference getScriptTask_SelectionLayers() {
 		return (EReference)scriptTaskEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getScriptTask_OutputLayer() {
+		return (EReference)scriptTaskEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -564,7 +574,8 @@ public class Bpmn_litePackageImpl extends EPackageImpl implements Bpmn_litePacka
 		subProcessEClass = createEClass(SUB_PROCESS);
 
 		scriptTaskEClass = createEClass(SCRIPT_TASK);
-		createEReference(scriptTaskEClass, SCRIPT_TASK__LINKED_ATTRIBUTES);
+		createEReference(scriptTaskEClass, SCRIPT_TASK__SELECTION_LAYERS);
+		createEReference(scriptTaskEClass, SCRIPT_TASK__OUTPUT_LAYER);
 
 		userTaskEClass = createEClass(USER_TASK);
 		createEReference(userTaskEClass, USER_TASK__ENTITY);
@@ -657,7 +668,8 @@ public class Bpmn_litePackageImpl extends EPackageImpl implements Bpmn_litePacka
 		initEClass(subProcessEClass, SubProcess.class, "SubProcess", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(scriptTaskEClass, ScriptTask.class, "ScriptTask", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getScriptTask_LinkedAttributes(), theEcorePackage.getEStructuralFeature(), null, "linkedAttributes", null, 0, -1, ScriptTask.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getScriptTask_SelectionLayers(), theLogical_transformationsPackage.getSelectionLayer(), null, "selectionLayers", null, 0, -1, ScriptTask.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getScriptTask_OutputLayer(), theEcorePackage.getEClass(), null, "outputLayer", null, 0, 1, ScriptTask.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(userTaskEClass, UserTask.class, "UserTask", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getUserTask_Entity(), theEcorePackage.getEClass(), null, "entity", null, 0, 1, UserTask.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

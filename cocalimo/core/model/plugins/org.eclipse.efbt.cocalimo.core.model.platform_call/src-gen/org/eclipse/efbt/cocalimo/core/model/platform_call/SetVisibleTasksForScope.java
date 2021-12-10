@@ -21,7 +21,7 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.platform_call.SetVisibleTasksForScope#getScriptTasksInScope <em>Script Tasks In Scope</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.core.model.platform_call.SetVisibleTasksForScope#getScenariosOutOfScope <em>Scenarios Out Of Scope</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.core.model.platform_call.SetVisibleTasksForScope#getscenariosInScope <em>Scenarios Out Of Scope</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.core.model.platform_call.SetVisibleTasksForScope#getLogicalTransformationModule <em>Logical Transformation Module</em>}</li>
  * </ul>
  *
@@ -48,11 +48,11 @@ public interface SetVisibleTasksForScope extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Scenarios Out Of Scope</em>' reference list.
-	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.Platform_callPackage#getSetVisibleTasksForScope_ScenariosOutOfScope()
+	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.Platform_callPackage#getSetVisibleTasksForScope_scenariosInScope()
 	 * @model
 	 * @generated
 	 */
-	EList<Scenario> getScenariosOutOfScope();
+	EList<Scenario> getscenariosInScope();
 
 	/**
 	 * Returns the value of the '<em><b>Logical Transformation Module</b></em>' reference.

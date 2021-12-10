@@ -10,6 +10,7 @@ import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Bpmn_litePackage;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ServiceTask;
 
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsFactory;
+
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 

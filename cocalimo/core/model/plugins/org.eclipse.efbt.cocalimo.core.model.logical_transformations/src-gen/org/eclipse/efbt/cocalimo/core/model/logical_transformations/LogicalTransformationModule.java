@@ -5,6 +5,7 @@ package org.eclipse.efbt.cocalimo.core.model.logical_transformations;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.SubProcess;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.RequirementsModule;
+
 import org.eclipse.emf.common.util.EList;
 
 /**

@@ -3,6 +3,7 @@
 package org.eclipse.efbt.cocalimo.core.model.logical_transformations;
 
 import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 

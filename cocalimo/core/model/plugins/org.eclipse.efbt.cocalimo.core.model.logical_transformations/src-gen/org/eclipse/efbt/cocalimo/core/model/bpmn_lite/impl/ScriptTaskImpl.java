@@ -7,11 +7,15 @@ import java.util.Collection;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Bpmn_litePackage;
 import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.ScriptTask;
 
+import org.eclipse.efbt.cocalimo.core.model.logical_transformations.SelectionLayer;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -21,22 +25,31 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.efbt.cocalimo.core.model.bpmn_lite.impl.ScriptTaskImpl#getLinkedAttributes <em>Linked Attributes</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.core.model.bpmn_lite.impl.ScriptTaskImpl#getSelectionLayers <em>Selection Layers</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.core.model.bpmn_lite.impl.ScriptTaskImpl#getOutputLayer <em>Output Layer</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class ScriptTaskImpl extends TaskImpl implements ScriptTask {
 	/**
-	 * The cached value of the '{@link #getLinkedAttributes() <em>Linked Attributes</em>}' reference list.
+	 * The cached value of the '{@link #getSelectionLayers() <em>Selection Layers</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getLinkedAttributes()
+	 * @see #getSelectionLayers()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<EStructuralFeature> linkedAttributes;
-
+	protected EList<SelectionLayer> selectionLayers;
+	/**
+	 * The cached value of the '{@link #getOutputLayer() <em>Output Layer</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getOutputLayer()
+	 * @generated
+	 * @ordered
+	 */
+	protected EClass outputLayer;
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -62,11 +75,65 @@ public class ScriptTaskImpl extends TaskImpl implements ScriptTask {
 	 * @generated
 	 */
 	@Override
-	public EList<EStructuralFeature> getLinkedAttributes() {
-		if (linkedAttributes == null) {
-			linkedAttributes = new EObjectResolvingEList<EStructuralFeature>(EStructuralFeature.class, this, Bpmn_litePackage.SCRIPT_TASK__LINKED_ATTRIBUTES);
+	public EList<SelectionLayer> getSelectionLayers() {
+		if (selectionLayers == null) {
+			selectionLayers = new EObjectContainmentEList<SelectionLayer>(SelectionLayer.class, this, Bpmn_litePackage.SCRIPT_TASK__SELECTION_LAYERS);
 		}
-		return linkedAttributes;
+		return selectionLayers;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getOutputLayer() {
+		if (outputLayer != null && outputLayer.eIsProxy()) {
+			InternalEObject oldOutputLayer = (InternalEObject)outputLayer;
+			outputLayer = (EClass)eResolveProxy(oldOutputLayer);
+			if (outputLayer != oldOutputLayer) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Bpmn_litePackage.SCRIPT_TASK__OUTPUT_LAYER, oldOutputLayer, outputLayer));
+			}
+		}
+		return outputLayer;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass basicGetOutputLayer() {
+		return outputLayer;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setOutputLayer(EClass newOutputLayer) {
+		EClass oldOutputLayer = outputLayer;
+		outputLayer = newOutputLayer;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, Bpmn_litePackage.SCRIPT_TASK__OUTPUT_LAYER, oldOutputLayer, outputLayer));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case Bpmn_litePackage.SCRIPT_TASK__SELECTION_LAYERS:
+				return ((InternalEList<?>)getSelectionLayers()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -77,8 +144,11 @@ public class ScriptTaskImpl extends TaskImpl implements ScriptTask {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case Bpmn_litePackage.SCRIPT_TASK__LINKED_ATTRIBUTES:
-				return getLinkedAttributes();
+			case Bpmn_litePackage.SCRIPT_TASK__SELECTION_LAYERS:
+				return getSelectionLayers();
+			case Bpmn_litePackage.SCRIPT_TASK__OUTPUT_LAYER:
+				if (resolve) return getOutputLayer();
+				return basicGetOutputLayer();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -92,9 +162,12 @@ public class ScriptTaskImpl extends TaskImpl implements ScriptTask {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case Bpmn_litePackage.SCRIPT_TASK__LINKED_ATTRIBUTES:
-				getLinkedAttributes().clear();
-				getLinkedAttributes().addAll((Collection<? extends EStructuralFeature>)newValue);
+			case Bpmn_litePackage.SCRIPT_TASK__SELECTION_LAYERS:
+				getSelectionLayers().clear();
+				getSelectionLayers().addAll((Collection<? extends SelectionLayer>)newValue);
+				return;
+			case Bpmn_litePackage.SCRIPT_TASK__OUTPUT_LAYER:
+				setOutputLayer((EClass)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -108,8 +181,11 @@ public class ScriptTaskImpl extends TaskImpl implements ScriptTask {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case Bpmn_litePackage.SCRIPT_TASK__LINKED_ATTRIBUTES:
-				getLinkedAttributes().clear();
+			case Bpmn_litePackage.SCRIPT_TASK__SELECTION_LAYERS:
+				getSelectionLayers().clear();
+				return;
+			case Bpmn_litePackage.SCRIPT_TASK__OUTPUT_LAYER:
+				setOutputLayer((EClass)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -123,8 +199,10 @@ public class ScriptTaskImpl extends TaskImpl implements ScriptTask {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case Bpmn_litePackage.SCRIPT_TASK__LINKED_ATTRIBUTES:
-				return linkedAttributes != null && !linkedAttributes.isEmpty();
+			case Bpmn_litePackage.SCRIPT_TASK__SELECTION_LAYERS:
+				return selectionLayers != null && !selectionLayers.isEmpty();
+			case Bpmn_litePackage.SCRIPT_TASK__OUTPUT_LAYER:
+				return outputLayer != null;
 		}
 		return super.eIsSet(featureID);
 	}

@@ -64,6 +64,10 @@ public class Logical_transformationsFactoryImpl extends EFactoryImpl implements 
 			case Logical_transformationsPackage.TEST: return createTest();
 			case Logical_transformationsPackage.TEST_MODULE: return createTestModule();
 			case Logical_transformationsPackage.DATA_CONSTRAINT: return createDataConstraint();
+			case Logical_transformationsPackage.SELECTION_LAYER: return createSelectionLayer();
+			case Logical_transformationsPackage.TEST_SCOPE: return createTestScope();
+			case Logical_transformationsPackage.UNIT_TEST_SCOPE: return createUnitTestScope();
+			case Logical_transformationsPackage.E2E_TEST_SCOPE: return createE2ETestScope();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -174,6 +178,50 @@ public class Logical_transformationsFactoryImpl extends EFactoryImpl implements 
 	public DataConstraint createDataConstraint() {
 		DataConstraintImpl dataConstraint = new DataConstraintImpl();
 		return dataConstraint;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public SelectionLayer createSelectionLayer() {
+		SelectionLayerImpl selectionLayer = new SelectionLayerImpl();
+		return selectionLayer;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TestScope createTestScope() {
+		TestScopeImpl testScope = new TestScopeImpl();
+		return testScope;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public UnitTestScope createUnitTestScope() {
+		UnitTestScopeImpl unitTestScope = new UnitTestScopeImpl();
+		return unitTestScope;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public E2ETestScope createE2ETestScope() {
+		E2ETestScopeImpl e2ETestScope = new E2ETestScopeImpl();
+		return e2ETestScope;
 	}
 
 	/**

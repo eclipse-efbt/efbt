@@ -53,8 +53,7 @@ public class Controller {
 	private static void createLogicalTransformationViewForScope(CreateLogicalTransformationViewForScope call) {
 		// TODO Auto-generated method stub
 		LogicalTransformationViews.createLogicalTransformationViewForScope(call.getLogicalTransformationModule(),
-																			call.getScriptTasksInScope(),
-																			call.getScenariosOutOfScope(),
+																			call.getTestScope(),
 																			call);
 	}
 	

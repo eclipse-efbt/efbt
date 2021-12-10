@@ -1,28 +1,42 @@
 {
   "eClass" : "http://www.eclipse.org/efbt/platform_call#//CreateLogicalTransformationViewForScope",
   "name" : "limited_scope",
-  "scriptTasksInScope" : [ {
-    "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ScriptTask",
-    "$ref" : "BIRD_transformations.logical_transformations#//@subProcess/@flowElements.5/@flowElements.1"
-  } ],
   "logicalTransformationModule" : {
     "eClass" : "http://www.eclipse.org/efbt/logical_transformations#//LogicalTransformationModule",
     "$ref" : "BIRD_transformations.logical_transformations#transformations"
   },
   "attributeLineage" : [ {
     "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
-    "$ref" : "logical_data_model.ecore#//BondInstrument_derived/duration"
+    "$ref" : "logical_data_model.ecore#//Trade_derived/exposure_at_defualt"
   }, {
     "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
-    "$ref" : "logical_data_model.ecore#//BondInstrument/coupon_rate"
+    "$ref" : "logical_data_model.ecore#//Instrument/mkt_value"
   }, {
     "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
-    "$ref" : "logical_data_model.ecore#//Instrument/instrument_id"
+    "$ref" : "logical_data_model.ecore#//Trade_derived/risk_weight"
+  }, {
+    "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
+    "$ref" : "logical_data_model.ecore#//Entity/credit_quality"
   }, {
     "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
     "$ref" : "logical_data_model.ecore#//Trade/trade_id"
-  }, {
-    "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
-    "$ref" : "logical_data_model.ecore#//Entity/entity_id"
+  } ],
+  "testScope" : [ {
+    "name" : "scope2",
+    "scenarios" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/logical_transformations#//Scenario",
+      "$ref" : "BIRD_transformations.logical_transformations#primary EAD Scenario"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/logical_transformations#//Scenario",
+      "$ref" : "BIRD_transformations.logical_transformations#primary Risk Weight Scenario"
+    } ],
+    "layer" : {
+      "eClass" : "http://www.eclipse.org/efbt/logical_transformations#//SelectionLayer",
+      "$ref" : "BIRD_transformations.logical_transformations#credit_risk_report$layer1"
+    },
+    "scriptTask" : {
+      "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ScriptTask",
+      "$ref" : "BIRD_transformations.logical_transformations#//@subProcess/@flowElements.5/@flowElements.0"
+    }
   } ]
 }
