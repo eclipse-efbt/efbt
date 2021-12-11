@@ -40,7 +40,6 @@
 		<module>plugins/org.eclipse.efbt.controller.smcubes.component.importexport.api</module>
 		<module>plugins/org.eclipse.efbt.controller.smcubes.component.importexport.impl</module>
 		<module>features/org.eclipse.efbt.controller.smcubes.component.feature</module>
-		<module>tests/org.eclipse.efbt.controller.smcubes.component.importexport.test</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
