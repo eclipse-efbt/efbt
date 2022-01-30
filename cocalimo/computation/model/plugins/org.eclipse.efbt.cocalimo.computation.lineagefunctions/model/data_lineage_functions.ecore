@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="data_lineage_functions" nsURI="http://www.eclipse.org/efbt/data_lineage_functions"
+    nsPrefix="data_lineage_functions">
+  <eAnnotations source="license">
+    <details key="license" value="Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"/>
+  </eAnnotations>
+  <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+    <details key="documentation" value="The package describes the CellsParameter"/>
+  </eAnnotations>
+  <eClassifiers xsi:type="ecore:EClass" name="CellsParameter" eSuperTypes="../../org.eclipse.efbt.cocalimo.computation.model.functions/model/functions.ecore#//Parameter">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A Parameter which is an existing Cell. The Cell might be a BaseCell or a DerivedCell."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cells" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.computation.model.entities/model/entities.ecore#//Cell">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The cell"/>
+      </eAnnotations>
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="kind" value="attribute"/>
+        <details key="name" value="cells"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+</ecore:EPackage>
