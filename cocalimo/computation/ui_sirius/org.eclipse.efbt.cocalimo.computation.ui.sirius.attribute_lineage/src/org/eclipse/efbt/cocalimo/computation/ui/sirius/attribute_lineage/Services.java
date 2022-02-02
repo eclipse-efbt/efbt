@@ -1,10 +1,16 @@
 package org.eclipse.efbt.cocalimo.computation.ui.sirius.attribute_lineage;
 
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.efbt.cocalimo.computation.query.attribute_lineage.AttributeLineageModelQuery;
+import org.eclipse.efbt.cocalimo.smcubes_with_lineage.query.lineagefunctions.LineageFunctionsModelQuery;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EClass;
 
-/**
- * The services class used by VSM.
- */
+import functions.AggregateFunction;
+import functions.BasicFunction;
+import functions.Function;
+import cube_transformation_logic.CubeTransformationLogic;
+
+
 /**
  * The services class used by VSM.
  */
@@ -26,10 +32,10 @@ public class Services {
     	
     }
     
-    public  EList<BaseRowStructure> getTheDependantEvaluatedTableSchemas(CubeTransformationLogic self)
+    public  EList<EClass> getTheDependantEvaluatedTableSchemas(CubeTransformationLogic self)
     {
 
-    	return AttributeLineageModelQuery.getTheDependantBaseRowStructures(self);
+    	return AttributeLineageModelQuery.getTheDependantEClasss(self);
     	
     }
     

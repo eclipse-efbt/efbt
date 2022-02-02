@@ -15,7 +15,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.efbt.cocalimo.computation.model.functions;bundle-version="0.1.0",
  org.eclipse.efbt.cocalimo.computation.model.lineagefunctions;bundle-version="0.1.0",
  org.eclipse.efbt.cocalimo.computation.query.attribute_lineage;bundle-version="1.0.0",
- org.eclipse.efbt.cocalimo.computation.query.lineagefunctions;bundle-version="1.0.0" 
+ org.eclipse.efbt.cocalimo.computation.query.lineagefunctions;bundle-version="1.0.0",
+ org.eclipse.emf.common
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Vendor: %providerName
