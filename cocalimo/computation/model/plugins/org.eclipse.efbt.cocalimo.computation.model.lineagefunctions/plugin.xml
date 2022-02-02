@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated lineagefunctions -->
+      <package
+            uri="http://www.eclipse.org/efbt/advanced_variable_lineagefunctions"
+            class="advanced_variable_lineagefunctions.Advanced_variable_lineagefunctionsPackage"
+            genModel="model/lineagefunctions.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated lineagefunctions -->
+      <package
+            uri="http://www.eclipse.org/efbt/column_transformation_logic"
+            class="column_transformation_logic.Column_transformation_logicPackage"
+            genModel="model/lineagefunctions.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated lineagefunctions -->
+      <parser
+            type="column_transformation_logic"
+            class="column_transformation_logic.util.Column_transformation_logicResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated lineagefunctions -->
+      <package
+            uri="http://www.eclipse.org/efbt/data_lineage_functions"
+            class="data_lineage_functions.Data_lineage_functionsPackage"
+            genModel="model/lineagefunctions.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated lineagefunctions -->
+      <parser
+            type="data_lineage_functions"
+            class="data_lineage_functions.util.Data_lineage_functionsResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated lineagefunctions -->
+      <package
+            uri="http://www.eclipse.org/efbt/entity_functions"
+            class="entity_functions.Entity_functionsPackage"
+            genModel="model/lineagefunctions.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated lineagefunctions -->
+      <parser
+            type="entity_functions"
+            class="entity_functions.util.Entity_functionsResourceFactoryImpl"/>
+   </extension>
+
+</plugin>

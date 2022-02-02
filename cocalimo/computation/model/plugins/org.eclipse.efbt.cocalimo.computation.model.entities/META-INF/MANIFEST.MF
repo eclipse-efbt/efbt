@@ -1,7 +1,16 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.eclipse.efbt.cocalimo.computation.model.entities
-Bundle-SymbolicName: org.eclipse.efbt.cocalimo.computation.model.entities; singleton:=true
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.eclipse.efbt.cocalimo.computation.model.entities;singleton:=true
+Automatic-Module-Name: org.eclipse.efbt.cocalimo.computation.model.entities
 Bundle-Version: 0.1.0.qualifier
+Bundle-ClassPath: .
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Export-Package: entities,
+ entities.impl,
+ entities.util
 Require-Bundle: org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.core.runtime
+Bundle-ActivationPolicy: lazy
