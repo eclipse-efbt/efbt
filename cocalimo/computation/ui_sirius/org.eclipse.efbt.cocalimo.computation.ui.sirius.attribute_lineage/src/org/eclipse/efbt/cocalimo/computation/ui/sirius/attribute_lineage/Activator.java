@@ -1,4 +1,4 @@
-package org.eclipse.efbt.cocalimo.computation.ui.sirius.attribute_lineage;
+package org.eclipse.efbt.cocalimo.computation.ui.sirius.computation_lineage;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,7 +13,7 @@ import org.osgi.framework.BundleContext;
  */
 public class Activator extends AbstractUIPlugin {
     // The plug-in ID
-    public static final String PLUGIN_ID = "org.eclipse.efbt.cocalimo.computation.ui.sirius.attribute_lineage";
+    public static final String PLUGIN_ID = "org.eclipse.efbt.cocalimo.computation.ui.sirius.computation_lineage";
 
     // The shared instance
     private static Activator plugin;
@@ -35,7 +35,7 @@ public class Activator extends AbstractUIPlugin {
       super.start(context);
 	  plugin = this;
 	  viewpoints = new HashSet<Viewpoint>();
-	  viewpoints.addAll(ViewpointRegistry.getInstance().registerFromPlugin(PLUGIN_ID + "/description/attribute_lineage.odesign")); 
+	  viewpoints.addAll(ViewpointRegistry.getInstance().registerFromPlugin(PLUGIN_ID + "/description/computation_lineage.odesign")); 
     }
 
     /*

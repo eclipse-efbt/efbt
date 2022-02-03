@@ -5,8 +5,6 @@ Bundle-SymbolicName: org.eclipse.efbt.cocalimo.computation.query.lineagefunction
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: org.eclipse.efbt.cocalimo.computation.query.lineagefunctions
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Require-Bundle: org.eclipse.efbt.cocalimo.computation.model.functions,
- org.eclipse.efbt.cocalimo.computation.model.lineagefunctions,
- org.eclipse.efbt.cocalimo.smcubes.model.core
+Require-Bundle: org.eclipse.efbt.cocalimo.smcubes.model.core
 Export-Package: org.eclipse.efbt.cocalimo.smcubes_with_lineage.query.lineagefunctions
  

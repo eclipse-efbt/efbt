@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.cocalimo.computation.model.ecore_plus/src"
+    modelPluginID="org.eclipse.efbt.cocalimo.computation.model.ecore_plus" modelName="Ecore_plus"
+    rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="5.0" copyrightFields="false" usedGenPackages="../../org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore ../../org.eclipse.efbt.cocalimo.core.model.logical_transformations/model/logical_transformations.genmodel#//logical_transformations ../../org.eclipse.efbt.cocalimo.core.model.logical_transformations/model/logical_transformations.genmodel#//bpmn_lite ../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.cocalimo.core.model.requirements_text/model/requirements_text.genmodel#//requirements_text ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//core ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//data_definition"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>ecore_plus_structure.ecore</foreignModel>
+  <foreignModel>ecore_plus_logic.ecore</foreignModel>
+  <genPackages prefix="Ecore_plus_structure" basePackage="org.eclipse.efbt.cocalimo.computation.model"
+      resource="XML" disposableProviderFactory="true" ecorePackage="ecore_plus_structure.ecore#/">
+    <genClasses ecoreClass="ecore_plus_structure.ecore#//BaseEntity">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore_plus_structure.ecore#//BaseEntity/baseFeatures"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_structure.ecore#//Cell">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_structure.ecore#//Cell/row"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_structure.ecore#//Cell/column"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_structure.ecore#//HeirarchicalEnum"/>
+    <genClasses ecoreClass="ecore_plus_structure.ecore#//HeirarchicalEnumLiteral">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_structure.ecore#//HeirarchicalEnumLiteral/parentLiteral"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_structure.ecore#//EnumeratedDomain">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_structure.ecore#//EnumeratedDomain/domain"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_structure.ecore#//SubDomainEnum">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_structure.ecore#//SubDomainEnum/primaryEnum"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_structure.ecore#//SubDomainEnum/subDomain"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_structure.ecore#//CellsParameter">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_structure.ecore#//CellsParameter/cells"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_structure.ecore#//Entity"/>
+    <genClasses ecoreClass="ecore_plus_structure.ecore#//BaseEntityFeature">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore_plus_structure.ecore#//BaseEntityFeature/isFK"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_structure.ecore#//BaseEntityFeature/fkEntity"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_structure.ecore#//BaseEntityFeature/varaible"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_structure.ecore#//BaseEntityFeature/cube"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_structure.ecore#//BaseEntityModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore_plus_structure.ecore#//BaseEntityModule/baseEntities"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Ecore_plus_logic" basePackage="org.eclipse.efbt.cocalimo.computation.model"
+      resource="XML" disposableProviderFactory="true" ecorePackage="ecore_plus_logic.ecore#/">
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//DerivedEntity">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//DerivedEntity/sourceEntities"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//DerivedEntity/derivedFeatures"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//DerivedEntity/rowCreationApproachForEntity"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//DerivedEntity/cube"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//IntermediateDerivedEntity"/>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//GeneratedEntity"/>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//AggregateFunction">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//AggregateFunction/functionSpec"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//AggregateFunctionSpec"/>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//BasicFunction">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//BasicFunction/functionSpec"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//BasicFunctionSpec">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore_plus_logic.ecore#//BasicFunctionSpec/isInfix"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//BooleanFunction"/>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//Function">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//Function/parameters"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore_plus_logic.ecore#//Function/name"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//FunctionSpec">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//FunctionSpec/parameterSpecs"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore_plus_logic.ecore#//FunctionSpec/functionalName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore_plus_logic.ecore#//FunctionSpec/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore_plus_logic.ecore#//FunctionSpec/sqlName"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//FunctionSpecModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//FunctionSpecModule/functionSpecs"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//ParamaterSpec">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore_plus_logic.ecore#//ParamaterSpec/name"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//Parameter"/>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//MemberParameter">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//MemberParameter/param"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//ValueParameter">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore_plus_logic.ecore#//ValueParameter/value"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//ValueParameter/dataType"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//AggregateDerivedFeature">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//AggregateDerivedFeature/aggregateFunction"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//BasicDerivedFeature">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//BasicDerivedFeature/basicScenarioLogic"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//BasicScenarioLogic">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//BasicScenarioLogic/basicFunction"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//BasicScenarioLogic/sceanrio"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//DerivedFeature">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//DerivedFeature/variable"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//BaseFeature">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//BaseFeature/variable"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//DerivedFeatureGroup">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//DerivedFeatureGroup/derivedFeatures"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//FeatureParameter">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//FeatureParameter/feature"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//ProxyFeatureParameter">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//ProxyFeatureParameter/entity"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//ProxyFeatureParameter/varaible"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//GetAttributeFromEntityDerivedFeature">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//GetAttributeFromEntityDerivedFeature/attributeInEntity"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//GetAttributeFromEntityDerivedFeature/entityFeature"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//AttributeFromEntityParameter">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//AttributeFromEntityParameter/attributeInEntity"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//AttributeFromEntityParameter/entityFeature"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//ProxyAttributeFromEntityParameter">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//ProxyAttributeFromEntityParameter/variable"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//ProxyAttributeFromEntityParameter/entity"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//ProxyAttributeFromEntityParameter/cube"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//CustomRowCreationApproach">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//CustomRowCreationApproach/dependantVariables"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//FilterAndGroupToOneRowCreationApproach">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//FilterAndGroupToOneRowCreationApproach/filterFunction"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//FilterAndGroupToOneRowCreationApproach/groupByVariables"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//RowCreationApproachForEntity">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//RowCreationApproachForEntity/rowCreationApproach"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//RowCreationApproachForEntity/entity"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore_plus_logic.ecore#//RowCreationApproachForEntity/name"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//OneToOneRowCreationApproach"/>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//FilterRowCreationApproach">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//FilterRowCreationApproach/filterFunction"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//RowCreationApproach">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//RowCreationApproach/dependantCubeColumns"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//RowCreationApproach/createdCubeColumns"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//RowCreationApproach/dependantStructItemColumns"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//GroupByRowCreationApproach">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//GroupByRowCreationApproach/groupByCubeColumnNames"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//GroupByRowCreationApproach/groupByColumns"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//RowJoinFunction">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//RowJoinFunction/joinFunction"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//UnionRowCreationApproach"/>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//ExplodeArrayOfStructsRowFunction">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//ExplodeArrayOfStructsRowFunction/arraySourceVariable"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

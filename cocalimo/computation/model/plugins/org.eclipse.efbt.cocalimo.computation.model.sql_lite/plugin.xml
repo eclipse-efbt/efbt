@@ -10,7 +10,7 @@
       <!-- @generated sql_lite -->
       <package
             uri="http://www.example.org/sql_lite"
-            class="sql_lite.Sql_litePackage"
+            class="org.eclipse.efbt.cocalimo.computation.model.sql_lite.Sql_litePackage"
             genModel="model/sql_lite.genmodel"/>
    </extension>
 

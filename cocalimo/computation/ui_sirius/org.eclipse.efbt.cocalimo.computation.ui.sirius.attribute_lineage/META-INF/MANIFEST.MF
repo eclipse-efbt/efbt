@@ -1,23 +1,21 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.eclipse.efbt.cocalimo.computation.ui.sirius.attribute_lineage;singleton:=true
+Bundle-SymbolicName: org.eclipse.efbt.cocalimo.computation.ui.sirius.computation_lineage;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.eclipse.efbt.cocalimo.computation.ui.sirius.attribute_lineage.Activator
+Bundle-Activator: org.eclipse.efbt.cocalimo.computation.ui.sirius.computation_lineage.Activator
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.eclipse.sirius,
  org.eclipse.sirius.common.acceleo.aql,
- org.eclipse.efbt.cocalimo.computation.model.attribute_lineage;bundle-version="0.1.0",
- org.eclipse.efbt.cocalimo.computation.model.entities;bundle-version="0.1.0",
- org.eclipse.efbt.cocalimo.computation.model.functions;bundle-version="0.1.0",
- org.eclipse.efbt.cocalimo.computation.model.lineagefunctions;bundle-version="0.1.0",
- org.eclipse.efbt.cocalimo.computation.query.attribute_lineage;bundle-version="1.0.0",
+ org.eclipse.efbt.cocalimo.computation.model.ecore_plus,
+ org.eclipse.efbt.cocalimo.computation.model.computation_lineage;bundle-version="0.1.0",
+ org.eclipse.efbt.cocalimo.computation.query.computation_lineage;bundle-version="1.0.0",
  org.eclipse.efbt.cocalimo.computation.query.lineagefunctions;bundle-version="1.0.0",
  org.eclipse.emf.common
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Vendor: %providerName
-Automatic-Module-Name: org.eclipse.efbt.cocalimo.computation.ui.sirius.attribute_lineage
+Automatic-Module-Name: org.eclipse.efbt.cocalimo.computation.ui.sirius.computation_lineage

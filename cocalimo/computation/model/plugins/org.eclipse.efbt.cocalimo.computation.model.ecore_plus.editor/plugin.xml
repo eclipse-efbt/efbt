@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <!-- @generated ecore_plus -->
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.presentation.Ecore_plus_structureModelWizardID"
+            name="%_UI_Ecore_plus_structureModelWizard_label"
+            class="org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.presentation.Ecore_plus_structureModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/Ecore_plus_structureModelFile.gif">
+         <description>%_UI_Ecore_plus_structureModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <!-- @generated ecore_plus -->
+      <editor
+            id="org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.presentation.Ecore_plus_structureEditorID"
+            name="%_UI_Ecore_plus_structureEditor_label"
+            icon="icons/full/obj16/Ecore_plus_structureModelFile.gif"
+            extensions="ecore_plus_structure"
+            class="org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.presentation.Ecore_plus_structureEditor"
+            contributorClass="org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.presentation.Ecore_plus_structureActionBarContributor">
+      </editor>
+   </extension>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <!-- @generated ecore_plus -->
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.presentation.Ecore_plus_logicModelWizardID"
+            name="%_UI_Ecore_plus_logicModelWizard_label"
+            class="org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.presentation.Ecore_plus_logicModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/Ecore_plus_logicModelFile.gif">
+         <description>%_UI_Ecore_plus_logicModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <!-- @generated ecore_plus -->
+      <editor
+            id="org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.presentation.Ecore_plus_logicEditorID"
+            name="%_UI_Ecore_plus_logicEditor_label"
+            icon="icons/full/obj16/Ecore_plus_logicModelFile.gif"
+            extensions="ecore_plus_logic"
+            class="org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.presentation.Ecore_plus_logicEditor"
+            contributorClass="org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.presentation.Ecore_plus_logicActionBarContributor">
+      </editor>
+   </extension>
+
+</plugin>

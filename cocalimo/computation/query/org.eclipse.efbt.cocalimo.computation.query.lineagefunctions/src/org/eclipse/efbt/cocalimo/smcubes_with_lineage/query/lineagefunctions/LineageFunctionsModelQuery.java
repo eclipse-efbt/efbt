@@ -17,11 +17,11 @@ import java.util.Iterator;
 
 import org.eclipse.emf.common.util.EList;
 
-import column_transformation_logic.SpeculativeCubeColumnParameter;
-import entity_functions.ValueParameter;
-import functions.AggregateFunction;
-import functions.BasicFunction;
-import functions.Parameter;
+import org.eclipse.efbt.cocalimo.computation.model.column_transformation_logic.SpeculativeCubeColumnParameter;
+import org.eclipse.efbt.cocalimo.computation.model.entity_functions.ValueParameter;
+import org.eclipse.efbt.cocalimo.computation.model.functions.AggregateFunction;
+import org.eclipse.efbt.cocalimo.computation.model.functions.BasicFunction;
+import org.eclipse.efbt.cocalimo.computation.model.functions.Parameter;
 
 
 
