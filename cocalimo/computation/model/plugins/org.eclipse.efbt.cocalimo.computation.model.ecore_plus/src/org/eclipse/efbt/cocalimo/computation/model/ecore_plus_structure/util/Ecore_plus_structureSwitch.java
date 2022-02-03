@@ -79,6 +79,7 @@ public class Ecore_plus_structureSwitch<T> extends Switch<T> {
 			case Ecore_plus_structurePackage.BASE_ENTITY: {
 				BaseEntity baseEntity = (BaseEntity)theEObject;
 				T result = caseBaseEntity(baseEntity);
+				if (result == null) result = caseEntity(baseEntity);
 				if (result == null) result = caseEClass(baseEntity);
 				if (result == null) result = caseEClassifier(baseEntity);
 				if (result == null) result = caseENamedElement(baseEntity);

@@ -112,6 +112,15 @@ public interface Sql_liteFactory extends EFactory {
 	GeneratedEntitySQL createGeneratedEntitySQL();
 
 	/**
+	 * Returns a new object of class '<em>Generated Entity SQL Module</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Generated Entity SQL Module</em>'.
+	 * @generated
+	 */
+	GeneratedEntitySQLModule createGeneratedEntitySQLModule();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

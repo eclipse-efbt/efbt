@@ -2,6 +2,7 @@
  */
 package org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl;
 
+import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.Entity;
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.Sql_litePackage;
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.Table;
 
@@ -34,7 +35,7 @@ public class TableImpl extends SQLEntityImpl implements Table {
 	 * @generated
 	 * @ordered
 	 */
-	protected EClass entity;
+	protected Entity entity;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -60,10 +61,10 @@ public class TableImpl extends SQLEntityImpl implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getEntity() {
+	public Entity getEntity() {
 		if (entity != null && entity.eIsProxy()) {
 			InternalEObject oldEntity = (InternalEObject)entity;
-			entity = (EClass)eResolveProxy(oldEntity);
+			entity = (Entity)eResolveProxy(oldEntity);
 			if (entity != oldEntity) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Sql_litePackage.TABLE__ENTITY, oldEntity, entity));
@@ -77,7 +78,7 @@ public class TableImpl extends SQLEntityImpl implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass basicGetEntity() {
+	public Entity basicGetEntity() {
 		return entity;
 	}
 
@@ -86,8 +87,8 @@ public class TableImpl extends SQLEntityImpl implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setEntity(EClass newEntity) {
-		EClass oldEntity = entity;
+	public void setEntity(Entity newEntity) {
+		Entity oldEntity = entity;
 		entity = newEntity;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, Sql_litePackage.TABLE__ENTITY, oldEntity, entity));
@@ -117,7 +118,7 @@ public class TableImpl extends SQLEntityImpl implements Table {
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Sql_litePackage.TABLE__ENTITY:
-				setEntity((EClass)newValue);
+				setEntity((Entity)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -132,7 +133,7 @@ public class TableImpl extends SQLEntityImpl implements Table {
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Sql_litePackage.TABLE__ENTITY:
-				setEntity((EClass)null);
+				setEntity((Entity)null);
 				return;
 		}
 		super.eUnset(featureID);

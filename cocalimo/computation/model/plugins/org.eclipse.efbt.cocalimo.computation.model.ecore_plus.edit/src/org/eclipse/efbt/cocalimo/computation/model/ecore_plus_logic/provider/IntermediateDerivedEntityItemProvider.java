@@ -112,7 +112,8 @@ public class IntermediateDerivedEntityItemProvider extends DerivedEntityItemProv
 
 		boolean qualify =
 			childFeature == EcorePackage.Literals.ECLASS__ESTRUCTURAL_FEATURES ||
-			childFeature == Ecore_plus_logicPackage.Literals.DERIVED_ENTITY__DERIVED_FEATURES;
+			childFeature == Ecore_plus_logicPackage.Literals.DERIVED_ENTITY__DERIVED_ATTRIBUTES ||
+			childFeature == Ecore_plus_logicPackage.Literals.DERIVED_ENTITY__DERIVED_STRUCTS;
 
 		if (qualify) {
 			return getString

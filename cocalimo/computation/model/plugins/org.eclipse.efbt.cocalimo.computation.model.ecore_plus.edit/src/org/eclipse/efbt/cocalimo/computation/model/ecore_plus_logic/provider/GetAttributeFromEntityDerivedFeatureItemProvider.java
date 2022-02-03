@@ -21,7 +21,7 @@ import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
  * <!-- end-user-doc -->
  * @generated
  */
-public class GetAttributeFromEntityDerivedFeatureItemProvider extends DerivedFeatureItemProvider {
+public class GetAttributeFromEntityDerivedFeatureItemProvider extends DerivedAttributeItemProvider {
 	/**
 	 * This constructs an instance from a factory and a notifier.
 	 * <!-- begin-user-doc -->

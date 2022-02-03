@@ -157,22 +157,22 @@ public interface Ecore_plus_logicFactory extends EFactory {
 	ValueParameter createValueParameter();
 
 	/**
-	 * Returns a new object of class '<em>Aggregate Derived Feature</em>'.
+	 * Returns a new object of class '<em>Aggregate Derived Attribute</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Aggregate Derived Feature</em>'.
+	 * @return a new object of class '<em>Aggregate Derived Attribute</em>'.
 	 * @generated
 	 */
-	AggregateDerivedFeature createAggregateDerivedFeature();
+	AggregateDerivedAttribute createAggregateDerivedAttribute();
 
 	/**
-	 * Returns a new object of class '<em>Basic Derived Feature</em>'.
+	 * Returns a new object of class '<em>Basic Derived Attribute</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Basic Derived Feature</em>'.
+	 * @return a new object of class '<em>Basic Derived Attribute</em>'.
 	 * @generated
 	 */
-	BasicDerivedFeature createBasicDerivedFeature();
+	BasicDerivedAttribute createBasicDerivedAttribute();
 
 	/**
 	 * Returns a new object of class '<em>Basic Scenario Logic</em>'.
@@ -184,13 +184,22 @@ public interface Ecore_plus_logicFactory extends EFactory {
 	BasicScenarioLogic createBasicScenarioLogic();
 
 	/**
-	 * Returns a new object of class '<em>Derived Feature</em>'.
+	 * Returns a new object of class '<em>Derived Attribute</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Derived Feature</em>'.
+	 * @return a new object of class '<em>Derived Attribute</em>'.
 	 * @generated
 	 */
-	DerivedFeature createDerivedFeature();
+	DerivedAttribute createDerivedAttribute();
+
+	/**
+	 * Returns a new object of class '<em>Derived Struct</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Derived Struct</em>'.
+	 * @generated
+	 */
+	DerivedStruct createDerivedStruct();
 
 	/**
 	 * Returns a new object of class '<em>Base Feature</em>'.
@@ -344,6 +353,33 @@ public interface Ecore_plus_logicFactory extends EFactory {
 	 * @generated
 	 */
 	ExplodeArrayOfStructsRowFunction createExplodeArrayOfStructsRowFunction();
+
+	/**
+	 * Returns a new object of class '<em>Derived Entity Module</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Derived Entity Module</em>'.
+	 * @generated
+	 */
+	DerivedEntityModule createDerivedEntityModule();
+
+	/**
+	 * Returns a new object of class '<em>Intermediate Derived Entities Module</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Intermediate Derived Entities Module</em>'.
+	 * @generated
+	 */
+	IntermediateDerivedEntitiesModule createIntermediateDerivedEntitiesModule();
+
+	/**
+	 * Returns a new object of class '<em>Generated Entity Module</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Generated Entity Module</em>'.
+	 * @generated
+	 */
+	GeneratedEntityModule createGeneratedEntityModule();
 
 	/**
 	 * Returns the package supported by this factory.

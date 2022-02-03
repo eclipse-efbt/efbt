@@ -135,6 +135,13 @@ public class Sql_liteSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case Sql_litePackage.GENERATED_ENTITY_SQL_MODULE: {
+				GeneratedEntitySQLModule generatedEntitySQLModule = (GeneratedEntitySQLModule)theEObject;
+				T result = caseGeneratedEntitySQLModule(generatedEntitySQLModule);
+				if (result == null) result = caseModule(generatedEntitySQLModule);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -301,6 +308,21 @@ public class Sql_liteSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseGeneratedEntitySQL(GeneratedEntitySQL object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Generated Entity SQL Module</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Generated Entity SQL Module</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseGeneratedEntitySQLModule(GeneratedEntitySQLModule object) {
 		return null;
 	}
 

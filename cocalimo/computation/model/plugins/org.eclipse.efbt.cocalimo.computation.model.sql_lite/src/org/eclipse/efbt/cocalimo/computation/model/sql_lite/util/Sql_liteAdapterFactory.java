@@ -112,6 +112,10 @@ public class Sql_liteAdapterFactory extends AdapterFactoryImpl {
 				return createGeneratedEntitySQLAdapter();
 			}
 			@Override
+			public Adapter caseGeneratedEntitySQLModule(GeneratedEntitySQLModule object) {
+				return createGeneratedEntitySQLModuleAdapter();
+			}
+			@Override
 			public Adapter caseModule(org.eclipse.efbt.cocalimo.core.model.module_management.Module object) {
 				return createModuleAdapter();
 			}
@@ -286,6 +290,20 @@ public class Sql_liteAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createGeneratedEntitySQLAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.GeneratedEntitySQLModule <em>Generated Entity SQL Module</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.sql_lite.GeneratedEntitySQLModule
+	 * @generated
+	 */
+	public Adapter createGeneratedEntitySQLModuleAdapter() {
 		return null;
 	}
 

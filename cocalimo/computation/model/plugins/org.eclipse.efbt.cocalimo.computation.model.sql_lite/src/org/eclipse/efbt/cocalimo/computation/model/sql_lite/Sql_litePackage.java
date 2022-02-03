@@ -464,13 +464,22 @@ public interface Sql_litePackage extends EPackage {
 	int SQL_ENTITY_MODULE__LONG_NAME = Module_managementPackage.MODULE__LONG_NAME;
 
 	/**
+	 * The feature id for the '<em><b>Sql Entities</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SQL_ENTITY_MODULE__SQL_ENTITIES = Module_managementPackage.MODULE_FEATURE_COUNT + 0;
+
+	/**
 	 * The number of structural features of the '<em>SQL Entity Module</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SQL_ENTITY_MODULE_FEATURE_COUNT = Module_managementPackage.MODULE_FEATURE_COUNT + 0;
+	int SQL_ENTITY_MODULE_FEATURE_COUNT = Module_managementPackage.MODULE_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of operations of the '<em>SQL Entity Module</em>' class.
@@ -526,6 +535,98 @@ public interface Sql_litePackage extends EPackage {
 	 * @ordered
 	 */
 	int GENERATED_ENTITY_SQL_OPERATION_COUNT = 0;
+
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl.GeneratedEntitySQLModuleImpl <em>Generated Entity SQL Module</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl.GeneratedEntitySQLModuleImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl.Sql_litePackageImpl#getGeneratedEntitySQLModule()
+	 * @generated
+	 */
+	int GENERATED_ENTITY_SQL_MODULE = 11;
+
+	/**
+	 * The feature id for the '<em><b>Dependencies</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERATED_ENTITY_SQL_MODULE__DEPENDENCIES = Module_managementPackage.MODULE__DEPENDENCIES;
+
+	/**
+	 * The feature id for the '<em><b>The Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERATED_ENTITY_SQL_MODULE__THE_DESCRIPTION = Module_managementPackage.MODULE__THE_DESCRIPTION;
+
+	/**
+	 * The feature id for the '<em><b>License</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERATED_ENTITY_SQL_MODULE__LICENSE = Module_managementPackage.MODULE__LICENSE;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERATED_ENTITY_SQL_MODULE__NAME = Module_managementPackage.MODULE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Version</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERATED_ENTITY_SQL_MODULE__VERSION = Module_managementPackage.MODULE__VERSION;
+
+	/**
+	 * The feature id for the '<em><b>Long Name</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERATED_ENTITY_SQL_MODULE__LONG_NAME = Module_managementPackage.MODULE__LONG_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Generated Entity SQ Ls</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERATED_ENTITY_SQL_MODULE__GENERATED_ENTITY_SQ_LS = Module_managementPackage.MODULE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Generated Entity SQL Module</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERATED_ENTITY_SQL_MODULE_FEATURE_COUNT = Module_managementPackage.MODULE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of operations of the '<em>Generated Entity SQL Module</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERATED_ENTITY_SQL_MODULE_OPERATION_COUNT = Module_managementPackage.MODULE_OPERATION_COUNT + 0;
 
 
 	/**
@@ -739,6 +840,17 @@ public interface Sql_litePackage extends EPackage {
 	EClass getSQLEntityModule();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.SQLEntityModule#getSqlEntities <em>Sql Entities</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Sql Entities</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.sql_lite.SQLEntityModule#getSqlEntities()
+	 * @see #getSQLEntityModule()
+	 * @generated
+	 */
+	EReference getSQLEntityModule_SqlEntities();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.GeneratedEntitySQL <em>Generated Entity SQL</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -769,6 +881,27 @@ public interface Sql_litePackage extends EPackage {
 	 * @generated
 	 */
 	EReference getGeneratedEntitySQL_View();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.GeneratedEntitySQLModule <em>Generated Entity SQL Module</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Generated Entity SQL Module</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.sql_lite.GeneratedEntitySQLModule
+	 * @generated
+	 */
+	EClass getGeneratedEntitySQLModule();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.GeneratedEntitySQLModule#getGeneratedEntitySQLs <em>Generated Entity SQ Ls</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Generated Entity SQ Ls</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.sql_lite.GeneratedEntitySQLModule#getGeneratedEntitySQLs()
+	 * @see #getGeneratedEntitySQLModule()
+	 * @generated
+	 */
+	EReference getGeneratedEntitySQLModule_GeneratedEntitySQLs();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -974,6 +1107,14 @@ public interface Sql_litePackage extends EPackage {
 		EClass SQL_ENTITY_MODULE = eINSTANCE.getSQLEntityModule();
 
 		/**
+		 * The meta object literal for the '<em><b>Sql Entities</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SQL_ENTITY_MODULE__SQL_ENTITIES = eINSTANCE.getSQLEntityModule_SqlEntities();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl.GeneratedEntitySQLImpl <em>Generated Entity SQL</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -998,6 +1139,24 @@ public interface Sql_litePackage extends EPackage {
 		 * @generated
 		 */
 		EReference GENERATED_ENTITY_SQL__VIEW = eINSTANCE.getGeneratedEntitySQL_View();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl.GeneratedEntitySQLModuleImpl <em>Generated Entity SQL Module</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl.GeneratedEntitySQLModuleImpl
+		 * @see org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl.Sql_litePackageImpl#getGeneratedEntitySQLModule()
+		 * @generated
+		 */
+		EClass GENERATED_ENTITY_SQL_MODULE = eINSTANCE.getGeneratedEntitySQLModule();
+
+		/**
+		 * The meta object literal for the '<em><b>Generated Entity SQ Ls</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference GENERATED_ENTITY_SQL_MODULE__GENERATED_ENTITY_SQ_LS = eINSTANCE.getGeneratedEntitySQLModule_GeneratedEntitySQLs();
 
 	}
 

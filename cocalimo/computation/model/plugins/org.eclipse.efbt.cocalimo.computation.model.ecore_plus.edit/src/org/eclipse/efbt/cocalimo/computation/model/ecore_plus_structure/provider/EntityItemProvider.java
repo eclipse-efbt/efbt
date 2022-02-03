@@ -112,17 +112,22 @@ public class EntityItemProvider extends EClassItemProvider {
 		newChildDescriptors.add
 			(createChildParameter
 				(EcorePackage.Literals.ECLASS__ESTRUCTURAL_FEATURES,
-				 Ecore_plus_logicFactory.eINSTANCE.createDerivedFeature()));
+				 Ecore_plus_logicFactory.eINSTANCE.createDerivedAttribute()));
 
 		newChildDescriptors.add
 			(createChildParameter
 				(EcorePackage.Literals.ECLASS__ESTRUCTURAL_FEATURES,
-				 Ecore_plus_logicFactory.eINSTANCE.createAggregateDerivedFeature()));
+				 Ecore_plus_logicFactory.eINSTANCE.createAggregateDerivedAttribute()));
 
 		newChildDescriptors.add
 			(createChildParameter
 				(EcorePackage.Literals.ECLASS__ESTRUCTURAL_FEATURES,
-				 Ecore_plus_logicFactory.eINSTANCE.createBasicDerivedFeature()));
+				 Ecore_plus_logicFactory.eINSTANCE.createBasicDerivedAttribute()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(EcorePackage.Literals.ECLASS__ESTRUCTURAL_FEATURES,
+				 Ecore_plus_logicFactory.eINSTANCE.createDerivedStruct()));
 
 		newChildDescriptors.add
 			(createChildParameter

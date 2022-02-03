@@ -7,9 +7,6 @@ import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.BaseEnti
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.Ecore_plus_structurePackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.core.VARIABLE;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE;
-
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
@@ -29,7 +26,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.BaseEntityFeatureImpl#isIsFK <em>Is FK</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.BaseEntityFeatureImpl#getFkEntity <em>Fk Entity</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.BaseEntityFeatureImpl#getVaraible <em>Varaible</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.BaseEntityFeatureImpl#getCube <em>Cube</em>}</li>
  * </ul>
  *
  * @generated
@@ -74,16 +70,6 @@ public class BaseEntityFeatureImpl extends EAttributeImpl implements BaseEntityF
 	 * @ordered
 	 */
 	protected VARIABLE varaible;
-
-	/**
-	 * The cached value of the '{@link #getCube() <em>Cube</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getCube()
-	 * @generated
-	 * @ordered
-	 */
-	protected CUBE cube;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -206,44 +192,6 @@ public class BaseEntityFeatureImpl extends EAttributeImpl implements BaseEntityF
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public CUBE getCube() {
-		if (cube != null && cube.eIsProxy()) {
-			InternalEObject oldCube = (InternalEObject)cube;
-			cube = (CUBE)eResolveProxy(oldCube);
-			if (cube != oldCube) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Ecore_plus_structurePackage.BASE_ENTITY_FEATURE__CUBE, oldCube, cube));
-			}
-		}
-		return cube;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public CUBE basicGetCube() {
-		return cube;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setCube(CUBE newCube) {
-		CUBE oldCube = cube;
-		cube = newCube;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, Ecore_plus_structurePackage.BASE_ENTITY_FEATURE__CUBE, oldCube, cube));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -255,9 +203,6 @@ public class BaseEntityFeatureImpl extends EAttributeImpl implements BaseEntityF
 			case Ecore_plus_structurePackage.BASE_ENTITY_FEATURE__VARAIBLE:
 				if (resolve) return getVaraible();
 				return basicGetVaraible();
-			case Ecore_plus_structurePackage.BASE_ENTITY_FEATURE__CUBE:
-				if (resolve) return getCube();
-				return basicGetCube();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -278,9 +223,6 @@ public class BaseEntityFeatureImpl extends EAttributeImpl implements BaseEntityF
 				return;
 			case Ecore_plus_structurePackage.BASE_ENTITY_FEATURE__VARAIBLE:
 				setVaraible((VARIABLE)newValue);
-				return;
-			case Ecore_plus_structurePackage.BASE_ENTITY_FEATURE__CUBE:
-				setCube((CUBE)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -303,9 +245,6 @@ public class BaseEntityFeatureImpl extends EAttributeImpl implements BaseEntityF
 			case Ecore_plus_structurePackage.BASE_ENTITY_FEATURE__VARAIBLE:
 				setVaraible((VARIABLE)null);
 				return;
-			case Ecore_plus_structurePackage.BASE_ENTITY_FEATURE__CUBE:
-				setCube((CUBE)null);
-				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -324,8 +263,6 @@ public class BaseEntityFeatureImpl extends EAttributeImpl implements BaseEntityF
 				return fkEntity != null;
 			case Ecore_plus_structurePackage.BASE_ENTITY_FEATURE__VARAIBLE:
 				return varaible != null;
-			case Ecore_plus_structurePackage.BASE_ENTITY_FEATURE__CUBE:
-				return cube != null;
 		}
 		return super.eIsSet(featureID);
 	}

@@ -1,14 +1,13 @@
 package org.eclipse.efbt.cocalimo.computation.ui.sirius.computation_lineage;
 
+import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntity;
+import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Function;
 import org.eclipse.efbt.cocalimo.computation.query.computation_lineage.AttributeLineageModelQuery;
 import org.eclipse.efbt.cocalimo.smcubes_with_lineage.query.lineagefunctions.LineageFunctionsModelQuery;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 
-import org.eclipse.efbt.cocalimo.computation.model.functions.AggregateFunction;
-import org.eclipse.efbt.cocalimo.computation.model.functions.BasicFunction;
-import org.eclipse.efbt.cocalimo.computation.model.functions.Function;
-import org.eclipse.efbt.cocalimo.computation.model.cube_transformation_logic.CubeTransformationLogic;
+
 
 
 /**
@@ -25,14 +24,14 @@ public class Services {
       
    
     
-    public  EList<CubeTransformationLogic> getTheDependantFunctionalRowLogics(CubeTransformationLogic self)
+    public  EList<DerivedEntity> getTheDependantFunctionalRowLogics(DerivedEntity self)
     {
 
     	return AttributeLineageModelQuery.getTheDependantFunctionalRowLogics(self);
     	
     }
     
-    public  EList<EClass> getTheDependantEvaluatedTableSchemas(CubeTransformationLogic self)
+    public  EList<EClass> getTheDependantEvaluatedTableSchemas(DerivedEntity self)
     {
 
     	return AttributeLineageModelQuery.getTheDependantEClasss(self);

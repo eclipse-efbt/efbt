@@ -2,9 +2,10 @@
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="ecore_plus_structure" nsURI="http://www.eclipse.org/efbt/ecore_plus_structure"
     nsPrefix="ecore_plus">
-  <eClassifiers xsi:type="ecore:EClass" name="BaseEntity" eSuperTypes="../../org.eclipse.emf.ecore/model/Ecore.ecore#//EClass">
+  <eClassifiers xsi:type="ecore:EClass" name="BaseEntity" eSuperTypes="#//Entity">
     <eStructuralFeatures xsi:type="ecore:EReference" name="baseFeatures" upperBound="-1"
         eType="#//BaseEntityFeature" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cube" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/data_definition.ecore#//CUBE"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Cell">
     <eStructuralFeatures xsi:type="ecore:EReference" name="row" eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
@@ -40,10 +41,9 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isFK" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="fkEntity" eType="#//BaseEntity"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="varaible" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/core.ecore#//VARIABLE"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="cube" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/data_definition.ecore#//CUBE"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BaseEntityModule" eSuperTypes="../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.ecore#//Module">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="baseEntities" eType="#//BaseEntity"
-        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="baseEntities" upperBound="-1"
+        eType="#//BaseEntity" containment="true"/>
   </eClassifiers>
 </ecore:EPackage>

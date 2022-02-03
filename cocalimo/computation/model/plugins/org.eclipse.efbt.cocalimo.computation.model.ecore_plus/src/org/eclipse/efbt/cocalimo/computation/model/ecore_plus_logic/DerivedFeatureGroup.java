@@ -29,7 +29,7 @@ import org.eclipse.emf.ecore.EObject;
 public interface DerivedFeatureGroup extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Derived Features</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedFeature}.
+	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedAttribute}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
@@ -40,6 +40,6 @@ public interface DerivedFeatureGroup extends EObject {
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<DerivedFeature> getDerivedFeatures();
+	EList<DerivedAttribute> getDerivedFeatures();
 
 } // DerivedFeatureGroup

@@ -4,8 +4,9 @@ package org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl;
 
 import java.util.Collection;
 
+import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedAttribute;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntity;
-import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedFeature;
+import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedStruct;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Ecore_plus_logicPackage;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.RowCreationApproachForEntity;
 
@@ -38,9 +39,10 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedEntityImpl#getSourceEntities <em>Source Entities</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedEntityImpl#getDerivedFeatures <em>Derived Features</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedEntityImpl#getDerivedAttributes <em>Derived Attributes</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedEntityImpl#getRowCreationApproachForEntity <em>Row Creation Approach For Entity</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedEntityImpl#getCube <em>Cube</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedEntityImpl#getDerivedStructs <em>Derived Structs</em>}</li>
  * </ul>
  *
  * @generated
@@ -57,14 +59,14 @@ public class DerivedEntityImpl extends EntityImpl implements DerivedEntity {
 	protected EList<Entity> sourceEntities;
 
 	/**
-	 * The cached value of the '{@link #getDerivedFeatures() <em>Derived Features</em>}' containment reference list.
+	 * The cached value of the '{@link #getDerivedAttributes() <em>Derived Attributes</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDerivedFeatures()
+	 * @see #getDerivedAttributes()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<DerivedFeature> derivedFeatures;
+	protected EList<DerivedAttribute> derivedAttributes;
 
 	/**
 	 * The cached value of the '{@link #getRowCreationApproachForEntity() <em>Row Creation Approach For Entity</em>}' containment reference.
@@ -85,6 +87,16 @@ public class DerivedEntityImpl extends EntityImpl implements DerivedEntity {
 	 * @ordered
 	 */
 	protected CUBE cube;
+
+	/**
+	 * The cached value of the '{@link #getDerivedStructs() <em>Derived Structs</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDerivedStructs()
+	 * @generated
+	 * @ordered
+	 */
+	protected DerivedStruct derivedStructs;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -122,11 +134,11 @@ public class DerivedEntityImpl extends EntityImpl implements DerivedEntity {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<DerivedFeature> getDerivedFeatures() {
-		if (derivedFeatures == null) {
-			derivedFeatures = new EObjectContainmentEList<DerivedFeature>(DerivedFeature.class, this, Ecore_plus_logicPackage.DERIVED_ENTITY__DERIVED_FEATURES);
+	public EList<DerivedAttribute> getDerivedAttributes() {
+		if (derivedAttributes == null) {
+			derivedAttributes = new EObjectContainmentEList<DerivedAttribute>(DerivedAttribute.class, this, Ecore_plus_logicPackage.DERIVED_ENTITY__DERIVED_ATTRIBUTES);
 		}
-		return derivedFeatures;
+		return derivedAttributes;
 	}
 
 	/**
@@ -215,13 +227,58 @@ public class DerivedEntityImpl extends EntityImpl implements DerivedEntity {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public DerivedStruct getDerivedStructs() {
+		return derivedStructs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetDerivedStructs(DerivedStruct newDerivedStructs, NotificationChain msgs) {
+		DerivedStruct oldDerivedStructs = derivedStructs;
+		derivedStructs = newDerivedStructs;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, Ecore_plus_logicPackage.DERIVED_ENTITY__DERIVED_STRUCTS, oldDerivedStructs, newDerivedStructs);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setDerivedStructs(DerivedStruct newDerivedStructs) {
+		if (newDerivedStructs != derivedStructs) {
+			NotificationChain msgs = null;
+			if (derivedStructs != null)
+				msgs = ((InternalEObject)derivedStructs).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - Ecore_plus_logicPackage.DERIVED_ENTITY__DERIVED_STRUCTS, null, msgs);
+			if (newDerivedStructs != null)
+				msgs = ((InternalEObject)newDerivedStructs).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - Ecore_plus_logicPackage.DERIVED_ENTITY__DERIVED_STRUCTS, null, msgs);
+			msgs = basicSetDerivedStructs(newDerivedStructs, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, Ecore_plus_logicPackage.DERIVED_ENTITY__DERIVED_STRUCTS, newDerivedStructs, newDerivedStructs));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case Ecore_plus_logicPackage.DERIVED_ENTITY__DERIVED_FEATURES:
-				return ((InternalEList<?>)getDerivedFeatures()).basicRemove(otherEnd, msgs);
+			case Ecore_plus_logicPackage.DERIVED_ENTITY__DERIVED_ATTRIBUTES:
+				return ((InternalEList<?>)getDerivedAttributes()).basicRemove(otherEnd, msgs);
 			case Ecore_plus_logicPackage.DERIVED_ENTITY__ROW_CREATION_APPROACH_FOR_ENTITY:
 				return basicSetRowCreationApproachForEntity(null, msgs);
+			case Ecore_plus_logicPackage.DERIVED_ENTITY__DERIVED_STRUCTS:
+				return basicSetDerivedStructs(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -236,13 +293,15 @@ public class DerivedEntityImpl extends EntityImpl implements DerivedEntity {
 		switch (featureID) {
 			case Ecore_plus_logicPackage.DERIVED_ENTITY__SOURCE_ENTITIES:
 				return getSourceEntities();
-			case Ecore_plus_logicPackage.DERIVED_ENTITY__DERIVED_FEATURES:
-				return getDerivedFeatures();
+			case Ecore_plus_logicPackage.DERIVED_ENTITY__DERIVED_ATTRIBUTES:
+				return getDerivedAttributes();
 			case Ecore_plus_logicPackage.DERIVED_ENTITY__ROW_CREATION_APPROACH_FOR_ENTITY:
 				return getRowCreationApproachForEntity();
 			case Ecore_plus_logicPackage.DERIVED_ENTITY__CUBE:
 				if (resolve) return getCube();
 				return basicGetCube();
+			case Ecore_plus_logicPackage.DERIVED_ENTITY__DERIVED_STRUCTS:
+				return getDerivedStructs();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -260,15 +319,18 @@ public class DerivedEntityImpl extends EntityImpl implements DerivedEntity {
 				getSourceEntities().clear();
 				getSourceEntities().addAll((Collection<? extends Entity>)newValue);
 				return;
-			case Ecore_plus_logicPackage.DERIVED_ENTITY__DERIVED_FEATURES:
-				getDerivedFeatures().clear();
-				getDerivedFeatures().addAll((Collection<? extends DerivedFeature>)newValue);
+			case Ecore_plus_logicPackage.DERIVED_ENTITY__DERIVED_ATTRIBUTES:
+				getDerivedAttributes().clear();
+				getDerivedAttributes().addAll((Collection<? extends DerivedAttribute>)newValue);
 				return;
 			case Ecore_plus_logicPackage.DERIVED_ENTITY__ROW_CREATION_APPROACH_FOR_ENTITY:
 				setRowCreationApproachForEntity((RowCreationApproachForEntity)newValue);
 				return;
 			case Ecore_plus_logicPackage.DERIVED_ENTITY__CUBE:
 				setCube((CUBE)newValue);
+				return;
+			case Ecore_plus_logicPackage.DERIVED_ENTITY__DERIVED_STRUCTS:
+				setDerivedStructs((DerivedStruct)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -285,14 +347,17 @@ public class DerivedEntityImpl extends EntityImpl implements DerivedEntity {
 			case Ecore_plus_logicPackage.DERIVED_ENTITY__SOURCE_ENTITIES:
 				getSourceEntities().clear();
 				return;
-			case Ecore_plus_logicPackage.DERIVED_ENTITY__DERIVED_FEATURES:
-				getDerivedFeatures().clear();
+			case Ecore_plus_logicPackage.DERIVED_ENTITY__DERIVED_ATTRIBUTES:
+				getDerivedAttributes().clear();
 				return;
 			case Ecore_plus_logicPackage.DERIVED_ENTITY__ROW_CREATION_APPROACH_FOR_ENTITY:
 				setRowCreationApproachForEntity((RowCreationApproachForEntity)null);
 				return;
 			case Ecore_plus_logicPackage.DERIVED_ENTITY__CUBE:
 				setCube((CUBE)null);
+				return;
+			case Ecore_plus_logicPackage.DERIVED_ENTITY__DERIVED_STRUCTS:
+				setDerivedStructs((DerivedStruct)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -308,12 +373,14 @@ public class DerivedEntityImpl extends EntityImpl implements DerivedEntity {
 		switch (featureID) {
 			case Ecore_plus_logicPackage.DERIVED_ENTITY__SOURCE_ENTITIES:
 				return sourceEntities != null && !sourceEntities.isEmpty();
-			case Ecore_plus_logicPackage.DERIVED_ENTITY__DERIVED_FEATURES:
-				return derivedFeatures != null && !derivedFeatures.isEmpty();
+			case Ecore_plus_logicPackage.DERIVED_ENTITY__DERIVED_ATTRIBUTES:
+				return derivedAttributes != null && !derivedAttributes.isEmpty();
 			case Ecore_plus_logicPackage.DERIVED_ENTITY__ROW_CREATION_APPROACH_FOR_ENTITY:
 				return rowCreationApproachForEntity != null;
 			case Ecore_plus_logicPackage.DERIVED_ENTITY__CUBE:
 				return cube != null;
+			case Ecore_plus_logicPackage.DERIVED_ENTITY__DERIVED_STRUCTS:
+				return derivedStructs != null;
 		}
 		return super.eIsSet(featureID);
 	}

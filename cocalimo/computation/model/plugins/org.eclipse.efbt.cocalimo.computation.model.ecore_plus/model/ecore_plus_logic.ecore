@@ -5,11 +5,13 @@
   <eClassifiers xsi:type="ecore:EClass" name="DerivedEntity" eSuperTypes="ecore_plus_structure.ecore#//Entity">
     <eStructuralFeatures xsi:type="ecore:EReference" name="sourceEntities" upperBound="-1"
         eType="ecore:EClass ecore_plus_structure.ecore#//Entity"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="derivedFeatures" upperBound="-1"
-        eType="#//DerivedFeature" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="derivedAttributes" upperBound="-1"
+        eType="#//DerivedAttribute" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rowCreationApproachForEntity"
         eType="#//RowCreationApproachForEntity" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="cube" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/data_definition.ecore#//CUBE"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="derivedStructs" eType="#//DerivedStruct"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IntermediateDerivedEntity" eSuperTypes="#//DerivedEntity"/>
   <eClassifiers xsi:type="ecore:EClass" name="GeneratedEntity" eSuperTypes="ecore_plus_structure.ecore#//Entity"/>
@@ -244,7 +246,7 @@
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="dataType" eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EDataType"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="AggregateDerivedFeature" eSuperTypes="#//DerivedFeature">
+  <eClassifiers xsi:type="ecore:EClass" name="AggregateDerivedAttribute" eSuperTypes="#//DerivedAttribute">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A ColumnFunction on rows where there is multiple  source row per source cube,such as summing a column from a large set of source rows. "/>
     </eAnnotations>
@@ -263,7 +265,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="BasicDerivedFeature" eSuperTypes="#//DerivedFeature">
+  <eClassifiers xsi:type="ecore:EClass" name="BasicDerivedAttribute" eSuperTypes="#//DerivedAttribute">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="BasicColumnFunction"/>
       <details key="kind" value="empty"/>
@@ -287,7 +289,7 @@
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="sceanrio" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.core.model.logical_transformations/model/logical_transformations.ecore#//Scenario"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="DerivedFeature" eSuperTypes="../../org.eclipse.emf.ecore/model/Ecore.ecore#//EStructuralFeature">
+  <eClassifiers xsi:type="ecore:EClass" name="DerivedAttribute" eSuperTypes="../../org.eclipse.emf.ecore/model/Ecore.ecore#//EAttribute">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A description of function used to calculate a column (i.e. Variable) for A Cube."/>
     </eAnnotations>
@@ -297,6 +299,9 @@
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="variable" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/core.ecore#//VARIABLE"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DerivedStruct" eSuperTypes="../../org.eclipse.emf.ecore/model/Ecore.ecore#//EReference">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cube" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/data_definition.ecore#//CUBE"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BaseFeature" eSuperTypes="../../org.eclipse.emf.ecore/model/Ecore.ecore#//EAttribute">
     <eStructuralFeatures xsi:type="ecore:EReference" name="variable" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/core.ecore#//VARIABLE"/>
   </eClassifiers>
@@ -305,7 +310,7 @@
       <details key="documentation" value="A group of ColumnFunctions for a Cube."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="derivedFeatures" upperBound="-1"
-        eType="#//DerivedFeature" containment="true">
+        eType="#//DerivedAttribute" containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The group of ColumnFunctions for a Cube."/>
       </eAnnotations>
@@ -349,7 +354,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="varaible" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/core.ecore#//VARIABLE"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GetAttributeFromEntityDerivedFeature"
-      eSuperTypes="#//DerivedFeature">
+      eSuperTypes="#//DerivedAttribute">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="This is a ColumnFunction which represents the retrieval of a the value of a single Variable that exists inside  a CubeColumn that contains a StructTypeVariable."/>
     </eAnnotations>
@@ -590,5 +595,17 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ExplodeArrayOfStructsRowFunction" eSuperTypes="#//RowCreationApproach">
     <eStructuralFeatures xsi:type="ecore:EReference" name="arraySourceVariable" eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EStructuralFeature"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DerivedEntityModule" eSuperTypes="../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.ecore#//Module">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="derivedEntities" upperBound="-1"
+        eType="#//DerivedEntity" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IntermediateDerivedEntitiesModule" eSuperTypes="../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.ecore#//Module">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="intermediateDerivedEntities"
+        upperBound="-1" eType="#//IntermediateDerivedEntity" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GeneratedEntityModule" eSuperTypes="../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.ecore#//Module">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="generatedEntities" upperBound="-1"
+        eType="#//GeneratedEntity" containment="true"/>
   </eClassifiers>
 </ecore:EPackage>

@@ -2,7 +2,7 @@
  */
 package org.eclipse.efbt.cocalimo.computation.model.sql_lite;
 
-import org.eclipse.emf.ecore.EClass;
+import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.Entity;
 
 /**
  * <!-- begin-user-doc -->
@@ -26,12 +26,12 @@ public interface Table extends SQLEntity {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Entity</em>' reference.
-	 * @see #setEntity(EClass)
+	 * @see #setEntity(Entity)
 	 * @see org.eclipse.efbt.cocalimo.computation.model.sql_lite.Sql_litePackage#getTable_Entity()
 	 * @model
 	 * @generated
 	 */
-	EClass getEntity();
+	Entity getEntity();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.Table#getEntity <em>Entity</em>}' reference.
@@ -41,6 +41,6 @@ public interface Table extends SQLEntity {
 	 * @see #getEntity()
 	 * @generated
 	 */
-	void setEntity(EClass value);
+	void setEntity(Entity value);
 
 } // Table

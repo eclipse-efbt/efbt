@@ -26,7 +26,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
  * @model
  * @generated
  */
-public interface GetAttributeFromEntityDerivedFeature extends DerivedFeature {
+public interface GetAttributeFromEntityDerivedFeature extends DerivedAttribute {
 	/**
 	 * Returns the value of the '<em><b>Attribute In Entity</b></em>' reference.
 	 * <!-- begin-user-doc -->

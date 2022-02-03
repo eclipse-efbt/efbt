@@ -2,8 +2,7 @@
  */
 package org.eclipse.efbt.cocalimo.computation.model.sql_lite;
 
-import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedFeature;
-
+import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedAttribute;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -28,12 +27,12 @@ public interface ColumnAsFunction extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Column</em>' reference.
-	 * @see #setColumn(DerivedFeature)
+	 * @see #setColumn(DerivedAttribute)
 	 * @see org.eclipse.efbt.cocalimo.computation.model.sql_lite.Sql_litePackage#getColumnAsFunction_Column()
 	 * @model
 	 * @generated
 	 */
-	DerivedFeature getColumn();
+	DerivedAttribute getColumn();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.ColumnAsFunction#getColumn <em>Column</em>}' reference.
@@ -43,6 +42,6 @@ public interface ColumnAsFunction extends EObject {
 	 * @see #getColumn()
 	 * @generated
 	 */
-	void setColumn(DerivedFeature value);
+	void setColumn(DerivedAttribute value);
 
 } // ColumnAsFunction

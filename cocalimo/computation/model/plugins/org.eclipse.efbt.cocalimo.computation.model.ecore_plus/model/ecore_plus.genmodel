@@ -11,6 +11,7 @@
       resource="XML" disposableProviderFactory="true" ecorePackage="ecore_plus_structure.ecore#/">
     <genClasses ecoreClass="ecore_plus_structure.ecore#//BaseEntity">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore_plus_structure.ecore#//BaseEntity/baseFeatures"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_structure.ecore#//BaseEntity/cube"/>
     </genClasses>
     <genClasses ecoreClass="ecore_plus_structure.ecore#//Cell">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_structure.ecore#//Cell/row"/>
@@ -35,7 +36,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore_plus_structure.ecore#//BaseEntityFeature/isFK"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_structure.ecore#//BaseEntityFeature/fkEntity"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_structure.ecore#//BaseEntityFeature/varaible"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_structure.ecore#//BaseEntityFeature/cube"/>
     </genClasses>
     <genClasses ecoreClass="ecore_plus_structure.ecore#//BaseEntityModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore_plus_structure.ecore#//BaseEntityModule/baseEntities"/>
@@ -45,9 +45,10 @@
       resource="XML" disposableProviderFactory="true" ecorePackage="ecore_plus_logic.ecore#/">
     <genClasses ecoreClass="ecore_plus_logic.ecore#//DerivedEntity">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//DerivedEntity/sourceEntities"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//DerivedEntity/derivedFeatures"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//DerivedEntity/derivedAttributes"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//DerivedEntity/rowCreationApproachForEntity"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//DerivedEntity/cube"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//DerivedEntity/derivedStructs"/>
     </genClasses>
     <genClasses ecoreClass="ecore_plus_logic.ecore#//IntermediateDerivedEntity"/>
     <genClasses ecoreClass="ecore_plus_logic.ecore#//GeneratedEntity"/>
@@ -86,18 +87,21 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore_plus_logic.ecore#//ValueParameter/value"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//ValueParameter/dataType"/>
     </genClasses>
-    <genClasses ecoreClass="ecore_plus_logic.ecore#//AggregateDerivedFeature">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//AggregateDerivedFeature/aggregateFunction"/>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//AggregateDerivedAttribute">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//AggregateDerivedAttribute/aggregateFunction"/>
     </genClasses>
-    <genClasses ecoreClass="ecore_plus_logic.ecore#//BasicDerivedFeature">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//BasicDerivedFeature/basicScenarioLogic"/>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//BasicDerivedAttribute">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//BasicDerivedAttribute/basicScenarioLogic"/>
     </genClasses>
     <genClasses ecoreClass="ecore_plus_logic.ecore#//BasicScenarioLogic">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//BasicScenarioLogic/basicFunction"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//BasicScenarioLogic/sceanrio"/>
     </genClasses>
-    <genClasses ecoreClass="ecore_plus_logic.ecore#//DerivedFeature">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//DerivedFeature/variable"/>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//DerivedAttribute">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//DerivedAttribute/variable"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//DerivedStruct">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//DerivedStruct/cube"/>
     </genClasses>
     <genClasses ecoreClass="ecore_plus_logic.ecore#//BaseFeature">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//BaseFeature/variable"/>
@@ -156,6 +160,15 @@
     <genClasses ecoreClass="ecore_plus_logic.ecore#//UnionRowCreationApproach"/>
     <genClasses ecoreClass="ecore_plus_logic.ecore#//ExplodeArrayOfStructsRowFunction">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//ExplodeArrayOfStructsRowFunction/arraySourceVariable"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//DerivedEntityModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//DerivedEntityModule/derivedEntities"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//IntermediateDerivedEntitiesModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//IntermediateDerivedEntitiesModule/intermediateDerivedEntities"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore_plus_logic.ecore#//GeneratedEntityModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore_plus_logic.ecore#//GeneratedEntityModule/generatedEntities"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

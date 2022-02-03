@@ -153,17 +153,17 @@ public class DerivedFeatureGroupItemProvider
 		newChildDescriptors.add
 			(createChildParameter
 				(Ecore_plus_logicPackage.Literals.DERIVED_FEATURE_GROUP__DERIVED_FEATURES,
-				 Ecore_plus_logicFactory.eINSTANCE.createDerivedFeature()));
+				 Ecore_plus_logicFactory.eINSTANCE.createDerivedAttribute()));
 
 		newChildDescriptors.add
 			(createChildParameter
 				(Ecore_plus_logicPackage.Literals.DERIVED_FEATURE_GROUP__DERIVED_FEATURES,
-				 Ecore_plus_logicFactory.eINSTANCE.createAggregateDerivedFeature()));
+				 Ecore_plus_logicFactory.eINSTANCE.createAggregateDerivedAttribute()));
 
 		newChildDescriptors.add
 			(createChildParameter
 				(Ecore_plus_logicPackage.Literals.DERIVED_FEATURE_GROUP__DERIVED_FEATURES,
-				 Ecore_plus_logicFactory.eINSTANCE.createBasicDerivedFeature()));
+				 Ecore_plus_logicFactory.eINSTANCE.createBasicDerivedAttribute()));
 
 		newChildDescriptors.add
 			(createChildParameter

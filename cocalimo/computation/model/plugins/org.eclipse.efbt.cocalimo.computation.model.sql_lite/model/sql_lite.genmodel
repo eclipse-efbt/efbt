@@ -35,10 +35,15 @@
     <genClasses ecoreClass="sql_lite.ecore#//FromClause">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sql_lite.ecore#//FromClause/sqlEntities"/>
     </genClasses>
-    <genClasses ecoreClass="sql_lite.ecore#//SQLEntityModule"/>
+    <genClasses ecoreClass="sql_lite.ecore#//SQLEntityModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sql_lite.ecore#//SQLEntityModule/sqlEntities"/>
+    </genClasses>
     <genClasses ecoreClass="sql_lite.ecore#//GeneratedEntitySQL">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sql_lite.ecore#//GeneratedEntitySQL/generatedEntity"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sql_lite.ecore#//GeneratedEntitySQL/view"/>
+    </genClasses>
+    <genClasses ecoreClass="sql_lite.ecore#//GeneratedEntitySQLModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sql_lite.ecore#//GeneratedEntitySQLModule/GeneratedEntitySQLs"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

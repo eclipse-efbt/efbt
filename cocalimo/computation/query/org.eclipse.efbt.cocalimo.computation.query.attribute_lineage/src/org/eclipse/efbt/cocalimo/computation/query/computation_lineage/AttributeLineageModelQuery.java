@@ -5,11 +5,9 @@ import java.util.Iterator;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.efbt.cocalimo.computation.model.attribute_lineage.AttributeLineageModel;
-import org.eclipse.efbt.cocalimo.computation.model.cube_transformation_logic.CubeTransformationLogic;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.BaseEntity;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntity;
-import org.eclipse.efbt.cocalimo.computation.model.row_transformation_logic.UnionRowCreationApproach;
+
 
 public class AttributeLineageModelQuery {
 

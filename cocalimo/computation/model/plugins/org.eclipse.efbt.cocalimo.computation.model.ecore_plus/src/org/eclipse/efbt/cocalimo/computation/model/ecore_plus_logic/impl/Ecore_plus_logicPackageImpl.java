@@ -2,20 +2,22 @@
  */
 package org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl;
 
-import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateDerivedFeature;
+import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateDerivedAttribute;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateFunction;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateFunctionSpec;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AttributeFromEntityParameter;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BaseFeature;
-import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicDerivedFeature;
+import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicDerivedAttribute;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicFunction;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicFunctionSpec;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicScenarioLogic;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BooleanFunction;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.CustomRowCreationApproach;
+import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedAttribute;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntity;
-import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedFeature;
+import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntityModule;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedFeatureGroup;
+import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedStruct;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Ecore_plus_logicFactory;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Ecore_plus_logicPackage;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ExplodeArrayOfStructsRowFunction;
@@ -26,8 +28,10 @@ import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Function;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.FunctionSpec;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.FunctionSpecModule;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GeneratedEntity;
+import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GeneratedEntityModule;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GetAttributeFromEntityDerivedFeature;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GroupByRowCreationApproach;
+import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.IntermediateDerivedEntitiesModule;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.IntermediateDerivedEntity;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.MemberParameter;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.OneToOneRowCreationApproach;
@@ -182,14 +186,14 @@ public class Ecore_plus_logicPackageImpl extends EPackageImpl implements Ecore_p
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass aggregateDerivedFeatureEClass = null;
+	private EClass aggregateDerivedAttributeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass basicDerivedFeatureEClass = null;
+	private EClass basicDerivedAttributeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -203,7 +207,14 @@ public class Ecore_plus_logicPackageImpl extends EPackageImpl implements Ecore_p
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass derivedFeatureEClass = null;
+	private EClass derivedAttributeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass derivedStructEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -325,6 +336,27 @@ public class Ecore_plus_logicPackageImpl extends EPackageImpl implements Ecore_p
 	private EClass explodeArrayOfStructsRowFunctionEClass = null;
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass derivedEntityModuleEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass intermediateDerivedEntitiesModuleEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass generatedEntityModuleEClass = null;
+
+	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
 	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
 	 * package URI value.
@@ -423,7 +455,7 @@ public class Ecore_plus_logicPackageImpl extends EPackageImpl implements Ecore_p
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getDerivedEntity_DerivedFeatures() {
+	public EReference getDerivedEntity_DerivedAttributes() {
 		return (EReference)derivedEntityEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -443,6 +475,15 @@ public class Ecore_plus_logicPackageImpl extends EPackageImpl implements Ecore_p
 	 */
 	public EReference getDerivedEntity_Cube() {
 		return (EReference)derivedEntityEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getDerivedEntity_DerivedStructs() {
+		return (EReference)derivedEntityEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -702,8 +743,8 @@ public class Ecore_plus_logicPackageImpl extends EPackageImpl implements Ecore_p
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getAggregateDerivedFeature() {
-		return aggregateDerivedFeatureEClass;
+	public EClass getAggregateDerivedAttribute() {
+		return aggregateDerivedAttributeEClass;
 	}
 
 	/**
@@ -711,8 +752,8 @@ public class Ecore_plus_logicPackageImpl extends EPackageImpl implements Ecore_p
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getAggregateDerivedFeature_AggregateFunction() {
-		return (EReference)aggregateDerivedFeatureEClass.getEStructuralFeatures().get(0);
+	public EReference getAggregateDerivedAttribute_AggregateFunction() {
+		return (EReference)aggregateDerivedAttributeEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -720,8 +761,8 @@ public class Ecore_plus_logicPackageImpl extends EPackageImpl implements Ecore_p
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getBasicDerivedFeature() {
-		return basicDerivedFeatureEClass;
+	public EClass getBasicDerivedAttribute() {
+		return basicDerivedAttributeEClass;
 	}
 
 	/**
@@ -729,8 +770,8 @@ public class Ecore_plus_logicPackageImpl extends EPackageImpl implements Ecore_p
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getBasicDerivedFeature_BasicScenarioLogic() {
-		return (EReference)basicDerivedFeatureEClass.getEStructuralFeatures().get(0);
+	public EReference getBasicDerivedAttribute_BasicScenarioLogic() {
+		return (EReference)basicDerivedAttributeEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -765,8 +806,8 @@ public class Ecore_plus_logicPackageImpl extends EPackageImpl implements Ecore_p
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getDerivedFeature() {
-		return derivedFeatureEClass;
+	public EClass getDerivedAttribute() {
+		return derivedAttributeEClass;
 	}
 
 	/**
@@ -774,8 +815,26 @@ public class Ecore_plus_logicPackageImpl extends EPackageImpl implements Ecore_p
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getDerivedFeature_Variable() {
-		return (EReference)derivedFeatureEClass.getEStructuralFeatures().get(0);
+	public EReference getDerivedAttribute_Variable() {
+		return (EReference)derivedAttributeEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getDerivedStruct() {
+		return derivedStructEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getDerivedStruct_Cube() {
+		return (EReference)derivedStructEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -1170,6 +1229,60 @@ public class Ecore_plus_logicPackageImpl extends EPackageImpl implements Ecore_p
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getDerivedEntityModule() {
+		return derivedEntityModuleEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getDerivedEntityModule_DerivedEntities() {
+		return (EReference)derivedEntityModuleEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getIntermediateDerivedEntitiesModule() {
+		return intermediateDerivedEntitiesModuleEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getIntermediateDerivedEntitiesModule_IntermediateDerivedEntities() {
+		return (EReference)intermediateDerivedEntitiesModuleEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getGeneratedEntityModule() {
+		return generatedEntityModuleEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getGeneratedEntityModule_GeneratedEntities() {
+		return (EReference)generatedEntityModuleEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public Ecore_plus_logicFactory getEcore_plus_logicFactory() {
 		return (Ecore_plus_logicFactory)getEFactoryInstance();
 	}
@@ -1195,9 +1308,10 @@ public class Ecore_plus_logicPackageImpl extends EPackageImpl implements Ecore_p
 		// Create classes and their features
 		derivedEntityEClass = createEClass(DERIVED_ENTITY);
 		createEReference(derivedEntityEClass, DERIVED_ENTITY__SOURCE_ENTITIES);
-		createEReference(derivedEntityEClass, DERIVED_ENTITY__DERIVED_FEATURES);
+		createEReference(derivedEntityEClass, DERIVED_ENTITY__DERIVED_ATTRIBUTES);
 		createEReference(derivedEntityEClass, DERIVED_ENTITY__ROW_CREATION_APPROACH_FOR_ENTITY);
 		createEReference(derivedEntityEClass, DERIVED_ENTITY__CUBE);
+		createEReference(derivedEntityEClass, DERIVED_ENTITY__DERIVED_STRUCTS);
 
 		intermediateDerivedEntityEClass = createEClass(INTERMEDIATE_DERIVED_ENTITY);
 
@@ -1241,18 +1355,21 @@ public class Ecore_plus_logicPackageImpl extends EPackageImpl implements Ecore_p
 		createEAttribute(valueParameterEClass, VALUE_PARAMETER__VALUE);
 		createEReference(valueParameterEClass, VALUE_PARAMETER__DATA_TYPE);
 
-		aggregateDerivedFeatureEClass = createEClass(AGGREGATE_DERIVED_FEATURE);
-		createEReference(aggregateDerivedFeatureEClass, AGGREGATE_DERIVED_FEATURE__AGGREGATE_FUNCTION);
+		aggregateDerivedAttributeEClass = createEClass(AGGREGATE_DERIVED_ATTRIBUTE);
+		createEReference(aggregateDerivedAttributeEClass, AGGREGATE_DERIVED_ATTRIBUTE__AGGREGATE_FUNCTION);
 
-		basicDerivedFeatureEClass = createEClass(BASIC_DERIVED_FEATURE);
-		createEReference(basicDerivedFeatureEClass, BASIC_DERIVED_FEATURE__BASIC_SCENARIO_LOGIC);
+		basicDerivedAttributeEClass = createEClass(BASIC_DERIVED_ATTRIBUTE);
+		createEReference(basicDerivedAttributeEClass, BASIC_DERIVED_ATTRIBUTE__BASIC_SCENARIO_LOGIC);
 
 		basicScenarioLogicEClass = createEClass(BASIC_SCENARIO_LOGIC);
 		createEReference(basicScenarioLogicEClass, BASIC_SCENARIO_LOGIC__BASIC_FUNCTION);
 		createEReference(basicScenarioLogicEClass, BASIC_SCENARIO_LOGIC__SCEANRIO);
 
-		derivedFeatureEClass = createEClass(DERIVED_FEATURE);
-		createEReference(derivedFeatureEClass, DERIVED_FEATURE__VARIABLE);
+		derivedAttributeEClass = createEClass(DERIVED_ATTRIBUTE);
+		createEReference(derivedAttributeEClass, DERIVED_ATTRIBUTE__VARIABLE);
+
+		derivedStructEClass = createEClass(DERIVED_STRUCT);
+		createEReference(derivedStructEClass, DERIVED_STRUCT__CUBE);
 
 		baseFeatureEClass = createEClass(BASE_FEATURE);
 		createEReference(baseFeatureEClass, BASE_FEATURE__VARIABLE);
@@ -1313,6 +1430,15 @@ public class Ecore_plus_logicPackageImpl extends EPackageImpl implements Ecore_p
 
 		explodeArrayOfStructsRowFunctionEClass = createEClass(EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION);
 		createEReference(explodeArrayOfStructsRowFunctionEClass, EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION__ARRAY_SOURCE_VARIABLE);
+
+		derivedEntityModuleEClass = createEClass(DERIVED_ENTITY_MODULE);
+		createEReference(derivedEntityModuleEClass, DERIVED_ENTITY_MODULE__DERIVED_ENTITIES);
+
+		intermediateDerivedEntitiesModuleEClass = createEClass(INTERMEDIATE_DERIVED_ENTITIES_MODULE);
+		createEReference(intermediateDerivedEntitiesModuleEClass, INTERMEDIATE_DERIVED_ENTITIES_MODULE__INTERMEDIATE_DERIVED_ENTITIES);
+
+		generatedEntityModuleEClass = createEClass(GENERATED_ENTITY_MODULE);
+		createEReference(generatedEntityModuleEClass, GENERATED_ENTITY_MODULE__GENERATED_ENTITIES);
 	}
 
 	/**
@@ -1363,13 +1489,14 @@ public class Ecore_plus_logicPackageImpl extends EPackageImpl implements Ecore_p
 		functionSpecModuleEClass.getESuperTypes().add(theModule_managementPackage.getModule());
 		memberParameterEClass.getESuperTypes().add(this.getParameter());
 		valueParameterEClass.getESuperTypes().add(this.getParameter());
-		aggregateDerivedFeatureEClass.getESuperTypes().add(this.getDerivedFeature());
-		basicDerivedFeatureEClass.getESuperTypes().add(this.getDerivedFeature());
-		derivedFeatureEClass.getESuperTypes().add(theEcorePackage.getEStructuralFeature());
+		aggregateDerivedAttributeEClass.getESuperTypes().add(this.getDerivedAttribute());
+		basicDerivedAttributeEClass.getESuperTypes().add(this.getDerivedAttribute());
+		derivedAttributeEClass.getESuperTypes().add(theEcorePackage.getEAttribute());
+		derivedStructEClass.getESuperTypes().add(theEcorePackage.getEReference());
 		baseFeatureEClass.getESuperTypes().add(theEcorePackage.getEAttribute());
 		featureParameterEClass.getESuperTypes().add(this.getParameter());
 		proxyFeatureParameterEClass.getESuperTypes().add(this.getParameter());
-		getAttributeFromEntityDerivedFeatureEClass.getESuperTypes().add(this.getDerivedFeature());
+		getAttributeFromEntityDerivedFeatureEClass.getESuperTypes().add(this.getDerivedAttribute());
 		attributeFromEntityParameterEClass.getESuperTypes().add(theEcorePackage.getEParameter());
 		proxyAttributeFromEntityParameterEClass.getESuperTypes().add(this.getParameter());
 		customRowCreationApproachEClass.getESuperTypes().add(this.getRowCreationApproach());
@@ -1380,13 +1507,17 @@ public class Ecore_plus_logicPackageImpl extends EPackageImpl implements Ecore_p
 		rowJoinFunctionEClass.getESuperTypes().add(this.getRowCreationApproach());
 		unionRowCreationApproachEClass.getESuperTypes().add(this.getRowCreationApproach());
 		explodeArrayOfStructsRowFunctionEClass.getESuperTypes().add(this.getRowCreationApproach());
+		derivedEntityModuleEClass.getESuperTypes().add(theModule_managementPackage.getModule());
+		intermediateDerivedEntitiesModuleEClass.getESuperTypes().add(theModule_managementPackage.getModule());
+		generatedEntityModuleEClass.getESuperTypes().add(theModule_managementPackage.getModule());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(derivedEntityEClass, DerivedEntity.class, "DerivedEntity", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getDerivedEntity_SourceEntities(), theEcore_plus_structurePackage.getEntity(), null, "sourceEntities", null, 0, -1, DerivedEntity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getDerivedEntity_DerivedFeatures(), this.getDerivedFeature(), null, "derivedFeatures", null, 0, -1, DerivedEntity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDerivedEntity_DerivedAttributes(), this.getDerivedAttribute(), null, "derivedAttributes", null, 0, -1, DerivedEntity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getDerivedEntity_RowCreationApproachForEntity(), this.getRowCreationApproachForEntity(), null, "rowCreationApproachForEntity", null, 0, 1, DerivedEntity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getDerivedEntity_Cube(), theData_definitionPackage.getCUBE(), null, "cube", null, 0, 1, DerivedEntity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDerivedEntity_DerivedStructs(), this.getDerivedStruct(), null, "derivedStructs", null, 0, 1, DerivedEntity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(intermediateDerivedEntityEClass, IntermediateDerivedEntity.class, "IntermediateDerivedEntity", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -1430,24 +1561,27 @@ public class Ecore_plus_logicPackageImpl extends EPackageImpl implements Ecore_p
 		initEAttribute(getValueParameter_Value(), ecorePackage.getEString(), "value", null, 0, 1, ValueParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getValueParameter_DataType(), theEcorePackage.getEDataType(), null, "dataType", null, 0, 1, ValueParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(aggregateDerivedFeatureEClass, AggregateDerivedFeature.class, "AggregateDerivedFeature", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getAggregateDerivedFeature_AggregateFunction(), this.getAggregateFunction(), null, "aggregateFunction", null, 0, 1, AggregateDerivedFeature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(aggregateDerivedAttributeEClass, AggregateDerivedAttribute.class, "AggregateDerivedAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getAggregateDerivedAttribute_AggregateFunction(), this.getAggregateFunction(), null, "aggregateFunction", null, 0, 1, AggregateDerivedAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(basicDerivedFeatureEClass, BasicDerivedFeature.class, "BasicDerivedFeature", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getBasicDerivedFeature_BasicScenarioLogic(), this.getBasicScenarioLogic(), null, "basicScenarioLogic", null, 0, -1, BasicDerivedFeature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(basicDerivedAttributeEClass, BasicDerivedAttribute.class, "BasicDerivedAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getBasicDerivedAttribute_BasicScenarioLogic(), this.getBasicScenarioLogic(), null, "basicScenarioLogic", null, 0, -1, BasicDerivedAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(basicScenarioLogicEClass, BasicScenarioLogic.class, "BasicScenarioLogic", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getBasicScenarioLogic_BasicFunction(), this.getBasicFunction(), null, "basicFunction", null, 0, 1, BasicScenarioLogic.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getBasicScenarioLogic_Sceanrio(), theLogical_transformationsPackage.getScenario(), null, "sceanrio", null, 0, 1, BasicScenarioLogic.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(derivedFeatureEClass, DerivedFeature.class, "DerivedFeature", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getDerivedFeature_Variable(), theCorePackage.getVARIABLE(), null, "variable", null, 0, 1, DerivedFeature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(derivedAttributeEClass, DerivedAttribute.class, "DerivedAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getDerivedAttribute_Variable(), theCorePackage.getVARIABLE(), null, "variable", null, 0, 1, DerivedAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(derivedStructEClass, DerivedStruct.class, "DerivedStruct", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getDerivedStruct_Cube(), theData_definitionPackage.getCUBE(), null, "cube", null, 0, 1, DerivedStruct.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(baseFeatureEClass, BaseFeature.class, "BaseFeature", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getBaseFeature_Variable(), theCorePackage.getVARIABLE(), null, "variable", null, 0, 1, BaseFeature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(derivedFeatureGroupEClass, DerivedFeatureGroup.class, "DerivedFeatureGroup", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getDerivedFeatureGroup_DerivedFeatures(), this.getDerivedFeature(), null, "derivedFeatures", null, 0, -1, DerivedFeatureGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDerivedFeatureGroup_DerivedFeatures(), this.getDerivedAttribute(), null, "derivedFeatures", null, 0, -1, DerivedFeatureGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(featureParameterEClass, FeatureParameter.class, "FeatureParameter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getFeatureParameter_Feature(), theEcorePackage.getEStructuralFeature(), null, "feature", null, 0, 1, FeatureParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1502,6 +1636,15 @@ public class Ecore_plus_logicPackageImpl extends EPackageImpl implements Ecore_p
 
 		initEClass(explodeArrayOfStructsRowFunctionEClass, ExplodeArrayOfStructsRowFunction.class, "ExplodeArrayOfStructsRowFunction", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getExplodeArrayOfStructsRowFunction_ArraySourceVariable(), theEcorePackage.getEStructuralFeature(), null, "arraySourceVariable", null, 0, 1, ExplodeArrayOfStructsRowFunction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(derivedEntityModuleEClass, DerivedEntityModule.class, "DerivedEntityModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getDerivedEntityModule_DerivedEntities(), this.getDerivedEntity(), null, "derivedEntities", null, 0, -1, DerivedEntityModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(intermediateDerivedEntitiesModuleEClass, IntermediateDerivedEntitiesModule.class, "IntermediateDerivedEntitiesModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getIntermediateDerivedEntitiesModule_IntermediateDerivedEntities(), this.getIntermediateDerivedEntity(), null, "intermediateDerivedEntities", null, 0, -1, IntermediateDerivedEntitiesModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(generatedEntityModuleEClass, GeneratedEntityModule.class, "GeneratedEntityModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getGeneratedEntityModule_GeneratedEntities(), this.getGeneratedEntity(), null, "generatedEntities", null, 0, -1, GeneratedEntityModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);
@@ -1695,21 +1838,21 @@ public class Ecore_plus_logicPackageImpl extends EPackageImpl implements Ecore_p
 			   "name", "value"
 		   });
 		addAnnotation
-		  (aggregateDerivedFeatureEClass,
+		  (aggregateDerivedAttributeEClass,
 		   source,
 		   new String[] {
 			   "name", "AggregateColumnFunction",
 			   "kind", "elementOnly"
 		   });
 		addAnnotation
-		  (getAggregateDerivedFeature_AggregateFunction(),
+		  (getAggregateDerivedAttribute_AggregateFunction(),
 		   source,
 		   new String[] {
 			   "kind", "element",
 			   "name", "aggregateFunction"
 		   });
 		addAnnotation
-		  (basicDerivedFeatureEClass,
+		  (basicDerivedAttributeEClass,
 		   source,
 		   new String[] {
 			   "name", "BasicColumnFunction",
@@ -1723,7 +1866,7 @@ public class Ecore_plus_logicPackageImpl extends EPackageImpl implements Ecore_p
 			   "name", "basicFunction"
 		   });
 		addAnnotation
-		  (derivedFeatureEClass,
+		  (derivedAttributeEClass,
 		   source,
 		   new String[] {
 			   "name", "ColumnFunction",

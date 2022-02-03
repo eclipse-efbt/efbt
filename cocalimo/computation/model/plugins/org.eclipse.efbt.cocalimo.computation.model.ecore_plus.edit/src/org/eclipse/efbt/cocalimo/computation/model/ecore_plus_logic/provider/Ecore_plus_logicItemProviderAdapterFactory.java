@@ -417,49 +417,49 @@ public class Ecore_plus_logicItemProviderAdapterFactory extends Ecore_plus_logic
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateDerivedFeature} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateDerivedAttribute} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected AggregateDerivedFeatureItemProvider aggregateDerivedFeatureItemProvider;
+	protected AggregateDerivedAttributeItemProvider aggregateDerivedAttributeItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateDerivedFeature}.
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateDerivedAttribute}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	public Adapter createAggregateDerivedFeatureAdapter() {
-		if (aggregateDerivedFeatureItemProvider == null) {
-			aggregateDerivedFeatureItemProvider = new AggregateDerivedFeatureItemProvider(this);
+	public Adapter createAggregateDerivedAttributeAdapter() {
+		if (aggregateDerivedAttributeItemProvider == null) {
+			aggregateDerivedAttributeItemProvider = new AggregateDerivedAttributeItemProvider(this);
 		}
 
-		return aggregateDerivedFeatureItemProvider;
+		return aggregateDerivedAttributeItemProvider;
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicDerivedFeature} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicDerivedAttribute} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected BasicDerivedFeatureItemProvider basicDerivedFeatureItemProvider;
+	protected BasicDerivedAttributeItemProvider basicDerivedAttributeItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicDerivedFeature}.
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicDerivedAttribute}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	public Adapter createBasicDerivedFeatureAdapter() {
-		if (basicDerivedFeatureItemProvider == null) {
-			basicDerivedFeatureItemProvider = new BasicDerivedFeatureItemProvider(this);
+	public Adapter createBasicDerivedAttributeAdapter() {
+		if (basicDerivedAttributeItemProvider == null) {
+			basicDerivedAttributeItemProvider = new BasicDerivedAttributeItemProvider(this);
 		}
 
-		return basicDerivedFeatureItemProvider;
+		return basicDerivedAttributeItemProvider;
 	}
 
 	/**
@@ -486,26 +486,49 @@ public class Ecore_plus_logicItemProviderAdapterFactory extends Ecore_plus_logic
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedFeature} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedAttribute} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected DerivedFeatureItemProvider derivedFeatureItemProvider;
+	protected DerivedAttributeItemProvider derivedAttributeItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedFeature}.
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedAttribute}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	public Adapter createDerivedFeatureAdapter() {
-		if (derivedFeatureItemProvider == null) {
-			derivedFeatureItemProvider = new DerivedFeatureItemProvider(this);
+	public Adapter createDerivedAttributeAdapter() {
+		if (derivedAttributeItemProvider == null) {
+			derivedAttributeItemProvider = new DerivedAttributeItemProvider(this);
 		}
 
-		return derivedFeatureItemProvider;
+		return derivedAttributeItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedStruct} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected DerivedStructItemProvider derivedStructItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedStruct}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createDerivedStructAdapter() {
+		if (derivedStructItemProvider == null) {
+			derivedStructItemProvider = new DerivedStructItemProvider(this);
+		}
+
+		return derivedStructItemProvider;
 	}
 
 	/**
@@ -900,6 +923,75 @@ public class Ecore_plus_logicItemProviderAdapterFactory extends Ecore_plus_logic
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntityModule} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected DerivedEntityModuleItemProvider derivedEntityModuleItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntityModule}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createDerivedEntityModuleAdapter() {
+		if (derivedEntityModuleItemProvider == null) {
+			derivedEntityModuleItemProvider = new DerivedEntityModuleItemProvider(this);
+		}
+
+		return derivedEntityModuleItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.IntermediateDerivedEntitiesModule} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected IntermediateDerivedEntitiesModuleItemProvider intermediateDerivedEntitiesModuleItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.IntermediateDerivedEntitiesModule}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createIntermediateDerivedEntitiesModuleAdapter() {
+		if (intermediateDerivedEntitiesModuleItemProvider == null) {
+			intermediateDerivedEntitiesModuleItemProvider = new IntermediateDerivedEntitiesModuleItemProvider(this);
+		}
+
+		return intermediateDerivedEntitiesModuleItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GeneratedEntityModule} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected GeneratedEntityModuleItemProvider generatedEntityModuleItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GeneratedEntityModule}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createGeneratedEntityModuleAdapter() {
+		if (generatedEntityModuleItemProvider == null) {
+			generatedEntityModuleItemProvider = new GeneratedEntityModuleItemProvider(this);
+		}
+
+		return generatedEntityModuleItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1013,10 +1105,11 @@ public class Ecore_plus_logicItemProviderAdapterFactory extends Ecore_plus_logic
 		if (parameterItemProvider != null) parameterItemProvider.dispose();
 		if (memberParameterItemProvider != null) memberParameterItemProvider.dispose();
 		if (valueParameterItemProvider != null) valueParameterItemProvider.dispose();
-		if (aggregateDerivedFeatureItemProvider != null) aggregateDerivedFeatureItemProvider.dispose();
-		if (basicDerivedFeatureItemProvider != null) basicDerivedFeatureItemProvider.dispose();
+		if (aggregateDerivedAttributeItemProvider != null) aggregateDerivedAttributeItemProvider.dispose();
+		if (basicDerivedAttributeItemProvider != null) basicDerivedAttributeItemProvider.dispose();
 		if (basicScenarioLogicItemProvider != null) basicScenarioLogicItemProvider.dispose();
-		if (derivedFeatureItemProvider != null) derivedFeatureItemProvider.dispose();
+		if (derivedAttributeItemProvider != null) derivedAttributeItemProvider.dispose();
+		if (derivedStructItemProvider != null) derivedStructItemProvider.dispose();
 		if (baseFeatureItemProvider != null) baseFeatureItemProvider.dispose();
 		if (derivedFeatureGroupItemProvider != null) derivedFeatureGroupItemProvider.dispose();
 		if (featureParameterItemProvider != null) featureParameterItemProvider.dispose();
@@ -1034,6 +1127,9 @@ public class Ecore_plus_logicItemProviderAdapterFactory extends Ecore_plus_logic
 		if (rowJoinFunctionItemProvider != null) rowJoinFunctionItemProvider.dispose();
 		if (unionRowCreationApproachItemProvider != null) unionRowCreationApproachItemProvider.dispose();
 		if (explodeArrayOfStructsRowFunctionItemProvider != null) explodeArrayOfStructsRowFunctionItemProvider.dispose();
+		if (derivedEntityModuleItemProvider != null) derivedEntityModuleItemProvider.dispose();
+		if (intermediateDerivedEntitiesModuleItemProvider != null) intermediateDerivedEntitiesModuleItemProvider.dispose();
+		if (generatedEntityModuleItemProvider != null) generatedEntityModuleItemProvider.dispose();
 	}
 
 }

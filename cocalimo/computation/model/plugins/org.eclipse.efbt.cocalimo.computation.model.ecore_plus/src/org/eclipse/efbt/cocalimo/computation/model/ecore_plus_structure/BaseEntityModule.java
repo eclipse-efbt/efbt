@@ -2,6 +2,7 @@
  */
 package org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure;
 
+import org.eclipse.emf.common.util.EList;
 
 /**
  * <!-- begin-user-doc -->
@@ -21,25 +22,15 @@ package org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure;
  */
 public interface BaseEntityModule extends org.eclipse.efbt.cocalimo.core.model.module_management.Module {
 	/**
-	 * Returns the value of the '<em><b>Base Entities</b></em>' containment reference.
+	 * Returns the value of the '<em><b>Base Entities</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.BaseEntity}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Base Entities</em>' containment reference.
-	 * @see #setBaseEntities(BaseEntity)
+	 * @return the value of the '<em>Base Entities</em>' containment reference list.
 	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.Ecore_plus_structurePackage#getBaseEntityModule_BaseEntities()
 	 * @model containment="true"
 	 * @generated
 	 */
-	BaseEntity getBaseEntities();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.BaseEntityModule#getBaseEntities <em>Base Entities</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Base Entities</em>' containment reference.
-	 * @see #getBaseEntities()
-	 * @generated
-	 */
-	void setBaseEntities(BaseEntity value);
+	EList<BaseEntity> getBaseEntities();
 
 } // BaseEntityModule

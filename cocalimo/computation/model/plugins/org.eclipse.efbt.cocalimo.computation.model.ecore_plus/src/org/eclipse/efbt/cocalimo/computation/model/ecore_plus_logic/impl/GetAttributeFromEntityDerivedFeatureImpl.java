@@ -28,7 +28,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  *
  * @generated
  */
-public class GetAttributeFromEntityDerivedFeatureImpl extends DerivedFeatureImpl implements GetAttributeFromEntityDerivedFeature {
+public class GetAttributeFromEntityDerivedFeatureImpl extends DerivedAttributeImpl implements GetAttributeFromEntityDerivedFeature {
 	/**
 	 * The cached value of the '{@link #getAttributeInEntity() <em>Attribute In Entity</em>}' reference.
 	 * <!-- begin-user-doc -->

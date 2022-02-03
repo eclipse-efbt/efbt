@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.EModelElement;
 import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EParameter;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.ETypedElement;
 
@@ -138,20 +139,24 @@ public class Ecore_plus_logicAdapterFactory extends AdapterFactoryImpl {
 				return createValueParameterAdapter();
 			}
 			@Override
-			public Adapter caseAggregateDerivedFeature(AggregateDerivedFeature object) {
-				return createAggregateDerivedFeatureAdapter();
+			public Adapter caseAggregateDerivedAttribute(AggregateDerivedAttribute object) {
+				return createAggregateDerivedAttributeAdapter();
 			}
 			@Override
-			public Adapter caseBasicDerivedFeature(BasicDerivedFeature object) {
-				return createBasicDerivedFeatureAdapter();
+			public Adapter caseBasicDerivedAttribute(BasicDerivedAttribute object) {
+				return createBasicDerivedAttributeAdapter();
 			}
 			@Override
 			public Adapter caseBasicScenarioLogic(BasicScenarioLogic object) {
 				return createBasicScenarioLogicAdapter();
 			}
 			@Override
-			public Adapter caseDerivedFeature(DerivedFeature object) {
-				return createDerivedFeatureAdapter();
+			public Adapter caseDerivedAttribute(DerivedAttribute object) {
+				return createDerivedAttributeAdapter();
+			}
+			@Override
+			public Adapter caseDerivedStruct(DerivedStruct object) {
+				return createDerivedStructAdapter();
 			}
 			@Override
 			public Adapter caseBaseFeature(BaseFeature object) {
@@ -222,6 +227,18 @@ public class Ecore_plus_logicAdapterFactory extends AdapterFactoryImpl {
 				return createExplodeArrayOfStructsRowFunctionAdapter();
 			}
 			@Override
+			public Adapter caseDerivedEntityModule(DerivedEntityModule object) {
+				return createDerivedEntityModuleAdapter();
+			}
+			@Override
+			public Adapter caseIntermediateDerivedEntitiesModule(IntermediateDerivedEntitiesModule object) {
+				return createIntermediateDerivedEntitiesModuleAdapter();
+			}
+			@Override
+			public Adapter caseGeneratedEntityModule(GeneratedEntityModule object) {
+				return createGeneratedEntityModuleAdapter();
+			}
+			@Override
 			public Adapter caseEModelElement(EModelElement object) {
 				return createEModelElementAdapter();
 			}
@@ -256,6 +273,10 @@ public class Ecore_plus_logicAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseEAttribute(EAttribute object) {
 				return createEAttributeAdapter();
+			}
+			@Override
+			public Adapter caseEReference(EReference object) {
+				return createEReferenceAdapter();
 			}
 			@Override
 			public Adapter caseEParameter(EParameter object) {
@@ -492,30 +513,30 @@ public class Ecore_plus_logicAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateDerivedFeature <em>Aggregate Derived Feature</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateDerivedAttribute <em>Aggregate Derived Attribute</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateDerivedFeature
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateDerivedAttribute
 	 * @generated
 	 */
-	public Adapter createAggregateDerivedFeatureAdapter() {
+	public Adapter createAggregateDerivedAttributeAdapter() {
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicDerivedFeature <em>Basic Derived Feature</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicDerivedAttribute <em>Basic Derived Attribute</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicDerivedFeature
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicDerivedAttribute
 	 * @generated
 	 */
-	public Adapter createBasicDerivedFeatureAdapter() {
+	public Adapter createBasicDerivedAttributeAdapter() {
 		return null;
 	}
 
@@ -534,16 +555,30 @@ public class Ecore_plus_logicAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedFeature <em>Derived Feature</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedAttribute <em>Derived Attribute</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedFeature
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedAttribute
 	 * @generated
 	 */
-	public Adapter createDerivedFeatureAdapter() {
+	public Adapter createDerivedAttributeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedStruct <em>Derived Struct</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedStruct
+	 * @generated
+	 */
+	public Adapter createDerivedStructAdapter() {
 		return null;
 	}
 
@@ -786,6 +821,48 @@ public class Ecore_plus_logicAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntityModule <em>Derived Entity Module</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntityModule
+	 * @generated
+	 */
+	public Adapter createDerivedEntityModuleAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.IntermediateDerivedEntitiesModule <em>Intermediate Derived Entities Module</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.IntermediateDerivedEntitiesModule
+	 * @generated
+	 */
+	public Adapter createIntermediateDerivedEntitiesModuleAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GeneratedEntityModule <em>Generated Entity Module</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GeneratedEntityModule
+	 * @generated
+	 */
+	public Adapter createGeneratedEntityModuleAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.ecore.EModelElement <em>EModel Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -908,6 +985,20 @@ public class Ecore_plus_logicAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createEAttributeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.ecore.EReference <em>EReference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.ecore.EReference
+	 * @generated
+	 */
+	public Adapter createEReferenceAdapter() {
 		return null;
 	}
 

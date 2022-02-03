@@ -2,8 +2,7 @@
  */
 package org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl;
 
-import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedFeature;
-
+import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedAttribute;
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.ColumnAsFunction;
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.Sql_litePackage;
 
@@ -37,7 +36,7 @@ public class ColumnAsFunctionImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 * @ordered
 	 */
-	protected DerivedFeature column;
+	protected DerivedAttribute column;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -63,10 +62,10 @@ public class ColumnAsFunctionImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public DerivedFeature getColumn() {
+	public DerivedAttribute getColumn() {
 		if (column != null && column.eIsProxy()) {
 			InternalEObject oldColumn = (InternalEObject)column;
-			column = (DerivedFeature)eResolveProxy(oldColumn);
+			column = (DerivedAttribute)eResolveProxy(oldColumn);
 			if (column != oldColumn) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Sql_litePackage.COLUMN_AS_FUNCTION__COLUMN, oldColumn, column));
@@ -80,7 +79,7 @@ public class ColumnAsFunctionImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public DerivedFeature basicGetColumn() {
+	public DerivedAttribute basicGetColumn() {
 		return column;
 	}
 
@@ -89,8 +88,8 @@ public class ColumnAsFunctionImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setColumn(DerivedFeature newColumn) {
-		DerivedFeature oldColumn = column;
+	public void setColumn(DerivedAttribute newColumn) {
+		DerivedAttribute oldColumn = column;
 		column = newColumn;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, Sql_litePackage.COLUMN_AS_FUNCTION__COLUMN, oldColumn, column));
@@ -120,7 +119,7 @@ public class ColumnAsFunctionImpl extends MinimalEObjectImpl.Container implement
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Sql_litePackage.COLUMN_AS_FUNCTION__COLUMN:
-				setColumn((DerivedFeature)newValue);
+				setColumn((DerivedAttribute)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -135,7 +134,7 @@ public class ColumnAsFunctionImpl extends MinimalEObjectImpl.Container implement
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Sql_litePackage.COLUMN_AS_FUNCTION__COLUMN:
-				setColumn((DerivedFeature)null);
+				setColumn((DerivedAttribute)null);
 				return;
 		}
 		super.eUnset(featureID);

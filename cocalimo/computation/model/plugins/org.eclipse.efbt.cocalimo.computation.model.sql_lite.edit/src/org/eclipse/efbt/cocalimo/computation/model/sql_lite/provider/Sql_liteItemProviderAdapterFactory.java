@@ -302,6 +302,29 @@ public class Sql_liteItemProviderAdapterFactory extends Sql_liteAdapterFactory i
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.GeneratedEntitySQLModule} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected GeneratedEntitySQLModuleItemProvider generatedEntitySQLModuleItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.GeneratedEntitySQLModule}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createGeneratedEntitySQLModuleAdapter() {
+		if (generatedEntitySQLModuleItemProvider == null) {
+			generatedEntitySQLModuleItemProvider = new GeneratedEntitySQLModuleItemProvider(this);
+		}
+
+		return generatedEntitySQLModuleItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -410,6 +433,7 @@ public class Sql_liteItemProviderAdapterFactory extends Sql_liteAdapterFactory i
 		if (fromClauseItemProvider != null) fromClauseItemProvider.dispose();
 		if (sqlEntityModuleItemProvider != null) sqlEntityModuleItemProvider.dispose();
 		if (generatedEntitySQLItemProvider != null) generatedEntitySQLItemProvider.dispose();
+		if (generatedEntitySQLModuleItemProvider != null) generatedEntitySQLModuleItemProvider.dispose();
 	}
 
 }

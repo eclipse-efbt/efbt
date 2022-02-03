@@ -115,8 +115,9 @@ public class DerivedEntityItemProvider extends EntityItemProvider {
 	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
-			childrenFeatures.add(Ecore_plus_logicPackage.Literals.DERIVED_ENTITY__DERIVED_FEATURES);
+			childrenFeatures.add(Ecore_plus_logicPackage.Literals.DERIVED_ENTITY__DERIVED_ATTRIBUTES);
 			childrenFeatures.add(Ecore_plus_logicPackage.Literals.DERIVED_ENTITY__ROW_CREATION_APPROACH_FOR_ENTITY);
+			childrenFeatures.add(Ecore_plus_logicPackage.Literals.DERIVED_ENTITY__DERIVED_STRUCTS);
 		}
 		return childrenFeatures;
 	}
@@ -172,8 +173,9 @@ public class DerivedEntityItemProvider extends EntityItemProvider {
 		updateChildren(notification);
 
 		switch (notification.getFeatureID(DerivedEntity.class)) {
-			case Ecore_plus_logicPackage.DERIVED_ENTITY__DERIVED_FEATURES:
+			case Ecore_plus_logicPackage.DERIVED_ENTITY__DERIVED_ATTRIBUTES:
 			case Ecore_plus_logicPackage.DERIVED_ENTITY__ROW_CREATION_APPROACH_FOR_ENTITY:
+			case Ecore_plus_logicPackage.DERIVED_ENTITY__DERIVED_STRUCTS:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
@@ -193,28 +195,33 @@ public class DerivedEntityItemProvider extends EntityItemProvider {
 
 		newChildDescriptors.add
 			(createChildParameter
-				(Ecore_plus_logicPackage.Literals.DERIVED_ENTITY__DERIVED_FEATURES,
-				 Ecore_plus_logicFactory.eINSTANCE.createDerivedFeature()));
+				(Ecore_plus_logicPackage.Literals.DERIVED_ENTITY__DERIVED_ATTRIBUTES,
+				 Ecore_plus_logicFactory.eINSTANCE.createDerivedAttribute()));
 
 		newChildDescriptors.add
 			(createChildParameter
-				(Ecore_plus_logicPackage.Literals.DERIVED_ENTITY__DERIVED_FEATURES,
-				 Ecore_plus_logicFactory.eINSTANCE.createAggregateDerivedFeature()));
+				(Ecore_plus_logicPackage.Literals.DERIVED_ENTITY__DERIVED_ATTRIBUTES,
+				 Ecore_plus_logicFactory.eINSTANCE.createAggregateDerivedAttribute()));
 
 		newChildDescriptors.add
 			(createChildParameter
-				(Ecore_plus_logicPackage.Literals.DERIVED_ENTITY__DERIVED_FEATURES,
-				 Ecore_plus_logicFactory.eINSTANCE.createBasicDerivedFeature()));
+				(Ecore_plus_logicPackage.Literals.DERIVED_ENTITY__DERIVED_ATTRIBUTES,
+				 Ecore_plus_logicFactory.eINSTANCE.createBasicDerivedAttribute()));
 
 		newChildDescriptors.add
 			(createChildParameter
-				(Ecore_plus_logicPackage.Literals.DERIVED_ENTITY__DERIVED_FEATURES,
+				(Ecore_plus_logicPackage.Literals.DERIVED_ENTITY__DERIVED_ATTRIBUTES,
 				 Ecore_plus_logicFactory.eINSTANCE.createGetAttributeFromEntityDerivedFeature()));
 
 		newChildDescriptors.add
 			(createChildParameter
 				(Ecore_plus_logicPackage.Literals.DERIVED_ENTITY__ROW_CREATION_APPROACH_FOR_ENTITY,
 				 Ecore_plus_logicFactory.eINSTANCE.createRowCreationApproachForEntity()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(Ecore_plus_logicPackage.Literals.DERIVED_ENTITY__DERIVED_STRUCTS,
+				 Ecore_plus_logicFactory.eINSTANCE.createDerivedStruct()));
 	}
 
 	/**
@@ -230,7 +237,8 @@ public class DerivedEntityItemProvider extends EntityItemProvider {
 
 		boolean qualify =
 			childFeature == EcorePackage.Literals.ECLASS__ESTRUCTURAL_FEATURES ||
-			childFeature == Ecore_plus_logicPackage.Literals.DERIVED_ENTITY__DERIVED_FEATURES;
+			childFeature == Ecore_plus_logicPackage.Literals.DERIVED_ENTITY__DERIVED_ATTRIBUTES ||
+			childFeature == Ecore_plus_logicPackage.Literals.DERIVED_ENTITY__DERIVED_STRUCTS;
 
 		if (qualify) {
 			return getString

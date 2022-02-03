@@ -215,6 +215,15 @@ public class Ecore_plus_structurePackageImpl extends EPackageImpl implements Eco
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getBaseEntity_Cube() {
+		return (EReference)baseEntityEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getCell() {
 		return cellEClass;
 	}
@@ -377,15 +386,6 @@ public class Ecore_plus_structurePackageImpl extends EPackageImpl implements Eco
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getBaseEntityFeature_Cube() {
-		return (EReference)baseEntityFeatureEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getBaseEntityModule() {
 		return baseEntityModuleEClass;
 	}
@@ -429,6 +429,7 @@ public class Ecore_plus_structurePackageImpl extends EPackageImpl implements Eco
 		// Create classes and their features
 		baseEntityEClass = createEClass(BASE_ENTITY);
 		createEReference(baseEntityEClass, BASE_ENTITY__BASE_FEATURES);
+		createEReference(baseEntityEClass, BASE_ENTITY__CUBE);
 
 		cellEClass = createEClass(CELL);
 		createEReference(cellEClass, CELL__ROW);
@@ -455,7 +456,6 @@ public class Ecore_plus_structurePackageImpl extends EPackageImpl implements Eco
 		createEAttribute(baseEntityFeatureEClass, BASE_ENTITY_FEATURE__IS_FK);
 		createEReference(baseEntityFeatureEClass, BASE_ENTITY_FEATURE__FK_ENTITY);
 		createEReference(baseEntityFeatureEClass, BASE_ENTITY_FEATURE__VARAIBLE);
-		createEReference(baseEntityFeatureEClass, BASE_ENTITY_FEATURE__CUBE);
 
 		baseEntityModuleEClass = createEClass(BASE_ENTITY_MODULE);
 		createEReference(baseEntityModuleEClass, BASE_ENTITY_MODULE__BASE_ENTITIES);
@@ -485,9 +485,9 @@ public class Ecore_plus_structurePackageImpl extends EPackageImpl implements Eco
 		setNsURI(eNS_URI);
 
 		// Obtain other dependent packages
+		Data_definitionPackage theData_definitionPackage = (Data_definitionPackage)EPackage.Registry.INSTANCE.getEPackage(Data_definitionPackage.eNS_URI);
 		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
 		CorePackage theCorePackage = (CorePackage)EPackage.Registry.INSTANCE.getEPackage(CorePackage.eNS_URI);
-		Data_definitionPackage theData_definitionPackage = (Data_definitionPackage)EPackage.Registry.INSTANCE.getEPackage(Data_definitionPackage.eNS_URI);
 		Module_managementPackage theModule_managementPackage = (Module_managementPackage)EPackage.Registry.INSTANCE.getEPackage(Module_managementPackage.eNS_URI);
 
 		// Create type parameters
@@ -495,7 +495,7 @@ public class Ecore_plus_structurePackageImpl extends EPackageImpl implements Eco
 		// Set bounds for type parameters
 
 		// Add supertypes to classes
-		baseEntityEClass.getESuperTypes().add(theEcorePackage.getEClass());
+		baseEntityEClass.getESuperTypes().add(this.getEntity());
 		heirarchicalEnumEClass.getESuperTypes().add(theEcorePackage.getEEnum());
 		heirarchicalEnumLiteralEClass.getESuperTypes().add(theEcorePackage.getEEnumLiteral());
 		enumeratedDomainEClass.getESuperTypes().add(this.getHeirarchicalEnum());
@@ -507,6 +507,7 @@ public class Ecore_plus_structurePackageImpl extends EPackageImpl implements Eco
 		// Initialize classes, features, and operations; add parameters
 		initEClass(baseEntityEClass, BaseEntity.class, "BaseEntity", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getBaseEntity_BaseFeatures(), this.getBaseEntityFeature(), null, "baseFeatures", null, 0, -1, BaseEntity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getBaseEntity_Cube(), theData_definitionPackage.getCUBE(), null, "cube", null, 0, 1, BaseEntity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(cellEClass, Cell.class, "Cell", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getCell_Row(), theEcorePackage.getEObject(), null, "row", null, 0, 1, Cell.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -533,10 +534,9 @@ public class Ecore_plus_structurePackageImpl extends EPackageImpl implements Eco
 		initEAttribute(getBaseEntityFeature_IsFK(), ecorePackage.getEBoolean(), "isFK", null, 0, 1, BaseEntityFeature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getBaseEntityFeature_FkEntity(), this.getBaseEntity(), null, "fkEntity", null, 0, 1, BaseEntityFeature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getBaseEntityFeature_Varaible(), theCorePackage.getVARIABLE(), null, "varaible", null, 0, 1, BaseEntityFeature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getBaseEntityFeature_Cube(), theData_definitionPackage.getCUBE(), null, "cube", null, 0, 1, BaseEntityFeature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(baseEntityModuleEClass, BaseEntityModule.class, "BaseEntityModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getBaseEntityModule_BaseEntities(), this.getBaseEntity(), null, "baseEntities", null, 0, 1, BaseEntityModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getBaseEntityModule_BaseEntities(), this.getBaseEntity(), null, "baseEntities", null, 0, -1, BaseEntityModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

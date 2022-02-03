@@ -160,17 +160,22 @@ public class RowCreationApproachItemProvider
 		newChildDescriptors.add
 			(createChildParameter
 				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS,
-				 Ecore_plus_logicFactory.eINSTANCE.createDerivedFeature()));
+				 Ecore_plus_logicFactory.eINSTANCE.createDerivedAttribute()));
 
 		newChildDescriptors.add
 			(createChildParameter
 				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS,
-				 Ecore_plus_logicFactory.eINSTANCE.createAggregateDerivedFeature()));
+				 Ecore_plus_logicFactory.eINSTANCE.createAggregateDerivedAttribute()));
 
 		newChildDescriptors.add
 			(createChildParameter
 				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS,
-				 Ecore_plus_logicFactory.eINSTANCE.createBasicDerivedFeature()));
+				 Ecore_plus_logicFactory.eINSTANCE.createBasicDerivedAttribute()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS,
+				 Ecore_plus_logicFactory.eINSTANCE.createDerivedStruct()));
 
 		newChildDescriptors.add
 			(createChildParameter
@@ -200,7 +205,27 @@ public class RowCreationApproachItemProvider
 		newChildDescriptors.add
 			(createChildParameter
 				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS,
+				 Ecore_plus_logicFactory.eINSTANCE.createDerivedAttribute()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS,
+				 Ecore_plus_logicFactory.eINSTANCE.createAggregateDerivedAttribute()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS,
+				 Ecore_plus_logicFactory.eINSTANCE.createBasicDerivedAttribute()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS,
 				 Ecore_plus_logicFactory.eINSTANCE.createBaseFeature()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS,
+				 Ecore_plus_logicFactory.eINSTANCE.createGetAttributeFromEntityDerivedFeature()));
 
 		newChildDescriptors.add
 			(createChildParameter
@@ -215,17 +240,22 @@ public class RowCreationApproachItemProvider
 		newChildDescriptors.add
 			(createChildParameter
 				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS,
-				 Ecore_plus_logicFactory.eINSTANCE.createDerivedFeature()));
+				 Ecore_plus_logicFactory.eINSTANCE.createDerivedAttribute()));
 
 		newChildDescriptors.add
 			(createChildParameter
 				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS,
-				 Ecore_plus_logicFactory.eINSTANCE.createAggregateDerivedFeature()));
+				 Ecore_plus_logicFactory.eINSTANCE.createAggregateDerivedAttribute()));
 
 		newChildDescriptors.add
 			(createChildParameter
 				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS,
-				 Ecore_plus_logicFactory.eINSTANCE.createBasicDerivedFeature()));
+				 Ecore_plus_logicFactory.eINSTANCE.createBasicDerivedAttribute()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS,
+				 Ecore_plus_logicFactory.eINSTANCE.createDerivedStruct()));
 
 		newChildDescriptors.add
 			(createChildParameter
@@ -266,8 +296,8 @@ public class RowCreationApproachItemProvider
 
 		boolean qualify =
 			childFeature == Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS ||
-			childFeature == Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS ||
-			childFeature == Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS;
+			childFeature == Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS ||
+			childFeature == Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS;
 
 		if (qualify) {
 			return getString

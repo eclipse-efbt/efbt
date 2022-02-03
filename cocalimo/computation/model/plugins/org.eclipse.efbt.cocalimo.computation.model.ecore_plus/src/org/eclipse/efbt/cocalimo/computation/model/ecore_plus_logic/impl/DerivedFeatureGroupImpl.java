@@ -4,7 +4,7 @@ package org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl;
 
 import java.util.Collection;
 
-import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedFeature;
+import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedAttribute;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedFeatureGroup;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Ecore_plus_logicPackage;
 
@@ -42,7 +42,7 @@ public class DerivedFeatureGroupImpl extends MinimalEObjectImpl.Container implem
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<DerivedFeature> derivedFeatures;
+	protected EList<DerivedAttribute> derivedFeatures;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -68,9 +68,9 @@ public class DerivedFeatureGroupImpl extends MinimalEObjectImpl.Container implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<DerivedFeature> getDerivedFeatures() {
+	public EList<DerivedAttribute> getDerivedFeatures() {
 		if (derivedFeatures == null) {
-			derivedFeatures = new EObjectContainmentEList<DerivedFeature>(DerivedFeature.class, this, Ecore_plus_logicPackage.DERIVED_FEATURE_GROUP__DERIVED_FEATURES);
+			derivedFeatures = new EObjectContainmentEList<DerivedAttribute>(DerivedAttribute.class, this, Ecore_plus_logicPackage.DERIVED_FEATURE_GROUP__DERIVED_FEATURES);
 		}
 		return derivedFeatures;
 	}
@@ -114,7 +114,7 @@ public class DerivedFeatureGroupImpl extends MinimalEObjectImpl.Container implem
 		switch (featureID) {
 			case Ecore_plus_logicPackage.DERIVED_FEATURE_GROUP__DERIVED_FEATURES:
 				getDerivedFeatures().clear();
-				getDerivedFeatures().addAll((Collection<? extends DerivedFeature>)newValue);
+				getDerivedFeatures().addAll((Collection<? extends DerivedAttribute>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);

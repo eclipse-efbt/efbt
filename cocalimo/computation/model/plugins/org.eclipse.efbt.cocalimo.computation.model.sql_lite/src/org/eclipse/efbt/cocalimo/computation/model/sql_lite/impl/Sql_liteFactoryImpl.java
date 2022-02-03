@@ -66,6 +66,7 @@ public class Sql_liteFactoryImpl extends EFactoryImpl implements Sql_liteFactory
 			case Sql_litePackage.FROM_CLAUSE: return createFromClause();
 			case Sql_litePackage.SQL_ENTITY_MODULE: return createSQLEntityModule();
 			case Sql_litePackage.GENERATED_ENTITY_SQL: return createGeneratedEntitySQL();
+			case Sql_litePackage.GENERATED_ENTITY_SQL_MODULE: return createGeneratedEntitySQLModule();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -169,6 +170,16 @@ public class Sql_liteFactoryImpl extends EFactoryImpl implements Sql_liteFactory
 	public GeneratedEntitySQL createGeneratedEntitySQL() {
 		GeneratedEntitySQLImpl generatedEntitySQL = new GeneratedEntitySQLImpl();
 		return generatedEntitySQL;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public GeneratedEntitySQLModule createGeneratedEntitySQLModule() {
+		GeneratedEntitySQLModuleImpl generatedEntitySQLModule = new GeneratedEntitySQLModuleImpl();
+		return generatedEntitySQLModule;
 	}
 
 	/**

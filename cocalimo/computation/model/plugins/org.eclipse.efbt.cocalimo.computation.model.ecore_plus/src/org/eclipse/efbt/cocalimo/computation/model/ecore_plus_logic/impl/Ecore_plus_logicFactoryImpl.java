@@ -71,10 +71,11 @@ public class Ecore_plus_logicFactoryImpl extends EFactoryImpl implements Ecore_p
 			case Ecore_plus_logicPackage.PARAMETER: return createParameter();
 			case Ecore_plus_logicPackage.MEMBER_PARAMETER: return createMemberParameter();
 			case Ecore_plus_logicPackage.VALUE_PARAMETER: return createValueParameter();
-			case Ecore_plus_logicPackage.AGGREGATE_DERIVED_FEATURE: return createAggregateDerivedFeature();
-			case Ecore_plus_logicPackage.BASIC_DERIVED_FEATURE: return createBasicDerivedFeature();
+			case Ecore_plus_logicPackage.AGGREGATE_DERIVED_ATTRIBUTE: return createAggregateDerivedAttribute();
+			case Ecore_plus_logicPackage.BASIC_DERIVED_ATTRIBUTE: return createBasicDerivedAttribute();
 			case Ecore_plus_logicPackage.BASIC_SCENARIO_LOGIC: return createBasicScenarioLogic();
-			case Ecore_plus_logicPackage.DERIVED_FEATURE: return createDerivedFeature();
+			case Ecore_plus_logicPackage.DERIVED_ATTRIBUTE: return createDerivedAttribute();
+			case Ecore_plus_logicPackage.DERIVED_STRUCT: return createDerivedStruct();
 			case Ecore_plus_logicPackage.BASE_FEATURE: return createBaseFeature();
 			case Ecore_plus_logicPackage.DERIVED_FEATURE_GROUP: return createDerivedFeatureGroup();
 			case Ecore_plus_logicPackage.FEATURE_PARAMETER: return createFeatureParameter();
@@ -92,6 +93,9 @@ public class Ecore_plus_logicFactoryImpl extends EFactoryImpl implements Ecore_p
 			case Ecore_plus_logicPackage.ROW_JOIN_FUNCTION: return createRowJoinFunction();
 			case Ecore_plus_logicPackage.UNION_ROW_CREATION_APPROACH: return createUnionRowCreationApproach();
 			case Ecore_plus_logicPackage.EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION: return createExplodeArrayOfStructsRowFunction();
+			case Ecore_plus_logicPackage.DERIVED_ENTITY_MODULE: return createDerivedEntityModule();
+			case Ecore_plus_logicPackage.INTERMEDIATE_DERIVED_ENTITIES_MODULE: return createIntermediateDerivedEntitiesModule();
+			case Ecore_plus_logicPackage.GENERATED_ENTITY_MODULE: return createGeneratedEntityModule();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -252,9 +256,9 @@ public class Ecore_plus_logicFactoryImpl extends EFactoryImpl implements Ecore_p
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public AggregateDerivedFeature createAggregateDerivedFeature() {
-		AggregateDerivedFeatureImpl aggregateDerivedFeature = new AggregateDerivedFeatureImpl();
-		return aggregateDerivedFeature;
+	public AggregateDerivedAttribute createAggregateDerivedAttribute() {
+		AggregateDerivedAttributeImpl aggregateDerivedAttribute = new AggregateDerivedAttributeImpl();
+		return aggregateDerivedAttribute;
 	}
 
 	/**
@@ -262,9 +266,9 @@ public class Ecore_plus_logicFactoryImpl extends EFactoryImpl implements Ecore_p
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public BasicDerivedFeature createBasicDerivedFeature() {
-		BasicDerivedFeatureImpl basicDerivedFeature = new BasicDerivedFeatureImpl();
-		return basicDerivedFeature;
+	public BasicDerivedAttribute createBasicDerivedAttribute() {
+		BasicDerivedAttributeImpl basicDerivedAttribute = new BasicDerivedAttributeImpl();
+		return basicDerivedAttribute;
 	}
 
 	/**
@@ -282,9 +286,19 @@ public class Ecore_plus_logicFactoryImpl extends EFactoryImpl implements Ecore_p
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public DerivedFeature createDerivedFeature() {
-		DerivedFeatureImpl derivedFeature = new DerivedFeatureImpl();
-		return derivedFeature;
+	public DerivedAttribute createDerivedAttribute() {
+		DerivedAttributeImpl derivedAttribute = new DerivedAttributeImpl();
+		return derivedAttribute;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public DerivedStruct createDerivedStruct() {
+		DerivedStructImpl derivedStruct = new DerivedStructImpl();
+		return derivedStruct;
 	}
 
 	/**
@@ -455,6 +469,36 @@ public class Ecore_plus_logicFactoryImpl extends EFactoryImpl implements Ecore_p
 	public ExplodeArrayOfStructsRowFunction createExplodeArrayOfStructsRowFunction() {
 		ExplodeArrayOfStructsRowFunctionImpl explodeArrayOfStructsRowFunction = new ExplodeArrayOfStructsRowFunctionImpl();
 		return explodeArrayOfStructsRowFunction;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public DerivedEntityModule createDerivedEntityModule() {
+		DerivedEntityModuleImpl derivedEntityModule = new DerivedEntityModuleImpl();
+		return derivedEntityModule;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public IntermediateDerivedEntitiesModule createIntermediateDerivedEntitiesModule() {
+		IntermediateDerivedEntitiesModuleImpl intermediateDerivedEntitiesModule = new IntermediateDerivedEntitiesModuleImpl();
+		return intermediateDerivedEntitiesModule;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public GeneratedEntityModule createGeneratedEntityModule() {
+		GeneratedEntityModuleImpl generatedEntityModule = new GeneratedEntityModuleImpl();
+		return generatedEntityModule;
 	}
 
 	/**

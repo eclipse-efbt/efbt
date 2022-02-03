@@ -297,13 +297,13 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	int DERIVED_ENTITY__SOURCE_ENTITIES = Ecore_plus_structurePackage.ENTITY_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Derived Features</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Derived Attributes</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_ENTITY__DERIVED_FEATURES = Ecore_plus_structurePackage.ENTITY_FEATURE_COUNT + 1;
+	int DERIVED_ENTITY__DERIVED_ATTRIBUTES = Ecore_plus_structurePackage.ENTITY_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Row Creation Approach For Entity</b></em>' containment reference.
@@ -324,13 +324,22 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	int DERIVED_ENTITY__CUBE = Ecore_plus_structurePackage.ENTITY_FEATURE_COUNT + 3;
 
 	/**
+	 * The feature id for the '<em><b>Derived Structs</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY__DERIVED_STRUCTS = Ecore_plus_structurePackage.ENTITY_FEATURE_COUNT + 4;
+
+	/**
 	 * The number of structural features of the '<em>Derived Entity</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_ENTITY_FEATURE_COUNT = Ecore_plus_structurePackage.ENTITY_FEATURE_COUNT + 4;
+	int DERIVED_ENTITY_FEATURE_COUNT = Ecore_plus_structurePackage.ENTITY_FEATURE_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Get EAnnotation</em>' operation.
@@ -694,13 +703,13 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	int INTERMEDIATE_DERIVED_ENTITY__SOURCE_ENTITIES = DERIVED_ENTITY__SOURCE_ENTITIES;
 
 	/**
-	 * The feature id for the '<em><b>Derived Features</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Derived Attributes</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int INTERMEDIATE_DERIVED_ENTITY__DERIVED_FEATURES = DERIVED_ENTITY__DERIVED_FEATURES;
+	int INTERMEDIATE_DERIVED_ENTITY__DERIVED_ATTRIBUTES = DERIVED_ENTITY__DERIVED_ATTRIBUTES;
 
 	/**
 	 * The feature id for the '<em><b>Row Creation Approach For Entity</b></em>' containment reference.
@@ -719,6 +728,15 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @ordered
 	 */
 	int INTERMEDIATE_DERIVED_ENTITY__CUBE = DERIVED_ENTITY__CUBE;
+
+	/**
+	 * The feature id for the '<em><b>Derived Structs</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERMEDIATE_DERIVED_ENTITY__DERIVED_STRUCTS = DERIVED_ENTITY__DERIVED_STRUCTS;
 
 	/**
 	 * The number of structural features of the '<em>Intermediate Derived Entity</em>' class.
@@ -1868,14 +1886,14 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	int VALUE_PARAMETER_OPERATION_COUNT = PARAMETER_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedFeatureImpl <em>Derived Feature</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedAttributeImpl <em>Derived Attribute</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedFeatureImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getDerivedFeature()
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedAttributeImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getDerivedAttribute()
 	 * @generated
 	 */
-	int DERIVED_FEATURE = 18;
+	int DERIVED_ATTRIBUTE = 18;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
@@ -1884,7 +1902,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_FEATURE__EANNOTATIONS = EcorePackage.ESTRUCTURAL_FEATURE__EANNOTATIONS;
+	int DERIVED_ATTRIBUTE__EANNOTATIONS = EcorePackage.EATTRIBUTE__EANNOTATIONS;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1893,7 +1911,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_FEATURE__NAME = EcorePackage.ESTRUCTURAL_FEATURE__NAME;
+	int DERIVED_ATTRIBUTE__NAME = EcorePackage.EATTRIBUTE__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
@@ -1902,7 +1920,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_FEATURE__ORDERED = EcorePackage.ESTRUCTURAL_FEATURE__ORDERED;
+	int DERIVED_ATTRIBUTE__ORDERED = EcorePackage.EATTRIBUTE__ORDERED;
 
 	/**
 	 * The feature id for the '<em><b>Unique</b></em>' attribute.
@@ -1911,7 +1929,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_FEATURE__UNIQUE = EcorePackage.ESTRUCTURAL_FEATURE__UNIQUE;
+	int DERIVED_ATTRIBUTE__UNIQUE = EcorePackage.EATTRIBUTE__UNIQUE;
 
 	/**
 	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
@@ -1920,7 +1938,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_FEATURE__LOWER_BOUND = EcorePackage.ESTRUCTURAL_FEATURE__LOWER_BOUND;
+	int DERIVED_ATTRIBUTE__LOWER_BOUND = EcorePackage.EATTRIBUTE__LOWER_BOUND;
 
 	/**
 	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
@@ -1929,7 +1947,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_FEATURE__UPPER_BOUND = EcorePackage.ESTRUCTURAL_FEATURE__UPPER_BOUND;
+	int DERIVED_ATTRIBUTE__UPPER_BOUND = EcorePackage.EATTRIBUTE__UPPER_BOUND;
 
 	/**
 	 * The feature id for the '<em><b>Many</b></em>' attribute.
@@ -1938,7 +1956,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_FEATURE__MANY = EcorePackage.ESTRUCTURAL_FEATURE__MANY;
+	int DERIVED_ATTRIBUTE__MANY = EcorePackage.EATTRIBUTE__MANY;
 
 	/**
 	 * The feature id for the '<em><b>Required</b></em>' attribute.
@@ -1947,7 +1965,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_FEATURE__REQUIRED = EcorePackage.ESTRUCTURAL_FEATURE__REQUIRED;
+	int DERIVED_ATTRIBUTE__REQUIRED = EcorePackage.EATTRIBUTE__REQUIRED;
 
 	/**
 	 * The feature id for the '<em><b>EType</b></em>' reference.
@@ -1956,7 +1974,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_FEATURE__ETYPE = EcorePackage.ESTRUCTURAL_FEATURE__ETYPE;
+	int DERIVED_ATTRIBUTE__ETYPE = EcorePackage.EATTRIBUTE__ETYPE;
 
 	/**
 	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
@@ -1965,7 +1983,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_FEATURE__EGENERIC_TYPE = EcorePackage.ESTRUCTURAL_FEATURE__EGENERIC_TYPE;
+	int DERIVED_ATTRIBUTE__EGENERIC_TYPE = EcorePackage.EATTRIBUTE__EGENERIC_TYPE;
 
 	/**
 	 * The feature id for the '<em><b>Changeable</b></em>' attribute.
@@ -1974,7 +1992,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_FEATURE__CHANGEABLE = EcorePackage.ESTRUCTURAL_FEATURE__CHANGEABLE;
+	int DERIVED_ATTRIBUTE__CHANGEABLE = EcorePackage.EATTRIBUTE__CHANGEABLE;
 
 	/**
 	 * The feature id for the '<em><b>Volatile</b></em>' attribute.
@@ -1983,7 +2001,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_FEATURE__VOLATILE = EcorePackage.ESTRUCTURAL_FEATURE__VOLATILE;
+	int DERIVED_ATTRIBUTE__VOLATILE = EcorePackage.EATTRIBUTE__VOLATILE;
 
 	/**
 	 * The feature id for the '<em><b>Transient</b></em>' attribute.
@@ -1992,7 +2010,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_FEATURE__TRANSIENT = EcorePackage.ESTRUCTURAL_FEATURE__TRANSIENT;
+	int DERIVED_ATTRIBUTE__TRANSIENT = EcorePackage.EATTRIBUTE__TRANSIENT;
 
 	/**
 	 * The feature id for the '<em><b>Default Value Literal</b></em>' attribute.
@@ -2001,7 +2019,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_FEATURE__DEFAULT_VALUE_LITERAL = EcorePackage.ESTRUCTURAL_FEATURE__DEFAULT_VALUE_LITERAL;
+	int DERIVED_ATTRIBUTE__DEFAULT_VALUE_LITERAL = EcorePackage.EATTRIBUTE__DEFAULT_VALUE_LITERAL;
 
 	/**
 	 * The feature id for the '<em><b>Default Value</b></em>' attribute.
@@ -2010,7 +2028,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_FEATURE__DEFAULT_VALUE = EcorePackage.ESTRUCTURAL_FEATURE__DEFAULT_VALUE;
+	int DERIVED_ATTRIBUTE__DEFAULT_VALUE = EcorePackage.EATTRIBUTE__DEFAULT_VALUE;
 
 	/**
 	 * The feature id for the '<em><b>Unsettable</b></em>' attribute.
@@ -2019,7 +2037,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_FEATURE__UNSETTABLE = EcorePackage.ESTRUCTURAL_FEATURE__UNSETTABLE;
+	int DERIVED_ATTRIBUTE__UNSETTABLE = EcorePackage.EATTRIBUTE__UNSETTABLE;
 
 	/**
 	 * The feature id for the '<em><b>Derived</b></em>' attribute.
@@ -2028,7 +2046,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_FEATURE__DERIVED = EcorePackage.ESTRUCTURAL_FEATURE__DERIVED;
+	int DERIVED_ATTRIBUTE__DERIVED = EcorePackage.EATTRIBUTE__DERIVED;
 
 	/**
 	 * The feature id for the '<em><b>EContaining Class</b></em>' container reference.
@@ -2037,7 +2055,25 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_FEATURE__ECONTAINING_CLASS = EcorePackage.ESTRUCTURAL_FEATURE__ECONTAINING_CLASS;
+	int DERIVED_ATTRIBUTE__ECONTAINING_CLASS = EcorePackage.EATTRIBUTE__ECONTAINING_CLASS;
+
+	/**
+	 * The feature id for the '<em><b>ID</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ATTRIBUTE__ID = EcorePackage.EATTRIBUTE__ID;
+
+	/**
+	 * The feature id for the '<em><b>EAttribute Type</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ATTRIBUTE__EATTRIBUTE_TYPE = EcorePackage.EATTRIBUTE__EATTRIBUTE_TYPE;
 
 	/**
 	 * The feature id for the '<em><b>Variable</b></em>' reference.
@@ -2046,16 +2082,16 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_FEATURE__VARIABLE = EcorePackage.ESTRUCTURAL_FEATURE_FEATURE_COUNT + 0;
+	int DERIVED_ATTRIBUTE__VARIABLE = EcorePackage.EATTRIBUTE_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the '<em>Derived Feature</em>' class.
+	 * The number of structural features of the '<em>Derived Attribute</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_FEATURE_FEATURE_COUNT = EcorePackage.ESTRUCTURAL_FEATURE_FEATURE_COUNT + 1;
+	int DERIVED_ATTRIBUTE_FEATURE_COUNT = EcorePackage.EATTRIBUTE_FEATURE_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Get EAnnotation</em>' operation.
@@ -2064,7 +2100,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_FEATURE___GET_EANNOTATION__STRING = EcorePackage.ESTRUCTURAL_FEATURE___GET_EANNOTATION__STRING;
+	int DERIVED_ATTRIBUTE___GET_EANNOTATION__STRING = EcorePackage.EATTRIBUTE___GET_EANNOTATION__STRING;
 
 	/**
 	 * The operation id for the '<em>Get Feature ID</em>' operation.
@@ -2073,7 +2109,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_FEATURE___GET_FEATURE_ID = EcorePackage.ESTRUCTURAL_FEATURE___GET_FEATURE_ID;
+	int DERIVED_ATTRIBUTE___GET_FEATURE_ID = EcorePackage.EATTRIBUTE___GET_FEATURE_ID;
 
 	/**
 	 * The operation id for the '<em>Get Container Class</em>' operation.
@@ -2082,26 +2118,26 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_FEATURE___GET_CONTAINER_CLASS = EcorePackage.ESTRUCTURAL_FEATURE___GET_CONTAINER_CLASS;
+	int DERIVED_ATTRIBUTE___GET_CONTAINER_CLASS = EcorePackage.EATTRIBUTE___GET_CONTAINER_CLASS;
 
 	/**
-	 * The number of operations of the '<em>Derived Feature</em>' class.
+	 * The number of operations of the '<em>Derived Attribute</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_FEATURE_OPERATION_COUNT = EcorePackage.ESTRUCTURAL_FEATURE_OPERATION_COUNT + 0;
+	int DERIVED_ATTRIBUTE_OPERATION_COUNT = EcorePackage.EATTRIBUTE_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.AggregateDerivedFeatureImpl <em>Aggregate Derived Feature</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.AggregateDerivedAttributeImpl <em>Aggregate Derived Attribute</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.AggregateDerivedFeatureImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getAggregateDerivedFeature()
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.AggregateDerivedAttributeImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getAggregateDerivedAttribute()
 	 * @generated
 	 */
-	int AGGREGATE_DERIVED_FEATURE = 15;
+	int AGGREGATE_DERIVED_ATTRIBUTE = 15;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
@@ -2110,7 +2146,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AGGREGATE_DERIVED_FEATURE__EANNOTATIONS = DERIVED_FEATURE__EANNOTATIONS;
+	int AGGREGATE_DERIVED_ATTRIBUTE__EANNOTATIONS = DERIVED_ATTRIBUTE__EANNOTATIONS;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2119,7 +2155,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AGGREGATE_DERIVED_FEATURE__NAME = DERIVED_FEATURE__NAME;
+	int AGGREGATE_DERIVED_ATTRIBUTE__NAME = DERIVED_ATTRIBUTE__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
@@ -2128,7 +2164,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AGGREGATE_DERIVED_FEATURE__ORDERED = DERIVED_FEATURE__ORDERED;
+	int AGGREGATE_DERIVED_ATTRIBUTE__ORDERED = DERIVED_ATTRIBUTE__ORDERED;
 
 	/**
 	 * The feature id for the '<em><b>Unique</b></em>' attribute.
@@ -2137,7 +2173,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AGGREGATE_DERIVED_FEATURE__UNIQUE = DERIVED_FEATURE__UNIQUE;
+	int AGGREGATE_DERIVED_ATTRIBUTE__UNIQUE = DERIVED_ATTRIBUTE__UNIQUE;
 
 	/**
 	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
@@ -2146,7 +2182,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AGGREGATE_DERIVED_FEATURE__LOWER_BOUND = DERIVED_FEATURE__LOWER_BOUND;
+	int AGGREGATE_DERIVED_ATTRIBUTE__LOWER_BOUND = DERIVED_ATTRIBUTE__LOWER_BOUND;
 
 	/**
 	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
@@ -2155,7 +2191,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AGGREGATE_DERIVED_FEATURE__UPPER_BOUND = DERIVED_FEATURE__UPPER_BOUND;
+	int AGGREGATE_DERIVED_ATTRIBUTE__UPPER_BOUND = DERIVED_ATTRIBUTE__UPPER_BOUND;
 
 	/**
 	 * The feature id for the '<em><b>Many</b></em>' attribute.
@@ -2164,7 +2200,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AGGREGATE_DERIVED_FEATURE__MANY = DERIVED_FEATURE__MANY;
+	int AGGREGATE_DERIVED_ATTRIBUTE__MANY = DERIVED_ATTRIBUTE__MANY;
 
 	/**
 	 * The feature id for the '<em><b>Required</b></em>' attribute.
@@ -2173,7 +2209,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AGGREGATE_DERIVED_FEATURE__REQUIRED = DERIVED_FEATURE__REQUIRED;
+	int AGGREGATE_DERIVED_ATTRIBUTE__REQUIRED = DERIVED_ATTRIBUTE__REQUIRED;
 
 	/**
 	 * The feature id for the '<em><b>EType</b></em>' reference.
@@ -2182,7 +2218,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AGGREGATE_DERIVED_FEATURE__ETYPE = DERIVED_FEATURE__ETYPE;
+	int AGGREGATE_DERIVED_ATTRIBUTE__ETYPE = DERIVED_ATTRIBUTE__ETYPE;
 
 	/**
 	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
@@ -2191,7 +2227,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AGGREGATE_DERIVED_FEATURE__EGENERIC_TYPE = DERIVED_FEATURE__EGENERIC_TYPE;
+	int AGGREGATE_DERIVED_ATTRIBUTE__EGENERIC_TYPE = DERIVED_ATTRIBUTE__EGENERIC_TYPE;
 
 	/**
 	 * The feature id for the '<em><b>Changeable</b></em>' attribute.
@@ -2200,7 +2236,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AGGREGATE_DERIVED_FEATURE__CHANGEABLE = DERIVED_FEATURE__CHANGEABLE;
+	int AGGREGATE_DERIVED_ATTRIBUTE__CHANGEABLE = DERIVED_ATTRIBUTE__CHANGEABLE;
 
 	/**
 	 * The feature id for the '<em><b>Volatile</b></em>' attribute.
@@ -2209,7 +2245,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AGGREGATE_DERIVED_FEATURE__VOLATILE = DERIVED_FEATURE__VOLATILE;
+	int AGGREGATE_DERIVED_ATTRIBUTE__VOLATILE = DERIVED_ATTRIBUTE__VOLATILE;
 
 	/**
 	 * The feature id for the '<em><b>Transient</b></em>' attribute.
@@ -2218,7 +2254,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AGGREGATE_DERIVED_FEATURE__TRANSIENT = DERIVED_FEATURE__TRANSIENT;
+	int AGGREGATE_DERIVED_ATTRIBUTE__TRANSIENT = DERIVED_ATTRIBUTE__TRANSIENT;
 
 	/**
 	 * The feature id for the '<em><b>Default Value Literal</b></em>' attribute.
@@ -2227,7 +2263,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AGGREGATE_DERIVED_FEATURE__DEFAULT_VALUE_LITERAL = DERIVED_FEATURE__DEFAULT_VALUE_LITERAL;
+	int AGGREGATE_DERIVED_ATTRIBUTE__DEFAULT_VALUE_LITERAL = DERIVED_ATTRIBUTE__DEFAULT_VALUE_LITERAL;
 
 	/**
 	 * The feature id for the '<em><b>Default Value</b></em>' attribute.
@@ -2236,7 +2272,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AGGREGATE_DERIVED_FEATURE__DEFAULT_VALUE = DERIVED_FEATURE__DEFAULT_VALUE;
+	int AGGREGATE_DERIVED_ATTRIBUTE__DEFAULT_VALUE = DERIVED_ATTRIBUTE__DEFAULT_VALUE;
 
 	/**
 	 * The feature id for the '<em><b>Unsettable</b></em>' attribute.
@@ -2245,7 +2281,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AGGREGATE_DERIVED_FEATURE__UNSETTABLE = DERIVED_FEATURE__UNSETTABLE;
+	int AGGREGATE_DERIVED_ATTRIBUTE__UNSETTABLE = DERIVED_ATTRIBUTE__UNSETTABLE;
 
 	/**
 	 * The feature id for the '<em><b>Derived</b></em>' attribute.
@@ -2254,7 +2290,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AGGREGATE_DERIVED_FEATURE__DERIVED = DERIVED_FEATURE__DERIVED;
+	int AGGREGATE_DERIVED_ATTRIBUTE__DERIVED = DERIVED_ATTRIBUTE__DERIVED;
 
 	/**
 	 * The feature id for the '<em><b>EContaining Class</b></em>' container reference.
@@ -2263,7 +2299,25 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AGGREGATE_DERIVED_FEATURE__ECONTAINING_CLASS = DERIVED_FEATURE__ECONTAINING_CLASS;
+	int AGGREGATE_DERIVED_ATTRIBUTE__ECONTAINING_CLASS = DERIVED_ATTRIBUTE__ECONTAINING_CLASS;
+
+	/**
+	 * The feature id for the '<em><b>ID</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AGGREGATE_DERIVED_ATTRIBUTE__ID = DERIVED_ATTRIBUTE__ID;
+
+	/**
+	 * The feature id for the '<em><b>EAttribute Type</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AGGREGATE_DERIVED_ATTRIBUTE__EATTRIBUTE_TYPE = DERIVED_ATTRIBUTE__EATTRIBUTE_TYPE;
 
 	/**
 	 * The feature id for the '<em><b>Variable</b></em>' reference.
@@ -2272,7 +2326,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AGGREGATE_DERIVED_FEATURE__VARIABLE = DERIVED_FEATURE__VARIABLE;
+	int AGGREGATE_DERIVED_ATTRIBUTE__VARIABLE = DERIVED_ATTRIBUTE__VARIABLE;
 
 	/**
 	 * The feature id for the '<em><b>Aggregate Function</b></em>' containment reference.
@@ -2281,16 +2335,16 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AGGREGATE_DERIVED_FEATURE__AGGREGATE_FUNCTION = DERIVED_FEATURE_FEATURE_COUNT + 0;
+	int AGGREGATE_DERIVED_ATTRIBUTE__AGGREGATE_FUNCTION = DERIVED_ATTRIBUTE_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the '<em>Aggregate Derived Feature</em>' class.
+	 * The number of structural features of the '<em>Aggregate Derived Attribute</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int AGGREGATE_DERIVED_FEATURE_FEATURE_COUNT = DERIVED_FEATURE_FEATURE_COUNT + 1;
+	int AGGREGATE_DERIVED_ATTRIBUTE_FEATURE_COUNT = DERIVED_ATTRIBUTE_FEATURE_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Get EAnnotation</em>' operation.
@@ -2299,7 +2353,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AGGREGATE_DERIVED_FEATURE___GET_EANNOTATION__STRING = DERIVED_FEATURE___GET_EANNOTATION__STRING;
+	int AGGREGATE_DERIVED_ATTRIBUTE___GET_EANNOTATION__STRING = DERIVED_ATTRIBUTE___GET_EANNOTATION__STRING;
 
 	/**
 	 * The operation id for the '<em>Get Feature ID</em>' operation.
@@ -2308,7 +2362,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AGGREGATE_DERIVED_FEATURE___GET_FEATURE_ID = DERIVED_FEATURE___GET_FEATURE_ID;
+	int AGGREGATE_DERIVED_ATTRIBUTE___GET_FEATURE_ID = DERIVED_ATTRIBUTE___GET_FEATURE_ID;
 
 	/**
 	 * The operation id for the '<em>Get Container Class</em>' operation.
@@ -2317,26 +2371,26 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AGGREGATE_DERIVED_FEATURE___GET_CONTAINER_CLASS = DERIVED_FEATURE___GET_CONTAINER_CLASS;
+	int AGGREGATE_DERIVED_ATTRIBUTE___GET_CONTAINER_CLASS = DERIVED_ATTRIBUTE___GET_CONTAINER_CLASS;
 
 	/**
-	 * The number of operations of the '<em>Aggregate Derived Feature</em>' class.
+	 * The number of operations of the '<em>Aggregate Derived Attribute</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int AGGREGATE_DERIVED_FEATURE_OPERATION_COUNT = DERIVED_FEATURE_OPERATION_COUNT + 0;
+	int AGGREGATE_DERIVED_ATTRIBUTE_OPERATION_COUNT = DERIVED_ATTRIBUTE_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicDerivedFeatureImpl <em>Basic Derived Feature</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicDerivedAttributeImpl <em>Basic Derived Attribute</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicDerivedFeatureImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getBasicDerivedFeature()
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicDerivedAttributeImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getBasicDerivedAttribute()
 	 * @generated
 	 */
-	int BASIC_DERIVED_FEATURE = 16;
+	int BASIC_DERIVED_ATTRIBUTE = 16;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
@@ -2345,7 +2399,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASIC_DERIVED_FEATURE__EANNOTATIONS = DERIVED_FEATURE__EANNOTATIONS;
+	int BASIC_DERIVED_ATTRIBUTE__EANNOTATIONS = DERIVED_ATTRIBUTE__EANNOTATIONS;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2354,7 +2408,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASIC_DERIVED_FEATURE__NAME = DERIVED_FEATURE__NAME;
+	int BASIC_DERIVED_ATTRIBUTE__NAME = DERIVED_ATTRIBUTE__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
@@ -2363,7 +2417,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASIC_DERIVED_FEATURE__ORDERED = DERIVED_FEATURE__ORDERED;
+	int BASIC_DERIVED_ATTRIBUTE__ORDERED = DERIVED_ATTRIBUTE__ORDERED;
 
 	/**
 	 * The feature id for the '<em><b>Unique</b></em>' attribute.
@@ -2372,7 +2426,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASIC_DERIVED_FEATURE__UNIQUE = DERIVED_FEATURE__UNIQUE;
+	int BASIC_DERIVED_ATTRIBUTE__UNIQUE = DERIVED_ATTRIBUTE__UNIQUE;
 
 	/**
 	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
@@ -2381,7 +2435,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASIC_DERIVED_FEATURE__LOWER_BOUND = DERIVED_FEATURE__LOWER_BOUND;
+	int BASIC_DERIVED_ATTRIBUTE__LOWER_BOUND = DERIVED_ATTRIBUTE__LOWER_BOUND;
 
 	/**
 	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
@@ -2390,7 +2444,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASIC_DERIVED_FEATURE__UPPER_BOUND = DERIVED_FEATURE__UPPER_BOUND;
+	int BASIC_DERIVED_ATTRIBUTE__UPPER_BOUND = DERIVED_ATTRIBUTE__UPPER_BOUND;
 
 	/**
 	 * The feature id for the '<em><b>Many</b></em>' attribute.
@@ -2399,7 +2453,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASIC_DERIVED_FEATURE__MANY = DERIVED_FEATURE__MANY;
+	int BASIC_DERIVED_ATTRIBUTE__MANY = DERIVED_ATTRIBUTE__MANY;
 
 	/**
 	 * The feature id for the '<em><b>Required</b></em>' attribute.
@@ -2408,7 +2462,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASIC_DERIVED_FEATURE__REQUIRED = DERIVED_FEATURE__REQUIRED;
+	int BASIC_DERIVED_ATTRIBUTE__REQUIRED = DERIVED_ATTRIBUTE__REQUIRED;
 
 	/**
 	 * The feature id for the '<em><b>EType</b></em>' reference.
@@ -2417,7 +2471,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASIC_DERIVED_FEATURE__ETYPE = DERIVED_FEATURE__ETYPE;
+	int BASIC_DERIVED_ATTRIBUTE__ETYPE = DERIVED_ATTRIBUTE__ETYPE;
 
 	/**
 	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
@@ -2426,7 +2480,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASIC_DERIVED_FEATURE__EGENERIC_TYPE = DERIVED_FEATURE__EGENERIC_TYPE;
+	int BASIC_DERIVED_ATTRIBUTE__EGENERIC_TYPE = DERIVED_ATTRIBUTE__EGENERIC_TYPE;
 
 	/**
 	 * The feature id for the '<em><b>Changeable</b></em>' attribute.
@@ -2435,7 +2489,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASIC_DERIVED_FEATURE__CHANGEABLE = DERIVED_FEATURE__CHANGEABLE;
+	int BASIC_DERIVED_ATTRIBUTE__CHANGEABLE = DERIVED_ATTRIBUTE__CHANGEABLE;
 
 	/**
 	 * The feature id for the '<em><b>Volatile</b></em>' attribute.
@@ -2444,7 +2498,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASIC_DERIVED_FEATURE__VOLATILE = DERIVED_FEATURE__VOLATILE;
+	int BASIC_DERIVED_ATTRIBUTE__VOLATILE = DERIVED_ATTRIBUTE__VOLATILE;
 
 	/**
 	 * The feature id for the '<em><b>Transient</b></em>' attribute.
@@ -2453,7 +2507,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASIC_DERIVED_FEATURE__TRANSIENT = DERIVED_FEATURE__TRANSIENT;
+	int BASIC_DERIVED_ATTRIBUTE__TRANSIENT = DERIVED_ATTRIBUTE__TRANSIENT;
 
 	/**
 	 * The feature id for the '<em><b>Default Value Literal</b></em>' attribute.
@@ -2462,7 +2516,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASIC_DERIVED_FEATURE__DEFAULT_VALUE_LITERAL = DERIVED_FEATURE__DEFAULT_VALUE_LITERAL;
+	int BASIC_DERIVED_ATTRIBUTE__DEFAULT_VALUE_LITERAL = DERIVED_ATTRIBUTE__DEFAULT_VALUE_LITERAL;
 
 	/**
 	 * The feature id for the '<em><b>Default Value</b></em>' attribute.
@@ -2471,7 +2525,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASIC_DERIVED_FEATURE__DEFAULT_VALUE = DERIVED_FEATURE__DEFAULT_VALUE;
+	int BASIC_DERIVED_ATTRIBUTE__DEFAULT_VALUE = DERIVED_ATTRIBUTE__DEFAULT_VALUE;
 
 	/**
 	 * The feature id for the '<em><b>Unsettable</b></em>' attribute.
@@ -2480,7 +2534,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASIC_DERIVED_FEATURE__UNSETTABLE = DERIVED_FEATURE__UNSETTABLE;
+	int BASIC_DERIVED_ATTRIBUTE__UNSETTABLE = DERIVED_ATTRIBUTE__UNSETTABLE;
 
 	/**
 	 * The feature id for the '<em><b>Derived</b></em>' attribute.
@@ -2489,7 +2543,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASIC_DERIVED_FEATURE__DERIVED = DERIVED_FEATURE__DERIVED;
+	int BASIC_DERIVED_ATTRIBUTE__DERIVED = DERIVED_ATTRIBUTE__DERIVED;
 
 	/**
 	 * The feature id for the '<em><b>EContaining Class</b></em>' container reference.
@@ -2498,7 +2552,25 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASIC_DERIVED_FEATURE__ECONTAINING_CLASS = DERIVED_FEATURE__ECONTAINING_CLASS;
+	int BASIC_DERIVED_ATTRIBUTE__ECONTAINING_CLASS = DERIVED_ATTRIBUTE__ECONTAINING_CLASS;
+
+	/**
+	 * The feature id for the '<em><b>ID</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_DERIVED_ATTRIBUTE__ID = DERIVED_ATTRIBUTE__ID;
+
+	/**
+	 * The feature id for the '<em><b>EAttribute Type</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_DERIVED_ATTRIBUTE__EATTRIBUTE_TYPE = DERIVED_ATTRIBUTE__EATTRIBUTE_TYPE;
 
 	/**
 	 * The feature id for the '<em><b>Variable</b></em>' reference.
@@ -2507,7 +2579,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASIC_DERIVED_FEATURE__VARIABLE = DERIVED_FEATURE__VARIABLE;
+	int BASIC_DERIVED_ATTRIBUTE__VARIABLE = DERIVED_ATTRIBUTE__VARIABLE;
 
 	/**
 	 * The feature id for the '<em><b>Basic Scenario Logic</b></em>' containment reference list.
@@ -2516,16 +2588,16 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASIC_DERIVED_FEATURE__BASIC_SCENARIO_LOGIC = DERIVED_FEATURE_FEATURE_COUNT + 0;
+	int BASIC_DERIVED_ATTRIBUTE__BASIC_SCENARIO_LOGIC = DERIVED_ATTRIBUTE_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the '<em>Basic Derived Feature</em>' class.
+	 * The number of structural features of the '<em>Basic Derived Attribute</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BASIC_DERIVED_FEATURE_FEATURE_COUNT = DERIVED_FEATURE_FEATURE_COUNT + 1;
+	int BASIC_DERIVED_ATTRIBUTE_FEATURE_COUNT = DERIVED_ATTRIBUTE_FEATURE_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Get EAnnotation</em>' operation.
@@ -2534,7 +2606,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASIC_DERIVED_FEATURE___GET_EANNOTATION__STRING = DERIVED_FEATURE___GET_EANNOTATION__STRING;
+	int BASIC_DERIVED_ATTRIBUTE___GET_EANNOTATION__STRING = DERIVED_ATTRIBUTE___GET_EANNOTATION__STRING;
 
 	/**
 	 * The operation id for the '<em>Get Feature ID</em>' operation.
@@ -2543,7 +2615,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASIC_DERIVED_FEATURE___GET_FEATURE_ID = DERIVED_FEATURE___GET_FEATURE_ID;
+	int BASIC_DERIVED_ATTRIBUTE___GET_FEATURE_ID = DERIVED_ATTRIBUTE___GET_FEATURE_ID;
 
 	/**
 	 * The operation id for the '<em>Get Container Class</em>' operation.
@@ -2552,16 +2624,16 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASIC_DERIVED_FEATURE___GET_CONTAINER_CLASS = DERIVED_FEATURE___GET_CONTAINER_CLASS;
+	int BASIC_DERIVED_ATTRIBUTE___GET_CONTAINER_CLASS = DERIVED_ATTRIBUTE___GET_CONTAINER_CLASS;
 
 	/**
-	 * The number of operations of the '<em>Basic Derived Feature</em>' class.
+	 * The number of operations of the '<em>Basic Derived Attribute</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BASIC_DERIVED_FEATURE_OPERATION_COUNT = DERIVED_FEATURE_OPERATION_COUNT + 0;
+	int BASIC_DERIVED_ATTRIBUTE_OPERATION_COUNT = DERIVED_ATTRIBUTE_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicScenarioLogicImpl <em>Basic Scenario Logic</em>}' class.
@@ -2610,6 +2682,286 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	int BASIC_SCENARIO_LOGIC_OPERATION_COUNT = 0;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedStructImpl <em>Derived Struct</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedStructImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getDerivedStruct()
+	 * @generated
+	 */
+	int DERIVED_STRUCT = 19;
+
+	/**
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_STRUCT__EANNOTATIONS = EcorePackage.EREFERENCE__EANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_STRUCT__NAME = EcorePackage.EREFERENCE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_STRUCT__ORDERED = EcorePackage.EREFERENCE__ORDERED;
+
+	/**
+	 * The feature id for the '<em><b>Unique</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_STRUCT__UNIQUE = EcorePackage.EREFERENCE__UNIQUE;
+
+	/**
+	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_STRUCT__LOWER_BOUND = EcorePackage.EREFERENCE__LOWER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_STRUCT__UPPER_BOUND = EcorePackage.EREFERENCE__UPPER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Many</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_STRUCT__MANY = EcorePackage.EREFERENCE__MANY;
+
+	/**
+	 * The feature id for the '<em><b>Required</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_STRUCT__REQUIRED = EcorePackage.EREFERENCE__REQUIRED;
+
+	/**
+	 * The feature id for the '<em><b>EType</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_STRUCT__ETYPE = EcorePackage.EREFERENCE__ETYPE;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_STRUCT__EGENERIC_TYPE = EcorePackage.EREFERENCE__EGENERIC_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Changeable</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_STRUCT__CHANGEABLE = EcorePackage.EREFERENCE__CHANGEABLE;
+
+	/**
+	 * The feature id for the '<em><b>Volatile</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_STRUCT__VOLATILE = EcorePackage.EREFERENCE__VOLATILE;
+
+	/**
+	 * The feature id for the '<em><b>Transient</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_STRUCT__TRANSIENT = EcorePackage.EREFERENCE__TRANSIENT;
+
+	/**
+	 * The feature id for the '<em><b>Default Value Literal</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_STRUCT__DEFAULT_VALUE_LITERAL = EcorePackage.EREFERENCE__DEFAULT_VALUE_LITERAL;
+
+	/**
+	 * The feature id for the '<em><b>Default Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_STRUCT__DEFAULT_VALUE = EcorePackage.EREFERENCE__DEFAULT_VALUE;
+
+	/**
+	 * The feature id for the '<em><b>Unsettable</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_STRUCT__UNSETTABLE = EcorePackage.EREFERENCE__UNSETTABLE;
+
+	/**
+	 * The feature id for the '<em><b>Derived</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_STRUCT__DERIVED = EcorePackage.EREFERENCE__DERIVED;
+
+	/**
+	 * The feature id for the '<em><b>EContaining Class</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_STRUCT__ECONTAINING_CLASS = EcorePackage.EREFERENCE__ECONTAINING_CLASS;
+
+	/**
+	 * The feature id for the '<em><b>Containment</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_STRUCT__CONTAINMENT = EcorePackage.EREFERENCE__CONTAINMENT;
+
+	/**
+	 * The feature id for the '<em><b>Container</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_STRUCT__CONTAINER = EcorePackage.EREFERENCE__CONTAINER;
+
+	/**
+	 * The feature id for the '<em><b>Resolve Proxies</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_STRUCT__RESOLVE_PROXIES = EcorePackage.EREFERENCE__RESOLVE_PROXIES;
+
+	/**
+	 * The feature id for the '<em><b>EOpposite</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_STRUCT__EOPPOSITE = EcorePackage.EREFERENCE__EOPPOSITE;
+
+	/**
+	 * The feature id for the '<em><b>EReference Type</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_STRUCT__EREFERENCE_TYPE = EcorePackage.EREFERENCE__EREFERENCE_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>EKeys</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_STRUCT__EKEYS = EcorePackage.EREFERENCE__EKEYS;
+
+	/**
+	 * The feature id for the '<em><b>Cube</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_STRUCT__CUBE = EcorePackage.EREFERENCE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Derived Struct</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_STRUCT_FEATURE_COUNT = EcorePackage.EREFERENCE_FEATURE_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get EAnnotation</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_STRUCT___GET_EANNOTATION__STRING = EcorePackage.EREFERENCE___GET_EANNOTATION__STRING;
+
+	/**
+	 * The operation id for the '<em>Get Feature ID</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_STRUCT___GET_FEATURE_ID = EcorePackage.EREFERENCE___GET_FEATURE_ID;
+
+	/**
+	 * The operation id for the '<em>Get Container Class</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_STRUCT___GET_CONTAINER_CLASS = EcorePackage.EREFERENCE___GET_CONTAINER_CLASS;
+
+	/**
+	 * The number of operations of the '<em>Derived Struct</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_STRUCT_OPERATION_COUNT = EcorePackage.EREFERENCE_OPERATION_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BaseFeatureImpl <em>Base Feature</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2617,7 +2969,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getBaseFeature()
 	 * @generated
 	 */
-	int BASE_FEATURE = 19;
+	int BASE_FEATURE = 20;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
@@ -2861,7 +3213,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getDerivedFeatureGroup()
 	 * @generated
 	 */
-	int DERIVED_FEATURE_GROUP = 20;
+	int DERIVED_FEATURE_GROUP = 21;
 
 	/**
 	 * The feature id for the '<em><b>Derived Features</b></em>' containment reference list.
@@ -2898,7 +3250,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getFeatureParameter()
 	 * @generated
 	 */
-	int FEATURE_PARAMETER = 21;
+	int FEATURE_PARAMETER = 22;
 
 	/**
 	 * The feature id for the '<em><b>Feature</b></em>' reference.
@@ -2935,7 +3287,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getProxyFeatureParameter()
 	 * @generated
 	 */
-	int PROXY_FEATURE_PARAMETER = 22;
+	int PROXY_FEATURE_PARAMETER = 23;
 
 	/**
 	 * The feature id for the '<em><b>Entity</b></em>' reference.
@@ -2981,7 +3333,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getGetAttributeFromEntityDerivedFeature()
 	 * @generated
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE = 23;
+	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE = 24;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
@@ -2990,7 +3342,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__EANNOTATIONS = DERIVED_FEATURE__EANNOTATIONS;
+	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__EANNOTATIONS = DERIVED_ATTRIBUTE__EANNOTATIONS;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2999,7 +3351,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__NAME = DERIVED_FEATURE__NAME;
+	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__NAME = DERIVED_ATTRIBUTE__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
@@ -3008,7 +3360,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__ORDERED = DERIVED_FEATURE__ORDERED;
+	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__ORDERED = DERIVED_ATTRIBUTE__ORDERED;
 
 	/**
 	 * The feature id for the '<em><b>Unique</b></em>' attribute.
@@ -3017,7 +3369,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__UNIQUE = DERIVED_FEATURE__UNIQUE;
+	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__UNIQUE = DERIVED_ATTRIBUTE__UNIQUE;
 
 	/**
 	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
@@ -3026,7 +3378,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__LOWER_BOUND = DERIVED_FEATURE__LOWER_BOUND;
+	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__LOWER_BOUND = DERIVED_ATTRIBUTE__LOWER_BOUND;
 
 	/**
 	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
@@ -3035,7 +3387,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__UPPER_BOUND = DERIVED_FEATURE__UPPER_BOUND;
+	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__UPPER_BOUND = DERIVED_ATTRIBUTE__UPPER_BOUND;
 
 	/**
 	 * The feature id for the '<em><b>Many</b></em>' attribute.
@@ -3044,7 +3396,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__MANY = DERIVED_FEATURE__MANY;
+	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__MANY = DERIVED_ATTRIBUTE__MANY;
 
 	/**
 	 * The feature id for the '<em><b>Required</b></em>' attribute.
@@ -3053,7 +3405,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__REQUIRED = DERIVED_FEATURE__REQUIRED;
+	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__REQUIRED = DERIVED_ATTRIBUTE__REQUIRED;
 
 	/**
 	 * The feature id for the '<em><b>EType</b></em>' reference.
@@ -3062,7 +3414,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__ETYPE = DERIVED_FEATURE__ETYPE;
+	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__ETYPE = DERIVED_ATTRIBUTE__ETYPE;
 
 	/**
 	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
@@ -3071,7 +3423,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__EGENERIC_TYPE = DERIVED_FEATURE__EGENERIC_TYPE;
+	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__EGENERIC_TYPE = DERIVED_ATTRIBUTE__EGENERIC_TYPE;
 
 	/**
 	 * The feature id for the '<em><b>Changeable</b></em>' attribute.
@@ -3080,7 +3432,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__CHANGEABLE = DERIVED_FEATURE__CHANGEABLE;
+	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__CHANGEABLE = DERIVED_ATTRIBUTE__CHANGEABLE;
 
 	/**
 	 * The feature id for the '<em><b>Volatile</b></em>' attribute.
@@ -3089,7 +3441,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__VOLATILE = DERIVED_FEATURE__VOLATILE;
+	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__VOLATILE = DERIVED_ATTRIBUTE__VOLATILE;
 
 	/**
 	 * The feature id for the '<em><b>Transient</b></em>' attribute.
@@ -3098,7 +3450,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__TRANSIENT = DERIVED_FEATURE__TRANSIENT;
+	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__TRANSIENT = DERIVED_ATTRIBUTE__TRANSIENT;
 
 	/**
 	 * The feature id for the '<em><b>Default Value Literal</b></em>' attribute.
@@ -3107,7 +3459,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__DEFAULT_VALUE_LITERAL = DERIVED_FEATURE__DEFAULT_VALUE_LITERAL;
+	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__DEFAULT_VALUE_LITERAL = DERIVED_ATTRIBUTE__DEFAULT_VALUE_LITERAL;
 
 	/**
 	 * The feature id for the '<em><b>Default Value</b></em>' attribute.
@@ -3116,7 +3468,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__DEFAULT_VALUE = DERIVED_FEATURE__DEFAULT_VALUE;
+	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__DEFAULT_VALUE = DERIVED_ATTRIBUTE__DEFAULT_VALUE;
 
 	/**
 	 * The feature id for the '<em><b>Unsettable</b></em>' attribute.
@@ -3125,7 +3477,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__UNSETTABLE = DERIVED_FEATURE__UNSETTABLE;
+	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__UNSETTABLE = DERIVED_ATTRIBUTE__UNSETTABLE;
 
 	/**
 	 * The feature id for the '<em><b>Derived</b></em>' attribute.
@@ -3134,7 +3486,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__DERIVED = DERIVED_FEATURE__DERIVED;
+	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__DERIVED = DERIVED_ATTRIBUTE__DERIVED;
 
 	/**
 	 * The feature id for the '<em><b>EContaining Class</b></em>' container reference.
@@ -3143,7 +3495,25 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__ECONTAINING_CLASS = DERIVED_FEATURE__ECONTAINING_CLASS;
+	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__ECONTAINING_CLASS = DERIVED_ATTRIBUTE__ECONTAINING_CLASS;
+
+	/**
+	 * The feature id for the '<em><b>ID</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__ID = DERIVED_ATTRIBUTE__ID;
+
+	/**
+	 * The feature id for the '<em><b>EAttribute Type</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__EATTRIBUTE_TYPE = DERIVED_ATTRIBUTE__EATTRIBUTE_TYPE;
 
 	/**
 	 * The feature id for the '<em><b>Variable</b></em>' reference.
@@ -3152,7 +3522,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__VARIABLE = DERIVED_FEATURE__VARIABLE;
+	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__VARIABLE = DERIVED_ATTRIBUTE__VARIABLE;
 
 	/**
 	 * The feature id for the '<em><b>Attribute In Entity</b></em>' reference.
@@ -3161,7 +3531,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__ATTRIBUTE_IN_ENTITY = DERIVED_FEATURE_FEATURE_COUNT + 0;
+	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__ATTRIBUTE_IN_ENTITY = DERIVED_ATTRIBUTE_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Entity Feature</b></em>' reference.
@@ -3170,7 +3540,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__ENTITY_FEATURE = DERIVED_FEATURE_FEATURE_COUNT + 1;
+	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__ENTITY_FEATURE = DERIVED_ATTRIBUTE_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Get Attribute From Entity Derived Feature</em>' class.
@@ -3179,7 +3549,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE_FEATURE_COUNT = DERIVED_FEATURE_FEATURE_COUNT + 2;
+	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE_FEATURE_COUNT = DERIVED_ATTRIBUTE_FEATURE_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get EAnnotation</em>' operation.
@@ -3188,7 +3558,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE___GET_EANNOTATION__STRING = DERIVED_FEATURE___GET_EANNOTATION__STRING;
+	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE___GET_EANNOTATION__STRING = DERIVED_ATTRIBUTE___GET_EANNOTATION__STRING;
 
 	/**
 	 * The operation id for the '<em>Get Feature ID</em>' operation.
@@ -3197,7 +3567,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE___GET_FEATURE_ID = DERIVED_FEATURE___GET_FEATURE_ID;
+	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE___GET_FEATURE_ID = DERIVED_ATTRIBUTE___GET_FEATURE_ID;
 
 	/**
 	 * The operation id for the '<em>Get Container Class</em>' operation.
@@ -3206,7 +3576,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE___GET_CONTAINER_CLASS = DERIVED_FEATURE___GET_CONTAINER_CLASS;
+	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE___GET_CONTAINER_CLASS = DERIVED_ATTRIBUTE___GET_CONTAINER_CLASS;
 
 	/**
 	 * The number of operations of the '<em>Get Attribute From Entity Derived Feature</em>' class.
@@ -3215,7 +3585,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE_OPERATION_COUNT = DERIVED_FEATURE_OPERATION_COUNT + 0;
+	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE_OPERATION_COUNT = DERIVED_ATTRIBUTE_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.AttributeFromEntityParameterImpl <em>Attribute From Entity Parameter</em>}' class.
@@ -3225,7 +3595,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getAttributeFromEntityParameter()
 	 * @generated
 	 */
-	int ATTRIBUTE_FROM_ENTITY_PARAMETER = 24;
+	int ATTRIBUTE_FROM_ENTITY_PARAMETER = 25;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
@@ -3379,7 +3749,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getProxyAttributeFromEntityParameter()
 	 * @generated
 	 */
-	int PROXY_ATTRIBUTE_FROM_ENTITY_PARAMETER = 25;
+	int PROXY_ATTRIBUTE_FROM_ENTITY_PARAMETER = 26;
 
 	/**
 	 * The feature id for the '<em><b>Variable</b></em>' reference.
@@ -3434,7 +3804,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getRowCreationApproach()
 	 * @generated
 	 */
-	int ROW_CREATION_APPROACH = 31;
+	int ROW_CREATION_APPROACH = 32;
 
 	/**
 	 * The feature id for the '<em><b>Dependant Cube Columns</b></em>' containment reference list.
@@ -3489,7 +3859,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getCustomRowCreationApproach()
 	 * @generated
 	 */
-	int CUSTOM_ROW_CREATION_APPROACH = 26;
+	int CUSTOM_ROW_CREATION_APPROACH = 27;
 
 	/**
 	 * The feature id for the '<em><b>Dependant Cube Columns</b></em>' containment reference list.
@@ -3553,7 +3923,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getFilterAndGroupToOneRowCreationApproach()
 	 * @generated
 	 */
-	int FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH = 27;
+	int FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH = 28;
 
 	/**
 	 * The feature id for the '<em><b>Dependant Cube Columns</b></em>' containment reference list.
@@ -3626,7 +3996,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getRowCreationApproachForEntity()
 	 * @generated
 	 */
-	int ROW_CREATION_APPROACH_FOR_ENTITY = 28;
+	int ROW_CREATION_APPROACH_FOR_ENTITY = 29;
 
 	/**
 	 * The feature id for the '<em><b>Row Creation Approach</b></em>' containment reference.
@@ -3681,7 +4051,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getOneToOneRowCreationApproach()
 	 * @generated
 	 */
-	int ONE_TO_ONE_ROW_CREATION_APPROACH = 29;
+	int ONE_TO_ONE_ROW_CREATION_APPROACH = 30;
 
 	/**
 	 * The feature id for the '<em><b>Dependant Cube Columns</b></em>' containment reference list.
@@ -3736,7 +4106,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getFilterRowCreationApproach()
 	 * @generated
 	 */
-	int FILTER_ROW_CREATION_APPROACH = 30;
+	int FILTER_ROW_CREATION_APPROACH = 31;
 
 	/**
 	 * The feature id for the '<em><b>Dependant Cube Columns</b></em>' containment reference list.
@@ -3800,7 +4170,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getGroupByRowCreationApproach()
 	 * @generated
 	 */
-	int GROUP_BY_ROW_CREATION_APPROACH = 32;
+	int GROUP_BY_ROW_CREATION_APPROACH = 33;
 
 	/**
 	 * The feature id for the '<em><b>Dependant Cube Columns</b></em>' containment reference list.
@@ -3873,7 +4243,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getRowJoinFunction()
 	 * @generated
 	 */
-	int ROW_JOIN_FUNCTION = 33;
+	int ROW_JOIN_FUNCTION = 34;
 
 	/**
 	 * The feature id for the '<em><b>Dependant Cube Columns</b></em>' containment reference list.
@@ -3937,7 +4307,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getUnionRowCreationApproach()
 	 * @generated
 	 */
-	int UNION_ROW_CREATION_APPROACH = 34;
+	int UNION_ROW_CREATION_APPROACH = 35;
 
 	/**
 	 * The feature id for the '<em><b>Dependant Cube Columns</b></em>' containment reference list.
@@ -3992,7 +4362,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getExplodeArrayOfStructsRowFunction()
 	 * @generated
 	 */
-	int EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION = 35;
+	int EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION = 36;
 
 	/**
 	 * The feature id for the '<em><b>Dependant Cube Columns</b></em>' containment reference list.
@@ -4048,6 +4418,280 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 */
 	int EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION_OPERATION_COUNT = ROW_CREATION_APPROACH_OPERATION_COUNT + 0;
 
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedEntityModuleImpl <em>Derived Entity Module</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedEntityModuleImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getDerivedEntityModule()
+	 * @generated
+	 */
+	int DERIVED_ENTITY_MODULE = 37;
+
+	/**
+	 * The feature id for the '<em><b>Dependencies</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_MODULE__DEPENDENCIES = Module_managementPackage.MODULE__DEPENDENCIES;
+
+	/**
+	 * The feature id for the '<em><b>The Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_MODULE__THE_DESCRIPTION = Module_managementPackage.MODULE__THE_DESCRIPTION;
+
+	/**
+	 * The feature id for the '<em><b>License</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_MODULE__LICENSE = Module_managementPackage.MODULE__LICENSE;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_MODULE__NAME = Module_managementPackage.MODULE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Version</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_MODULE__VERSION = Module_managementPackage.MODULE__VERSION;
+
+	/**
+	 * The feature id for the '<em><b>Long Name</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_MODULE__LONG_NAME = Module_managementPackage.MODULE__LONG_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Derived Entities</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_MODULE__DERIVED_ENTITIES = Module_managementPackage.MODULE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Derived Entity Module</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_MODULE_FEATURE_COUNT = Module_managementPackage.MODULE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of operations of the '<em>Derived Entity Module</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_MODULE_OPERATION_COUNT = Module_managementPackage.MODULE_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.IntermediateDerivedEntitiesModuleImpl <em>Intermediate Derived Entities Module</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.IntermediateDerivedEntitiesModuleImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getIntermediateDerivedEntitiesModule()
+	 * @generated
+	 */
+	int INTERMEDIATE_DERIVED_ENTITIES_MODULE = 38;
+
+	/**
+	 * The feature id for the '<em><b>Dependencies</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERMEDIATE_DERIVED_ENTITIES_MODULE__DEPENDENCIES = Module_managementPackage.MODULE__DEPENDENCIES;
+
+	/**
+	 * The feature id for the '<em><b>The Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERMEDIATE_DERIVED_ENTITIES_MODULE__THE_DESCRIPTION = Module_managementPackage.MODULE__THE_DESCRIPTION;
+
+	/**
+	 * The feature id for the '<em><b>License</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERMEDIATE_DERIVED_ENTITIES_MODULE__LICENSE = Module_managementPackage.MODULE__LICENSE;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERMEDIATE_DERIVED_ENTITIES_MODULE__NAME = Module_managementPackage.MODULE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Version</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERMEDIATE_DERIVED_ENTITIES_MODULE__VERSION = Module_managementPackage.MODULE__VERSION;
+
+	/**
+	 * The feature id for the '<em><b>Long Name</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERMEDIATE_DERIVED_ENTITIES_MODULE__LONG_NAME = Module_managementPackage.MODULE__LONG_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Intermediate Derived Entities</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERMEDIATE_DERIVED_ENTITIES_MODULE__INTERMEDIATE_DERIVED_ENTITIES = Module_managementPackage.MODULE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Intermediate Derived Entities Module</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERMEDIATE_DERIVED_ENTITIES_MODULE_FEATURE_COUNT = Module_managementPackage.MODULE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of operations of the '<em>Intermediate Derived Entities Module</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERMEDIATE_DERIVED_ENTITIES_MODULE_OPERATION_COUNT = Module_managementPackage.MODULE_OPERATION_COUNT + 0;
+
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.GeneratedEntityModuleImpl <em>Generated Entity Module</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.GeneratedEntityModuleImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getGeneratedEntityModule()
+	 * @generated
+	 */
+	int GENERATED_ENTITY_MODULE = 39;
+
+	/**
+	 * The feature id for the '<em><b>Dependencies</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERATED_ENTITY_MODULE__DEPENDENCIES = Module_managementPackage.MODULE__DEPENDENCIES;
+
+	/**
+	 * The feature id for the '<em><b>The Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERATED_ENTITY_MODULE__THE_DESCRIPTION = Module_managementPackage.MODULE__THE_DESCRIPTION;
+
+	/**
+	 * The feature id for the '<em><b>License</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERATED_ENTITY_MODULE__LICENSE = Module_managementPackage.MODULE__LICENSE;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERATED_ENTITY_MODULE__NAME = Module_managementPackage.MODULE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Version</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERATED_ENTITY_MODULE__VERSION = Module_managementPackage.MODULE__VERSION;
+
+	/**
+	 * The feature id for the '<em><b>Long Name</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERATED_ENTITY_MODULE__LONG_NAME = Module_managementPackage.MODULE__LONG_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Generated Entities</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERATED_ENTITY_MODULE__GENERATED_ENTITIES = Module_managementPackage.MODULE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Generated Entity Module</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERATED_ENTITY_MODULE_FEATURE_COUNT = Module_managementPackage.MODULE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of operations of the '<em>Generated Entity Module</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERATED_ENTITY_MODULE_OPERATION_COUNT = Module_managementPackage.MODULE_OPERATION_COUNT + 0;
+
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntity <em>Derived Entity</em>}'.
@@ -4071,15 +4715,15 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	EReference getDerivedEntity_SourceEntities();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntity#getDerivedFeatures <em>Derived Features</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntity#getDerivedAttributes <em>Derived Attributes</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Derived Features</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntity#getDerivedFeatures()
+	 * @return the meta object for the containment reference list '<em>Derived Attributes</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntity#getDerivedAttributes()
 	 * @see #getDerivedEntity()
 	 * @generated
 	 */
-	EReference getDerivedEntity_DerivedFeatures();
+	EReference getDerivedEntity_DerivedAttributes();
 
 	/**
 	 * Returns the meta object for the containment reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntity#getRowCreationApproachForEntity <em>Row Creation Approach For Entity</em>}'.
@@ -4102,6 +4746,17 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getDerivedEntity_Cube();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntity#getDerivedStructs <em>Derived Structs</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Derived Structs</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntity#getDerivedStructs()
+	 * @see #getDerivedEntity()
+	 * @generated
+	 */
+	EReference getDerivedEntity_DerivedStructs();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.IntermediateDerivedEntity <em>Intermediate Derived Entity</em>}'.
@@ -4398,46 +5053,46 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	EReference getValueParameter_DataType();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateDerivedFeature <em>Aggregate Derived Feature</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateDerivedAttribute <em>Aggregate Derived Attribute</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Aggregate Derived Feature</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateDerivedFeature
+	 * @return the meta object for class '<em>Aggregate Derived Attribute</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateDerivedAttribute
 	 * @generated
 	 */
-	EClass getAggregateDerivedFeature();
+	EClass getAggregateDerivedAttribute();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateDerivedFeature#getAggregateFunction <em>Aggregate Function</em>}'.
+	 * Returns the meta object for the containment reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateDerivedAttribute#getAggregateFunction <em>Aggregate Function</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference '<em>Aggregate Function</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateDerivedFeature#getAggregateFunction()
-	 * @see #getAggregateDerivedFeature()
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateDerivedAttribute#getAggregateFunction()
+	 * @see #getAggregateDerivedAttribute()
 	 * @generated
 	 */
-	EReference getAggregateDerivedFeature_AggregateFunction();
+	EReference getAggregateDerivedAttribute_AggregateFunction();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicDerivedFeature <em>Basic Derived Feature</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicDerivedAttribute <em>Basic Derived Attribute</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Basic Derived Feature</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicDerivedFeature
+	 * @return the meta object for class '<em>Basic Derived Attribute</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicDerivedAttribute
 	 * @generated
 	 */
-	EClass getBasicDerivedFeature();
+	EClass getBasicDerivedAttribute();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicDerivedFeature#getBasicScenarioLogic <em>Basic Scenario Logic</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicDerivedAttribute#getBasicScenarioLogic <em>Basic Scenario Logic</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Basic Scenario Logic</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicDerivedFeature#getBasicScenarioLogic()
-	 * @see #getBasicDerivedFeature()
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicDerivedAttribute#getBasicScenarioLogic()
+	 * @see #getBasicDerivedAttribute()
 	 * @generated
 	 */
-	EReference getBasicDerivedFeature_BasicScenarioLogic();
+	EReference getBasicDerivedAttribute_BasicScenarioLogic();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicScenarioLogic <em>Basic Scenario Logic</em>}'.
@@ -4472,25 +5127,46 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	EReference getBasicScenarioLogic_Sceanrio();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedFeature <em>Derived Feature</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedAttribute <em>Derived Attribute</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Derived Feature</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedFeature
+	 * @return the meta object for class '<em>Derived Attribute</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedAttribute
 	 * @generated
 	 */
-	EClass getDerivedFeature();
+	EClass getDerivedAttribute();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedFeature#getVariable <em>Variable</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedAttribute#getVariable <em>Variable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Variable</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedFeature#getVariable()
-	 * @see #getDerivedFeature()
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedAttribute#getVariable()
+	 * @see #getDerivedAttribute()
 	 * @generated
 	 */
-	EReference getDerivedFeature_Variable();
+	EReference getDerivedAttribute_Variable();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedStruct <em>Derived Struct</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Derived Struct</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedStruct
+	 * @generated
+	 */
+	EClass getDerivedStruct();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedStruct#getCube <em>Cube</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Cube</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedStruct#getCube()
+	 * @see #getDerivedStruct()
+	 * @generated
+	 */
+	EReference getDerivedStruct_Cube();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BaseFeature <em>Base Feature</em>}'.
@@ -4949,6 +5625,69 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	EReference getExplodeArrayOfStructsRowFunction_ArraySourceVariable();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntityModule <em>Derived Entity Module</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Derived Entity Module</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntityModule
+	 * @generated
+	 */
+	EClass getDerivedEntityModule();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntityModule#getDerivedEntities <em>Derived Entities</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Derived Entities</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntityModule#getDerivedEntities()
+	 * @see #getDerivedEntityModule()
+	 * @generated
+	 */
+	EReference getDerivedEntityModule_DerivedEntities();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.IntermediateDerivedEntitiesModule <em>Intermediate Derived Entities Module</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Intermediate Derived Entities Module</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.IntermediateDerivedEntitiesModule
+	 * @generated
+	 */
+	EClass getIntermediateDerivedEntitiesModule();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.IntermediateDerivedEntitiesModule#getIntermediateDerivedEntities <em>Intermediate Derived Entities</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Intermediate Derived Entities</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.IntermediateDerivedEntitiesModule#getIntermediateDerivedEntities()
+	 * @see #getIntermediateDerivedEntitiesModule()
+	 * @generated
+	 */
+	EReference getIntermediateDerivedEntitiesModule_IntermediateDerivedEntities();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GeneratedEntityModule <em>Generated Entity Module</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Generated Entity Module</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GeneratedEntityModule
+	 * @generated
+	 */
+	EClass getGeneratedEntityModule();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GeneratedEntityModule#getGeneratedEntities <em>Generated Entities</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Generated Entities</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GeneratedEntityModule#getGeneratedEntities()
+	 * @see #getGeneratedEntityModule()
+	 * @generated
+	 */
+	EReference getGeneratedEntityModule_GeneratedEntities();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4990,12 +5729,12 @@ public interface Ecore_plus_logicPackage extends EPackage {
 		EReference DERIVED_ENTITY__SOURCE_ENTITIES = eINSTANCE.getDerivedEntity_SourceEntities();
 
 		/**
-		 * The meta object literal for the '<em><b>Derived Features</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Derived Attributes</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference DERIVED_ENTITY__DERIVED_FEATURES = eINSTANCE.getDerivedEntity_DerivedFeatures();
+		EReference DERIVED_ENTITY__DERIVED_ATTRIBUTES = eINSTANCE.getDerivedEntity_DerivedAttributes();
 
 		/**
 		 * The meta object literal for the '<em><b>Row Creation Approach For Entity</b></em>' containment reference feature.
@@ -5012,6 +5751,14 @@ public interface Ecore_plus_logicPackage extends EPackage {
 		 * @generated
 		 */
 		EReference DERIVED_ENTITY__CUBE = eINSTANCE.getDerivedEntity_Cube();
+
+		/**
+		 * The meta object literal for the '<em><b>Derived Structs</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DERIVED_ENTITY__DERIVED_STRUCTS = eINSTANCE.getDerivedEntity_DerivedStructs();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.IntermediateDerivedEntityImpl <em>Intermediate Derived Entity</em>}' class.
@@ -5266,14 +6013,14 @@ public interface Ecore_plus_logicPackage extends EPackage {
 		EReference VALUE_PARAMETER__DATA_TYPE = eINSTANCE.getValueParameter_DataType();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.AggregateDerivedFeatureImpl <em>Aggregate Derived Feature</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.AggregateDerivedAttributeImpl <em>Aggregate Derived Attribute</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.AggregateDerivedFeatureImpl
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getAggregateDerivedFeature()
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.AggregateDerivedAttributeImpl
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getAggregateDerivedAttribute()
 		 * @generated
 		 */
-		EClass AGGREGATE_DERIVED_FEATURE = eINSTANCE.getAggregateDerivedFeature();
+		EClass AGGREGATE_DERIVED_ATTRIBUTE = eINSTANCE.getAggregateDerivedAttribute();
 
 		/**
 		 * The meta object literal for the '<em><b>Aggregate Function</b></em>' containment reference feature.
@@ -5281,17 +6028,17 @@ public interface Ecore_plus_logicPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference AGGREGATE_DERIVED_FEATURE__AGGREGATE_FUNCTION = eINSTANCE.getAggregateDerivedFeature_AggregateFunction();
+		EReference AGGREGATE_DERIVED_ATTRIBUTE__AGGREGATE_FUNCTION = eINSTANCE.getAggregateDerivedAttribute_AggregateFunction();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicDerivedFeatureImpl <em>Basic Derived Feature</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicDerivedAttributeImpl <em>Basic Derived Attribute</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicDerivedFeatureImpl
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getBasicDerivedFeature()
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicDerivedAttributeImpl
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getBasicDerivedAttribute()
 		 * @generated
 		 */
-		EClass BASIC_DERIVED_FEATURE = eINSTANCE.getBasicDerivedFeature();
+		EClass BASIC_DERIVED_ATTRIBUTE = eINSTANCE.getBasicDerivedAttribute();
 
 		/**
 		 * The meta object literal for the '<em><b>Basic Scenario Logic</b></em>' containment reference list feature.
@@ -5299,7 +6046,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference BASIC_DERIVED_FEATURE__BASIC_SCENARIO_LOGIC = eINSTANCE.getBasicDerivedFeature_BasicScenarioLogic();
+		EReference BASIC_DERIVED_ATTRIBUTE__BASIC_SCENARIO_LOGIC = eINSTANCE.getBasicDerivedAttribute_BasicScenarioLogic();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicScenarioLogicImpl <em>Basic Scenario Logic</em>}' class.
@@ -5328,14 +6075,14 @@ public interface Ecore_plus_logicPackage extends EPackage {
 		EReference BASIC_SCENARIO_LOGIC__SCEANRIO = eINSTANCE.getBasicScenarioLogic_Sceanrio();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedFeatureImpl <em>Derived Feature</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedAttributeImpl <em>Derived Attribute</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedFeatureImpl
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getDerivedFeature()
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedAttributeImpl
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getDerivedAttribute()
 		 * @generated
 		 */
-		EClass DERIVED_FEATURE = eINSTANCE.getDerivedFeature();
+		EClass DERIVED_ATTRIBUTE = eINSTANCE.getDerivedAttribute();
 
 		/**
 		 * The meta object literal for the '<em><b>Variable</b></em>' reference feature.
@@ -5343,7 +6090,25 @@ public interface Ecore_plus_logicPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference DERIVED_FEATURE__VARIABLE = eINSTANCE.getDerivedFeature_Variable();
+		EReference DERIVED_ATTRIBUTE__VARIABLE = eINSTANCE.getDerivedAttribute_Variable();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedStructImpl <em>Derived Struct</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedStructImpl
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getDerivedStruct()
+		 * @generated
+		 */
+		EClass DERIVED_STRUCT = eINSTANCE.getDerivedStruct();
+
+		/**
+		 * The meta object literal for the '<em><b>Cube</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DERIVED_STRUCT__CUBE = eINSTANCE.getDerivedStruct_Cube();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BaseFeatureImpl <em>Base Feature</em>}' class.
@@ -5722,6 +6487,60 @@ public interface Ecore_plus_logicPackage extends EPackage {
 		 * @generated
 		 */
 		EReference EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION__ARRAY_SOURCE_VARIABLE = eINSTANCE.getExplodeArrayOfStructsRowFunction_ArraySourceVariable();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedEntityModuleImpl <em>Derived Entity Module</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedEntityModuleImpl
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getDerivedEntityModule()
+		 * @generated
+		 */
+		EClass DERIVED_ENTITY_MODULE = eINSTANCE.getDerivedEntityModule();
+
+		/**
+		 * The meta object literal for the '<em><b>Derived Entities</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DERIVED_ENTITY_MODULE__DERIVED_ENTITIES = eINSTANCE.getDerivedEntityModule_DerivedEntities();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.IntermediateDerivedEntitiesModuleImpl <em>Intermediate Derived Entities Module</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.IntermediateDerivedEntitiesModuleImpl
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getIntermediateDerivedEntitiesModule()
+		 * @generated
+		 */
+		EClass INTERMEDIATE_DERIVED_ENTITIES_MODULE = eINSTANCE.getIntermediateDerivedEntitiesModule();
+
+		/**
+		 * The meta object literal for the '<em><b>Intermediate Derived Entities</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference INTERMEDIATE_DERIVED_ENTITIES_MODULE__INTERMEDIATE_DERIVED_ENTITIES = eINSTANCE.getIntermediateDerivedEntitiesModule_IntermediateDerivedEntities();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.GeneratedEntityModuleImpl <em>Generated Entity Module</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.GeneratedEntityModuleImpl
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getGeneratedEntityModule()
+		 * @generated
+		 */
+		EClass GENERATED_ENTITY_MODULE = eINSTANCE.getGeneratedEntityModule();
+
+		/**
+		 * The meta object literal for the '<em><b>Generated Entities</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference GENERATED_ENTITY_MODULE__GENERATED_ENTITIES = eINSTANCE.getGeneratedEntityModule_GeneratedEntities();
 
 	}
 

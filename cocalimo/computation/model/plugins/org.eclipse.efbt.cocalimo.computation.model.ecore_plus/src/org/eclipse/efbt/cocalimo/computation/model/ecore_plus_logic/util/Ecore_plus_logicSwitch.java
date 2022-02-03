@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EParameter;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.ETypedElement;
 
@@ -195,25 +196,27 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case Ecore_plus_logicPackage.AGGREGATE_DERIVED_FEATURE: {
-				AggregateDerivedFeature aggregateDerivedFeature = (AggregateDerivedFeature)theEObject;
-				T result = caseAggregateDerivedFeature(aggregateDerivedFeature);
-				if (result == null) result = caseDerivedFeature(aggregateDerivedFeature);
-				if (result == null) result = caseEStructuralFeature(aggregateDerivedFeature);
-				if (result == null) result = caseETypedElement(aggregateDerivedFeature);
-				if (result == null) result = caseENamedElement(aggregateDerivedFeature);
-				if (result == null) result = caseEModelElement(aggregateDerivedFeature);
+			case Ecore_plus_logicPackage.AGGREGATE_DERIVED_ATTRIBUTE: {
+				AggregateDerivedAttribute aggregateDerivedAttribute = (AggregateDerivedAttribute)theEObject;
+				T result = caseAggregateDerivedAttribute(aggregateDerivedAttribute);
+				if (result == null) result = caseDerivedAttribute(aggregateDerivedAttribute);
+				if (result == null) result = caseEAttribute(aggregateDerivedAttribute);
+				if (result == null) result = caseEStructuralFeature(aggregateDerivedAttribute);
+				if (result == null) result = caseETypedElement(aggregateDerivedAttribute);
+				if (result == null) result = caseENamedElement(aggregateDerivedAttribute);
+				if (result == null) result = caseEModelElement(aggregateDerivedAttribute);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case Ecore_plus_logicPackage.BASIC_DERIVED_FEATURE: {
-				BasicDerivedFeature basicDerivedFeature = (BasicDerivedFeature)theEObject;
-				T result = caseBasicDerivedFeature(basicDerivedFeature);
-				if (result == null) result = caseDerivedFeature(basicDerivedFeature);
-				if (result == null) result = caseEStructuralFeature(basicDerivedFeature);
-				if (result == null) result = caseETypedElement(basicDerivedFeature);
-				if (result == null) result = caseENamedElement(basicDerivedFeature);
-				if (result == null) result = caseEModelElement(basicDerivedFeature);
+			case Ecore_plus_logicPackage.BASIC_DERIVED_ATTRIBUTE: {
+				BasicDerivedAttribute basicDerivedAttribute = (BasicDerivedAttribute)theEObject;
+				T result = caseBasicDerivedAttribute(basicDerivedAttribute);
+				if (result == null) result = caseDerivedAttribute(basicDerivedAttribute);
+				if (result == null) result = caseEAttribute(basicDerivedAttribute);
+				if (result == null) result = caseEStructuralFeature(basicDerivedAttribute);
+				if (result == null) result = caseETypedElement(basicDerivedAttribute);
+				if (result == null) result = caseENamedElement(basicDerivedAttribute);
+				if (result == null) result = caseEModelElement(basicDerivedAttribute);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -223,13 +226,25 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case Ecore_plus_logicPackage.DERIVED_FEATURE: {
-				DerivedFeature derivedFeature = (DerivedFeature)theEObject;
-				T result = caseDerivedFeature(derivedFeature);
-				if (result == null) result = caseEStructuralFeature(derivedFeature);
-				if (result == null) result = caseETypedElement(derivedFeature);
-				if (result == null) result = caseENamedElement(derivedFeature);
-				if (result == null) result = caseEModelElement(derivedFeature);
+			case Ecore_plus_logicPackage.DERIVED_ATTRIBUTE: {
+				DerivedAttribute derivedAttribute = (DerivedAttribute)theEObject;
+				T result = caseDerivedAttribute(derivedAttribute);
+				if (result == null) result = caseEAttribute(derivedAttribute);
+				if (result == null) result = caseEStructuralFeature(derivedAttribute);
+				if (result == null) result = caseETypedElement(derivedAttribute);
+				if (result == null) result = caseENamedElement(derivedAttribute);
+				if (result == null) result = caseEModelElement(derivedAttribute);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Ecore_plus_logicPackage.DERIVED_STRUCT: {
+				DerivedStruct derivedStruct = (DerivedStruct)theEObject;
+				T result = caseDerivedStruct(derivedStruct);
+				if (result == null) result = caseEReference(derivedStruct);
+				if (result == null) result = caseEStructuralFeature(derivedStruct);
+				if (result == null) result = caseETypedElement(derivedStruct);
+				if (result == null) result = caseENamedElement(derivedStruct);
+				if (result == null) result = caseEModelElement(derivedStruct);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -267,7 +282,8 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 			case Ecore_plus_logicPackage.GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE: {
 				GetAttributeFromEntityDerivedFeature getAttributeFromEntityDerivedFeature = (GetAttributeFromEntityDerivedFeature)theEObject;
 				T result = caseGetAttributeFromEntityDerivedFeature(getAttributeFromEntityDerivedFeature);
-				if (result == null) result = caseDerivedFeature(getAttributeFromEntityDerivedFeature);
+				if (result == null) result = caseDerivedAttribute(getAttributeFromEntityDerivedFeature);
+				if (result == null) result = caseEAttribute(getAttributeFromEntityDerivedFeature);
 				if (result == null) result = caseEStructuralFeature(getAttributeFromEntityDerivedFeature);
 				if (result == null) result = caseETypedElement(getAttributeFromEntityDerivedFeature);
 				if (result == null) result = caseENamedElement(getAttributeFromEntityDerivedFeature);
@@ -357,6 +373,27 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 				ExplodeArrayOfStructsRowFunction explodeArrayOfStructsRowFunction = (ExplodeArrayOfStructsRowFunction)theEObject;
 				T result = caseExplodeArrayOfStructsRowFunction(explodeArrayOfStructsRowFunction);
 				if (result == null) result = caseRowCreationApproach(explodeArrayOfStructsRowFunction);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Ecore_plus_logicPackage.DERIVED_ENTITY_MODULE: {
+				DerivedEntityModule derivedEntityModule = (DerivedEntityModule)theEObject;
+				T result = caseDerivedEntityModule(derivedEntityModule);
+				if (result == null) result = caseModule(derivedEntityModule);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Ecore_plus_logicPackage.INTERMEDIATE_DERIVED_ENTITIES_MODULE: {
+				IntermediateDerivedEntitiesModule intermediateDerivedEntitiesModule = (IntermediateDerivedEntitiesModule)theEObject;
+				T result = caseIntermediateDerivedEntitiesModule(intermediateDerivedEntitiesModule);
+				if (result == null) result = caseModule(intermediateDerivedEntitiesModule);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Ecore_plus_logicPackage.GENERATED_ENTITY_MODULE: {
+				GeneratedEntityModule generatedEntityModule = (GeneratedEntityModule)theEObject;
+				T result = caseGeneratedEntityModule(generatedEntityModule);
+				if (result == null) result = caseModule(generatedEntityModule);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -590,32 +627,32 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Aggregate Derived Feature</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Aggregate Derived Attribute</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Aggregate Derived Feature</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Aggregate Derived Attribute</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseAggregateDerivedFeature(AggregateDerivedFeature object) {
+	public T caseAggregateDerivedAttribute(AggregateDerivedAttribute object) {
 		return null;
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Basic Derived Feature</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Basic Derived Attribute</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Basic Derived Feature</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Basic Derived Attribute</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseBasicDerivedFeature(BasicDerivedFeature object) {
+	public T caseBasicDerivedAttribute(BasicDerivedAttribute object) {
 		return null;
 	}
 
@@ -635,17 +672,32 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Derived Feature</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Derived Attribute</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Derived Feature</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Derived Attribute</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseDerivedFeature(DerivedFeature object) {
+	public T caseDerivedAttribute(DerivedAttribute object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Derived Struct</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Derived Struct</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseDerivedStruct(DerivedStruct object) {
 		return null;
 	}
 
@@ -905,6 +957,51 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Derived Entity Module</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Derived Entity Module</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseDerivedEntityModule(DerivedEntityModule object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Intermediate Derived Entities Module</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Intermediate Derived Entities Module</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseIntermediateDerivedEntitiesModule(IntermediateDerivedEntitiesModule object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Generated Entity Module</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Generated Entity Module</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseGeneratedEntityModule(GeneratedEntityModule object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>EModel Element</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -1036,6 +1133,21 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseEAttribute(EAttribute object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>EReference</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>EReference</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseEReference(EReference object) {
 		return null;
 	}
 

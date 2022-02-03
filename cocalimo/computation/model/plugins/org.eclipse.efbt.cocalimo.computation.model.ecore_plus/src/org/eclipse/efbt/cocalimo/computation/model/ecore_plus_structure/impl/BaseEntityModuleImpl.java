@@ -2,19 +2,23 @@
  */
 package org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl;
 
+import java.util.Collection;
+
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.BaseEntity;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.BaseEntityModule;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.Ecore_plus_structurePackage;
 
 import org.eclipse.efbt.cocalimo.core.model.module_management.impl.ModuleImpl;
 
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -31,14 +35,14 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  */
 public class BaseEntityModuleImpl extends ModuleImpl implements BaseEntityModule {
 	/**
-	 * The cached value of the '{@link #getBaseEntities() <em>Base Entities</em>}' containment reference.
+	 * The cached value of the '{@link #getBaseEntities() <em>Base Entities</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getBaseEntities()
 	 * @generated
 	 * @ordered
 	 */
-	protected BaseEntity baseEntities;
+	protected EList<BaseEntity> baseEntities;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -64,42 +68,11 @@ public class BaseEntityModuleImpl extends ModuleImpl implements BaseEntityModule
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public BaseEntity getBaseEntities() {
+	public EList<BaseEntity> getBaseEntities() {
+		if (baseEntities == null) {
+			baseEntities = new EObjectContainmentEList<BaseEntity>(BaseEntity.class, this, Ecore_plus_structurePackage.BASE_ENTITY_MODULE__BASE_ENTITIES);
+		}
 		return baseEntities;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain basicSetBaseEntities(BaseEntity newBaseEntities, NotificationChain msgs) {
-		BaseEntity oldBaseEntities = baseEntities;
-		baseEntities = newBaseEntities;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, Ecore_plus_structurePackage.BASE_ENTITY_MODULE__BASE_ENTITIES, oldBaseEntities, newBaseEntities);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setBaseEntities(BaseEntity newBaseEntities) {
-		if (newBaseEntities != baseEntities) {
-			NotificationChain msgs = null;
-			if (baseEntities != null)
-				msgs = ((InternalEObject)baseEntities).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - Ecore_plus_structurePackage.BASE_ENTITY_MODULE__BASE_ENTITIES, null, msgs);
-			if (newBaseEntities != null)
-				msgs = ((InternalEObject)newBaseEntities).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - Ecore_plus_structurePackage.BASE_ENTITY_MODULE__BASE_ENTITIES, null, msgs);
-			msgs = basicSetBaseEntities(newBaseEntities, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, Ecore_plus_structurePackage.BASE_ENTITY_MODULE__BASE_ENTITIES, newBaseEntities, newBaseEntities));
 	}
 
 	/**
@@ -111,7 +84,7 @@ public class BaseEntityModuleImpl extends ModuleImpl implements BaseEntityModule
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case Ecore_plus_structurePackage.BASE_ENTITY_MODULE__BASE_ENTITIES:
-				return basicSetBaseEntities(null, msgs);
+				return ((InternalEList<?>)getBaseEntities()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -135,11 +108,13 @@ public class BaseEntityModuleImpl extends ModuleImpl implements BaseEntityModule
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Ecore_plus_structurePackage.BASE_ENTITY_MODULE__BASE_ENTITIES:
-				setBaseEntities((BaseEntity)newValue);
+				getBaseEntities().clear();
+				getBaseEntities().addAll((Collection<? extends BaseEntity>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -154,7 +129,7 @@ public class BaseEntityModuleImpl extends ModuleImpl implements BaseEntityModule
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Ecore_plus_structurePackage.BASE_ENTITY_MODULE__BASE_ENTITIES:
-				setBaseEntities((BaseEntity)null);
+				getBaseEntities().clear();
 				return;
 		}
 		super.eUnset(featureID);
@@ -169,7 +144,7 @@ public class BaseEntityModuleImpl extends ModuleImpl implements BaseEntityModule
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Ecore_plus_structurePackage.BASE_ENTITY_MODULE__BASE_ENTITIES:
-				return baseEntities != null;
+				return baseEntities != null && !baseEntities.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
