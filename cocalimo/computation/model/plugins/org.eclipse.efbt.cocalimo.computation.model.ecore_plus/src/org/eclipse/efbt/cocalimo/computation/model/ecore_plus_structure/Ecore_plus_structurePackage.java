@@ -60,76 +60,6 @@ public interface Ecore_plus_structurePackage extends EPackage {
 	Ecore_plus_structurePackage eINSTANCE = org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.Ecore_plus_structurePackageImpl.init();
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.BaseEntityImpl <em>Base Entity</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.BaseEntityImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.Ecore_plus_structurePackageImpl#getBaseEntity()
-	 * @generated
-	 */
-	int BASE_ENTITY = 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.CellImpl <em>Cell</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.CellImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.Ecore_plus_structurePackageImpl#getCell()
-	 * @generated
-	 */
-	int CELL = 1;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.HeirarchicalEnumImpl <em>Heirarchical Enum</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.HeirarchicalEnumImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.Ecore_plus_structurePackageImpl#getHeirarchicalEnum()
-	 * @generated
-	 */
-	int HEIRARCHICAL_ENUM = 2;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.HeirarchicalEnumLiteralImpl <em>Heirarchical Enum Literal</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.HeirarchicalEnumLiteralImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.Ecore_plus_structurePackageImpl#getHeirarchicalEnumLiteral()
-	 * @generated
-	 */
-	int HEIRARCHICAL_ENUM_LITERAL = 3;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.EnumeratedDomainImpl <em>Enumerated Domain</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.EnumeratedDomainImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.Ecore_plus_structurePackageImpl#getEnumeratedDomain()
-	 * @generated
-	 */
-	int ENUMERATED_DOMAIN = 4;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.SubDomainEnumImpl <em>Sub Domain Enum</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.SubDomainEnumImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.Ecore_plus_structurePackageImpl#getSubDomainEnum()
-	 * @generated
-	 */
-	int SUB_DOMAIN_ENUM = 5;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.CellsParameterImpl <em>Cells Parameter</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.CellsParameterImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.Ecore_plus_structurePackageImpl#getCellsParameter()
-	 * @generated
-	 */
-	int CELLS_PARAMETER = 6;
-
-	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.EntityImpl <em>Entity</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -137,7 +67,7 @@ public interface Ecore_plus_structurePackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.Ecore_plus_structurePackageImpl#getEntity()
 	 * @generated
 	 */
-	int ENTITY = 7;
+	int ENTITY = 2;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
@@ -491,6 +421,16 @@ public interface Ecore_plus_structurePackage extends EPackage {
 	int ENTITY_OPERATION_COUNT = EcorePackage.ECLASS_OPERATION_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.BaseEntityImpl <em>Base Entity</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.BaseEntityImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.Ecore_plus_structurePackageImpl#getBaseEntity()
+	 * @generated
+	 */
+	int BASE_ENTITY = 0;
+
+	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -716,22 +656,13 @@ public interface Ecore_plus_structurePackage extends EPackage {
 	int BASE_ENTITY__BASE_FEATURES = ENTITY_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Cube</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_ENTITY__CUBE = ENTITY_FEATURE_COUNT + 1;
-
-	/**
 	 * The number of structural features of the '<em>Base Entity</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BASE_ENTITY_FEATURE_COUNT = ENTITY_FEATURE_COUNT + 2;
+	int BASE_ENTITY_FEATURE_COUNT = ENTITY_FEATURE_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Get EAnnotation</em>' operation.
@@ -860,6 +791,16 @@ public interface Ecore_plus_structurePackage extends EPackage {
 	int BASE_ENTITY_OPERATION_COUNT = ENTITY_OPERATION_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.CellImpl <em>Cell</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.CellImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.Ecore_plus_structurePackageImpl#getCell()
+	 * @generated
+	 */
+	int CELL = 1;
+
+	/**
 	 * The feature id for the '<em><b>Row</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -896,636 +837,6 @@ public interface Ecore_plus_structurePackage extends EPackage {
 	int CELL_OPERATION_COUNT = 0;
 
 	/**
-	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int HEIRARCHICAL_ENUM__EANNOTATIONS = EcorePackage.EENUM__EANNOTATIONS;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int HEIRARCHICAL_ENUM__NAME = EcorePackage.EENUM__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Instance Class Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int HEIRARCHICAL_ENUM__INSTANCE_CLASS_NAME = EcorePackage.EENUM__INSTANCE_CLASS_NAME;
-
-	/**
-	 * The feature id for the '<em><b>Instance Class</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int HEIRARCHICAL_ENUM__INSTANCE_CLASS = EcorePackage.EENUM__INSTANCE_CLASS;
-
-	/**
-	 * The feature id for the '<em><b>Default Value</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int HEIRARCHICAL_ENUM__DEFAULT_VALUE = EcorePackage.EENUM__DEFAULT_VALUE;
-
-	/**
-	 * The feature id for the '<em><b>Instance Type Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int HEIRARCHICAL_ENUM__INSTANCE_TYPE_NAME = EcorePackage.EENUM__INSTANCE_TYPE_NAME;
-
-	/**
-	 * The feature id for the '<em><b>EPackage</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int HEIRARCHICAL_ENUM__EPACKAGE = EcorePackage.EENUM__EPACKAGE;
-
-	/**
-	 * The feature id for the '<em><b>EType Parameters</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int HEIRARCHICAL_ENUM__ETYPE_PARAMETERS = EcorePackage.EENUM__ETYPE_PARAMETERS;
-
-	/**
-	 * The feature id for the '<em><b>Serializable</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int HEIRARCHICAL_ENUM__SERIALIZABLE = EcorePackage.EENUM__SERIALIZABLE;
-
-	/**
-	 * The feature id for the '<em><b>ELiterals</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int HEIRARCHICAL_ENUM__ELITERALS = EcorePackage.EENUM__ELITERALS;
-
-	/**
-	 * The number of structural features of the '<em>Heirarchical Enum</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int HEIRARCHICAL_ENUM_FEATURE_COUNT = EcorePackage.EENUM_FEATURE_COUNT + 0;
-
-	/**
-	 * The operation id for the '<em>Get EAnnotation</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int HEIRARCHICAL_ENUM___GET_EANNOTATION__STRING = EcorePackage.EENUM___GET_EANNOTATION__STRING;
-
-	/**
-	 * The operation id for the '<em>Is Instance</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int HEIRARCHICAL_ENUM___IS_INSTANCE__OBJECT = EcorePackage.EENUM___IS_INSTANCE__OBJECT;
-
-	/**
-	 * The operation id for the '<em>Get Classifier ID</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int HEIRARCHICAL_ENUM___GET_CLASSIFIER_ID = EcorePackage.EENUM___GET_CLASSIFIER_ID;
-
-	/**
-	 * The operation id for the '<em>Get EEnum Literal</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int HEIRARCHICAL_ENUM___GET_EENUM_LITERAL__STRING = EcorePackage.EENUM___GET_EENUM_LITERAL__STRING;
-
-	/**
-	 * The operation id for the '<em>Get EEnum Literal</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int HEIRARCHICAL_ENUM___GET_EENUM_LITERAL__INT = EcorePackage.EENUM___GET_EENUM_LITERAL__INT;
-
-	/**
-	 * The operation id for the '<em>Get EEnum Literal By Literal</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int HEIRARCHICAL_ENUM___GET_EENUM_LITERAL_BY_LITERAL__STRING = EcorePackage.EENUM___GET_EENUM_LITERAL_BY_LITERAL__STRING;
-
-	/**
-	 * The number of operations of the '<em>Heirarchical Enum</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int HEIRARCHICAL_ENUM_OPERATION_COUNT = EcorePackage.EENUM_OPERATION_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int HEIRARCHICAL_ENUM_LITERAL__EANNOTATIONS = EcorePackage.EENUM_LITERAL__EANNOTATIONS;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int HEIRARCHICAL_ENUM_LITERAL__NAME = EcorePackage.EENUM_LITERAL__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Value</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int HEIRARCHICAL_ENUM_LITERAL__VALUE = EcorePackage.EENUM_LITERAL__VALUE;
-
-	/**
-	 * The feature id for the '<em><b>Instance</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int HEIRARCHICAL_ENUM_LITERAL__INSTANCE = EcorePackage.EENUM_LITERAL__INSTANCE;
-
-	/**
-	 * The feature id for the '<em><b>Literal</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int HEIRARCHICAL_ENUM_LITERAL__LITERAL = EcorePackage.EENUM_LITERAL__LITERAL;
-
-	/**
-	 * The feature id for the '<em><b>EEnum</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int HEIRARCHICAL_ENUM_LITERAL__EENUM = EcorePackage.EENUM_LITERAL__EENUM;
-
-	/**
-	 * The feature id for the '<em><b>Parent Literal</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int HEIRARCHICAL_ENUM_LITERAL__PARENT_LITERAL = EcorePackage.EENUM_LITERAL_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Heirarchical Enum Literal</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int HEIRARCHICAL_ENUM_LITERAL_FEATURE_COUNT = EcorePackage.EENUM_LITERAL_FEATURE_COUNT + 1;
-
-	/**
-	 * The operation id for the '<em>Get EAnnotation</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int HEIRARCHICAL_ENUM_LITERAL___GET_EANNOTATION__STRING = EcorePackage.EENUM_LITERAL___GET_EANNOTATION__STRING;
-
-	/**
-	 * The number of operations of the '<em>Heirarchical Enum Literal</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int HEIRARCHICAL_ENUM_LITERAL_OPERATION_COUNT = EcorePackage.EENUM_LITERAL_OPERATION_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ENUMERATED_DOMAIN__EANNOTATIONS = HEIRARCHICAL_ENUM__EANNOTATIONS;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ENUMERATED_DOMAIN__NAME = HEIRARCHICAL_ENUM__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Instance Class Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ENUMERATED_DOMAIN__INSTANCE_CLASS_NAME = HEIRARCHICAL_ENUM__INSTANCE_CLASS_NAME;
-
-	/**
-	 * The feature id for the '<em><b>Instance Class</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ENUMERATED_DOMAIN__INSTANCE_CLASS = HEIRARCHICAL_ENUM__INSTANCE_CLASS;
-
-	/**
-	 * The feature id for the '<em><b>Default Value</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ENUMERATED_DOMAIN__DEFAULT_VALUE = HEIRARCHICAL_ENUM__DEFAULT_VALUE;
-
-	/**
-	 * The feature id for the '<em><b>Instance Type Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ENUMERATED_DOMAIN__INSTANCE_TYPE_NAME = HEIRARCHICAL_ENUM__INSTANCE_TYPE_NAME;
-
-	/**
-	 * The feature id for the '<em><b>EPackage</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ENUMERATED_DOMAIN__EPACKAGE = HEIRARCHICAL_ENUM__EPACKAGE;
-
-	/**
-	 * The feature id for the '<em><b>EType Parameters</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ENUMERATED_DOMAIN__ETYPE_PARAMETERS = HEIRARCHICAL_ENUM__ETYPE_PARAMETERS;
-
-	/**
-	 * The feature id for the '<em><b>Serializable</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ENUMERATED_DOMAIN__SERIALIZABLE = HEIRARCHICAL_ENUM__SERIALIZABLE;
-
-	/**
-	 * The feature id for the '<em><b>ELiterals</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ENUMERATED_DOMAIN__ELITERALS = HEIRARCHICAL_ENUM__ELITERALS;
-
-	/**
-	 * The feature id for the '<em><b>Domain</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ENUMERATED_DOMAIN__DOMAIN = HEIRARCHICAL_ENUM_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Enumerated Domain</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ENUMERATED_DOMAIN_FEATURE_COUNT = HEIRARCHICAL_ENUM_FEATURE_COUNT + 1;
-
-	/**
-	 * The operation id for the '<em>Get EAnnotation</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ENUMERATED_DOMAIN___GET_EANNOTATION__STRING = HEIRARCHICAL_ENUM___GET_EANNOTATION__STRING;
-
-	/**
-	 * The operation id for the '<em>Is Instance</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ENUMERATED_DOMAIN___IS_INSTANCE__OBJECT = HEIRARCHICAL_ENUM___IS_INSTANCE__OBJECT;
-
-	/**
-	 * The operation id for the '<em>Get Classifier ID</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ENUMERATED_DOMAIN___GET_CLASSIFIER_ID = HEIRARCHICAL_ENUM___GET_CLASSIFIER_ID;
-
-	/**
-	 * The operation id for the '<em>Get EEnum Literal</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ENUMERATED_DOMAIN___GET_EENUM_LITERAL__STRING = HEIRARCHICAL_ENUM___GET_EENUM_LITERAL__STRING;
-
-	/**
-	 * The operation id for the '<em>Get EEnum Literal</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ENUMERATED_DOMAIN___GET_EENUM_LITERAL__INT = HEIRARCHICAL_ENUM___GET_EENUM_LITERAL__INT;
-
-	/**
-	 * The operation id for the '<em>Get EEnum Literal By Literal</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ENUMERATED_DOMAIN___GET_EENUM_LITERAL_BY_LITERAL__STRING = HEIRARCHICAL_ENUM___GET_EENUM_LITERAL_BY_LITERAL__STRING;
-
-	/**
-	 * The number of operations of the '<em>Enumerated Domain</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ENUMERATED_DOMAIN_OPERATION_COUNT = HEIRARCHICAL_ENUM_OPERATION_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SUB_DOMAIN_ENUM__EANNOTATIONS = HEIRARCHICAL_ENUM__EANNOTATIONS;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SUB_DOMAIN_ENUM__NAME = HEIRARCHICAL_ENUM__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Instance Class Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SUB_DOMAIN_ENUM__INSTANCE_CLASS_NAME = HEIRARCHICAL_ENUM__INSTANCE_CLASS_NAME;
-
-	/**
-	 * The feature id for the '<em><b>Instance Class</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SUB_DOMAIN_ENUM__INSTANCE_CLASS = HEIRARCHICAL_ENUM__INSTANCE_CLASS;
-
-	/**
-	 * The feature id for the '<em><b>Default Value</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SUB_DOMAIN_ENUM__DEFAULT_VALUE = HEIRARCHICAL_ENUM__DEFAULT_VALUE;
-
-	/**
-	 * The feature id for the '<em><b>Instance Type Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SUB_DOMAIN_ENUM__INSTANCE_TYPE_NAME = HEIRARCHICAL_ENUM__INSTANCE_TYPE_NAME;
-
-	/**
-	 * The feature id for the '<em><b>EPackage</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SUB_DOMAIN_ENUM__EPACKAGE = HEIRARCHICAL_ENUM__EPACKAGE;
-
-	/**
-	 * The feature id for the '<em><b>EType Parameters</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SUB_DOMAIN_ENUM__ETYPE_PARAMETERS = HEIRARCHICAL_ENUM__ETYPE_PARAMETERS;
-
-	/**
-	 * The feature id for the '<em><b>Serializable</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SUB_DOMAIN_ENUM__SERIALIZABLE = HEIRARCHICAL_ENUM__SERIALIZABLE;
-
-	/**
-	 * The feature id for the '<em><b>ELiterals</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SUB_DOMAIN_ENUM__ELITERALS = HEIRARCHICAL_ENUM__ELITERALS;
-
-	/**
-	 * The feature id for the '<em><b>Primary Enum</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SUB_DOMAIN_ENUM__PRIMARY_ENUM = HEIRARCHICAL_ENUM_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Sub Domain</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SUB_DOMAIN_ENUM__SUB_DOMAIN = HEIRARCHICAL_ENUM_FEATURE_COUNT + 1;
-
-	/**
-	 * The number of structural features of the '<em>Sub Domain Enum</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SUB_DOMAIN_ENUM_FEATURE_COUNT = HEIRARCHICAL_ENUM_FEATURE_COUNT + 2;
-
-	/**
-	 * The operation id for the '<em>Get EAnnotation</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SUB_DOMAIN_ENUM___GET_EANNOTATION__STRING = HEIRARCHICAL_ENUM___GET_EANNOTATION__STRING;
-
-	/**
-	 * The operation id for the '<em>Is Instance</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SUB_DOMAIN_ENUM___IS_INSTANCE__OBJECT = HEIRARCHICAL_ENUM___IS_INSTANCE__OBJECT;
-
-	/**
-	 * The operation id for the '<em>Get Classifier ID</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SUB_DOMAIN_ENUM___GET_CLASSIFIER_ID = HEIRARCHICAL_ENUM___GET_CLASSIFIER_ID;
-
-	/**
-	 * The operation id for the '<em>Get EEnum Literal</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SUB_DOMAIN_ENUM___GET_EENUM_LITERAL__STRING = HEIRARCHICAL_ENUM___GET_EENUM_LITERAL__STRING;
-
-	/**
-	 * The operation id for the '<em>Get EEnum Literal</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SUB_DOMAIN_ENUM___GET_EENUM_LITERAL__INT = HEIRARCHICAL_ENUM___GET_EENUM_LITERAL__INT;
-
-	/**
-	 * The operation id for the '<em>Get EEnum Literal By Literal</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SUB_DOMAIN_ENUM___GET_EENUM_LITERAL_BY_LITERAL__STRING = HEIRARCHICAL_ENUM___GET_EENUM_LITERAL_BY_LITERAL__STRING;
-
-	/**
-	 * The number of operations of the '<em>Sub Domain Enum</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SUB_DOMAIN_ENUM_OPERATION_COUNT = HEIRARCHICAL_ENUM_OPERATION_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Cells</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CELLS_PARAMETER__CELLS = 0;
-
-	/**
-	 * The number of structural features of the '<em>Cells Parameter</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CELLS_PARAMETER_FEATURE_COUNT = 1;
-
-	/**
-	 * The number of operations of the '<em>Cells Parameter</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CELLS_PARAMETER_OPERATION_COUNT = 0;
-
-	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.BaseEntityFeatureImpl <em>Base Entity Feature</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1533,7 +844,7 @@ public interface Ecore_plus_structurePackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.Ecore_plus_structurePackageImpl#getBaseEntityFeature()
 	 * @generated
 	 */
-	int BASE_ENTITY_FEATURE = 8;
+	int BASE_ENTITY_FEATURE = 3;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
@@ -1734,22 +1045,13 @@ public interface Ecore_plus_structurePackage extends EPackage {
 	int BASE_ENTITY_FEATURE__FK_ENTITY = EcorePackage.EATTRIBUTE_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Varaible</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_ENTITY_FEATURE__VARAIBLE = EcorePackage.EATTRIBUTE_FEATURE_COUNT + 2;
-
-	/**
 	 * The number of structural features of the '<em>Base Entity Feature</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BASE_ENTITY_FEATURE_FEATURE_COUNT = EcorePackage.EATTRIBUTE_FEATURE_COUNT + 3;
+	int BASE_ENTITY_FEATURE_FEATURE_COUNT = EcorePackage.EATTRIBUTE_FEATURE_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get EAnnotation</em>' operation.
@@ -1795,7 +1097,7 @@ public interface Ecore_plus_structurePackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.Ecore_plus_structurePackageImpl#getBaseEntityModule()
 	 * @generated
 	 */
-	int BASE_ENTITY_MODULE = 9;
+	int BASE_ENTITY_MODULE = 4;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' containment reference.
@@ -1901,17 +1203,6 @@ public interface Ecore_plus_structurePackage extends EPackage {
 	EReference getBaseEntity_BaseFeatures();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.BaseEntity#getCube <em>Cube</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Cube</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.BaseEntity#getCube()
-	 * @see #getBaseEntity()
-	 * @generated
-	 */
-	EReference getBaseEntity_Cube();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.Cell <em>Cell</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1942,111 +1233,6 @@ public interface Ecore_plus_structurePackage extends EPackage {
 	 * @generated
 	 */
 	EReference getCell_Column();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.HeirarchicalEnum <em>Heirarchical Enum</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Heirarchical Enum</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.HeirarchicalEnum
-	 * @generated
-	 */
-	EClass getHeirarchicalEnum();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.HeirarchicalEnumLiteral <em>Heirarchical Enum Literal</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Heirarchical Enum Literal</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.HeirarchicalEnumLiteral
-	 * @generated
-	 */
-	EClass getHeirarchicalEnumLiteral();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.HeirarchicalEnumLiteral#getParentLiteral <em>Parent Literal</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Parent Literal</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.HeirarchicalEnumLiteral#getParentLiteral()
-	 * @see #getHeirarchicalEnumLiteral()
-	 * @generated
-	 */
-	EReference getHeirarchicalEnumLiteral_ParentLiteral();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.EnumeratedDomain <em>Enumerated Domain</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Enumerated Domain</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.EnumeratedDomain
-	 * @generated
-	 */
-	EClass getEnumeratedDomain();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.EnumeratedDomain#getDomain <em>Domain</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Domain</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.EnumeratedDomain#getDomain()
-	 * @see #getEnumeratedDomain()
-	 * @generated
-	 */
-	EReference getEnumeratedDomain_Domain();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.SubDomainEnum <em>Sub Domain Enum</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Sub Domain Enum</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.SubDomainEnum
-	 * @generated
-	 */
-	EClass getSubDomainEnum();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.SubDomainEnum#getPrimaryEnum <em>Primary Enum</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Primary Enum</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.SubDomainEnum#getPrimaryEnum()
-	 * @see #getSubDomainEnum()
-	 * @generated
-	 */
-	EReference getSubDomainEnum_PrimaryEnum();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.SubDomainEnum#getSubDomain <em>Sub Domain</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Sub Domain</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.SubDomainEnum#getSubDomain()
-	 * @see #getSubDomainEnum()
-	 * @generated
-	 */
-	EReference getSubDomainEnum_SubDomain();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.CellsParameter <em>Cells Parameter</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Cells Parameter</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.CellsParameter
-	 * @generated
-	 */
-	EClass getCellsParameter();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.CellsParameter#getCells <em>Cells</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Cells</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.CellsParameter#getCells()
-	 * @see #getCellsParameter()
-	 * @generated
-	 */
-	EReference getCellsParameter_Cells();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.Entity <em>Entity</em>}'.
@@ -2089,17 +1275,6 @@ public interface Ecore_plus_structurePackage extends EPackage {
 	 * @generated
 	 */
 	EReference getBaseEntityFeature_FkEntity();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.BaseEntityFeature#getVaraible <em>Varaible</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Varaible</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.BaseEntityFeature#getVaraible()
-	 * @see #getBaseEntityFeature()
-	 * @generated
-	 */
-	EReference getBaseEntityFeature_Varaible();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.BaseEntityModule <em>Base Entity Module</em>}'.
@@ -2164,14 +1339,6 @@ public interface Ecore_plus_structurePackage extends EPackage {
 		EReference BASE_ENTITY__BASE_FEATURES = eINSTANCE.getBaseEntity_BaseFeatures();
 
 		/**
-		 * The meta object literal for the '<em><b>Cube</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference BASE_ENTITY__CUBE = eINSTANCE.getBaseEntity_Cube();
-
-		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.CellImpl <em>Cell</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2196,96 +1363,6 @@ public interface Ecore_plus_structurePackage extends EPackage {
 		 * @generated
 		 */
 		EReference CELL__COLUMN = eINSTANCE.getCell_Column();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.HeirarchicalEnumImpl <em>Heirarchical Enum</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.HeirarchicalEnumImpl
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.Ecore_plus_structurePackageImpl#getHeirarchicalEnum()
-		 * @generated
-		 */
-		EClass HEIRARCHICAL_ENUM = eINSTANCE.getHeirarchicalEnum();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.HeirarchicalEnumLiteralImpl <em>Heirarchical Enum Literal</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.HeirarchicalEnumLiteralImpl
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.Ecore_plus_structurePackageImpl#getHeirarchicalEnumLiteral()
-		 * @generated
-		 */
-		EClass HEIRARCHICAL_ENUM_LITERAL = eINSTANCE.getHeirarchicalEnumLiteral();
-
-		/**
-		 * The meta object literal for the '<em><b>Parent Literal</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference HEIRARCHICAL_ENUM_LITERAL__PARENT_LITERAL = eINSTANCE.getHeirarchicalEnumLiteral_ParentLiteral();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.EnumeratedDomainImpl <em>Enumerated Domain</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.EnumeratedDomainImpl
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.Ecore_plus_structurePackageImpl#getEnumeratedDomain()
-		 * @generated
-		 */
-		EClass ENUMERATED_DOMAIN = eINSTANCE.getEnumeratedDomain();
-
-		/**
-		 * The meta object literal for the '<em><b>Domain</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference ENUMERATED_DOMAIN__DOMAIN = eINSTANCE.getEnumeratedDomain_Domain();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.SubDomainEnumImpl <em>Sub Domain Enum</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.SubDomainEnumImpl
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.Ecore_plus_structurePackageImpl#getSubDomainEnum()
-		 * @generated
-		 */
-		EClass SUB_DOMAIN_ENUM = eINSTANCE.getSubDomainEnum();
-
-		/**
-		 * The meta object literal for the '<em><b>Primary Enum</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference SUB_DOMAIN_ENUM__PRIMARY_ENUM = eINSTANCE.getSubDomainEnum_PrimaryEnum();
-
-		/**
-		 * The meta object literal for the '<em><b>Sub Domain</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference SUB_DOMAIN_ENUM__SUB_DOMAIN = eINSTANCE.getSubDomainEnum_SubDomain();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.CellsParameterImpl <em>Cells Parameter</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.CellsParameterImpl
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.Ecore_plus_structurePackageImpl#getCellsParameter()
-		 * @generated
-		 */
-		EClass CELLS_PARAMETER = eINSTANCE.getCellsParameter();
-
-		/**
-		 * The meta object literal for the '<em><b>Cells</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference CELLS_PARAMETER__CELLS = eINSTANCE.getCellsParameter_Cells();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.EntityImpl <em>Entity</em>}' class.
@@ -2322,14 +1399,6 @@ public interface Ecore_plus_structurePackage extends EPackage {
 		 * @generated
 		 */
 		EReference BASE_ENTITY_FEATURE__FK_ENTITY = eINSTANCE.getBaseEntityFeature_FkEntity();
-
-		/**
-		 * The meta object literal for the '<em><b>Varaible</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference BASE_ENTITY_FEATURE__VARAIBLE = eINSTANCE.getBaseEntityFeature_Varaible();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.BaseEntityModuleImpl <em>Base Entity Module</em>}' class.

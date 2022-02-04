@@ -13,10 +13,9 @@ import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+import org.eclipse.emf.ecore.impl.EOperationImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
@@ -29,24 +28,12 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.RowCreationApproachImpl#getDependantCubeColumns <em>Dependant Cube Columns</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.RowCreationApproachImpl#getCreatedCubeColumns <em>Created Cube Columns</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.RowCreationApproachImpl#getDependantStructItemColumns <em>Dependant Struct Item Columns</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class RowCreationApproachImpl extends MinimalEObjectImpl.Container implements RowCreationApproach {
-	/**
-	 * The cached value of the '{@link #getDependantCubeColumns() <em>Dependant Cube Columns</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDependantCubeColumns()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<EStructuralFeature> dependantCubeColumns;
-
+public class RowCreationApproachImpl extends EOperationImpl implements RowCreationApproach {
 	/**
 	 * The cached value of the '{@link #getCreatedCubeColumns() <em>Created Cube Columns</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -56,16 +43,6 @@ public class RowCreationApproachImpl extends MinimalEObjectImpl.Container implem
 	 * @ordered
 	 */
 	protected EList<EAttribute> createdCubeColumns;
-
-	/**
-	 * The cached value of the '{@link #getDependantStructItemColumns() <em>Dependant Struct Item Columns</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDependantStructItemColumns()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<EStructuralFeature> dependantStructItemColumns;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -91,18 +68,6 @@ public class RowCreationApproachImpl extends MinimalEObjectImpl.Container implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<EStructuralFeature> getDependantCubeColumns() {
-		if (dependantCubeColumns == null) {
-			dependantCubeColumns = new EObjectContainmentEList<EStructuralFeature>(EStructuralFeature.class, this, Ecore_plus_logicPackage.ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS);
-		}
-		return dependantCubeColumns;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EList<EAttribute> getCreatedCubeColumns() {
 		if (createdCubeColumns == null) {
 			createdCubeColumns = new EObjectContainmentEList<EAttribute>(EAttribute.class, this, Ecore_plus_logicPackage.ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS);
@@ -115,27 +80,11 @@ public class RowCreationApproachImpl extends MinimalEObjectImpl.Container implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<EStructuralFeature> getDependantStructItemColumns() {
-		if (dependantStructItemColumns == null) {
-			dependantStructItemColumns = new EObjectContainmentEList<EStructuralFeature>(EStructuralFeature.class, this, Ecore_plus_logicPackage.ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS);
-		}
-		return dependantStructItemColumns;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case Ecore_plus_logicPackage.ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS:
-				return ((InternalEList<?>)getDependantCubeColumns()).basicRemove(otherEnd, msgs);
 			case Ecore_plus_logicPackage.ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS:
 				return ((InternalEList<?>)getCreatedCubeColumns()).basicRemove(otherEnd, msgs);
-			case Ecore_plus_logicPackage.ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS:
-				return ((InternalEList<?>)getDependantStructItemColumns()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -148,12 +97,8 @@ public class RowCreationApproachImpl extends MinimalEObjectImpl.Container implem
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case Ecore_plus_logicPackage.ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS:
-				return getDependantCubeColumns();
 			case Ecore_plus_logicPackage.ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS:
 				return getCreatedCubeColumns();
-			case Ecore_plus_logicPackage.ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS:
-				return getDependantStructItemColumns();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -167,17 +112,9 @@ public class RowCreationApproachImpl extends MinimalEObjectImpl.Container implem
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case Ecore_plus_logicPackage.ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS:
-				getDependantCubeColumns().clear();
-				getDependantCubeColumns().addAll((Collection<? extends EStructuralFeature>)newValue);
-				return;
 			case Ecore_plus_logicPackage.ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS:
 				getCreatedCubeColumns().clear();
 				getCreatedCubeColumns().addAll((Collection<? extends EAttribute>)newValue);
-				return;
-			case Ecore_plus_logicPackage.ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS:
-				getDependantStructItemColumns().clear();
-				getDependantStructItemColumns().addAll((Collection<? extends EStructuralFeature>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -191,14 +128,8 @@ public class RowCreationApproachImpl extends MinimalEObjectImpl.Container implem
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case Ecore_plus_logicPackage.ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS:
-				getDependantCubeColumns().clear();
-				return;
 			case Ecore_plus_logicPackage.ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS:
 				getCreatedCubeColumns().clear();
-				return;
-			case Ecore_plus_logicPackage.ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS:
-				getDependantStructItemColumns().clear();
 				return;
 		}
 		super.eUnset(featureID);
@@ -212,12 +143,8 @@ public class RowCreationApproachImpl extends MinimalEObjectImpl.Container implem
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case Ecore_plus_logicPackage.ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS:
-				return dependantCubeColumns != null && !dependantCubeColumns.isEmpty();
 			case Ecore_plus_logicPackage.ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS:
 				return createdCubeColumns != null && !createdCubeColumns.isEmpty();
-			case Ecore_plus_logicPackage.ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS:
-				return dependantStructItemColumns != null && !dependantStructItemColumns.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

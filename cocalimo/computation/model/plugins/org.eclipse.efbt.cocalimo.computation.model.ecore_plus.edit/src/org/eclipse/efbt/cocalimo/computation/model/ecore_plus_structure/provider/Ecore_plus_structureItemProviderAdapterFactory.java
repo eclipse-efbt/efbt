@@ -118,121 +118,6 @@ public class Ecore_plus_structureItemProviderAdapterFactory extends Ecore_plus_s
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.HeirarchicalEnum} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected HeirarchicalEnumItemProvider heirarchicalEnumItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.HeirarchicalEnum}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createHeirarchicalEnumAdapter() {
-		if (heirarchicalEnumItemProvider == null) {
-			heirarchicalEnumItemProvider = new HeirarchicalEnumItemProvider(this);
-		}
-
-		return heirarchicalEnumItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.HeirarchicalEnumLiteral} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected HeirarchicalEnumLiteralItemProvider heirarchicalEnumLiteralItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.HeirarchicalEnumLiteral}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createHeirarchicalEnumLiteralAdapter() {
-		if (heirarchicalEnumLiteralItemProvider == null) {
-			heirarchicalEnumLiteralItemProvider = new HeirarchicalEnumLiteralItemProvider(this);
-		}
-
-		return heirarchicalEnumLiteralItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.EnumeratedDomain} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected EnumeratedDomainItemProvider enumeratedDomainItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.EnumeratedDomain}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createEnumeratedDomainAdapter() {
-		if (enumeratedDomainItemProvider == null) {
-			enumeratedDomainItemProvider = new EnumeratedDomainItemProvider(this);
-		}
-
-		return enumeratedDomainItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.SubDomainEnum} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected SubDomainEnumItemProvider subDomainEnumItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.SubDomainEnum}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createSubDomainEnumAdapter() {
-		if (subDomainEnumItemProvider == null) {
-			subDomainEnumItemProvider = new SubDomainEnumItemProvider(this);
-		}
-
-		return subDomainEnumItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.CellsParameter} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected CellsParameterItemProvider cellsParameterItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.CellsParameter}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createCellsParameterAdapter() {
-		if (cellsParameterItemProvider == null) {
-			cellsParameterItemProvider = new CellsParameterItemProvider(this);
-		}
-
-		return cellsParameterItemProvider;
-	}
-
-	/**
 	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.Entity} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -402,11 +287,6 @@ public class Ecore_plus_structureItemProviderAdapterFactory extends Ecore_plus_s
 	public void dispose() {
 		if (baseEntityItemProvider != null) baseEntityItemProvider.dispose();
 		if (cellItemProvider != null) cellItemProvider.dispose();
-		if (heirarchicalEnumItemProvider != null) heirarchicalEnumItemProvider.dispose();
-		if (heirarchicalEnumLiteralItemProvider != null) heirarchicalEnumLiteralItemProvider.dispose();
-		if (enumeratedDomainItemProvider != null) enumeratedDomainItemProvider.dispose();
-		if (subDomainEnumItemProvider != null) subDomainEnumItemProvider.dispose();
-		if (cellsParameterItemProvider != null) cellsParameterItemProvider.dispose();
 		if (entityItemProvider != null) entityItemProvider.dispose();
 		if (baseEntityFeatureItemProvider != null) baseEntityFeatureItemProvider.dispose();
 		if (baseEntityModuleItemProvider != null) baseEntityModuleItemProvider.dispose();

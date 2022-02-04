@@ -7,12 +7,16 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Ecore_plus_logicPackage;
+import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GroupByRowCreationApproach;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.ecore.EcorePackage;
+
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
+import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 
 /**
  * This is the item provider adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GroupByRowCreationApproach} object.
@@ -42,32 +46,10 @@ public class GroupByRowCreationApproachItemProvider extends RowCreationApproachI
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addGroupByCubeColumnNamesPropertyDescriptor(object);
 			addGroupByColumnsPropertyDescriptor(object);
+			addGroupByCubeColumnNamesPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
-	}
-
-	/**
-	 * This adds a property descriptor for the Group By Cube Column Names feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addGroupByCubeColumnNamesPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_GroupByRowCreationApproach_groupByCubeColumnNames_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_GroupByRowCreationApproach_groupByCubeColumnNames_feature", "_UI_GroupByRowCreationApproach_type"),
-				 Ecore_plus_logicPackage.Literals.GROUP_BY_ROW_CREATION_APPROACH__GROUP_BY_CUBE_COLUMN_NAMES,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
 	}
 
 	/**
@@ -93,6 +75,28 @@ public class GroupByRowCreationApproachItemProvider extends RowCreationApproachI
 	}
 
 	/**
+	 * This adds a property descriptor for the Group By Cube Column Names feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addGroupByCubeColumnNamesPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_GroupByRowCreationApproach_groupByCubeColumnNames_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_GroupByRowCreationApproach_groupByCubeColumnNames_feature", "_UI_GroupByRowCreationApproach_type"),
+				 Ecore_plus_logicPackage.Literals.GROUP_BY_ROW_CREATION_APPROACH__GROUP_BY_CUBE_COLUMN_NAMES,
+				 true,
+				 false,
+				 true,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
 	 * This returns GroupByRowCreationApproach.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -111,7 +115,10 @@ public class GroupByRowCreationApproachItemProvider extends RowCreationApproachI
 	 */
 	@Override
 	public String getText(Object object) {
-		return getString("_UI_GroupByRowCreationApproach_type");
+		String label = ((GroupByRowCreationApproach)object).getName();
+		return label == null || label.length() == 0 ?
+			getString("_UI_GroupByRowCreationApproach_type") :
+			getString("_UI_GroupByRowCreationApproach_type") + " " + label;
 	}
 
 
@@ -152,9 +159,8 @@ public class GroupByRowCreationApproachItemProvider extends RowCreationApproachI
 		Object childObject = child;
 
 		boolean qualify =
-			childFeature == Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS ||
-			childFeature == Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS ||
-			childFeature == Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS;
+			childFeature == EcorePackage.Literals.ETYPED_ELEMENT__EGENERIC_TYPE ||
+			childFeature == EcorePackage.Literals.EOPERATION__EGENERIC_EXCEPTIONS;
 
 		if (qualify) {
 			return getString

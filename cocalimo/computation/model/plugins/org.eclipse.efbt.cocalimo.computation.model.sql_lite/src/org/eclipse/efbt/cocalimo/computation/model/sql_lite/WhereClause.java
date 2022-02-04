@@ -2,8 +2,7 @@
  */
 package org.eclipse.efbt.cocalimo.computation.model.sql_lite;
 
-import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BooleanFunction;
-
+import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BooleanOperation;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -28,12 +27,12 @@ public interface WhereClause extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Where function</em>' containment reference.
-	 * @see #setWhere_function(BooleanFunction)
+	 * @see #setWhere_function(BooleanOperation)
 	 * @see org.eclipse.efbt.cocalimo.computation.model.sql_lite.Sql_litePackage#getWhereClause_Where_function()
 	 * @model containment="true"
 	 * @generated
 	 */
-	BooleanFunction getWhere_function();
+	BooleanOperation getWhere_function();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.WhereClause#getWhere_function <em>Where function</em>}' containment reference.
@@ -43,6 +42,6 @@ public interface WhereClause extends EObject {
 	 * @see #getWhere_function()
 	 * @generated
 	 */
-	void setWhere_function(BooleanFunction value);
+	void setWhere_function(BooleanOperation value);
 
 } // WhereClause

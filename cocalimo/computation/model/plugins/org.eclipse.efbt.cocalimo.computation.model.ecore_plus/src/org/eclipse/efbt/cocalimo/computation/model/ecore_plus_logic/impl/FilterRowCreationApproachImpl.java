@@ -2,7 +2,7 @@
  */
 package org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl;
 
-import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BooleanFunction;
+import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BooleanOperation;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Ecore_plus_logicPackage;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.FilterRowCreationApproach;
 
@@ -36,7 +36,7 @@ public class FilterRowCreationApproachImpl extends RowCreationApproachImpl imple
 	 * @generated
 	 * @ordered
 	 */
-	protected BooleanFunction filterFunction;
+	protected BooleanOperation filterFunction;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -62,7 +62,7 @@ public class FilterRowCreationApproachImpl extends RowCreationApproachImpl imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public BooleanFunction getFilterFunction() {
+	public BooleanOperation getFilterFunction() {
 		return filterFunction;
 	}
 
@@ -71,8 +71,8 @@ public class FilterRowCreationApproachImpl extends RowCreationApproachImpl imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetFilterFunction(BooleanFunction newFilterFunction, NotificationChain msgs) {
-		BooleanFunction oldFilterFunction = filterFunction;
+	public NotificationChain basicSetFilterFunction(BooleanOperation newFilterFunction, NotificationChain msgs) {
+		BooleanOperation oldFilterFunction = filterFunction;
 		filterFunction = newFilterFunction;
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, Ecore_plus_logicPackage.FILTER_ROW_CREATION_APPROACH__FILTER_FUNCTION, oldFilterFunction, newFilterFunction);
@@ -86,7 +86,7 @@ public class FilterRowCreationApproachImpl extends RowCreationApproachImpl imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setFilterFunction(BooleanFunction newFilterFunction) {
+	public void setFilterFunction(BooleanOperation newFilterFunction) {
 		if (newFilterFunction != filterFunction) {
 			NotificationChain msgs = null;
 			if (filterFunction != null)
@@ -137,7 +137,7 @@ public class FilterRowCreationApproachImpl extends RowCreationApproachImpl imple
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Ecore_plus_logicPackage.FILTER_ROW_CREATION_APPROACH__FILTER_FUNCTION:
-				setFilterFunction((BooleanFunction)newValue);
+				setFilterFunction((BooleanOperation)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -152,7 +152,7 @@ public class FilterRowCreationApproachImpl extends RowCreationApproachImpl imple
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Ecore_plus_logicPackage.FILTER_ROW_CREATION_APPROACH__FILTER_FUNCTION:
-				setFilterFunction((BooleanFunction)null);
+				setFilterFunction((BooleanOperation)null);
 				return;
 		}
 		super.eUnset(featureID);

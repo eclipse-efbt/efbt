@@ -58,11 +58,6 @@ public class Ecore_plus_structureFactoryImpl extends EFactoryImpl implements Eco
 		switch (eClass.getClassifierID()) {
 			case Ecore_plus_structurePackage.BASE_ENTITY: return createBaseEntity();
 			case Ecore_plus_structurePackage.CELL: return createCell();
-			case Ecore_plus_structurePackage.HEIRARCHICAL_ENUM: return createHeirarchicalEnum();
-			case Ecore_plus_structurePackage.HEIRARCHICAL_ENUM_LITERAL: return createHeirarchicalEnumLiteral();
-			case Ecore_plus_structurePackage.ENUMERATED_DOMAIN: return createEnumeratedDomain();
-			case Ecore_plus_structurePackage.SUB_DOMAIN_ENUM: return createSubDomainEnum();
-			case Ecore_plus_structurePackage.CELLS_PARAMETER: return createCellsParameter();
 			case Ecore_plus_structurePackage.ENTITY: return createEntity();
 			case Ecore_plus_structurePackage.BASE_ENTITY_FEATURE: return createBaseEntityFeature();
 			case Ecore_plus_structurePackage.BASE_ENTITY_MODULE: return createBaseEntityModule();
@@ -89,56 +84,6 @@ public class Ecore_plus_structureFactoryImpl extends EFactoryImpl implements Eco
 	public Cell createCell() {
 		CellImpl cell = new CellImpl();
 		return cell;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public HeirarchicalEnum createHeirarchicalEnum() {
-		HeirarchicalEnumImpl heirarchicalEnum = new HeirarchicalEnumImpl();
-		return heirarchicalEnum;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public HeirarchicalEnumLiteral createHeirarchicalEnumLiteral() {
-		HeirarchicalEnumLiteralImpl heirarchicalEnumLiteral = new HeirarchicalEnumLiteralImpl();
-		return heirarchicalEnumLiteral;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EnumeratedDomain createEnumeratedDomain() {
-		EnumeratedDomainImpl enumeratedDomain = new EnumeratedDomainImpl();
-		return enumeratedDomain;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public SubDomainEnum createSubDomainEnum() {
-		SubDomainEnumImpl subDomainEnum = new SubDomainEnumImpl();
-		return subDomainEnum;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public CellsParameter createCellsParameter() {
-		CellsParameterImpl cellsParameter = new CellsParameterImpl();
-		return cellsParameter;
 	}
 
 	/**

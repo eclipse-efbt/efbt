@@ -6,16 +6,14 @@ import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.*;
 
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.Entity;
 
-import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EModelElement;
 import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EParameter;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.ETypedElement;
 
 import org.eclipse.emf.ecore.util.Switch;
@@ -111,26 +109,10 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case Ecore_plus_logicPackage.AGGREGATE_FUNCTION: {
-				AggregateFunction aggregateFunction = (AggregateFunction)theEObject;
-				T result = caseAggregateFunction(aggregateFunction);
-				if (result == null) result = caseFunction(aggregateFunction);
-				if (result == null) result = caseParameter(aggregateFunction);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case Ecore_plus_logicPackage.AGGREGATE_FUNCTION_SPEC: {
 				AggregateFunctionSpec aggregateFunctionSpec = (AggregateFunctionSpec)theEObject;
 				T result = caseAggregateFunctionSpec(aggregateFunctionSpec);
 				if (result == null) result = caseFunctionSpec(aggregateFunctionSpec);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case Ecore_plus_logicPackage.BASIC_FUNCTION: {
-				BasicFunction basicFunction = (BasicFunction)theEObject;
-				T result = caseBasicFunction(basicFunction);
-				if (result == null) result = caseFunction(basicFunction);
-				if (result == null) result = caseParameter(basicFunction);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -141,19 +123,17 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case Ecore_plus_logicPackage.BOOLEAN_FUNCTION: {
-				BooleanFunction booleanFunction = (BooleanFunction)theEObject;
-				T result = caseBooleanFunction(booleanFunction);
-				if (result == null) result = caseBasicFunction(booleanFunction);
-				if (result == null) result = caseFunction(booleanFunction);
-				if (result == null) result = caseParameter(booleanFunction);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case Ecore_plus_logicPackage.FUNCTION: {
-				Function function = (Function)theEObject;
-				T result = caseFunction(function);
-				if (result == null) result = caseParameter(function);
+			case Ecore_plus_logicPackage.BOOLEAN_OPERATION: {
+				BooleanOperation booleanOperation = (BooleanOperation)theEObject;
+				T result = caseBooleanOperation(booleanOperation);
+				if (result == null) result = caseBasicOperation(booleanOperation);
+				if (result == null) result = caseOperation(booleanOperation);
+				if (result == null) result = caseEOperation(booleanOperation);
+				if (result == null) result = caseParameter(booleanOperation);
+				if (result == null) result = caseEParameter(booleanOperation);
+				if (result == null) result = caseETypedElement(booleanOperation);
+				if (result == null) result = caseENamedElement(booleanOperation);
+				if (result == null) result = caseEModelElement(booleanOperation);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -170,15 +150,13 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case Ecore_plus_logicPackage.PARAMATER_SPEC: {
-				ParamaterSpec paramaterSpec = (ParamaterSpec)theEObject;
-				T result = caseParamaterSpec(paramaterSpec);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case Ecore_plus_logicPackage.PARAMETER: {
 				Parameter parameter = (Parameter)theEObject;
 				T result = caseParameter(parameter);
+				if (result == null) result = caseEParameter(parameter);
+				if (result == null) result = caseETypedElement(parameter);
+				if (result == null) result = caseENamedElement(parameter);
+				if (result == null) result = caseEModelElement(parameter);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -186,6 +164,21 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 				MemberParameter memberParameter = (MemberParameter)theEObject;
 				T result = caseMemberParameter(memberParameter);
 				if (result == null) result = caseParameter(memberParameter);
+				if (result == null) result = caseEParameter(memberParameter);
+				if (result == null) result = caseETypedElement(memberParameter);
+				if (result == null) result = caseENamedElement(memberParameter);
+				if (result == null) result = caseEModelElement(memberParameter);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Ecore_plus_logicPackage.ENTITY_PARAMETER: {
+				EntityParameter entityParameter = (EntityParameter)theEObject;
+				T result = caseEntityParameter(entityParameter);
+				if (result == null) result = caseParameter(entityParameter);
+				if (result == null) result = caseEParameter(entityParameter);
+				if (result == null) result = caseETypedElement(entityParameter);
+				if (result == null) result = caseENamedElement(entityParameter);
+				if (result == null) result = caseEModelElement(entityParameter);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -193,75 +186,23 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 				ValueParameter valueParameter = (ValueParameter)theEObject;
 				T result = caseValueParameter(valueParameter);
 				if (result == null) result = caseParameter(valueParameter);
+				if (result == null) result = caseEParameter(valueParameter);
+				if (result == null) result = caseETypedElement(valueParameter);
+				if (result == null) result = caseENamedElement(valueParameter);
+				if (result == null) result = caseEModelElement(valueParameter);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case Ecore_plus_logicPackage.AGGREGATE_DERIVED_ATTRIBUTE: {
-				AggregateDerivedAttribute aggregateDerivedAttribute = (AggregateDerivedAttribute)theEObject;
-				T result = caseAggregateDerivedAttribute(aggregateDerivedAttribute);
-				if (result == null) result = caseDerivedAttribute(aggregateDerivedAttribute);
-				if (result == null) result = caseEAttribute(aggregateDerivedAttribute);
-				if (result == null) result = caseEStructuralFeature(aggregateDerivedAttribute);
-				if (result == null) result = caseETypedElement(aggregateDerivedAttribute);
-				if (result == null) result = caseENamedElement(aggregateDerivedAttribute);
-				if (result == null) result = caseEModelElement(aggregateDerivedAttribute);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case Ecore_plus_logicPackage.BASIC_DERIVED_ATTRIBUTE: {
-				BasicDerivedAttribute basicDerivedAttribute = (BasicDerivedAttribute)theEObject;
-				T result = caseBasicDerivedAttribute(basicDerivedAttribute);
-				if (result == null) result = caseDerivedAttribute(basicDerivedAttribute);
-				if (result == null) result = caseEAttribute(basicDerivedAttribute);
-				if (result == null) result = caseEStructuralFeature(basicDerivedAttribute);
-				if (result == null) result = caseETypedElement(basicDerivedAttribute);
-				if (result == null) result = caseENamedElement(basicDerivedAttribute);
-				if (result == null) result = caseEModelElement(basicDerivedAttribute);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case Ecore_plus_logicPackage.BASIC_SCENARIO_LOGIC: {
-				BasicScenarioLogic basicScenarioLogic = (BasicScenarioLogic)theEObject;
-				T result = caseBasicScenarioLogic(basicScenarioLogic);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case Ecore_plus_logicPackage.DERIVED_ATTRIBUTE: {
-				DerivedAttribute derivedAttribute = (DerivedAttribute)theEObject;
-				T result = caseDerivedAttribute(derivedAttribute);
-				if (result == null) result = caseEAttribute(derivedAttribute);
-				if (result == null) result = caseEStructuralFeature(derivedAttribute);
-				if (result == null) result = caseETypedElement(derivedAttribute);
-				if (result == null) result = caseENamedElement(derivedAttribute);
-				if (result == null) result = caseEModelElement(derivedAttribute);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case Ecore_plus_logicPackage.DERIVED_STRUCT: {
-				DerivedStruct derivedStruct = (DerivedStruct)theEObject;
-				T result = caseDerivedStruct(derivedStruct);
-				if (result == null) result = caseEReference(derivedStruct);
-				if (result == null) result = caseEStructuralFeature(derivedStruct);
-				if (result == null) result = caseETypedElement(derivedStruct);
-				if (result == null) result = caseENamedElement(derivedStruct);
-				if (result == null) result = caseEModelElement(derivedStruct);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case Ecore_plus_logicPackage.BASE_FEATURE: {
-				BaseFeature baseFeature = (BaseFeature)theEObject;
-				T result = caseBaseFeature(baseFeature);
-				if (result == null) result = caseEAttribute(baseFeature);
-				if (result == null) result = caseEStructuralFeature(baseFeature);
-				if (result == null) result = caseETypedElement(baseFeature);
-				if (result == null) result = caseENamedElement(baseFeature);
-				if (result == null) result = caseEModelElement(baseFeature);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case Ecore_plus_logicPackage.DERIVED_FEATURE_GROUP: {
-				DerivedFeatureGroup derivedFeatureGroup = (DerivedFeatureGroup)theEObject;
-				T result = caseDerivedFeatureGroup(derivedFeatureGroup);
+			case Ecore_plus_logicPackage.BASIC_SCENARIO_OPERATION: {
+				BasicScenarioOperation basicScenarioOperation = (BasicScenarioOperation)theEObject;
+				T result = caseBasicScenarioOperation(basicScenarioOperation);
+				if (result == null) result = caseOperation(basicScenarioOperation);
+				if (result == null) result = caseEOperation(basicScenarioOperation);
+				if (result == null) result = caseParameter(basicScenarioOperation);
+				if (result == null) result = caseEParameter(basicScenarioOperation);
+				if (result == null) result = caseETypedElement(basicScenarioOperation);
+				if (result == null) result = caseENamedElement(basicScenarioOperation);
+				if (result == null) result = caseEModelElement(basicScenarioOperation);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -269,42 +210,38 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 				FeatureParameter featureParameter = (FeatureParameter)theEObject;
 				T result = caseFeatureParameter(featureParameter);
 				if (result == null) result = caseParameter(featureParameter);
+				if (result == null) result = caseEParameter(featureParameter);
+				if (result == null) result = caseETypedElement(featureParameter);
+				if (result == null) result = caseENamedElement(featureParameter);
+				if (result == null) result = caseEModelElement(featureParameter);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Ecore_plus_logicPackage.OPERATION_PARAMETER: {
+				OperationParameter operationParameter = (OperationParameter)theEObject;
+				T result = caseOperationParameter(operationParameter);
+				if (result == null) result = caseParameter(operationParameter);
+				if (result == null) result = caseEParameter(operationParameter);
+				if (result == null) result = caseETypedElement(operationParameter);
+				if (result == null) result = caseENamedElement(operationParameter);
+				if (result == null) result = caseEModelElement(operationParameter);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Ecore_plus_logicPackage.PROXY_OPERATION_PARAMETER: {
+				ProxyOperationParameter proxyOperationParameter = (ProxyOperationParameter)theEObject;
+				T result = caseProxyOperationParameter(proxyOperationParameter);
+				if (result == null) result = caseParameter(proxyOperationParameter);
+				if (result == null) result = caseEParameter(proxyOperationParameter);
+				if (result == null) result = caseETypedElement(proxyOperationParameter);
+				if (result == null) result = caseENamedElement(proxyOperationParameter);
+				if (result == null) result = caseEModelElement(proxyOperationParameter);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case Ecore_plus_logicPackage.PROXY_FEATURE_PARAMETER: {
 				ProxyFeatureParameter proxyFeatureParameter = (ProxyFeatureParameter)theEObject;
 				T result = caseProxyFeatureParameter(proxyFeatureParameter);
-				if (result == null) result = caseParameter(proxyFeatureParameter);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case Ecore_plus_logicPackage.GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE: {
-				GetAttributeFromEntityDerivedFeature getAttributeFromEntityDerivedFeature = (GetAttributeFromEntityDerivedFeature)theEObject;
-				T result = caseGetAttributeFromEntityDerivedFeature(getAttributeFromEntityDerivedFeature);
-				if (result == null) result = caseDerivedAttribute(getAttributeFromEntityDerivedFeature);
-				if (result == null) result = caseEAttribute(getAttributeFromEntityDerivedFeature);
-				if (result == null) result = caseEStructuralFeature(getAttributeFromEntityDerivedFeature);
-				if (result == null) result = caseETypedElement(getAttributeFromEntityDerivedFeature);
-				if (result == null) result = caseENamedElement(getAttributeFromEntityDerivedFeature);
-				if (result == null) result = caseEModelElement(getAttributeFromEntityDerivedFeature);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case Ecore_plus_logicPackage.ATTRIBUTE_FROM_ENTITY_PARAMETER: {
-				AttributeFromEntityParameter attributeFromEntityParameter = (AttributeFromEntityParameter)theEObject;
-				T result = caseAttributeFromEntityParameter(attributeFromEntityParameter);
-				if (result == null) result = caseEParameter(attributeFromEntityParameter);
-				if (result == null) result = caseETypedElement(attributeFromEntityParameter);
-				if (result == null) result = caseENamedElement(attributeFromEntityParameter);
-				if (result == null) result = caseEModelElement(attributeFromEntityParameter);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case Ecore_plus_logicPackage.PROXY_ATTRIBUTE_FROM_ENTITY_PARAMETER: {
-				ProxyAttributeFromEntityParameter proxyAttributeFromEntityParameter = (ProxyAttributeFromEntityParameter)theEObject;
-				T result = caseProxyAttributeFromEntityParameter(proxyAttributeFromEntityParameter);
-				if (result == null) result = caseParameter(proxyAttributeFromEntityParameter);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -312,6 +249,10 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 				CustomRowCreationApproach customRowCreationApproach = (CustomRowCreationApproach)theEObject;
 				T result = caseCustomRowCreationApproach(customRowCreationApproach);
 				if (result == null) result = caseRowCreationApproach(customRowCreationApproach);
+				if (result == null) result = caseEOperation(customRowCreationApproach);
+				if (result == null) result = caseETypedElement(customRowCreationApproach);
+				if (result == null) result = caseENamedElement(customRowCreationApproach);
+				if (result == null) result = caseEModelElement(customRowCreationApproach);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -319,12 +260,10 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 				FilterAndGroupToOneRowCreationApproach filterAndGroupToOneRowCreationApproach = (FilterAndGroupToOneRowCreationApproach)theEObject;
 				T result = caseFilterAndGroupToOneRowCreationApproach(filterAndGroupToOneRowCreationApproach);
 				if (result == null) result = caseRowCreationApproach(filterAndGroupToOneRowCreationApproach);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case Ecore_plus_logicPackage.ROW_CREATION_APPROACH_FOR_ENTITY: {
-				RowCreationApproachForEntity rowCreationApproachForEntity = (RowCreationApproachForEntity)theEObject;
-				T result = caseRowCreationApproachForEntity(rowCreationApproachForEntity);
+				if (result == null) result = caseEOperation(filterAndGroupToOneRowCreationApproach);
+				if (result == null) result = caseETypedElement(filterAndGroupToOneRowCreationApproach);
+				if (result == null) result = caseENamedElement(filterAndGroupToOneRowCreationApproach);
+				if (result == null) result = caseEModelElement(filterAndGroupToOneRowCreationApproach);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -332,6 +271,10 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 				OneToOneRowCreationApproach oneToOneRowCreationApproach = (OneToOneRowCreationApproach)theEObject;
 				T result = caseOneToOneRowCreationApproach(oneToOneRowCreationApproach);
 				if (result == null) result = caseRowCreationApproach(oneToOneRowCreationApproach);
+				if (result == null) result = caseEOperation(oneToOneRowCreationApproach);
+				if (result == null) result = caseETypedElement(oneToOneRowCreationApproach);
+				if (result == null) result = caseENamedElement(oneToOneRowCreationApproach);
+				if (result == null) result = caseEModelElement(oneToOneRowCreationApproach);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -339,12 +282,20 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 				FilterRowCreationApproach filterRowCreationApproach = (FilterRowCreationApproach)theEObject;
 				T result = caseFilterRowCreationApproach(filterRowCreationApproach);
 				if (result == null) result = caseRowCreationApproach(filterRowCreationApproach);
+				if (result == null) result = caseEOperation(filterRowCreationApproach);
+				if (result == null) result = caseETypedElement(filterRowCreationApproach);
+				if (result == null) result = caseENamedElement(filterRowCreationApproach);
+				if (result == null) result = caseEModelElement(filterRowCreationApproach);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case Ecore_plus_logicPackage.ROW_CREATION_APPROACH: {
 				RowCreationApproach rowCreationApproach = (RowCreationApproach)theEObject;
 				T result = caseRowCreationApproach(rowCreationApproach);
+				if (result == null) result = caseEOperation(rowCreationApproach);
+				if (result == null) result = caseETypedElement(rowCreationApproach);
+				if (result == null) result = caseENamedElement(rowCreationApproach);
+				if (result == null) result = caseEModelElement(rowCreationApproach);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -352,6 +303,10 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 				GroupByRowCreationApproach groupByRowCreationApproach = (GroupByRowCreationApproach)theEObject;
 				T result = caseGroupByRowCreationApproach(groupByRowCreationApproach);
 				if (result == null) result = caseRowCreationApproach(groupByRowCreationApproach);
+				if (result == null) result = caseEOperation(groupByRowCreationApproach);
+				if (result == null) result = caseETypedElement(groupByRowCreationApproach);
+				if (result == null) result = caseENamedElement(groupByRowCreationApproach);
+				if (result == null) result = caseEModelElement(groupByRowCreationApproach);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -359,6 +314,10 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 				RowJoinFunction rowJoinFunction = (RowJoinFunction)theEObject;
 				T result = caseRowJoinFunction(rowJoinFunction);
 				if (result == null) result = caseRowCreationApproach(rowJoinFunction);
+				if (result == null) result = caseEOperation(rowJoinFunction);
+				if (result == null) result = caseETypedElement(rowJoinFunction);
+				if (result == null) result = caseENamedElement(rowJoinFunction);
+				if (result == null) result = caseEModelElement(rowJoinFunction);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -366,6 +325,10 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 				UnionRowCreationApproach unionRowCreationApproach = (UnionRowCreationApproach)theEObject;
 				T result = caseUnionRowCreationApproach(unionRowCreationApproach);
 				if (result == null) result = caseRowCreationApproach(unionRowCreationApproach);
+				if (result == null) result = caseEOperation(unionRowCreationApproach);
+				if (result == null) result = caseETypedElement(unionRowCreationApproach);
+				if (result == null) result = caseENamedElement(unionRowCreationApproach);
+				if (result == null) result = caseEModelElement(unionRowCreationApproach);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -373,6 +336,10 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 				ExplodeArrayOfStructsRowFunction explodeArrayOfStructsRowFunction = (ExplodeArrayOfStructsRowFunction)theEObject;
 				T result = caseExplodeArrayOfStructsRowFunction(explodeArrayOfStructsRowFunction);
 				if (result == null) result = caseRowCreationApproach(explodeArrayOfStructsRowFunction);
+				if (result == null) result = caseEOperation(explodeArrayOfStructsRowFunction);
+				if (result == null) result = caseETypedElement(explodeArrayOfStructsRowFunction);
+				if (result == null) result = caseENamedElement(explodeArrayOfStructsRowFunction);
+				if (result == null) result = caseEModelElement(explodeArrayOfStructsRowFunction);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -394,6 +361,143 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 				GeneratedEntityModule generatedEntityModule = (GeneratedEntityModule)theEObject;
 				T result = caseGeneratedEntityModule(generatedEntityModule);
 				if (result == null) result = caseModule(generatedEntityModule);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Ecore_plus_logicPackage.ENTITY_TABLE: {
+				EntityTable entityTable = (EntityTable)theEObject;
+				T result = caseEntityTable(entityTable);
+				if (result == null) result = caseEntity(entityTable);
+				if (result == null) result = caseEClass(entityTable);
+				if (result == null) result = caseEClassifier(entityTable);
+				if (result == null) result = caseENamedElement(entityTable);
+				if (result == null) result = caseEModelElement(entityTable);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Ecore_plus_logicPackage.DERIVED_ENTITY_TABLE: {
+				DerivedEntityTable derivedEntityTable = (DerivedEntityTable)theEObject;
+				T result = caseDerivedEntityTable(derivedEntityTable);
+				if (result == null) result = caseEntityTable(derivedEntityTable);
+				if (result == null) result = caseEntity(derivedEntityTable);
+				if (result == null) result = caseEClass(derivedEntityTable);
+				if (result == null) result = caseEClassifier(derivedEntityTable);
+				if (result == null) result = caseENamedElement(derivedEntityTable);
+				if (result == null) result = caseEModelElement(derivedEntityTable);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Ecore_plus_logicPackage.BASE_ENTITY_TABLE: {
+				BaseEntityTable baseEntityTable = (BaseEntityTable)theEObject;
+				T result = caseBaseEntityTable(baseEntityTable);
+				if (result == null) result = caseEntityTable(baseEntityTable);
+				if (result == null) result = caseEntity(baseEntityTable);
+				if (result == null) result = caseEClass(baseEntityTable);
+				if (result == null) result = caseEClassifier(baseEntityTable);
+				if (result == null) result = caseENamedElement(baseEntityTable);
+				if (result == null) result = caseEModelElement(baseEntityTable);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Ecore_plus_logicPackage.OPERATION: {
+				Operation operation = (Operation)theEObject;
+				T result = caseOperation(operation);
+				if (result == null) result = caseEOperation(operation);
+				if (result == null) result = caseParameter(operation);
+				if (result == null) result = caseEParameter(operation);
+				if (result == null) result = caseETypedElement(operation);
+				if (result == null) result = caseENamedElement(operation);
+				if (result == null) result = caseEModelElement(operation);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Ecore_plus_logicPackage.BASIC_OPERATION: {
+				BasicOperation basicOperation = (BasicOperation)theEObject;
+				T result = caseBasicOperation(basicOperation);
+				if (result == null) result = caseOperation(basicOperation);
+				if (result == null) result = caseEOperation(basicOperation);
+				if (result == null) result = caseParameter(basicOperation);
+				if (result == null) result = caseEParameter(basicOperation);
+				if (result == null) result = caseETypedElement(basicOperation);
+				if (result == null) result = caseENamedElement(basicOperation);
+				if (result == null) result = caseEModelElement(basicOperation);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Ecore_plus_logicPackage.AGGREGATE_OPERATION: {
+				AggregateOperation aggregateOperation = (AggregateOperation)theEObject;
+				T result = caseAggregateOperation(aggregateOperation);
+				if (result == null) result = caseOperation(aggregateOperation);
+				if (result == null) result = caseEOperation(aggregateOperation);
+				if (result == null) result = caseParameter(aggregateOperation);
+				if (result == null) result = caseEParameter(aggregateOperation);
+				if (result == null) result = caseETypedElement(aggregateOperation);
+				if (result == null) result = caseENamedElement(aggregateOperation);
+				if (result == null) result = caseEModelElement(aggregateOperation);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Ecore_plus_logicPackage.ENTITY_FROM_SOURCE_OPERATION: {
+				EntityFromSourceOperation entityFromSourceOperation = (EntityFromSourceOperation)theEObject;
+				T result = caseEntityFromSourceOperation(entityFromSourceOperation);
+				if (result == null) result = caseOperation(entityFromSourceOperation);
+				if (result == null) result = caseEOperation(entityFromSourceOperation);
+				if (result == null) result = caseParameter(entityFromSourceOperation);
+				if (result == null) result = caseEParameter(entityFromSourceOperation);
+				if (result == null) result = caseETypedElement(entityFromSourceOperation);
+				if (result == null) result = caseENamedElement(entityFromSourceOperation);
+				if (result == null) result = caseEModelElement(entityFromSourceOperation);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Ecore_plus_logicPackage.ATTRIBUTE_FROM_ENTITY_OPERATION: {
+				AttributeFromEntityOperation attributeFromEntityOperation = (AttributeFromEntityOperation)theEObject;
+				T result = caseAttributeFromEntityOperation(attributeFromEntityOperation);
+				if (result == null) result = caseOperation(attributeFromEntityOperation);
+				if (result == null) result = caseEOperation(attributeFromEntityOperation);
+				if (result == null) result = caseParameter(attributeFromEntityOperation);
+				if (result == null) result = caseEParameter(attributeFromEntityOperation);
+				if (result == null) result = caseETypedElement(attributeFromEntityOperation);
+				if (result == null) result = caseENamedElement(attributeFromEntityOperation);
+				if (result == null) result = caseEModelElement(attributeFromEntityOperation);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Ecore_plus_logicPackage.CELLS_PARAMETER: {
+				CellsParameter cellsParameter = (CellsParameter)theEObject;
+				T result = caseCellsParameter(cellsParameter);
+				if (result == null) result = caseParameter(cellsParameter);
+				if (result == null) result = caseEParameter(cellsParameter);
+				if (result == null) result = caseETypedElement(cellsParameter);
+				if (result == null) result = caseENamedElement(cellsParameter);
+				if (result == null) result = caseEModelElement(cellsParameter);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Ecore_plus_logicPackage.BASIC_OPERATION_SCENARIO_SET: {
+				BasicOperationScenarioSet basicOperationScenarioSet = (BasicOperationScenarioSet)theEObject;
+				T result = caseBasicOperationScenarioSet(basicOperationScenarioSet);
+				if (result == null) result = caseOperation(basicOperationScenarioSet);
+				if (result == null) result = caseEOperation(basicOperationScenarioSet);
+				if (result == null) result = caseParameter(basicOperationScenarioSet);
+				if (result == null) result = caseEParameter(basicOperationScenarioSet);
+				if (result == null) result = caseETypedElement(basicOperationScenarioSet);
+				if (result == null) result = caseENamedElement(basicOperationScenarioSet);
+				if (result == null) result = caseEModelElement(basicOperationScenarioSet);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Ecore_plus_logicPackage.BASE_ENTITY_TABLE_MODULE: {
+				BaseEntityTableModule baseEntityTableModule = (BaseEntityTableModule)theEObject;
+				T result = caseBaseEntityTableModule(baseEntityTableModule);
+				if (result == null) result = caseModule(baseEntityTableModule);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Ecore_plus_logicPackage.DERIVED_ENTITY_TABLE_MODULE: {
+				DerivedEntityTableModule derivedEntityTableModule = (DerivedEntityTableModule)theEObject;
+				T result = caseDerivedEntityTableModule(derivedEntityTableModule);
+				if (result == null) result = caseModule(derivedEntityTableModule);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -447,21 +551,6 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Aggregate Function</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Aggregate Function</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseAggregateFunction(AggregateFunction object) {
-		return null;
-	}
-
-	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Aggregate Function Spec</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -473,21 +562,6 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseAggregateFunctionSpec(AggregateFunctionSpec object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Basic Function</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Basic Function</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseBasicFunction(BasicFunction object) {
 		return null;
 	}
 
@@ -507,32 +581,17 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Boolean Function</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Boolean Operation</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Boolean Function</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Boolean Operation</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseBooleanFunction(BooleanFunction object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Function</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Function</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseFunction(Function object) {
+	public T caseBooleanOperation(BooleanOperation object) {
 		return null;
 	}
 
@@ -567,21 +626,6 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Paramater Spec</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Paramater Spec</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseParamaterSpec(ParamaterSpec object) {
-		return null;
-	}
-
-	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Parameter</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -612,6 +656,21 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Entity Parameter</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Entity Parameter</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseEntityParameter(EntityParameter object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Value Parameter</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -627,107 +686,17 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Aggregate Derived Attribute</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Basic Scenario Operation</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Aggregate Derived Attribute</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Basic Scenario Operation</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseAggregateDerivedAttribute(AggregateDerivedAttribute object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Basic Derived Attribute</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Basic Derived Attribute</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseBasicDerivedAttribute(BasicDerivedAttribute object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Basic Scenario Logic</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Basic Scenario Logic</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseBasicScenarioLogic(BasicScenarioLogic object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Derived Attribute</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Derived Attribute</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseDerivedAttribute(DerivedAttribute object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Derived Struct</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Derived Struct</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseDerivedStruct(DerivedStruct object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Base Feature</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Base Feature</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseBaseFeature(BaseFeature object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Derived Feature Group</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Derived Feature Group</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseDerivedFeatureGroup(DerivedFeatureGroup object) {
+	public T caseBasicScenarioOperation(BasicScenarioOperation object) {
 		return null;
 	}
 
@@ -747,6 +716,36 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Operation Parameter</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Operation Parameter</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseOperationParameter(OperationParameter object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Proxy Operation Parameter</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Proxy Operation Parameter</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseProxyOperationParameter(ProxyOperationParameter object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Proxy Feature Parameter</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -758,51 +757,6 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseProxyFeatureParameter(ProxyFeatureParameter object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Get Attribute From Entity Derived Feature</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Get Attribute From Entity Derived Feature</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseGetAttributeFromEntityDerivedFeature(GetAttributeFromEntityDerivedFeature object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Attribute From Entity Parameter</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Attribute From Entity Parameter</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseAttributeFromEntityParameter(AttributeFromEntityParameter object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Proxy Attribute From Entity Parameter</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Proxy Attribute From Entity Parameter</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseProxyAttributeFromEntityParameter(ProxyAttributeFromEntityParameter object) {
 		return null;
 	}
 
@@ -833,21 +787,6 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseFilterAndGroupToOneRowCreationApproach(FilterAndGroupToOneRowCreationApproach object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Row Creation Approach For Entity</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Row Creation Approach For Entity</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseRowCreationApproachForEntity(RowCreationApproachForEntity object) {
 		return null;
 	}
 
@@ -1002,6 +941,186 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Entity Table</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Entity Table</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseEntityTable(EntityTable object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Derived Entity Table</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Derived Entity Table</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseDerivedEntityTable(DerivedEntityTable object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Base Entity Table</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Base Entity Table</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseBaseEntityTable(BaseEntityTable object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Operation</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Operation</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseOperation(Operation object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Basic Operation</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Basic Operation</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseBasicOperation(BasicOperation object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Aggregate Operation</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Aggregate Operation</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseAggregateOperation(AggregateOperation object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Entity From Source Operation</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Entity From Source Operation</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseEntityFromSourceOperation(EntityFromSourceOperation object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Attribute From Entity Operation</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Attribute From Entity Operation</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseAttributeFromEntityOperation(AttributeFromEntityOperation object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Cells Parameter</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Cells Parameter</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseCellsParameter(CellsParameter object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Basic Operation Scenario Set</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Basic Operation Scenario Set</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseBasicOperationScenarioSet(BasicOperationScenarioSet object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Base Entity Table Module</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Base Entity Table Module</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseBaseEntityTableModule(BaseEntityTableModule object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Derived Entity Table Module</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Derived Entity Table Module</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseDerivedEntityTableModule(DerivedEntityTableModule object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>EModel Element</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -1107,51 +1226,6 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>EStructural Feature</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>EStructural Feature</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseEStructuralFeature(EStructuralFeature object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>EAttribute</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>EAttribute</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseEAttribute(EAttribute object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>EReference</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>EReference</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseEReference(EReference object) {
-		return null;
-	}
-
-	/**
 	 * Returns the result of interpreting the object as an instance of '<em>EParameter</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -1163,6 +1237,21 @@ public class Ecore_plus_logicSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseEParameter(EParameter object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>EOperation</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>EOperation</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseEOperation(EOperation object) {
 		return null;
 	}
 

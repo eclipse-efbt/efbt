@@ -106,38 +106,93 @@ public class EntityItemProvider extends EClassItemProvider {
 
 		newChildDescriptors.add
 			(createChildParameter
+				(EcorePackage.Literals.ECLASS__EOPERATIONS,
+				 Ecore_plus_logicFactory.eINSTANCE.createOperation()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(EcorePackage.Literals.ECLASS__EOPERATIONS,
+				 Ecore_plus_logicFactory.eINSTANCE.createBasicOperation()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(EcorePackage.Literals.ECLASS__EOPERATIONS,
+				 Ecore_plus_logicFactory.eINSTANCE.createBooleanOperation()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(EcorePackage.Literals.ECLASS__EOPERATIONS,
+				 Ecore_plus_logicFactory.eINSTANCE.createBasicScenarioOperation()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(EcorePackage.Literals.ECLASS__EOPERATIONS,
+				 Ecore_plus_logicFactory.eINSTANCE.createRowCreationApproach()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(EcorePackage.Literals.ECLASS__EOPERATIONS,
+				 Ecore_plus_logicFactory.eINSTANCE.createCustomRowCreationApproach()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(EcorePackage.Literals.ECLASS__EOPERATIONS,
+				 Ecore_plus_logicFactory.eINSTANCE.createFilterAndGroupToOneRowCreationApproach()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(EcorePackage.Literals.ECLASS__EOPERATIONS,
+				 Ecore_plus_logicFactory.eINSTANCE.createOneToOneRowCreationApproach()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(EcorePackage.Literals.ECLASS__EOPERATIONS,
+				 Ecore_plus_logicFactory.eINSTANCE.createFilterRowCreationApproach()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(EcorePackage.Literals.ECLASS__EOPERATIONS,
+				 Ecore_plus_logicFactory.eINSTANCE.createGroupByRowCreationApproach()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(EcorePackage.Literals.ECLASS__EOPERATIONS,
+				 Ecore_plus_logicFactory.eINSTANCE.createRowJoinFunction()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(EcorePackage.Literals.ECLASS__EOPERATIONS,
+				 Ecore_plus_logicFactory.eINSTANCE.createUnionRowCreationApproach()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(EcorePackage.Literals.ECLASS__EOPERATIONS,
+				 Ecore_plus_logicFactory.eINSTANCE.createExplodeArrayOfStructsRowFunction()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(EcorePackage.Literals.ECLASS__EOPERATIONS,
+				 Ecore_plus_logicFactory.eINSTANCE.createAggregateOperation()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(EcorePackage.Literals.ECLASS__EOPERATIONS,
+				 Ecore_plus_logicFactory.eINSTANCE.createEntityFromSourceOperation()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(EcorePackage.Literals.ECLASS__EOPERATIONS,
+				 Ecore_plus_logicFactory.eINSTANCE.createAttributeFromEntityOperation()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(EcorePackage.Literals.ECLASS__EOPERATIONS,
+				 Ecore_plus_logicFactory.eINSTANCE.createBasicOperationScenarioSet()));
+
+		newChildDescriptors.add
+			(createChildParameter
 				(EcorePackage.Literals.ECLASS__ESTRUCTURAL_FEATURES,
 				 Ecore_plus_structureFactory.eINSTANCE.createBaseEntityFeature()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(EcorePackage.Literals.ECLASS__ESTRUCTURAL_FEATURES,
-				 Ecore_plus_logicFactory.eINSTANCE.createDerivedAttribute()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(EcorePackage.Literals.ECLASS__ESTRUCTURAL_FEATURES,
-				 Ecore_plus_logicFactory.eINSTANCE.createAggregateDerivedAttribute()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(EcorePackage.Literals.ECLASS__ESTRUCTURAL_FEATURES,
-				 Ecore_plus_logicFactory.eINSTANCE.createBasicDerivedAttribute()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(EcorePackage.Literals.ECLASS__ESTRUCTURAL_FEATURES,
-				 Ecore_plus_logicFactory.eINSTANCE.createDerivedStruct()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(EcorePackage.Literals.ECLASS__ESTRUCTURAL_FEATURES,
-				 Ecore_plus_logicFactory.eINSTANCE.createBaseFeature()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(EcorePackage.Literals.ECLASS__ESTRUCTURAL_FEATURES,
-				 Ecore_plus_logicFactory.eINSTANCE.createGetAttributeFromEntityDerivedFeature()));
 	}
 
 	/**

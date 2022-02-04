@@ -8,7 +8,7 @@ import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ExplodeArray
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.ETypedElement;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -35,7 +35,7 @@ public class ExplodeArrayOfStructsRowFunctionImpl extends RowCreationApproachImp
 	 * @generated
 	 * @ordered
 	 */
-	protected EStructuralFeature arraySourceVariable;
+	protected ETypedElement arraySourceVariable;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -61,10 +61,10 @@ public class ExplodeArrayOfStructsRowFunctionImpl extends RowCreationApproachImp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EStructuralFeature getArraySourceVariable() {
+	public ETypedElement getArraySourceVariable() {
 		if (arraySourceVariable != null && arraySourceVariable.eIsProxy()) {
 			InternalEObject oldArraySourceVariable = (InternalEObject)arraySourceVariable;
-			arraySourceVariable = (EStructuralFeature)eResolveProxy(oldArraySourceVariable);
+			arraySourceVariable = (ETypedElement)eResolveProxy(oldArraySourceVariable);
 			if (arraySourceVariable != oldArraySourceVariable) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Ecore_plus_logicPackage.EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION__ARRAY_SOURCE_VARIABLE, oldArraySourceVariable, arraySourceVariable));
@@ -78,7 +78,7 @@ public class ExplodeArrayOfStructsRowFunctionImpl extends RowCreationApproachImp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EStructuralFeature basicGetArraySourceVariable() {
+	public ETypedElement basicGetArraySourceVariable() {
 		return arraySourceVariable;
 	}
 
@@ -87,8 +87,8 @@ public class ExplodeArrayOfStructsRowFunctionImpl extends RowCreationApproachImp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setArraySourceVariable(EStructuralFeature newArraySourceVariable) {
-		EStructuralFeature oldArraySourceVariable = arraySourceVariable;
+	public void setArraySourceVariable(ETypedElement newArraySourceVariable) {
+		ETypedElement oldArraySourceVariable = arraySourceVariable;
 		arraySourceVariable = newArraySourceVariable;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, Ecore_plus_logicPackage.EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION__ARRAY_SOURCE_VARIABLE, oldArraySourceVariable, arraySourceVariable));
@@ -118,7 +118,7 @@ public class ExplodeArrayOfStructsRowFunctionImpl extends RowCreationApproachImp
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Ecore_plus_logicPackage.EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION__ARRAY_SOURCE_VARIABLE:
-				setArraySourceVariable((EStructuralFeature)newValue);
+				setArraySourceVariable((ETypedElement)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -133,7 +133,7 @@ public class ExplodeArrayOfStructsRowFunctionImpl extends RowCreationApproachImp
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Ecore_plus_logicPackage.EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION__ARRAY_SOURCE_VARIABLE:
-				setArraySourceVariable((EStructuralFeature)null);
+				setArraySourceVariable((ETypedElement)null);
 				return;
 		}
 		super.eUnset(featureID);

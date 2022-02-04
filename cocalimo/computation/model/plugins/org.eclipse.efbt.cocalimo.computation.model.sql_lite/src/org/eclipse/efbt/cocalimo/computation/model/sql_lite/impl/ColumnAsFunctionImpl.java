@@ -2,13 +2,13 @@
  */
 package org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl;
 
-import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedAttribute;
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.ColumnAsFunction;
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.Sql_litePackage;
 
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.ETypedElement;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -36,7 +36,7 @@ public class ColumnAsFunctionImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 * @ordered
 	 */
-	protected DerivedAttribute column;
+	protected ETypedElement column;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -62,10 +62,10 @@ public class ColumnAsFunctionImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public DerivedAttribute getColumn() {
+	public ETypedElement getColumn() {
 		if (column != null && column.eIsProxy()) {
 			InternalEObject oldColumn = (InternalEObject)column;
-			column = (DerivedAttribute)eResolveProxy(oldColumn);
+			column = (ETypedElement)eResolveProxy(oldColumn);
 			if (column != oldColumn) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Sql_litePackage.COLUMN_AS_FUNCTION__COLUMN, oldColumn, column));
@@ -79,7 +79,7 @@ public class ColumnAsFunctionImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public DerivedAttribute basicGetColumn() {
+	public ETypedElement basicGetColumn() {
 		return column;
 	}
 
@@ -88,8 +88,8 @@ public class ColumnAsFunctionImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setColumn(DerivedAttribute newColumn) {
-		DerivedAttribute oldColumn = column;
+	public void setColumn(ETypedElement newColumn) {
+		ETypedElement oldColumn = column;
 		column = newColumn;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, Sql_litePackage.COLUMN_AS_FUNCTION__COLUMN, oldColumn, column));
@@ -119,7 +119,7 @@ public class ColumnAsFunctionImpl extends MinimalEObjectImpl.Container implement
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Sql_litePackage.COLUMN_AS_FUNCTION__COLUMN:
-				setColumn((DerivedAttribute)newValue);
+				setColumn((ETypedElement)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -134,7 +134,7 @@ public class ColumnAsFunctionImpl extends MinimalEObjectImpl.Container implement
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Sql_litePackage.COLUMN_AS_FUNCTION__COLUMN:
-				setColumn((DerivedAttribute)null);
+				setColumn((ETypedElement)null);
 				return;
 		}
 		super.eUnset(featureID);

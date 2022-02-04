@@ -26,8 +26,6 @@ import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_tran
 import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementPackage;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.Requirements_textPackage;
-import org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage;
-import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.Data_definitionPackage;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
@@ -178,8 +176,6 @@ public class Sql_litePackageImpl extends EPackageImpl implements Sql_litePackage
 		Ecore_plus_logicPackage.eINSTANCE.eClass();
 		EcorePackage.eINSTANCE.eClass();
 		Module_managementPackage.eINSTANCE.eClass();
-		CorePackage.eINSTANCE.eClass();
-		Data_definitionPackage.eINSTANCE.eClass();
 		Logical_transformationsPackage.eINSTANCE.eClass();
 		Bpmn_litePackage.eINSTANCE.eClass();
 		Requirements_textPackage.eINSTANCE.eClass();
@@ -551,13 +547,13 @@ public class Sql_litePackageImpl extends EPackageImpl implements Sql_litePackage
 		initEReference(getSelectColumn_As(), theEcorePackage.getEAttribute(), null, "as", null, 0, 1, SelectColumn.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(columnAsFunctionEClass, ColumnAsFunction.class, "ColumnAsFunction", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getColumnAsFunction_Column(), theEcore_plus_logicPackage.getDerivedAttribute(), null, "column", null, 0, 1, ColumnAsFunction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getColumnAsFunction_Column(), theEcorePackage.getETypedElement(), null, "column", null, 0, 1, ColumnAsFunction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(columnEClass, Column.class, "Column", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getColumn_Attribute(), theEcorePackage.getEAttribute(), null, "attribute", null, 0, 1, Column.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(whereClauseEClass, WhereClause.class, "WhereClause", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getWhereClause_Where_function(), theEcore_plus_logicPackage.getBooleanFunction(), null, "where_function", null, 0, 1, WhereClause.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getWhereClause_Where_function(), theEcore_plus_logicPackage.getBooleanOperation(), null, "where_function", null, 0, 1, WhereClause.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(tableEClass, Table.class, "Table", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getTable_Entity(), theEcore_plus_structurePackage.getEntity(), null, "entity", null, 0, 1, Table.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

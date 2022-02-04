@@ -4,7 +4,7 @@ package org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic;
 
 import org.eclipse.emf.common.util.EList;
 
-import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.ETypedElement;
 
 /**
  * <!-- begin-user-doc -->
@@ -36,13 +36,13 @@ public interface FilterAndGroupToOneRowCreationApproach extends RowCreationAppro
 	 * The function that defines the filter condition
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Filter Function</em>' containment reference.
-	 * @see #setFilterFunction(BooleanFunction)
+	 * @see #setFilterFunction(BooleanOperation)
 	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Ecore_plus_logicPackage#getFilterAndGroupToOneRowCreationApproach_FilterFunction()
 	 * @model containment="true"
 	 *        extendedMetaData="kind='element' name='filterFunction'"
 	 * @generated
 	 */
-	BooleanFunction getFilterFunction();
+	BooleanOperation getFilterFunction();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.FilterAndGroupToOneRowCreationApproach#getFilterFunction <em>Filter Function</em>}' containment reference.
@@ -52,11 +52,11 @@ public interface FilterAndGroupToOneRowCreationApproach extends RowCreationAppro
 	 * @see #getFilterFunction()
 	 * @generated
 	 */
-	void setFilterFunction(BooleanFunction value);
+	void setFilterFunction(BooleanOperation value);
 
 	/**
 	 * Returns the value of the '<em><b>Group By Variables</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.emf.ecore.EAttribute}.
+	 * The list contents are of type {@link org.eclipse.emf.ecore.ETypedElement}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Group By Variables</em>' reference list.
@@ -64,6 +64,6 @@ public interface FilterAndGroupToOneRowCreationApproach extends RowCreationAppro
 	 * @model
 	 * @generated
 	 */
-	EList<EAttribute> getGroupByVariables();
+	EList<ETypedElement> getGroupByVariables();
 
 } // FilterAndGroupToOneRowCreationApproach

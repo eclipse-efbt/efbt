@@ -59,33 +59,22 @@ public class Ecore_plus_logicFactoryImpl extends EFactoryImpl implements Ecore_p
 			case Ecore_plus_logicPackage.DERIVED_ENTITY: return createDerivedEntity();
 			case Ecore_plus_logicPackage.INTERMEDIATE_DERIVED_ENTITY: return createIntermediateDerivedEntity();
 			case Ecore_plus_logicPackage.GENERATED_ENTITY: return createGeneratedEntity();
-			case Ecore_plus_logicPackage.AGGREGATE_FUNCTION: return createAggregateFunction();
 			case Ecore_plus_logicPackage.AGGREGATE_FUNCTION_SPEC: return createAggregateFunctionSpec();
-			case Ecore_plus_logicPackage.BASIC_FUNCTION: return createBasicFunction();
 			case Ecore_plus_logicPackage.BASIC_FUNCTION_SPEC: return createBasicFunctionSpec();
-			case Ecore_plus_logicPackage.BOOLEAN_FUNCTION: return createBooleanFunction();
-			case Ecore_plus_logicPackage.FUNCTION: return createFunction();
+			case Ecore_plus_logicPackage.BOOLEAN_OPERATION: return createBooleanOperation();
 			case Ecore_plus_logicPackage.FUNCTION_SPEC: return createFunctionSpec();
 			case Ecore_plus_logicPackage.FUNCTION_SPEC_MODULE: return createFunctionSpecModule();
-			case Ecore_plus_logicPackage.PARAMATER_SPEC: return createParamaterSpec();
 			case Ecore_plus_logicPackage.PARAMETER: return createParameter();
 			case Ecore_plus_logicPackage.MEMBER_PARAMETER: return createMemberParameter();
+			case Ecore_plus_logicPackage.ENTITY_PARAMETER: return createEntityParameter();
 			case Ecore_plus_logicPackage.VALUE_PARAMETER: return createValueParameter();
-			case Ecore_plus_logicPackage.AGGREGATE_DERIVED_ATTRIBUTE: return createAggregateDerivedAttribute();
-			case Ecore_plus_logicPackage.BASIC_DERIVED_ATTRIBUTE: return createBasicDerivedAttribute();
-			case Ecore_plus_logicPackage.BASIC_SCENARIO_LOGIC: return createBasicScenarioLogic();
-			case Ecore_plus_logicPackage.DERIVED_ATTRIBUTE: return createDerivedAttribute();
-			case Ecore_plus_logicPackage.DERIVED_STRUCT: return createDerivedStruct();
-			case Ecore_plus_logicPackage.BASE_FEATURE: return createBaseFeature();
-			case Ecore_plus_logicPackage.DERIVED_FEATURE_GROUP: return createDerivedFeatureGroup();
+			case Ecore_plus_logicPackage.BASIC_SCENARIO_OPERATION: return createBasicScenarioOperation();
 			case Ecore_plus_logicPackage.FEATURE_PARAMETER: return createFeatureParameter();
+			case Ecore_plus_logicPackage.OPERATION_PARAMETER: return createOperationParameter();
+			case Ecore_plus_logicPackage.PROXY_OPERATION_PARAMETER: return createProxyOperationParameter();
 			case Ecore_plus_logicPackage.PROXY_FEATURE_PARAMETER: return createProxyFeatureParameter();
-			case Ecore_plus_logicPackage.GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE: return createGetAttributeFromEntityDerivedFeature();
-			case Ecore_plus_logicPackage.ATTRIBUTE_FROM_ENTITY_PARAMETER: return createAttributeFromEntityParameter();
-			case Ecore_plus_logicPackage.PROXY_ATTRIBUTE_FROM_ENTITY_PARAMETER: return createProxyAttributeFromEntityParameter();
 			case Ecore_plus_logicPackage.CUSTOM_ROW_CREATION_APPROACH: return createCustomRowCreationApproach();
 			case Ecore_plus_logicPackage.FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH: return createFilterAndGroupToOneRowCreationApproach();
-			case Ecore_plus_logicPackage.ROW_CREATION_APPROACH_FOR_ENTITY: return createRowCreationApproachForEntity();
 			case Ecore_plus_logicPackage.ONE_TO_ONE_ROW_CREATION_APPROACH: return createOneToOneRowCreationApproach();
 			case Ecore_plus_logicPackage.FILTER_ROW_CREATION_APPROACH: return createFilterRowCreationApproach();
 			case Ecore_plus_logicPackage.ROW_CREATION_APPROACH: return createRowCreationApproach();
@@ -96,6 +85,18 @@ public class Ecore_plus_logicFactoryImpl extends EFactoryImpl implements Ecore_p
 			case Ecore_plus_logicPackage.DERIVED_ENTITY_MODULE: return createDerivedEntityModule();
 			case Ecore_plus_logicPackage.INTERMEDIATE_DERIVED_ENTITIES_MODULE: return createIntermediateDerivedEntitiesModule();
 			case Ecore_plus_logicPackage.GENERATED_ENTITY_MODULE: return createGeneratedEntityModule();
+			case Ecore_plus_logicPackage.ENTITY_TABLE: return createEntityTable();
+			case Ecore_plus_logicPackage.DERIVED_ENTITY_TABLE: return createDerivedEntityTable();
+			case Ecore_plus_logicPackage.BASE_ENTITY_TABLE: return createBaseEntityTable();
+			case Ecore_plus_logicPackage.OPERATION: return createOperation();
+			case Ecore_plus_logicPackage.BASIC_OPERATION: return createBasicOperation();
+			case Ecore_plus_logicPackage.AGGREGATE_OPERATION: return createAggregateOperation();
+			case Ecore_plus_logicPackage.ENTITY_FROM_SOURCE_OPERATION: return createEntityFromSourceOperation();
+			case Ecore_plus_logicPackage.ATTRIBUTE_FROM_ENTITY_OPERATION: return createAttributeFromEntityOperation();
+			case Ecore_plus_logicPackage.CELLS_PARAMETER: return createCellsParameter();
+			case Ecore_plus_logicPackage.BASIC_OPERATION_SCENARIO_SET: return createBasicOperationScenarioSet();
+			case Ecore_plus_logicPackage.BASE_ENTITY_TABLE_MODULE: return createBaseEntityTableModule();
+			case Ecore_plus_logicPackage.DERIVED_ENTITY_TABLE_MODULE: return createDerivedEntityTableModule();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -136,29 +137,9 @@ public class Ecore_plus_logicFactoryImpl extends EFactoryImpl implements Ecore_p
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public AggregateFunction createAggregateFunction() {
-		AggregateFunctionImpl aggregateFunction = new AggregateFunctionImpl();
-		return aggregateFunction;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public AggregateFunctionSpec createAggregateFunctionSpec() {
 		AggregateFunctionSpecImpl aggregateFunctionSpec = new AggregateFunctionSpecImpl();
 		return aggregateFunctionSpec;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public BasicFunction createBasicFunction() {
-		BasicFunctionImpl basicFunction = new BasicFunctionImpl();
-		return basicFunction;
 	}
 
 	/**
@@ -176,19 +157,9 @@ public class Ecore_plus_logicFactoryImpl extends EFactoryImpl implements Ecore_p
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public BooleanFunction createBooleanFunction() {
-		BooleanFunctionImpl booleanFunction = new BooleanFunctionImpl();
-		return booleanFunction;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Function createFunction() {
-		FunctionImpl function = new FunctionImpl();
-		return function;
+	public BooleanOperation createBooleanOperation() {
+		BooleanOperationImpl booleanOperation = new BooleanOperationImpl();
+		return booleanOperation;
 	}
 
 	/**
@@ -216,16 +187,6 @@ public class Ecore_plus_logicFactoryImpl extends EFactoryImpl implements Ecore_p
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ParamaterSpec createParamaterSpec() {
-		ParamaterSpecImpl paramaterSpec = new ParamaterSpecImpl();
-		return paramaterSpec;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public Parameter createParameter() {
 		ParameterImpl parameter = new ParameterImpl();
 		return parameter;
@@ -246,6 +207,16 @@ public class Ecore_plus_logicFactoryImpl extends EFactoryImpl implements Ecore_p
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EntityParameter createEntityParameter() {
+		EntityParameterImpl entityParameter = new EntityParameterImpl();
+		return entityParameter;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ValueParameter createValueParameter() {
 		ValueParameterImpl valueParameter = new ValueParameterImpl();
 		return valueParameter;
@@ -256,69 +227,9 @@ public class Ecore_plus_logicFactoryImpl extends EFactoryImpl implements Ecore_p
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public AggregateDerivedAttribute createAggregateDerivedAttribute() {
-		AggregateDerivedAttributeImpl aggregateDerivedAttribute = new AggregateDerivedAttributeImpl();
-		return aggregateDerivedAttribute;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public BasicDerivedAttribute createBasicDerivedAttribute() {
-		BasicDerivedAttributeImpl basicDerivedAttribute = new BasicDerivedAttributeImpl();
-		return basicDerivedAttribute;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public BasicScenarioLogic createBasicScenarioLogic() {
-		BasicScenarioLogicImpl basicScenarioLogic = new BasicScenarioLogicImpl();
-		return basicScenarioLogic;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public DerivedAttribute createDerivedAttribute() {
-		DerivedAttributeImpl derivedAttribute = new DerivedAttributeImpl();
-		return derivedAttribute;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public DerivedStruct createDerivedStruct() {
-		DerivedStructImpl derivedStruct = new DerivedStructImpl();
-		return derivedStruct;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public BaseFeature createBaseFeature() {
-		BaseFeatureImpl baseFeature = new BaseFeatureImpl();
-		return baseFeature;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public DerivedFeatureGroup createDerivedFeatureGroup() {
-		DerivedFeatureGroupImpl derivedFeatureGroup = new DerivedFeatureGroupImpl();
-		return derivedFeatureGroup;
+	public BasicScenarioOperation createBasicScenarioOperation() {
+		BasicScenarioOperationImpl basicScenarioOperation = new BasicScenarioOperationImpl();
+		return basicScenarioOperation;
 	}
 
 	/**
@@ -336,39 +247,29 @@ public class Ecore_plus_logicFactoryImpl extends EFactoryImpl implements Ecore_p
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public OperationParameter createOperationParameter() {
+		OperationParameterImpl operationParameter = new OperationParameterImpl();
+		return operationParameter;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ProxyOperationParameter createProxyOperationParameter() {
+		ProxyOperationParameterImpl proxyOperationParameter = new ProxyOperationParameterImpl();
+		return proxyOperationParameter;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ProxyFeatureParameter createProxyFeatureParameter() {
 		ProxyFeatureParameterImpl proxyFeatureParameter = new ProxyFeatureParameterImpl();
 		return proxyFeatureParameter;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public GetAttributeFromEntityDerivedFeature createGetAttributeFromEntityDerivedFeature() {
-		GetAttributeFromEntityDerivedFeatureImpl getAttributeFromEntityDerivedFeature = new GetAttributeFromEntityDerivedFeatureImpl();
-		return getAttributeFromEntityDerivedFeature;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public AttributeFromEntityParameter createAttributeFromEntityParameter() {
-		AttributeFromEntityParameterImpl attributeFromEntityParameter = new AttributeFromEntityParameterImpl();
-		return attributeFromEntityParameter;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public ProxyAttributeFromEntityParameter createProxyAttributeFromEntityParameter() {
-		ProxyAttributeFromEntityParameterImpl proxyAttributeFromEntityParameter = new ProxyAttributeFromEntityParameterImpl();
-		return proxyAttributeFromEntityParameter;
 	}
 
 	/**
@@ -389,16 +290,6 @@ public class Ecore_plus_logicFactoryImpl extends EFactoryImpl implements Ecore_p
 	public FilterAndGroupToOneRowCreationApproach createFilterAndGroupToOneRowCreationApproach() {
 		FilterAndGroupToOneRowCreationApproachImpl filterAndGroupToOneRowCreationApproach = new FilterAndGroupToOneRowCreationApproachImpl();
 		return filterAndGroupToOneRowCreationApproach;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public RowCreationApproachForEntity createRowCreationApproachForEntity() {
-		RowCreationApproachForEntityImpl rowCreationApproachForEntity = new RowCreationApproachForEntityImpl();
-		return rowCreationApproachForEntity;
 	}
 
 	/**
@@ -499,6 +390,126 @@ public class Ecore_plus_logicFactoryImpl extends EFactoryImpl implements Ecore_p
 	public GeneratedEntityModule createGeneratedEntityModule() {
 		GeneratedEntityModuleImpl generatedEntityModule = new GeneratedEntityModuleImpl();
 		return generatedEntityModule;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EntityTable createEntityTable() {
+		EntityTableImpl entityTable = new EntityTableImpl();
+		return entityTable;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public DerivedEntityTable createDerivedEntityTable() {
+		DerivedEntityTableImpl derivedEntityTable = new DerivedEntityTableImpl();
+		return derivedEntityTable;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public BaseEntityTable createBaseEntityTable() {
+		BaseEntityTableImpl baseEntityTable = new BaseEntityTableImpl();
+		return baseEntityTable;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Operation createOperation() {
+		OperationImpl operation = new OperationImpl();
+		return operation;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public BasicOperation createBasicOperation() {
+		BasicOperationImpl basicOperation = new BasicOperationImpl();
+		return basicOperation;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public AggregateOperation createAggregateOperation() {
+		AggregateOperationImpl aggregateOperation = new AggregateOperationImpl();
+		return aggregateOperation;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EntityFromSourceOperation createEntityFromSourceOperation() {
+		EntityFromSourceOperationImpl entityFromSourceOperation = new EntityFromSourceOperationImpl();
+		return entityFromSourceOperation;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public AttributeFromEntityOperation createAttributeFromEntityOperation() {
+		AttributeFromEntityOperationImpl attributeFromEntityOperation = new AttributeFromEntityOperationImpl();
+		return attributeFromEntityOperation;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public CellsParameter createCellsParameter() {
+		CellsParameterImpl cellsParameter = new CellsParameterImpl();
+		return cellsParameter;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public BasicOperationScenarioSet createBasicOperationScenarioSet() {
+		BasicOperationScenarioSetImpl basicOperationScenarioSet = new BasicOperationScenarioSetImpl();
+		return basicOperationScenarioSet;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public BaseEntityTableModule createBaseEntityTableModule() {
+		BaseEntityTableModuleImpl baseEntityTableModule = new BaseEntityTableModuleImpl();
+		return baseEntityTableModule;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public DerivedEntityTableModule createDerivedEntityTableModule() {
+		DerivedEntityTableModuleImpl derivedEntityTableModule = new DerivedEntityTableModuleImpl();
+		return derivedEntityTableModule;
 	}
 
 	/**

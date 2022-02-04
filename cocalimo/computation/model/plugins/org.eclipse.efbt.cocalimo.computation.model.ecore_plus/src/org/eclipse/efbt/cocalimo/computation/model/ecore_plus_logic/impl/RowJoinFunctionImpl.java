@@ -2,7 +2,7 @@
  */
 package org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl;
 
-import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BooleanFunction;
+import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BooleanOperation;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Ecore_plus_logicPackage;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.RowJoinFunction;
 
@@ -36,7 +36,7 @@ public class RowJoinFunctionImpl extends RowCreationApproachImpl implements RowJ
 	 * @generated
 	 * @ordered
 	 */
-	protected BooleanFunction joinFunction;
+	protected BooleanOperation joinFunction;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -62,7 +62,7 @@ public class RowJoinFunctionImpl extends RowCreationApproachImpl implements RowJ
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public BooleanFunction getJoinFunction() {
+	public BooleanOperation getJoinFunction() {
 		return joinFunction;
 	}
 
@@ -71,8 +71,8 @@ public class RowJoinFunctionImpl extends RowCreationApproachImpl implements RowJ
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetJoinFunction(BooleanFunction newJoinFunction, NotificationChain msgs) {
-		BooleanFunction oldJoinFunction = joinFunction;
+	public NotificationChain basicSetJoinFunction(BooleanOperation newJoinFunction, NotificationChain msgs) {
+		BooleanOperation oldJoinFunction = joinFunction;
 		joinFunction = newJoinFunction;
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, Ecore_plus_logicPackage.ROW_JOIN_FUNCTION__JOIN_FUNCTION, oldJoinFunction, newJoinFunction);
@@ -86,7 +86,7 @@ public class RowJoinFunctionImpl extends RowCreationApproachImpl implements RowJ
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setJoinFunction(BooleanFunction newJoinFunction) {
+	public void setJoinFunction(BooleanOperation newJoinFunction) {
 		if (newJoinFunction != joinFunction) {
 			NotificationChain msgs = null;
 			if (joinFunction != null)
@@ -137,7 +137,7 @@ public class RowJoinFunctionImpl extends RowCreationApproachImpl implements RowJ
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Ecore_plus_logicPackage.ROW_JOIN_FUNCTION__JOIN_FUNCTION:
-				setJoinFunction((BooleanFunction)newValue);
+				setJoinFunction((BooleanOperation)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -152,7 +152,7 @@ public class RowJoinFunctionImpl extends RowCreationApproachImpl implements RowJ
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Ecore_plus_logicPackage.ROW_JOIN_FUNCTION__JOIN_FUNCTION:
-				setJoinFunction((BooleanFunction)null);
+				setJoinFunction((BooleanOperation)null);
 				return;
 		}
 		super.eUnset(featureID);

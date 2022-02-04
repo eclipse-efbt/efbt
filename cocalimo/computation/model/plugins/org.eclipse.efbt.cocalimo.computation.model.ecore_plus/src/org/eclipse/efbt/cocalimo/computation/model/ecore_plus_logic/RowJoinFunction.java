@@ -32,13 +32,13 @@ public interface RowJoinFunction extends RowCreationApproach {
 	 * The function that defines the join condition
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Join Function</em>' containment reference.
-	 * @see #setJoinFunction(BooleanFunction)
+	 * @see #setJoinFunction(BooleanOperation)
 	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Ecore_plus_logicPackage#getRowJoinFunction_JoinFunction()
 	 * @model containment="true"
 	 *        extendedMetaData="kind='element' name='joinFunction'"
 	 * @generated
 	 */
-	BooleanFunction getJoinFunction();
+	BooleanOperation getJoinFunction();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.RowJoinFunction#getJoinFunction <em>Join Function</em>}' containment reference.
@@ -48,6 +48,6 @@ public interface RowJoinFunction extends RowCreationApproach {
 	 * @see #getJoinFunction()
 	 * @generated
 	 */
-	void setJoinFunction(BooleanFunction value);
+	void setJoinFunction(BooleanOperation value);
 
 } // RowJoinFunction

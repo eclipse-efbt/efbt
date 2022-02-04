@@ -5,8 +5,7 @@ package org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.EOperation;
 
 /**
  * <!-- begin-user-doc -->
@@ -22,33 +21,14 @@ import org.eclipse.emf.ecore.EStructuralFeature;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.RowCreationApproach#getDependantCubeColumns <em>Dependant Cube Columns</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.RowCreationApproach#getCreatedCubeColumns <em>Created Cube Columns</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.RowCreationApproach#getDependantStructItemColumns <em>Dependant Struct Item Columns</em>}</li>
  * </ul>
  *
  * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Ecore_plus_logicPackage#getRowCreationApproach()
  * @model extendedMetaData="name='RowCreationApproach' kind='elementOnly'"
  * @generated
  */
-public interface RowCreationApproach extends EObject {
-	/**
-	 * Returns the value of the '<em><b>Dependant Cube Columns</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.emf.ecore.EStructuralFeature}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The parameters (from functions) which contain the CubeColumns from the source which are used to determine how to create and link the created rows. 
-	 *             	For example these could  be the CubeColumns used for grouping, or filtering, or joining. 
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Dependant Cube Columns</em>' containment reference list.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Ecore_plus_logicPackage#getRowCreationApproach_DependantCubeColumns()
-	 * @model containment="true"
-	 *        extendedMetaData="kind='element' name='dependantCubeColumns'"
-	 * @generated
-	 */
-	EList<EStructuralFeature> getDependantCubeColumns();
-
+public interface RowCreationApproach extends EOperation {
 	/**
 	 * Returns the value of the '<em><b>Created Cube Columns</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.emf.ecore.EAttribute}.
@@ -67,22 +47,5 @@ public interface RowCreationApproach extends EObject {
 	 * @generated
 	 */
 	EList<EAttribute> getCreatedCubeColumns();
-
-	/**
-	 * Returns the value of the '<em><b>Dependant Struct Item Columns</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.emf.ecore.EStructuralFeature}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The parameters (from functions) which contain the CubeColumns from the source which are used to determine how to create and link the created rows. 
-	 *             	For example these could  be the CubeColumns used for grouping, or filtering, or joining. 
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Dependant Struct Item Columns</em>' containment reference list.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Ecore_plus_logicPackage#getRowCreationApproach_DependantStructItemColumns()
-	 * @model containment="true"
-	 *        extendedMetaData="kind='element' name='dependantCubeColumns'"
-	 * @generated
-	 */
-	EList<EStructuralFeature> getDependantStructItemColumns();
 
 } // RowCreationApproach

@@ -2,8 +2,7 @@
  */
 package org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl;
 
-import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BooleanFunction;
-
+import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BooleanOperation;
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.Sql_litePackage;
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.WhereClause;
 
@@ -38,7 +37,7 @@ public class WhereClauseImpl extends MinimalEObjectImpl.Container implements Whe
 	 * @generated
 	 * @ordered
 	 */
-	protected BooleanFunction where_function;
+	protected BooleanOperation where_function;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -64,7 +63,7 @@ public class WhereClauseImpl extends MinimalEObjectImpl.Container implements Whe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public BooleanFunction getWhere_function() {
+	public BooleanOperation getWhere_function() {
 		return where_function;
 	}
 
@@ -73,8 +72,8 @@ public class WhereClauseImpl extends MinimalEObjectImpl.Container implements Whe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetWhere_function(BooleanFunction newWhere_function, NotificationChain msgs) {
-		BooleanFunction oldWhere_function = where_function;
+	public NotificationChain basicSetWhere_function(BooleanOperation newWhere_function, NotificationChain msgs) {
+		BooleanOperation oldWhere_function = where_function;
 		where_function = newWhere_function;
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, Sql_litePackage.WHERE_CLAUSE__WHERE_FUNCTION, oldWhere_function, newWhere_function);
@@ -88,7 +87,7 @@ public class WhereClauseImpl extends MinimalEObjectImpl.Container implements Whe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setWhere_function(BooleanFunction newWhere_function) {
+	public void setWhere_function(BooleanOperation newWhere_function) {
 		if (newWhere_function != where_function) {
 			NotificationChain msgs = null;
 			if (where_function != null)
@@ -139,7 +138,7 @@ public class WhereClauseImpl extends MinimalEObjectImpl.Container implements Whe
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Sql_litePackage.WHERE_CLAUSE__WHERE_FUNCTION:
-				setWhere_function((BooleanFunction)newValue);
+				setWhere_function((BooleanOperation)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -154,7 +153,7 @@ public class WhereClauseImpl extends MinimalEObjectImpl.Container implements Whe
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Sql_litePackage.WHERE_CLAUSE__WHERE_FUNCTION:
-				setWhere_function((BooleanFunction)null);
+				setWhere_function((BooleanOperation)null);
 				return;
 		}
 		super.eUnset(featureID);

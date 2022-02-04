@@ -12,9 +12,6 @@ import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
-import org.eclipse.emf.ecore.EDataType;
-import org.eclipse.emf.ecore.EEnum;
-import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EModelElement;
 import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
@@ -86,26 +83,6 @@ public class Ecore_plus_structureAdapterFactory extends AdapterFactoryImpl {
 				return createCellAdapter();
 			}
 			@Override
-			public Adapter caseHeirarchicalEnum(HeirarchicalEnum object) {
-				return createHeirarchicalEnumAdapter();
-			}
-			@Override
-			public Adapter caseHeirarchicalEnumLiteral(HeirarchicalEnumLiteral object) {
-				return createHeirarchicalEnumLiteralAdapter();
-			}
-			@Override
-			public Adapter caseEnumeratedDomain(EnumeratedDomain object) {
-				return createEnumeratedDomainAdapter();
-			}
-			@Override
-			public Adapter caseSubDomainEnum(SubDomainEnum object) {
-				return createSubDomainEnumAdapter();
-			}
-			@Override
-			public Adapter caseCellsParameter(CellsParameter object) {
-				return createCellsParameterAdapter();
-			}
-			@Override
 			public Adapter caseEntity(Entity object) {
 				return createEntityAdapter();
 			}
@@ -132,18 +109,6 @@ public class Ecore_plus_structureAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseEClass(EClass object) {
 				return createEClassAdapter();
-			}
-			@Override
-			public Adapter caseEDataType(EDataType object) {
-				return createEDataTypeAdapter();
-			}
-			@Override
-			public Adapter caseEEnum(EEnum object) {
-				return createEEnumAdapter();
-			}
-			@Override
-			public Adapter caseEEnumLiteral(EEnumLiteral object) {
-				return createEEnumLiteralAdapter();
 			}
 			@Override
 			public Adapter caseETypedElement(ETypedElement object) {
@@ -206,76 +171,6 @@ public class Ecore_plus_structureAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createCellAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.HeirarchicalEnum <em>Heirarchical Enum</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.HeirarchicalEnum
-	 * @generated
-	 */
-	public Adapter createHeirarchicalEnumAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.HeirarchicalEnumLiteral <em>Heirarchical Enum Literal</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.HeirarchicalEnumLiteral
-	 * @generated
-	 */
-	public Adapter createHeirarchicalEnumLiteralAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.EnumeratedDomain <em>Enumerated Domain</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.EnumeratedDomain
-	 * @generated
-	 */
-	public Adapter createEnumeratedDomainAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.SubDomainEnum <em>Sub Domain Enum</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.SubDomainEnum
-	 * @generated
-	 */
-	public Adapter createSubDomainEnumAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.CellsParameter <em>Cells Parameter</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.CellsParameter
-	 * @generated
-	 */
-	public Adapter createCellsParameterAdapter() {
 		return null;
 	}
 
@@ -374,48 +269,6 @@ public class Ecore_plus_structureAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createEClassAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.ecore.EDataType <em>EData Type</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.emf.ecore.EDataType
-	 * @generated
-	 */
-	public Adapter createEDataTypeAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.ecore.EEnum <em>EEnum</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.emf.ecore.EEnum
-	 * @generated
-	 */
-	public Adapter createEEnumAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.ecore.EEnumLiteral <em>EEnum Literal</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.emf.ecore.EEnumLiteral
-	 * @generated
-	 */
-	public Adapter createEEnumLiteralAdapter() {
 		return null;
 	}
 

@@ -7,9 +7,6 @@ import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.*;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
-import org.eclipse.emf.ecore.EDataType;
-import org.eclipse.emf.ecore.EEnum;
-import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EModelElement;
 import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
@@ -93,56 +90,6 @@ public class Ecore_plus_structureSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case Ecore_plus_structurePackage.HEIRARCHICAL_ENUM: {
-				HeirarchicalEnum heirarchicalEnum = (HeirarchicalEnum)theEObject;
-				T result = caseHeirarchicalEnum(heirarchicalEnum);
-				if (result == null) result = caseEEnum(heirarchicalEnum);
-				if (result == null) result = caseEDataType(heirarchicalEnum);
-				if (result == null) result = caseEClassifier(heirarchicalEnum);
-				if (result == null) result = caseENamedElement(heirarchicalEnum);
-				if (result == null) result = caseEModelElement(heirarchicalEnum);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case Ecore_plus_structurePackage.HEIRARCHICAL_ENUM_LITERAL: {
-				HeirarchicalEnumLiteral heirarchicalEnumLiteral = (HeirarchicalEnumLiteral)theEObject;
-				T result = caseHeirarchicalEnumLiteral(heirarchicalEnumLiteral);
-				if (result == null) result = caseEEnumLiteral(heirarchicalEnumLiteral);
-				if (result == null) result = caseENamedElement(heirarchicalEnumLiteral);
-				if (result == null) result = caseEModelElement(heirarchicalEnumLiteral);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case Ecore_plus_structurePackage.ENUMERATED_DOMAIN: {
-				EnumeratedDomain enumeratedDomain = (EnumeratedDomain)theEObject;
-				T result = caseEnumeratedDomain(enumeratedDomain);
-				if (result == null) result = caseHeirarchicalEnum(enumeratedDomain);
-				if (result == null) result = caseEEnum(enumeratedDomain);
-				if (result == null) result = caseEDataType(enumeratedDomain);
-				if (result == null) result = caseEClassifier(enumeratedDomain);
-				if (result == null) result = caseENamedElement(enumeratedDomain);
-				if (result == null) result = caseEModelElement(enumeratedDomain);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case Ecore_plus_structurePackage.SUB_DOMAIN_ENUM: {
-				SubDomainEnum subDomainEnum = (SubDomainEnum)theEObject;
-				T result = caseSubDomainEnum(subDomainEnum);
-				if (result == null) result = caseHeirarchicalEnum(subDomainEnum);
-				if (result == null) result = caseEEnum(subDomainEnum);
-				if (result == null) result = caseEDataType(subDomainEnum);
-				if (result == null) result = caseEClassifier(subDomainEnum);
-				if (result == null) result = caseENamedElement(subDomainEnum);
-				if (result == null) result = caseEModelElement(subDomainEnum);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case Ecore_plus_structurePackage.CELLS_PARAMETER: {
-				CellsParameter cellsParameter = (CellsParameter)theEObject;
-				T result = caseCellsParameter(cellsParameter);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case Ecore_plus_structurePackage.ENTITY: {
 				Entity entity = (Entity)theEObject;
 				T result = caseEntity(entity);
@@ -202,81 +149,6 @@ public class Ecore_plus_structureSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseCell(Cell object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Heirarchical Enum</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Heirarchical Enum</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseHeirarchicalEnum(HeirarchicalEnum object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Heirarchical Enum Literal</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Heirarchical Enum Literal</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseHeirarchicalEnumLiteral(HeirarchicalEnumLiteral object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Enumerated Domain</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Enumerated Domain</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseEnumeratedDomain(EnumeratedDomain object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Sub Domain Enum</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Sub Domain Enum</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseSubDomainEnum(SubDomainEnum object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Cells Parameter</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Cells Parameter</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseCellsParameter(CellsParameter object) {
 		return null;
 	}
 
@@ -382,51 +254,6 @@ public class Ecore_plus_structureSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseEClass(EClass object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>EData Type</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>EData Type</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseEDataType(EDataType object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>EEnum</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>EEnum</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseEEnum(EEnum object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>EEnum Literal</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>EEnum Literal</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseEEnumLiteral(EEnumLiteral object) {
 		return null;
 	}
 

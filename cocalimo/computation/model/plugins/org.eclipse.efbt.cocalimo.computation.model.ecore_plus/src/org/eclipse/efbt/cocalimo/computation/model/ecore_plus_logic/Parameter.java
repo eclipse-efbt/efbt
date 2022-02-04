@@ -2,7 +2,7 @@
  */
 package org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic;
 
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EParameter;
 
 /**
  * <!-- begin-user-doc -->
@@ -18,5 +18,5 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='Parameter' kind='empty'"
  * @generated
  */
-public interface Parameter extends EObject {
+public interface Parameter extends EParameter {
 } // Parameter

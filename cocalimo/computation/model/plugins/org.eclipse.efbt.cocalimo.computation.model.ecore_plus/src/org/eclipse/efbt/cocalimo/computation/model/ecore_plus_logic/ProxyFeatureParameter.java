@@ -4,34 +4,26 @@ package org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic;
 
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.Entity;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.core.VARIABLE;
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Proxy Feature Parameter</b></em>'.
  * <!-- end-user-doc -->
  *
- * <!-- begin-model-doc -->
- * A Parameter where we are taking a CubeColumn from a cube.
- *  Speculative here relates to the fact that this cubeColumn may or may not actually exist. 
- *  Note that during development of a program that set of actually existing CubeColumns changes.
- *  Allowing a specultiveCubeColumnParameter    means that we can develop more quickly, and run checks occasionally to check that all SpeculativeCubeColumnParameters can be resolved  to real CubeColumns.
- *                
- * <!-- end-model-doc -->
- *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ProxyFeatureParameter#getEntity <em>Entity</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ProxyFeatureParameter#getVaraible <em>Varaible</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ProxyFeatureParameter#getFeature_name <em>Feature name</em>}</li>
  * </ul>
  *
  * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Ecore_plus_logicPackage#getProxyFeatureParameter()
- * @model extendedMetaData="name='SpeculativeCubeColumnParameter' kind='empty'"
+ * @model
  * @generated
  */
-public interface ProxyFeatureParameter extends Parameter {
+public interface ProxyFeatureParameter extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Entity</b></em>' reference.
 	 * <!-- begin-user-doc -->
@@ -58,25 +50,25 @@ public interface ProxyFeatureParameter extends Parameter {
 	void setEntity(Entity value);
 
 	/**
-	 * Returns the value of the '<em><b>Varaible</b></em>' reference.
+	 * Returns the value of the '<em><b>Feature name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Varaible</em>' reference.
-	 * @see #setVaraible(VARIABLE)
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Ecore_plus_logicPackage#getProxyFeatureParameter_Varaible()
+	 * @return the value of the '<em>Feature name</em>' attribute.
+	 * @see #setFeature_name(String)
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Ecore_plus_logicPackage#getProxyFeatureParameter_Feature_name()
 	 * @model
 	 * @generated
 	 */
-	VARIABLE getVaraible();
+	String getFeature_name();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ProxyFeatureParameter#getVaraible <em>Varaible</em>}' reference.
+	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ProxyFeatureParameter#getFeature_name <em>Feature name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Varaible</em>' reference.
-	 * @see #getVaraible()
+	 * @param value the new value of the '<em>Feature name</em>' attribute.
+	 * @see #getFeature_name()
 	 * @generated
 	 */
-	void setVaraible(VARIABLE value);
+	void setFeature_name(String value);
 
 } // ProxyFeatureParameter

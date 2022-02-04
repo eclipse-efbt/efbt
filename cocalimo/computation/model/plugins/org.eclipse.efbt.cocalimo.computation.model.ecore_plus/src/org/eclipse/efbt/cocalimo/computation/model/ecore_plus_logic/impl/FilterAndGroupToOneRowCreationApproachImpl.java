@@ -3,8 +3,7 @@
 package org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl;
 
 import java.util.Collection;
-
-import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BooleanFunction;
+import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BooleanOperation;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Ecore_plus_logicPackage;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.FilterAndGroupToOneRowCreationApproach;
 
@@ -13,8 +12,8 @@ import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
 
-import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.ETypedElement;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -44,7 +43,7 @@ public class FilterAndGroupToOneRowCreationApproachImpl extends RowCreationAppro
 	 * @generated
 	 * @ordered
 	 */
-	protected BooleanFunction filterFunction;
+	protected BooleanOperation filterFunction;
 
 	/**
 	 * The cached value of the '{@link #getGroupByVariables() <em>Group By Variables</em>}' reference list.
@@ -54,7 +53,7 @@ public class FilterAndGroupToOneRowCreationApproachImpl extends RowCreationAppro
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<EAttribute> groupByVariables;
+	protected EList<ETypedElement> groupByVariables;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -80,7 +79,7 @@ public class FilterAndGroupToOneRowCreationApproachImpl extends RowCreationAppro
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public BooleanFunction getFilterFunction() {
+	public BooleanOperation getFilterFunction() {
 		return filterFunction;
 	}
 
@@ -89,8 +88,8 @@ public class FilterAndGroupToOneRowCreationApproachImpl extends RowCreationAppro
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetFilterFunction(BooleanFunction newFilterFunction, NotificationChain msgs) {
-		BooleanFunction oldFilterFunction = filterFunction;
+	public NotificationChain basicSetFilterFunction(BooleanOperation newFilterFunction, NotificationChain msgs) {
+		BooleanOperation oldFilterFunction = filterFunction;
 		filterFunction = newFilterFunction;
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, Ecore_plus_logicPackage.FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH__FILTER_FUNCTION, oldFilterFunction, newFilterFunction);
@@ -104,7 +103,7 @@ public class FilterAndGroupToOneRowCreationApproachImpl extends RowCreationAppro
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setFilterFunction(BooleanFunction newFilterFunction) {
+	public void setFilterFunction(BooleanOperation newFilterFunction) {
 		if (newFilterFunction != filterFunction) {
 			NotificationChain msgs = null;
 			if (filterFunction != null)
@@ -123,9 +122,9 @@ public class FilterAndGroupToOneRowCreationApproachImpl extends RowCreationAppro
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<EAttribute> getGroupByVariables() {
+	public EList<ETypedElement> getGroupByVariables() {
 		if (groupByVariables == null) {
-			groupByVariables = new EObjectResolvingEList<EAttribute>(EAttribute.class, this, Ecore_plus_logicPackage.FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH__GROUP_BY_VARIABLES);
+			groupByVariables = new EObjectResolvingEList<ETypedElement>(ETypedElement.class, this, Ecore_plus_logicPackage.FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH__GROUP_BY_VARIABLES);
 		}
 		return groupByVariables;
 	}
@@ -170,11 +169,11 @@ public class FilterAndGroupToOneRowCreationApproachImpl extends RowCreationAppro
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Ecore_plus_logicPackage.FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH__FILTER_FUNCTION:
-				setFilterFunction((BooleanFunction)newValue);
+				setFilterFunction((BooleanOperation)newValue);
 				return;
 			case Ecore_plus_logicPackage.FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH__GROUP_BY_VARIABLES:
 				getGroupByVariables().clear();
-				getGroupByVariables().addAll((Collection<? extends EAttribute>)newValue);
+				getGroupByVariables().addAll((Collection<? extends ETypedElement>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -189,7 +188,7 @@ public class FilterAndGroupToOneRowCreationApproachImpl extends RowCreationAppro
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Ecore_plus_logicPackage.FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH__FILTER_FUNCTION:
-				setFilterFunction((BooleanFunction)null);
+				setFilterFunction((BooleanOperation)null);
 				return;
 			case Ecore_plus_logicPackage.FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH__GROUP_BY_VARIABLES:
 				getGroupByVariables().clear();

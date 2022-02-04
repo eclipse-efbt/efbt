@@ -114,7 +114,7 @@ public class ValueParameterItemProvider extends ParameterItemProvider {
 	 */
 	@Override
 	public String getText(Object object) {
-		String label = ((ValueParameter)object).getValue();
+		String label = ((ValueParameter)object).getName();
 		return label == null || label.length() == 0 ?
 			getString("_UI_ValueParameter_type") :
 			getString("_UI_ValueParameter_type") + " " + label;

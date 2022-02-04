@@ -6,10 +6,12 @@ package org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.provider;
 import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Ecore_plus_logicPackage;
+import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.OneToOneRowCreationApproach;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
+
+import org.eclipse.emf.ecore.EcorePackage;
 
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 
@@ -64,7 +66,10 @@ public class OneToOneRowCreationApproachItemProvider extends RowCreationApproach
 	 */
 	@Override
 	public String getText(Object object) {
-		return getString("_UI_OneToOneRowCreationApproach_type");
+		String label = ((OneToOneRowCreationApproach)object).getName();
+		return label == null || label.length() == 0 ?
+			getString("_UI_OneToOneRowCreationApproach_type") :
+			getString("_UI_OneToOneRowCreationApproach_type") + " " + label;
 	}
 
 
@@ -105,9 +110,8 @@ public class OneToOneRowCreationApproachItemProvider extends RowCreationApproach
 		Object childObject = child;
 
 		boolean qualify =
-			childFeature == Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS ||
-			childFeature == Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS ||
-			childFeature == Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS;
+			childFeature == EcorePackage.Literals.ETYPED_ELEMENT__EGENERIC_TYPE ||
+			childFeature == EcorePackage.Literals.EOPERATION__EGENERIC_EXCEPTIONS;
 
 		if (qualify) {
 			return getString

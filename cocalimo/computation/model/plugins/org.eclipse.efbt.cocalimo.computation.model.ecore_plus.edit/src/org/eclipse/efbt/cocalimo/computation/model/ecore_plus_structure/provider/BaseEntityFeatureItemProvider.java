@@ -51,7 +51,6 @@ public class BaseEntityFeatureItemProvider extends EAttributeItemProvider {
 
 			addIsFKPropertyDescriptor(object);
 			addFkEntityPropertyDescriptor(object);
-			addVaraiblePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -92,28 +91,6 @@ public class BaseEntityFeatureItemProvider extends EAttributeItemProvider {
 				 getString("_UI_BaseEntityFeature_fkEntity_feature"),
 				 getString("_UI_PropertyDescriptor_description", "_UI_BaseEntityFeature_fkEntity_feature", "_UI_BaseEntityFeature_type"),
 				 Ecore_plus_structurePackage.Literals.BASE_ENTITY_FEATURE__FK_ENTITY,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Varaible feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addVaraiblePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_BaseEntityFeature_varaible_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_BaseEntityFeature_varaible_feature", "_UI_BaseEntityFeature_type"),
-				 Ecore_plus_structurePackage.Literals.BASE_ENTITY_FEATURE__VARAIBLE,
 				 true,
 				 false,
 				 true,

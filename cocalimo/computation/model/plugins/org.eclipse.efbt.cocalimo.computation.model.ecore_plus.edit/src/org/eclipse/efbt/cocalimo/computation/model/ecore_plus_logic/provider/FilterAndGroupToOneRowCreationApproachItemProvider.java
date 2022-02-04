@@ -14,6 +14,7 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.EcorePackage;
 
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
@@ -123,7 +124,10 @@ public class FilterAndGroupToOneRowCreationApproachItemProvider extends RowCreat
 	 */
 	@Override
 	public String getText(Object object) {
-		return getString("_UI_FilterAndGroupToOneRowCreationApproach_type");
+		String label = ((FilterAndGroupToOneRowCreationApproach)object).getName();
+		return label == null || label.length() == 0 ?
+			getString("_UI_FilterAndGroupToOneRowCreationApproach_type") :
+			getString("_UI_FilterAndGroupToOneRowCreationApproach_type") + " " + label;
 	}
 
 
@@ -160,7 +164,7 @@ public class FilterAndGroupToOneRowCreationApproachItemProvider extends RowCreat
 		newChildDescriptors.add
 			(createChildParameter
 				(Ecore_plus_logicPackage.Literals.FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH__FILTER_FUNCTION,
-				 Ecore_plus_logicFactory.eINSTANCE.createBooleanFunction()));
+				 Ecore_plus_logicFactory.eINSTANCE.createBooleanOperation()));
 	}
 
 	/**
@@ -175,9 +179,10 @@ public class FilterAndGroupToOneRowCreationApproachItemProvider extends RowCreat
 		Object childObject = child;
 
 		boolean qualify =
-			childFeature == Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS ||
-			childFeature == Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS ||
-			childFeature == Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS;
+			childFeature == EcorePackage.Literals.ETYPED_ELEMENT__EGENERIC_TYPE ||
+			childFeature == EcorePackage.Literals.EOPERATION__EGENERIC_EXCEPTIONS ||
+			childFeature == EcorePackage.Literals.EOPERATION__EPARAMETERS ||
+			childFeature == Ecore_plus_logicPackage.Literals.FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH__FILTER_FUNCTION;
 
 		if (qualify) {
 			return getString

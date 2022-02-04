@@ -40,51 +40,6 @@ public interface Ecore_plus_structureFactory extends EFactory {
 	Cell createCell();
 
 	/**
-	 * Returns a new object of class '<em>Heirarchical Enum</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Heirarchical Enum</em>'.
-	 * @generated
-	 */
-	HeirarchicalEnum createHeirarchicalEnum();
-
-	/**
-	 * Returns a new object of class '<em>Heirarchical Enum Literal</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Heirarchical Enum Literal</em>'.
-	 * @generated
-	 */
-	HeirarchicalEnumLiteral createHeirarchicalEnumLiteral();
-
-	/**
-	 * Returns a new object of class '<em>Enumerated Domain</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Enumerated Domain</em>'.
-	 * @generated
-	 */
-	EnumeratedDomain createEnumeratedDomain();
-
-	/**
-	 * Returns a new object of class '<em>Sub Domain Enum</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Sub Domain Enum</em>'.
-	 * @generated
-	 */
-	SubDomainEnum createSubDomainEnum();
-
-	/**
-	 * Returns a new object of class '<em>Cells Parameter</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Cells Parameter</em>'.
-	 * @generated
-	 */
-	CellsParameter createCellsParameter();
-
-	/**
 	 * Returns a new object of class '<em>Entity</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

@@ -8,8 +8,6 @@ import org.eclipse.efbt.cocalimo.core.model.module_management.provider.Module_ma
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.provider.Requirements_textEditPlugin;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.core.provider.SmcubesEditPlugin;
-
 import org.eclipse.emf.common.EMFPlugin;
 
 import org.eclipse.emf.common.util.ResourceLocator;
@@ -52,7 +50,6 @@ public final class Ecore_plusEditPlugin extends EMFPlugin {
 		     TaskEditPlugin.INSTANCE,
 		     Module_managementEditPlugin.INSTANCE,
 		     Requirements_textEditPlugin.INSTANCE,
-		     SmcubesEditPlugin.INSTANCE,
 		   });
 	}
 

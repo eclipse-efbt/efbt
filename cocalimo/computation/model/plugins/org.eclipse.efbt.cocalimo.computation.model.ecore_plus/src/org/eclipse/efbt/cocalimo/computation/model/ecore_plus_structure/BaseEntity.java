@@ -2,7 +2,6 @@
  */
 package org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE;
 import org.eclipse.emf.common.util.EList;
 
 /**
@@ -15,7 +14,6 @@ import org.eclipse.emf.common.util.EList;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.BaseEntity#getBaseFeatures <em>Base Features</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.BaseEntity#getCube <em>Cube</em>}</li>
  * </ul>
  *
  * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.Ecore_plus_structurePackage#getBaseEntity()
@@ -34,27 +32,5 @@ public interface BaseEntity extends Entity {
 	 * @generated
 	 */
 	EList<BaseEntityFeature> getBaseFeatures();
-
-	/**
-	 * Returns the value of the '<em><b>Cube</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Cube</em>' reference.
-	 * @see #setCube(CUBE)
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.Ecore_plus_structurePackage#getBaseEntity_Cube()
-	 * @model
-	 * @generated
-	 */
-	CUBE getCube();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.BaseEntity#getCube <em>Cube</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Cube</em>' reference.
-	 * @see #getCube()
-	 * @generated
-	 */
-	void setCube(CUBE value);
 
 } // BaseEntity

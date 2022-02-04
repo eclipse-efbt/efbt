@@ -2,7 +2,7 @@
  */
 package org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic;
 
-import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.ETypedElement;
 
 /**
  * <!-- begin-user-doc -->
@@ -26,12 +26,12 @@ public interface ExplodeArrayOfStructsRowFunction extends RowCreationApproach {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Array Source Variable</em>' reference.
-	 * @see #setArraySourceVariable(EStructuralFeature)
+	 * @see #setArraySourceVariable(ETypedElement)
 	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Ecore_plus_logicPackage#getExplodeArrayOfStructsRowFunction_ArraySourceVariable()
 	 * @model
 	 * @generated
 	 */
-	EStructuralFeature getArraySourceVariable();
+	ETypedElement getArraySourceVariable();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ExplodeArrayOfStructsRowFunction#getArraySourceVariable <em>Array Source Variable</em>}' reference.
@@ -41,6 +41,6 @@ public interface ExplodeArrayOfStructsRowFunction extends RowCreationApproach {
 	 * @see #getArraySourceVariable()
 	 * @generated
 	 */
-	void setArraySourceVariable(EStructuralFeature value);
+	void setArraySourceVariable(ETypedElement value);
 
 } // ExplodeArrayOfStructsRowFunction

@@ -2,7 +2,6 @@
  */
 package org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.core.VARIABLE;
 import org.eclipse.emf.ecore.EAttribute;
 
 /**
@@ -16,7 +15,6 @@ import org.eclipse.emf.ecore.EAttribute;
  * <ul>
  *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.BaseEntityFeature#isIsFK <em>Is FK</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.BaseEntityFeature#getFkEntity <em>Fk Entity</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.BaseEntityFeature#getVaraible <em>Varaible</em>}</li>
  * </ul>
  *
  * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.Ecore_plus_structurePackage#getBaseEntityFeature()
@@ -67,27 +65,5 @@ public interface BaseEntityFeature extends EAttribute {
 	 * @generated
 	 */
 	void setFkEntity(BaseEntity value);
-
-	/**
-	 * Returns the value of the '<em><b>Varaible</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Varaible</em>' reference.
-	 * @see #setVaraible(VARIABLE)
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.Ecore_plus_structurePackage#getBaseEntityFeature_Varaible()
-	 * @model
-	 * @generated
-	 */
-	VARIABLE getVaraible();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.BaseEntityFeature#getVaraible <em>Varaible</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Varaible</em>' reference.
-	 * @see #getVaraible()
-	 * @generated
-	 */
-	void setVaraible(VARIABLE value);
 
 } // BaseEntityFeature

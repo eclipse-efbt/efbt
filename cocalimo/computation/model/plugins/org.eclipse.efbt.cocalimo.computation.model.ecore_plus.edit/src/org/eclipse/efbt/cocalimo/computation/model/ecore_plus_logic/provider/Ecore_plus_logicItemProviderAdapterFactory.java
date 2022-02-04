@@ -141,29 +141,6 @@ public class Ecore_plus_logicItemProviderAdapterFactory extends Ecore_plus_logic
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateFunction} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected AggregateFunctionItemProvider aggregateFunctionItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateFunction}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createAggregateFunctionAdapter() {
-		if (aggregateFunctionItemProvider == null) {
-			aggregateFunctionItemProvider = new AggregateFunctionItemProvider(this);
-		}
-
-		return aggregateFunctionItemProvider;
-	}
-
-	/**
 	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateFunctionSpec} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -184,29 +161,6 @@ public class Ecore_plus_logicItemProviderAdapterFactory extends Ecore_plus_logic
 		}
 
 		return aggregateFunctionSpecItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicFunction} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected BasicFunctionItemProvider basicFunctionItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicFunction}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createBasicFunctionAdapter() {
-		if (basicFunctionItemProvider == null) {
-			basicFunctionItemProvider = new BasicFunctionItemProvider(this);
-		}
-
-		return basicFunctionItemProvider;
 	}
 
 	/**
@@ -233,49 +187,26 @@ public class Ecore_plus_logicItemProviderAdapterFactory extends Ecore_plus_logic
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BooleanFunction} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BooleanOperation} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected BooleanFunctionItemProvider booleanFunctionItemProvider;
+	protected BooleanOperationItemProvider booleanOperationItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BooleanFunction}.
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BooleanOperation}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	public Adapter createBooleanFunctionAdapter() {
-		if (booleanFunctionItemProvider == null) {
-			booleanFunctionItemProvider = new BooleanFunctionItemProvider(this);
+	public Adapter createBooleanOperationAdapter() {
+		if (booleanOperationItemProvider == null) {
+			booleanOperationItemProvider = new BooleanOperationItemProvider(this);
 		}
 
-		return booleanFunctionItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Function} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected FunctionItemProvider functionItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Function}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createFunctionAdapter() {
-		if (functionItemProvider == null) {
-			functionItemProvider = new FunctionItemProvider(this);
-		}
-
-		return functionItemProvider;
+		return booleanOperationItemProvider;
 	}
 
 	/**
@@ -325,29 +256,6 @@ public class Ecore_plus_logicItemProviderAdapterFactory extends Ecore_plus_logic
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ParamaterSpec} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected ParamaterSpecItemProvider paramaterSpecItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ParamaterSpec}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createParamaterSpecAdapter() {
-		if (paramaterSpecItemProvider == null) {
-			paramaterSpecItemProvider = new ParamaterSpecItemProvider(this);
-		}
-
-		return paramaterSpecItemProvider;
-	}
-
-	/**
 	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Parameter} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -394,6 +302,29 @@ public class Ecore_plus_logicItemProviderAdapterFactory extends Ecore_plus_logic
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.EntityParameter} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected EntityParameterItemProvider entityParameterItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.EntityParameter}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createEntityParameterAdapter() {
+		if (entityParameterItemProvider == null) {
+			entityParameterItemProvider = new EntityParameterItemProvider(this);
+		}
+
+		return entityParameterItemProvider;
+	}
+
+	/**
 	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ValueParameter} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -417,164 +348,26 @@ public class Ecore_plus_logicItemProviderAdapterFactory extends Ecore_plus_logic
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateDerivedAttribute} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicScenarioOperation} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected AggregateDerivedAttributeItemProvider aggregateDerivedAttributeItemProvider;
+	protected BasicScenarioOperationItemProvider basicScenarioOperationItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateDerivedAttribute}.
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicScenarioOperation}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	public Adapter createAggregateDerivedAttributeAdapter() {
-		if (aggregateDerivedAttributeItemProvider == null) {
-			aggregateDerivedAttributeItemProvider = new AggregateDerivedAttributeItemProvider(this);
+	public Adapter createBasicScenarioOperationAdapter() {
+		if (basicScenarioOperationItemProvider == null) {
+			basicScenarioOperationItemProvider = new BasicScenarioOperationItemProvider(this);
 		}
 
-		return aggregateDerivedAttributeItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicDerivedAttribute} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected BasicDerivedAttributeItemProvider basicDerivedAttributeItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicDerivedAttribute}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createBasicDerivedAttributeAdapter() {
-		if (basicDerivedAttributeItemProvider == null) {
-			basicDerivedAttributeItemProvider = new BasicDerivedAttributeItemProvider(this);
-		}
-
-		return basicDerivedAttributeItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicScenarioLogic} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected BasicScenarioLogicItemProvider basicScenarioLogicItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicScenarioLogic}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createBasicScenarioLogicAdapter() {
-		if (basicScenarioLogicItemProvider == null) {
-			basicScenarioLogicItemProvider = new BasicScenarioLogicItemProvider(this);
-		}
-
-		return basicScenarioLogicItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedAttribute} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected DerivedAttributeItemProvider derivedAttributeItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedAttribute}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createDerivedAttributeAdapter() {
-		if (derivedAttributeItemProvider == null) {
-			derivedAttributeItemProvider = new DerivedAttributeItemProvider(this);
-		}
-
-		return derivedAttributeItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedStruct} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected DerivedStructItemProvider derivedStructItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedStruct}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createDerivedStructAdapter() {
-		if (derivedStructItemProvider == null) {
-			derivedStructItemProvider = new DerivedStructItemProvider(this);
-		}
-
-		return derivedStructItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BaseFeature} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected BaseFeatureItemProvider baseFeatureItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BaseFeature}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createBaseFeatureAdapter() {
-		if (baseFeatureItemProvider == null) {
-			baseFeatureItemProvider = new BaseFeatureItemProvider(this);
-		}
-
-		return baseFeatureItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedFeatureGroup} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected DerivedFeatureGroupItemProvider derivedFeatureGroupItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedFeatureGroup}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createDerivedFeatureGroupAdapter() {
-		if (derivedFeatureGroupItemProvider == null) {
-			derivedFeatureGroupItemProvider = new DerivedFeatureGroupItemProvider(this);
-		}
-
-		return derivedFeatureGroupItemProvider;
+		return basicScenarioOperationItemProvider;
 	}
 
 	/**
@@ -601,6 +394,52 @@ public class Ecore_plus_logicItemProviderAdapterFactory extends Ecore_plus_logic
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.OperationParameter} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected OperationParameterItemProvider operationParameterItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.OperationParameter}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createOperationParameterAdapter() {
+		if (operationParameterItemProvider == null) {
+			operationParameterItemProvider = new OperationParameterItemProvider(this);
+		}
+
+		return operationParameterItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ProxyOperationParameter} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ProxyOperationParameterItemProvider proxyOperationParameterItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ProxyOperationParameter}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createProxyOperationParameterAdapter() {
+		if (proxyOperationParameterItemProvider == null) {
+			proxyOperationParameterItemProvider = new ProxyOperationParameterItemProvider(this);
+		}
+
+		return proxyOperationParameterItemProvider;
+	}
+
+	/**
 	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ProxyFeatureParameter} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -621,75 +460,6 @@ public class Ecore_plus_logicItemProviderAdapterFactory extends Ecore_plus_logic
 		}
 
 		return proxyFeatureParameterItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GetAttributeFromEntityDerivedFeature} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected GetAttributeFromEntityDerivedFeatureItemProvider getAttributeFromEntityDerivedFeatureItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GetAttributeFromEntityDerivedFeature}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createGetAttributeFromEntityDerivedFeatureAdapter() {
-		if (getAttributeFromEntityDerivedFeatureItemProvider == null) {
-			getAttributeFromEntityDerivedFeatureItemProvider = new GetAttributeFromEntityDerivedFeatureItemProvider(this);
-		}
-
-		return getAttributeFromEntityDerivedFeatureItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AttributeFromEntityParameter} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected AttributeFromEntityParameterItemProvider attributeFromEntityParameterItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AttributeFromEntityParameter}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createAttributeFromEntityParameterAdapter() {
-		if (attributeFromEntityParameterItemProvider == null) {
-			attributeFromEntityParameterItemProvider = new AttributeFromEntityParameterItemProvider(this);
-		}
-
-		return attributeFromEntityParameterItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ProxyAttributeFromEntityParameter} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected ProxyAttributeFromEntityParameterItemProvider proxyAttributeFromEntityParameterItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ProxyAttributeFromEntityParameter}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createProxyAttributeFromEntityParameterAdapter() {
-		if (proxyAttributeFromEntityParameterItemProvider == null) {
-			proxyAttributeFromEntityParameterItemProvider = new ProxyAttributeFromEntityParameterItemProvider(this);
-		}
-
-		return proxyAttributeFromEntityParameterItemProvider;
 	}
 
 	/**
@@ -736,29 +506,6 @@ public class Ecore_plus_logicItemProviderAdapterFactory extends Ecore_plus_logic
 		}
 
 		return filterAndGroupToOneRowCreationApproachItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.RowCreationApproachForEntity} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected RowCreationApproachForEntityItemProvider rowCreationApproachForEntityItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.RowCreationApproachForEntity}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createRowCreationApproachForEntityAdapter() {
-		if (rowCreationApproachForEntityItemProvider == null) {
-			rowCreationApproachForEntityItemProvider = new RowCreationApproachForEntityItemProvider(this);
-		}
-
-		return rowCreationApproachForEntityItemProvider;
 	}
 
 	/**
@@ -992,6 +739,282 @@ public class Ecore_plus_logicItemProviderAdapterFactory extends Ecore_plus_logic
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.EntityTable} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected EntityTableItemProvider entityTableItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.EntityTable}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createEntityTableAdapter() {
+		if (entityTableItemProvider == null) {
+			entityTableItemProvider = new EntityTableItemProvider(this);
+		}
+
+		return entityTableItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntityTable} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected DerivedEntityTableItemProvider derivedEntityTableItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntityTable}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createDerivedEntityTableAdapter() {
+		if (derivedEntityTableItemProvider == null) {
+			derivedEntityTableItemProvider = new DerivedEntityTableItemProvider(this);
+		}
+
+		return derivedEntityTableItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BaseEntityTable} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected BaseEntityTableItemProvider baseEntityTableItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BaseEntityTable}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createBaseEntityTableAdapter() {
+		if (baseEntityTableItemProvider == null) {
+			baseEntityTableItemProvider = new BaseEntityTableItemProvider(this);
+		}
+
+		return baseEntityTableItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Operation} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected OperationItemProvider operationItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Operation}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createOperationAdapter() {
+		if (operationItemProvider == null) {
+			operationItemProvider = new OperationItemProvider(this);
+		}
+
+		return operationItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicOperation} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected BasicOperationItemProvider basicOperationItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicOperation}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createBasicOperationAdapter() {
+		if (basicOperationItemProvider == null) {
+			basicOperationItemProvider = new BasicOperationItemProvider(this);
+		}
+
+		return basicOperationItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateOperation} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected AggregateOperationItemProvider aggregateOperationItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateOperation}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createAggregateOperationAdapter() {
+		if (aggregateOperationItemProvider == null) {
+			aggregateOperationItemProvider = new AggregateOperationItemProvider(this);
+		}
+
+		return aggregateOperationItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.EntityFromSourceOperation} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected EntityFromSourceOperationItemProvider entityFromSourceOperationItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.EntityFromSourceOperation}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createEntityFromSourceOperationAdapter() {
+		if (entityFromSourceOperationItemProvider == null) {
+			entityFromSourceOperationItemProvider = new EntityFromSourceOperationItemProvider(this);
+		}
+
+		return entityFromSourceOperationItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AttributeFromEntityOperation} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected AttributeFromEntityOperationItemProvider attributeFromEntityOperationItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AttributeFromEntityOperation}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createAttributeFromEntityOperationAdapter() {
+		if (attributeFromEntityOperationItemProvider == null) {
+			attributeFromEntityOperationItemProvider = new AttributeFromEntityOperationItemProvider(this);
+		}
+
+		return attributeFromEntityOperationItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.CellsParameter} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected CellsParameterItemProvider cellsParameterItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.CellsParameter}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createCellsParameterAdapter() {
+		if (cellsParameterItemProvider == null) {
+			cellsParameterItemProvider = new CellsParameterItemProvider(this);
+		}
+
+		return cellsParameterItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicOperationScenarioSet} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected BasicOperationScenarioSetItemProvider basicOperationScenarioSetItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicOperationScenarioSet}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createBasicOperationScenarioSetAdapter() {
+		if (basicOperationScenarioSetItemProvider == null) {
+			basicOperationScenarioSetItemProvider = new BasicOperationScenarioSetItemProvider(this);
+		}
+
+		return basicOperationScenarioSetItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BaseEntityTableModule} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected BaseEntityTableModuleItemProvider baseEntityTableModuleItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BaseEntityTableModule}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createBaseEntityTableModuleAdapter() {
+		if (baseEntityTableModuleItemProvider == null) {
+			baseEntityTableModuleItemProvider = new BaseEntityTableModuleItemProvider(this);
+		}
+
+		return baseEntityTableModuleItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntityTableModule} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected DerivedEntityTableModuleItemProvider derivedEntityTableModuleItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntityTableModule}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createDerivedEntityTableModuleAdapter() {
+		if (derivedEntityTableModuleItemProvider == null) {
+			derivedEntityTableModuleItemProvider = new DerivedEntityTableModuleItemProvider(this);
+		}
+
+		return derivedEntityTableModuleItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1093,33 +1116,22 @@ public class Ecore_plus_logicItemProviderAdapterFactory extends Ecore_plus_logic
 		if (derivedEntityItemProvider != null) derivedEntityItemProvider.dispose();
 		if (intermediateDerivedEntityItemProvider != null) intermediateDerivedEntityItemProvider.dispose();
 		if (generatedEntityItemProvider != null) generatedEntityItemProvider.dispose();
-		if (aggregateFunctionItemProvider != null) aggregateFunctionItemProvider.dispose();
 		if (aggregateFunctionSpecItemProvider != null) aggregateFunctionSpecItemProvider.dispose();
-		if (basicFunctionItemProvider != null) basicFunctionItemProvider.dispose();
 		if (basicFunctionSpecItemProvider != null) basicFunctionSpecItemProvider.dispose();
-		if (booleanFunctionItemProvider != null) booleanFunctionItemProvider.dispose();
-		if (functionItemProvider != null) functionItemProvider.dispose();
+		if (booleanOperationItemProvider != null) booleanOperationItemProvider.dispose();
 		if (functionSpecItemProvider != null) functionSpecItemProvider.dispose();
 		if (functionSpecModuleItemProvider != null) functionSpecModuleItemProvider.dispose();
-		if (paramaterSpecItemProvider != null) paramaterSpecItemProvider.dispose();
 		if (parameterItemProvider != null) parameterItemProvider.dispose();
 		if (memberParameterItemProvider != null) memberParameterItemProvider.dispose();
+		if (entityParameterItemProvider != null) entityParameterItemProvider.dispose();
 		if (valueParameterItemProvider != null) valueParameterItemProvider.dispose();
-		if (aggregateDerivedAttributeItemProvider != null) aggregateDerivedAttributeItemProvider.dispose();
-		if (basicDerivedAttributeItemProvider != null) basicDerivedAttributeItemProvider.dispose();
-		if (basicScenarioLogicItemProvider != null) basicScenarioLogicItemProvider.dispose();
-		if (derivedAttributeItemProvider != null) derivedAttributeItemProvider.dispose();
-		if (derivedStructItemProvider != null) derivedStructItemProvider.dispose();
-		if (baseFeatureItemProvider != null) baseFeatureItemProvider.dispose();
-		if (derivedFeatureGroupItemProvider != null) derivedFeatureGroupItemProvider.dispose();
+		if (basicScenarioOperationItemProvider != null) basicScenarioOperationItemProvider.dispose();
 		if (featureParameterItemProvider != null) featureParameterItemProvider.dispose();
+		if (operationParameterItemProvider != null) operationParameterItemProvider.dispose();
+		if (proxyOperationParameterItemProvider != null) proxyOperationParameterItemProvider.dispose();
 		if (proxyFeatureParameterItemProvider != null) proxyFeatureParameterItemProvider.dispose();
-		if (getAttributeFromEntityDerivedFeatureItemProvider != null) getAttributeFromEntityDerivedFeatureItemProvider.dispose();
-		if (attributeFromEntityParameterItemProvider != null) attributeFromEntityParameterItemProvider.dispose();
-		if (proxyAttributeFromEntityParameterItemProvider != null) proxyAttributeFromEntityParameterItemProvider.dispose();
 		if (customRowCreationApproachItemProvider != null) customRowCreationApproachItemProvider.dispose();
 		if (filterAndGroupToOneRowCreationApproachItemProvider != null) filterAndGroupToOneRowCreationApproachItemProvider.dispose();
-		if (rowCreationApproachForEntityItemProvider != null) rowCreationApproachForEntityItemProvider.dispose();
 		if (oneToOneRowCreationApproachItemProvider != null) oneToOneRowCreationApproachItemProvider.dispose();
 		if (filterRowCreationApproachItemProvider != null) filterRowCreationApproachItemProvider.dispose();
 		if (rowCreationApproachItemProvider != null) rowCreationApproachItemProvider.dispose();
@@ -1130,6 +1142,18 @@ public class Ecore_plus_logicItemProviderAdapterFactory extends Ecore_plus_logic
 		if (derivedEntityModuleItemProvider != null) derivedEntityModuleItemProvider.dispose();
 		if (intermediateDerivedEntitiesModuleItemProvider != null) intermediateDerivedEntitiesModuleItemProvider.dispose();
 		if (generatedEntityModuleItemProvider != null) generatedEntityModuleItemProvider.dispose();
+		if (entityTableItemProvider != null) entityTableItemProvider.dispose();
+		if (derivedEntityTableItemProvider != null) derivedEntityTableItemProvider.dispose();
+		if (baseEntityTableItemProvider != null) baseEntityTableItemProvider.dispose();
+		if (operationItemProvider != null) operationItemProvider.dispose();
+		if (basicOperationItemProvider != null) basicOperationItemProvider.dispose();
+		if (aggregateOperationItemProvider != null) aggregateOperationItemProvider.dispose();
+		if (entityFromSourceOperationItemProvider != null) entityFromSourceOperationItemProvider.dispose();
+		if (attributeFromEntityOperationItemProvider != null) attributeFromEntityOperationItemProvider.dispose();
+		if (cellsParameterItemProvider != null) cellsParameterItemProvider.dispose();
+		if (basicOperationScenarioSetItemProvider != null) basicOperationScenarioSetItemProvider.dispose();
+		if (baseEntityTableModuleItemProvider != null) baseEntityTableModuleItemProvider.dispose();
+		if (derivedEntityTableModuleItemProvider != null) derivedEntityTableModuleItemProvider.dispose();
 	}
 
 }

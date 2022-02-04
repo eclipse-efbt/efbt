@@ -21,14 +21,11 @@ import org.eclipse.emf.common.util.ResourceLocator;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcoreFactory;
+import org.eclipse.emf.ecore.EcorePackage;
 
-import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
-import org.eclipse.emf.edit.provider.IItemLabelProvider;
+import org.eclipse.emf.ecore.provider.EOperationItemProvider;
+
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
-import org.eclipse.emf.edit.provider.IItemPropertySource;
-import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
-import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
-import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
@@ -37,14 +34,7 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
  * <!-- end-user-doc -->
  * @generated
  */
-public class RowCreationApproachItemProvider 
-	extends ItemProviderAdapter
-	implements
-		IEditingDomainItemProvider,
-		IStructuredItemContentProvider,
-		ITreeItemContentProvider,
-		IItemLabelProvider,
-		IItemPropertySource {
+public class RowCreationApproachItemProvider extends EOperationItemProvider {
 	/**
 	 * This constructs an instance from a factory and a notifier.
 	 * <!-- begin-user-doc -->
@@ -82,9 +72,7 @@ public class RowCreationApproachItemProvider
 	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
-			childrenFeatures.add(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS);
 			childrenFeatures.add(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS);
-			childrenFeatures.add(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS);
 		}
 		return childrenFeatures;
 	}
@@ -121,7 +109,10 @@ public class RowCreationApproachItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		return getString("_UI_RowCreationApproach_type");
+		String label = ((RowCreationApproach)object).getName();
+		return label == null || label.length() == 0 ?
+			getString("_UI_RowCreationApproach_type") :
+			getString("_UI_RowCreationApproach_type") + " " + label;
 	}
 
 
@@ -137,9 +128,7 @@ public class RowCreationApproachItemProvider
 		updateChildren(notification);
 
 		switch (notification.getFeatureID(RowCreationApproach.class)) {
-			case Ecore_plus_logicPackage.ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS:
 			case Ecore_plus_logicPackage.ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS:
-			case Ecore_plus_logicPackage.ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
@@ -159,128 +148,93 @@ public class RowCreationApproachItemProvider
 
 		newChildDescriptors.add
 			(createChildParameter
-				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS,
-				 Ecore_plus_logicFactory.eINSTANCE.createDerivedAttribute()));
+				(EcorePackage.Literals.EOPERATION__EPARAMETERS,
+				 Ecore_plus_logicFactory.eINSTANCE.createOperation()));
 
 		newChildDescriptors.add
 			(createChildParameter
-				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS,
-				 Ecore_plus_logicFactory.eINSTANCE.createAggregateDerivedAttribute()));
+				(EcorePackage.Literals.EOPERATION__EPARAMETERS,
+				 Ecore_plus_logicFactory.eINSTANCE.createBasicOperation()));
 
 		newChildDescriptors.add
 			(createChildParameter
-				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS,
-				 Ecore_plus_logicFactory.eINSTANCE.createBasicDerivedAttribute()));
+				(EcorePackage.Literals.EOPERATION__EPARAMETERS,
+				 Ecore_plus_logicFactory.eINSTANCE.createBooleanOperation()));
 
 		newChildDescriptors.add
 			(createChildParameter
-				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS,
-				 Ecore_plus_logicFactory.eINSTANCE.createDerivedStruct()));
+				(EcorePackage.Literals.EOPERATION__EPARAMETERS,
+				 Ecore_plus_logicFactory.eINSTANCE.createParameter()));
 
 		newChildDescriptors.add
 			(createChildParameter
-				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS,
-				 Ecore_plus_logicFactory.eINSTANCE.createBaseFeature()));
+				(EcorePackage.Literals.EOPERATION__EPARAMETERS,
+				 Ecore_plus_logicFactory.eINSTANCE.createMemberParameter()));
 
 		newChildDescriptors.add
 			(createChildParameter
-				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS,
-				 Ecore_plus_logicFactory.eINSTANCE.createGetAttributeFromEntityDerivedFeature()));
+				(EcorePackage.Literals.EOPERATION__EPARAMETERS,
+				 Ecore_plus_logicFactory.eINSTANCE.createEntityParameter()));
 
 		newChildDescriptors.add
 			(createChildParameter
-				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS,
+				(EcorePackage.Literals.EOPERATION__EPARAMETERS,
+				 Ecore_plus_logicFactory.eINSTANCE.createValueParameter()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(EcorePackage.Literals.EOPERATION__EPARAMETERS,
+				 Ecore_plus_logicFactory.eINSTANCE.createBasicScenarioOperation()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(EcorePackage.Literals.EOPERATION__EPARAMETERS,
+				 Ecore_plus_logicFactory.eINSTANCE.createFeatureParameter()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(EcorePackage.Literals.EOPERATION__EPARAMETERS,
+				 Ecore_plus_logicFactory.eINSTANCE.createOperationParameter()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(EcorePackage.Literals.EOPERATION__EPARAMETERS,
+				 Ecore_plus_logicFactory.eINSTANCE.createProxyOperationParameter()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(EcorePackage.Literals.EOPERATION__EPARAMETERS,
+				 Ecore_plus_logicFactory.eINSTANCE.createAggregateOperation()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(EcorePackage.Literals.EOPERATION__EPARAMETERS,
+				 Ecore_plus_logicFactory.eINSTANCE.createEntityFromSourceOperation()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(EcorePackage.Literals.EOPERATION__EPARAMETERS,
+				 Ecore_plus_logicFactory.eINSTANCE.createAttributeFromEntityOperation()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(EcorePackage.Literals.EOPERATION__EPARAMETERS,
+				 Ecore_plus_logicFactory.eINSTANCE.createCellsParameter()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(EcorePackage.Literals.EOPERATION__EPARAMETERS,
+				 Ecore_plus_logicFactory.eINSTANCE.createBasicOperationScenarioSet()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS,
 				 Ecore_plus_structureFactory.eINSTANCE.createBaseEntityFeature()));
 
 		newChildDescriptors.add
 			(createChildParameter
-				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS,
-				 EcoreFactory.eINSTANCE.createEAttribute()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS,
-				 EcoreFactory.eINSTANCE.createEReference()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS,
-				 Ecore_plus_logicFactory.eINSTANCE.createDerivedAttribute()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS,
-				 Ecore_plus_logicFactory.eINSTANCE.createAggregateDerivedAttribute()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS,
-				 Ecore_plus_logicFactory.eINSTANCE.createBasicDerivedAttribute()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS,
-				 Ecore_plus_logicFactory.eINSTANCE.createBaseFeature()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS,
-				 Ecore_plus_logicFactory.eINSTANCE.createGetAttributeFromEntityDerivedFeature()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS,
-				 Ecore_plus_structureFactory.eINSTANCE.createBaseEntityFeature()));
-
-		newChildDescriptors.add
-			(createChildParameter
 				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS,
 				 EcoreFactory.eINSTANCE.createEAttribute()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS,
-				 Ecore_plus_logicFactory.eINSTANCE.createDerivedAttribute()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS,
-				 Ecore_plus_logicFactory.eINSTANCE.createAggregateDerivedAttribute()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS,
-				 Ecore_plus_logicFactory.eINSTANCE.createBasicDerivedAttribute()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS,
-				 Ecore_plus_logicFactory.eINSTANCE.createDerivedStruct()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS,
-				 Ecore_plus_logicFactory.eINSTANCE.createBaseFeature()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS,
-				 Ecore_plus_logicFactory.eINSTANCE.createGetAttributeFromEntityDerivedFeature()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS,
-				 Ecore_plus_structureFactory.eINSTANCE.createBaseEntityFeature()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS,
-				 EcoreFactory.eINSTANCE.createEAttribute()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS,
-				 EcoreFactory.eINSTANCE.createEReference()));
 	}
 
 	/**
@@ -295,9 +249,8 @@ public class RowCreationApproachItemProvider
 		Object childObject = child;
 
 		boolean qualify =
-			childFeature == Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS ||
-			childFeature == Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS ||
-			childFeature == Ecore_plus_logicPackage.Literals.ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS;
+			childFeature == EcorePackage.Literals.ETYPED_ELEMENT__EGENERIC_TYPE ||
+			childFeature == EcorePackage.Literals.EOPERATION__EGENERIC_EXCEPTIONS;
 
 		if (qualify) {
 			return getString

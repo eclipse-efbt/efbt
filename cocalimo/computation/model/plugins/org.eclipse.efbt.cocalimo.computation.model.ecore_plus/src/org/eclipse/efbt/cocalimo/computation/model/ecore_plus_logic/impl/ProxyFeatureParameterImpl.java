@@ -7,14 +7,13 @@ import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ProxyFeature
 
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.Entity;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.core.VARIABLE;
-
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -25,12 +24,12 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ProxyFeatureParameterImpl#getEntity <em>Entity</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ProxyFeatureParameterImpl#getVaraible <em>Varaible</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ProxyFeatureParameterImpl#getFeature_name <em>Feature name</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class ProxyFeatureParameterImpl extends ParameterImpl implements ProxyFeatureParameter {
+public class ProxyFeatureParameterImpl extends MinimalEObjectImpl.Container implements ProxyFeatureParameter {
 	/**
 	 * The cached value of the '{@link #getEntity() <em>Entity</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -42,14 +41,24 @@ public class ProxyFeatureParameterImpl extends ParameterImpl implements ProxyFea
 	protected Entity entity;
 
 	/**
-	 * The cached value of the '{@link #getVaraible() <em>Varaible</em>}' reference.
+	 * The default value of the '{@link #getFeature_name() <em>Feature name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getVaraible()
+	 * @see #getFeature_name()
 	 * @generated
 	 * @ordered
 	 */
-	protected VARIABLE varaible;
+	protected static final String FEATURE_NAME_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getFeature_name() <em>Feature name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getFeature_name()
+	 * @generated
+	 * @ordered
+	 */
+	protected String feature_name = FEATURE_NAME_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -113,16 +122,8 @@ public class ProxyFeatureParameterImpl extends ParameterImpl implements ProxyFea
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public VARIABLE getVaraible() {
-		if (varaible != null && varaible.eIsProxy()) {
-			InternalEObject oldVaraible = (InternalEObject)varaible;
-			varaible = (VARIABLE)eResolveProxy(oldVaraible);
-			if (varaible != oldVaraible) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Ecore_plus_logicPackage.PROXY_FEATURE_PARAMETER__VARAIBLE, oldVaraible, varaible));
-			}
-		}
-		return varaible;
+	public String getFeature_name() {
+		return feature_name;
 	}
 
 	/**
@@ -130,20 +131,11 @@ public class ProxyFeatureParameterImpl extends ParameterImpl implements ProxyFea
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public VARIABLE basicGetVaraible() {
-		return varaible;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setVaraible(VARIABLE newVaraible) {
-		VARIABLE oldVaraible = varaible;
-		varaible = newVaraible;
+	public void setFeature_name(String newFeature_name) {
+		String oldFeature_name = feature_name;
+		feature_name = newFeature_name;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, Ecore_plus_logicPackage.PROXY_FEATURE_PARAMETER__VARAIBLE, oldVaraible, varaible));
+			eNotify(new ENotificationImpl(this, Notification.SET, Ecore_plus_logicPackage.PROXY_FEATURE_PARAMETER__FEATURE_NAME, oldFeature_name, feature_name));
 	}
 
 	/**
@@ -157,9 +149,8 @@ public class ProxyFeatureParameterImpl extends ParameterImpl implements ProxyFea
 			case Ecore_plus_logicPackage.PROXY_FEATURE_PARAMETER__ENTITY:
 				if (resolve) return getEntity();
 				return basicGetEntity();
-			case Ecore_plus_logicPackage.PROXY_FEATURE_PARAMETER__VARAIBLE:
-				if (resolve) return getVaraible();
-				return basicGetVaraible();
+			case Ecore_plus_logicPackage.PROXY_FEATURE_PARAMETER__FEATURE_NAME:
+				return getFeature_name();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -175,8 +166,8 @@ public class ProxyFeatureParameterImpl extends ParameterImpl implements ProxyFea
 			case Ecore_plus_logicPackage.PROXY_FEATURE_PARAMETER__ENTITY:
 				setEntity((Entity)newValue);
 				return;
-			case Ecore_plus_logicPackage.PROXY_FEATURE_PARAMETER__VARAIBLE:
-				setVaraible((VARIABLE)newValue);
+			case Ecore_plus_logicPackage.PROXY_FEATURE_PARAMETER__FEATURE_NAME:
+				setFeature_name((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -193,8 +184,8 @@ public class ProxyFeatureParameterImpl extends ParameterImpl implements ProxyFea
 			case Ecore_plus_logicPackage.PROXY_FEATURE_PARAMETER__ENTITY:
 				setEntity((Entity)null);
 				return;
-			case Ecore_plus_logicPackage.PROXY_FEATURE_PARAMETER__VARAIBLE:
-				setVaraible((VARIABLE)null);
+			case Ecore_plus_logicPackage.PROXY_FEATURE_PARAMETER__FEATURE_NAME:
+				setFeature_name(FEATURE_NAME_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -210,10 +201,26 @@ public class ProxyFeatureParameterImpl extends ParameterImpl implements ProxyFea
 		switch (featureID) {
 			case Ecore_plus_logicPackage.PROXY_FEATURE_PARAMETER__ENTITY:
 				return entity != null;
-			case Ecore_plus_logicPackage.PROXY_FEATURE_PARAMETER__VARAIBLE:
-				return varaible != null;
+			case Ecore_plus_logicPackage.PROXY_FEATURE_PARAMETER__FEATURE_NAME:
+				return FEATURE_NAME_EDEFAULT == null ? feature_name != null : !FEATURE_NAME_EDEFAULT.equals(feature_name);
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy()) return super.toString();
+
+		StringBuilder result = new StringBuilder(super.toString());
+		result.append(" (feature_name: ");
+		result.append(feature_name);
+		result.append(')');
+		return result.toString();
 	}
 
 } //ProxyFeatureParameterImpl

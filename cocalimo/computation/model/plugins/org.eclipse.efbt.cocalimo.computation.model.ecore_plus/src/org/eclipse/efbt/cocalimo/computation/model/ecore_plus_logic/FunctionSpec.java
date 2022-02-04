@@ -2,8 +2,6 @@
  */
 package org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic;
 
-import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -19,7 +17,6 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.FunctionSpec#getParameterSpecs <em>Parameter Specs</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.FunctionSpec#getFunctionalName <em>Functional Name</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.FunctionSpec#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.FunctionSpec#getSqlName <em>Sql Name</em>}</li>
@@ -30,22 +27,6 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface FunctionSpec extends EObject {
-	/**
-	 * Returns the value of the '<em><b>Parameter Specs</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ParamaterSpec}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The parameter spec of the function
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Parameter Specs</em>' containment reference list.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Ecore_plus_logicPackage#getFunctionSpec_ParameterSpecs()
-	 * @model containment="true"
-	 *        extendedMetaData="kind='element' name='parameterSpecs'"
-	 * @generated
-	 */
-	EList<ParamaterSpec> getParameterSpecs();
-
 	/**
 	 * Returns the value of the '<em><b>Functional Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->

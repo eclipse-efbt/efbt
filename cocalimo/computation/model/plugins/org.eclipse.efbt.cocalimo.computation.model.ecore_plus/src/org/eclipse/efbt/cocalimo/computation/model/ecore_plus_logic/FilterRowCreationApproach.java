@@ -32,13 +32,13 @@ public interface FilterRowCreationApproach extends RowCreationApproach {
 	 * The function that defines the filter condition
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Filter Function</em>' containment reference.
-	 * @see #setFilterFunction(BooleanFunction)
+	 * @see #setFilterFunction(BooleanOperation)
 	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Ecore_plus_logicPackage#getFilterRowCreationApproach_FilterFunction()
 	 * @model containment="true"
 	 *        extendedMetaData="kind='element' name='filterFunction'"
 	 * @generated
 	 */
-	BooleanFunction getFilterFunction();
+	BooleanOperation getFilterFunction();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.FilterRowCreationApproach#getFilterFunction <em>Filter Function</em>}' containment reference.
@@ -48,6 +48,6 @@ public interface FilterRowCreationApproach extends RowCreationApproach {
 	 * @see #getFilterFunction()
 	 * @generated
 	 */
-	void setFilterFunction(BooleanFunction value);
+	void setFilterFunction(BooleanOperation value);
 
 } // FilterRowCreationApproach

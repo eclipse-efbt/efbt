@@ -6,7 +6,6 @@ import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.BaseEnti
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.BaseEntityFeature;
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.Ecore_plus_structurePackage;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.core.VARIABLE;
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
@@ -25,7 +24,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <ul>
  *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.BaseEntityFeatureImpl#isIsFK <em>Is FK</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.BaseEntityFeatureImpl#getFkEntity <em>Fk Entity</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.impl.BaseEntityFeatureImpl#getVaraible <em>Varaible</em>}</li>
  * </ul>
  *
  * @generated
@@ -60,16 +58,6 @@ public class BaseEntityFeatureImpl extends EAttributeImpl implements BaseEntityF
 	 * @ordered
 	 */
 	protected BaseEntity fkEntity;
-
-	/**
-	 * The cached value of the '{@link #getVaraible() <em>Varaible</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getVaraible()
-	 * @generated
-	 * @ordered
-	 */
-	protected VARIABLE varaible;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -154,44 +142,6 @@ public class BaseEntityFeatureImpl extends EAttributeImpl implements BaseEntityF
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public VARIABLE getVaraible() {
-		if (varaible != null && varaible.eIsProxy()) {
-			InternalEObject oldVaraible = (InternalEObject)varaible;
-			varaible = (VARIABLE)eResolveProxy(oldVaraible);
-			if (varaible != oldVaraible) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Ecore_plus_structurePackage.BASE_ENTITY_FEATURE__VARAIBLE, oldVaraible, varaible));
-			}
-		}
-		return varaible;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public VARIABLE basicGetVaraible() {
-		return varaible;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setVaraible(VARIABLE newVaraible) {
-		VARIABLE oldVaraible = varaible;
-		varaible = newVaraible;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, Ecore_plus_structurePackage.BASE_ENTITY_FEATURE__VARAIBLE, oldVaraible, varaible));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -200,9 +150,6 @@ public class BaseEntityFeatureImpl extends EAttributeImpl implements BaseEntityF
 			case Ecore_plus_structurePackage.BASE_ENTITY_FEATURE__FK_ENTITY:
 				if (resolve) return getFkEntity();
 				return basicGetFkEntity();
-			case Ecore_plus_structurePackage.BASE_ENTITY_FEATURE__VARAIBLE:
-				if (resolve) return getVaraible();
-				return basicGetVaraible();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -220,9 +167,6 @@ public class BaseEntityFeatureImpl extends EAttributeImpl implements BaseEntityF
 				return;
 			case Ecore_plus_structurePackage.BASE_ENTITY_FEATURE__FK_ENTITY:
 				setFkEntity((BaseEntity)newValue);
-				return;
-			case Ecore_plus_structurePackage.BASE_ENTITY_FEATURE__VARAIBLE:
-				setVaraible((VARIABLE)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -242,9 +186,6 @@ public class BaseEntityFeatureImpl extends EAttributeImpl implements BaseEntityF
 			case Ecore_plus_structurePackage.BASE_ENTITY_FEATURE__FK_ENTITY:
 				setFkEntity((BaseEntity)null);
 				return;
-			case Ecore_plus_structurePackage.BASE_ENTITY_FEATURE__VARAIBLE:
-				setVaraible((VARIABLE)null);
-				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -261,8 +202,6 @@ public class BaseEntityFeatureImpl extends EAttributeImpl implements BaseEntityF
 				return isFK != IS_FK_EDEFAULT;
 			case Ecore_plus_structurePackage.BASE_ENTITY_FEATURE__FK_ENTITY:
 				return fkEntity != null;
-			case Ecore_plus_structurePackage.BASE_ENTITY_FEATURE__VARAIBLE:
-				return varaible != null;
 		}
 		return super.eIsSet(featureID);
 	}

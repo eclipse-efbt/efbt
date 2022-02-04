@@ -49,15 +49,6 @@ public interface Ecore_plus_logicFactory extends EFactory {
 	GeneratedEntity createGeneratedEntity();
 
 	/**
-	 * Returns a new object of class '<em>Aggregate Function</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Aggregate Function</em>'.
-	 * @generated
-	 */
-	AggregateFunction createAggregateFunction();
-
-	/**
 	 * Returns a new object of class '<em>Aggregate Function Spec</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -65,15 +56,6 @@ public interface Ecore_plus_logicFactory extends EFactory {
 	 * @generated
 	 */
 	AggregateFunctionSpec createAggregateFunctionSpec();
-
-	/**
-	 * Returns a new object of class '<em>Basic Function</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Basic Function</em>'.
-	 * @generated
-	 */
-	BasicFunction createBasicFunction();
 
 	/**
 	 * Returns a new object of class '<em>Basic Function Spec</em>'.
@@ -85,22 +67,13 @@ public interface Ecore_plus_logicFactory extends EFactory {
 	BasicFunctionSpec createBasicFunctionSpec();
 
 	/**
-	 * Returns a new object of class '<em>Boolean Function</em>'.
+	 * Returns a new object of class '<em>Boolean Operation</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Boolean Function</em>'.
+	 * @return a new object of class '<em>Boolean Operation</em>'.
 	 * @generated
 	 */
-	BooleanFunction createBooleanFunction();
-
-	/**
-	 * Returns a new object of class '<em>Function</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Function</em>'.
-	 * @generated
-	 */
-	Function createFunction();
+	BooleanOperation createBooleanOperation();
 
 	/**
 	 * Returns a new object of class '<em>Function Spec</em>'.
@@ -121,15 +94,6 @@ public interface Ecore_plus_logicFactory extends EFactory {
 	FunctionSpecModule createFunctionSpecModule();
 
 	/**
-	 * Returns a new object of class '<em>Paramater Spec</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Paramater Spec</em>'.
-	 * @generated
-	 */
-	ParamaterSpec createParamaterSpec();
-
-	/**
 	 * Returns a new object of class '<em>Parameter</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -148,6 +112,15 @@ public interface Ecore_plus_logicFactory extends EFactory {
 	MemberParameter createMemberParameter();
 
 	/**
+	 * Returns a new object of class '<em>Entity Parameter</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Entity Parameter</em>'.
+	 * @generated
+	 */
+	EntityParameter createEntityParameter();
+
+	/**
 	 * Returns a new object of class '<em>Value Parameter</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -157,67 +130,13 @@ public interface Ecore_plus_logicFactory extends EFactory {
 	ValueParameter createValueParameter();
 
 	/**
-	 * Returns a new object of class '<em>Aggregate Derived Attribute</em>'.
+	 * Returns a new object of class '<em>Basic Scenario Operation</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Aggregate Derived Attribute</em>'.
+	 * @return a new object of class '<em>Basic Scenario Operation</em>'.
 	 * @generated
 	 */
-	AggregateDerivedAttribute createAggregateDerivedAttribute();
-
-	/**
-	 * Returns a new object of class '<em>Basic Derived Attribute</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Basic Derived Attribute</em>'.
-	 * @generated
-	 */
-	BasicDerivedAttribute createBasicDerivedAttribute();
-
-	/**
-	 * Returns a new object of class '<em>Basic Scenario Logic</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Basic Scenario Logic</em>'.
-	 * @generated
-	 */
-	BasicScenarioLogic createBasicScenarioLogic();
-
-	/**
-	 * Returns a new object of class '<em>Derived Attribute</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Derived Attribute</em>'.
-	 * @generated
-	 */
-	DerivedAttribute createDerivedAttribute();
-
-	/**
-	 * Returns a new object of class '<em>Derived Struct</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Derived Struct</em>'.
-	 * @generated
-	 */
-	DerivedStruct createDerivedStruct();
-
-	/**
-	 * Returns a new object of class '<em>Base Feature</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Base Feature</em>'.
-	 * @generated
-	 */
-	BaseFeature createBaseFeature();
-
-	/**
-	 * Returns a new object of class '<em>Derived Feature Group</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Derived Feature Group</em>'.
-	 * @generated
-	 */
-	DerivedFeatureGroup createDerivedFeatureGroup();
+	BasicScenarioOperation createBasicScenarioOperation();
 
 	/**
 	 * Returns a new object of class '<em>Feature Parameter</em>'.
@@ -229,6 +148,24 @@ public interface Ecore_plus_logicFactory extends EFactory {
 	FeatureParameter createFeatureParameter();
 
 	/**
+	 * Returns a new object of class '<em>Operation Parameter</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Operation Parameter</em>'.
+	 * @generated
+	 */
+	OperationParameter createOperationParameter();
+
+	/**
+	 * Returns a new object of class '<em>Proxy Operation Parameter</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Proxy Operation Parameter</em>'.
+	 * @generated
+	 */
+	ProxyOperationParameter createProxyOperationParameter();
+
+	/**
 	 * Returns a new object of class '<em>Proxy Feature Parameter</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -236,33 +173,6 @@ public interface Ecore_plus_logicFactory extends EFactory {
 	 * @generated
 	 */
 	ProxyFeatureParameter createProxyFeatureParameter();
-
-	/**
-	 * Returns a new object of class '<em>Get Attribute From Entity Derived Feature</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Get Attribute From Entity Derived Feature</em>'.
-	 * @generated
-	 */
-	GetAttributeFromEntityDerivedFeature createGetAttributeFromEntityDerivedFeature();
-
-	/**
-	 * Returns a new object of class '<em>Attribute From Entity Parameter</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Attribute From Entity Parameter</em>'.
-	 * @generated
-	 */
-	AttributeFromEntityParameter createAttributeFromEntityParameter();
-
-	/**
-	 * Returns a new object of class '<em>Proxy Attribute From Entity Parameter</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Proxy Attribute From Entity Parameter</em>'.
-	 * @generated
-	 */
-	ProxyAttributeFromEntityParameter createProxyAttributeFromEntityParameter();
 
 	/**
 	 * Returns a new object of class '<em>Custom Row Creation Approach</em>'.
@@ -281,15 +191,6 @@ public interface Ecore_plus_logicFactory extends EFactory {
 	 * @generated
 	 */
 	FilterAndGroupToOneRowCreationApproach createFilterAndGroupToOneRowCreationApproach();
-
-	/**
-	 * Returns a new object of class '<em>Row Creation Approach For Entity</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Row Creation Approach For Entity</em>'.
-	 * @generated
-	 */
-	RowCreationApproachForEntity createRowCreationApproachForEntity();
 
 	/**
 	 * Returns a new object of class '<em>One To One Row Creation Approach</em>'.
@@ -380,6 +281,114 @@ public interface Ecore_plus_logicFactory extends EFactory {
 	 * @generated
 	 */
 	GeneratedEntityModule createGeneratedEntityModule();
+
+	/**
+	 * Returns a new object of class '<em>Entity Table</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Entity Table</em>'.
+	 * @generated
+	 */
+	EntityTable createEntityTable();
+
+	/**
+	 * Returns a new object of class '<em>Derived Entity Table</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Derived Entity Table</em>'.
+	 * @generated
+	 */
+	DerivedEntityTable createDerivedEntityTable();
+
+	/**
+	 * Returns a new object of class '<em>Base Entity Table</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Base Entity Table</em>'.
+	 * @generated
+	 */
+	BaseEntityTable createBaseEntityTable();
+
+	/**
+	 * Returns a new object of class '<em>Operation</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Operation</em>'.
+	 * @generated
+	 */
+	Operation createOperation();
+
+	/**
+	 * Returns a new object of class '<em>Basic Operation</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Basic Operation</em>'.
+	 * @generated
+	 */
+	BasicOperation createBasicOperation();
+
+	/**
+	 * Returns a new object of class '<em>Aggregate Operation</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Aggregate Operation</em>'.
+	 * @generated
+	 */
+	AggregateOperation createAggregateOperation();
+
+	/**
+	 * Returns a new object of class '<em>Entity From Source Operation</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Entity From Source Operation</em>'.
+	 * @generated
+	 */
+	EntityFromSourceOperation createEntityFromSourceOperation();
+
+	/**
+	 * Returns a new object of class '<em>Attribute From Entity Operation</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Attribute From Entity Operation</em>'.
+	 * @generated
+	 */
+	AttributeFromEntityOperation createAttributeFromEntityOperation();
+
+	/**
+	 * Returns a new object of class '<em>Cells Parameter</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Cells Parameter</em>'.
+	 * @generated
+	 */
+	CellsParameter createCellsParameter();
+
+	/**
+	 * Returns a new object of class '<em>Basic Operation Scenario Set</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Basic Operation Scenario Set</em>'.
+	 * @generated
+	 */
+	BasicOperationScenarioSet createBasicOperationScenarioSet();
+
+	/**
+	 * Returns a new object of class '<em>Base Entity Table Module</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Base Entity Table Module</em>'.
+	 * @generated
+	 */
+	BaseEntityTableModule createBaseEntityTableModule();
+
+	/**
+	 * Returns a new object of class '<em>Derived Entity Table Module</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Derived Entity Table Module</em>'.
+	 * @generated
+	 */
+	DerivedEntityTableModule createDerivedEntityTableModule();
 
 	/**
 	 * Returns the package supported by this factory.

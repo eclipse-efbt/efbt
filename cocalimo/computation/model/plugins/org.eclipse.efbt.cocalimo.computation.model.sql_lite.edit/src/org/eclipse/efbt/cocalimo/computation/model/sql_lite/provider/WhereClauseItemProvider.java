@@ -152,7 +152,7 @@ public class WhereClauseItemProvider
 		newChildDescriptors.add
 			(createChildParameter
 				(Sql_litePackage.Literals.WHERE_CLAUSE__WHERE_FUNCTION,
-				 Ecore_plus_logicFactory.eINSTANCE.createBooleanFunction()));
+				 Ecore_plus_logicFactory.eINSTANCE.createBooleanOperation()));
 	}
 
 	/**

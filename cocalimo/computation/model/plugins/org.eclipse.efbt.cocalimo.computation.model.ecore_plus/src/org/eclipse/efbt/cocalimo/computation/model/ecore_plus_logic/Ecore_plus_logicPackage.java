@@ -297,49 +297,13 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	int DERIVED_ENTITY__SOURCE_ENTITIES = Ecore_plus_structurePackage.ENTITY_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Derived Attributes</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_ENTITY__DERIVED_ATTRIBUTES = Ecore_plus_structurePackage.ENTITY_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Row Creation Approach For Entity</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_ENTITY__ROW_CREATION_APPROACH_FOR_ENTITY = Ecore_plus_structurePackage.ENTITY_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Cube</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_ENTITY__CUBE = Ecore_plus_structurePackage.ENTITY_FEATURE_COUNT + 3;
-
-	/**
-	 * The feature id for the '<em><b>Derived Structs</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_ENTITY__DERIVED_STRUCTS = Ecore_plus_structurePackage.ENTITY_FEATURE_COUNT + 4;
-
-	/**
 	 * The number of structural features of the '<em>Derived Entity</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_ENTITY_FEATURE_COUNT = Ecore_plus_structurePackage.ENTITY_FEATURE_COUNT + 5;
+	int DERIVED_ENTITY_FEATURE_COUNT = Ecore_plus_structurePackage.ENTITY_FEATURE_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Get EAnnotation</em>' operation.
@@ -701,42 +665,6 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @ordered
 	 */
 	int INTERMEDIATE_DERIVED_ENTITY__SOURCE_ENTITIES = DERIVED_ENTITY__SOURCE_ENTITIES;
-
-	/**
-	 * The feature id for the '<em><b>Derived Attributes</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_DERIVED_ENTITY__DERIVED_ATTRIBUTES = DERIVED_ENTITY__DERIVED_ATTRIBUTES;
-
-	/**
-	 * The feature id for the '<em><b>Row Creation Approach For Entity</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_DERIVED_ENTITY__ROW_CREATION_APPROACH_FOR_ENTITY = DERIVED_ENTITY__ROW_CREATION_APPROACH_FOR_ENTITY;
-
-	/**
-	 * The feature id for the '<em><b>Cube</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_DERIVED_ENTITY__CUBE = DERIVED_ENTITY__CUBE;
-
-	/**
-	 * The feature id for the '<em><b>Derived Structs</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_DERIVED_ENTITY__DERIVED_STRUCTS = DERIVED_ENTITY__DERIVED_STRUCTS;
 
 	/**
 	 * The number of structural features of the '<em>Intermediate Derived Entity</em>' class.
@@ -1235,135 +1163,6 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	int GENERATED_ENTITY_OPERATION_COUNT = Ecore_plus_structurePackage.ENTITY_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ParameterImpl <em>Parameter</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ParameterImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getParameter()
-	 * @generated
-	 */
-	int PARAMETER = 12;
-
-	/**
-	 * The number of structural features of the '<em>Parameter</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETER_FEATURE_COUNT = 0;
-
-	/**
-	 * The number of operations of the '<em>Parameter</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETER_OPERATION_COUNT = 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.FunctionImpl <em>Function</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.FunctionImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getFunction()
-	 * @generated
-	 */
-	int FUNCTION = 8;
-
-	/**
-	 * The feature id for the '<em><b>Parameters</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FUNCTION__PARAMETERS = PARAMETER_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FUNCTION__NAME = PARAMETER_FEATURE_COUNT + 1;
-
-	/**
-	 * The number of structural features of the '<em>Function</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FUNCTION_FEATURE_COUNT = PARAMETER_FEATURE_COUNT + 2;
-
-	/**
-	 * The number of operations of the '<em>Function</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FUNCTION_OPERATION_COUNT = PARAMETER_OPERATION_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.AggregateFunctionImpl <em>Aggregate Function</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.AggregateFunctionImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getAggregateFunction()
-	 * @generated
-	 */
-	int AGGREGATE_FUNCTION = 3;
-
-	/**
-	 * The feature id for the '<em><b>Parameters</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AGGREGATE_FUNCTION__PARAMETERS = FUNCTION__PARAMETERS;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AGGREGATE_FUNCTION__NAME = FUNCTION__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Function Spec</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AGGREGATE_FUNCTION__FUNCTION_SPEC = FUNCTION_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Aggregate Function</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AGGREGATE_FUNCTION_FEATURE_COUNT = FUNCTION_FEATURE_COUNT + 1;
-
-	/**
-	 * The number of operations of the '<em>Aggregate Function</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AGGREGATE_FUNCTION_OPERATION_COUNT = FUNCTION_OPERATION_COUNT + 0;
-
-	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.FunctionSpecImpl <em>Function Spec</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1371,16 +1170,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getFunctionSpec()
 	 * @generated
 	 */
-	int FUNCTION_SPEC = 9;
-
-	/**
-	 * The feature id for the '<em><b>Parameter Specs</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FUNCTION_SPEC__PARAMETER_SPECS = 0;
+	int FUNCTION_SPEC = 6;
 
 	/**
 	 * The feature id for the '<em><b>Functional Name</b></em>' attribute.
@@ -1389,7 +1179,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_SPEC__FUNCTIONAL_NAME = 1;
+	int FUNCTION_SPEC__FUNCTIONAL_NAME = 0;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1398,7 +1188,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_SPEC__NAME = 2;
+	int FUNCTION_SPEC__NAME = 1;
 
 	/**
 	 * The feature id for the '<em><b>Sql Name</b></em>' attribute.
@@ -1407,7 +1197,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_SPEC__SQL_NAME = 3;
+	int FUNCTION_SPEC__SQL_NAME = 2;
 
 	/**
 	 * The number of structural features of the '<em>Function Spec</em>' class.
@@ -1416,7 +1206,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_SPEC_FEATURE_COUNT = 4;
+	int FUNCTION_SPEC_FEATURE_COUNT = 3;
 
 	/**
 	 * The number of operations of the '<em>Function Spec</em>' class.
@@ -1435,16 +1225,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getAggregateFunctionSpec()
 	 * @generated
 	 */
-	int AGGREGATE_FUNCTION_SPEC = 4;
-
-	/**
-	 * The feature id for the '<em><b>Parameter Specs</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AGGREGATE_FUNCTION_SPEC__PARAMETER_SPECS = FUNCTION_SPEC__PARAMETER_SPECS;
+	int AGGREGATE_FUNCTION_SPEC = 3;
 
 	/**
 	 * The feature id for the '<em><b>Functional Name</b></em>' attribute.
@@ -1492,61 +1273,6 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	int AGGREGATE_FUNCTION_SPEC_OPERATION_COUNT = FUNCTION_SPEC_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicFunctionImpl <em>Basic Function</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicFunctionImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getBasicFunction()
-	 * @generated
-	 */
-	int BASIC_FUNCTION = 5;
-
-	/**
-	 * The feature id for the '<em><b>Parameters</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_FUNCTION__PARAMETERS = FUNCTION__PARAMETERS;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_FUNCTION__NAME = FUNCTION__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Function Spec</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_FUNCTION__FUNCTION_SPEC = FUNCTION_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Basic Function</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_FUNCTION_FEATURE_COUNT = FUNCTION_FEATURE_COUNT + 1;
-
-	/**
-	 * The number of operations of the '<em>Basic Function</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_FUNCTION_OPERATION_COUNT = FUNCTION_OPERATION_COUNT + 0;
-
-	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicFunctionSpecImpl <em>Basic Function Spec</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1554,16 +1280,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getBasicFunctionSpec()
 	 * @generated
 	 */
-	int BASIC_FUNCTION_SPEC = 6;
-
-	/**
-	 * The feature id for the '<em><b>Parameter Specs</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_FUNCTION_SPEC__PARAMETER_SPECS = FUNCTION_SPEC__PARAMETER_SPECS;
+	int BASIC_FUNCTION_SPEC = 4;
 
 	/**
 	 * The feature id for the '<em><b>Functional Name</b></em>' attribute.
@@ -1620,23 +1337,63 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	int BASIC_FUNCTION_SPEC_OPERATION_COUNT = FUNCTION_SPEC_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BooleanFunctionImpl <em>Boolean Function</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.FunctionSpecModuleImpl <em>Function Spec Module</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BooleanFunctionImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getBooleanFunction()
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.FunctionSpecModuleImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getFunctionSpecModule()
 	 * @generated
 	 */
-	int BOOLEAN_FUNCTION = 7;
+	int FUNCTION_SPEC_MODULE = 7;
 
 	/**
-	 * The feature id for the '<em><b>Parameters</b></em>' containment reference list.
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ParameterImpl <em>Parameter</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ParameterImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getParameter()
+	 * @generated
+	 */
+	int PARAMETER = 8;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.MemberParameterImpl <em>Member Parameter</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.MemberParameterImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getMemberParameter()
+	 * @generated
+	 */
+	int MEMBER_PARAMETER = 9;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ValueParameterImpl <em>Value Parameter</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ValueParameterImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getValueParameter()
+	 * @generated
+	 */
+	int VALUE_PARAMETER = 11;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.OperationImpl <em>Operation</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.OperationImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getOperation()
+	 * @generated
+	 */
+	int OPERATION = 32;
+
+	/**
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BOOLEAN_FUNCTION__PARAMETERS = BASIC_FUNCTION__PARAMETERS;
+	int OPERATION__EANNOTATIONS = EcorePackage.EOPERATION__EANNOTATIONS;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1645,7 +1402,522 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BOOLEAN_FUNCTION__NAME = BASIC_FUNCTION__NAME;
+	int OPERATION__NAME = EcorePackage.EOPERATION__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPERATION__ORDERED = EcorePackage.EOPERATION__ORDERED;
+
+	/**
+	 * The feature id for the '<em><b>Unique</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPERATION__UNIQUE = EcorePackage.EOPERATION__UNIQUE;
+
+	/**
+	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPERATION__LOWER_BOUND = EcorePackage.EOPERATION__LOWER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPERATION__UPPER_BOUND = EcorePackage.EOPERATION__UPPER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Many</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPERATION__MANY = EcorePackage.EOPERATION__MANY;
+
+	/**
+	 * The feature id for the '<em><b>Required</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPERATION__REQUIRED = EcorePackage.EOPERATION__REQUIRED;
+
+	/**
+	 * The feature id for the '<em><b>EType</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPERATION__ETYPE = EcorePackage.EOPERATION__ETYPE;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPERATION__EGENERIC_TYPE = EcorePackage.EOPERATION__EGENERIC_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>EContaining Class</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPERATION__ECONTAINING_CLASS = EcorePackage.EOPERATION__ECONTAINING_CLASS;
+
+	/**
+	 * The feature id for the '<em><b>EType Parameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPERATION__ETYPE_PARAMETERS = EcorePackage.EOPERATION__ETYPE_PARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>EParameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPERATION__EPARAMETERS = EcorePackage.EOPERATION__EPARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>EExceptions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPERATION__EEXCEPTIONS = EcorePackage.EOPERATION__EEXCEPTIONS;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Exceptions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPERATION__EGENERIC_EXCEPTIONS = EcorePackage.EOPERATION__EGENERIC_EXCEPTIONS;
+
+	/**
+	 * The feature id for the '<em><b>EOperation</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPERATION__EOPERATION = EcorePackage.EOPERATION_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Operation</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPERATION_FEATURE_COUNT = EcorePackage.EOPERATION_FEATURE_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get EAnnotation</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPERATION___GET_EANNOTATION__STRING = EcorePackage.EOPERATION___GET_EANNOTATION__STRING;
+
+	/**
+	 * The operation id for the '<em>Get Operation ID</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPERATION___GET_OPERATION_ID = EcorePackage.EOPERATION___GET_OPERATION_ID;
+
+	/**
+	 * The operation id for the '<em>Is Override Of</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPERATION___IS_OVERRIDE_OF__EOPERATION = EcorePackage.EOPERATION___IS_OVERRIDE_OF__EOPERATION;
+
+	/**
+	 * The number of operations of the '<em>Operation</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPERATION_OPERATION_COUNT = EcorePackage.EOPERATION_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicScenarioOperationImpl <em>Basic Scenario Operation</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicScenarioOperationImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getBasicScenarioOperation()
+	 * @generated
+	 */
+	int BASIC_SCENARIO_OPERATION = 12;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.FeatureParameterImpl <em>Feature Parameter</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.FeatureParameterImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getFeatureParameter()
+	 * @generated
+	 */
+	int FEATURE_PARAMETER = 13;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ProxyOperationParameterImpl <em>Proxy Operation Parameter</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ProxyOperationParameterImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getProxyOperationParameter()
+	 * @generated
+	 */
+	int PROXY_OPERATION_PARAMETER = 15;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ProxyFeatureParameterImpl <em>Proxy Feature Parameter</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ProxyFeatureParameterImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getProxyFeatureParameter()
+	 * @generated
+	 */
+	int PROXY_FEATURE_PARAMETER = 16;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.RowCreationApproachImpl <em>Row Creation Approach</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.RowCreationApproachImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getRowCreationApproach()
+	 * @generated
+	 */
+	int ROW_CREATION_APPROACH = 21;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.CustomRowCreationApproachImpl <em>Custom Row Creation Approach</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.CustomRowCreationApproachImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getCustomRowCreationApproach()
+	 * @generated
+	 */
+	int CUSTOM_ROW_CREATION_APPROACH = 17;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.FilterAndGroupToOneRowCreationApproachImpl <em>Filter And Group To One Row Creation Approach</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.FilterAndGroupToOneRowCreationApproachImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getFilterAndGroupToOneRowCreationApproach()
+	 * @generated
+	 */
+	int FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH = 18;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.OneToOneRowCreationApproachImpl <em>One To One Row Creation Approach</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.OneToOneRowCreationApproachImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getOneToOneRowCreationApproach()
+	 * @generated
+	 */
+	int ONE_TO_ONE_ROW_CREATION_APPROACH = 19;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.FilterRowCreationApproachImpl <em>Filter Row Creation Approach</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.FilterRowCreationApproachImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getFilterRowCreationApproach()
+	 * @generated
+	 */
+	int FILTER_ROW_CREATION_APPROACH = 20;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.GroupByRowCreationApproachImpl <em>Group By Row Creation Approach</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.GroupByRowCreationApproachImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getGroupByRowCreationApproach()
+	 * @generated
+	 */
+	int GROUP_BY_ROW_CREATION_APPROACH = 22;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.RowJoinFunctionImpl <em>Row Join Function</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.RowJoinFunctionImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getRowJoinFunction()
+	 * @generated
+	 */
+	int ROW_JOIN_FUNCTION = 23;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.UnionRowCreationApproachImpl <em>Union Row Creation Approach</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.UnionRowCreationApproachImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getUnionRowCreationApproach()
+	 * @generated
+	 */
+	int UNION_ROW_CREATION_APPROACH = 24;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ExplodeArrayOfStructsRowFunctionImpl <em>Explode Array Of Structs Row Function</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ExplodeArrayOfStructsRowFunctionImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getExplodeArrayOfStructsRowFunction()
+	 * @generated
+	 */
+	int EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION = 25;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedEntityModuleImpl <em>Derived Entity Module</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedEntityModuleImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getDerivedEntityModule()
+	 * @generated
+	 */
+	int DERIVED_ENTITY_MODULE = 26;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.IntermediateDerivedEntitiesModuleImpl <em>Intermediate Derived Entities Module</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.IntermediateDerivedEntitiesModuleImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getIntermediateDerivedEntitiesModule()
+	 * @generated
+	 */
+	int INTERMEDIATE_DERIVED_ENTITIES_MODULE = 27;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.GeneratedEntityModuleImpl <em>Generated Entity Module</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.GeneratedEntityModuleImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getGeneratedEntityModule()
+	 * @generated
+	 */
+	int GENERATED_ENTITY_MODULE = 28;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.EntityTableImpl <em>Entity Table</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.EntityTableImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getEntityTable()
+	 * @generated
+	 */
+	int ENTITY_TABLE = 29;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedEntityTableImpl <em>Derived Entity Table</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedEntityTableImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getDerivedEntityTable()
+	 * @generated
+	 */
+	int DERIVED_ENTITY_TABLE = 30;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BaseEntityTableImpl <em>Base Entity Table</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BaseEntityTableImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getBaseEntityTable()
+	 * @generated
+	 */
+	int BASE_ENTITY_TABLE = 31;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicOperationImpl <em>Basic Operation</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicOperationImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getBasicOperation()
+	 * @generated
+	 */
+	int BASIC_OPERATION = 33;
+
+	/**
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION__EANNOTATIONS = OPERATION__EANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION__NAME = OPERATION__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION__ORDERED = OPERATION__ORDERED;
+
+	/**
+	 * The feature id for the '<em><b>Unique</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION__UNIQUE = OPERATION__UNIQUE;
+
+	/**
+	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION__LOWER_BOUND = OPERATION__LOWER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION__UPPER_BOUND = OPERATION__UPPER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Many</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION__MANY = OPERATION__MANY;
+
+	/**
+	 * The feature id for the '<em><b>Required</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION__REQUIRED = OPERATION__REQUIRED;
+
+	/**
+	 * The feature id for the '<em><b>EType</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION__ETYPE = OPERATION__ETYPE;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION__EGENERIC_TYPE = OPERATION__EGENERIC_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>EContaining Class</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION__ECONTAINING_CLASS = OPERATION__ECONTAINING_CLASS;
+
+	/**
+	 * The feature id for the '<em><b>EType Parameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION__ETYPE_PARAMETERS = OPERATION__ETYPE_PARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>EParameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION__EPARAMETERS = OPERATION__EPARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>EExceptions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION__EEXCEPTIONS = OPERATION__EEXCEPTIONS;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Exceptions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION__EGENERIC_EXCEPTIONS = OPERATION__EGENERIC_EXCEPTIONS;
+
+	/**
+	 * The feature id for the '<em><b>EOperation</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION__EOPERATION = OPERATION__EOPERATION;
 
 	/**
 	 * The feature id for the '<em><b>Function Spec</b></em>' reference.
@@ -1654,35 +1926,260 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BOOLEAN_FUNCTION__FUNCTION_SPEC = BASIC_FUNCTION__FUNCTION_SPEC;
+	int BASIC_OPERATION__FUNCTION_SPEC = OPERATION_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the '<em>Boolean Function</em>' class.
+	 * The number of structural features of the '<em>Basic Operation</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BOOLEAN_FUNCTION_FEATURE_COUNT = BASIC_FUNCTION_FEATURE_COUNT + 0;
+	int BASIC_OPERATION_FEATURE_COUNT = OPERATION_FEATURE_COUNT + 1;
 
 	/**
-	 * The number of operations of the '<em>Boolean Function</em>' class.
+	 * The operation id for the '<em>Get EAnnotation</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BOOLEAN_FUNCTION_OPERATION_COUNT = BASIC_FUNCTION_OPERATION_COUNT + 0;
+	int BASIC_OPERATION___GET_EANNOTATION__STRING = OPERATION___GET_EANNOTATION__STRING;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.FunctionSpecModuleImpl <em>Function Spec Module</em>}' class.
+	 * The operation id for the '<em>Get Operation ID</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.FunctionSpecModuleImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getFunctionSpecModule()
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION___GET_OPERATION_ID = OPERATION___GET_OPERATION_ID;
+
+	/**
+	 * The operation id for the '<em>Is Override Of</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION___IS_OVERRIDE_OF__EOPERATION = OPERATION___IS_OVERRIDE_OF__EOPERATION;
+
+	/**
+	 * The number of operations of the '<em>Basic Operation</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION_OPERATION_COUNT = OPERATION_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BooleanOperationImpl <em>Boolean Operation</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BooleanOperationImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getBooleanOperation()
 	 * @generated
 	 */
-	int FUNCTION_SPEC_MODULE = 10;
+	int BOOLEAN_OPERATION = 5;
+
+	/**
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_OPERATION__EANNOTATIONS = BASIC_OPERATION__EANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_OPERATION__NAME = BASIC_OPERATION__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_OPERATION__ORDERED = BASIC_OPERATION__ORDERED;
+
+	/**
+	 * The feature id for the '<em><b>Unique</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_OPERATION__UNIQUE = BASIC_OPERATION__UNIQUE;
+
+	/**
+	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_OPERATION__LOWER_BOUND = BASIC_OPERATION__LOWER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_OPERATION__UPPER_BOUND = BASIC_OPERATION__UPPER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Many</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_OPERATION__MANY = BASIC_OPERATION__MANY;
+
+	/**
+	 * The feature id for the '<em><b>Required</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_OPERATION__REQUIRED = BASIC_OPERATION__REQUIRED;
+
+	/**
+	 * The feature id for the '<em><b>EType</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_OPERATION__ETYPE = BASIC_OPERATION__ETYPE;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_OPERATION__EGENERIC_TYPE = BASIC_OPERATION__EGENERIC_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>EContaining Class</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_OPERATION__ECONTAINING_CLASS = BASIC_OPERATION__ECONTAINING_CLASS;
+
+	/**
+	 * The feature id for the '<em><b>EType Parameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_OPERATION__ETYPE_PARAMETERS = BASIC_OPERATION__ETYPE_PARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>EParameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_OPERATION__EPARAMETERS = BASIC_OPERATION__EPARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>EExceptions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_OPERATION__EEXCEPTIONS = BASIC_OPERATION__EEXCEPTIONS;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Exceptions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_OPERATION__EGENERIC_EXCEPTIONS = BASIC_OPERATION__EGENERIC_EXCEPTIONS;
+
+	/**
+	 * The feature id for the '<em><b>EOperation</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_OPERATION__EOPERATION = BASIC_OPERATION__EOPERATION;
+
+	/**
+	 * The feature id for the '<em><b>Function Spec</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_OPERATION__FUNCTION_SPEC = BASIC_OPERATION__FUNCTION_SPEC;
+
+	/**
+	 * The number of structural features of the '<em>Boolean Operation</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_OPERATION_FEATURE_COUNT = BASIC_OPERATION_FEATURE_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Get EAnnotation</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_OPERATION___GET_EANNOTATION__STRING = BASIC_OPERATION___GET_EANNOTATION__STRING;
+
+	/**
+	 * The operation id for the '<em>Get Operation ID</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_OPERATION___GET_OPERATION_ID = BASIC_OPERATION___GET_OPERATION_ID;
+
+	/**
+	 * The operation id for the '<em>Is Override Of</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_OPERATION___IS_OVERRIDE_OF__EOPERATION = BASIC_OPERATION___IS_OVERRIDE_OF__EOPERATION;
+
+	/**
+	 * The number of operations of the '<em>Boolean Operation</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_OPERATION_OPERATION_COUNT = BASIC_OPERATION_OPERATION_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' containment reference.
@@ -1766,14 +2263,13 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	int FUNCTION_SPEC_MODULE_OPERATION_COUNT = Module_managementPackage.MODULE_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ParamaterSpecImpl <em>Paramater Spec</em>}' class.
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ParamaterSpecImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getParamaterSpec()
 	 * @generated
+	 * @ordered
 	 */
-	int PARAMATER_SPEC = 11;
+	int PARAMETER__EANNOTATIONS = EcorePackage.EPARAMETER__EANNOTATIONS;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1782,35 +2278,214 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMATER_SPEC__NAME = 0;
+	int PARAMETER__NAME = EcorePackage.EPARAMETER__NAME;
 
 	/**
-	 * The number of structural features of the '<em>Paramater Spec</em>' class.
+	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMATER_SPEC_FEATURE_COUNT = 1;
+	int PARAMETER__ORDERED = EcorePackage.EPARAMETER__ORDERED;
 
 	/**
-	 * The number of operations of the '<em>Paramater Spec</em>' class.
+	 * The feature id for the '<em><b>Unique</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMATER_SPEC_OPERATION_COUNT = 0;
+	int PARAMETER__UNIQUE = EcorePackage.EPARAMETER__UNIQUE;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.MemberParameterImpl <em>Member Parameter</em>}' class.
+	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.MemberParameterImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getMemberParameter()
 	 * @generated
+	 * @ordered
 	 */
-	int MEMBER_PARAMETER = 13;
+	int PARAMETER__LOWER_BOUND = EcorePackage.EPARAMETER__LOWER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETER__UPPER_BOUND = EcorePackage.EPARAMETER__UPPER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Many</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETER__MANY = EcorePackage.EPARAMETER__MANY;
+
+	/**
+	 * The feature id for the '<em><b>Required</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETER__REQUIRED = EcorePackage.EPARAMETER__REQUIRED;
+
+	/**
+	 * The feature id for the '<em><b>EType</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETER__ETYPE = EcorePackage.EPARAMETER__ETYPE;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETER__EGENERIC_TYPE = EcorePackage.EPARAMETER__EGENERIC_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>EOperation</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETER__EOPERATION = EcorePackage.EPARAMETER__EOPERATION;
+
+	/**
+	 * The number of structural features of the '<em>Parameter</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETER_FEATURE_COUNT = EcorePackage.EPARAMETER_FEATURE_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Get EAnnotation</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETER___GET_EANNOTATION__STRING = EcorePackage.EPARAMETER___GET_EANNOTATION__STRING;
+
+	/**
+	 * The number of operations of the '<em>Parameter</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETER_OPERATION_COUNT = EcorePackage.EPARAMETER_OPERATION_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MEMBER_PARAMETER__EANNOTATIONS = PARAMETER__EANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MEMBER_PARAMETER__NAME = PARAMETER__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MEMBER_PARAMETER__ORDERED = PARAMETER__ORDERED;
+
+	/**
+	 * The feature id for the '<em><b>Unique</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MEMBER_PARAMETER__UNIQUE = PARAMETER__UNIQUE;
+
+	/**
+	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MEMBER_PARAMETER__LOWER_BOUND = PARAMETER__LOWER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MEMBER_PARAMETER__UPPER_BOUND = PARAMETER__UPPER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Many</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MEMBER_PARAMETER__MANY = PARAMETER__MANY;
+
+	/**
+	 * The feature id for the '<em><b>Required</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MEMBER_PARAMETER__REQUIRED = PARAMETER__REQUIRED;
+
+	/**
+	 * The feature id for the '<em><b>EType</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MEMBER_PARAMETER__ETYPE = PARAMETER__ETYPE;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MEMBER_PARAMETER__EGENERIC_TYPE = PARAMETER__EGENERIC_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>EOperation</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MEMBER_PARAMETER__EOPERATION = PARAMETER__EOPERATION;
 
 	/**
 	 * The feature id for the '<em><b>Param</b></em>' reference.
@@ -1831,6 +2506,15 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	int MEMBER_PARAMETER_FEATURE_COUNT = PARAMETER_FEATURE_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Get EAnnotation</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MEMBER_PARAMETER___GET_EANNOTATION__STRING = PARAMETER___GET_EANNOTATION__STRING;
+
+	/**
 	 * The number of operations of the '<em>Member Parameter</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1840,14 +2524,248 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	int MEMBER_PARAMETER_OPERATION_COUNT = PARAMETER_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ValueParameterImpl <em>Value Parameter</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.EntityParameterImpl <em>Entity Parameter</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ValueParameterImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getValueParameter()
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.EntityParameterImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getEntityParameter()
 	 * @generated
 	 */
-	int VALUE_PARAMETER = 14;
+	int ENTITY_PARAMETER = 10;
+
+	/**
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_PARAMETER__EANNOTATIONS = PARAMETER__EANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_PARAMETER__NAME = PARAMETER__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_PARAMETER__ORDERED = PARAMETER__ORDERED;
+
+	/**
+	 * The feature id for the '<em><b>Unique</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_PARAMETER__UNIQUE = PARAMETER__UNIQUE;
+
+	/**
+	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_PARAMETER__LOWER_BOUND = PARAMETER__LOWER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_PARAMETER__UPPER_BOUND = PARAMETER__UPPER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Many</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_PARAMETER__MANY = PARAMETER__MANY;
+
+	/**
+	 * The feature id for the '<em><b>Required</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_PARAMETER__REQUIRED = PARAMETER__REQUIRED;
+
+	/**
+	 * The feature id for the '<em><b>EType</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_PARAMETER__ETYPE = PARAMETER__ETYPE;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_PARAMETER__EGENERIC_TYPE = PARAMETER__EGENERIC_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>EOperation</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_PARAMETER__EOPERATION = PARAMETER__EOPERATION;
+
+	/**
+	 * The feature id for the '<em><b>Entity</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_PARAMETER__ENTITY = PARAMETER_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Entity Parameter</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_PARAMETER_FEATURE_COUNT = PARAMETER_FEATURE_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get EAnnotation</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_PARAMETER___GET_EANNOTATION__STRING = PARAMETER___GET_EANNOTATION__STRING;
+
+	/**
+	 * The number of operations of the '<em>Entity Parameter</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_PARAMETER_OPERATION_COUNT = PARAMETER_OPERATION_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VALUE_PARAMETER__EANNOTATIONS = PARAMETER__EANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VALUE_PARAMETER__NAME = PARAMETER__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VALUE_PARAMETER__ORDERED = PARAMETER__ORDERED;
+
+	/**
+	 * The feature id for the '<em><b>Unique</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VALUE_PARAMETER__UNIQUE = PARAMETER__UNIQUE;
+
+	/**
+	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VALUE_PARAMETER__LOWER_BOUND = PARAMETER__LOWER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VALUE_PARAMETER__UPPER_BOUND = PARAMETER__UPPER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Many</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VALUE_PARAMETER__MANY = PARAMETER__MANY;
+
+	/**
+	 * The feature id for the '<em><b>Required</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VALUE_PARAMETER__REQUIRED = PARAMETER__REQUIRED;
+
+	/**
+	 * The feature id for the '<em><b>EType</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VALUE_PARAMETER__ETYPE = PARAMETER__ETYPE;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VALUE_PARAMETER__EGENERIC_TYPE = PARAMETER__EGENERIC_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>EOperation</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VALUE_PARAMETER__EOPERATION = PARAMETER__EOPERATION;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -1877,6 +2795,15 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	int VALUE_PARAMETER_FEATURE_COUNT = PARAMETER_FEATURE_COUNT + 2;
 
 	/**
+	 * The operation id for the '<em>Get EAnnotation</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VALUE_PARAMETER___GET_EANNOTATION__STRING = PARAMETER___GET_EANNOTATION__STRING;
+
+	/**
 	 * The number of operations of the '<em>Value Parameter</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1886,23 +2813,13 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	int VALUE_PARAMETER_OPERATION_COUNT = PARAMETER_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedAttributeImpl <em>Derived Attribute</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedAttributeImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getDerivedAttribute()
-	 * @generated
-	 */
-	int DERIVED_ATTRIBUTE = 18;
-
-	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_ATTRIBUTE__EANNOTATIONS = EcorePackage.EATTRIBUTE__EANNOTATIONS;
+	int BASIC_SCENARIO_OPERATION__EANNOTATIONS = OPERATION__EANNOTATIONS;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1911,7 +2828,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_ATTRIBUTE__NAME = EcorePackage.EATTRIBUTE__NAME;
+	int BASIC_SCENARIO_OPERATION__NAME = OPERATION__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
@@ -1920,7 +2837,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_ATTRIBUTE__ORDERED = EcorePackage.EATTRIBUTE__ORDERED;
+	int BASIC_SCENARIO_OPERATION__ORDERED = OPERATION__ORDERED;
 
 	/**
 	 * The feature id for the '<em><b>Unique</b></em>' attribute.
@@ -1929,7 +2846,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_ATTRIBUTE__UNIQUE = EcorePackage.EATTRIBUTE__UNIQUE;
+	int BASIC_SCENARIO_OPERATION__UNIQUE = OPERATION__UNIQUE;
 
 	/**
 	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
@@ -1938,7 +2855,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_ATTRIBUTE__LOWER_BOUND = EcorePackage.EATTRIBUTE__LOWER_BOUND;
+	int BASIC_SCENARIO_OPERATION__LOWER_BOUND = OPERATION__LOWER_BOUND;
 
 	/**
 	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
@@ -1947,7 +2864,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_ATTRIBUTE__UPPER_BOUND = EcorePackage.EATTRIBUTE__UPPER_BOUND;
+	int BASIC_SCENARIO_OPERATION__UPPER_BOUND = OPERATION__UPPER_BOUND;
 
 	/**
 	 * The feature id for the '<em><b>Many</b></em>' attribute.
@@ -1956,7 +2873,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_ATTRIBUTE__MANY = EcorePackage.EATTRIBUTE__MANY;
+	int BASIC_SCENARIO_OPERATION__MANY = OPERATION__MANY;
 
 	/**
 	 * The feature id for the '<em><b>Required</b></em>' attribute.
@@ -1965,7 +2882,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_ATTRIBUTE__REQUIRED = EcorePackage.EATTRIBUTE__REQUIRED;
+	int BASIC_SCENARIO_OPERATION__REQUIRED = OPERATION__REQUIRED;
 
 	/**
 	 * The feature id for the '<em><b>EType</b></em>' reference.
@@ -1974,7 +2891,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_ATTRIBUTE__ETYPE = EcorePackage.EATTRIBUTE__ETYPE;
+	int BASIC_SCENARIO_OPERATION__ETYPE = OPERATION__ETYPE;
 
 	/**
 	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
@@ -1983,70 +2900,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_ATTRIBUTE__EGENERIC_TYPE = EcorePackage.EATTRIBUTE__EGENERIC_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>Changeable</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_ATTRIBUTE__CHANGEABLE = EcorePackage.EATTRIBUTE__CHANGEABLE;
-
-	/**
-	 * The feature id for the '<em><b>Volatile</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_ATTRIBUTE__VOLATILE = EcorePackage.EATTRIBUTE__VOLATILE;
-
-	/**
-	 * The feature id for the '<em><b>Transient</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_ATTRIBUTE__TRANSIENT = EcorePackage.EATTRIBUTE__TRANSIENT;
-
-	/**
-	 * The feature id for the '<em><b>Default Value Literal</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_ATTRIBUTE__DEFAULT_VALUE_LITERAL = EcorePackage.EATTRIBUTE__DEFAULT_VALUE_LITERAL;
-
-	/**
-	 * The feature id for the '<em><b>Default Value</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_ATTRIBUTE__DEFAULT_VALUE = EcorePackage.EATTRIBUTE__DEFAULT_VALUE;
-
-	/**
-	 * The feature id for the '<em><b>Unsettable</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_ATTRIBUTE__UNSETTABLE = EcorePackage.EATTRIBUTE__UNSETTABLE;
-
-	/**
-	 * The feature id for the '<em><b>Derived</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_ATTRIBUTE__DERIVED = EcorePackage.EATTRIBUTE__DERIVED;
+	int BASIC_SCENARIO_OPERATION__EGENERIC_TYPE = OPERATION__EGENERIC_TYPE;
 
 	/**
 	 * The feature id for the '<em><b>EContaining Class</b></em>' container reference.
@@ -2055,604 +2909,52 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_ATTRIBUTE__ECONTAINING_CLASS = EcorePackage.EATTRIBUTE__ECONTAINING_CLASS;
+	int BASIC_SCENARIO_OPERATION__ECONTAINING_CLASS = OPERATION__ECONTAINING_CLASS;
 
 	/**
-	 * The feature id for the '<em><b>ID</b></em>' attribute.
+	 * The feature id for the '<em><b>EType Parameters</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_ATTRIBUTE__ID = EcorePackage.EATTRIBUTE__ID;
+	int BASIC_SCENARIO_OPERATION__ETYPE_PARAMETERS = OPERATION__ETYPE_PARAMETERS;
 
 	/**
-	 * The feature id for the '<em><b>EAttribute Type</b></em>' reference.
+	 * The feature id for the '<em><b>EParameters</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_ATTRIBUTE__EATTRIBUTE_TYPE = EcorePackage.EATTRIBUTE__EATTRIBUTE_TYPE;
+	int BASIC_SCENARIO_OPERATION__EPARAMETERS = OPERATION__EPARAMETERS;
 
 	/**
-	 * The feature id for the '<em><b>Variable</b></em>' reference.
+	 * The feature id for the '<em><b>EExceptions</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_ATTRIBUTE__VARIABLE = EcorePackage.EATTRIBUTE_FEATURE_COUNT + 0;
+	int BASIC_SCENARIO_OPERATION__EEXCEPTIONS = OPERATION__EEXCEPTIONS;
 
 	/**
-	 * The number of structural features of the '<em>Derived Attribute</em>' class.
+	 * The feature id for the '<em><b>EGeneric Exceptions</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_ATTRIBUTE_FEATURE_COUNT = EcorePackage.EATTRIBUTE_FEATURE_COUNT + 1;
+	int BASIC_SCENARIO_OPERATION__EGENERIC_EXCEPTIONS = OPERATION__EGENERIC_EXCEPTIONS;
 
 	/**
-	 * The operation id for the '<em>Get EAnnotation</em>' operation.
+	 * The feature id for the '<em><b>EOperation</b></em>' container reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_ATTRIBUTE___GET_EANNOTATION__STRING = EcorePackage.EATTRIBUTE___GET_EANNOTATION__STRING;
-
-	/**
-	 * The operation id for the '<em>Get Feature ID</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_ATTRIBUTE___GET_FEATURE_ID = EcorePackage.EATTRIBUTE___GET_FEATURE_ID;
-
-	/**
-	 * The operation id for the '<em>Get Container Class</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_ATTRIBUTE___GET_CONTAINER_CLASS = EcorePackage.EATTRIBUTE___GET_CONTAINER_CLASS;
-
-	/**
-	 * The number of operations of the '<em>Derived Attribute</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_ATTRIBUTE_OPERATION_COUNT = EcorePackage.EATTRIBUTE_OPERATION_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.AggregateDerivedAttributeImpl <em>Aggregate Derived Attribute</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.AggregateDerivedAttributeImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getAggregateDerivedAttribute()
-	 * @generated
-	 */
-	int AGGREGATE_DERIVED_ATTRIBUTE = 15;
-
-	/**
-	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AGGREGATE_DERIVED_ATTRIBUTE__EANNOTATIONS = DERIVED_ATTRIBUTE__EANNOTATIONS;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AGGREGATE_DERIVED_ATTRIBUTE__NAME = DERIVED_ATTRIBUTE__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AGGREGATE_DERIVED_ATTRIBUTE__ORDERED = DERIVED_ATTRIBUTE__ORDERED;
-
-	/**
-	 * The feature id for the '<em><b>Unique</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AGGREGATE_DERIVED_ATTRIBUTE__UNIQUE = DERIVED_ATTRIBUTE__UNIQUE;
-
-	/**
-	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AGGREGATE_DERIVED_ATTRIBUTE__LOWER_BOUND = DERIVED_ATTRIBUTE__LOWER_BOUND;
-
-	/**
-	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AGGREGATE_DERIVED_ATTRIBUTE__UPPER_BOUND = DERIVED_ATTRIBUTE__UPPER_BOUND;
-
-	/**
-	 * The feature id for the '<em><b>Many</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AGGREGATE_DERIVED_ATTRIBUTE__MANY = DERIVED_ATTRIBUTE__MANY;
-
-	/**
-	 * The feature id for the '<em><b>Required</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AGGREGATE_DERIVED_ATTRIBUTE__REQUIRED = DERIVED_ATTRIBUTE__REQUIRED;
-
-	/**
-	 * The feature id for the '<em><b>EType</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AGGREGATE_DERIVED_ATTRIBUTE__ETYPE = DERIVED_ATTRIBUTE__ETYPE;
-
-	/**
-	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AGGREGATE_DERIVED_ATTRIBUTE__EGENERIC_TYPE = DERIVED_ATTRIBUTE__EGENERIC_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>Changeable</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AGGREGATE_DERIVED_ATTRIBUTE__CHANGEABLE = DERIVED_ATTRIBUTE__CHANGEABLE;
-
-	/**
-	 * The feature id for the '<em><b>Volatile</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AGGREGATE_DERIVED_ATTRIBUTE__VOLATILE = DERIVED_ATTRIBUTE__VOLATILE;
-
-	/**
-	 * The feature id for the '<em><b>Transient</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AGGREGATE_DERIVED_ATTRIBUTE__TRANSIENT = DERIVED_ATTRIBUTE__TRANSIENT;
-
-	/**
-	 * The feature id for the '<em><b>Default Value Literal</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AGGREGATE_DERIVED_ATTRIBUTE__DEFAULT_VALUE_LITERAL = DERIVED_ATTRIBUTE__DEFAULT_VALUE_LITERAL;
-
-	/**
-	 * The feature id for the '<em><b>Default Value</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AGGREGATE_DERIVED_ATTRIBUTE__DEFAULT_VALUE = DERIVED_ATTRIBUTE__DEFAULT_VALUE;
-
-	/**
-	 * The feature id for the '<em><b>Unsettable</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AGGREGATE_DERIVED_ATTRIBUTE__UNSETTABLE = DERIVED_ATTRIBUTE__UNSETTABLE;
-
-	/**
-	 * The feature id for the '<em><b>Derived</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AGGREGATE_DERIVED_ATTRIBUTE__DERIVED = DERIVED_ATTRIBUTE__DERIVED;
-
-	/**
-	 * The feature id for the '<em><b>EContaining Class</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AGGREGATE_DERIVED_ATTRIBUTE__ECONTAINING_CLASS = DERIVED_ATTRIBUTE__ECONTAINING_CLASS;
-
-	/**
-	 * The feature id for the '<em><b>ID</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AGGREGATE_DERIVED_ATTRIBUTE__ID = DERIVED_ATTRIBUTE__ID;
-
-	/**
-	 * The feature id for the '<em><b>EAttribute Type</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AGGREGATE_DERIVED_ATTRIBUTE__EATTRIBUTE_TYPE = DERIVED_ATTRIBUTE__EATTRIBUTE_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>Variable</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AGGREGATE_DERIVED_ATTRIBUTE__VARIABLE = DERIVED_ATTRIBUTE__VARIABLE;
-
-	/**
-	 * The feature id for the '<em><b>Aggregate Function</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AGGREGATE_DERIVED_ATTRIBUTE__AGGREGATE_FUNCTION = DERIVED_ATTRIBUTE_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Aggregate Derived Attribute</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AGGREGATE_DERIVED_ATTRIBUTE_FEATURE_COUNT = DERIVED_ATTRIBUTE_FEATURE_COUNT + 1;
-
-	/**
-	 * The operation id for the '<em>Get EAnnotation</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AGGREGATE_DERIVED_ATTRIBUTE___GET_EANNOTATION__STRING = DERIVED_ATTRIBUTE___GET_EANNOTATION__STRING;
-
-	/**
-	 * The operation id for the '<em>Get Feature ID</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AGGREGATE_DERIVED_ATTRIBUTE___GET_FEATURE_ID = DERIVED_ATTRIBUTE___GET_FEATURE_ID;
-
-	/**
-	 * The operation id for the '<em>Get Container Class</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AGGREGATE_DERIVED_ATTRIBUTE___GET_CONTAINER_CLASS = DERIVED_ATTRIBUTE___GET_CONTAINER_CLASS;
-
-	/**
-	 * The number of operations of the '<em>Aggregate Derived Attribute</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AGGREGATE_DERIVED_ATTRIBUTE_OPERATION_COUNT = DERIVED_ATTRIBUTE_OPERATION_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicDerivedAttributeImpl <em>Basic Derived Attribute</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicDerivedAttributeImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getBasicDerivedAttribute()
-	 * @generated
-	 */
-	int BASIC_DERIVED_ATTRIBUTE = 16;
-
-	/**
-	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_DERIVED_ATTRIBUTE__EANNOTATIONS = DERIVED_ATTRIBUTE__EANNOTATIONS;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_DERIVED_ATTRIBUTE__NAME = DERIVED_ATTRIBUTE__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_DERIVED_ATTRIBUTE__ORDERED = DERIVED_ATTRIBUTE__ORDERED;
-
-	/**
-	 * The feature id for the '<em><b>Unique</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_DERIVED_ATTRIBUTE__UNIQUE = DERIVED_ATTRIBUTE__UNIQUE;
-
-	/**
-	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_DERIVED_ATTRIBUTE__LOWER_BOUND = DERIVED_ATTRIBUTE__LOWER_BOUND;
-
-	/**
-	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_DERIVED_ATTRIBUTE__UPPER_BOUND = DERIVED_ATTRIBUTE__UPPER_BOUND;
-
-	/**
-	 * The feature id for the '<em><b>Many</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_DERIVED_ATTRIBUTE__MANY = DERIVED_ATTRIBUTE__MANY;
-
-	/**
-	 * The feature id for the '<em><b>Required</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_DERIVED_ATTRIBUTE__REQUIRED = DERIVED_ATTRIBUTE__REQUIRED;
-
-	/**
-	 * The feature id for the '<em><b>EType</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_DERIVED_ATTRIBUTE__ETYPE = DERIVED_ATTRIBUTE__ETYPE;
-
-	/**
-	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_DERIVED_ATTRIBUTE__EGENERIC_TYPE = DERIVED_ATTRIBUTE__EGENERIC_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>Changeable</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_DERIVED_ATTRIBUTE__CHANGEABLE = DERIVED_ATTRIBUTE__CHANGEABLE;
-
-	/**
-	 * The feature id for the '<em><b>Volatile</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_DERIVED_ATTRIBUTE__VOLATILE = DERIVED_ATTRIBUTE__VOLATILE;
-
-	/**
-	 * The feature id for the '<em><b>Transient</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_DERIVED_ATTRIBUTE__TRANSIENT = DERIVED_ATTRIBUTE__TRANSIENT;
-
-	/**
-	 * The feature id for the '<em><b>Default Value Literal</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_DERIVED_ATTRIBUTE__DEFAULT_VALUE_LITERAL = DERIVED_ATTRIBUTE__DEFAULT_VALUE_LITERAL;
-
-	/**
-	 * The feature id for the '<em><b>Default Value</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_DERIVED_ATTRIBUTE__DEFAULT_VALUE = DERIVED_ATTRIBUTE__DEFAULT_VALUE;
-
-	/**
-	 * The feature id for the '<em><b>Unsettable</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_DERIVED_ATTRIBUTE__UNSETTABLE = DERIVED_ATTRIBUTE__UNSETTABLE;
-
-	/**
-	 * The feature id for the '<em><b>Derived</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_DERIVED_ATTRIBUTE__DERIVED = DERIVED_ATTRIBUTE__DERIVED;
-
-	/**
-	 * The feature id for the '<em><b>EContaining Class</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_DERIVED_ATTRIBUTE__ECONTAINING_CLASS = DERIVED_ATTRIBUTE__ECONTAINING_CLASS;
-
-	/**
-	 * The feature id for the '<em><b>ID</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_DERIVED_ATTRIBUTE__ID = DERIVED_ATTRIBUTE__ID;
-
-	/**
-	 * The feature id for the '<em><b>EAttribute Type</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_DERIVED_ATTRIBUTE__EATTRIBUTE_TYPE = DERIVED_ATTRIBUTE__EATTRIBUTE_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>Variable</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_DERIVED_ATTRIBUTE__VARIABLE = DERIVED_ATTRIBUTE__VARIABLE;
-
-	/**
-	 * The feature id for the '<em><b>Basic Scenario Logic</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_DERIVED_ATTRIBUTE__BASIC_SCENARIO_LOGIC = DERIVED_ATTRIBUTE_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Basic Derived Attribute</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_DERIVED_ATTRIBUTE_FEATURE_COUNT = DERIVED_ATTRIBUTE_FEATURE_COUNT + 1;
-
-	/**
-	 * The operation id for the '<em>Get EAnnotation</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_DERIVED_ATTRIBUTE___GET_EANNOTATION__STRING = DERIVED_ATTRIBUTE___GET_EANNOTATION__STRING;
-
-	/**
-	 * The operation id for the '<em>Get Feature ID</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_DERIVED_ATTRIBUTE___GET_FEATURE_ID = DERIVED_ATTRIBUTE___GET_FEATURE_ID;
-
-	/**
-	 * The operation id for the '<em>Get Container Class</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_DERIVED_ATTRIBUTE___GET_CONTAINER_CLASS = DERIVED_ATTRIBUTE___GET_CONTAINER_CLASS;
-
-	/**
-	 * The number of operations of the '<em>Basic Derived Attribute</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_DERIVED_ATTRIBUTE_OPERATION_COUNT = DERIVED_ATTRIBUTE_OPERATION_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicScenarioLogicImpl <em>Basic Scenario Logic</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicScenarioLogicImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getBasicScenarioLogic()
-	 * @generated
-	 */
-	int BASIC_SCENARIO_LOGIC = 17;
-
-	/**
-	 * The feature id for the '<em><b>Basic Function</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASIC_SCENARIO_LOGIC__BASIC_FUNCTION = 0;
+	int BASIC_SCENARIO_OPERATION__EOPERATION = OPERATION__EOPERATION;
 
 	/**
 	 * The feature id for the '<em><b>Sceanrio</b></em>' reference.
@@ -2661,269 +2963,25 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASIC_SCENARIO_LOGIC__SCEANRIO = 1;
+	int BASIC_SCENARIO_OPERATION__SCEANRIO = OPERATION_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the '<em>Basic Scenario Logic</em>' class.
+	 * The feature id for the '<em><b>Function Spec</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BASIC_SCENARIO_LOGIC_FEATURE_COUNT = 2;
+	int BASIC_SCENARIO_OPERATION__FUNCTION_SPEC = OPERATION_FEATURE_COUNT + 1;
 
 	/**
-	 * The number of operations of the '<em>Basic Scenario Logic</em>' class.
+	 * The number of structural features of the '<em>Basic Scenario Operation</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BASIC_SCENARIO_LOGIC_OPERATION_COUNT = 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedStructImpl <em>Derived Struct</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedStructImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getDerivedStruct()
-	 * @generated
-	 */
-	int DERIVED_STRUCT = 19;
-
-	/**
-	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_STRUCT__EANNOTATIONS = EcorePackage.EREFERENCE__EANNOTATIONS;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_STRUCT__NAME = EcorePackage.EREFERENCE__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_STRUCT__ORDERED = EcorePackage.EREFERENCE__ORDERED;
-
-	/**
-	 * The feature id for the '<em><b>Unique</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_STRUCT__UNIQUE = EcorePackage.EREFERENCE__UNIQUE;
-
-	/**
-	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_STRUCT__LOWER_BOUND = EcorePackage.EREFERENCE__LOWER_BOUND;
-
-	/**
-	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_STRUCT__UPPER_BOUND = EcorePackage.EREFERENCE__UPPER_BOUND;
-
-	/**
-	 * The feature id for the '<em><b>Many</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_STRUCT__MANY = EcorePackage.EREFERENCE__MANY;
-
-	/**
-	 * The feature id for the '<em><b>Required</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_STRUCT__REQUIRED = EcorePackage.EREFERENCE__REQUIRED;
-
-	/**
-	 * The feature id for the '<em><b>EType</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_STRUCT__ETYPE = EcorePackage.EREFERENCE__ETYPE;
-
-	/**
-	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_STRUCT__EGENERIC_TYPE = EcorePackage.EREFERENCE__EGENERIC_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>Changeable</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_STRUCT__CHANGEABLE = EcorePackage.EREFERENCE__CHANGEABLE;
-
-	/**
-	 * The feature id for the '<em><b>Volatile</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_STRUCT__VOLATILE = EcorePackage.EREFERENCE__VOLATILE;
-
-	/**
-	 * The feature id for the '<em><b>Transient</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_STRUCT__TRANSIENT = EcorePackage.EREFERENCE__TRANSIENT;
-
-	/**
-	 * The feature id for the '<em><b>Default Value Literal</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_STRUCT__DEFAULT_VALUE_LITERAL = EcorePackage.EREFERENCE__DEFAULT_VALUE_LITERAL;
-
-	/**
-	 * The feature id for the '<em><b>Default Value</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_STRUCT__DEFAULT_VALUE = EcorePackage.EREFERENCE__DEFAULT_VALUE;
-
-	/**
-	 * The feature id for the '<em><b>Unsettable</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_STRUCT__UNSETTABLE = EcorePackage.EREFERENCE__UNSETTABLE;
-
-	/**
-	 * The feature id for the '<em><b>Derived</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_STRUCT__DERIVED = EcorePackage.EREFERENCE__DERIVED;
-
-	/**
-	 * The feature id for the '<em><b>EContaining Class</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_STRUCT__ECONTAINING_CLASS = EcorePackage.EREFERENCE__ECONTAINING_CLASS;
-
-	/**
-	 * The feature id for the '<em><b>Containment</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_STRUCT__CONTAINMENT = EcorePackage.EREFERENCE__CONTAINMENT;
-
-	/**
-	 * The feature id for the '<em><b>Container</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_STRUCT__CONTAINER = EcorePackage.EREFERENCE__CONTAINER;
-
-	/**
-	 * The feature id for the '<em><b>Resolve Proxies</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_STRUCT__RESOLVE_PROXIES = EcorePackage.EREFERENCE__RESOLVE_PROXIES;
-
-	/**
-	 * The feature id for the '<em><b>EOpposite</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_STRUCT__EOPPOSITE = EcorePackage.EREFERENCE__EOPPOSITE;
-
-	/**
-	 * The feature id for the '<em><b>EReference Type</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_STRUCT__EREFERENCE_TYPE = EcorePackage.EREFERENCE__EREFERENCE_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>EKeys</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_STRUCT__EKEYS = EcorePackage.EREFERENCE__EKEYS;
-
-	/**
-	 * The feature id for the '<em><b>Cube</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_STRUCT__CUBE = EcorePackage.EREFERENCE_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Derived Struct</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_STRUCT_FEATURE_COUNT = EcorePackage.EREFERENCE_FEATURE_COUNT + 1;
+	int BASIC_SCENARIO_OPERATION_FEATURE_COUNT = OPERATION_FEATURE_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get EAnnotation</em>' operation.
@@ -2932,44 +2990,34 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_STRUCT___GET_EANNOTATION__STRING = EcorePackage.EREFERENCE___GET_EANNOTATION__STRING;
+	int BASIC_SCENARIO_OPERATION___GET_EANNOTATION__STRING = OPERATION___GET_EANNOTATION__STRING;
 
 	/**
-	 * The operation id for the '<em>Get Feature ID</em>' operation.
+	 * The operation id for the '<em>Get Operation ID</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_STRUCT___GET_FEATURE_ID = EcorePackage.EREFERENCE___GET_FEATURE_ID;
+	int BASIC_SCENARIO_OPERATION___GET_OPERATION_ID = OPERATION___GET_OPERATION_ID;
 
 	/**
-	 * The operation id for the '<em>Get Container Class</em>' operation.
+	 * The operation id for the '<em>Is Override Of</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_STRUCT___GET_CONTAINER_CLASS = EcorePackage.EREFERENCE___GET_CONTAINER_CLASS;
+	int BASIC_SCENARIO_OPERATION___IS_OVERRIDE_OF__EOPERATION = OPERATION___IS_OVERRIDE_OF__EOPERATION;
 
 	/**
-	 * The number of operations of the '<em>Derived Struct</em>' class.
+	 * The number of operations of the '<em>Basic Scenario Operation</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_STRUCT_OPERATION_COUNT = EcorePackage.EREFERENCE_OPERATION_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BaseFeatureImpl <em>Base Feature</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BaseFeatureImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getBaseFeature()
-	 * @generated
-	 */
-	int BASE_FEATURE = 20;
+	int BASIC_SCENARIO_OPERATION_OPERATION_COUNT = OPERATION_OPERATION_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
@@ -2978,7 +3026,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASE_FEATURE__EANNOTATIONS = EcorePackage.EATTRIBUTE__EANNOTATIONS;
+	int FEATURE_PARAMETER__EANNOTATIONS = PARAMETER__EANNOTATIONS;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2987,7 +3035,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASE_FEATURE__NAME = EcorePackage.EATTRIBUTE__NAME;
+	int FEATURE_PARAMETER__NAME = PARAMETER__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
@@ -2996,7 +3044,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASE_FEATURE__ORDERED = EcorePackage.EATTRIBUTE__ORDERED;
+	int FEATURE_PARAMETER__ORDERED = PARAMETER__ORDERED;
 
 	/**
 	 * The feature id for the '<em><b>Unique</b></em>' attribute.
@@ -3005,7 +3053,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASE_FEATURE__UNIQUE = EcorePackage.EATTRIBUTE__UNIQUE;
+	int FEATURE_PARAMETER__UNIQUE = PARAMETER__UNIQUE;
 
 	/**
 	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
@@ -3014,7 +3062,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASE_FEATURE__LOWER_BOUND = EcorePackage.EATTRIBUTE__LOWER_BOUND;
+	int FEATURE_PARAMETER__LOWER_BOUND = PARAMETER__LOWER_BOUND;
 
 	/**
 	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
@@ -3023,7 +3071,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASE_FEATURE__UPPER_BOUND = EcorePackage.EATTRIBUTE__UPPER_BOUND;
+	int FEATURE_PARAMETER__UPPER_BOUND = PARAMETER__UPPER_BOUND;
 
 	/**
 	 * The feature id for the '<em><b>Many</b></em>' attribute.
@@ -3032,7 +3080,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASE_FEATURE__MANY = EcorePackage.EATTRIBUTE__MANY;
+	int FEATURE_PARAMETER__MANY = PARAMETER__MANY;
 
 	/**
 	 * The feature id for the '<em><b>Required</b></em>' attribute.
@@ -3041,7 +3089,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASE_FEATURE__REQUIRED = EcorePackage.EATTRIBUTE__REQUIRED;
+	int FEATURE_PARAMETER__REQUIRED = PARAMETER__REQUIRED;
 
 	/**
 	 * The feature id for the '<em><b>EType</b></em>' reference.
@@ -3050,7 +3098,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASE_FEATURE__ETYPE = EcorePackage.EATTRIBUTE__ETYPE;
+	int FEATURE_PARAMETER__ETYPE = PARAMETER__ETYPE;
 
 	/**
 	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
@@ -3059,198 +3107,16 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BASE_FEATURE__EGENERIC_TYPE = EcorePackage.EATTRIBUTE__EGENERIC_TYPE;
+	int FEATURE_PARAMETER__EGENERIC_TYPE = PARAMETER__EGENERIC_TYPE;
 
 	/**
-	 * The feature id for the '<em><b>Changeable</b></em>' attribute.
+	 * The feature id for the '<em><b>EOperation</b></em>' container reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BASE_FEATURE__CHANGEABLE = EcorePackage.EATTRIBUTE__CHANGEABLE;
-
-	/**
-	 * The feature id for the '<em><b>Volatile</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_FEATURE__VOLATILE = EcorePackage.EATTRIBUTE__VOLATILE;
-
-	/**
-	 * The feature id for the '<em><b>Transient</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_FEATURE__TRANSIENT = EcorePackage.EATTRIBUTE__TRANSIENT;
-
-	/**
-	 * The feature id for the '<em><b>Default Value Literal</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_FEATURE__DEFAULT_VALUE_LITERAL = EcorePackage.EATTRIBUTE__DEFAULT_VALUE_LITERAL;
-
-	/**
-	 * The feature id for the '<em><b>Default Value</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_FEATURE__DEFAULT_VALUE = EcorePackage.EATTRIBUTE__DEFAULT_VALUE;
-
-	/**
-	 * The feature id for the '<em><b>Unsettable</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_FEATURE__UNSETTABLE = EcorePackage.EATTRIBUTE__UNSETTABLE;
-
-	/**
-	 * The feature id for the '<em><b>Derived</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_FEATURE__DERIVED = EcorePackage.EATTRIBUTE__DERIVED;
-
-	/**
-	 * The feature id for the '<em><b>EContaining Class</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_FEATURE__ECONTAINING_CLASS = EcorePackage.EATTRIBUTE__ECONTAINING_CLASS;
-
-	/**
-	 * The feature id for the '<em><b>ID</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_FEATURE__ID = EcorePackage.EATTRIBUTE__ID;
-
-	/**
-	 * The feature id for the '<em><b>EAttribute Type</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_FEATURE__EATTRIBUTE_TYPE = EcorePackage.EATTRIBUTE__EATTRIBUTE_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>Variable</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_FEATURE__VARIABLE = EcorePackage.EATTRIBUTE_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Base Feature</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_FEATURE_FEATURE_COUNT = EcorePackage.EATTRIBUTE_FEATURE_COUNT + 1;
-
-	/**
-	 * The operation id for the '<em>Get EAnnotation</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_FEATURE___GET_EANNOTATION__STRING = EcorePackage.EATTRIBUTE___GET_EANNOTATION__STRING;
-
-	/**
-	 * The operation id for the '<em>Get Feature ID</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_FEATURE___GET_FEATURE_ID = EcorePackage.EATTRIBUTE___GET_FEATURE_ID;
-
-	/**
-	 * The operation id for the '<em>Get Container Class</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_FEATURE___GET_CONTAINER_CLASS = EcorePackage.EATTRIBUTE___GET_CONTAINER_CLASS;
-
-	/**
-	 * The number of operations of the '<em>Base Feature</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_FEATURE_OPERATION_COUNT = EcorePackage.EATTRIBUTE_OPERATION_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedFeatureGroupImpl <em>Derived Feature Group</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedFeatureGroupImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getDerivedFeatureGroup()
-	 * @generated
-	 */
-	int DERIVED_FEATURE_GROUP = 21;
-
-	/**
-	 * The feature id for the '<em><b>Derived Features</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_FEATURE_GROUP__DERIVED_FEATURES = 0;
-
-	/**
-	 * The number of structural features of the '<em>Derived Feature Group</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_FEATURE_GROUP_FEATURE_COUNT = 1;
-
-	/**
-	 * The number of operations of the '<em>Derived Feature Group</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_FEATURE_GROUP_OPERATION_COUNT = 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.FeatureParameterImpl <em>Feature Parameter</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.FeatureParameterImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getFeatureParameter()
-	 * @generated
-	 */
-	int FEATURE_PARAMETER = 22;
+	int FEATURE_PARAMETER__EOPERATION = PARAMETER__EOPERATION;
 
 	/**
 	 * The feature id for the '<em><b>Feature</b></em>' reference.
@@ -3271,6 +3137,15 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	int FEATURE_PARAMETER_FEATURE_COUNT = PARAMETER_FEATURE_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Get EAnnotation</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FEATURE_PARAMETER___GET_EANNOTATION__STRING = PARAMETER___GET_EANNOTATION__STRING;
+
+	/**
 	 * The number of operations of the '<em>Feature Parameter</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3280,60 +3155,14 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	int FEATURE_PARAMETER_OPERATION_COUNT = PARAMETER_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ProxyFeatureParameterImpl <em>Proxy Feature Parameter</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.OperationParameterImpl <em>Operation Parameter</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ProxyFeatureParameterImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getProxyFeatureParameter()
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.OperationParameterImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getOperationParameter()
 	 * @generated
 	 */
-	int PROXY_FEATURE_PARAMETER = 23;
-
-	/**
-	 * The feature id for the '<em><b>Entity</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROXY_FEATURE_PARAMETER__ENTITY = PARAMETER_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Varaible</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROXY_FEATURE_PARAMETER__VARAIBLE = PARAMETER_FEATURE_COUNT + 1;
-
-	/**
-	 * The number of structural features of the '<em>Proxy Feature Parameter</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROXY_FEATURE_PARAMETER_FEATURE_COUNT = PARAMETER_FEATURE_COUNT + 2;
-
-	/**
-	 * The number of operations of the '<em>Proxy Feature Parameter</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROXY_FEATURE_PARAMETER_OPERATION_COUNT = PARAMETER_OPERATION_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.GetAttributeFromEntityDerivedFeatureImpl <em>Get Attribute From Entity Derived Feature</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.GetAttributeFromEntityDerivedFeatureImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getGetAttributeFromEntityDerivedFeature()
-	 * @generated
-	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE = 24;
+	int OPERATION_PARAMETER = 14;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
@@ -3342,7 +3171,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__EANNOTATIONS = DERIVED_ATTRIBUTE__EANNOTATIONS;
+	int OPERATION_PARAMETER__EANNOTATIONS = PARAMETER__EANNOTATIONS;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3351,7 +3180,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__NAME = DERIVED_ATTRIBUTE__NAME;
+	int OPERATION_PARAMETER__NAME = PARAMETER__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
@@ -3360,7 +3189,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__ORDERED = DERIVED_ATTRIBUTE__ORDERED;
+	int OPERATION_PARAMETER__ORDERED = PARAMETER__ORDERED;
 
 	/**
 	 * The feature id for the '<em><b>Unique</b></em>' attribute.
@@ -3369,7 +3198,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__UNIQUE = DERIVED_ATTRIBUTE__UNIQUE;
+	int OPERATION_PARAMETER__UNIQUE = PARAMETER__UNIQUE;
 
 	/**
 	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
@@ -3378,7 +3207,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__LOWER_BOUND = DERIVED_ATTRIBUTE__LOWER_BOUND;
+	int OPERATION_PARAMETER__LOWER_BOUND = PARAMETER__LOWER_BOUND;
 
 	/**
 	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
@@ -3387,7 +3216,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__UPPER_BOUND = DERIVED_ATTRIBUTE__UPPER_BOUND;
+	int OPERATION_PARAMETER__UPPER_BOUND = PARAMETER__UPPER_BOUND;
 
 	/**
 	 * The feature id for the '<em><b>Many</b></em>' attribute.
@@ -3396,7 +3225,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__MANY = DERIVED_ATTRIBUTE__MANY;
+	int OPERATION_PARAMETER__MANY = PARAMETER__MANY;
 
 	/**
 	 * The feature id for the '<em><b>Required</b></em>' attribute.
@@ -3405,7 +3234,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__REQUIRED = DERIVED_ATTRIBUTE__REQUIRED;
+	int OPERATION_PARAMETER__REQUIRED = PARAMETER__REQUIRED;
 
 	/**
 	 * The feature id for the '<em><b>EType</b></em>' reference.
@@ -3414,7 +3243,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__ETYPE = DERIVED_ATTRIBUTE__ETYPE;
+	int OPERATION_PARAMETER__ETYPE = PARAMETER__ETYPE;
 
 	/**
 	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
@@ -3423,269 +3252,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__EGENERIC_TYPE = DERIVED_ATTRIBUTE__EGENERIC_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>Changeable</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__CHANGEABLE = DERIVED_ATTRIBUTE__CHANGEABLE;
-
-	/**
-	 * The feature id for the '<em><b>Volatile</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__VOLATILE = DERIVED_ATTRIBUTE__VOLATILE;
-
-	/**
-	 * The feature id for the '<em><b>Transient</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__TRANSIENT = DERIVED_ATTRIBUTE__TRANSIENT;
-
-	/**
-	 * The feature id for the '<em><b>Default Value Literal</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__DEFAULT_VALUE_LITERAL = DERIVED_ATTRIBUTE__DEFAULT_VALUE_LITERAL;
-
-	/**
-	 * The feature id for the '<em><b>Default Value</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__DEFAULT_VALUE = DERIVED_ATTRIBUTE__DEFAULT_VALUE;
-
-	/**
-	 * The feature id for the '<em><b>Unsettable</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__UNSETTABLE = DERIVED_ATTRIBUTE__UNSETTABLE;
-
-	/**
-	 * The feature id for the '<em><b>Derived</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__DERIVED = DERIVED_ATTRIBUTE__DERIVED;
-
-	/**
-	 * The feature id for the '<em><b>EContaining Class</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__ECONTAINING_CLASS = DERIVED_ATTRIBUTE__ECONTAINING_CLASS;
-
-	/**
-	 * The feature id for the '<em><b>ID</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__ID = DERIVED_ATTRIBUTE__ID;
-
-	/**
-	 * The feature id for the '<em><b>EAttribute Type</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__EATTRIBUTE_TYPE = DERIVED_ATTRIBUTE__EATTRIBUTE_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>Variable</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__VARIABLE = DERIVED_ATTRIBUTE__VARIABLE;
-
-	/**
-	 * The feature id for the '<em><b>Attribute In Entity</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__ATTRIBUTE_IN_ENTITY = DERIVED_ATTRIBUTE_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Entity Feature</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__ENTITY_FEATURE = DERIVED_ATTRIBUTE_FEATURE_COUNT + 1;
-
-	/**
-	 * The number of structural features of the '<em>Get Attribute From Entity Derived Feature</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE_FEATURE_COUNT = DERIVED_ATTRIBUTE_FEATURE_COUNT + 2;
-
-	/**
-	 * The operation id for the '<em>Get EAnnotation</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE___GET_EANNOTATION__STRING = DERIVED_ATTRIBUTE___GET_EANNOTATION__STRING;
-
-	/**
-	 * The operation id for the '<em>Get Feature ID</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE___GET_FEATURE_ID = DERIVED_ATTRIBUTE___GET_FEATURE_ID;
-
-	/**
-	 * The operation id for the '<em>Get Container Class</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE___GET_CONTAINER_CLASS = DERIVED_ATTRIBUTE___GET_CONTAINER_CLASS;
-
-	/**
-	 * The number of operations of the '<em>Get Attribute From Entity Derived Feature</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE_OPERATION_COUNT = DERIVED_ATTRIBUTE_OPERATION_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.AttributeFromEntityParameterImpl <em>Attribute From Entity Parameter</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.AttributeFromEntityParameterImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getAttributeFromEntityParameter()
-	 * @generated
-	 */
-	int ATTRIBUTE_FROM_ENTITY_PARAMETER = 25;
-
-	/**
-	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ATTRIBUTE_FROM_ENTITY_PARAMETER__EANNOTATIONS = EcorePackage.EPARAMETER__EANNOTATIONS;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ATTRIBUTE_FROM_ENTITY_PARAMETER__NAME = EcorePackage.EPARAMETER__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ATTRIBUTE_FROM_ENTITY_PARAMETER__ORDERED = EcorePackage.EPARAMETER__ORDERED;
-
-	/**
-	 * The feature id for the '<em><b>Unique</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ATTRIBUTE_FROM_ENTITY_PARAMETER__UNIQUE = EcorePackage.EPARAMETER__UNIQUE;
-
-	/**
-	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ATTRIBUTE_FROM_ENTITY_PARAMETER__LOWER_BOUND = EcorePackage.EPARAMETER__LOWER_BOUND;
-
-	/**
-	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ATTRIBUTE_FROM_ENTITY_PARAMETER__UPPER_BOUND = EcorePackage.EPARAMETER__UPPER_BOUND;
-
-	/**
-	 * The feature id for the '<em><b>Many</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ATTRIBUTE_FROM_ENTITY_PARAMETER__MANY = EcorePackage.EPARAMETER__MANY;
-
-	/**
-	 * The feature id for the '<em><b>Required</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ATTRIBUTE_FROM_ENTITY_PARAMETER__REQUIRED = EcorePackage.EPARAMETER__REQUIRED;
-
-	/**
-	 * The feature id for the '<em><b>EType</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ATTRIBUTE_FROM_ENTITY_PARAMETER__ETYPE = EcorePackage.EPARAMETER__ETYPE;
-
-	/**
-	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ATTRIBUTE_FROM_ENTITY_PARAMETER__EGENERIC_TYPE = EcorePackage.EPARAMETER__EGENERIC_TYPE;
+	int OPERATION_PARAMETER__EGENERIC_TYPE = PARAMETER__EGENERIC_TYPE;
 
 	/**
 	 * The feature id for the '<em><b>EOperation</b></em>' container reference.
@@ -3694,34 +3261,25 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ATTRIBUTE_FROM_ENTITY_PARAMETER__EOPERATION = EcorePackage.EPARAMETER__EOPERATION;
+	int OPERATION_PARAMETER__EOPERATION = PARAMETER__EOPERATION;
 
 	/**
-	 * The feature id for the '<em><b>Attribute In Entity</b></em>' reference.
+	 * The feature id for the '<em><b>Operation</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ATTRIBUTE_FROM_ENTITY_PARAMETER__ATTRIBUTE_IN_ENTITY = EcorePackage.EPARAMETER_FEATURE_COUNT + 0;
+	int OPERATION_PARAMETER__OPERATION = PARAMETER_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Entity Feature</b></em>' reference.
+	 * The number of structural features of the '<em>Operation Parameter</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ATTRIBUTE_FROM_ENTITY_PARAMETER__ENTITY_FEATURE = EcorePackage.EPARAMETER_FEATURE_COUNT + 1;
-
-	/**
-	 * The number of structural features of the '<em>Attribute From Entity Parameter</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ATTRIBUTE_FROM_ENTITY_PARAMETER_FEATURE_COUNT = EcorePackage.EPARAMETER_FEATURE_COUNT + 2;
+	int OPERATION_PARAMETER_FEATURE_COUNT = PARAMETER_FEATURE_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Get EAnnotation</em>' operation.
@@ -3730,35 +3288,115 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ATTRIBUTE_FROM_ENTITY_PARAMETER___GET_EANNOTATION__STRING = EcorePackage.EPARAMETER___GET_EANNOTATION__STRING;
+	int OPERATION_PARAMETER___GET_EANNOTATION__STRING = PARAMETER___GET_EANNOTATION__STRING;
 
 	/**
-	 * The number of operations of the '<em>Attribute From Entity Parameter</em>' class.
+	 * The number of operations of the '<em>Operation Parameter</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ATTRIBUTE_FROM_ENTITY_PARAMETER_OPERATION_COUNT = EcorePackage.EPARAMETER_OPERATION_COUNT + 0;
+	int OPERATION_PARAMETER_OPERATION_COUNT = PARAMETER_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ProxyAttributeFromEntityParameterImpl <em>Proxy Attribute From Entity Parameter</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ProxyAttributeFromEntityParameterImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getProxyAttributeFromEntityParameter()
-	 * @generated
-	 */
-	int PROXY_ATTRIBUTE_FROM_ENTITY_PARAMETER = 26;
-
-	/**
-	 * The feature id for the '<em><b>Variable</b></em>' reference.
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROXY_ATTRIBUTE_FROM_ENTITY_PARAMETER__VARIABLE = PARAMETER_FEATURE_COUNT + 0;
+	int PROXY_OPERATION_PARAMETER__EANNOTATIONS = PARAMETER__EANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROXY_OPERATION_PARAMETER__NAME = PARAMETER__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROXY_OPERATION_PARAMETER__ORDERED = PARAMETER__ORDERED;
+
+	/**
+	 * The feature id for the '<em><b>Unique</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROXY_OPERATION_PARAMETER__UNIQUE = PARAMETER__UNIQUE;
+
+	/**
+	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROXY_OPERATION_PARAMETER__LOWER_BOUND = PARAMETER__LOWER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROXY_OPERATION_PARAMETER__UPPER_BOUND = PARAMETER__UPPER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Many</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROXY_OPERATION_PARAMETER__MANY = PARAMETER__MANY;
+
+	/**
+	 * The feature id for the '<em><b>Required</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROXY_OPERATION_PARAMETER__REQUIRED = PARAMETER__REQUIRED;
+
+	/**
+	 * The feature id for the '<em><b>EType</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROXY_OPERATION_PARAMETER__ETYPE = PARAMETER__ETYPE;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROXY_OPERATION_PARAMETER__EGENERIC_TYPE = PARAMETER__EGENERIC_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>EOperation</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROXY_OPERATION_PARAMETER__EOPERATION = PARAMETER__EOPERATION;
 
 	/**
 	 * The feature id for the '<em><b>Entity</b></em>' reference.
@@ -3767,53 +3405,214 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROXY_ATTRIBUTE_FROM_ENTITY_PARAMETER__ENTITY = PARAMETER_FEATURE_COUNT + 1;
+	int PROXY_OPERATION_PARAMETER__ENTITY = PARAMETER_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Cube</b></em>' reference.
+	 * The feature id for the '<em><b>Operation name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROXY_ATTRIBUTE_FROM_ENTITY_PARAMETER__CUBE = PARAMETER_FEATURE_COUNT + 2;
+	int PROXY_OPERATION_PARAMETER__OPERATION_NAME = PARAMETER_FEATURE_COUNT + 1;
 
 	/**
-	 * The number of structural features of the '<em>Proxy Attribute From Entity Parameter</em>' class.
+	 * The number of structural features of the '<em>Proxy Operation Parameter</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROXY_ATTRIBUTE_FROM_ENTITY_PARAMETER_FEATURE_COUNT = PARAMETER_FEATURE_COUNT + 3;
+	int PROXY_OPERATION_PARAMETER_FEATURE_COUNT = PARAMETER_FEATURE_COUNT + 2;
 
 	/**
-	 * The number of operations of the '<em>Proxy Attribute From Entity Parameter</em>' class.
+	 * The operation id for the '<em>Get EAnnotation</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROXY_ATTRIBUTE_FROM_ENTITY_PARAMETER_OPERATION_COUNT = PARAMETER_OPERATION_COUNT + 0;
+	int PROXY_OPERATION_PARAMETER___GET_EANNOTATION__STRING = PARAMETER___GET_EANNOTATION__STRING;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.RowCreationApproachImpl <em>Row Creation Approach</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.RowCreationApproachImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getRowCreationApproach()
-	 * @generated
-	 */
-	int ROW_CREATION_APPROACH = 32;
-
-	/**
-	 * The feature id for the '<em><b>Dependant Cube Columns</b></em>' containment reference list.
+	 * The number of operations of the '<em>Proxy Operation Parameter</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS = 0;
+	int PROXY_OPERATION_PARAMETER_OPERATION_COUNT = PARAMETER_OPERATION_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Entity</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROXY_FEATURE_PARAMETER__ENTITY = 0;
+
+	/**
+	 * The feature id for the '<em><b>Feature name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROXY_FEATURE_PARAMETER__FEATURE_NAME = 1;
+
+	/**
+	 * The number of structural features of the '<em>Proxy Feature Parameter</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROXY_FEATURE_PARAMETER_FEATURE_COUNT = 2;
+
+	/**
+	 * The number of operations of the '<em>Proxy Feature Parameter</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROXY_FEATURE_PARAMETER_OPERATION_COUNT = 0;
+
+	/**
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_CREATION_APPROACH__EANNOTATIONS = EcorePackage.EOPERATION__EANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_CREATION_APPROACH__NAME = EcorePackage.EOPERATION__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_CREATION_APPROACH__ORDERED = EcorePackage.EOPERATION__ORDERED;
+
+	/**
+	 * The feature id for the '<em><b>Unique</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_CREATION_APPROACH__UNIQUE = EcorePackage.EOPERATION__UNIQUE;
+
+	/**
+	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_CREATION_APPROACH__LOWER_BOUND = EcorePackage.EOPERATION__LOWER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_CREATION_APPROACH__UPPER_BOUND = EcorePackage.EOPERATION__UPPER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Many</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_CREATION_APPROACH__MANY = EcorePackage.EOPERATION__MANY;
+
+	/**
+	 * The feature id for the '<em><b>Required</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_CREATION_APPROACH__REQUIRED = EcorePackage.EOPERATION__REQUIRED;
+
+	/**
+	 * The feature id for the '<em><b>EType</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_CREATION_APPROACH__ETYPE = EcorePackage.EOPERATION__ETYPE;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_CREATION_APPROACH__EGENERIC_TYPE = EcorePackage.EOPERATION__EGENERIC_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>EContaining Class</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_CREATION_APPROACH__ECONTAINING_CLASS = EcorePackage.EOPERATION__ECONTAINING_CLASS;
+
+	/**
+	 * The feature id for the '<em><b>EType Parameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_CREATION_APPROACH__ETYPE_PARAMETERS = EcorePackage.EOPERATION__ETYPE_PARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>EParameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_CREATION_APPROACH__EPARAMETERS = EcorePackage.EOPERATION__EPARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>EExceptions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_CREATION_APPROACH__EEXCEPTIONS = EcorePackage.EOPERATION__EEXCEPTIONS;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Exceptions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_CREATION_APPROACH__EGENERIC_EXCEPTIONS = EcorePackage.EOPERATION__EGENERIC_EXCEPTIONS;
 
 	/**
 	 * The feature id for the '<em><b>Created Cube Columns</b></em>' containment reference list.
@@ -3822,16 +3621,7 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS = 1;
-
-	/**
-	 * The feature id for the '<em><b>Dependant Struct Item Columns</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS = 2;
+	int ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS = EcorePackage.EOPERATION_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Row Creation Approach</em>' class.
@@ -3840,7 +3630,34 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ROW_CREATION_APPROACH_FEATURE_COUNT = 3;
+	int ROW_CREATION_APPROACH_FEATURE_COUNT = EcorePackage.EOPERATION_FEATURE_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get EAnnotation</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_CREATION_APPROACH___GET_EANNOTATION__STRING = EcorePackage.EOPERATION___GET_EANNOTATION__STRING;
+
+	/**
+	 * The operation id for the '<em>Get Operation ID</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_CREATION_APPROACH___GET_OPERATION_ID = EcorePackage.EOPERATION___GET_OPERATION_ID;
+
+	/**
+	 * The operation id for the '<em>Is Override Of</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_CREATION_APPROACH___IS_OVERRIDE_OF__EOPERATION = EcorePackage.EOPERATION___IS_OVERRIDE_OF__EOPERATION;
 
 	/**
 	 * The number of operations of the '<em>Row Creation Approach</em>' class.
@@ -3849,26 +3666,142 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ROW_CREATION_APPROACH_OPERATION_COUNT = 0;
+	int ROW_CREATION_APPROACH_OPERATION_COUNT = EcorePackage.EOPERATION_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.CustomRowCreationApproachImpl <em>Custom Row Creation Approach</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.CustomRowCreationApproachImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getCustomRowCreationApproach()
-	 * @generated
-	 */
-	int CUSTOM_ROW_CREATION_APPROACH = 27;
-
-	/**
-	 * The feature id for the '<em><b>Dependant Cube Columns</b></em>' containment reference list.
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CUSTOM_ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS = ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS;
+	int CUSTOM_ROW_CREATION_APPROACH__EANNOTATIONS = ROW_CREATION_APPROACH__EANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CUSTOM_ROW_CREATION_APPROACH__NAME = ROW_CREATION_APPROACH__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CUSTOM_ROW_CREATION_APPROACH__ORDERED = ROW_CREATION_APPROACH__ORDERED;
+
+	/**
+	 * The feature id for the '<em><b>Unique</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CUSTOM_ROW_CREATION_APPROACH__UNIQUE = ROW_CREATION_APPROACH__UNIQUE;
+
+	/**
+	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CUSTOM_ROW_CREATION_APPROACH__LOWER_BOUND = ROW_CREATION_APPROACH__LOWER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CUSTOM_ROW_CREATION_APPROACH__UPPER_BOUND = ROW_CREATION_APPROACH__UPPER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Many</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CUSTOM_ROW_CREATION_APPROACH__MANY = ROW_CREATION_APPROACH__MANY;
+
+	/**
+	 * The feature id for the '<em><b>Required</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CUSTOM_ROW_CREATION_APPROACH__REQUIRED = ROW_CREATION_APPROACH__REQUIRED;
+
+	/**
+	 * The feature id for the '<em><b>EType</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CUSTOM_ROW_CREATION_APPROACH__ETYPE = ROW_CREATION_APPROACH__ETYPE;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CUSTOM_ROW_CREATION_APPROACH__EGENERIC_TYPE = ROW_CREATION_APPROACH__EGENERIC_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>EContaining Class</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CUSTOM_ROW_CREATION_APPROACH__ECONTAINING_CLASS = ROW_CREATION_APPROACH__ECONTAINING_CLASS;
+
+	/**
+	 * The feature id for the '<em><b>EType Parameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CUSTOM_ROW_CREATION_APPROACH__ETYPE_PARAMETERS = ROW_CREATION_APPROACH__ETYPE_PARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>EParameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CUSTOM_ROW_CREATION_APPROACH__EPARAMETERS = ROW_CREATION_APPROACH__EPARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>EExceptions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CUSTOM_ROW_CREATION_APPROACH__EEXCEPTIONS = ROW_CREATION_APPROACH__EEXCEPTIONS;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Exceptions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CUSTOM_ROW_CREATION_APPROACH__EGENERIC_EXCEPTIONS = ROW_CREATION_APPROACH__EGENERIC_EXCEPTIONS;
 
 	/**
 	 * The feature id for the '<em><b>Created Cube Columns</b></em>' containment reference list.
@@ -3880,31 +3813,40 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	int CUSTOM_ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS = ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS;
 
 	/**
-	 * The feature id for the '<em><b>Dependant Struct Item Columns</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CUSTOM_ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS = ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS;
-
-	/**
-	 * The feature id for the '<em><b>Dependant Variables</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CUSTOM_ROW_CREATION_APPROACH__DEPENDANT_VARIABLES = ROW_CREATION_APPROACH_FEATURE_COUNT + 0;
-
-	/**
 	 * The number of structural features of the '<em>Custom Row Creation Approach</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CUSTOM_ROW_CREATION_APPROACH_FEATURE_COUNT = ROW_CREATION_APPROACH_FEATURE_COUNT + 1;
+	int CUSTOM_ROW_CREATION_APPROACH_FEATURE_COUNT = ROW_CREATION_APPROACH_FEATURE_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Get EAnnotation</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CUSTOM_ROW_CREATION_APPROACH___GET_EANNOTATION__STRING = ROW_CREATION_APPROACH___GET_EANNOTATION__STRING;
+
+	/**
+	 * The operation id for the '<em>Get Operation ID</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CUSTOM_ROW_CREATION_APPROACH___GET_OPERATION_ID = ROW_CREATION_APPROACH___GET_OPERATION_ID;
+
+	/**
+	 * The operation id for the '<em>Is Override Of</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CUSTOM_ROW_CREATION_APPROACH___IS_OVERRIDE_OF__EOPERATION = ROW_CREATION_APPROACH___IS_OVERRIDE_OF__EOPERATION;
 
 	/**
 	 * The number of operations of the '<em>Custom Row Creation Approach</em>' class.
@@ -3916,23 +3858,139 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	int CUSTOM_ROW_CREATION_APPROACH_OPERATION_COUNT = ROW_CREATION_APPROACH_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.FilterAndGroupToOneRowCreationApproachImpl <em>Filter And Group To One Row Creation Approach</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.FilterAndGroupToOneRowCreationApproachImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getFilterAndGroupToOneRowCreationApproach()
-	 * @generated
-	 */
-	int FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH = 28;
-
-	/**
-	 * The feature id for the '<em><b>Dependant Cube Columns</b></em>' containment reference list.
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS = ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS;
+	int FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH__EANNOTATIONS = ROW_CREATION_APPROACH__EANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH__NAME = ROW_CREATION_APPROACH__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH__ORDERED = ROW_CREATION_APPROACH__ORDERED;
+
+	/**
+	 * The feature id for the '<em><b>Unique</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH__UNIQUE = ROW_CREATION_APPROACH__UNIQUE;
+
+	/**
+	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH__LOWER_BOUND = ROW_CREATION_APPROACH__LOWER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH__UPPER_BOUND = ROW_CREATION_APPROACH__UPPER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Many</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH__MANY = ROW_CREATION_APPROACH__MANY;
+
+	/**
+	 * The feature id for the '<em><b>Required</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH__REQUIRED = ROW_CREATION_APPROACH__REQUIRED;
+
+	/**
+	 * The feature id for the '<em><b>EType</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH__ETYPE = ROW_CREATION_APPROACH__ETYPE;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH__EGENERIC_TYPE = ROW_CREATION_APPROACH__EGENERIC_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>EContaining Class</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH__ECONTAINING_CLASS = ROW_CREATION_APPROACH__ECONTAINING_CLASS;
+
+	/**
+	 * The feature id for the '<em><b>EType Parameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH__ETYPE_PARAMETERS = ROW_CREATION_APPROACH__ETYPE_PARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>EParameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH__EPARAMETERS = ROW_CREATION_APPROACH__EPARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>EExceptions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH__EEXCEPTIONS = ROW_CREATION_APPROACH__EEXCEPTIONS;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Exceptions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH__EGENERIC_EXCEPTIONS = ROW_CREATION_APPROACH__EGENERIC_EXCEPTIONS;
 
 	/**
 	 * The feature id for the '<em><b>Created Cube Columns</b></em>' containment reference list.
@@ -3942,15 +4000,6 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @ordered
 	 */
 	int FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS = ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS;
-
-	/**
-	 * The feature id for the '<em><b>Dependant Struct Item Columns</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS = ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS;
 
 	/**
 	 * The feature id for the '<em><b>Filter Function</b></em>' containment reference.
@@ -3980,6 +4029,33 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	int FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH_FEATURE_COUNT = ROW_CREATION_APPROACH_FEATURE_COUNT + 2;
 
 	/**
+	 * The operation id for the '<em>Get EAnnotation</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH___GET_EANNOTATION__STRING = ROW_CREATION_APPROACH___GET_EANNOTATION__STRING;
+
+	/**
+	 * The operation id for the '<em>Get Operation ID</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH___GET_OPERATION_ID = ROW_CREATION_APPROACH___GET_OPERATION_ID;
+
+	/**
+	 * The operation id for the '<em>Is Override Of</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH___IS_OVERRIDE_OF__EOPERATION = ROW_CREATION_APPROACH___IS_OVERRIDE_OF__EOPERATION;
+
+	/**
 	 * The number of operations of the '<em>Filter And Group To One Row Creation Approach</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3989,32 +4065,13 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	int FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH_OPERATION_COUNT = ROW_CREATION_APPROACH_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.RowCreationApproachForEntityImpl <em>Row Creation Approach For Entity</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.RowCreationApproachForEntityImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getRowCreationApproachForEntity()
-	 * @generated
-	 */
-	int ROW_CREATION_APPROACH_FOR_ENTITY = 29;
-
-	/**
-	 * The feature id for the '<em><b>Row Creation Approach</b></em>' containment reference.
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ROW_CREATION_APPROACH_FOR_ENTITY__ROW_CREATION_APPROACH = 0;
-
-	/**
-	 * The feature id for the '<em><b>Entity</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ROW_CREATION_APPROACH_FOR_ENTITY__ENTITY = 1;
+	int ONE_TO_ONE_ROW_CREATION_APPROACH__EANNOTATIONS = ROW_CREATION_APPROACH__EANNOTATIONS;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4023,44 +4080,124 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ROW_CREATION_APPROACH_FOR_ENTITY__NAME = 2;
+	int ONE_TO_ONE_ROW_CREATION_APPROACH__NAME = ROW_CREATION_APPROACH__NAME;
 
 	/**
-	 * The number of structural features of the '<em>Row Creation Approach For Entity</em>' class.
+	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ROW_CREATION_APPROACH_FOR_ENTITY_FEATURE_COUNT = 3;
+	int ONE_TO_ONE_ROW_CREATION_APPROACH__ORDERED = ROW_CREATION_APPROACH__ORDERED;
 
 	/**
-	 * The number of operations of the '<em>Row Creation Approach For Entity</em>' class.
+	 * The feature id for the '<em><b>Unique</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ROW_CREATION_APPROACH_FOR_ENTITY_OPERATION_COUNT = 0;
+	int ONE_TO_ONE_ROW_CREATION_APPROACH__UNIQUE = ROW_CREATION_APPROACH__UNIQUE;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.OneToOneRowCreationApproachImpl <em>One To One Row Creation Approach</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.OneToOneRowCreationApproachImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getOneToOneRowCreationApproach()
-	 * @generated
-	 */
-	int ONE_TO_ONE_ROW_CREATION_APPROACH = 30;
-
-	/**
-	 * The feature id for the '<em><b>Dependant Cube Columns</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ONE_TO_ONE_ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS = ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS;
+	int ONE_TO_ONE_ROW_CREATION_APPROACH__LOWER_BOUND = ROW_CREATION_APPROACH__LOWER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ONE_TO_ONE_ROW_CREATION_APPROACH__UPPER_BOUND = ROW_CREATION_APPROACH__UPPER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Many</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ONE_TO_ONE_ROW_CREATION_APPROACH__MANY = ROW_CREATION_APPROACH__MANY;
+
+	/**
+	 * The feature id for the '<em><b>Required</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ONE_TO_ONE_ROW_CREATION_APPROACH__REQUIRED = ROW_CREATION_APPROACH__REQUIRED;
+
+	/**
+	 * The feature id for the '<em><b>EType</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ONE_TO_ONE_ROW_CREATION_APPROACH__ETYPE = ROW_CREATION_APPROACH__ETYPE;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ONE_TO_ONE_ROW_CREATION_APPROACH__EGENERIC_TYPE = ROW_CREATION_APPROACH__EGENERIC_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>EContaining Class</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ONE_TO_ONE_ROW_CREATION_APPROACH__ECONTAINING_CLASS = ROW_CREATION_APPROACH__ECONTAINING_CLASS;
+
+	/**
+	 * The feature id for the '<em><b>EType Parameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ONE_TO_ONE_ROW_CREATION_APPROACH__ETYPE_PARAMETERS = ROW_CREATION_APPROACH__ETYPE_PARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>EParameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ONE_TO_ONE_ROW_CREATION_APPROACH__EPARAMETERS = ROW_CREATION_APPROACH__EPARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>EExceptions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ONE_TO_ONE_ROW_CREATION_APPROACH__EEXCEPTIONS = ROW_CREATION_APPROACH__EEXCEPTIONS;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Exceptions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ONE_TO_ONE_ROW_CREATION_APPROACH__EGENERIC_EXCEPTIONS = ROW_CREATION_APPROACH__EGENERIC_EXCEPTIONS;
 
 	/**
 	 * The feature id for the '<em><b>Created Cube Columns</b></em>' containment reference list.
@@ -4072,15 +4209,6 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	int ONE_TO_ONE_ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS = ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS;
 
 	/**
-	 * The feature id for the '<em><b>Dependant Struct Item Columns</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ONE_TO_ONE_ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS = ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS;
-
-	/**
 	 * The number of structural features of the '<em>One To One Row Creation Approach</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4088,6 +4216,33 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @ordered
 	 */
 	int ONE_TO_ONE_ROW_CREATION_APPROACH_FEATURE_COUNT = ROW_CREATION_APPROACH_FEATURE_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Get EAnnotation</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ONE_TO_ONE_ROW_CREATION_APPROACH___GET_EANNOTATION__STRING = ROW_CREATION_APPROACH___GET_EANNOTATION__STRING;
+
+	/**
+	 * The operation id for the '<em>Get Operation ID</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ONE_TO_ONE_ROW_CREATION_APPROACH___GET_OPERATION_ID = ROW_CREATION_APPROACH___GET_OPERATION_ID;
+
+	/**
+	 * The operation id for the '<em>Is Override Of</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ONE_TO_ONE_ROW_CREATION_APPROACH___IS_OVERRIDE_OF__EOPERATION = ROW_CREATION_APPROACH___IS_OVERRIDE_OF__EOPERATION;
 
 	/**
 	 * The number of operations of the '<em>One To One Row Creation Approach</em>' class.
@@ -4099,23 +4254,139 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	int ONE_TO_ONE_ROW_CREATION_APPROACH_OPERATION_COUNT = ROW_CREATION_APPROACH_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.FilterRowCreationApproachImpl <em>Filter Row Creation Approach</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.FilterRowCreationApproachImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getFilterRowCreationApproach()
-	 * @generated
-	 */
-	int FILTER_ROW_CREATION_APPROACH = 31;
-
-	/**
-	 * The feature id for the '<em><b>Dependant Cube Columns</b></em>' containment reference list.
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FILTER_ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS = ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS;
+	int FILTER_ROW_CREATION_APPROACH__EANNOTATIONS = ROW_CREATION_APPROACH__EANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_ROW_CREATION_APPROACH__NAME = ROW_CREATION_APPROACH__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_ROW_CREATION_APPROACH__ORDERED = ROW_CREATION_APPROACH__ORDERED;
+
+	/**
+	 * The feature id for the '<em><b>Unique</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_ROW_CREATION_APPROACH__UNIQUE = ROW_CREATION_APPROACH__UNIQUE;
+
+	/**
+	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_ROW_CREATION_APPROACH__LOWER_BOUND = ROW_CREATION_APPROACH__LOWER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_ROW_CREATION_APPROACH__UPPER_BOUND = ROW_CREATION_APPROACH__UPPER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Many</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_ROW_CREATION_APPROACH__MANY = ROW_CREATION_APPROACH__MANY;
+
+	/**
+	 * The feature id for the '<em><b>Required</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_ROW_CREATION_APPROACH__REQUIRED = ROW_CREATION_APPROACH__REQUIRED;
+
+	/**
+	 * The feature id for the '<em><b>EType</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_ROW_CREATION_APPROACH__ETYPE = ROW_CREATION_APPROACH__ETYPE;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_ROW_CREATION_APPROACH__EGENERIC_TYPE = ROW_CREATION_APPROACH__EGENERIC_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>EContaining Class</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_ROW_CREATION_APPROACH__ECONTAINING_CLASS = ROW_CREATION_APPROACH__ECONTAINING_CLASS;
+
+	/**
+	 * The feature id for the '<em><b>EType Parameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_ROW_CREATION_APPROACH__ETYPE_PARAMETERS = ROW_CREATION_APPROACH__ETYPE_PARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>EParameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_ROW_CREATION_APPROACH__EPARAMETERS = ROW_CREATION_APPROACH__EPARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>EExceptions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_ROW_CREATION_APPROACH__EEXCEPTIONS = ROW_CREATION_APPROACH__EEXCEPTIONS;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Exceptions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_ROW_CREATION_APPROACH__EGENERIC_EXCEPTIONS = ROW_CREATION_APPROACH__EGENERIC_EXCEPTIONS;
 
 	/**
 	 * The feature id for the '<em><b>Created Cube Columns</b></em>' containment reference list.
@@ -4125,15 +4396,6 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @ordered
 	 */
 	int FILTER_ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS = ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS;
-
-	/**
-	 * The feature id for the '<em><b>Dependant Struct Item Columns</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FILTER_ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS = ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS;
 
 	/**
 	 * The feature id for the '<em><b>Filter Function</b></em>' containment reference.
@@ -4154,6 +4416,33 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	int FILTER_ROW_CREATION_APPROACH_FEATURE_COUNT = ROW_CREATION_APPROACH_FEATURE_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Get EAnnotation</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_ROW_CREATION_APPROACH___GET_EANNOTATION__STRING = ROW_CREATION_APPROACH___GET_EANNOTATION__STRING;
+
+	/**
+	 * The operation id for the '<em>Get Operation ID</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_ROW_CREATION_APPROACH___GET_OPERATION_ID = ROW_CREATION_APPROACH___GET_OPERATION_ID;
+
+	/**
+	 * The operation id for the '<em>Is Override Of</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_ROW_CREATION_APPROACH___IS_OVERRIDE_OF__EOPERATION = ROW_CREATION_APPROACH___IS_OVERRIDE_OF__EOPERATION;
+
+	/**
 	 * The number of operations of the '<em>Filter Row Creation Approach</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4163,23 +4452,139 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	int FILTER_ROW_CREATION_APPROACH_OPERATION_COUNT = ROW_CREATION_APPROACH_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.GroupByRowCreationApproachImpl <em>Group By Row Creation Approach</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.GroupByRowCreationApproachImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getGroupByRowCreationApproach()
-	 * @generated
-	 */
-	int GROUP_BY_ROW_CREATION_APPROACH = 33;
-
-	/**
-	 * The feature id for the '<em><b>Dependant Cube Columns</b></em>' containment reference list.
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int GROUP_BY_ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS = ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS;
+	int GROUP_BY_ROW_CREATION_APPROACH__EANNOTATIONS = ROW_CREATION_APPROACH__EANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GROUP_BY_ROW_CREATION_APPROACH__NAME = ROW_CREATION_APPROACH__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GROUP_BY_ROW_CREATION_APPROACH__ORDERED = ROW_CREATION_APPROACH__ORDERED;
+
+	/**
+	 * The feature id for the '<em><b>Unique</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GROUP_BY_ROW_CREATION_APPROACH__UNIQUE = ROW_CREATION_APPROACH__UNIQUE;
+
+	/**
+	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GROUP_BY_ROW_CREATION_APPROACH__LOWER_BOUND = ROW_CREATION_APPROACH__LOWER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GROUP_BY_ROW_CREATION_APPROACH__UPPER_BOUND = ROW_CREATION_APPROACH__UPPER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Many</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GROUP_BY_ROW_CREATION_APPROACH__MANY = ROW_CREATION_APPROACH__MANY;
+
+	/**
+	 * The feature id for the '<em><b>Required</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GROUP_BY_ROW_CREATION_APPROACH__REQUIRED = ROW_CREATION_APPROACH__REQUIRED;
+
+	/**
+	 * The feature id for the '<em><b>EType</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GROUP_BY_ROW_CREATION_APPROACH__ETYPE = ROW_CREATION_APPROACH__ETYPE;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GROUP_BY_ROW_CREATION_APPROACH__EGENERIC_TYPE = ROW_CREATION_APPROACH__EGENERIC_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>EContaining Class</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GROUP_BY_ROW_CREATION_APPROACH__ECONTAINING_CLASS = ROW_CREATION_APPROACH__ECONTAINING_CLASS;
+
+	/**
+	 * The feature id for the '<em><b>EType Parameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GROUP_BY_ROW_CREATION_APPROACH__ETYPE_PARAMETERS = ROW_CREATION_APPROACH__ETYPE_PARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>EParameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GROUP_BY_ROW_CREATION_APPROACH__EPARAMETERS = ROW_CREATION_APPROACH__EPARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>EExceptions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GROUP_BY_ROW_CREATION_APPROACH__EEXCEPTIONS = ROW_CREATION_APPROACH__EEXCEPTIONS;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Exceptions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GROUP_BY_ROW_CREATION_APPROACH__EGENERIC_EXCEPTIONS = ROW_CREATION_APPROACH__EGENERIC_EXCEPTIONS;
 
 	/**
 	 * The feature id for the '<em><b>Created Cube Columns</b></em>' containment reference list.
@@ -4191,31 +4596,22 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	int GROUP_BY_ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS = ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS;
 
 	/**
-	 * The feature id for the '<em><b>Dependant Struct Item Columns</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Group By Columns</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int GROUP_BY_ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS = ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS;
+	int GROUP_BY_ROW_CREATION_APPROACH__GROUP_BY_COLUMNS = ROW_CREATION_APPROACH_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Group By Cube Column Names</b></em>' reference list.
+	 * The feature id for the '<em><b>Group By Cube Column Names</b></em>' attribute list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int GROUP_BY_ROW_CREATION_APPROACH__GROUP_BY_CUBE_COLUMN_NAMES = ROW_CREATION_APPROACH_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Group By Columns</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GROUP_BY_ROW_CREATION_APPROACH__GROUP_BY_COLUMNS = ROW_CREATION_APPROACH_FEATURE_COUNT + 1;
+	int GROUP_BY_ROW_CREATION_APPROACH__GROUP_BY_CUBE_COLUMN_NAMES = ROW_CREATION_APPROACH_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Group By Row Creation Approach</em>' class.
@@ -4227,6 +4623,33 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	int GROUP_BY_ROW_CREATION_APPROACH_FEATURE_COUNT = ROW_CREATION_APPROACH_FEATURE_COUNT + 2;
 
 	/**
+	 * The operation id for the '<em>Get EAnnotation</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GROUP_BY_ROW_CREATION_APPROACH___GET_EANNOTATION__STRING = ROW_CREATION_APPROACH___GET_EANNOTATION__STRING;
+
+	/**
+	 * The operation id for the '<em>Get Operation ID</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GROUP_BY_ROW_CREATION_APPROACH___GET_OPERATION_ID = ROW_CREATION_APPROACH___GET_OPERATION_ID;
+
+	/**
+	 * The operation id for the '<em>Is Override Of</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GROUP_BY_ROW_CREATION_APPROACH___IS_OVERRIDE_OF__EOPERATION = ROW_CREATION_APPROACH___IS_OVERRIDE_OF__EOPERATION;
+
+	/**
 	 * The number of operations of the '<em>Group By Row Creation Approach</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4236,23 +4659,139 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	int GROUP_BY_ROW_CREATION_APPROACH_OPERATION_COUNT = ROW_CREATION_APPROACH_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.RowJoinFunctionImpl <em>Row Join Function</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.RowJoinFunctionImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getRowJoinFunction()
-	 * @generated
-	 */
-	int ROW_JOIN_FUNCTION = 34;
-
-	/**
-	 * The feature id for the '<em><b>Dependant Cube Columns</b></em>' containment reference list.
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ROW_JOIN_FUNCTION__DEPENDANT_CUBE_COLUMNS = ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS;
+	int ROW_JOIN_FUNCTION__EANNOTATIONS = ROW_CREATION_APPROACH__EANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_JOIN_FUNCTION__NAME = ROW_CREATION_APPROACH__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_JOIN_FUNCTION__ORDERED = ROW_CREATION_APPROACH__ORDERED;
+
+	/**
+	 * The feature id for the '<em><b>Unique</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_JOIN_FUNCTION__UNIQUE = ROW_CREATION_APPROACH__UNIQUE;
+
+	/**
+	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_JOIN_FUNCTION__LOWER_BOUND = ROW_CREATION_APPROACH__LOWER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_JOIN_FUNCTION__UPPER_BOUND = ROW_CREATION_APPROACH__UPPER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Many</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_JOIN_FUNCTION__MANY = ROW_CREATION_APPROACH__MANY;
+
+	/**
+	 * The feature id for the '<em><b>Required</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_JOIN_FUNCTION__REQUIRED = ROW_CREATION_APPROACH__REQUIRED;
+
+	/**
+	 * The feature id for the '<em><b>EType</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_JOIN_FUNCTION__ETYPE = ROW_CREATION_APPROACH__ETYPE;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_JOIN_FUNCTION__EGENERIC_TYPE = ROW_CREATION_APPROACH__EGENERIC_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>EContaining Class</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_JOIN_FUNCTION__ECONTAINING_CLASS = ROW_CREATION_APPROACH__ECONTAINING_CLASS;
+
+	/**
+	 * The feature id for the '<em><b>EType Parameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_JOIN_FUNCTION__ETYPE_PARAMETERS = ROW_CREATION_APPROACH__ETYPE_PARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>EParameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_JOIN_FUNCTION__EPARAMETERS = ROW_CREATION_APPROACH__EPARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>EExceptions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_JOIN_FUNCTION__EEXCEPTIONS = ROW_CREATION_APPROACH__EEXCEPTIONS;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Exceptions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_JOIN_FUNCTION__EGENERIC_EXCEPTIONS = ROW_CREATION_APPROACH__EGENERIC_EXCEPTIONS;
 
 	/**
 	 * The feature id for the '<em><b>Created Cube Columns</b></em>' containment reference list.
@@ -4262,15 +4801,6 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @ordered
 	 */
 	int ROW_JOIN_FUNCTION__CREATED_CUBE_COLUMNS = ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS;
-
-	/**
-	 * The feature id for the '<em><b>Dependant Struct Item Columns</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ROW_JOIN_FUNCTION__DEPENDANT_STRUCT_ITEM_COLUMNS = ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS;
 
 	/**
 	 * The feature id for the '<em><b>Join Function</b></em>' containment reference.
@@ -4291,6 +4821,33 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	int ROW_JOIN_FUNCTION_FEATURE_COUNT = ROW_CREATION_APPROACH_FEATURE_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Get EAnnotation</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_JOIN_FUNCTION___GET_EANNOTATION__STRING = ROW_CREATION_APPROACH___GET_EANNOTATION__STRING;
+
+	/**
+	 * The operation id for the '<em>Get Operation ID</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_JOIN_FUNCTION___GET_OPERATION_ID = ROW_CREATION_APPROACH___GET_OPERATION_ID;
+
+	/**
+	 * The operation id for the '<em>Is Override Of</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_JOIN_FUNCTION___IS_OVERRIDE_OF__EOPERATION = ROW_CREATION_APPROACH___IS_OVERRIDE_OF__EOPERATION;
+
+	/**
 	 * The number of operations of the '<em>Row Join Function</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4300,23 +4857,139 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	int ROW_JOIN_FUNCTION_OPERATION_COUNT = ROW_CREATION_APPROACH_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.UnionRowCreationApproachImpl <em>Union Row Creation Approach</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.UnionRowCreationApproachImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getUnionRowCreationApproach()
-	 * @generated
-	 */
-	int UNION_ROW_CREATION_APPROACH = 35;
-
-	/**
-	 * The feature id for the '<em><b>Dependant Cube Columns</b></em>' containment reference list.
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int UNION_ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS = ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS;
+	int UNION_ROW_CREATION_APPROACH__EANNOTATIONS = ROW_CREATION_APPROACH__EANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNION_ROW_CREATION_APPROACH__NAME = ROW_CREATION_APPROACH__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNION_ROW_CREATION_APPROACH__ORDERED = ROW_CREATION_APPROACH__ORDERED;
+
+	/**
+	 * The feature id for the '<em><b>Unique</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNION_ROW_CREATION_APPROACH__UNIQUE = ROW_CREATION_APPROACH__UNIQUE;
+
+	/**
+	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNION_ROW_CREATION_APPROACH__LOWER_BOUND = ROW_CREATION_APPROACH__LOWER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNION_ROW_CREATION_APPROACH__UPPER_BOUND = ROW_CREATION_APPROACH__UPPER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Many</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNION_ROW_CREATION_APPROACH__MANY = ROW_CREATION_APPROACH__MANY;
+
+	/**
+	 * The feature id for the '<em><b>Required</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNION_ROW_CREATION_APPROACH__REQUIRED = ROW_CREATION_APPROACH__REQUIRED;
+
+	/**
+	 * The feature id for the '<em><b>EType</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNION_ROW_CREATION_APPROACH__ETYPE = ROW_CREATION_APPROACH__ETYPE;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNION_ROW_CREATION_APPROACH__EGENERIC_TYPE = ROW_CREATION_APPROACH__EGENERIC_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>EContaining Class</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNION_ROW_CREATION_APPROACH__ECONTAINING_CLASS = ROW_CREATION_APPROACH__ECONTAINING_CLASS;
+
+	/**
+	 * The feature id for the '<em><b>EType Parameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNION_ROW_CREATION_APPROACH__ETYPE_PARAMETERS = ROW_CREATION_APPROACH__ETYPE_PARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>EParameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNION_ROW_CREATION_APPROACH__EPARAMETERS = ROW_CREATION_APPROACH__EPARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>EExceptions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNION_ROW_CREATION_APPROACH__EEXCEPTIONS = ROW_CREATION_APPROACH__EEXCEPTIONS;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Exceptions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNION_ROW_CREATION_APPROACH__EGENERIC_EXCEPTIONS = ROW_CREATION_APPROACH__EGENERIC_EXCEPTIONS;
 
 	/**
 	 * The feature id for the '<em><b>Created Cube Columns</b></em>' containment reference list.
@@ -4328,15 +5001,6 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	int UNION_ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS = ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS;
 
 	/**
-	 * The feature id for the '<em><b>Dependant Struct Item Columns</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int UNION_ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS = ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS;
-
-	/**
 	 * The number of structural features of the '<em>Union Row Creation Approach</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4344,6 +5008,33 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @ordered
 	 */
 	int UNION_ROW_CREATION_APPROACH_FEATURE_COUNT = ROW_CREATION_APPROACH_FEATURE_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Get EAnnotation</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNION_ROW_CREATION_APPROACH___GET_EANNOTATION__STRING = ROW_CREATION_APPROACH___GET_EANNOTATION__STRING;
+
+	/**
+	 * The operation id for the '<em>Get Operation ID</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNION_ROW_CREATION_APPROACH___GET_OPERATION_ID = ROW_CREATION_APPROACH___GET_OPERATION_ID;
+
+	/**
+	 * The operation id for the '<em>Is Override Of</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNION_ROW_CREATION_APPROACH___IS_OVERRIDE_OF__EOPERATION = ROW_CREATION_APPROACH___IS_OVERRIDE_OF__EOPERATION;
 
 	/**
 	 * The number of operations of the '<em>Union Row Creation Approach</em>' class.
@@ -4355,23 +5046,139 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	int UNION_ROW_CREATION_APPROACH_OPERATION_COUNT = ROW_CREATION_APPROACH_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ExplodeArrayOfStructsRowFunctionImpl <em>Explode Array Of Structs Row Function</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ExplodeArrayOfStructsRowFunctionImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getExplodeArrayOfStructsRowFunction()
-	 * @generated
-	 */
-	int EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION = 36;
-
-	/**
-	 * The feature id for the '<em><b>Dependant Cube Columns</b></em>' containment reference list.
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION__DEPENDANT_CUBE_COLUMNS = ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS;
+	int EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION__EANNOTATIONS = ROW_CREATION_APPROACH__EANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION__NAME = ROW_CREATION_APPROACH__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION__ORDERED = ROW_CREATION_APPROACH__ORDERED;
+
+	/**
+	 * The feature id for the '<em><b>Unique</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION__UNIQUE = ROW_CREATION_APPROACH__UNIQUE;
+
+	/**
+	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION__LOWER_BOUND = ROW_CREATION_APPROACH__LOWER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION__UPPER_BOUND = ROW_CREATION_APPROACH__UPPER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Many</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION__MANY = ROW_CREATION_APPROACH__MANY;
+
+	/**
+	 * The feature id for the '<em><b>Required</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION__REQUIRED = ROW_CREATION_APPROACH__REQUIRED;
+
+	/**
+	 * The feature id for the '<em><b>EType</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION__ETYPE = ROW_CREATION_APPROACH__ETYPE;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION__EGENERIC_TYPE = ROW_CREATION_APPROACH__EGENERIC_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>EContaining Class</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION__ECONTAINING_CLASS = ROW_CREATION_APPROACH__ECONTAINING_CLASS;
+
+	/**
+	 * The feature id for the '<em><b>EType Parameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION__ETYPE_PARAMETERS = ROW_CREATION_APPROACH__ETYPE_PARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>EParameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION__EPARAMETERS = ROW_CREATION_APPROACH__EPARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>EExceptions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION__EEXCEPTIONS = ROW_CREATION_APPROACH__EEXCEPTIONS;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Exceptions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION__EGENERIC_EXCEPTIONS = ROW_CREATION_APPROACH__EGENERIC_EXCEPTIONS;
 
 	/**
 	 * The feature id for the '<em><b>Created Cube Columns</b></em>' containment reference list.
@@ -4381,15 +5188,6 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @ordered
 	 */
 	int EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION__CREATED_CUBE_COLUMNS = ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS;
-
-	/**
-	 * The feature id for the '<em><b>Dependant Struct Item Columns</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION__DEPENDANT_STRUCT_ITEM_COLUMNS = ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS;
 
 	/**
 	 * The feature id for the '<em><b>Array Source Variable</b></em>' reference.
@@ -4410,6 +5208,33 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	int EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION_FEATURE_COUNT = ROW_CREATION_APPROACH_FEATURE_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Get EAnnotation</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION___GET_EANNOTATION__STRING = ROW_CREATION_APPROACH___GET_EANNOTATION__STRING;
+
+	/**
+	 * The operation id for the '<em>Get Operation ID</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION___GET_OPERATION_ID = ROW_CREATION_APPROACH___GET_OPERATION_ID;
+
+	/**
+	 * The operation id for the '<em>Is Override Of</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION___IS_OVERRIDE_OF__EOPERATION = ROW_CREATION_APPROACH___IS_OVERRIDE_OF__EOPERATION;
+
+	/**
 	 * The number of operations of the '<em>Explode Array Of Structs Row Function</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4417,16 +5242,6 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @ordered
 	 */
 	int EXPLODE_ARRAY_OF_STRUCTS_ROW_FUNCTION_OPERATION_COUNT = ROW_CREATION_APPROACH_OPERATION_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedEntityModuleImpl <em>Derived Entity Module</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedEntityModuleImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getDerivedEntityModule()
-	 * @generated
-	 */
-	int DERIVED_ENTITY_MODULE = 37;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' containment reference.
@@ -4510,16 +5325,6 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	int DERIVED_ENTITY_MODULE_OPERATION_COUNT = Module_managementPackage.MODULE_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.IntermediateDerivedEntitiesModuleImpl <em>Intermediate Derived Entities Module</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.IntermediateDerivedEntitiesModuleImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getIntermediateDerivedEntitiesModule()
-	 * @generated
-	 */
-	int INTERMEDIATE_DERIVED_ENTITIES_MODULE = 38;
-
-	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4599,17 +5404,6 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @ordered
 	 */
 	int INTERMEDIATE_DERIVED_ENTITIES_MODULE_OPERATION_COUNT = Module_managementPackage.MODULE_OPERATION_COUNT + 0;
-
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.GeneratedEntityModuleImpl <em>Generated Entity Module</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.GeneratedEntityModuleImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getGeneratedEntityModule()
-	 * @generated
-	 */
-	int GENERATED_ENTITY_MODULE = 39;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' containment reference.
@@ -4692,6 +5486,2210 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 */
 	int GENERATED_ENTITY_MODULE_OPERATION_COUNT = Module_managementPackage.MODULE_OPERATION_COUNT + 0;
 
+	/**
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE__EANNOTATIONS = Ecore_plus_structurePackage.ENTITY__EANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE__NAME = Ecore_plus_structurePackage.ENTITY__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Instance Class Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE__INSTANCE_CLASS_NAME = Ecore_plus_structurePackage.ENTITY__INSTANCE_CLASS_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Instance Class</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE__INSTANCE_CLASS = Ecore_plus_structurePackage.ENTITY__INSTANCE_CLASS;
+
+	/**
+	 * The feature id for the '<em><b>Default Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE__DEFAULT_VALUE = Ecore_plus_structurePackage.ENTITY__DEFAULT_VALUE;
+
+	/**
+	 * The feature id for the '<em><b>Instance Type Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE__INSTANCE_TYPE_NAME = Ecore_plus_structurePackage.ENTITY__INSTANCE_TYPE_NAME;
+
+	/**
+	 * The feature id for the '<em><b>EPackage</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE__EPACKAGE = Ecore_plus_structurePackage.ENTITY__EPACKAGE;
+
+	/**
+	 * The feature id for the '<em><b>EType Parameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE__ETYPE_PARAMETERS = Ecore_plus_structurePackage.ENTITY__ETYPE_PARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>Abstract</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE__ABSTRACT = Ecore_plus_structurePackage.ENTITY__ABSTRACT;
+
+	/**
+	 * The feature id for the '<em><b>Interface</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE__INTERFACE = Ecore_plus_structurePackage.ENTITY__INTERFACE;
+
+	/**
+	 * The feature id for the '<em><b>ESuper Types</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE__ESUPER_TYPES = Ecore_plus_structurePackage.ENTITY__ESUPER_TYPES;
+
+	/**
+	 * The feature id for the '<em><b>EOperations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE__EOPERATIONS = Ecore_plus_structurePackage.ENTITY__EOPERATIONS;
+
+	/**
+	 * The feature id for the '<em><b>EAll Attributes</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE__EALL_ATTRIBUTES = Ecore_plus_structurePackage.ENTITY__EALL_ATTRIBUTES;
+
+	/**
+	 * The feature id for the '<em><b>EAll References</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE__EALL_REFERENCES = Ecore_plus_structurePackage.ENTITY__EALL_REFERENCES;
+
+	/**
+	 * The feature id for the '<em><b>EReferences</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE__EREFERENCES = Ecore_plus_structurePackage.ENTITY__EREFERENCES;
+
+	/**
+	 * The feature id for the '<em><b>EAttributes</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE__EATTRIBUTES = Ecore_plus_structurePackage.ENTITY__EATTRIBUTES;
+
+	/**
+	 * The feature id for the '<em><b>EAll Containments</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE__EALL_CONTAINMENTS = Ecore_plus_structurePackage.ENTITY__EALL_CONTAINMENTS;
+
+	/**
+	 * The feature id for the '<em><b>EAll Operations</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE__EALL_OPERATIONS = Ecore_plus_structurePackage.ENTITY__EALL_OPERATIONS;
+
+	/**
+	 * The feature id for the '<em><b>EAll Structural Features</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE__EALL_STRUCTURAL_FEATURES = Ecore_plus_structurePackage.ENTITY__EALL_STRUCTURAL_FEATURES;
+
+	/**
+	 * The feature id for the '<em><b>EAll Super Types</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE__EALL_SUPER_TYPES = Ecore_plus_structurePackage.ENTITY__EALL_SUPER_TYPES;
+
+	/**
+	 * The feature id for the '<em><b>EID Attribute</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE__EID_ATTRIBUTE = Ecore_plus_structurePackage.ENTITY__EID_ATTRIBUTE;
+
+	/**
+	 * The feature id for the '<em><b>EStructural Features</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE__ESTRUCTURAL_FEATURES = Ecore_plus_structurePackage.ENTITY__ESTRUCTURAL_FEATURES;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Super Types</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE__EGENERIC_SUPER_TYPES = Ecore_plus_structurePackage.ENTITY__EGENERIC_SUPER_TYPES;
+
+	/**
+	 * The feature id for the '<em><b>EAll Generic Super Types</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE__EALL_GENERIC_SUPER_TYPES = Ecore_plus_structurePackage.ENTITY__EALL_GENERIC_SUPER_TYPES;
+
+	/**
+	 * The number of structural features of the '<em>Entity Table</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE_FEATURE_COUNT = Ecore_plus_structurePackage.ENTITY_FEATURE_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Get EAnnotation</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE___GET_EANNOTATION__STRING = Ecore_plus_structurePackage.ENTITY___GET_EANNOTATION__STRING;
+
+	/**
+	 * The operation id for the '<em>Is Instance</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE___IS_INSTANCE__OBJECT = Ecore_plus_structurePackage.ENTITY___IS_INSTANCE__OBJECT;
+
+	/**
+	 * The operation id for the '<em>Get Classifier ID</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE___GET_CLASSIFIER_ID = Ecore_plus_structurePackage.ENTITY___GET_CLASSIFIER_ID;
+
+	/**
+	 * The operation id for the '<em>Is Super Type Of</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE___IS_SUPER_TYPE_OF__ECLASS = Ecore_plus_structurePackage.ENTITY___IS_SUPER_TYPE_OF__ECLASS;
+
+	/**
+	 * The operation id for the '<em>Get Feature Count</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE___GET_FEATURE_COUNT = Ecore_plus_structurePackage.ENTITY___GET_FEATURE_COUNT;
+
+	/**
+	 * The operation id for the '<em>Get EStructural Feature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE___GET_ESTRUCTURAL_FEATURE__INT = Ecore_plus_structurePackage.ENTITY___GET_ESTRUCTURAL_FEATURE__INT;
+
+	/**
+	 * The operation id for the '<em>Get Feature ID</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE___GET_FEATURE_ID__ESTRUCTURALFEATURE = Ecore_plus_structurePackage.ENTITY___GET_FEATURE_ID__ESTRUCTURALFEATURE;
+
+	/**
+	 * The operation id for the '<em>Get EStructural Feature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE___GET_ESTRUCTURAL_FEATURE__STRING = Ecore_plus_structurePackage.ENTITY___GET_ESTRUCTURAL_FEATURE__STRING;
+
+	/**
+	 * The operation id for the '<em>Get Operation Count</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE___GET_OPERATION_COUNT = Ecore_plus_structurePackage.ENTITY___GET_OPERATION_COUNT;
+
+	/**
+	 * The operation id for the '<em>Get EOperation</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE___GET_EOPERATION__INT = Ecore_plus_structurePackage.ENTITY___GET_EOPERATION__INT;
+
+	/**
+	 * The operation id for the '<em>Get Operation ID</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE___GET_OPERATION_ID__EOPERATION = Ecore_plus_structurePackage.ENTITY___GET_OPERATION_ID__EOPERATION;
+
+	/**
+	 * The operation id for the '<em>Get Override</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE___GET_OVERRIDE__EOPERATION = Ecore_plus_structurePackage.ENTITY___GET_OVERRIDE__EOPERATION;
+
+	/**
+	 * The operation id for the '<em>Get Feature Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE___GET_FEATURE_TYPE__ESTRUCTURALFEATURE = Ecore_plus_structurePackage.ENTITY___GET_FEATURE_TYPE__ESTRUCTURALFEATURE;
+
+	/**
+	 * The number of operations of the '<em>Entity Table</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_TABLE_OPERATION_COUNT = Ecore_plus_structurePackage.ENTITY_OPERATION_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE__EANNOTATIONS = ENTITY_TABLE__EANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE__NAME = ENTITY_TABLE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Instance Class Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE__INSTANCE_CLASS_NAME = ENTITY_TABLE__INSTANCE_CLASS_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Instance Class</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE__INSTANCE_CLASS = ENTITY_TABLE__INSTANCE_CLASS;
+
+	/**
+	 * The feature id for the '<em><b>Default Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE__DEFAULT_VALUE = ENTITY_TABLE__DEFAULT_VALUE;
+
+	/**
+	 * The feature id for the '<em><b>Instance Type Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE__INSTANCE_TYPE_NAME = ENTITY_TABLE__INSTANCE_TYPE_NAME;
+
+	/**
+	 * The feature id for the '<em><b>EPackage</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE__EPACKAGE = ENTITY_TABLE__EPACKAGE;
+
+	/**
+	 * The feature id for the '<em><b>EType Parameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE__ETYPE_PARAMETERS = ENTITY_TABLE__ETYPE_PARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>Abstract</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE__ABSTRACT = ENTITY_TABLE__ABSTRACT;
+
+	/**
+	 * The feature id for the '<em><b>Interface</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE__INTERFACE = ENTITY_TABLE__INTERFACE;
+
+	/**
+	 * The feature id for the '<em><b>ESuper Types</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE__ESUPER_TYPES = ENTITY_TABLE__ESUPER_TYPES;
+
+	/**
+	 * The feature id for the '<em><b>EOperations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE__EOPERATIONS = ENTITY_TABLE__EOPERATIONS;
+
+	/**
+	 * The feature id for the '<em><b>EAll Attributes</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE__EALL_ATTRIBUTES = ENTITY_TABLE__EALL_ATTRIBUTES;
+
+	/**
+	 * The feature id for the '<em><b>EAll References</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE__EALL_REFERENCES = ENTITY_TABLE__EALL_REFERENCES;
+
+	/**
+	 * The feature id for the '<em><b>EReferences</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE__EREFERENCES = ENTITY_TABLE__EREFERENCES;
+
+	/**
+	 * The feature id for the '<em><b>EAttributes</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE__EATTRIBUTES = ENTITY_TABLE__EATTRIBUTES;
+
+	/**
+	 * The feature id for the '<em><b>EAll Containments</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE__EALL_CONTAINMENTS = ENTITY_TABLE__EALL_CONTAINMENTS;
+
+	/**
+	 * The feature id for the '<em><b>EAll Operations</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE__EALL_OPERATIONS = ENTITY_TABLE__EALL_OPERATIONS;
+
+	/**
+	 * The feature id for the '<em><b>EAll Structural Features</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE__EALL_STRUCTURAL_FEATURES = ENTITY_TABLE__EALL_STRUCTURAL_FEATURES;
+
+	/**
+	 * The feature id for the '<em><b>EAll Super Types</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE__EALL_SUPER_TYPES = ENTITY_TABLE__EALL_SUPER_TYPES;
+
+	/**
+	 * The feature id for the '<em><b>EID Attribute</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE__EID_ATTRIBUTE = ENTITY_TABLE__EID_ATTRIBUTE;
+
+	/**
+	 * The feature id for the '<em><b>EStructural Features</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE__ESTRUCTURAL_FEATURES = ENTITY_TABLE__ESTRUCTURAL_FEATURES;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Super Types</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE__EGENERIC_SUPER_TYPES = ENTITY_TABLE__EGENERIC_SUPER_TYPES;
+
+	/**
+	 * The feature id for the '<em><b>EAll Generic Super Types</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE__EALL_GENERIC_SUPER_TYPES = ENTITY_TABLE__EALL_GENERIC_SUPER_TYPES;
+
+	/**
+	 * The feature id for the '<em><b>Source Tables</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE__SOURCE_TABLES = ENTITY_TABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Contained Entity Type</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE__CONTAINED_ENTITY_TYPE = ENTITY_TABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Derived Entity Table</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE_FEATURE_COUNT = ENTITY_TABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The operation id for the '<em>Get EAnnotation</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE___GET_EANNOTATION__STRING = ENTITY_TABLE___GET_EANNOTATION__STRING;
+
+	/**
+	 * The operation id for the '<em>Is Instance</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE___IS_INSTANCE__OBJECT = ENTITY_TABLE___IS_INSTANCE__OBJECT;
+
+	/**
+	 * The operation id for the '<em>Get Classifier ID</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE___GET_CLASSIFIER_ID = ENTITY_TABLE___GET_CLASSIFIER_ID;
+
+	/**
+	 * The operation id for the '<em>Is Super Type Of</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE___IS_SUPER_TYPE_OF__ECLASS = ENTITY_TABLE___IS_SUPER_TYPE_OF__ECLASS;
+
+	/**
+	 * The operation id for the '<em>Get Feature Count</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE___GET_FEATURE_COUNT = ENTITY_TABLE___GET_FEATURE_COUNT;
+
+	/**
+	 * The operation id for the '<em>Get EStructural Feature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE___GET_ESTRUCTURAL_FEATURE__INT = ENTITY_TABLE___GET_ESTRUCTURAL_FEATURE__INT;
+
+	/**
+	 * The operation id for the '<em>Get Feature ID</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE___GET_FEATURE_ID__ESTRUCTURALFEATURE = ENTITY_TABLE___GET_FEATURE_ID__ESTRUCTURALFEATURE;
+
+	/**
+	 * The operation id for the '<em>Get EStructural Feature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE___GET_ESTRUCTURAL_FEATURE__STRING = ENTITY_TABLE___GET_ESTRUCTURAL_FEATURE__STRING;
+
+	/**
+	 * The operation id for the '<em>Get Operation Count</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE___GET_OPERATION_COUNT = ENTITY_TABLE___GET_OPERATION_COUNT;
+
+	/**
+	 * The operation id for the '<em>Get EOperation</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE___GET_EOPERATION__INT = ENTITY_TABLE___GET_EOPERATION__INT;
+
+	/**
+	 * The operation id for the '<em>Get Operation ID</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE___GET_OPERATION_ID__EOPERATION = ENTITY_TABLE___GET_OPERATION_ID__EOPERATION;
+
+	/**
+	 * The operation id for the '<em>Get Override</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE___GET_OVERRIDE__EOPERATION = ENTITY_TABLE___GET_OVERRIDE__EOPERATION;
+
+	/**
+	 * The operation id for the '<em>Get Feature Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE___GET_FEATURE_TYPE__ESTRUCTURALFEATURE = ENTITY_TABLE___GET_FEATURE_TYPE__ESTRUCTURALFEATURE;
+
+	/**
+	 * The number of operations of the '<em>Derived Entity Table</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE_OPERATION_COUNT = ENTITY_TABLE_OPERATION_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE__EANNOTATIONS = ENTITY_TABLE__EANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE__NAME = ENTITY_TABLE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Instance Class Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE__INSTANCE_CLASS_NAME = ENTITY_TABLE__INSTANCE_CLASS_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Instance Class</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE__INSTANCE_CLASS = ENTITY_TABLE__INSTANCE_CLASS;
+
+	/**
+	 * The feature id for the '<em><b>Default Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE__DEFAULT_VALUE = ENTITY_TABLE__DEFAULT_VALUE;
+
+	/**
+	 * The feature id for the '<em><b>Instance Type Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE__INSTANCE_TYPE_NAME = ENTITY_TABLE__INSTANCE_TYPE_NAME;
+
+	/**
+	 * The feature id for the '<em><b>EPackage</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE__EPACKAGE = ENTITY_TABLE__EPACKAGE;
+
+	/**
+	 * The feature id for the '<em><b>EType Parameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE__ETYPE_PARAMETERS = ENTITY_TABLE__ETYPE_PARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>Abstract</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE__ABSTRACT = ENTITY_TABLE__ABSTRACT;
+
+	/**
+	 * The feature id for the '<em><b>Interface</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE__INTERFACE = ENTITY_TABLE__INTERFACE;
+
+	/**
+	 * The feature id for the '<em><b>ESuper Types</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE__ESUPER_TYPES = ENTITY_TABLE__ESUPER_TYPES;
+
+	/**
+	 * The feature id for the '<em><b>EOperations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE__EOPERATIONS = ENTITY_TABLE__EOPERATIONS;
+
+	/**
+	 * The feature id for the '<em><b>EAll Attributes</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE__EALL_ATTRIBUTES = ENTITY_TABLE__EALL_ATTRIBUTES;
+
+	/**
+	 * The feature id for the '<em><b>EAll References</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE__EALL_REFERENCES = ENTITY_TABLE__EALL_REFERENCES;
+
+	/**
+	 * The feature id for the '<em><b>EReferences</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE__EREFERENCES = ENTITY_TABLE__EREFERENCES;
+
+	/**
+	 * The feature id for the '<em><b>EAttributes</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE__EATTRIBUTES = ENTITY_TABLE__EATTRIBUTES;
+
+	/**
+	 * The feature id for the '<em><b>EAll Containments</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE__EALL_CONTAINMENTS = ENTITY_TABLE__EALL_CONTAINMENTS;
+
+	/**
+	 * The feature id for the '<em><b>EAll Operations</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE__EALL_OPERATIONS = ENTITY_TABLE__EALL_OPERATIONS;
+
+	/**
+	 * The feature id for the '<em><b>EAll Structural Features</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE__EALL_STRUCTURAL_FEATURES = ENTITY_TABLE__EALL_STRUCTURAL_FEATURES;
+
+	/**
+	 * The feature id for the '<em><b>EAll Super Types</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE__EALL_SUPER_TYPES = ENTITY_TABLE__EALL_SUPER_TYPES;
+
+	/**
+	 * The feature id for the '<em><b>EID Attribute</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE__EID_ATTRIBUTE = ENTITY_TABLE__EID_ATTRIBUTE;
+
+	/**
+	 * The feature id for the '<em><b>EStructural Features</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE__ESTRUCTURAL_FEATURES = ENTITY_TABLE__ESTRUCTURAL_FEATURES;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Super Types</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE__EGENERIC_SUPER_TYPES = ENTITY_TABLE__EGENERIC_SUPER_TYPES;
+
+	/**
+	 * The feature id for the '<em><b>EAll Generic Super Types</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE__EALL_GENERIC_SUPER_TYPES = ENTITY_TABLE__EALL_GENERIC_SUPER_TYPES;
+
+	/**
+	 * The number of structural features of the '<em>Base Entity Table</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE_FEATURE_COUNT = ENTITY_TABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Get EAnnotation</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE___GET_EANNOTATION__STRING = ENTITY_TABLE___GET_EANNOTATION__STRING;
+
+	/**
+	 * The operation id for the '<em>Is Instance</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE___IS_INSTANCE__OBJECT = ENTITY_TABLE___IS_INSTANCE__OBJECT;
+
+	/**
+	 * The operation id for the '<em>Get Classifier ID</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE___GET_CLASSIFIER_ID = ENTITY_TABLE___GET_CLASSIFIER_ID;
+
+	/**
+	 * The operation id for the '<em>Is Super Type Of</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE___IS_SUPER_TYPE_OF__ECLASS = ENTITY_TABLE___IS_SUPER_TYPE_OF__ECLASS;
+
+	/**
+	 * The operation id for the '<em>Get Feature Count</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE___GET_FEATURE_COUNT = ENTITY_TABLE___GET_FEATURE_COUNT;
+
+	/**
+	 * The operation id for the '<em>Get EStructural Feature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE___GET_ESTRUCTURAL_FEATURE__INT = ENTITY_TABLE___GET_ESTRUCTURAL_FEATURE__INT;
+
+	/**
+	 * The operation id for the '<em>Get Feature ID</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE___GET_FEATURE_ID__ESTRUCTURALFEATURE = ENTITY_TABLE___GET_FEATURE_ID__ESTRUCTURALFEATURE;
+
+	/**
+	 * The operation id for the '<em>Get EStructural Feature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE___GET_ESTRUCTURAL_FEATURE__STRING = ENTITY_TABLE___GET_ESTRUCTURAL_FEATURE__STRING;
+
+	/**
+	 * The operation id for the '<em>Get Operation Count</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE___GET_OPERATION_COUNT = ENTITY_TABLE___GET_OPERATION_COUNT;
+
+	/**
+	 * The operation id for the '<em>Get EOperation</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE___GET_EOPERATION__INT = ENTITY_TABLE___GET_EOPERATION__INT;
+
+	/**
+	 * The operation id for the '<em>Get Operation ID</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE___GET_OPERATION_ID__EOPERATION = ENTITY_TABLE___GET_OPERATION_ID__EOPERATION;
+
+	/**
+	 * The operation id for the '<em>Get Override</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE___GET_OVERRIDE__EOPERATION = ENTITY_TABLE___GET_OVERRIDE__EOPERATION;
+
+	/**
+	 * The operation id for the '<em>Get Feature Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE___GET_FEATURE_TYPE__ESTRUCTURALFEATURE = ENTITY_TABLE___GET_FEATURE_TYPE__ESTRUCTURALFEATURE;
+
+	/**
+	 * The number of operations of the '<em>Base Entity Table</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE_OPERATION_COUNT = ENTITY_TABLE_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.AggregateOperationImpl <em>Aggregate Operation</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.AggregateOperationImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getAggregateOperation()
+	 * @generated
+	 */
+	int AGGREGATE_OPERATION = 34;
+
+	/**
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AGGREGATE_OPERATION__EANNOTATIONS = OPERATION__EANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AGGREGATE_OPERATION__NAME = OPERATION__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AGGREGATE_OPERATION__ORDERED = OPERATION__ORDERED;
+
+	/**
+	 * The feature id for the '<em><b>Unique</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AGGREGATE_OPERATION__UNIQUE = OPERATION__UNIQUE;
+
+	/**
+	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AGGREGATE_OPERATION__LOWER_BOUND = OPERATION__LOWER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AGGREGATE_OPERATION__UPPER_BOUND = OPERATION__UPPER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Many</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AGGREGATE_OPERATION__MANY = OPERATION__MANY;
+
+	/**
+	 * The feature id for the '<em><b>Required</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AGGREGATE_OPERATION__REQUIRED = OPERATION__REQUIRED;
+
+	/**
+	 * The feature id for the '<em><b>EType</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AGGREGATE_OPERATION__ETYPE = OPERATION__ETYPE;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AGGREGATE_OPERATION__EGENERIC_TYPE = OPERATION__EGENERIC_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>EContaining Class</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AGGREGATE_OPERATION__ECONTAINING_CLASS = OPERATION__ECONTAINING_CLASS;
+
+	/**
+	 * The feature id for the '<em><b>EType Parameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AGGREGATE_OPERATION__ETYPE_PARAMETERS = OPERATION__ETYPE_PARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>EParameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AGGREGATE_OPERATION__EPARAMETERS = OPERATION__EPARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>EExceptions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AGGREGATE_OPERATION__EEXCEPTIONS = OPERATION__EEXCEPTIONS;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Exceptions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AGGREGATE_OPERATION__EGENERIC_EXCEPTIONS = OPERATION__EGENERIC_EXCEPTIONS;
+
+	/**
+	 * The feature id for the '<em><b>EOperation</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AGGREGATE_OPERATION__EOPERATION = OPERATION__EOPERATION;
+
+	/**
+	 * The feature id for the '<em><b>Function Spec</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AGGREGATE_OPERATION__FUNCTION_SPEC = OPERATION_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Aggregate Operation</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AGGREGATE_OPERATION_FEATURE_COUNT = OPERATION_FEATURE_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get EAnnotation</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AGGREGATE_OPERATION___GET_EANNOTATION__STRING = OPERATION___GET_EANNOTATION__STRING;
+
+	/**
+	 * The operation id for the '<em>Get Operation ID</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AGGREGATE_OPERATION___GET_OPERATION_ID = OPERATION___GET_OPERATION_ID;
+
+	/**
+	 * The operation id for the '<em>Is Override Of</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AGGREGATE_OPERATION___IS_OVERRIDE_OF__EOPERATION = OPERATION___IS_OVERRIDE_OF__EOPERATION;
+
+	/**
+	 * The number of operations of the '<em>Aggregate Operation</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AGGREGATE_OPERATION_OPERATION_COUNT = OPERATION_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.EntityFromSourceOperationImpl <em>Entity From Source Operation</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.EntityFromSourceOperationImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getEntityFromSourceOperation()
+	 * @generated
+	 */
+	int ENTITY_FROM_SOURCE_OPERATION = 35;
+
+	/**
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_FROM_SOURCE_OPERATION__EANNOTATIONS = OPERATION__EANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_FROM_SOURCE_OPERATION__NAME = OPERATION__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_FROM_SOURCE_OPERATION__ORDERED = OPERATION__ORDERED;
+
+	/**
+	 * The feature id for the '<em><b>Unique</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_FROM_SOURCE_OPERATION__UNIQUE = OPERATION__UNIQUE;
+
+	/**
+	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_FROM_SOURCE_OPERATION__LOWER_BOUND = OPERATION__LOWER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_FROM_SOURCE_OPERATION__UPPER_BOUND = OPERATION__UPPER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Many</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_FROM_SOURCE_OPERATION__MANY = OPERATION__MANY;
+
+	/**
+	 * The feature id for the '<em><b>Required</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_FROM_SOURCE_OPERATION__REQUIRED = OPERATION__REQUIRED;
+
+	/**
+	 * The feature id for the '<em><b>EType</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_FROM_SOURCE_OPERATION__ETYPE = OPERATION__ETYPE;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_FROM_SOURCE_OPERATION__EGENERIC_TYPE = OPERATION__EGENERIC_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>EContaining Class</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_FROM_SOURCE_OPERATION__ECONTAINING_CLASS = OPERATION__ECONTAINING_CLASS;
+
+	/**
+	 * The feature id for the '<em><b>EType Parameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_FROM_SOURCE_OPERATION__ETYPE_PARAMETERS = OPERATION__ETYPE_PARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>EParameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_FROM_SOURCE_OPERATION__EPARAMETERS = OPERATION__EPARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>EExceptions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_FROM_SOURCE_OPERATION__EEXCEPTIONS = OPERATION__EEXCEPTIONS;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Exceptions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_FROM_SOURCE_OPERATION__EGENERIC_EXCEPTIONS = OPERATION__EGENERIC_EXCEPTIONS;
+
+	/**
+	 * The feature id for the '<em><b>EOperation</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_FROM_SOURCE_OPERATION__EOPERATION = OPERATION__EOPERATION;
+
+	/**
+	 * The number of structural features of the '<em>Entity From Source Operation</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_FROM_SOURCE_OPERATION_FEATURE_COUNT = OPERATION_FEATURE_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Get EAnnotation</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_FROM_SOURCE_OPERATION___GET_EANNOTATION__STRING = OPERATION___GET_EANNOTATION__STRING;
+
+	/**
+	 * The operation id for the '<em>Get Operation ID</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_FROM_SOURCE_OPERATION___GET_OPERATION_ID = OPERATION___GET_OPERATION_ID;
+
+	/**
+	 * The operation id for the '<em>Is Override Of</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_FROM_SOURCE_OPERATION___IS_OVERRIDE_OF__EOPERATION = OPERATION___IS_OVERRIDE_OF__EOPERATION;
+
+	/**
+	 * The number of operations of the '<em>Entity From Source Operation</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTITY_FROM_SOURCE_OPERATION_OPERATION_COUNT = OPERATION_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.AttributeFromEntityOperationImpl <em>Attribute From Entity Operation</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.AttributeFromEntityOperationImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getAttributeFromEntityOperation()
+	 * @generated
+	 */
+	int ATTRIBUTE_FROM_ENTITY_OPERATION = 36;
+
+	/**
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_FROM_ENTITY_OPERATION__EANNOTATIONS = OPERATION__EANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_FROM_ENTITY_OPERATION__NAME = OPERATION__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_FROM_ENTITY_OPERATION__ORDERED = OPERATION__ORDERED;
+
+	/**
+	 * The feature id for the '<em><b>Unique</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_FROM_ENTITY_OPERATION__UNIQUE = OPERATION__UNIQUE;
+
+	/**
+	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_FROM_ENTITY_OPERATION__LOWER_BOUND = OPERATION__LOWER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_FROM_ENTITY_OPERATION__UPPER_BOUND = OPERATION__UPPER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Many</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_FROM_ENTITY_OPERATION__MANY = OPERATION__MANY;
+
+	/**
+	 * The feature id for the '<em><b>Required</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_FROM_ENTITY_OPERATION__REQUIRED = OPERATION__REQUIRED;
+
+	/**
+	 * The feature id for the '<em><b>EType</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_FROM_ENTITY_OPERATION__ETYPE = OPERATION__ETYPE;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_FROM_ENTITY_OPERATION__EGENERIC_TYPE = OPERATION__EGENERIC_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>EContaining Class</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_FROM_ENTITY_OPERATION__ECONTAINING_CLASS = OPERATION__ECONTAINING_CLASS;
+
+	/**
+	 * The feature id for the '<em><b>EType Parameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_FROM_ENTITY_OPERATION__ETYPE_PARAMETERS = OPERATION__ETYPE_PARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>EParameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_FROM_ENTITY_OPERATION__EPARAMETERS = OPERATION__EPARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>EExceptions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_FROM_ENTITY_OPERATION__EEXCEPTIONS = OPERATION__EEXCEPTIONS;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Exceptions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_FROM_ENTITY_OPERATION__EGENERIC_EXCEPTIONS = OPERATION__EGENERIC_EXCEPTIONS;
+
+	/**
+	 * The feature id for the '<em><b>EOperation</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_FROM_ENTITY_OPERATION__EOPERATION = OPERATION__EOPERATION;
+
+	/**
+	 * The number of structural features of the '<em>Attribute From Entity Operation</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_FROM_ENTITY_OPERATION_FEATURE_COUNT = OPERATION_FEATURE_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Get EAnnotation</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_FROM_ENTITY_OPERATION___GET_EANNOTATION__STRING = OPERATION___GET_EANNOTATION__STRING;
+
+	/**
+	 * The operation id for the '<em>Get Operation ID</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_FROM_ENTITY_OPERATION___GET_OPERATION_ID = OPERATION___GET_OPERATION_ID;
+
+	/**
+	 * The operation id for the '<em>Is Override Of</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_FROM_ENTITY_OPERATION___IS_OVERRIDE_OF__EOPERATION = OPERATION___IS_OVERRIDE_OF__EOPERATION;
+
+	/**
+	 * The number of operations of the '<em>Attribute From Entity Operation</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_FROM_ENTITY_OPERATION_OPERATION_COUNT = OPERATION_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.CellsParameterImpl <em>Cells Parameter</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.CellsParameterImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getCellsParameter()
+	 * @generated
+	 */
+	int CELLS_PARAMETER = 37;
+
+	/**
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CELLS_PARAMETER__EANNOTATIONS = PARAMETER__EANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CELLS_PARAMETER__NAME = PARAMETER__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CELLS_PARAMETER__ORDERED = PARAMETER__ORDERED;
+
+	/**
+	 * The feature id for the '<em><b>Unique</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CELLS_PARAMETER__UNIQUE = PARAMETER__UNIQUE;
+
+	/**
+	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CELLS_PARAMETER__LOWER_BOUND = PARAMETER__LOWER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CELLS_PARAMETER__UPPER_BOUND = PARAMETER__UPPER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Many</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CELLS_PARAMETER__MANY = PARAMETER__MANY;
+
+	/**
+	 * The feature id for the '<em><b>Required</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CELLS_PARAMETER__REQUIRED = PARAMETER__REQUIRED;
+
+	/**
+	 * The feature id for the '<em><b>EType</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CELLS_PARAMETER__ETYPE = PARAMETER__ETYPE;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CELLS_PARAMETER__EGENERIC_TYPE = PARAMETER__EGENERIC_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>EOperation</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CELLS_PARAMETER__EOPERATION = PARAMETER__EOPERATION;
+
+	/**
+	 * The number of structural features of the '<em>Cells Parameter</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CELLS_PARAMETER_FEATURE_COUNT = PARAMETER_FEATURE_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Get EAnnotation</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CELLS_PARAMETER___GET_EANNOTATION__STRING = PARAMETER___GET_EANNOTATION__STRING;
+
+	/**
+	 * The number of operations of the '<em>Cells Parameter</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CELLS_PARAMETER_OPERATION_COUNT = PARAMETER_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicOperationScenarioSetImpl <em>Basic Operation Scenario Set</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicOperationScenarioSetImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getBasicOperationScenarioSet()
+	 * @generated
+	 */
+	int BASIC_OPERATION_SCENARIO_SET = 38;
+
+	/**
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION_SCENARIO_SET__EANNOTATIONS = OPERATION__EANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION_SCENARIO_SET__NAME = OPERATION__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION_SCENARIO_SET__ORDERED = OPERATION__ORDERED;
+
+	/**
+	 * The feature id for the '<em><b>Unique</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION_SCENARIO_SET__UNIQUE = OPERATION__UNIQUE;
+
+	/**
+	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION_SCENARIO_SET__LOWER_BOUND = OPERATION__LOWER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION_SCENARIO_SET__UPPER_BOUND = OPERATION__UPPER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Many</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION_SCENARIO_SET__MANY = OPERATION__MANY;
+
+	/**
+	 * The feature id for the '<em><b>Required</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION_SCENARIO_SET__REQUIRED = OPERATION__REQUIRED;
+
+	/**
+	 * The feature id for the '<em><b>EType</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION_SCENARIO_SET__ETYPE = OPERATION__ETYPE;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Type</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION_SCENARIO_SET__EGENERIC_TYPE = OPERATION__EGENERIC_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>EContaining Class</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION_SCENARIO_SET__ECONTAINING_CLASS = OPERATION__ECONTAINING_CLASS;
+
+	/**
+	 * The feature id for the '<em><b>EType Parameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION_SCENARIO_SET__ETYPE_PARAMETERS = OPERATION__ETYPE_PARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>EParameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION_SCENARIO_SET__EPARAMETERS = OPERATION__EPARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>EExceptions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION_SCENARIO_SET__EEXCEPTIONS = OPERATION__EEXCEPTIONS;
+
+	/**
+	 * The feature id for the '<em><b>EGeneric Exceptions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION_SCENARIO_SET__EGENERIC_EXCEPTIONS = OPERATION__EGENERIC_EXCEPTIONS;
+
+	/**
+	 * The feature id for the '<em><b>EOperation</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION_SCENARIO_SET__EOPERATION = OPERATION__EOPERATION;
+
+	/**
+	 * The feature id for the '<em><b>Basic Scenario Logic</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION_SCENARIO_SET__BASIC_SCENARIO_LOGIC = OPERATION_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Basic Operation Scenario Set</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION_SCENARIO_SET_FEATURE_COUNT = OPERATION_FEATURE_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get EAnnotation</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION_SCENARIO_SET___GET_EANNOTATION__STRING = OPERATION___GET_EANNOTATION__STRING;
+
+	/**
+	 * The operation id for the '<em>Get Operation ID</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION_SCENARIO_SET___GET_OPERATION_ID = OPERATION___GET_OPERATION_ID;
+
+	/**
+	 * The operation id for the '<em>Is Override Of</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION_SCENARIO_SET___IS_OVERRIDE_OF__EOPERATION = OPERATION___IS_OVERRIDE_OF__EOPERATION;
+
+	/**
+	 * The number of operations of the '<em>Basic Operation Scenario Set</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASIC_OPERATION_SCENARIO_SET_OPERATION_COUNT = OPERATION_OPERATION_COUNT + 0;
+
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BaseEntityTableModuleImpl <em>Base Entity Table Module</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BaseEntityTableModuleImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getBaseEntityTableModule()
+	 * @generated
+	 */
+	int BASE_ENTITY_TABLE_MODULE = 39;
+
+	/**
+	 * The feature id for the '<em><b>Dependencies</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE_MODULE__DEPENDENCIES = Module_managementPackage.MODULE__DEPENDENCIES;
+
+	/**
+	 * The feature id for the '<em><b>The Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE_MODULE__THE_DESCRIPTION = Module_managementPackage.MODULE__THE_DESCRIPTION;
+
+	/**
+	 * The feature id for the '<em><b>License</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE_MODULE__LICENSE = Module_managementPackage.MODULE__LICENSE;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE_MODULE__NAME = Module_managementPackage.MODULE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Version</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE_MODULE__VERSION = Module_managementPackage.MODULE__VERSION;
+
+	/**
+	 * The feature id for the '<em><b>Long Name</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE_MODULE__LONG_NAME = Module_managementPackage.MODULE__LONG_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Base Entity Tables</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE_MODULE__BASE_ENTITY_TABLES = Module_managementPackage.MODULE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Base Entity Table Module</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE_MODULE_FEATURE_COUNT = Module_managementPackage.MODULE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of operations of the '<em>Base Entity Table Module</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_ENTITY_TABLE_MODULE_OPERATION_COUNT = Module_managementPackage.MODULE_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedEntityTableModuleImpl <em>Derived Entity Table Module</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedEntityTableModuleImpl
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getDerivedEntityTableModule()
+	 * @generated
+	 */
+	int DERIVED_ENTITY_TABLE_MODULE = 40;
+
+	/**
+	 * The feature id for the '<em><b>Dependencies</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE_MODULE__DEPENDENCIES = Module_managementPackage.MODULE__DEPENDENCIES;
+
+	/**
+	 * The feature id for the '<em><b>The Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE_MODULE__THE_DESCRIPTION = Module_managementPackage.MODULE__THE_DESCRIPTION;
+
+	/**
+	 * The feature id for the '<em><b>License</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE_MODULE__LICENSE = Module_managementPackage.MODULE__LICENSE;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE_MODULE__NAME = Module_managementPackage.MODULE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Version</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE_MODULE__VERSION = Module_managementPackage.MODULE__VERSION;
+
+	/**
+	 * The feature id for the '<em><b>Long Name</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE_MODULE__LONG_NAME = Module_managementPackage.MODULE__LONG_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Derived Entity Tables</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE_MODULE__DERIVED_ENTITY_TABLES = Module_managementPackage.MODULE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Derived Entity Table Module</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE_MODULE_FEATURE_COUNT = Module_managementPackage.MODULE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of operations of the '<em>Derived Entity Table Module</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DERIVED_ENTITY_TABLE_MODULE_OPERATION_COUNT = Module_managementPackage.MODULE_OPERATION_COUNT + 0;
+
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntity <em>Derived Entity</em>}'.
@@ -4715,50 +7713,6 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	EReference getDerivedEntity_SourceEntities();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntity#getDerivedAttributes <em>Derived Attributes</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Derived Attributes</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntity#getDerivedAttributes()
-	 * @see #getDerivedEntity()
-	 * @generated
-	 */
-	EReference getDerivedEntity_DerivedAttributes();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntity#getRowCreationApproachForEntity <em>Row Creation Approach For Entity</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Row Creation Approach For Entity</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntity#getRowCreationApproachForEntity()
-	 * @see #getDerivedEntity()
-	 * @generated
-	 */
-	EReference getDerivedEntity_RowCreationApproachForEntity();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntity#getCube <em>Cube</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Cube</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntity#getCube()
-	 * @see #getDerivedEntity()
-	 * @generated
-	 */
-	EReference getDerivedEntity_Cube();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntity#getDerivedStructs <em>Derived Structs</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Derived Structs</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntity#getDerivedStructs()
-	 * @see #getDerivedEntity()
-	 * @generated
-	 */
-	EReference getDerivedEntity_DerivedStructs();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.IntermediateDerivedEntity <em>Intermediate Derived Entity</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4779,27 +7733,6 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	EClass getGeneratedEntity();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateFunction <em>Aggregate Function</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Aggregate Function</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateFunction
-	 * @generated
-	 */
-	EClass getAggregateFunction();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateFunction#getFunctionSpec <em>Function Spec</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Function Spec</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateFunction#getFunctionSpec()
-	 * @see #getAggregateFunction()
-	 * @generated
-	 */
-	EReference getAggregateFunction_FunctionSpec();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateFunctionSpec <em>Aggregate Function Spec</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4808,27 +7741,6 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getAggregateFunctionSpec();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicFunction <em>Basic Function</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Basic Function</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicFunction
-	 * @generated
-	 */
-	EClass getBasicFunction();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicFunction#getFunctionSpec <em>Function Spec</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Function Spec</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicFunction#getFunctionSpec()
-	 * @see #getBasicFunction()
-	 * @generated
-	 */
-	EReference getBasicFunction_FunctionSpec();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicFunctionSpec <em>Basic Function Spec</em>}'.
@@ -4852,46 +7764,14 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	EAttribute getBasicFunctionSpec_IsInfix();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BooleanFunction <em>Boolean Function</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BooleanOperation <em>Boolean Operation</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Boolean Function</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BooleanFunction
+	 * @return the meta object for class '<em>Boolean Operation</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BooleanOperation
 	 * @generated
 	 */
-	EClass getBooleanFunction();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Function <em>Function</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Function</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Function
-	 * @generated
-	 */
-	EClass getFunction();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Function#getParameters <em>Parameters</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Parameters</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Function#getParameters()
-	 * @see #getFunction()
-	 * @generated
-	 */
-	EReference getFunction_Parameters();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Function#getName <em>Name</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Function#getName()
-	 * @see #getFunction()
-	 * @generated
-	 */
-	EAttribute getFunction_Name();
+	EClass getBooleanOperation();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.FunctionSpec <em>Function Spec</em>}'.
@@ -4902,17 +7782,6 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getFunctionSpec();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.FunctionSpec#getParameterSpecs <em>Parameter Specs</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Parameter Specs</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.FunctionSpec#getParameterSpecs()
-	 * @see #getFunctionSpec()
-	 * @generated
-	 */
-	EReference getFunctionSpec_ParameterSpecs();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.FunctionSpec#getFunctionalName <em>Functional Name</em>}'.
@@ -4969,27 +7838,6 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	EReference getFunctionSpecModule_FunctionSpecs();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ParamaterSpec <em>Paramater Spec</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Paramater Spec</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ParamaterSpec
-	 * @generated
-	 */
-	EClass getParamaterSpec();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ParamaterSpec#getName <em>Name</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ParamaterSpec#getName()
-	 * @see #getParamaterSpec()
-	 * @generated
-	 */
-	EAttribute getParamaterSpec_Name();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Parameter <em>Parameter</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5019,6 +7867,27 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getMemberParameter_Param();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.EntityParameter <em>Entity Parameter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Entity Parameter</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.EntityParameter
+	 * @generated
+	 */
+	EClass getEntityParameter();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.EntityParameter#getEntity <em>Entity</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Entity</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.EntityParameter#getEntity()
+	 * @see #getEntityParameter()
+	 * @generated
+	 */
+	EReference getEntityParameter_Entity();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ValueParameter <em>Value Parameter</em>}'.
@@ -5053,162 +7922,36 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	EReference getValueParameter_DataType();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateDerivedAttribute <em>Aggregate Derived Attribute</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicScenarioOperation <em>Basic Scenario Operation</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Aggregate Derived Attribute</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateDerivedAttribute
+	 * @return the meta object for class '<em>Basic Scenario Operation</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicScenarioOperation
 	 * @generated
 	 */
-	EClass getAggregateDerivedAttribute();
+	EClass getBasicScenarioOperation();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateDerivedAttribute#getAggregateFunction <em>Aggregate Function</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Aggregate Function</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateDerivedAttribute#getAggregateFunction()
-	 * @see #getAggregateDerivedAttribute()
-	 * @generated
-	 */
-	EReference getAggregateDerivedAttribute_AggregateFunction();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicDerivedAttribute <em>Basic Derived Attribute</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Basic Derived Attribute</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicDerivedAttribute
-	 * @generated
-	 */
-	EClass getBasicDerivedAttribute();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicDerivedAttribute#getBasicScenarioLogic <em>Basic Scenario Logic</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Basic Scenario Logic</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicDerivedAttribute#getBasicScenarioLogic()
-	 * @see #getBasicDerivedAttribute()
-	 * @generated
-	 */
-	EReference getBasicDerivedAttribute_BasicScenarioLogic();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicScenarioLogic <em>Basic Scenario Logic</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Basic Scenario Logic</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicScenarioLogic
-	 * @generated
-	 */
-	EClass getBasicScenarioLogic();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicScenarioLogic#getBasicFunction <em>Basic Function</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Basic Function</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicScenarioLogic#getBasicFunction()
-	 * @see #getBasicScenarioLogic()
-	 * @generated
-	 */
-	EReference getBasicScenarioLogic_BasicFunction();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicScenarioLogic#getSceanrio <em>Sceanrio</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicScenarioOperation#getSceanrio <em>Sceanrio</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Sceanrio</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicScenarioLogic#getSceanrio()
-	 * @see #getBasicScenarioLogic()
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicScenarioOperation#getSceanrio()
+	 * @see #getBasicScenarioOperation()
 	 * @generated
 	 */
-	EReference getBasicScenarioLogic_Sceanrio();
+	EReference getBasicScenarioOperation_Sceanrio();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedAttribute <em>Derived Attribute</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicScenarioOperation#getFunctionSpec <em>Function Spec</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Derived Attribute</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedAttribute
+	 * @return the meta object for the reference '<em>Function Spec</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicScenarioOperation#getFunctionSpec()
+	 * @see #getBasicScenarioOperation()
 	 * @generated
 	 */
-	EClass getDerivedAttribute();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedAttribute#getVariable <em>Variable</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Variable</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedAttribute#getVariable()
-	 * @see #getDerivedAttribute()
-	 * @generated
-	 */
-	EReference getDerivedAttribute_Variable();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedStruct <em>Derived Struct</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Derived Struct</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedStruct
-	 * @generated
-	 */
-	EClass getDerivedStruct();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedStruct#getCube <em>Cube</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Cube</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedStruct#getCube()
-	 * @see #getDerivedStruct()
-	 * @generated
-	 */
-	EReference getDerivedStruct_Cube();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BaseFeature <em>Base Feature</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Base Feature</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BaseFeature
-	 * @generated
-	 */
-	EClass getBaseFeature();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BaseFeature#getVariable <em>Variable</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Variable</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BaseFeature#getVariable()
-	 * @see #getBaseFeature()
-	 * @generated
-	 */
-	EReference getBaseFeature_Variable();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedFeatureGroup <em>Derived Feature Group</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Derived Feature Group</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedFeatureGroup
-	 * @generated
-	 */
-	EClass getDerivedFeatureGroup();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedFeatureGroup#getDerivedFeatures <em>Derived Features</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Derived Features</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedFeatureGroup#getDerivedFeatures()
-	 * @see #getDerivedFeatureGroup()
-	 * @generated
-	 */
-	EReference getDerivedFeatureGroup_DerivedFeatures();
+	EReference getBasicScenarioOperation_FunctionSpec();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.FeatureParameter <em>Feature Parameter</em>}'.
@@ -5232,6 +7975,59 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	EReference getFeatureParameter_Feature();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.OperationParameter <em>Operation Parameter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Operation Parameter</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.OperationParameter
+	 * @generated
+	 */
+	EClass getOperationParameter();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.OperationParameter#getOperation <em>Operation</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Operation</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.OperationParameter#getOperation()
+	 * @see #getOperationParameter()
+	 * @generated
+	 */
+	EReference getOperationParameter_Operation();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ProxyOperationParameter <em>Proxy Operation Parameter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Proxy Operation Parameter</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ProxyOperationParameter
+	 * @generated
+	 */
+	EClass getProxyOperationParameter();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ProxyOperationParameter#getEntity <em>Entity</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Entity</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ProxyOperationParameter#getEntity()
+	 * @see #getProxyOperationParameter()
+	 * @generated
+	 */
+	EReference getProxyOperationParameter_Entity();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ProxyOperationParameter#getOperation_name <em>Operation name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Operation name</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ProxyOperationParameter#getOperation_name()
+	 * @see #getProxyOperationParameter()
+	 * @generated
+	 */
+	EAttribute getProxyOperationParameter_Operation_name();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ProxyFeatureParameter <em>Proxy Feature Parameter</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5253,122 +8049,15 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	EReference getProxyFeatureParameter_Entity();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ProxyFeatureParameter#getVaraible <em>Varaible</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ProxyFeatureParameter#getFeature_name <em>Feature name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Varaible</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ProxyFeatureParameter#getVaraible()
+	 * @return the meta object for the attribute '<em>Feature name</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ProxyFeatureParameter#getFeature_name()
 	 * @see #getProxyFeatureParameter()
 	 * @generated
 	 */
-	EReference getProxyFeatureParameter_Varaible();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GetAttributeFromEntityDerivedFeature <em>Get Attribute From Entity Derived Feature</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Get Attribute From Entity Derived Feature</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GetAttributeFromEntityDerivedFeature
-	 * @generated
-	 */
-	EClass getGetAttributeFromEntityDerivedFeature();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GetAttributeFromEntityDerivedFeature#getAttributeInEntity <em>Attribute In Entity</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Attribute In Entity</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GetAttributeFromEntityDerivedFeature#getAttributeInEntity()
-	 * @see #getGetAttributeFromEntityDerivedFeature()
-	 * @generated
-	 */
-	EReference getGetAttributeFromEntityDerivedFeature_AttributeInEntity();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GetAttributeFromEntityDerivedFeature#getEntityFeature <em>Entity Feature</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Entity Feature</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GetAttributeFromEntityDerivedFeature#getEntityFeature()
-	 * @see #getGetAttributeFromEntityDerivedFeature()
-	 * @generated
-	 */
-	EReference getGetAttributeFromEntityDerivedFeature_EntityFeature();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AttributeFromEntityParameter <em>Attribute From Entity Parameter</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Attribute From Entity Parameter</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AttributeFromEntityParameter
-	 * @generated
-	 */
-	EClass getAttributeFromEntityParameter();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AttributeFromEntityParameter#getAttributeInEntity <em>Attribute In Entity</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Attribute In Entity</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AttributeFromEntityParameter#getAttributeInEntity()
-	 * @see #getAttributeFromEntityParameter()
-	 * @generated
-	 */
-	EReference getAttributeFromEntityParameter_AttributeInEntity();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AttributeFromEntityParameter#getEntityFeature <em>Entity Feature</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Entity Feature</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AttributeFromEntityParameter#getEntityFeature()
-	 * @see #getAttributeFromEntityParameter()
-	 * @generated
-	 */
-	EReference getAttributeFromEntityParameter_EntityFeature();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ProxyAttributeFromEntityParameter <em>Proxy Attribute From Entity Parameter</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Proxy Attribute From Entity Parameter</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ProxyAttributeFromEntityParameter
-	 * @generated
-	 */
-	EClass getProxyAttributeFromEntityParameter();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ProxyAttributeFromEntityParameter#getVariable <em>Variable</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Variable</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ProxyAttributeFromEntityParameter#getVariable()
-	 * @see #getProxyAttributeFromEntityParameter()
-	 * @generated
-	 */
-	EReference getProxyAttributeFromEntityParameter_Variable();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ProxyAttributeFromEntityParameter#getEntity <em>Entity</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Entity</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ProxyAttributeFromEntityParameter#getEntity()
-	 * @see #getProxyAttributeFromEntityParameter()
-	 * @generated
-	 */
-	EReference getProxyAttributeFromEntityParameter_Entity();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ProxyAttributeFromEntityParameter#getCube <em>Cube</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Cube</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.ProxyAttributeFromEntityParameter#getCube()
-	 * @see #getProxyAttributeFromEntityParameter()
-	 * @generated
-	 */
-	EReference getProxyAttributeFromEntityParameter_Cube();
+	EAttribute getProxyFeatureParameter_Feature_name();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.CustomRowCreationApproach <em>Custom Row Creation Approach</em>}'.
@@ -5379,17 +8068,6 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getCustomRowCreationApproach();
-
-	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.CustomRowCreationApproach#getDependantVariables <em>Dependant Variables</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Dependant Variables</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.CustomRowCreationApproach#getDependantVariables()
-	 * @see #getCustomRowCreationApproach()
-	 * @generated
-	 */
-	EReference getCustomRowCreationApproach_DependantVariables();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.FilterAndGroupToOneRowCreationApproach <em>Filter And Group To One Row Creation Approach</em>}'.
@@ -5422,49 +8100,6 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getFilterAndGroupToOneRowCreationApproach_GroupByVariables();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.RowCreationApproachForEntity <em>Row Creation Approach For Entity</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Row Creation Approach For Entity</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.RowCreationApproachForEntity
-	 * @generated
-	 */
-	EClass getRowCreationApproachForEntity();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.RowCreationApproachForEntity#getRowCreationApproach <em>Row Creation Approach</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Row Creation Approach</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.RowCreationApproachForEntity#getRowCreationApproach()
-	 * @see #getRowCreationApproachForEntity()
-	 * @generated
-	 */
-	EReference getRowCreationApproachForEntity_RowCreationApproach();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.RowCreationApproachForEntity#getEntity <em>Entity</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Entity</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.RowCreationApproachForEntity#getEntity()
-	 * @see #getRowCreationApproachForEntity()
-	 * @generated
-	 */
-	EReference getRowCreationApproachForEntity_Entity();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.RowCreationApproachForEntity#getName <em>Name</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.RowCreationApproachForEntity#getName()
-	 * @see #getRowCreationApproachForEntity()
-	 * @generated
-	 */
-	EAttribute getRowCreationApproachForEntity_Name();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.OneToOneRowCreationApproach <em>One To One Row Creation Approach</em>}'.
@@ -5508,17 +8143,6 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	EClass getRowCreationApproach();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.RowCreationApproach#getDependantCubeColumns <em>Dependant Cube Columns</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Dependant Cube Columns</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.RowCreationApproach#getDependantCubeColumns()
-	 * @see #getRowCreationApproach()
-	 * @generated
-	 */
-	EReference getRowCreationApproach_DependantCubeColumns();
-
-	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.RowCreationApproach#getCreatedCubeColumns <em>Created Cube Columns</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5528,17 +8152,6 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getRowCreationApproach_CreatedCubeColumns();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.RowCreationApproach#getDependantStructItemColumns <em>Dependant Struct Item Columns</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Dependant Struct Item Columns</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.RowCreationApproach#getDependantStructItemColumns()
-	 * @see #getRowCreationApproach()
-	 * @generated
-	 */
-	EReference getRowCreationApproach_DependantStructItemColumns();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GroupByRowCreationApproach <em>Group By Row Creation Approach</em>}'.
@@ -5551,26 +8164,26 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	EClass getGroupByRowCreationApproach();
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GroupByRowCreationApproach#getGroupByCubeColumnNames <em>Group By Cube Column Names</em>}'.
+	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GroupByRowCreationApproach#getGroupByColumns <em>Group By Columns</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Group By Cube Column Names</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GroupByRowCreationApproach#getGroupByCubeColumnNames()
-	 * @see #getGroupByRowCreationApproach()
-	 * @generated
-	 */
-	EReference getGroupByRowCreationApproach_GroupByCubeColumnNames();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GroupByRowCreationApproach#getGroupByColumns <em>Group By Columns</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Group By Columns</em>'.
+	 * @return the meta object for the reference list '<em>Group By Columns</em>'.
 	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GroupByRowCreationApproach#getGroupByColumns()
 	 * @see #getGroupByRowCreationApproach()
 	 * @generated
 	 */
 	EReference getGroupByRowCreationApproach_GroupByColumns();
+
+	/**
+	 * Returns the meta object for the attribute list '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GroupByRowCreationApproach#getGroupByCubeColumnNames <em>Group By Cube Column Names</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute list '<em>Group By Cube Column Names</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GroupByRowCreationApproach#getGroupByCubeColumnNames()
+	 * @see #getGroupByRowCreationApproach()
+	 * @generated
+	 */
+	EAttribute getGroupByRowCreationApproach_GroupByCubeColumnNames();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.RowJoinFunction <em>Row Join Function</em>}'.
@@ -5688,6 +8301,203 @@ public interface Ecore_plus_logicPackage extends EPackage {
 	EReference getGeneratedEntityModule_GeneratedEntities();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.EntityTable <em>Entity Table</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Entity Table</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.EntityTable
+	 * @generated
+	 */
+	EClass getEntityTable();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntityTable <em>Derived Entity Table</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Derived Entity Table</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntityTable
+	 * @generated
+	 */
+	EClass getDerivedEntityTable();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntityTable#getSourceTables <em>Source Tables</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Source Tables</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntityTable#getSourceTables()
+	 * @see #getDerivedEntityTable()
+	 * @generated
+	 */
+	EReference getDerivedEntityTable_SourceTables();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntityTable#getContainedEntityType <em>Contained Entity Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Contained Entity Type</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntityTable#getContainedEntityType()
+	 * @see #getDerivedEntityTable()
+	 * @generated
+	 */
+	EReference getDerivedEntityTable_ContainedEntityType();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BaseEntityTable <em>Base Entity Table</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Base Entity Table</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BaseEntityTable
+	 * @generated
+	 */
+	EClass getBaseEntityTable();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Operation <em>Operation</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Operation</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Operation
+	 * @generated
+	 */
+	EClass getOperation();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicOperation <em>Basic Operation</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Basic Operation</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicOperation
+	 * @generated
+	 */
+	EClass getBasicOperation();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicOperation#getFunctionSpec <em>Function Spec</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Function Spec</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicOperation#getFunctionSpec()
+	 * @see #getBasicOperation()
+	 * @generated
+	 */
+	EReference getBasicOperation_FunctionSpec();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateOperation <em>Aggregate Operation</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Aggregate Operation</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateOperation
+	 * @generated
+	 */
+	EClass getAggregateOperation();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateOperation#getFunctionSpec <em>Function Spec</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Function Spec</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AggregateOperation#getFunctionSpec()
+	 * @see #getAggregateOperation()
+	 * @generated
+	 */
+	EReference getAggregateOperation_FunctionSpec();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.EntityFromSourceOperation <em>Entity From Source Operation</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Entity From Source Operation</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.EntityFromSourceOperation
+	 * @generated
+	 */
+	EClass getEntityFromSourceOperation();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AttributeFromEntityOperation <em>Attribute From Entity Operation</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Attribute From Entity Operation</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.AttributeFromEntityOperation
+	 * @generated
+	 */
+	EClass getAttributeFromEntityOperation();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.CellsParameter <em>Cells Parameter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Cells Parameter</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.CellsParameter
+	 * @generated
+	 */
+	EClass getCellsParameter();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicOperationScenarioSet <em>Basic Operation Scenario Set</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Basic Operation Scenario Set</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicOperationScenarioSet
+	 * @generated
+	 */
+	EClass getBasicOperationScenarioSet();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicOperationScenarioSet#getBasicScenarioLogic <em>Basic Scenario Logic</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Basic Scenario Logic</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BasicOperationScenarioSet#getBasicScenarioLogic()
+	 * @see #getBasicOperationScenarioSet()
+	 * @generated
+	 */
+	EReference getBasicOperationScenarioSet_BasicScenarioLogic();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BaseEntityTableModule <em>Base Entity Table Module</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Base Entity Table Module</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BaseEntityTableModule
+	 * @generated
+	 */
+	EClass getBaseEntityTableModule();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BaseEntityTableModule#getBaseEntityTables <em>Base Entity Tables</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Base Entity Tables</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.BaseEntityTableModule#getBaseEntityTables()
+	 * @see #getBaseEntityTableModule()
+	 * @generated
+	 */
+	EReference getBaseEntityTableModule_BaseEntityTables();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntityTableModule <em>Derived Entity Table Module</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Derived Entity Table Module</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntityTableModule
+	 * @generated
+	 */
+	EClass getDerivedEntityTableModule();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntityTableModule#getDerivedEntityTables <em>Derived Entity Tables</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Derived Entity Tables</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.DerivedEntityTableModule#getDerivedEntityTables()
+	 * @see #getDerivedEntityTableModule()
+	 * @generated
+	 */
+	EReference getDerivedEntityTableModule_DerivedEntityTables();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5729,38 +8539,6 @@ public interface Ecore_plus_logicPackage extends EPackage {
 		EReference DERIVED_ENTITY__SOURCE_ENTITIES = eINSTANCE.getDerivedEntity_SourceEntities();
 
 		/**
-		 * The meta object literal for the '<em><b>Derived Attributes</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference DERIVED_ENTITY__DERIVED_ATTRIBUTES = eINSTANCE.getDerivedEntity_DerivedAttributes();
-
-		/**
-		 * The meta object literal for the '<em><b>Row Creation Approach For Entity</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference DERIVED_ENTITY__ROW_CREATION_APPROACH_FOR_ENTITY = eINSTANCE.getDerivedEntity_RowCreationApproachForEntity();
-
-		/**
-		 * The meta object literal for the '<em><b>Cube</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference DERIVED_ENTITY__CUBE = eINSTANCE.getDerivedEntity_Cube();
-
-		/**
-		 * The meta object literal for the '<em><b>Derived Structs</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference DERIVED_ENTITY__DERIVED_STRUCTS = eINSTANCE.getDerivedEntity_DerivedStructs();
-
-		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.IntermediateDerivedEntityImpl <em>Intermediate Derived Entity</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -5781,24 +8559,6 @@ public interface Ecore_plus_logicPackage extends EPackage {
 		EClass GENERATED_ENTITY = eINSTANCE.getGeneratedEntity();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.AggregateFunctionImpl <em>Aggregate Function</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.AggregateFunctionImpl
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getAggregateFunction()
-		 * @generated
-		 */
-		EClass AGGREGATE_FUNCTION = eINSTANCE.getAggregateFunction();
-
-		/**
-		 * The meta object literal for the '<em><b>Function Spec</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference AGGREGATE_FUNCTION__FUNCTION_SPEC = eINSTANCE.getAggregateFunction_FunctionSpec();
-
-		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.AggregateFunctionSpecImpl <em>Aggregate Function Spec</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -5807,24 +8567,6 @@ public interface Ecore_plus_logicPackage extends EPackage {
 		 * @generated
 		 */
 		EClass AGGREGATE_FUNCTION_SPEC = eINSTANCE.getAggregateFunctionSpec();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicFunctionImpl <em>Basic Function</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicFunctionImpl
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getBasicFunction()
-		 * @generated
-		 */
-		EClass BASIC_FUNCTION = eINSTANCE.getBasicFunction();
-
-		/**
-		 * The meta object literal for the '<em><b>Function Spec</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference BASIC_FUNCTION__FUNCTION_SPEC = eINSTANCE.getBasicFunction_FunctionSpec();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicFunctionSpecImpl <em>Basic Function Spec</em>}' class.
@@ -5845,40 +8587,14 @@ public interface Ecore_plus_logicPackage extends EPackage {
 		EAttribute BASIC_FUNCTION_SPEC__IS_INFIX = eINSTANCE.getBasicFunctionSpec_IsInfix();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BooleanFunctionImpl <em>Boolean Function</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BooleanOperationImpl <em>Boolean Operation</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BooleanFunctionImpl
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getBooleanFunction()
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BooleanOperationImpl
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getBooleanOperation()
 		 * @generated
 		 */
-		EClass BOOLEAN_FUNCTION = eINSTANCE.getBooleanFunction();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.FunctionImpl <em>Function</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.FunctionImpl
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getFunction()
-		 * @generated
-		 */
-		EClass FUNCTION = eINSTANCE.getFunction();
-
-		/**
-		 * The meta object literal for the '<em><b>Parameters</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference FUNCTION__PARAMETERS = eINSTANCE.getFunction_Parameters();
-
-		/**
-		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute FUNCTION__NAME = eINSTANCE.getFunction_Name();
+		EClass BOOLEAN_OPERATION = eINSTANCE.getBooleanOperation();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.FunctionSpecImpl <em>Function Spec</em>}' class.
@@ -5889,14 +8605,6 @@ public interface Ecore_plus_logicPackage extends EPackage {
 		 * @generated
 		 */
 		EClass FUNCTION_SPEC = eINSTANCE.getFunctionSpec();
-
-		/**
-		 * The meta object literal for the '<em><b>Parameter Specs</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference FUNCTION_SPEC__PARAMETER_SPECS = eINSTANCE.getFunctionSpec_ParameterSpecs();
 
 		/**
 		 * The meta object literal for the '<em><b>Functional Name</b></em>' attribute feature.
@@ -5941,24 +8649,6 @@ public interface Ecore_plus_logicPackage extends EPackage {
 		EReference FUNCTION_SPEC_MODULE__FUNCTION_SPECS = eINSTANCE.getFunctionSpecModule_FunctionSpecs();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ParamaterSpecImpl <em>Paramater Spec</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ParamaterSpecImpl
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getParamaterSpec()
-		 * @generated
-		 */
-		EClass PARAMATER_SPEC = eINSTANCE.getParamaterSpec();
-
-		/**
-		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute PARAMATER_SPEC__NAME = eINSTANCE.getParamaterSpec_Name();
-
-		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ParameterImpl <em>Parameter</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -5987,6 +8677,24 @@ public interface Ecore_plus_logicPackage extends EPackage {
 		EReference MEMBER_PARAMETER__PARAM = eINSTANCE.getMemberParameter_Param();
 
 		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.EntityParameterImpl <em>Entity Parameter</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.EntityParameterImpl
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getEntityParameter()
+		 * @generated
+		 */
+		EClass ENTITY_PARAMETER = eINSTANCE.getEntityParameter();
+
+		/**
+		 * The meta object literal for the '<em><b>Entity</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ENTITY_PARAMETER__ENTITY = eINSTANCE.getEntityParameter_Entity();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ValueParameterImpl <em>Value Parameter</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -6013,58 +8721,14 @@ public interface Ecore_plus_logicPackage extends EPackage {
 		EReference VALUE_PARAMETER__DATA_TYPE = eINSTANCE.getValueParameter_DataType();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.AggregateDerivedAttributeImpl <em>Aggregate Derived Attribute</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicScenarioOperationImpl <em>Basic Scenario Operation</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.AggregateDerivedAttributeImpl
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getAggregateDerivedAttribute()
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicScenarioOperationImpl
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getBasicScenarioOperation()
 		 * @generated
 		 */
-		EClass AGGREGATE_DERIVED_ATTRIBUTE = eINSTANCE.getAggregateDerivedAttribute();
-
-		/**
-		 * The meta object literal for the '<em><b>Aggregate Function</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference AGGREGATE_DERIVED_ATTRIBUTE__AGGREGATE_FUNCTION = eINSTANCE.getAggregateDerivedAttribute_AggregateFunction();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicDerivedAttributeImpl <em>Basic Derived Attribute</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicDerivedAttributeImpl
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getBasicDerivedAttribute()
-		 * @generated
-		 */
-		EClass BASIC_DERIVED_ATTRIBUTE = eINSTANCE.getBasicDerivedAttribute();
-
-		/**
-		 * The meta object literal for the '<em><b>Basic Scenario Logic</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference BASIC_DERIVED_ATTRIBUTE__BASIC_SCENARIO_LOGIC = eINSTANCE.getBasicDerivedAttribute_BasicScenarioLogic();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicScenarioLogicImpl <em>Basic Scenario Logic</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicScenarioLogicImpl
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getBasicScenarioLogic()
-		 * @generated
-		 */
-		EClass BASIC_SCENARIO_LOGIC = eINSTANCE.getBasicScenarioLogic();
-
-		/**
-		 * The meta object literal for the '<em><b>Basic Function</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference BASIC_SCENARIO_LOGIC__BASIC_FUNCTION = eINSTANCE.getBasicScenarioLogic_BasicFunction();
+		EClass BASIC_SCENARIO_OPERATION = eINSTANCE.getBasicScenarioOperation();
 
 		/**
 		 * The meta object literal for the '<em><b>Sceanrio</b></em>' reference feature.
@@ -6072,79 +8736,15 @@ public interface Ecore_plus_logicPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference BASIC_SCENARIO_LOGIC__SCEANRIO = eINSTANCE.getBasicScenarioLogic_Sceanrio();
+		EReference BASIC_SCENARIO_OPERATION__SCEANRIO = eINSTANCE.getBasicScenarioOperation_Sceanrio();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedAttributeImpl <em>Derived Attribute</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedAttributeImpl
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getDerivedAttribute()
-		 * @generated
-		 */
-		EClass DERIVED_ATTRIBUTE = eINSTANCE.getDerivedAttribute();
-
-		/**
-		 * The meta object literal for the '<em><b>Variable</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Function Spec</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference DERIVED_ATTRIBUTE__VARIABLE = eINSTANCE.getDerivedAttribute_Variable();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedStructImpl <em>Derived Struct</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedStructImpl
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getDerivedStruct()
-		 * @generated
-		 */
-		EClass DERIVED_STRUCT = eINSTANCE.getDerivedStruct();
-
-		/**
-		 * The meta object literal for the '<em><b>Cube</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference DERIVED_STRUCT__CUBE = eINSTANCE.getDerivedStruct_Cube();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BaseFeatureImpl <em>Base Feature</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BaseFeatureImpl
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getBaseFeature()
-		 * @generated
-		 */
-		EClass BASE_FEATURE = eINSTANCE.getBaseFeature();
-
-		/**
-		 * The meta object literal for the '<em><b>Variable</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference BASE_FEATURE__VARIABLE = eINSTANCE.getBaseFeature_Variable();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedFeatureGroupImpl <em>Derived Feature Group</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedFeatureGroupImpl
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getDerivedFeatureGroup()
-		 * @generated
-		 */
-		EClass DERIVED_FEATURE_GROUP = eINSTANCE.getDerivedFeatureGroup();
-
-		/**
-		 * The meta object literal for the '<em><b>Derived Features</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference DERIVED_FEATURE_GROUP__DERIVED_FEATURES = eINSTANCE.getDerivedFeatureGroup_DerivedFeatures();
+		EReference BASIC_SCENARIO_OPERATION__FUNCTION_SPEC = eINSTANCE.getBasicScenarioOperation_FunctionSpec();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.FeatureParameterImpl <em>Feature Parameter</em>}' class.
@@ -6165,6 +8765,50 @@ public interface Ecore_plus_logicPackage extends EPackage {
 		EReference FEATURE_PARAMETER__FEATURE = eINSTANCE.getFeatureParameter_Feature();
 
 		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.OperationParameterImpl <em>Operation Parameter</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.OperationParameterImpl
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getOperationParameter()
+		 * @generated
+		 */
+		EClass OPERATION_PARAMETER = eINSTANCE.getOperationParameter();
+
+		/**
+		 * The meta object literal for the '<em><b>Operation</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference OPERATION_PARAMETER__OPERATION = eINSTANCE.getOperationParameter_Operation();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ProxyOperationParameterImpl <em>Proxy Operation Parameter</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ProxyOperationParameterImpl
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getProxyOperationParameter()
+		 * @generated
+		 */
+		EClass PROXY_OPERATION_PARAMETER = eINSTANCE.getProxyOperationParameter();
+
+		/**
+		 * The meta object literal for the '<em><b>Entity</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference PROXY_OPERATION_PARAMETER__ENTITY = eINSTANCE.getProxyOperationParameter_Entity();
+
+		/**
+		 * The meta object literal for the '<em><b>Operation name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PROXY_OPERATION_PARAMETER__OPERATION_NAME = eINSTANCE.getProxyOperationParameter_Operation_name();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ProxyFeatureParameterImpl <em>Proxy Feature Parameter</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -6183,98 +8827,12 @@ public interface Ecore_plus_logicPackage extends EPackage {
 		EReference PROXY_FEATURE_PARAMETER__ENTITY = eINSTANCE.getProxyFeatureParameter_Entity();
 
 		/**
-		 * The meta object literal for the '<em><b>Varaible</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Feature name</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference PROXY_FEATURE_PARAMETER__VARAIBLE = eINSTANCE.getProxyFeatureParameter_Varaible();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.GetAttributeFromEntityDerivedFeatureImpl <em>Get Attribute From Entity Derived Feature</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.GetAttributeFromEntityDerivedFeatureImpl
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getGetAttributeFromEntityDerivedFeature()
-		 * @generated
-		 */
-		EClass GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE = eINSTANCE.getGetAttributeFromEntityDerivedFeature();
-
-		/**
-		 * The meta object literal for the '<em><b>Attribute In Entity</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__ATTRIBUTE_IN_ENTITY = eINSTANCE.getGetAttributeFromEntityDerivedFeature_AttributeInEntity();
-
-		/**
-		 * The meta object literal for the '<em><b>Entity Feature</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference GET_ATTRIBUTE_FROM_ENTITY_DERIVED_FEATURE__ENTITY_FEATURE = eINSTANCE.getGetAttributeFromEntityDerivedFeature_EntityFeature();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.AttributeFromEntityParameterImpl <em>Attribute From Entity Parameter</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.AttributeFromEntityParameterImpl
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getAttributeFromEntityParameter()
-		 * @generated
-		 */
-		EClass ATTRIBUTE_FROM_ENTITY_PARAMETER = eINSTANCE.getAttributeFromEntityParameter();
-
-		/**
-		 * The meta object literal for the '<em><b>Attribute In Entity</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference ATTRIBUTE_FROM_ENTITY_PARAMETER__ATTRIBUTE_IN_ENTITY = eINSTANCE.getAttributeFromEntityParameter_AttributeInEntity();
-
-		/**
-		 * The meta object literal for the '<em><b>Entity Feature</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference ATTRIBUTE_FROM_ENTITY_PARAMETER__ENTITY_FEATURE = eINSTANCE.getAttributeFromEntityParameter_EntityFeature();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ProxyAttributeFromEntityParameterImpl <em>Proxy Attribute From Entity Parameter</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.ProxyAttributeFromEntityParameterImpl
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getProxyAttributeFromEntityParameter()
-		 * @generated
-		 */
-		EClass PROXY_ATTRIBUTE_FROM_ENTITY_PARAMETER = eINSTANCE.getProxyAttributeFromEntityParameter();
-
-		/**
-		 * The meta object literal for the '<em><b>Variable</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PROXY_ATTRIBUTE_FROM_ENTITY_PARAMETER__VARIABLE = eINSTANCE.getProxyAttributeFromEntityParameter_Variable();
-
-		/**
-		 * The meta object literal for the '<em><b>Entity</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PROXY_ATTRIBUTE_FROM_ENTITY_PARAMETER__ENTITY = eINSTANCE.getProxyAttributeFromEntityParameter_Entity();
-
-		/**
-		 * The meta object literal for the '<em><b>Cube</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PROXY_ATTRIBUTE_FROM_ENTITY_PARAMETER__CUBE = eINSTANCE.getProxyAttributeFromEntityParameter_Cube();
+		EAttribute PROXY_FEATURE_PARAMETER__FEATURE_NAME = eINSTANCE.getProxyFeatureParameter_Feature_name();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.CustomRowCreationApproachImpl <em>Custom Row Creation Approach</em>}' class.
@@ -6285,14 +8843,6 @@ public interface Ecore_plus_logicPackage extends EPackage {
 		 * @generated
 		 */
 		EClass CUSTOM_ROW_CREATION_APPROACH = eINSTANCE.getCustomRowCreationApproach();
-
-		/**
-		 * The meta object literal for the '<em><b>Dependant Variables</b></em>' reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference CUSTOM_ROW_CREATION_APPROACH__DEPENDANT_VARIABLES = eINSTANCE.getCustomRowCreationApproach_DependantVariables();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.FilterAndGroupToOneRowCreationApproachImpl <em>Filter And Group To One Row Creation Approach</em>}' class.
@@ -6319,40 +8869,6 @@ public interface Ecore_plus_logicPackage extends EPackage {
 		 * @generated
 		 */
 		EReference FILTER_AND_GROUP_TO_ONE_ROW_CREATION_APPROACH__GROUP_BY_VARIABLES = eINSTANCE.getFilterAndGroupToOneRowCreationApproach_GroupByVariables();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.RowCreationApproachForEntityImpl <em>Row Creation Approach For Entity</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.RowCreationApproachForEntityImpl
-		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getRowCreationApproachForEntity()
-		 * @generated
-		 */
-		EClass ROW_CREATION_APPROACH_FOR_ENTITY = eINSTANCE.getRowCreationApproachForEntity();
-
-		/**
-		 * The meta object literal for the '<em><b>Row Creation Approach</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference ROW_CREATION_APPROACH_FOR_ENTITY__ROW_CREATION_APPROACH = eINSTANCE.getRowCreationApproachForEntity_RowCreationApproach();
-
-		/**
-		 * The meta object literal for the '<em><b>Entity</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference ROW_CREATION_APPROACH_FOR_ENTITY__ENTITY = eINSTANCE.getRowCreationApproachForEntity_Entity();
-
-		/**
-		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute ROW_CREATION_APPROACH_FOR_ENTITY__NAME = eINSTANCE.getRowCreationApproachForEntity_Name();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.OneToOneRowCreationApproachImpl <em>One To One Row Creation Approach</em>}' class.
@@ -6393,28 +8909,12 @@ public interface Ecore_plus_logicPackage extends EPackage {
 		EClass ROW_CREATION_APPROACH = eINSTANCE.getRowCreationApproach();
 
 		/**
-		 * The meta object literal for the '<em><b>Dependant Cube Columns</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference ROW_CREATION_APPROACH__DEPENDANT_CUBE_COLUMNS = eINSTANCE.getRowCreationApproach_DependantCubeColumns();
-
-		/**
 		 * The meta object literal for the '<em><b>Created Cube Columns</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EReference ROW_CREATION_APPROACH__CREATED_CUBE_COLUMNS = eINSTANCE.getRowCreationApproach_CreatedCubeColumns();
-
-		/**
-		 * The meta object literal for the '<em><b>Dependant Struct Item Columns</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference ROW_CREATION_APPROACH__DEPENDANT_STRUCT_ITEM_COLUMNS = eINSTANCE.getRowCreationApproach_DependantStructItemColumns();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.GroupByRowCreationApproachImpl <em>Group By Row Creation Approach</em>}' class.
@@ -6427,20 +8927,20 @@ public interface Ecore_plus_logicPackage extends EPackage {
 		EClass GROUP_BY_ROW_CREATION_APPROACH = eINSTANCE.getGroupByRowCreationApproach();
 
 		/**
-		 * The meta object literal for the '<em><b>Group By Cube Column Names</b></em>' reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference GROUP_BY_ROW_CREATION_APPROACH__GROUP_BY_CUBE_COLUMN_NAMES = eINSTANCE.getGroupByRowCreationApproach_GroupByCubeColumnNames();
-
-		/**
-		 * The meta object literal for the '<em><b>Group By Columns</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Group By Columns</b></em>' reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EReference GROUP_BY_ROW_CREATION_APPROACH__GROUP_BY_COLUMNS = eINSTANCE.getGroupByRowCreationApproach_GroupByColumns();
+
+		/**
+		 * The meta object literal for the '<em><b>Group By Cube Column Names</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute GROUP_BY_ROW_CREATION_APPROACH__GROUP_BY_CUBE_COLUMN_NAMES = eINSTANCE.getGroupByRowCreationApproach_GroupByCubeColumnNames();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.RowJoinFunctionImpl <em>Row Join Function</em>}' class.
@@ -6541,6 +9041,182 @@ public interface Ecore_plus_logicPackage extends EPackage {
 		 * @generated
 		 */
 		EReference GENERATED_ENTITY_MODULE__GENERATED_ENTITIES = eINSTANCE.getGeneratedEntityModule_GeneratedEntities();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.EntityTableImpl <em>Entity Table</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.EntityTableImpl
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getEntityTable()
+		 * @generated
+		 */
+		EClass ENTITY_TABLE = eINSTANCE.getEntityTable();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedEntityTableImpl <em>Derived Entity Table</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedEntityTableImpl
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getDerivedEntityTable()
+		 * @generated
+		 */
+		EClass DERIVED_ENTITY_TABLE = eINSTANCE.getDerivedEntityTable();
+
+		/**
+		 * The meta object literal for the '<em><b>Source Tables</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DERIVED_ENTITY_TABLE__SOURCE_TABLES = eINSTANCE.getDerivedEntityTable_SourceTables();
+
+		/**
+		 * The meta object literal for the '<em><b>Contained Entity Type</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DERIVED_ENTITY_TABLE__CONTAINED_ENTITY_TYPE = eINSTANCE.getDerivedEntityTable_ContainedEntityType();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BaseEntityTableImpl <em>Base Entity Table</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BaseEntityTableImpl
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getBaseEntityTable()
+		 * @generated
+		 */
+		EClass BASE_ENTITY_TABLE = eINSTANCE.getBaseEntityTable();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.OperationImpl <em>Operation</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.OperationImpl
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getOperation()
+		 * @generated
+		 */
+		EClass OPERATION = eINSTANCE.getOperation();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicOperationImpl <em>Basic Operation</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicOperationImpl
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getBasicOperation()
+		 * @generated
+		 */
+		EClass BASIC_OPERATION = eINSTANCE.getBasicOperation();
+
+		/**
+		 * The meta object literal for the '<em><b>Function Spec</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference BASIC_OPERATION__FUNCTION_SPEC = eINSTANCE.getBasicOperation_FunctionSpec();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.AggregateOperationImpl <em>Aggregate Operation</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.AggregateOperationImpl
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getAggregateOperation()
+		 * @generated
+		 */
+		EClass AGGREGATE_OPERATION = eINSTANCE.getAggregateOperation();
+
+		/**
+		 * The meta object literal for the '<em><b>Function Spec</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference AGGREGATE_OPERATION__FUNCTION_SPEC = eINSTANCE.getAggregateOperation_FunctionSpec();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.EntityFromSourceOperationImpl <em>Entity From Source Operation</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.EntityFromSourceOperationImpl
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getEntityFromSourceOperation()
+		 * @generated
+		 */
+		EClass ENTITY_FROM_SOURCE_OPERATION = eINSTANCE.getEntityFromSourceOperation();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.AttributeFromEntityOperationImpl <em>Attribute From Entity Operation</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.AttributeFromEntityOperationImpl
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getAttributeFromEntityOperation()
+		 * @generated
+		 */
+		EClass ATTRIBUTE_FROM_ENTITY_OPERATION = eINSTANCE.getAttributeFromEntityOperation();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.CellsParameterImpl <em>Cells Parameter</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.CellsParameterImpl
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getCellsParameter()
+		 * @generated
+		 */
+		EClass CELLS_PARAMETER = eINSTANCE.getCellsParameter();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicOperationScenarioSetImpl <em>Basic Operation Scenario Set</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BasicOperationScenarioSetImpl
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getBasicOperationScenarioSet()
+		 * @generated
+		 */
+		EClass BASIC_OPERATION_SCENARIO_SET = eINSTANCE.getBasicOperationScenarioSet();
+
+		/**
+		 * The meta object literal for the '<em><b>Basic Scenario Logic</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference BASIC_OPERATION_SCENARIO_SET__BASIC_SCENARIO_LOGIC = eINSTANCE.getBasicOperationScenarioSet_BasicScenarioLogic();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BaseEntityTableModuleImpl <em>Base Entity Table Module</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.BaseEntityTableModuleImpl
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getBaseEntityTableModule()
+		 * @generated
+		 */
+		EClass BASE_ENTITY_TABLE_MODULE = eINSTANCE.getBaseEntityTableModule();
+
+		/**
+		 * The meta object literal for the '<em><b>Base Entity Tables</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference BASE_ENTITY_TABLE_MODULE__BASE_ENTITY_TABLES = eINSTANCE.getBaseEntityTableModule_BaseEntityTables();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedEntityTableModuleImpl <em>Derived Entity Table Module</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.DerivedEntityTableModuleImpl
+		 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.impl.Ecore_plus_logicPackageImpl#getDerivedEntityTableModule()
+		 * @generated
+		 */
+		EClass DERIVED_ENTITY_TABLE_MODULE = eINSTANCE.getDerivedEntityTableModule();
+
+		/**
+		 * The meta object literal for the '<em><b>Derived Entity Tables</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DERIVED_ENTITY_TABLE_MODULE__DERIVED_ENTITY_TABLES = eINSTANCE.getDerivedEntityTableModule_DerivedEntityTables();
 
 	}
 

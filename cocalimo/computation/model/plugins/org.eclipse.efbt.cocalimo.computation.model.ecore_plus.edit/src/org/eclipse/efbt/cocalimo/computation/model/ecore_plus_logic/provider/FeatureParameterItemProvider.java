@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Ecore_plus_logicPackage;
+import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.FeatureParameter;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
@@ -88,7 +89,10 @@ public class FeatureParameterItemProvider extends ParameterItemProvider {
 	 */
 	@Override
 	public String getText(Object object) {
-		return getString("_UI_FeatureParameter_type");
+		String label = ((FeatureParameter)object).getName();
+		return label == null || label.length() == 0 ?
+			getString("_UI_FeatureParameter_type") :
+			getString("_UI_FeatureParameter_type") + " " + label;
 	}
 
 

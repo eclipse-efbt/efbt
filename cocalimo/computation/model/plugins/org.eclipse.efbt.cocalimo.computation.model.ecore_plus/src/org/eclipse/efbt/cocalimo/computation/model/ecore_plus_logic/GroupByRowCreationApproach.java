@@ -4,7 +4,7 @@ package org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic;
 
 import org.eclipse.emf.common.util.EList;
 
-import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.ETypedElement;
 
 /**
  * <!-- begin-user-doc -->
@@ -19,8 +19,8 @@ import org.eclipse.emf.ecore.EAttribute;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GroupByRowCreationApproach#getGroupByCubeColumnNames <em>Group By Cube Column Names</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GroupByRowCreationApproach#getGroupByColumns <em>Group By Columns</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GroupByRowCreationApproach#getGroupByCubeColumnNames <em>Group By Cube Column Names</em>}</li>
  * </ul>
  *
  * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Ecore_plus_logicPackage#getGroupByRowCreationApproach()
@@ -29,40 +29,27 @@ import org.eclipse.emf.ecore.EAttribute;
  */
 public interface GroupByRowCreationApproach extends RowCreationApproach {
 	/**
-	 * Returns the value of the '<em><b>Group By Cube Column Names</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.emf.ecore.EAttribute}.
+	 * Returns the value of the '<em><b>Group By Columns</b></em>' reference list.
+	 * The list contents are of type {@link org.eclipse.emf.ecore.ETypedElement}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The CubeColumns to use to group the source cube by, e.g. grouping a cube by a a column called Currency will lead to one row per unique currency in the source cube rows.
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Group By Cube Column Names</em>' reference list.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Ecore_plus_logicPackage#getGroupByRowCreationApproach_GroupByCubeColumnNames()
-	 * @model extendedMetaData="kind='attribute' name='groupByCubeColumns'"
-	 * @generated
-	 */
-	EList<EAttribute> getGroupByCubeColumnNames();
-
-	/**
-	 * Returns the value of the '<em><b>Group By Columns</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Group By Columns</em>' reference.
-	 * @see #setGroupByColumns(EAttribute)
+	 * @return the value of the '<em>Group By Columns</em>' reference list.
 	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Ecore_plus_logicPackage#getGroupByRowCreationApproach_GroupByColumns()
 	 * @model
 	 * @generated
 	 */
-	EAttribute getGroupByColumns();
+	EList<ETypedElement> getGroupByColumns();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GroupByRowCreationApproach#getGroupByColumns <em>Group By Columns</em>}' reference.
+	 * Returns the value of the '<em><b>Group By Cube Column Names</b></em>' attribute list.
+	 * The list contents are of type {@link java.lang.String}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Group By Columns</em>' reference.
-	 * @see #getGroupByColumns()
+	 * @return the value of the '<em>Group By Cube Column Names</em>' attribute list.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Ecore_plus_logicPackage#getGroupByRowCreationApproach_GroupByCubeColumnNames()
+	 * @model
 	 * @generated
 	 */
-	void setGroupByColumns(EAttribute value);
+	EList<String> getGroupByCubeColumnNames();
 
 } // GroupByRowCreationApproach
