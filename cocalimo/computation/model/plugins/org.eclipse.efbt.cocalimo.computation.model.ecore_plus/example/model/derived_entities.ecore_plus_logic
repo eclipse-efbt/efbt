@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore_plus_logic:DerivedEntityModule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore_plus="http://www.eclipse.org/efbt/ecore_plus_structure" xmlns:ecore_plus_logic="http://www.eclipse.org/efbt/ecore_plus_logic">
+  <derivedEntities name="CounterpartyAndRating" sourceEntities="base_entities.ecore_plus_structure#//@baseEntities.0 base_entities.ecore_plus_structure#//@baseEntities.5">
+    <eOperations xsi:type="ecore_plus_logic:EntityFromSourceOperation" name="counterparty" eType="ecore_plus:BaseEntity base_entities.ecore_plus_structure#//@baseEntities.0"/>
+    <eOperations xsi:type="ecore_plus_logic:EntityFromSourceOperation" name="rating" eType="ecore_plus:BaseEntity base_entities.ecore_plus_structure#//@baseEntities.5"/>
+  </derivedEntities>
+  <derivedEntities name="EquityInstrumentAsInstrument" sourceEntities="base_entities.ecore_plus_structure#//@baseEntities.3">
+    <eOperations xsi:type="ecore_plus_logic:EntityFromSourceOperation" name="equityInstrument" eType="ecore_plus:BaseEntity base_entities.ecore_plus_structure#//@baseEntities.3"/>
+  </derivedEntities>
+  <derivedEntities name="BondInstrumentAsInstrument" sourceEntities="base_entities.ecore_plus_structure#//@baseEntities.2">
+    <eOperations xsi:type="ecore_plus_logic:EntityFromSourceOperation" name="bondInstrument" eType="ecore_plus:BaseEntity base_entities.ecore_plus_structure#//@baseEntities.2"/>
+  </derivedEntities>
+  <derivedEntities name="AllInstruments" sourceEntities="base_entities.ecore_plus_structure#//@baseEntities.1">
+    <eOperations xsi:type="ecore_plus_logic:EntityFromSourceOperation" name="instrument" eType="ecore_plus:BaseEntity base_entities.ecore_plus_structure#//@baseEntities.1"/>
+  </derivedEntities>
+  <derivedEntities name="TradesWithInstrument" sourceEntities="#//@derivedEntities.3 base_entities.ecore_plus_structure#//@baseEntities.4">
+    <eOperations xsi:type="ecore_plus_logic:EntityFromSourceOperation" name="trade" eType="ecore_plus:BaseEntity base_entities.ecore_plus_structure#//@baseEntities.4"/>
+    <eOperations xsi:type="ecore_plus_logic:EntityFromSourceOperation" name="instrument" eType="ecore_plus:BaseEntity base_entities.ecore_plus_structure#//@baseEntities.1"/>
+  </derivedEntities>
+  <derivedEntities name="BondTrades" sourceEntities="#//@derivedEntities.4">
+    <eOperations xsi:type="ecore_plus_logic:BasicOperation" name="trade" functionSpec="functions.ecore_plus_logic#ID">
+      <eParameters xsi:type="ecore_plus_logic:OperationParameter" eType="ecore_plus:BaseEntity base_entities.ecore_plus_structure#//@baseEntities.4" operation="#//@derivedEntities.4/trade"/>
+    </eOperations>
+    <eOperations xsi:type="ecore_plus_logic:BasicOperation" name="instrument" functionSpec="functions.ecore_plus_logic#ID">
+      <eParameters xsi:type="ecore_plus_logic:OperationParameter" eType="ecore_plus:BaseEntity base_entities.ecore_plus_structure#//@baseEntities.4" operation="#//@derivedEntities.4/instrument"/>
+    </eOperations>
+  </derivedEntities>
+</ecore_plus_logic:DerivedEntityModule>

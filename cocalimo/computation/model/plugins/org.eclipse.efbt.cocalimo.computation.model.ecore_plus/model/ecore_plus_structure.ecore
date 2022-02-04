@@ -5,42 +5,15 @@
   <eClassifiers xsi:type="ecore:EClass" name="BaseEntity" eSuperTypes="#//Entity">
     <eStructuralFeatures xsi:type="ecore:EReference" name="baseFeatures" upperBound="-1"
         eType="#//BaseEntityFeature" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="cube" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/data_definition.ecore#//CUBE"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Cell">
     <eStructuralFeatures xsi:type="ecore:EReference" name="row" eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="column" eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EStructuralFeature"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="HeirarchicalEnum" eSuperTypes="../../org.eclipse.emf.ecore/model/Ecore.ecore#//EEnum"/>
-  <eClassifiers xsi:type="ecore:EClass" name="HeirarchicalEnumLiteral" eSuperTypes="../../org.eclipse.emf.ecore/model/Ecore.ecore#//EEnumLiteral">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parentLiteral" eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EEnumLiteral"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="EnumeratedDomain" eSuperTypes="#//HeirarchicalEnum">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="domain" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/core.ecore#//DOMAIN"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SubDomainEnum" eSuperTypes="#//HeirarchicalEnum">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="primaryEnum" eType="#//EnumeratedDomain"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="subDomain" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/core.ecore#//SUBDOMAIN"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CellsParameter">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A Parameter which is an existing Cell. The Cell might be a BaseCell or a DerivedCell."/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="cells" eType="#//Cell">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The cell"/>
-      </eAnnotations>
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="cells"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Entity" eSuperTypes="../../org.eclipse.emf.ecore/model/Ecore.ecore#//EClass"/>
   <eClassifiers xsi:type="ecore:EClass" name="BaseEntityFeature" eSuperTypes="../../org.eclipse.emf.ecore/model/Ecore.ecore#//EAttribute">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isFK" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="fkEntity" eType="#//BaseEntity"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="varaible" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/core.ecore#//VARIABLE"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BaseEntityModule" eSuperTypes="../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.ecore#//Module">
     <eStructuralFeatures xsi:type="ecore:EReference" name="baseEntities" upperBound="-1"

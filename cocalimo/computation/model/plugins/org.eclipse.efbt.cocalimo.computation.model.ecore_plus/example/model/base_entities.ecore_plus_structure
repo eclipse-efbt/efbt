@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore_plus:BaseEntityModule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:ecore_plus="http://www.eclipse.org/efbt/ecore_plus_structure">
+  <baseEntities name="Counterparty">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="counterpartyID" iD="true">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="counterpartyName" iD="true">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="exposureClass" iD="true">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+  </baseEntities>
+  <baseEntities name="Instrument"/>
+  <baseEntities name="BondInstrument" eSuperTypes="//@baseEntities.1">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="instrumentName">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="instrumentID" iD="true">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="couponRate">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    </eStructuralFeatures>
+    <baseFeatures name="IssuerCounterpartyID" isFK="true" fkEntity="//@baseEntities.0"/>
+  </baseEntities>
+  <baseEntities name="EquityInstrument" eSuperTypes="//@baseEntities.1">
+    <eStructuralFeatures xsi:type="ecore_plus:BaseEntityFeature" name="IssuerCounterpartyID" isFK="true" fkEntity="//@baseEntities.0"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="instrumentName">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="instrumentID" iD="true">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+  </baseEntities>
+  <baseEntities name="Trade">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="tradeId" iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="counterpartyID" iD="true">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="instrumentID">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="modifiedDuration">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="notionalAmount">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ccy">
+      <eType xsi:type="ecore:EEnum" href="enums.ecore#//Currency"/>
+    </eStructuralFeatures>
+  </baseEntities>
+  <baseEntities name="Rating">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ratingID" iD="true">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ratingAgency">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="creditQualityStep">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    </eStructuralFeatures>
+    <baseFeatures name="counterpartyID" isFK="true" fkEntity="//@baseEntities.0">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </baseFeatures>
+  </baseEntities>
+</ecore_plus:BaseEntityModule>

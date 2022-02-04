@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore_plus_logic:DerivedEntityTableModule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:ecore_plus="http://www.eclipse.org/efbt/ecore_plus_structure" xmlns:ecore_plus_logic="http://www.eclipse.org/efbt/ecore_plus_logic">
+  <derivedEntityTables name="CounterpartyAndRating">
+    <eOperations xsi:type="ecore_plus_logic:RowJoinFunction">
+      <joinFunction functionSpec="functions.ecore_plus_logic#equals">
+        <eParameters xsi:type="ecore_plus_logic:ResolvedCubeColumnParameter" cubeColumn="ecore:EAttribute base_entities.ecore_plus_structure#//@baseEntities.0/counterpartyID"/>
+        <eParameters xsi:type="ecore_plus_logic:ResolvedCubeColumnParameter" cubeColumn="ecore_plus:BaseEntityFeature base_entities.ecore_plus_structure#//@baseEntities.5/counterpartyID"/>
+      </joinFunction>
+    </eOperations>
+  </derivedEntityTables>
+  <derivedEntityTables name="BondInstrumentAsInstrument" sourceTables="baseTables.ecore_plus_logic#//@baseEntityTables.2">
+    <eOperations xsi:type="ecore_plus_logic:OneToOneRowCreationApproach" eType="ecore_plus_logic:DerivedEntity derived_entities.ecore_plus_logic#//@derivedEntities.2"/>
+  </derivedEntityTables>
+  <derivedEntityTables name="EquityInstrumentAsInstrument" sourceTables="baseTables.ecore_plus_logic#//@baseEntityTables.3">
+    <eOperations xsi:type="ecore_plus_logic:OneToOneRowCreationApproach" eType="ecore_plus_logic:DerivedEntity derived_entities.ecore_plus_logic#//@derivedEntities.1"/>
+  </derivedEntityTables>
+  <derivedEntityTables name="AllInstrumentsTable" sourceTables="#//@derivedEntityTables.1 #//@derivedEntityTables.2">
+    <eOperations xsi:type="ecore_plus_logic:UnionRowCreationApproach"/>
+  </derivedEntityTables>
+  <derivedEntityTables name="TradesWithInstrumentTable" sourceTables="#//@derivedEntityTables.3 baseTables.ecore_plus_logic#//@baseEntityTables.1">
+    <eOperations xsi:type="ecore_plus_logic:RowJoinFunction">
+      <joinFunction functionSpec="functions.ecore_plus_logic#equals">
+        <eParameters xsi:type="ecore_plus_logic:AttributeFromEntityOperation">
+          <eParameters xsi:type="ecore_plus_logic:ResolvedCubeColumnParameter" cubeColumn="ecore:EAttribute base_entities.ecore_plus_structure#//@baseEntities.4/instrumentID"/>
+          <eParameters xsi:type="ecore_plus_logic:OperationParameter" operation="derived_entities.ecore_plus_logic#//@derivedEntities.4/trade"/>
+        </eParameters>
+      </joinFunction>
+    </eOperations>
+  </derivedEntityTables>
+  <derivedEntityTables name="BondTradesTable" sourceTables="#//@derivedEntityTables.4">
+    <eOperations xsi:type="ecore_plus_logic:FilterRowCreationApproach">
+      <filterFunction eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" functionSpec="functions.ecore_plus_logic#equals">
+        <eParameters xsi:type="ecore_plus_logic:BasicOperation" functionSpec="functions.ecore_plus_logic#getEntityType">
+          <eParameters xsi:type="ecore_plus_logic:OperationParameter" operation="derived_entities.ecore_plus_logic#//@derivedEntities.5/instrument"/>
+          <eParameters xsi:type="ecore_plus_logic:EntityParameter" entity="base_entities.ecore_plus_structure#//@baseEntities.2"/>
+        </eParameters>
+      </filterFunction>
+    </eOperations>
+  </derivedEntityTables>
+</ecore_plus_logic:DerivedEntityTableModule>
