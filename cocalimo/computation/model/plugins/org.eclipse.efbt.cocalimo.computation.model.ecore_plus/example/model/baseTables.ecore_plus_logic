@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore_plus_logic:BaseEntityTableModule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:ecore_plus="http://www.eclipse.org/efbt/ecore_plus_structure" xmlns:ecore_plus_logic="http://www.eclipse.org/efbt/ecore_plus_logic">
+  <baseEntityTables name="CounterpartyTable">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contents" upperBound="-1" eType="ecore_plus:BaseEntity base_entities.ecore_plus_structure#//@baseEntities.0" containment="true"/>
+  </baseEntityTables>
+  <baseEntityTables name="TradeTable">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contents" upperBound="-1" eType="ecore_plus:BaseEntity base_entities.ecore_plus_structure#//@baseEntities.4" containment="true"/>
+  </baseEntityTables>
+  <baseEntityTables name="BondInstrumentTable">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contents" upperBound="-1" eType="ecore_plus:BaseEntity base_entities.ecore_plus_structure#//@baseEntities.2"/>
+  </baseEntityTables>
+  <baseEntityTables name="EquityInstrumentTable">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contents" upperBound="-1" eType="ecore_plus:BaseEntity base_entities.ecore_plus_structure#//@baseEntities.3"/>
+  </baseEntityTables>
+</ecore_plus_logic:BaseEntityTableModule>

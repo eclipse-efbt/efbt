@@ -409,7 +409,7 @@ public interface Platform_callPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__ATTRIBUTE_LINEAGE = PLATFORM_CALL_FEATURE_COUNT + 1;
+	int CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__computation_lineage = PLATFORM_CALL_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Test Scope</b></em>' containment reference list.
@@ -760,7 +760,7 @@ public interface Platform_callPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__ATTRIBUTE_LINEAGE = eINSTANCE.getCreateLogicalTransformationViewForScope_AttributeLineage();
+		EReference CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__computation_lineage = eINSTANCE.getCreateLogicalTransformationViewForScope_AttributeLineage();
 
 		/**
 		 * The meta object literal for the '<em><b>Test Scope</b></em>' containment reference list feature.

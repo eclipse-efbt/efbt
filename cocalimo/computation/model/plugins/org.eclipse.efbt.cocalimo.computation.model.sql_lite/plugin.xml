@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated sql_lite -->
+      <package
+            uri="http://www.example.org/sql_lite"
+            class="org.eclipse.efbt.cocalimo.computation.model.sql_lite.Sql_litePackage"
+            genModel="model/sql_lite.genmodel"/>
+   </extension>
+
+</plugin>
