@@ -1,6 +1,6 @@
 /**
  */
-package org.eclipse.efbt.cocalimo.smcubes.model.mapping.presentation;
+package org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.presentation;
 
 
 import java.io.IOException;
@@ -155,7 +155,7 @@ import org.eclipse.emf.edit.ui.util.EditUIUtil;
 
 import org.eclipse.emf.edit.ui.view.ExtendedPropertySheetPage;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.mapping.provider.MappingItemProviderAdapterFactory;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.provider.Data_meta_modelItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.core.model.module_management.provider.Module_managementItemProviderAdapterFactory;
 
@@ -167,7 +167,7 @@ import org.eclipse.efbt.cocalimo.smcubes.model.core.provider.CoreItemProviderAda
 
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.provider.Data_definitionItemProviderAdapterFactory;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.provider.Data_meta_modelItemProviderAdapterFactory;
+import org.eclipse.efbt.cocalimo.smcubes.model.mapping.provider.MappingItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.rendering.provider.RenderingItemProviderAdapterFactory;
 
@@ -175,12 +175,12 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 
 /**
- * This is an example of a Mapping model editor.
+ * This is an example of a Data_meta_model model editor.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class MappingEditor
+public class Data_meta_modelEditor
 	extends MultiPageEditorPart
 	implements IEditingDomainProvider, ISelectionProvider, IMenuListener, IViewerProvider, IGotoMarker {
 	/**
@@ -343,18 +343,18 @@ public class MappingEditor
 			public void partActivated(IWorkbenchPart p) {
 				if (p instanceof ContentOutline) {
 					if (((ContentOutline)p).getCurrentPage() == contentOutlinePage) {
-						getActionBarContributor().setActiveEditor(MappingEditor.this);
+						getActionBarContributor().setActiveEditor(Data_meta_modelEditor.this);
 
 						setCurrentViewer(contentOutlineViewer);
 					}
 				}
 				else if (p instanceof PropertySheet) {
 					if (propertySheetPages.contains(((PropertySheet)p).getCurrentPage())) {
-						getActionBarContributor().setActiveEditor(MappingEditor.this);
+						getActionBarContributor().setActiveEditor(Data_meta_modelEditor.this);
 						handleActivate();
 					}
 				}
-				else if (p == MappingEditor.this) {
+				else if (p == Data_meta_modelEditor.this) {
 					handleActivate();
 				}
 			}
@@ -535,7 +535,7 @@ public class MappingEditor
 								 public void run() {
 									 removedResources.addAll(visitor.getRemovedResources());
 									 if (!isDirty()) {
-										 getSite().getPage().closeEditor(MappingEditor.this, false);
+										 getSite().getPage().closeEditor(Data_meta_modelEditor.this, false);
 									 }
 								 }
 							 });
@@ -547,7 +547,7 @@ public class MappingEditor
 								 @Override
 								 public void run() {
 									 changedResources.addAll(visitor.getChangedResources());
-									 if (getSite().getPage().getActiveEditor() == MappingEditor.this) {
+									 if (getSite().getPage().getActiveEditor() == Data_meta_modelEditor.this) {
 										 handleActivate();
 									 }
 								 }
@@ -579,7 +579,7 @@ public class MappingEditor
 
 		if (!removedResources.isEmpty()) {
 			if (handleDirtyConflict()) {
-				getSite().getPage().closeEditor(MappingEditor.this, false);
+				getSite().getPage().closeEditor(Data_meta_modelEditor.this, false);
 			}
 			else {
 				removedResources.clear();
@@ -707,7 +707,7 @@ public class MappingEditor
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MappingEditor() {
+	public Data_meta_modelEditor() {
 		super();
 		initializeEditingDomain();
 	}
@@ -1057,7 +1057,7 @@ public class MappingEditor
 			//
 			{
 				ViewerPane viewerPane =
-					new ViewerPane(getSite().getPage(), MappingEditor.this) {
+					new ViewerPane(getSite().getPage(), Data_meta_modelEditor.this) {
 						@Override
 						public Viewer createViewer(Composite composite) {
 							Tree tree = new Tree(composite, SWT.MULTI);
@@ -1092,7 +1092,7 @@ public class MappingEditor
 			//
 			{
 				ViewerPane viewerPane =
-					new ViewerPane(getSite().getPage(), MappingEditor.this) {
+					new ViewerPane(getSite().getPage(), Data_meta_modelEditor.this) {
 						@Override
 						public Viewer createViewer(Composite composite) {
 							Tree tree = new Tree(composite, SWT.MULTI);
@@ -1121,7 +1121,7 @@ public class MappingEditor
 			//
 			{
 				ViewerPane viewerPane =
-					new ViewerPane(getSite().getPage(), MappingEditor.this) {
+					new ViewerPane(getSite().getPage(), Data_meta_modelEditor.this) {
 						@Override
 						public Viewer createViewer(Composite composite) {
 							return new ListViewer(composite);
@@ -1146,7 +1146,7 @@ public class MappingEditor
 			//
 			{
 				ViewerPane viewerPane =
-					new ViewerPane(getSite().getPage(), MappingEditor.this) {
+					new ViewerPane(getSite().getPage(), Data_meta_modelEditor.this) {
 						@Override
 						public Viewer createViewer(Composite composite) {
 							return new TreeViewer(composite);
@@ -1173,7 +1173,7 @@ public class MappingEditor
 			//
 			{
 				ViewerPane viewerPane =
-					new ViewerPane(getSite().getPage(), MappingEditor.this) {
+					new ViewerPane(getSite().getPage(), Data_meta_modelEditor.this) {
 						@Override
 						public Viewer createViewer(Composite composite) {
 							return new TableViewer(composite);
@@ -1216,7 +1216,7 @@ public class MappingEditor
 			//
 			{
 				ViewerPane viewerPane =
-					new ViewerPane(getSite().getPage(), MappingEditor.this) {
+					new ViewerPane(getSite().getPage(), Data_meta_modelEditor.this) {
 						@Override
 						public Viewer createViewer(Composite composite) {
 							return new TreeViewer(composite);
@@ -1441,8 +1441,8 @@ public class MappingEditor
 			new ExtendedPropertySheetPage(editingDomain, ExtendedPropertySheetPage.Decoration.NONE, null, 0, false) {
 				@Override
 				public void setSelectionToViewer(List<?> selection) {
-					MappingEditor.this.setSelectionToViewer(selection);
-					MappingEditor.this.setFocus();
+					Data_meta_modelEditor.this.setSelectionToViewer(selection);
+					Data_meta_modelEditor.this.setFocus();
 				}
 
 				@Override

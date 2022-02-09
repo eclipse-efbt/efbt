@@ -165,6 +165,8 @@ import org.eclipse.efbt.cocalimo.smcubes.model.core.provider.CoreItemProviderAda
 
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.provider.Data_definitionItemProviderAdapterFactory;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.provider.Data_meta_modelItemProviderAdapterFactory;
+
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.provider.MappingItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.rendering.provider.RenderingItemProviderAdapterFactory;
@@ -727,6 +729,7 @@ public class Cocalimo_smcubes_extensionEditor
 		adapterFactory.addAdapterFactory(new MappingItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new RenderingItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Cocalimo_smcubes_extensionItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new Data_meta_modelItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Module_managementItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 

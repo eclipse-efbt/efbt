@@ -160,10 +160,15 @@ import org.eclipse.efbt.cocalimo.smcubes.model.core.provider.CoreItemProviderAda
 import org.eclipse.efbt.cocalimo.core.model.module_management.provider.Module_managementItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.provider.Cocalimo_smcubes_extensionItemProviderAdapterFactory;
+
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.provider.Data_definitionItemProviderAdapterFactory;
+
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.provider.Data_meta_modelItemProviderAdapterFactory;
+
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.provider.MappingItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.rendering.provider.RenderingItemProviderAdapterFactory;
+
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 
@@ -722,6 +727,7 @@ public class CoreEditor
 		adapterFactory.addAdapterFactory(new MappingItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new RenderingItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Cocalimo_smcubes_extensionItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new Data_meta_modelItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Module_managementItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 
