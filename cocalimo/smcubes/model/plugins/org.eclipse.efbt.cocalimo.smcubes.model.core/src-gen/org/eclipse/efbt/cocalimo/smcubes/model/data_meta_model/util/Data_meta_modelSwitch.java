@@ -136,7 +136,6 @@ public class Data_meta_modelSwitch<T> extends Switch<T> {
 				GeneratedEntity generatedEntity = (GeneratedEntity)theEObject;
 				T result = caseGeneratedEntity(generatedEntity);
 				if (result == null) result = caseEntity(generatedEntity);
-				if (result == null) result = caseClassifier(generatedEntity);
 				if (result == null) result = caseNamedElement(generatedEntity);
 				if (result == null) result = caseElement(generatedEntity);
 				if (result == null) result = defaultCase(theEObject);
@@ -145,7 +144,6 @@ public class Data_meta_modelSwitch<T> extends Switch<T> {
 			case Data_meta_modelPackage.ENTITY: {
 				Entity entity = (Entity)theEObject;
 				T result = caseEntity(entity);
-				if (result == null) result = caseClassifier(entity);
 				if (result == null) result = caseNamedElement(entity);
 				if (result == null) result = caseElement(entity);
 				if (result == null) result = defaultCase(theEObject);
@@ -155,7 +153,6 @@ public class Data_meta_modelSwitch<T> extends Switch<T> {
 				DerivedEntity derivedEntity = (DerivedEntity)theEObject;
 				T result = caseDerivedEntity(derivedEntity);
 				if (result == null) result = caseEntity(derivedEntity);
-				if (result == null) result = caseClassifier(derivedEntity);
 				if (result == null) result = caseNamedElement(derivedEntity);
 				if (result == null) result = caseElement(derivedEntity);
 				if (result == null) result = defaultCase(theEObject);
@@ -165,7 +162,6 @@ public class Data_meta_modelSwitch<T> extends Switch<T> {
 				BasicEntity basicEntity = (BasicEntity)theEObject;
 				T result = caseBasicEntity(basicEntity);
 				if (result == null) result = caseEntity(basicEntity);
-				if (result == null) result = caseClassifier(basicEntity);
 				if (result == null) result = caseNamedElement(basicEntity);
 				if (result == null) result = caseElement(basicEntity);
 				if (result == null) result = defaultCase(theEObject);

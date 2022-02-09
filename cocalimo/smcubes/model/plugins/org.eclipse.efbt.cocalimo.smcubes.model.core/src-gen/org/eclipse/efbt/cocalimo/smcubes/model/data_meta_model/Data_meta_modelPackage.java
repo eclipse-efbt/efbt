@@ -516,7 +516,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ENTITY__NAME = CLASSIFIER__NAME;
+	int ENTITY__NAME = NAMED_ELEMENT__NAME;
 
 	/**
 	 * The number of structural features of the '<em>Entity</em>' class.
@@ -525,7 +525,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ENTITY_FEATURE_COUNT = CLASSIFIER_FEATURE_COUNT + 0;
+	int ENTITY_FEATURE_COUNT = NAMED_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of operations of the '<em>Entity</em>' class.
@@ -534,7 +534,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ENTITY_OPERATION_COUNT = CLASSIFIER_OPERATION_COUNT + 0;
+	int ENTITY_OPERATION_COUNT = NAMED_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.GeneratedEntityImpl <em>Generated Entity</em>}' class.

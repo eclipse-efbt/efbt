@@ -626,7 +626,7 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 		structuralFeatureEClass.getESuperTypes().add(this.getTypedElement());
 		typedElementEClass.getESuperTypes().add(this.getNamedElement());
 		generatedEntityEClass.getESuperTypes().add(this.getEntity());
-		entityEClass.getESuperTypes().add(this.getClassifier());
+		entityEClass.getESuperTypes().add(this.getNamedElement());
 		derivedEntityEClass.getESuperTypes().add(this.getEntity());
 		basicEntityEClass.getESuperTypes().add(this.getEntity());
 

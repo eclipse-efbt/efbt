@@ -13,5 +13,5 @@ package org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model;
  * @model abstract="true"
  * @generated
  */
-public interface Entity extends Classifier {
+public interface Entity extends NamedElement {
 } // Entity
