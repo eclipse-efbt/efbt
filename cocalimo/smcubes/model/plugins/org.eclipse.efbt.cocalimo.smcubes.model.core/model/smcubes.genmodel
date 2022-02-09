@@ -11,6 +11,7 @@
   <foreignModel>mapping.ecore</foreignModel>
   <foreignModel>rendering.ecore</foreignModel>
   <foreignModel>cocalimo_smcubes_extension.ecore</foreignModel>
+  <foreignModel>data_meta_model.ecore</foreignModel>
   <genPackages prefix="Core" basePackage="org.eclipse.efbt.cocalimo.smcubes.model"
       resource="XMI" disposableProviderFactory="true" ecorePackage="core.ecore#/">
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="core.ecore#//FACET_VALUE_TYPE">
@@ -112,7 +113,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//SUBDOMAIN/is_listed"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//SUBDOMAIN/is_natural"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference core.ecore#//SUBDOMAIN/maintenance_agency_id"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//SUBDOMAIN/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//SUBDOMAIN/subdomain_id"/>
     </genClasses>
     <genClasses ecoreClass="core.ecore#//SUBDOMAIN_ENUMERATION">
@@ -467,6 +467,54 @@
     </genClasses>
     <genClasses ecoreClass="cocalimo_smcubes_extension.ecore#//TableCellModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference cocalimo_smcubes_extension.ecore#//TableCellModule/tableCells"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Data_meta_model" basePackage="org.eclipse.efbt.cocalimo.smcubes.model"
+      ecorePackage="data_meta_model.ecore#/">
+    <genDataTypes ecoreDataType="data_meta_model.ecore#//Boolean"/>
+    <genDataTypes ecoreDataType="data_meta_model.ecore#//Int"/>
+    <genDataTypes ecoreDataType="data_meta_model.ecore#//String"/>
+    <genClasses ecoreClass="data_meta_model.ecore#//Attribute">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_meta_model.ecore#//Attribute/isPK"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_meta_model.ecore#//Attribute/variable"/>
+    </genClasses>
+    <genClasses ecoreClass="data_meta_model.ecore#//ForeignKeyAttribute">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_meta_model.ecore#//ForeignKeyAttribute/entity"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="data_meta_model.ecore#//Classifier"/>
+    <genClasses image="false" ecoreClass="data_meta_model.ecore#//Element"/>
+    <genClasses image="false" ecoreClass="data_meta_model.ecore#//NamedElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_meta_model.ecore#//NamedElement/name"/>
+    </genClasses>
+    <genClasses ecoreClass="data_meta_model.ecore#//EntityModule">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_meta_model.ecore#//EntityModule/nsURI"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_meta_model.ecore#//EntityModule/nsPrefix"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference data_meta_model.ecore#//EntityModule/entities"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="data_meta_model.ecore#//StructuralFeature"/>
+    <genClasses image="false" ecoreClass="data_meta_model.ecore#//TypedElement">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_meta_model.ecore#//TypedElement/classifier"/>
+    </genClasses>
+    <genClasses ecoreClass="data_meta_model.ecore#//BaseEntity">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_meta_model.ecore#//BaseEntity/superType"/>
+      <genFeatures property="None" children="true" createChild="false" ecoreFeature="ecore:EReference data_meta_model.ecore#//BaseEntity/attributes"/>
+    </genClasses>
+    <genClasses ecoreClass="data_meta_model.ecore#//GeneratedEntity">
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference data_meta_model.ecore#//GeneratedEntity/eAttributes"/>
+    </genClasses>
+    <genClasses ecoreClass="data_meta_model.ecore#//Entity"/>
+    <genClasses ecoreClass="data_meta_model.ecore#//DerivedEntity">
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference data_meta_model.ecore#//DerivedEntity/eAttributes"/>
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference data_meta_model.ecore#//DerivedEntity/eIDAttribute"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="data_meta_model.ecore#//ReturnedTypedElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_meta_model.ecore#//ReturnedTypedElement/ordered"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_meta_model.ecore#//ReturnedTypedElement/unique"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_meta_model.ecore#//ReturnedTypedElement/lowerBound"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_meta_model.ecore#//ReturnedTypedElement/upperBound"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute data_meta_model.ecore#//ReturnedTypedElement/many"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute data_meta_model.ecore#//ReturnedTypedElement/required"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_meta_model.ecore#//ReturnedTypedElement/entityType"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

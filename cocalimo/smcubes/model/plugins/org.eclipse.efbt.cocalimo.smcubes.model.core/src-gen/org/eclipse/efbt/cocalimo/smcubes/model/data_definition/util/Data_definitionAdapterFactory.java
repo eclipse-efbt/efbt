@@ -19,8 +19,7 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.eclipse.efbt.cocalimo.smcubes.model.data_definition.Data_definitionPackage
  * @generated
  */
-public class Data_definitionAdapterFactory extends AdapterFactoryImpl
-{
+public class Data_definitionAdapterFactory extends AdapterFactoryImpl {
 	/**
 	 * The cached model package.
 	 * <!-- begin-user-doc -->
@@ -35,8 +34,7 @@ public class Data_definitionAdapterFactory extends AdapterFactoryImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Data_definitionAdapterFactory()
-	{
+	public Data_definitionAdapterFactory() {
 		if (modelPackage == null) {
 			modelPackage = Data_definitionPackage.eINSTANCE;
 		}
@@ -51,8 +49,7 @@ public class Data_definitionAdapterFactory extends AdapterFactoryImpl
 	 * @generated
 	 */
 	@Override
-	public boolean isFactoryForType(Object object)
-	{
+	public boolean isFactoryForType(Object object) {
 		if (object == modelPackage) {
 			return true;
 		}
@@ -141,8 +138,7 @@ public class Data_definitionAdapterFactory extends AdapterFactoryImpl
 	 * @generated
 	 */
 	@Override
-	public Adapter createAdapter(Notifier target)
-	{
+	public Adapter createAdapter(Notifier target) {
 		return modelSwitch.doSwitch((EObject)target);
 	}
 
@@ -157,8 +153,7 @@ public class Data_definitionAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_definition.COMBINATION
 	 * @generated
 	 */
-	public Adapter createCOMBINATIONAdapter()
-	{
+	public Adapter createCOMBINATIONAdapter() {
 		return null;
 	}
 
@@ -172,8 +167,7 @@ public class Data_definitionAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_definition.COMBINATION_ITEM
 	 * @generated
 	 */
-	public Adapter createCOMBINATION_ITEMAdapter()
-	{
+	public Adapter createCOMBINATION_ITEMAdapter() {
 		return null;
 	}
 
@@ -187,8 +181,7 @@ public class Data_definitionAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE
 	 * @generated
 	 */
-	public Adapter createCUBEAdapter()
-	{
+	public Adapter createCUBEAdapter() {
 		return null;
 	}
 
@@ -202,8 +195,7 @@ public class Data_definitionAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE_GROUP
 	 * @generated
 	 */
-	public Adapter createCUBE_GROUPAdapter()
-	{
+	public Adapter createCUBE_GROUPAdapter() {
 		return null;
 	}
 
@@ -217,8 +209,7 @@ public class Data_definitionAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE_GROUP_ENUMERATION
 	 * @generated
 	 */
-	public Adapter createCUBE_GROUP_ENUMERATIONAdapter()
-	{
+	public Adapter createCUBE_GROUP_ENUMERATIONAdapter() {
 		return null;
 	}
 
@@ -232,8 +223,7 @@ public class Data_definitionAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE_HIERARCHY
 	 * @generated
 	 */
-	public Adapter createCUBE_HIERARCHYAdapter()
-	{
+	public Adapter createCUBE_HIERARCHYAdapter() {
 		return null;
 	}
 
@@ -247,8 +237,7 @@ public class Data_definitionAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE_HIERARCHY_NODE
 	 * @generated
 	 */
-	public Adapter createCUBE_HIERARCHY_NODEAdapter()
-	{
+	public Adapter createCUBE_HIERARCHY_NODEAdapter() {
 		return null;
 	}
 
@@ -262,8 +251,7 @@ public class Data_definitionAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE_RELATIONSHIP
 	 * @generated
 	 */
-	public Adapter createCUBE_RELATIONSHIPAdapter()
-	{
+	public Adapter createCUBE_RELATIONSHIPAdapter() {
 		return null;
 	}
 
@@ -277,8 +265,7 @@ public class Data_definitionAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE_STRUCTURE
 	 * @generated
 	 */
-	public Adapter createCUBE_STRUCTUREAdapter()
-	{
+	public Adapter createCUBE_STRUCTUREAdapter() {
 		return null;
 	}
 
@@ -292,8 +279,7 @@ public class Data_definitionAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE_STRUCTURE_ITEM
 	 * @generated
 	 */
-	public Adapter createCUBE_STRUCTURE_ITEMAdapter()
-	{
+	public Adapter createCUBE_STRUCTURE_ITEMAdapter() {
 		return null;
 	}
 
@@ -307,8 +293,7 @@ public class Data_definitionAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE_TO_COMBINATION
 	 * @generated
 	 */
-	public Adapter createCUBE_TO_COMBINATIONAdapter()
-	{
+	public Adapter createCUBE_TO_COMBINATIONAdapter() {
 		return null;
 	}
 
@@ -322,8 +307,7 @@ public class Data_definitionAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_definition.FRAMEWORK
 	 * @generated
 	 */
-	public Adapter createFRAMEWORKAdapter()
-	{
+	public Adapter createFRAMEWORKAdapter() {
 		return null;
 	}
 
@@ -337,8 +321,7 @@ public class Data_definitionAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_definition.FRAMEWORK_SUBDOMAIN
 	 * @generated
 	 */
-	public Adapter createFRAMEWORK_SUBDOMAINAdapter()
-	{
+	public Adapter createFRAMEWORK_SUBDOMAINAdapter() {
 		return null;
 	}
 
@@ -352,8 +335,7 @@ public class Data_definitionAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_definition.FRAMEWORK_VARIABLE_SET
 	 * @generated
 	 */
-	public Adapter createFRAMEWORK_VARIABLE_SETAdapter()
-	{
+	public Adapter createFRAMEWORK_VARIABLE_SETAdapter() {
 		return null;
 	}
 
@@ -365,8 +347,7 @@ public class Data_definitionAdapterFactory extends AdapterFactoryImpl
 	 * @return the new adapter.
 	 * @generated
 	 */
-	public Adapter createEObjectAdapter()
-	{
+	public Adapter createEObjectAdapter() {
 		return null;
 	}
 

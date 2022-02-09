@@ -5,7 +5,9 @@ package org.eclipse.efbt.cocalimo.smcubes.model.core.impl;
 import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.Cocalimo_smcubes_extensionPackage;
+
 import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.impl.Cocalimo_smcubes_extensionPackageImpl;
+
 import org.eclipse.efbt.cocalimo.smcubes.model.core.CoreFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.facet_type;
@@ -13,6 +15,11 @@ import org.eclipse.efbt.cocalimo.smcubes.model.core.facet_type;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.Data_definitionPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.impl.Data_definitionPackageImpl;
+
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage;
+
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl;
+
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MappingPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.impl.MappingPackageImpl;
@@ -20,6 +27,7 @@ import org.eclipse.efbt.cocalimo.smcubes.model.mapping.impl.MappingPackageImpl;
 import org.eclipse.efbt.cocalimo.smcubes.model.rendering.RenderingPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.rendering.impl.RenderingPackageImpl;
+
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -200,6 +208,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		RenderingPackageImpl theRenderingPackage = (RenderingPackageImpl)(registeredPackage instanceof RenderingPackageImpl ? registeredPackage : RenderingPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Cocalimo_smcubes_extensionPackage.eNS_URI);
 		Cocalimo_smcubes_extensionPackageImpl theCocalimo_smcubes_extensionPackage = (Cocalimo_smcubes_extensionPackageImpl)(registeredPackage instanceof Cocalimo_smcubes_extensionPackageImpl ? registeredPackage : Cocalimo_smcubes_extensionPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Data_meta_modelPackage.eNS_URI);
+		Data_meta_modelPackageImpl theData_meta_modelPackage = (Data_meta_modelPackageImpl)(registeredPackage instanceof Data_meta_modelPackageImpl ? registeredPackage : Data_meta_modelPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theCorePackage.createPackageContents();
@@ -207,6 +217,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		theMappingPackage.createPackageContents();
 		theRenderingPackage.createPackageContents();
 		theCocalimo_smcubes_extensionPackage.createPackageContents();
+		theData_meta_modelPackage.createPackageContents();
 
 		// Initialize created meta-data
 		theCorePackage.initializePackageContents();
@@ -214,6 +225,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		theMappingPackage.initializePackageContents();
 		theRenderingPackage.initializePackageContents();
 		theCocalimo_smcubes_extensionPackage.initializePackageContents();
+		theData_meta_modelPackage.initializePackageContents();
 
 		// Mark meta-data to indicate it can't be changed
 		theCorePackage.freeze();
@@ -939,18 +951,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getSUBDOMAIN_Name() {
-		return (EAttribute)subdomainEClass.getEStructuralFeatures().get(7);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EAttribute getSUBDOMAIN_Subdomain_id() {
-		return (EAttribute)subdomainEClass.getEStructuralFeatures().get(8);
+		return (EAttribute)subdomainEClass.getEStructuralFeatures().get(7);
 	}
 
 	/**
@@ -1371,7 +1373,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		createEAttribute(subdomainEClass, SUBDOMAIN__IS_LISTED);
 		createEAttribute(subdomainEClass, SUBDOMAIN__IS_NATURAL);
 		createEReference(subdomainEClass, SUBDOMAIN__MAINTENANCE_AGENCY_ID);
-		createEAttribute(subdomainEClass, SUBDOMAIN__NAME);
 		createEAttribute(subdomainEClass, SUBDOMAIN__SUBDOMAIN_ID);
 
 		subdomaiN_ENUMERATIONEClass = createEClass(SUBDOMAIN_ENUMERATION);
@@ -1437,11 +1438,15 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		setNsPrefix(eNS_PREFIX);
 		setNsURI(eNS_URI);
 
+		// Obtain other dependent packages
+		Data_meta_modelPackage theData_meta_modelPackage = (Data_meta_modelPackage)EPackage.Registry.INSTANCE.getEPackage(Data_meta_modelPackage.eNS_URI);
+
 		// Create type parameters
 
 		// Set bounds for type parameters
 
 		// Add supertypes to classes
+		subdomainEClass.getESuperTypes().add(theData_meta_modelPackage.getClassifier());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(domainEClass, org.eclipse.efbt.cocalimo.smcubes.model.core.DOMAIN.class, "DOMAIN", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1523,7 +1528,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		initEAttribute(getSUBDOMAIN_Is_listed(), ecorePackage.getEBoolean(), "is_listed", null, 0, 1, org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSUBDOMAIN_Is_natural(), ecorePackage.getEBoolean(), "is_natural", null, 0, 1, org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSUBDOMAIN_Maintenance_agency_id(), this.getMAINTENANCE_AGENCY(), null, "maintenance_agency_id", null, 0, 1, org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getSUBDOMAIN_Name(), ecorePackage.getEString(), "name", null, 0, 1, org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSUBDOMAIN_Subdomain_id(), ecorePackage.getEString(), "subdomain_id", null, 0, 1, org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(subdomaiN_ENUMERATIONEClass, org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN_ENUMERATION.class, "SUBDOMAIN_ENUMERATION", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -2097,13 +2101,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		   new String[] {
 			   "kind", "attribute",
 			   "name", "maintenance_agency_id"
-		   });
-		addAnnotation
-		  (getSUBDOMAIN_Name(),
-		   source,
-		   new String[] {
-			   "kind", "attribute",
-			   "name", "name"
 		   });
 		addAnnotation
 		  (getSUBDOMAIN_Subdomain_id(),

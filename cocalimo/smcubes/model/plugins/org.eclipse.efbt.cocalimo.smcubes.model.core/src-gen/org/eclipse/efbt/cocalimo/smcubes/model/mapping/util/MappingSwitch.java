@@ -22,8 +22,7 @@ import org.eclipse.emf.ecore.util.Switch;
  * @see org.eclipse.efbt.cocalimo.smcubes.model.mapping.MappingPackage
  * @generated
  */
-public class MappingSwitch<T> extends Switch<T>
-{
+public class MappingSwitch<T> extends Switch<T> {
 	/**
 	 * The cached model package
 	 * <!-- begin-user-doc -->
@@ -38,8 +37,7 @@ public class MappingSwitch<T> extends Switch<T>
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MappingSwitch()
-	{
+	public MappingSwitch() {
 		if (modelPackage == null) {
 			modelPackage = MappingPackage.eINSTANCE;
 		}
@@ -54,8 +52,7 @@ public class MappingSwitch<T> extends Switch<T>
 	 * @generated
 	 */
 	@Override
-	protected boolean isSwitchFor(EPackage ePackage)
-	{
+	protected boolean isSwitchFor(EPackage ePackage) {
 		return ePackage == modelPackage;
 	}
 
@@ -67,8 +64,7 @@ public class MappingSwitch<T> extends Switch<T>
 	 * @generated
 	 */
 	@Override
-	protected T doSwitch(int classifierID, EObject theEObject)
-	{
+	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
 			case MappingPackage.CUBE_MAPPING: {
 				CUBE_MAPPING cubE_MAPPING = (CUBE_MAPPING)theEObject;
@@ -133,8 +129,7 @@ public class MappingSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseCUBE_MAPPING(CUBE_MAPPING object)
-	{
+	public T caseCUBE_MAPPING(CUBE_MAPPING object) {
 		return null;
 	}
 
@@ -149,8 +144,7 @@ public class MappingSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseMEMBER_MAPPING(MEMBER_MAPPING object)
-	{
+	public T caseMEMBER_MAPPING(MEMBER_MAPPING object) {
 		return null;
 	}
 
@@ -165,8 +159,7 @@ public class MappingSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseMEMBER_MAPPING_ITEM(MEMBER_MAPPING_ITEM object)
-	{
+	public T caseMEMBER_MAPPING_ITEM(MEMBER_MAPPING_ITEM object) {
 		return null;
 	}
 
@@ -181,8 +174,7 @@ public class MappingSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseVARIABLE_MAPPING_ITEM(VARIABLE_MAPPING_ITEM object)
-	{
+	public T caseVARIABLE_MAPPING_ITEM(VARIABLE_MAPPING_ITEM object) {
 		return null;
 	}
 
@@ -197,8 +189,7 @@ public class MappingSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseVARIABLE_MAPPING(VARIABLE_MAPPING object)
-	{
+	public T caseVARIABLE_MAPPING(VARIABLE_MAPPING object) {
 		return null;
 	}
 
@@ -213,8 +204,7 @@ public class MappingSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseMAPPING_TO_CUBE(MAPPING_TO_CUBE object)
-	{
+	public T caseMAPPING_TO_CUBE(MAPPING_TO_CUBE object) {
 		return null;
 	}
 
@@ -229,8 +219,7 @@ public class MappingSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseVARIABLE_SET_MAPPING(VARIABLE_SET_MAPPING object)
-	{
+	public T caseVARIABLE_SET_MAPPING(VARIABLE_SET_MAPPING object) {
 		return null;
 	}
 
@@ -245,8 +234,7 @@ public class MappingSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseMAPPING_DEFINITION(MAPPING_DEFINITION object)
-	{
+	public T caseMAPPING_DEFINITION(MAPPING_DEFINITION object) {
 		return null;
 	}
 
@@ -262,8 +250,7 @@ public class MappingSwitch<T> extends Switch<T>
 	 * @generated
 	 */
 	@Override
-	public T defaultCase(EObject object)
-	{
+	public T defaultCase(EObject object) {
 		return null;
 	}
 

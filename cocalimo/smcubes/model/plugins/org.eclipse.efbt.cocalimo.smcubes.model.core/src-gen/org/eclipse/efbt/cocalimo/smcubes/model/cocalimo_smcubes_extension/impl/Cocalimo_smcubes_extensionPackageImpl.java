@@ -34,6 +34,10 @@ import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.Data_definitionPa
 
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.impl.Data_definitionPackageImpl;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage;
+
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl;
+
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MappingPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.impl.MappingPackageImpl;
@@ -248,6 +252,8 @@ public class Cocalimo_smcubes_extensionPackageImpl extends EPackageImpl implemen
 		MappingPackageImpl theMappingPackage = (MappingPackageImpl)(registeredPackage instanceof MappingPackageImpl ? registeredPackage : MappingPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(RenderingPackage.eNS_URI);
 		RenderingPackageImpl theRenderingPackage = (RenderingPackageImpl)(registeredPackage instanceof RenderingPackageImpl ? registeredPackage : RenderingPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Data_meta_modelPackage.eNS_URI);
+		Data_meta_modelPackageImpl theData_meta_modelPackage = (Data_meta_modelPackageImpl)(registeredPackage instanceof Data_meta_modelPackageImpl ? registeredPackage : Data_meta_modelPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theCocalimo_smcubes_extensionPackage.createPackageContents();
@@ -255,6 +261,7 @@ public class Cocalimo_smcubes_extensionPackageImpl extends EPackageImpl implemen
 		theData_definitionPackage.createPackageContents();
 		theMappingPackage.createPackageContents();
 		theRenderingPackage.createPackageContents();
+		theData_meta_modelPackage.createPackageContents();
 
 		// Initialize created meta-data
 		theCocalimo_smcubes_extensionPackage.initializePackageContents();
@@ -262,6 +269,7 @@ public class Cocalimo_smcubes_extensionPackageImpl extends EPackageImpl implemen
 		theData_definitionPackage.initializePackageContents();
 		theMappingPackage.initializePackageContents();
 		theRenderingPackage.initializePackageContents();
+		theData_meta_modelPackage.initializePackageContents();
 
 		// Mark meta-data to indicate it can't be changed
 		theCocalimo_smcubes_extensionPackage.freeze();

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="functions_meta_model" nsURI="http://www.eclipse.org/efbt/functions_meta_model"
+    nsPrefix="functions_meta_model">
+  <eClassifiers xsi:type="ecore:EClass" name="Operation" eSuperTypes="data_meta_model.ecore#//TypedElement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PopulatedFunctionSpec" eSuperTypes="#//Operation">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="eParameterValues" upperBound="-1"
+        eType="#//ParameterValue" containment="true" resolveProxies="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="functionSpec" eType="#//FunctionSpec"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PopulatedFunctionSpecForScenario">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="populatedFunctionSpec"
+        eType="#//PopulatedFunctionSpec" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="scenario" eType="#//Scenario"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PopulatedFunctionSpecForScenarios" eSuperTypes="#//Operation">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="populatedFunctionSpecForScenarios"
+        upperBound="-1" eType="#//PopulatedFunctionSpecForScenario" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Scenario">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="scenarioConstraint" eType="#//ScenarioConstraint"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ScenarioConstraint">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="eParameterValues" upperBound="-1"
+        eType="#//ParameterValue" containment="true" resolveProxies="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="functionSpec" eType="#//BooleanFunctionSpec"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ParameterValue">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parameter" eType="#//Parameter"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ParameterOperationLocation" eSuperTypes="#//ParameterValue">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="source" eType="#//SourceEntityType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="operation" eType="#//PopulatedFunctionSpec"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ParameterAttributeLocation" eSuperTypes="#//ParameterValue">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="source" eType="#//SourceEntityType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" eType="ecore:EClass data_meta_model.ecore#//Attribute"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ParameterMemberLocation" eSuperTypes="#//ParameterValue">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="member" eType="ecore:EClass core.ecore#//MEMBER"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ParameterActualValue">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="stringValue" eType="ecore:EDataType data_meta_model.ecore#//String"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dataType" eType="ecore:EEnum core.ecore#//FACET_VALUE_TYPE"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ParameterBaseEntityType">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="baseEntity" eType="ecore:EClass data_meta_model.ecore#//BaseEntity"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ParameterPopulatedFunctionSpec">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="populatedFunctionSpec"
+        eType="#//PopulatedFunctionSpec" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Parameter" eSuperTypes="data_meta_model.ecore#//TypedElement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Reference" eSuperTypes="data_meta_model.ecore#//StructuralFeature">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="ConsistentOpposite SingleContainer ConsistentKeys ConsistentUnique ConsistentContainer"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="container" eType="ecore:EDataType data_meta_model.ecore#//Boolean"
+        changeable="false" volatile="true" transient="true" derived="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="eReferenceType" lowerBound="1"
+        eType="ecore:EClass data_meta_model.ecore#//Classifier" changeable="false"
+        volatile="true" transient="true" derived="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ContainmentReference" eSuperTypes="#//Reference"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ReferenceReference" eSuperTypes="#//Reference"/>
+  <eClassifiers xsi:type="ecore:EClass" name="DerivedEntity2" eSuperTypes="data_meta_model.ecore#//Entity">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="UniqueOperationSignatures"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="operations" upperBound="-1"
+        eType="#//PopulatedFunctionSpec" containment="true" resolveProxies="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sourceEntity1" eType="#//ReferenceReference"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sourceEntity2" eType="#//ReferenceReference"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sourceEntityList" upperBound="-1"
+        eType="#//ReferenceReference" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IntermediateDerivedEntity" eSuperTypes="#//DerivedEntity2"/>
+  <eClassifiers xsi:type="ecore:EEnum" name="SourceEntityType">
+    <eLiterals name="FIRST"/>
+    <eLiterals name="SECOND" value="1"/>
+    <eLiterals name="LIST" value="2"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FunctionSpec"/>
+  <eClassifiers xsi:type="ecore:EClass" name="BasicFunctionSpec" eSuperTypes="#//FunctionSpec">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1"
+        eType="#//Parameter" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BooleanFunctionSpec" eSuperTypes="#//BasicFunctionSpec"/>
+  <eClassifiers xsi:type="ecore:EClass" name="AggregateFunctionSpec" eSuperTypes="#//FunctionSpec">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parameter" upperBound="-1"
+        eType="#//Parameter" containment="true"/>
+  </eClassifiers>
+</ecore:EPackage>

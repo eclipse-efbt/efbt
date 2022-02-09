@@ -3,26 +3,26 @@
 package org.eclipse.efbt.cocalimo.smcubes.model.data_definition.util;
 
 import org.eclipse.emf.common.util.URI;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.emfjson.jackson.resource.JsonResource;
+
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 
 /**
  * <!-- begin-user-doc -->
  * The <b>Resource </b> associated with the package.
  * <!-- end-user-doc -->
  * @see org.eclipse.efbt.cocalimo.smcubes.model.data_definition.util.Data_definitionResourceFactoryImpl
- * @generated NOT
+ * @generated
  */
-public class Data_definitionResourceImpl extends JsonResource {
+public class Data_definitionResourceImpl extends XMIResourceImpl {
 	/**
 	 * Creates an instance of the resource.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param uri the URI of the new resource.
-	 * @generated NOT
+	 * @generated
 	 */
-	public Data_definitionResourceImpl(URI uri, ObjectMapper mapper ) {
-		super(uri,mapper);
+	public Data_definitionResourceImpl(URI uri) {
+		super(uri);
 	}
 
 } //Data_definitionResourceImpl

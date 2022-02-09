@@ -3,22 +3,24 @@
 package org.eclipse.efbt.cocalimo.smcubes.model.core.util;
 
 import org.eclipse.emf.common.util.URI;
+
 import org.eclipse.emf.ecore.resource.Resource;
-import org.emfjson.jackson.resource.JsonResourceFactory;
+
+import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
 
 /**
  * <!-- begin-user-doc -->
  * The <b>Resource Factory</b> associated with the package.
  * <!-- end-user-doc -->
  * @see org.eclipse.efbt.cocalimo.smcubes.model.core.util.CoreResourceImpl
- * @generated NOT
+ * @generated
  */
-public class CoreResourceFactoryImpl extends JsonResourceFactory {
+public class CoreResourceFactoryImpl extends ResourceFactoryImpl {
 	/**
 	 * Creates an instance of the resource factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated NOT
+	 * @generated
 	 */
 	public CoreResourceFactoryImpl() {
 		super();
@@ -28,11 +30,11 @@ public class CoreResourceFactoryImpl extends JsonResourceFactory {
 	 * Creates an instance of the resource.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated NOT
+	 * @generated
 	 */
 	@Override
 	public Resource createResource(URI uri) {
-		Resource result = new CoreResourceImpl(uri, getMapper());
+		Resource result = new CoreResourceImpl(uri);
 		return result;
 	}
 
