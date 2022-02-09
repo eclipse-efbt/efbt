@@ -132,16 +132,6 @@ public class Data_meta_modelSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case Data_meta_modelPackage.BASE_ENTITY: {
-				BaseEntity baseEntity = (BaseEntity)theEObject;
-				T result = caseBaseEntity(baseEntity);
-				if (result == null) result = caseEntity(baseEntity);
-				if (result == null) result = caseClassifier(baseEntity);
-				if (result == null) result = caseNamedElement(baseEntity);
-				if (result == null) result = caseElement(baseEntity);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case Data_meta_modelPackage.GENERATED_ENTITY: {
 				GeneratedEntity generatedEntity = (GeneratedEntity)theEObject;
 				T result = caseGeneratedEntity(generatedEntity);
@@ -171,12 +161,13 @@ public class Data_meta_modelSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case Data_meta_modelPackage.RETURNED_TYPED_ELEMENT: {
-				ReturnedTypedElement returnedTypedElement = (ReturnedTypedElement)theEObject;
-				T result = caseReturnedTypedElement(returnedTypedElement);
-				if (result == null) result = caseTypedElement(returnedTypedElement);
-				if (result == null) result = caseNamedElement(returnedTypedElement);
-				if (result == null) result = caseElement(returnedTypedElement);
+			case Data_meta_modelPackage.BASIC_ENTITY: {
+				BasicEntity basicEntity = (BasicEntity)theEObject;
+				T result = caseBasicEntity(basicEntity);
+				if (result == null) result = caseEntity(basicEntity);
+				if (result == null) result = caseClassifier(basicEntity);
+				if (result == null) result = caseNamedElement(basicEntity);
+				if (result == null) result = caseElement(basicEntity);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -305,21 +296,6 @@ public class Data_meta_modelSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Base Entity</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Base Entity</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseBaseEntity(BaseEntity object) {
-		return null;
-	}
-
-	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Generated Entity</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -365,17 +341,17 @@ public class Data_meta_modelSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Returned Typed Element</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Basic Entity</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Returned Typed Element</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Basic Entity</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseReturnedTypedElement(ReturnedTypedElement object) {
+	public T caseBasicEntity(BasicEntity object) {
 		return null;
 	}
 

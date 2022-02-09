@@ -49,15 +49,6 @@ public interface Data_meta_modelFactory extends EFactory {
 	EntityModule createEntityModule();
 
 	/**
-	 * Returns a new object of class '<em>Base Entity</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Base Entity</em>'.
-	 * @generated
-	 */
-	BaseEntity createBaseEntity();
-
-	/**
 	 * Returns a new object of class '<em>Generated Entity</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -74,6 +65,15 @@ public interface Data_meta_modelFactory extends EFactory {
 	 * @generated
 	 */
 	DerivedEntity createDerivedEntity();
+
+	/**
+	 * Returns a new object of class '<em>Basic Entity</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Basic Entity</em>'.
+	 * @generated
+	 */
+	BasicEntity createBasicEntity();
 
 	/**
 	 * Returns the package supported by this factory.

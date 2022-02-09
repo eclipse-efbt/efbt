@@ -1,41 +1,38 @@
 /**
  */
-package org.eclipse.efbt.cocalimo.computation.model.sql_lite.provider;
+package org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.provider;
 
 
 import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.efbt.cocalimo.computation.model.sql_lite.SQLEntityModule;
-import org.eclipse.efbt.cocalimo.computation.model.sql_lite.Sql_liteFactory;
-import org.eclipse.efbt.cocalimo.computation.model.sql_lite.Sql_litePackage;
-
-import org.eclipse.efbt.cocalimo.core.model.module_management.provider.ModuleItemProvider;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BasicEntity;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelFactory;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 
-import org.eclipse.emf.common.util.ResourceLocator;
-
 import org.eclipse.emf.ecore.EStructuralFeature;
 
+import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.SQLEntityModule} object.
+ * This is the item provider adapter for a {@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BasicEntity} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class SQLEntityModuleItemProvider extends ModuleItemProvider {
+public class BasicEntityItemProvider extends EntityItemProvider {
 	/**
 	 * This constructs an instance from a factory and a notifier.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public SQLEntityModuleItemProvider(AdapterFactory adapterFactory) {
+	public BasicEntityItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -50,8 +47,31 @@ public class SQLEntityModuleItemProvider extends ModuleItemProvider {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
+			addSuperClassPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
+	}
+
+	/**
+	 * This adds a property descriptor for the Super Class feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addSuperClassPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_BasicEntity_superClass_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_BasicEntity_superClass_feature", "_UI_BasicEntity_type"),
+				 Data_meta_modelPackage.Literals.BASIC_ENTITY__SUPER_CLASS,
+				 true,
+				 false,
+				 true,
+				 null,
+				 null,
+				 null));
 	}
 
 	/**
@@ -66,7 +86,7 @@ public class SQLEntityModuleItemProvider extends ModuleItemProvider {
 	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
-			childrenFeatures.add(Sql_litePackage.Literals.SQL_ENTITY_MODULE__SQL_ENTITIES);
+			childrenFeatures.add(Data_meta_modelPackage.Literals.BASIC_ENTITY__ATTRIBUTES);
 		}
 		return childrenFeatures;
 	}
@@ -85,14 +105,14 @@ public class SQLEntityModuleItemProvider extends ModuleItemProvider {
 	}
 
 	/**
-	 * This returns SQLEntityModule.gif.
+	 * This returns BasicEntity.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/SQLEntityModule"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/BasicEntity"));
 	}
 
 	/**
@@ -103,10 +123,11 @@ public class SQLEntityModuleItemProvider extends ModuleItemProvider {
 	 */
 	@Override
 	public String getText(Object object) {
-		String label = ((SQLEntityModule)object).getName();
+		Object labelValue = ((BasicEntity)object).getName();
+		String label = labelValue == null ? null : labelValue.toString();
 		return label == null || label.length() == 0 ?
-			getString("_UI_SQLEntityModule_type") :
-			getString("_UI_SQLEntityModule_type") + " " + label;
+			getString("_UI_BasicEntity_type") :
+			getString("_UI_BasicEntity_type") + " " + label;
 	}
 
 
@@ -121,8 +142,8 @@ public class SQLEntityModuleItemProvider extends ModuleItemProvider {
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 
-		switch (notification.getFeatureID(SQLEntityModule.class)) {
-			case Sql_litePackage.SQL_ENTITY_MODULE__SQL_ENTITIES:
+		switch (notification.getFeatureID(BasicEntity.class)) {
+			case Data_meta_modelPackage.BASIC_ENTITY__ATTRIBUTES:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
@@ -142,29 +163,13 @@ public class SQLEntityModuleItemProvider extends ModuleItemProvider {
 
 		newChildDescriptors.add
 			(createChildParameter
-				(Sql_litePackage.Literals.SQL_ENTITY_MODULE__SQL_ENTITIES,
-				 Sql_liteFactory.eINSTANCE.createSQLEntity()));
+				(Data_meta_modelPackage.Literals.BASIC_ENTITY__ATTRIBUTES,
+				 Data_meta_modelFactory.eINSTANCE.createAttribute()));
 
 		newChildDescriptors.add
 			(createChildParameter
-				(Sql_litePackage.Literals.SQL_ENTITY_MODULE__SQL_ENTITIES,
-				 Sql_liteFactory.eINSTANCE.createView()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(Sql_litePackage.Literals.SQL_ENTITY_MODULE__SQL_ENTITIES,
-				 Sql_liteFactory.eINSTANCE.createTable()));
-	}
-
-	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public ResourceLocator getResourceLocator() {
-		return Sql_liteEditPlugin.INSTANCE;
+				(Data_meta_modelPackage.Literals.BASIC_ENTITY__ATTRIBUTES,
+				 Data_meta_modelFactory.eINSTANCE.createForeignKeyAttribute()));
 	}
 
 }

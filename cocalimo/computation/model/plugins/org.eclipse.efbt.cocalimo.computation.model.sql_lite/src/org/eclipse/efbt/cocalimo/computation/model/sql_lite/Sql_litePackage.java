@@ -299,22 +299,13 @@ public interface Sql_litePackage extends EPackage {
 	int WHERE_CLAUSE = 5;
 
 	/**
-	 * The feature id for the '<em><b>Where function</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int WHERE_CLAUSE__WHERE_FUNCTION = 0;
-
-	/**
 	 * The number of structural features of the '<em>Where Clause</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int WHERE_CLAUSE_FEATURE_COUNT = 1;
+	int WHERE_CLAUSE_FEATURE_COUNT = 0;
 
 	/**
 	 * The number of operations of the '<em>Where Clause</em>' class.
@@ -535,7 +526,6 @@ public interface Sql_litePackage extends EPackage {
 	 * @ordered
 	 */
 	int GENERATED_ENTITY_SQL_OPERATION_COUNT = 0;
-
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl.GeneratedEntitySQLModuleImpl <em>Generated Entity SQL Module</em>}' class.
@@ -765,17 +755,6 @@ public interface Sql_litePackage extends EPackage {
 	 * @generated
 	 */
 	EClass getWhereClause();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.WhereClause#getWhere_function <em>Where function</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Where function</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.sql_lite.WhereClause#getWhere_function()
-	 * @see #getWhereClause()
-	 * @generated
-	 */
-	EReference getWhereClause_Where_function();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.Table <em>Table</em>}'.
@@ -1041,14 +1020,6 @@ public interface Sql_litePackage extends EPackage {
 		 * @generated
 		 */
 		EClass WHERE_CLAUSE = eINSTANCE.getWhereClause();
-
-		/**
-		 * The meta object literal for the '<em><b>Where function</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference WHERE_CLAUSE__WHERE_FUNCTION = eINSTANCE.getWhereClause_Where_function();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl.TableImpl <em>Table</em>}' class.

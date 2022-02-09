@@ -3,6 +3,7 @@
 package org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl;
 
 import java.util.Collection;
+
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.SQLEntity;
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.SQLEntityModule;
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.Sql_litePackage;
@@ -10,9 +11,12 @@ import org.eclipse.efbt.cocalimo.computation.model.sql_lite.Sql_litePackage;
 import org.eclipse.efbt.cocalimo.core.model.module_management.impl.ModuleImpl;
 
 import org.eclipse.emf.common.notify.NotificationChain;
+
 import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 

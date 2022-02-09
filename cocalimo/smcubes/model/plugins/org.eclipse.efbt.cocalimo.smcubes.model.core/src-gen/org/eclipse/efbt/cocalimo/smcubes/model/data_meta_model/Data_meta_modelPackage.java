@@ -507,7 +507,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getEntity()
 	 * @generated
 	 */
-	int ENTITY = 10;
+	int ENTITY = 9;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -537,61 +537,6 @@ public interface Data_meta_modelPackage extends EPackage {
 	int ENTITY_OPERATION_COUNT = CLASSIFIER_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.BaseEntityImpl <em>Base Entity</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.BaseEntityImpl
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getBaseEntity()
-	 * @generated
-	 */
-	int BASE_ENTITY = 8;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_ENTITY__NAME = ENTITY__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Super Type</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_ENTITY__SUPER_TYPE = ENTITY_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Attributes</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_ENTITY__ATTRIBUTES = ENTITY_FEATURE_COUNT + 1;
-
-	/**
-	 * The number of structural features of the '<em>Base Entity</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_ENTITY_FEATURE_COUNT = ENTITY_FEATURE_COUNT + 2;
-
-	/**
-	 * The number of operations of the '<em>Base Entity</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_ENTITY_OPERATION_COUNT = ENTITY_OPERATION_COUNT + 0;
-
-	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.GeneratedEntityImpl <em>Generated Entity</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -599,7 +544,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getGeneratedEntity()
 	 * @generated
 	 */
-	int GENERATED_ENTITY = 9;
+	int GENERATED_ENTITY = 8;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -611,13 +556,13 @@ public interface Data_meta_modelPackage extends EPackage {
 	int GENERATED_ENTITY__NAME = ENTITY__NAME;
 
 	/**
-	 * The feature id for the '<em><b>EAttributes</b></em>' reference list.
+	 * The feature id for the '<em><b>Attributes</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int GENERATED_ENTITY__EATTRIBUTES = ENTITY_FEATURE_COUNT + 0;
+	int GENERATED_ENTITY__ATTRIBUTES = ENTITY_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Generated Entity</em>' class.
@@ -645,7 +590,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getDerivedEntity()
 	 * @generated
 	 */
-	int DERIVED_ENTITY = 11;
+	int DERIVED_ENTITY = 10;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -657,22 +602,13 @@ public interface Data_meta_modelPackage extends EPackage {
 	int DERIVED_ENTITY__NAME = ENTITY__NAME;
 
 	/**
-	 * The feature id for the '<em><b>EAttributes</b></em>' reference list.
+	 * The feature id for the '<em><b>Attributes</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_ENTITY__EATTRIBUTES = ENTITY_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>EID Attribute</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DERIVED_ENTITY__EID_ATTRIBUTE = ENTITY_FEATURE_COUNT + 1;
+	int DERIVED_ENTITY__ATTRIBUTES = ENTITY_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Derived Entity</em>' class.
@@ -681,7 +617,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DERIVED_ENTITY_FEATURE_COUNT = ENTITY_FEATURE_COUNT + 2;
+	int DERIVED_ENTITY_FEATURE_COUNT = ENTITY_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of operations of the '<em>Derived Entity</em>' class.
@@ -693,14 +629,14 @@ public interface Data_meta_modelPackage extends EPackage {
 	int DERIVED_ENTITY_OPERATION_COUNT = ENTITY_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.ReturnedTypedElementImpl <em>Returned Typed Element</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.BasicEntityImpl <em>Basic Entity</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.ReturnedTypedElementImpl
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getReturnedTypedElement()
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.BasicEntityImpl
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getBasicEntity()
 	 * @generated
 	 */
-	int RETURNED_TYPED_ELEMENT = 12;
+	int BASIC_ENTITY = 11;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -709,97 +645,43 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int RETURNED_TYPED_ELEMENT__NAME = TYPED_ELEMENT__NAME;
+	int BASIC_ENTITY__NAME = ENTITY__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Classifier</b></em>' reference.
+	 * The feature id for the '<em><b>Attributes</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int RETURNED_TYPED_ELEMENT__CLASSIFIER = TYPED_ELEMENT__CLASSIFIER;
+	int BASIC_ENTITY__ATTRIBUTES = ENTITY_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
+	 * The feature id for the '<em><b>Super Class</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int RETURNED_TYPED_ELEMENT__ORDERED = TYPED_ELEMENT_FEATURE_COUNT + 0;
+	int BASIC_ENTITY__SUPER_CLASS = ENTITY_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Unique</b></em>' attribute.
+	 * The number of structural features of the '<em>Basic Entity</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int RETURNED_TYPED_ELEMENT__UNIQUE = TYPED_ELEMENT_FEATURE_COUNT + 1;
+	int BASIC_ENTITY_FEATURE_COUNT = ENTITY_FEATURE_COUNT + 2;
 
 	/**
-	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
+	 * The number of operations of the '<em>Basic Entity</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int RETURNED_TYPED_ELEMENT__LOWER_BOUND = TYPED_ELEMENT_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RETURNED_TYPED_ELEMENT__UPPER_BOUND = TYPED_ELEMENT_FEATURE_COUNT + 3;
-
-	/**
-	 * The feature id for the '<em><b>Many</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RETURNED_TYPED_ELEMENT__MANY = TYPED_ELEMENT_FEATURE_COUNT + 4;
-
-	/**
-	 * The feature id for the '<em><b>Required</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RETURNED_TYPED_ELEMENT__REQUIRED = TYPED_ELEMENT_FEATURE_COUNT + 5;
-
-	/**
-	 * The feature id for the '<em><b>Entity Type</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RETURNED_TYPED_ELEMENT__ENTITY_TYPE = TYPED_ELEMENT_FEATURE_COUNT + 6;
-
-	/**
-	 * The number of structural features of the '<em>Returned Typed Element</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RETURNED_TYPED_ELEMENT_FEATURE_COUNT = TYPED_ELEMENT_FEATURE_COUNT + 7;
-
-	/**
-	 * The number of operations of the '<em>Returned Typed Element</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RETURNED_TYPED_ELEMENT_OPERATION_COUNT = TYPED_ELEMENT_OPERATION_COUNT + 0;
+	int BASIC_ENTITY_OPERATION_COUNT = ENTITY_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '<em>Boolean</em>' data type.
@@ -809,7 +691,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getBoolean()
 	 * @generated
 	 */
-	int BOOLEAN = 13;
+	int BOOLEAN = 12;
 
 	/**
 	 * The meta object id for the '<em>Int</em>' data type.
@@ -819,7 +701,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getInt()
 	 * @generated
 	 */
-	int INT = 14;
+	int INT = 13;
 
 	/**
 	 * The meta object id for the '<em>String</em>' data type.
@@ -829,7 +711,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getString()
 	 * @generated
 	 */
-	int STRING = 15;
+	int STRING = 14;
 
 
 	/**
@@ -1001,38 +883,6 @@ public interface Data_meta_modelPackage extends EPackage {
 	EReference getTypedElement_Classifier();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BaseEntity <em>Base Entity</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Base Entity</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BaseEntity
-	 * @generated
-	 */
-	EClass getBaseEntity();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BaseEntity#getSuperType <em>Super Type</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Super Type</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BaseEntity#getSuperType()
-	 * @see #getBaseEntity()
-	 * @generated
-	 */
-	EReference getBaseEntity_SuperType();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BaseEntity#getAttributes <em>Attributes</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Attributes</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BaseEntity#getAttributes()
-	 * @see #getBaseEntity()
-	 * @generated
-	 */
-	EReference getBaseEntity_Attributes();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.GeneratedEntity <em>Generated Entity</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1043,15 +893,15 @@ public interface Data_meta_modelPackage extends EPackage {
 	EClass getGeneratedEntity();
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.GeneratedEntity#getEAttributes <em>EAttributes</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.GeneratedEntity#getAttributes <em>Attributes</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>EAttributes</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.GeneratedEntity#getEAttributes()
+	 * @return the meta object for the containment reference list '<em>Attributes</em>'.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.GeneratedEntity#getAttributes()
 	 * @see #getGeneratedEntity()
 	 * @generated
 	 */
-	EReference getGeneratedEntity_EAttributes();
+	EReference getGeneratedEntity_Attributes();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Entity <em>Entity</em>}'.
@@ -1074,113 +924,47 @@ public interface Data_meta_modelPackage extends EPackage {
 	EClass getDerivedEntity();
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.DerivedEntity#getEAttributes <em>EAttributes</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.DerivedEntity#getAttributes <em>Attributes</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>EAttributes</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.DerivedEntity#getEAttributes()
+	 * @return the meta object for the containment reference list '<em>Attributes</em>'.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.DerivedEntity#getAttributes()
 	 * @see #getDerivedEntity()
 	 * @generated
 	 */
-	EReference getDerivedEntity_EAttributes();
+	EReference getDerivedEntity_Attributes();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.DerivedEntity#getEIDAttribute <em>EID Attribute</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BasicEntity <em>Basic Entity</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>EID Attribute</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.DerivedEntity#getEIDAttribute()
-	 * @see #getDerivedEntity()
+	 * @return the meta object for class '<em>Basic Entity</em>'.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BasicEntity
 	 * @generated
 	 */
-	EReference getDerivedEntity_EIDAttribute();
+	EClass getBasicEntity();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ReturnedTypedElement <em>Returned Typed Element</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BasicEntity#getAttributes <em>Attributes</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Returned Typed Element</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ReturnedTypedElement
+	 * @return the meta object for the containment reference list '<em>Attributes</em>'.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BasicEntity#getAttributes()
+	 * @see #getBasicEntity()
 	 * @generated
 	 */
-	EClass getReturnedTypedElement();
+	EReference getBasicEntity_Attributes();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ReturnedTypedElement#getOrdered <em>Ordered</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BasicEntity#getSuperClass <em>Super Class</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Ordered</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ReturnedTypedElement#getOrdered()
-	 * @see #getReturnedTypedElement()
+	 * @return the meta object for the reference '<em>Super Class</em>'.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BasicEntity#getSuperClass()
+	 * @see #getBasicEntity()
 	 * @generated
 	 */
-	EAttribute getReturnedTypedElement_Ordered();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ReturnedTypedElement#getUnique <em>Unique</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Unique</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ReturnedTypedElement#getUnique()
-	 * @see #getReturnedTypedElement()
-	 * @generated
-	 */
-	EAttribute getReturnedTypedElement_Unique();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ReturnedTypedElement#getLowerBound <em>Lower Bound</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Lower Bound</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ReturnedTypedElement#getLowerBound()
-	 * @see #getReturnedTypedElement()
-	 * @generated
-	 */
-	EAttribute getReturnedTypedElement_LowerBound();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ReturnedTypedElement#getUpperBound <em>Upper Bound</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Upper Bound</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ReturnedTypedElement#getUpperBound()
-	 * @see #getReturnedTypedElement()
-	 * @generated
-	 */
-	EAttribute getReturnedTypedElement_UpperBound();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ReturnedTypedElement#getMany <em>Many</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Many</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ReturnedTypedElement#getMany()
-	 * @see #getReturnedTypedElement()
-	 * @generated
-	 */
-	EAttribute getReturnedTypedElement_Many();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ReturnedTypedElement#getRequired <em>Required</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Required</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ReturnedTypedElement#getRequired()
-	 * @see #getReturnedTypedElement()
-	 * @generated
-	 */
-	EAttribute getReturnedTypedElement_Required();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ReturnedTypedElement#getEntityType <em>Entity Type</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Entity Type</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ReturnedTypedElement#getEntityType()
-	 * @see #getReturnedTypedElement()
-	 * @generated
-	 */
-	EReference getReturnedTypedElement_EntityType();
+	EReference getBasicEntity_SuperClass();
 
 	/**
 	 * Returns the meta object for data type '{@link java.lang.Object <em>Boolean</em>}'.
@@ -1386,32 +1170,6 @@ public interface Data_meta_modelPackage extends EPackage {
 		EReference TYPED_ELEMENT__CLASSIFIER = eINSTANCE.getTypedElement_Classifier();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.BaseEntityImpl <em>Base Entity</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.BaseEntityImpl
-		 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getBaseEntity()
-		 * @generated
-		 */
-		EClass BASE_ENTITY = eINSTANCE.getBaseEntity();
-
-		/**
-		 * The meta object literal for the '<em><b>Super Type</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference BASE_ENTITY__SUPER_TYPE = eINSTANCE.getBaseEntity_SuperType();
-
-		/**
-		 * The meta object literal for the '<em><b>Attributes</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference BASE_ENTITY__ATTRIBUTES = eINSTANCE.getBaseEntity_Attributes();
-
-		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.GeneratedEntityImpl <em>Generated Entity</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1422,12 +1180,12 @@ public interface Data_meta_modelPackage extends EPackage {
 		EClass GENERATED_ENTITY = eINSTANCE.getGeneratedEntity();
 
 		/**
-		 * The meta object literal for the '<em><b>EAttributes</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Attributes</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference GENERATED_ENTITY__EATTRIBUTES = eINSTANCE.getGeneratedEntity_EAttributes();
+		EReference GENERATED_ENTITY__ATTRIBUTES = eINSTANCE.getGeneratedEntity_Attributes();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.EntityImpl <em>Entity</em>}' class.
@@ -1450,86 +1208,38 @@ public interface Data_meta_modelPackage extends EPackage {
 		EClass DERIVED_ENTITY = eINSTANCE.getDerivedEntity();
 
 		/**
-		 * The meta object literal for the '<em><b>EAttributes</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Attributes</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference DERIVED_ENTITY__EATTRIBUTES = eINSTANCE.getDerivedEntity_EAttributes();
+		EReference DERIVED_ENTITY__ATTRIBUTES = eINSTANCE.getDerivedEntity_Attributes();
 
 		/**
-		 * The meta object literal for the '<em><b>EID Attribute</b></em>' reference feature.
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.BasicEntityImpl <em>Basic Entity</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.BasicEntityImpl
+		 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getBasicEntity()
 		 * @generated
 		 */
-		EReference DERIVED_ENTITY__EID_ATTRIBUTE = eINSTANCE.getDerivedEntity_EIDAttribute();
+		EClass BASIC_ENTITY = eINSTANCE.getBasicEntity();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.ReturnedTypedElementImpl <em>Returned Typed Element</em>}' class.
+		 * The meta object literal for the '<em><b>Attributes</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.ReturnedTypedElementImpl
-		 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getReturnedTypedElement()
 		 * @generated
 		 */
-		EClass RETURNED_TYPED_ELEMENT = eINSTANCE.getReturnedTypedElement();
+		EReference BASIC_ENTITY__ATTRIBUTES = eINSTANCE.getBasicEntity_Attributes();
 
 		/**
-		 * The meta object literal for the '<em><b>Ordered</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Super Class</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute RETURNED_TYPED_ELEMENT__ORDERED = eINSTANCE.getReturnedTypedElement_Ordered();
-
-		/**
-		 * The meta object literal for the '<em><b>Unique</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute RETURNED_TYPED_ELEMENT__UNIQUE = eINSTANCE.getReturnedTypedElement_Unique();
-
-		/**
-		 * The meta object literal for the '<em><b>Lower Bound</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute RETURNED_TYPED_ELEMENT__LOWER_BOUND = eINSTANCE.getReturnedTypedElement_LowerBound();
-
-		/**
-		 * The meta object literal for the '<em><b>Upper Bound</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute RETURNED_TYPED_ELEMENT__UPPER_BOUND = eINSTANCE.getReturnedTypedElement_UpperBound();
-
-		/**
-		 * The meta object literal for the '<em><b>Many</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute RETURNED_TYPED_ELEMENT__MANY = eINSTANCE.getReturnedTypedElement_Many();
-
-		/**
-		 * The meta object literal for the '<em><b>Required</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute RETURNED_TYPED_ELEMENT__REQUIRED = eINSTANCE.getReturnedTypedElement_Required();
-
-		/**
-		 * The meta object literal for the '<em><b>Entity Type</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference RETURNED_TYPED_ELEMENT__ENTITY_TYPE = eINSTANCE.getReturnedTypedElement_EntityType();
+		EReference BASIC_ENTITY__SUPER_CLASS = eINSTANCE.getBasicEntity_SuperClass();
 
 		/**
 		 * The meta object literal for the '<em>Boolean</em>' data type.

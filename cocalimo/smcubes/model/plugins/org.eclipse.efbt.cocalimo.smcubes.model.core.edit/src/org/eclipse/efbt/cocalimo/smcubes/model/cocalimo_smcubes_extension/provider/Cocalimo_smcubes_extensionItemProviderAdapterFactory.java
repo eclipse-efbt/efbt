@@ -509,6 +509,29 @@ public class Cocalimo_smcubes_extensionItemProviderAdapterFactory extends Cocali
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SubDomainModule} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected SubDomainModuleItemProvider subDomainModuleItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SubDomainModule}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createSubDomainModuleAdapter() {
+		if (subDomainModuleItemProvider == null) {
+			subDomainModuleItemProvider = new SubDomainModuleItemProvider(this);
+		}
+
+		return subDomainModuleItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -632,6 +655,7 @@ public class Cocalimo_smcubes_extensionItemProviderAdapterFactory extends Cocali
 		if (reportCellValueItemProvider != null) reportCellValueItemProvider.dispose();
 		if (reportTableModuleItemProvider != null) reportTableModuleItemProvider.dispose();
 		if (tableCellModuleItemProvider != null) tableCellModuleItemProvider.dispose();
+		if (subDomainModuleItemProvider != null) subDomainModuleItemProvider.dispose();
 	}
 
 }

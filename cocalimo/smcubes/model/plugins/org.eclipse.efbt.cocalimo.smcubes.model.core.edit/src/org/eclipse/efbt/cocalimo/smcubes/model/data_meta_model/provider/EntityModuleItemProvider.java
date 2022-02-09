@@ -197,17 +197,17 @@ public class EntityModuleItemProvider extends ModuleItemProvider {
 		newChildDescriptors.add
 			(createChildParameter
 				(Data_meta_modelPackage.Literals.ENTITY_MODULE__ENTITIES,
-				 Data_meta_modelFactory.eINSTANCE.createBaseEntity()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(Data_meta_modelPackage.Literals.ENTITY_MODULE__ENTITIES,
 				 Data_meta_modelFactory.eINSTANCE.createGeneratedEntity()));
 
 		newChildDescriptors.add
 			(createChildParameter
 				(Data_meta_modelPackage.Literals.ENTITY_MODULE__ENTITIES,
 				 Data_meta_modelFactory.eINSTANCE.createDerivedEntity()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(Data_meta_modelPackage.Literals.ENTITY_MODULE__ENTITIES,
+				 Data_meta_modelFactory.eINSTANCE.createBasicEntity()));
 	}
 
 	/**

@@ -13,8 +13,7 @@ import org.eclipse.emf.common.util.EList;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.DerivedEntity#getEAttributes <em>EAttributes</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.DerivedEntity#getEIDAttribute <em>EID Attribute</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.DerivedEntity#getAttributes <em>Attributes</em>}</li>
  * </ul>
  *
  * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage#getDerivedEntity()
@@ -23,26 +22,15 @@ import org.eclipse.emf.common.util.EList;
  */
 public interface DerivedEntity extends Entity {
 	/**
-	 * Returns the value of the '<em><b>EAttributes</b></em>' reference list.
+	 * Returns the value of the '<em><b>Attributes</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>EAttributes</em>' reference list.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage#getDerivedEntity_EAttributes()
-	 * @model transient="true" changeable="false" volatile="true" derived="true"
+	 * @return the value of the '<em>Attributes</em>' containment reference list.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage#getDerivedEntity_Attributes()
+	 * @model containment="true"
 	 * @generated
 	 */
-	EList<Attribute> getEAttributes();
-
-	/**
-	 * Returns the value of the '<em><b>EID Attribute</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>EID Attribute</em>' reference.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage#getDerivedEntity_EIDAttribute()
-	 * @model resolveProxies="false" transient="true" changeable="false" volatile="true" derived="true"
-	 * @generated
-	 */
-	Attribute getEIDAttribute();
+	EList<Attribute> getAttributes();
 
 } // DerivedEntity

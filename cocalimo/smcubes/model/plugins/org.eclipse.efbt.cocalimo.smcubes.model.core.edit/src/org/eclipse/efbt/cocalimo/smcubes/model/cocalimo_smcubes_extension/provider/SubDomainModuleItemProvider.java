@@ -1,37 +1,44 @@
 /**
  */
-package org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.provider;
+package org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.provider;
 
 
 import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BaseEntity;
-import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage;
+import org.eclipse.efbt.cocalimo.core.model.module_management.provider.ModuleItemProvider;
+
+import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.Cocalimo_smcubes_extensionPackage;
+import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SubDomainModule;
+
+import org.eclipse.efbt.cocalimo.smcubes.model.core.CoreFactory;
+
+import org.eclipse.efbt.cocalimo.smcubes.model.core.provider.SmcubesEditPlugin;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.util.ResourceLocator;
+
 import org.eclipse.emf.ecore.EStructuralFeature;
 
-import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BaseEntity} object.
+ * This is the item provider adapter for a {@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SubDomainModule} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class BaseEntityItemProvider extends EntityItemProvider {
+public class SubDomainModuleItemProvider extends ModuleItemProvider {
 	/**
 	 * This constructs an instance from a factory and a notifier.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public BaseEntityItemProvider(AdapterFactory adapterFactory) {
+	public SubDomainModuleItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -46,31 +53,8 @@ public class BaseEntityItemProvider extends EntityItemProvider {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addSuperTypePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
-	}
-
-	/**
-	 * This adds a property descriptor for the Super Type feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addSuperTypePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_BaseEntity_superType_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_BaseEntity_superType_feature", "_UI_BaseEntity_type"),
-				 Data_meta_modelPackage.Literals.BASE_ENTITY__SUPER_TYPE,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
 	}
 
 	/**
@@ -85,7 +69,7 @@ public class BaseEntityItemProvider extends EntityItemProvider {
 	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
-			childrenFeatures.add(Data_meta_modelPackage.Literals.BASE_ENTITY__ATTRIBUTES);
+			childrenFeatures.add(Cocalimo_smcubes_extensionPackage.Literals.SUB_DOMAIN_MODULE__SUBDOMAINS);
 		}
 		return childrenFeatures;
 	}
@@ -104,14 +88,14 @@ public class BaseEntityItemProvider extends EntityItemProvider {
 	}
 
 	/**
-	 * This returns BaseEntity.gif.
+	 * This returns SubDomainModule.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/BaseEntity"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/SubDomainModule"));
 	}
 
 	/**
@@ -122,11 +106,10 @@ public class BaseEntityItemProvider extends EntityItemProvider {
 	 */
 	@Override
 	public String getText(Object object) {
-		Object labelValue = ((BaseEntity)object).getName();
-		String label = labelValue == null ? null : labelValue.toString();
+		String label = ((SubDomainModule)object).getName();
 		return label == null || label.length() == 0 ?
-			getString("_UI_BaseEntity_type") :
-			getString("_UI_BaseEntity_type") + " " + label;
+			getString("_UI_SubDomainModule_type") :
+			getString("_UI_SubDomainModule_type") + " " + label;
 	}
 
 
@@ -141,8 +124,8 @@ public class BaseEntityItemProvider extends EntityItemProvider {
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 
-		switch (notification.getFeatureID(BaseEntity.class)) {
-			case Data_meta_modelPackage.BASE_ENTITY__ATTRIBUTES:
+		switch (notification.getFeatureID(SubDomainModule.class)) {
+			case Cocalimo_smcubes_extensionPackage.SUB_DOMAIN_MODULE__SUBDOMAINS:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
@@ -159,6 +142,22 @@ public class BaseEntityItemProvider extends EntityItemProvider {
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
+
+		newChildDescriptors.add
+			(createChildParameter
+				(Cocalimo_smcubes_extensionPackage.Literals.SUB_DOMAIN_MODULE__SUBDOMAINS,
+				 CoreFactory.eINSTANCE.createSUBDOMAIN()));
+	}
+
+	/**
+	 * Return the resource locator for this item provider's resources.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public ResourceLocator getResourceLocator() {
+		return SmcubesEditPlugin.INSTANCE;
 	}
 
 }

@@ -7,7 +7,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="variable" eType="ecore:EClass core.ecore#//VARIABLE"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ForeignKeyAttribute" eSuperTypes="#//Attribute">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="entity" eType="#//BaseEntity"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entity" eType="#//BasicEntity"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Classifier" abstract="true" eSuperTypes="#//NamedElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="Element" abstract="true"/>
@@ -39,45 +39,18 @@
       <details key="baseType" value="http://www.w3.org/2001/XMLSchema#string"/>
     </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="BaseEntity" eSuperTypes="#//Entity">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="superType" eType="#//BaseEntity"
-        unsettable="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="GeneratedEntity" eSuperTypes="#//Entity">
     <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" upperBound="-1"
         eType="#//Attribute" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="GeneratedEntity" eSuperTypes="#//Entity">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="eAttributes" upperBound="-1"
-        eType="#//Attribute" changeable="false" volatile="true" transient="true" derived="true"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Entity" abstract="true" eSuperTypes="#//Classifier"/>
   <eClassifiers xsi:type="ecore:EClass" name="DerivedEntity" eSuperTypes="#//Entity">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="eAttributes" upperBound="-1"
-        eType="#//Attribute" changeable="false" volatile="true" transient="true" derived="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="eIDAttribute" eType="#//Attribute"
-        changeable="false" volatile="true" transient="true" derived="true" resolveProxies="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" upperBound="-1"
+        eType="#//Attribute" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ReturnedTypedElement" abstract="true"
-      eSuperTypes="#//TypedElement">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
-      <details key="constraints" value="ValidLowerBound ValidUpperBound ConsistentBounds ValidType"/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ordered" eType="#//Boolean"
-        defaultValueLiteral="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="unique" eType="#//Boolean"
-        defaultValueLiteral="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lowerBound" eType="#//Int"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="upperBound" eType="#//Int"
-        defaultValueLiteral="1"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="many" eType="#//Boolean"
-        changeable="false" volatile="true" transient="true" derived="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="required" eType="#//Boolean"
-        changeable="false" volatile="true" transient="true" derived="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="entityType" eType="#//Entity"
-        volatile="true" unsettable="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="suppressedIsSetVisibility" value="true"/>
-        <details key="suppressedUnsetVisibility" value="true"/>
-      </eAnnotations>
-    </eStructuralFeatures>
+  <eClassifiers xsi:type="ecore:EClass" name="BasicEntity" eSuperTypes="#//Entity">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" upperBound="-1"
+        eType="#//Attribute" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="superClass" eType="#//BasicEntity"/>
   </eClassifiers>
 </ecore:EPackage>

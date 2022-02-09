@@ -17,7 +17,7 @@ import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.Data_definitionPa
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.impl.Data_definitionPackageImpl;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute;
-import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BaseEntity;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BasicEntity;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Classifier;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage;
@@ -28,11 +28,8 @@ import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.EntityModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ForeignKeyAttribute;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.GeneratedEntity;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.NamedElement;
-import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ReturnedTypedElement;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.StructuralFeature;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.TypedElement;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.util.Data_meta_modelValidator;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MappingPackage;
 
@@ -47,7 +44,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EValidator;
 
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
@@ -119,13 +115,6 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass baseEntityEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	private EClass generatedEntityEClass = null;
 
 	/**
@@ -147,7 +136,7 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass returnedTypedElementEClass = null;
+	private EClass basicEntityEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -247,16 +236,6 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 		theMappingPackage.initializePackageContents();
 		theRenderingPackage.initializePackageContents();
 		theCocalimo_smcubes_extensionPackage.initializePackageContents();
-
-		// Register package validator
-		EValidator.Registry.INSTANCE.put
-			(theData_meta_modelPackage,
-			 new EValidator.Descriptor() {
-				 @Override
-				 public EValidator getEValidator() {
-					 return Data_meta_modelValidator.INSTANCE;
-				 }
-			 });
 
 		// Mark meta-data to indicate it can't be changed
 		theData_meta_modelPackage.freeze();
@@ -432,36 +411,6 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 	 * @generated
 	 */
 	@Override
-	public EClass getBaseEntity() {
-		return baseEntityEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getBaseEntity_SuperType() {
-		return (EReference)baseEntityEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getBaseEntity_Attributes() {
-		return (EReference)baseEntityEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EClass getGeneratedEntity() {
 		return generatedEntityEClass;
 	}
@@ -472,7 +421,7 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 	 * @generated
 	 */
 	@Override
-	public EReference getGeneratedEntity_EAttributes() {
+	public EReference getGeneratedEntity_Attributes() {
 		return (EReference)generatedEntityEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -502,7 +451,7 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 	 * @generated
 	 */
 	@Override
-	public EReference getDerivedEntity_EAttributes() {
+	public EReference getDerivedEntity_Attributes() {
 		return (EReference)derivedEntityEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -512,8 +461,8 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 	 * @generated
 	 */
 	@Override
-	public EReference getDerivedEntity_EIDAttribute() {
-		return (EReference)derivedEntityEClass.getEStructuralFeatures().get(1);
+	public EClass getBasicEntity() {
+		return basicEntityEClass;
 	}
 
 	/**
@@ -522,8 +471,8 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 	 * @generated
 	 */
 	@Override
-	public EClass getReturnedTypedElement() {
-		return returnedTypedElementEClass;
+	public EReference getBasicEntity_Attributes() {
+		return (EReference)basicEntityEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -532,68 +481,8 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 	 * @generated
 	 */
 	@Override
-	public EAttribute getReturnedTypedElement_Ordered() {
-		return (EAttribute)returnedTypedElementEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EAttribute getReturnedTypedElement_Unique() {
-		return (EAttribute)returnedTypedElementEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EAttribute getReturnedTypedElement_LowerBound() {
-		return (EAttribute)returnedTypedElementEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EAttribute getReturnedTypedElement_UpperBound() {
-		return (EAttribute)returnedTypedElementEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EAttribute getReturnedTypedElement_Many() {
-		return (EAttribute)returnedTypedElementEClass.getEStructuralFeatures().get(4);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EAttribute getReturnedTypedElement_Required() {
-		return (EAttribute)returnedTypedElementEClass.getEStructuralFeatures().get(5);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getReturnedTypedElement_EntityType() {
-		return (EReference)returnedTypedElementEClass.getEStructuralFeatures().get(6);
+	public EReference getBasicEntity_SuperClass() {
+		return (EReference)basicEntityEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -679,27 +568,17 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 		typedElementEClass = createEClass(TYPED_ELEMENT);
 		createEReference(typedElementEClass, TYPED_ELEMENT__CLASSIFIER);
 
-		baseEntityEClass = createEClass(BASE_ENTITY);
-		createEReference(baseEntityEClass, BASE_ENTITY__SUPER_TYPE);
-		createEReference(baseEntityEClass, BASE_ENTITY__ATTRIBUTES);
-
 		generatedEntityEClass = createEClass(GENERATED_ENTITY);
-		createEReference(generatedEntityEClass, GENERATED_ENTITY__EATTRIBUTES);
+		createEReference(generatedEntityEClass, GENERATED_ENTITY__ATTRIBUTES);
 
 		entityEClass = createEClass(ENTITY);
 
 		derivedEntityEClass = createEClass(DERIVED_ENTITY);
-		createEReference(derivedEntityEClass, DERIVED_ENTITY__EATTRIBUTES);
-		createEReference(derivedEntityEClass, DERIVED_ENTITY__EID_ATTRIBUTE);
+		createEReference(derivedEntityEClass, DERIVED_ENTITY__ATTRIBUTES);
 
-		returnedTypedElementEClass = createEClass(RETURNED_TYPED_ELEMENT);
-		createEAttribute(returnedTypedElementEClass, RETURNED_TYPED_ELEMENT__ORDERED);
-		createEAttribute(returnedTypedElementEClass, RETURNED_TYPED_ELEMENT__UNIQUE);
-		createEAttribute(returnedTypedElementEClass, RETURNED_TYPED_ELEMENT__LOWER_BOUND);
-		createEAttribute(returnedTypedElementEClass, RETURNED_TYPED_ELEMENT__UPPER_BOUND);
-		createEAttribute(returnedTypedElementEClass, RETURNED_TYPED_ELEMENT__MANY);
-		createEAttribute(returnedTypedElementEClass, RETURNED_TYPED_ELEMENT__REQUIRED);
-		createEReference(returnedTypedElementEClass, RETURNED_TYPED_ELEMENT__ENTITY_TYPE);
+		basicEntityEClass = createEClass(BASIC_ENTITY);
+		createEReference(basicEntityEClass, BASIC_ENTITY__ATTRIBUTES);
+		createEReference(basicEntityEClass, BASIC_ENTITY__SUPER_CLASS);
 
 		// Create data types
 		booleanEDataType = createEDataType(BOOLEAN);
@@ -746,11 +625,10 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 		entityModuleEClass.getESuperTypes().add(theModule_managementPackage.getModule());
 		structuralFeatureEClass.getESuperTypes().add(this.getTypedElement());
 		typedElementEClass.getESuperTypes().add(this.getNamedElement());
-		baseEntityEClass.getESuperTypes().add(this.getEntity());
 		generatedEntityEClass.getESuperTypes().add(this.getEntity());
 		entityEClass.getESuperTypes().add(this.getClassifier());
 		derivedEntityEClass.getESuperTypes().add(this.getEntity());
-		returnedTypedElementEClass.getESuperTypes().add(this.getTypedElement());
+		basicEntityEClass.getESuperTypes().add(this.getEntity());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(attributeEClass, Attribute.class, "Attribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -758,7 +636,7 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 		initEReference(getAttribute_Variable(), theCorePackage.getVARIABLE(), null, "variable", null, 0, 1, Attribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(foreignKeyAttributeEClass, ForeignKeyAttribute.class, "ForeignKeyAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getForeignKeyAttribute_Entity(), this.getBaseEntity(), null, "entity", null, 0, 1, ForeignKeyAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getForeignKeyAttribute_Entity(), this.getBasicEntity(), null, "entity", null, 0, 1, ForeignKeyAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(classifierEClass, Classifier.class, "Classifier", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -777,27 +655,17 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 		initEClass(typedElementEClass, TypedElement.class, "TypedElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getTypedElement_Classifier(), this.getClassifier(), null, "classifier", null, 0, 1, TypedElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(baseEntityEClass, BaseEntity.class, "BaseEntity", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getBaseEntity_SuperType(), this.getBaseEntity(), null, "superType", null, 0, 1, BaseEntity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getBaseEntity_Attributes(), this.getAttribute(), null, "attributes", null, 0, -1, BaseEntity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
 		initEClass(generatedEntityEClass, GeneratedEntity.class, "GeneratedEntity", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getGeneratedEntity_EAttributes(), this.getAttribute(), null, "eAttributes", null, 0, -1, GeneratedEntity.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEReference(getGeneratedEntity_Attributes(), this.getAttribute(), null, "attributes", null, 0, -1, GeneratedEntity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(entityEClass, Entity.class, "Entity", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(derivedEntityEClass, DerivedEntity.class, "DerivedEntity", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getDerivedEntity_EAttributes(), this.getAttribute(), null, "eAttributes", null, 0, -1, DerivedEntity.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
-		initEReference(getDerivedEntity_EIDAttribute(), this.getAttribute(), null, "eIDAttribute", null, 0, 1, DerivedEntity.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEReference(getDerivedEntity_Attributes(), this.getAttribute(), null, "attributes", null, 0, -1, DerivedEntity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(returnedTypedElementEClass, ReturnedTypedElement.class, "ReturnedTypedElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getReturnedTypedElement_Ordered(), this.getBoolean(), "ordered", "true", 0, 1, ReturnedTypedElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getReturnedTypedElement_Unique(), this.getBoolean(), "unique", "true", 0, 1, ReturnedTypedElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getReturnedTypedElement_LowerBound(), this.getInt(), "lowerBound", null, 0, 1, ReturnedTypedElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getReturnedTypedElement_UpperBound(), this.getInt(), "upperBound", "1", 0, 1, ReturnedTypedElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getReturnedTypedElement_Many(), this.getBoolean(), "many", null, 0, 1, ReturnedTypedElement.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
-		initEAttribute(getReturnedTypedElement_Required(), this.getBoolean(), "required", null, 0, 1, ReturnedTypedElement.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
-		initEReference(getReturnedTypedElement_EntityType(), this.getEntity(), null, "entityType", null, 0, 1, ReturnedTypedElement.class, !IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(basicEntityEClass, BasicEntity.class, "BasicEntity", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getBasicEntity_Attributes(), this.getAttribute(), null, "attributes", null, 0, -1, BasicEntity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getBasicEntity_SuperClass(), this.getBasicEntity(), null, "superClass", null, 0, 1, BasicEntity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize data types
 		initEDataType(booleanEDataType, Object.class, "Boolean", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
@@ -810,8 +678,6 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 		// Create annotations
 		// http:///org/eclipse/emf/ecore/util/ExtendedMetaData
 		createExtendedMetaDataAnnotations();
-		// http://www.eclipse.org/emf/2002/Ecore
-		createEcoreAnnotations();
 	}
 
 	/**
@@ -839,22 +705,6 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 		   source,
 		   new String[] {
 			   "baseType", "http://www.w3.org/2001/XMLSchema#string"
-		   });
-	}
-
-	/**
-	 * Initializes the annotations for <b>http://www.eclipse.org/emf/2002/Ecore</b>.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void createEcoreAnnotations() {
-		String source = "http://www.eclipse.org/emf/2002/Ecore";
-		addAnnotation
-		  (returnedTypedElementEClass,
-		   source,
-		   new String[] {
-			   "constraints", "ValidLowerBound ValidUpperBound ConsistentBounds ValidType"
 		   });
 	}
 

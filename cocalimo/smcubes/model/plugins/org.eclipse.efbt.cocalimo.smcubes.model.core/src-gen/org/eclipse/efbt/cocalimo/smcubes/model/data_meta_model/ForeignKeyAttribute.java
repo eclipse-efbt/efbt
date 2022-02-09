@@ -25,12 +25,12 @@ public interface ForeignKeyAttribute extends Attribute {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Entity</em>' reference.
-	 * @see #setEntity(BaseEntity)
+	 * @see #setEntity(BasicEntity)
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage#getForeignKeyAttribute_Entity()
 	 * @model
 	 * @generated
 	 */
-	BaseEntity getEntity();
+	BasicEntity getEntity();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ForeignKeyAttribute#getEntity <em>Entity</em>}' reference.
@@ -40,6 +40,6 @@ public interface ForeignKeyAttribute extends Attribute {
 	 * @see #getEntity()
 	 * @generated
 	 */
-	void setEntity(BaseEntity value);
+	void setEntity(BasicEntity value);
 
 } // ForeignKeyAttribute

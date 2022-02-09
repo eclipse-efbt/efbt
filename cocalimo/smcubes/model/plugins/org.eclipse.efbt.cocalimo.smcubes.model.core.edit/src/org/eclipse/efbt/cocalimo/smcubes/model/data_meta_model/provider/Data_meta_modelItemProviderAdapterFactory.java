@@ -140,29 +140,6 @@ public class Data_meta_modelItemProviderAdapterFactory extends Data_meta_modelAd
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BaseEntity} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected BaseEntityItemProvider baseEntityItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BaseEntity}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createBaseEntityAdapter() {
-		if (baseEntityItemProvider == null) {
-			baseEntityItemProvider = new BaseEntityItemProvider(this);
-		}
-
-		return baseEntityItemProvider;
-	}
-
-	/**
 	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.GeneratedEntity} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -206,6 +183,29 @@ public class Data_meta_modelItemProviderAdapterFactory extends Data_meta_modelAd
 		}
 
 		return derivedEntityItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BasicEntity} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected BasicEntityItemProvider basicEntityItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BasicEntity}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createBasicEntityAdapter() {
+		if (basicEntityItemProvider == null) {
+			basicEntityItemProvider = new BasicEntityItemProvider(this);
+		}
+
+		return basicEntityItemProvider;
 	}
 
 	/**

@@ -75,6 +75,7 @@ public class Cocalimo_smcubes_extensionFactoryImpl extends EFactoryImpl implemen
 			case Cocalimo_smcubes_extensionPackage.REPORT_CELL_VALUE: return createReportCellValue();
 			case Cocalimo_smcubes_extensionPackage.REPORT_TABLE_MODULE: return createReportTableModule();
 			case Cocalimo_smcubes_extensionPackage.TABLE_CELL_MODULE: return createTableCellModule();
+			case Cocalimo_smcubes_extensionPackage.SUB_DOMAIN_MODULE: return createSubDomainModule();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -287,6 +288,17 @@ public class Cocalimo_smcubes_extensionFactoryImpl extends EFactoryImpl implemen
 	public TableCellModule createTableCellModule() {
 		TableCellModuleImpl tableCellModule = new TableCellModuleImpl();
 		return tableCellModule;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public SubDomainModule createSubDomainModule() {
+		SubDomainModuleImpl subDomainModule = new SubDomainModuleImpl();
+		return subDomainModule;
 	}
 
 	/**

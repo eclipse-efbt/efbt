@@ -63,9 +63,9 @@ public class Data_meta_modelFactoryImpl extends EFactoryImpl implements Data_met
 			case Data_meta_modelPackage.ATTRIBUTE: return createAttribute();
 			case Data_meta_modelPackage.FOREIGN_KEY_ATTRIBUTE: return createForeignKeyAttribute();
 			case Data_meta_modelPackage.ENTITY_MODULE: return createEntityModule();
-			case Data_meta_modelPackage.BASE_ENTITY: return createBaseEntity();
 			case Data_meta_modelPackage.GENERATED_ENTITY: return createGeneratedEntity();
 			case Data_meta_modelPackage.DERIVED_ENTITY: return createDerivedEntity();
+			case Data_meta_modelPackage.BASIC_ENTITY: return createBasicEntity();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -148,17 +148,6 @@ public class Data_meta_modelFactoryImpl extends EFactoryImpl implements Data_met
 	 * @generated
 	 */
 	@Override
-	public BaseEntity createBaseEntity() {
-		BaseEntityImpl baseEntity = new BaseEntityImpl();
-		return baseEntity;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public GeneratedEntity createGeneratedEntity() {
 		GeneratedEntityImpl generatedEntity = new GeneratedEntityImpl();
 		return generatedEntity;
@@ -180,8 +169,19 @@ public class Data_meta_modelFactoryImpl extends EFactoryImpl implements Data_met
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	public BasicEntity createBasicEntity() {
+		BasicEntityImpl basicEntity = new BasicEntityImpl();
+		return basicEntity;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public Object createBooleanFromString(EDataType eDataType, String initialValue) {
-		return super.createFromString(eDataType, initialValue);
+		return XMLTypeFactory.eINSTANCE.createFromString(XMLTypePackage.Literals.BOOLEAN, initialValue);
 	}
 
 	/**
@@ -190,7 +190,7 @@ public class Data_meta_modelFactoryImpl extends EFactoryImpl implements Data_met
 	 * @generated
 	 */
 	public String convertBooleanToString(EDataType eDataType, Object instanceValue) {
-		return super.convertToString(eDataType, instanceValue);
+		return XMLTypeFactory.eINSTANCE.convertToString(XMLTypePackage.Literals.BOOLEAN, instanceValue);
 	}
 
 	/**
@@ -199,7 +199,7 @@ public class Data_meta_modelFactoryImpl extends EFactoryImpl implements Data_met
 	 * @generated
 	 */
 	public Object createIntFromString(EDataType eDataType, String initialValue) {
-		return super.createFromString(eDataType, initialValue);
+		return XMLTypeFactory.eINSTANCE.createFromString(XMLTypePackage.Literals.INT, initialValue);
 	}
 
 	/**
@@ -208,7 +208,7 @@ public class Data_meta_modelFactoryImpl extends EFactoryImpl implements Data_met
 	 * @generated
 	 */
 	public String convertIntToString(EDataType eDataType, Object instanceValue) {
-		return super.convertToString(eDataType, instanceValue);
+		return XMLTypeFactory.eINSTANCE.convertToString(XMLTypePackage.Literals.INT, instanceValue);
 	}
 
 	/**

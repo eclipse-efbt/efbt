@@ -100,10 +100,6 @@ public class Data_meta_modelAdapterFactory extends AdapterFactoryImpl {
 				return createTypedElementAdapter();
 			}
 			@Override
-			public Adapter caseBaseEntity(BaseEntity object) {
-				return createBaseEntityAdapter();
-			}
-			@Override
 			public Adapter caseGeneratedEntity(GeneratedEntity object) {
 				return createGeneratedEntityAdapter();
 			}
@@ -116,8 +112,8 @@ public class Data_meta_modelAdapterFactory extends AdapterFactoryImpl {
 				return createDerivedEntityAdapter();
 			}
 			@Override
-			public Adapter caseReturnedTypedElement(ReturnedTypedElement object) {
-				return createReturnedTypedElementAdapter();
+			public Adapter caseBasicEntity(BasicEntity object) {
+				return createBasicEntityAdapter();
 			}
 			@Override
 			public Adapter caseModule(org.eclipse.efbt.cocalimo.core.model.module_management.Module object) {
@@ -256,20 +252,6 @@ public class Data_meta_modelAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BaseEntity <em>Base Entity</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BaseEntity
-	 * @generated
-	 */
-	public Adapter createBaseEntityAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.GeneratedEntity <em>Generated Entity</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -312,16 +294,16 @@ public class Data_meta_modelAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ReturnedTypedElement <em>Returned Typed Element</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BasicEntity <em>Basic Entity</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ReturnedTypedElement
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BasicEntity
 	 * @generated
 	 */
-	public Adapter createReturnedTypedElementAdapter() {
+	public Adapter createBasicEntityAdapter() {
 		return null;
 	}
 

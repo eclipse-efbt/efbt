@@ -157,15 +157,12 @@ import org.eclipse.emf.edit.ui.view.ExtendedPropertySheetPage;
 
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.provider.Sql_liteItemProviderAdapterFactory;
 
-import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.provider.Ecore_plus_logicItemProviderAdapterFactory;
-
-import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.provider.Ecore_plus_structureItemProviderAdapterFactory;
-
-import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.provider.Bpmn_liteItemProviderAdapterFactory;
-import org.eclipse.efbt.cocalimo.core.model.logical_transformations.provider.Logical_transformationsItemProviderAdapterFactory;
 import org.eclipse.efbt.cocalimo.core.model.module_management.provider.Module_managementItemProviderAdapterFactory;
 
-import org.eclipse.efbt.cocalimo.core.model.requirements_text.provider.Requirements_textItemProviderAdapterFactory;
+import org.eclipse.efbt.cocalimo.smcubes.model.core.provider.CoreItemProviderAdapterFactory;
+
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.provider.Data_meta_modelItemProviderAdapterFactory;
+
 import org.eclipse.emf.ecore.provider.EcoreItemProviderAdapterFactory;
 
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
@@ -712,13 +709,10 @@ public class Sql_liteEditor
 
 		adapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Sql_liteItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new Ecore_plus_structureItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new Ecore_plus_logicItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new EcoreItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Module_managementItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new Logical_transformationsItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new Bpmn_liteItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new Requirements_textItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new CoreItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new Data_meta_modelItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 
 		// Create the command stack that will notify this editor as commands are executed.

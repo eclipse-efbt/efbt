@@ -2,9 +2,10 @@
  */
 package org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl;
 
-import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.Entity;
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.Sql_litePackage;
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.Table;
+
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Entity;
 
 import org.eclipse.emf.common.notify.Notification;
 

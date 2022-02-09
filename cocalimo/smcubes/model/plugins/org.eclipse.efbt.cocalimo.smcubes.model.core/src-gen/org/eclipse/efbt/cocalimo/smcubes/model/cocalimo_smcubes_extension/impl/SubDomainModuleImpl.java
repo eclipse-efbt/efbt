@@ -1,12 +1,15 @@
 /**
  */
-package org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl;
+package org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.impl;
 
 import java.util.Collection;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute;
-import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage;
-import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.DerivedEntity;
+import org.eclipse.efbt.cocalimo.core.model.module_management.impl.ModuleImpl;
+
+import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.Cocalimo_smcubes_extensionPackage;
+import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SubDomainModule;
+
+import org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN;
 
 import org.eclipse.emf.common.notify.NotificationChain;
 
@@ -20,34 +23,34 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Derived Entity</b></em>'.
+ * An implementation of the model object '<em><b>Sub Domain Module</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.DerivedEntityImpl#getAttributes <em>Attributes</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.impl.SubDomainModuleImpl#getSubdomains <em>Subdomains</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class DerivedEntityImpl extends EntityImpl implements DerivedEntity {
+public class SubDomainModuleImpl extends ModuleImpl implements SubDomainModule {
 	/**
-	 * The cached value of the '{@link #getAttributes() <em>Attributes</em>}' containment reference list.
+	 * The cached value of the '{@link #getSubdomains() <em>Subdomains</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getAttributes()
+	 * @see #getSubdomains()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<Attribute> attributes;
+	protected EList<SUBDOMAIN> subdomains;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected DerivedEntityImpl() {
+	protected SubDomainModuleImpl() {
 		super();
 	}
 
@@ -58,7 +61,7 @@ public class DerivedEntityImpl extends EntityImpl implements DerivedEntity {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return Data_meta_modelPackage.Literals.DERIVED_ENTITY;
+		return Cocalimo_smcubes_extensionPackage.Literals.SUB_DOMAIN_MODULE;
 	}
 
 	/**
@@ -67,11 +70,11 @@ public class DerivedEntityImpl extends EntityImpl implements DerivedEntity {
 	 * @generated
 	 */
 	@Override
-	public EList<Attribute> getAttributes() {
-		if (attributes == null) {
-			attributes = new EObjectContainmentEList<Attribute>(Attribute.class, this, Data_meta_modelPackage.DERIVED_ENTITY__ATTRIBUTES);
+	public EList<SUBDOMAIN> getSubdomains() {
+		if (subdomains == null) {
+			subdomains = new EObjectContainmentEList<SUBDOMAIN>(SUBDOMAIN.class, this, Cocalimo_smcubes_extensionPackage.SUB_DOMAIN_MODULE__SUBDOMAINS);
 		}
-		return attributes;
+		return subdomains;
 	}
 
 	/**
@@ -82,8 +85,8 @@ public class DerivedEntityImpl extends EntityImpl implements DerivedEntity {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case Data_meta_modelPackage.DERIVED_ENTITY__ATTRIBUTES:
-				return ((InternalEList<?>)getAttributes()).basicRemove(otherEnd, msgs);
+			case Cocalimo_smcubes_extensionPackage.SUB_DOMAIN_MODULE__SUBDOMAINS:
+				return ((InternalEList<?>)getSubdomains()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -96,8 +99,8 @@ public class DerivedEntityImpl extends EntityImpl implements DerivedEntity {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case Data_meta_modelPackage.DERIVED_ENTITY__ATTRIBUTES:
-				return getAttributes();
+			case Cocalimo_smcubes_extensionPackage.SUB_DOMAIN_MODULE__SUBDOMAINS:
+				return getSubdomains();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -111,9 +114,9 @@ public class DerivedEntityImpl extends EntityImpl implements DerivedEntity {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case Data_meta_modelPackage.DERIVED_ENTITY__ATTRIBUTES:
-				getAttributes().clear();
-				getAttributes().addAll((Collection<? extends Attribute>)newValue);
+			case Cocalimo_smcubes_extensionPackage.SUB_DOMAIN_MODULE__SUBDOMAINS:
+				getSubdomains().clear();
+				getSubdomains().addAll((Collection<? extends SUBDOMAIN>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -127,8 +130,8 @@ public class DerivedEntityImpl extends EntityImpl implements DerivedEntity {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case Data_meta_modelPackage.DERIVED_ENTITY__ATTRIBUTES:
-				getAttributes().clear();
+			case Cocalimo_smcubes_extensionPackage.SUB_DOMAIN_MODULE__SUBDOMAINS:
+				getSubdomains().clear();
 				return;
 		}
 		super.eUnset(featureID);
@@ -142,10 +145,10 @@ public class DerivedEntityImpl extends EntityImpl implements DerivedEntity {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case Data_meta_modelPackage.DERIVED_ENTITY__ATTRIBUTES:
-				return attributes != null && !attributes.isEmpty();
+			case Cocalimo_smcubes_extensionPackage.SUB_DOMAIN_MODULE__SUBDOMAINS:
+				return subdomains != null && !subdomains.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
 
-} //DerivedEntityImpl
+} //SubDomainModuleImpl

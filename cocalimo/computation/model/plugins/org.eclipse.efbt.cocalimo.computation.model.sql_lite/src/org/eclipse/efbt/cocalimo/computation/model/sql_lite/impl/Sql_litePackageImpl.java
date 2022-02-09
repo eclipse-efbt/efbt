@@ -2,10 +2,6 @@
  */
 package org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl;
 
-import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.Ecore_plus_logicPackage;
-
-import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.Ecore_plus_structurePackage;
-
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.Column;
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.ColumnAsFunction;
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.FromClause;
@@ -21,11 +17,12 @@ import org.eclipse.efbt.cocalimo.computation.model.sql_lite.Table;
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.View;
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.WhereClause;
 
-import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Bpmn_litePackage;
-import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsPackage;
 import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementPackage;
 
-import org.eclipse.efbt.cocalimo.core.model.requirements_text.Requirements_textPackage;
+import org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage;
+
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
@@ -172,13 +169,10 @@ public class Sql_litePackageImpl extends EPackageImpl implements Sql_litePackage
 		isInited = true;
 
 		// Initialize simple dependencies
-		Ecore_plus_structurePackage.eINSTANCE.eClass();
-		Ecore_plus_logicPackage.eINSTANCE.eClass();
 		EcorePackage.eINSTANCE.eClass();
 		Module_managementPackage.eINSTANCE.eClass();
-		Logical_transformationsPackage.eINSTANCE.eClass();
-		Bpmn_litePackage.eINSTANCE.eClass();
-		Requirements_textPackage.eINSTANCE.eClass();
+		CorePackage.eINSTANCE.eClass();
+		Data_meta_modelPackage.eINSTANCE.eClass();
 
 		// Create package meta-data objects
 		theSql_litePackage.createPackageContents();
@@ -309,15 +303,6 @@ public class Sql_litePackageImpl extends EPackageImpl implements Sql_litePackage
 	 */
 	public EClass getWhereClause() {
 		return whereClauseEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getWhereClause_Where_function() {
-		return (EReference)whereClauseEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -474,7 +459,6 @@ public class Sql_litePackageImpl extends EPackageImpl implements Sql_litePackage
 		createEReference(columnEClass, COLUMN__ATTRIBUTE);
 
 		whereClauseEClass = createEClass(WHERE_CLAUSE);
-		createEReference(whereClauseEClass, WHERE_CLAUSE__WHERE_FUNCTION);
 
 		tableEClass = createEClass(TABLE);
 		createEReference(tableEClass, TABLE__ENTITY);
@@ -520,8 +504,7 @@ public class Sql_litePackageImpl extends EPackageImpl implements Sql_litePackage
 
 		// Obtain other dependent packages
 		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
-		Ecore_plus_logicPackage theEcore_plus_logicPackage = (Ecore_plus_logicPackage)EPackage.Registry.INSTANCE.getEPackage(Ecore_plus_logicPackage.eNS_URI);
-		Ecore_plus_structurePackage theEcore_plus_structurePackage = (Ecore_plus_structurePackage)EPackage.Registry.INSTANCE.getEPackage(Ecore_plus_structurePackage.eNS_URI);
+		Data_meta_modelPackage theData_meta_modelPackage = (Data_meta_modelPackage)EPackage.Registry.INSTANCE.getEPackage(Data_meta_modelPackage.eNS_URI);
 		Module_managementPackage theModule_managementPackage = (Module_managementPackage)EPackage.Registry.INSTANCE.getEPackage(Module_managementPackage.eNS_URI);
 
 		// Create type parameters
@@ -553,10 +536,9 @@ public class Sql_litePackageImpl extends EPackageImpl implements Sql_litePackage
 		initEReference(getColumn_Attribute(), theEcorePackage.getEAttribute(), null, "attribute", null, 0, 1, Column.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(whereClauseEClass, WhereClause.class, "WhereClause", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getWhereClause_Where_function(), theEcore_plus_logicPackage.getBooleanOperation(), null, "where_function", null, 0, 1, WhereClause.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(tableEClass, Table.class, "Table", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getTable_Entity(), theEcore_plus_structurePackage.getEntity(), null, "entity", null, 0, 1, Table.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTable_Entity(), theData_meta_modelPackage.getEntity(), null, "entity", null, 0, 1, Table.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(sqlEntityEClass, SQLEntity.class, "SQLEntity", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -567,7 +549,7 @@ public class Sql_litePackageImpl extends EPackageImpl implements Sql_litePackage
 		initEReference(getSQLEntityModule_SqlEntities(), this.getSQLEntity(), null, "sqlEntities", null, 0, -1, SQLEntityModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(generatedEntitySQLEClass, GeneratedEntitySQL.class, "GeneratedEntitySQL", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getGeneratedEntitySQL_GeneratedEntity(), theEcore_plus_logicPackage.getGeneratedEntity(), null, "generatedEntity", null, 0, 1, GeneratedEntitySQL.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getGeneratedEntitySQL_GeneratedEntity(), theData_meta_modelPackage.getGeneratedEntity(), null, "generatedEntity", null, 0, 1, GeneratedEntitySQL.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getGeneratedEntitySQL_View(), this.getView(), null, "view", null, 0, 1, GeneratedEntitySQL.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(generatedEntitySQLModuleEClass, GeneratedEntitySQLModule.class, "GeneratedEntitySQLModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

@@ -110,6 +110,7 @@ public class SmcubesModelItemProvider
 			childrenFeatures.add(Cocalimo_smcubes_extensionPackage.Literals.SMCUBES_MODEL__CUBES);
 			childrenFeatures.add(Cocalimo_smcubes_extensionPackage.Literals.SMCUBES_MODEL__COMBINATIONS);
 			childrenFeatures.add(Cocalimo_smcubes_extensionPackage.Literals.SMCUBES_MODEL__MAPPINGS);
+			childrenFeatures.add(Cocalimo_smcubes_extensionPackage.Literals.SMCUBES_MODEL__SUB_DOMAINS_MODULE);
 		}
 		return childrenFeatures;
 	}
@@ -174,6 +175,7 @@ public class SmcubesModelItemProvider
 			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__CUBES:
 			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__COMBINATIONS:
 			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__MAPPINGS:
+			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__SUB_DOMAINS_MODULE:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
@@ -220,6 +222,11 @@ public class SmcubesModelItemProvider
 			(createChildParameter
 				(Cocalimo_smcubes_extensionPackage.Literals.SMCUBES_MODEL__MAPPINGS,
 				 Cocalimo_smcubes_extensionFactory.eINSTANCE.createMappingDefinitionModule()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(Cocalimo_smcubes_extensionPackage.Literals.SMCUBES_MODEL__SUB_DOMAINS_MODULE,
+				 Cocalimo_smcubes_extensionFactory.eINSTANCE.createSubDomainModule()));
 	}
 
 	/**

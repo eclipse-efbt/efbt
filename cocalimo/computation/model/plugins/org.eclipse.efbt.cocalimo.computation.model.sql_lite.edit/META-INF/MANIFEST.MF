@@ -13,16 +13,10 @@ Export-Package: org.eclipse.efbt.cocalimo.computation.model.sql_lite.provider
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.efbt.cocalimo.computation.model.sql_lite;visibility:=reexport,
  org.eclipse.emf.edit;visibility:=reexport,
- org.eclipse.efbt.cocalimo.computation.model.ecore_plus;visibility:=reexport,
- org.eclipse.efbt.cocalimo.computation.model.ecore_plus.edit;visibility:=reexport,
  org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.emf.ecore.edit;visibility:=reexport,
  org.eclipse.efbt.cocalimo.core.model.module_management;visibility:=reexport,
  org.eclipse.efbt.cocalimo.core.model.module_management.edit;visibility:=reexport,
  org.eclipse.efbt.cocalimo.smcubes.model.core;visibility:=reexport,
- org.eclipse.efbt.cocalimo.smcubes.model.core.edit;visibility:=reexport,
- org.eclipse.efbt.cocalimo.core.model.logical_transformations;visibility:=reexport,
- org.eclipse.efbt.cocalimo.core.model.logical_transformations.edit;visibility:=reexport,
- org.eclipse.efbt.cocalimo.core.model.requirements_text;visibility:=reexport,
- org.eclipse.efbt.cocalimo.core.model.requirements_text.edit;visibility:=reexport
+ org.eclipse.efbt.cocalimo.smcubes.model.core.edit;visibility:=reexport
 Bundle-ActivationPolicy: lazy

@@ -2,7 +2,7 @@
  */
 package org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BaseEntity;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BasicEntity;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ForeignKeyAttribute;
 
@@ -35,7 +35,7 @@ public class ForeignKeyAttributeImpl extends AttributeImpl implements ForeignKey
 	 * @generated
 	 * @ordered
 	 */
-	protected BaseEntity entity;
+	protected BasicEntity entity;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -62,10 +62,10 @@ public class ForeignKeyAttributeImpl extends AttributeImpl implements ForeignKey
 	 * @generated
 	 */
 	@Override
-	public BaseEntity getEntity() {
+	public BasicEntity getEntity() {
 		if (entity != null && entity.eIsProxy()) {
 			InternalEObject oldEntity = (InternalEObject)entity;
-			entity = (BaseEntity)eResolveProxy(oldEntity);
+			entity = (BasicEntity)eResolveProxy(oldEntity);
 			if (entity != oldEntity) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Data_meta_modelPackage.FOREIGN_KEY_ATTRIBUTE__ENTITY, oldEntity, entity));
@@ -79,7 +79,7 @@ public class ForeignKeyAttributeImpl extends AttributeImpl implements ForeignKey
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public BaseEntity basicGetEntity() {
+	public BasicEntity basicGetEntity() {
 		return entity;
 	}
 
@@ -89,8 +89,8 @@ public class ForeignKeyAttributeImpl extends AttributeImpl implements ForeignKey
 	 * @generated
 	 */
 	@Override
-	public void setEntity(BaseEntity newEntity) {
-		BaseEntity oldEntity = entity;
+	public void setEntity(BasicEntity newEntity) {
+		BasicEntity oldEntity = entity;
 		entity = newEntity;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, Data_meta_modelPackage.FOREIGN_KEY_ATTRIBUTE__ENTITY, oldEntity, entity));
@@ -120,7 +120,7 @@ public class ForeignKeyAttributeImpl extends AttributeImpl implements ForeignKey
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Data_meta_modelPackage.FOREIGN_KEY_ATTRIBUTE__ENTITY:
-				setEntity((BaseEntity)newValue);
+				setEntity((BasicEntity)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -135,7 +135,7 @@ public class ForeignKeyAttributeImpl extends AttributeImpl implements ForeignKey
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Data_meta_modelPackage.FOREIGN_KEY_ATTRIBUTE__ENTITY:
-				setEntity((BaseEntity)null);
+				setEntity((BasicEntity)null);
 				return;
 		}
 		super.eUnset(featureID);
