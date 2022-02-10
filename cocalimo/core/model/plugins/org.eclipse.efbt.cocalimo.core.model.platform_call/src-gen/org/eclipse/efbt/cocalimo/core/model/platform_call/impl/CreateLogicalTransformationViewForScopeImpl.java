@@ -134,7 +134,7 @@ public class CreateLogicalTransformationViewForScopeImpl extends PlatformCallImp
 	@Override
 	public EList<EStructuralFeature> getAttributeLineage() {
 		if (attributeLineage == null) {
-			attributeLineage = new EObjectResolvingEList<EStructuralFeature>(EStructuralFeature.class, this, Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__computation_lineage);
+			attributeLineage = new EObjectResolvingEList<EStructuralFeature>(EStructuralFeature.class, this, Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__ATTRIBUTE_LINEAGE);
 		}
 		return attributeLineage;
 	}
@@ -177,7 +177,7 @@ public class CreateLogicalTransformationViewForScopeImpl extends PlatformCallImp
 			case Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__LOGICAL_TRANSFORMATION_MODULE:
 				if (resolve) return getLogicalTransformationModule();
 				return basicGetLogicalTransformationModule();
-			case Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__computation_lineage:
+			case Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__ATTRIBUTE_LINEAGE:
 				return getAttributeLineage();
 			case Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__TEST_SCOPE:
 				return getTestScope();
@@ -197,7 +197,7 @@ public class CreateLogicalTransformationViewForScopeImpl extends PlatformCallImp
 			case Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__LOGICAL_TRANSFORMATION_MODULE:
 				setLogicalTransformationModule((LogicalTransformationModule)newValue);
 				return;
-			case Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__computation_lineage:
+			case Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__ATTRIBUTE_LINEAGE:
 				getAttributeLineage().clear();
 				getAttributeLineage().addAll((Collection<? extends EStructuralFeature>)newValue);
 				return;
@@ -220,7 +220,7 @@ public class CreateLogicalTransformationViewForScopeImpl extends PlatformCallImp
 			case Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__LOGICAL_TRANSFORMATION_MODULE:
 				setLogicalTransformationModule((LogicalTransformationModule)null);
 				return;
-			case Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__computation_lineage:
+			case Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__ATTRIBUTE_LINEAGE:
 				getAttributeLineage().clear();
 				return;
 			case Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__TEST_SCOPE:
@@ -240,7 +240,7 @@ public class CreateLogicalTransformationViewForScopeImpl extends PlatformCallImp
 		switch (featureID) {
 			case Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__LOGICAL_TRANSFORMATION_MODULE:
 				return logicalTransformationModule != null;
-			case Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__computation_lineage:
+			case Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__ATTRIBUTE_LINEAGE:
 				return attributeLineage != null && !attributeLineage.isEmpty();
 			case Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__TEST_SCOPE:
 				return testScope != null && !testScope.isEmpty();

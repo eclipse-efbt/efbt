@@ -12,10 +12,12 @@
  *******************************************************************************/
 package org.eclipse.efbt.controller.platformcall.component.core;
 
+import org.eclipse.efbt.cocalimo.core.model.platform_call.ConvertDataMetaModelToEcore;
 import org.eclipse.efbt.cocalimo.core.model.platform_call.ConvertSQLDeveloperModelToEcore;
 import org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope;
 import org.eclipse.efbt.cocalimo.core.model.platform_call.PlatformCall;
 import org.eclipse.efbt.cocalimo.core.model.platform_call.ImportBIRDFromMSAccess;
+import org.eclipse.efbt.controller.data_meta_model.component.dmm_to_ecore.DMMToEcoreConverter;
 import org.eclipse.efbt.controller.ldm.component.logical_transformations.LogicalTransformationViews;
 import org.eclipse.efbt.controller.ldm.component.sqldevconvertor.SQLDevConverter;
 import org.eclipse.efbt.controller.smcubes.component.importexport.impl.ImportOfBIRDFromMSAccess;
@@ -32,6 +34,10 @@ public class Controller {
 		{
 			convertSQLDeveloperModelToEcore((ConvertSQLDeveloperModelToEcore) call);
 		}
+		if (call instanceof ConvertDataMetaModelToEcore)
+		{
+			convertDataMetaModelToEcore((ConvertDataMetaModelToEcore) call);
+		}
 		if (call instanceof CreateLogicalTransformationViewForScope)
 		{
 			createLogicalTransformationViewForScope((CreateLogicalTransformationViewForScope) call);
@@ -44,6 +50,10 @@ public class Controller {
 		ImportOfBIRDFromMSAccess.importBIRDFromMSAccess(call.getInputDirectory(), call.getOutputDirectory());
 	}
 
+	private static void convertDataMetaModelToEcore(ConvertDataMetaModelToEcore call) {
+		// TODO Auto-generated method stub
+		DMMToEcoreConverter.convert(call.getOutputDirectory(), call.getEntityModule());
+	}
 	
 	private static void convertSQLDeveloperModelToEcore(ConvertSQLDeveloperModelToEcore call) {
 		// TODO Auto-generated method stub

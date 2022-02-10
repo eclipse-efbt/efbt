@@ -409,7 +409,7 @@ public interface Platform_callPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__computation_lineage = PLATFORM_CALL_FEATURE_COUNT + 1;
+	int CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__ATTRIBUTE_LINEAGE = PLATFORM_CALL_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Test Scope</b></em>' containment reference list.
@@ -437,6 +437,79 @@ public interface Platform_callPackage extends EPackage {
 	 * @ordered
 	 */
 	int CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE_OPERATION_COUNT = PLATFORM_CALL_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.impl.ConvertDataMetaModelToEcoreImpl <em>Convert Data Meta Model To Ecore</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.impl.ConvertDataMetaModelToEcoreImpl
+	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.impl.Platform_callPackageImpl#getConvertDataMetaModelToEcore()
+	 * @generated
+	 */
+	int CONVERT_DATA_META_MODEL_TO_ECORE = 5;
+
+	/**
+	 * The feature id for the '<em><b>Error Message</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONVERT_DATA_META_MODEL_TO_ECORE__ERROR_MESSAGE = PLATFORM_CALL__ERROR_MESSAGE;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONVERT_DATA_META_MODEL_TO_ECORE__NAME = PLATFORM_CALL__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Return Status</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONVERT_DATA_META_MODEL_TO_ECORE__RETURN_STATUS = PLATFORM_CALL__RETURN_STATUS;
+
+	/**
+	 * The feature id for the '<em><b>Output Directory</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONVERT_DATA_META_MODEL_TO_ECORE__OUTPUT_DIRECTORY = PLATFORM_CALL_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Entity Module</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONVERT_DATA_META_MODEL_TO_ECORE__ENTITY_MODULE = PLATFORM_CALL_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Convert Data Meta Model To Ecore</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONVERT_DATA_META_MODEL_TO_ECORE_FEATURE_COUNT = PLATFORM_CALL_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of operations of the '<em>Convert Data Meta Model To Ecore</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONVERT_DATA_META_MODEL_TO_ECORE_OPERATION_COUNT = PLATFORM_CALL_OPERATION_COUNT + 0;
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.PlatformCall <em>Platform Call</em>}'.
@@ -610,6 +683,38 @@ public interface Platform_callPackage extends EPackage {
 	EReference getCreateLogicalTransformationViewForScope_TestScope();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.ConvertDataMetaModelToEcore <em>Convert Data Meta Model To Ecore</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Convert Data Meta Model To Ecore</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.ConvertDataMetaModelToEcore
+	 * @generated
+	 */
+	EClass getConvertDataMetaModelToEcore();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.ConvertDataMetaModelToEcore#getOutputDirectory <em>Output Directory</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Output Directory</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.ConvertDataMetaModelToEcore#getOutputDirectory()
+	 * @see #getConvertDataMetaModelToEcore()
+	 * @generated
+	 */
+	EAttribute getConvertDataMetaModelToEcore_OutputDirectory();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.ConvertDataMetaModelToEcore#getEntityModule <em>Entity Module</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Entity Module</em>'.
+	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.ConvertDataMetaModelToEcore#getEntityModule()
+	 * @see #getConvertDataMetaModelToEcore()
+	 * @generated
+	 */
+	EReference getConvertDataMetaModelToEcore_EntityModule();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -760,7 +865,7 @@ public interface Platform_callPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__computation_lineage = eINSTANCE.getCreateLogicalTransformationViewForScope_AttributeLineage();
+		EReference CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__ATTRIBUTE_LINEAGE = eINSTANCE.getCreateLogicalTransformationViewForScope_AttributeLineage();
 
 		/**
 		 * The meta object literal for the '<em><b>Test Scope</b></em>' containment reference list feature.
@@ -769,6 +874,32 @@ public interface Platform_callPackage extends EPackage {
 		 * @generated
 		 */
 		EReference CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__TEST_SCOPE = eINSTANCE.getCreateLogicalTransformationViewForScope_TestScope();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.impl.ConvertDataMetaModelToEcoreImpl <em>Convert Data Meta Model To Ecore</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.impl.ConvertDataMetaModelToEcoreImpl
+		 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.impl.Platform_callPackageImpl#getConvertDataMetaModelToEcore()
+		 * @generated
+		 */
+		EClass CONVERT_DATA_META_MODEL_TO_ECORE = eINSTANCE.getConvertDataMetaModelToEcore();
+
+		/**
+		 * The meta object literal for the '<em><b>Output Directory</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CONVERT_DATA_META_MODEL_TO_ECORE__OUTPUT_DIRECTORY = eINSTANCE.getConvertDataMetaModelToEcore_OutputDirectory();
+
+		/**
+		 * The meta object literal for the '<em><b>Entity Module</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference CONVERT_DATA_META_MODEL_TO_ECORE__ENTITY_MODULE = eINSTANCE.getConvertDataMetaModelToEcore_EntityModule();
 
 	}
 

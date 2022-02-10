@@ -6,6 +6,7 @@ import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Bpmn_litePackage;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsPackage;
 import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementPackage;
 
+import org.eclipse.efbt.cocalimo.core.model.platform_call.ConvertDataMetaModelToEcore;
 import org.eclipse.efbt.cocalimo.core.model.platform_call.ConvertSQLDeveloperModelToEcore;
 import org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope;
 import org.eclipse.efbt.cocalimo.core.model.platform_call.PlatformCall;
@@ -13,6 +14,8 @@ import org.eclipse.efbt.cocalimo.core.model.platform_call.PlatformCallModule;
 import org.eclipse.efbt.cocalimo.core.model.platform_call.Platform_callFactory;
 import org.eclipse.efbt.cocalimo.core.model.platform_call.Platform_callPackage;
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.Requirements_textPackage;
+import org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage;
 import org.eclipse.efbt.cocalimo.core.model.platform_call.ImportBIRDFromMSAccess;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -63,6 +66,13 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 	 * @generated
 	 */
 	private EClass createLogicalTransformationViewForScopeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass convertDataMetaModelToEcoreEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -117,6 +127,8 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 		Bpmn_litePackage.eINSTANCE.eClass();
 		Module_managementPackage.eINSTANCE.eClass();
 		Requirements_textPackage.eINSTANCE.eClass();
+		CorePackage.eINSTANCE.eClass();
+		Data_meta_modelPackage.eINSTANCE.eClass();
 
 		// Create package meta-data objects
 		thePlatform_callPackage.createPackageContents();
@@ -298,6 +310,36 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 	 * @generated
 	 */
 	@Override
+	public EClass getConvertDataMetaModelToEcore() {
+		return convertDataMetaModelToEcoreEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getConvertDataMetaModelToEcore_OutputDirectory() {
+		return (EAttribute)convertDataMetaModelToEcoreEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getConvertDataMetaModelToEcore_EntityModule() {
+		return (EReference)convertDataMetaModelToEcoreEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Platform_callFactory getPlatform_callFactory() {
 		return (Platform_callFactory)getEFactoryInstance();
 	}
@@ -339,8 +381,12 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 
 		createLogicalTransformationViewForScopeEClass = createEClass(CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE);
 		createEReference(createLogicalTransformationViewForScopeEClass, CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__LOGICAL_TRANSFORMATION_MODULE);
-		createEReference(createLogicalTransformationViewForScopeEClass, CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__computation_lineage);
+		createEReference(createLogicalTransformationViewForScopeEClass, CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__ATTRIBUTE_LINEAGE);
 		createEReference(createLogicalTransformationViewForScopeEClass, CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__TEST_SCOPE);
+
+		convertDataMetaModelToEcoreEClass = createEClass(CONVERT_DATA_META_MODEL_TO_ECORE);
+		createEAttribute(convertDataMetaModelToEcoreEClass, CONVERT_DATA_META_MODEL_TO_ECORE__OUTPUT_DIRECTORY);
+		createEReference(convertDataMetaModelToEcoreEClass, CONVERT_DATA_META_MODEL_TO_ECORE__ENTITY_MODULE);
 	}
 
 	/**
@@ -370,6 +416,7 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 		Module_managementPackage theModule_managementPackage = (Module_managementPackage)EPackage.Registry.INSTANCE.getEPackage(Module_managementPackage.eNS_URI);
 		Logical_transformationsPackage theLogical_transformationsPackage = (Logical_transformationsPackage)EPackage.Registry.INSTANCE.getEPackage(Logical_transformationsPackage.eNS_URI);
 		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
+		Data_meta_modelPackage theData_meta_modelPackage = (Data_meta_modelPackage)EPackage.Registry.INSTANCE.getEPackage(Data_meta_modelPackage.eNS_URI);
 
 		// Create type parameters
 
@@ -380,6 +427,7 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 		convertSQLDeveloperModelToEcoreEClass.getESuperTypes().add(this.getPlatformCall());
 		importBIRDFromMSAccessEClass.getESuperTypes().add(this.getPlatformCall());
 		createLogicalTransformationViewForScopeEClass.getESuperTypes().add(this.getPlatformCall());
+		convertDataMetaModelToEcoreEClass.getESuperTypes().add(this.getPlatformCall());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(platformCallEClass, PlatformCall.class, "PlatformCall", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -402,6 +450,10 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 		initEReference(getCreateLogicalTransformationViewForScope_LogicalTransformationModule(), theLogical_transformationsPackage.getLogicalTransformationModule(), null, "logicalTransformationModule", null, 0, 1, CreateLogicalTransformationViewForScope.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getCreateLogicalTransformationViewForScope_AttributeLineage(), theEcorePackage.getEStructuralFeature(), null, "attributeLineage", null, 0, -1, CreateLogicalTransformationViewForScope.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getCreateLogicalTransformationViewForScope_TestScope(), theLogical_transformationsPackage.getE2ETestScope(), null, "testScope", null, 0, -1, CreateLogicalTransformationViewForScope.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(convertDataMetaModelToEcoreEClass, ConvertDataMetaModelToEcore.class, "ConvertDataMetaModelToEcore", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getConvertDataMetaModelToEcore_OutputDirectory(), ecorePackage.getEString(), "outputDirectory", null, 0, 1, ConvertDataMetaModelToEcore.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getConvertDataMetaModelToEcore_EntityModule(), theData_meta_modelPackage.getEntityModule(), null, "entityModule", null, 0, 1, ConvertDataMetaModelToEcore.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

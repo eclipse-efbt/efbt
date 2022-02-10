@@ -100,6 +100,13 @@ public class Platform_callSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case Platform_callPackage.CONVERT_DATA_META_MODEL_TO_ECORE: {
+				ConvertDataMetaModelToEcore convertDataMetaModelToEcore = (ConvertDataMetaModelToEcore)theEObject;
+				T result = caseConvertDataMetaModelToEcore(convertDataMetaModelToEcore);
+				if (result == null) result = casePlatformCall(convertDataMetaModelToEcore);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -176,6 +183,21 @@ public class Platform_callSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseCreateLogicalTransformationViewForScope(CreateLogicalTransformationViewForScope object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Convert Data Meta Model To Ecore</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Convert Data Meta Model To Ecore</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseConvertDataMetaModelToEcore(ConvertDataMetaModelToEcore object) {
 		return null;
 	}
 

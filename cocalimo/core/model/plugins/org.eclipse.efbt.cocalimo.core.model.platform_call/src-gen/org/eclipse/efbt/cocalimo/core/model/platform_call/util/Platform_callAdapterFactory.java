@@ -88,6 +88,10 @@ public class Platform_callAdapterFactory extends AdapterFactoryImpl {
 				return createCreateLogicalTransformationViewForScopeAdapter();
 			}
 			@Override
+			public Adapter caseConvertDataMetaModelToEcore(ConvertDataMetaModelToEcore object) {
+				return createConvertDataMetaModelToEcoreAdapter();
+			}
+			@Override
 			public Adapter caseModule(org.eclipse.efbt.cocalimo.core.model.module_management.Module object) {
 				return createModuleAdapter();
 			}
@@ -178,6 +182,20 @@ public class Platform_callAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createCreateLogicalTransformationViewForScopeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.core.model.platform_call.ConvertDataMetaModelToEcore <em>Convert Data Meta Model To Ecore</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.core.model.platform_call.ConvertDataMetaModelToEcore
+	 * @generated
+	 */
+	public Adapter createConvertDataMetaModelToEcoreAdapter() {
 		return null;
 	}
 

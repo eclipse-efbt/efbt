@@ -87,7 +87,7 @@ public class CreateLogicalTransformationViewForScopeItemProvider
 				 getResourceLocator(),
 				 getString("_UI_CreateLogicalTransformationViewForScope_attributeLineage_feature"),
 				 getString("_UI_PropertyDescriptor_description", "_UI_CreateLogicalTransformationViewForScope_attributeLineage_feature", "_UI_CreateLogicalTransformationViewForScope_type"),
-				 Platform_callPackage.Literals.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__computation_lineage,
+				 Platform_callPackage.Literals.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__ATTRIBUTE_LINEAGE,
 				 true,
 				 false,
 				 true,

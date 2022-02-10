@@ -6,6 +6,7 @@ import org.eclipse.efbt.cocalimo.core.model.logical_transformations.provider.Tas
 import org.eclipse.efbt.cocalimo.core.model.module_management.provider.Module_managementEditPlugin;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.provider.Requirements_textEditPlugin;
+import org.eclipse.efbt.cocalimo.smcubes.model.core.provider.SmcubesEditPlugin;
 import org.eclipse.emf.common.EMFPlugin;
 
 import org.eclipse.emf.common.ui.EclipseUIPlugin;
@@ -49,6 +50,7 @@ public final class ControllerEditorPlugin extends EMFPlugin {
 				TaskEditPlugin.INSTANCE,
 				Module_managementEditPlugin.INSTANCE,
 				Requirements_textEditPlugin.INSTANCE,
+				SmcubesEditPlugin.INSTANCE,
 			});
 	}
 

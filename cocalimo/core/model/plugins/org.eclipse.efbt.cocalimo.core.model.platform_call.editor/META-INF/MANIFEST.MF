@@ -19,5 +19,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore.edit;visibility:=reexport,
  org.eclipse.efbt.cocalimo.core.model.logical_transformations.edit;visibility:=reexport,
  org.eclipse.efbt.cocalimo.core.model.module_management.edit;visibility:=reexport,
- org.eclipse.efbt.cocalimo.core.model.requirements_text.edit;visibility:=reexport
+ org.eclipse.efbt.cocalimo.core.model.requirements_text.edit;visibility:=reexport,
+ org.eclipse.efbt.cocalimo.smcubes.model.core.edit;visibility:=reexport
 Bundle-ActivationPolicy: lazy

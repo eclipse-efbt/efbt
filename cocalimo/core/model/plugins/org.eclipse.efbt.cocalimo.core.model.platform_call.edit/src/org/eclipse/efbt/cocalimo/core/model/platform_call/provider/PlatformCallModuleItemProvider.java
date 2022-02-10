@@ -159,6 +159,11 @@ public class PlatformCallModuleItemProvider extends ModuleItemProvider {
 			(createChildParameter
 				(Platform_callPackage.Literals.PLATFORM_CALL_MODULE__PLATFORM_CALLS,
 				 Platform_callFactory.eINSTANCE.createCreateLogicalTransformationViewForScope()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(Platform_callPackage.Literals.PLATFORM_CALL_MODULE__PLATFORM_CALLS,
+				 Platform_callFactory.eINSTANCE.createConvertDataMetaModelToEcore()));
 	}
 
 	/**
