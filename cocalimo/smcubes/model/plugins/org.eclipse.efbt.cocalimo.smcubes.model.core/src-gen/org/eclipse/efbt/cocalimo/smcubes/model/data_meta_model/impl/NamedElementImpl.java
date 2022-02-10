@@ -26,6 +26,16 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  */
 public abstract class NamedElementImpl extends ElementImpl implements NamedElement {
 	/**
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getName()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String NAME_EDEFAULT = null;
+
+	/**
 	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -33,7 +43,7 @@ public abstract class NamedElementImpl extends ElementImpl implements NamedEleme
 	 * @generated
 	 * @ordered
 	 */
-	protected Object name;
+	protected String name = NAME_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -60,7 +70,7 @@ public abstract class NamedElementImpl extends ElementImpl implements NamedEleme
 	 * @generated
 	 */
 	@Override
-	public Object getName() {
+	public String getName() {
 		return name;
 	}
 
@@ -70,8 +80,8 @@ public abstract class NamedElementImpl extends ElementImpl implements NamedEleme
 	 * @generated
 	 */
 	@Override
-	public void setName(Object newName) {
-		Object oldName = name;
+	public void setName(String newName) {
+		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, Data_meta_modelPackage.NAMED_ELEMENT__NAME, oldName, name));
@@ -100,7 +110,7 @@ public abstract class NamedElementImpl extends ElementImpl implements NamedEleme
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Data_meta_modelPackage.NAMED_ELEMENT__NAME:
-				setName(newValue);
+				setName((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -115,7 +125,7 @@ public abstract class NamedElementImpl extends ElementImpl implements NamedEleme
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Data_meta_modelPackage.NAMED_ELEMENT__NAME:
-				setName((Object)null);
+				setName(NAME_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -130,7 +140,7 @@ public abstract class NamedElementImpl extends ElementImpl implements NamedEleme
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Data_meta_modelPackage.NAMED_ELEMENT__NAME:
-				return name != null;
+				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 		}
 		return super.eIsSet(featureID);
 	}

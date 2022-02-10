@@ -53,8 +53,7 @@ public class StructuralFeatureItemProvider extends TypedElementItemProvider {
 	 */
 	@Override
 	public String getText(Object object) {
-		Object labelValue = ((StructuralFeature)object).getName();
-		String label = labelValue == null ? null : labelValue.toString();
+		String label = ((StructuralFeature)object).getName();
 		return label == null || label.length() == 0 ?
 			getString("_UI_StructuralFeature_type") :
 			getString("_UI_StructuralFeature_type") + " " + label;
