@@ -40,6 +40,16 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class EntityModuleImpl extends ModuleImpl implements EntityModule {
 	/**
+	 * The default value of the '{@link #getNsURI() <em>Ns URI</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getNsURI()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String NS_URI_EDEFAULT = null;
+
+	/**
 	 * The cached value of the '{@link #getNsURI() <em>Ns URI</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -47,7 +57,17 @@ public class EntityModuleImpl extends ModuleImpl implements EntityModule {
 	 * @generated
 	 * @ordered
 	 */
-	protected Object nsURI;
+	protected String nsURI = NS_URI_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getNsPrefix() <em>Ns Prefix</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getNsPrefix()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String NS_PREFIX_EDEFAULT = null;
 
 	/**
 	 * The cached value of the '{@link #getNsPrefix() <em>Ns Prefix</em>}' attribute.
@@ -57,7 +77,7 @@ public class EntityModuleImpl extends ModuleImpl implements EntityModule {
 	 * @generated
 	 * @ordered
 	 */
-	protected Object nsPrefix;
+	protected String nsPrefix = NS_PREFIX_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getEntities() <em>Entities</em>}' containment reference list.
@@ -94,7 +114,7 @@ public class EntityModuleImpl extends ModuleImpl implements EntityModule {
 	 * @generated
 	 */
 	@Override
-	public Object getNsURI() {
+	public String getNsURI() {
 		return nsURI;
 	}
 
@@ -104,8 +124,8 @@ public class EntityModuleImpl extends ModuleImpl implements EntityModule {
 	 * @generated
 	 */
 	@Override
-	public void setNsURI(Object newNsURI) {
-		Object oldNsURI = nsURI;
+	public void setNsURI(String newNsURI) {
+		String oldNsURI = nsURI;
 		nsURI = newNsURI;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, Data_meta_modelPackage.ENTITY_MODULE__NS_URI, oldNsURI, nsURI));
@@ -117,7 +137,7 @@ public class EntityModuleImpl extends ModuleImpl implements EntityModule {
 	 * @generated
 	 */
 	@Override
-	public Object getNsPrefix() {
+	public String getNsPrefix() {
 		return nsPrefix;
 	}
 
@@ -127,8 +147,8 @@ public class EntityModuleImpl extends ModuleImpl implements EntityModule {
 	 * @generated
 	 */
 	@Override
-	public void setNsPrefix(Object newNsPrefix) {
-		Object oldNsPrefix = nsPrefix;
+	public void setNsPrefix(String newNsPrefix) {
+		String oldNsPrefix = nsPrefix;
 		nsPrefix = newNsPrefix;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, Data_meta_modelPackage.ENTITY_MODULE__NS_PREFIX, oldNsPrefix, nsPrefix));
@@ -189,10 +209,10 @@ public class EntityModuleImpl extends ModuleImpl implements EntityModule {
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Data_meta_modelPackage.ENTITY_MODULE__NS_URI:
-				setNsURI(newValue);
+				setNsURI((String)newValue);
 				return;
 			case Data_meta_modelPackage.ENTITY_MODULE__NS_PREFIX:
-				setNsPrefix(newValue);
+				setNsPrefix((String)newValue);
 				return;
 			case Data_meta_modelPackage.ENTITY_MODULE__ENTITIES:
 				getEntities().clear();
@@ -211,10 +231,10 @@ public class EntityModuleImpl extends ModuleImpl implements EntityModule {
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Data_meta_modelPackage.ENTITY_MODULE__NS_URI:
-				setNsURI((Object)null);
+				setNsURI(NS_URI_EDEFAULT);
 				return;
 			case Data_meta_modelPackage.ENTITY_MODULE__NS_PREFIX:
-				setNsPrefix((Object)null);
+				setNsPrefix(NS_PREFIX_EDEFAULT);
 				return;
 			case Data_meta_modelPackage.ENTITY_MODULE__ENTITIES:
 				getEntities().clear();
@@ -232,9 +252,9 @@ public class EntityModuleImpl extends ModuleImpl implements EntityModule {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Data_meta_modelPackage.ENTITY_MODULE__NS_URI:
-				return nsURI != null;
+				return NS_URI_EDEFAULT == null ? nsURI != null : !NS_URI_EDEFAULT.equals(nsURI);
 			case Data_meta_modelPackage.ENTITY_MODULE__NS_PREFIX:
-				return nsPrefix != null;
+				return NS_PREFIX_EDEFAULT == null ? nsPrefix != null : !NS_PREFIX_EDEFAULT.equals(nsPrefix);
 			case Data_meta_modelPackage.ENTITY_MODULE__ENTITIES:
 				return entities != null && !entities.isEmpty();
 		}

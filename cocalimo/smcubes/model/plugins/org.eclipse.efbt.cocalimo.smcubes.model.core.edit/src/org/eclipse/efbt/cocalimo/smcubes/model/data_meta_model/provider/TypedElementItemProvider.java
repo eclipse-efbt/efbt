@@ -78,8 +78,7 @@ public class TypedElementItemProvider extends NamedElementItemProvider {
 	 */
 	@Override
 	public String getText(Object object) {
-		Object labelValue = ((TypedElement)object).getName();
-		String label = labelValue == null ? null : labelValue.toString();
+		String label = ((TypedElement)object).getName();
 		return label == null || label.length() == 0 ?
 			getString("_UI_TypedElement_type") :
 			getString("_UI_TypedElement_type") + " " + label;

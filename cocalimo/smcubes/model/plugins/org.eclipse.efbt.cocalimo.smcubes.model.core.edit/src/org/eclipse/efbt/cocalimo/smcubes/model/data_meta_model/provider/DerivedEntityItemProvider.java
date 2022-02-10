@@ -99,8 +99,7 @@ public class DerivedEntityItemProvider extends EntityItemProvider {
 	 */
 	@Override
 	public String getText(Object object) {
-		Object labelValue = ((DerivedEntity)object).getName();
-		String label = labelValue == null ? null : labelValue.toString();
+		String label = ((DerivedEntity)object).getName();
 		return label == null || label.length() == 0 ?
 			getString("_UI_DerivedEntity_type") :
 			getString("_UI_DerivedEntity_type") + " " + label;

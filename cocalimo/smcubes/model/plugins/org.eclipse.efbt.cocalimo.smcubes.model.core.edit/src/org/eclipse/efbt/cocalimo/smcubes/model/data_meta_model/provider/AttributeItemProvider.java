@@ -68,7 +68,7 @@ public class AttributeItemProvider extends StructuralFeatureItemProvider {
 				 true,
 				 false,
 				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
 				 null,
 				 null));
 	}
@@ -114,8 +114,7 @@ public class AttributeItemProvider extends StructuralFeatureItemProvider {
 	 */
 	@Override
 	public String getText(Object object) {
-		Object labelValue = ((Attribute)object).getName();
-		String label = labelValue == null ? null : labelValue.toString();
+		String label = ((Attribute)object).getName();
 		return label == null || label.length() == 0 ?
 			getString("_UI_Attribute_type") :
 			getString("_UI_Attribute_type") + " " + label;

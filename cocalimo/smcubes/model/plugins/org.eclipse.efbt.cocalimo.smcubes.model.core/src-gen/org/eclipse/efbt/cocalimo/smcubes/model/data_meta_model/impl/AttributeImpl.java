@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.AttributeImpl#getIsPK <em>Is PK</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.AttributeImpl#isIsPK <em>Is PK</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.AttributeImpl#getVariable <em>Variable</em>}</li>
  * </ul>
  *
@@ -30,14 +30,24 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  */
 public class AttributeImpl extends StructuralFeatureImpl implements Attribute {
 	/**
-	 * The cached value of the '{@link #getIsPK() <em>Is PK</em>}' attribute.
+	 * The default value of the '{@link #isIsPK() <em>Is PK</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getIsPK()
+	 * @see #isIsPK()
 	 * @generated
 	 * @ordered
 	 */
-	protected Object isPK;
+	protected static final boolean IS_PK_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isIsPK() <em>Is PK</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isIsPK()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean isPK = IS_PK_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getVariable() <em>Variable</em>}' reference.
@@ -74,7 +84,7 @@ public class AttributeImpl extends StructuralFeatureImpl implements Attribute {
 	 * @generated
 	 */
 	@Override
-	public Object getIsPK() {
+	public boolean isIsPK() {
 		return isPK;
 	}
 
@@ -84,8 +94,8 @@ public class AttributeImpl extends StructuralFeatureImpl implements Attribute {
 	 * @generated
 	 */
 	@Override
-	public void setIsPK(Object newIsPK) {
-		Object oldIsPK = isPK;
+	public void setIsPK(boolean newIsPK) {
+		boolean oldIsPK = isPK;
 		isPK = newIsPK;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, Data_meta_modelPackage.ATTRIBUTE__IS_PK, oldIsPK, isPK));
@@ -140,7 +150,7 @@ public class AttributeImpl extends StructuralFeatureImpl implements Attribute {
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Data_meta_modelPackage.ATTRIBUTE__IS_PK:
-				return getIsPK();
+				return isIsPK();
 			case Data_meta_modelPackage.ATTRIBUTE__VARIABLE:
 				if (resolve) return getVariable();
 				return basicGetVariable();
@@ -157,7 +167,7 @@ public class AttributeImpl extends StructuralFeatureImpl implements Attribute {
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Data_meta_modelPackage.ATTRIBUTE__IS_PK:
-				setIsPK(newValue);
+				setIsPK((Boolean)newValue);
 				return;
 			case Data_meta_modelPackage.ATTRIBUTE__VARIABLE:
 				setVariable((VARIABLE)newValue);
@@ -175,7 +185,7 @@ public class AttributeImpl extends StructuralFeatureImpl implements Attribute {
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Data_meta_modelPackage.ATTRIBUTE__IS_PK:
-				setIsPK((Object)null);
+				setIsPK(IS_PK_EDEFAULT);
 				return;
 			case Data_meta_modelPackage.ATTRIBUTE__VARIABLE:
 				setVariable((VARIABLE)null);
@@ -193,7 +203,7 @@ public class AttributeImpl extends StructuralFeatureImpl implements Attribute {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case Data_meta_modelPackage.ATTRIBUTE__IS_PK:
-				return isPK != null;
+				return isPK != IS_PK_EDEFAULT;
 			case Data_meta_modelPackage.ATTRIBUTE__VARIABLE:
 				return variable != null;
 		}

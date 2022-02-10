@@ -6,7 +6,6 @@ import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementP
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
@@ -336,13 +335,40 @@ public interface Data_meta_modelPackage extends EPackage {
 	int FOREIGN_KEY_ATTRIBUTE__ENTITY = ATTRIBUTE_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Containment</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FOREIGN_KEY_ATTRIBUTE__CONTAINMENT = ATTRIBUTE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Cardinality</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FOREIGN_KEY_ATTRIBUTE__CARDINALITY = ATTRIBUTE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Mandatory</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FOREIGN_KEY_ATTRIBUTE__MANDATORY = ATTRIBUTE_FEATURE_COUNT + 3;
+
+	/**
 	 * The number of structural features of the '<em>Foreign Key Attribute</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FOREIGN_KEY_ATTRIBUTE_FEATURE_COUNT = ATTRIBUTE_FEATURE_COUNT + 1;
+	int FOREIGN_KEY_ATTRIBUTE_FEATURE_COUNT = ATTRIBUTE_FEATURE_COUNT + 4;
 
 	/**
 	 * The number of operations of the '<em>Foreign Key Attribute</em>' class.
@@ -683,36 +709,6 @@ public interface Data_meta_modelPackage extends EPackage {
 	 */
 	int BASIC_ENTITY_OPERATION_COUNT = ENTITY_OPERATION_COUNT + 0;
 
-	/**
-	 * The meta object id for the '<em>Boolean</em>' data type.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see java.lang.Object
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getBoolean()
-	 * @generated
-	 */
-	int BOOLEAN = 12;
-
-	/**
-	 * The meta object id for the '<em>Int</em>' data type.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see java.lang.Object
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getInt()
-	 * @generated
-	 */
-	int INT = 13;
-
-	/**
-	 * The meta object id for the '<em>String</em>' data type.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see java.lang.Object
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getString()
-	 * @generated
-	 */
-	int STRING = 14;
-
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute <em>Attribute</em>}'.
@@ -725,11 +721,11 @@ public interface Data_meta_modelPackage extends EPackage {
 	EClass getAttribute();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute#getIsPK <em>Is PK</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute#isIsPK <em>Is PK</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Is PK</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute#getIsPK()
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute#isIsPK()
 	 * @see #getAttribute()
 	 * @generated
 	 */
@@ -766,6 +762,39 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getForeignKeyAttribute_Entity();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ForeignKeyAttribute#isContainment <em>Containment</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Containment</em>'.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ForeignKeyAttribute#isContainment()
+	 * @see #getForeignKeyAttribute()
+	 * @generated
+	 */
+	EAttribute getForeignKeyAttribute_Containment();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ForeignKeyAttribute#getCardinality <em>Cardinality</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Cardinality</em>'.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ForeignKeyAttribute#getCardinality()
+	 * @see #getForeignKeyAttribute()
+	 * @generated
+	 */
+	EAttribute getForeignKeyAttribute_Cardinality();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ForeignKeyAttribute#isMandatory <em>Mandatory</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Mandatory</em>'.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ForeignKeyAttribute#isMandatory()
+	 * @see #getForeignKeyAttribute()
+	 * @generated
+	 */
+	EAttribute getForeignKeyAttribute_Mandatory();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Classifier <em>Classifier</em>}'.
@@ -967,42 +996,6 @@ public interface Data_meta_modelPackage extends EPackage {
 	EReference getBasicEntity_SuperClass();
 
 	/**
-	 * Returns the meta object for data type '{@link java.lang.Object <em>Boolean</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for data type '<em>Boolean</em>'.
-	 * @see java.lang.Object
-	 * @model instanceClass="java.lang.Object"
-	 *        extendedMetaData="baseType='http://www.w3.org/2001/XMLSchema#boolean'"
-	 * @generated
-	 */
-	EDataType getBoolean();
-
-	/**
-	 * Returns the meta object for data type '{@link java.lang.Object <em>Int</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for data type '<em>Int</em>'.
-	 * @see java.lang.Object
-	 * @model instanceClass="java.lang.Object"
-	 *        extendedMetaData="baseType='http://www.w3.org/2001/XMLSchema#int'"
-	 * @generated
-	 */
-	EDataType getInt();
-
-	/**
-	 * Returns the meta object for data type '{@link java.lang.Object <em>String</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for data type '<em>String</em>'.
-	 * @see java.lang.Object
-	 * @model instanceClass="java.lang.Object"
-	 *        extendedMetaData="baseType='http://www.w3.org/2001/XMLSchema#string'"
-	 * @generated
-	 */
-	EDataType getString();
-
-	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1068,6 +1061,30 @@ public interface Data_meta_modelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference FOREIGN_KEY_ATTRIBUTE__ENTITY = eINSTANCE.getForeignKeyAttribute_Entity();
+
+		/**
+		 * The meta object literal for the '<em><b>Containment</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute FOREIGN_KEY_ATTRIBUTE__CONTAINMENT = eINSTANCE.getForeignKeyAttribute_Containment();
+
+		/**
+		 * The meta object literal for the '<em><b>Cardinality</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute FOREIGN_KEY_ATTRIBUTE__CARDINALITY = eINSTANCE.getForeignKeyAttribute_Cardinality();
+
+		/**
+		 * The meta object literal for the '<em><b>Mandatory</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute FOREIGN_KEY_ATTRIBUTE__MANDATORY = eINSTANCE.getForeignKeyAttribute_Mandatory();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.ClassifierImpl <em>Classifier</em>}' class.
@@ -1240,36 +1257,6 @@ public interface Data_meta_modelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference BASIC_ENTITY__SUPER_CLASS = eINSTANCE.getBasicEntity_SuperClass();
-
-		/**
-		 * The meta object literal for the '<em>Boolean</em>' data type.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see java.lang.Object
-		 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getBoolean()
-		 * @generated
-		 */
-		EDataType BOOLEAN = eINSTANCE.getBoolean();
-
-		/**
-		 * The meta object literal for the '<em>Int</em>' data type.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see java.lang.Object
-		 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getInt()
-		 * @generated
-		 */
-		EDataType INT = eINSTANCE.getInt();
-
-		/**
-		 * The meta object literal for the '<em>String</em>' data type.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see java.lang.Object
-		 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getString()
-		 * @generated
-		 */
-		EDataType STRING = eINSTANCE.getString();
 
 	}
 

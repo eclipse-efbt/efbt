@@ -123,8 +123,7 @@ public class BasicEntityItemProvider extends EntityItemProvider {
 	 */
 	@Override
 	public String getText(Object object) {
-		Object labelValue = ((BasicEntity)object).getName();
-		String label = labelValue == null ? null : labelValue.toString();
+		String label = ((BasicEntity)object).getName();
 		return label == null || label.length() == 0 ?
 			getString("_UI_BasicEntity_type") :
 			getString("_UI_BasicEntity_type") + " " + label;

@@ -5,16 +5,12 @@ package org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.*;
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import org.eclipse.emf.ecore.xml.type.XMLTypeFactory;
-import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
 
 /**
  * <!-- begin-user-doc -->
@@ -68,44 +64,6 @@ public class Data_meta_modelFactoryImpl extends EFactoryImpl implements Data_met
 			case Data_meta_modelPackage.BASIC_ENTITY: return createBasicEntity();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
-		}
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Object createFromString(EDataType eDataType, String initialValue) {
-		switch (eDataType.getClassifierID()) {
-			case Data_meta_modelPackage.BOOLEAN:
-				return createBooleanFromString(eDataType, initialValue);
-			case Data_meta_modelPackage.INT:
-				return createIntFromString(eDataType, initialValue);
-			case Data_meta_modelPackage.STRING:
-				return createStringFromString(eDataType, initialValue);
-			default:
-				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
-		}
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String convertToString(EDataType eDataType, Object instanceValue) {
-		switch (eDataType.getClassifierID()) {
-			case Data_meta_modelPackage.BOOLEAN:
-				return convertBooleanToString(eDataType, instanceValue);
-			case Data_meta_modelPackage.INT:
-				return convertIntToString(eDataType, instanceValue);
-			case Data_meta_modelPackage.STRING:
-				return convertStringToString(eDataType, instanceValue);
-			default:
-				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
 	}
 
@@ -173,60 +131,6 @@ public class Data_meta_modelFactoryImpl extends EFactoryImpl implements Data_met
 	public BasicEntity createBasicEntity() {
 		BasicEntityImpl basicEntity = new BasicEntityImpl();
 		return basicEntity;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Object createBooleanFromString(EDataType eDataType, String initialValue) {
-		return XMLTypeFactory.eINSTANCE.createFromString(XMLTypePackage.Literals.BOOLEAN, initialValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String convertBooleanToString(EDataType eDataType, Object instanceValue) {
-		return XMLTypeFactory.eINSTANCE.convertToString(XMLTypePackage.Literals.BOOLEAN, instanceValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Object createIntFromString(EDataType eDataType, String initialValue) {
-		return XMLTypeFactory.eINSTANCE.createFromString(XMLTypePackage.Literals.INT, initialValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String convertIntToString(EDataType eDataType, Object instanceValue) {
-		return XMLTypeFactory.eINSTANCE.convertToString(XMLTypePackage.Literals.INT, instanceValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Object createStringFromString(EDataType eDataType, String initialValue) {
-		return XMLTypeFactory.eINSTANCE.createFromString(XMLTypePackage.Literals.STRING, initialValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String convertStringToString(EDataType eDataType, Object instanceValue) {
-		return XMLTypeFactory.eINSTANCE.convertToString(XMLTypePackage.Literals.STRING, instanceValue);
 	}
 
 	/**

@@ -13,7 +13,7 @@ import org.eclipse.efbt.cocalimo.smcubes.model.core.VARIABLE;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute#getIsPK <em>Is PK</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute#isIsPK <em>Is PK</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute#getVariable <em>Variable</em>}</li>
  * </ul>
  *
@@ -27,22 +27,22 @@ public interface Attribute extends StructuralFeature {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Is PK</em>' attribute.
-	 * @see #setIsPK(Object)
+	 * @see #setIsPK(boolean)
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage#getAttribute_IsPK()
-	 * @model dataType="org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Boolean"
+	 * @model
 	 * @generated
 	 */
-	Object getIsPK();
+	boolean isIsPK();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute#getIsPK <em>Is PK</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute#isIsPK <em>Is PK</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Is PK</em>' attribute.
-	 * @see #getIsPK()
+	 * @see #isIsPK()
 	 * @generated
 	 */
-	void setIsPK(Object value);
+	void setIsPK(boolean value);
 
 	/**
 	 * Returns the value of the '<em><b>Variable</b></em>' reference.

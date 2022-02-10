@@ -28,12 +28,12 @@ public interface EntityModule extends org.eclipse.efbt.cocalimo.core.model.modul
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Ns URI</em>' attribute.
-	 * @see #setNsURI(Object)
+	 * @see #setNsURI(String)
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage#getEntityModule_NsURI()
-	 * @model dataType="org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.String"
+	 * @model
 	 * @generated
 	 */
-	Object getNsURI();
+	String getNsURI();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.EntityModule#getNsURI <em>Ns URI</em>}' attribute.
@@ -43,19 +43,19 @@ public interface EntityModule extends org.eclipse.efbt.cocalimo.core.model.modul
 	 * @see #getNsURI()
 	 * @generated
 	 */
-	void setNsURI(Object value);
+	void setNsURI(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Ns Prefix</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Ns Prefix</em>' attribute.
-	 * @see #setNsPrefix(Object)
+	 * @see #setNsPrefix(String)
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage#getEntityModule_NsPrefix()
-	 * @model dataType="org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.String"
+	 * @model
 	 * @generated
 	 */
-	Object getNsPrefix();
+	String getNsPrefix();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.EntityModule#getNsPrefix <em>Ns Prefix</em>}' attribute.
@@ -65,7 +65,7 @@ public interface EntityModule extends org.eclipse.efbt.cocalimo.core.model.modul
 	 * @see #getNsPrefix()
 	 * @generated
 	 */
-	void setNsPrefix(Object value);
+	void setNsPrefix(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Entities</b></em>' containment reference list.

@@ -41,7 +41,6 @@ import org.eclipse.efbt.cocalimo.smcubes.model.rendering.impl.RenderingPackageIm
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
@@ -137,27 +136,6 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 	 * @generated
 	 */
 	private EClass basicEntityEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EDataType booleanEDataType = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EDataType intEDataType = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EDataType stringEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -293,6 +271,36 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 	@Override
 	public EReference getForeignKeyAttribute_Entity() {
 		return (EReference)foreignKeyAttributeEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getForeignKeyAttribute_Containment() {
+		return (EAttribute)foreignKeyAttributeEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getForeignKeyAttribute_Cardinality() {
+		return (EAttribute)foreignKeyAttributeEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getForeignKeyAttribute_Mandatory() {
+		return (EAttribute)foreignKeyAttributeEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -491,36 +499,6 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 	 * @generated
 	 */
 	@Override
-	public EDataType getBoolean() {
-		return booleanEDataType;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EDataType getInt() {
-		return intEDataType;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EDataType getString() {
-		return stringEDataType;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public Data_meta_modelFactory getData_meta_modelFactory() {
 		return (Data_meta_modelFactory)getEFactoryInstance();
 	}
@@ -550,6 +528,9 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 
 		foreignKeyAttributeEClass = createEClass(FOREIGN_KEY_ATTRIBUTE);
 		createEReference(foreignKeyAttributeEClass, FOREIGN_KEY_ATTRIBUTE__ENTITY);
+		createEAttribute(foreignKeyAttributeEClass, FOREIGN_KEY_ATTRIBUTE__CONTAINMENT);
+		createEAttribute(foreignKeyAttributeEClass, FOREIGN_KEY_ATTRIBUTE__CARDINALITY);
+		createEAttribute(foreignKeyAttributeEClass, FOREIGN_KEY_ATTRIBUTE__MANDATORY);
 
 		classifierEClass = createEClass(CLASSIFIER);
 
@@ -579,11 +560,6 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 		basicEntityEClass = createEClass(BASIC_ENTITY);
 		createEReference(basicEntityEClass, BASIC_ENTITY__ATTRIBUTES);
 		createEReference(basicEntityEClass, BASIC_ENTITY__SUPER_CLASS);
-
-		// Create data types
-		booleanEDataType = createEDataType(BOOLEAN);
-		intEDataType = createEDataType(INT);
-		stringEDataType = createEDataType(STRING);
 	}
 
 	/**
@@ -632,22 +608,25 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(attributeEClass, Attribute.class, "Attribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getAttribute_IsPK(), this.getBoolean(), "isPK", null, 0, 1, Attribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getAttribute_IsPK(), ecorePackage.getEBoolean(), "isPK", null, 0, 1, Attribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getAttribute_Variable(), theCorePackage.getVARIABLE(), null, "variable", null, 0, 1, Attribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(foreignKeyAttributeEClass, ForeignKeyAttribute.class, "ForeignKeyAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getForeignKeyAttribute_Entity(), this.getBasicEntity(), null, "entity", null, 0, 1, ForeignKeyAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getForeignKeyAttribute_Containment(), ecorePackage.getEBoolean(), "containment", null, 0, 1, ForeignKeyAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getForeignKeyAttribute_Cardinality(), ecorePackage.getEInt(), "cardinality", null, 0, 1, ForeignKeyAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getForeignKeyAttribute_Mandatory(), ecorePackage.getEBoolean(), "mandatory", null, 0, 1, ForeignKeyAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(classifierEClass, Classifier.class, "Classifier", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(elementEClass, Element.class, "Element", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(namedElementEClass, NamedElement.class, "NamedElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getNamedElement_Name(), this.getString(), "name", null, 0, 1, NamedElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getNamedElement_Name(), ecorePackage.getEString(), "name", null, 0, 1, NamedElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(entityModuleEClass, EntityModule.class, "EntityModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getEntityModule_NsURI(), this.getString(), "nsURI", null, 0, 1, EntityModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getEntityModule_NsPrefix(), this.getString(), "nsPrefix", null, 0, 1, EntityModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getEntityModule_NsURI(), ecorePackage.getEString(), "nsURI", null, 0, 1, EntityModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getEntityModule_NsPrefix(), ecorePackage.getEString(), "nsPrefix", null, 0, 1, EntityModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getEntityModule_Entities(), this.getEntity(), null, "entities", null, 0, -1, EntityModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(structuralFeatureEClass, StructuralFeature.class, "StructuralFeature", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -667,45 +646,8 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 		initEReference(getBasicEntity_Attributes(), this.getAttribute(), null, "attributes", null, 0, -1, BasicEntity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getBasicEntity_SuperClass(), this.getBasicEntity(), null, "superClass", null, 0, 1, BasicEntity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		// Initialize data types
-		initEDataType(booleanEDataType, Object.class, "Boolean", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
-		initEDataType(intEDataType, Object.class, "Int", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
-		initEDataType(stringEDataType, Object.class, "String", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
-
 		// Create resource
 		createResource(eNS_URI);
-
-		// Create annotations
-		// http:///org/eclipse/emf/ecore/util/ExtendedMetaData
-		createExtendedMetaDataAnnotations();
-	}
-
-	/**
-	 * Initializes the annotations for <b>http:///org/eclipse/emf/ecore/util/ExtendedMetaData</b>.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void createExtendedMetaDataAnnotations() {
-		String source = "http:///org/eclipse/emf/ecore/util/ExtendedMetaData";
-		addAnnotation
-		  (booleanEDataType,
-		   source,
-		   new String[] {
-			   "baseType", "http://www.w3.org/2001/XMLSchema#boolean"
-		   });
-		addAnnotation
-		  (intEDataType,
-		   source,
-		   new String[] {
-			   "baseType", "http://www.w3.org/2001/XMLSchema#int"
-		   });
-		addAnnotation
-		  (stringEDataType,
-		   source,
-		   new String[] {
-			   "baseType", "http://www.w3.org/2001/XMLSchema#string"
-		   });
 	}
 
 } //Data_meta_modelPackageImpl

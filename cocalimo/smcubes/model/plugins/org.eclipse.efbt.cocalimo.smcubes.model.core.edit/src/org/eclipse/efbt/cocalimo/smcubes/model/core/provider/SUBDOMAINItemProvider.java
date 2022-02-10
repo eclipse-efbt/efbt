@@ -256,8 +256,7 @@ public class SUBDOMAINItemProvider extends ClassifierItemProvider {
 	 */
 	@Override
 	public String getText(Object object) {
-		Object labelValue = ((SUBDOMAIN)object).getName();
-		String label = labelValue == null ? null : labelValue.toString();
+		String label = ((SUBDOMAIN)object).getName();
 		return label == null || label.length() == 0 ?
 			getString("_UI_SUBDOMAIN_type") :
 			getString("_UI_SUBDOMAIN_type") + " " + label;

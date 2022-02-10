@@ -14,6 +14,8 @@ import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
+import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
+import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
  * This is the item provider adapter for a {@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ForeignKeyAttribute} object.
@@ -44,6 +46,9 @@ public class ForeignKeyAttributeItemProvider extends AttributeItemProvider {
 			super.getPropertyDescriptors(object);
 
 			addEntityPropertyDescriptor(object);
+			addContainmentPropertyDescriptor(object);
+			addCardinalityPropertyDescriptor(object);
+			addMandatoryPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -71,6 +76,72 @@ public class ForeignKeyAttributeItemProvider extends AttributeItemProvider {
 	}
 
 	/**
+	 * This adds a property descriptor for the Containment feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addContainmentPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_ForeignKeyAttribute_containment_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_ForeignKeyAttribute_containment_feature", "_UI_ForeignKeyAttribute_type"),
+				 Data_meta_modelPackage.Literals.FOREIGN_KEY_ATTRIBUTE__CONTAINMENT,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Cardinality feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addCardinalityPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_ForeignKeyAttribute_cardinality_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_ForeignKeyAttribute_cardinality_feature", "_UI_ForeignKeyAttribute_type"),
+				 Data_meta_modelPackage.Literals.FOREIGN_KEY_ATTRIBUTE__CARDINALITY,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Mandatory feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addMandatoryPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_ForeignKeyAttribute_mandatory_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_ForeignKeyAttribute_mandatory_feature", "_UI_ForeignKeyAttribute_type"),
+				 Data_meta_modelPackage.Literals.FOREIGN_KEY_ATTRIBUTE__MANDATORY,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
 	 * This returns ForeignKeyAttribute.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -89,8 +160,7 @@ public class ForeignKeyAttributeItemProvider extends AttributeItemProvider {
 	 */
 	@Override
 	public String getText(Object object) {
-		Object labelValue = ((ForeignKeyAttribute)object).getName();
-		String label = labelValue == null ? null : labelValue.toString();
+		String label = ((ForeignKeyAttribute)object).getName();
 		return label == null || label.length() == 0 ?
 			getString("_UI_ForeignKeyAttribute_type") :
 			getString("_UI_ForeignKeyAttribute_type") + " " + label;
@@ -107,6 +177,14 @@ public class ForeignKeyAttributeItemProvider extends AttributeItemProvider {
 	@Override
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
+
+		switch (notification.getFeatureID(ForeignKeyAttribute.class)) {
+			case Data_meta_modelPackage.FOREIGN_KEY_ATTRIBUTE__CONTAINMENT:
+			case Data_meta_modelPackage.FOREIGN_KEY_ATTRIBUTE__CARDINALITY:
+			case Data_meta_modelPackage.FOREIGN_KEY_ATTRIBUTE__MANDATORY:
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+				return;
+		}
 		super.notifyChanged(notification);
 	}
 

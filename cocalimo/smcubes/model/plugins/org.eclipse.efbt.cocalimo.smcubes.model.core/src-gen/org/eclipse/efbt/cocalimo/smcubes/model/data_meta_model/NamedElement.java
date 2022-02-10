@@ -25,12 +25,12 @@ public interface NamedElement extends Element {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Name</em>' attribute.
-	 * @see #setName(Object)
+	 * @see #setName(String)
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage#getNamedElement_Name()
-	 * @model dataType="org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.String"
+	 * @model
 	 * @generated
 	 */
-	Object getName();
+	String getName();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.NamedElement#getName <em>Name</em>}' attribute.
@@ -40,6 +40,6 @@ public interface NamedElement extends Element {
 	 * @see #getName()
 	 * @generated
 	 */
-	void setName(Object value);
+	void setName(String value);
 
 } // NamedElement

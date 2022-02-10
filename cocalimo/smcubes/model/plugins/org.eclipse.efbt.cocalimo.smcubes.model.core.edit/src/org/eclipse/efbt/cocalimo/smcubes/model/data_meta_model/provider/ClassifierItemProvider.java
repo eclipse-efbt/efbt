@@ -53,8 +53,7 @@ public class ClassifierItemProvider extends NamedElementItemProvider {
 	 */
 	@Override
 	public String getText(Object object) {
-		Object labelValue = ((Classifier)object).getName();
-		String label = labelValue == null ? null : labelValue.toString();
+		String label = ((Classifier)object).getName();
 		return label == null || label.length() == 0 ?
 			getString("_UI_Classifier_type") :
 			getString("_UI_Classifier_type") + " " + label;
