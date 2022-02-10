@@ -4,7 +4,6 @@ package org.eclipse.efbt.cocalimo.computation.model.sql_lite;
 
 import org.eclipse.emf.common.util.EList;
 
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>SQL Entity Module</b></em>'.
@@ -22,7 +21,6 @@ import org.eclipse.emf.common.util.EList;
  * @generated
  */
 public interface SQLEntityModule extends org.eclipse.efbt.cocalimo.core.model.module_management.Module {
-
 	/**
 	 * Returns the value of the '<em><b>Sql Entities</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.SQLEntity}.
@@ -34,4 +32,5 @@ public interface SQLEntityModule extends org.eclipse.efbt.cocalimo.core.model.mo
 	 * @generated
 	 */
 	EList<SQLEntity> getSqlEntities();
+
 } // SQLEntityModule

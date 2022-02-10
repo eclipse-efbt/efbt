@@ -2,7 +2,7 @@
  */
 package org.eclipse.efbt.cocalimo.computation.model.sql_lite;
 
-import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_logic.GeneratedEntity;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.GeneratedEntity;
 
 import org.eclipse.emf.ecore.EObject;
 

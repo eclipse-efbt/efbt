@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ecore_plus_logic:FunctionSpecModule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore_plus_logic="http://www.eclipse.org/efbt/ecore_plus_logic">
-  <functionSpecs xsi:type="ecore_plus_logic:AggregateFunctionSpec" functionalName="sum" name="sum" sqlName="sum"/>
-  <functionSpecs xsi:type="ecore_plus_logic:BasicFunctionSpec" functionalName="times" name="times" sqlName="times"/>
-  <functionSpecs xsi:type="ecore_plus_logic:BasicFunctionSpec" functionalName="equals" name="equals" sqlName="equals" isInfix="true"/>
-  <functionSpecs xsi:type="ecore_plus_logic:AggregateFunctionSpec" functionalName="first" name="first" sqlName="first"/>
-  <functionSpecs xsi:type="ecore_plus_logic:BasicFunctionSpec" functionalName="ID" name="ID" sqlName="ID"/>
-  <functionSpecs xsi:type="ecore_plus_logic:BasicFunctionSpec" name="getEntityType"/>
-</ecore_plus_logic:FunctionSpecModule>

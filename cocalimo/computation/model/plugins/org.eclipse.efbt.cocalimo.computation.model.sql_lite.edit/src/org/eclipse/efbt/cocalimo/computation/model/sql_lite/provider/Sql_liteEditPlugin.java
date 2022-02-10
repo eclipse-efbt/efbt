@@ -2,12 +2,10 @@
  */
 package org.eclipse.efbt.cocalimo.computation.model.sql_lite.provider;
 
-import org.eclipse.efbt.cocalimo.computation.model.ecore_plus_structure.provider.Ecore_plusEditPlugin;
-
-import org.eclipse.efbt.cocalimo.core.model.logical_transformations.provider.TaskEditPlugin;
 import org.eclipse.efbt.cocalimo.core.model.module_management.provider.Module_managementEditPlugin;
 
-import org.eclipse.efbt.cocalimo.core.model.requirements_text.provider.Requirements_textEditPlugin;
+import org.eclipse.efbt.cocalimo.smcubes.model.core.provider.SmcubesEditPlugin;
+
 import org.eclipse.emf.common.EMFPlugin;
 
 import org.eclipse.emf.common.util.ResourceLocator;
@@ -46,11 +44,9 @@ public final class Sql_liteEditPlugin extends EMFPlugin {
 	public Sql_liteEditPlugin() {
 		super
 		  (new ResourceLocator [] {
-		     Ecore_plusEditPlugin.INSTANCE,
 		     EcoreEditPlugin.INSTANCE,
 		     Module_managementEditPlugin.INSTANCE,
-		     TaskEditPlugin.INSTANCE,
-		     Requirements_textEditPlugin.INSTANCE,
+		     SmcubesEditPlugin.INSTANCE,
 		   });
 	}
 

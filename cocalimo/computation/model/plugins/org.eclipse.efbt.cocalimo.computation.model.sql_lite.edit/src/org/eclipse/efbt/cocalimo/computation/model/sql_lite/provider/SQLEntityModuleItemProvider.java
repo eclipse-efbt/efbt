@@ -7,9 +7,9 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.SQLEntityModule;
-
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.Sql_liteFactory;
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.Sql_litePackage;
+
 import org.eclipse.efbt.cocalimo.core.model.module_management.provider.ModuleItemProvider;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
@@ -18,6 +18,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
+
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 

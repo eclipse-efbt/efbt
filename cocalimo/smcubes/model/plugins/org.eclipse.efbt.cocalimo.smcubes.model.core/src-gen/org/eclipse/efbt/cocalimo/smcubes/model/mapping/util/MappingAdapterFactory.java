@@ -19,8 +19,7 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.eclipse.efbt.cocalimo.smcubes.model.mapping.MappingPackage
  * @generated
  */
-public class MappingAdapterFactory extends AdapterFactoryImpl
-{
+public class MappingAdapterFactory extends AdapterFactoryImpl {
 	/**
 	 * The cached model package.
 	 * <!-- begin-user-doc -->
@@ -35,8 +34,7 @@ public class MappingAdapterFactory extends AdapterFactoryImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MappingAdapterFactory()
-	{
+	public MappingAdapterFactory() {
 		if (modelPackage == null) {
 			modelPackage = MappingPackage.eINSTANCE;
 		}
@@ -51,8 +49,7 @@ public class MappingAdapterFactory extends AdapterFactoryImpl
 	 * @generated
 	 */
 	@Override
-	public boolean isFactoryForType(Object object)
-	{
+	public boolean isFactoryForType(Object object) {
 		if (object == modelPackage) {
 			return true;
 		}
@@ -117,8 +114,7 @@ public class MappingAdapterFactory extends AdapterFactoryImpl
 	 * @generated
 	 */
 	@Override
-	public Adapter createAdapter(Notifier target)
-	{
+	public Adapter createAdapter(Notifier target) {
 		return modelSwitch.doSwitch((EObject)target);
 	}
 
@@ -133,8 +129,7 @@ public class MappingAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.mapping.CUBE_MAPPING
 	 * @generated
 	 */
-	public Adapter createCUBE_MAPPINGAdapter()
-	{
+	public Adapter createCUBE_MAPPINGAdapter() {
 		return null;
 	}
 
@@ -148,8 +143,7 @@ public class MappingAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.mapping.MEMBER_MAPPING
 	 * @generated
 	 */
-	public Adapter createMEMBER_MAPPINGAdapter()
-	{
+	public Adapter createMEMBER_MAPPINGAdapter() {
 		return null;
 	}
 
@@ -163,8 +157,7 @@ public class MappingAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.mapping.MEMBER_MAPPING_ITEM
 	 * @generated
 	 */
-	public Adapter createMEMBER_MAPPING_ITEMAdapter()
-	{
+	public Adapter createMEMBER_MAPPING_ITEMAdapter() {
 		return null;
 	}
 
@@ -178,8 +171,7 @@ public class MappingAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.mapping.VARIABLE_MAPPING_ITEM
 	 * @generated
 	 */
-	public Adapter createVARIABLE_MAPPING_ITEMAdapter()
-	{
+	public Adapter createVARIABLE_MAPPING_ITEMAdapter() {
 		return null;
 	}
 
@@ -193,8 +185,7 @@ public class MappingAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.mapping.VARIABLE_MAPPING
 	 * @generated
 	 */
-	public Adapter createVARIABLE_MAPPINGAdapter()
-	{
+	public Adapter createVARIABLE_MAPPINGAdapter() {
 		return null;
 	}
 
@@ -208,8 +199,7 @@ public class MappingAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.mapping.MAPPING_TO_CUBE
 	 * @generated
 	 */
-	public Adapter createMAPPING_TO_CUBEAdapter()
-	{
+	public Adapter createMAPPING_TO_CUBEAdapter() {
 		return null;
 	}
 
@@ -223,8 +213,7 @@ public class MappingAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.mapping.VARIABLE_SET_MAPPING
 	 * @generated
 	 */
-	public Adapter createVARIABLE_SET_MAPPINGAdapter()
-	{
+	public Adapter createVARIABLE_SET_MAPPINGAdapter() {
 		return null;
 	}
 
@@ -238,8 +227,7 @@ public class MappingAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.mapping.MAPPING_DEFINITION
 	 * @generated
 	 */
-	public Adapter createMAPPING_DEFINITIONAdapter()
-	{
+	public Adapter createMAPPING_DEFINITIONAdapter() {
 		return null;
 	}
 
@@ -251,8 +239,7 @@ public class MappingAdapterFactory extends AdapterFactoryImpl
 	 * @return the new adapter.
 	 * @generated
 	 */
-	public Adapter createEObjectAdapter()
-	{
+	public Adapter createEObjectAdapter() {
 		return null;
 	}
 

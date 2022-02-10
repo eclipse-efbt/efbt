@@ -4,6 +4,10 @@ package org.eclipse.efbt.cocalimo.smcubes.model.core.util;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.core.*;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Classifier;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Element;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.NamedElement;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 
@@ -22,8 +26,7 @@ import org.eclipse.emf.ecore.util.Switch;
  * @see org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage
  * @generated
  */
-public class CoreSwitch<T> extends Switch<T>
-{
+public class CoreSwitch<T> extends Switch<T> {
 	/**
 	 * The cached model package
 	 * <!-- begin-user-doc -->
@@ -38,8 +41,7 @@ public class CoreSwitch<T> extends Switch<T>
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public CoreSwitch()
-	{
+	public CoreSwitch() {
 		if (modelPackage == null) {
 			modelPackage = CorePackage.eINSTANCE;
 		}
@@ -54,8 +56,7 @@ public class CoreSwitch<T> extends Switch<T>
 	 * @generated
 	 */
 	@Override
-	protected boolean isSwitchFor(EPackage ePackage)
-	{
+	protected boolean isSwitchFor(EPackage ePackage) {
 		return ePackage == modelPackage;
 	}
 
@@ -67,8 +68,7 @@ public class CoreSwitch<T> extends Switch<T>
 	 * @generated
 	 */
 	@Override
-	protected T doSwitch(int classifierID, EObject theEObject)
-	{
+	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
 			case CorePackage.DOMAIN: {
 				DOMAIN domain = (DOMAIN)theEObject;
@@ -121,6 +121,9 @@ public class CoreSwitch<T> extends Switch<T>
 			case CorePackage.SUBDOMAIN: {
 				SUBDOMAIN subdomain = (SUBDOMAIN)theEObject;
 				T result = caseSUBDOMAIN(subdomain);
+				if (result == null) result = caseClassifier(subdomain);
+				if (result == null) result = caseNamedElement(subdomain);
+				if (result == null) result = caseElement(subdomain);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -163,8 +166,7 @@ public class CoreSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseDOMAIN(DOMAIN object)
-	{
+	public T caseDOMAIN(DOMAIN object) {
 		return null;
 	}
 
@@ -179,8 +181,7 @@ public class CoreSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseFACET_COLLECTION(FACET_COLLECTION object)
-	{
+	public T caseFACET_COLLECTION(FACET_COLLECTION object) {
 		return null;
 	}
 
@@ -195,8 +196,7 @@ public class CoreSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseFACET_ENUMERATION(FACET_ENUMERATION object)
-	{
+	public T caseFACET_ENUMERATION(FACET_ENUMERATION object) {
 		return null;
 	}
 
@@ -211,8 +211,7 @@ public class CoreSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T casefacet_type(facet_type object)
-	{
+	public T casefacet_type(facet_type object) {
 		return null;
 	}
 
@@ -227,8 +226,7 @@ public class CoreSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseMAINTENANCE_AGENCY(MAINTENANCE_AGENCY object)
-	{
+	public T caseMAINTENANCE_AGENCY(MAINTENANCE_AGENCY object) {
 		return null;
 	}
 
@@ -243,8 +241,7 @@ public class CoreSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseMEMBER(MEMBER object)
-	{
+	public T caseMEMBER(MEMBER object) {
 		return null;
 	}
 
@@ -259,8 +256,7 @@ public class CoreSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseMEMBER_HIERARCHY(MEMBER_HIERARCHY object)
-	{
+	public T caseMEMBER_HIERARCHY(MEMBER_HIERARCHY object) {
 		return null;
 	}
 
@@ -275,8 +271,7 @@ public class CoreSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseMEMBER_HIERARCHY_NODE(MEMBER_HIERARCHY_NODE object)
-	{
+	public T caseMEMBER_HIERARCHY_NODE(MEMBER_HIERARCHY_NODE object) {
 		return null;
 	}
 
@@ -291,8 +286,7 @@ public class CoreSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseSUBDOMAIN(SUBDOMAIN object)
-	{
+	public T caseSUBDOMAIN(SUBDOMAIN object) {
 		return null;
 	}
 
@@ -307,8 +301,7 @@ public class CoreSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseSUBDOMAIN_ENUMERATION(SUBDOMAIN_ENUMERATION object)
-	{
+	public T caseSUBDOMAIN_ENUMERATION(SUBDOMAIN_ENUMERATION object) {
 		return null;
 	}
 
@@ -323,8 +316,7 @@ public class CoreSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseVARIABLE(VARIABLE object)
-	{
+	public T caseVARIABLE(VARIABLE object) {
 		return null;
 	}
 
@@ -339,8 +331,7 @@ public class CoreSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseVARIABLE_SET(VARIABLE_SET object)
-	{
+	public T caseVARIABLE_SET(VARIABLE_SET object) {
 		return null;
 	}
 
@@ -355,8 +346,52 @@ public class CoreSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseVARIABLE_SET_ENUMERATION(VARIABLE_SET_ENUMERATION object)
-	{
+	public T caseVARIABLE_SET_ENUMERATION(VARIABLE_SET_ENUMERATION object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Element</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Element</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseElement(Element object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Named Element</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Named Element</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseNamedElement(NamedElement object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Classifier</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Classifier</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseClassifier(Classifier object) {
 		return null;
 	}
 
@@ -372,8 +407,7 @@ public class CoreSwitch<T> extends Switch<T>
 	 * @generated
 	 */
 	@Override
-	public T defaultCase(EObject object)
-	{
+	public T defaultCase(EObject object) {
 		return null;
 	}
 

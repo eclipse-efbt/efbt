@@ -81,4 +81,12 @@
             class="org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.util.Cocalimo_smcubes_extensionResourceFactoryImpl"/>
    </extension>
 
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated smcubes -->
+      <package
+            uri="http://www.eclipse.org/efbt/data_meta_model"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage"
+            genModel="model/smcubes.genmodel"/>
+   </extension>
+
 </plugin>

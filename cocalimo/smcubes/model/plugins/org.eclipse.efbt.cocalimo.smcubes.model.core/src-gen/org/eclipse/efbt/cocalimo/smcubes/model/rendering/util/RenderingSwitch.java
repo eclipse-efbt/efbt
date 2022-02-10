@@ -22,8 +22,7 @@ import org.eclipse.emf.ecore.util.Switch;
  * @see org.eclipse.efbt.cocalimo.smcubes.model.rendering.RenderingPackage
  * @generated
  */
-public class RenderingSwitch<T> extends Switch<T>
-{
+public class RenderingSwitch<T> extends Switch<T> {
 	/**
 	 * The cached model package
 	 * <!-- begin-user-doc -->
@@ -38,8 +37,7 @@ public class RenderingSwitch<T> extends Switch<T>
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public RenderingSwitch()
-	{
+	public RenderingSwitch() {
 		if (modelPackage == null) {
 			modelPackage = RenderingPackage.eINSTANCE;
 		}
@@ -54,8 +52,7 @@ public class RenderingSwitch<T> extends Switch<T>
 	 * @generated
 	 */
 	@Override
-	protected boolean isSwitchFor(EPackage ePackage)
-	{
+	protected boolean isSwitchFor(EPackage ePackage) {
 		return ePackage == modelPackage;
 	}
 
@@ -67,8 +64,7 @@ public class RenderingSwitch<T> extends Switch<T>
 	 * @generated
 	 */
 	@Override
-	protected T doSwitch(int classifierID, EObject theEObject)
-	{
+	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
 			case RenderingPackage.AXIS: {
 				AXIS axis = (AXIS)theEObject;
@@ -121,8 +117,7 @@ public class RenderingSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseAXIS(AXIS object)
-	{
+	public T caseAXIS(AXIS object) {
 		return null;
 	}
 
@@ -137,8 +132,7 @@ public class RenderingSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseAXIS_ORDINATE(AXIS_ORDINATE object)
-	{
+	public T caseAXIS_ORDINATE(AXIS_ORDINATE object) {
 		return null;
 	}
 
@@ -153,8 +147,7 @@ public class RenderingSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseCELL_POSITION(CELL_POSITION object)
-	{
+	public T caseCELL_POSITION(CELL_POSITION object) {
 		return null;
 	}
 
@@ -169,8 +162,7 @@ public class RenderingSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseORDINATE_ITEM(ORDINATE_ITEM object)
-	{
+	public T caseORDINATE_ITEM(ORDINATE_ITEM object) {
 		return null;
 	}
 
@@ -185,8 +177,7 @@ public class RenderingSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseTABLE(TABLE object)
-	{
+	public T caseTABLE(TABLE object) {
 		return null;
 	}
 
@@ -201,8 +192,7 @@ public class RenderingSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseTABLE_CELL(TABLE_CELL object)
-	{
+	public T caseTABLE_CELL(TABLE_CELL object) {
 		return null;
 	}
 
@@ -218,8 +208,7 @@ public class RenderingSwitch<T> extends Switch<T>
 	 * @generated
 	 */
 	@Override
-	public T defaultCase(EObject object)
-	{
+	public T defaultCase(EObject object) {
 		return null;
 	}
 
