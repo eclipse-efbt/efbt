@@ -2,6 +2,7 @@
  */
 package org.eclipse.efbt.cocalimo.smcubes.model.core.impl;
 
+import java.util.Collection;
 import java.util.Date;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage;
@@ -9,13 +10,15 @@ import org.eclipse.efbt.cocalimo.smcubes.model.core.MEMBER;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN_ENUMERATION;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.ClassifierImpl;
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -25,7 +28,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.core.impl.SUBDOMAIN_ENUMERATIONImpl#getMember_id <em>Member id</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.core.impl.SUBDOMAIN_ENUMERATIONImpl#getMember_ids <em>Member ids</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.core.impl.SUBDOMAIN_ENUMERATIONImpl#getOrder <em>Order</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.core.impl.SUBDOMAIN_ENUMERATIONImpl#getSubdomain_id <em>Subdomain id</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.core.impl.SUBDOMAIN_ENUMERATIONImpl#getValid_from <em>Valid from</em>}</li>
@@ -34,16 +37,16 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container implements SUBDOMAIN_ENUMERATION {
+public class SUBDOMAIN_ENUMERATIONImpl extends ClassifierImpl implements SUBDOMAIN_ENUMERATION {
 	/**
-	 * The cached value of the '{@link #getMember_id() <em>Member id</em>}' reference.
+	 * The cached value of the '{@link #getMember_ids() <em>Member ids</em>}' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getMember_id()
+	 * @see #getMember_ids()
 	 * @generated
 	 * @ordered
 	 */
-	protected MEMBER member_id;
+	protected EList<MEMBER> member_ids;
 
 	/**
 	 * The default value of the '{@link #getOrder() <em>Order</em>}' attribute.
@@ -140,38 +143,11 @@ public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public MEMBER getMember_id() {
-		if (member_id != null && member_id.eIsProxy()) {
-			InternalEObject oldMember_id = (InternalEObject)member_id;
-			member_id = (MEMBER)eResolveProxy(oldMember_id);
-			if (member_id != oldMember_id) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, CorePackage.SUBDOMAIN_ENUMERATION__MEMBER_ID, oldMember_id, member_id));
-			}
+	public EList<MEMBER> getMember_ids() {
+		if (member_ids == null) {
+			member_ids = new EObjectResolvingEList<MEMBER>(MEMBER.class, this, CorePackage.SUBDOMAIN_ENUMERATION__MEMBER_IDS);
 		}
-		return member_id;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public MEMBER basicGetMember_id() {
-		return member_id;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setMember_id(MEMBER newMember_id) {
-		MEMBER oldMember_id = member_id;
-		member_id = newMember_id;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, CorePackage.SUBDOMAIN_ENUMERATION__MEMBER_ID, oldMember_id, member_id));
+		return member_ids;
 	}
 
 	/**
@@ -291,9 +267,8 @@ public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container impl
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case CorePackage.SUBDOMAIN_ENUMERATION__MEMBER_ID:
-				if (resolve) return getMember_id();
-				return basicGetMember_id();
+			case CorePackage.SUBDOMAIN_ENUMERATION__MEMBER_IDS:
+				return getMember_ids();
 			case CorePackage.SUBDOMAIN_ENUMERATION__ORDER:
 				return getOrder();
 			case CorePackage.SUBDOMAIN_ENUMERATION__SUBDOMAIN_ID:
@@ -312,11 +287,13 @@ public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case CorePackage.SUBDOMAIN_ENUMERATION__MEMBER_ID:
-				setMember_id((MEMBER)newValue);
+			case CorePackage.SUBDOMAIN_ENUMERATION__MEMBER_IDS:
+				getMember_ids().clear();
+				getMember_ids().addAll((Collection<? extends MEMBER>)newValue);
 				return;
 			case CorePackage.SUBDOMAIN_ENUMERATION__ORDER:
 				setOrder((Integer)newValue);
@@ -342,8 +319,8 @@ public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container impl
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case CorePackage.SUBDOMAIN_ENUMERATION__MEMBER_ID:
-				setMember_id((MEMBER)null);
+			case CorePackage.SUBDOMAIN_ENUMERATION__MEMBER_IDS:
+				getMember_ids().clear();
 				return;
 			case CorePackage.SUBDOMAIN_ENUMERATION__ORDER:
 				setOrder(ORDER_EDEFAULT);
@@ -369,8 +346,8 @@ public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container impl
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case CorePackage.SUBDOMAIN_ENUMERATION__MEMBER_ID:
-				return member_id != null;
+			case CorePackage.SUBDOMAIN_ENUMERATION__MEMBER_IDS:
+				return member_ids != null && !member_ids.isEmpty();
 			case CorePackage.SUBDOMAIN_ENUMERATION__ORDER:
 				return order != ORDER_EDEFAULT;
 			case CorePackage.SUBDOMAIN_ENUMERATION__SUBDOMAIN_ID:

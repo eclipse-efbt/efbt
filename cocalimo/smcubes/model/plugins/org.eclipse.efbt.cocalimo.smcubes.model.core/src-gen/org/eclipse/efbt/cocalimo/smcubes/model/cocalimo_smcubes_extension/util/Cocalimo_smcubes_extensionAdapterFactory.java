@@ -148,6 +148,10 @@ public class Cocalimo_smcubes_extensionAdapterFactory extends AdapterFactoryImpl
 				return createSubDomainModuleAdapter();
 			}
 			@Override
+			public Adapter caseSubDomainEnumerationModule(SubDomainEnumerationModule object) {
+				return createSubDomainEnumerationModuleAdapter();
+			}
+			@Override
 			public Adapter caseModule(org.eclipse.efbt.cocalimo.core.model.module_management.Module object) {
 				return createModuleAdapter();
 			}
@@ -448,6 +452,20 @@ public class Cocalimo_smcubes_extensionAdapterFactory extends AdapterFactoryImpl
 	 * @generated
 	 */
 	public Adapter createSubDomainModuleAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SubDomainEnumerationModule <em>Sub Domain Enumeration Module</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SubDomainEnumerationModule
+	 * @generated
+	 */
+	public Adapter createSubDomainEnumerationModuleAdapter() {
 		return null;
 	}
 

@@ -7,15 +7,13 @@ import org.eclipse.efbt.cocalimo.smcubes.model.core.DOMAIN;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.FACET_COLLECTION;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.MAINTENANCE_AGENCY;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.ClassifierImpl;
-
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -37,7 +35,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  *
  * @generated
  */
-public class SUBDOMAINImpl extends ClassifierImpl implements SUBDOMAIN {
+public class SUBDOMAINImpl extends MinimalEObjectImpl.Container implements SUBDOMAIN {
 	/**
 	 * The default value of the '{@link #getCode() <em>Code</em>}' attribute.
 	 * <!-- begin-user-doc -->

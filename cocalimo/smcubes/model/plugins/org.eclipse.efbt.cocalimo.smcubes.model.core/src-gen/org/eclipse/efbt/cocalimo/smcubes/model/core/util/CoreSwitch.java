@@ -121,15 +121,15 @@ public class CoreSwitch<T> extends Switch<T> {
 			case CorePackage.SUBDOMAIN: {
 				SUBDOMAIN subdomain = (SUBDOMAIN)theEObject;
 				T result = caseSUBDOMAIN(subdomain);
-				if (result == null) result = caseClassifier(subdomain);
-				if (result == null) result = caseNamedElement(subdomain);
-				if (result == null) result = caseElement(subdomain);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case CorePackage.SUBDOMAIN_ENUMERATION: {
 				SUBDOMAIN_ENUMERATION subdomaiN_ENUMERATION = (SUBDOMAIN_ENUMERATION)theEObject;
 				T result = caseSUBDOMAIN_ENUMERATION(subdomaiN_ENUMERATION);
+				if (result == null) result = caseClassifier(subdomaiN_ENUMERATION);
+				if (result == null) result = caseNamedElement(subdomaiN_ENUMERATION);
+				if (result == null) result = caseElement(subdomaiN_ENUMERATION);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}

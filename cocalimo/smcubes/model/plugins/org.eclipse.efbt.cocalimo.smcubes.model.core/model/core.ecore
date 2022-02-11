@@ -403,7 +403,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SUBDOMAIN" eSuperTypes="data_meta_model.ecore#//Classifier">
+  <eClassifiers xsi:type="ecore:EClass" name="SUBDOMAIN">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="SUBDOMAIN"/>
       <details key="kind" value="empty"/>
@@ -459,12 +459,13 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SUBDOMAIN_ENUMERATION">
+  <eClassifiers xsi:type="ecore:EClass" name="SUBDOMAIN_ENUMERATION" eSuperTypes="data_meta_model.ecore#//Classifier">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="SUBDOMAIN_ENUMERATION"/>
       <details key="kind" value="empty"/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="member_id" eType="#//MEMBER">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="member_ids" upperBound="-1"
+        eType="#//MEMBER">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="attribute"/>
         <details key="name" value="member_id"/>

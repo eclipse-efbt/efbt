@@ -532,6 +532,29 @@ public class Cocalimo_smcubes_extensionItemProviderAdapterFactory extends Cocali
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SubDomainEnumerationModule} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected SubDomainEnumerationModuleItemProvider subDomainEnumerationModuleItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SubDomainEnumerationModule}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createSubDomainEnumerationModuleAdapter() {
+		if (subDomainEnumerationModuleItemProvider == null) {
+			subDomainEnumerationModuleItemProvider = new SubDomainEnumerationModuleItemProvider(this);
+		}
+
+		return subDomainEnumerationModuleItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -656,6 +679,7 @@ public class Cocalimo_smcubes_extensionItemProviderAdapterFactory extends Cocali
 		if (reportTableModuleItemProvider != null) reportTableModuleItemProvider.dispose();
 		if (tableCellModuleItemProvider != null) tableCellModuleItemProvider.dispose();
 		if (subDomainModuleItemProvider != null) subDomainModuleItemProvider.dispose();
+		if (subDomainEnumerationModuleItemProvider != null) subDomainEnumerationModuleItemProvider.dispose();
 	}
 
 }
