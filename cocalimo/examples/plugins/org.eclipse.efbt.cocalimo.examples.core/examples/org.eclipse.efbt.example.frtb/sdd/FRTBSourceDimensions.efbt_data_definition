@@ -1,0 +1,175 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/efbt_data_definition#//VariableModule",
+  "name" : "FRTBSourceDimensions",
+  "variables" : [ {
+    "code" : "ShockDirection",
+    "description" : "ShockDirection",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.efbt_data_definition#shockDirection"
+    },
+    "variable_id" : "ShockDirection",
+    "name" : "ShockDirection",
+    "displayName" : "ShockDirection"
+  }, {
+    "code" : "mainCurrency",
+    "description" : "mainCurrency",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.efbt_data_definition#Currency"
+    },
+    "variable_id" : "mainCurrency",
+    "name" : "mainCurrency",
+    "displayName" : "mainCurrency"
+  }, {
+    "code" : "secondCurrency",
+    "description" : "secondCurrency",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.efbt_data_definition#Currency"
+    },
+    "variable_id" : "secondCurrency",
+    "name" : "secondCurrency",
+    "displayName" : "secondCurrency"
+  }, {
+    "code" : "currencyOfRecord",
+    "description" : "currencyOfRecord",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.efbt_data_definition#Currency"
+    },
+    "variable_id" : "currencyOfRecord",
+    "name" : "currencyOfRecord",
+    "displayName" : "currencyOfRecord"
+  }, {
+    "code" : "Currency",
+    "description" : "Currency",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.efbt_data_definition#Currency"
+    },
+    "variable_id" : "Currency",
+    "name" : "Currency",
+    "displayName" : "Currency"
+  }, {
+    "code" : "Dummy",
+    "description" : "Dummy",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.efbt_data_definition#String"
+    },
+    "variable_id" : "Dummy",
+    "name" : "Dummy",
+    "displayName" : "Dummy"
+  }, {
+    "code" : "ccy1",
+    "description" : "ccy1",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.efbt_data_definition#Currency"
+    },
+    "variable_id" : "ccy1",
+    "name" : "ccy1",
+    "displayName" : "ccy1"
+  }, {
+    "code" : "ccy2",
+    "description" : "ccy2",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.efbt_data_definition#Currency"
+    },
+    "variable_id" : "ccy2",
+    "name" : "ccy2",
+    "displayName" : "ccy2"
+  }, {
+    "code" : "equityFactorType",
+    "description" : "equityFactorType",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.efbt_data_definition#shockDirection"
+    },
+    "variable_id" : "equityFactorType",
+    "name" : "equityFactorType",
+    "displayName" : "equityFactorType"
+  }, {
+    "code" : "ratingsGrade",
+    "description" : "ratingsGrade",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.efbt_data_definition#ratingsGrade"
+    },
+    "variable_id" : "ratingsGrade",
+    "name" : "ratingsGrade",
+    "displayName" : "ratingsGrade"
+  }, {
+    "code" : "CSRCurveType",
+    "description" : "CSRCurveType",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.efbt_data_definition#CSRCurveType"
+    },
+    "variable_id" : "CSRCurveType",
+    "name" : "CSRCurveType",
+    "displayName" : "CSRCurveType"
+  }, {
+    "code" : "commodityType",
+    "description" : "commodityType",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.efbt_data_definition#commodityType"
+    },
+    "variable_id" : "commodityType",
+    "name" : "commodityType",
+    "displayName" : "commodityType"
+  }, {
+    "code" : "marketCap",
+    "description" : "marketCap",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.efbt_data_definition#marketCap"
+    },
+    "variable_id" : "marketCap",
+    "name" : "marketCap",
+    "displayName" : "marketCap"
+  }, {
+    "code" : "economy",
+    "description" : "economy",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.efbt_data_definition#economy"
+    },
+    "variable_id" : "economy",
+    "name" : "economy",
+    "displayName" : "economy"
+  }, {
+    "code" : "sector",
+    "description" : "sector",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.efbt_data_definition#sector"
+    },
+    "variable_id" : "sector",
+    "name" : "sector",
+    "displayName" : "sector"
+  }, {
+    "code" : "securitisationSector",
+    "description" : "securitisationSector",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.efbt_data_definition#securitisationSector"
+    },
+    "variable_id" : "securitisationSector",
+    "name" : "securitisationSector",
+    "displayName" : "securitisationSector"
+  }, {
+    "code" : "riskClass",
+    "description" : "riskClass",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.efbt_data_definition#riskClass"
+    },
+    "variable_id" : "riskClass",
+    "name" : "riskClass",
+    "displayName" : "riskClass"
+  } ]
+}

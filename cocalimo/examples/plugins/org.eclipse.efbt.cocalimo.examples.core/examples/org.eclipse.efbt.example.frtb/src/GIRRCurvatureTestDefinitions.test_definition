@@ -1,0 +1,106 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/test_definition#//RegTestDefinitionModule",
+  "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
+  "name" : "GIRRCurvatureTestDefinitions",
+  "version" : "1.0",
+  "testDefinitions" : [ {
+    "name" : "GIRRCurvatureTestDefinition1",
+    "inputModules" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/task#//ReadDataSourceTask",
+      "$ref" : "../requirements/FRTBTask.task#ReadDeltaSensitivities"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/task#//ReadDataSourceTask",
+      "$ref" : "../requirements/FRTBTask.task#ReadGIRRCurvatureData"
+    } ],
+    "processingModules" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/task#//DataProcessingTask",
+      "$ref" : "../requirements/FRTBTask.task#GIRRCurvatureAssignBucket"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/task#//DataProcessingTask",
+      "$ref" : "../requirements/FRTBTask.task#GIRRCurvatureBucketsCreateCorrelatedPairs"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/task#//DataProcessingTask",
+      "$ref" : "../requirements/FRTBTask.task#GIRRCurvatureBucketsCreateSquares"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/task#//DataProcessingTask",
+      "$ref" : "../requirements/FRTBTask.task#GIRRCurvatureCalculateCVR"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/task#//DataProcessingTask",
+      "$ref" : "../requirements/FRTBTask.task#GIRRCurvatureCreateBucketValue"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/task#//DataProcessingTask",
+      "$ref" : "../requirements/FRTBTask.task#GIRRCurvatureCreateCapitalCharge"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/task#//DataProcessingTask",
+      "$ref" : "../requirements/FRTBTask.task#GIRRCurvatureCreateCorrelatedPairs"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/task#//DataProcessingTask",
+      "$ref" : "../requirements/FRTBTask.task#GIRRCurvatureCreateSquares"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/task#//DataProcessingTask",
+      "$ref" : "../requirements/FRTBTask.task#GIRRCurvatureDeltaStripping"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/task#//DataProcessingTask",
+      "$ref" : "../requirements/FRTBTask.task#GIRRDeltaApplyWeighting"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/task#//DataProcessingTask",
+      "$ref" : "../requirements/FRTBTask.task#GIRRDeltaAssignBucket"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/task#//DataProcessingTask",
+      "$ref" : "../requirements/FRTBTask.task#GIRRDeltaBucketsCreateCorrelatedPairs"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/task#//DataProcessingTask",
+      "$ref" : "../requirements/FRTBTask.task#GIRRDeltaBucketsCreateSquares"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/task#//DataProcessingTask",
+      "$ref" : "../requirements/FRTBTask.task#GIRRDeltaCreateBucketValue"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/task#//DataProcessingTask",
+      "$ref" : "../requirements/FRTBTask.task#GIRRDeltaCreateCapitalCharge"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/task#//DataProcessingTask",
+      "$ref" : "../requirements/FRTBTask.task#GIRRDeltaCreateCorrelatedPairs"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/task#//DataProcessingTask",
+      "$ref" : "../requirements/FRTBTask.task#GIRRDeltaCreateSquares"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/task#//DataProcessingTask",
+      "$ref" : "../requirements/FRTBTask.task#GIRRVegaApplyWeighting"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/task#//DataProcessingTask",
+      "$ref" : "../requirements/FRTBTask.task#GIRRVegaAssignBucket"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/task#//DataProcessingTask",
+      "$ref" : "../requirements/FRTBTask.task#GIRRVegaBucketsCreateCorrelatedPairs"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/task#//DataProcessingTask",
+      "$ref" : "../requirements/FRTBTask.task#GIRRVegaBucketsCreateSquares"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/task#//DataProcessingTask",
+      "$ref" : "../requirements/FRTBTask.task#GIRRVegaCreateBucketValue"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/task#//DataProcessingTask",
+      "$ref" : "../requirements/FRTBTask.task#GIRRVegaCreateCapitalCharge"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/task#//DataProcessingTask",
+      "$ref" : "../requirements/FRTBTask.task#GIRRVegaCreateCorrelatedPairs"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/task#//DataProcessingTask",
+      "$ref" : "../requirements/FRTBTask.task#GIRRVegaCreateSquares"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/task#//DataProcessingTask",
+      "$ref" : "../requirements/FRTBTask.task#NetDeltaSensitivities"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/task#//DataProcessingTask",
+      "$ref" : "../requirements/FRTBTask.task#NetVegaSensitivities"
+    } ],
+    "reportCellCreationModules" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/task#//ReportCellCreationTask",
+      "$ref" : "../requirements/FRTBTask.task#createGIRRCurvatureReportCells"
+    } ],
+    "scenarios" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/scenarios#//Scenario",
+      "$ref" : "../requirements/FRTBTask.task#GIRRCurvatureUpShocks"
+    } ]
+  } ]
+}
