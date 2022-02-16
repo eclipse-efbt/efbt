@@ -9,5 +9,5 @@ Require-Bundle: org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.xmi,
  org.apache.commons.csv,
  org.eclipse.efbt.cocalimo.core.model.logical_transformations,
- org.eclipse.efbt.cocalimo.core.model.platform_call
+ org.eclipse.efbt.cocalimo.platform_call.model.platform_call
 Export-Package: org.eclipse.efbt.controller.ldm.component.logical_transformations

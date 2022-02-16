@@ -130,7 +130,7 @@ Exhibit A – Form of Secondary Licenses Notice
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.emf.edit.ui"/>
       <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.eclipse.efbt.cocalimo.core.model.module_management" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.emf.ecore.edit"/>
    </requires>
 
    <plugin
@@ -142,13 +142,6 @@ Exhibit A – Form of Secondary Licenses Notice
 
    <plugin
          id="org.eclipse.efbt.cocalimo.core.model.requirements_text"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.efbt.cocalimo.core.model.platform_call"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -176,13 +169,6 @@ Exhibit A – Form of Secondary Licenses Notice
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.efbt.cocalimo.core.model.platform_call.edit"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.efbt.cocalimo.core.model.logical_transformations.edit"
          download-size="0"
          install-size="0"
@@ -198,13 +184,6 @@ Exhibit A – Form of Secondary Licenses Notice
 
    <plugin
          id="org.eclipse.efbt.cocalimo.core.model.requirements_text.editor"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.efbt.cocalimo.core.model.platform_call.editor"
          download-size="0"
          install-size="0"
          version="0.0.0"

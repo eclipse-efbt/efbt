@@ -146,6 +146,16 @@
       </predicate>
     </workingSet>
     <workingSet
+        name="controller_dmm"
+        id="controller_dmm">
+      <predicate
+          xsi:type="predicates:AndPredicate">
+        <operand
+            xsi:type="predicates:NamePredicate"
+            pattern=".*\.eclipse.efbt.controller.data_meta_model.*"/>
+      </predicate>
+    </workingSet>
+    <workingSet
         name="examples"
         id="examples">
       <predicate
@@ -231,6 +241,50 @@
         <operand
             xsi:type="predicates:NamePredicate"
             pattern=".*\.eclipse.efbt.controller.platformcall.*"/>
+      </predicate>
+    </workingSet>
+    <workingSet
+        name="cocalimo_platform_call"
+        id="cocalimo_platform_call">
+      <predicate
+          xsi:type="predicates:AndPredicate">
+        <operand
+            xsi:type="predicates:NamePredicate"
+            pattern=".*\.eclipse.efbt.cocalimo.platform_call.*"/>
+        <operand
+            xsi:type="predicates:NotPredicate">
+          <operand
+              xsi:type="predicates:NamePredicate"
+              pattern=".*\.edit"/>
+        </operand>
+        <operand
+            xsi:type="predicates:NotPredicate">
+          <operand
+              xsi:type="predicates:NamePredicate"
+              pattern=".*\.editor"/>
+        </operand>
+      </predicate>
+    </workingSet>
+    <workingSet
+        name="cocalimo_computation"
+        id="cocalimo_computation">
+      <predicate
+          xsi:type="predicates:AndPredicate">
+        <operand
+            xsi:type="predicates:NamePredicate"
+            pattern=".*\.eclipse.efbt.cocalimo.computation.*"/>
+        <operand
+            xsi:type="predicates:NotPredicate">
+          <operand
+              xsi:type="predicates:NamePredicate"
+              pattern=".*\.edit"/>
+        </operand>
+        <operand
+            xsi:type="predicates:NotPredicate">
+          <operand
+              xsi:type="predicates:NamePredicate"
+              pattern=".*\.editor"/>
+        </operand>
       </predicate>
     </workingSet>
     <description>efbt_working_sets</description>
