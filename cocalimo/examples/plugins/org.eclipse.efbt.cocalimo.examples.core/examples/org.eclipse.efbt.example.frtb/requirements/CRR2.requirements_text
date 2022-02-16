@@ -1,0 +1,96 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/requirements_text#//RequirementsModule",
+  "name" : "CRRRequirementsModel1",
+  "rules" : [ {
+    "iD" : "CRRRuleBook",
+    "sections" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/requirements_text#//TitledRequirementsSection",
+      "iD" : "Title_IV",
+      "sections" : [ {
+        "eClass" : "http://www.eclipse.org/efbt/requirements_text#//TitledRequirementsSection",
+        "iD" : "Title_IV;Chapter_1_General_Provisions",
+        "sections" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/requirements_text#//TitledRequirementsSection",
+          "iD" : "Article_325",
+          "sections" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/requirements_text#//TitledRequirementsSection",
+            "iD" : "Article_325_1",
+            "sections" : [ {
+              "eClass" : "http://www.eclipse.org/efbt/requirements_text#//TitledRequirementsSection",
+              "iD" : "Article_325_1_a",
+              "sections" : [ {
+                "eClass" : "http://www.eclipse.org/efbt/requirements_text#//RequirementsSectionText",
+                "iD" : "Article_325:1(a):text1",
+                "text" : "Regulatory Text"
+              } ],
+              "requirementsType" : {
+                "eClass" : "http://www.eclipse.org/efbt/requirements_text#//RequirementType",
+                "$ref" : "LetterParagraph"
+              },
+              "title" : "Article_325: 1(a)"
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/requirements_text#//TitledRequirementsSection",
+              "iD" : "Article_325_1_b",
+              "sections" : [ {
+                "eClass" : "http://www.eclipse.org/efbt/requirements_text#//RequirementsSectionText",
+                "iD" : "Article_325:1(b):text1",
+                "text" : "Regulatory Text"
+              } ],
+              "requirementsType" : {
+                "eClass" : "http://www.eclipse.org/efbt/requirements_text#//RequirementType",
+                "$ref" : "LetterParagraph"
+              },
+              "title" : "Article_325: 1(b)"
+            } ],
+            "requirementsType" : {
+              "eClass" : "http://www.eclipse.org/efbt/requirements_text#//RequirementType",
+              "$ref" : "NumericParagraph"
+            },
+            "title" : "Article_325;1"
+          } ],
+          "requirementsType" : {
+            "eClass" : "http://www.eclipse.org/efbt/requirements_text#//RequirementType",
+            "$ref" : "Article"
+          },
+          "title" : "Article 325: Approaches for calculating the own funds requirements_text for market risks"
+        } ],
+        "requirementsType" : {
+          "eClass" : "http://www.eclipse.org/efbt/requirements_text#//RequirementType",
+          "$ref" : "Chapter"
+        },
+        "title" : "Chapter 1 General Provisions"
+      } ],
+      "requirementsType" : {
+        "eClass" : "http://www.eclipse.org/efbt/requirements_text#//RequirementType",
+        "$ref" : "Title"
+      },
+      "title" : "Title_IV"
+    } ],
+    "requirementsType" : {
+      "eClass" : "http://www.eclipse.org/efbt/requirements_text#//RequirementType",
+      "$ref" : "Rulebook"
+    },
+    "title" : "CRRRuleBook"
+  } ],
+  "allowedtypes" : {
+    "allowedTypes" : [ {
+      "requirementType" : "Rulebook"
+    }, {
+      "requirementType" : "Title"
+    }, {
+      "requirementType" : "Chapter"
+    }, {
+      "requirementType" : "Section"
+    }, {
+      "requirementType" : "SubSection"
+    }, {
+      "requirementType" : "Article"
+    }, {
+      "requirementType" : "NumericParagraph"
+    }, {
+      "requirementType" : "LetterParagraph"
+    }, {
+      "requirementType" : "RomanNumeralParagraph"
+    } ]
+  }
+}
