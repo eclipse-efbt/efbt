@@ -34,5 +34,72 @@
       "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
       "$ref" : "//@entities.0"
     }
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+    "name" : "SecurityIssue",
+    "attributes" : [ {
+      "name" : "name",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+      },
+      "isPK" : true,
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#riskFactorID"
+      }
+    }, {
+      "name" : "ratingGrade",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#ratingsGrade"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#ratingsGrade"
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+    "name" : "EquityIssue",
+    "superClass" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+      "$ref" : "//@entities.2"
+    }
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+    "name" : "EquityRiskFactor",
+    "attributes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//ForeignKeyAttribute",
+      "name" : "issueID",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#issueID"
+      },
+      "entity" : {
+        "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+        "$ref" : "//@entities.3"
+      },
+      "cardinality" : 1,
+      "mandatory" : true
+    }, {
+      "name" : "equityFactorType",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#equityFactorType"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#equityFactorType"
+      }
+    } ],
+    "superClass" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+      "$ref" : "//@entities.0"
+    }
   } ]
 }
