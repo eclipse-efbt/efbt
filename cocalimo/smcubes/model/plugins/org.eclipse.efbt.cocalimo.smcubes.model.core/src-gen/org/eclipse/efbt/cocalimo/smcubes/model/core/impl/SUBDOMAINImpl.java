@@ -2,18 +2,29 @@
  */
 package org.eclipse.efbt.cocalimo.smcubes.model.core.impl;
 
+import java.util.Collection;
+
 import org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.DOMAIN;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.FACET_COLLECTION;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.MAINTENANCE_AGENCY;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN;
+import org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN_ENUMERATION;
+
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.ClassifierImpl;
+
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -31,11 +42,12 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.core.impl.SUBDOMAINImpl#isIs_natural <em>Is natural</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.core.impl.SUBDOMAINImpl#getMaintenance_agency_id <em>Maintenance agency id</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.core.impl.SUBDOMAINImpl#getSubdomain_id <em>Subdomain id</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.core.impl.SUBDOMAINImpl#getItems <em>Items</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class SUBDOMAINImpl extends MinimalEObjectImpl.Container implements SUBDOMAIN {
+public class SUBDOMAINImpl extends ClassifierImpl implements SUBDOMAIN {
 	/**
 	 * The default value of the '{@link #getCode() <em>Code</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -165,6 +177,16 @@ public class SUBDOMAINImpl extends MinimalEObjectImpl.Container implements SUBDO
 	 * @ordered
 	 */
 	protected String subdomain_id = SUBDOMAIN_ID_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getItems() <em>Items</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getItems()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<SUBDOMAIN_ENUMERATION> items;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -426,6 +448,33 @@ public class SUBDOMAINImpl extends MinimalEObjectImpl.Container implements SUBDO
 	 * @generated
 	 */
 	@Override
+	public EList<SUBDOMAIN_ENUMERATION> getItems() {
+		if (items == null) {
+			items = new EObjectContainmentEList<SUBDOMAIN_ENUMERATION>(SUBDOMAIN_ENUMERATION.class, this, CorePackage.SUBDOMAIN__ITEMS);
+		}
+		return items;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case CorePackage.SUBDOMAIN__ITEMS:
+				return ((InternalEList<?>)getItems()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case CorePackage.SUBDOMAIN__CODE:
@@ -447,6 +496,8 @@ public class SUBDOMAINImpl extends MinimalEObjectImpl.Container implements SUBDO
 				return basicGetMaintenance_agency_id();
 			case CorePackage.SUBDOMAIN__SUBDOMAIN_ID:
 				return getSubdomain_id();
+			case CorePackage.SUBDOMAIN__ITEMS:
+				return getItems();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -456,6 +507,7 @@ public class SUBDOMAINImpl extends MinimalEObjectImpl.Container implements SUBDO
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
@@ -482,6 +534,10 @@ public class SUBDOMAINImpl extends MinimalEObjectImpl.Container implements SUBDO
 				return;
 			case CorePackage.SUBDOMAIN__SUBDOMAIN_ID:
 				setSubdomain_id((String)newValue);
+				return;
+			case CorePackage.SUBDOMAIN__ITEMS:
+				getItems().clear();
+				getItems().addAll((Collection<? extends SUBDOMAIN_ENUMERATION>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -519,6 +575,9 @@ public class SUBDOMAINImpl extends MinimalEObjectImpl.Container implements SUBDO
 			case CorePackage.SUBDOMAIN__SUBDOMAIN_ID:
 				setSubdomain_id(SUBDOMAIN_ID_EDEFAULT);
 				return;
+			case CorePackage.SUBDOMAIN__ITEMS:
+				getItems().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -547,6 +606,8 @@ public class SUBDOMAINImpl extends MinimalEObjectImpl.Container implements SUBDO
 				return maintenance_agency_id != null;
 			case CorePackage.SUBDOMAIN__SUBDOMAIN_ID:
 				return SUBDOMAIN_ID_EDEFAULT == null ? subdomain_id != null : !SUBDOMAIN_ID_EDEFAULT.equals(subdomain_id);
+			case CorePackage.SUBDOMAIN__ITEMS:
+				return items != null && !items.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

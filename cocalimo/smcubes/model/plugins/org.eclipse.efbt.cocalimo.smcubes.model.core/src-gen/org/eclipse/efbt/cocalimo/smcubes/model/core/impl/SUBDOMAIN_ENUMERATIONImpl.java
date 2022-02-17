@@ -2,23 +2,19 @@
  */
 package org.eclipse.efbt.cocalimo.smcubes.model.core.impl;
 
-import java.util.Collection;
 import java.util.Date;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.MEMBER;
-import org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN_ENUMERATION;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.ClassifierImpl;
 import org.eclipse.emf.common.notify.Notification;
 
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -28,25 +24,24 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.core.impl.SUBDOMAIN_ENUMERATIONImpl#getMember_ids <em>Member ids</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.core.impl.SUBDOMAIN_ENUMERATIONImpl#getMember_id <em>Member id</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.core.impl.SUBDOMAIN_ENUMERATIONImpl#getOrder <em>Order</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.core.impl.SUBDOMAIN_ENUMERATIONImpl#getSubdomain_id <em>Subdomain id</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.core.impl.SUBDOMAIN_ENUMERATIONImpl#getValid_from <em>Valid from</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.core.impl.SUBDOMAIN_ENUMERATIONImpl#getValid_to <em>Valid to</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class SUBDOMAIN_ENUMERATIONImpl extends ClassifierImpl implements SUBDOMAIN_ENUMERATION {
+public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container implements SUBDOMAIN_ENUMERATION {
 	/**
-	 * The cached value of the '{@link #getMember_ids() <em>Member ids</em>}' reference list.
+	 * The cached value of the '{@link #getMember_id() <em>Member id</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getMember_ids()
+	 * @see #getMember_id()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<MEMBER> member_ids;
+	protected MEMBER member_id;
 
 	/**
 	 * The default value of the '{@link #getOrder() <em>Order</em>}' attribute.
@@ -67,16 +62,6 @@ public class SUBDOMAIN_ENUMERATIONImpl extends ClassifierImpl implements SUBDOMA
 	 * @ordered
 	 */
 	protected int order = ORDER_EDEFAULT;
-
-	/**
-	 * The cached value of the '{@link #getSubdomain_id() <em>Subdomain id</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getSubdomain_id()
-	 * @generated
-	 * @ordered
-	 */
-	protected SUBDOMAIN subdomain_id;
 
 	/**
 	 * The default value of the '{@link #getValid_from() <em>Valid from</em>}' attribute.
@@ -143,11 +128,38 @@ public class SUBDOMAIN_ENUMERATIONImpl extends ClassifierImpl implements SUBDOMA
 	 * @generated
 	 */
 	@Override
-	public EList<MEMBER> getMember_ids() {
-		if (member_ids == null) {
-			member_ids = new EObjectResolvingEList<MEMBER>(MEMBER.class, this, CorePackage.SUBDOMAIN_ENUMERATION__MEMBER_IDS);
+	public MEMBER getMember_id() {
+		if (member_id != null && member_id.eIsProxy()) {
+			InternalEObject oldMember_id = (InternalEObject)member_id;
+			member_id = (MEMBER)eResolveProxy(oldMember_id);
+			if (member_id != oldMember_id) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, CorePackage.SUBDOMAIN_ENUMERATION__MEMBER_ID, oldMember_id, member_id));
+			}
 		}
-		return member_ids;
+		return member_id;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public MEMBER basicGetMember_id() {
+		return member_id;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setMember_id(MEMBER newMember_id) {
+		MEMBER oldMember_id = member_id;
+		member_id = newMember_id;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, CorePackage.SUBDOMAIN_ENUMERATION__MEMBER_ID, oldMember_id, member_id));
 	}
 
 	/**
@@ -171,46 +183,6 @@ public class SUBDOMAIN_ENUMERATIONImpl extends ClassifierImpl implements SUBDOMA
 		order = newOrder;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, CorePackage.SUBDOMAIN_ENUMERATION__ORDER, oldOrder, order));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public SUBDOMAIN getSubdomain_id() {
-		if (subdomain_id != null && subdomain_id.eIsProxy()) {
-			InternalEObject oldSubdomain_id = (InternalEObject)subdomain_id;
-			subdomain_id = (SUBDOMAIN)eResolveProxy(oldSubdomain_id);
-			if (subdomain_id != oldSubdomain_id) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, CorePackage.SUBDOMAIN_ENUMERATION__SUBDOMAIN_ID, oldSubdomain_id, subdomain_id));
-			}
-		}
-		return subdomain_id;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public SUBDOMAIN basicGetSubdomain_id() {
-		return subdomain_id;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setSubdomain_id(SUBDOMAIN newSubdomain_id) {
-		SUBDOMAIN oldSubdomain_id = subdomain_id;
-		subdomain_id = newSubdomain_id;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, CorePackage.SUBDOMAIN_ENUMERATION__SUBDOMAIN_ID, oldSubdomain_id, subdomain_id));
 	}
 
 	/**
@@ -267,13 +239,11 @@ public class SUBDOMAIN_ENUMERATIONImpl extends ClassifierImpl implements SUBDOMA
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case CorePackage.SUBDOMAIN_ENUMERATION__MEMBER_IDS:
-				return getMember_ids();
+			case CorePackage.SUBDOMAIN_ENUMERATION__MEMBER_ID:
+				if (resolve) return getMember_id();
+				return basicGetMember_id();
 			case CorePackage.SUBDOMAIN_ENUMERATION__ORDER:
 				return getOrder();
-			case CorePackage.SUBDOMAIN_ENUMERATION__SUBDOMAIN_ID:
-				if (resolve) return getSubdomain_id();
-				return basicGetSubdomain_id();
 			case CorePackage.SUBDOMAIN_ENUMERATION__VALID_FROM:
 				return getValid_from();
 			case CorePackage.SUBDOMAIN_ENUMERATION__VALID_TO:
@@ -287,19 +257,14 @@ public class SUBDOMAIN_ENUMERATIONImpl extends ClassifierImpl implements SUBDOMA
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case CorePackage.SUBDOMAIN_ENUMERATION__MEMBER_IDS:
-				getMember_ids().clear();
-				getMember_ids().addAll((Collection<? extends MEMBER>)newValue);
+			case CorePackage.SUBDOMAIN_ENUMERATION__MEMBER_ID:
+				setMember_id((MEMBER)newValue);
 				return;
 			case CorePackage.SUBDOMAIN_ENUMERATION__ORDER:
 				setOrder((Integer)newValue);
-				return;
-			case CorePackage.SUBDOMAIN_ENUMERATION__SUBDOMAIN_ID:
-				setSubdomain_id((SUBDOMAIN)newValue);
 				return;
 			case CorePackage.SUBDOMAIN_ENUMERATION__VALID_FROM:
 				setValid_from((Date)newValue);
@@ -319,14 +284,11 @@ public class SUBDOMAIN_ENUMERATIONImpl extends ClassifierImpl implements SUBDOMA
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case CorePackage.SUBDOMAIN_ENUMERATION__MEMBER_IDS:
-				getMember_ids().clear();
+			case CorePackage.SUBDOMAIN_ENUMERATION__MEMBER_ID:
+				setMember_id((MEMBER)null);
 				return;
 			case CorePackage.SUBDOMAIN_ENUMERATION__ORDER:
 				setOrder(ORDER_EDEFAULT);
-				return;
-			case CorePackage.SUBDOMAIN_ENUMERATION__SUBDOMAIN_ID:
-				setSubdomain_id((SUBDOMAIN)null);
 				return;
 			case CorePackage.SUBDOMAIN_ENUMERATION__VALID_FROM:
 				setValid_from(VALID_FROM_EDEFAULT);
@@ -346,12 +308,10 @@ public class SUBDOMAIN_ENUMERATIONImpl extends ClassifierImpl implements SUBDOMA
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case CorePackage.SUBDOMAIN_ENUMERATION__MEMBER_IDS:
-				return member_ids != null && !member_ids.isEmpty();
+			case CorePackage.SUBDOMAIN_ENUMERATION__MEMBER_ID:
+				return member_id != null;
 			case CorePackage.SUBDOMAIN_ENUMERATION__ORDER:
 				return order != ORDER_EDEFAULT;
-			case CorePackage.SUBDOMAIN_ENUMERATION__SUBDOMAIN_ID:
-				return subdomain_id != null;
 			case CorePackage.SUBDOMAIN_ENUMERATION__VALID_FROM:
 				return VALID_FROM_EDEFAULT == null ? valid_from != null : !VALID_FROM_EDEFAULT.equals(valid_from);
 			case CorePackage.SUBDOMAIN_ENUMERATION__VALID_TO:

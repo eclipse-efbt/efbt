@@ -30,34 +30,14 @@
         <details key="documentation" value="The Variables"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="cubes" upperBound="-1"
-        eType="#//CubeModule" containment="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The Cubes, The Cube Structures and the Cube Structure Items."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="combinations" upperBound="-1"
-        eType="#//CombinationModule" containment="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The Combinations"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="mappings" upperBound="-1"
-        eType="#//MappingDefinitionModule" containment="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The Mappings"/>
-      </eAnnotations>
-    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The name of the SMCubesModel"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="subDomainsModule" upperBound="-1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="subdomains" upperBound="-1"
         eType="#//SubDomainModule" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="subdomainEnumerationModules"
-        upperBound="-1" eType="#//SubDomainEnumerationModule" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CombinationModule" eSuperTypes="../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.ecore#//Module">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -424,9 +404,5 @@
   <eClassifiers xsi:type="ecore:EClass" name="SubDomainModule" eSuperTypes="../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.ecore#//Module">
     <eStructuralFeatures xsi:type="ecore:EReference" name="subdomains" upperBound="-1"
         eType="ecore:EClass core.ecore#//SUBDOMAIN" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SubDomainEnumerationModule" eSuperTypes="../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.ecore#//Module">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="subdomainEnumerations"
-        eType="ecore:EClass core.ecore#//SUBDOMAIN_ENUMERATION" containment="true"/>
   </eClassifiers>
 </ecore:EPackage>
