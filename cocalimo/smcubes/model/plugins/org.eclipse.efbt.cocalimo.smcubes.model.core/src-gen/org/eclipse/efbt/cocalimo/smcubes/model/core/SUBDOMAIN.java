@@ -2,7 +2,7 @@
  */
 package org.eclipse.efbt.cocalimo.smcubes.model.core;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Classifier;
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -27,7 +27,7 @@ import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Classifier;
  * @model extendedMetaData="name='SUBDOMAIN' kind='empty'"
  * @generated
  */
-public interface SUBDOMAIN extends Classifier {
+public interface SUBDOMAIN extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Code</b></em>' attribute.
 	 * <!-- begin-user-doc -->

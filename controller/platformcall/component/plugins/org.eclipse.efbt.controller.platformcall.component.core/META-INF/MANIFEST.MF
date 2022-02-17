@@ -5,8 +5,10 @@ Bundle-SymbolicName: org.eclipse.efbt.controller.platformcall.component.core
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: org.eclipse.efbt.controller.platformcall.component.core
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Require-Bundle: org.eclipse.efbt.cocalimo.core.model.platform_call;bundle-version="1.0.0",
+Require-Bundle: org.eclipse.efbt.cocalimo.platform_call.model.platform_call;bundle-version="1.0.0",
  org.eclipse.efbt.controller.smcubes.component.importexport.impl;bundle-version="1.0.0",
  org.eclipse.efbt.controller.ldm.component.sqldevconvertor;bundle-version="1.0.0",
- org.eclipse.efbt.controller.ldm.component.logical_transformations
+ org.eclipse.efbt.controller.ldm.component.logical_transformations,
+ org.eclipse.efbt.controller.data_meta_model.component.dmm_to_ecore
 Export-Package: org.eclipse.efbt.controller.platformcall.component.core
+Import-Package: org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model

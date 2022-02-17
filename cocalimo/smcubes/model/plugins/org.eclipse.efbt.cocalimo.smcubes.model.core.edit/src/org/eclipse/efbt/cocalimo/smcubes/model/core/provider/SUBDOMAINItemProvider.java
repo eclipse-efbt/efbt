@@ -8,17 +8,20 @@ import java.util.List;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.provider.ClassifierItemProvider;
-
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.common.util.ResourceLocator;
 
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
+import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
+import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
+import org.eclipse.emf.edit.provider.IItemPropertySource;
+import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
+import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
+import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
@@ -27,7 +30,7 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
  * <!-- end-user-doc -->
  * @generated
  */
-public class SUBDOMAINItemProvider extends ClassifierItemProvider {
+public class SUBDOMAINItemProvider extends ItemProviderAdapter implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier.
 	 * <!-- begin-user-doc -->
@@ -256,7 +259,7 @@ public class SUBDOMAINItemProvider extends ClassifierItemProvider {
 	 */
 	@Override
 	public String getText(Object object) {
-		String label = ((SUBDOMAIN)object).getName();
+		String label = ((SUBDOMAIN)object).getCode();
 		return label == null || label.length() == 0 ?
 			getString("_UI_SUBDOMAIN_type") :
 			getString("_UI_SUBDOMAIN_type") + " " + label;

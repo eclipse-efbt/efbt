@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel#getMappings <em>Mappings</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel#getSubDomainsModule <em>Sub Domains Module</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel#getSubdomainEnumerationModules <em>Subdomain Enumeration Modules</em>}</li>
  * </ul>
  *
  * @see org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.Cocalimo_smcubes_extensionPackage#getSmcubesModel()
@@ -160,5 +161,17 @@ public interface SmcubesModel extends EObject {
 	 * @generated
 	 */
 	EList<SubDomainModule> getSubDomainsModule();
+
+	/**
+	 * Returns the value of the '<em><b>Subdomain Enumeration Modules</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SubDomainEnumerationModule}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Subdomain Enumeration Modules</em>' containment reference list.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.Cocalimo_smcubes_extensionPackage#getSmcubesModel_SubdomainEnumerationModules()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<SubDomainEnumerationModule> getSubdomainEnumerationModules();
 
 } // SmcubesModel
