@@ -1,6 +1,8 @@
 {
   "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//EntityModule",
   "name" : "LDM_EntityModule",
+  "nsURI" : "http://www.eclipse.org/efbt/frtb",
+  "nsPrefix" : "frtb",
   "entities" : [ {
     "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
     "name" : "RiskFactor"
