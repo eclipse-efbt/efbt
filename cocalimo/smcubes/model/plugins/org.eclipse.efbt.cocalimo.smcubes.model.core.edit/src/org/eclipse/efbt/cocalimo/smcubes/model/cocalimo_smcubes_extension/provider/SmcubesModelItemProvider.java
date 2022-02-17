@@ -107,11 +107,7 @@ public class SmcubesModelItemProvider
 			childrenFeatures.add(Cocalimo_smcubes_extensionPackage.Literals.SMCUBES_MODEL__DOMAINS);
 			childrenFeatures.add(Cocalimo_smcubes_extensionPackage.Literals.SMCUBES_MODEL__MEMBERS);
 			childrenFeatures.add(Cocalimo_smcubes_extensionPackage.Literals.SMCUBES_MODEL__VARIABLES);
-			childrenFeatures.add(Cocalimo_smcubes_extensionPackage.Literals.SMCUBES_MODEL__CUBES);
-			childrenFeatures.add(Cocalimo_smcubes_extensionPackage.Literals.SMCUBES_MODEL__COMBINATIONS);
-			childrenFeatures.add(Cocalimo_smcubes_extensionPackage.Literals.SMCUBES_MODEL__MAPPINGS);
-			childrenFeatures.add(Cocalimo_smcubes_extensionPackage.Literals.SMCUBES_MODEL__SUB_DOMAINS_MODULE);
-			childrenFeatures.add(Cocalimo_smcubes_extensionPackage.Literals.SMCUBES_MODEL__SUBDOMAIN_ENUMERATION_MODULES);
+			childrenFeatures.add(Cocalimo_smcubes_extensionPackage.Literals.SMCUBES_MODEL__SUBDOMAINS);
 		}
 		return childrenFeatures;
 	}
@@ -173,11 +169,7 @@ public class SmcubesModelItemProvider
 			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__DOMAINS:
 			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__MEMBERS:
 			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__VARIABLES:
-			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__CUBES:
-			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__COMBINATIONS:
-			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__MAPPINGS:
-			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__SUB_DOMAINS_MODULE:
-			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__SUBDOMAIN_ENUMERATION_MODULES:
+			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__SUBDOMAINS:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
@@ -212,28 +204,8 @@ public class SmcubesModelItemProvider
 
 		newChildDescriptors.add
 			(createChildParameter
-				(Cocalimo_smcubes_extensionPackage.Literals.SMCUBES_MODEL__CUBES,
-				 Cocalimo_smcubes_extensionFactory.eINSTANCE.createCubeModule()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(Cocalimo_smcubes_extensionPackage.Literals.SMCUBES_MODEL__COMBINATIONS,
-				 Cocalimo_smcubes_extensionFactory.eINSTANCE.createCombinationModule()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(Cocalimo_smcubes_extensionPackage.Literals.SMCUBES_MODEL__MAPPINGS,
-				 Cocalimo_smcubes_extensionFactory.eINSTANCE.createMappingDefinitionModule()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(Cocalimo_smcubes_extensionPackage.Literals.SMCUBES_MODEL__SUB_DOMAINS_MODULE,
+				(Cocalimo_smcubes_extensionPackage.Literals.SMCUBES_MODEL__SUBDOMAINS,
 				 Cocalimo_smcubes_extensionFactory.eINSTANCE.createSubDomainModule()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(Cocalimo_smcubes_extensionPackage.Literals.SMCUBES_MODEL__SUBDOMAIN_ENUMERATION_MODULES,
-				 Cocalimo_smcubes_extensionFactory.eINSTANCE.createSubDomainEnumerationModule()));
 	}
 
 	/**

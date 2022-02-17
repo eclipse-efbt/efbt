@@ -57,7 +57,7 @@ public class DMMToEcoreConverter {
 					 boolean isDomainEnumerated = attribute.getVariable().getDomain_id().isIs_enumerated();
 					 if(isDomainEnumerated)
 					 {
-						 EEnum eenum = getEnumClassifier(epackage, (SUBDOMAIN_ENUMERATION) attribute.getClassifier());
+						 EEnum eenum = getEnumClassifier(epackage, (SUBDOMAIN) attribute.getClassifier());
 						 eAttribute.setEType(eenum);
 					 }
 					 else
@@ -120,14 +120,14 @@ public class DMMToEcoreConverter {
 		return returnValue;
 	}
 
-	private static EEnum getEnumClassifier(EPackage epackage, SUBDOMAIN_ENUMERATION subdomain_ENUMERATION) {
+	private static EEnum getEnumClassifier(EPackage epackage, SUBDOMAIN subdomain) {
 		// return Enum or create it and return it
 		EList<EClassifier> classifiers = epackage.getEClassifiers();
 		EEnum returnValue= null;
 		for (EClassifier eClassifier : classifiers) {
 			if(eClassifier instanceof EEnum)
 			{
-				if(eClassifier.getName().equals(subdomain_ENUMERATION.getName()))
+				if(eClassifier.getName().equals(subdomain.getName()))
 					returnValue = (EEnum) eClassifier;
 			}
 					
@@ -135,11 +135,13 @@ public class DMMToEcoreConverter {
 		if (returnValue == null)
 		{
 			EEnum eenum = EcoreFactory.eINSTANCE.createEEnum();
-			eenum.setName(subdomain_ENUMERATION.getSubdomain_id().getCode());
-			EList<MEMBER> members = subdomain_ENUMERATION.getMember_ids();
+			eenum.setName(subdomain.getCode());
+			EList<SUBDOMAIN_ENUMERATION> subDomainItems = subdomain.getItems();
+			// EList<MEMBER> members = subdomain_ENUMERATION.getMember_ids();
 			int counter=0;
-			for (MEMBER member : members) {
+			for (SUBDOMAIN_ENUMERATION subdomain_ENUMERATION : subDomainItems) {
 				
+				MEMBER member = subdomain_ENUMERATION.getMember_id();
 				EEnumLiteral eliteral= EcoreFactory.eINSTANCE.createEEnumLiteral();
 				counter++;
 				eliteral.setLiteral(member.getCode());

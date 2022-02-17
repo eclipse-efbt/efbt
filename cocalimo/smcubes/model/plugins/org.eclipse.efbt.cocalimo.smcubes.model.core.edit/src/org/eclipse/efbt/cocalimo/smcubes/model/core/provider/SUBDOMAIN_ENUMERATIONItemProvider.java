@@ -9,15 +9,20 @@ import java.util.List;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN_ENUMERATION;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.provider.ClassifierItemProvider;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.common.util.ResourceLocator;
 
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
+import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
+import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
+import org.eclipse.emf.edit.provider.IItemPropertySource;
+import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
+import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
+import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
@@ -27,7 +32,13 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
  * @generated
  */
 public class SUBDOMAIN_ENUMERATIONItemProvider 
-	extends ClassifierItemProvider {
+	extends ItemProviderAdapter
+	implements
+		IEditingDomainItemProvider,
+		IStructuredItemContentProvider,
+		ITreeItemContentProvider,
+		IItemLabelProvider,
+		IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier.
 	 * <!-- begin-user-doc -->
@@ -49,9 +60,8 @@ public class SUBDOMAIN_ENUMERATIONItemProvider
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addMember_idsPropertyDescriptor(object);
+			addMember_idPropertyDescriptor(object);
 			addOrderPropertyDescriptor(object);
-			addSubdomain_idPropertyDescriptor(object);
 			addValid_fromPropertyDescriptor(object);
 			addValid_toPropertyDescriptor(object);
 		}
@@ -59,19 +69,19 @@ public class SUBDOMAIN_ENUMERATIONItemProvider
 	}
 
 	/**
-	 * This adds a property descriptor for the Member ids feature.
+	 * This adds a property descriptor for the Member id feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addMember_idsPropertyDescriptor(Object object) {
+	protected void addMember_idPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_SUBDOMAIN_ENUMERATION_member_ids_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_SUBDOMAIN_ENUMERATION_member_ids_feature", "_UI_SUBDOMAIN_ENUMERATION_type"),
-				 CorePackage.Literals.SUBDOMAIN_ENUMERATION__MEMBER_IDS,
+				 getString("_UI_SUBDOMAIN_ENUMERATION_member_id_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_SUBDOMAIN_ENUMERATION_member_id_feature", "_UI_SUBDOMAIN_ENUMERATION_type"),
+				 CorePackage.Literals.SUBDOMAIN_ENUMERATION__MEMBER_ID,
 				 true,
 				 false,
 				 true,
@@ -98,28 +108,6 @@ public class SUBDOMAIN_ENUMERATIONItemProvider
 				 false,
 				 false,
 				 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Subdomain id feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addSubdomain_idPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_SUBDOMAIN_ENUMERATION_subdomain_id_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_SUBDOMAIN_ENUMERATION_subdomain_id_feature", "_UI_SUBDOMAIN_ENUMERATION_type"),
-				 CorePackage.Literals.SUBDOMAIN_ENUMERATION__SUBDOMAIN_ID,
-				 true,
-				 false,
-				 true,
-				 null,
 				 null,
 				 null));
 	}
@@ -187,10 +175,8 @@ public class SUBDOMAIN_ENUMERATIONItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		String label = ((SUBDOMAIN_ENUMERATION)object).getName();
-		return label == null || label.length() == 0 ?
-			getString("_UI_SUBDOMAIN_ENUMERATION_type") :
-			getString("_UI_SUBDOMAIN_ENUMERATION_type") + " " + label;
+		SUBDOMAIN_ENUMERATION subdomaiN_ENUMERATION = (SUBDOMAIN_ENUMERATION)object;
+		return getString("_UI_SUBDOMAIN_ENUMERATION_type") + " " + subdomaiN_ENUMERATION.getOrder();
 	}
 
 

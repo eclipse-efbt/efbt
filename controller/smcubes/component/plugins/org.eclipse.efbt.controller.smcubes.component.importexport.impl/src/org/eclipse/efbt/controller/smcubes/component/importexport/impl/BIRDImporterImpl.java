@@ -26,6 +26,8 @@ import org.eclipse.efbt.cocalimo.smcubes.model.core.CoreFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.DOMAIN;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.FACET_VALUE_TYPE;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.MEMBER;
+import org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN;
+import org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN_ENUMERATION;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.VARIABLE;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.COMBINATION;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.COMBINATION_ITEM;
@@ -385,6 +387,79 @@ public class BIRDImporterImpl extends Importer {
 	}
 
 	/**
+	 * create the SubDomain model instances from the BIRD Access Database
+	 */
+	public void createAllSubdomains() {
+
+		AccessUtils accessUtils = AccessUtilProvider.getAccessUtils();
+
+		try {
+
+			List<AccessRow> list = accessUtils.getRowsForTable(filepath, "SUBDOMAIN");
+			for (AccessRow row : list) {
+
+				SUBDOMAIN subDomain = CoreFactory.eINSTANCE.createSUBDOMAIN();
+				subDomain.setCode(row.getString("CODE"));
+				subDomain.setSubdomain_id(replaceDots(row.getString("SUBDOMAIN_ID")));
+				subDomain.setName(replaceDots(row.getString("SUBDOMAIN_ID")));
+				subDomain.setDescription(row.getString("DESCRIPTION"));
+
+				String domainIDString = (row.getString("DOMAIN_ID"));
+				DOMAIN domain = getDomainWithID(domainIDString);
+				subDomain.setDomain_id(domain);
+
+				subdomains.getSubdomains().add(subDomain);
+				
+				
+
+			}
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+
+	}
+	
+	/**
+	 * create the SubDomain model instances from the BIRD Access Database
+	 */
+	public void createAllSubdomainEnumerarions() {
+
+		AccessUtils accessUtils = AccessUtilProvider.getAccessUtils();
+
+		try {
+
+			List<AccessRow> list = accessUtils.getRowsForTable(filepath, "SUBDOMAIN_ENUMERATION");
+			for (AccessRow row : list) {
+
+				String subdomainIDString = row.getString("SUBDOMAIN_ID");
+				SUBDOMAIN subdomain = getSubdomainWithID(subdomainIDString);
+				String memberID =row.getString("MEMBER_ID");
+				DOMAIN domain= subdomain.getDomain_id();
+				MEMBER member= getMemberWithIDAndDomain(memberID, domain);
+				
+				SUBDOMAIN_ENUMERATION subDomainEnum = CoreFactory.eINSTANCE.createSUBDOMAIN_ENUMERATION();
+				subDomainEnum.setMember_id(member);
+				try
+				{
+					subDomainEnum.setOrder(Integer.parseInt(row.getString("ORDER")));
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+				subdomain.getItems().add(subDomainEnum);
+				
+
+			}
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+
+	}
+	
+	/**
 	 * create the MEMBER model instances from the BIRD Access Database
 	 */
 	public void createAllMembers() {
@@ -432,6 +507,41 @@ public class BIRDImporterImpl extends Importer {
 				returnDomain = dom;
 		}
 		return returnDomain;
+	}
+	
+	/**
+	 * get the SUBDOMAIN instance which corresponds to the String ID of the DOMAIN
+	 * 
+	 * @param subDomainIDString
+	 * @return
+	 */
+	private SUBDOMAIN getSubdomainWithID(String subDomainIDString) {
+
+		EList<SUBDOMAIN> subdomainList = subdomains.getSubdomains();
+		SUBDOMAIN returnSubDomain = null;
+		for (Iterator iterator = subdomainList.iterator(); iterator.hasNext();) {
+			SUBDOMAIN subdom = (SUBDOMAIN) iterator.next();
+			if (subDomainIDString.equals(subdom.getSubdomain_id()))
+				returnSubDomain = subdom;
+		}
+		return returnSubDomain;
+	}
+	/**
+	 * get the MEMBER instance which corresponds to the member ID in a DOMAIN
+	 * 
+	 * @param subDomainIDString
+	 * @return
+	 */
+	private MEMBER getMemberWithIDAndDomain(String memberID, DOMAIN domain) {
+
+		EList<MEMBER> memberList = members.getMembers();
+		MEMBER returnMember = null;
+		for (Iterator iterator = memberList.iterator(); iterator.hasNext();) {
+			MEMBER member = (MEMBER) iterator.next();
+			if ((memberID.equals(member.getMember_id()) && (member.getDomain_id().equals(domain))  ))
+					returnMember = member;
+		}
+		return returnMember;
 	}
 
 	/**
@@ -577,7 +687,7 @@ public class BIRDImporterImpl extends Importer {
 				if (counter == 0) {
 					combinationsModule = Cocalimo_smcubes_extensionFactory.eINSTANCE.createCombinationModule();
 					combinationsModules.add(combinationsModule);
-					birdModel.getCombinations().add(combinationsModule);
+					//birdModel.getCombinations().add(combinationsModule);
 				}
 
 				counter++;
@@ -1182,4 +1292,5 @@ public class BIRDImporterImpl extends Importer {
 
 	}
 
+	
 }

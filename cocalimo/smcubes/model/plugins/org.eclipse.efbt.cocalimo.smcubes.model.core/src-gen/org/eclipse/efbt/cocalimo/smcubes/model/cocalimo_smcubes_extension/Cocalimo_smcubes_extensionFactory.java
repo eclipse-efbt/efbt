@@ -202,15 +202,6 @@ public interface Cocalimo_smcubes_extensionFactory extends EFactory {
 	SubDomainModule createSubDomainModule();
 
 	/**
-	 * Returns a new object of class '<em>Sub Domain Enumeration Module</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Sub Domain Enumeration Module</em>'.
-	 * @generated
-	 */
-	SubDomainEnumerationModule createSubDomainEnumerationModule();
-
-	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

@@ -1,0 +1,9 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/platform_call#//PlatformCallModule",
+  "platformCalls" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/platform_call#//ImportBIRDFromMSAccess",
+    "name" : "import",
+    "inputDirectory" : "C:\\\\Users\\\\Neil\\\\BIRD_LDM_SDD\\\\BIRD_SDD.accdb",
+    "outputDirectory" : "C:\\\\Users\\\\Neil\\\\freebirdtools-develop\\\\runtime-efbt\\\\org.eclipse.efbt.example.ldm\\\\src\\\\"
+  } ]
+}

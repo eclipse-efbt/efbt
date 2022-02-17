@@ -961,6 +961,16 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * @generated
 	 */
 	@Override
+	public EReference getSUBDOMAIN_Items() {
+		return (EReference)subdomainEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getSUBDOMAIN_ENUMERATION() {
 		return subdomaiN_ENUMERATIONEClass;
 	}
@@ -971,7 +981,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getSUBDOMAIN_ENUMERATION_Member_ids() {
+	public EReference getSUBDOMAIN_ENUMERATION_Member_id() {
 		return (EReference)subdomaiN_ENUMERATIONEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -991,18 +1001,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getSUBDOMAIN_ENUMERATION_Subdomain_id() {
-		return (EReference)subdomaiN_ENUMERATIONEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EAttribute getSUBDOMAIN_ENUMERATION_Valid_from() {
-		return (EAttribute)subdomaiN_ENUMERATIONEClass.getEStructuralFeatures().get(3);
+		return (EAttribute)subdomaiN_ENUMERATIONEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -1012,7 +1012,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 */
 	@Override
 	public EAttribute getSUBDOMAIN_ENUMERATION_Valid_to() {
-		return (EAttribute)subdomaiN_ENUMERATIONEClass.getEStructuralFeatures().get(4);
+		return (EAttribute)subdomaiN_ENUMERATIONEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -1374,11 +1374,11 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		createEAttribute(subdomainEClass, SUBDOMAIN__IS_NATURAL);
 		createEReference(subdomainEClass, SUBDOMAIN__MAINTENANCE_AGENCY_ID);
 		createEAttribute(subdomainEClass, SUBDOMAIN__SUBDOMAIN_ID);
+		createEReference(subdomainEClass, SUBDOMAIN__ITEMS);
 
 		subdomaiN_ENUMERATIONEClass = createEClass(SUBDOMAIN_ENUMERATION);
-		createEReference(subdomaiN_ENUMERATIONEClass, SUBDOMAIN_ENUMERATION__MEMBER_IDS);
+		createEReference(subdomaiN_ENUMERATIONEClass, SUBDOMAIN_ENUMERATION__MEMBER_ID);
 		createEAttribute(subdomaiN_ENUMERATIONEClass, SUBDOMAIN_ENUMERATION__ORDER);
-		createEReference(subdomaiN_ENUMERATIONEClass, SUBDOMAIN_ENUMERATION__SUBDOMAIN_ID);
 		createEAttribute(subdomaiN_ENUMERATIONEClass, SUBDOMAIN_ENUMERATION__VALID_FROM);
 		createEAttribute(subdomaiN_ENUMERATIONEClass, SUBDOMAIN_ENUMERATION__VALID_TO);
 
@@ -1446,7 +1446,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		// Set bounds for type parameters
 
 		// Add supertypes to classes
-		subdomaiN_ENUMERATIONEClass.getESuperTypes().add(theData_meta_modelPackage.getClassifier());
+		subdomainEClass.getESuperTypes().add(theData_meta_modelPackage.getClassifier());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(domainEClass, org.eclipse.efbt.cocalimo.smcubes.model.core.DOMAIN.class, "DOMAIN", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1529,11 +1529,11 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		initEAttribute(getSUBDOMAIN_Is_natural(), ecorePackage.getEBoolean(), "is_natural", null, 0, 1, org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSUBDOMAIN_Maintenance_agency_id(), this.getMAINTENANCE_AGENCY(), null, "maintenance_agency_id", null, 0, 1, org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSUBDOMAIN_Subdomain_id(), ecorePackage.getEString(), "subdomain_id", null, 0, 1, org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSUBDOMAIN_Items(), this.getSUBDOMAIN_ENUMERATION(), null, "items", null, 0, -1, org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(subdomaiN_ENUMERATIONEClass, org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN_ENUMERATION.class, "SUBDOMAIN_ENUMERATION", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getSUBDOMAIN_ENUMERATION_Member_ids(), this.getMEMBER(), null, "member_ids", null, 0, -1, org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN_ENUMERATION.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSUBDOMAIN_ENUMERATION_Member_id(), this.getMEMBER(), null, "member_id", null, 0, 1, org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN_ENUMERATION.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSUBDOMAIN_ENUMERATION_Order(), ecorePackage.getEInt(), "order", null, 0, 1, org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN_ENUMERATION.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getSUBDOMAIN_ENUMERATION_Subdomain_id(), this.getSUBDOMAIN(), null, "subdomain_id", null, 0, 1, org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN_ENUMERATION.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSUBDOMAIN_ENUMERATION_Valid_from(), ecorePackage.getEDate(), "valid_from", null, 0, 1, org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN_ENUMERATION.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSUBDOMAIN_ENUMERATION_Valid_to(), ecorePackage.getEDate(), "valid_to", null, 0, 1, org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN_ENUMERATION.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -2110,14 +2110,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 			   "name", "subdomain_id"
 		   });
 		addAnnotation
-		  (subdomaiN_ENUMERATIONEClass,
-		   source,
-		   new String[] {
-			   "name", "SUBDOMAIN_ENUMERATION",
-			   "kind", "empty"
-		   });
-		addAnnotation
-		  (getSUBDOMAIN_ENUMERATION_Member_ids(),
+		  (getSUBDOMAIN_ENUMERATION_Member_id(),
 		   source,
 		   new String[] {
 			   "kind", "attribute",
@@ -2129,13 +2122,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		   new String[] {
 			   "kind", "attribute",
 			   "name", "order"
-		   });
-		addAnnotation
-		  (getSUBDOMAIN_ENUMERATION_Subdomain_id(),
-		   source,
-		   new String[] {
-			   "kind", "attribute",
-			   "name", "subdomain_id"
 		   });
 		addAnnotation
 		  (getSUBDOMAIN_ENUMERATION_Valid_from(),

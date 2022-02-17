@@ -33,6 +33,7 @@ import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.Mappin
 import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.MemberMappingModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.VariableMappingModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel;
+import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SubDomainModule;
 import org.eclipse.efbt.controller.smcubes.component.importexport.api.BirdImporter;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.URI;
@@ -71,7 +72,11 @@ public abstract class Importer implements BirdImporter {
 	 */
 	protected MemberModule members;
 	/**
-	 * The combinationsModules
+	 * The subdomains
+	 */
+	protected SubDomainModule subdomains;
+	/**
+	 * The subdomain enumerations
 	 */
 	protected List<CombinationModule> combinationsModules;
 	/**
@@ -135,6 +140,8 @@ public abstract class Importer implements BirdImporter {
 		variables.setName("variablesModule");
 		members = Cocalimo_smcubes_extensionFactory.eINSTANCE.createMemberModule();
 		members.setName("membersModule");
+		subdomains = Cocalimo_smcubes_extensionFactory.eINSTANCE.createSubDomainModule();
+		subdomains.setName("subdomainsModule");
 
 		cubesModule = Cocalimo_smcubes_extensionFactory.eINSTANCE.createCubeModule();
 		cubesModule.setName("cubesModule");
@@ -150,14 +157,14 @@ public abstract class Importer implements BirdImporter {
 
 		birdModel = Cocalimo_smcubes_extensionFactory.eINSTANCE.createSmcubesModel();
 		// birdModel.setCombinations(combinationModule);
-		birdModel.getCubes().add(cubesModule);
-		birdModel.getCubes().add(cubeStructuresModule);
-		birdModel.getCubes().add(cubeStructureItemsModule);
+		//birdModel.getCubes().add(cubesModule);
+		//birdModel.getCubes().add(cubeStructuresModule);
+		//birdModel.getCubes().add(cubeStructureItemsModule);
 		
-		birdModel.getDomains().add(domains);
-		birdModel.getMappings().add(mappingDefinitionModule);
-		birdModel.getMembers().add(members);
-		birdModel.getVariables().add(variables);
+		//birdModel.getDomains().add(domains);
+		//birdModel.getMappings().add(mappingDefinitionModule);
+		//birdModel.getMembers().add(members);
+		//birdModel.getVariables().add(variables);
 		
 		ModuleDependencies dependencies = Module_managementFactory.eINSTANCE.createModuleDependencies();
 		
@@ -195,6 +202,16 @@ public abstract class Importer implements BirdImporter {
 	 * Create all the Members EObjects
 	 */
 	public abstract void createAllMembers();
+	
+	/**
+	 * Create all the Subdomain EObjects
+	 */
+	public abstract void createAllSubdomains();
+	
+	/**
+	 * Create all the Subdomain Enumeration EObjects
+	 */
+	public abstract void createAllSubdomainEnumerarions();
 
 
 	/**
@@ -217,8 +234,10 @@ public abstract class Importer implements BirdImporter {
 		createAllDomains();  
 		createAllMembers();
 		createAllVariables();
-		createAllCubes();	
-		createAllCombinations();		
+		createAllSubdomains();
+		createAllSubdomainEnumerarions();
+		//createAllCubes();	
+		//createAllCombinations();		
 	
 		
 		
@@ -233,9 +252,11 @@ public abstract class Importer implements BirdImporter {
 		URI domainsURI = URI.createFileURI(outputFilepath + "domains.cocalimo_smcubes_extension");
 		URI membersURI = URI.createFileURI(outputFilepath + "members.cocalimo_smcubes_extension");
 		URI variablesURI = URI.createFileURI(outputFilepath + "variables.cocalimo_smcubes_extension");
-		URI cubesURI = URI.createFileURI(outputFilepath + "cubes.cocalimo_smcubes_extension");
-		URI cubestructuresURI = URI.createFileURI(outputFilepath + "cube_structures.cocalimo_smcubes_extension");
-		URI cubestructureitemsURI = URI.createFileURI(outputFilepath + "cube_structure_items.cocalimo_smcubes_extension");
+		URI subdomainsURI = URI.createFileURI(outputFilepath + "subdomains.cocalimo_smcubes_extension");
+		
+		//URI cubesURI = URI.createFileURI(outputFilepath + "cubes.cocalimo_smcubes_extension");
+		//URI cubestructuresURI = URI.createFileURI(outputFilepath + "cube_structures.cocalimo_smcubes_extension");
+		//URI cubestructureitemsURI = URI.createFileURI(outputFilepath + "cube_structure_items.cocalimo_smcubes_extension");
 		// URI transformationsURI = URI.createFileURI(outputFilepath +
 		// "transformations.efbt_vtl_transformation");
 
@@ -253,9 +274,10 @@ public abstract class Importer implements BirdImporter {
 		Resource domainsResource = factory.createResource(domainsURI);
 		Resource membersResource = factory.createResource(membersURI);
 		Resource variablesResource = factory.createResource(variablesURI);
-		Resource cubesResource = factory.createResource(cubesURI);
-		Resource cubestructuresResource = factory.createResource(cubestructuresURI);
-		Resource cubestructureitemsResource = factory.createResource(cubestructureitemsURI);
+		Resource subdomainsResource = factory.createResource(subdomainsURI);
+		//Resource cubesResource = factory.createResource(cubesURI);
+		//Resource cubestructuresResource = factory.createResource(cubestructuresURI);
+		//Resource cubestructureitemsResource = factory.createResource(cubestructureitemsURI);
 		// Resource transformationsResource =
 		// factory.createResource(transformationsURI);
 
@@ -271,9 +293,11 @@ public abstract class Importer implements BirdImporter {
 		domainsResource.getContents().add(domains);
 		membersResource.getContents().add(members);
 		variablesResource.getContents().add(variables);
-		cubesResource.getContents().add(cubesModule);
-		cubestructuresResource.getContents().add(cubeStructuresModule);
-		cubestructureitemsResource.getContents().add(cubeStructureItemsModule);
+		subdomainsResource.getContents().add(subdomains);
+		
+		//cubesResource.getContents().add(cubesModule);
+		//cubestructuresResource.getContents().add(cubeStructuresModule);
+		//cubestructureitemsResource.getContents().add(cubeStructureItemsModule);
 		// cubeMappingResource.getContents().add(cubeMappingModule);
 		// mappingDefinitionResource.getContents().add(mappingDefinitionModule);
 		// memberMappingResource.getContents().add(memberMappingModule);
@@ -285,9 +309,10 @@ public abstract class Importer implements BirdImporter {
 			domainsResource.save(Collections.EMPTY_MAP);
 			membersResource.save(Collections.EMPTY_MAP);
 			variablesResource.save(Collections.EMPTY_MAP);
-			cubesResource.save(Collections.EMPTY_MAP);
-			cubestructuresResource.save(Collections.EMPTY_MAP);
-			cubestructureitemsResource.save(Collections.EMPTY_MAP);			
+			subdomainsResource.save(Collections.EMPTY_MAP);
+			//cubesResource.save(Collections.EMPTY_MAP);
+			//cubestructuresResource.save(Collections.EMPTY_MAP);
+			//cubestructureitemsResource.save(Collections.EMPTY_MAP);			
 			// cubeMappingResource.save(Collections.EMPTY_MAP);
 			// mappingDefinitionResource.save(Collections.EMPTY_MAP);
 			// memberMappingResource.save(Collections.EMPTY_MAP);
@@ -304,7 +329,7 @@ public abstract class Importer implements BirdImporter {
 		}
 		int counter = 0;
 
-		for (Iterator iterator = combinationsModules.iterator(); iterator.hasNext();) {
+		/**for (Iterator iterator = combinationsModules.iterator(); iterator.hasNext();) {
 			CombinationModule combinationModule = (CombinationModule) iterator.next();
 			URI combinationsURI = URI
 					.createFileURI(outputFilepath + "\\combinations\\combinations" + counter + ".cocalimo_smcubes_extension");
@@ -318,7 +343,7 @@ public abstract class Importer implements BirdImporter {
 				e.printStackTrace();
 			}
 
-		}
+		}*/
 
 	}
 	

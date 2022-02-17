@@ -89,4 +89,11 @@
             genModel="model/smcubes.genmodel"/>
    </extension>
 
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated smcubes -->
+      <parser
+            type="data_meta_model"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.util.Data_meta_modelResourceFactoryImpl"/>
+   </extension>
+
 </plugin>
