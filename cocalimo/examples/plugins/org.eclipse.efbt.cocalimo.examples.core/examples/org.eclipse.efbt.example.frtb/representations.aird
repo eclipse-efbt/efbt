@@ -1,2 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" uid="_jB3VMJAOEeyYCPeRWuFwKg" version="14.5.1.202106111100"/>
+<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" xsi:schemaLocation="http://www.eclipse.org/sirius/description/1.1.0 http://www.eclipse.org/sirius/1.1.0#//description" uid="_jB3VMJAOEeyYCPeRWuFwKg" selectedViews="_fYTvYJAgEeyOkr9jiFo6aw" version="14.5.1.202106111100">
+  <semanticResources>ldm/ldm.data_meta_model</semanticResources>
+  <semanticResources>sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension</semanticResources>
+  <semanticResources>sdd/FRTBSourceDomains.cocalimo_smcubes_extension</semanticResources>
+  <semanticResources>sdd/FRTBSourceDomainMembers.cocalimo_smcubes_extension</semanticResources>
+  <semanticResources>sdd/FRTBSourceDimensions.cocalimo_smcubes_extension</semanticResources>
+  <semanticResources>sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension</semanticResources>
+  <semanticResources>platform_calls/generateCalsses.platform_call</semanticResources>
+  <semanticResources>requirements/CRR2.requirements_text</semanticResources>
+  <semanticResources>sdd/FRTBDerivedDimensions.cocalimo_smcubes_extension</semanticResources>
+  <semanticResources>sdd/FRTBDerivedDomain.cocalimo_smcubes_extension</semanticResources>
+  <semanticResources>sdd/FRTBDerivedDomainMembers.cocalimo_smcubes_extension</semanticResources>
+  <semanticResources>sdd/FRTBDerivedIdentifiers.cocalimo_smcubes_extension</semanticResources>
+  <semanticResources>sdd/FRTBDerivedSubDomains.cocalimo_smcubes_extension</semanticResources>
+  <semanticResources>sdd/FRTBSourceMeasures.cocalimo_smcubes_extension</semanticResources>
+  <ownedViews xmi:type="viewpoint:DView" uid="_fYTvYJAgEeyOkr9jiFo6aw">
+    <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.efbt.cocalimo.platform_call.ui.sirius.core/description/controller.odesign#//@ownedViewpoints[name='Modules']"/>
+  </ownedViews>
+</viewpoint:DAnalysis>

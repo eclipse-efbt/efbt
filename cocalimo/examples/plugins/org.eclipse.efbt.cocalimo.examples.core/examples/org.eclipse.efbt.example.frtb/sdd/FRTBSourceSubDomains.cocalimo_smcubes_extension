@@ -85,5 +85,58 @@
       "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#String"
     },
     "subdomain_id" : "String"
+  }, {
+    "name" : "ratingsGrade",
+    "code" : "ratingsGrade",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#ratingsGrade"
+    },
+    "subdomain_id" : "ratingsGrade",
+    "items" : [ {
+      "member_id" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
+        "$ref" : "FRTBSourceDomainMembers.cocalimo_smcubes_extension#SENIOR_IG"
+      }
+    }, {
+      "member_id" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
+        "$ref" : "FRTBSourceDomainMembers.cocalimo_smcubes_extension#NON_SENIOR_IG"
+      },
+      "order" : 1
+    }, {
+      "member_id" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
+        "$ref" : "FRTBSourceDomainMembers.cocalimo_smcubes_extension#HIGH_YIELD"
+      },
+      "order" : 2
+    }, {
+      "member_id" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
+        "$ref" : "FRTBSourceDomainMembers.cocalimo_smcubes_extension#NON_RATED"
+      },
+      "order" : 3
+    } ]
+  }, {
+    "name" : "equityFactorType",
+    "code" : "equityFactorType",
+    "description" : "equityFactorType",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#equityFactorType"
+    },
+    "subdomain_id" : "equityFactorType",
+    "items" : [ {
+      "member_id" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
+        "$ref" : "FRTBSourceDomainMembers.cocalimo_smcubes_extension#Repo"
+      }
+    }, {
+      "member_id" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
+        "$ref" : "FRTBSourceDomainMembers.cocalimo_smcubes_extension#Spot"
+      },
+      "order" : 1
+    } ]
   } ]
 }
