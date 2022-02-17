@@ -10,7 +10,7 @@
  * Contributors:
  *    Neil Mackenzie - initial API and implementation
  *******************************************************************************/
-package org.eclipse.efbt.controller.platformcall.ui.sirius.core;
+package org.eclipse.efbt.cocalimo.platform_call.ui.sirius.core;
 
 
 import org.eclipse.efbt.controller.platformcall.component.core.Controller;

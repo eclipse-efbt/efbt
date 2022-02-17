@@ -46,6 +46,6 @@
         </edgeMappings>
       </defaultLayer>
     </ownedRepresentations>
-    <ownedJavaExtensions qualifiedClassName="org.eclipse.efbt.controller.platformcall.ui.sirius.core.Services"/>
+    <ownedJavaExtensions qualifiedClassName="org.eclipse.efbt.cocalimo.platform_call.ui.sirius.core.Services"/>
   </ownedViewpoints>
 </description:Group>

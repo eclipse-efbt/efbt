@@ -84,7 +84,7 @@ public class DMMToEcoreConverter {
 				if(superClass != null)
 				{
 					EClass eclass = getEClassForEntity(epackage,entity);
-					EClass eSuperclass = getEClassForEntity(epackage,entity);
+					EClass eSuperclass = getEClassForEntity(epackage,superClass);
 					eclass.getESuperTypes().add(eSuperclass);
 				}
 			}
