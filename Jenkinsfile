@@ -49,7 +49,7 @@ pipeline {
                     cd ../../..
                     cd cocalimo/platform_call/ui_sirius
 					mvn install
-					cd ../../.
+					cd ../../..
                     cd installations/complete_repo/
                     mvn install
                     cd ../..
