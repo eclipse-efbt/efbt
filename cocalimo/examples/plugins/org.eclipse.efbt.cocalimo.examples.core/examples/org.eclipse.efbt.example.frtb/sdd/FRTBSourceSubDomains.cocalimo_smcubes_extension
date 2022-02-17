@@ -1,0 +1,89 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/cocalimo_smcubes_extension#//SubDomainModule",
+  "name" : "FRTBSourceSubDomains",
+  "subdomains" : [ {
+    "name" : "commodityType",
+    "code" : "commodityType",
+    "description" : "commodityType",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#commodityType"
+    },
+    "subdomain_id" : "commodityType",
+    "items" : [ {
+      "member_id" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
+        "$ref" : "FRTBSourceDomainMembers.cocalimo_smcubes_extension#ENERGY_ELECTRICITY_AND_CARBON_TRADING"
+      }
+    }, {
+      "member_id" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
+        "$ref" : "FRTBSourceDomainMembers.cocalimo_smcubes_extension#ENERGY_LIQUID_COMBUSTABLES"
+      },
+      "order" : 1
+    }, {
+      "member_id" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
+        "$ref" : "FRTBSourceDomainMembers.cocalimo_smcubes_extension#ENERGY_SOLID_COMBUSTABLES"
+      },
+      "order" : 2
+    }, {
+      "member_id" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
+        "$ref" : "FRTBSourceDomainMembers.cocalimo_smcubes_extension#FREIGHT"
+      },
+      "order" : 3
+    }, {
+      "member_id" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
+        "$ref" : "FRTBSourceDomainMembers.cocalimo_smcubes_extension#METALS_NON_PRECIOUS"
+      },
+      "order" : 4
+    }, {
+      "member_id" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
+        "$ref" : "FRTBSourceDomainMembers.cocalimo_smcubes_extension#GASEOUS_COMBUSTABLES"
+      },
+      "order" : 5
+    }, {
+      "member_id" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
+        "$ref" : "FRTBSourceDomainMembers.cocalimo_smcubes_extension#PRECIOUS_METALS"
+      },
+      "order" : 6
+    }, {
+      "member_id" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
+        "$ref" : "FRTBSourceDomainMembers.cocalimo_smcubes_extension#GRAINS_AND_OILSEED"
+      },
+      "order" : 7
+    }, {
+      "member_id" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
+        "$ref" : "FRTBSourceDomainMembers.cocalimo_smcubes_extension#LIVESTOCK_AND_DAIRY"
+      },
+      "order" : 8
+    }, {
+      "member_id" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
+        "$ref" : "FRTBSourceDomainMembers.cocalimo_smcubes_extension#SOFTS_AND_OTHER_AGRICULTURALS"
+      },
+      "order" : 9
+    }, {
+      "member_id" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
+        "$ref" : "FRTBSourceDomainMembers.cocalimo_smcubes_extension#OTHER_COMMODITY"
+      },
+      "order" : 10
+    } ]
+  }, {
+    "name" : "String",
+    "code" : "String",
+    "description" : "String",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#String"
+    },
+    "subdomain_id" : "String"
+  } ]
+}
