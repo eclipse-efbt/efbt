@@ -1,0 +1,38 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//EntityModule",
+  "name" : "LDM_EntityModule",
+  "nsURI" : "http://www.eclipse.org/efbt/frtb",
+  "nsPrefix" : "frtb",
+  "entities" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+    "name" : "RiskFactor"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+    "name" : "CommodityRiskFactor",
+    "attributes" : [ {
+      "name" : "commodityType",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#commodityType"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#commodityType"
+      }
+    }, {
+      "name" : "deliveryLocation",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#deliveryLocation"
+      }
+    } ],
+    "superClass" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+      "$ref" : "//@entities.0"
+    }
+  } ]
+}

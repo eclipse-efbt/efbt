@@ -33,6 +33,7 @@
         <example wizardID="org.eclipse.efbt.wizard.EFBTExampleWizard" pageImage="icons/EObject.gif">
             <projectDescriptor name="org.eclipse.efbt.example.logical_transformations" contentURI="examples/org.eclipse.efbt.example.logical_transformations/" description="Logical Transformations Example"/>
             <projectDescriptor name="org.eclipse.efbt.example.ldm" contentURI="examples/org.eclipse.efbt.example.ldm/" description="LDM Example"/>
+            <projectDescriptor name="org.eclipse.efbt.example.frtb" contentURI="examples/org.eclipse.efbt.example.frtb/" description="FRTB Example"/>
         </example>
     </extension>
 </plugin>

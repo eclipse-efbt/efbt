@@ -147,8 +147,10 @@ public class DMMToEcoreConverter {
 				eliteral.setLiteral(member.getCode());
 				eliteral.setName(member.getCode());
 				eliteral.setValue(counter);
+				eenum.getELiterals().add(eliteral);
 
 			}
+			epackage.getEClassifiers().add(eenum);
 			returnValue = eenum;
 		}
 		return returnValue;
@@ -159,7 +161,7 @@ public class DMMToEcoreConverter {
 		if (facetValueType == FACET_VALUE_TYPE.BIG_INTEGER )
 			returnType = ((EcorePackageImpl)(((EPackageImpl) epackage).eClass().getEPackage())).getEBigInteger();
 		if (facetValueType == FACET_VALUE_TYPE.STRING )
-			returnType =  ((EcorePackageImpl) epackage).getEString();
+			returnType =  ((EcorePackageImpl)(((EPackageImpl) epackage).eClass().getEPackage())).getEString();
 		
 		return returnType;
 		
