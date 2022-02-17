@@ -17,6 +17,9 @@ pipeline {
                     cd cocalimo/smcubes/model
                     mvn install
                     cd ../../..
+                    cd cocalimo/platform_call/model
+					mvn install
+					cd ../../..
                     cd cocalimo/smcubes/modelquery
                     mvn install
                     cd ../../..
@@ -29,6 +32,9 @@ pipeline {
                     cd controller/ldm
                     mvn install
                     cd ../..
+                    cd controller/data_meta_model
+					mvn install
+					cd ../..
                     cd controller/smcubes/access_dependencies_external
                     mvn install
                     cd ../../..
@@ -41,9 +47,9 @@ pipeline {
                     cd controller/platformcall/component
                     mvn install
                     cd ../../..
-                    cd controller/platformcall/ui_sirius
-                    mvn install
-                    cd ../../..
+                    cd cocalimo/platform_call/ui_sirius
+					mvn install
+					cd ../../.
                     cd installations/complete_repo/
                     mvn install
                     cd ../..
