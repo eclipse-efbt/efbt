@@ -5,7 +5,9 @@ package org.eclipse.efbt.cocalimo.smcubes.model.mapping.impl;
 import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.Cocalimo_smcubes_extensionPackage;
+
 import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.impl.Cocalimo_smcubes_extensionPackageImpl;
+
 import org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.core.impl.CorePackageImpl;
@@ -13,12 +15,18 @@ import org.eclipse.efbt.cocalimo.smcubes.model.core.impl.CorePackageImpl;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.Data_definitionPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.impl.Data_definitionPackageImpl;
+
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage;
+
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl;
+
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MappingFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MappingPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.rendering.RenderingPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.rendering.impl.RenderingPackageImpl;
+
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
@@ -148,6 +156,8 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage {
 		RenderingPackageImpl theRenderingPackage = (RenderingPackageImpl)(registeredPackage instanceof RenderingPackageImpl ? registeredPackage : RenderingPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Cocalimo_smcubes_extensionPackage.eNS_URI);
 		Cocalimo_smcubes_extensionPackageImpl theCocalimo_smcubes_extensionPackage = (Cocalimo_smcubes_extensionPackageImpl)(registeredPackage instanceof Cocalimo_smcubes_extensionPackageImpl ? registeredPackage : Cocalimo_smcubes_extensionPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Data_meta_modelPackage.eNS_URI);
+		Data_meta_modelPackageImpl theData_meta_modelPackage = (Data_meta_modelPackageImpl)(registeredPackage instanceof Data_meta_modelPackageImpl ? registeredPackage : Data_meta_modelPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theMappingPackage.createPackageContents();
@@ -155,6 +165,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage {
 		theData_definitionPackage.createPackageContents();
 		theRenderingPackage.createPackageContents();
 		theCocalimo_smcubes_extensionPackage.createPackageContents();
+		theData_meta_modelPackage.createPackageContents();
 
 		// Initialize created meta-data
 		theMappingPackage.initializePackageContents();
@@ -162,6 +173,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage {
 		theData_definitionPackage.initializePackageContents();
 		theRenderingPackage.initializePackageContents();
 		theCocalimo_smcubes_extensionPackage.initializePackageContents();
+		theData_meta_modelPackage.initializePackageContents();
 
 		// Mark meta-data to indicate it can't be changed
 		theMappingPackage.freeze();

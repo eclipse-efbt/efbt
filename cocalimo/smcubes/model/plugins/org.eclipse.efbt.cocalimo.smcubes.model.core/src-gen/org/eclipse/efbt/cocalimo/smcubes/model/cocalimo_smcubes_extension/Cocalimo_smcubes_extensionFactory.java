@@ -193,6 +193,15 @@ public interface Cocalimo_smcubes_extensionFactory extends EFactory {
 	TableCellModule createTableCellModule();
 
 	/**
+	 * Returns a new object of class '<em>Sub Domain Module</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Sub Domain Module</em>'.
+	 * @generated
+	 */
+	SubDomainModule createSubDomainModule();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

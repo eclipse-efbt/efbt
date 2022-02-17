@@ -2,6 +2,8 @@
  */
 package org.eclipse.efbt.cocalimo.smcubes.model.core;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage;
+
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -792,13 +794,22 @@ public interface CorePackage extends EPackage {
 	int SUBDOMAIN = 8;
 
 	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SUBDOMAIN__NAME = Data_meta_modelPackage.CLASSIFIER__NAME;
+
+	/**
 	 * The feature id for the '<em><b>Code</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SUBDOMAIN__CODE = 0;
+	int SUBDOMAIN__CODE = Data_meta_modelPackage.CLASSIFIER_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute.
@@ -807,7 +818,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SUBDOMAIN__DESCRIPTION = 1;
+	int SUBDOMAIN__DESCRIPTION = Data_meta_modelPackage.CLASSIFIER_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Domain id</b></em>' reference.
@@ -816,7 +827,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SUBDOMAIN__DOMAIN_ID = 2;
+	int SUBDOMAIN__DOMAIN_ID = Data_meta_modelPackage.CLASSIFIER_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Facet id</b></em>' reference.
@@ -825,7 +836,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SUBDOMAIN__FACET_ID = 3;
+	int SUBDOMAIN__FACET_ID = Data_meta_modelPackage.CLASSIFIER_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Is listed</b></em>' attribute.
@@ -834,7 +845,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SUBDOMAIN__IS_LISTED = 4;
+	int SUBDOMAIN__IS_LISTED = Data_meta_modelPackage.CLASSIFIER_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Is natural</b></em>' attribute.
@@ -843,7 +854,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SUBDOMAIN__IS_NATURAL = 5;
+	int SUBDOMAIN__IS_NATURAL = Data_meta_modelPackage.CLASSIFIER_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Maintenance agency id</b></em>' reference.
@@ -852,16 +863,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SUBDOMAIN__MAINTENANCE_AGENCY_ID = 6;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SUBDOMAIN__NAME = 7;
+	int SUBDOMAIN__MAINTENANCE_AGENCY_ID = Data_meta_modelPackage.CLASSIFIER_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Subdomain id</b></em>' attribute.
@@ -870,7 +872,16 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SUBDOMAIN__SUBDOMAIN_ID = 8;
+	int SUBDOMAIN__SUBDOMAIN_ID = Data_meta_modelPackage.CLASSIFIER_FEATURE_COUNT + 7;
+
+	/**
+	 * The feature id for the '<em><b>Items</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SUBDOMAIN__ITEMS = Data_meta_modelPackage.CLASSIFIER_FEATURE_COUNT + 8;
 
 	/**
 	 * The number of structural features of the '<em>SUBDOMAIN</em>' class.
@@ -879,7 +890,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SUBDOMAIN_FEATURE_COUNT = 9;
+	int SUBDOMAIN_FEATURE_COUNT = Data_meta_modelPackage.CLASSIFIER_FEATURE_COUNT + 9;
 
 	/**
 	 * The number of operations of the '<em>SUBDOMAIN</em>' class.
@@ -888,7 +899,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SUBDOMAIN_OPERATION_COUNT = 0;
+	int SUBDOMAIN_OPERATION_COUNT = Data_meta_modelPackage.CLASSIFIER_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.core.impl.SUBDOMAIN_ENUMERATIONImpl <em>SUBDOMAIN ENUMERATION</em>}' class.
@@ -919,22 +930,13 @@ public interface CorePackage extends EPackage {
 	int SUBDOMAIN_ENUMERATION__ORDER = 1;
 
 	/**
-	 * The feature id for the '<em><b>Subdomain id</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SUBDOMAIN_ENUMERATION__SUBDOMAIN_ID = 2;
-
-	/**
 	 * The feature id for the '<em><b>Valid from</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SUBDOMAIN_ENUMERATION__VALID_FROM = 3;
+	int SUBDOMAIN_ENUMERATION__VALID_FROM = 2;
 
 	/**
 	 * The feature id for the '<em><b>Valid to</b></em>' attribute.
@@ -943,7 +945,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SUBDOMAIN_ENUMERATION__VALID_TO = 4;
+	int SUBDOMAIN_ENUMERATION__VALID_TO = 3;
 
 	/**
 	 * The number of structural features of the '<em>SUBDOMAIN ENUMERATION</em>' class.
@@ -952,7 +954,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SUBDOMAIN_ENUMERATION_FEATURE_COUNT = 5;
+	int SUBDOMAIN_ENUMERATION_FEATURE_COUNT = 4;
 
 	/**
 	 * The number of operations of the '<em>SUBDOMAIN ENUMERATION</em>' class.
@@ -2021,17 +2023,6 @@ public interface CorePackage extends EPackage {
 	EReference getSUBDOMAIN_Maintenance_agency_id();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN#getName <em>Name</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN#getName()
-	 * @see #getSUBDOMAIN()
-	 * @generated
-	 */
-	EAttribute getSUBDOMAIN_Name();
-
-	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN#getSubdomain_id <em>Subdomain id</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2041,6 +2032,17 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getSUBDOMAIN_Subdomain_id();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN#getItems <em>Items</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Items</em>'.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN#getItems()
+	 * @see #getSUBDOMAIN()
+	 * @generated
+	 */
+	EReference getSUBDOMAIN_Items();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN_ENUMERATION <em>SUBDOMAIN ENUMERATION</em>}'.
@@ -2073,17 +2075,6 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getSUBDOMAIN_ENUMERATION_Order();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN_ENUMERATION#getSubdomain_id <em>Subdomain id</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Subdomain id</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN_ENUMERATION#getSubdomain_id()
-	 * @see #getSUBDOMAIN_ENUMERATION()
-	 * @generated
-	 */
-	EReference getSUBDOMAIN_ENUMERATION_Subdomain_id();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN_ENUMERATION#getValid_from <em>Valid from</em>}'.
@@ -2989,20 +2980,20 @@ public interface CorePackage extends EPackage {
 		EReference SUBDOMAIN__MAINTENANCE_AGENCY_ID = eINSTANCE.getSUBDOMAIN_Maintenance_agency_id();
 
 		/**
-		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute SUBDOMAIN__NAME = eINSTANCE.getSUBDOMAIN_Name();
-
-		/**
 		 * The meta object literal for the '<em><b>Subdomain id</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EAttribute SUBDOMAIN__SUBDOMAIN_ID = eINSTANCE.getSUBDOMAIN_Subdomain_id();
+
+		/**
+		 * The meta object literal for the '<em><b>Items</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SUBDOMAIN__ITEMS = eINSTANCE.getSUBDOMAIN_Items();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.core.impl.SUBDOMAIN_ENUMERATIONImpl <em>SUBDOMAIN ENUMERATION</em>}' class.
@@ -3029,14 +3020,6 @@ public interface CorePackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute SUBDOMAIN_ENUMERATION__ORDER = eINSTANCE.getSUBDOMAIN_ENUMERATION_Order();
-
-		/**
-		 * The meta object literal for the '<em><b>Subdomain id</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference SUBDOMAIN_ENUMERATION__SUBDOMAIN_ID = eINSTANCE.getSUBDOMAIN_ENUMERATION_Subdomain_id();
 
 		/**
 		 * The meta object literal for the '<em><b>Valid from</b></em>' attribute feature.

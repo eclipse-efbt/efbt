@@ -13,7 +13,7 @@
  -->
 <feature
       id="org.eclipse.efbt.controller.platformcall.component.core.feature"
-      label="Controller LDM Component"
+      label="Controller Platfrom Call Component"
       version="1.0.0.qualifier"
       provider-name="Bird Software Solutions">
 

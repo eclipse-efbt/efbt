@@ -33,14 +33,17 @@
    <feature id="org.eclipse.efbt.cocalimo.core.ui.sirius.feature">
       <category name="efbt"/>
    </feature>
-   <feature id="org.eclipse.efbt.controller.platformcall.ui.sirius.core.feature">
-      <category name="efbt"/>
-   </feature>
    <feature id="org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.feature">
       <category name="efbt"/>
    </feature>
    <feature id="org.eclipse.efbt.cocalimo.examples.feature">
       <category name="efbt"/>
    </feature>
+   <bundle id="org.eclipse.efbt.cocalimo.platform_call.model.platform_call">
+      <category name="efbt"/>
+   </bundle>
+   <bundle id="org.eclipse.efbt.cocalimo.platform_call.ui.sirius.core">
+      <category name="efbt"/>
+   </bundle>
    <category-def name="efbt" label="Complete EFBT Repository"/>
 </site>

@@ -146,4 +146,32 @@
       </editor>
    </extension>
 
+   <extension point="org.eclipse.ui.newWizards">
+      <!-- @generated smcubes -->
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.presentation.Data_meta_modelModelWizardID"
+            name="%_UI_Data_meta_modelModelWizard_label"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.presentation.Data_meta_modelModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/Data_meta_modelModelFile.gif">
+         <description>%_UI_Data_meta_modelModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <!-- @generated smcubes -->
+      <editor
+            id="org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.presentation.Data_meta_modelEditorID"
+            name="%_UI_Data_meta_modelEditor_label"
+            icon="icons/full/obj16/Data_meta_modelModelFile.gif"
+            extensions="data_meta_model"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.presentation.Data_meta_modelEditor"
+            contributorClass="org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.presentation.Data_meta_modelActionBarContributor">
+      </editor>
+   </extension>
+
 </plugin>

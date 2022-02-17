@@ -403,7 +403,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SUBDOMAIN">
+  <eClassifiers xsi:type="ecore:EClass" name="SUBDOMAIN" eSuperTypes="data_meta_model.ecore#//Classifier">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="SUBDOMAIN"/>
       <details key="kind" value="empty"/>
@@ -451,12 +451,6 @@
         <details key="name" value="maintenance_agency_id"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="name"/>
-      </eAnnotations>
-    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="subdomain_id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
@@ -464,12 +458,10 @@
         <details key="name" value="subdomain_id"/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="items" upperBound="-1"
+        eType="#//SUBDOMAIN_ENUMERATION" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SUBDOMAIN_ENUMERATION">
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="SUBDOMAIN_ENUMERATION"/>
-      <details key="kind" value="empty"/>
-    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="member_id" eType="#//MEMBER">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="attribute"/>
@@ -480,12 +472,6 @@
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="attribute"/>
         <details key="name" value="order"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="subdomain_id" eType="#//SUBDOMAIN">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="subdomain_id"/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="valid_from" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate">

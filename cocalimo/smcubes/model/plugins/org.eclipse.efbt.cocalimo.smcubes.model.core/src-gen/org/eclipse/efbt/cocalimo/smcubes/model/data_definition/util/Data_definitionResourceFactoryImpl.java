@@ -5,6 +5,7 @@ package org.eclipse.efbt.cocalimo.smcubes.model.data_definition.util;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.emfjson.jackson.resource.JsonResourceFactory;
+
 /**
  * <!-- begin-user-doc -->
  * The <b>Resource Factory</b> associated with the package.

@@ -3,8 +3,8 @@
 package org.eclipse.efbt.cocalimo.smcubes.model.core.util;
 
 import org.eclipse.emf.common.util.URI;
+import  org.emfjson.jackson.resource.JsonResource;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.emfjson.jackson.resource.JsonResource;
 
 /**
  * <!-- begin-user-doc -->

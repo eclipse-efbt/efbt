@@ -1,0 +1,81 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/cocalimo_smcubes_extension#//DomainModule",
+  "name" : "FRTBSourceDomains",
+  "domains" : [ {
+    "code" : "Currency",
+    "data_type" : "String",
+    "is_enumerated" : true,
+    "name" : "Currency",
+    "displayName" : "Currency"
+  }, {
+    "code" : "shockDirection",
+    "data_type" : "String",
+    "is_enumerated" : true,
+    "name" : "shockDirection",
+    "displayName" : "CurrshockDirectionency"
+  }, {
+    "code" : "String",
+    "data_type" : "String",
+    "name" : "String",
+    "displayName" : "String"
+  }, {
+    "code" : "Numbers",
+    "data_type" : "Double",
+    "name" : "Numbers",
+    "displayName" : "Numbers"
+  }, {
+    "code" : "riskClass",
+    "data_type" : "String",
+    "is_enumerated" : true,
+    "name" : "riskClass",
+    "displayName" : "riskClass"
+  }, {
+    "code" : "equityFactorType",
+    "data_type" : "String",
+    "is_enumerated" : true,
+    "name" : "equityFactorType",
+    "displayName" : "equityFactorType"
+  }, {
+    "code" : "CSRCurveType",
+    "data_type" : "String",
+    "is_enumerated" : true,
+    "name" : "CSRCurveType",
+    "displayName" : "CSRCurveType"
+  }, {
+    "code" : "ratingsGrade",
+    "data_type" : "String",
+    "is_enumerated" : true,
+    "name" : "ratingsGrade",
+    "displayName" : "ratingsGrade"
+  }, {
+    "code" : "commodityType",
+    "data_type" : "String",
+    "is_enumerated" : true,
+    "name" : "commodityType",
+    "displayName" : "commodityType"
+  }, {
+    "code" : "marketCap",
+    "data_type" : "String",
+    "is_enumerated" : true,
+    "name" : "marketCap",
+    "displayName" : "marketCap"
+  }, {
+    "code" : "economy",
+    "data_type" : "String",
+    "is_enumerated" : true,
+    "name" : "economy",
+    "displayName" : "economy"
+  }, {
+    "code" : "sector",
+    "data_type" : "String",
+    "is_enumerated" : true,
+    "name" : "sector",
+    "displayName" : "sector"
+  }, {
+    "code" : "securitisationSector",
+    "data_type" : "String",
+    "is_enumerated" : true,
+    "name" : "securitisationSector",
+    "displayName" : "securitisationSector"
+  } ]
+}

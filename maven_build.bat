@@ -7,6 +7,9 @@ cd ..\..\..
 cd cocalimo\smcubes\model
 call mvn install
 cd ..\..\..
+cd cocalimo\platform_call\model
+call mvn install
+cd ..\..\..
  cd cocalimo\smcubes\modelquery
 call mvn install
 cd ..\..\..
@@ -17,6 +20,9 @@ cd cocalimo\examples
 call mvn install 
 cd ..\..                  
 cd controller\ldm
+call mvn install
+cd ..\..
+cd controller\data_meta_model
 call mvn install
 cd ..\..
 cd controller\smcubes\access_dependencies_external
@@ -31,7 +37,7 @@ cd ..\..\..
 cd controller\platformcall\component
 call mvn install
 cd ..\..\..
-cd controller\platformcall\ui_sirius
+cd cocalimo\platform_call\ui_sirius
 call mvn install
 cd ..\..\..
 cd installations\complete_repo\

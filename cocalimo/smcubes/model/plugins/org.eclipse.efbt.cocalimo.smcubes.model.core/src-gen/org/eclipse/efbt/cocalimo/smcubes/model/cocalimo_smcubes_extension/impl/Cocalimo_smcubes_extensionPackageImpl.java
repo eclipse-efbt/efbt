@@ -22,6 +22,7 @@ import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.Report
 import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.ReportCellValue;
 import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.ReportTableModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel;
+import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SubDomainModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.TableCellModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.VariableMappingModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.VariableModule;
@@ -33,6 +34,10 @@ import org.eclipse.efbt.cocalimo.smcubes.model.core.impl.CorePackageImpl;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.Data_definitionPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.impl.Data_definitionPackageImpl;
+
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage;
+
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MappingPackage;
 
@@ -190,6 +195,13 @@ public class Cocalimo_smcubes_extensionPackageImpl extends EPackageImpl implemen
 	private EClass tableCellModuleEClass = null;
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass subDomainModuleEClass = null;
+
+	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
 	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
 	 * package URI value.
@@ -248,6 +260,8 @@ public class Cocalimo_smcubes_extensionPackageImpl extends EPackageImpl implemen
 		MappingPackageImpl theMappingPackage = (MappingPackageImpl)(registeredPackage instanceof MappingPackageImpl ? registeredPackage : MappingPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(RenderingPackage.eNS_URI);
 		RenderingPackageImpl theRenderingPackage = (RenderingPackageImpl)(registeredPackage instanceof RenderingPackageImpl ? registeredPackage : RenderingPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Data_meta_modelPackage.eNS_URI);
+		Data_meta_modelPackageImpl theData_meta_modelPackage = (Data_meta_modelPackageImpl)(registeredPackage instanceof Data_meta_modelPackageImpl ? registeredPackage : Data_meta_modelPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theCocalimo_smcubes_extensionPackage.createPackageContents();
@@ -255,6 +269,7 @@ public class Cocalimo_smcubes_extensionPackageImpl extends EPackageImpl implemen
 		theData_definitionPackage.createPackageContents();
 		theMappingPackage.createPackageContents();
 		theRenderingPackage.createPackageContents();
+		theData_meta_modelPackage.createPackageContents();
 
 		// Initialize created meta-data
 		theCocalimo_smcubes_extensionPackage.initializePackageContents();
@@ -262,6 +277,7 @@ public class Cocalimo_smcubes_extensionPackageImpl extends EPackageImpl implemen
 		theData_definitionPackage.initializePackageContents();
 		theMappingPackage.initializePackageContents();
 		theRenderingPackage.initializePackageContents();
+		theData_meta_modelPackage.initializePackageContents();
 
 		// Mark meta-data to indicate it can't be changed
 		theCocalimo_smcubes_extensionPackage.freeze();
@@ -317,38 +333,18 @@ public class Cocalimo_smcubes_extensionPackageImpl extends EPackageImpl implemen
 	 * @generated
 	 */
 	@Override
-	public EReference getSmcubesModel_Cubes() {
-		return (EReference)smcubesModelEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getSmcubesModel_Combinations() {
-		return (EReference)smcubesModelEClass.getEStructuralFeatures().get(4);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getSmcubesModel_Mappings() {
-		return (EReference)smcubesModelEClass.getEStructuralFeatures().get(5);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EAttribute getSmcubesModel_Name() {
-		return (EAttribute)smcubesModelEClass.getEStructuralFeatures().get(6);
+		return (EAttribute)smcubesModelEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getSmcubesModel_Subdomains() {
+		return (EReference)smcubesModelEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -787,6 +783,26 @@ public class Cocalimo_smcubes_extensionPackageImpl extends EPackageImpl implemen
 	 * @generated
 	 */
 	@Override
+	public EClass getSubDomainModule() {
+		return subDomainModuleEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getSubDomainModule_Subdomains() {
+		return (EReference)subDomainModuleEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Cocalimo_smcubes_extensionFactory getCocalimo_smcubes_extensionFactory() {
 		return (Cocalimo_smcubes_extensionFactory)getEFactoryInstance();
 	}
@@ -814,10 +830,8 @@ public class Cocalimo_smcubes_extensionPackageImpl extends EPackageImpl implemen
 		createEReference(smcubesModelEClass, SMCUBES_MODEL__DOMAINS);
 		createEReference(smcubesModelEClass, SMCUBES_MODEL__MEMBERS);
 		createEReference(smcubesModelEClass, SMCUBES_MODEL__VARIABLES);
-		createEReference(smcubesModelEClass, SMCUBES_MODEL__CUBES);
-		createEReference(smcubesModelEClass, SMCUBES_MODEL__COMBINATIONS);
-		createEReference(smcubesModelEClass, SMCUBES_MODEL__MAPPINGS);
 		createEAttribute(smcubesModelEClass, SMCUBES_MODEL__NAME);
+		createEReference(smcubesModelEClass, SMCUBES_MODEL__SUBDOMAINS);
 
 		combinationModuleEClass = createEClass(COMBINATION_MODULE);
 		createEReference(combinationModuleEClass, COMBINATION_MODULE__COMBINATIONS);
@@ -879,6 +893,9 @@ public class Cocalimo_smcubes_extensionPackageImpl extends EPackageImpl implemen
 
 		tableCellModuleEClass = createEClass(TABLE_CELL_MODULE);
 		createEReference(tableCellModuleEClass, TABLE_CELL_MODULE__TABLE_CELLS);
+
+		subDomainModuleEClass = createEClass(SUB_DOMAIN_MODULE);
+		createEReference(subDomainModuleEClass, SUB_DOMAIN_MODULE__SUBDOMAINS);
 	}
 
 	/**
@@ -932,16 +949,15 @@ public class Cocalimo_smcubes_extensionPackageImpl extends EPackageImpl implemen
 		ordinateItemModuleEClass.getESuperTypes().add(theModule_managementPackage.getModule());
 		reportTableModuleEClass.getESuperTypes().add(theModule_managementPackage.getModule());
 		tableCellModuleEClass.getESuperTypes().add(theModule_managementPackage.getModule());
+		subDomainModuleEClass.getESuperTypes().add(theModule_managementPackage.getModule());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(smcubesModelEClass, SmcubesModel.class, "SmcubesModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getSmcubesModel_Domains(), this.getDomainModule(), null, "domains", null, 0, -1, SmcubesModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSmcubesModel_Members(), this.getMemberModule(), null, "members", null, 0, -1, SmcubesModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSmcubesModel_Variables(), this.getVariableModule(), null, "variables", null, 0, -1, SmcubesModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getSmcubesModel_Cubes(), this.getCubeModule(), null, "cubes", null, 0, -1, SmcubesModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getSmcubesModel_Combinations(), this.getCombinationModule(), null, "combinations", null, 0, -1, SmcubesModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getSmcubesModel_Mappings(), this.getMappingDefinitionModule(), null, "mappings", null, 0, -1, SmcubesModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSmcubesModel_Name(), ecorePackage.getEString(), "name", null, 0, 1, SmcubesModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSmcubesModel_Subdomains(), this.getSubDomainModule(), null, "subdomains", null, 0, -1, SmcubesModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(combinationModuleEClass, CombinationModule.class, "CombinationModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getCombinationModule_Combinations(), theData_definitionPackage.getCOMBINATION(), null, "combinations", null, 0, -1, CombinationModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1003,6 +1019,9 @@ public class Cocalimo_smcubes_extensionPackageImpl extends EPackageImpl implemen
 
 		initEClass(tableCellModuleEClass, TableCellModule.class, "TableCellModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getTableCellModule_TableCells(), theRenderingPackage.getTABLE_CELL(), null, "tableCells", null, 0, -1, TableCellModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(subDomainModuleEClass, SubDomainModule.class, "SubDomainModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getSubDomainModule_Subdomains(), theCorePackage.getSUBDOMAIN(), null, "subdomains", null, 0, -1, SubDomainModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

@@ -62,7 +62,6 @@ public class SUBDOMAIN_ENUMERATIONItemProvider
 
 			addMember_idPropertyDescriptor(object);
 			addOrderPropertyDescriptor(object);
-			addSubdomain_idPropertyDescriptor(object);
 			addValid_fromPropertyDescriptor(object);
 			addValid_toPropertyDescriptor(object);
 		}
@@ -109,28 +108,6 @@ public class SUBDOMAIN_ENUMERATIONItemProvider
 				 false,
 				 false,
 				 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Subdomain id feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addSubdomain_idPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_SUBDOMAIN_ENUMERATION_subdomain_id_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_SUBDOMAIN_ENUMERATION_subdomain_id_feature", "_UI_SUBDOMAIN_ENUMERATION_type"),
-				 CorePackage.Literals.SUBDOMAIN_ENUMERATION__SUBDOMAIN_ID,
-				 true,
-				 false,
-				 true,
-				 null,
 				 null,
 				 null));
 	}

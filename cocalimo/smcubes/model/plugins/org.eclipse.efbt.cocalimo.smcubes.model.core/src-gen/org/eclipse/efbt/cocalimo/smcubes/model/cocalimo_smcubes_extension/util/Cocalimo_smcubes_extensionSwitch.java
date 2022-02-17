@@ -196,6 +196,13 @@ public class Cocalimo_smcubes_extensionSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case Cocalimo_smcubes_extensionPackage.SUB_DOMAIN_MODULE: {
+				SubDomainModule subDomainModule = (SubDomainModule)theEObject;
+				T result = caseSubDomainModule(subDomainModule);
+				if (result == null) result = caseModule(subDomainModule);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -482,6 +489,21 @@ public class Cocalimo_smcubes_extensionSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseTableCellModule(TableCellModule object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Sub Domain Module</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Sub Domain Module</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseSubDomainModule(SubDomainModule object) {
 		return null;
 	}
 

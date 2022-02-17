@@ -6,7 +6,6 @@ import java.util.Date;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.MEMBER;
-import org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN_ENUMERATION;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -27,7 +26,6 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * <ul>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.core.impl.SUBDOMAIN_ENUMERATIONImpl#getMember_id <em>Member id</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.core.impl.SUBDOMAIN_ENUMERATIONImpl#getOrder <em>Order</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.core.impl.SUBDOMAIN_ENUMERATIONImpl#getSubdomain_id <em>Subdomain id</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.core.impl.SUBDOMAIN_ENUMERATIONImpl#getValid_from <em>Valid from</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.core.impl.SUBDOMAIN_ENUMERATIONImpl#getValid_to <em>Valid to</em>}</li>
  * </ul>
@@ -64,16 +62,6 @@ public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container impl
 	 * @ordered
 	 */
 	protected int order = ORDER_EDEFAULT;
-
-	/**
-	 * The cached value of the '{@link #getSubdomain_id() <em>Subdomain id</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getSubdomain_id()
-	 * @generated
-	 * @ordered
-	 */
-	protected SUBDOMAIN subdomain_id;
 
 	/**
 	 * The default value of the '{@link #getValid_from() <em>Valid from</em>}' attribute.
@@ -203,46 +191,6 @@ public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 */
 	@Override
-	public SUBDOMAIN getSubdomain_id() {
-		if (subdomain_id != null && subdomain_id.eIsProxy()) {
-			InternalEObject oldSubdomain_id = (InternalEObject)subdomain_id;
-			subdomain_id = (SUBDOMAIN)eResolveProxy(oldSubdomain_id);
-			if (subdomain_id != oldSubdomain_id) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, CorePackage.SUBDOMAIN_ENUMERATION__SUBDOMAIN_ID, oldSubdomain_id, subdomain_id));
-			}
-		}
-		return subdomain_id;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public SUBDOMAIN basicGetSubdomain_id() {
-		return subdomain_id;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setSubdomain_id(SUBDOMAIN newSubdomain_id) {
-		SUBDOMAIN oldSubdomain_id = subdomain_id;
-		subdomain_id = newSubdomain_id;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, CorePackage.SUBDOMAIN_ENUMERATION__SUBDOMAIN_ID, oldSubdomain_id, subdomain_id));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public Date getValid_from() {
 		return valid_from;
 	}
@@ -296,9 +244,6 @@ public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container impl
 				return basicGetMember_id();
 			case CorePackage.SUBDOMAIN_ENUMERATION__ORDER:
 				return getOrder();
-			case CorePackage.SUBDOMAIN_ENUMERATION__SUBDOMAIN_ID:
-				if (resolve) return getSubdomain_id();
-				return basicGetSubdomain_id();
 			case CorePackage.SUBDOMAIN_ENUMERATION__VALID_FROM:
 				return getValid_from();
 			case CorePackage.SUBDOMAIN_ENUMERATION__VALID_TO:
@@ -320,9 +265,6 @@ public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container impl
 				return;
 			case CorePackage.SUBDOMAIN_ENUMERATION__ORDER:
 				setOrder((Integer)newValue);
-				return;
-			case CorePackage.SUBDOMAIN_ENUMERATION__SUBDOMAIN_ID:
-				setSubdomain_id((SUBDOMAIN)newValue);
 				return;
 			case CorePackage.SUBDOMAIN_ENUMERATION__VALID_FROM:
 				setValid_from((Date)newValue);
@@ -348,9 +290,6 @@ public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container impl
 			case CorePackage.SUBDOMAIN_ENUMERATION__ORDER:
 				setOrder(ORDER_EDEFAULT);
 				return;
-			case CorePackage.SUBDOMAIN_ENUMERATION__SUBDOMAIN_ID:
-				setSubdomain_id((SUBDOMAIN)null);
-				return;
 			case CorePackage.SUBDOMAIN_ENUMERATION__VALID_FROM:
 				setValid_from(VALID_FROM_EDEFAULT);
 				return;
@@ -373,8 +312,6 @@ public class SUBDOMAIN_ENUMERATIONImpl extends MinimalEObjectImpl.Container impl
 				return member_id != null;
 			case CorePackage.SUBDOMAIN_ENUMERATION__ORDER:
 				return order != ORDER_EDEFAULT;
-			case CorePackage.SUBDOMAIN_ENUMERATION__SUBDOMAIN_ID:
-				return subdomain_id != null;
 			case CorePackage.SUBDOMAIN_ENUMERATION__VALID_FROM:
 				return VALID_FROM_EDEFAULT == null ? valid_from != null : !VALID_FROM_EDEFAULT.equals(valid_from);
 			case CorePackage.SUBDOMAIN_ENUMERATION__VALID_TO:

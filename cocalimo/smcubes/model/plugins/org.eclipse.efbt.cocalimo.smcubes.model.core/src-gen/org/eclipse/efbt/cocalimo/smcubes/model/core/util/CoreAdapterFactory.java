@@ -4,6 +4,10 @@ package org.eclipse.efbt.cocalimo.smcubes.model.core.util;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.core.*;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Classifier;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Element;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.NamedElement;
+
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 
@@ -19,8 +23,7 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage
  * @generated
  */
-public class CoreAdapterFactory extends AdapterFactoryImpl
-{
+public class CoreAdapterFactory extends AdapterFactoryImpl {
 	/**
 	 * The cached model package.
 	 * <!-- begin-user-doc -->
@@ -35,8 +38,7 @@ public class CoreAdapterFactory extends AdapterFactoryImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public CoreAdapterFactory()
-	{
+	public CoreAdapterFactory() {
 		if (modelPackage == null) {
 			modelPackage = CorePackage.eINSTANCE;
 		}
@@ -51,8 +53,7 @@ public class CoreAdapterFactory extends AdapterFactoryImpl
 	 * @generated
 	 */
 	@Override
-	public boolean isFactoryForType(Object object)
-	{
+	public boolean isFactoryForType(Object object) {
 		if (object == modelPackage) {
 			return true;
 		}
@@ -123,6 +124,18 @@ public class CoreAdapterFactory extends AdapterFactoryImpl
 				return createVARIABLE_SET_ENUMERATIONAdapter();
 			}
 			@Override
+			public Adapter caseElement(Element object) {
+				return createElementAdapter();
+			}
+			@Override
+			public Adapter caseNamedElement(NamedElement object) {
+				return createNamedElementAdapter();
+			}
+			@Override
+			public Adapter caseClassifier(Classifier object) {
+				return createClassifierAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -137,8 +150,7 @@ public class CoreAdapterFactory extends AdapterFactoryImpl
 	 * @generated
 	 */
 	@Override
-	public Adapter createAdapter(Notifier target)
-	{
+	public Adapter createAdapter(Notifier target) {
 		return modelSwitch.doSwitch((EObject)target);
 	}
 
@@ -153,8 +165,7 @@ public class CoreAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.core.DOMAIN
 	 * @generated
 	 */
-	public Adapter createDOMAINAdapter()
-	{
+	public Adapter createDOMAINAdapter() {
 		return null;
 	}
 
@@ -168,8 +179,7 @@ public class CoreAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.core.FACET_COLLECTION
 	 * @generated
 	 */
-	public Adapter createFACET_COLLECTIONAdapter()
-	{
+	public Adapter createFACET_COLLECTIONAdapter() {
 		return null;
 	}
 
@@ -183,8 +193,7 @@ public class CoreAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.core.FACET_ENUMERATION
 	 * @generated
 	 */
-	public Adapter createFACET_ENUMERATIONAdapter()
-	{
+	public Adapter createFACET_ENUMERATIONAdapter() {
 		return null;
 	}
 
@@ -198,8 +207,7 @@ public class CoreAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.core.facet_type
 	 * @generated
 	 */
-	public Adapter createfacet_typeAdapter()
-	{
+	public Adapter createfacet_typeAdapter() {
 		return null;
 	}
 
@@ -213,8 +221,7 @@ public class CoreAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.core.MAINTENANCE_AGENCY
 	 * @generated
 	 */
-	public Adapter createMAINTENANCE_AGENCYAdapter()
-	{
+	public Adapter createMAINTENANCE_AGENCYAdapter() {
 		return null;
 	}
 
@@ -228,8 +235,7 @@ public class CoreAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.core.MEMBER
 	 * @generated
 	 */
-	public Adapter createMEMBERAdapter()
-	{
+	public Adapter createMEMBERAdapter() {
 		return null;
 	}
 
@@ -243,8 +249,7 @@ public class CoreAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.core.MEMBER_HIERARCHY
 	 * @generated
 	 */
-	public Adapter createMEMBER_HIERARCHYAdapter()
-	{
+	public Adapter createMEMBER_HIERARCHYAdapter() {
 		return null;
 	}
 
@@ -258,8 +263,7 @@ public class CoreAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.core.MEMBER_HIERARCHY_NODE
 	 * @generated
 	 */
-	public Adapter createMEMBER_HIERARCHY_NODEAdapter()
-	{
+	public Adapter createMEMBER_HIERARCHY_NODEAdapter() {
 		return null;
 	}
 
@@ -273,8 +277,7 @@ public class CoreAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN
 	 * @generated
 	 */
-	public Adapter createSUBDOMAINAdapter()
-	{
+	public Adapter createSUBDOMAINAdapter() {
 		return null;
 	}
 
@@ -288,8 +291,7 @@ public class CoreAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN_ENUMERATION
 	 * @generated
 	 */
-	public Adapter createSUBDOMAIN_ENUMERATIONAdapter()
-	{
+	public Adapter createSUBDOMAIN_ENUMERATIONAdapter() {
 		return null;
 	}
 
@@ -303,8 +305,7 @@ public class CoreAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.core.VARIABLE
 	 * @generated
 	 */
-	public Adapter createVARIABLEAdapter()
-	{
+	public Adapter createVARIABLEAdapter() {
 		return null;
 	}
 
@@ -318,8 +319,7 @@ public class CoreAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.core.VARIABLE_SET
 	 * @generated
 	 */
-	public Adapter createVARIABLE_SETAdapter()
-	{
+	public Adapter createVARIABLE_SETAdapter() {
 		return null;
 	}
 
@@ -333,8 +333,49 @@ public class CoreAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.core.VARIABLE_SET_ENUMERATION
 	 * @generated
 	 */
-	public Adapter createVARIABLE_SET_ENUMERATIONAdapter()
-	{
+	public Adapter createVARIABLE_SET_ENUMERATIONAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Element <em>Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Element
+	 * @generated
+	 */
+	public Adapter createElementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.NamedElement <em>Named Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.NamedElement
+	 * @generated
+	 */
+	public Adapter createNamedElementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Classifier <em>Classifier</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Classifier
+	 * @generated
+	 */
+	public Adapter createClassifierAdapter() {
 		return null;
 	}
 
@@ -346,8 +387,7 @@ public class CoreAdapterFactory extends AdapterFactoryImpl
 	 * @return the new adapter.
 	 * @generated
 	 */
-	public Adapter createEObjectAdapter()
-	{
+	public Adapter createEObjectAdapter() {
 		return null;
 	}
 

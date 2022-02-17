@@ -2,7 +2,9 @@
  */
 package org.eclipse.efbt.cocalimo.smcubes.model.core;
 
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Classifier;
+
+import org.eclipse.emf.common.util.EList;
 
 /**
  * <!-- begin-user-doc -->
@@ -20,15 +22,15 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN#isIs_listed <em>Is listed</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN#isIs_natural <em>Is natural</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN#getMaintenance_agency_id <em>Maintenance agency id</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN#getSubdomain_id <em>Subdomain id</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN#getItems <em>Items</em>}</li>
  * </ul>
  *
  * @see org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage#getSUBDOMAIN()
  * @model extendedMetaData="name='SUBDOMAIN' kind='empty'"
  * @generated
  */
-public interface SUBDOMAIN extends EObject {
+public interface SUBDOMAIN extends Classifier {
 	/**
 	 * Returns the value of the '<em><b>Code</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -184,28 +186,6 @@ public interface SUBDOMAIN extends EObject {
 	void setMaintenance_agency_id(MAINTENANCE_AGENCY value);
 
 	/**
-	 * Returns the value of the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Name</em>' attribute.
-	 * @see #setName(String)
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage#getSUBDOMAIN_Name()
-	 * @model extendedMetaData="kind='attribute' name='name'"
-	 * @generated
-	 */
-	String getName();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN#getName <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Name</em>' attribute.
-	 * @see #getName()
-	 * @generated
-	 */
-	void setName(String value);
-
-	/**
 	 * Returns the value of the '<em><b>Subdomain id</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -227,5 +207,17 @@ public interface SUBDOMAIN extends EObject {
 	 * @generated
 	 */
 	void setSubdomain_id(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Items</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN_ENUMERATION}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Items</em>' containment reference list.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage#getSUBDOMAIN_Items()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<SUBDOMAIN_ENUMERATION> getItems();
 
 } // SUBDOMAIN

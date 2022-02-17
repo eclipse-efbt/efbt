@@ -102,40 +102,22 @@ public interface Cocalimo_smcubes_extensionPackage extends EPackage {
 	int SMCUBES_MODEL__VARIABLES = 2;
 
 	/**
-	 * The feature id for the '<em><b>Cubes</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SMCUBES_MODEL__CUBES = 3;
-
-	/**
-	 * The feature id for the '<em><b>Combinations</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SMCUBES_MODEL__COMBINATIONS = 4;
-
-	/**
-	 * The feature id for the '<em><b>Mappings</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SMCUBES_MODEL__MAPPINGS = 5;
-
-	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SMCUBES_MODEL__NAME = 6;
+	int SMCUBES_MODEL__NAME = 3;
+
+	/**
+	 * The feature id for the '<em><b>Subdomains</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SMCUBES_MODEL__SUBDOMAINS = 4;
 
 	/**
 	 * The number of structural features of the '<em>Smcubes Model</em>' class.
@@ -144,7 +126,7 @@ public interface Cocalimo_smcubes_extensionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SMCUBES_MODEL_FEATURE_COUNT = 7;
+	int SMCUBES_MODEL_FEATURE_COUNT = 5;
 
 	/**
 	 * The number of operations of the '<em>Smcubes Model</em>' class.
@@ -1748,6 +1730,97 @@ public interface Cocalimo_smcubes_extensionPackage extends EPackage {
 	 */
 	int TABLE_CELL_MODULE_OPERATION_COUNT = Module_managementPackage.MODULE_OPERATION_COUNT + 0;
 
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.impl.SubDomainModuleImpl <em>Sub Domain Module</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.impl.SubDomainModuleImpl
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.impl.Cocalimo_smcubes_extensionPackageImpl#getSubDomainModule()
+	 * @generated
+	 */
+	int SUB_DOMAIN_MODULE = 19;
+
+	/**
+	 * The feature id for the '<em><b>Dependencies</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SUB_DOMAIN_MODULE__DEPENDENCIES = Module_managementPackage.MODULE__DEPENDENCIES;
+
+	/**
+	 * The feature id for the '<em><b>The Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SUB_DOMAIN_MODULE__THE_DESCRIPTION = Module_managementPackage.MODULE__THE_DESCRIPTION;
+
+	/**
+	 * The feature id for the '<em><b>License</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SUB_DOMAIN_MODULE__LICENSE = Module_managementPackage.MODULE__LICENSE;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SUB_DOMAIN_MODULE__NAME = Module_managementPackage.MODULE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Version</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SUB_DOMAIN_MODULE__VERSION = Module_managementPackage.MODULE__VERSION;
+
+	/**
+	 * The feature id for the '<em><b>Long Name</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SUB_DOMAIN_MODULE__LONG_NAME = Module_managementPackage.MODULE__LONG_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Subdomains</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SUB_DOMAIN_MODULE__SUBDOMAINS = Module_managementPackage.MODULE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Sub Domain Module</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SUB_DOMAIN_MODULE_FEATURE_COUNT = Module_managementPackage.MODULE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of operations of the '<em>Sub Domain Module</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SUB_DOMAIN_MODULE_OPERATION_COUNT = Module_managementPackage.MODULE_OPERATION_COUNT + 0;
+
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel <em>Smcubes Model</em>}'.
@@ -1793,39 +1866,6 @@ public interface Cocalimo_smcubes_extensionPackage extends EPackage {
 	EReference getSmcubesModel_Variables();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel#getCubes <em>Cubes</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Cubes</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel#getCubes()
-	 * @see #getSmcubesModel()
-	 * @generated
-	 */
-	EReference getSmcubesModel_Cubes();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel#getCombinations <em>Combinations</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Combinations</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel#getCombinations()
-	 * @see #getSmcubesModel()
-	 * @generated
-	 */
-	EReference getSmcubesModel_Combinations();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel#getMappings <em>Mappings</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Mappings</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel#getMappings()
-	 * @see #getSmcubesModel()
-	 * @generated
-	 */
-	EReference getSmcubesModel_Mappings();
-
-	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel#getName <em>Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1835,6 +1875,17 @@ public interface Cocalimo_smcubes_extensionPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getSmcubesModel_Name();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel#getSubdomains <em>Subdomains</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Subdomains</em>'.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel#getSubdomains()
+	 * @see #getSmcubesModel()
+	 * @generated
+	 */
+	EReference getSmcubesModel_Subdomains();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.CombinationModule <em>Combination Module</em>}'.
@@ -2292,6 +2343,27 @@ public interface Cocalimo_smcubes_extensionPackage extends EPackage {
 	EReference getTableCellModule_TableCells();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SubDomainModule <em>Sub Domain Module</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Sub Domain Module</em>'.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SubDomainModule
+	 * @generated
+	 */
+	EClass getSubDomainModule();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SubDomainModule#getSubdomains <em>Subdomains</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Subdomains</em>'.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SubDomainModule#getSubdomains()
+	 * @see #getSubDomainModule()
+	 * @generated
+	 */
+	EReference getSubDomainModule_Subdomains();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2349,36 +2421,20 @@ public interface Cocalimo_smcubes_extensionPackage extends EPackage {
 		EReference SMCUBES_MODEL__VARIABLES = eINSTANCE.getSmcubesModel_Variables();
 
 		/**
-		 * The meta object literal for the '<em><b>Cubes</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference SMCUBES_MODEL__CUBES = eINSTANCE.getSmcubesModel_Cubes();
-
-		/**
-		 * The meta object literal for the '<em><b>Combinations</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference SMCUBES_MODEL__COMBINATIONS = eINSTANCE.getSmcubesModel_Combinations();
-
-		/**
-		 * The meta object literal for the '<em><b>Mappings</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference SMCUBES_MODEL__MAPPINGS = eINSTANCE.getSmcubesModel_Mappings();
-
-		/**
 		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EAttribute SMCUBES_MODEL__NAME = eINSTANCE.getSmcubesModel_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Subdomains</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SMCUBES_MODEL__SUBDOMAINS = eINSTANCE.getSmcubesModel_Subdomains();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.impl.CombinationModuleImpl <em>Combination Module</em>}' class.
@@ -2759,6 +2815,24 @@ public interface Cocalimo_smcubes_extensionPackage extends EPackage {
 		 * @generated
 		 */
 		EReference TABLE_CELL_MODULE__TABLE_CELLS = eINSTANCE.getTableCellModule_TableCells();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.impl.SubDomainModuleImpl <em>Sub Domain Module</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.impl.SubDomainModuleImpl
+		 * @see org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.impl.Cocalimo_smcubes_extensionPackageImpl#getSubDomainModule()
+		 * @generated
+		 */
+		EClass SUB_DOMAIN_MODULE = eINSTANCE.getSubDomainModule();
+
+		/**
+		 * The meta object literal for the '<em><b>Subdomains</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SUB_DOMAIN_MODULE__SUBDOMAINS = eINSTANCE.getSubDomainModule_Subdomains();
 
 	}
 

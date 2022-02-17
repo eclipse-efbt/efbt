@@ -22,8 +22,7 @@ import org.eclipse.emf.ecore.util.Switch;
  * @see org.eclipse.efbt.cocalimo.smcubes.model.data_definition.Data_definitionPackage
  * @generated
  */
-public class Data_definitionSwitch<T> extends Switch<T>
-{
+public class Data_definitionSwitch<T> extends Switch<T> {
 	/**
 	 * The cached model package
 	 * <!-- begin-user-doc -->
@@ -38,8 +37,7 @@ public class Data_definitionSwitch<T> extends Switch<T>
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Data_definitionSwitch()
-	{
+	public Data_definitionSwitch() {
 		if (modelPackage == null) {
 			modelPackage = Data_definitionPackage.eINSTANCE;
 		}
@@ -54,8 +52,7 @@ public class Data_definitionSwitch<T> extends Switch<T>
 	 * @generated
 	 */
 	@Override
-	protected boolean isSwitchFor(EPackage ePackage)
-	{
+	protected boolean isSwitchFor(EPackage ePackage) {
 		return ePackage == modelPackage;
 	}
 
@@ -67,8 +64,7 @@ public class Data_definitionSwitch<T> extends Switch<T>
 	 * @generated
 	 */
 	@Override
-	protected T doSwitch(int classifierID, EObject theEObject)
-	{
+	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
 			case Data_definitionPackage.COMBINATION: {
 				COMBINATION combination = (COMBINATION)theEObject;
@@ -169,8 +165,7 @@ public class Data_definitionSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseCOMBINATION(COMBINATION object)
-	{
+	public T caseCOMBINATION(COMBINATION object) {
 		return null;
 	}
 
@@ -185,8 +180,7 @@ public class Data_definitionSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseCOMBINATION_ITEM(COMBINATION_ITEM object)
-	{
+	public T caseCOMBINATION_ITEM(COMBINATION_ITEM object) {
 		return null;
 	}
 
@@ -201,8 +195,7 @@ public class Data_definitionSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseCUBE(CUBE object)
-	{
+	public T caseCUBE(CUBE object) {
 		return null;
 	}
 
@@ -217,8 +210,7 @@ public class Data_definitionSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseCUBE_GROUP(CUBE_GROUP object)
-	{
+	public T caseCUBE_GROUP(CUBE_GROUP object) {
 		return null;
 	}
 
@@ -233,8 +225,7 @@ public class Data_definitionSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseCUBE_GROUP_ENUMERATION(CUBE_GROUP_ENUMERATION object)
-	{
+	public T caseCUBE_GROUP_ENUMERATION(CUBE_GROUP_ENUMERATION object) {
 		return null;
 	}
 
@@ -249,8 +240,7 @@ public class Data_definitionSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseCUBE_HIERARCHY(CUBE_HIERARCHY object)
-	{
+	public T caseCUBE_HIERARCHY(CUBE_HIERARCHY object) {
 		return null;
 	}
 
@@ -265,8 +255,7 @@ public class Data_definitionSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseCUBE_HIERARCHY_NODE(CUBE_HIERARCHY_NODE object)
-	{
+	public T caseCUBE_HIERARCHY_NODE(CUBE_HIERARCHY_NODE object) {
 		return null;
 	}
 
@@ -281,8 +270,7 @@ public class Data_definitionSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseCUBE_RELATIONSHIP(CUBE_RELATIONSHIP object)
-	{
+	public T caseCUBE_RELATIONSHIP(CUBE_RELATIONSHIP object) {
 		return null;
 	}
 
@@ -297,8 +285,7 @@ public class Data_definitionSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseCUBE_STRUCTURE(CUBE_STRUCTURE object)
-	{
+	public T caseCUBE_STRUCTURE(CUBE_STRUCTURE object) {
 		return null;
 	}
 
@@ -313,8 +300,7 @@ public class Data_definitionSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseCUBE_STRUCTURE_ITEM(CUBE_STRUCTURE_ITEM object)
-	{
+	public T caseCUBE_STRUCTURE_ITEM(CUBE_STRUCTURE_ITEM object) {
 		return null;
 	}
 
@@ -329,8 +315,7 @@ public class Data_definitionSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseCUBE_TO_COMBINATION(CUBE_TO_COMBINATION object)
-	{
+	public T caseCUBE_TO_COMBINATION(CUBE_TO_COMBINATION object) {
 		return null;
 	}
 
@@ -345,8 +330,7 @@ public class Data_definitionSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseFRAMEWORK(FRAMEWORK object)
-	{
+	public T caseFRAMEWORK(FRAMEWORK object) {
 		return null;
 	}
 
@@ -361,8 +345,7 @@ public class Data_definitionSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseFRAMEWORK_SUBDOMAIN(FRAMEWORK_SUBDOMAIN object)
-	{
+	public T caseFRAMEWORK_SUBDOMAIN(FRAMEWORK_SUBDOMAIN object) {
 		return null;
 	}
 
@@ -377,8 +360,7 @@ public class Data_definitionSwitch<T> extends Switch<T>
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseFRAMEWORK_VARIABLE_SET(FRAMEWORK_VARIABLE_SET object)
-	{
+	public T caseFRAMEWORK_VARIABLE_SET(FRAMEWORK_VARIABLE_SET object) {
 		return null;
 	}
 
@@ -394,8 +376,7 @@ public class Data_definitionSwitch<T> extends Switch<T>
 	 * @generated
 	 */
 	@Override
-	public T defaultCase(EObject object)
-	{
+	public T defaultCase(EObject object) {
 		return null;
 	}
 

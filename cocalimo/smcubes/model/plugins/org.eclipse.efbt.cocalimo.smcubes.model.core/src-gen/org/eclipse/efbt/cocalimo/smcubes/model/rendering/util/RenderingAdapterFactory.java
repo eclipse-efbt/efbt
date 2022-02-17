@@ -19,8 +19,7 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.eclipse.efbt.cocalimo.smcubes.model.rendering.RenderingPackage
  * @generated
  */
-public class RenderingAdapterFactory extends AdapterFactoryImpl
-{
+public class RenderingAdapterFactory extends AdapterFactoryImpl {
 	/**
 	 * The cached model package.
 	 * <!-- begin-user-doc -->
@@ -35,8 +34,7 @@ public class RenderingAdapterFactory extends AdapterFactoryImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public RenderingAdapterFactory()
-	{
+	public RenderingAdapterFactory() {
 		if (modelPackage == null) {
 			modelPackage = RenderingPackage.eINSTANCE;
 		}
@@ -51,8 +49,7 @@ public class RenderingAdapterFactory extends AdapterFactoryImpl
 	 * @generated
 	 */
 	@Override
-	public boolean isFactoryForType(Object object)
-	{
+	public boolean isFactoryForType(Object object) {
 		if (object == modelPackage) {
 			return true;
 		}
@@ -109,8 +106,7 @@ public class RenderingAdapterFactory extends AdapterFactoryImpl
 	 * @generated
 	 */
 	@Override
-	public Adapter createAdapter(Notifier target)
-	{
+	public Adapter createAdapter(Notifier target) {
 		return modelSwitch.doSwitch((EObject)target);
 	}
 
@@ -125,8 +121,7 @@ public class RenderingAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.rendering.AXIS
 	 * @generated
 	 */
-	public Adapter createAXISAdapter()
-	{
+	public Adapter createAXISAdapter() {
 		return null;
 	}
 
@@ -140,8 +135,7 @@ public class RenderingAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.rendering.AXIS_ORDINATE
 	 * @generated
 	 */
-	public Adapter createAXIS_ORDINATEAdapter()
-	{
+	public Adapter createAXIS_ORDINATEAdapter() {
 		return null;
 	}
 
@@ -155,8 +149,7 @@ public class RenderingAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.rendering.CELL_POSITION
 	 * @generated
 	 */
-	public Adapter createCELL_POSITIONAdapter()
-	{
+	public Adapter createCELL_POSITIONAdapter() {
 		return null;
 	}
 
@@ -170,8 +163,7 @@ public class RenderingAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.rendering.ORDINATE_ITEM
 	 * @generated
 	 */
-	public Adapter createORDINATE_ITEMAdapter()
-	{
+	public Adapter createORDINATE_ITEMAdapter() {
 		return null;
 	}
 
@@ -185,8 +177,7 @@ public class RenderingAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.rendering.TABLE
 	 * @generated
 	 */
-	public Adapter createTABLEAdapter()
-	{
+	public Adapter createTABLEAdapter() {
 		return null;
 	}
 
@@ -200,8 +191,7 @@ public class RenderingAdapterFactory extends AdapterFactoryImpl
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.rendering.TABLE_CELL
 	 * @generated
 	 */
-	public Adapter createTABLE_CELLAdapter()
-	{
+	public Adapter createTABLE_CELLAdapter() {
 		return null;
 	}
 
@@ -213,8 +203,7 @@ public class RenderingAdapterFactory extends AdapterFactoryImpl
 	 * @return the new adapter.
 	 * @generated
 	 */
-	public Adapter createEObjectAdapter()
-	{
+	public Adapter createEObjectAdapter() {
 		return null;
 	}
 

@@ -27,7 +27,7 @@ import org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTrans
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Scenario;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.SelectionLayer;
 import org.eclipse.efbt.cocalimo.core.model.logical_transformations.TestScope;
-import org.eclipse.efbt.cocalimo.core.model.platform_call.CreateLogicalTransformationViewForScope;
+import org.eclipse.efbt.cocalimo.platform_call.model.platform_call.CreateLogicalTransformationViewForScope;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;

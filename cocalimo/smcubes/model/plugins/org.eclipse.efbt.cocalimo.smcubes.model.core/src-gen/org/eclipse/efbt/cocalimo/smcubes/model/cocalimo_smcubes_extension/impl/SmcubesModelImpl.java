@@ -5,12 +5,10 @@ package org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.impl;
 import java.util.Collection;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.Cocalimo_smcubes_extensionPackage;
-import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.CombinationModule;
-import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.CubeModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.DomainModule;
-import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.MappingDefinitionModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.MemberModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel;
+import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SubDomainModule;
 import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.VariableModule;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -38,10 +36,8 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.impl.SmcubesModelImpl#getDomains <em>Domains</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.impl.SmcubesModelImpl#getMembers <em>Members</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.impl.SmcubesModelImpl#getVariables <em>Variables</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.impl.SmcubesModelImpl#getCubes <em>Cubes</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.impl.SmcubesModelImpl#getCombinations <em>Combinations</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.impl.SmcubesModelImpl#getMappings <em>Mappings</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.impl.SmcubesModelImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.impl.SmcubesModelImpl#getSubdomains <em>Subdomains</em>}</li>
  * </ul>
  *
  * @generated
@@ -78,36 +74,6 @@ public class SmcubesModelImpl extends MinimalEObjectImpl.Container implements Sm
 	protected EList<VariableModule> variables;
 
 	/**
-	 * The cached value of the '{@link #getCubes() <em>Cubes</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getCubes()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<CubeModule> cubes;
-
-	/**
-	 * The cached value of the '{@link #getCombinations() <em>Combinations</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getCombinations()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<CombinationModule> combinations;
-
-	/**
-	 * The cached value of the '{@link #getMappings() <em>Mappings</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getMappings()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<MappingDefinitionModule> mappings;
-
-	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -126,6 +92,16 @@ public class SmcubesModelImpl extends MinimalEObjectImpl.Container implements Sm
 	 * @ordered
 	 */
 	protected String name = NAME_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getSubdomains() <em>Subdomains</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSubdomains()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<SubDomainModule> subdomains;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -191,45 +167,6 @@ public class SmcubesModelImpl extends MinimalEObjectImpl.Container implements Sm
 	 * @generated
 	 */
 	@Override
-	public EList<CubeModule> getCubes() {
-		if (cubes == null) {
-			cubes = new EObjectContainmentEList<CubeModule>(CubeModule.class, this, Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__CUBES);
-		}
-		return cubes;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EList<CombinationModule> getCombinations() {
-		if (combinations == null) {
-			combinations = new EObjectContainmentEList<CombinationModule>(CombinationModule.class, this, Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__COMBINATIONS);
-		}
-		return combinations;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EList<MappingDefinitionModule> getMappings() {
-		if (mappings == null) {
-			mappings = new EObjectContainmentEList<MappingDefinitionModule>(MappingDefinitionModule.class, this, Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__MAPPINGS);
-		}
-		return mappings;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public String getName() {
 		return name;
 	}
@@ -253,6 +190,19 @@ public class SmcubesModelImpl extends MinimalEObjectImpl.Container implements Sm
 	 * @generated
 	 */
 	@Override
+	public EList<SubDomainModule> getSubdomains() {
+		if (subdomains == null) {
+			subdomains = new EObjectContainmentEList<SubDomainModule>(SubDomainModule.class, this, Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__SUBDOMAINS);
+		}
+		return subdomains;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__DOMAINS:
@@ -261,12 +211,8 @@ public class SmcubesModelImpl extends MinimalEObjectImpl.Container implements Sm
 				return ((InternalEList<?>)getMembers()).basicRemove(otherEnd, msgs);
 			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__VARIABLES:
 				return ((InternalEList<?>)getVariables()).basicRemove(otherEnd, msgs);
-			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__CUBES:
-				return ((InternalEList<?>)getCubes()).basicRemove(otherEnd, msgs);
-			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__COMBINATIONS:
-				return ((InternalEList<?>)getCombinations()).basicRemove(otherEnd, msgs);
-			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__MAPPINGS:
-				return ((InternalEList<?>)getMappings()).basicRemove(otherEnd, msgs);
+			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__SUBDOMAINS:
+				return ((InternalEList<?>)getSubdomains()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -285,14 +231,10 @@ public class SmcubesModelImpl extends MinimalEObjectImpl.Container implements Sm
 				return getMembers();
 			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__VARIABLES:
 				return getVariables();
-			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__CUBES:
-				return getCubes();
-			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__COMBINATIONS:
-				return getCombinations();
-			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__MAPPINGS:
-				return getMappings();
 			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__NAME:
 				return getName();
+			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__SUBDOMAINS:
+				return getSubdomains();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -318,20 +260,12 @@ public class SmcubesModelImpl extends MinimalEObjectImpl.Container implements Sm
 				getVariables().clear();
 				getVariables().addAll((Collection<? extends VariableModule>)newValue);
 				return;
-			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__CUBES:
-				getCubes().clear();
-				getCubes().addAll((Collection<? extends CubeModule>)newValue);
-				return;
-			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__COMBINATIONS:
-				getCombinations().clear();
-				getCombinations().addAll((Collection<? extends CombinationModule>)newValue);
-				return;
-			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__MAPPINGS:
-				getMappings().clear();
-				getMappings().addAll((Collection<? extends MappingDefinitionModule>)newValue);
-				return;
 			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__NAME:
 				setName((String)newValue);
+				return;
+			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__SUBDOMAINS:
+				getSubdomains().clear();
+				getSubdomains().addAll((Collection<? extends SubDomainModule>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -354,17 +288,11 @@ public class SmcubesModelImpl extends MinimalEObjectImpl.Container implements Sm
 			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__VARIABLES:
 				getVariables().clear();
 				return;
-			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__CUBES:
-				getCubes().clear();
-				return;
-			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__COMBINATIONS:
-				getCombinations().clear();
-				return;
-			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__MAPPINGS:
-				getMappings().clear();
-				return;
 			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__NAME:
 				setName(NAME_EDEFAULT);
+				return;
+			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__SUBDOMAINS:
+				getSubdomains().clear();
 				return;
 		}
 		super.eUnset(featureID);
@@ -384,14 +312,10 @@ public class SmcubesModelImpl extends MinimalEObjectImpl.Container implements Sm
 				return members != null && !members.isEmpty();
 			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__VARIABLES:
 				return variables != null && !variables.isEmpty();
-			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__CUBES:
-				return cubes != null && !cubes.isEmpty();
-			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__COMBINATIONS:
-				return combinations != null && !combinations.isEmpty();
-			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__MAPPINGS:
-				return mappings != null && !mappings.isEmpty();
 			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+			case Cocalimo_smcubes_extensionPackage.SMCUBES_MODEL__SUBDOMAINS:
+				return subdomains != null && !subdomains.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

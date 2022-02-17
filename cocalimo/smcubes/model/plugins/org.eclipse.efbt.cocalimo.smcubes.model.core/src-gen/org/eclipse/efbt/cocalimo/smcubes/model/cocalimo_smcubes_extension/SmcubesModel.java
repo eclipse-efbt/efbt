@@ -22,10 +22,8 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel#getDomains <em>Domains</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel#getMembers <em>Members</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel#getVariables <em>Variables</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel#getCubes <em>Cubes</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel#getCombinations <em>Combinations</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel#getMappings <em>Mappings</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel#getSubdomains <em>Subdomains</em>}</li>
  * </ul>
  *
  * @see org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.Cocalimo_smcubes_extensionPackage#getSmcubesModel()
@@ -79,51 +77,6 @@ public interface SmcubesModel extends EObject {
 	EList<VariableModule> getVariables();
 
 	/**
-	 * Returns the value of the '<em><b>Cubes</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.CubeModule}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The Cubes, The Cube Structures and the Cube Structure Items.
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Cubes</em>' containment reference list.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.Cocalimo_smcubes_extensionPackage#getSmcubesModel_Cubes()
-	 * @model containment="true"
-	 * @generated
-	 */
-	EList<CubeModule> getCubes();
-
-	/**
-	 * Returns the value of the '<em><b>Combinations</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.CombinationModule}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The Combinations
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Combinations</em>' containment reference list.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.Cocalimo_smcubes_extensionPackage#getSmcubesModel_Combinations()
-	 * @model containment="true"
-	 * @generated
-	 */
-	EList<CombinationModule> getCombinations();
-
-	/**
-	 * Returns the value of the '<em><b>Mappings</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.MappingDefinitionModule}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The Mappings
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Mappings</em>' containment reference list.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.Cocalimo_smcubes_extensionPackage#getSmcubesModel_Mappings()
-	 * @model containment="true"
-	 * @generated
-	 */
-	EList<MappingDefinitionModule> getMappings();
-
-	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -147,5 +100,17 @@ public interface SmcubesModel extends EObject {
 	 * @generated
 	 */
 	void setName(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Subdomains</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SubDomainModule}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Subdomains</em>' containment reference list.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.Cocalimo_smcubes_extensionPackage#getSmcubesModel_Subdomains()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<SubDomainModule> getSubdomains();
 
 } // SmcubesModel
