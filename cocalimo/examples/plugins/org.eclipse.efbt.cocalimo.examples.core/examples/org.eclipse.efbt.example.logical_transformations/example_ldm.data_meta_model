@@ -1,0 +1,117 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//EntityModule",
+  "name" : "logical_data_model",
+  "nsURI" : "logical_data_model",
+  "nsPrefix" : "logical_data_model",
+  "entities" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+    "name" : "Instrument"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+    "name" : "BondInstrument",
+    "attributes" : [ {
+      "name" : "coupon_rate"
+    } ],
+    "superClass" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+      "$ref" : "//@entities.0"
+    }
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+    "name" : "EquityInstrument",
+    "superClass" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+      "$ref" : "//@entities.0"
+    }
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+    "name" : "Entity",
+    "attributes" : [ {
+      "name" : "entity_id"
+    }, {
+      "name" : "market_cap"
+    }, {
+      "name" : "credit_quality"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+    "name" : "Trade",
+    "attributes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//ForeignKeyAttribute",
+      "name" : "counteparty",
+      "entity" : {
+        "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+        "$ref" : "//@entities.3"
+      }
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//ForeignKeyAttribute",
+      "name" : "instrument",
+      "entity" : {
+        "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+        "$ref" : "//@entities.0"
+      }
+    }, {
+      "name" : "quantity"
+    }, {
+      "name" : "trade_id",
+      "isPK" : true
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//DerivedEntity",
+    "name" : "Entity_derived"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//DerivedEntity",
+    "name" : "Trade_derived",
+    "attributes" : [ {
+      "name" : "exposure_at_defualt"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//ForeignKeyAttribute",
+      "name" : "trade",
+      "entity" : {
+        "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+        "$ref" : "//@entities.4"
+      }
+    }, {
+      "name" : "risk_weight"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//DerivedEntity",
+    "name" : "BondInstrument_derived",
+    "attributes" : [ {
+      "name" : "duration"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//ForeignKeyAttribute",
+      "name" : "bondinstrument",
+      "entity" : {
+        "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+        "$ref" : "//@entities.1"
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//GeneratedEntity",
+    "name" : "OUTPUT_LAYER_CREDIT_RISK",
+    "attributes" : [ {
+      "name" : "EAD"
+    }, {
+      "name" : "RW"
+    }, {
+      "name" : "TRADE_ID"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//GeneratedEntity",
+    "name" : "OUTPUT_LAYER_MARKET_RISK",
+    "attributes" : [ {
+      "name" : "TRADE_ID"
+    }, {
+      "name" : "DURATION"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//GeneratedEntity",
+    "name" : "OUTPUT_LAYER_TRADE_REPORT",
+    "attributes" : [ {
+      "name" : "TRADE_ID"
+    }, {
+      "name" : "MARKET_VALUE"
+    } ]
+  } ]
+}
