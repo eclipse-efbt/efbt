@@ -38,13 +38,10 @@
 		<module>releng/org.eclipse.efbt.cocalimo.core.model.target</module>	
 		<module>plugins/org.eclipse.efbt.cocalimo.core.model.module_management</module>
 		<module>plugins/org.eclipse.efbt.cocalimo.core.model.requirements_text</module>
-		<module>plugins/org.eclipse.efbt.cocalimo.core.model.logical_transformations</module>	
 		<module>plugins/org.eclipse.efbt.cocalimo.core.model.module_management.edit</module>
 		<module>plugins/org.eclipse.efbt.cocalimo.core.model.requirements_text.edit</module>
-		<module>plugins/org.eclipse.efbt.cocalimo.core.model.logical_transformations.edit</module>		
 		<module>plugins/org.eclipse.efbt.cocalimo.core.model.module_management.editor</module>
 		<module>plugins/org.eclipse.efbt.cocalimo.core.model.requirements_text.editor</module>
-		<module>plugins/org.eclipse.efbt.cocalimo.core.model.logical_transformations.editor</module>
 		<module>features/org.eclipse.efbt.cocalimo.core.model.feature</module>
 
 	</modules>

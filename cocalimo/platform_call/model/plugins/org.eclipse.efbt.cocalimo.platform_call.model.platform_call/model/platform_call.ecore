@@ -75,11 +75,11 @@
   <eClassifiers xsi:type="ecore:EClass" name="CreateLogicalTransformationViewForScope"
       eSuperTypes="#//PlatformCall">
     <eStructuralFeatures xsi:type="ecore:EReference" name="logicalTransformationModule"
-        eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.core.model.logical_transformations/model/logical_transformations.ecore#//LogicalTransformationModule"/>
+        eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations/model/logical_transformations.ecore#//LogicalTransformationModule"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="attributeLineage" upperBound="-1"
         eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EStructuralFeature"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="testScope" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.core.model.logical_transformations/model/logical_transformations.ecore#//E2ETestScope"
+        eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations/model/logical_transformations.ecore#//E2ETestScope"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ConvertDataMetaModelToEcore" eSuperTypes="#//PlatformCall">

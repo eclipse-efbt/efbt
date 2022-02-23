@@ -131,11 +131,11 @@ Exhibit A – Form of Secondary Licenses Notice
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.emf.edit.ui"/>
       <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.eclipse.efbt.cocalimo.core.model.logical_transformations"/>
+      <import plugin="org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core"/>
       <import plugin="org.eclipse.efbt.cocalimo.core.model.requirements_text"/>
       <import plugin="org.eclipse.efbt.cocalimo.smcubes.model.core"/>
       <import plugin="org.eclipse.emf.ecore.edit"/>
-      <import plugin="org.eclipse.efbt.cocalimo.core.model.logical_transformations.edit"/>
+      <import plugin="org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core.edit"/>
       <import plugin="org.eclipse.efbt.cocalimo.core.model.module_management.edit"/>
       <import plugin="org.eclipse.efbt.cocalimo.core.model.requirements_text.edit"/>
       <import plugin="org.eclipse.efbt.cocalimo.smcubes.model.core.edit"/>

@@ -2,13 +2,13 @@
  */
 package org.eclipse.efbt.cocalimo.platform_call.model.platform_call.impl;
 
-import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.Bpmn_litePackage;
-
-import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsPackage;
-
 import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementPackage;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.Requirements_textPackage;
+
+import org.eclipse.efbt.cocalimo.logical_transformations.model.bpmn_lite.Bpmn_litePackage;
+
+import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.Logical_transformationsPackage;
 
 import org.eclipse.efbt.cocalimo.platform_call.model.platform_call.ConvertDataMetaModelToEcore;
 import org.eclipse.efbt.cocalimo.platform_call.model.platform_call.ConvertSQLDeveloperModelToEcore;
@@ -129,8 +129,8 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 
 		// Initialize simple dependencies
 		EcorePackage.eINSTANCE.eClass();
-		Logical_transformationsPackage.eINSTANCE.eClass();
 		Bpmn_litePackage.eINSTANCE.eClass();
+		Logical_transformationsPackage.eINSTANCE.eClass();
 		Module_managementPackage.eINSTANCE.eClass();
 		Requirements_textPackage.eINSTANCE.eClass();
 		CorePackage.eINSTANCE.eClass();

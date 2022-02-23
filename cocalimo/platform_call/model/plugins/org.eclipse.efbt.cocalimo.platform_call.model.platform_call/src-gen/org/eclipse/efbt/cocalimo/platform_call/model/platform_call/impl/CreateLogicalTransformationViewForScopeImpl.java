@@ -4,8 +4,8 @@ package org.eclipse.efbt.cocalimo.platform_call.model.platform_call.impl;
 
 import java.util.Collection;
 
-import org.eclipse.efbt.cocalimo.core.model.logical_transformations.E2ETestScope;
-import org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule;
+import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.E2ETestScope;
+import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.LogicalTransformationModule;
 
 import org.eclipse.efbt.cocalimo.platform_call.model.platform_call.CreateLogicalTransformationViewForScope;
 import org.eclipse.efbt.cocalimo.platform_call.model.platform_call.Platform_callPackage;

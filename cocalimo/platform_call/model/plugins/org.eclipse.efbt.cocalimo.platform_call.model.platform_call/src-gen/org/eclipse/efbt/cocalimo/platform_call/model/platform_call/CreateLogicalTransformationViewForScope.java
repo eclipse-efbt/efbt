@@ -2,8 +2,8 @@
  */
 package org.eclipse.efbt.cocalimo.platform_call.model.platform_call;
 
-import org.eclipse.efbt.cocalimo.core.model.logical_transformations.E2ETestScope;
-import org.eclipse.efbt.cocalimo.core.model.logical_transformations.LogicalTransformationModule;
+import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.E2ETestScope;
+import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.LogicalTransformationModule;
 
 import org.eclipse.emf.common.util.EList;
 
@@ -64,7 +64,7 @@ public interface CreateLogicalTransformationViewForScope extends PlatformCall {
 
 	/**
 	 * Returns the value of the '<em><b>Test Scope</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.core.model.logical_transformations.E2ETestScope}.
+	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.E2ETestScope}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Test Scope</em>' containment reference list.
