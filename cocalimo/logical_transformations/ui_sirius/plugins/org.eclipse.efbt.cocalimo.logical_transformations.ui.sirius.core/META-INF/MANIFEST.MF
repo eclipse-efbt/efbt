@@ -13,7 +13,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.emf.edit.ui,
  org.eclipse.sirius.diagram,
  com.google.guava,
- org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations
+ org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations,
+ org.eclipse.efbt.cocalimo.smcubes.model.core
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Vendor: %providerName

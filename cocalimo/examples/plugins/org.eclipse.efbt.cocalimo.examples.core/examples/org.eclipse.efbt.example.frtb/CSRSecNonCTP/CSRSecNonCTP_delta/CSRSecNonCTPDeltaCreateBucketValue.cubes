@@ -1,0 +1,42 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/cubes#//FreeBirdToolsCubeModule",
+  "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
+  "name" : "CSRSecNonCTPDeltaCreateBucketValue",
+  "version" : "1.0",
+  "cubes" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "copyOfTotalCSRSecNonCTPDeltaSensitivityPerBucket",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "CSRSecNonCTPDeltaCreateSquares.cubes#totalCSRSecNonCTPDeltaSensitivityPerBucket"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "CSRSecNonCTPDeltaSensitivityPerBucketCombinations",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "copyOfTotalCSRSecNonCTPDeltaSensitivityPerBucket"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "CSRSecNonCTPDeltaSensitivityPerBucketCombinationsWithCorrelationFactor",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "CSRSecNonCTPDeltaSensitivityPerBucketCombinations"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "CSRSecNonCTPDeltaSensitivityPerBucketCorrelated",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "CSRSecNonCTPDeltaSensitivityPerBucketCombinationsWithCorrelationFactor"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "totalCSRSecNonCTPDeltaSensitivityPerBucketCorrelated",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "totalCSRSecNonCTPDeltaSensitivityPerBucketCorrelated"
+    } ]
+  } ]
+}

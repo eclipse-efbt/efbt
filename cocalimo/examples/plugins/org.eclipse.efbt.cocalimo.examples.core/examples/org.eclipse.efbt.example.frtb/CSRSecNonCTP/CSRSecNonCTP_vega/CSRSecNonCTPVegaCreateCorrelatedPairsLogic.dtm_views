@@ -1,0 +1,369 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+  "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
+  "name" : "CSRSecNonCTPVegaCreateCorrelatedPairsLogic",
+  "version" : "1.0",
+  "DTMViews" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//CopyView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "CSRSecNonCTPVegaCreateCorrelatedPairs.cubes#copyOfWeightedCSRSecNonCTPVegaSensitivitiesAndRiskFactors"
+    },
+    "name" : "copyOfWeightedCSRSecNonCTPVegaSensitivitiesAndRiskFactors"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//JoinView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "CSRSecNonCTPVegaCreateCorrelatedPairs.cubes#CSRSecNonCTPVegaSensitivityCombinations"
+    },
+    "name" : "CSRSecNonCTPVegaSensitivityCombinations",
+    "whereClause" : {
+      "function" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "../../sdd/FRTBDerivedIdentifiers.efbt_data_definition#bucketID"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "CSRSecNonCTPVegaCreateCorrelatedPairs.cubes#copyOfWeightedCSRSecNonCTPVegaSensitivitiesAndRiskFactors"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "../../sdd/FRTBDerivedIdentifiers.efbt_data_definition#bucketID"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "CSRSecNonCTPVegaApplyWeighting.cubes#weightedCSRSecNonCTPVegaSensitivitiesAndRiskFactors"
+          }
+        } ],
+        "name" : "equals",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+          "$ref" : "../../common/commonFunctionsModule.functions#equals"
+        }
+      }
+    },
+    "renames" : [ {
+      "fromCube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "CSRSecNonCTPVegaCreateCorrelatedPairs.cubes#copyOfWeightedCSRSecNonCTPVegaSensitivitiesAndRiskFactors"
+      },
+      "fromVariable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "CSRSecNonCTPVegaMeasures.efbt_data_definition#weightedCSRSecNonCTPVegaSensitivity"
+      },
+      "toVariable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "CSRSecNonCTPVegaMeasures.efbt_data_definition#CSRSecNonCTPVegaSensitivityl"
+      }
+    }, {
+      "fromCube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "CSRSecNonCTPVegaApplyWeighting.cubes#weightedCSRSecNonCTPVegaSensitivitiesAndRiskFactors"
+      },
+      "fromVariable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "CSRSecNonCTPVegaMeasures.efbt_data_definition#weightedCSRSecNonCTPVegaSensitivity"
+      },
+      "toVariable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "CSRSecNonCTPVegaMeasures.efbt_data_definition#CSRSecNonCTPVegaSensitivityk"
+      }
+    }, {
+      "fromCube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "CSRSecNonCTPVegaCreateCorrelatedPairs.cubes#copyOfWeightedCSRSecNonCTPVegaSensitivitiesAndRiskFactors"
+      },
+      "fromVariable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../../sdd/FRTBSourceMeasures.efbt_data_definition#tenor"
+      },
+      "toVariable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "CSRSecNonCTPVegaMeasures.efbt_data_definition#tenorl"
+      }
+    }, {
+      "fromCube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "CSRSecNonCTPVegaApplyWeighting.cubes#weightedCSRSecNonCTPVegaSensitivitiesAndRiskFactors"
+      },
+      "fromVariable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../../sdd/FRTBSourceMeasures.efbt_data_definition#tenor"
+      },
+      "toVariable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "CSRSecNonCTPVegaMeasures.efbt_data_definition#tenork"
+      }
+    }, {
+      "fromCube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "CSRSecNonCTPVegaCreateCorrelatedPairs.cubes#copyOfWeightedCSRSecNonCTPVegaSensitivitiesAndRiskFactors"
+      },
+      "fromVariable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../../sdd/FRTBSourceIdentifiers.efbt_data_definition#riskFactorID"
+      },
+      "toVariable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../../sdd/FRTBDerivedIdentifiers.efbt_data_definition#riskFactorIDl"
+      }
+    }, {
+      "fromCube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "CSRSecNonCTPVegaApplyWeighting.cubes#weightedCSRSecNonCTPVegaSensitivitiesAndRiskFactors"
+      },
+      "fromVariable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../../sdd/FRTBSourceIdentifiers.efbt_data_definition#riskFactorID"
+      },
+      "toVariable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../../sdd/FRTBDerivedIdentifiers.efbt_data_definition#riskFactorIDk"
+      }
+    } ],
+    "ignores" : [ {
+      "columnToIgnore" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../../sdd/FRTBSourceDimensions.efbt_data_definition#mainCurrency"
+      },
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "CSRSecNonCTPVegaCreateCorrelatedPairs.cubes#copyOfWeightedCSRSecNonCTPVegaSensitivitiesAndRiskFactors"
+      }
+    }, {
+      "columnToIgnore" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../../sdd/FRTBSourceDimensions.efbt_data_definition#secondCurrency"
+      },
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "CSRSecNonCTPVegaCreateCorrelatedPairs.cubes#copyOfWeightedCSRSecNonCTPVegaSensitivitiesAndRiskFactors"
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//EnrichmentView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "CSRSecNonCTPVegaCreateCorrelatedPairs.cubes#CSRSecNonCTPVegaSensitivityCombinationsWithCorrelationFactor"
+    },
+    "name" : "CSRSecNonCTPVegaSensitivityCombinationsWithCorrelationFactor",
+    "functions" : [ {
+      "name" : "CSRSecNonCTPVegaSensitivityCombinationsWithCorrelationFactor_CSRSecNonCTPVegaCorrelationFactor",
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "CSRSecNonCTPVegaCreateCorrelatedPairs.cubes#CSRSecNonCTPVegaSensitivityCombinationsWithCorrelationFactor"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "CSRSecNonCTPVegaMeasures.efbt_data_definition#CSRSecNonCTPVegaCorrelationFactor"
+      },
+      "basicFunction" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "CSRSecNonCTPVegaMeasures.efbt_data_definition#tenork"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "CSRSecNonCTPVegaCreateCorrelatedPairs.cubes#CSRSecNonCTPVegaSensitivityCombinations"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "CSRSecNonCTPVegaMeasures.efbt_data_definition#tenorl"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "CSRSecNonCTPVegaCreateCorrelatedPairs.cubes#CSRSecNonCTPVegaSensitivityCombinations"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "../../sdd/FRTBDerivedIdentifiers.efbt_data_definition#riskFactorIDk"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "CSRSecNonCTPVegaCreateCorrelatedPairs.cubes#CSRSecNonCTPVegaSensitivityCombinations"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "../../sdd/FRTBDerivedIdentifiers.efbt_data_definition#riskFactorIDl"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "CSRSecNonCTPVegaCreateCorrelatedPairs.cubes#CSRSecNonCTPVegaSensitivityCombinations"
+          }
+        } ],
+        "name" : "getCSRSecNonCTPVegaCorrelationFactor",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+          "$ref" : "../CSRSecNonCTP_common/CSRSecNonCTPFunctions.functions#getCSRSecNonCTPVegaCorrelationFactor"
+        }
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//EnrichmentView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "CSRSecNonCTPVegaCreateCorrelatedPairs.cubes#CSRSecNonCTPVegaSensitivitiesCorrelated"
+    },
+    "name" : "CSRSecNonCTPVegaSensitivitiesCorrelated",
+    "functions" : [ {
+      "name" : "CSRSecNonCTPVegaSensitivitiesCorrelated_CSRSecNonCTPVegaKBInput",
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "CSRSecNonCTPVegaCreateCorrelatedPairs.cubes#CSRSecNonCTPVegaSensitivitiesCorrelated"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "CSRSecNonCTPVegaMeasures.efbt_data_definition#CSRSecNonCTPVegaKBInput"
+      },
+      "basicFunction" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunction",
+          "parameters" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+            "column" : {
+              "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+              "$ref" : "CSRSecNonCTPVegaMeasures.efbt_data_definition#CSRSecNonCTPVegaSensitivityk"
+            },
+            "cube" : {
+              "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+              "$ref" : "CSRSecNonCTPVegaCreateCorrelatedPairs.cubes#CSRSecNonCTPVegaSensitivityCombinationsWithCorrelationFactor"
+            }
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+            "column" : {
+              "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+              "$ref" : "CSRSecNonCTPVegaMeasures.efbt_data_definition#CSRSecNonCTPVegaSensitivityk"
+            },
+            "cube" : {
+              "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+              "$ref" : "CSRSecNonCTPVegaCreateCorrelatedPairs.cubes#CSRSecNonCTPVegaSensitivityCombinationsWithCorrelationFactor"
+            }
+          } ],
+          "name" : "multiply1",
+          "functionSpec" : {
+            "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+            "$ref" : "../../common/commonFunctionsModule.functions#multiply"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "CSRSecNonCTPVegaMeasures.efbt_data_definition#CSRSecNonCTPVegaCorrelationFactor"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "CSRSecNonCTPVegaCreateCorrelatedPairs.cubes#CSRSecNonCTPVegaSensitivityCombinationsWithCorrelationFactor"
+          }
+        } ],
+        "name" : "multiply",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+          "$ref" : "../../common/commonFunctionsModule.functions#multiply"
+        }
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//AggregateEnrichmentView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "CSRSecNonCTPVegaCreateCorrelatedPairs.cubes#CSRSecNonCTPVegaSensitivitiesCorrelatedAndAggregated"
+    },
+    "name" : "CSRSecNonCTPVegaSensitivitiesCorrelatedAndAggregated",
+    "functions" : [ {
+      "name" : "CSRSecNonCTPVegaSensitivitiesCorrelatedAndAggregated_CSRSecNonCTPVegaKBInput_per_bucket",
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "CSRSecNonCTPVegaCreateCorrelatedPairs.cubes#CSRSecNonCTPVegaSensitivitiesCorrelatedAndAggregated"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "CSRSecNonCTPVegaMeasures.efbt_data_definition#CSRSecNonCTPVegaKBInputPerBucket"
+      },
+      "aggregateFunction" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "CSRSecNonCTPVegaMeasures.efbt_data_definition#CSRSecNonCTPVegaKBInput"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "CSRSecNonCTPVegaCreateCorrelatedPairs.cubes#CSRSecNonCTPVegaSensitivitiesCorrelated"
+          }
+        } ],
+        "name" : "SUM",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//AggregateFunctionSpec",
+          "$ref" : "../../common/commonFunctionsModule.functions#SUM"
+        }
+      }
+    } ],
+    "groupByClause" : {
+      "groupByColumns" : [ {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../../sdd/FRTBDerivedIdentifiers.efbt_data_definition#bucketID"
+      } ]
+    }
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//EnrichmentView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "CSRSecNonCTPVegaCreateCorrelatedPairs.cubes#CSRSecNonCTPVegaSensitivityKBPerBucket"
+    },
+    "name" : "CSRSecNonCTPVegaSensitivityKBPerBucket",
+    "functions" : [ {
+      "name" : "CSRSecNonCTPVegaSensitivityKBPerBucket_CSRSecNonCTPVegaKB",
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "CSRSecNonCTPVegaCreateCorrelatedPairs.cubes#CSRSecNonCTPVegaSensitivityKBPerBucket"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "CSRSecNonCTPVegaMeasures.efbt_data_definition#CSRSecNonCTPVegaKB"
+      },
+      "basicFunction" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunction",
+          "parameters" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+            "column" : {
+              "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+              "$ref" : "CSRSecNonCTPVegaMeasures.efbt_data_definition#CSRSecNonCTPVegaKBInputPerBucket"
+            },
+            "cube" : {
+              "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+              "$ref" : "CSRSecNonCTPVegaCreateCorrelatedPairs.cubes#CSRSecNonCTPVegaSensitivitiesCorrelatedAndAggregated"
+            }
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/functions#//ValueParameter",
+            "dataType" : "Decimal",
+            "value" : "0.0"
+          } ],
+          "name" : "max",
+          "functionSpec" : {
+            "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+            "$ref" : "../../common/commonFunctionsModule.functions#max"
+          }
+        } ],
+        "name" : "sqrt",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+          "$ref" : "../../common/commonFunctionsModule.functions#sqrt"
+        }
+      }
+    } ]
+  } ]
+}

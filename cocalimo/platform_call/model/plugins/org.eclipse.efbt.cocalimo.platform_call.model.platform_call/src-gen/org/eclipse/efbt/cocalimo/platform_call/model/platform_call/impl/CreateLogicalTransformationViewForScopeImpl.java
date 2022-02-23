@@ -10,13 +10,13 @@ import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transform
 import org.eclipse.efbt.cocalimo.platform_call.model.platform_call.CreateLogicalTransformationViewForScope;
 import org.eclipse.efbt.cocalimo.platform_call.model.platform_call.Platform_callPackage;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -59,7 +59,7 @@ public class CreateLogicalTransformationViewForScopeImpl extends PlatformCallImp
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<EStructuralFeature> attributeLineage;
+	protected EList<Attribute> attributeLineage;
 
 	/**
 	 * The cached value of the '{@link #getTestScope() <em>Test Scope</em>}' containment reference list.
@@ -136,9 +136,9 @@ public class CreateLogicalTransformationViewForScopeImpl extends PlatformCallImp
 	 * @generated
 	 */
 	@Override
-	public EList<EStructuralFeature> getAttributeLineage() {
+	public EList<Attribute> getAttributeLineage() {
 		if (attributeLineage == null) {
-			attributeLineage = new EObjectResolvingEList<EStructuralFeature>(EStructuralFeature.class, this, Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__ATTRIBUTE_LINEAGE);
+			attributeLineage = new EObjectResolvingEList<Attribute>(Attribute.class, this, Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__ATTRIBUTE_LINEAGE);
 		}
 		return attributeLineage;
 	}
@@ -203,7 +203,7 @@ public class CreateLogicalTransformationViewForScopeImpl extends PlatformCallImp
 				return;
 			case Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__ATTRIBUTE_LINEAGE:
 				getAttributeLineage().clear();
-				getAttributeLineage().addAll((Collection<? extends EStructuralFeature>)newValue);
+				getAttributeLineage().addAll((Collection<? extends Attribute>)newValue);
 				return;
 			case Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__TEST_SCOPE:
 				getTestScope().clear();

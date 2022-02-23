@@ -27,12 +27,12 @@ import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transform
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.TestModule;
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.TestScope;
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.UnitTestScope;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BasicEntity;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
@@ -110,7 +110,7 @@ public class TaskService {
 		if (self instanceof ServiceTask)
 		{
 			ServiceTask serviceTask = (ServiceTask) self;
-			EStructuralFeature attr = serviceTask.getEnrichedAttribute();
+			Attribute attr = serviceTask.getEnrichedAttribute();
 			EList<Scenario> scenarios = serviceTask.getScenarios();
 			for (Scenario scenario : scenarios) {
 				scenario.getRequiredAttributes();
@@ -120,9 +120,9 @@ public class TaskService {
 		return returnTasks;
 	}
 	
-	public EList<EStructuralFeature> getILAttributes(SubProcess self)
+	public EList<Attribute> getILAttributes(SubProcess self)
 	{
-		EList<EStructuralFeature> returnAttributes = new BasicEList<EStructuralFeature>();
+		EList<Attribute> returnAttributes = new BasicEList<Attribute>();
 		TreeIterator<EObject> contents = self.eAllContents();
 		while(contents.hasNext())
 		{
@@ -130,8 +130,8 @@ public class TaskService {
 			if(item instanceof UserTask )
 			{
 				UserTask userTask= (UserTask) item;
-				EClass eclass = userTask.getEntity();
-				EList<EStructuralFeature> attributes = eclass.getEAllStructuralFeatures();
+				BasicEntity eclass = userTask.getEntity();
+				EList<Attribute> attributes = eclass.getAttributes();
 				returnAttributes.addAll(attributes);
 			}
 		}
@@ -140,9 +140,9 @@ public class TaskService {
 		
 	}
 	
-	public EList<EStructuralFeature> getEILAttributes(SubProcess self)
+	public EList<Attribute> getEILAttributes(SubProcess self)
 	{
-		EList<EStructuralFeature> returnAttributes = new BasicEList<EStructuralFeature>();
+		EList<Attribute> returnAttributes = new BasicEList<Attribute>();
 		TreeIterator<EObject> contents = self.eAllContents();
 		while(contents.hasNext())
 		{
@@ -151,7 +151,7 @@ public class TaskService {
 			{
 				ServiceTask serviceTask= (ServiceTask) item;
 				
-				EStructuralFeature attribute = serviceTask.getEnrichedAttribute();
+				Attribute attribute = serviceTask.getEnrichedAttribute();
 				returnAttributes.add(attribute);
 			}
 		}

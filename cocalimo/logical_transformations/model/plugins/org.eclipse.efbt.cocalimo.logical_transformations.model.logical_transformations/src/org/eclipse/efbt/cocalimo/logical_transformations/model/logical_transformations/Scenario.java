@@ -2,10 +2,10 @@
  */
 package org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 
 /**
  * <!-- begin-user-doc -->
@@ -107,7 +107,7 @@ public interface Scenario extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Required Attributes</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.emf.ecore.EStructuralFeature}.
+	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Required Attributes</em>' reference list.
@@ -115,7 +115,7 @@ public interface Scenario extends EObject {
 	 * @model
 	 * @generated
 	 */
-	EList<EStructuralFeature> getRequiredAttributes();
+	EList<Attribute> getRequiredAttributes();
 
 	/**
 	 * Returns the value of the '<em><b>Data constraints</b></em>' containment reference.

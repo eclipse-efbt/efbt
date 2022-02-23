@@ -5,9 +5,8 @@ package org.eclipse.efbt.cocalimo.platform_call.model.platform_call;
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.E2ETestScope;
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.LogicalTransformationModule;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute;
 import org.eclipse.emf.common.util.EList;
-
-import org.eclipse.emf.ecore.EStructuralFeature;
 
 /**
  * <!-- begin-user-doc -->
@@ -52,7 +51,7 @@ public interface CreateLogicalTransformationViewForScope extends PlatformCall {
 
 	/**
 	 * Returns the value of the '<em><b>Attribute Lineage</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.emf.ecore.EStructuralFeature}.
+	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Attribute Lineage</em>' reference list.
@@ -60,7 +59,7 @@ public interface CreateLogicalTransformationViewForScope extends PlatformCall {
 	 * @model
 	 * @generated
 	 */
-	EList<EStructuralFeature> getAttributeLineage();
+	EList<Attribute> getAttributeLineage();
 
 	/**
 	 * Returns the value of the '<em><b>Test Scope</b></em>' containment reference list.

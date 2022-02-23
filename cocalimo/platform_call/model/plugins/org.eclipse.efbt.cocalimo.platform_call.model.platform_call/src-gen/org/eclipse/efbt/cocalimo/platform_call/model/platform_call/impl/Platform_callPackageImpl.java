@@ -421,7 +421,6 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 		// Obtain other dependent packages
 		Module_managementPackage theModule_managementPackage = (Module_managementPackage)EPackage.Registry.INSTANCE.getEPackage(Module_managementPackage.eNS_URI);
 		Logical_transformationsPackage theLogical_transformationsPackage = (Logical_transformationsPackage)EPackage.Registry.INSTANCE.getEPackage(Logical_transformationsPackage.eNS_URI);
-		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
 		Data_meta_modelPackage theData_meta_modelPackage = (Data_meta_modelPackage)EPackage.Registry.INSTANCE.getEPackage(Data_meta_modelPackage.eNS_URI);
 
 		// Create type parameters
@@ -454,7 +453,7 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 
 		initEClass(createLogicalTransformationViewForScopeEClass, CreateLogicalTransformationViewForScope.class, "CreateLogicalTransformationViewForScope", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getCreateLogicalTransformationViewForScope_LogicalTransformationModule(), theLogical_transformationsPackage.getLogicalTransformationModule(), null, "logicalTransformationModule", null, 0, 1, CreateLogicalTransformationViewForScope.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getCreateLogicalTransformationViewForScope_AttributeLineage(), theEcorePackage.getEStructuralFeature(), null, "attributeLineage", null, 0, -1, CreateLogicalTransformationViewForScope.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getCreateLogicalTransformationViewForScope_AttributeLineage(), theData_meta_modelPackage.getAttribute(), null, "attributeLineage", null, 0, -1, CreateLogicalTransformationViewForScope.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getCreateLogicalTransformationViewForScope_TestScope(), theLogical_transformationsPackage.getE2ETestScope(), null, "testScope", null, 0, -1, CreateLogicalTransformationViewForScope.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(convertDataMetaModelToEcoreEClass, ConvertDataMetaModelToEcore.class, "ConvertDataMetaModelToEcore", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

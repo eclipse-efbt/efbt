@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <ul>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.AttributeImpl#isIsPK <em>Is PK</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.AttributeImpl#getVariable <em>Variable</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.AttributeImpl#isOrdered <em>Ordered</em>}</li>
  * </ul>
  *
  * @generated
@@ -58,6 +59,26 @@ public class AttributeImpl extends StructuralFeatureImpl implements Attribute {
 	 * @ordered
 	 */
 	protected VARIABLE variable;
+
+	/**
+	 * The default value of the '{@link #isOrdered() <em>Ordered</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isOrdered()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean ORDERED_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isOrdered() <em>Ordered</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isOrdered()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean ordered = ORDERED_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -147,6 +168,29 @@ public class AttributeImpl extends StructuralFeatureImpl implements Attribute {
 	 * @generated
 	 */
 	@Override
+	public boolean isOrdered() {
+		return ordered;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setOrdered(boolean newOrdered) {
+		boolean oldOrdered = ordered;
+		ordered = newOrdered;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, Data_meta_modelPackage.ATTRIBUTE__ORDERED, oldOrdered, ordered));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Data_meta_modelPackage.ATTRIBUTE__IS_PK:
@@ -154,6 +198,8 @@ public class AttributeImpl extends StructuralFeatureImpl implements Attribute {
 			case Data_meta_modelPackage.ATTRIBUTE__VARIABLE:
 				if (resolve) return getVariable();
 				return basicGetVariable();
+			case Data_meta_modelPackage.ATTRIBUTE__ORDERED:
+				return isOrdered();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -171,6 +217,9 @@ public class AttributeImpl extends StructuralFeatureImpl implements Attribute {
 				return;
 			case Data_meta_modelPackage.ATTRIBUTE__VARIABLE:
 				setVariable((VARIABLE)newValue);
+				return;
+			case Data_meta_modelPackage.ATTRIBUTE__ORDERED:
+				setOrdered((Boolean)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -190,6 +239,9 @@ public class AttributeImpl extends StructuralFeatureImpl implements Attribute {
 			case Data_meta_modelPackage.ATTRIBUTE__VARIABLE:
 				setVariable((VARIABLE)null);
 				return;
+			case Data_meta_modelPackage.ATTRIBUTE__ORDERED:
+				setOrdered(ORDERED_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -206,6 +258,8 @@ public class AttributeImpl extends StructuralFeatureImpl implements Attribute {
 				return isPK != IS_PK_EDEFAULT;
 			case Data_meta_modelPackage.ATTRIBUTE__VARIABLE:
 				return variable != null;
+			case Data_meta_modelPackage.ATTRIBUTE__ORDERED:
+				return ordered != ORDERED_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -222,6 +276,8 @@ public class AttributeImpl extends StructuralFeatureImpl implements Attribute {
 		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (isPK: ");
 		result.append(isPK);
+		result.append(", ordered: ");
+		result.append(ordered);
 		result.append(')');
 		return result.toString();
 	}

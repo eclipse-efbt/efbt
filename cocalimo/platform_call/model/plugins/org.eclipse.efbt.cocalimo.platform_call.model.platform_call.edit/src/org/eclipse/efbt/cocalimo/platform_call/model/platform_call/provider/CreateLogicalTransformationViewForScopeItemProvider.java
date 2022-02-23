@@ -5,6 +5,7 @@ package org.eclipse.efbt.cocalimo.platform_call.model.platform_call.provider;
 
 import java.util.Collection;
 import java.util.List;
+import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.Logical_transformationsFactory;
 import org.eclipse.efbt.cocalimo.platform_call.model.platform_call.CreateLogicalTransformationViewForScope;
 import org.eclipse.efbt.cocalimo.platform_call.model.platform_call.Platform_callPackage;
 
@@ -184,7 +185,7 @@ public class CreateLogicalTransformationViewForScopeItemProvider extends Platfor
 		newChildDescriptors.add
 			(createChildParameter
 				(Platform_callPackage.Literals.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE__TEST_SCOPE,
-				 org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.Logical_transformationsFactory.eINSTANCE.createE2ETestScope()));
+				 Logical_transformationsFactory.eINSTANCE.createE2ETestScope()));
 	}
 
 }

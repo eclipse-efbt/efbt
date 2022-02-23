@@ -5,6 +5,7 @@ package org.eclipse.efbt.cocalimo.logical_transformations.model.bpmn_lite.impl;
 import org.eclipse.efbt.cocalimo.logical_transformations.model.bpmn_lite.Bpmn_litePackage;
 import org.eclipse.efbt.cocalimo.logical_transformations.model.bpmn_lite.UserTask;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BasicEntity;
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
@@ -34,7 +35,7 @@ public class UserTaskImpl extends TaskImpl implements UserTask {
 	 * @generated
 	 * @ordered
 	 */
-	protected EClass entity;
+	protected BasicEntity entity;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -60,10 +61,10 @@ public class UserTaskImpl extends TaskImpl implements UserTask {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getEntity() {
+	public BasicEntity getEntity() {
 		if (entity != null && entity.eIsProxy()) {
 			InternalEObject oldEntity = (InternalEObject)entity;
-			entity = (EClass)eResolveProxy(oldEntity);
+			entity = (BasicEntity)eResolveProxy(oldEntity);
 			if (entity != oldEntity) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Bpmn_litePackage.USER_TASK__ENTITY, oldEntity, entity));
@@ -77,7 +78,7 @@ public class UserTaskImpl extends TaskImpl implements UserTask {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass basicGetEntity() {
+	public BasicEntity basicGetEntity() {
 		return entity;
 	}
 
@@ -86,8 +87,8 @@ public class UserTaskImpl extends TaskImpl implements UserTask {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setEntity(EClass newEntity) {
-		EClass oldEntity = entity;
+	public void setEntity(BasicEntity newEntity) {
+		BasicEntity oldEntity = entity;
 		entity = newEntity;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, Bpmn_litePackage.USER_TASK__ENTITY, oldEntity, entity));
@@ -117,7 +118,7 @@ public class UserTaskImpl extends TaskImpl implements UserTask {
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Bpmn_litePackage.USER_TASK__ENTITY:
-				setEntity((EClass)newValue);
+				setEntity((BasicEntity)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -132,7 +133,7 @@ public class UserTaskImpl extends TaskImpl implements UserTask {
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Bpmn_litePackage.USER_TASK__ENTITY:
-				setEntity((EClass)null);
+				setEntity((BasicEntity)null);
 				return;
 		}
 		super.eUnset(featureID);

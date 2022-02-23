@@ -2,8 +2,8 @@
  */
 package org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 
 /**
  * <!-- begin-user-doc -->
@@ -29,12 +29,12 @@ public interface DataConstraint extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Attr1</em>' reference.
-	 * @see #setAttr1(EStructuralFeature)
+	 * @see #setAttr1(Attribute)
 	 * @see org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.Logical_transformationsPackage#getDataConstraint_Attr1()
 	 * @model
 	 * @generated
 	 */
-	EStructuralFeature getAttr1();
+	Attribute getAttr1();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.DataConstraint#getAttr1 <em>Attr1</em>}' reference.
@@ -44,19 +44,19 @@ public interface DataConstraint extends EObject {
 	 * @see #getAttr1()
 	 * @generated
 	 */
-	void setAttr1(EStructuralFeature value);
+	void setAttr1(Attribute value);
 
 	/**
 	 * Returns the value of the '<em><b>Attr2</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Attr2</em>' reference.
-	 * @see #setAttr2(EStructuralFeature)
+	 * @see #setAttr2(Attribute)
 	 * @see org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.Logical_transformationsPackage#getDataConstraint_Attr2()
 	 * @model
 	 * @generated
 	 */
-	EStructuralFeature getAttr2();
+	Attribute getAttr2();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.DataConstraint#getAttr2 <em>Attr2</em>}' reference.
@@ -66,7 +66,7 @@ public interface DataConstraint extends EObject {
 	 * @see #getAttr2()
 	 * @generated
 	 */
-	void setAttr2(EStructuralFeature value);
+	void setAttr2(Attribute value);
 
 	/**
 	 * Returns the value of the '<em><b>Comparison</b></em>' attribute.

@@ -9,6 +9,7 @@ import org.eclipse.efbt.cocalimo.logical_transformations.model.bpmn_lite.ScriptT
 
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.SelectionLayer;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.GeneratedEntity;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
@@ -55,7 +56,7 @@ public class ScriptTaskImpl extends TaskImpl implements ScriptTask {
 	 * @generated
 	 * @ordered
 	 */
-	protected EClass outputLayer;
+	protected GeneratedEntity outputLayer;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -93,10 +94,10 @@ public class ScriptTaskImpl extends TaskImpl implements ScriptTask {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getOutputLayer() {
+	public GeneratedEntity getOutputLayer() {
 		if (outputLayer != null && outputLayer.eIsProxy()) {
 			InternalEObject oldOutputLayer = (InternalEObject)outputLayer;
-			outputLayer = (EClass)eResolveProxy(oldOutputLayer);
+			outputLayer = (GeneratedEntity)eResolveProxy(oldOutputLayer);
 			if (outputLayer != oldOutputLayer) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Bpmn_litePackage.SCRIPT_TASK__OUTPUT_LAYER, oldOutputLayer, outputLayer));
@@ -110,7 +111,7 @@ public class ScriptTaskImpl extends TaskImpl implements ScriptTask {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass basicGetOutputLayer() {
+	public GeneratedEntity basicGetOutputLayer() {
 		return outputLayer;
 	}
 
@@ -119,8 +120,8 @@ public class ScriptTaskImpl extends TaskImpl implements ScriptTask {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setOutputLayer(EClass newOutputLayer) {
-		EClass oldOutputLayer = outputLayer;
+	public void setOutputLayer(GeneratedEntity newOutputLayer) {
+		GeneratedEntity oldOutputLayer = outputLayer;
 		outputLayer = newOutputLayer;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, Bpmn_litePackage.SCRIPT_TASK__OUTPUT_LAYER, oldOutputLayer, outputLayer));
@@ -171,7 +172,7 @@ public class ScriptTaskImpl extends TaskImpl implements ScriptTask {
 				getSelectionLayers().addAll((Collection<? extends SelectionLayer>)newValue);
 				return;
 			case Bpmn_litePackage.SCRIPT_TASK__OUTPUT_LAYER:
-				setOutputLayer((EClass)newValue);
+				setOutputLayer((GeneratedEntity)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -189,7 +190,7 @@ public class ScriptTaskImpl extends TaskImpl implements ScriptTask {
 				getSelectionLayers().clear();
 				return;
 			case Bpmn_litePackage.SCRIPT_TASK__OUTPUT_LAYER:
-				setOutputLayer((EClass)null);
+				setOutputLayer((GeneratedEntity)null);
 				return;
 		}
 		super.eUnset(featureID);

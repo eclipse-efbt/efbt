@@ -7,13 +7,12 @@ import java.util.Collection;
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.Logical_transformationsPackage;
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.SelectionLayer;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute;
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
@@ -43,7 +42,7 @@ public class SelectionLayerImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<EStructuralFeature> requiredAttributes;
+	protected EList<Attribute> requiredAttributes;
 
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
@@ -109,9 +108,9 @@ public class SelectionLayerImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<EStructuralFeature> getRequiredAttributes() {
+	public EList<Attribute> getRequiredAttributes() {
 		if (requiredAttributes == null) {
-			requiredAttributes = new EObjectResolvingEList<EStructuralFeature>(EStructuralFeature.class, this, Logical_transformationsPackage.SELECTION_LAYER__REQUIRED_ATTRIBUTES);
+			requiredAttributes = new EObjectResolvingEList<Attribute>(Attribute.class, this, Logical_transformationsPackage.SELECTION_LAYER__REQUIRED_ATTRIBUTES);
 		}
 		return requiredAttributes;
 	}
@@ -187,7 +186,7 @@ public class SelectionLayerImpl extends MinimalEObjectImpl.Container implements 
 		switch (featureID) {
 			case Logical_transformationsPackage.SELECTION_LAYER__REQUIRED_ATTRIBUTES:
 				getRequiredAttributes().clear();
-				getRequiredAttributes().addAll((Collection<? extends EStructuralFeature>)newValue);
+				getRequiredAttributes().addAll((Collection<? extends Attribute>)newValue);
 				return;
 			case Logical_transformationsPackage.SELECTION_LAYER__NAME:
 				setName((String)newValue);

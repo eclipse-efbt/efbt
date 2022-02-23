@@ -4,9 +4,8 @@ package org.eclipse.efbt.cocalimo.logical_transformations.model.bpmn_lite;
 
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.SelectionLayer;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.GeneratedEntity;
 import org.eclipse.emf.common.util.EList;
-
-import org.eclipse.emf.ecore.EClass;
 
 /**
  * <!-- begin-user-doc -->
@@ -43,12 +42,12 @@ public interface ScriptTask extends Task {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Output Layer</em>' reference.
-	 * @see #setOutputLayer(EClass)
+	 * @see #setOutputLayer(GeneratedEntity)
 	 * @see org.eclipse.efbt.cocalimo.logical_transformations.model.bpmn_lite.Bpmn_litePackage#getScriptTask_OutputLayer()
 	 * @model
 	 * @generated
 	 */
-	EClass getOutputLayer();
+	GeneratedEntity getOutputLayer();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.logical_transformations.model.bpmn_lite.ScriptTask#getOutputLayer <em>Output Layer</em>}' reference.
@@ -58,6 +57,6 @@ public interface ScriptTask extends Task {
 	 * @see #getOutputLayer()
 	 * @generated
 	 */
-	void setOutputLayer(EClass value);
+	void setOutputLayer(GeneratedEntity value);
 
 } // ScriptTask

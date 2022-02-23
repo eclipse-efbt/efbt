@@ -1,0 +1,101 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/functions#//FunctionSpecModule",
+  "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
+  "name" : "GIRRFunctions",
+  "version" : "1.0",
+  "functionSpecs" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "param1"
+    }, {
+      "name" : "param2"
+    } ],
+    "functionalName" : "CustomFunctions_getGIRRCVRCorrelationFactor",
+    "name" : "getGIRRCVRCorrelationFactor",
+    "relationalName" : "getGIRRCVRCorrelationFactor"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "param1"
+    }, {
+      "name" : "param2"
+    } ],
+    "functionalName" : "CustomFunctions_getGIRRDeltaCorrelationFactor",
+    "name" : "getGIRRDeltaCorrelationFactor",
+    "relationalName" : "getGIRRDeltaCorrelationFactor"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "param1"
+    }, {
+      "name" : "param2"
+    } ],
+    "functionalName" : "CustomFunctions_getGIRRVegaRiskFactorRiskWeight",
+    "name" : "getGIRRVegaRiskFactorRiskWeight",
+    "relationalName" : "getGIRRVegaRiskFactorRiskWeight"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "param1"
+    }, {
+      "name" : "param2"
+    } ],
+    "functionalName" : "CustomFunctions_getGIRRVegaCorrelationFactor",
+    "name" : "getGIRRVegaCorrelationFactor",
+    "relationalName" : "getGIRRVegaCorrelationFactor"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "param1"
+    }, {
+      "name" : "param2"
+    } ],
+    "functionalName" : "CustomFunctions_getGIRRBucketCorrelationFactor",
+    "name" : "getGIRRBucketCorrelationFactor",
+    "relationalName" : "getGIRRBucketCorrelationFactor"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "valuationDifference"
+    }, {
+      "name" : "summedGIRR_delta"
+    }, {
+      "name" : "ShockDirection"
+    } ],
+    "functionalName" : "CustomFunctions_GIRRDeltaStrip",
+    "name" : "GIRRDeltaStrip",
+    "relationalName" : "GIRRDeltaStrip"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "tenor"
+    } ],
+    "functionalName" : "CustomFunctions_getGIRRDeltaRiskFactorRiskWeight",
+    "name" : "getGIRRDeltaRiskFactorRiskWeight",
+    "relationalName" : "getGIRRDeltaRiskFactorRiskWeight"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "mainCurrency"
+    } ],
+    "functionalName" : "CustomFunctions_getGIRRDeltaBucketName",
+    "name" : "getGIRRDeltaBucketName",
+    "relationalName" : "getGIRRDeltaBucketName"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "mainCurrency"
+    } ],
+    "functionalName" : "CustomFunctions_getGIRRVegaBucketName",
+    "name" : "getGIRRVegaBucketName",
+    "relationalName" : "getGIRRVegaBucketName"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "mainCurrency"
+    } ],
+    "functionalName" : "CustomFunctions_getGIRRCurvatureBucketName",
+    "name" : "getGIRRCurvatureBucketName",
+    "relationalName" : "getGIRRCurvatureBucketName"
+  } ]
+}

@@ -2,7 +2,7 @@
  */
 package org.eclipse.efbt.cocalimo.logical_transformations.model.bpmn_lite;
 
-import org.eclipse.emf.ecore.EClass;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BasicEntity;
 
 /**
  * <!-- begin-user-doc -->
@@ -26,12 +26,12 @@ public interface UserTask extends Task {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Entity</em>' reference.
-	 * @see #setEntity(EClass)
+	 * @see #setEntity(BasicEntity)
 	 * @see org.eclipse.efbt.cocalimo.logical_transformations.model.bpmn_lite.Bpmn_litePackage#getUserTask_Entity()
 	 * @model
 	 * @generated
 	 */
-	EClass getEntity();
+	BasicEntity getEntity();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.logical_transformations.model.bpmn_lite.UserTask#getEntity <em>Entity</em>}' reference.
@@ -41,6 +41,6 @@ public interface UserTask extends Task {
 	 * @see #getEntity()
 	 * @generated
 	 */
-	void setEntity(EClass value);
+	void setEntity(BasicEntity value);
 
 } // UserTask

@@ -6,10 +6,10 @@ import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transform
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.DataConstraint;
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.Logical_transformationsPackage;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute;
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -39,7 +39,7 @@ public class DataConstraintImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 * @ordered
 	 */
-	protected EStructuralFeature attr1;
+	protected Attribute attr1;
 
 	/**
 	 * The cached value of the '{@link #getAttr2() <em>Attr2</em>}' reference.
@@ -49,7 +49,7 @@ public class DataConstraintImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 * @ordered
 	 */
-	protected EStructuralFeature attr2;
+	protected Attribute attr2;
 
 	/**
 	 * The default value of the '{@link #getComparison() <em>Comparison</em>}' attribute.
@@ -95,10 +95,10 @@ public class DataConstraintImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EStructuralFeature getAttr1() {
+	public Attribute getAttr1() {
 		if (attr1 != null && attr1.eIsProxy()) {
 			InternalEObject oldAttr1 = (InternalEObject)attr1;
-			attr1 = (EStructuralFeature)eResolveProxy(oldAttr1);
+			attr1 = (Attribute)eResolveProxy(oldAttr1);
 			if (attr1 != oldAttr1) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Logical_transformationsPackage.DATA_CONSTRAINT__ATTR1, oldAttr1, attr1));
@@ -112,7 +112,7 @@ public class DataConstraintImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EStructuralFeature basicGetAttr1() {
+	public Attribute basicGetAttr1() {
 		return attr1;
 	}
 
@@ -121,8 +121,8 @@ public class DataConstraintImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setAttr1(EStructuralFeature newAttr1) {
-		EStructuralFeature oldAttr1 = attr1;
+	public void setAttr1(Attribute newAttr1) {
+		Attribute oldAttr1 = attr1;
 		attr1 = newAttr1;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, Logical_transformationsPackage.DATA_CONSTRAINT__ATTR1, oldAttr1, attr1));
@@ -133,10 +133,10 @@ public class DataConstraintImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EStructuralFeature getAttr2() {
+	public Attribute getAttr2() {
 		if (attr2 != null && attr2.eIsProxy()) {
 			InternalEObject oldAttr2 = (InternalEObject)attr2;
-			attr2 = (EStructuralFeature)eResolveProxy(oldAttr2);
+			attr2 = (Attribute)eResolveProxy(oldAttr2);
 			if (attr2 != oldAttr2) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Logical_transformationsPackage.DATA_CONSTRAINT__ATTR2, oldAttr2, attr2));
@@ -150,7 +150,7 @@ public class DataConstraintImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EStructuralFeature basicGetAttr2() {
+	public Attribute basicGetAttr2() {
 		return attr2;
 	}
 
@@ -159,8 +159,8 @@ public class DataConstraintImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setAttr2(EStructuralFeature newAttr2) {
-		EStructuralFeature oldAttr2 = attr2;
+	public void setAttr2(Attribute newAttr2) {
+		Attribute oldAttr2 = attr2;
 		attr2 = newAttr2;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, Logical_transformationsPackage.DATA_CONSTRAINT__ATTR2, oldAttr2, attr2));
@@ -216,10 +216,10 @@ public class DataConstraintImpl extends MinimalEObjectImpl.Container implements 
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Logical_transformationsPackage.DATA_CONSTRAINT__ATTR1:
-				setAttr1((EStructuralFeature)newValue);
+				setAttr1((Attribute)newValue);
 				return;
 			case Logical_transformationsPackage.DATA_CONSTRAINT__ATTR2:
-				setAttr2((EStructuralFeature)newValue);
+				setAttr2((Attribute)newValue);
 				return;
 			case Logical_transformationsPackage.DATA_CONSTRAINT__COMPARISON:
 				setComparison((AttrComparison)newValue);
@@ -237,10 +237,10 @@ public class DataConstraintImpl extends MinimalEObjectImpl.Container implements 
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Logical_transformationsPackage.DATA_CONSTRAINT__ATTR1:
-				setAttr1((EStructuralFeature)null);
+				setAttr1((Attribute)null);
 				return;
 			case Logical_transformationsPackage.DATA_CONSTRAINT__ATTR2:
-				setAttr2((EStructuralFeature)null);
+				setAttr2((Attribute)null);
 				return;
 			case Logical_transformationsPackage.DATA_CONSTRAINT__COMPARISON:
 				setComparison(COMPARISON_EDEFAULT);

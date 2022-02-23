@@ -1,0 +1,101 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/functions#//FunctionSpecModule",
+  "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
+  "name" : "EquityFunctions",
+  "version" : "1.0",
+  "functionSpecs" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "param1"
+    }, {
+      "name" : "param2"
+    } ],
+    "functionalName" : "CustomFunctions_getEquityCVRCorrelationFactor",
+    "name" : "getEquityCVRCorrelationFactor",
+    "relationalName" : "getEquityCVRCorrelationFactor"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "param1"
+    }, {
+      "name" : "param2"
+    } ],
+    "functionalName" : "CustomFunctions_getEquityDeltaCorrelationFactor",
+    "name" : "getEquityDeltaCorrelationFactor",
+    "relationalName" : "getEquityDeltaCorrelationFactor"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "param1"
+    }, {
+      "name" : "param2"
+    } ],
+    "functionalName" : "CustomFunctions_getEquityVegaRiskFactorRiskWeight",
+    "name" : "getEquityVegaRiskFactorRiskWeight",
+    "relationalName" : "getEquityVegaRiskFactorRiskWeight"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "param1"
+    }, {
+      "name" : "param2"
+    } ],
+    "functionalName" : "CustomFunctions_getEquityVegaCorrelationFactor",
+    "name" : "getEquityVegaCorrelationFactor",
+    "relationalName" : "getEquityVegaCorrelationFactor"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "param1"
+    }, {
+      "name" : "param2"
+    } ],
+    "functionalName" : "CustomFunctions_getEquityBucketCorrelationFactor",
+    "name" : "getEquityBucketCorrelationFactor",
+    "relationalName" : "getEquityBucketCorrelationFactor"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "valuationDifference"
+    }, {
+      "name" : "summedEquity_delta"
+    }, {
+      "name" : "ShockDirection"
+    } ],
+    "functionalName" : "CustomFunctions_EquityDeltaStrip",
+    "name" : "EquityDeltaStrip",
+    "relationalName" : "EquityDeltaStrip"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "tenor"
+    } ],
+    "functionalName" : "CustomFunctions_getEquityDeltaRiskFactorRiskWeight",
+    "name" : "getEquityDeltaRiskFactorRiskWeight",
+    "relationalName" : "getEquityDeltaRiskFactorRiskWeight"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "mainCurrency"
+    } ],
+    "functionalName" : "CustomFunctions_getEquityDeltaBucketName",
+    "name" : "getEquityDeltaBucketName",
+    "relationalName" : "getEquityDeltaBucketName"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "mainCurrency"
+    } ],
+    "functionalName" : "CustomFunctions_getEquityVegaBucketName",
+    "name" : "getEquityVegaBucketName",
+    "relationalName" : "getEquityVegaBucketName"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+    "parameterSpecs" : [ {
+      "name" : "mainCurrency"
+    } ],
+    "functionalName" : "CustomFunctions_getEquityCurvatureBucketName",
+    "name" : "getEquityCurvatureBucketName",
+    "relationalName" : "getEquityCurvatureBucketName"
+  } ]
+}

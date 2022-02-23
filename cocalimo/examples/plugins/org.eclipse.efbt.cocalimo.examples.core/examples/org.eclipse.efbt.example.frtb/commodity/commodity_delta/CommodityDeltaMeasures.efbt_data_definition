@@ -1,0 +1,184 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/efbt_data_definition#//VariableModule",
+  "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
+  "name" : "CommodityDeltaMeasures",
+  "version" : "1.0",
+  "variables" : [ {
+    "code" : "CommodityDeltaSensitivityk",
+    "description" : "CommodityDeltaSensitivityk",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CommodityDeltaSensitivityk",
+    "name" : "CommodityDeltaSensitivityk",
+    "displayName" : "CommodityDeltaSensitivityk"
+  }, {
+    "code" : "CommodityDeltaCorrelationFactor",
+    "description" : "CommodityDeltaCorrelationFactor",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CommodityDeltaCorrelationFactor",
+    "name" : "CommodityDeltaCorrelationFactor",
+    "displayName" : "CommodityDeltaCorrelationFactor"
+  }, {
+    "code" : "CommodityDeltaSensitivityl",
+    "description" : "CommodityDeltaSensitivityl",
+    "primary_concept" : "",
+    "variable_id" : "CommodityDeltaSensitivityl",
+    "name" : "CommodityDeltaSensitivityl"
+  }, {
+    "code" : "summedCommodityDelta",
+    "description" : "summedCommodityDelta",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "summedCommodityDelta",
+    "name" : "summedCommodityDelta",
+    "displayName" : "summedCommodityDelta"
+  }, {
+    "code" : "tenork",
+    "description" : "tenork",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#ratingsGrade"
+    },
+    "variable_id" : "tenork",
+    "name" : "tenork",
+    "displayName" : "tenork"
+  }, {
+    "code" : "tenorl",
+    "description" : "tenorl",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "tenorl",
+    "name" : "tenorl",
+    "displayName" : "tenorl"
+  }, {
+    "code" : "mainCurrencyl",
+    "description" : "mainCurrencyl",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Currency"
+    },
+    "variable_id" : "mainCurrencyl",
+    "name" : "mainCurrencyl",
+    "displayName" : "mainCurrencyl"
+  }, {
+    "code" : "mainCurrencyk",
+    "description" : "mainCurrencyk",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Currency"
+    },
+    "variable_id" : "mainCurrencyk",
+    "name" : "mainCurrencyk",
+    "displayName" : "mainCurrencyk"
+  }, {
+    "code" : "CommodityDeltaRiskWeight",
+    "description" : "CommodityDeltaRiskWeight",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CommodityDeltaRiskWeight",
+    "name" : "CommodityDeltaRiskWeight",
+    "displayName" : "CommodityDeltaRiskWeight"
+  }, {
+    "code" : "weightedCommodityDeltaSensitivity",
+    "description" : "weightedCommodityDeltaSensitivity",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "weightedCommodityDeltaSensitivity",
+    "name" : "weightedCommodityDeltaSensitivity",
+    "displayName" : "weightedCommodityDeltaSensitivity"
+  }, {
+    "code" : "CommodityDeltaKBInput",
+    "description" : "CommodityDeltaKBInput",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CommodityDeltaKBInput",
+    "name" : "CommodityDeltaKBInput",
+    "displayName" : "CommodityDeltaKBInput"
+  }, {
+    "code" : "CommodityDeltaKB",
+    "description" : "CommodityDeltaKB",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "primary_concept" : "CommodityDeltaKB",
+    "variable_id" : "CommodityDeltaKB",
+    "name" : "CommodityDeltaKB",
+    "displayName" : "CommodityDeltaKB"
+  }, {
+    "code" : "CommodityDeltaKBInputPerBucket",
+    "description" : "CommodityDeltaKBInputPerBucket",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CommodityDeltaKBInputPerBucket",
+    "name" : "CommodityDeltaKBInputPerBucket",
+    "displayName" : "CommodityDeltaKBInputPerBucket"
+  }, {
+    "code" : "CommodityDeltaSensitivityPerBucketCorrelated",
+    "description" : "CommodityDeltaSensitivityPerBucketCorrelated",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CommodityDeltaSensitivityPerBucketCorrelated",
+    "name" : "CommodityDeltaSensitivityPerBucketCorrelated",
+    "displayName" : "CommodityDeltaSensitivityPerBucketCorrelated"
+  }, {
+    "code" : "totalCommodityDeltaSensitivityPerBucket",
+    "description" : "totalCommodityDeltaSensitivityPerBucket",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "totalCommodityDeltaSensitivityPerBucket",
+    "name" : "totalCommodityDeltaSensitivityPerBucket",
+    "displayName" : "totalCommodityDeltaSensitivityPerBucket"
+  }, {
+    "code" : "CommodityDeltaBucketCorrelationFactor",
+    "description" : "CommodityDeltaBucketCorrelationFactor",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "CommodityDeltaBucketCorrelationFactor",
+    "name" : "CommodityDeltaBucketCorrelationFactor",
+    "displayName" : "CommodityDeltaBucketCorrelationFactor"
+  }, {
+    "code" : "totalCommodityDeltaSensitivityPerBucketk",
+    "description" : "totalCommodityDeltaSensitivityPerBucketk",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "totalCommodityDeltaSensitivityPerBucketk",
+    "name" : "totalCommodityDeltaSensitivityPerBucketk",
+    "displayName" : "totalCommodityDeltaSensitivityPerBucketk"
+  }, {
+    "code" : "totalCommodityDeltaSensitivityPerBucketl",
+    "description" : "totalCommodityDeltaSensitivityPerBucketl",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.efbt_data_definition#Numbers"
+    },
+    "variable_id" : "totalCommodityDeltaSensitivityPerBucketl",
+    "name" : "totalCommodityDeltaSensitivityPerBucketl",
+    "displayName" : "totalCommodityDeltaSensitivityPerBucketl"
+  } ]
+}

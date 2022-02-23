@@ -4,9 +4,8 @@ package org.eclipse.efbt.cocalimo.logical_transformations.model.bpmn_lite;
 
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.Scenario;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute;
 import org.eclipse.emf.common.util.EList;
-
-import org.eclipse.emf.ecore.EStructuralFeature;
 
 /**
  * <!-- begin-user-doc -->
@@ -31,12 +30,12 @@ public interface ServiceTask extends Task {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Enriched Attribute</em>' reference.
-	 * @see #setEnrichedAttribute(EStructuralFeature)
+	 * @see #setEnrichedAttribute(Attribute)
 	 * @see org.eclipse.efbt.cocalimo.logical_transformations.model.bpmn_lite.Bpmn_litePackage#getServiceTask_EnrichedAttribute()
 	 * @model
 	 * @generated
 	 */
-	EStructuralFeature getEnrichedAttribute();
+	Attribute getEnrichedAttribute();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.logical_transformations.model.bpmn_lite.ServiceTask#getEnrichedAttribute <em>Enriched Attribute</em>}' reference.
@@ -46,7 +45,7 @@ public interface ServiceTask extends Task {
 	 * @see #getEnrichedAttribute()
 	 * @generated
 	 */
-	void setEnrichedAttribute(EStructuralFeature value);
+	void setEnrichedAttribute(Attribute value);
 
 	/**
 	 * Returns the value of the '<em><b>Scenarios</b></em>' containment reference list.

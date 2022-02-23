@@ -27,6 +27,8 @@ import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transform
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.Scenario;
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.SelectionLayer;
 import org.eclipse.efbt.cocalimo.platform_call.model.platform_call.CreateLogicalTransformationViewForScope;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BasicEntity;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
@@ -40,14 +42,14 @@ public class LogicalTransformationViews {
 			EList<E2ETestScope> eList, CreateLogicalTransformationViewForScope call) {
 		markScriptTaskAsInvisible(logicalTransformationModule, eList);
 
-		EList<EStructuralFeature> requiredAttributes = 
+		EList<Attribute> requiredAttributes = 
 				getListOfRequiredAttributes(logicalTransformationModule,
 						eList);
 		call.getAttributeLineage().clear();
 		
 		setAllAttributesAsOrdered(logicalTransformationModule);
 		
-		for (EStructuralFeature eAttribute : requiredAttributes) {
+		for (Attribute eAttribute : requiredAttributes) {
 			call.getAttributeLineage().add(eAttribute);
 			eAttribute.setOrdered(false);
 		}
@@ -71,15 +73,15 @@ public class LogicalTransformationViews {
 				Object o = subProcessContents.next();
 				if (o instanceof ServiceTask)
 				{
-					EStructuralFeature attr = ((ServiceTask)o).getEnrichedAttribute();
-					attr.setOrdered(true);
+					 Attribute attr = ((ServiceTask)o).getEnrichedAttribute();
+					 attr.setOrdered(true);
 				}
 				if (o instanceof UserTask)
 				{
-					EList<EStructuralFeature> attributes = ((UserTask)o).getEntity().getEStructuralFeatures();
-					for (EStructuralFeature eStructuralFeature : attributes) {
-						eStructuralFeature.setOrdered(true);
-					}
+					 EList<Attribute> attributes = ((UserTask)o).getEntity().getAttributes();
+					 for (Attribute attribute : attributes) {
+						 attribute.setOrdered(true);
+					 }
 				}
 			}	
 					
@@ -120,7 +122,7 @@ public class LogicalTransformationViews {
 		
 	}
 
-	private static void markDependantTasksAsInvisible(LogicalTransformationModule logicalTransformationModule, EList<EStructuralFeature> requiredAttributes) {
+	private static void markDependantTasksAsInvisible(LogicalTransformationModule logicalTransformationModule, EList<Attribute> requiredAttributes) {
 		SubProcess subProcess = logicalTransformationModule.getSubProcess();
 		
 		TreeIterator<Object> subProcessContents = EcoreUtil.getAllContents(subProcess, true);
@@ -130,10 +132,10 @@ public class LogicalTransformationViews {
 			if (o instanceof UserTask)
 			{
 				UserTask task = (UserTask) o;
-				EClass entity = task.getEntity();
-				EList<EStructuralFeature> entityAttributes = entity.getEStructuralFeatures();
+				BasicEntity entity = task.getEntity();
+				EList<Attribute> entityAttributes = entity.getAttributes();
 				boolean entityContainsRequiredAttributes = false;
-				for (EStructuralFeature eAttribute : entityAttributes) 
+				for (Attribute eAttribute : entityAttributes) 
 				{
 					if(requiredAttributes.contains(eAttribute))
 					{
@@ -154,7 +156,7 @@ public class LogicalTransformationViews {
 		
 	}
 
-	private static void markDependantServiceTasksAsInvisible(LogicalTransformationModule logicalTransformationModule, EList<EStructuralFeature> requiredAttributes) {
+	private static void markDependantServiceTasksAsInvisible(LogicalTransformationModule logicalTransformationModule, EList<Attribute> requiredAttributes) {
 
 		SubProcess subProcess = logicalTransformationModule.getSubProcess();
 		
@@ -165,7 +167,7 @@ public class LogicalTransformationViews {
 			if (o instanceof ServiceTask)
 			{
 				ServiceTask serviceTask = (ServiceTask) o;
-				EStructuralFeature enrichedAttribute = serviceTask.getEnrichedAttribute();
+				Attribute enrichedAttribute = serviceTask.getEnrichedAttribute();
 				if(requiredAttributes.contains(enrichedAttribute))
 				{
 					serviceTask.setInvisible(false);
@@ -179,9 +181,9 @@ public class LogicalTransformationViews {
 		
 	}
 
-	private static EList<EStructuralFeature> getListOfRequiredAttributes(
+	private static EList<Attribute> getListOfRequiredAttributes(
 			LogicalTransformationModule logicalTransformationModule, EList<E2ETestScope> e2eTestScopes) {
-		EList<EStructuralFeature> requiredAttributesList = new BasicEList<EStructuralFeature>();
+		EList<Attribute> requiredAttributesList = new BasicEList<Attribute>();
 		
 		SubProcess subProcess = logicalTransformationModule.getSubProcess();
 		
@@ -199,18 +201,18 @@ public class LogicalTransformationViews {
 				{
 					if (scriptTaskInScope.equals(o))
 					{										
-							EList<EStructuralFeature> scriptTaskAttributes = layer.getRequiredAttributes();
+							EList<Attribute> scriptTaskAttributes = layer.getRequiredAttributes();
 							for (Iterator iterator = scriptTaskAttributes.iterator(); iterator.hasNext();) {
-								EStructuralFeature eAttribute = (EStructuralFeature) iterator.next();
+								Attribute eAttribute = (Attribute) iterator.next();
 								
 								if(!requiredAttributesList.contains(eAttribute))
 								{
 									requiredAttributesList.add(eAttribute);
-									EList<EStructuralFeature> transientDependantAttributes = 
+									EList<Attribute> transientDependantAttributes = 
 											getTransientDependantAttributes(subProcess,
 																			eAttribute,
 																			scenariosInScope);
-									for (EStructuralFeature eAttribute2 : transientDependantAttributes) {
+									for (Attribute eAttribute2 : transientDependantAttributes) {
 										if(!requiredAttributesList.contains(eAttribute2))
 										{
 											requiredAttributesList.add(eAttribute2);
@@ -231,13 +233,13 @@ public class LogicalTransformationViews {
 		return requiredAttributesList;
 	}
 
-	private static EList<EStructuralFeature> getTransientDependantAttributes(SubProcess subProcess, 
-			EStructuralFeature eAttribute,EList<Scenario> scenariosInScope) {
+	private static EList<Attribute> getTransientDependantAttributes(SubProcess subProcess, 
+			Attribute eAttribute,EList<Scenario> scenariosInScope) {
 		// find any ServiceTasks that are calculating that attribute
 		// for each scenario of that attribute (unless it is out of scope), we further get the 
 		// transient dependant attributes of that too and add to the list.
 		
-		EList<EStructuralFeature> transientDependantAttributes = new BasicEList<EStructuralFeature>();
+		EList<Attribute> transientDependantAttributes = new BasicEList<Attribute>();
 		TreeIterator<Object> subProcessContents = EcoreUtil.getAllContents(subProcess, true);
 		while (subProcessContents.hasNext())
 		{
@@ -245,24 +247,24 @@ public class LogicalTransformationViews {
 			if (o instanceof ServiceTask)
 			{
 				ServiceTask serviceTask = (ServiceTask) o;
-				EStructuralFeature enrichedAttribute = serviceTask.getEnrichedAttribute();
+				Attribute enrichedAttribute = serviceTask.getEnrichedAttribute();
 				if (eAttribute == enrichedAttribute)
 				{
 					EList<Scenario> scenarios = serviceTask.getScenarios();
 					for (Scenario scenario : scenarios) {
 						if (scenariosInScope.contains(scenario))
 						{
-							EList<EStructuralFeature> requiredAttributes = scenario.getRequiredAttributes();
-							for (EStructuralFeature requiredAttribute : requiredAttributes) {
+							EList<Attribute> requiredAttributes = scenario.getRequiredAttributes();
+							for (Attribute requiredAttribute : requiredAttributes) {
 							
 								if(!transientDependantAttributes.contains(requiredAttribute))
 								{
 									transientDependantAttributes.add(requiredAttribute);
-									EList<EStructuralFeature> furtherTransientDependantAttributes = getTransientDependantAttributes(subProcess,
+									EList<Attribute> furtherTransientDependantAttributes = getTransientDependantAttributes(subProcess,
 																	requiredAttribute,
 																	scenariosInScope);
 											
-									for (EStructuralFeature eAttribute2 : furtherTransientDependantAttributes) 
+									for (Attribute eAttribute2 : furtherTransientDependantAttributes) 
 									{
 										if(!transientDependantAttributes.contains(eAttribute2))
 										{

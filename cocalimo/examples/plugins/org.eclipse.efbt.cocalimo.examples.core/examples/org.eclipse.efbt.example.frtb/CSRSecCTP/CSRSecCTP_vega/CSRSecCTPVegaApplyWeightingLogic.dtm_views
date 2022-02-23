@@ -1,0 +1,89 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/dtm_views#//VersionedDTMViewsModule",
+  "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
+  "name" : "CSRSecCTPVegaApplyWeightingLogic",
+  "version" : "1.0",
+  "DTMViews" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//EnrichmentView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "CSRSecCTPVegaApplyWeighting.cubes#CSRSecCTPVegaSensitivitiesAndRiskFactorsWithWeight"
+    },
+    "name" : "CSRSecCTPVegaSensitivitiesAndRiskFactorsWithWeight",
+    "functions" : [ {
+      "name" : "CSRSecCTPVegaSensitivitiesAndRiskFactorsWithWeight_CSRSecCTPVegaRiskWeight",
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "CSRSecCTPVegaApplyWeighting.cubes#CSRSecCTPVegaSensitivitiesAndRiskFactorsWithWeight"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "CSRSecCTPVegaMeasures.efbt_data_definition#CSRSecCTPVegaRiskWeight"
+      },
+      "basicFunction" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "../../sdd/FRTBSourceMeasures.efbt_data_definition#tenor"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "CSRSecCTPVegaAssignBucket.cubes#CSRSecCTPVegaSensitivitiesAndRiskFactors"
+          }
+        } ],
+        "name" : "getCSRSecCTPVegaRiskWeight",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+          "$ref" : "../CSRSecCTP_common/CSRSecCTPFunctions.functions#getCSRSecCTPVegaRiskFactorRiskWeight"
+        }
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/dtm_views#//EnrichmentView",
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "CSRSecCTPVegaApplyWeighting.cubes#weightedCSRSecCTPVegaSensitivitiesAndRiskFactors"
+    },
+    "name" : "weightedCSRSecCTPVegaSensitivitiesAndRiskFactors",
+    "functions" : [ {
+      "name" : "weightedCSRSecCTPVegaSensitivitiesAndRiskFactors_weightedCSRSecCTPVegaSensitivity",
+      "cube" : {
+        "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+        "$ref" : "CSRSecCTPVegaApplyWeighting.cubes#weightedCSRSecCTPVegaSensitivitiesAndRiskFactors"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "CSRSecCTPVegaMeasures.efbt_data_definition#weightedCSRSecCTPVegaSensitivity"
+      },
+      "basicFunction" : {
+        "parameters" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "../../common/CommonMeasures.efbt_data_definition#nettedVegaSensitivity"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "CSRSecCTPVegaApplyWeighting.cubes#CSRSecCTPVegaSensitivitiesAndRiskFactorsWithWeight"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//SpeculativeCubeColumnParameter",
+          "column" : {
+            "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+            "$ref" : "CSRSecCTPVegaMeasures.efbt_data_definition#CSRSecCTPVegaRiskWeight"
+          },
+          "cube" : {
+            "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+            "$ref" : "CSRSecCTPVegaApplyWeighting.cubes#CSRSecCTPVegaSensitivitiesAndRiskFactorsWithWeight"
+          }
+        } ],
+        "name" : "multiply",
+        "functionSpec" : {
+          "eClass" : "http://www.eclipse.org/efbt/functions#//BasicFunctionSpec",
+          "$ref" : "../../common/commonFunctionsModule.functions#multiply"
+        }
+      }
+    } ]
+  } ]
+}

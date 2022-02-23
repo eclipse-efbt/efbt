@@ -8,13 +8,13 @@ import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transform
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.Logical_transformationsPackage;
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.Scenario;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -108,7 +108,7 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<EStructuralFeature> requiredAttributes;
+	protected EList<Attribute> requiredAttributes;
 
 	/**
 	 * The cached value of the '{@link #getData_constraints() <em>Data constraints</em>}' containment reference.
@@ -207,9 +207,9 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<EStructuralFeature> getRequiredAttributes() {
+	public EList<Attribute> getRequiredAttributes() {
 		if (requiredAttributes == null) {
-			requiredAttributes = new EObjectResolvingEList<EStructuralFeature>(EStructuralFeature.class, this, Logical_transformationsPackage.SCENARIO__REQUIRED_ATTRIBUTES);
+			requiredAttributes = new EObjectResolvingEList<Attribute>(Attribute.class, this, Logical_transformationsPackage.SCENARIO__REQUIRED_ATTRIBUTES);
 		}
 		return requiredAttributes;
 	}
@@ -313,7 +313,7 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
 				return;
 			case Logical_transformationsPackage.SCENARIO__REQUIRED_ATTRIBUTES:
 				getRequiredAttributes().clear();
-				getRequiredAttributes().addAll((Collection<? extends EStructuralFeature>)newValue);
+				getRequiredAttributes().addAll((Collection<? extends Attribute>)newValue);
 				return;
 			case Logical_transformationsPackage.SCENARIO__DATA_CONSTRAINTS:
 				setData_constraints((DataConstraint)newValue);

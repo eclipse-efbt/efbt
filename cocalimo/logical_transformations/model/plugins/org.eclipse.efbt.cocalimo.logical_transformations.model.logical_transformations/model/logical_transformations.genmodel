@@ -4,7 +4,7 @@
     modelPluginID="org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations"
     modelName="Logical_transformations" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     importerID="org.eclipse.emf.importer.ecore" complianceLevel="5.0" copyrightFields="false"
-    usedGenPackages="../../org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore ../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.cocalimo.core.model.requirements_text/model/requirements_text.genmodel#//requirements_text"
+    usedGenPackages="../../org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore ../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.cocalimo.core.model.requirements_text/model/requirements_text.genmodel#//requirements_text ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//core ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//data_meta_model"
     operationReflection="true" importOrganizing="true">
   <foreignModel>bpmn_lite.ecore</foreignModel>
   <foreignModel>logical_transformations.ecore</foreignModel>
