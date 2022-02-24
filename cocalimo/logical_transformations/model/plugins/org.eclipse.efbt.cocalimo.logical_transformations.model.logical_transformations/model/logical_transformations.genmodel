@@ -9,7 +9,7 @@
   <foreignModel>bpmn_lite.ecore</foreignModel>
   <foreignModel>logical_transformations.ecore</foreignModel>
   <genPackages prefix="Bpmn_lite" basePackage="org.eclipse.efbt.cocalimo.logical_transformations.model"
-      disposableProviderFactory="true" ecorePackage="bpmn_lite.ecore#/">
+      resource="XMI" disposableProviderFactory="true" ecorePackage="bpmn_lite.ecore#/">
     <genClasses image="false" ecoreClass="bpmn_lite.ecore#//BaseElement">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn_lite.ecore#//BaseElement/id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn_lite.ecore#//BaseElement/description"/>
@@ -49,7 +49,7 @@
     </genClasses>
   </genPackages>
   <genPackages prefix="Logical_transformations" basePackage="org.eclipse.efbt.cocalimo.logical_transformations.model"
-      resource="XML" disposableProviderFactory="true" ecorePackage="logical_transformations.ecore#/">
+      resource="XMI" disposableProviderFactory="true" ecorePackage="logical_transformations.ecore#/">
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="logical_transformations.ecore#//AttrComparison">
       <genEnumLiterals ecoreEnumLiteral="logical_transformations.ecore#//AttrComparison/equals"/>
       <genEnumLiterals ecoreEnumLiteral="logical_transformations.ecore#//AttrComparison/less_than"/>

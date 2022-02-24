@@ -10,6 +10,7 @@ import org.eclipse.efbt.cocalimo.logical_transformations.model.bpmn_lite.Service
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.Scenario;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 

@@ -3,26 +3,22 @@
 package org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.util;
 
 import org.eclipse.emf.common.util.URI;
-
 import org.eclipse.emf.ecore.resource.Resource;
-
-import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
-
-import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.emfjson.jackson.resource.JsonResourceFactory;
 
 /**
  * <!-- begin-user-doc -->
  * The <b>Resource Factory</b> associated with the package.
  * <!-- end-user-doc -->
  * @see org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.util.Logical_transformationsResourceImpl
- * @generated
+ * @generated NOT
  */
-public class Logical_transformationsResourceFactoryImpl extends ResourceFactoryImpl {
+public class Logical_transformationsResourceFactoryImpl extends JsonResourceFactory {
 	/**
 	 * Creates an instance of the resource factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	public Logical_transformationsResourceFactoryImpl() {
 		super();
@@ -32,20 +28,11 @@ public class Logical_transformationsResourceFactoryImpl extends ResourceFactoryI
 	 * Creates an instance of the resource.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public Resource createResource(URI uri) {
-		XMLResource result = new Logical_transformationsResourceImpl(uri);
-		result.getDefaultSaveOptions().put(XMLResource.OPTION_EXTENDED_META_DATA, Boolean.TRUE);
-		result.getDefaultLoadOptions().put(XMLResource.OPTION_EXTENDED_META_DATA, Boolean.TRUE);
-
-		result.getDefaultSaveOptions().put(XMLResource.OPTION_SCHEMA_LOCATION, Boolean.TRUE);
-
-		result.getDefaultLoadOptions().put(XMLResource.OPTION_USE_ENCODED_ATTRIBUTE_STYLE, Boolean.TRUE);
-		result.getDefaultSaveOptions().put(XMLResource.OPTION_USE_ENCODED_ATTRIBUTE_STYLE, Boolean.TRUE);
-
-		result.getDefaultLoadOptions().put(XMLResource.OPTION_USE_LEXICAL_HANDLER, Boolean.TRUE);
+		Resource result = new Logical_transformationsResourceImpl(uri, getMapper());
 		return result;
 	}
 

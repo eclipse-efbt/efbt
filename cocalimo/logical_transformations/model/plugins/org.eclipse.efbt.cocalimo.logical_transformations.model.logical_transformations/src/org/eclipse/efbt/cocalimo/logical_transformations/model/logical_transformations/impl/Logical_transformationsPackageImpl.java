@@ -26,7 +26,9 @@ import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transform
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.UnitTestScope;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage;
+
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage;
+
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EEnum;

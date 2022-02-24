@@ -2,7 +2,10 @@
 <description:Group xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:filter="http://www.eclipse.org/sirius/diagram/description/filter/1.1.0" xmlns:properties="http://www.eclipse.org/sirius/properties/1.0.0" xmlns:style="http://www.eclipse.org/sirius/diagram/description/style/1.1.0" xmlns:tool="http://www.eclipse.org/sirius/diagram/description/tool/1.1.0" xmlns:tool_1="http://www.eclipse.org/sirius/description/tool/1.1.0" name="bpmn_lite" version="12.0.0.2017041100">
   <ownedViewpoints name="Process" label="bpmn_lite - Process" modelFileExtension="logical_transformations">
     <ownedRepresentations xsi:type="description_1:DiagramDescription" name="SubProcessDiagram" label="SubProcess Diagram" titleExpression="aql:self.name" domainClass="bpmn_lite.SubProcess" enablePopupBars="true">
-      <metamodel href="../../org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/model/bpmn_lite.ecore#/"/>
+      <metamodel href="../../org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations/model/bpmn_lite.ecore#/"/>
+      <metamodel href="../../org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations/model/logical_transformations.ecore#/"/>
+      <metamodel href="../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.ecore#/"/>
+      <metamodel href="../../org.eclipse.efbt.cocalimo.core.model.requirements_text/model/requirements_text.ecore#/"/>
       <filters xsi:type="filter:CompositeFilterDescription" name="FitlerOnVisibility">
         <filters xsi:type="filter:MappingFilter" mappings="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPSubProcess'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='LabelEdge'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='SequenceFlow'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPExclusiveGateway'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPExternalLabel'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPInclusiveGateway'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPParallelGateway']" semanticConditionExpression="aql: not (self.invisible)"/>
       </filters>
@@ -29,17 +32,17 @@
             <style xsi:type="style:SquareDescription" borderColor="//@userColorsPalettes[name='Colors']/@entries[name='LightYellow']" showIcon="false" labelExpression="aql:self.getExternalLabel()" labelColor="//@userColorsPalettes[name='Colors']/@entries[name='TextBackground']" labelAlignment="LEFT" sizeComputationExpression="aql:self.getExternalLabelSize()" labelPosition="node" resizeKind="NSEW" color="//@userColorsPalettes[name='Colors']/@entries[name='LightYellow']"/>
           </subNodeMappings>
           <subNodeMappings name="SPParallelGateway" labelDirectEdit="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.0/@ownedTools[name='FlowElementNameEdit']" semanticCandidatesExpression="aql:self.flowElements->filter(bpmn_lite::ParallelGateway)" domainClass="bpmn_lite.ParallelGateway">
-            <style xsi:type="style:WorkspaceImageDescription" showIcon="false" labelExpression="aql:self.getNonExternalLabel(view)" labelColor="//@userColorsPalettes[name='Colors']/@entries[name='TextBackground']" sizeComputationExpression="-1" arcWidth="1" arcHeight="1" workspacePath="/org.eclipse.efbt.cocalimo.core.ui.sirius/icons2/nodes/gateway/parallel-gateway.svg">
+            <style xsi:type="style:WorkspaceImageDescription" showIcon="false" labelExpression="aql:self.getNonExternalLabel(view)" labelColor="//@userColorsPalettes[name='Colors']/@entries[name='TextBackground']" sizeComputationExpression="-1" arcWidth="1" arcHeight="1" workspacePath="/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/icons2/nodes/gateway/parallel-gateway.svg">
               <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             </style>
           </subNodeMappings>
           <subNodeMappings name="SPInclusiveGateway" labelDirectEdit="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.0/@ownedTools[name='FlowElementNameEdit']" semanticCandidatesExpression="aql:self.flowElements->filter(bpmn_lite::InclusiveGateway)" domainClass="bpmn_lite.InclusiveGateway">
-            <style xsi:type="style:WorkspaceImageDescription" showIcon="false" labelExpression="aql:self.getNonExternalLabel(view)" labelColor="//@userColorsPalettes[name='Colors']/@entries[name='TextBackground']" sizeComputationExpression="-1" arcWidth="1" arcHeight="1" workspacePath="/org.eclipse.efbt.cocalimo.core.ui.sirius/icons2/nodes/gateway/inclusive-gateway.svg">
+            <style xsi:type="style:WorkspaceImageDescription" showIcon="false" labelExpression="aql:self.getNonExternalLabel(view)" labelColor="//@userColorsPalettes[name='Colors']/@entries[name='TextBackground']" sizeComputationExpression="-1" arcWidth="1" arcHeight="1" workspacePath="/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/icons2/nodes/gateway/inclusive-gateway.svg">
               <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             </style>
           </subNodeMappings>
           <subNodeMappings name="SPExclusiveGateway" labelDirectEdit="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.0/@ownedTools[name='FlowElementNameEdit']" semanticCandidatesExpression="aql:self.flowElements->filter(bpmn_lite::ExclusiveGateway)" domainClass="bpmn_lite.ExclusiveGateway">
-            <style xsi:type="style:WorkspaceImageDescription" showIcon="false" labelExpression="aql:self.getNonExternalLabel(view)" labelColor="//@userColorsPalettes[name='Colors']/@entries[name='TextBackground']" sizeComputationExpression="-1" arcWidth="1" arcHeight="1" workspacePath="/org.eclipse.efbt.cocalimo.core.ui.sirius/icons2/nodes/gateway/exclusive-gateway.svg">
+            <style xsi:type="style:WorkspaceImageDescription" showIcon="false" labelExpression="aql:self.getNonExternalLabel(view)" labelColor="//@userColorsPalettes[name='Colors']/@entries[name='TextBackground']" sizeComputationExpression="-1" arcWidth="1" arcHeight="1" workspacePath="/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/icons2/nodes/gateway/exclusive-gateway.svg">
               <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             </style>
           </subNodeMappings>
@@ -102,14 +105,7 @@
                   </subModelOperations>
                 </firstModelOperations>
               </initialOperation>
-            </tools>
-            <tools xsi:type="tool_1:ToolDescription" name="SuppressCondition" label="%SupressCondition" forceRefresh="true" iconPath="/org.eclipse.efbt.cocalimo.core.ui.sirius/icons/remove.png">
-              <element name="element"/>
-              <elementView name="elementView"/>
-              <initialOperation>
-                <firstModelOperations xsi:type="tool_1:Unset" featureName="conditionExpression" elementExpression="aql:self.conditionExpression"/>
-              </initialOperation>
-            </tools>
+            </tools>            
           </ownedTools>
         </toolSections>
         <toolSections name="Activities" label="%Activities" icon="/org.eclipse.efbt.cocalimo.smcubes.model.logical_transformation.edit/icons/full/obj16/Task.png">
@@ -333,11 +329,11 @@
           </ownedTools>
         </toolSections>
         <decorationDescriptionsSet>
-          <decorationDescriptions xsi:type="description_1:MappingBasedDecoration" name="ServiceTask" position="NORTH_WEST" preconditionExpression="aql:self.isLikeServiceTask()" imageExpression="/org.eclipse.efbt.cocalimo.core.ui.sirius/icons2/decorations/process/north-west/service-task.png" mappings="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']"/>
-          <decorationDescriptions xsi:type="description_1:MappingBasedDecoration" name="SubProcess" position="SOUTH" preconditionExpression="aql:containerView.ownedDiagramElements->first().filter(diagram::DNodeContainer).isCollapsed()" imageExpression="/org.eclipse.efbt.cocalimo.core.ui.sirius/icons2/decorations/process/south/subprocess.collapsed.png" mappings="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']"/>
-          <decorationDescriptions xsi:type="description_1:MappingBasedDecoration" name="CollapsedSubProcessMarker" position="SOUTH" preconditionExpression="aql:view.isCollapsed()" imageExpression="/org.eclipse.efbt.cocalimo.core.ui.sirius/icons2/decorations/process/south/subprocess.collapsed.png" mappings="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']"/>
-          <decorationDescriptions xsi:type="description_1:MappingBasedDecoration" name="ScriptTask" position="NORTH_WEST" preconditionExpression="aql:self.isLikeScriptTask()" imageExpression="/org.eclipse.efbt.cocalimo.core.ui.sirius/icons2/decorations/process/north-west/script-task.png" mappings="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']"/>
-          <decorationDescriptions xsi:type="description_1:MappingBasedDecoration" name="UserTask" position="NORTH_WEST" preconditionExpression="aql:self.isLikeUserTask()" imageExpression="/org.eclipse.efbt.cocalimo.core.ui.sirius/icons2/decorations/process/north-west/user-task.png" mappings="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']"/>
+          <decorationDescriptions xsi:type="description_1:MappingBasedDecoration" name="ServiceTask" position="NORTH_WEST" preconditionExpression="aql:self.isLikeServiceTask()" imageExpression="/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/icons2/decorations/process/north-west/service-task.png" mappings="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']"/>
+          <decorationDescriptions xsi:type="description_1:MappingBasedDecoration" name="SubProcess" position="SOUTH" preconditionExpression="aql:containerView.ownedDiagramElements->first().filter(diagram::DNodeContainer).isCollapsed()" imageExpression="/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/icons2/decorations/process/south/subprocess.collapsed.png" mappings="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']"/>
+          <decorationDescriptions xsi:type="description_1:MappingBasedDecoration" name="CollapsedSubProcessMarker" position="SOUTH" preconditionExpression="aql:view.isCollapsed()" imageExpression="/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/icons2/decorations/process/south/subprocess.collapsed.png" mappings="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']"/>
+          <decorationDescriptions xsi:type="description_1:MappingBasedDecoration" name="ScriptTask" position="NORTH_WEST" preconditionExpression="aql:self.isLikeScriptTask()" imageExpression="/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/icons2/decorations/process/north-west/script-task.png" mappings="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']"/>
+          <decorationDescriptions xsi:type="description_1:MappingBasedDecoration" name="UserTask" position="NORTH_WEST" preconditionExpression="aql:self.isLikeUserTask()" imageExpression="/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/icons2/decorations/process/north-west/user-task.png" mappings="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']"/>
         </decorationDescriptionsSet>
         <customization/>
       </defaultLayer>
@@ -353,8 +349,8 @@
       </additionalLayers>
     </ownedRepresentations>
     <ownedRepresentations xsi:type="description_1:DiagramDescription" name="ActivityTag" label="ActivityTag" domainClass="ActivityTag">
-      <metamodel href="../../org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/model/logical_transformations.ecore#/"/>
       <metamodel href="../../org.eclipse.efbt.cocalimo.core.model.requirements_text/model/requirements_text.ecore#/"/>
+      <metamodel href="../../org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations/model/logical_transformations.ecore#/"/>
       <defaultLayer name="Default">
         <nodeMappings name="Activity" semanticCandidatesExpression="feature:activity" domainClass="Activity">
           <style xsi:type="style:SquareDescription" labelSize="12" sizeComputationExpression="15" labelPosition="node" resizeKind="NSEW">
@@ -396,8 +392,8 @@
       </defaultLayer>
     </ownedRepresentations>
     <ownedRepresentations xsi:type="description_1:DiagramDescription" name="ScenarioTag" label="ScenarioTag" domainClass="ScenarioTag">
-      <metamodel href="../../org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/model/logical_transformations.ecore#/"/>
       <metamodel href="../../org.eclipse.efbt.cocalimo.core.model.requirements_text/model/requirements_text.ecore#/"/>
+      <metamodel href="../../org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations/model/logical_transformations.ecore#/"/>
       <defaultLayer name="Default">
         <nodeMappings name="Scenario" semanticCandidatesExpression="feature:scenario" domainClass="Scenario">
           <style xsi:type="style:SquareDescription" labelSize="12" sizeComputationExpression="15" labelPosition="node" resizeKind="NSEW">
@@ -439,8 +435,8 @@
       </defaultLayer>
     </ownedRepresentations>
     <ownedRepresentations xsi:type="description_1:DiagramDescription" name="ServiceTask" domainClass="ServiceTask" enablePopupBars="true">
-      <metamodel href="../../org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/model/bpmn_lite.ecore#/"/>
-      <metamodel href="../../org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/model/logical_transformations.ecore#/"/>
+      <metamodel href="../../org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations/model/bpmn_lite.ecore#/"/>
+      <metamodel href="../../org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations/model/logical_transformations.ecore#/"/>
       <defaultLayer name="Default">
         <nodeMappings name="ServiceTask" semanticCandidatesExpression="aql:self" domainClass="ServiceTask">
           <style xsi:type="style:SquareDescription" labelSize="12" sizeComputationExpression="15" labelPosition="node" resizeKind="NSEW">
@@ -456,7 +452,7 @@
             <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
           </style>
         </nodeMappings>
-        <nodeMappings name="EnrichedAttribute" semanticCandidatesExpression="feature:enrichedAttribute" domainClass="EAttribute">
+        <nodeMappings name="EnrichedAttribute" semanticCandidatesExpression="feature:enrichedAttribute" domainClass="Attribute">
           <style xsi:type="style:SquareDescription" labelSize="12" sizeComputationExpression="5" labelPosition="node" resizeKind="NSEW" width="15" height="5">
             <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
@@ -509,8 +505,8 @@
       </defaultLayer>
     </ownedRepresentations>
     <ownedRepresentations xsi:type="description_1:DiagramDescription" name="Scenario" domainClass="Scenario" enablePopupBars="true">
-      <metamodel href="../../org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/model/bpmn_lite.ecore#/"/>
-      <metamodel href="../../org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/model/logical_transformations.ecore#/"/>
+      <metamodel href="../../org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations/model/bpmn_lite.ecore#/"/>
+      <metamodel href="../../org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations/model/logical_transformations.ecore#/"/>
       <defaultLayer name="Default">
         <nodeMappings name="Scenario" semanticCandidatesExpression="aql:self" domainClass="Scenario">
           <style xsi:type="style:EllipseNodeDescription" labelSize="12" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
@@ -579,7 +575,7 @@
       </defaultLayer>
     </ownedRepresentations>
     <ownedRepresentations xsi:type="description_1:DiagramDescription" name="Test" domainClass="Test" enablePopupBars="true">
-      <metamodel href="../../org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/model/logical_transformations.ecore#/"/>
+      <metamodel href="../../org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations/model/logical_transformations.ecore#/"/>
       <defaultLayer name="Default">
         <nodeMappings name="Test" semanticCandidatesExpression="aql:self" domainClass="Test">
           <style xsi:type="style:SquareDescription" labelSize="12" sizeComputationExpression="15" labelPosition="node" resizeKind="NSEW">
@@ -621,8 +617,8 @@
       </defaultLayer>
     </ownedRepresentations>
     <ownedRepresentations xsi:type="description_1:DiagramDescription" name="ScriptTask" domainClass="ScriptTask" enablePopupBars="true">
-      <metamodel href="../../org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/model/bpmn_lite.ecore#/"/>
-      <metamodel href="../../org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/model/logical_transformations.ecore#/"/>
+      <metamodel href="../../org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations/model/bpmn_lite.ecore#/"/>
+      <metamodel href="../../org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations/model/logical_transformations.ecore#/"/>
       <defaultLayer name="Default">
         <nodeMappings name="ScriptTask" semanticCandidatesExpression="aql:self" domainClass="ScriptTask">
           <style xsi:type="style:SquareDescription" labelSize="12" sizeComputationExpression="15" labelPosition="node" resizeKind="NSEW">
@@ -631,7 +627,7 @@
             <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
           </style>
         </nodeMappings>
-        <nodeMappings name="LinkedAttribute" semanticCandidatesExpression="feature:linkedAttributes" domainClass="EStructuralFeature">
+        <nodeMappings name="LinkedAttribute" semanticCandidatesExpression="aql:self.outputLayer.attributes" domainClass="Attribute">
           <style xsi:type="style:SquareDescription" labelSize="12" sizeComputationExpression="5" labelPosition="node" resizeKind="NSEW" width="22" height="5">
             <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
@@ -645,7 +641,7 @@
             <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_green']"/>
           </style>
         </nodeMappings>
-        <edgeMappings name="taskToLinkedAttribute" sourceMapping="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ScriptTask']/@defaultLayer/@nodeMappings[name='ScriptTask']" targetMapping="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ScriptTask']/@defaultLayer/@nodeMappings[name='LinkedAttribute']" targetFinderExpression="feature:linkedAttributes">
+        <edgeMappings name="taskToLinkedAttribute" sourceMapping="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ScriptTask']/@defaultLayer/@nodeMappings[name='ScriptTask']" targetMapping="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ScriptTask']/@defaultLayer/@nodeMappings[name='LinkedAttribute']" targetFinderExpression="aql:self.">
           <style sizeComputationExpression="2">
             <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
             <centerLabelStyleDescription labelSize="12">
@@ -671,8 +667,8 @@
       </defaultLayer>
     </ownedRepresentations>
     <ownedRepresentations xsi:type="description_1:DiagramDescription" name="UserTask" domainClass="UserTask" enablePopupBars="true">
-      <metamodel href="../../org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/model/bpmn_lite.ecore#/"/>
-      <metamodel href="../../org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/model/logical_transformations.ecore#/"/>
+      <metamodel href="../../org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations/model/bpmn_lite.ecore#/"/>
+      <metamodel href="../../org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations/model/logical_transformations.ecore#/"/>
       <defaultLayer name="Default">
         <nodeMappings name="UserTask" semanticCandidatesExpression="aql:self" domainClass="UserTask">
           <style xsi:type="style:SquareDescription" labelSize="12" sizeComputationExpression="15" labelPosition="node" resizeKind="NSEW">
@@ -681,14 +677,14 @@
             <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
           </style>
         </nodeMappings>
-        <nodeMappings name="EStructuralFeature" semanticCandidatesExpression="aql:self.entity.eStructuralFeatures" domainClass="EStructuralFeature">
+        <nodeMappings name="Attribute" semanticCandidatesExpression="aql:self.entity.attributes" domainClass="Attribute">
           <style xsi:type="style:SquareDescription" labelSize="12" sizeComputationExpression="15" labelPosition="node" resizeKind="NSEW">
             <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_purple']"/>
           </style>
         </nodeMappings>
-        <edgeMappings name="taskToFeature" sourceMapping="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='UserTask']/@defaultLayer/@nodeMappings[name='UserTask']" targetMapping="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='UserTask']/@defaultLayer/@nodeMappings[name='EStructuralFeature']" targetFinderExpression="aql:self.entity.eStructuralFeatures">
+        <edgeMappings name="taskToFeature" sourceMapping="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='UserTask']/@defaultLayer/@nodeMappings[name='UserTask']" targetMapping="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='UserTask']/@defaultLayer/@nodeMappings[name='Attribute']" targetFinderExpression="aql:self.entity.attributes">
           <style sizeComputationExpression="2">
             <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
             <centerLabelStyleDescription labelSize="12">
@@ -706,6 +702,7 @@
       </defaultLayer>
     </ownedRepresentations>
     <ownedRepresentations xsi:type="description_1:DiagramDescription" name="SubProcess_attrLineage" domainClass="bpmn_lite.SubProcess" enablePopupBars="true">
+      <metamodel href="../../org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations/model/bpmn_lite.ecore#/"/>
       <filters xsi:type="filter:CompositeFilterDescription" name="FilterOnVisibility">
         <filters xsi:type="filter:MappingFilter" mappings="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ScriptTask'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ServiceTask'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ServiceTask']/@subNodeMappings[name='Scenario'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']" semanticConditionExpression="aql: not (self.invisible)"/>
         <filters xsi:type="filter:MappingFilter" mappings="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ServiceTask']/@subNodeMappings[name='EnrichedLayerAttributes'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']/@subNodeMappings[name='InputLayerAttributes']" semanticConditionExpression="aql: not (self.ordered)"/>
@@ -736,7 +733,7 @@
               <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='dark_green']"/>
             </style>
           </subNodeMappings>
-          <subNodeMappings name="OuputLayerAttributes" semanticCandidatesExpression="aql:self.outputLayer.eStructuralFeatures" domainClass="EStructuralFeature">
+          <subNodeMappings name="OuputLayerAttributes" semanticCandidatesExpression="aql:self.outputLayer.attributes" domainClass="Attribute">
             <style xsi:type="style:SquareDescription" labelSize="12" labelPosition="node" resizeKind="NSEW" width="22" height="3">
               <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
               <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
@@ -750,7 +747,7 @@
           </style>
         </containerMappings>
         <containerMappings name="UserTask" semanticCandidatesExpression="aql:self.eAllContents()" domainClass="UserTask">
-          <subNodeMappings name="InputLayerAttributes" semanticCandidatesExpression="aql:self.entity.eStructuralFeatures" domainClass="EStructuralFeature">
+          <subNodeMappings name="InputLayerAttributes" semanticCandidatesExpression="aql:self.entity.attributes" domainClass="Attribute">
             <style xsi:type="style:SquareDescription" labelSize="12" labelPosition="node" resizeKind="NSEW" width="22" height="3">
               <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
               <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
@@ -764,7 +761,7 @@
           </style>
         </containerMappings>
         <containerMappings name="ServiceTask" semanticCandidatesExpression="aql:self.eAllContents()" domainClass="ServiceTask">
-          <subNodeMappings name="EnrichedLayerAttributes" semanticCandidatesExpression="feature:enrichedAttribute" domainClass="EStructuralFeature">
+          <subNodeMappings name="EnrichedLayerAttributes" semanticCandidatesExpression="feature:enrichedAttribute" domainClass="Attribute">
             <style xsi:type="style:SquareDescription" labelSize="12" labelPosition="node" resizeKind="NSEW" width="22" height="3">
               <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
               <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>

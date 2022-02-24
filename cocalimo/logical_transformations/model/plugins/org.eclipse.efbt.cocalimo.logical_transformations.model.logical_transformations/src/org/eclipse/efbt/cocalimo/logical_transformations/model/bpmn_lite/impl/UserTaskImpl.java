@@ -6,6 +6,7 @@ import org.eclipse.efbt.cocalimo.logical_transformations.model.bpmn_lite.Bpmn_li
 import org.eclipse.efbt.cocalimo.logical_transformations.model.bpmn_lite.UserTask;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BasicEntity;
+
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;

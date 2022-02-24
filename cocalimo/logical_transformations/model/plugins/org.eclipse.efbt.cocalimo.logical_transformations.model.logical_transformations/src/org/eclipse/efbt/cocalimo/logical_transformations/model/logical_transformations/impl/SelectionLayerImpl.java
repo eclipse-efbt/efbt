@@ -8,11 +8,13 @@ import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transform
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.SelectionLayer;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute;
+
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
+
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 

@@ -7,6 +7,7 @@ import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transform
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.Logical_transformationsPackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute;
+
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;

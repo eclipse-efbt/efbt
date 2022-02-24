@@ -21,7 +21,7 @@ import org.eclipse.osgi.util.NLS;
  */
 public class Messages extends NLS {
 
-	private static final String BUNDLE_NAME = "org.eclipse.efbt.cocalimo.core.ui.sirius.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core.messages"; //$NON-NLS-1$
 
 	public static String PropertiesTitle;
 

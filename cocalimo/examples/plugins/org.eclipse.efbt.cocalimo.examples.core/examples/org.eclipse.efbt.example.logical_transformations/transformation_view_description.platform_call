@@ -5,22 +5,6 @@
     "eClass" : "http://www.eclipse.org/efbt/logical_transformations#//LogicalTransformationModule",
     "$ref" : "BIRD_transformations.logical_transformations#transformations"
   },
-  "attributeLineage" : [ {
-    "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
-    "$ref" : "logical_data_model.ecore#//Trade_derived/exposure_at_defualt"
-  }, {
-    "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
-    "$ref" : "logical_data_model.ecore#//Instrument/mkt_value"
-  }, {
-    "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
-    "$ref" : "logical_data_model.ecore#//Trade_derived/risk_weight"
-  }, {
-    "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
-    "$ref" : "logical_data_model.ecore#//Entity/credit_quality"
-  }, {
-    "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
-    "$ref" : "logical_data_model.ecore#//Trade/trade_id"
-  } ],
   "testScope" : [ {
     "name" : "scope2",
     "scenarios" : [ {
@@ -36,7 +20,7 @@
     },
     "scriptTask" : {
       "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ScriptTask",
-      "$ref" : "BIRD_transformations.logical_transformations#//@subProcess/@flowElements.5/@flowElements.0"
+      "$ref" : "BIRD_transformations.logical_transformations#Generate Credit Risk Report"
     }
   } ]
 }

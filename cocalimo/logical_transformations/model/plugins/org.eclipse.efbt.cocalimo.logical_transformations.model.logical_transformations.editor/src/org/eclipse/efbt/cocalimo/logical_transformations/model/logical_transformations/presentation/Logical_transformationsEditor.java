@@ -166,7 +166,9 @@ import org.eclipse.efbt.cocalimo.logical_transformations.model.bpmn_lite.present
 import org.eclipse.efbt.cocalimo.logical_transformations.model.bpmn_lite.provider.Bpmn_liteItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.core.provider.CoreItemProviderAdapterFactory;
+
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.provider.Data_meta_modelItemProviderAdapterFactory;
+
 import org.eclipse.emf.ecore.provider.EcoreItemProviderAdapterFactory;
 
 import org.eclipse.ui.actions.WorkspaceModifyOperation;

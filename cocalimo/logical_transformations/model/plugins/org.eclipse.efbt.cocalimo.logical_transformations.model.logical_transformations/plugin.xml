@@ -14,6 +14,13 @@
             genModel="model/logical_transformations.genmodel"/>
    </extension>
 
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated logical_transformations -->
+      <parser
+            type="bpmn_lite"
+            class="org.eclipse.efbt.cocalimo.logical_transformations.model.bpmn_lite.util.Bpmn_liteResourceFactoryImpl"/>
+   </extension>
+
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated logical_transformations -->
       <package

@@ -5,6 +5,7 @@ package org.eclipse.efbt.cocalimo.logical_transformations.model.bpmn_lite;
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.Scenario;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute;
+
 import org.eclipse.emf.common.util.EList;
 
 /**
