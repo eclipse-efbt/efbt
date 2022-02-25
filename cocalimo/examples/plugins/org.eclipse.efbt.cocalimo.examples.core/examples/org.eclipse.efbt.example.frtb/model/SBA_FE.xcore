@@ -1,0 +1,160 @@
+@Ecore(nsURI="http://www.eclipse.org/efbt/")
+@License(license="Copyright (c) 2020 Bird Software Solutions Ltd\n All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html\n\nSPDX-License-Identifier: EPL-2.0 \n\n Contributors:\n Neil Mackenzie - initial API and implementation\r")
+@GenModel(modelDirectory="/org.eclipse.efbt.cocason.example.frtb/src",
+	modelPluginID="org.eclipse.efbt.cocason.example.frtb", modelName="Sba", importerID="org.eclipse.emf.importer.ecore")
+package sba
+
+
+annotation "license" as License
+
+enum RiskClass {
+	FX
+	GIRR
+	Equity
+	CSRNonSecuritisation
+	CSRSecuritisationNonCTP
+	CSRSecuritisationCTP
+	Commodity	
+}
+
+class RiskFactor {
+	id String name
+	boolean volFactor
+	String ccy1
+	String ccy2
+	GIRRRiskFactorType riskFactorType
+	String mainCurrency
+	String secondCurrency
+	refers SecurityIssue issue
+	EquityFactorType equityFactorType
+	refers Organisation issuer
+	CreditSpreadCurveType CSRCurveType
+	RatingGrade CSRCreditQuality
+	String trancheName
+	CommodityType commodityType
+	String deliveryLocation
+	RiskClass riskClass
+}
+
+enum SensitivityType {
+	Delta
+	Vega
+	Curvature
+}
+
+
+class Sensitivity{
+	SensitivityType sensitivityType
+	double tenor
+	double sensitivity
+	double optionMaturity
+	double optionUnderlyingResidualMaturity
+	refers RiskFactor riskFactor
+	refers Position position
+	String ccyOfRecord
+	double valuationDifference
+	ShockDirection shockDirection
+	double riskWeight
+}
+
+enum IssueType {
+	Equity
+	Bond
+	Securitisation
+}
+class Position {
+	id String name
+}
+
+class SecurityIssue {
+	IssueType issueType
+	refers Organisation issuer
+	RatingGrade ratingGrade
+	id String name
+	SecuritisationSector securitisationSector
+}
+
+class Organisation {
+	RatingGrade ratingGrade
+	Sector sector
+	MarketCap marketCap
+	id String name
+	Economy economy
+}
+
+enum ShockDirection {
+	upshock
+	downShock
+}
+
+enum SecuritisationSector {
+	RMBS_PRIME = 1
+	RMBS_MID_PRIME = 2
+	RMBS_SUB_PRIME = 3
+	CMBS = 4
+	ABS_STUDENT_LOAN = 5
+	ABS_AUTO = 6
+	CLO_NON_CTP = 7
+	OTHER_SECTOR = 8
+}
+
+enum GIRRRiskFactorType {
+	INFLATION
+	BASIS = 1
+	YIELD = 2
+}
+
+enum EquityFactorType {
+	SPOT
+	REPO = 1
+}
+
+enum Economy {
+	EMERGING_MARKET
+	ADVANCED_ECONOMY = 1
+}
+
+enum RatingGrade {
+	SENIOR_IG
+	NON_SENIOR_IG = 1
+	HIGH_YIELD = 2
+	NON_RATED = 3
+	IG = 4
+}
+
+enum MarketCap {
+	LARGE
+	SMALL = 1
+}
+
+enum Sector {
+	SOVEREIGN
+	LOCAL_GOVERNMENT = 1
+	FINANCIALS = 2
+	BASIC_MATERIALS = 3
+	CONSUMER_GOODS = 4
+	TECHNOLOGY = 5
+	HEALTH_CARE = 6
+	COVERED_BONDS = 7
+	OTHER_SECTOR = 8
+}
+
+enum CreditSpreadCurveType {
+	BOND
+	CDS
+}
+
+enum CommodityType {
+	ENERGY_SOLID_COMBUSTABLES = 0
+	ENERGY_LIQUID_COMBUSTABLES = 1
+	ENERGY_ELECTRICITY_AND_CARBON_TRADING = 2
+	FREIGHT = 3
+	METALS_NON_PRECIOUS = 4
+	GASEOUS_COMBUSTABLES = 5
+	PRECIOUS_METALS = 6
+	GRAINS_AND_OILSEED = 7
+	LIVESTOCK_AND_DAIRY = 8
+	SOFTS_AND_OTHER_AGRICULTURALS = 9
+	OTHER_COMMODITY = 10
+}
+
