@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn_lite="http://www.eclipse.org/efbt/bpmn_lite" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:diagram="http://www.eclipse.org/sirius/diagram/1.1.0" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.3/notation" xmlns:platform_call="http://www.eclipse.org/efbt/platform_call" xmlns:style="http://www.eclipse.org/sirius/diagram/description/style/1.1.0" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" xsi:schemaLocation="http://www.eclipse.org/sirius/description/1.1.0 http://www.eclipse.org/sirius/1.1.0#//description http://www.eclipse.org/sirius/diagram/description/1.1.0 http://www.eclipse.org/sirius/diagram/1.1.0#//description http://www.eclipse.org/sirius/diagram/description/style/1.1.0 http://www.eclipse.org/sirius/diagram/1.1.0#//description/style">
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn_lite="http://www.eclipse.org/efbt/bpmn_lite" xmlns:data_meta_model="http://www.eclipse.org/efbt/data_meta_model" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:diagram="http://www.eclipse.org/sirius/diagram/1.1.0" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:logical_transformations="http://www.eclipse.org/efbt/logical_transformations" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.3/notation" xmlns:platform_call="http://www.eclipse.org/efbt/platform_call" xmlns:style="http://www.eclipse.org/sirius/diagram/description/style/1.1.0" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" xsi:schemaLocation="http://www.eclipse.org/sirius/description/1.1.0 http://www.eclipse.org/sirius/1.1.0#//description http://www.eclipse.org/sirius/diagram/description/1.1.0 http://www.eclipse.org/sirius/diagram/1.1.0#//description http://www.eclipse.org/sirius/diagram/description/style/1.1.0 http://www.eclipse.org/sirius/diagram/1.1.0#//description/style">
   <viewpoint:DAnalysis uid="_bgo60JVxEeyiAL8J0xRiWA" selectedViews="_Z0jhkJVzEeyiAL8J0xRiWA _oMXUoJVzEeyiAL8J0xRiWA _ivJ94JWbEeyBF9UvPG2xxQ" version="14.5.1.202106111100">
     <semanticResources>BIRD_transformations.logical_transformations</semanticResources>
     <semanticResources>requirements/CRR2.requirements_text</semanticResources>
@@ -24,6 +24,10 @@
       <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_aCLt4JVzEeyiAL8J0xRiWA" name="new PlatformCall" repPath="#_aByFQJVzEeyiAL8J0xRiWA" changeId="48db315b-9d23-4f05-943e-70cc7c6704ad">
         <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.platform_call.ui.sirius.core/description/controller.odesign#//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='PlatformCall']"/>
         <target xmi:type="platform_call:ConvertDataMetaModelToEcore" href="generateCalsses.platform_call#generate_classes"/>
+      </ownedRepresentationDescriptors>
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_tc7mYJYjEeyL6bV68vQIEg" name="new PlatformCall" repPath="#_tc6_UJYjEeyL6bV68vQIEg" changeId="91f4eb63-ffa3-4eb8-ad61-e16facdabe6f">
+        <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.platform_call.ui.sirius.core/description/controller.odesign#//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='PlatformCall']"/>
+        <target xmi:type="platform_call:CreateLogicalTransformationViewForScope" href="transformation_view_description.platform_call#limited_scope"/>
       </ownedRepresentationDescriptors>
     </ownedViews>
     <ownedViews xmi:type="viewpoint:DView" uid="_oMXUoJVzEeyiAL8J0xRiWA">
@@ -51,8 +55,16 @@
         <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']"/>
         <target xmi:type="bpmn_lite:SubProcess" href="BIRD_transformations.logical_transformations#process"/>
       </ownedRepresentationDescriptors>
-      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_Nic1gJYdEeyL6bV68vQIEg" name="Regulatory Processing Chain" repPath="#_NicOcJYdEeyL6bV68vQIEg" changeId="41910311-4335-46b7-b331-350a338a3e5a">
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_Nic1gJYdEeyL6bV68vQIEg" name="Regulatory Processing Chain" repPath="#_NicOcJYdEeyL6bV68vQIEg" changeId="4be2e236-7537-4d6d-af01-14379a04448a">
         <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']"/>
+        <target xmi:type="bpmn_lite:SubProcess" href="BIRD_transformations.logical_transformations#Regulatory Processing Chain"/>
+      </ownedRepresentationDescriptors>
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_iLhD4JYgEeyL6bV68vQIEg" name="new TheServiceTaskLink" repPath="#_iLgc0JYgEeyL6bV68vQIEg" changeId="fe97f871-8434-43d0-8a5f-0c092626750d">
+        <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ServiceTask']"/>
+        <target xmi:type="bpmn_lite:ServiceTask" href="BIRD_transformations.logical_transformations#Calculate_Duration"/>
+      </ownedRepresentationDescriptors>
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_BcqWIZYiEeyL6bV68vQIEg" name="new SubProcess_attrLineage" repPath="#_BcpvEJYiEeyL6bV68vQIEg" changeId="697dcd4b-7aab-4ffd-8d44-7b1b3691307e">
+        <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']"/>
         <target xmi:type="bpmn_lite:SubProcess" href="BIRD_transformations.logical_transformations#Regulatory Processing Chain"/>
       </ownedRepresentationDescriptors>
     </ownedViews>
@@ -1772,7 +1784,7 @@
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPInclusiveGateway']"/>
       </ownedDiagramElements>
-      <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_SkqdFZYbEeyL6bV68vQIEg" target="Calculate_Entity_Size" name=" &#xA; &#xA;Calculate_Entity_Size" semanticElements="Calculate_Entity_Size" visible="false">
+      <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_SkqdFZYbEeyL6bV68vQIEg" name=" &#xA; &#xA;Calculate_Entity_Size" visible="false">
         <decorations xmi:type="viewpoint:Decoration" uid="_SkrEIZYbEeyL6bV68vQIEg">
           <description xmi:type="description_1:MappingBasedDecoration" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@decorationDescriptionsSet/@decorationDescriptions[name='ServiceTask']"/>
         </decorations>
@@ -1957,7 +1969,7 @@
           </ownedStyle>
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPInclusiveGateway']"/>
         </ownedDiagramElements>
-        <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_SkxKxpYbEeyL6bV68vQIEg" target="Calculate_Entity_Size" name=" &#xA; &#xA;Calculate_Entity_Size" semanticElements="Calculate_Entity_Size">
+        <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_SkxKxpYbEeyL6bV68vQIEg" name=" &#xA; &#xA;Calculate_Entity_Size">
           <decorations xmi:type="viewpoint:Decoration" uid="_Skxx0ZYbEeyL6bV68vQIEg">
             <description xmi:type="description_1:MappingBasedDecoration" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@decorationDescriptionsSet/@decorationDescriptions[name='ServiceTask']"/>
           </decorations>
@@ -2959,8 +2971,8 @@
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPInclusiveGateway']"/>
       </ownedDiagramElements>
       <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_1TLOF5YcEeyL6bV68vQIEg" name="Derivations">
-        <target xmi:type="bpmn_lite:SubProcess" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.5"/>
-        <semanticElements xmi:type="bpmn_lite:SubProcess" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.5"/>
+        <target xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#sf15"/>
+        <semanticElements xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#sf15"/>
         <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
         <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
         <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
@@ -2972,8 +2984,8 @@
       </ownedDiagramElements>
     </ownedDiagramElements>
     <ownedDiagramElements xmi:type="diagram:DEdge" uid="_osFxwJYcEeyL6bV68vQIEg" visible="false" sourceNode="_bdmMq5YbEeyL6bV68vQIEg" targetNode="_bdllmJYbEeyL6bV68vQIEg">
-      <target xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1/@flowElements.3"/>
-      <semanticElements xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1/@flowElements.3"/>
+      <target xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#sf9"/>
+      <semanticElements xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#sf9"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="_osGY0JYcEeyL6bV68vQIEg" targetArrow="InputFillClosedArrow" size="2" routingStyle="manhattan" strokeColor="125,125,125">
         <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='SequenceFlow']/@style"/>
         <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_osGY0ZYcEeyL6bV68vQIEg" showIcon="false">
@@ -2983,8 +2995,8 @@
       <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='SequenceFlow']"/>
     </ownedDiagramElements>
     <ownedDiagramElements xmi:type="diagram:DEdge" uid="_osG_4pYcEeyL6bV68vQIEg" visible="false" sourceNode="_bdmMq5YbEeyL6bV68vQIEg" targetNode="_bdv9oJYbEeyL6bV68vQIEg">
-      <target xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1/@flowElements.3"/>
-      <semanticElements xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1/@flowElements.3"/>
+      <target xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#sf9"/>
+      <semanticElements xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#sf9"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="_osG_45YcEeyL6bV68vQIEg" targetArrow="InputFillClosedArrow" size="2" routingStyle="manhattan" strokeColor="125,125,125">
         <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='SequenceFlow']/@style"/>
         <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_osG_5JYcEeyL6bV68vQIEg" showIcon="false">
@@ -2994,8 +3006,8 @@
       <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='SequenceFlow']"/>
     </ownedDiagramElements>
     <ownedDiagramElements xmi:type="diagram:DEdge" uid="_osG_55YcEeyL6bV68vQIEg" visible="false" sourceNode="_bdwktJYbEeyL6bV68vQIEg" targetNode="_bdllmJYbEeyL6bV68vQIEg">
-      <target xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1/@flowElements.3"/>
-      <semanticElements xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1/@flowElements.3"/>
+      <target xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#sf9"/>
+      <semanticElements xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#sf9"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="_osHm8JYcEeyL6bV68vQIEg" targetArrow="InputFillClosedArrow" size="2" routingStyle="manhattan" strokeColor="125,125,125">
         <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='SequenceFlow']/@style"/>
         <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_osHm8ZYcEeyL6bV68vQIEg" showIcon="false">
@@ -3005,8 +3017,8 @@
       <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='SequenceFlow']"/>
     </ownedDiagramElements>
     <ownedDiagramElements xmi:type="diagram:DEdge" uid="_osHm9JYcEeyL6bV68vQIEg" sourceNode="_bdwktJYbEeyL6bV68vQIEg" targetNode="_bdv9oJYbEeyL6bV68vQIEg">
-      <target xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1/@flowElements.3"/>
-      <semanticElements xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1/@flowElements.3"/>
+      <target xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#sf9"/>
+      <semanticElements xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#sf9"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="_osHm9ZYcEeyL6bV68vQIEg" targetArrow="InputFillClosedArrow" size="2" routingStyle="manhattan" strokeColor="125,125,125">
         <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='SequenceFlow']/@style"/>
         <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_osHm9pYcEeyL6bV68vQIEg" showIcon="false">
@@ -3016,8 +3028,8 @@
       <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='SequenceFlow']"/>
     </ownedDiagramElements>
     <ownedDiagramElements xmi:type="diagram:DEdge" uid="_pU1z4JYcEeyL6bV68vQIEg" visible="false" sourceNode="_bdmMq5YbEeyL6bV68vQIEg" targetNode="_bdmMo5YbEeyL6bV68vQIEg">
-      <target xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1/@flowElements.4"/>
-      <semanticElements xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1/@flowElements.4"/>
+      <target xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#sf10"/>
+      <semanticElements xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#sf10"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="_pU2a4JYcEeyL6bV68vQIEg" targetArrow="InputFillClosedArrow" size="2" routingStyle="manhattan" strokeColor="125,125,125">
         <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='SequenceFlow']/@style"/>
         <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_pU2a4ZYcEeyL6bV68vQIEg" showIcon="false">
@@ -3027,8 +3039,8 @@
       <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='SequenceFlow']"/>
     </ownedDiagramElements>
     <ownedDiagramElements xmi:type="diagram:DEdge" uid="_pU2a5JYcEeyL6bV68vQIEg" visible="false" sourceNode="_bdmMq5YbEeyL6bV68vQIEg" targetNode="_bdv9pJYbEeyL6bV68vQIEg">
-      <target xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1/@flowElements.4"/>
-      <semanticElements xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1/@flowElements.4"/>
+      <target xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#sf10"/>
+      <semanticElements xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#sf10"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="_pU2a5ZYcEeyL6bV68vQIEg" targetArrow="InputFillClosedArrow" size="2" routingStyle="manhattan" strokeColor="125,125,125">
         <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='SequenceFlow']/@style"/>
         <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_pU2a5pYcEeyL6bV68vQIEg" showIcon="false">
@@ -3038,8 +3050,8 @@
       <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='SequenceFlow']"/>
     </ownedDiagramElements>
     <ownedDiagramElements xmi:type="diagram:DEdge" uid="_pU2a6ZYcEeyL6bV68vQIEg" visible="false" sourceNode="_bdwktJYbEeyL6bV68vQIEg" targetNode="_bdmMo5YbEeyL6bV68vQIEg">
-      <target xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1/@flowElements.4"/>
-      <semanticElements xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1/@flowElements.4"/>
+      <target xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#sf10"/>
+      <semanticElements xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#sf10"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="_pU2a6pYcEeyL6bV68vQIEg" targetArrow="InputFillClosedArrow" size="2" routingStyle="manhattan" strokeColor="125,125,125">
         <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='SequenceFlow']/@style"/>
         <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_pU2a65YcEeyL6bV68vQIEg" showIcon="false">
@@ -3049,8 +3061,8 @@
       <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='SequenceFlow']"/>
     </ownedDiagramElements>
     <ownedDiagramElements xmi:type="diagram:DEdge" uid="_pU2a7pYcEeyL6bV68vQIEg" sourceNode="_bdwktJYbEeyL6bV68vQIEg" targetNode="_bdv9pJYbEeyL6bV68vQIEg">
-      <target xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1/@flowElements.4"/>
-      <semanticElements xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1/@flowElements.4"/>
+      <target xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#sf10"/>
+      <semanticElements xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#sf10"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="_pU3B8JYcEeyL6bV68vQIEg" targetArrow="InputFillClosedArrow" size="2" routingStyle="manhattan" strokeColor="125,125,125">
         <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='SequenceFlow']/@style"/>
         <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_pU3B8ZYcEeyL6bV68vQIEg" showIcon="false">
@@ -3060,8 +3072,8 @@
       <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='SequenceFlow']"/>
     </ownedDiagramElements>
     <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_1TIx0JYcEeyL6bV68vQIEg" name="Derivations" visible="false">
-      <target xmi:type="bpmn_lite:SubProcess" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.5"/>
-      <semanticElements xmi:type="bpmn_lite:SubProcess" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.5"/>
+      <target xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#sf15"/>
+      <semanticElements xmi:type="bpmn_lite:SequenceFlow" href="BIRD_transformations.logical_transformations#sf15"/>
       <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_1TIx0ZYcEeyL6bV68vQIEg" labelSize="9" showIcon="false" borderSize="3" borderSizeComputationExpression="3" borderColor="245,233,73" backgroundColor="255,249,225" foregroundColor="255,249,225">
         <labelFormat>bold</labelFormat>
         <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@style"/>
@@ -4541,8 +4553,8 @@
       </ownedDiagramElements>
     </ownedDiagramElements>
     <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_Nif40JYdEeyL6bV68vQIEg" name="Derivations" visible="false" incomingEdges="_LcdkKJYeEeyL6bV68vQIEg">
-      <target xmi:type="bpmn_lite:SubProcess" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1"/>
-      <semanticElements xmi:type="bpmn_lite:SubProcess" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1"/>
+      <target xmi:type="bpmn_lite:SubProcess" href="BIRD_transformations.logical_transformations#Derivations"/>
+      <semanticElements xmi:type="bpmn_lite:SubProcess" href="BIRD_transformations.logical_transformations#Derivations"/>
       <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_Nif40ZYdEeyL6bV68vQIEg" labelSize="9" showIcon="false" borderSize="3" borderSizeComputationExpression="3" borderColor="245,233,73" backgroundColor="255,249,225" foregroundColor="255,249,225">
         <labelFormat>bold</labelFormat>
         <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@style"/>
@@ -4802,8 +4814,8 @@
         </ownedDiagramElements>
       </ownedDiagramElements>
       <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_Nivwc5YdEeyL6bV68vQIEg" name="Derivations" incomingEdges="_LcdkLZYeEeyL6bV68vQIEg">
-        <target xmi:type="bpmn_lite:SubProcess" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1"/>
-        <semanticElements xmi:type="bpmn_lite:SubProcess" href="BIRD_transformations.logical_transformations#//@subProcess/@flowElements.1"/>
+        <target xmi:type="bpmn_lite:SubProcess" href="BIRD_transformations.logical_transformations#Derivations"/>
+        <semanticElements xmi:type="bpmn_lite:SubProcess" href="BIRD_transformations.logical_transformations#Derivations"/>
         <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
         <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
         <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
@@ -5617,5 +5629,1241 @@
     <filterVariableHistory xmi:type="diagram:FilterVariableHistory" uid="_NicOcZYdEeyL6bV68vQIEg"/>
     <activatedLayers xmi:type="description_1:Layer" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer"/>
     <target xmi:type="bpmn_lite:SubProcess" href="BIRD_transformations.logical_transformations#Regulatory Processing Chain"/>
+  </diagram:DSemanticDiagram>
+  <diagram:DSemanticDiagram uid="_iLgc0JYgEeyL6bV68vQIEg">
+    <ownedAnnotationEntries xmi:type="description:AnnotationEntry" uid="_iLsDAJYgEeyL6bV68vQIEg" source="GMF_DIAGRAMS">
+      <data xmi:type="notation:Diagram" xmi:id="_iLsDAZYgEeyL6bV68vQIEg" type="Sirius" element="_iLgc0JYgEeyL6bV68vQIEg" measurementUnit="Pixel">
+        <children xmi:type="notation:Node" xmi:id="_iLufSZYgEeyL6bV68vQIEg" type="2001" element="_iLsqEJYgEeyL6bV68vQIEg">
+          <children xmi:type="notation:Node" xmi:id="_iLufTJYgEeyL6bV68vQIEg" type="5002">
+            <layoutConstraint xmi:type="notation:Location" xmi:id="_iLufTZYgEeyL6bV68vQIEg" y="5"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_iLvGZJYgEeyL6bV68vQIEg" type="3003" element="_iLsqEZYgEeyL6bV68vQIEg">
+            <styles xmi:type="notation:ShapeStyle" xmi:id="_iLvGZZYgEeyL6bV68vQIEg" fontName="Segoe UI"/>
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_iLvGZpYgEeyL6bV68vQIEg"/>
+          </children>
+          <styles xmi:type="notation:ShapeStyle" xmi:id="_iLufSpYgEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_iLufS5YgEeyL6bV68vQIEg" x="370" y="160" width="150" height="150"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_iLvGUJYgEeyL6bV68vQIEg" type="2001" element="_iLtRIJYgEeyL6bV68vQIEg">
+          <children xmi:type="notation:Node" xmi:id="_iLvGU5YgEeyL6bV68vQIEg" type="5002">
+            <layoutConstraint xmi:type="notation:Location" xmi:id="_iLvGVJYgEeyL6bV68vQIEg" y="5"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_iLvGZ5YgEeyL6bV68vQIEg" type="3016" element="_iLtRIZYgEeyL6bV68vQIEg">
+            <styles xmi:type="notation:ShapeStyle" xmi:id="_iLvtYJYgEeyL6bV68vQIEg" fontName="Segoe UI"/>
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_iLvtYZYgEeyL6bV68vQIEg"/>
+          </children>
+          <styles xmi:type="notation:ShapeStyle" xmi:id="_iLvGUZYgEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_iLvGUpYgEeyL6bV68vQIEg" x="180" width="100" height="100"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_iLvGVZYgEeyL6bV68vQIEg" type="2001" element="_iLtRI5YgEeyL6bV68vQIEg">
+          <children xmi:type="notation:Node" xmi:id="_iLvGWJYgEeyL6bV68vQIEg" type="5002">
+            <layoutConstraint xmi:type="notation:Location" xmi:id="_iLvGWZYgEeyL6bV68vQIEg" y="5"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_iLvtYpYgEeyL6bV68vQIEg" type="3016" element="_iLtRJJYgEeyL6bV68vQIEg">
+            <styles xmi:type="notation:ShapeStyle" xmi:id="_iLvtY5YgEeyL6bV68vQIEg" fontName="Segoe UI"/>
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_iLvtZJYgEeyL6bV68vQIEg"/>
+          </children>
+          <styles xmi:type="notation:ShapeStyle" xmi:id="_iLvGVpYgEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_iLvGV5YgEeyL6bV68vQIEg" x="580" width="100" height="100"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_iLvGWpYgEeyL6bV68vQIEg" type="2001" element="_iLtRJpYgEeyL6bV68vQIEg">
+          <children xmi:type="notation:Node" xmi:id="_iLvGXZYgEeyL6bV68vQIEg" type="5002">
+            <layoutConstraint xmi:type="notation:Location" xmi:id="_iLvGXpYgEeyL6bV68vQIEg" y="5"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_iLvtZZYgEeyL6bV68vQIEg" type="3003" element="_iLt4MJYgEeyL6bV68vQIEg">
+            <styles xmi:type="notation:ShapeStyle" xmi:id="_iLvtZpYgEeyL6bV68vQIEg" fontName="Segoe UI"/>
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_iLvtZ5YgEeyL6bV68vQIEg"/>
+          </children>
+          <styles xmi:type="notation:ShapeStyle" xmi:id="_iLvGW5YgEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_iLvGXJYgEeyL6bV68vQIEg" x="370" width="150" height="50"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_iLvGX5YgEeyL6bV68vQIEg" type="2001" element="_iLt4MpYgEeyL6bV68vQIEg">
+          <children xmi:type="notation:Node" xmi:id="_iLvGYpYgEeyL6bV68vQIEg" type="5002">
+            <layoutConstraint xmi:type="notation:Location" xmi:id="_iLvGY5YgEeyL6bV68vQIEg" y="5"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_iLvtaJYgEeyL6bV68vQIEg" type="3003" element="_iLt4M5YgEeyL6bV68vQIEg">
+            <styles xmi:type="notation:ShapeStyle" xmi:id="_iLvtaZYgEeyL6bV68vQIEg" fontName="Segoe UI"/>
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_iLvtapYgEeyL6bV68vQIEg"/>
+          </children>
+          <styles xmi:type="notation:ShapeStyle" xmi:id="_iLvGYJYgEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_iLvGYZYgEeyL6bV68vQIEg" width="150" height="150"/>
+        </children>
+        <styles xmi:type="notation:DiagramStyle" xmi:id="_iLsDApYgEeyL6bV68vQIEg"/>
+        <edges xmi:type="notation:Edge" xmi:id="_iLvta5YgEeyL6bV68vQIEg" type="4001" element="_iLt4NZYgEeyL6bV68vQIEg" source="_iLufSZYgEeyL6bV68vQIEg" target="_iLvGUJYgEeyL6bV68vQIEg">
+          <children xmi:type="notation:Node" xmi:id="_iLvtb5YgEeyL6bV68vQIEg" type="6001">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_iLvtcJYgEeyL6bV68vQIEg" y="-10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_iLvtcZYgEeyL6bV68vQIEg" type="6002">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_iLvtcpYgEeyL6bV68vQIEg" y="10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_iLvtc5YgEeyL6bV68vQIEg" type="6003">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_iLvtdJYgEeyL6bV68vQIEg" y="10"/>
+          </children>
+          <styles xmi:type="notation:ConnectorStyle" xmi:id="_iLvtbJYgEeyL6bV68vQIEg"/>
+          <styles xmi:type="notation:FontStyle" xmi:id="_iLvtbZYgEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+          <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_iLvtbpYgEeyL6bV68vQIEg" points="[0, 0, 185, 60]$[-185, -60, 0, 0]"/>
+          <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_iLvtdZYgEeyL6bV68vQIEg" id="(0.5,0.0)"/>
+          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_iLvtdpYgEeyL6bV68vQIEg" id="(0.5,1.0)"/>
+        </edges>
+        <edges xmi:type="notation:Edge" xmi:id="_iLvtd5YgEeyL6bV68vQIEg" type="4001" element="_iLt4OpYgEeyL6bV68vQIEg" source="_iLufSZYgEeyL6bV68vQIEg" target="_iLvGVZYgEeyL6bV68vQIEg">
+          <children xmi:type="notation:Node" xmi:id="_iLvte5YgEeyL6bV68vQIEg" type="6001">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_iLvtfJYgEeyL6bV68vQIEg" y="-10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_iLwUcJYgEeyL6bV68vQIEg" type="6002">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_iLwUcZYgEeyL6bV68vQIEg" y="10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_iLwUcpYgEeyL6bV68vQIEg" type="6003">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_iLwUc5YgEeyL6bV68vQIEg" y="10"/>
+          </children>
+          <styles xmi:type="notation:ConnectorStyle" xmi:id="_iLvteJYgEeyL6bV68vQIEg"/>
+          <styles xmi:type="notation:FontStyle" xmi:id="_iLvteZYgEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+          <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_iLvtepYgEeyL6bV68vQIEg" points="[0, 0, -185, 60]$[185, -60, 0, 0]"/>
+          <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_iLwUdJYgEeyL6bV68vQIEg" id="(0.5,0.0)"/>
+          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_iLwUdZYgEeyL6bV68vQIEg" id="(0.5,1.0)"/>
+        </edges>
+        <edges xmi:type="notation:Edge" xmi:id="_iLwUdpYgEeyL6bV68vQIEg" type="4001" element="_iLufQpYgEeyL6bV68vQIEg" source="_iLufSZYgEeyL6bV68vQIEg" target="_iLvGWpYgEeyL6bV68vQIEg">
+          <children xmi:type="notation:Node" xmi:id="_iLwUepYgEeyL6bV68vQIEg" type="6001">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_iLwUe5YgEeyL6bV68vQIEg" y="-10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_iLwUfJYgEeyL6bV68vQIEg" type="6002">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_iLwUfZYgEeyL6bV68vQIEg" y="10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_iLwUfpYgEeyL6bV68vQIEg" type="6003">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_iLwUf5YgEeyL6bV68vQIEg" y="10"/>
+          </children>
+          <styles xmi:type="notation:ConnectorStyle" xmi:id="_iLwUd5YgEeyL6bV68vQIEg"/>
+          <styles xmi:type="notation:FontStyle" xmi:id="_iLwUeJYgEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+          <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_iLwUeZYgEeyL6bV68vQIEg" points="[0, 0, 0, 60]$[0, -60, 0, 0]"/>
+          <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_iLwUgJYgEeyL6bV68vQIEg" id="(0.5,0.0)"/>
+          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_iLwUgZYgEeyL6bV68vQIEg" id="(0.5,1.0)"/>
+        </edges>
+      </data>
+    </ownedAnnotationEntries>
+    <ownedAnnotationEntries xmi:type="description:AnnotationEntry" uid="_iLufR5YgEeyL6bV68vQIEg" source="DANNOTATION_CUSTOMIZATION_KEY">
+      <data xmi:type="diagram:ComputedStyleDescriptionRegistry" uid="_iLufSJYgEeyL6bV68vQIEg"/>
+    </ownedAnnotationEntries>
+    <ownedDiagramElements xmi:type="diagram:DNode" uid="_iLsqEJYgEeyL6bV68vQIEg" name="Calculate_Duration" outgoingEdges="_iLt4NZYgEeyL6bV68vQIEg _iLt4OpYgEeyL6bV68vQIEg _iLufQpYgEeyL6bV68vQIEg" width="15" height="15" resizeKind="NSEW">
+      <target xmi:type="bpmn_lite:ServiceTask" href="BIRD_transformations.logical_transformations#Calculate_Duration"/>
+      <semanticElements xmi:type="bpmn_lite:ServiceTask" href="BIRD_transformations.logical_transformations#Calculate_Duration"/>
+      <ownedStyle xmi:type="diagram:Square" uid="_iLsqEZYgEeyL6bV68vQIEg" labelSize="12" labelPosition="node" color="252,233,79">
+        <description xmi:type="style:SquareDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ServiceTask']/@defaultLayer/@nodeMappings[name='ServiceTask']/@style"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ServiceTask']/@defaultLayer/@nodeMappings[name='ServiceTask']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DNode" uid="_iLtRIJYgEeyL6bV68vQIEg" name="main duration scenario" incomingEdges="_iLt4NZYgEeyL6bV68vQIEg" width="10" height="10" resizeKind="NSEW">
+      <target xmi:type="logical_transformations:Scenario" href="BIRD_transformations.logical_transformations#main duration scenario"/>
+      <semanticElements xmi:type="logical_transformations:Scenario" href="BIRD_transformations.logical_transformations#main duration scenario"/>
+      <ownedStyle xmi:type="diagram:Ellipse" uid="_iLtRIZYgEeyL6bV68vQIEg" labelSize="12" labelPosition="node" color="252,233,79">
+        <description xmi:type="style:EllipseNodeDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ServiceTask']/@defaultLayer/@nodeMappings[name='Scenario']/@style"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ServiceTask']/@defaultLayer/@nodeMappings[name='Scenario']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DNode" uid="_iLtRI5YgEeyL6bV68vQIEg" name="zero coupon rate edge case" incomingEdges="_iLt4OpYgEeyL6bV68vQIEg" width="10" height="10" resizeKind="NSEW">
+      <target xmi:type="logical_transformations:Scenario" href="BIRD_transformations.logical_transformations#zero coupon rate edge case"/>
+      <semanticElements xmi:type="logical_transformations:Scenario" href="BIRD_transformations.logical_transformations#zero coupon rate edge case"/>
+      <ownedStyle xmi:type="diagram:Ellipse" uid="_iLtRJJYgEeyL6bV68vQIEg" labelSize="12" labelPosition="node" color="252,233,79">
+        <description xmi:type="style:EllipseNodeDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ServiceTask']/@defaultLayer/@nodeMappings[name='Scenario']/@style"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ServiceTask']/@defaultLayer/@nodeMappings[name='Scenario']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DNode" uid="_iLtRJpYgEeyL6bV68vQIEg" name="duration" incomingEdges="_iLufQpYgEeyL6bV68vQIEg" width="15" height="5" resizeKind="NSEW">
+      <target xmi:type="data_meta_model:Attribute" href="example_ldm.data_meta_model#//@entities.7/@attributes.0"/>
+      <semanticElements xmi:type="data_meta_model:Attribute" href="example_ldm.data_meta_model#//@entities.7/@attributes.0"/>
+      <ownedStyle xmi:type="diagram:Square" uid="_iLt4MJYgEeyL6bV68vQIEg" labelSize="12" labelPosition="node" width="15" height="5" color="217,196,215">
+        <description xmi:type="style:SquareDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ServiceTask']/@defaultLayer/@nodeMappings[name='EnrichedAttribute']/@style"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ServiceTask']/@defaultLayer/@nodeMappings[name='EnrichedAttribute']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DNode" uid="_iLt4MpYgEeyL6bV68vQIEg" name="duration_tag" width="15" height="15" resizeKind="NSEW">
+      <target xmi:type="logical_transformations:ActivityTag" href="BIRD_transformations.logical_transformations#duration_tag"/>
+      <semanticElements xmi:type="logical_transformations:ActivityTag" href="BIRD_transformations.logical_transformations#duration_tag"/>
+      <ownedStyle xmi:type="diagram:Square" uid="_iLt4M5YgEeyL6bV68vQIEg" labelSize="12" labelPosition="node" color="204,242,166">
+        <description xmi:type="style:SquareDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ServiceTask']/@defaultLayer/@nodeMappings[name='ActivityTag']/@style"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ServiceTask']/@defaultLayer/@nodeMappings[name='ActivityTag']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_iLt4NZYgEeyL6bV68vQIEg" sourceNode="_iLsqEJYgEeyL6bV68vQIEg" targetNode="_iLtRIJYgEeyL6bV68vQIEg">
+      <target xmi:type="bpmn_lite:ServiceTask" href="BIRD_transformations.logical_transformations#Calculate_Duration"/>
+      <ownedStyle xmi:type="diagram:EdgeStyle" uid="_iLt4NpYgEeyL6bV68vQIEg" size="2">
+        <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ServiceTask']/@defaultLayer/@edgeMappings[name='taskToScenarios']/@style"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_iLt4N5YgEeyL6bV68vQIEg" labelSize="12"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ServiceTask']/@defaultLayer/@edgeMappings[name='taskToScenarios']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_iLt4OpYgEeyL6bV68vQIEg" sourceNode="_iLsqEJYgEeyL6bV68vQIEg" targetNode="_iLtRI5YgEeyL6bV68vQIEg">
+      <target xmi:type="bpmn_lite:ServiceTask" href="BIRD_transformations.logical_transformations#Calculate_Duration"/>
+      <ownedStyle xmi:type="diagram:EdgeStyle" uid="_iLt4O5YgEeyL6bV68vQIEg" size="2">
+        <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ServiceTask']/@defaultLayer/@edgeMappings[name='taskToScenarios']/@style"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_iLt4PJYgEeyL6bV68vQIEg" labelSize="12"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ServiceTask']/@defaultLayer/@edgeMappings[name='taskToScenarios']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_iLufQpYgEeyL6bV68vQIEg" sourceNode="_iLsqEJYgEeyL6bV68vQIEg" targetNode="_iLtRJpYgEeyL6bV68vQIEg">
+      <target xmi:type="bpmn_lite:ServiceTask" href="BIRD_transformations.logical_transformations#Calculate_Duration"/>
+      <ownedStyle xmi:type="diagram:EdgeStyle" uid="_iLufQ5YgEeyL6bV68vQIEg" size="2">
+        <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ServiceTask']/@defaultLayer/@edgeMappings[name='taskToEnrichedAttribute']/@style"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_iLufRJYgEeyL6bV68vQIEg" labelSize="12"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ServiceTask']/@defaultLayer/@edgeMappings[name='taskToEnrichedAttribute']"/>
+    </ownedDiagramElements>
+    <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ServiceTask']"/>
+    <filterVariableHistory xmi:type="diagram:FilterVariableHistory" uid="_iLgc0ZYgEeyL6bV68vQIEg"/>
+    <activatedLayers xmi:type="description_1:Layer" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='ServiceTask']/@defaultLayer"/>
+    <target xmi:type="bpmn_lite:ServiceTask" href="BIRD_transformations.logical_transformations#Calculate_Duration"/>
+  </diagram:DSemanticDiagram>
+  <diagram:DSemanticDiagram uid="_BcpvEJYiEeyL6bV68vQIEg">
+    <ownedAnnotationEntries xmi:type="description:AnnotationEntry" uid="_Bcq9MJYiEeyL6bV68vQIEg" source="GMF_DIAGRAMS">
+      <data xmi:type="notation:Diagram" xmi:id="_Bcq9MZYiEeyL6bV68vQIEg" type="Sirius" element="_BcpvEJYiEeyL6bV68vQIEg" measurementUnit="Pixel">
+        <children xmi:type="notation:Node" xmi:id="_Bc7b4JYiEeyL6bV68vQIEg" type="2002" element="_BcsLUJYiEeyL6bV68vQIEg">
+          <children xmi:type="notation:Node" xmi:id="_Bc8C8JYiEeyL6bV68vQIEg" type="5006"/>
+          <children xmi:type="notation:Node" xmi:id="_Bc8C8ZYiEeyL6bV68vQIEg" type="7001">
+            <children xmi:type="notation:Node" xmi:id="_Bc94JJYiEeyL6bV68vQIEg" type="3007" element="_BcuAgJYiEeyL6bV68vQIEg">
+              <children xmi:type="notation:Node" xmi:id="_Bc94J5YiEeyL6bV68vQIEg" type="5003">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_Bc94KJYiEeyL6bV68vQIEg" y="5"/>
+              </children>
+              <children xmi:type="notation:Node" xmi:id="_Bc_GQJYiEeyL6bV68vQIEg" type="3003" element="_BcuAgZYiEeyL6bV68vQIEg">
+                <styles xmi:type="notation:ShapeStyle" xmi:id="_Bc_GQZYiEeyL6bV68vQIEg" fontName="Segoe UI"/>
+                <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Bc_GQpYiEeyL6bV68vQIEg"/>
+              </children>
+              <styles xmi:type="notation:ShapeStyle" xmi:id="_Bc94JZYiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Bc94JpYiEeyL6bV68vQIEg" x="28" y="32" width="220" height="60"/>
+            </children>
+            <children xmi:type="notation:Node" xmi:id="_Bc94KZYiEeyL6bV68vQIEg" type="3007" element="_BcvOoJYiEeyL6bV68vQIEg">
+              <children xmi:type="notation:Node" xmi:id="_Bc94LJYiEeyL6bV68vQIEg" type="5003">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_Bc94LZYiEeyL6bV68vQIEg" y="5"/>
+              </children>
+              <children xmi:type="notation:Node" xmi:id="_Bc_GQ5YiEeyL6bV68vQIEg" type="3003" element="_BcvOoZYiEeyL6bV68vQIEg">
+                <styles xmi:type="notation:ShapeStyle" xmi:id="_Bc_GRJYiEeyL6bV68vQIEg" fontName="Segoe UI"/>
+                <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Bc_GRZYiEeyL6bV68vQIEg"/>
+              </children>
+              <styles xmi:type="notation:ShapeStyle" xmi:id="_Bc94KpYiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Bc94K5YiEeyL6bV68vQIEg" x="28" y="122" width="220" height="30"/>
+            </children>
+            <children xmi:type="notation:Node" xmi:id="_Bc-fMJYiEeyL6bV68vQIEg" type="3007" element="_BcwcwJYiEeyL6bV68vQIEg">
+              <children xmi:type="notation:Node" xmi:id="_Bc-fM5YiEeyL6bV68vQIEg" type="5003">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_Bc-fNJYiEeyL6bV68vQIEg" y="5"/>
+              </children>
+              <children xmi:type="notation:Node" xmi:id="_Bc_GRpYiEeyL6bV68vQIEg" type="3003" element="_BcwcwZYiEeyL6bV68vQIEg">
+                <styles xmi:type="notation:ShapeStyle" xmi:id="_Bc_GR5YiEeyL6bV68vQIEg" fontName="Segoe UI"/>
+                <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Bc_GSJYiEeyL6bV68vQIEg"/>
+              </children>
+              <styles xmi:type="notation:ShapeStyle" xmi:id="_Bc-fMZYiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Bc-fMpYiEeyL6bV68vQIEg" x="28" y="212" width="220" height="30"/>
+            </children>
+            <children xmi:type="notation:Node" xmi:id="_Bc-fNZYiEeyL6bV68vQIEg" type="3007" element="_Bcwcw5YiEeyL6bV68vQIEg">
+              <children xmi:type="notation:Node" xmi:id="_Bc-fOJYiEeyL6bV68vQIEg" type="5003">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_Bc-fOZYiEeyL6bV68vQIEg" y="5"/>
+              </children>
+              <children xmi:type="notation:Node" xmi:id="_Bc_tUJYiEeyL6bV68vQIEg" type="3003" element="_BcwcxJYiEeyL6bV68vQIEg">
+                <styles xmi:type="notation:ShapeStyle" xmi:id="_Bc_tUZYiEeyL6bV68vQIEg" fontName="Segoe UI"/>
+                <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Bc_tUpYiEeyL6bV68vQIEg"/>
+              </children>
+              <styles xmi:type="notation:ShapeStyle" xmi:id="_Bc-fNpYiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Bc-fN5YiEeyL6bV68vQIEg" x="28" y="302" width="220" height="30"/>
+            </children>
+            <styles xmi:type="notation:SortingStyle" xmi:id="_Bc8C8pYiEeyL6bV68vQIEg"/>
+            <styles xmi:type="notation:FilteringStyle" xmi:id="_Bc8C85YiEeyL6bV68vQIEg"/>
+          </children>
+          <styles xmi:type="notation:ShapeStyle" xmi:id="_Bc7b4ZYiEeyL6bV68vQIEg" fontName="Segoe UI" bold="true"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Bc7b4pYiEeyL6bV68vQIEg" x="960" y="25"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_Bc8C9JYiEeyL6bV68vQIEg" type="2002" element="_BcsLU5YiEeyL6bV68vQIEg">
+          <children xmi:type="notation:Node" xmi:id="_Bc8C95YiEeyL6bV68vQIEg" type="5006"/>
+          <children xmi:type="notation:Node" xmi:id="_Bc8C-JYiEeyL6bV68vQIEg" type="7001">
+            <children xmi:type="notation:Node" xmi:id="_Bc_tU5YiEeyL6bV68vQIEg" type="3007" element="_BcwcxpYiEeyL6bV68vQIEg">
+              <children xmi:type="notation:Node" xmi:id="_Bc_tVpYiEeyL6bV68vQIEg" type="5003">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_Bc_tV5YiEeyL6bV68vQIEg" y="5"/>
+              </children>
+              <children xmi:type="notation:Node" xmi:id="_Bc_tWJYiEeyL6bV68vQIEg" type="3003" element="_BcxD0JYiEeyL6bV68vQIEg">
+                <styles xmi:type="notation:ShapeStyle" xmi:id="_Bc_tWZYiEeyL6bV68vQIEg" fontName="Segoe UI"/>
+                <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Bc_tWpYiEeyL6bV68vQIEg"/>
+              </children>
+              <styles xmi:type="notation:ShapeStyle" xmi:id="_Bc_tVJYiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Bc_tVZYiEeyL6bV68vQIEg" x="28" y="32" width="220" height="60"/>
+            </children>
+            <styles xmi:type="notation:SortingStyle" xmi:id="_Bc8C-ZYiEeyL6bV68vQIEg"/>
+            <styles xmi:type="notation:FilteringStyle" xmi:id="_Bc8C-pYiEeyL6bV68vQIEg"/>
+          </children>
+          <styles xmi:type="notation:ShapeStyle" xmi:id="_Bc8C9ZYiEeyL6bV68vQIEg" fontName="Segoe UI" bold="true"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Bc8C9pYiEeyL6bV68vQIEg" x="960" y="420"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_Bc8C-5YiEeyL6bV68vQIEg" type="2002" element="_BcsyYpYiEeyL6bV68vQIEg">
+          <children xmi:type="notation:Node" xmi:id="_Bc8C_pYiEeyL6bV68vQIEg" type="5006"/>
+          <children xmi:type="notation:Node" xmi:id="_Bc8C_5YiEeyL6bV68vQIEg" type="7001">
+            <children xmi:type="notation:Node" xmi:id="_BdAUYJYiEeyL6bV68vQIEg" type="3007" element="_BcxD0pYiEeyL6bV68vQIEg">
+              <children xmi:type="notation:Node" xmi:id="_BdAUY5YiEeyL6bV68vQIEg" type="5003">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_BdAUZJYiEeyL6bV68vQIEg" y="5"/>
+              </children>
+              <children xmi:type="notation:Node" xmi:id="_BdAUZZYiEeyL6bV68vQIEg" type="3003" element="_BcxD05YiEeyL6bV68vQIEg">
+                <styles xmi:type="notation:ShapeStyle" xmi:id="_BdAUZpYiEeyL6bV68vQIEg" fontName="Segoe UI"/>
+                <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdAUZ5YiEeyL6bV68vQIEg"/>
+              </children>
+              <styles xmi:type="notation:ShapeStyle" xmi:id="_BdAUYZYiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdAUYpYiEeyL6bV68vQIEg" x="28" y="32" width="220" height="60"/>
+            </children>
+            <styles xmi:type="notation:SortingStyle" xmi:id="_Bc8DAJYiEeyL6bV68vQIEg"/>
+            <styles xmi:type="notation:FilteringStyle" xmi:id="_Bc8DAZYiEeyL6bV68vQIEg"/>
+          </children>
+          <styles xmi:type="notation:ShapeStyle" xmi:id="_Bc8C_JYiEeyL6bV68vQIEg" fontName="Segoe UI" bold="true"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Bc8C_ZYiEeyL6bV68vQIEg" x="985" y="645"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_Bc8DApYiEeyL6bV68vQIEg" type="2002" element="_Bcxq4JYiEeyL6bV68vQIEg">
+          <children xmi:type="notation:Node" xmi:id="_Bc8DBZYiEeyL6bV68vQIEg" type="5006"/>
+          <children xmi:type="notation:Node" xmi:id="_Bc8DBpYiEeyL6bV68vQIEg" type="7001">
+            <children xmi:type="notation:Node" xmi:id="_BdA7cJYiEeyL6bV68vQIEg" type="3007" element="_BcyR8JYiEeyL6bV68vQIEg">
+              <children xmi:type="notation:Node" xmi:id="_BdA7c5YiEeyL6bV68vQIEg" type="5003">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_BdA7dJYiEeyL6bV68vQIEg" y="5"/>
+              </children>
+              <children xmi:type="notation:Node" xmi:id="_BdFz8JYiEeyL6bV68vQIEg" type="3003" element="_BcyR8ZYiEeyL6bV68vQIEg">
+                <styles xmi:type="notation:ShapeStyle" xmi:id="_BdFz8ZYiEeyL6bV68vQIEg" fontName="Segoe UI"/>
+                <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdFz8pYiEeyL6bV68vQIEg"/>
+              </children>
+              <styles xmi:type="notation:ShapeStyle" xmi:id="_BdA7cZYiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdA7cpYiEeyL6bV68vQIEg" x="28" y="32" width="220" height="30"/>
+            </children>
+            <children xmi:type="notation:Node" xmi:id="_BdBigJYiEeyL6bV68vQIEg" type="3007" element="_BcyR85YiEeyL6bV68vQIEg">
+              <children xmi:type="notation:Node" xmi:id="_BdCwoJYiEeyL6bV68vQIEg" type="5003">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_BdCwoZYiEeyL6bV68vQIEg" y="5"/>
+              </children>
+              <children xmi:type="notation:Node" xmi:id="_BdFz85YiEeyL6bV68vQIEg" type="3003" element="_BcyR9JYiEeyL6bV68vQIEg">
+                <styles xmi:type="notation:ShapeStyle" xmi:id="_BdFz9JYiEeyL6bV68vQIEg" fontName="Segoe UI"/>
+                <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdFz9ZYiEeyL6bV68vQIEg"/>
+              </children>
+              <styles xmi:type="notation:ShapeStyle" xmi:id="_BdBigZYiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdBigpYiEeyL6bV68vQIEg" x="28" y="92" width="220" height="30"/>
+            </children>
+            <children xmi:type="notation:Node" xmi:id="_BdDXsJYiEeyL6bV68vQIEg" type="3007" element="_BcyR9pYiEeyL6bV68vQIEg">
+              <children xmi:type="notation:Node" xmi:id="_BdEl0JYiEeyL6bV68vQIEg" type="5003">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_BdEl0ZYiEeyL6bV68vQIEg" y="5"/>
+              </children>
+              <children xmi:type="notation:Node" xmi:id="_BdFz9pYiEeyL6bV68vQIEg" type="3003" element="_BcyR95YiEeyL6bV68vQIEg">
+                <styles xmi:type="notation:ShapeStyle" xmi:id="_BdFz95YiEeyL6bV68vQIEg" fontName="Segoe UI"/>
+                <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdFz-JYiEeyL6bV68vQIEg"/>
+              </children>
+              <styles xmi:type="notation:ShapeStyle" xmi:id="_BdDXsZYiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdDXspYiEeyL6bV68vQIEg" x="28" y="145" width="220" height="30"/>
+            </children>
+            <children xmi:type="notation:Node" xmi:id="_BdFM4JYiEeyL6bV68vQIEg" type="3007" element="_BcyR-ZYiEeyL6bV68vQIEg">
+              <children xmi:type="notation:Node" xmi:id="_BdFM45YiEeyL6bV68vQIEg" type="5003">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_BdFM5JYiEeyL6bV68vQIEg" y="5"/>
+              </children>
+              <children xmi:type="notation:Node" xmi:id="_BdFz-ZYiEeyL6bV68vQIEg" type="3003" element="_BcyR-pYiEeyL6bV68vQIEg">
+                <styles xmi:type="notation:ShapeStyle" xmi:id="_BdFz-pYiEeyL6bV68vQIEg" fontName="Segoe UI"/>
+                <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdFz-5YiEeyL6bV68vQIEg"/>
+              </children>
+              <styles xmi:type="notation:ShapeStyle" xmi:id="_BdFM4ZYiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdFM4pYiEeyL6bV68vQIEg" x="28" y="200" width="220" height="30"/>
+            </children>
+            <styles xmi:type="notation:SortingStyle" xmi:id="_Bc8DB5YiEeyL6bV68vQIEg"/>
+            <styles xmi:type="notation:FilteringStyle" xmi:id="_Bc8DCJYiEeyL6bV68vQIEg"/>
+          </children>
+          <styles xmi:type="notation:ShapeStyle" xmi:id="_Bc8DA5YiEeyL6bV68vQIEg" fontName="Segoe UI" bold="true"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Bc8DBJYiEeyL6bV68vQIEg" x="25" y="675"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_Bc8DCZYiEeyL6bV68vQIEg" type="2002" element="_Bcxq45YiEeyL6bV68vQIEg">
+          <children xmi:type="notation:Node" xmi:id="_Bc8qApYiEeyL6bV68vQIEg" type="5006"/>
+          <children xmi:type="notation:Node" xmi:id="_Bc8qA5YiEeyL6bV68vQIEg" type="7001">
+            <children xmi:type="notation:Node" xmi:id="_BdGbAJYiEeyL6bV68vQIEg" type="3007" element="_Bcy5AJYiEeyL6bV68vQIEg">
+              <children xmi:type="notation:Node" xmi:id="_BdGbA5YiEeyL6bV68vQIEg" type="5003">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_BdGbBJYiEeyL6bV68vQIEg" y="5"/>
+              </children>
+              <children xmi:type="notation:Node" xmi:id="_BdHCEpYiEeyL6bV68vQIEg" type="3003" element="_Bcy5AZYiEeyL6bV68vQIEg">
+                <styles xmi:type="notation:ShapeStyle" xmi:id="_BdHCE5YiEeyL6bV68vQIEg" fontName="Segoe UI"/>
+                <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdHCFJYiEeyL6bV68vQIEg"/>
+              </children>
+              <styles xmi:type="notation:ShapeStyle" xmi:id="_BdGbAZYiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdGbApYiEeyL6bV68vQIEg" x="28" y="32" width="220" height="30"/>
+            </children>
+            <children xmi:type="notation:Node" xmi:id="_BdGbBZYiEeyL6bV68vQIEg" type="3007" element="_Bcy5A5YiEeyL6bV68vQIEg">
+              <children xmi:type="notation:Node" xmi:id="_BdGbCJYiEeyL6bV68vQIEg" type="5003">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_BdGbCZYiEeyL6bV68vQIEg" y="5"/>
+              </children>
+              <children xmi:type="notation:Node" xmi:id="_BdHCFZYiEeyL6bV68vQIEg" type="3003" element="_Bcy5BJYiEeyL6bV68vQIEg">
+                <styles xmi:type="notation:ShapeStyle" xmi:id="_BdHCFpYiEeyL6bV68vQIEg" fontName="Segoe UI"/>
+                <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdHCF5YiEeyL6bV68vQIEg"/>
+              </children>
+              <styles xmi:type="notation:ShapeStyle" xmi:id="_BdGbBpYiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdGbB5YiEeyL6bV68vQIEg" x="28" y="92" width="220" height="30"/>
+            </children>
+            <children xmi:type="notation:Node" xmi:id="_BdGbCpYiEeyL6bV68vQIEg" type="3007" element="_Bcy5BpYiEeyL6bV68vQIEg">
+              <children xmi:type="notation:Node" xmi:id="_BdHCEJYiEeyL6bV68vQIEg" type="5003">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_BdHCEZYiEeyL6bV68vQIEg" y="5"/>
+              </children>
+              <children xmi:type="notation:Node" xmi:id="_BdHCGJYiEeyL6bV68vQIEg" type="3003" element="_Bcy5B5YiEeyL6bV68vQIEg">
+                <styles xmi:type="notation:ShapeStyle" xmi:id="_BdHCGZYiEeyL6bV68vQIEg" fontName="Segoe UI"/>
+                <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdHCGpYiEeyL6bV68vQIEg"/>
+              </children>
+              <styles xmi:type="notation:ShapeStyle" xmi:id="_BdGbC5YiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdGbDJYiEeyL6bV68vQIEg" x="28" y="182" width="220" height="30"/>
+            </children>
+            <styles xmi:type="notation:SortingStyle" xmi:id="_Bc8qBJYiEeyL6bV68vQIEg"/>
+            <styles xmi:type="notation:FilteringStyle" xmi:id="_Bc8qBZYiEeyL6bV68vQIEg"/>
+          </children>
+          <styles xmi:type="notation:ShapeStyle" xmi:id="_Bc8qAJYiEeyL6bV68vQIEg" fontName="Segoe UI" bold="true"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Bc8qAZYiEeyL6bV68vQIEg" x="10" y="25"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_Bc8qBpYiEeyL6bV68vQIEg" type="2002" element="_Bcxq5pYiEeyL6bV68vQIEg">
+          <children xmi:type="notation:Node" xmi:id="_Bc8qCZYiEeyL6bV68vQIEg" type="5006"/>
+          <children xmi:type="notation:Node" xmi:id="_Bc8qCpYiEeyL6bV68vQIEg" type="7001">
+            <children xmi:type="notation:Node" xmi:id="_BdHpIJYiEeyL6bV68vQIEg" type="3007" element="_Bcy5CZYiEeyL6bV68vQIEg">
+              <children xmi:type="notation:Node" xmi:id="_BdHpI5YiEeyL6bV68vQIEg" type="5003">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_BdHpJJYiEeyL6bV68vQIEg" y="5"/>
+              </children>
+              <children xmi:type="notation:Node" xmi:id="_BdHpJZYiEeyL6bV68vQIEg" type="3003" element="_Bcy5CpYiEeyL6bV68vQIEg">
+                <styles xmi:type="notation:ShapeStyle" xmi:id="_BdHpJpYiEeyL6bV68vQIEg" fontName="Segoe UI"/>
+                <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdHpJ5YiEeyL6bV68vQIEg"/>
+              </children>
+              <styles xmi:type="notation:ShapeStyle" xmi:id="_BdHpIZYiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdHpIpYiEeyL6bV68vQIEg" x="28" y="32" width="220" height="30"/>
+            </children>
+            <styles xmi:type="notation:SortingStyle" xmi:id="_Bc8qC5YiEeyL6bV68vQIEg"/>
+            <styles xmi:type="notation:FilteringStyle" xmi:id="_Bc8qDJYiEeyL6bV68vQIEg"/>
+          </children>
+          <styles xmi:type="notation:ShapeStyle" xmi:id="_Bc8qB5YiEeyL6bV68vQIEg" fontName="Segoe UI" bold="true"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Bc8qCJYiEeyL6bV68vQIEg" x="15" y="490"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_Bc8qDZYiEeyL6bV68vQIEg" type="2002" element="_Bcxq6ZYiEeyL6bV68vQIEg">
+          <children xmi:type="notation:Node" xmi:id="_Bc8qEJYiEeyL6bV68vQIEg" type="5006"/>
+          <children xmi:type="notation:Node" xmi:id="_Bc8qEZYiEeyL6bV68vQIEg" type="7001">
+            <styles xmi:type="notation:SortingStyle" xmi:id="_Bc8qEpYiEeyL6bV68vQIEg"/>
+            <styles xmi:type="notation:FilteringStyle" xmi:id="_Bc8qE5YiEeyL6bV68vQIEg"/>
+          </children>
+          <styles xmi:type="notation:ShapeStyle" xmi:id="_Bc8qDpYiEeyL6bV68vQIEg" fontName="Segoe UI" bold="true"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Bc8qD5YiEeyL6bV68vQIEg" x="25" y="590"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_Bc8qFJYiEeyL6bV68vQIEg" type="2002" element="_Bcxq7JYiEeyL6bV68vQIEg">
+          <children xmi:type="notation:Node" xmi:id="_Bc8qF5YiEeyL6bV68vQIEg" type="5006"/>
+          <children xmi:type="notation:Node" xmi:id="_Bc8qGJYiEeyL6bV68vQIEg" type="7001">
+            <children xmi:type="notation:Node" xmi:id="_BdHpKJYiEeyL6bV68vQIEg" type="3007" element="_Bcy5DJYiEeyL6bV68vQIEg">
+              <children xmi:type="notation:Node" xmi:id="_BdHpK5YiEeyL6bV68vQIEg" type="5003">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_BdHpLJYiEeyL6bV68vQIEg" y="5"/>
+              </children>
+              <children xmi:type="notation:Node" xmi:id="_BdIQOpYiEeyL6bV68vQIEg" type="3003" element="_BczgEJYiEeyL6bV68vQIEg">
+                <styles xmi:type="notation:ShapeStyle" xmi:id="_BdIQO5YiEeyL6bV68vQIEg" fontName="Segoe UI"/>
+                <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdIQPJYiEeyL6bV68vQIEg"/>
+              </children>
+              <styles xmi:type="notation:ShapeStyle" xmi:id="_BdHpKZYiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdHpKpYiEeyL6bV68vQIEg" x="28" y="32" width="220" height="30"/>
+            </children>
+            <children xmi:type="notation:Node" xmi:id="_BdIQMJYiEeyL6bV68vQIEg" type="3007" element="_BczgEpYiEeyL6bV68vQIEg">
+              <children xmi:type="notation:Node" xmi:id="_BdIQM5YiEeyL6bV68vQIEg" type="5003">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_BdIQNJYiEeyL6bV68vQIEg" y="5"/>
+              </children>
+              <children xmi:type="notation:Node" xmi:id="_BdIQPZYiEeyL6bV68vQIEg" type="3003" element="_BczgE5YiEeyL6bV68vQIEg">
+                <styles xmi:type="notation:ShapeStyle" xmi:id="_BdIQPpYiEeyL6bV68vQIEg" fontName="Segoe UI"/>
+                <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdIQP5YiEeyL6bV68vQIEg"/>
+              </children>
+              <styles xmi:type="notation:ShapeStyle" xmi:id="_BdIQMZYiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdIQMpYiEeyL6bV68vQIEg" x="28" y="92" width="220" height="30"/>
+            </children>
+            <children xmi:type="notation:Node" xmi:id="_BdIQNZYiEeyL6bV68vQIEg" type="3007" element="_BczgFZYiEeyL6bV68vQIEg">
+              <children xmi:type="notation:Node" xmi:id="_BdIQOJYiEeyL6bV68vQIEg" type="5003">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_BdIQOZYiEeyL6bV68vQIEg" y="5"/>
+              </children>
+              <children xmi:type="notation:Node" xmi:id="_BdIQQJYiEeyL6bV68vQIEg" type="3003" element="_BczgFpYiEeyL6bV68vQIEg">
+                <styles xmi:type="notation:ShapeStyle" xmi:id="_BdIQQZYiEeyL6bV68vQIEg" fontName="Segoe UI"/>
+                <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdIQQpYiEeyL6bV68vQIEg"/>
+              </children>
+              <styles xmi:type="notation:ShapeStyle" xmi:id="_BdIQNpYiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdIQN5YiEeyL6bV68vQIEg" x="28" y="142" width="220" height="30"/>
+            </children>
+            <styles xmi:type="notation:SortingStyle" xmi:id="_Bc8qGZYiEeyL6bV68vQIEg"/>
+            <styles xmi:type="notation:FilteringStyle" xmi:id="_Bc8qGpYiEeyL6bV68vQIEg"/>
+          </children>
+          <styles xmi:type="notation:ShapeStyle" xmi:id="_Bc8qFZYiEeyL6bV68vQIEg" fontName="Segoe UI" bold="true"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Bc8qFpYiEeyL6bV68vQIEg" x="10" y="265"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_Bc8qG5YiEeyL6bV68vQIEg" type="2002" element="_BczgGJYiEeyL6bV68vQIEg">
+          <children xmi:type="notation:Node" xmi:id="_Bc9REJYiEeyL6bV68vQIEg" type="5006"/>
+          <children xmi:type="notation:Node" xmi:id="_Bc9REZYiEeyL6bV68vQIEg" type="7001">
+            <children xmi:type="notation:Node" xmi:id="_BdI3QJYiEeyL6bV68vQIEg" type="3007" element="_Bc0HJpYiEeyL6bV68vQIEg">
+              <children xmi:type="notation:Node" xmi:id="_BdI3Q5YiEeyL6bV68vQIEg" type="5003">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_BdI3RJYiEeyL6bV68vQIEg" y="5"/>
+              </children>
+              <children xmi:type="notation:Node" xmi:id="_BdI3SpYiEeyL6bV68vQIEg" type="3003" element="_Bc0HJ5YiEeyL6bV68vQIEg">
+                <styles xmi:type="notation:ShapeStyle" xmi:id="_BdI3S5YiEeyL6bV68vQIEg" fontName="Segoe UI"/>
+                <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdI3TJYiEeyL6bV68vQIEg"/>
+              </children>
+              <styles xmi:type="notation:ShapeStyle" xmi:id="_BdI3QZYiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdI3QpYiEeyL6bV68vQIEg" x="28" y="32" width="220" height="30"/>
+            </children>
+            <children xmi:type="notation:Node" xmi:id="_BdI3RZYiEeyL6bV68vQIEg" type="3007" element="_Bc0HKZYiEeyL6bV68vQIEg">
+              <children xmi:type="notation:Node" xmi:id="_BdI3SJYiEeyL6bV68vQIEg" type="5003">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_BdI3SZYiEeyL6bV68vQIEg" y="5"/>
+              </children>
+              <children xmi:type="notation:Node" xmi:id="_BdI3TZYiEeyL6bV68vQIEg" type="3016" element="_Bc0uMJYiEeyL6bV68vQIEg">
+                <styles xmi:type="notation:ShapeStyle" xmi:id="_BdI3TpYiEeyL6bV68vQIEg" fontName="Segoe UI"/>
+                <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdI3T5YiEeyL6bV68vQIEg"/>
+              </children>
+              <styles xmi:type="notation:ShapeStyle" xmi:id="_BdI3RpYiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdI3R5YiEeyL6bV68vQIEg" x="28" y="92" width="100" height="100"/>
+            </children>
+            <styles xmi:type="notation:SortingStyle" xmi:id="_Bc9REpYiEeyL6bV68vQIEg"/>
+            <styles xmi:type="notation:FilteringStyle" xmi:id="_Bc9RE5YiEeyL6bV68vQIEg"/>
+          </children>
+          <styles xmi:type="notation:ShapeStyle" xmi:id="_Bc8qHJYiEeyL6bV68vQIEg" fontName="Segoe UI" bold="true"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Bc8qHZYiEeyL6bV68vQIEg" x="335" y="-130"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_Bc9RFJYiEeyL6bV68vQIEg" type="2002" element="_Bc0HIJYiEeyL6bV68vQIEg">
+          <children xmi:type="notation:Node" xmi:id="_Bc9RF5YiEeyL6bV68vQIEg" type="5006"/>
+          <children xmi:type="notation:Node" xmi:id="_Bc9RGJYiEeyL6bV68vQIEg" type="7001">
+            <children xmi:type="notation:Node" xmi:id="_BdI3UJYiEeyL6bV68vQIEg" type="3007" element="_Bc0uMpYiEeyL6bV68vQIEg">
+              <children xmi:type="notation:Node" xmi:id="_BdJeUJYiEeyL6bV68vQIEg" type="5003">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_BdJeUZYiEeyL6bV68vQIEg" y="5"/>
+              </children>
+              <children xmi:type="notation:Node" xmi:id="_BdJeUpYiEeyL6bV68vQIEg" type="3016" element="_Bc0uM5YiEeyL6bV68vQIEg">
+                <styles xmi:type="notation:ShapeStyle" xmi:id="_BdJeU5YiEeyL6bV68vQIEg" fontName="Segoe UI"/>
+                <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdJeVJYiEeyL6bV68vQIEg"/>
+              </children>
+              <styles xmi:type="notation:ShapeStyle" xmi:id="_BdI3UZYiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdI3UpYiEeyL6bV68vQIEg" x="28" y="32" width="100" height="100"/>
+            </children>
+            <children xmi:type="notation:Node" xmi:id="_AeAUgJYtEeyF3akakP_SdA" type="3007" element="_AdG8opYtEeyF3akakP_SdA">
+              <children xmi:type="notation:Node" xmi:id="_AeHpQJYtEeyF3akakP_SdA" type="5003">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_AeHpQZYtEeyF3akakP_SdA" y="5"/>
+              </children>
+              <children xmi:type="notation:Node" xmi:id="_AeJecJYtEeyF3akakP_SdA" type="3003" element="_AdIx0JYtEeyF3akakP_SdA">
+                <styles xmi:type="notation:ShapeStyle" xmi:id="_AeJecZYtEeyF3akakP_SdA" fontName="Segoe UI"/>
+                <layoutConstraint xmi:type="notation:Bounds" xmi:id="_AeJecpYtEeyF3akakP_SdA"/>
+              </children>
+              <styles xmi:type="notation:ShapeStyle" xmi:id="_AeAUgZYtEeyF3akakP_SdA" fontName="Segoe UI" fontHeight="12"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_AeAUgpYtEeyF3akakP_SdA" width="220" height="30"/>
+            </children>
+            <styles xmi:type="notation:SortingStyle" xmi:id="_Bc9RGZYiEeyL6bV68vQIEg"/>
+            <styles xmi:type="notation:FilteringStyle" xmi:id="_Bc9RGpYiEeyL6bV68vQIEg"/>
+          </children>
+          <styles xmi:type="notation:ShapeStyle" xmi:id="_Bc9RFZYiEeyL6bV68vQIEg" fontName="Segoe UI" bold="true"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Bc9RFpYiEeyL6bV68vQIEg" x="695" y="65"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_Bc9RG5YiEeyL6bV68vQIEg" type="2002" element="_Bc0HI5YiEeyL6bV68vQIEg">
+          <children xmi:type="notation:Node" xmi:id="_Bc94IJYiEeyL6bV68vQIEg" type="5006"/>
+          <children xmi:type="notation:Node" xmi:id="_Bc94IZYiEeyL6bV68vQIEg" type="7001">
+            <children xmi:type="notation:Node" xmi:id="_BdJeVZYiEeyL6bV68vQIEg" type="3007" element="_Bc1VQJYiEeyL6bV68vQIEg">
+              <children xmi:type="notation:Node" xmi:id="_BdJeWJYiEeyL6bV68vQIEg" type="5003">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_BdJeWZYiEeyL6bV68vQIEg" y="5"/>
+              </children>
+              <children xmi:type="notation:Node" xmi:id="_BdKscpYiEeyL6bV68vQIEg" type="3003" element="_Bc1VQZYiEeyL6bV68vQIEg">
+                <styles xmi:type="notation:ShapeStyle" xmi:id="_BdKsc5YiEeyL6bV68vQIEg" fontName="Segoe UI"/>
+                <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdKsdJYiEeyL6bV68vQIEg"/>
+              </children>
+              <styles xmi:type="notation:ShapeStyle" xmi:id="_BdJeVpYiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdJeV5YiEeyL6bV68vQIEg" x="28" y="32" width="220" height="30"/>
+            </children>
+            <children xmi:type="notation:Node" xmi:id="_BdKFYJYiEeyL6bV68vQIEg" type="3007" element="_Bc18UJYiEeyL6bV68vQIEg">
+              <children xmi:type="notation:Node" xmi:id="_BdKFY5YiEeyL6bV68vQIEg" type="5003">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_BdKFZJYiEeyL6bV68vQIEg" y="5"/>
+              </children>
+              <children xmi:type="notation:Node" xmi:id="_BdKsdZYiEeyL6bV68vQIEg" type="3016" element="_Bc18UZYiEeyL6bV68vQIEg">
+                <styles xmi:type="notation:ShapeStyle" xmi:id="_BdKsdpYiEeyL6bV68vQIEg" fontName="Segoe UI"/>
+                <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdKsd5YiEeyL6bV68vQIEg"/>
+              </children>
+              <styles xmi:type="notation:ShapeStyle" xmi:id="_BdKFYZYiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdKFYpYiEeyL6bV68vQIEg" x="28" y="92" width="100" height="100"/>
+            </children>
+            <children xmi:type="notation:Node" xmi:id="_BdKFZZYiEeyL6bV68vQIEg" type="3007" element="_Bc18U5YiEeyL6bV68vQIEg">
+              <children xmi:type="notation:Node" xmi:id="_BdKscJYiEeyL6bV68vQIEg" type="5003">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_BdKscZYiEeyL6bV68vQIEg" y="5"/>
+              </children>
+              <children xmi:type="notation:Node" xmi:id="_BdLTgJYiEeyL6bV68vQIEg" type="3016" element="_Bc18VJYiEeyL6bV68vQIEg">
+                <styles xmi:type="notation:ShapeStyle" xmi:id="_BdLTgZYiEeyL6bV68vQIEg" fontName="Segoe UI"/>
+                <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdLTgpYiEeyL6bV68vQIEg"/>
+              </children>
+              <styles xmi:type="notation:ShapeStyle" xmi:id="_BdKFZpYiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdKFZ5YiEeyL6bV68vQIEg" x="28" y="252" width="100" height="100"/>
+            </children>
+            <styles xmi:type="notation:SortingStyle" xmi:id="_Bc94IpYiEeyL6bV68vQIEg"/>
+            <styles xmi:type="notation:FilteringStyle" xmi:id="_Bc94I5YiEeyL6bV68vQIEg"/>
+          </children>
+          <styles xmi:type="notation:ShapeStyle" xmi:id="_Bc9RHJYiEeyL6bV68vQIEg" fontName="Segoe UI" bold="true"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Bc9RHZYiEeyL6bV68vQIEg" x="505" y="290"/>
+        </children>
+        <styles xmi:type="notation:DiagramStyle" xmi:id="_Bcq9MpYiEeyL6bV68vQIEg"/>
+        <edges xmi:type="notation:Edge" xmi:id="_BdL6kJYiEeyL6bV68vQIEg" type="4001" element="_Bc18VpYiEeyL6bV68vQIEg" source="_Bc94JJYiEeyL6bV68vQIEg" target="_BdI3QJYiEeyL6bV68vQIEg">
+          <children xmi:type="notation:Node" xmi:id="_BdNIsJYiEeyL6bV68vQIEg" type="6001">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdNIsZYiEeyL6bV68vQIEg" x="11" y="5"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_BdNIspYiEeyL6bV68vQIEg" type="6002">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdNIs5YiEeyL6bV68vQIEg" x="9" y="-2"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_BdNvwJYiEeyL6bV68vQIEg" type="6003">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdNvwZYiEeyL6bV68vQIEg" x="7" y="1"/>
+          </children>
+          <styles xmi:type="notation:ConnectorStyle" xmi:id="_BdL6kZYiEeyL6bV68vQIEg"/>
+          <styles xmi:type="notation:FontStyle" xmi:id="_BdL6kpYiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+          <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_BdL6k5YiEeyL6bV68vQIEg" points="[-111, -30, 514, 140]$[-570, -155, 55, 15]"/>
+          <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_BdNvwpYiEeyL6bV68vQIEg" id="(0.5,0.5)"/>
+          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_BdOW0JYiEeyL6bV68vQIEg" id="(0.5,0.5)"/>
+        </edges>
+        <edges xmi:type="notation:Edge" xmi:id="_BdOW0ZYiEeyL6bV68vQIEg" type="4001" element="_Bc2jYpYiEeyL6bV68vQIEg" source="_Bc94JJYiEeyL6bV68vQIEg" target="_BdFM4JYiEeyL6bV68vQIEg">
+          <children xmi:type="notation:Node" xmi:id="_BdPk8JYiEeyL6bV68vQIEg" type="6001">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdPk8ZYiEeyL6bV68vQIEg" x="-17" y="-2"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_BdPk8pYiEeyL6bV68vQIEg" type="6002">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdPk85YiEeyL6bV68vQIEg" x="16" y="9"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_BdPk9JYiEeyL6bV68vQIEg" type="6003">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdPk9ZYiEeyL6bV68vQIEg" x="16" y="14"/>
+          </children>
+          <styles xmi:type="notation:ConnectorStyle" xmi:id="_BdOW0pYiEeyL6bV68vQIEg"/>
+          <styles xmi:type="notation:FontStyle" xmi:id="_BdOW05YiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+          <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_BdOW1JYiEeyL6bV68vQIEg" points="[-35, 30, 900, -773]$[-918, 788, 17, -15]"/>
+          <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_BdQMAJYiEeyL6bV68vQIEg" id="(0.5,0.5)"/>
+          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_BdQMAZYiEeyL6bV68vQIEg" id="(0.5,0.5)"/>
+        </edges>
+        <edges xmi:type="notation:Edge" xmi:id="_BdQMApYiEeyL6bV68vQIEg" type="4001" element="_Bc2jZ5YiEeyL6bV68vQIEg" source="_Bc_tU5YiEeyL6bV68vQIEg" target="_BdFM4JYiEeyL6bV68vQIEg">
+          <children xmi:type="notation:Node" xmi:id="_BdQMBpYiEeyL6bV68vQIEg" type="6001">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdQMB5YiEeyL6bV68vQIEg" x="-1" y="10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_BdQMCJYiEeyL6bV68vQIEg" type="6002">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdQMCZYiEeyL6bV68vQIEg" x="3" y="-3"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_BdQMCpYiEeyL6bV68vQIEg" type="6003">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdQMC5YiEeyL6bV68vQIEg" x="3" y="-2"/>
+          </children>
+          <styles xmi:type="notation:ConnectorStyle" xmi:id="_BdQMA5YiEeyL6bV68vQIEg"/>
+          <styles xmi:type="notation:FontStyle" xmi:id="_BdQMBJYiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+          <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_BdQMBZYiEeyL6bV68vQIEg" points="[-69, 30, 866, -378]$[-901, 393, 34, -15]"/>
+          <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_BdQMDJYiEeyL6bV68vQIEg" id="(0.5,0.5)"/>
+          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_BdQMDZYiEeyL6bV68vQIEg" id="(0.5,0.5)"/>
+        </edges>
+        <edges xmi:type="notation:Edge" xmi:id="_BdQzEJYiEeyL6bV68vQIEg" type="4001" element="_Bc2jbJYiEeyL6bV68vQIEg" source="_Bc_tU5YiEeyL6bV68vQIEg" target="_BdHpKJYiEeyL6bV68vQIEg">
+          <children xmi:type="notation:Node" xmi:id="_BdQzFJYiEeyL6bV68vQIEg" type="6001">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdQzFZYiEeyL6bV68vQIEg" x="-11" y="-1"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_BdQzFpYiEeyL6bV68vQIEg" type="6002">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdQzF5YiEeyL6bV68vQIEg" x="19" y="7"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_BdQzGJYiEeyL6bV68vQIEg" type="6003">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdQzGZYiEeyL6bV68vQIEg" x="15" y="5"/>
+          </children>
+          <styles xmi:type="notation:ConnectorStyle" xmi:id="_BdQzEZYiEeyL6bV68vQIEg"/>
+          <styles xmi:type="notation:FontStyle" xmi:id="_BdQzEpYiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+          <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_BdQzE5YiEeyL6bV68vQIEg" points="[-110, -20, 840, 150]$[-867, -155, 83, 15]"/>
+          <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_BdQzGpYiEeyL6bV68vQIEg" id="(0.5,0.5)"/>
+          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_BdQzG5YiEeyL6bV68vQIEg" id="(0.5,0.5)"/>
+        </edges>
+        <edges xmi:type="notation:Edge" xmi:id="_BdQzHJYiEeyL6bV68vQIEg" type="4001" element="_Bc2jcZYiEeyL6bV68vQIEg" source="_Bc_tU5YiEeyL6bV68vQIEg" target="_BdJeVZYiEeyL6bV68vQIEg">
+          <children xmi:type="notation:Node" xmi:id="_BdRaIpYiEeyL6bV68vQIEg" type="6001">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdRaI5YiEeyL6bV68vQIEg" x="3" y="4"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_BdRaJJYiEeyL6bV68vQIEg" type="6002">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdRaJZYiEeyL6bV68vQIEg" y="-2"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_BdRaJpYiEeyL6bV68vQIEg" type="6003">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdRaJ5YiEeyL6bV68vQIEg" x="1" y="-1"/>
+          </children>
+          <styles xmi:type="notation:ConnectorStyle" xmi:id="_BdQzHZYiEeyL6bV68vQIEg"/>
+          <styles xmi:type="notation:FontStyle" xmi:id="_BdRaIJYiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+          <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_BdRaIZYiEeyL6bV68vQIEg" points="[-95, -30, 360, 115]$[-408, -130, 47, 15]"/>
+          <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_BdRaKJYiEeyL6bV68vQIEg" id="(0.5,0.5)"/>
+          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_BdRaKZYiEeyL6bV68vQIEg" id="(0.5,0.5)"/>
+        </edges>
+        <edges xmi:type="notation:Edge" xmi:id="_BdRaKpYiEeyL6bV68vQIEg" type="4001" element="_Bc3KdJYiEeyL6bV68vQIEg" source="_BdI3RZYiEeyL6bV68vQIEg" target="_BdGbCpYiEeyL6bV68vQIEg">
+          <children xmi:type="notation:Node" xmi:id="_BdSBMJYiEeyL6bV68vQIEg" type="6001">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdSBMZYiEeyL6bV68vQIEg" x="-3" y="9"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_BdSBMpYiEeyL6bV68vQIEg" type="6002">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdSBM5YiEeyL6bV68vQIEg" x="6" y="-1"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_BdSBNJYiEeyL6bV68vQIEg" type="6003">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdSBNZYiEeyL6bV68vQIEg" x="7" y="-2"/>
+          </children>
+          <styles xmi:type="notation:ConnectorStyle" xmi:id="_BdRaK5YiEeyL6bV68vQIEg"/>
+          <styles xmi:type="notation:FontStyle" xmi:id="_BdRaLJYiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+          <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_BdRaLZYiEeyL6bV68vQIEg" points="[-50, 39, 215, -171]$[-247, 195, 18, -15]"/>
+          <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_BdSBNpYiEeyL6bV68vQIEg" id="(0.5,0.5)"/>
+          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_BdSBN5YiEeyL6bV68vQIEg" id="(0.5,0.5)"/>
+        </edges>
+        <edges xmi:type="notation:Edge" xmi:id="_BdSBOJYiEeyL6bV68vQIEg" type="4001" element="_Bc3KeZYiEeyL6bV68vQIEg" source="_BdI3UJYiEeyL6bV68vQIEg" target="_BdIQMJYiEeyL6bV68vQIEg">
+          <children xmi:type="notation:Node" xmi:id="_BdSBPJYiEeyL6bV68vQIEg" type="6001">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdSBPZYiEeyL6bV68vQIEg" x="22" y="1"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_BdSBPpYiEeyL6bV68vQIEg" type="6002">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdSBP5YiEeyL6bV68vQIEg" x="-16" y="4"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_BdSBQJYiEeyL6bV68vQIEg" type="6003">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdSBQZYiEeyL6bV68vQIEg" x="-12" y="6"/>
+          </children>
+          <styles xmi:type="notation:ConnectorStyle" xmi:id="_BdSBOZYiEeyL6bV68vQIEg"/>
+          <styles xmi:type="notation:FontStyle" xmi:id="_BdSBOpYiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+          <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_BdSBO5YiEeyL6bV68vQIEg" points="[-50, 18, 575, -207]$[-584, 210, 41, -15]"/>
+          <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_BdSBQpYiEeyL6bV68vQIEg" id="(0.5,0.5)"/>
+          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_BdSBQ5YiEeyL6bV68vQIEg" id="(0.5,0.5)"/>
+        </edges>
+        <edges xmi:type="notation:Edge" xmi:id="_BdSBRJYiEeyL6bV68vQIEg" type="4001" element="_Bc3xgpYiEeyL6bV68vQIEg" source="_BdKFYJYiEeyL6bV68vQIEg" target="_BdHpIJYiEeyL6bV68vQIEg">
+          <children xmi:type="notation:Node" xmi:id="_BdSoQJYiEeyL6bV68vQIEg" type="6001">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdSoQZYiEeyL6bV68vQIEg" x="-6" y="3"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_BdSoQpYiEeyL6bV68vQIEg" type="6002">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdSoQ5YiEeyL6bV68vQIEg" x="8" y="4"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_BdSoRJYiEeyL6bV68vQIEg" type="6003">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdSoRZYiEeyL6bV68vQIEg" x="11" y="4"/>
+          </children>
+          <styles xmi:type="notation:ConnectorStyle" xmi:id="_BdSBRZYiEeyL6bV68vQIEg"/>
+          <styles xmi:type="notation:FontStyle" xmi:id="_BdSBRpYiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+          <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_BdSBR5YiEeyL6bV68vQIEg" points="[-50, 12, 380, -93]$[-369, 90, 61, -15]"/>
+          <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_BdSoRpYiEeyL6bV68vQIEg" id="(0.5,0.5)"/>
+          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_BdSoR5YiEeyL6bV68vQIEg" id="(0.5,0.5)"/>
+        </edges>
+        <edges xmi:type="notation:Edge" xmi:id="_BdSoSJYiEeyL6bV68vQIEg" type="4001" element="_Bc4YkpYiEeyL6bV68vQIEg" source="_BdKFZZYiEeyL6bV68vQIEg" target="_BdHpIJYiEeyL6bV68vQIEg">
+          <children xmi:type="notation:Node" xmi:id="_BdSoTJYiEeyL6bV68vQIEg" type="6001">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdSoTZYiEeyL6bV68vQIEg" x="-3" y="2"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_BdSoTpYiEeyL6bV68vQIEg" type="6002">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdSoT5YiEeyL6bV68vQIEg" x="10" y="4"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_BdSoUJYiEeyL6bV68vQIEg" type="6003">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BdSoUZYiEeyL6bV68vQIEg" x="7" y="1"/>
+          </children>
+          <styles xmi:type="notation:ConnectorStyle" xmi:id="_BdSoSZYiEeyL6bV68vQIEg"/>
+          <styles xmi:type="notation:FontStyle" xmi:id="_BdSoSpYiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+          <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_BdSoS5YiEeyL6bV68vQIEg" points="[-50, -7, 380, 48]$[-320, -41, 110, 14]"/>
+          <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_BdSoUpYiEeyL6bV68vQIEg" id="(0.5,0.5)"/>
+          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_BdSoU5YiEeyL6bV68vQIEg" id="(0.5,0.5)"/>
+        </edges>
+        <edges xmi:type="notation:Edge" xmi:id="_qBYiAJYiEeyL6bV68vQIEg" type="4001" element="_qAfxU5YiEeyL6bV68vQIEg" source="_BdI3UJYiEeyL6bV68vQIEg" target="_BdI3QJYiEeyL6bV68vQIEg">
+          <children xmi:type="notation:Node" xmi:id="_qBZwIJYiEeyL6bV68vQIEg" type="6001">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_qBZwIZYiEeyL6bV68vQIEg" x="-24"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_qBZwIpYiEeyL6bV68vQIEg" type="6002">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_qBZwI5YiEeyL6bV68vQIEg" x="32" y="4"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_qBZwJJYiEeyL6bV68vQIEg" type="6003">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_qBZwJZYiEeyL6bV68vQIEg" x="32" y="6"/>
+          </children>
+          <styles xmi:type="notation:ConnectorStyle" xmi:id="_qBZJEJYiEeyL6bV68vQIEg"/>
+          <styles xmi:type="notation:FontStyle" xmi:id="_qBZJEZYiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+          <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_qBZJEpYiEeyL6bV68vQIEg" points="[-50, -39, 250, 191]$[-281, -215, 19, 15]"/>
+          <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_qBaXMJYiEeyL6bV68vQIEg" id="(0.5,0.5)"/>
+          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_qBaXMZYiEeyL6bV68vQIEg" id="(0.5,0.5)"/>
+        </edges>
+        <edges xmi:type="notation:Edge" xmi:id="_2a4OQJYiEeyL6bV68vQIEg" type="4001" element="_2Z7MDJYiEeyL6bV68vQIEg" source="_BdAUYJYiEeyL6bV68vQIEg" target="_BdFM4JYiEeyL6bV68vQIEg">
+          <children xmi:type="notation:Node" xmi:id="_2a41U5YiEeyL6bV68vQIEg" type="6001">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_2a41VJYiEeyL6bV68vQIEg" y="-10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_2a41VZYiEeyL6bV68vQIEg" type="6002">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_2a41VpYiEeyL6bV68vQIEg" y="10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_2a41V5YiEeyL6bV68vQIEg" type="6003">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_2a41WJYiEeyL6bV68vQIEg" y="10"/>
+          </children>
+          <styles xmi:type="notation:ConnectorStyle" xmi:id="_2a41UJYiEeyL6bV68vQIEg"/>
+          <styles xmi:type="notation:FontStyle" xmi:id="_2a41UZYiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+          <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_2a41UpYiEeyL6bV68vQIEg" points="[-110, 20, 850, -163]$[-882, 168, 78, -15]"/>
+          <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_2a41WZYiEeyL6bV68vQIEg" id="(0.5,0.5)"/>
+          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_2a41WpYiEeyL6bV68vQIEg" id="(0.5,0.5)"/>
+        </edges>
+        <edges xmi:type="notation:Edge" xmi:id="_2a41W5YiEeyL6bV68vQIEg" type="4001" element="_2Z7MEZYiEeyL6bV68vQIEg" source="_BdAUYJYiEeyL6bV68vQIEg" target="_BdIQMJYiEeyL6bV68vQIEg">
+          <children xmi:type="notation:Node" xmi:id="_2a41X5YiEeyL6bV68vQIEg" type="6001">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_2a41YJYiEeyL6bV68vQIEg" y="-10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_2a41YZYiEeyL6bV68vQIEg" type="6002">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_2a41YpYiEeyL6bV68vQIEg" y="10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_2a41Y5YiEeyL6bV68vQIEg" type="6003">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_2a41ZJYiEeyL6bV68vQIEg" y="10"/>
+          </children>
+          <styles xmi:type="notation:ConnectorStyle" xmi:id="_2a41XJYiEeyL6bV68vQIEg"/>
+          <styles xmi:type="notation:FontStyle" xmi:id="_2a41XZYiEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+          <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_2a41XpYiEeyL6bV68vQIEg" points="[-88, -30, 887, 305]$[-932, -320, 43, 15]"/>
+          <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_2a5cYJYiEeyL6bV68vQIEg" id="(0.5,0.5)"/>
+          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_2a5cYZYiEeyL6bV68vQIEg" id="(0.5,0.5)"/>
+        </edges>
+        <edges xmi:type="notation:Edge" xmi:id="_AeMhwJYtEeyF3akakP_SdA" type="4001" element="_AdMcNJYtEeyF3akakP_SdA" source="_Bc94JJYiEeyL6bV68vQIEg" target="_AeAUgJYtEeyF3akakP_SdA">
+          <children xmi:type="notation:Node" xmi:id="_AeOW8JYtEeyF3akakP_SdA" type="6001">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_AeOW8ZYtEeyF3akakP_SdA" y="-10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_AeQzMJYtEeyF3akakP_SdA" type="6002">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_AeQzMZYtEeyF3akakP_SdA" y="10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_AeSBUJYtEeyF3akakP_SdA" type="6003">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_AeSBUZYtEeyF3akakP_SdA" y="10"/>
+          </children>
+          <styles xmi:type="notation:ConnectorStyle" xmi:id="_AeMhwZYtEeyF3akakP_SdA"/>
+          <styles xmi:type="notation:FontStyle" xmi:id="_AeMhwpYtEeyF3akakP_SdA" fontName="Segoe UI" fontHeight="12"/>
+          <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_AeMhw5YtEeyF3akakP_SdA" points="[-110, -3, 183, 4]$[-183, -5, 110, 2]"/>
+          <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_AeYvAJYtEeyF3akakP_SdA" id="(0.5,0.5)"/>
+          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_AeYvAZYtEeyF3akakP_SdA" id="(0.5,0.5)"/>
+        </edges>
+      </data>
+    </ownedAnnotationEntries>
+    <ownedAnnotationEntries xmi:type="description:AnnotationEntry" uid="_Bc4_opYiEeyL6bV68vQIEg" source="DANNOTATION_CUSTOMIZATION_KEY">
+      <data xmi:type="diagram:ComputedStyleDescriptionRegistry" uid="_Bc4_o5YiEeyL6bV68vQIEg"/>
+    </ownedAnnotationEntries>
+    <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_BcsLUJYiEeyL6bV68vQIEg" name="Generate Credit Risk Report">
+      <target xmi:type="bpmn_lite:ScriptTask" href="BIRD_transformations.logical_transformations#Generate Credit Risk Report"/>
+      <semanticElements xmi:type="bpmn_lite:ScriptTask" href="BIRD_transformations.logical_transformations#Generate Credit Risk Report"/>
+      <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
+      <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
+      <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
+      <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_BcsLUZYiEeyL6bV68vQIEg" labelSize="9" showIcon="false" borderSize="3" borderSizeComputationExpression="3" borderColor="245,233,73" backgroundStyle="GradientTopToBottom" backgroundColor="204,242,166" foregroundColor="255,249,225">
+        <labelFormat>bold</labelFormat>
+        <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ScriptTask']/@style"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ScriptTask']"/>
+      <ownedDiagramElements xmi:type="diagram:DNode" uid="_BcuAgJYiEeyL6bV68vQIEg" name="credit_risk_report$layer1" outgoingEdges="_Bc18VpYiEeyL6bV68vQIEg _Bc2jYpYiEeyL6bV68vQIEg _AdMcNJYtEeyF3akakP_SdA" width="22" height="6" resizeKind="NSEW">
+        <target xmi:type="logical_transformations:SelectionLayer" href="BIRD_transformations.logical_transformations#credit_risk_report$layer1"/>
+        <semanticElements xmi:type="logical_transformations:SelectionLayer" href="BIRD_transformations.logical_transformations#credit_risk_report$layer1"/>
+        <ownedStyle xmi:type="diagram:Square" uid="_BcuAgZYiEeyL6bV68vQIEg" labelSize="12" labelPosition="node" width="22" height="6" color="77,137,20">
+          <description xmi:type="style:SquareDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ScriptTask']/@subNodeMappings[name='SelectionLayer']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ScriptTask']/@subNodeMappings[name='SelectionLayer']"/>
+      </ownedDiagramElements>
+      <ownedDiagramElements xmi:type="diagram:DNode" uid="_BcvOoJYiEeyL6bV68vQIEg" name="EAD" width="22" height="3" resizeKind="NSEW">
+        <target xmi:type="data_meta_model:Attribute" href="example_ldm.data_meta_model#//@entities.8/@attributes.0"/>
+        <semanticElements xmi:type="data_meta_model:Attribute" href="example_ldm.data_meta_model#//@entities.8/@attributes.0"/>
+        <ownedStyle xmi:type="diagram:Square" uid="_BcvOoZYiEeyL6bV68vQIEg" labelSize="12" labelPosition="node" width="22" height="3" color="255,255,255">
+          <description xmi:type="style:SquareDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ScriptTask']/@subNodeMappings[name='OuputLayerAttributes']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ScriptTask']/@subNodeMappings[name='OuputLayerAttributes']"/>
+      </ownedDiagramElements>
+      <ownedDiagramElements xmi:type="diagram:DNode" uid="_BcwcwJYiEeyL6bV68vQIEg" name="RW" width="22" height="3" resizeKind="NSEW">
+        <target xmi:type="data_meta_model:Attribute" href="example_ldm.data_meta_model#//@entities.8/@attributes.1"/>
+        <semanticElements xmi:type="data_meta_model:Attribute" href="example_ldm.data_meta_model#//@entities.8/@attributes.1"/>
+        <ownedStyle xmi:type="diagram:Square" uid="_BcwcwZYiEeyL6bV68vQIEg" labelSize="12" labelPosition="node" width="22" height="3" color="255,255,255">
+          <description xmi:type="style:SquareDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ScriptTask']/@subNodeMappings[name='OuputLayerAttributes']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ScriptTask']/@subNodeMappings[name='OuputLayerAttributes']"/>
+      </ownedDiagramElements>
+      <ownedDiagramElements xmi:type="diagram:DNode" uid="_Bcwcw5YiEeyL6bV68vQIEg" name="TRADE_ID" width="22" height="3" resizeKind="NSEW">
+        <target xmi:type="data_meta_model:Attribute" href="example_ldm.data_meta_model#//@entities.8/@attributes.2"/>
+        <semanticElements xmi:type="data_meta_model:Attribute" href="example_ldm.data_meta_model#//@entities.8/@attributes.2"/>
+        <ownedStyle xmi:type="diagram:Square" uid="_BcwcxJYiEeyL6bV68vQIEg" labelSize="12" labelPosition="node" width="22" height="3" color="255,255,255">
+          <description xmi:type="style:SquareDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ScriptTask']/@subNodeMappings[name='OuputLayerAttributes']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ScriptTask']/@subNodeMappings[name='OuputLayerAttributes']"/>
+      </ownedDiagramElements>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_BcsLU5YiEeyL6bV68vQIEg" name="Generate Market Risk Report">
+      <target xmi:type="bpmn_lite:ScriptTask" href="BIRD_transformations.logical_transformations#Generate Market Risk Report"/>
+      <semanticElements xmi:type="bpmn_lite:ScriptTask" href="BIRD_transformations.logical_transformations#Generate Market Risk Report"/>
+      <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
+      <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
+      <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
+      <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_BcsyYJYiEeyL6bV68vQIEg" labelSize="9" showIcon="false" borderSize="3" borderSizeComputationExpression="3" borderColor="245,233,73" backgroundStyle="GradientTopToBottom" backgroundColor="204,242,166" foregroundColor="255,249,225">
+        <labelFormat>bold</labelFormat>
+        <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ScriptTask']/@style"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ScriptTask']"/>
+      <ownedDiagramElements xmi:type="diagram:DNode" uid="_BcwcxpYiEeyL6bV68vQIEg" name="market_risk_report$layer1" outgoingEdges="_Bc2jZ5YiEeyL6bV68vQIEg _Bc2jbJYiEeyL6bV68vQIEg _Bc2jcZYiEeyL6bV68vQIEg" width="22" height="6" resizeKind="NSEW">
+        <target xmi:type="logical_transformations:SelectionLayer" href="BIRD_transformations.logical_transformations#market_risk_report$layer1"/>
+        <semanticElements xmi:type="logical_transformations:SelectionLayer" href="BIRD_transformations.logical_transformations#market_risk_report$layer1"/>
+        <ownedStyle xmi:type="diagram:Square" uid="_BcxD0JYiEeyL6bV68vQIEg" labelSize="12" labelPosition="node" width="22" height="6" color="77,137,20">
+          <description xmi:type="style:SquareDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ScriptTask']/@subNodeMappings[name='SelectionLayer']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ScriptTask']/@subNodeMappings[name='SelectionLayer']"/>
+      </ownedDiagramElements>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_BcsyYpYiEeyL6bV68vQIEg" name="Generat Trade Report">
+      <target xmi:type="bpmn_lite:ScriptTask" href="BIRD_transformations.logical_transformations#Generat Trade Report"/>
+      <semanticElements xmi:type="bpmn_lite:ScriptTask" href="BIRD_transformations.logical_transformations#Generat Trade Report"/>
+      <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
+      <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
+      <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
+      <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_BctZcJYiEeyL6bV68vQIEg" labelSize="9" showIcon="false" borderSize="3" borderSizeComputationExpression="3" borderColor="245,233,73" backgroundStyle="GradientTopToBottom" backgroundColor="204,242,166" foregroundColor="255,249,225">
+        <labelFormat>bold</labelFormat>
+        <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ScriptTask']/@style"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ScriptTask']"/>
+      <ownedDiagramElements xmi:type="diagram:DNode" uid="_BcxD0pYiEeyL6bV68vQIEg" name="trade_report_layer1" outgoingEdges="_2Z7MDJYiEeyL6bV68vQIEg _2Z7MEZYiEeyL6bV68vQIEg" width="22" height="6" resizeKind="NSEW">
+        <target xmi:type="logical_transformations:SelectionLayer" href="BIRD_transformations.logical_transformations#trade_report_layer1"/>
+        <semanticElements xmi:type="logical_transformations:SelectionLayer" href="BIRD_transformations.logical_transformations#trade_report_layer1"/>
+        <ownedStyle xmi:type="diagram:Square" uid="_BcxD05YiEeyL6bV68vQIEg" labelSize="12" labelPosition="node" width="22" height="6" color="77,137,20">
+          <description xmi:type="style:SquareDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ScriptTask']/@subNodeMappings[name='SelectionLayer']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ScriptTask']/@subNodeMappings[name='SelectionLayer']"/>
+      </ownedDiagramElements>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_Bcxq4JYiEeyL6bV68vQIEg" name="Read_Trade">
+      <target xmi:type="bpmn_lite:UserTask" href="BIRD_transformations.logical_transformations#Read_Trade"/>
+      <semanticElements xmi:type="bpmn_lite:UserTask" href="BIRD_transformations.logical_transformations#Read_Trade"/>
+      <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
+      <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
+      <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
+      <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_Bcxq4ZYiEeyL6bV68vQIEg" labelSize="9" showIcon="false" borderSize="3" borderSizeComputationExpression="3" borderColor="245,233,73" backgroundColor="246,139,139" foregroundColor="255,249,225">
+        <labelFormat>bold</labelFormat>
+        <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']/@style"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']"/>
+      <ownedDiagramElements xmi:type="diagram:DNode" uid="_BcyR8JYiEeyL6bV68vQIEg" name="counteparty_id" width="22" height="3" resizeKind="NSEW">
+        <target xmi:type="data_meta_model:ForeignKeyAttribute" href="example_ldm.data_meta_model#//@entities.4/@attributes.0"/>
+        <semanticElements xmi:type="data_meta_model:ForeignKeyAttribute" href="example_ldm.data_meta_model#//@entities.4/@attributes.0"/>
+        <ownedStyle xmi:type="diagram:Square" uid="_BcyR8ZYiEeyL6bV68vQIEg" labelSize="12" labelPosition="node" width="22" height="3" color="255,255,255">
+          <description xmi:type="style:SquareDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']/@subNodeMappings[name='InputLayerAttributes']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']/@subNodeMappings[name='InputLayerAttributes']"/>
+      </ownedDiagramElements>
+      <ownedDiagramElements xmi:type="diagram:DNode" uid="_BcyR85YiEeyL6bV68vQIEg" name="instrument_id" width="22" height="3" resizeKind="NSEW">
+        <target xmi:type="data_meta_model:ForeignKeyAttribute" href="example_ldm.data_meta_model#//@entities.4/@attributes.1"/>
+        <semanticElements xmi:type="data_meta_model:ForeignKeyAttribute" href="example_ldm.data_meta_model#//@entities.4/@attributes.1"/>
+        <ownedStyle xmi:type="diagram:Square" uid="_BcyR9JYiEeyL6bV68vQIEg" labelSize="12" labelPosition="node" width="22" height="3" color="255,255,255">
+          <description xmi:type="style:SquareDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']/@subNodeMappings[name='InputLayerAttributes']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']/@subNodeMappings[name='InputLayerAttributes']"/>
+      </ownedDiagramElements>
+      <ownedDiagramElements xmi:type="diagram:DNode" uid="_BcyR9pYiEeyL6bV68vQIEg" name="quantity" width="22" height="3" resizeKind="NSEW">
+        <target xmi:type="data_meta_model:Attribute" href="example_ldm.data_meta_model#//@entities.4/@attributes.2"/>
+        <semanticElements xmi:type="data_meta_model:Attribute" href="example_ldm.data_meta_model#//@entities.4/@attributes.2"/>
+        <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
+        <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
+        <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
+        <ownedStyle xmi:type="diagram:Square" uid="_BcyR95YiEeyL6bV68vQIEg" labelSize="12" labelPosition="node" width="22" height="3" color="255,255,255">
+          <description xmi:type="style:SquareDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']/@subNodeMappings[name='InputLayerAttributes']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']/@subNodeMappings[name='InputLayerAttributes']"/>
+      </ownedDiagramElements>
+      <ownedDiagramElements xmi:type="diagram:DNode" uid="_BcyR-ZYiEeyL6bV68vQIEg" name="trade_id" incomingEdges="_Bc2jYpYiEeyL6bV68vQIEg _Bc2jZ5YiEeyL6bV68vQIEg _2Z7MDJYiEeyL6bV68vQIEg" width="22" height="3" resizeKind="NSEW">
+        <target xmi:type="data_meta_model:Attribute" href="example_ldm.data_meta_model#//@entities.4/@attributes.3"/>
+        <semanticElements xmi:type="data_meta_model:Attribute" href="example_ldm.data_meta_model#//@entities.4/@attributes.3"/>
+        <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
+        <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
+        <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
+        <ownedStyle xmi:type="diagram:Square" uid="_BcyR-pYiEeyL6bV68vQIEg" labelSize="12" labelPosition="node" width="22" height="3" color="255,255,255">
+          <description xmi:type="style:SquareDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']/@subNodeMappings[name='InputLayerAttributes']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']/@subNodeMappings[name='InputLayerAttributes']"/>
+      </ownedDiagramElements>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_Bcxq45YiEeyL6bV68vQIEg" name="Read_Entity">
+      <target xmi:type="bpmn_lite:UserTask" href="BIRD_transformations.logical_transformations#Read_Entity"/>
+      <semanticElements xmi:type="bpmn_lite:UserTask" href="BIRD_transformations.logical_transformations#Read_Entity"/>
+      <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
+      <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
+      <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
+      <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_Bcxq5JYiEeyL6bV68vQIEg" labelSize="9" showIcon="false" borderSize="3" borderSizeComputationExpression="3" borderColor="245,233,73" backgroundColor="246,139,139" foregroundColor="255,249,225">
+        <labelFormat>bold</labelFormat>
+        <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']/@style"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']"/>
+      <ownedDiagramElements xmi:type="diagram:DNode" uid="_Bcy5AJYiEeyL6bV68vQIEg" name="entity_id" width="22" height="3" resizeKind="NSEW">
+        <target xmi:type="data_meta_model:Attribute" href="example_ldm.data_meta_model#//@entities.3/@attributes.0"/>
+        <semanticElements xmi:type="data_meta_model:Attribute" href="example_ldm.data_meta_model#//@entities.3/@attributes.0"/>
+        <ownedStyle xmi:type="diagram:Square" uid="_Bcy5AZYiEeyL6bV68vQIEg" labelSize="12" labelPosition="node" width="22" height="3" color="255,255,255">
+          <description xmi:type="style:SquareDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']/@subNodeMappings[name='InputLayerAttributes']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']/@subNodeMappings[name='InputLayerAttributes']"/>
+      </ownedDiagramElements>
+      <ownedDiagramElements xmi:type="diagram:DNode" uid="_Bcy5A5YiEeyL6bV68vQIEg" name="market_cap" width="22" height="3" resizeKind="NSEW">
+        <target xmi:type="data_meta_model:Attribute" href="example_ldm.data_meta_model#//@entities.3/@attributes.1"/>
+        <semanticElements xmi:type="data_meta_model:Attribute" href="example_ldm.data_meta_model#//@entities.3/@attributes.1"/>
+        <ownedStyle xmi:type="diagram:Square" uid="_Bcy5BJYiEeyL6bV68vQIEg" labelSize="12" labelPosition="node" width="22" height="3" color="255,255,255">
+          <description xmi:type="style:SquareDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']/@subNodeMappings[name='InputLayerAttributes']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']/@subNodeMappings[name='InputLayerAttributes']"/>
+      </ownedDiagramElements>
+      <ownedDiagramElements xmi:type="diagram:DNode" uid="_Bcy5BpYiEeyL6bV68vQIEg" name="credit_quality" incomingEdges="_Bc3KdJYiEeyL6bV68vQIEg" width="22" height="3" resizeKind="NSEW">
+        <target xmi:type="data_meta_model:Attribute" href="example_ldm.data_meta_model#//@entities.3/@attributes.2"/>
+        <semanticElements xmi:type="data_meta_model:Attribute" href="example_ldm.data_meta_model#//@entities.3/@attributes.2"/>
+        <ownedStyle xmi:type="diagram:Square" uid="_Bcy5B5YiEeyL6bV68vQIEg" labelSize="12" labelPosition="node" width="22" height="3" color="255,255,255">
+          <description xmi:type="style:SquareDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']/@subNodeMappings[name='InputLayerAttributes']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']/@subNodeMappings[name='InputLayerAttributes']"/>
+      </ownedDiagramElements>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_Bcxq5pYiEeyL6bV68vQIEg" name="Read_Bond_Instrument">
+      <target xmi:type="bpmn_lite:UserTask" href="BIRD_transformations.logical_transformations#Read_Bond_Instrument"/>
+      <semanticElements xmi:type="bpmn_lite:UserTask" href="BIRD_transformations.logical_transformations#Read_Bond_Instrument"/>
+      <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
+      <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
+      <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
+      <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_Bcxq55YiEeyL6bV68vQIEg" labelSize="9" showIcon="false" borderSize="3" borderSizeComputationExpression="3" borderColor="245,233,73" backgroundColor="246,139,139" foregroundColor="255,249,225">
+        <labelFormat>bold</labelFormat>
+        <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']/@style"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']"/>
+      <ownedDiagramElements xmi:type="diagram:DNode" uid="_Bcy5CZYiEeyL6bV68vQIEg" name="coupon_rate" incomingEdges="_Bc3xgpYiEeyL6bV68vQIEg _Bc4YkpYiEeyL6bV68vQIEg" width="22" height="3" resizeKind="NSEW">
+        <target xmi:type="data_meta_model:Attribute" href="example_ldm.data_meta_model#//@entities.1/@attributes.0"/>
+        <semanticElements xmi:type="data_meta_model:Attribute" href="example_ldm.data_meta_model#//@entities.1/@attributes.0"/>
+        <ownedStyle xmi:type="diagram:Square" uid="_Bcy5CpYiEeyL6bV68vQIEg" labelSize="12" labelPosition="node" width="22" height="3" color="255,255,255">
+          <description xmi:type="style:SquareDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']/@subNodeMappings[name='InputLayerAttributes']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']/@subNodeMappings[name='InputLayerAttributes']"/>
+      </ownedDiagramElements>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_Bcxq6ZYiEeyL6bV68vQIEg" name="Read Equity Instrument">
+      <target xmi:type="bpmn_lite:UserTask" href="BIRD_transformations.logical_transformations#Read Equity Instrument"/>
+      <semanticElements xmi:type="bpmn_lite:UserTask" href="BIRD_transformations.logical_transformations#Read Equity Instrument"/>
+      <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
+      <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
+      <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
+      <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_Bcxq6pYiEeyL6bV68vQIEg" labelSize="9" showIcon="false" borderSize="3" borderSizeComputationExpression="3" borderColor="245,233,73" backgroundColor="246,139,139" foregroundColor="255,249,225">
+        <labelFormat>bold</labelFormat>
+        <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']/@style"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_Bcxq7JYiEeyL6bV68vQIEg" name="Read Instrument">
+      <target xmi:type="bpmn_lite:UserTask" href="BIRD_transformations.logical_transformations#Read Instrument"/>
+      <semanticElements xmi:type="bpmn_lite:UserTask" href="BIRD_transformations.logical_transformations#Read Instrument"/>
+      <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
+      <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
+      <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
+      <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_Bcxq7ZYiEeyL6bV68vQIEg" labelSize="9" showIcon="false" borderSize="3" borderSizeComputationExpression="3" borderColor="245,233,73" backgroundColor="246,139,139" foregroundColor="255,249,225">
+        <labelFormat>bold</labelFormat>
+        <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']/@style"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']"/>
+      <ownedDiagramElements xmi:type="diagram:DNode" uid="_Bcy5DJYiEeyL6bV68vQIEg" name="instrument_id" incomingEdges="_Bc2jbJYiEeyL6bV68vQIEg" width="22" height="3" resizeKind="NSEW">
+        <target xmi:type="data_meta_model:Attribute" href="example_ldm.data_meta_model#//@entities.0/@attributes.0"/>
+        <semanticElements xmi:type="data_meta_model:Attribute" href="example_ldm.data_meta_model#//@entities.0/@attributes.0"/>
+        <ownedStyle xmi:type="diagram:Square" uid="_BczgEJYiEeyL6bV68vQIEg" labelSize="12" labelPosition="node" width="22" height="3" color="255,255,255">
+          <description xmi:type="style:SquareDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']/@subNodeMappings[name='InputLayerAttributes']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']/@subNodeMappings[name='InputLayerAttributes']"/>
+      </ownedDiagramElements>
+      <ownedDiagramElements xmi:type="diagram:DNode" uid="_BczgEpYiEeyL6bV68vQIEg" name="mkt_value" incomingEdges="_Bc3KeZYiEeyL6bV68vQIEg _2Z7MEZYiEeyL6bV68vQIEg" width="22" height="3" resizeKind="NSEW">
+        <target xmi:type="data_meta_model:Attribute" href="example_ldm.data_meta_model#//@entities.0/@attributes.1"/>
+        <semanticElements xmi:type="data_meta_model:Attribute" href="example_ldm.data_meta_model#//@entities.0/@attributes.1"/>
+        <ownedStyle xmi:type="diagram:Square" uid="_BczgE5YiEeyL6bV68vQIEg" labelSize="12" labelPosition="node" width="22" height="3" color="255,255,255">
+          <description xmi:type="style:SquareDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']/@subNodeMappings[name='InputLayerAttributes']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']/@subNodeMappings[name='InputLayerAttributes']"/>
+      </ownedDiagramElements>
+      <ownedDiagramElements xmi:type="diagram:DNode" uid="_BczgFZYiEeyL6bV68vQIEg" name="issuer_id" width="22" height="3" resizeKind="NSEW">
+        <target xmi:type="data_meta_model:ForeignKeyAttribute" href="example_ldm.data_meta_model#//@entities.0/@attributes.2"/>
+        <semanticElements xmi:type="data_meta_model:ForeignKeyAttribute" href="example_ldm.data_meta_model#//@entities.0/@attributes.2"/>
+        <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
+        <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
+        <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
+        <ownedStyle xmi:type="diagram:Square" uid="_BczgFpYiEeyL6bV68vQIEg" labelSize="12" labelPosition="node" width="22" height="3" color="255,255,255">
+          <description xmi:type="style:SquareDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']/@subNodeMappings[name='InputLayerAttributes']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']/@subNodeMappings[name='InputLayerAttributes']"/>
+      </ownedDiagramElements>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_BczgGJYiEeyL6bV68vQIEg" name="Calculate_Risk_Weight">
+      <target xmi:type="bpmn_lite:ServiceTask" href="BIRD_transformations.logical_transformations#Calculate_Risk_Weight"/>
+      <semanticElements xmi:type="bpmn_lite:ServiceTask" href="BIRD_transformations.logical_transformations#Calculate_Risk_Weight"/>
+      <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
+      <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
+      <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
+      <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_BczgGZYiEeyL6bV68vQIEg" labelSize="9" showIcon="false" borderSize="3" borderSizeComputationExpression="3" borderColor="245,233,73" backgroundColor="255,249,225" foregroundColor="255,249,225">
+        <labelFormat>bold</labelFormat>
+        <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ServiceTask']/@style"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ServiceTask']"/>
+      <ownedDiagramElements xmi:type="diagram:DNode" uid="_Bc0HJpYiEeyL6bV68vQIEg" name="risk_weight" incomingEdges="_Bc18VpYiEeyL6bV68vQIEg _qAfxU5YiEeyL6bV68vQIEg" width="22" height="3" resizeKind="NSEW">
+        <target xmi:type="data_meta_model:Attribute" href="example_ldm.data_meta_model#//@entities.6/@attributes.2"/>
+        <semanticElements xmi:type="data_meta_model:Attribute" href="example_ldm.data_meta_model#//@entities.6/@attributes.2"/>
+        <ownedStyle xmi:type="diagram:Square" uid="_Bc0HJ5YiEeyL6bV68vQIEg" labelSize="12" labelPosition="node" width="22" height="3" color="255,255,255">
+          <description xmi:type="style:SquareDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ServiceTask']/@subNodeMappings[name='EnrichedLayerAttributes']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ServiceTask']/@subNodeMappings[name='EnrichedLayerAttributes']"/>
+      </ownedDiagramElements>
+      <ownedDiagramElements xmi:type="diagram:DNode" uid="_Bc0HKZYiEeyL6bV68vQIEg" name="primary Risk Weight Scenario" outgoingEdges="_Bc3KdJYiEeyL6bV68vQIEg" width="10" height="10" resizeKind="NSEW">
+        <target xmi:type="logical_transformations:Scenario" href="BIRD_transformations.logical_transformations#primary Risk Weight Scenario"/>
+        <semanticElements xmi:type="logical_transformations:Scenario" href="BIRD_transformations.logical_transformations#primary Risk Weight Scenario"/>
+        <ownedStyle xmi:type="diagram:Ellipse" uid="_Bc0uMJYiEeyL6bV68vQIEg" labelSize="12" labelPosition="node" color="252,233,79">
+          <description xmi:type="style:EllipseNodeDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ServiceTask']/@subNodeMappings[name='Scenario']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ServiceTask']/@subNodeMappings[name='Scenario']"/>
+      </ownedDiagramElements>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_Bc0HIJYiEeyL6bV68vQIEg" name="Calculate_Exposure_At_Default">
+      <target xmi:type="bpmn_lite:ServiceTask" href="BIRD_transformations.logical_transformations#Calculate_Exposure_At_Default"/>
+      <semanticElements xmi:type="bpmn_lite:ServiceTask" href="BIRD_transformations.logical_transformations#Calculate_Exposure_At_Default"/>
+      <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
+      <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
+      <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
+      <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_Bc0HIZYiEeyL6bV68vQIEg" labelSize="9" showIcon="false" borderSize="3" borderSizeComputationExpression="3" borderColor="245,233,73" backgroundColor="255,249,225" foregroundColor="255,249,225">
+        <labelFormat>bold</labelFormat>
+        <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ServiceTask']/@style"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ServiceTask']"/>
+      <ownedDiagramElements xmi:type="diagram:DNode" uid="_Bc0uMpYiEeyL6bV68vQIEg" name="primary EAD Scenario" outgoingEdges="_Bc3KeZYiEeyL6bV68vQIEg _qAfxU5YiEeyL6bV68vQIEg" width="10" height="10" resizeKind="NSEW">
+        <target xmi:type="logical_transformations:Scenario" href="BIRD_transformations.logical_transformations#primary EAD Scenario"/>
+        <semanticElements xmi:type="logical_transformations:Scenario" href="BIRD_transformations.logical_transformations#primary EAD Scenario"/>
+        <ownedStyle xmi:type="diagram:Ellipse" uid="_Bc0uM5YiEeyL6bV68vQIEg" labelSize="12" labelPosition="node" color="252,233,79">
+          <description xmi:type="style:EllipseNodeDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ServiceTask']/@subNodeMappings[name='Scenario']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ServiceTask']/@subNodeMappings[name='Scenario']"/>
+      </ownedDiagramElements>
+      <ownedDiagramElements xmi:type="diagram:DNode" uid="_AdG8opYtEeyF3akakP_SdA" name="exposure_at_defualt" incomingEdges="_AdMcNJYtEeyF3akakP_SdA" width="22" height="3" resizeKind="NSEW">
+        <target xmi:type="data_meta_model:Attribute" href="example_ldm.data_meta_model#//@entities.6/@attributes.0"/>
+        <semanticElements xmi:type="data_meta_model:Attribute" href="example_ldm.data_meta_model#//@entities.6/@attributes.0"/>
+        <ownedStyle xmi:type="diagram:Square" uid="_AdIx0JYtEeyF3akakP_SdA" labelSize="12" labelPosition="node" width="22" height="3" color="255,255,255">
+          <description xmi:type="style:SquareDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ServiceTask']/@subNodeMappings[name='EnrichedLayerAttributes']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ServiceTask']/@subNodeMappings[name='EnrichedLayerAttributes']"/>
+      </ownedDiagramElements>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_Bc0HI5YiEeyL6bV68vQIEg" name="Calculate_Duration">
+      <target xmi:type="bpmn_lite:ServiceTask" href="BIRD_transformations.logical_transformations#Calculate_Duration"/>
+      <semanticElements xmi:type="bpmn_lite:ServiceTask" href="BIRD_transformations.logical_transformations#Calculate_Duration"/>
+      <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
+      <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
+      <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
+      <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_Bc0HJJYiEeyL6bV68vQIEg" labelSize="9" showIcon="false" borderSize="3" borderSizeComputationExpression="3" borderColor="245,233,73" backgroundColor="255,249,225" foregroundColor="255,249,225">
+        <labelFormat>bold</labelFormat>
+        <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ServiceTask']/@style"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ServiceTask']"/>
+      <ownedDiagramElements xmi:type="diagram:DNode" uid="_Bc1VQJYiEeyL6bV68vQIEg" name="duration" incomingEdges="_Bc2jcZYiEeyL6bV68vQIEg" width="22" height="3" resizeKind="NSEW">
+        <target xmi:type="data_meta_model:Attribute" href="example_ldm.data_meta_model#//@entities.7/@attributes.0"/>
+        <semanticElements xmi:type="data_meta_model:Attribute" href="example_ldm.data_meta_model#//@entities.7/@attributes.0"/>
+        <ownedStyle xmi:type="diagram:Square" uid="_Bc1VQZYiEeyL6bV68vQIEg" labelSize="12" labelPosition="node" width="22" height="3" color="255,255,255">
+          <description xmi:type="style:SquareDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ServiceTask']/@subNodeMappings[name='EnrichedLayerAttributes']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ServiceTask']/@subNodeMappings[name='EnrichedLayerAttributes']"/>
+      </ownedDiagramElements>
+      <ownedDiagramElements xmi:type="diagram:DNode" uid="_Bc18UJYiEeyL6bV68vQIEg" name="main duration scenario" outgoingEdges="_Bc3xgpYiEeyL6bV68vQIEg" width="10" height="10" resizeKind="NSEW">
+        <target xmi:type="logical_transformations:Scenario" href="BIRD_transformations.logical_transformations#main duration scenario"/>
+        <semanticElements xmi:type="logical_transformations:Scenario" href="BIRD_transformations.logical_transformations#main duration scenario"/>
+        <ownedStyle xmi:type="diagram:Ellipse" uid="_Bc18UZYiEeyL6bV68vQIEg" labelSize="12" labelPosition="node" color="252,233,79">
+          <description xmi:type="style:EllipseNodeDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ServiceTask']/@subNodeMappings[name='Scenario']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ServiceTask']/@subNodeMappings[name='Scenario']"/>
+      </ownedDiagramElements>
+      <ownedDiagramElements xmi:type="diagram:DNode" uid="_Bc18U5YiEeyL6bV68vQIEg" name="zero coupon rate edge case" outgoingEdges="_Bc4YkpYiEeyL6bV68vQIEg" width="10" height="10" resizeKind="NSEW">
+        <target xmi:type="logical_transformations:Scenario" href="BIRD_transformations.logical_transformations#zero coupon rate edge case"/>
+        <semanticElements xmi:type="logical_transformations:Scenario" href="BIRD_transformations.logical_transformations#zero coupon rate edge case"/>
+        <ownedStyle xmi:type="diagram:Ellipse" uid="_Bc18VJYiEeyL6bV68vQIEg" labelSize="12" labelPosition="node" color="252,233,79">
+          <description xmi:type="style:EllipseNodeDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ServiceTask']/@subNodeMappings[name='Scenario']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ServiceTask']/@subNodeMappings[name='Scenario']"/>
+      </ownedDiagramElements>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_Bc18VpYiEeyL6bV68vQIEg" sourceNode="_BcuAgJYiEeyL6bV68vQIEg" targetNode="_Bc0HJpYiEeyL6bV68vQIEg">
+      <target xmi:type="logical_transformations:SelectionLayer" href="BIRD_transformations.logical_transformations#credit_risk_report$layer1"/>
+      <ownedStyle xmi:type="diagram:EdgeStyle" uid="_Bc18V5YiEeyL6bV68vQIEg" size="2">
+        <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@edgeMappings[name='SelectionLayerToAttribute']/@style"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_Bc18WJYiEeyL6bV68vQIEg" labelSize="12"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@edgeMappings[name='SelectionLayerToAttribute']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_Bc2jYpYiEeyL6bV68vQIEg" sourceNode="_BcuAgJYiEeyL6bV68vQIEg" targetNode="_BcyR-ZYiEeyL6bV68vQIEg">
+      <target xmi:type="logical_transformations:SelectionLayer" href="BIRD_transformations.logical_transformations#credit_risk_report$layer1"/>
+      <ownedStyle xmi:type="diagram:EdgeStyle" uid="_Bc2jY5YiEeyL6bV68vQIEg" size="2">
+        <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@edgeMappings[name='SelectionLayerToAttribute']/@style"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_Bc2jZJYiEeyL6bV68vQIEg" labelSize="12"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@edgeMappings[name='SelectionLayerToAttribute']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_Bc2jZ5YiEeyL6bV68vQIEg" sourceNode="_BcwcxpYiEeyL6bV68vQIEg" targetNode="_BcyR-ZYiEeyL6bV68vQIEg">
+      <target xmi:type="logical_transformations:SelectionLayer" href="BIRD_transformations.logical_transformations#market_risk_report$layer1"/>
+      <ownedStyle xmi:type="diagram:EdgeStyle" uid="_Bc2jaJYiEeyL6bV68vQIEg" size="2">
+        <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@edgeMappings[name='SelectionLayerToAttribute']/@style"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_Bc2jaZYiEeyL6bV68vQIEg" labelSize="12"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@edgeMappings[name='SelectionLayerToAttribute']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_Bc2jbJYiEeyL6bV68vQIEg" sourceNode="_BcwcxpYiEeyL6bV68vQIEg" targetNode="_Bcy5DJYiEeyL6bV68vQIEg">
+      <target xmi:type="logical_transformations:SelectionLayer" href="BIRD_transformations.logical_transformations#market_risk_report$layer1"/>
+      <ownedStyle xmi:type="diagram:EdgeStyle" uid="_Bc2jbZYiEeyL6bV68vQIEg" size="2">
+        <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@edgeMappings[name='SelectionLayerToAttribute']/@style"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_Bc2jbpYiEeyL6bV68vQIEg" labelSize="12"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@edgeMappings[name='SelectionLayerToAttribute']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_Bc2jcZYiEeyL6bV68vQIEg" sourceNode="_BcwcxpYiEeyL6bV68vQIEg" targetNode="_Bc1VQJYiEeyL6bV68vQIEg">
+      <target xmi:type="logical_transformations:SelectionLayer" href="BIRD_transformations.logical_transformations#market_risk_report$layer1"/>
+      <ownedStyle xmi:type="diagram:EdgeStyle" uid="_Bc3KcJYiEeyL6bV68vQIEg" size="2">
+        <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@edgeMappings[name='SelectionLayerToAttribute']/@style"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_Bc3KcZYiEeyL6bV68vQIEg" labelSize="12"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@edgeMappings[name='SelectionLayerToAttribute']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_Bc3KdJYiEeyL6bV68vQIEg" sourceNode="_Bc0HKZYiEeyL6bV68vQIEg" targetNode="_Bcy5BpYiEeyL6bV68vQIEg">
+      <target xmi:type="logical_transformations:Scenario" href="BIRD_transformations.logical_transformations#primary Risk Weight Scenario"/>
+      <ownedStyle xmi:type="diagram:EdgeStyle" uid="_Bc3KdZYiEeyL6bV68vQIEg" size="2">
+        <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@edgeMappings[name='ScenarioToAttribues']/@style"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_Bc3KdpYiEeyL6bV68vQIEg" labelSize="12"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@edgeMappings[name='ScenarioToAttribues']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_Bc3KeZYiEeyL6bV68vQIEg" sourceNode="_Bc0uMpYiEeyL6bV68vQIEg" targetNode="_BczgEpYiEeyL6bV68vQIEg">
+      <target xmi:type="logical_transformations:Scenario" href="BIRD_transformations.logical_transformations#primary EAD Scenario"/>
+      <ownedStyle xmi:type="diagram:EdgeStyle" uid="_Bc3KepYiEeyL6bV68vQIEg" size="2">
+        <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@edgeMappings[name='ScenarioToAttribues']/@style"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_Bc3Ke5YiEeyL6bV68vQIEg" labelSize="12"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@edgeMappings[name='ScenarioToAttribues']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_Bc3xgpYiEeyL6bV68vQIEg" sourceNode="_Bc18UJYiEeyL6bV68vQIEg" targetNode="_Bcy5CZYiEeyL6bV68vQIEg">
+      <target xmi:type="logical_transformations:Scenario" href="BIRD_transformations.logical_transformations#main duration scenario"/>
+      <ownedStyle xmi:type="diagram:EdgeStyle" uid="_Bc3xg5YiEeyL6bV68vQIEg" size="2">
+        <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@edgeMappings[name='ScenarioToAttribues']/@style"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_Bc3xhJYiEeyL6bV68vQIEg" labelSize="12"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@edgeMappings[name='ScenarioToAttribues']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_Bc4YkpYiEeyL6bV68vQIEg" sourceNode="_Bc18U5YiEeyL6bV68vQIEg" targetNode="_Bcy5CZYiEeyL6bV68vQIEg">
+      <target xmi:type="logical_transformations:Scenario" href="BIRD_transformations.logical_transformations#zero coupon rate edge case"/>
+      <ownedStyle xmi:type="diagram:EdgeStyle" uid="_Bc4Yk5YiEeyL6bV68vQIEg" size="2">
+        <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@edgeMappings[name='ScenarioToAttribues']/@style"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_Bc4YlJYiEeyL6bV68vQIEg" labelSize="12"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@edgeMappings[name='ScenarioToAttribues']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_qAfxU5YiEeyL6bV68vQIEg" sourceNode="_Bc0uMpYiEeyL6bV68vQIEg" targetNode="_Bc0HJpYiEeyL6bV68vQIEg">
+      <target xmi:type="logical_transformations:Scenario" href="BIRD_transformations.logical_transformations#primary EAD Scenario"/>
+      <ownedStyle xmi:type="diagram:EdgeStyle" uid="_qAfxVJYiEeyL6bV68vQIEg" size="2">
+        <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@edgeMappings[name='ScenarioToAttribues']/@style"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_qAfxVZYiEeyL6bV68vQIEg" labelSize="12"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@edgeMappings[name='ScenarioToAttribues']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_2Z7MDJYiEeyL6bV68vQIEg" sourceNode="_BcxD0pYiEeyL6bV68vQIEg" targetNode="_BcyR-ZYiEeyL6bV68vQIEg">
+      <target xmi:type="logical_transformations:SelectionLayer" href="BIRD_transformations.logical_transformations#trade_report_layer1"/>
+      <ownedStyle xmi:type="diagram:EdgeStyle" uid="_2Z7MDZYiEeyL6bV68vQIEg" size="2">
+        <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@edgeMappings[name='SelectionLayerToAttribute']/@style"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_2Z7MDpYiEeyL6bV68vQIEg" labelSize="12"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@edgeMappings[name='SelectionLayerToAttribute']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_2Z7MEZYiEeyL6bV68vQIEg" sourceNode="_BcxD0pYiEeyL6bV68vQIEg" targetNode="_BczgEpYiEeyL6bV68vQIEg">
+      <target xmi:type="logical_transformations:SelectionLayer" href="BIRD_transformations.logical_transformations#trade_report_layer1"/>
+      <ownedStyle xmi:type="diagram:EdgeStyle" uid="_2Z7MEpYiEeyL6bV68vQIEg" size="2">
+        <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@edgeMappings[name='SelectionLayerToAttribute']/@style"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_2Z7ME5YiEeyL6bV68vQIEg" labelSize="12"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@edgeMappings[name='SelectionLayerToAttribute']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_AdMcNJYtEeyF3akakP_SdA" sourceNode="_BcuAgJYiEeyL6bV68vQIEg" targetNode="_AdG8opYtEeyF3akakP_SdA">
+      <target xmi:type="logical_transformations:SelectionLayer" href="BIRD_transformations.logical_transformations#credit_risk_report$layer1"/>
+      <ownedStyle xmi:type="diagram:EdgeStyle" uid="_AdNDQJYtEeyF3akakP_SdA" size="2">
+        <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@edgeMappings[name='SelectionLayerToAttribute']/@style"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_AdNDQZYtEeyF3akakP_SdA" labelSize="12"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@edgeMappings[name='SelectionLayerToAttribute']"/>
+    </ownedDiagramElements>
+    <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']"/>
+    <filterVariableHistory xmi:type="diagram:FilterVariableHistory" uid="_BcqWIJYiEeyL6bV68vQIEg"/>
+    <activatedLayers xmi:type="description_1:Layer" href="platform:/plugin/org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer"/>
+    <target xmi:type="bpmn_lite:SubProcess" href="BIRD_transformations.logical_transformations#Regulatory Processing Chain"/>
+  </diagram:DSemanticDiagram>
+  <diagram:DSemanticDiagram uid="_tc6_UJYjEeyL6bV68vQIEg">
+    <ownedAnnotationEntries xmi:type="description:AnnotationEntry" uid="_tc8NcJYjEeyL6bV68vQIEg" source="GMF_DIAGRAMS">
+      <data xmi:type="notation:Diagram" xmi:id="_tc8NcZYjEeyL6bV68vQIEg" type="Sirius" element="_tc6_UJYjEeyL6bV68vQIEg" measurementUnit="Pixel">
+        <children xmi:type="notation:Node" xmi:id="_tc_QwJYjEeyL6bV68vQIEg" type="2001" element="_tc-CoJYjEeyL6bV68vQIEg">
+          <children xmi:type="notation:Node" xmi:id="_tc_Qw5YjEeyL6bV68vQIEg" type="5002">
+            <layoutConstraint xmi:type="notation:Location" xmi:id="_tc_QxJYjEeyL6bV68vQIEg" y="5"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_tdEJQJYjEeyL6bV68vQIEg" type="3017" element="_tc-psJYjEeyL6bV68vQIEg">
+            <styles xmi:type="notation:ShapeStyle" xmi:id="_tdEJQZYjEeyL6bV68vQIEg" fontName="Segoe UI"/>
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_tdEJQpYjEeyL6bV68vQIEg"/>
+          </children>
+          <styles xmi:type="notation:ShapeStyle" xmi:id="_tc_QwZYjEeyL6bV68vQIEg" fontName="Segoe UI" fontHeight="12"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_tc_QwpYjEeyL6bV68vQIEg" width="150" height="150"/>
+        </children>
+        <styles xmi:type="notation:DiagramStyle" xmi:id="_tc8NcpYjEeyL6bV68vQIEg"/>
+      </data>
+    </ownedAnnotationEntries>
+    <ownedAnnotationEntries xmi:type="description:AnnotationEntry" uid="_tc-pspYjEeyL6bV68vQIEg" source="DANNOTATION_CUSTOMIZATION_KEY">
+      <data xmi:type="diagram:ComputedStyleDescriptionRegistry" uid="_tc-ps5YjEeyL6bV68vQIEg"/>
+    </ownedAnnotationEntries>
+    <ownedDiagramElements xmi:type="diagram:DNode" uid="_tc-CoJYjEeyL6bV68vQIEg" name="PlatformCall" width="15" height="15" resizeKind="NSEW">
+      <target xmi:type="platform_call:CreateLogicalTransformationViewForScope" href="transformation_view_description.platform_call#limited_scope"/>
+      <semanticElements xmi:type="platform_call:CreateLogicalTransformationViewForScope" href="transformation_view_description.platform_call#limited_scope"/>
+      <ownedStyle xmi:type="diagram:Lozenge" uid="_tc-psJYjEeyL6bV68vQIEg" labelSize="12" labelPosition="node" color="239,41,41">
+        <description xmi:type="style:LozengeNodeDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.platform_call.ui.sirius.core/description/controller.odesign#//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='PlatformCall']/@defaultLayer/@nodeMappings[name='PlatformCall']/@style"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.cocalimo.platform_call.ui.sirius.core/description/controller.odesign#//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='PlatformCall']/@defaultLayer/@nodeMappings[name='PlatformCall']"/>
+    </ownedDiagramElements>
+    <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.efbt.cocalimo.platform_call.ui.sirius.core/description/controller.odesign#//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='PlatformCall']"/>
+    <filterVariableHistory xmi:type="diagram:FilterVariableHistory" uid="_tc6_UZYjEeyL6bV68vQIEg"/>
+    <activatedLayers xmi:type="description_1:Layer" href="platform:/plugin/org.eclipse.efbt.cocalimo.platform_call.ui.sirius.core/description/controller.odesign#//@ownedViewpoints[name='Modules']/@ownedRepresentations[name='PlatformCall']/@defaultLayer"/>
+    <target xmi:type="platform_call:CreateLogicalTransformationViewForScope" href="transformation_view_description.platform_call#limited_scope"/>
   </diagram:DSemanticDiagram>
 </xmi:XMI>

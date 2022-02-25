@@ -68,7 +68,6 @@
       }, {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
         "id" : "Read Instrument Data",
-        "invisible" : true,
         "name" : "Read Instrument Data",
         "incoming" : [ {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -252,12 +251,19 @@
             "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
             "$ref" : "sf8"
           } ],
+          "enrichedAttribute" : {
+            "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//Attribute",
+            "$ref" : "example_ldm.data_meta_model#//@entities.6/@attributes.0"
+          },
           "scenarios" : [ {
             "name" : "primary EAD Scenario",
             "description" : "The is the primary sceanrio which is calculateing EAD, EAD is exposure at default ..etc...etc",
             "requiredAttributes" : [ {
               "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//Attribute",
               "$ref" : "example_ldm.data_meta_model#//@entities.0/@attributes.1"
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//Attribute",
+              "$ref" : "example_ldm.data_meta_model#//@entities.6/@attributes.2"
             } ]
           } ]
         }, {
@@ -297,6 +303,7 @@
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
         "id" : "Market Risk Processing",
         "description" : "Market Risk Processing",
+        "invisible" : true,
         "name" : "Market Risk Processing",
         "incoming" : [ {
           "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
@@ -380,13 +387,13 @@
         "selectionLayers" : [ {
           "requiredAttributes" : [ {
             "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//Attribute",
-            "$ref" : "example_ldm.data_meta_model#//@entities.10/@attributes.0"
+            "$ref" : "example_ldm.data_meta_model#//@entities.6/@attributes.0"
           }, {
             "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//Attribute",
-            "$ref" : "example_ldm.data_meta_model#//@entities.8/@attributes.1"
+            "$ref" : "example_ldm.data_meta_model#//@entities.6/@attributes.2"
           }, {
             "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//Attribute",
-            "$ref" : "example_ldm.data_meta_model#//@entities.8/@attributes.0"
+            "$ref" : "example_ldm.data_meta_model#//@entities.4/@attributes.3"
           } ],
           "name" : "credit_risk_report$layer1",
           "invisible" : false
@@ -407,10 +414,13 @@
         "selectionLayers" : [ {
           "requiredAttributes" : [ {
             "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//Attribute",
-            "$ref" : "example_ldm.data_meta_model#//@entities.10/@attributes.0"
+            "$ref" : "example_ldm.data_meta_model#//@entities.4/@attributes.3"
           }, {
             "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//Attribute",
-            "$ref" : "example_ldm.data_meta_model#//@entities.9/@attributes.1"
+            "$ref" : "example_ldm.data_meta_model#//@entities.0/@attributes.0"
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//Attribute",
+            "$ref" : "example_ldm.data_meta_model#//@entities.7/@attributes.0"
           } ],
           "name" : "market_risk_report$layer1",
           "invisible" : true
@@ -427,10 +437,10 @@
         "selectionLayers" : [ {
           "requiredAttributes" : [ {
             "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//Attribute",
-            "$ref" : "example_ldm.data_meta_model#//@entities.10/@attributes.0"
+            "$ref" : "example_ldm.data_meta_model#//@entities.4/@attributes.3"
           }, {
             "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//Attribute",
-            "$ref" : "example_ldm.data_meta_model#//@entities.10/@attributes.1"
+            "$ref" : "example_ldm.data_meta_model#//@entities.0/@attributes.1"
           } ],
           "name" : "trade_report_layer1",
           "invisible" : true

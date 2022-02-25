@@ -16,7 +16,8 @@
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
         "$ref" : "example_variables.cocalimo_smcubes_extension#instrument_id"
-      }
+      },
+      "ordered" : true
     }, {
       "name" : "mkt_value",
       "classifier" : {
@@ -38,6 +39,7 @@
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
         "$ref" : "example_variables.cocalimo_smcubes_extension#issuer_id"
       },
+      "ordered" : true,
       "entity" : {
         "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
         "$ref" : "//@entities.3"
@@ -56,7 +58,8 @@
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
         "$ref" : "example_variables.cocalimo_smcubes_extension#coupon_rate"
-      }
+      },
+      "ordered" : true
     } ],
     "superClass" : {
       "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
@@ -81,7 +84,8 @@
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
         "$ref" : "example_variables.cocalimo_smcubes_extension#entity_id"
-      }
+      },
+      "ordered" : true
     }, {
       "name" : "market_cap",
       "classifier" : {
@@ -91,7 +95,8 @@
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
         "$ref" : "example_variables.cocalimo_smcubes_extension#market_cap"
-      }
+      },
+      "ordered" : true
     }, {
       "name" : "credit_quality",
       "classifier" : {
@@ -117,6 +122,7 @@
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
         "$ref" : "example_variables.cocalimo_smcubes_extension#counteparty_id"
       },
+      "ordered" : true,
       "entity" : {
         "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
         "$ref" : "//@entities.3"
@@ -132,6 +138,7 @@
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
         "$ref" : "example_variables.cocalimo_smcubes_extension#instrument_id"
       },
+      "ordered" : true,
       "entity" : {
         "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
         "$ref" : "//@entities.0"
@@ -145,7 +152,8 @@
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
         "$ref" : "example_variables.cocalimo_smcubes_extension#quantity"
-      }
+      },
+      "ordered" : true
     }, {
       "name" : "trade_id",
       "classifier" : {
@@ -239,7 +247,8 @@
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
         "$ref" : "example_variables.cocalimo_smcubes_extension#duration"
-      }
+      },
+      "ordered" : true
     }, {
       "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//ForeignKeyAttribute",
       "name" : "bondinstrument_id",

@@ -32,8 +32,6 @@ import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BasicEntity;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 public class LogicalTransformationViews {
