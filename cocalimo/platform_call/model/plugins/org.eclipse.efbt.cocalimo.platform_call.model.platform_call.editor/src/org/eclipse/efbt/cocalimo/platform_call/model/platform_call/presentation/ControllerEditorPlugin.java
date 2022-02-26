@@ -2,12 +2,11 @@
  */
 package org.eclipse.efbt.cocalimo.platform_call.model.platform_call.presentation;
 
-import org.eclipse.efbt.cocalimo.core.model.logical_transformations.provider.TaskEditPlugin;
-
 import org.eclipse.efbt.cocalimo.core.model.module_management.provider.Module_managementEditPlugin;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.provider.Requirements_textEditPlugin;
 
+import org.eclipse.efbt.cocalimo.logical_transformations.model.bpmn_lite.provider.Logical_transformationsEditPlugin;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.provider.SmcubesEditPlugin;
 
 import org.eclipse.emf.common.EMFPlugin;
@@ -51,7 +50,7 @@ public final class ControllerEditorPlugin extends EMFPlugin {
 		super
 			(new ResourceLocator [] {
 				EcoreEditPlugin.INSTANCE,
-				TaskEditPlugin.INSTANCE,
+				Logical_transformationsEditPlugin.INSTANCE,
 				Module_managementEditPlugin.INSTANCE,
 				Requirements_textEditPlugin.INSTANCE,
 				SmcubesEditPlugin.INSTANCE,

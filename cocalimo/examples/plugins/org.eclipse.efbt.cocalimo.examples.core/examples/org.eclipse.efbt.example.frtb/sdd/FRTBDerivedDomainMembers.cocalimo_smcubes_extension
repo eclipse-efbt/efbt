@@ -11,8 +11,7 @@
     "member_id" : "Delta",
     "name" : "Delta",
     "displayName" : "Delta"
-  },
-  {
+  }, {
     "code" : "Curvature",
     "description" : "Curvature",
     "domain_id" : {
@@ -22,8 +21,7 @@
     "member_id" : "Curvature",
     "name" : "Curvature",
     "displayName" : "Curvature"
-  },
-  {
+  }, {
     "code" : "Vega",
     "description" : "Vega",
     "domain_id" : {
@@ -33,8 +31,7 @@
     "member_id" : "Vega",
     "name" : "Vega",
     "displayName" : "Vega"
-  },
-  {
+  }, {
     "code" : "High",
     "description" : "High",
     "domain_id" : {
@@ -44,8 +41,7 @@
     "member_id" : "High",
     "name" : "High",
     "displayName" : "High"
-  },
-  {
+  }, {
     "code" : "Low",
     "description" : "Low",
     "domain_id" : {
@@ -55,8 +51,7 @@
     "member_id" : "Low",
     "name" : "Low",
     "displayName" : "Low"
-  },
-  {
+  }, {
     "code" : "Medium",
     "description" : "Medium",
     "domain_id" : {
@@ -66,6 +61,5 @@
     "member_id" : "Medium",
     "name" : "Medium",
     "displayName" : "Medium"
-  }
-   ]
+  } ]
 }

@@ -8,6 +8,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.xmi,
  org.apache.commons.csv,
- org.eclipse.efbt.cocalimo.core.model.logical_transformations,
- org.eclipse.efbt.cocalimo.platform_call.model.platform_call
+ org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core,
+ org.eclipse.efbt.cocalimo.platform_call.model.platform_call,
+ org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations
 Export-Package: org.eclipse.efbt.controller.ldm.component.logical_transformations

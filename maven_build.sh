@@ -3,10 +3,13 @@ pwd
 cd cocalimo/core/model
 mvn install
 cd ../../..
-cd cocalimo/core/ui_sirius
+cd cocalimo/smcubes/model
 mvn install
 cd ../../..
-cd cocalimo/smcubes/model
+cd cocalimo/logical_transformations/model
+mvn install
+cd ../../..
+cd cocalimo/logical_transformations/ui_sirius
 mvn install
 cd ../../..
 cd cocalimo/platform_call/model

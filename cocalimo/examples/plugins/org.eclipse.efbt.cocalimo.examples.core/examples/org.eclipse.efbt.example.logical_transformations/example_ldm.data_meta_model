@@ -1,0 +1,348 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//EntityModule",
+  "name" : "logical_data_model",
+  "nsURI" : "http://www.eclipse.org/efbt/logical_data_model",
+  "nsPrefix" : "logical_data_model",
+  "entities" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+    "name" : "Instrument",
+    "attributes" : [ {
+      "name" : "instrument_id",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "example_subdomains.cocalimo_smcubes_extension#STRING"
+      },
+      "isPK" : true,
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "example_variables.cocalimo_smcubes_extension#instrument_id"
+      },
+      "ordered" : true
+    }, {
+      "name" : "mkt_value",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "example_subdomains.cocalimo_smcubes_extension#MNTRY"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "example_variables.cocalimo_smcubes_extension#mkt_value"
+      }
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//ForeignKeyAttribute",
+      "name" : "issuer_id",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "example_subdomains.cocalimo_smcubes_extension#STRING"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "example_variables.cocalimo_smcubes_extension#issuer_id"
+      },
+      "ordered" : true,
+      "entity" : {
+        "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+        "$ref" : "//@entities.3"
+      },
+      "cardinality" : 1
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+    "name" : "BondInstrument",
+    "attributes" : [ {
+      "name" : "coupon_rate",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "example_subdomains.cocalimo_smcubes_extension#RL"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "example_variables.cocalimo_smcubes_extension#coupon_rate"
+      },
+      "ordered" : true
+    } ],
+    "superClass" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+      "$ref" : "//@entities.0"
+    }
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+    "name" : "EquityInstrument",
+    "superClass" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+      "$ref" : "//@entities.0"
+    }
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+    "name" : "Entity",
+    "attributes" : [ {
+      "name" : "entity_id",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "example_subdomains.cocalimo_smcubes_extension#STRING"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "example_variables.cocalimo_smcubes_extension#entity_id"
+      },
+      "ordered" : true
+    }, {
+      "name" : "market_cap",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "example_subdomains.cocalimo_smcubes_extension#MNTRY"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "example_variables.cocalimo_smcubes_extension#market_cap"
+      },
+      "ordered" : true
+    }, {
+      "name" : "credit_quality",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "example_subdomains.cocalimo_smcubes_extension#INTGR_NN_NGTV"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "example_variables.cocalimo_smcubes_extension#credit_quality"
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+    "name" : "Trade",
+    "attributes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//ForeignKeyAttribute",
+      "name" : "counteparty_id",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "example_subdomains.cocalimo_smcubes_extension#STRING"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "example_variables.cocalimo_smcubes_extension#counteparty_id"
+      },
+      "ordered" : true,
+      "entity" : {
+        "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+        "$ref" : "//@entities.3"
+      }
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//ForeignKeyAttribute",
+      "name" : "instrument_id",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "example_subdomains.cocalimo_smcubes_extension#STRING"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "example_variables.cocalimo_smcubes_extension#instrument_id"
+      },
+      "ordered" : true,
+      "entity" : {
+        "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+        "$ref" : "//@entities.0"
+      }
+    }, {
+      "name" : "quantity",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "example_subdomains.cocalimo_smcubes_extension#INTGR_NN_NGTV"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "example_variables.cocalimo_smcubes_extension#quantity"
+      },
+      "ordered" : true
+    }, {
+      "name" : "trade_id",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "example_subdomains.cocalimo_smcubes_extension#STRING"
+      },
+      "isPK" : true,
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "example_variables.cocalimo_smcubes_extension#trade_id"
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//DerivedEntity",
+    "name" : "Entity_derived",
+    "attributes" : [ {
+      "name" : "size",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "example_subdomains.cocalimo_smcubes_extension#SIZE"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "example_variables.cocalimo_smcubes_extension#size"
+      }
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//ForeignKeyAttribute",
+      "name" : "entity_id",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "example_subdomains.cocalimo_smcubes_extension#STRING"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "example_variables.cocalimo_smcubes_extension#entity_id"
+      },
+      "entity" : {
+        "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+        "$ref" : "//@entities.3"
+      },
+      "cardinality" : 1
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//DerivedEntity",
+    "name" : "Trade_derived",
+    "attributes" : [ {
+      "name" : "exposure_at_defualt",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "example_subdomains.cocalimo_smcubes_extension#MNTRY"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "example_variables.cocalimo_smcubes_extension#exposure_at_defualt"
+      }
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//ForeignKeyAttribute",
+      "name" : "trade_id",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "example_subdomains.cocalimo_smcubes_extension#STRING"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "example_variables.cocalimo_smcubes_extension#trade_id"
+      },
+      "entity" : {
+        "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+        "$ref" : "//@entities.4"
+      }
+    }, {
+      "name" : "risk_weight",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "example_subdomains.cocalimo_smcubes_extension#RL"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "example_variables.cocalimo_smcubes_extension#risk_weight"
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//DerivedEntity",
+    "name" : "BondInstrument_derived",
+    "attributes" : [ {
+      "name" : "duration",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "example_subdomains.cocalimo_smcubes_extension#RL"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "example_variables.cocalimo_smcubes_extension#duration"
+      },
+      "ordered" : true
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//ForeignKeyAttribute",
+      "name" : "bondinstrument_id",
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "example_variables.cocalimo_smcubes_extension#instrument_id"
+      },
+      "entity" : {
+        "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+        "$ref" : "//@entities.1"
+      },
+      "cardinality" : 1
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//GeneratedEntity",
+    "name" : "OUTPUT_LAYER_CREDIT_RISK",
+    "attributes" : [ {
+      "name" : "EAD",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "example_subdomains.cocalimo_smcubes_extension#MNTRY"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "example_variables.cocalimo_smcubes_extension#exposure_at_defualt"
+      }
+    }, {
+      "name" : "RW",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "example_subdomains.cocalimo_smcubes_extension#RL"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "example_variables.cocalimo_smcubes_extension#risk_weight"
+      }
+    }, {
+      "name" : "TRADE_ID",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "example_subdomains.cocalimo_smcubes_extension#STRING"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "example_variables.cocalimo_smcubes_extension#trade_id"
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//GeneratedEntity",
+    "name" : "OUTPUT_LAYER_MARKET_RISK",
+    "attributes" : [ {
+      "name" : "TRADE_ID",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "example_subdomains.cocalimo_smcubes_extension#SIZE"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "example_variables.cocalimo_smcubes_extension#trade_id"
+      }
+    }, {
+      "name" : "DURATION",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "example_subdomains.cocalimo_smcubes_extension#RL"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "example_variables.cocalimo_smcubes_extension#duration"
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//GeneratedEntity",
+    "name" : "OUTPUT_LAYER_TRADE_REPORT",
+    "attributes" : [ {
+      "name" : "TRADE_ID",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "example_subdomains.cocalimo_smcubes_extension#STRING"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "example_variables.cocalimo_smcubes_extension#trade_id"
+      }
+    }, {
+      "name" : "MARKET_VALUE",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "example_subdomains.cocalimo_smcubes_extension#MNTRY"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "example_variables.cocalimo_smcubes_extension#mkt_value"
+      }
+    } ]
+  } ]
+}

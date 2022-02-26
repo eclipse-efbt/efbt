@@ -1,5 +1,2 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<logical_data_model:Trade xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:logical_data_model="logical_data_model" xsi:schemaLocation="logical_data_model ../../../../logical_data_model.ecore" quantity="50" trade_id="IBM_trade_with_RBS">
-  <counteparty href="RBSEntity.xmi#RBS"/>
-  <instrument href="BondInstrument.xmi#IBM_Bond_instrument"/>
-</logical_data_model:Trade>
+<logical_data_model:Trade xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:logical_data_model="http://www.eclipse.org/efbt/logical_data_model" xsi:schemaLocation="http://www.eclipse.org/efbt/logical_data_model ../../../../generated_classes/dmm.ecore" counteparty_id="RBS" instrument_id="IBM_Bond_instrument" quantity="50" trade_id="IBM_trade_with_RBS"/>

@@ -8,5 +8,10 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="sdd"/>
 	<classpathentry kind="src" path="requirements"/>
+	<classpathentry kind="src" path="common"/>
+	<classpathentry kind="src" path="girr/girr_common"/>
+	<classpathentry kind="src" path="girr/girr_curvature"/>
+	<classpathentry kind="src" path="girr/girr_delta"/>
+	<classpathentry kind="src" path="girr/girr_vega"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

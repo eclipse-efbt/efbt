@@ -5,9 +5,7 @@ package org.eclipse.efbt.cocalimo.platform_call.model.platform_call.provider;
 
 import java.util.Collection;
 import java.util.List;
-
-import org.eclipse.efbt.cocalimo.core.model.logical_transformations.Logical_transformationsFactory;
-
+import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.Logical_transformationsFactory;
 import org.eclipse.efbt.cocalimo.platform_call.model.platform_call.CreateLogicalTransformationViewForScope;
 import org.eclipse.efbt.cocalimo.platform_call.model.platform_call.Platform_callPackage;
 

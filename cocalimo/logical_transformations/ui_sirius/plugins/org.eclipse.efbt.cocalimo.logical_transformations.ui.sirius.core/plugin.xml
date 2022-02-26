@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+    Copyright (c) 2020 Bird Software Solutions Ltd
+    This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License 2.0
+    which accompanies this distribution, and is available at
+    https://www.eclipse.org/legal/epl-2.0/
+   
+    SPDX-License-Identifier: EPL-2.0
+   
+    Contributors:
+       Neil Mackenzie - initial API and implementation
+ -->
+
+<plugin>
+  <extension point="org.eclipse.sirius.componentization">
+    <component class="org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core.Activator"
+                  id="org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core"
+	       name="bpmn_lite">
+    </component>
+  </extension>
+  <extension
+        id="efbt"
+        point="org.eclipse.core.runtime.products">
+     <product
+           application="org.eclipse.ant.core.antRunner"
+           name="EFBT">
+     </product>
+  </extension>
+    <extension
+        point="org.eclipse.sirius.externalJavaAction">
+     <javaActions
+           actionClass="org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core.SetUnsetExternalLabels"
+           id="org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core.setUnsetExternalLabels">
+     </javaActions>
+  </extension>
+</plugin>
