@@ -438,6 +438,15 @@ public class Bpmn_litePackageImpl extends EPackageImpl implements Bpmn_litePacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getServiceTask_SecondAttribute() {
+		return (EReference)serviceTaskEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getSubProcess() {
 		return subProcessEClass;
 	}
@@ -549,6 +558,7 @@ public class Bpmn_litePackageImpl extends EPackageImpl implements Bpmn_litePacka
 		serviceTaskEClass = createEClass(SERVICE_TASK);
 		createEReference(serviceTaskEClass, SERVICE_TASK__ENRICHED_ATTRIBUTE);
 		createEReference(serviceTaskEClass, SERVICE_TASK__SCENARIOS);
+		createEReference(serviceTaskEClass, SERVICE_TASK__SECOND_ATTRIBUTE);
 
 		subProcessEClass = createEClass(SUB_PROCESS);
 
@@ -643,6 +653,7 @@ public class Bpmn_litePackageImpl extends EPackageImpl implements Bpmn_litePacka
 		initEClass(serviceTaskEClass, ServiceTask.class, "ServiceTask", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getServiceTask_EnrichedAttribute(), theData_meta_modelPackage.getAttribute(), null, "enrichedAttribute", null, 0, 1, ServiceTask.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getServiceTask_Scenarios(), theLogical_transformationsPackage.getScenario(), null, "scenarios", null, 0, -1, ServiceTask.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getServiceTask_SecondAttribute(), theData_meta_modelPackage.getAttribute(), null, "secondAttribute", null, 0, 1, ServiceTask.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(subProcessEClass, SubProcess.class, "SubProcess", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

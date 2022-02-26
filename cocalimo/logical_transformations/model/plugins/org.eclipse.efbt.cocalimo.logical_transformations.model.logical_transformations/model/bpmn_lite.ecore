@@ -40,6 +40,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="enrichedAttribute" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/data_meta_model.ecore#//Attribute"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="scenarios" upperBound="-1"
         eType="ecore:EClass logical_transformations.ecore#//Scenario" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="secondAttribute" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/data_meta_model.ecore#//Attribute"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SubProcess" eSuperTypes="#//Activity #//FlowElementsContainer"/>
   <eClassifiers xsi:type="ecore:EClass" name="ScriptTask" eSuperTypes="#//Task">
