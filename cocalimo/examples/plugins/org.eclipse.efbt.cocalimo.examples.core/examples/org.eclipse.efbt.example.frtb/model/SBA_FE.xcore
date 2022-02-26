@@ -18,11 +18,11 @@ enum RiskClass {
 }
 
 class RiskFactor {
-	id String name
+	id String riskFactorID
 	boolean volFactor
 	String ccy1
 	String ccy2
-	GIRRRiskFactorType riskFactorType
+	GIRRRiskFactorType girrRiskFactorType
 	String mainCurrency
 	String secondCurrency
 	refers SecurityIssue issue
@@ -70,7 +70,7 @@ class SecurityIssue {
 	IssueType issueType
 	refers Organisation issuer
 	RatingGrade ratingGrade
-	id String name
+	id String issueID
 	SecuritisationSector securitisationSector
 }
 
@@ -78,7 +78,7 @@ class Organisation {
 	RatingGrade ratingGrade
 	Sector sector
 	MarketCap marketCap
-	id String name
+	id String organisation_id
 	Economy economy
 }
 

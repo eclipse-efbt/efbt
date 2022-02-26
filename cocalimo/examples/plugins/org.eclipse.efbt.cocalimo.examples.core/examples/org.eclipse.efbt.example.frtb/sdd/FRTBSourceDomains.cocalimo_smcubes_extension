@@ -24,6 +24,13 @@
     "name" : "Numbers",
     "displayName" : "Numbers"
   }, {
+    "code" : "Boolean",
+    "data_type" : "Boolean",
+    "description" : "Boolean",
+    "domain_id" : "Boolean",
+    "name" : "Boolean",
+    "displayName" : "Boolean"
+  }, {
     "code" : "riskClass",
     "data_type" : "String",
     "is_enumerated" : true,
@@ -77,5 +84,29 @@
     "is_enumerated" : true,
     "name" : "securitisationSector",
     "displayName" : "securitisationSector"
+  }, {
+    "code" : "issueType",
+    "data_type" : "String",
+    "description" : "issueType",
+    "domain_id" : "issueType",
+    "is_enumerated" : true,
+    "name" : "issueType",
+    "displayName" : "issueType"
+  }, {
+    "code" : "girrRiskFactorType",
+    "data_type" : "String",
+    "description" : "girrRiskFactorType",
+    "domain_id" : "girrRiskFactorType",
+    "is_enumerated" : true,
+    "name" : "girrRiskFactorType",
+    "displayName" : "girrRiskFactorType"
+  }, {
+    "code" : "sensitivityType",
+    "data_type" : "String",
+    "description" : "sensitivityType",
+    "domain_id" : "sensitivityType",
+    "is_enumerated" : true,
+    "name" : "sensitivityType",
+    "displayName" : "sensitivityType"
   } ]
 }

@@ -52,6 +52,16 @@
     "name" : "deltaSensitivity",
     "displayName" : "deltaSensitivity"
   }, {
+    "code" : "sensitivity",
+    "description" : "sensitivity",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+    },
+    "variable_id" : "sensitivity",
+    "name" : "sensitivity",
+    "displayName" : "sensitivity"
+  }, {
     "code" : "curvatureValuationDifference",
     "description" : "curvatureValuationDifference",
     "domain_id" : {

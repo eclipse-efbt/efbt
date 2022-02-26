@@ -1,0 +1,85 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/logical_transformations#//LogicalTransformationModule",
+  "subProcess" : {
+    "flowElements" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+      "outgoing" : [ {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+        "$ref" : "//@subProcess/@flowElements.4"
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+        "$ref" : "//@subProcess/@flowElements.5"
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+        "$ref" : "//@subProcess/@flowElements.6"
+      } ]
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+      "id" : "Read Data",
+      "description" : "Read Data",
+      "name" : "Read Data",
+      "incoming" : [ {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+        "$ref" : "//@subProcess/@flowElements.4"
+      } ],
+      "flowElements" : [ {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ScriptTask",
+        "description" : "Risk Factors",
+        "name" : "Risk Factors"
+      } ]
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+      "id" : "Derivation",
+      "description" : "Derivation",
+      "name" : "Derivation",
+      "incoming" : [ {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+        "$ref" : "//@subProcess/@flowElements.5"
+      } ],
+      "flowElements" : [ {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ServiceTask",
+        "description" : "NetDeltaSensitivities",
+        "name" : "NetDeltaSensitivities"
+      } ]
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+      "id" : "Output Generation",
+      "description" : "Output Generation",
+      "name" : "Output Generation",
+      "incoming" : [ {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+        "$ref" : "//@subProcess/@flowElements.6"
+      } ]
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+      "targetRef" : {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+        "$ref" : "Read Data"
+      },
+      "sourceRef" : {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+        "$ref" : "//@subProcess/@flowElements.0"
+      }
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+      "targetRef" : {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+        "$ref" : "Derivation"
+      },
+      "sourceRef" : {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+        "$ref" : "//@subProcess/@flowElements.0"
+      }
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+      "targetRef" : {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+        "$ref" : "Output Generation"
+      },
+      "sourceRef" : {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+        "$ref" : "//@subProcess/@flowElements.0"
+      }
+    } ]
+  }
+}
