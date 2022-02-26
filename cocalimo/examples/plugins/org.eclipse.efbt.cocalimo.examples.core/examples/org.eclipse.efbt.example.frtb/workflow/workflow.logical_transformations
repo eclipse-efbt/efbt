@@ -23,9 +23,50 @@
         "$ref" : "//@subProcess/@flowElements.4"
       } ],
       "flowElements" : [ {
-        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ScriptTask",
-        "description" : "Risk Factors",
-        "name" : "Risk Factors"
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
+        "id" : "RiskFactor",
+        "description" : "RiskFactor",
+        "name" : "RiskFactor",
+        "entity" : {
+          "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+          "$ref" : "../frtb_data_model/frtb.data_meta_model#//@entities.3"
+        }
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
+        "id" : "Sensitivity",
+        "description" : "Sensitivity",
+        "name" : "Sensitivity",
+        "entity" : {
+          "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+          "$ref" : "../frtb_data_model/frtb.data_meta_model#//@entities.4"
+        }
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
+        "id" : "SecurityIssue",
+        "description" : "SecurityIssue",
+        "name" : "SecurityIssue",
+        "entity" : {
+          "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+          "$ref" : "../frtb_data_model/frtb.data_meta_model#//@entities.2"
+        }
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
+        "id" : "Position",
+        "description" : "Position",
+        "name" : "Position",
+        "entity" : {
+          "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+          "$ref" : "../frtb_data_model/frtb.data_meta_model#//@entities.0"
+        }
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
+        "id" : "Organisation",
+        "description" : "Organisation",
+        "name" : "Organisation",
+        "entity" : {
+          "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+          "$ref" : "../frtb_data_model/frtb.data_meta_model#//@entities.1"
+        }
       } ]
     }, {
       "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
@@ -37,9 +78,1001 @@
         "$ref" : "//@subProcess/@flowElements.5"
       } ],
       "flowElements" : [ {
-        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ServiceTask",
-        "description" : "NetDeltaSensitivities",
-        "name" : "NetDeltaSensitivities"
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+        "description" : "PreNetting",
+        "name" : "PreNetting",
+        "incoming" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "//@subProcess/@flowElements.2/@flowElements.3"
+        } ],
+        "flowElements" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+          "description" : "DeltaNetting",
+          "name" : "DeltaNetting",
+          "incoming" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+            "$ref" : "//@subProcess/@flowElements.2/@flowElements.0/@flowElements.3"
+          } ]
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+          "description" : "VegaNetting",
+          "name" : "VegaNetting",
+          "incoming" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+            "$ref" : "//@subProcess/@flowElements.2/@flowElements.0/@flowElements.4"
+          } ]
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+          "outgoing" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+            "$ref" : "//@subProcess/@flowElements.2/@flowElements.0/@flowElements.3"
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+            "$ref" : "//@subProcess/@flowElements.2/@flowElements.0/@flowElements.4"
+          } ]
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "targetRef" : {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+            "$ref" : "//@subProcess/@flowElements.2/@flowElements.0/@flowElements.0"
+          },
+          "sourceRef" : {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+            "$ref" : "//@subProcess/@flowElements.2/@flowElements.0/@flowElements.2"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "targetRef" : {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+            "$ref" : "//@subProcess/@flowElements.2/@flowElements.0/@flowElements.1"
+          },
+          "sourceRef" : {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+            "$ref" : "//@subProcess/@flowElements.2/@flowElements.0/@flowElements.2"
+          }
+        } ]
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+        "outgoing" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "//@subProcess/@flowElements.2/@flowElements.3"
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "//@subProcess/@flowElements.2/@flowElements.4"
+        } ]
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+        "id" : "RiskClassProcessing",
+        "description" : "RiskClassProcessing",
+        "name" : "RiskClassProcessing",
+        "incoming" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "//@subProcess/@flowElements.2/@flowElements.4"
+        } ],
+        "flowElements" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+          "description" : "Delta And Curvature Processing",
+          "name" : "Delta And Curvature Processing",
+          "incoming" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+            "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.3"
+          } ],
+          "flowElements" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+            "outgoing" : [ {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+              "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.3"
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+              "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.4"
+            } ]
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+            "description" : "Delta Processing",
+            "name" : "Delta Processing",
+            "incoming" : [ {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+              "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.3"
+            } ],
+            "flowElements" : [ {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+              "description" : "Assign Delta Bucket",
+              "name" : "Assign Delta Bucket",
+              "incoming" : [ {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.3"
+              } ]
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+              "description" : "Assign Delta Weighting",
+              "name" : "Assign  Delta Weighting",
+              "incoming" : [ {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.4"
+              } ]
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+              "outgoing" : [ {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.3"
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.4"
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.7"
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.8"
+              } ]
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+              "targetRef" : {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.0"
+              },
+              "sourceRef" : {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.2"
+              }
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+              "targetRef" : {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.1"
+              },
+              "sourceRef" : {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.2"
+              }
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+              "description" : "Delta Intra Bucket Processing",
+              "name" : "Delta Intra Bucket Processing",
+              "incoming" : [ {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.7"
+              } ],
+              "flowElements" : [ {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+                "outgoing" : [ {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.5/@flowElements.3"
+                }, {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.5/@flowElements.4"
+                } ]
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                "description" : "Delta Intra Bucket Pairs And Squares",
+                "name" : "Delta Intra Bucket Pairs And Squares",
+                "incoming" : [ {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.5/@flowElements.3"
+                } ],
+                "flowElements" : [ {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+                  "outgoing" : [ {
+                    "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                    "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.5/@flowElements.1/@flowElements.2"
+                  }, {
+                    "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                    "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.5/@flowElements.1/@flowElements.4"
+                  } ]
+                }, {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                  "description" : "Delta Create Correlated Pairs",
+                  "name" : "Delta Create Correlated Pairs",
+                  "incoming" : [ {
+                    "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                    "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.5/@flowElements.1/@flowElements.2"
+                  } ]
+                }, {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                  "targetRef" : {
+                    "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                    "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.5/@flowElements.1/@flowElements.1"
+                  },
+                  "sourceRef" : {
+                    "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+                    "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.5/@flowElements.1/@flowElements.0"
+                  }
+                }, {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                  "description" : "Delta Create Squares",
+                  "name" : "Delta Create Squares",
+                  "incoming" : [ {
+                    "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                    "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.5/@flowElements.1/@flowElements.4"
+                  } ]
+                }, {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                  "targetRef" : {
+                    "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                    "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.5/@flowElements.1/@flowElements.3"
+                  },
+                  "sourceRef" : {
+                    "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+                    "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.5/@flowElements.1/@flowElements.0"
+                  }
+                } ]
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                "description" : "Delta Create Bucket Value",
+                "name" : "Delta Create Bucket Value",
+                "incoming" : [ {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.5/@flowElements.4"
+                } ]
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "targetRef" : {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.5/@flowElements.1"
+                },
+                "sourceRef" : {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.5/@flowElements.0"
+                }
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "targetRef" : {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.5/@flowElements.2"
+                },
+                "sourceRef" : {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.5/@flowElements.0"
+                }
+              } ]
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+              "description" : "Delta Inter Bucket Processing",
+              "name" : "Delta Inter Bucket Processing",
+              "incoming" : [ {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.8"
+              } ],
+              "flowElements" : [ {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                "description" : "Delta Inter Bucket Pairs And Squares",
+                "name" : "Delta Inter Bucket Pairs And Squares",
+                "incoming" : [ {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.6/@flowElements.2"
+                } ],
+                "flowElements" : [ {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                  "description" : "Delta Buckets Create Correlated Pairs",
+                  "name" : "Delta Buckets Create Correlated Pairs",
+                  "incoming" : [ {
+                    "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                    "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.6/@flowElements.0/@flowElements.3"
+                  } ]
+                }, {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+                  "outgoing" : [ {
+                    "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                    "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.6/@flowElements.0/@flowElements.3"
+                  }, {
+                    "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                    "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.6/@flowElements.0/@flowElements.4"
+                  } ]
+                }, {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                  "description" : "Delta Buckets Create Squares",
+                  "name" : "Delta Buckets Create Squares",
+                  "incoming" : [ {
+                    "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                    "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.6/@flowElements.0/@flowElements.4"
+                  } ]
+                }, {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                  "targetRef" : {
+                    "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                    "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.6/@flowElements.0/@flowElements.0"
+                  },
+                  "sourceRef" : {
+                    "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+                    "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.6/@flowElements.0/@flowElements.1"
+                  }
+                }, {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                  "targetRef" : {
+                    "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                    "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.6/@flowElements.0/@flowElements.2"
+                  },
+                  "sourceRef" : {
+                    "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+                    "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.6/@flowElements.0/@flowElements.1"
+                  }
+                } ]
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+                "outgoing" : [ {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.6/@flowElements.2"
+                }, {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.6/@flowElements.4"
+                } ]
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "targetRef" : {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.6/@flowElements.0"
+                },
+                "sourceRef" : {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.6/@flowElements.1"
+                }
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                "description" : "Delta Create Capital Charge",
+                "name" : "Delta Create Capital Charge",
+                "incoming" : [ {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.6/@flowElements.4"
+                } ]
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "targetRef" : {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.6/@flowElements.3"
+                },
+                "sourceRef" : {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.6/@flowElements.1"
+                }
+              } ]
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+              "targetRef" : {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.5"
+              },
+              "sourceRef" : {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.2"
+              }
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+              "targetRef" : {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.6"
+              },
+              "sourceRef" : {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1/@flowElements.2"
+              }
+            } ]
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+            "description" : "Curvature Processing",
+            "name" : "Curvature Processing",
+            "incoming" : [ {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+              "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.4"
+            } ],
+            "flowElements" : [ {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+              "outgoing" : [ {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.5"
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.6"
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.7"
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.8"
+              } ]
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+              "description" : "Curvature Delta Stripping",
+              "name" : "Curvature Delta Stripping",
+              "incoming" : [ {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.5"
+              } ]
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+              "description" : "Curvature Calculate CVR",
+              "name" : "Curvature Calculate CVR",
+              "incoming" : [ {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.6"
+              } ]
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+              "description" : "Curvature Assign Bucket",
+              "name" : "Curvature Assign Bucket",
+              "incoming" : [ {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.7"
+              } ]
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+              "description" : "Curvature Bucket Processing",
+              "name" : "Curvature Bucket Processing",
+              "incoming" : [ {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.8"
+              } ],
+              "flowElements" : [ {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                "description" : "Curvature Intra Bucket Pairs And Squares",
+                "name" : "Curvature Intra Bucket Pairs And Squares",
+                "incoming" : [ {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.4/@flowElements.2"
+                } ],
+                "flowElements" : [ {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+                  "outgoing" : [ {
+                    "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                    "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.4/@flowElements.0/@flowElements.3"
+                  }, {
+                    "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                    "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.4/@flowElements.0/@flowElements.4"
+                  } ]
+                }, {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                  "description" : "Curvature Create Correlated Pairs",
+                  "name" : "Curvature Create Correlated Pairs",
+                  "incoming" : [ {
+                    "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                    "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.4/@flowElements.0/@flowElements.3"
+                  } ]
+                }, {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                  "description" : "Curvature Create Squares",
+                  "name" : "Curvature Create Squares",
+                  "incoming" : [ {
+                    "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                    "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.4/@flowElements.0/@flowElements.4"
+                  } ]
+                }, {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                  "targetRef" : {
+                    "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                    "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.4/@flowElements.0/@flowElements.1"
+                  },
+                  "sourceRef" : {
+                    "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+                    "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.4/@flowElements.0/@flowElements.0"
+                  }
+                }, {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                  "targetRef" : {
+                    "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                    "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.4/@flowElements.0/@flowElements.2"
+                  },
+                  "sourceRef" : {
+                    "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+                    "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.4/@flowElements.0/@flowElements.0"
+                  }
+                } ]
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+                "outgoing" : [ {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.4/@flowElements.2"
+                }, {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.4/@flowElements.6"
+                }, {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.4/@flowElements.7"
+                }, {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.4/@flowElements.8"
+                } ]
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "targetRef" : {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.4/@flowElements.0"
+                },
+                "sourceRef" : {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.4/@flowElements.1"
+                }
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                "description" : "Curvature Create Bucket Value",
+                "name" : "Curvature Create Bucket Value",
+                "incoming" : [ {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.4/@flowElements.6"
+                } ]
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                "description" : "Curvature Inter Bucket Pairs And Squares",
+                "name" : "Curvature Inter Bucket Pairs And Squares",
+                "incoming" : [ {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.4/@flowElements.7"
+                } ],
+                "flowElements" : [ {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+                  "outgoing" : [ {
+                    "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                    "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.4/@flowElements.4/@flowElements.3"
+                  }, {
+                    "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                    "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.4/@flowElements.4/@flowElements.4"
+                  } ]
+                }, {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                  "description" : "Curvature Buckets Create Correlated Pairs",
+                  "name" : "Curvature Buckets Create Correlated Pairs",
+                  "incoming" : [ {
+                    "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                    "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.4/@flowElements.4/@flowElements.3"
+                  } ]
+                }, {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                  "description" : "Curvature Buckets Create Squares",
+                  "name" : "Curvature Buckets Create Squares",
+                  "incoming" : [ {
+                    "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                    "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.4/@flowElements.4/@flowElements.4"
+                  } ]
+                }, {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                  "targetRef" : {
+                    "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                    "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.4/@flowElements.4/@flowElements.1"
+                  },
+                  "sourceRef" : {
+                    "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+                    "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.4/@flowElements.4/@flowElements.0"
+                  }
+                }, {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                  "targetRef" : {
+                    "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                    "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.4/@flowElements.4/@flowElements.2"
+                  },
+                  "sourceRef" : {
+                    "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+                    "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.4/@flowElements.4/@flowElements.0"
+                  }
+                } ]
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                "description" : "Curvature Create Capital Charge",
+                "name" : "Curvature Create Capital Charge",
+                "incoming" : [ {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.4/@flowElements.8"
+                } ]
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "targetRef" : {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.4/@flowElements.3"
+                },
+                "sourceRef" : {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.4/@flowElements.1"
+                }
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "targetRef" : {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.4/@flowElements.4"
+                },
+                "sourceRef" : {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.4/@flowElements.1"
+                }
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "targetRef" : {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.4/@flowElements.5"
+                },
+                "sourceRef" : {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.4/@flowElements.1"
+                }
+              } ]
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+              "targetRef" : {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.1"
+              },
+              "sourceRef" : {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.0"
+              }
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+              "targetRef" : {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.2"
+              },
+              "sourceRef" : {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.0"
+              }
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+              "targetRef" : {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.3"
+              },
+              "sourceRef" : {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.0"
+              }
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+              "targetRef" : {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.4"
+              },
+              "sourceRef" : {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2/@flowElements.0"
+              }
+            } ]
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+            "targetRef" : {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+              "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.1"
+            },
+            "sourceRef" : {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+              "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.0"
+            }
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+            "targetRef" : {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+              "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.2"
+            },
+            "sourceRef" : {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+              "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0/@flowElements.0"
+            }
+          } ]
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+          "description" : "Vega Processing",
+          "name" : "Vega Processing",
+          "incoming" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+            "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.4"
+          } ],
+          "flowElements" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+            "description" : "Assign Vega Bucket",
+            "name" : "Assign Vega Bucket",
+            "incoming" : [ {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+              "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.3"
+            } ]
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+            "description" : "Assign Vega Weighting",
+            "name" : "Assign Vega Weighting",
+            "incoming" : [ {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+              "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.4"
+            } ]
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+            "outgoing" : [ {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+              "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.3"
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+              "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.4"
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+              "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.7"
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+              "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.8"
+            } ]
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+            "targetRef" : {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+              "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.0"
+            },
+            "sourceRef" : {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+              "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.2"
+            }
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+            "targetRef" : {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+              "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.1"
+            },
+            "sourceRef" : {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+              "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.2"
+            }
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+            "description" : "Delta Intra Bucket Processing",
+            "name" : "Delta Intra Bucket Processing",
+            "incoming" : [ {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+              "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.7"
+            } ],
+            "flowElements" : [ {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+              "outgoing" : [ {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.5/@flowElements.3"
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.5/@flowElements.4"
+              } ]
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+              "description" : "Vega Intra Bucket Pairs And Squares",
+              "name" : "Vega Intra Bucket Pairs And Squares",
+              "incoming" : [ {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.5/@flowElements.3"
+              } ],
+              "flowElements" : [ {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+                "outgoing" : [ {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.5/@flowElements.1/@flowElements.2"
+                }, {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.5/@flowElements.1/@flowElements.4"
+                } ]
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                "description" : "Vega Create Correlated Pairs",
+                "name" : "Vega Create Correlated Pairs",
+                "incoming" : [ {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.5/@flowElements.1/@flowElements.2"
+                } ]
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "targetRef" : {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.5/@flowElements.1/@flowElements.1"
+                },
+                "sourceRef" : {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.5/@flowElements.1/@flowElements.0"
+                }
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                "description" : "Vega Create Squares",
+                "name" : "Vega Create Squares",
+                "incoming" : [ {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.5/@flowElements.1/@flowElements.4"
+                } ]
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "targetRef" : {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.5/@flowElements.1/@flowElements.3"
+                },
+                "sourceRef" : {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.5/@flowElements.1/@flowElements.0"
+                }
+              } ]
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+              "description" : "Vega Create Bucket Value",
+              "name" : "Vega Create Bucket Value",
+              "incoming" : [ {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.5/@flowElements.4"
+              } ]
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+              "targetRef" : {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.5/@flowElements.1"
+              },
+              "sourceRef" : {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.5/@flowElements.0"
+              }
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+              "targetRef" : {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.5/@flowElements.2"
+              },
+              "sourceRef" : {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.5/@flowElements.0"
+              }
+            } ]
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+            "description" : "Vega Inter Bucket Processing",
+            "name" : "Vega Inter Bucket Processing",
+            "incoming" : [ {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+              "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.8"
+            } ],
+            "flowElements" : [ {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+              "description" : "Vega Inter Bucket Pairs And Squares",
+              "name" : "Vega Inter Bucket Pairs And Squares",
+              "incoming" : [ {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.6/@flowElements.2"
+              } ],
+              "flowElements" : [ {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                "description" : "Vega Buckets Create Correlated Pairs",
+                "name" : "Vega Buckets Create Correlated Pairs",
+                "incoming" : [ {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.6/@flowElements.0/@flowElements.3"
+                } ]
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+                "outgoing" : [ {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.6/@flowElements.0/@flowElements.3"
+                }, {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.6/@flowElements.0/@flowElements.4"
+                } ]
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                "description" : "Vega Buckets Create Squares",
+                "name" : "Vega Buckets Create Squares",
+                "incoming" : [ {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.6/@flowElements.0/@flowElements.4"
+                } ]
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "targetRef" : {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.6/@flowElements.0/@flowElements.0"
+                },
+                "sourceRef" : {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.6/@flowElements.0/@flowElements.1"
+                }
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "targetRef" : {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.6/@flowElements.0/@flowElements.2"
+                },
+                "sourceRef" : {
+                  "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+                  "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.6/@flowElements.0/@flowElements.1"
+                }
+              } ]
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+              "outgoing" : [ {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.6/@flowElements.2"
+              }, {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.6/@flowElements.4"
+              } ]
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+              "targetRef" : {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.6/@flowElements.0"
+              },
+              "sourceRef" : {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.6/@flowElements.1"
+              }
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+              "description" : "Vega Create Capital Charge",
+              "name" : "Vega Create Capital Charge",
+              "incoming" : [ {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.6/@flowElements.4"
+              } ]
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+              "targetRef" : {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.6/@flowElements.3"
+              },
+              "sourceRef" : {
+                "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+                "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.6/@flowElements.1"
+              }
+            } ]
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+            "targetRef" : {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+              "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.5"
+            },
+            "sourceRef" : {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+              "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.2"
+            }
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+            "targetRef" : {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+              "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.6"
+            },
+            "sourceRef" : {
+              "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+              "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1/@flowElements.2"
+            }
+          } ]
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+          "outgoing" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+            "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.3"
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+            "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.4"
+          } ]
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "targetRef" : {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+            "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.0"
+          },
+          "sourceRef" : {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+            "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.2"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "targetRef" : {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+            "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.1"
+          },
+          "sourceRef" : {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+            "$ref" : "//@subProcess/@flowElements.2/@flowElements.2/@flowElements.2"
+          }
+        } ]
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+        "targetRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+          "$ref" : "//@subProcess/@flowElements.2/@flowElements.0"
+        },
+        "sourceRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+          "$ref" : "//@subProcess/@flowElements.2/@flowElements.1"
+        }
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+        "targetRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+          "$ref" : "RiskClassProcessing"
+        },
+        "sourceRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+          "$ref" : "//@subProcess/@flowElements.2/@flowElements.1"
+        }
       } ]
     }, {
       "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
@@ -49,6 +1082,11 @@
       "incoming" : [ {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
         "$ref" : "//@subProcess/@flowElements.6"
+      } ],
+      "flowElements" : [ {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ScriptTask",
+        "description" : "FRTB Reports",
+        "name" : "FRTB Reports"
       } ]
     }, {
       "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
