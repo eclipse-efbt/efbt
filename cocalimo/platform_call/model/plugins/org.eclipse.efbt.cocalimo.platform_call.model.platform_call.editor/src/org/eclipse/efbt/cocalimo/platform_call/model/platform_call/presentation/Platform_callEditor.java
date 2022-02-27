@@ -157,10 +157,8 @@ import org.eclipse.emf.edit.ui.view.ExtendedPropertySheetPage;
 
 import org.eclipse.efbt.cocalimo.platform_call.model.platform_call.provider.Platform_callItemProviderAdapterFactory;
 
-import org.eclipse.efbt.cocalimo.core.model.bpmn_lite.provider.Bpmn_liteItemProviderAdapterFactory;
-
-import org.eclipse.efbt.cocalimo.core.model.logical_transformations.provider.Logical_transformationsItemProviderAdapterFactory;
-
+import org.eclipse.efbt.cocalimo.logical_transformations.model.bpmn_lite.provider.Bpmn_liteItemProviderAdapterFactory;
+import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.provider.Logical_transformationsItemProviderAdapterFactory;
 import org.eclipse.efbt.cocalimo.core.model.module_management.provider.Module_managementItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.provider.Requirements_textItemProviderAdapterFactory;
@@ -726,8 +724,8 @@ public class Platform_callEditor
 		adapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Platform_callItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new EcoreItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new Logical_transformationsItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Bpmn_liteItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new Logical_transformationsItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Module_managementItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Requirements_textItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new CoreItemProviderAdapterFactory());

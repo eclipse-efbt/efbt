@@ -429,5 +429,95 @@
     },
     "member_id" : "OTHER_securitisationSector",
     "name" : "OTHER_securitisationSector"
+  }, {
+    "code" : "Equity",
+    "description" : "Equity",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#issueType"
+    },
+    "member_id" : "Equity",
+    "name" : "Equity",
+    "displayName" : "Equity"
+  }, {
+    "code" : "Bond",
+    "description" : "Bond",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#issueType"
+    },
+    "member_id" : "Bond",
+    "name" : "Bond",
+    "displayName" : "Bond"
+  }, {
+    "code" : "Securitisation",
+    "description" : "Securitisation",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#issueType"
+    },
+    "member_id" : "Securitisation",
+    "name" : "Securitisation",
+    "displayName" : "Securitisation"
+  }, {
+    "code" : "INFLATION",
+    "description" : "INFLATION",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#girrRiskFactorType"
+    },
+    "member_id" : "INFLATION",
+    "name" : "INFLATION",
+    "displayName" : "INFLATION"
+  }, {
+    "code" : "BASIS",
+    "description" : "BASIS",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#girrRiskFactorType"
+    },
+    "member_id" : "BASIS",
+    "name" : "BASIS",
+    "displayName" : "BASIS"
+  }, {
+    "code" : "YIELD",
+    "description" : "YIELD",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#girrRiskFactorType"
+    },
+    "member_id" : "YIELD",
+    "name" : "YIELD",
+    "displayName" : "YIELD"
+  }, {
+    "code" : "DELTA",
+    "description" : "DELTA",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#sensitivityType"
+    },
+    "member_id" : "DELTA",
+    "name" : "DELTA",
+    "displayName" : "DELTA"
+  }, {
+    "code" : "VEGA",
+    "description" : "VEGA",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#sensitivityType"
+    },
+    "member_id" : "VEGA",
+    "name" : "VEGA",
+    "displayName" : "VEGA"
+  }, {
+    "code" : "CURVATURE",
+    "description" : "CURVATURE",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#sensitivityType"
+    },
+    "member_id" : "CURVATURE",
+    "name" : "CURVATURE",
+    "displayName" : "CURVATURE"
   } ]
 }

@@ -47,6 +47,7 @@ public class AttributeItemProvider extends StructuralFeatureItemProvider {
 
 			addIsPKPropertyDescriptor(object);
 			addVariablePropertyDescriptor(object);
+			addOrderedPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -96,6 +97,28 @@ public class AttributeItemProvider extends StructuralFeatureItemProvider {
 	}
 
 	/**
+	 * This adds a property descriptor for the Ordered feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addOrderedPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_Attribute_ordered_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_Attribute_ordered_feature", "_UI_Attribute_type"),
+				 Data_meta_modelPackage.Literals.ATTRIBUTE__ORDERED,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
 	 * This returns Attribute.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -134,6 +157,7 @@ public class AttributeItemProvider extends StructuralFeatureItemProvider {
 
 		switch (notification.getFeatureID(Attribute.class)) {
 			case Data_meta_modelPackage.ATTRIBUTE__IS_PK:
+			case Data_meta_modelPackage.ATTRIBUTE__ORDERED:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 		}

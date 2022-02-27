@@ -6,20 +6,20 @@
     "$ref" : "BIRD_transformations.logical_transformations#transformations"
   },
   "attributeLineage" : [ {
-    "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
-    "$ref" : "logical_data_model.ecore#//Trade_derived/exposure_at_defualt"
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//Attribute",
+    "$ref" : "example_ldm.data_meta_model#//@entities.6/@attributes.0"
   }, {
-    "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
-    "$ref" : "logical_data_model.ecore#//Instrument/mkt_value"
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//Attribute",
+    "$ref" : "example_ldm.data_meta_model#//@entities.0/@attributes.1"
   }, {
-    "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
-    "$ref" : "logical_data_model.ecore#//Trade_derived/risk_weight"
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//Attribute",
+    "$ref" : "example_ldm.data_meta_model#//@entities.6/@attributes.2"
   }, {
-    "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
-    "$ref" : "logical_data_model.ecore#//Entity/credit_quality"
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//Attribute",
+    "$ref" : "example_ldm.data_meta_model#//@entities.3/@attributes.2"
   }, {
-    "eClass" : "http://www.eclipse.org/emf/2002/Ecore#//EAttribute",
-    "$ref" : "logical_data_model.ecore#//Trade/trade_id"
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//Attribute",
+    "$ref" : "example_ldm.data_meta_model#//@entities.4/@attributes.3"
   } ],
   "testScope" : [ {
     "name" : "scope2",
@@ -36,7 +36,7 @@
     },
     "scriptTask" : {
       "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ScriptTask",
-      "$ref" : "BIRD_transformations.logical_transformations#//@subProcess/@flowElements.5/@flowElements.0"
+      "$ref" : "BIRD_transformations.logical_transformations#Generate Credit Risk Report"
     }
   } ]
 }

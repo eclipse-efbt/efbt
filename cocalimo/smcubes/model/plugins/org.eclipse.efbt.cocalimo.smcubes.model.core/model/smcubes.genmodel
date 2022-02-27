@@ -475,6 +475,7 @@
     <genClasses ecoreClass="data_meta_model.ecore#//Attribute">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_meta_model.ecore#//Attribute/isPK"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_meta_model.ecore#//Attribute/variable"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_meta_model.ecore#//Attribute/ordered"/>
     </genClasses>
     <genClasses ecoreClass="data_meta_model.ecore#//ForeignKeyAttribute">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_meta_model.ecore#//ForeignKeyAttribute/entity"/>

@@ -4,20 +4,20 @@
   "name" : "testModule1",
   "tests" : [ {
     "inputData" : [ {
-      "eClass" : "platform:/resource/org.eclipse.efbt.example.logical_transformations/logical_data_model.ecore#//BondInstrument",
-      "$ref" : "tests/duration/zero_coupon_rate_edge_case/test1/BondInstrument.xmi#IBM_Bond_instrument"
+      "eClass" : "platform:/resource/org.eclipse.efbt.example.logical_transformations/generated_classes/dmm.ecore#//Entity",
+      "$ref" : "tests/duration/zero_coupon_rate_edge_case/test1/RBSEntity.xmi#/"
     }, {
-      "eClass" : "platform:/resource/org.eclipse.efbt.example.logical_transformations/logical_data_model.ecore#//Trade",
+      "eClass" : "platform:/resource/org.eclipse.efbt.example.logical_transformations/generated_classes/dmm.ecore#//Entity",
+      "$ref" : "tests/duration/zero_coupon_rate_edge_case/test1/IBMEntity.xmi#/"
+    }, {
+      "eClass" : "platform:/resource/org.eclipse.efbt.example.logical_transformations/generated_classes/dmm.ecore#//BondInstrument_derived",
+      "$ref" : "tests/duration/zero_coupon_rate_edge_case/test1/BondInstrument_derived.xmi#/"
+    }, {
+      "eClass" : "platform:/resource/org.eclipse.efbt.example.logical_transformations/generated_classes/dmm.ecore#//Trade",
       "$ref" : "tests/duration/zero_coupon_rate_edge_case/test1/Trade.xmi#/"
-    }, {
-      "eClass" : "platform:/resource/org.eclipse.efbt.example.logical_transformations/logical_data_model.ecore#//Entity",
-      "$ref" : "tests/duration/zero_coupon_rate_edge_case/test1/RBSEntity.xmi#RBS"
-    }, {
-      "eClass" : "platform:/resource/org.eclipse.efbt.example.logical_transformations/logical_data_model.ecore#//Entity",
-      "$ref" : "tests/duration/zero_coupon_rate_edge_case/test1/IBMEntity.xmi#IBM"
     } ],
     "expectedResult" : [ {
-      "eClass" : "platform:/resource/org.eclipse.efbt.example.logical_transformations/logical_data_model.ecore#//BondInstrument_derived",
+      "eClass" : "platform:/resource/org.eclipse.efbt.example.logical_transformations/generated_classes/dmm.ecore#//BondInstrument_derived",
       "$ref" : "tests/duration/zero_coupon_rate_edge_case/test1/BondInstrument_derived.xmi#/"
     } ],
     "name" : "duration_test1",
@@ -44,7 +44,7 @@
       },
       "scriptTask" : {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ScriptTask",
-        "$ref" : "BIRD_transformations.logical_transformations#//@subProcess/@flowElements.5/@flowElements.0"
+        "$ref" : "BIRD_transformations.logical_transformations#Generate Credit Risk Report"
       }
     }
   } ]

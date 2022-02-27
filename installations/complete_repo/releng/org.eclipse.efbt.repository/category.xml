@@ -30,13 +30,31 @@
    <feature id="org.eclipse.efbt.cocalimo.smcubes.ui.sirius.feature">
       <category name="efbt"/>
    </feature>
-   <feature id="org.eclipse.efbt.cocalimo.core.ui.sirius.feature">
-      <category name="efbt"/>
-   </feature>
    <feature id="org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.feature">
       <category name="efbt"/>
    </feature>
    <feature id="org.eclipse.efbt.cocalimo.examples.feature">
+      <category name="efbt"/>
+   </feature>
+   <feature id="org.eclipse.efbt.cocalimo.logical_transformations.model.feature">
+      <category name="efbt"/>
+   </feature>
+   <feature id="org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core.feature">
+      <category name="efbt"/>
+   </feature>
+   <feature id="org.eclipse.efbt.cocalimo.platform_call.model.feature">
+      <category name="efbt"/>
+   </feature>
+   <feature id="org.eclipse.efbt.cocalimo.platform_call.ui.sirius.core.feature">
+      <category name="efbt"/>
+   </feature>
+   <feature id="org.eclipse.efbt.controller.data_meta_model.component.dmm_to_ecore.feature">
+      <category name="efbt"/>
+   </feature>
+   <feature id="org.eclipse.efbt.controller.ldm.component.logical_transformations.feature">
+      <category name="efbt"/>
+   </feature>
+   <feature id="org.eclipse.efbt.controller.platformcall.component.core.feature">
       <category name="efbt"/>
    </feature>
    <bundle id="org.eclipse.efbt.cocalimo.platform_call.model.platform_call">

@@ -171,5 +171,41 @@
     "variable_id" : "riskClass",
     "name" : "riskClass",
     "displayName" : "riskClass"
+  }, {
+    "code" : "issueType",
+    "description" : "issueType",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#issueType"
+    },
+    "variable_id" : "issueType",
+    "name" : "issueType",
+    "displayName" : "issueType"
+  }, {
+    "code" : "volFactor",
+    "description" : "volFactor",
+    "variable_id" : "volFactor",
+    "name" : "volFactor",
+    "displayName" : "volFactor"
+  }, {
+    "code" : "girrRiskFactorType",
+    "description" : "girrRiskFactorType",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#girrRiskFactorType"
+    },
+    "variable_id" : "girrRiskFactorType",
+    "name" : "girrRiskFactorType",
+    "displayName" : "girrRiskFactorType"
+  }, {
+    "code" : "sensitivityType",
+    "description" : "sensitivityType",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#sensitivityType"
+    },
+    "variable_id" : "sensitivityType",
+    "name" : "sensitivityType",
+    "displayName" : "sensitivityType"
   } ]
 }

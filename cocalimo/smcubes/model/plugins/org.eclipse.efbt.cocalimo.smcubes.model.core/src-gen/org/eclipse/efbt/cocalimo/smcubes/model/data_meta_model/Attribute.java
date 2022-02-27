@@ -15,6 +15,7 @@ import org.eclipse.efbt.cocalimo.smcubes.model.core.VARIABLE;
  * <ul>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute#isIsPK <em>Is PK</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute#getVariable <em>Variable</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute#isOrdered <em>Ordered</em>}</li>
  * </ul>
  *
  * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage#getAttribute()
@@ -65,5 +66,27 @@ public interface Attribute extends StructuralFeature {
 	 * @generated
 	 */
 	void setVariable(VARIABLE value);
+
+	/**
+	 * Returns the value of the '<em><b>Ordered</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Ordered</em>' attribute.
+	 * @see #setOrdered(boolean)
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage#getAttribute_Ordered()
+	 * @model
+	 * @generated
+	 */
+	boolean isOrdered();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute#isOrdered <em>Ordered</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Ordered</em>' attribute.
+	 * @see #isOrdered()
+	 * @generated
+	 */
+	void setOrdered(boolean value);
 
 } // Attribute

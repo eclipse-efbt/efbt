@@ -1,10 +1,13 @@
 cd cocalimo\core\model
 call mvn install
 cd ..\..\..
-cd cocalimo\core\ui_sirius
+cd cocalimo\smcubes\model
 call mvn install
 cd ..\..\..
-cd cocalimo\smcubes\model
+cd cocalimo\logical_transformations\model
+call mvn install
+cd ..\..\..
+cd cocalimo\logical_transformations\ui_sirius
 call mvn install
 cd ..\..\..
 cd cocalimo\platform_call\model

@@ -10,8 +10,10 @@ import org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN_ENUMERATION;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BasicEntity;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.DerivedEntity;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Entity;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.EntityModule;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.GeneratedEntity;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EAttribute;
@@ -72,7 +74,56 @@ public class DMMToEcoreConverter {
 				
 				epackage.getEClassifiers().add(eclass);
 			}
-			
+			if(entity instanceof DerivedEntity)
+			{
+				DerivedEntity derivedEntity = (DerivedEntity) entity;
+				EList<Attribute> attributes = derivedEntity.getAttributes();
+				for (Attribute attribute : attributes) {
+					 EAttribute eAttribute = EcoreFactory.eINSTANCE.createEAttribute();
+					 eAttribute.setName(attribute.getName());
+					 boolean isDomainEnumerated = attribute.getVariable().getDomain_id().isIs_enumerated();
+					 if(isDomainEnumerated)
+					 {
+						 EEnum eenum = getEnumClassifier(epackage, (SUBDOMAIN) attribute.getClassifier());
+						 eAttribute.setEType(eenum);
+					 }
+					 else
+					 {
+						 FACET_VALUE_TYPE facetValueType = attribute.getVariable().getDomain_id().getData_type();
+						 EDataType dtype = getEcoreDataTypeFromFacetValueType(facetValueType,epackage);
+						 eAttribute.setEType(dtype);
+					 }
+					
+					 eclass.getEAttributes().add(eAttribute);
+				}	
+				
+				epackage.getEClassifiers().add(eclass);
+			}
+			if(entity instanceof GeneratedEntity)
+			{
+				GeneratedEntity generatedEntity = (GeneratedEntity) entity;
+				EList<Attribute> attributes = generatedEntity.getAttributes();
+				for (Attribute attribute : attributes) {
+					 EAttribute eAttribute = EcoreFactory.eINSTANCE.createEAttribute();
+					 eAttribute.setName(attribute.getName());
+					 boolean isDomainEnumerated = attribute.getVariable().getDomain_id().isIs_enumerated();
+					 if(isDomainEnumerated)
+					 {
+						 EEnum eenum = getEnumClassifier(epackage, (SUBDOMAIN) attribute.getClassifier());
+						 eAttribute.setEType(eenum);
+					 }
+					 else
+					 {
+						 FACET_VALUE_TYPE facetValueType = attribute.getVariable().getDomain_id().getData_type();
+						 EDataType dtype = getEcoreDataTypeFromFacetValueType(facetValueType,epackage);
+						 eAttribute.setEType(dtype);
+					 }
+					
+					 eclass.getEAttributes().add(eAttribute);
+				}	
+				
+				epackage.getEClassifiers().add(eclass);
+			}
 		}
 		
 		//add superclass
@@ -162,6 +213,8 @@ public class DMMToEcoreConverter {
 			returnType = ((EcorePackageImpl)(((EPackageImpl) epackage).eClass().getEPackage())).getEBigInteger();
 		if (facetValueType == FACET_VALUE_TYPE.STRING )
 			returnType =  ((EcorePackageImpl)(((EPackageImpl) epackage).eClass().getEPackage())).getEString();
+		if (facetValueType == FACET_VALUE_TYPE.DOUBLE )
+			returnType =  ((EcorePackageImpl)(((EPackageImpl) epackage).eClass().getEPackage())).getEDouble();
 		
 		return returnType;
 		
