@@ -15,7 +15,6 @@
     <semanticResources>bin/FRTBSourceSubDomains.cocalimo_smcubes_extension</semanticResources>
     <semanticResources>common/CommonMeasures.cocalimo_smcubes_extension</semanticResources>
     <semanticResources>sdd/FRTBSourceDomains.cocalimo_smcubes_extension</semanticResources>
-    <semanticResources>frtb_data_model/frtb.data_meta_model</semanticResources>
     <semanticResources>sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension</semanticResources>
     <semanticResources>sdd/FRTBSourceDomainMembers.cocalimo_smcubes_extension</semanticResources>
     <semanticResources>sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension</semanticResources>
@@ -26,6 +25,8 @@
     <semanticResources>girr/girr_vega/GIRRVegaMeasures.cocalimo_smcubes_extension</semanticResources>
     <semanticResources>ldm/ldm.data_meta_model</semanticResources>
     <semanticResources>workflow/workflow.logical_transformations</semanticResources>
+    <semanticResources>frtb_data_model/frtb_with_derived.data_meta_model</semanticResources>
+    <semanticResources>sdd/FRTBDerivedIdentifiers.cocalimo_smcubes_extension</semanticResources>
     <ownedViews xmi:type="viewpoint:DView" uid="_o1sUcJbyEey6TL-F8Rag8g">
       <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.efbt.cocalimo.platform_call.ui.sirius.core/description/controller.odesign#//@ownedViewpoints[name='Modules']"/>
     </ownedViews>
