@@ -51,5 +51,45 @@
     "variable_id" : "bucketID",
     "name" : "bucketID",
     "displayName" : "bucketID"
+  }, {
+    "code" : "summedDeltaSensitivitiesPerPosition_id",
+    "description" : "summedDeltaSensitivitiesPerPosition_id",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#String"
+    },
+    "variable_id" : "summedDeltaSensitivitiesPerPosition_id",
+    "name" : "summedDeltaSensitivitiesPerPosition_id",
+    "displayName" : "summedDeltaSensitivitiesPerPosition_id"
+  }, {
+    "code" : "nettedDeltaSensitivities_id",
+    "description" : "nettedDeltaSensitivities_id",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#String"
+    },
+    "variable_id" : "nettedDeltaSensitivities_id",
+    "name" : "nettedDeltaSensitivities_id",
+    "displayName" : "nettedDeltaSensitivities_id"
+  }, {
+    "code" : "deltaSensitivitiesAndRiskFactor_id",
+    "description" : "deltaSensitivitiesAndRiskFactor_id",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#String"
+    },
+    "variable_id" : "deltaSensitivitiesAndRiskFactor_id",
+    "name" : "deltaSensitivitiesAndRiskFactor_id",
+    "displayName" : "deltaSensitivitiesAndRiskFactor_id"
+  }, {
+    "code" : "deltaSensitivityCombination_id",
+    "description" : "deltaSensitivityCombination_id",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#String"
+    },
+    "variable_id" : "deltaSensitivityCombination_id",
+    "name" : "deltaSensitivityCombination_id",
+    "displayName" : "deltaSensitivityCombination_id"
   } ]
 }
