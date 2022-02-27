@@ -624,7 +624,7 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 		initEAttribute(getAttribute_Ordered(), ecorePackage.getEBoolean(), "ordered", null, 0, 1, Attribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(foreignKeyAttributeEClass, ForeignKeyAttribute.class, "ForeignKeyAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getForeignKeyAttribute_Entity(), this.getBasicEntity(), null, "entity", null, 0, 1, ForeignKeyAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getForeignKeyAttribute_Entity(), this.getEntity(), null, "entity", null, 0, 1, ForeignKeyAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getForeignKeyAttribute_Containment(), ecorePackage.getEBoolean(), "containment", null, 0, 1, ForeignKeyAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getForeignKeyAttribute_Cardinality(), ecorePackage.getEInt(), "cardinality", null, 0, 1, ForeignKeyAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getForeignKeyAttribute_Mandatory(), ecorePackage.getEBoolean(), "mandatory", null, 0, 1, ForeignKeyAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

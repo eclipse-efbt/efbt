@@ -8,7 +8,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="ordered" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ForeignKeyAttribute" eSuperTypes="#//Attribute">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="entity" eType="#//BasicEntity"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entity" eType="#//Entity"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="containment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="cardinality" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="mandatory" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>

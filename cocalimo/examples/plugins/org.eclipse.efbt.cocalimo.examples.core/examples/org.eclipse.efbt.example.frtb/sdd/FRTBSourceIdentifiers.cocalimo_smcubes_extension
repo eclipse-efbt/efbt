@@ -91,5 +91,15 @@
     "variable_id" : "organisation_id",
     "name" : "organisation_id",
     "displayName" : "organisation_id"
+  }, {
+    "code" : "sensitivity_id",
+    "description" : "sensitivity_id",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#String"
+    },
+    "variable_id" : "sensitivity_id",
+    "name" : "sensitivity_id",
+    "displayName" : "sensitivity_id"
   } ]
 }
