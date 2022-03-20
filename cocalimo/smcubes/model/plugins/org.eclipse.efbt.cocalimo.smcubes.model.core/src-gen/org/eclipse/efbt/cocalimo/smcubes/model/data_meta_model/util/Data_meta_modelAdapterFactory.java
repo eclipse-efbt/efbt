@@ -72,8 +72,20 @@ public class Data_meta_modelAdapterFactory extends AdapterFactoryImpl {
 				return createAttributeAdapter();
 			}
 			@Override
-			public Adapter caseForeignKeyAttribute(ForeignKeyAttribute object) {
-				return createForeignKeyAttributeAdapter();
+			public Adapter caseRelationshipAttribute(RelationshipAttribute object) {
+				return createRelationshipAttributeAdapter();
+			}
+			@Override
+			public Adapter caseOneToOneRelationshipAttribute(OneToOneRelationshipAttribute object) {
+				return createOneToOneRelationshipAttributeAdapter();
+			}
+			@Override
+			public Adapter caseManyToOneRelationshipAttribute(ManyToOneRelationshipAttribute object) {
+				return createManyToOneRelationshipAttributeAdapter();
+			}
+			@Override
+			public Adapter caseOneToManyRelationshipAttribute(OneToManyRelationshipAttribute object) {
+				return createOneToManyRelationshipAttributeAdapter();
 			}
 			@Override
 			public Adapter caseClassifier(Classifier object) {
@@ -154,16 +166,58 @@ public class Data_meta_modelAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ForeignKeyAttribute <em>Foreign Key Attribute</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.RelationshipAttribute <em>Relationship Attribute</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ForeignKeyAttribute
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.RelationshipAttribute
 	 * @generated
 	 */
-	public Adapter createForeignKeyAttributeAdapter() {
+	public Adapter createRelationshipAttributeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.OneToOneRelationshipAttribute <em>One To One Relationship Attribute</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.OneToOneRelationshipAttribute
+	 * @generated
+	 */
+	public Adapter createOneToOneRelationshipAttributeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ManyToOneRelationshipAttribute <em>Many To One Relationship Attribute</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ManyToOneRelationshipAttribute
+	 * @generated
+	 */
+	public Adapter createManyToOneRelationshipAttributeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.OneToManyRelationshipAttribute <em>One To Many Relationship Attribute</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.OneToManyRelationshipAttribute
+	 * @generated
+	 */
+	public Adapter createOneToManyRelationshipAttributeAdapter() {
 		return null;
 	}
 

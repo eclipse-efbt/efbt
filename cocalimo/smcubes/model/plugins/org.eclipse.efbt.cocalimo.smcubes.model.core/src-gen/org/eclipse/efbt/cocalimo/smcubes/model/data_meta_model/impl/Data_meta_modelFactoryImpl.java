@@ -57,7 +57,10 @@ public class Data_meta_modelFactoryImpl extends EFactoryImpl implements Data_met
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case Data_meta_modelPackage.ATTRIBUTE: return createAttribute();
-			case Data_meta_modelPackage.FOREIGN_KEY_ATTRIBUTE: return createForeignKeyAttribute();
+			case Data_meta_modelPackage.RELATIONSHIP_ATTRIBUTE: return createRelationshipAttribute();
+			case Data_meta_modelPackage.ONE_TO_ONE_RELATIONSHIP_ATTRIBUTE: return createOneToOneRelationshipAttribute();
+			case Data_meta_modelPackage.MANY_TO_ONE_RELATIONSHIP_ATTRIBUTE: return createManyToOneRelationshipAttribute();
+			case Data_meta_modelPackage.ONE_TO_MANY_RELATIONSHIP_ATTRIBUTE: return createOneToManyRelationshipAttribute();
 			case Data_meta_modelPackage.ENTITY_MODULE: return createEntityModule();
 			case Data_meta_modelPackage.GENERATED_ENTITY: return createGeneratedEntity();
 			case Data_meta_modelPackage.DERIVED_ENTITY: return createDerivedEntity();
@@ -84,9 +87,42 @@ public class Data_meta_modelFactoryImpl extends EFactoryImpl implements Data_met
 	 * @generated
 	 */
 	@Override
-	public ForeignKeyAttribute createForeignKeyAttribute() {
-		ForeignKeyAttributeImpl foreignKeyAttribute = new ForeignKeyAttributeImpl();
-		return foreignKeyAttribute;
+	public RelationshipAttribute createRelationshipAttribute() {
+		RelationshipAttributeImpl relationshipAttribute = new RelationshipAttributeImpl();
+		return relationshipAttribute;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public OneToOneRelationshipAttribute createOneToOneRelationshipAttribute() {
+		OneToOneRelationshipAttributeImpl oneToOneRelationshipAttribute = new OneToOneRelationshipAttributeImpl();
+		return oneToOneRelationshipAttribute;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public ManyToOneRelationshipAttribute createManyToOneRelationshipAttribute() {
+		ManyToOneRelationshipAttributeImpl manyToOneRelationshipAttribute = new ManyToOneRelationshipAttributeImpl();
+		return manyToOneRelationshipAttribute;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public OneToManyRelationshipAttribute createOneToManyRelationshipAttribute() {
+		OneToManyRelationshipAttributeImpl oneToManyRelationshipAttribute = new OneToManyRelationshipAttributeImpl();
+		return oneToManyRelationshipAttribute;
 	}
 
 	/**

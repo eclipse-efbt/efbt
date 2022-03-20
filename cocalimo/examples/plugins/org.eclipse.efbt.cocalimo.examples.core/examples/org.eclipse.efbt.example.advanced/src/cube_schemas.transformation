@@ -1,0 +1,77 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/transformation#//VersionedCubeSchemaModule",
+  "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
+  "name" : "cube_schemas",
+  "version" : "1.0",
+  "schemas" : [ {
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_definition#//CUBE",
+      "$ref" : "cubes.efbt_data_definition#counterparty"
+    },
+    "name" : "counterparty",
+    "baseCube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+      "$ref" : "efbt_cubes.cubes#counterparty"
+    }
+  }, {
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_definition#//CUBE",
+      "$ref" : "cubes.efbt_data_definition#rating"
+    },
+    "name" : "rating",
+    "baseCube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+      "$ref" : "efbt_cubes.cubes#rating"
+    }
+  }, {
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_definition#//CUBE",
+      "$ref" : "cubes.efbt_data_definition#bondInstrument"
+    },
+    "name" : "bondInstrument",
+    "baseCube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+      "$ref" : "efbt_cubes.cubes#bondInstrument"
+    }
+  }, {
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_definition#//CUBE",
+      "$ref" : "cubes.efbt_data_definition#cashflow"
+    },
+    "name" : "cashflow",
+    "baseCube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+      "$ref" : "efbt_cubes.cubes#cashflow"
+    }
+  }, {
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_definition#//CUBE",
+      "$ref" : "cubes.efbt_data_definition#equityInstrument"
+    },
+    "name" : "equityInstrument",
+    "baseCube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+      "$ref" : "efbt_cubes.cubes#equityInstrument"
+    }
+  }, {
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_definition#//CUBE",
+      "$ref" : "cubes.efbt_data_definition#instrument"
+    },
+    "name" : "instrument",
+    "baseCube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+      "$ref" : "efbt_cubes.cubes#instrument"
+    }
+  }, {
+    "cube" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_definition#//CUBE",
+      "$ref" : "cubes.efbt_data_definition#trade"
+    },
+    "name" : "trade",
+    "baseCube" : {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+      "$ref" : "efbt_cubes.cubes#trade"
+    }
+  } ]
+}

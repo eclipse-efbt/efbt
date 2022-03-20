@@ -25,9 +25,12 @@ import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.DerivedEntity;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Element;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Entity;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.EntityModule;
-import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ForeignKeyAttribute;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.GeneratedEntity;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ManyToOneRelationshipAttribute;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.NamedElement;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.OneToManyRelationshipAttribute;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.OneToOneRelationshipAttribute;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.RelationshipAttribute;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.StructuralFeature;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.TypedElement;
 
@@ -65,7 +68,28 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass foreignKeyAttributeEClass = null;
+	private EClass relationshipAttributeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass oneToOneRelationshipAttributeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass manyToOneRelationshipAttributeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass oneToManyRelationshipAttributeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -269,8 +293,8 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 	 * @generated
 	 */
 	@Override
-	public EClass getForeignKeyAttribute() {
-		return foreignKeyAttributeEClass;
+	public EClass getRelationshipAttribute() {
+		return relationshipAttributeEClass;
 	}
 
 	/**
@@ -279,8 +303,8 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 	 * @generated
 	 */
 	@Override
-	public EReference getForeignKeyAttribute_Entity() {
-		return (EReference)foreignKeyAttributeEClass.getEStructuralFeatures().get(0);
+	public EReference getRelationshipAttribute_Entity() {
+		return (EReference)relationshipAttributeEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -289,8 +313,8 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 	 * @generated
 	 */
 	@Override
-	public EAttribute getForeignKeyAttribute_Containment() {
-		return (EAttribute)foreignKeyAttributeEClass.getEStructuralFeatures().get(1);
+	public EAttribute getRelationshipAttribute_Containment() {
+		return (EAttribute)relationshipAttributeEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -299,8 +323,8 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 	 * @generated
 	 */
 	@Override
-	public EAttribute getForeignKeyAttribute_Cardinality() {
-		return (EAttribute)foreignKeyAttributeEClass.getEStructuralFeatures().get(2);
+	public EAttribute getRelationshipAttribute_Mandatory() {
+		return (EAttribute)relationshipAttributeEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -309,8 +333,28 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 	 * @generated
 	 */
 	@Override
-	public EAttribute getForeignKeyAttribute_Mandatory() {
-		return (EAttribute)foreignKeyAttributeEClass.getEStructuralFeatures().get(3);
+	public EClass getOneToOneRelationshipAttribute() {
+		return oneToOneRelationshipAttributeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getManyToOneRelationshipAttribute() {
+		return manyToOneRelationshipAttributeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getOneToManyRelationshipAttribute() {
+		return oneToManyRelationshipAttributeEClass;
 	}
 
 	/**
@@ -537,11 +581,16 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 		createEReference(attributeEClass, ATTRIBUTE__VARIABLE);
 		createEAttribute(attributeEClass, ATTRIBUTE__ORDERED);
 
-		foreignKeyAttributeEClass = createEClass(FOREIGN_KEY_ATTRIBUTE);
-		createEReference(foreignKeyAttributeEClass, FOREIGN_KEY_ATTRIBUTE__ENTITY);
-		createEAttribute(foreignKeyAttributeEClass, FOREIGN_KEY_ATTRIBUTE__CONTAINMENT);
-		createEAttribute(foreignKeyAttributeEClass, FOREIGN_KEY_ATTRIBUTE__CARDINALITY);
-		createEAttribute(foreignKeyAttributeEClass, FOREIGN_KEY_ATTRIBUTE__MANDATORY);
+		relationshipAttributeEClass = createEClass(RELATIONSHIP_ATTRIBUTE);
+		createEReference(relationshipAttributeEClass, RELATIONSHIP_ATTRIBUTE__ENTITY);
+		createEAttribute(relationshipAttributeEClass, RELATIONSHIP_ATTRIBUTE__CONTAINMENT);
+		createEAttribute(relationshipAttributeEClass, RELATIONSHIP_ATTRIBUTE__MANDATORY);
+
+		oneToOneRelationshipAttributeEClass = createEClass(ONE_TO_ONE_RELATIONSHIP_ATTRIBUTE);
+
+		manyToOneRelationshipAttributeEClass = createEClass(MANY_TO_ONE_RELATIONSHIP_ATTRIBUTE);
+
+		oneToManyRelationshipAttributeEClass = createEClass(ONE_TO_MANY_RELATIONSHIP_ATTRIBUTE);
 
 		classifierEClass = createEClass(CLASSIFIER);
 
@@ -606,7 +655,10 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 
 		// Add supertypes to classes
 		attributeEClass.getESuperTypes().add(this.getStructuralFeature());
-		foreignKeyAttributeEClass.getESuperTypes().add(this.getAttribute());
+		relationshipAttributeEClass.getESuperTypes().add(this.getAttribute());
+		oneToOneRelationshipAttributeEClass.getESuperTypes().add(this.getRelationshipAttribute());
+		manyToOneRelationshipAttributeEClass.getESuperTypes().add(this.getRelationshipAttribute());
+		oneToManyRelationshipAttributeEClass.getESuperTypes().add(this.getRelationshipAttribute());
 		classifierEClass.getESuperTypes().add(this.getNamedElement());
 		namedElementEClass.getESuperTypes().add(this.getElement());
 		entityModuleEClass.getESuperTypes().add(theModule_managementPackage.getModule());
@@ -623,11 +675,16 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 		initEReference(getAttribute_Variable(), theCorePackage.getVARIABLE(), null, "variable", null, 0, 1, Attribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getAttribute_Ordered(), ecorePackage.getEBoolean(), "ordered", null, 0, 1, Attribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(foreignKeyAttributeEClass, ForeignKeyAttribute.class, "ForeignKeyAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getForeignKeyAttribute_Entity(), this.getEntity(), null, "entity", null, 0, 1, ForeignKeyAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getForeignKeyAttribute_Containment(), ecorePackage.getEBoolean(), "containment", null, 0, 1, ForeignKeyAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getForeignKeyAttribute_Cardinality(), ecorePackage.getEInt(), "cardinality", null, 0, 1, ForeignKeyAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getForeignKeyAttribute_Mandatory(), ecorePackage.getEBoolean(), "mandatory", null, 0, 1, ForeignKeyAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(relationshipAttributeEClass, RelationshipAttribute.class, "RelationshipAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getRelationshipAttribute_Entity(), this.getEntity(), null, "entity", null, 0, 1, RelationshipAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getRelationshipAttribute_Containment(), ecorePackage.getEBoolean(), "containment", null, 0, 1, RelationshipAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getRelationshipAttribute_Mandatory(), ecorePackage.getEBoolean(), "mandatory", null, 0, 1, RelationshipAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(oneToOneRelationshipAttributeEClass, OneToOneRelationshipAttribute.class, "OneToOneRelationshipAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(manyToOneRelationshipAttributeEClass, ManyToOneRelationshipAttribute.class, "ManyToOneRelationshipAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(oneToManyRelationshipAttributeEClass, OneToManyRelationshipAttribute.class, "OneToManyRelationshipAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(classifierEClass, Classifier.class, "Classifier", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

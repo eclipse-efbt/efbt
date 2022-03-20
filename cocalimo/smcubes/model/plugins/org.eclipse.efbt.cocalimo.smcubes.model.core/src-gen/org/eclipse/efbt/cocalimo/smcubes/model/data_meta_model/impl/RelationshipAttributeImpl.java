@@ -4,7 +4,7 @@ package org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Entity;
-import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ForeignKeyAttribute;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.RelationshipAttribute;
 
 import org.eclipse.emf.common.notify.Notification;
 
@@ -15,21 +15,20 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Foreign Key Attribute</b></em>'.
+ * An implementation of the model object '<em><b>Relationship Attribute</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.ForeignKeyAttributeImpl#getEntity <em>Entity</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.ForeignKeyAttributeImpl#isContainment <em>Containment</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.ForeignKeyAttributeImpl#getCardinality <em>Cardinality</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.ForeignKeyAttributeImpl#isMandatory <em>Mandatory</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.RelationshipAttributeImpl#getEntity <em>Entity</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.RelationshipAttributeImpl#isContainment <em>Containment</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.RelationshipAttributeImpl#isMandatory <em>Mandatory</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class ForeignKeyAttributeImpl extends AttributeImpl implements ForeignKeyAttribute {
+public class RelationshipAttributeImpl extends AttributeImpl implements RelationshipAttribute {
 	/**
 	 * The cached value of the '{@link #getEntity() <em>Entity</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -61,26 +60,6 @@ public class ForeignKeyAttributeImpl extends AttributeImpl implements ForeignKey
 	protected boolean containment = CONTAINMENT_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getCardinality() <em>Cardinality</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getCardinality()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final int CARDINALITY_EDEFAULT = 0;
-
-	/**
-	 * The cached value of the '{@link #getCardinality() <em>Cardinality</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getCardinality()
-	 * @generated
-	 * @ordered
-	 */
-	protected int cardinality = CARDINALITY_EDEFAULT;
-
-	/**
 	 * The default value of the '{@link #isMandatory() <em>Mandatory</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -105,7 +84,7 @@ public class ForeignKeyAttributeImpl extends AttributeImpl implements ForeignKey
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ForeignKeyAttributeImpl() {
+	protected RelationshipAttributeImpl() {
 		super();
 	}
 
@@ -116,7 +95,7 @@ public class ForeignKeyAttributeImpl extends AttributeImpl implements ForeignKey
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return Data_meta_modelPackage.Literals.FOREIGN_KEY_ATTRIBUTE;
+		return Data_meta_modelPackage.Literals.RELATIONSHIP_ATTRIBUTE;
 	}
 
 	/**
@@ -131,7 +110,7 @@ public class ForeignKeyAttributeImpl extends AttributeImpl implements ForeignKey
 			entity = (Entity)eResolveProxy(oldEntity);
 			if (entity != oldEntity) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Data_meta_modelPackage.FOREIGN_KEY_ATTRIBUTE__ENTITY, oldEntity, entity));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Data_meta_modelPackage.RELATIONSHIP_ATTRIBUTE__ENTITY, oldEntity, entity));
 			}
 		}
 		return entity;
@@ -156,7 +135,7 @@ public class ForeignKeyAttributeImpl extends AttributeImpl implements ForeignKey
 		Entity oldEntity = entity;
 		entity = newEntity;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, Data_meta_modelPackage.FOREIGN_KEY_ATTRIBUTE__ENTITY, oldEntity, entity));
+			eNotify(new ENotificationImpl(this, Notification.SET, Data_meta_modelPackage.RELATIONSHIP_ATTRIBUTE__ENTITY, oldEntity, entity));
 	}
 
 	/**
@@ -179,30 +158,7 @@ public class ForeignKeyAttributeImpl extends AttributeImpl implements ForeignKey
 		boolean oldContainment = containment;
 		containment = newContainment;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, Data_meta_modelPackage.FOREIGN_KEY_ATTRIBUTE__CONTAINMENT, oldContainment, containment));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public int getCardinality() {
-		return cardinality;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setCardinality(int newCardinality) {
-		int oldCardinality = cardinality;
-		cardinality = newCardinality;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, Data_meta_modelPackage.FOREIGN_KEY_ATTRIBUTE__CARDINALITY, oldCardinality, cardinality));
+			eNotify(new ENotificationImpl(this, Notification.SET, Data_meta_modelPackage.RELATIONSHIP_ATTRIBUTE__CONTAINMENT, oldContainment, containment));
 	}
 
 	/**
@@ -225,7 +181,7 @@ public class ForeignKeyAttributeImpl extends AttributeImpl implements ForeignKey
 		boolean oldMandatory = mandatory;
 		mandatory = newMandatory;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, Data_meta_modelPackage.FOREIGN_KEY_ATTRIBUTE__MANDATORY, oldMandatory, mandatory));
+			eNotify(new ENotificationImpl(this, Notification.SET, Data_meta_modelPackage.RELATIONSHIP_ATTRIBUTE__MANDATORY, oldMandatory, mandatory));
 	}
 
 	/**
@@ -236,14 +192,12 @@ public class ForeignKeyAttributeImpl extends AttributeImpl implements ForeignKey
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case Data_meta_modelPackage.FOREIGN_KEY_ATTRIBUTE__ENTITY:
+			case Data_meta_modelPackage.RELATIONSHIP_ATTRIBUTE__ENTITY:
 				if (resolve) return getEntity();
 				return basicGetEntity();
-			case Data_meta_modelPackage.FOREIGN_KEY_ATTRIBUTE__CONTAINMENT:
+			case Data_meta_modelPackage.RELATIONSHIP_ATTRIBUTE__CONTAINMENT:
 				return isContainment();
-			case Data_meta_modelPackage.FOREIGN_KEY_ATTRIBUTE__CARDINALITY:
-				return getCardinality();
-			case Data_meta_modelPackage.FOREIGN_KEY_ATTRIBUTE__MANDATORY:
+			case Data_meta_modelPackage.RELATIONSHIP_ATTRIBUTE__MANDATORY:
 				return isMandatory();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -257,16 +211,13 @@ public class ForeignKeyAttributeImpl extends AttributeImpl implements ForeignKey
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case Data_meta_modelPackage.FOREIGN_KEY_ATTRIBUTE__ENTITY:
+			case Data_meta_modelPackage.RELATIONSHIP_ATTRIBUTE__ENTITY:
 				setEntity((Entity)newValue);
 				return;
-			case Data_meta_modelPackage.FOREIGN_KEY_ATTRIBUTE__CONTAINMENT:
+			case Data_meta_modelPackage.RELATIONSHIP_ATTRIBUTE__CONTAINMENT:
 				setContainment((Boolean)newValue);
 				return;
-			case Data_meta_modelPackage.FOREIGN_KEY_ATTRIBUTE__CARDINALITY:
-				setCardinality((Integer)newValue);
-				return;
-			case Data_meta_modelPackage.FOREIGN_KEY_ATTRIBUTE__MANDATORY:
+			case Data_meta_modelPackage.RELATIONSHIP_ATTRIBUTE__MANDATORY:
 				setMandatory((Boolean)newValue);
 				return;
 		}
@@ -281,16 +232,13 @@ public class ForeignKeyAttributeImpl extends AttributeImpl implements ForeignKey
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case Data_meta_modelPackage.FOREIGN_KEY_ATTRIBUTE__ENTITY:
+			case Data_meta_modelPackage.RELATIONSHIP_ATTRIBUTE__ENTITY:
 				setEntity((Entity)null);
 				return;
-			case Data_meta_modelPackage.FOREIGN_KEY_ATTRIBUTE__CONTAINMENT:
+			case Data_meta_modelPackage.RELATIONSHIP_ATTRIBUTE__CONTAINMENT:
 				setContainment(CONTAINMENT_EDEFAULT);
 				return;
-			case Data_meta_modelPackage.FOREIGN_KEY_ATTRIBUTE__CARDINALITY:
-				setCardinality(CARDINALITY_EDEFAULT);
-				return;
-			case Data_meta_modelPackage.FOREIGN_KEY_ATTRIBUTE__MANDATORY:
+			case Data_meta_modelPackage.RELATIONSHIP_ATTRIBUTE__MANDATORY:
 				setMandatory(MANDATORY_EDEFAULT);
 				return;
 		}
@@ -305,13 +253,11 @@ public class ForeignKeyAttributeImpl extends AttributeImpl implements ForeignKey
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case Data_meta_modelPackage.FOREIGN_KEY_ATTRIBUTE__ENTITY:
+			case Data_meta_modelPackage.RELATIONSHIP_ATTRIBUTE__ENTITY:
 				return entity != null;
-			case Data_meta_modelPackage.FOREIGN_KEY_ATTRIBUTE__CONTAINMENT:
+			case Data_meta_modelPackage.RELATIONSHIP_ATTRIBUTE__CONTAINMENT:
 				return containment != CONTAINMENT_EDEFAULT;
-			case Data_meta_modelPackage.FOREIGN_KEY_ATTRIBUTE__CARDINALITY:
-				return cardinality != CARDINALITY_EDEFAULT;
-			case Data_meta_modelPackage.FOREIGN_KEY_ATTRIBUTE__MANDATORY:
+			case Data_meta_modelPackage.RELATIONSHIP_ATTRIBUTE__MANDATORY:
 				return mandatory != MANDATORY_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
@@ -329,12 +275,10 @@ public class ForeignKeyAttributeImpl extends AttributeImpl implements ForeignKey
 		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (containment: ");
 		result.append(containment);
-		result.append(", cardinality: ");
-		result.append(cardinality);
 		result.append(", mandatory: ");
 		result.append(mandatory);
 		result.append(')');
 		return result.toString();
 	}
 
-} //ForeignKeyAttributeImpl
+} //RelationshipAttributeImpl

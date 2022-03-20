@@ -5,7 +5,19 @@
   "nsPrefix" : "frtb",
   "entities" : [ {
     "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
-    "name" : "RiskFactor"
+    "name" : "RiskFactor",
+    "attributes" : [ {
+      "name" : "riskFactorID",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+      },
+      "isPK" : true,
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#riskFactorID"
+      }
+    } ]
   }, {
     "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
     "name" : "CommodityRiskFactor",
@@ -38,17 +50,6 @@
     "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
     "name" : "SecurityIssue",
     "attributes" : [ {
-      "name" : "name",
-      "classifier" : {
-        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
-      },
-      "isPK" : true,
-      "variable" : {
-        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#riskFactorID"
-      }
-    }, {
       "name" : "ratingGrade",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
@@ -57,6 +58,17 @@
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
         "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#ratingsGrade"
+      }
+    }, {
+      "name" : "issueID",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+      },
+      "isPK" : true,
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#issueID"
       }
     } ]
   }, {
@@ -70,7 +82,17 @@
     "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
     "name" : "EquityRiskFactor",
     "attributes" : [ {
-      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//ForeignKeyAttribute",
+      "name" : "equityFactorType",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#equityFactorType"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#equityFactorType"
+      }
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//OneToOneRelationshipAttribute",
       "name" : "issueID",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
@@ -83,23 +105,786 @@
       "entity" : {
         "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
         "$ref" : "//@entities.3"
-      },
-      "cardinality" : 1,
-      "mandatory" : true
-    }, {
-      "name" : "equityFactorType",
-      "classifier" : {
-        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#equityFactorType"
-      },
-      "variable" : {
-        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#equityFactorType"
       }
     } ],
     "superClass" : {
       "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
       "$ref" : "//@entities.0"
     }
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+    "name" : "FXRiskFactor",
+    "attributes" : [ {
+      "name" : "ccy1",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#currency"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#ccy1"
+      }
+    }, {
+      "name" : "ccy2",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#currency"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#ccy2"
+      }
+    } ],
+    "superClass" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+      "$ref" : "//@entities.0"
+    }
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+    "name" : "GIRRRiskFactor",
+    "attributes" : [ {
+      "name" : "girrRiskFactorType",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#girrRiskFactorType"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#girrRiskFactorType"
+      }
+    }, {
+      "name" : "mainCurrency",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#currency"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#mainCurrency"
+      }
+    }, {
+      "name" : "secondCurrency",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#currency"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#secondCurrency"
+      }
+    } ],
+    "superClass" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+      "$ref" : "//@entities.0"
+    }
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+    "name" : "CSRNonSecuritisationRiskFactor",
+    "attributes" : [ {
+      "name" : "CSRCurveType",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#CSRCurveType"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#CSRCurveType"
+      }
+    }, {
+      "name" : "CSRCreditQuality",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#ratingsGrade"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#ratingsGrade"
+      }
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//OneToOneRelationshipAttribute",
+      "name" : "organisation_id",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#organisation_id"
+      },
+      "entity" : {
+        "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+        "$ref" : "//@entities.9"
+      },
+      "mandatory" : true
+    } ],
+    "superClass" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+      "$ref" : "//@entities.0"
+    }
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+    "name" : "SecuritisationNonCTPRiskFactor",
+    "attributes" : [ {
+      "name" : "trancheName",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#trancheName"
+      }
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//OneToOneRelationshipAttribute",
+      "name" : "securitisation",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#securitisationID"
+      },
+      "entity" : {
+        "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+        "$ref" : "//@entities.10"
+      },
+      "mandatory" : true
+    } ],
+    "superClass" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+      "$ref" : "//@entities.0"
+    }
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+    "name" : "Organisation",
+    "attributes" : [ {
+      "name" : "organisation_id",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+      },
+      "isPK" : true,
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#organisation_id"
+      }
+    }, {
+      "name" : "ratingsGrade",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#ratingsGrade"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#ratingsGrade"
+      }
+    }, {
+      "name" : "sector",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#sector"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#sector"
+      }
+    }, {
+      "name" : "marketCap",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#marketCap"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#marketCap"
+      }
+    }, {
+      "name" : "economy",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#economy"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#economy"
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+    "name" : "Securitisation",
+    "attributes" : [ {
+      "name" : "securitisationSector",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#securitisationSector"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#securitisationSector"
+      }
+    } ],
+    "superClass" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+      "$ref" : "//@entities.2"
+    }
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+    "name" : "SecuritisationCTPRiskFactor",
+    "attributes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//OneToOneRelationshipAttribute",
+      "name" : "securitisation",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#securitisationID"
+      },
+      "entity" : {
+        "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+        "$ref" : "//@entities.10"
+      },
+      "mandatory" : true
+    } ],
+    "superClass" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+      "$ref" : "//@entities.0"
+    }
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+    "name" : "DeltaSensitivity",
+    "attributes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//OneToOneRelationshipAttribute",
+      "name" : "position",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#positionID"
+      },
+      "entity" : {
+        "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+        "$ref" : "//@entities.13"
+      },
+      "mandatory" : true
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//OneToOneRelationshipAttribute",
+      "name" : "riskFactorID",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#riskFactorID"
+      },
+      "entity" : {
+        "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+        "$ref" : "//@entities.0"
+      },
+      "mandatory" : true
+    }, {
+      "name" : "currencyOfRecord",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#currency"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#currencyOfRecord"
+      }
+    }, {
+      "name" : "tenor",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#number"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceMeasures.cocalimo_smcubes_extension#tenor"
+      }
+    }, {
+      "name" : "deltaSensitivity",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#number"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceMeasures.cocalimo_smcubes_extension#deltaSensitivity"
+      }
+    }, {
+      "name" : "delta_sensitivity_id",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+      },
+      "isPK" : true,
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#delta_sensitivity_id"
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+    "name" : "Position",
+    "attributes" : [ {
+      "name" : "positionID",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+      },
+      "isPK" : true,
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#positionID"
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+    "name" : "VegaSensitivity",
+    "attributes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//OneToOneRelationshipAttribute",
+      "name" : "position",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#positionID"
+      },
+      "entity" : {
+        "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+        "$ref" : "//@entities.13"
+      },
+      "mandatory" : true
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//OneToOneRelationshipAttribute",
+      "name" : "riskFactorID",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#riskFactorID"
+      },
+      "entity" : {
+        "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+        "$ref" : "//@entities.0"
+      },
+      "mandatory" : true
+    }, {
+      "name" : "currencyOfRecord",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#currency"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#currencyOfRecord"
+      }
+    }, {
+      "name" : "vegaSensitivity",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#number"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceMeasures.cocalimo_smcubes_extension#vegaSensitivity"
+      }
+    }, {
+      "name" : "vegaOptionMaturity",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#number"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceMeasures.cocalimo_smcubes_extension#vegaOptionMaturity"
+      }
+    }, {
+      "name" : "vegaOptionUnderlyingResidualMaturity",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#number"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceMeasures.cocalimo_smcubes_extension#vegaOptionUnderlyingResidualMaturity"
+      }
+    }, {
+      "name" : "vega_sensitivity_id",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+      },
+      "isPK" : true,
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#vega_sensitivity_id"
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+    "name" : "Curvature",
+    "attributes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//OneToOneRelationshipAttribute",
+      "name" : "position",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#positionID"
+      },
+      "entity" : {
+        "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+        "$ref" : "//@entities.13"
+      },
+      "mandatory" : true
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//OneToOneRelationshipAttribute",
+      "name" : "riskFactorID",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#riskFactorID"
+      },
+      "entity" : {
+        "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+        "$ref" : "//@entities.0"
+      },
+      "mandatory" : true
+    }, {
+      "name" : "currencyOfRecord",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#currency"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#currencyOfRecord"
+      }
+    }, {
+      "name" : "curvatureValuationDifference",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#number"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceMeasures.cocalimo_smcubes_extension#curvatureValuationDifference"
+      }
+    }, {
+      "name" : "shockDirection",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#shockDirection"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#ShockDirection"
+      }
+    }, {
+      "name" : "curvatureRiskWeight",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#number"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceMeasures.cocalimo_smcubes_extension#curvatureRiskWeight"
+      }
+    }, {
+      "name" : "curvature_id",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+      },
+      "isPK" : true,
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#curvature_id"
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//DerivedEntity",
+    "name" : "SummedDeltaSensitivitiesPerPositionAndRiskFactor",
+    "attributes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//OneToOneRelationshipAttribute",
+      "name" : "positionID",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#positionID"
+      },
+      "entity" : {
+        "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+        "$ref" : "//@entities.13"
+      }
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//OneToOneRelationshipAttribute",
+      "name" : "riskFactorID",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#riskFactorID"
+      },
+      "entity" : {
+        "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+        "$ref" : "//@entities.6"
+      }
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//OneToManyRelationshipAttribute",
+      "name" : "sensitivities",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#delta_sensitivity_id"
+      },
+      "entity" : {
+        "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+        "$ref" : "//@entities.12"
+      }
+    }, {
+      "name" : "summedDeltaPerPosition",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#number"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../common/CommonMeasures.cocalimo_smcubes_extension#summedDeltaPerPosition"
+      }
+    }, {
+      "name" : "summedDeltaSensitivitiesPerPosition_id",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#number"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBDerivedIdentifiers.cocalimo_smcubes_extension#summedDeltaSensitivitiesPerPosition_id"
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//DerivedEntity",
+    "name" : "NettedDeltaSensitivitiesPerRiskFactorAndTenor",
+    "attributes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//OneToManyRelationshipAttribute",
+      "name" : "sensitivities",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#delta_sensitivity_id"
+      },
+      "entity" : {
+        "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+        "$ref" : "//@entities.12"
+      }
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//OneToOneRelationshipAttribute",
+      "name" : "riskFactorID",
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#riskFactorID"
+      },
+      "entity" : {
+        "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+        "$ref" : "//@entities.6"
+      }
+    }, {
+      "name" : "nettedDeltaSensitivities_id",
+      "isPK" : true,
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBDerivedIdentifiers.cocalimo_smcubes_extension#nettedDeltaSensitivities_id"
+      }
+    }, {
+      "name" : "nettedDeltaSensitivity",
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../common/CommonMeasures.cocalimo_smcubes_extension#nettedDeltaSensitivity"
+      }
+    }, {
+      "name" : "tenor",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#number"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBSourceMeasures.cocalimo_smcubes_extension#tenor"
+      }
+    }, {
+      "name" : "GIRRDeltaRiskWeight",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#number"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../girr/girr_delta/GIRRDeltaMeasures.cocalimo_smcubes_extension#GIRRDeltaRiskWeight"
+      }
+    }, {
+      "name" : "weightedGIRRDeltaSensitivity",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#number"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../girr/girr_delta/GIRRDeltaMeasures.cocalimo_smcubes_extension#weightedGIRRDeltaSensitivity"
+      }
+    }, {
+      "name" : "bucket_id",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBDerivedIdentifiers.cocalimo_smcubes_extension#bucketID"
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//DerivedEntity",
+    "name" : "TotalDeltaSensitivityPerBucket",
+    "attributes" : [ {
+      "name" : "totalGIRRDeltaSensitivityPerBucket",
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../girr/girr_delta/GIRRDeltaMeasures.cocalimo_smcubes_extension#totalGIRRDeltaSensitivityPerBucket"
+      }
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//ManyToOneRelationshipAttribute",
+      "name" : "nettedDeltaSensitivities_id",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBDerivedIdentifiers.cocalimo_smcubes_extension#nettedDeltaSensitivities_id"
+      },
+      "entity" : {
+        "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//DerivedEntity",
+        "$ref" : "//@entities.17"
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//DerivedEntity",
+    "name" : "DeltaSensitivityCombinations",
+    "attributes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//OneToOneRelationshipAttribute",
+      "name" : "nettedDeltaSensitivities_id1",
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBDerivedIdentifiers.cocalimo_smcubes_extension#nettedDeltaSensitivities_id"
+      },
+      "entity" : {
+        "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//DerivedEntity",
+        "$ref" : "//@entities.17"
+      }
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//OneToOneRelationshipAttribute",
+      "name" : "nettedDeltaSensitivities_id2",
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBDerivedIdentifiers.cocalimo_smcubes_extension#nettedDeltaSensitivities_id"
+      },
+      "entity" : {
+        "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//DerivedEntity",
+        "$ref" : "//@entities.17"
+      }
+    }, {
+      "name" : "GIRRDeltaCorrelationFactor",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#number"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../girr/girr_delta/GIRRDeltaMeasures.cocalimo_smcubes_extension#GIRRDeltaCorrelationFactor"
+      }
+    }, {
+      "name" : "GIRRDeltaKBInput",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#number"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../girr/girr_delta/GIRRDeltaMeasures.cocalimo_smcubes_extension#GIRRDeltaKBInput"
+      }
+    }, {
+      "name" : "deltaSensitivityCombination_id",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#number"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBDerivedIdentifiers.cocalimo_smcubes_extension#deltaSensitivityCombination_id"
+      }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//DerivedEntity",
+    "name" : "DeltaSensitivitiesCorrelatedAndAggregated",
+    "attributes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//OneToOneRelationshipAttribute",
+      "name" : "deltaSensitivityCombination_id",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBDerivedIdentifiers.cocalimo_smcubes_extension#deltaSensitivityCombination_id"
+      },
+      "entity" : {
+        "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//DerivedEntity",
+        "$ref" : "//@entities.19"
+      }
+    }, {
+      "name" : "GIRRDeltaKBInput_per_bucket",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#number"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../girr/girr_delta/GIRRDeltaMeasures.cocalimo_smcubes_extension#GIRRDeltaKBInputPerBucket"
+      }
+    }, {
+      "name" : "GIRRDeltaKB",
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../girr/girr_delta/GIRRDeltaMeasures.cocalimo_smcubes_extension#GIRRDeltaKB"
+      }
+    } ]
   } ]
 }
