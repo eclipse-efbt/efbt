@@ -27,45 +27,150 @@
         "id" : "RiskFactor",
         "description" : "RiskFactor",
         "name" : "RiskFactor",
+        "incoming" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "//@subProcess/@flowElements.1/@flowElements.7"
+        } ],
         "entity" : {
           "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
           "$ref" : "../frtb_data_model/frtb.data_meta_model#//@entities.3"
         }
       }, {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
-        "id" : "Sensitivity",
-        "description" : "Sensitivity",
-        "name" : "Sensitivity",
+        "id" : "DeltaSensitivity",
+        "description" : "DeltaSensitivity",
+        "name" : "DeltaSensitivity",
+        "incoming" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "//@subProcess/@flowElements.1/@flowElements.10"
+        } ],
         "entity" : {
           "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
           "$ref" : "../frtb_data_model/frtb.data_meta_model#//@entities.4"
         }
       }, {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
-        "id" : "SecurityIssue",
-        "description" : "SecurityIssue",
-        "name" : "SecurityIssue",
-        "entity" : {
-          "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
-          "$ref" : "../frtb_data_model/frtb.data_meta_model#//@entities.2"
-        }
-      }, {
-        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
         "id" : "Position",
         "description" : "Position",
         "name" : "Position",
+        "incoming" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "//@subProcess/@flowElements.1/@flowElements.12"
+        } ],
         "entity" : {
           "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
           "$ref" : "../frtb_data_model/frtb.data_meta_model#//@entities.0"
         }
       }, {
         "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
-        "id" : "Organisation",
-        "description" : "Organisation",
-        "name" : "Organisation",
+        "id" : "Curvature",
+        "description" : "Curvature",
+        "name" : "Curvature",
+        "incoming" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "//@subProcess/@flowElements.1/@flowElements.8"
+        } ],
         "entity" : {
           "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
           "$ref" : "../frtb_data_model/frtb.data_meta_model#//@entities.1"
+        }
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
+        "description" : "GIRRRiskFactor",
+        "name" : "GIRRRiskFactor",
+        "incoming" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "//@subProcess/@flowElements.1/@flowElements.9"
+        } ]
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
+        "id" : "VegaSensitivity",
+        "description" : "VegaSensitivity",
+        "name" : "VegaSensitivity",
+        "incoming" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "//@subProcess/@flowElements.1/@flowElements.11"
+        } ]
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+        "outgoing" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "//@subProcess/@flowElements.1/@flowElements.7"
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "//@subProcess/@flowElements.1/@flowElements.8"
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "//@subProcess/@flowElements.1/@flowElements.9"
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "//@subProcess/@flowElements.1/@flowElements.10"
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "//@subProcess/@flowElements.1/@flowElements.11"
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "//@subProcess/@flowElements.1/@flowElements.12"
+        } ]
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+        "targetRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
+          "$ref" : "RiskFactor"
+        },
+        "sourceRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+          "$ref" : "//@subProcess/@flowElements.1/@flowElements.6"
+        }
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+        "targetRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
+          "$ref" : "Curvature"
+        },
+        "sourceRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+          "$ref" : "//@subProcess/@flowElements.1/@flowElements.6"
+        }
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+        "targetRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
+          "$ref" : "//@subProcess/@flowElements.1/@flowElements.4"
+        },
+        "sourceRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+          "$ref" : "//@subProcess/@flowElements.1/@flowElements.6"
+        }
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+        "targetRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
+          "$ref" : "DeltaSensitivity"
+        },
+        "sourceRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+          "$ref" : "//@subProcess/@flowElements.1/@flowElements.6"
+        }
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+        "targetRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
+          "$ref" : "VegaSensitivity"
+        },
+        "sourceRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+          "$ref" : "//@subProcess/@flowElements.1/@flowElements.6"
+        }
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+        "targetRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
+          "$ref" : "Position"
+        },
+        "sourceRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+          "$ref" : "//@subProcess/@flowElements.1/@flowElements.6"
         }
       } ]
     }, {
