@@ -31,13 +31,40 @@ public interface Data_meta_modelFactory extends EFactory {
 	Attribute createAttribute();
 
 	/**
-	 * Returns a new object of class '<em>Foreign Key Attribute</em>'.
+	 * Returns a new object of class '<em>Relationship Attribute</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Foreign Key Attribute</em>'.
+	 * @return a new object of class '<em>Relationship Attribute</em>'.
 	 * @generated
 	 */
-	ForeignKeyAttribute createForeignKeyAttribute();
+	RelationshipAttribute createRelationshipAttribute();
+
+	/**
+	 * Returns a new object of class '<em>One To One Relationship Attribute</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>One To One Relationship Attribute</em>'.
+	 * @generated
+	 */
+	OneToOneRelationshipAttribute createOneToOneRelationshipAttribute();
+
+	/**
+	 * Returns a new object of class '<em>Many To One Relationship Attribute</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Many To One Relationship Attribute</em>'.
+	 * @generated
+	 */
+	ManyToOneRelationshipAttribute createManyToOneRelationshipAttribute();
+
+	/**
+	 * Returns a new object of class '<em>One To Many Relationship Attribute</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>One To Many Relationship Attribute</em>'.
+	 * @generated
+	 */
+	OneToManyRelationshipAttribute createOneToManyRelationshipAttribute();
 
 	/**
 	 * Returns a new object of class '<em>Entity Module</em>'.

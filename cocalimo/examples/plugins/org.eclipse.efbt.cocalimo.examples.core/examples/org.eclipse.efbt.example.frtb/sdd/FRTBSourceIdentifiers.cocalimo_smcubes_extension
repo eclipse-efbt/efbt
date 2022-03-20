@@ -92,14 +92,34 @@
     "name" : "organisation_id",
     "displayName" : "organisation_id"
   }, {
-    "code" : "sensitivity_id",
-    "description" : "sensitivity_id",
+    "code" : "delta_sensitivity_id",
+    "description" : "delta_sensitivity_id",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
       "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#String"
     },
-    "variable_id" : "sensitivity_id",
-    "name" : "sensitivity_id",
-    "displayName" : "sensitivity_id"
+    "variable_id" : "delta_sensitivity_id",
+    "name" : "delta_sensitivity_id",
+    "displayName" : "delta_sensitivity_id"
+  }, {
+    "code" : "vega_sensitivity_id",
+    "description" : "vega_sensitivity_id",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#String"
+    },
+    "variable_id" : "vega_sensitivity_id",
+    "name" : "vega_sensitivity_id",
+    "displayName" : "vega_sensitivity_id"
+  }, {
+    "code" : "curvature_id",
+    "description" : "curvature_id",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#String"
+    },
+    "variable_id" : "curvature_id",
+    "name" : "curvature_id",
+    "displayName" : "curvature_id"
   } ]
 }

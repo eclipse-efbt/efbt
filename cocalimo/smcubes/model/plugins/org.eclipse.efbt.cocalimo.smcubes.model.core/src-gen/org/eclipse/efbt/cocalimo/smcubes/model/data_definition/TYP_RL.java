@@ -5,6 +5,7 @@ package org.eclipse.efbt.cocalimo.smcubes.model.data_definition;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
 import org.eclipse.emf.common.util.Enumerator;
 
 /**
