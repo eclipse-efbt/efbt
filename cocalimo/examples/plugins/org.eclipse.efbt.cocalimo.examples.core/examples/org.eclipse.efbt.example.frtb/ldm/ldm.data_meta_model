@@ -620,7 +620,7 @@
     } ]
   }, {
     "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//DerivedEntity",
-    "name" : "SummedDeltaSensitivitiesPerPositionAndRiskFactor",
+    "name" : "SummedDeltaSensitivitiesPerPositionAndRiskFactor_derived",
     "attributes" : [ {
       "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//OneToOneRelationshipAttribute",
       "name" : "positionID",
@@ -689,7 +689,7 @@
     } ]
   }, {
     "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//DerivedEntity",
-    "name" : "NettedDeltaSensitivitiesPerRiskFactorAndTenor",
+    "name" : "NettedDeltaSensitivitiesPerRiskFactorAndTenor_derived",
     "attributes" : [ {
       "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//OneToManyRelationshipAttribute",
       "name" : "sensitivities",
@@ -772,7 +772,7 @@
     } ]
   }, {
     "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//DerivedEntity",
-    "name" : "TotalDeltaSensitivityPerBucket",
+    "name" : "TotalDeltaSensitivityPerBucket_derived",
     "attributes" : [ {
       "name" : "totalGIRRDeltaSensitivityPerBucket",
       "variable" : {
@@ -797,7 +797,7 @@
     } ]
   }, {
     "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//DerivedEntity",
-    "name" : "DeltaSensitivityCombinations",
+    "name" : "DeltaSensitivityCombinations_derived",
     "attributes" : [ {
       "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//OneToOneRelationshipAttribute",
       "name" : "nettedDeltaSensitivities_id1",
@@ -853,7 +853,7 @@
     } ]
   }, {
     "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//DerivedEntity",
-    "name" : "DeltaSensitivitiesCorrelatedAndAggregated",
+    "name" : "DeltaSensitivitiesCorrelatedAndAggregated_derived",
     "attributes" : [ {
       "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//OneToOneRelationshipAttribute",
       "name" : "deltaSensitivityCombination_id",
@@ -885,6 +885,38 @@
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
         "$ref" : "../girr/girr_delta/GIRRDeltaMeasures.cocalimo_smcubes_extension#GIRRDeltaKB"
       }
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//GeneratedEntity",
+    "name" : "OUTPUT_LAYER_GIRR_DELTA_RISK",
+    "attributes" : [ {
+      "name" : "Base"
+    }, {
+      "name" : "MainCatagory"
+    }, {
+      "name" : "ApproachForPrudentialPurposes"
+    }, {
+      "name" : "DeltaVegaOrCurvatureRisk"
+    }, {
+      "name" : "TypeAndNatureOfSensitivity"
+    }, {
+      "name" : "PositionInTheInstrument"
+    }, {
+      "name" : "PrudentialPortfolio"
+    }, {
+      "name" : "ContingentScenario"
+    }, {
+      "name" : "HypotheticalValueUnderSpecificAssumptions"
+    }, {
+      "name" : "TypeOfRisk"
+    }, {
+      "name" : "MarketRiskPortfolio"
+    }, {
+      "name" : "Instrument"
+    }, {
+      "name" : "SensitivityToDeltaRiskFactors"
+    }, {
+      "name" : "OwnFundsRequirements"
     } ]
   } ]
 }
