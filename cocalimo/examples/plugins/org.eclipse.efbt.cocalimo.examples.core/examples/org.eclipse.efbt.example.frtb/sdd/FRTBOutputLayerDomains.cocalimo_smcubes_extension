@@ -66,13 +66,6 @@
     "name" : "ContingentScenario",
     "displayName" : "ContingentScenario"
   }, {
-    "code" : "HypotheticalValueUnderSpecificAssumptions",
-    "data_type" : "String",
-    "description" : "HypotheticalValueUnderSpecificAssumptions",
-    "domain_id" : "HypotheticalValueUnderSpecificAssumptions",
-    "name" : "HypotheticalValueUnderSpecificAssumptions",
-    "displayName" : "HypotheticalValueUnderSpecificAssumptions"
-  }, {
     "code" : "TypeOfRisk",
     "data_type" : "String",
     "description" : "TypeOfRisk",
@@ -89,12 +82,12 @@
     "name" : "MarketRiskPortfolio",
     "displayName" : "MarketRiskPortfolio"
   }, {
-    "code" : "MarketRiskPortfolio",
+    "code" : "Instrument",
     "data_type" : "String",
-    "description" : "MarketRiskPortfolio",
-    "domain_id" : "MarketRiskPortfolio",
+    "description" : "Instrument",
+    "domain_id" : "Instrument",
     "is_enumerated" : true,
-    "name" : "MarketRiskPortfolio",
-    "displayName" : "MarketRiskPortfolio"
+    "name" : "Instrument",
+    "displayName" : "Instrument"
   } ]
 }

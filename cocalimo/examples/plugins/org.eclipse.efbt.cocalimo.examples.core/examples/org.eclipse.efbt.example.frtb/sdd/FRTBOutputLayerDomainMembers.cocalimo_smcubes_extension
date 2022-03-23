@@ -1,0 +1,155 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/cocalimo_smcubes_extension#//MemberModule",
+  "name" : "FRTBOutputLayerDomainMembers",
+  "members" : [ {
+    "code" : "SensitivitiesBasedMethod",
+    "description" : "SensitivitiesBasedMethod",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#ApproachForPrudentialPurposes"
+    },
+    "member_id" : "SensitivitiesBasedMethod",
+    "name" : "SensitivitiesBasedMethod",
+    "displayName" : "SensitivitiesBasedMethod"
+  }, {
+    "code" : "MethodToDetermineTheDefaultRiskCharge",
+    "description" : "MethodToDetermineTheDefaultRiskCharge",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#ApproachForPrudentialPurposes"
+    },
+    "member_id" : "MethodToDetermineTheDefaultRiskCharge",
+    "name" : "MethodToDetermineTheDefaultRiskCharge",
+    "displayName" : "MethodToDetermineTheDefaultRiskCharge"
+  }, {
+    "code" : "MethodToDetermineTheResidualRiskCharge",
+    "description" : "MethodToDetermineTheResidualRiskCharge",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#ApproachForPrudentialPurposes"
+    },
+    "member_id" : "MethodToDetermineTheResidualRiskCharge",
+    "name" : "MethodToDetermineTheResidualRiskCharge",
+    "displayName" : "MethodToDetermineTheResidualRiskCharge"
+  }, {
+    "code" : "MemorandumItems",
+    "description" : "MemorandumItems",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#Base"
+    },
+    "member_id" : "MemorandumItems",
+    "name" : "MemorandumItems",
+    "displayName" : "MemorandumItems"
+  }, {
+    "code" : "Exposures",
+    "description" : "Exposures",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#Base"
+    },
+    "member_id" : "Exposures",
+    "name" : "Exposures",
+    "displayName" : "Exposures"
+  }, {
+    "code" : "LowCorrelationScenario",
+    "description" : "LowCorrelationScenario",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#ContingentScenario"
+    },
+    "member_id" : "LowCorrelationScenario",
+    "name" : "LowCorrelationScenario",
+    "displayName" : "LowCorrelationScenario"
+  }, {
+    "code" : "HighCorrelationScenario",
+    "description" : "HighCorrelationScenario",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#ContingentScenario"
+    },
+    "member_id" : "HighCorrelationScenario",
+    "name" : "HighCorrelationScenario",
+    "displayName" : "HighCorrelationScenario"
+  }, {
+    "code" : "MediumCorrelationScenario",
+    "description" : "MediumCorrelationScenario",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#ContingentScenario"
+    },
+    "member_id" : "MediumCorrelationScenario",
+    "name" : "MediumCorrelationScenario",
+    "displayName" : "MediumCorrelationScenario"
+  }, {
+    "code" : "DeltaRisk",
+    "description" : "DeltaRisk",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#DeltaVegaOrCurvatureRisk"
+    },
+    "member_id" : "DeltaRisk",
+    "name" : "DeltaRisk",
+    "displayName" : "DeltaRisk"
+  }, {
+    "code" : "VegaRisk",
+    "description" : "VegaRisk",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#DeltaVegaOrCurvatureRisk"
+    },
+    "member_id" : "VegaRisk",
+    "name" : "VegaRisk",
+    "displayName" : "VegaRisk"
+  }, {
+    "code" : "Curvature risk",
+    "description" : "Curvature risk",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#DeltaVegaOrCurvatureRisk"
+    },
+    "member_id" : "Curvature risk",
+    "name" : "Curvature risk",
+    "displayName" : "Curvature risk"
+  }, {
+    "code" : "DeltaVegaAndCurvatureRisk",
+    "description" : "DeltaVegaAndCurvatureRisk",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#DeltaVegaOrCurvatureRisk"
+    },
+    "member_id" : "DeltaVegaAndCurvatureRisk",
+    "name" : "DeltaVegaAndCurvatureRisk",
+    "displayName" : "DeltaVegaAndCurvatureRisk"
+  }, {
+    "code" : "InstrumentsOtherThanSecuritisationPositions",
+    "description" : "InstrumentsOtherThanSecuritisationPositions",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#Instrument"
+    },
+    "member_id" : "InstrumentsOtherThanSecuritisationPositions",
+    "name" : "InstrumentsOtherThanSecuritisationPositions",
+    "displayName" : "InstrumentsOtherThanSecuritisationPositions"
+  }, {
+    "code" : "SecuritisationPositions",
+    "description" : "SecuritisationPositions",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#Instrument"
+    },
+    "member_id" : "SecuritisationPositions",
+    "name" : "SecuritisationPositions",
+    "displayName" : "SecuritisationPositions"
+  }, {
+    "code" : "InstrumentsWithExoticUnderlyings",
+    "description" : "InstrumentsWithExoticUnderlyings",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#Instrument"
+    },
+    "member_id" : "InstrumentsWithExoticUnderlyings",
+    "name" : "InstrumentsWithExoticUnderlyings",
+    "displayName" : "InstrumentsWithExoticUnderlyings"
+  } ]
+}

@@ -890,33 +890,93 @@
     "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//GeneratedEntity",
     "name" : "OUTPUT_LAYER_GIRR_DELTA_RISK",
     "attributes" : [ {
-      "name" : "Base"
+      "name" : "Base",
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBOutputLayerDimensions.cocalimo_smcubes_extension#Base"
+      }
     }, {
-      "name" : "MainCatagory"
+      "name" : "MainCatagory",
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBOutputLayerDimensions.cocalimo_smcubes_extension#MainCatagory"
+      }
     }, {
-      "name" : "ApproachForPrudentialPurposes"
+      "name" : "ApproachForPrudentialPurposes",
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBOutputLayerDimensions.cocalimo_smcubes_extension#ApproachForPrudentialPurposes"
+      }
     }, {
-      "name" : "DeltaVegaOrCurvatureRisk"
+      "name" : "DeltaVegaOrCurvatureRisk",
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBOutputLayerDimensions.cocalimo_smcubes_extension#DeltaVegaOrCurvatureRisk"
+      }
     }, {
-      "name" : "TypeAndNatureOfSensitivity"
+      "name" : "TypeAndNatureOfSensitivity",
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBOutputLayerDimensions.cocalimo_smcubes_extension#TypeAndNatureOfSensitivity"
+      }
     }, {
-      "name" : "PositionInTheInstrument"
+      "name" : "PositionInTheInstrument",
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBOutputLayerDimensions.cocalimo_smcubes_extension#PositionInTheInstrument"
+      }
     }, {
-      "name" : "PrudentialPortfolio"
+      "name" : "PrudentialPortfolio",
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBOutputLayerDimensions.cocalimo_smcubes_extension#PrudentialPortfolio"
+      }
     }, {
-      "name" : "ContingentScenario"
+      "name" : "ContingentScenario",
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBOutputLayerDimensions.cocalimo_smcubes_extension#ContingentScenario"
+      }
     }, {
-      "name" : "HypotheticalValueUnderSpecificAssumptions"
+      "name" : "HypotheticalValueUnderSpecificAssumptions",
+      "classifier" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
+        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#boolean"
+      },
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBOutputLayerDimensions.cocalimo_smcubes_extension#HypotheticalValueUnderSpecificAssumptions"
+      }
     }, {
-      "name" : "TypeOfRisk"
+      "name" : "TypeOfRisk",
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBOutputLayerDimensions.cocalimo_smcubes_extension#TypeOfRisk"
+      }
     }, {
-      "name" : "MarketRiskPortfolio"
+      "name" : "MarketRiskPortfolio",
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBOutputLayerDimensions.cocalimo_smcubes_extension#MarketRiskPortfolio"
+      }
     }, {
-      "name" : "Instrument"
+      "name" : "Instrument",
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBOutputLayerDimensions.cocalimo_smcubes_extension#Instrument"
+      }
     }, {
-      "name" : "SensitivityToDeltaRiskFactors"
+      "name" : "SensitivityToDeltaRiskFactors",
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBOutputLayerMeasures.cocalimo_smcubes_extension#SensitivityToDeltaRiskFactors"
+      }
     }, {
-      "name" : "OwnFundsRequirements"
+      "name" : "OwnFundsRequirements",
+      "variable" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
+        "$ref" : "../sdd/FRTBOutputLayerMeasures.cocalimo_smcubes_extension#OwnFundsRequirements"
+      }
     } ]
   } ]
 }
