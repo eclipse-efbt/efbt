@@ -151,5 +151,185 @@
     "member_id" : "InstrumentsWithExoticUnderlyings",
     "name" : "InstrumentsWithExoticUnderlyings",
     "displayName" : "InstrumentsWithExoticUnderlyings"
+  }, {
+    "code" : "AlternativeCorrelationTradingPortfolio",
+    "description" : "AlternativeCorrelationTradingPortfolio",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#Instrument"
+    },
+    "member_id" : "AlternativeCorrelationTradingPortfolio",
+    "name" : "AlternativeCorrelationTradingPortfolio",
+    "displayName" : "AlternativeCorrelationTradingPortfolio"
+  }, {
+    "code" : "InstrumentsSubjectToMarketRisk",
+    "description" : "InstrumentsSubjectToMarketRisk",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#MainCatagory"
+    },
+    "member_id" : "InstrumentsSubjectToMarketRisk",
+    "name" : "InstrumentsSubjectToMarketRisk",
+    "displayName" : "InstrumentsSubjectToMarketRisk"
+  }, {
+    "code" : "BankingAndTradingBook",
+    "description" : "BankingAndTradingBook",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#PrudentialPortfolio"
+    },
+    "member_id" : "BankingAndTradingBook",
+    "name" : "BankingAndTradingBook",
+    "displayName" : "BankingAndTradingBook"
+  }, {
+    "code" : "TradingBook",
+    "description" : "TradingBook",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#PrudentialPortfolio"
+    },
+    "member_id" : "TradingBook",
+    "name" : "TradingBook",
+    "displayName" : "TradingBook"
+  }, {
+    "code" : "LongPosition",
+    "description" : "LongPosition",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#PositionInTheInstrument"
+    },
+    "member_id" : "LongPosition",
+    "name" : "LongPosition",
+    "displayName" : "LongPosition"
+  }, {
+    "code" : "ShortPosition",
+    "description" : "ShortPosition",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#PositionInTheInstrument"
+    },
+    "member_id" : "ShortPosition",
+    "name" : "ShortPosition",
+    "displayName" : "ShortPosition"
+  }, {
+    "code" : "NonACTP",
+    "description" : "NonACTP",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#MarketRiskPortfolio"
+    },
+    "member_id" : "NonACTP",
+    "name" : "NonACTP",
+    "displayName" : "NonACTP"
+  }, {
+    "code" : "ACTP",
+    "description" : "ACTP",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#MarketRiskPortfolio"
+    },
+    "member_id" : "ACTP",
+    "name" : "ACTP",
+    "displayName" : "ACTP"
+  }, {
+    "code" : "PositiveSensitivityGrossPerRiskClassUnweighted",
+    "description" : "PositiveSensitivityGrossPerRiskClassUnweighted",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#TypeAndNatureOfSensitivity"
+    },
+    "member_id" : "PositiveSensitivityGrossPerRiskClassUnweighted",
+    "name" : "PositiveSensitivityGrossPerRiskClassUnweighted",
+    "displayName" : "PositiveSensitivityGrossPerRiskClassUnweighted"
+  }, {
+    "code" : "NegativeSensitivityGrossPerRiskClassUnweighted",
+    "description" : "NegativeSensitivityGrossPerRiskClassUnweighted",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#TypeAndNatureOfSensitivity"
+    },
+    "member_id" : "NegativeSensitivityGrossPerRiskClassUnweighted",
+    "name" : "NegativeSensitivityGrossPerRiskClassUnweighted",
+    "displayName" : "NegativeSensitivityGrossPerRiskClassUnweighted"
+  }, {
+    "code" : "SensitivityNetPerRiskClassUnweighted",
+    "description" : "SensitivityNetPerRiskClassUnweighted",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#TypeAndNatureOfSensitivity"
+    },
+    "member_id" : "SensitivityNetPerRiskClassUnweighted",
+    "name" : "SensitivityNetPerRiskClassUnweighted",
+    "displayName" : "SensitivityNetPerRiskClassUnweighted"
+  }, {
+    "code" : "GIRR",
+    "description" : "GIRR",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#TypeOfRisk"
+    },
+    "member_id" : "GIRR",
+    "name" : "GIRR",
+    "displayName" : "GIRR"
+  }, {
+    "code" : "CSR",
+    "description" : "CSR",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#TypeOfRisk"
+    },
+    "member_id" : "CSR",
+    "name" : "CSR",
+    "displayName" : "CSR"
+  }, {
+    "code" : "EquityRisk",
+    "description" : "EquityRisk",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#TypeOfRisk"
+    },
+    "member_id" : "EquityRisk",
+    "name" : "EquityRisk",
+    "displayName" : "EquityRisk"
+  }, {
+    "code" : "ForeignExchangeRisk",
+    "description" : "ForeignExchangeRisk",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#TypeOfRisk"
+    },
+    "member_id" : "ForeignExchangeRisk",
+    "name" : "ForeignExchangeRisk",
+    "displayName" : "ForeignExchangeRisk"
+  }, {
+    "code" : "DefaultRisk",
+    "description" : "DefaultRisk",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#TypeOfRisk"
+    },
+    "member_id" : "DefaultRisk",
+    "name" : "DefaultRisk",
+    "displayName" : "DefaultRisk"
+  }, {
+    "code" : "ResidualRisk",
+    "description" : "ResidualRisk",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#TypeOfRisk"
+    },
+    "member_id" : "ResidualRisk",
+    "name" : "ResidualRisk",
+    "displayName" : "ResidualRisk"
+  }, {
+    "code" : "CommodityRisk",
+    "description" : "CommodityRisk",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#TypeOfRisk"
+    },
+    "member_id" : "CommodityRisk",
+    "name" : "CommodityRisk",
+    "displayName" : "CommodityRisk"
   } ]
 }
