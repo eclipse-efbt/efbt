@@ -58,7 +58,7 @@ public class Sql_liteFactoryImpl extends EFactoryImpl implements Sql_liteFactory
 		switch (eClass.getClassifierID()) {
 			case Sql_litePackage.VIEW: return createView();
 			case Sql_litePackage.SELECT_CLAUSE: return createSelectClause();
-			case Sql_litePackage.COLUMN_AS_FUNCTION: return createColumnAsFunction();
+			case Sql_litePackage.SELECT_COLUMN: return createSelectColumn();
 			case Sql_litePackage.COLUMN: return createColumn();
 			case Sql_litePackage.WHERE_CLAUSE: return createWhereClause();
 			case Sql_litePackage.TABLE: return createTable();
@@ -97,9 +97,9 @@ public class Sql_liteFactoryImpl extends EFactoryImpl implements Sql_liteFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ColumnAsFunction createColumnAsFunction() {
-		ColumnAsFunctionImpl columnAsFunction = new ColumnAsFunctionImpl();
-		return columnAsFunction;
+	public SelectColumn createSelectColumn() {
+		SelectColumnImpl selectColumn = new SelectColumnImpl();
+		return selectColumn;
 	}
 
 	/**

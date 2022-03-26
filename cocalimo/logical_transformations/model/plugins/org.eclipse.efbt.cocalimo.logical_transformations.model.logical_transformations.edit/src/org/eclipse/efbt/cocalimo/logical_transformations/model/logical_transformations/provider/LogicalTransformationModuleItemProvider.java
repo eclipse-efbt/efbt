@@ -100,6 +100,7 @@ public class LogicalTransformationModuleItemProvider extends ModuleItemProvider 
 			childrenFeatures.add(Logical_transformationsPackage.Literals.LOGICAL_TRANSFORMATION_MODULE__SCENARIO_TAGS);
 			childrenFeatures.add(Logical_transformationsPackage.Literals.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESS);
 			childrenFeatures.add(Logical_transformationsPackage.Literals.LOGICAL_TRANSFORMATION_MODULE__REQUIREMENTS);
+			childrenFeatures.add(Logical_transformationsPackage.Literals.LOGICAL_TRANSFORMATION_MODULE__SELECTION_LAYERS);
 		}
 		return childrenFeatures;
 	}
@@ -159,6 +160,7 @@ public class LogicalTransformationModuleItemProvider extends ModuleItemProvider 
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SCENARIO_TAGS:
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESS:
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__REQUIREMENTS:
+			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SELECTION_LAYERS:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
@@ -195,6 +197,11 @@ public class LogicalTransformationModuleItemProvider extends ModuleItemProvider 
 			(createChildParameter
 				(Logical_transformationsPackage.Literals.LOGICAL_TRANSFORMATION_MODULE__REQUIREMENTS,
 				 Requirements_textFactory.eINSTANCE.createRequirementsModule()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(Logical_transformationsPackage.Literals.LOGICAL_TRANSFORMATION_MODULE__SELECTION_LAYERS,
+				 Logical_transformationsFactory.eINSTANCE.createSelectionLayer()));
 	}
 
 	/**

@@ -2,6 +2,7 @@
  */
 package org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl;
 
+import java.util.Collection;
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.GeneratedEntitySQL;
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.Sql_litePackage;
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.View;
@@ -10,11 +11,13 @@ import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.GeneratedEntity;
 
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -42,14 +45,14 @@ public class GeneratedEntitySQLImpl extends MinimalEObjectImpl.Container impleme
 	protected GeneratedEntity generatedEntity;
 
 	/**
-	 * The cached value of the '{@link #getView() <em>View</em>}' reference.
+	 * The cached value of the '{@link #getView() <em>View</em>}' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getView()
 	 * @generated
 	 * @ordered
 	 */
-	protected View view;
+	protected EList<View> view;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -113,37 +116,11 @@ public class GeneratedEntitySQLImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public View getView() {
-		if (view != null && view.eIsProxy()) {
-			InternalEObject oldView = (InternalEObject)view;
-			view = (View)eResolveProxy(oldView);
-			if (view != oldView) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Sql_litePackage.GENERATED_ENTITY_SQL__VIEW, oldView, view));
-			}
+	public EList<View> getView() {
+		if (view == null) {
+			view = new EObjectResolvingEList<View>(View.class, this, Sql_litePackage.GENERATED_ENTITY_SQL__VIEW);
 		}
 		return view;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public View basicGetView() {
-		return view;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setView(View newView) {
-		View oldView = view;
-		view = newView;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, Sql_litePackage.GENERATED_ENTITY_SQL__VIEW, oldView, view));
 	}
 
 	/**
@@ -158,8 +135,7 @@ public class GeneratedEntitySQLImpl extends MinimalEObjectImpl.Container impleme
 				if (resolve) return getGeneratedEntity();
 				return basicGetGeneratedEntity();
 			case Sql_litePackage.GENERATED_ENTITY_SQL__VIEW:
-				if (resolve) return getView();
-				return basicGetView();
+				return getView();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -169,6 +145,7 @@ public class GeneratedEntitySQLImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
@@ -176,7 +153,8 @@ public class GeneratedEntitySQLImpl extends MinimalEObjectImpl.Container impleme
 				setGeneratedEntity((GeneratedEntity)newValue);
 				return;
 			case Sql_litePackage.GENERATED_ENTITY_SQL__VIEW:
-				setView((View)newValue);
+				getView().clear();
+				getView().addAll((Collection<? extends View>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -194,7 +172,7 @@ public class GeneratedEntitySQLImpl extends MinimalEObjectImpl.Container impleme
 				setGeneratedEntity((GeneratedEntity)null);
 				return;
 			case Sql_litePackage.GENERATED_ENTITY_SQL__VIEW:
-				setView((View)null);
+				getView().clear();
 				return;
 		}
 		super.eUnset(featureID);
@@ -211,7 +189,7 @@ public class GeneratedEntitySQLImpl extends MinimalEObjectImpl.Container impleme
 			case Sql_litePackage.GENERATED_ENTITY_SQL__GENERATED_ENTITY:
 				return generatedEntity != null;
 			case Sql_litePackage.GENERATED_ENTITY_SQL__VIEW:
-				return view != null;
+				return view != null && !view.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

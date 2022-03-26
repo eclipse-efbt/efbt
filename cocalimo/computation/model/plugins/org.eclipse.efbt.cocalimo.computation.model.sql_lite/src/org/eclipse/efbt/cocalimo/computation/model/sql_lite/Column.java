@@ -2,7 +2,7 @@
  */
 package org.eclipse.efbt.cocalimo.computation.model.sql_lite;
 
-import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -27,12 +27,12 @@ public interface Column extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Attribute</em>' reference.
-	 * @see #setAttribute(EAttribute)
+	 * @see #setAttribute(Attribute)
 	 * @see org.eclipse.efbt.cocalimo.computation.model.sql_lite.Sql_litePackage#getColumn_Attribute()
 	 * @model
 	 * @generated
 	 */
-	EAttribute getAttribute();
+	Attribute getAttribute();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.Column#getAttribute <em>Attribute</em>}' reference.
@@ -42,6 +42,6 @@ public interface Column extends EObject {
 	 * @see #getAttribute()
 	 * @generated
 	 */
-	void setAttribute(EAttribute value);
+	void setAttribute(Attribute value);
 
 } // Column

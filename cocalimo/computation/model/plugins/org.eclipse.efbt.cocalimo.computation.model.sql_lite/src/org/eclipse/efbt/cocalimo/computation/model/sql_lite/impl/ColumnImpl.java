@@ -5,9 +5,8 @@ package org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl;
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.Column;
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.Sql_litePackage;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute;
 import org.eclipse.emf.common.notify.Notification;
-
-import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
@@ -36,7 +35,7 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 	 * @generated
 	 * @ordered
 	 */
-	protected EAttribute attribute;
+	protected Attribute attribute;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -62,10 +61,10 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getAttribute() {
+	public Attribute getAttribute() {
 		if (attribute != null && attribute.eIsProxy()) {
 			InternalEObject oldAttribute = (InternalEObject)attribute;
-			attribute = (EAttribute)eResolveProxy(oldAttribute);
+			attribute = (Attribute)eResolveProxy(oldAttribute);
 			if (attribute != oldAttribute) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Sql_litePackage.COLUMN__ATTRIBUTE, oldAttribute, attribute));
@@ -79,7 +78,7 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute basicGetAttribute() {
+	public Attribute basicGetAttribute() {
 		return attribute;
 	}
 
@@ -88,8 +87,8 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setAttribute(EAttribute newAttribute) {
-		EAttribute oldAttribute = attribute;
+	public void setAttribute(Attribute newAttribute) {
+		Attribute oldAttribute = attribute;
 		attribute = newAttribute;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, Sql_litePackage.COLUMN__ATTRIBUTE, oldAttribute, attribute));
@@ -119,7 +118,7 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Sql_litePackage.COLUMN__ATTRIBUTE:
-				setAttribute((EAttribute)newValue);
+				setAttribute((Attribute)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -134,7 +133,7 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Sql_litePackage.COLUMN__ATTRIBUTE:
-				setAttribute((EAttribute)null);
+				setAttribute((Attribute)null);
 				return;
 		}
 		super.eUnset(featureID);

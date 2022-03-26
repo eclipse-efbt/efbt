@@ -118,26 +118,26 @@ public class Sql_liteItemProviderAdapterFactory extends Sql_liteAdapterFactory i
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.ColumnAsFunction} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.SelectColumn} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ColumnAsFunctionItemProvider columnAsFunctionItemProvider;
+	protected SelectColumnItemProvider selectColumnItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.ColumnAsFunction}.
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.SelectColumn}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	public Adapter createColumnAsFunctionAdapter() {
-		if (columnAsFunctionItemProvider == null) {
-			columnAsFunctionItemProvider = new ColumnAsFunctionItemProvider(this);
+	public Adapter createSelectColumnAdapter() {
+		if (selectColumnItemProvider == null) {
+			selectColumnItemProvider = new SelectColumnItemProvider(this);
 		}
 
-		return columnAsFunctionItemProvider;
+		return selectColumnItemProvider;
 	}
 
 	/**
@@ -425,7 +425,7 @@ public class Sql_liteItemProviderAdapterFactory extends Sql_liteAdapterFactory i
 	public void dispose() {
 		if (viewItemProvider != null) viewItemProvider.dispose();
 		if (selectClauseItemProvider != null) selectClauseItemProvider.dispose();
-		if (columnAsFunctionItemProvider != null) columnAsFunctionItemProvider.dispose();
+		if (selectColumnItemProvider != null) selectColumnItemProvider.dispose();
 		if (columnItemProvider != null) columnItemProvider.dispose();
 		if (whereClauseItemProvider != null) whereClauseItemProvider.dispose();
 		if (tableItemProvider != null) tableItemProvider.dispose();

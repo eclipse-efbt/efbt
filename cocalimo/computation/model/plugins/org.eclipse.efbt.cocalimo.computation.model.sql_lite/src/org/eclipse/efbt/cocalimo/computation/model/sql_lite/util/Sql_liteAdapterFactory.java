@@ -80,10 +80,6 @@ public class Sql_liteAdapterFactory extends AdapterFactoryImpl {
 				return createSelectColumnAdapter();
 			}
 			@Override
-			public Adapter caseColumnAsFunction(ColumnAsFunction object) {
-				return createColumnAsFunctionAdapter();
-			}
-			@Override
 			public Adapter caseColumn(Column object) {
 				return createColumnAdapter();
 			}
@@ -178,20 +174,6 @@ public class Sql_liteAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createSelectColumnAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.ColumnAsFunction <em>Column As Function</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.sql_lite.ColumnAsFunction
-	 * @generated
-	 */
-	public Adapter createColumnAsFunctionAdapter() {
 		return null;
 	}
 

@@ -1224,5 +1224,12 @@
         "$ref" : "//@subProcess/@flowElements.0"
       }
     } ]
-  }
+  },
+  "selectionLayers" : [ {
+    "name" : "OUTPUT_LAYER_GIRR_DELTA_SENSITIVITY",
+    "generatedEntity" : {
+      "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//GeneratedEntity",
+      "$ref" : "../ldm/ldm.data_meta_model#//@entities.21"
+    }
+  } ]
 }

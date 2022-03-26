@@ -3,7 +3,6 @@
 package org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl;
 
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.Column;
-import org.eclipse.efbt.cocalimo.computation.model.sql_lite.ColumnAsFunction;
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.FromClause;
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.GeneratedEntitySQL;
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.GeneratedEntitySQLModule;
@@ -23,6 +22,7 @@ import org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage;
 
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
@@ -57,13 +57,6 @@ public class Sql_litePackageImpl extends EPackageImpl implements Sql_litePackage
 	 * @generated
 	 */
 	private EClass selectColumnEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass columnAsFunctionEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -265,17 +258,8 @@ public class Sql_litePackageImpl extends EPackageImpl implements Sql_litePackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getColumnAsFunction() {
-		return columnAsFunctionEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getColumnAsFunction_Column() {
-		return (EReference)columnAsFunctionEClass.getEStructuralFeatures().get(0);
+	public EReference getSelectColumn_MemberAsConstant() {
+		return (EReference)selectColumnEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -330,6 +314,15 @@ public class Sql_litePackageImpl extends EPackageImpl implements Sql_litePackage
 	 */
 	public EClass getSQLEntity() {
 		return sqlEntityEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getSQLEntity_Name() {
+		return (EAttribute)sqlEntityEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -451,9 +444,7 @@ public class Sql_litePackageImpl extends EPackageImpl implements Sql_litePackage
 
 		selectColumnEClass = createEClass(SELECT_COLUMN);
 		createEReference(selectColumnEClass, SELECT_COLUMN__AS);
-
-		columnAsFunctionEClass = createEClass(COLUMN_AS_FUNCTION);
-		createEReference(columnAsFunctionEClass, COLUMN_AS_FUNCTION__COLUMN);
+		createEReference(selectColumnEClass, SELECT_COLUMN__MEMBER_AS_CONSTANT);
 
 		columnEClass = createEClass(COLUMN);
 		createEReference(columnEClass, COLUMN__ATTRIBUTE);
@@ -464,6 +455,7 @@ public class Sql_litePackageImpl extends EPackageImpl implements Sql_litePackage
 		createEReference(tableEClass, TABLE__ENTITY);
 
 		sqlEntityEClass = createEClass(SQL_ENTITY);
+		createEAttribute(sqlEntityEClass, SQL_ENTITY__NAME);
 
 		fromClauseEClass = createEClass(FROM_CLAUSE);
 		createEReference(fromClauseEClass, FROM_CLAUSE__SQL_ENTITIES);
@@ -503,8 +495,9 @@ public class Sql_litePackageImpl extends EPackageImpl implements Sql_litePackage
 		setNsURI(eNS_URI);
 
 		// Obtain other dependent packages
-		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
 		Data_meta_modelPackage theData_meta_modelPackage = (Data_meta_modelPackage)EPackage.Registry.INSTANCE.getEPackage(Data_meta_modelPackage.eNS_URI);
+		CorePackage theCorePackage = (CorePackage)EPackage.Registry.INSTANCE.getEPackage(CorePackage.eNS_URI);
+		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
 		Module_managementPackage theModule_managementPackage = (Module_managementPackage)EPackage.Registry.INSTANCE.getEPackage(Module_managementPackage.eNS_URI);
 
 		// Create type parameters
@@ -513,6 +506,7 @@ public class Sql_litePackageImpl extends EPackageImpl implements Sql_litePackage
 
 		// Add supertypes to classes
 		viewEClass.getESuperTypes().add(this.getSQLEntity());
+		selectColumnEClass.getESuperTypes().add(this.getColumn());
 		tableEClass.getESuperTypes().add(this.getSQLEntity());
 		sqlEntityModuleEClass.getESuperTypes().add(theModule_managementPackage.getModule());
 		generatedEntitySQLModuleEClass.getESuperTypes().add(theModule_managementPackage.getModule());
@@ -526,14 +520,12 @@ public class Sql_litePackageImpl extends EPackageImpl implements Sql_litePackage
 		initEClass(selectClauseEClass, SelectClause.class, "SelectClause", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getSelectClause_Columns(), this.getSelectColumn(), null, "columns", null, 0, -1, SelectClause.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(selectColumnEClass, SelectColumn.class, "SelectColumn", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getSelectColumn_As(), theEcorePackage.getEAttribute(), null, "as", null, 0, 1, SelectColumn.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(columnAsFunctionEClass, ColumnAsFunction.class, "ColumnAsFunction", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getColumnAsFunction_Column(), theEcorePackage.getETypedElement(), null, "column", null, 0, 1, ColumnAsFunction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(selectColumnEClass, SelectColumn.class, "SelectColumn", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getSelectColumn_As(), theData_meta_modelPackage.getAttribute(), null, "as", null, 0, 1, SelectColumn.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSelectColumn_MemberAsConstant(), theCorePackage.getMEMBER(), null, "memberAsConstant", null, 0, 1, SelectColumn.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(columnEClass, Column.class, "Column", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getColumn_Attribute(), theEcorePackage.getEAttribute(), null, "attribute", null, 0, 1, Column.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getColumn_Attribute(), theData_meta_modelPackage.getAttribute(), null, "attribute", null, 0, 1, Column.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(whereClauseEClass, WhereClause.class, "WhereClause", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -541,6 +533,7 @@ public class Sql_litePackageImpl extends EPackageImpl implements Sql_litePackage
 		initEReference(getTable_Entity(), theData_meta_modelPackage.getEntity(), null, "entity", null, 0, 1, Table.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(sqlEntityEClass, SQLEntity.class, "SQLEntity", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getSQLEntity_Name(), theEcorePackage.getEString(), "name", null, 0, 1, SQLEntity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(fromClauseEClass, FromClause.class, "FromClause", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getFromClause_SqlEntities(), this.getSQLEntity(), null, "sqlEntities", null, 0, 1, FromClause.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -550,7 +543,7 @@ public class Sql_litePackageImpl extends EPackageImpl implements Sql_litePackage
 
 		initEClass(generatedEntitySQLEClass, GeneratedEntitySQL.class, "GeneratedEntitySQL", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getGeneratedEntitySQL_GeneratedEntity(), theData_meta_modelPackage.getGeneratedEntity(), null, "generatedEntity", null, 0, 1, GeneratedEntitySQL.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getGeneratedEntitySQL_View(), this.getView(), null, "view", null, 0, 1, GeneratedEntitySQL.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getGeneratedEntitySQL_View(), this.getView(), null, "view", null, 0, -1, GeneratedEntitySQL.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(generatedEntitySQLModuleEClass, GeneratedEntitySQLModule.class, "GeneratedEntitySQLModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getGeneratedEntitySQLModule_GeneratedEntitySQLs(), this.getGeneratedEntitySQL(), null, "GeneratedEntitySQLs", null, 0, -1, GeneratedEntitySQLModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

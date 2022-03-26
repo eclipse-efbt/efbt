@@ -172,13 +172,22 @@ public interface Logical_transformationsPackage extends EPackage {
 	int LOGICAL_TRANSFORMATION_MODULE__TEST_MODULES = Module_managementPackage.MODULE_FEATURE_COUNT + 4;
 
 	/**
+	 * The feature id for the '<em><b>Selection Layers</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LOGICAL_TRANSFORMATION_MODULE__SELECTION_LAYERS = Module_managementPackage.MODULE_FEATURE_COUNT + 5;
+
+	/**
 	 * The number of structural features of the '<em>Logical Transformation Module</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int LOGICAL_TRANSFORMATION_MODULE_FEATURE_COUNT = Module_managementPackage.MODULE_FEATURE_COUNT + 5;
+	int LOGICAL_TRANSFORMATION_MODULE_FEATURE_COUNT = Module_managementPackage.MODULE_FEATURE_COUNT + 6;
 
 	/**
 	 * The number of operations of the '<em>Logical Transformation Module</em>' class.
@@ -611,22 +620,13 @@ public interface Logical_transformationsPackage extends EPackage {
 	int SELECTION_LAYER = 7;
 
 	/**
-	 * The feature id for the '<em><b>Required Attributes</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SELECTION_LAYER__REQUIRED_ATTRIBUTES = 0;
-
-	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SELECTION_LAYER__NAME = 1;
+	int SELECTION_LAYER__NAME = 0;
 
 	/**
 	 * The feature id for the '<em><b>Invisible</b></em>' attribute.
@@ -635,7 +635,16 @@ public interface Logical_transformationsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SELECTION_LAYER__INVISIBLE = 2;
+	int SELECTION_LAYER__INVISIBLE = 1;
+
+	/**
+	 * The feature id for the '<em><b>Generated Entity</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SELECTION_LAYER__GENERATED_ENTITY = 2;
 
 	/**
 	 * The number of structural features of the '<em>Selection Layer</em>' class.
@@ -879,6 +888,17 @@ public interface Logical_transformationsPackage extends EPackage {
 	EReference getLogicalTransformationModule_TestModules();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.LogicalTransformationModule#getSelectionLayers <em>Selection Layers</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Selection Layers</em>'.
+	 * @see org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.LogicalTransformationModule#getSelectionLayers()
+	 * @see #getLogicalTransformationModule()
+	 * @generated
+	 */
+	EReference getLogicalTransformationModule_SelectionLayers();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.ActivityTag <em>Activity Tag</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1114,17 +1134,6 @@ public interface Logical_transformationsPackage extends EPackage {
 	EClass getSelectionLayer();
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.SelectionLayer#getRequiredAttributes <em>Required Attributes</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Required Attributes</em>'.
-	 * @see org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.SelectionLayer#getRequiredAttributes()
-	 * @see #getSelectionLayer()
-	 * @generated
-	 */
-	EReference getSelectionLayer_RequiredAttributes();
-
-	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.SelectionLayer#getName <em>Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1145,6 +1154,17 @@ public interface Logical_transformationsPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getSelectionLayer_Invisible();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.SelectionLayer#getGeneratedEntity <em>Generated Entity</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Generated Entity</em>'.
+	 * @see org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.SelectionLayer#getGeneratedEntity()
+	 * @see #getSelectionLayer()
+	 * @generated
+	 */
+	EReference getSelectionLayer_GeneratedEntity();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.TestScope <em>Test Scope</em>}'.
@@ -1313,6 +1333,14 @@ public interface Logical_transformationsPackage extends EPackage {
 		 * @generated
 		 */
 		EReference LOGICAL_TRANSFORMATION_MODULE__TEST_MODULES = eINSTANCE.getLogicalTransformationModule_TestModules();
+
+		/**
+		 * The meta object literal for the '<em><b>Selection Layers</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference LOGICAL_TRANSFORMATION_MODULE__SELECTION_LAYERS = eINSTANCE.getLogicalTransformationModule_SelectionLayers();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.impl.ActivityTagImpl <em>Activity Tag</em>}' class.
@@ -1505,14 +1533,6 @@ public interface Logical_transformationsPackage extends EPackage {
 		EClass SELECTION_LAYER = eINSTANCE.getSelectionLayer();
 
 		/**
-		 * The meta object literal for the '<em><b>Required Attributes</b></em>' reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference SELECTION_LAYER__REQUIRED_ATTRIBUTES = eINSTANCE.getSelectionLayer_RequiredAttributes();
-
-		/**
 		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1527,6 +1547,14 @@ public interface Logical_transformationsPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute SELECTION_LAYER__INVISIBLE = eINSTANCE.getSelectionLayer_Invisible();
+
+		/**
+		 * The meta object literal for the '<em><b>Generated Entity</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SELECTION_LAYER__GENERATED_ENTITY = eINSTANCE.getSelectionLayer_GeneratedEntity();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.impl.TestScopeImpl <em>Test Scope</em>}' class.

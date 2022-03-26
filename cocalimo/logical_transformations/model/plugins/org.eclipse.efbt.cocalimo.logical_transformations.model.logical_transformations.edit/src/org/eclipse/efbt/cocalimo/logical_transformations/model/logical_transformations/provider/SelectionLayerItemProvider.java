@@ -62,33 +62,11 @@ public class SelectionLayerItemProvider
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addRequiredAttributesPropertyDescriptor(object);
 			addNamePropertyDescriptor(object);
 			addInvisiblePropertyDescriptor(object);
+			addGeneratedEntityPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
-	}
-
-	/**
-	 * This adds a property descriptor for the Required Attributes feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addRequiredAttributesPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_SelectionLayer_requiredAttributes_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_SelectionLayer_requiredAttributes_feature", "_UI_SelectionLayer_type"),
-				 Logical_transformationsPackage.Literals.SELECTION_LAYER__REQUIRED_ATTRIBUTES,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
 	}
 
 	/**
@@ -131,6 +109,28 @@ public class SelectionLayerItemProvider
 				 false,
 				 false,
 				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Generated Entity feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addGeneratedEntityPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_SelectionLayer_generatedEntity_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_SelectionLayer_generatedEntity_feature", "_UI_SelectionLayer_type"),
+				 Logical_transformationsPackage.Literals.SELECTION_LAYER__GENERATED_ENTITY,
+				 true,
+				 false,
+				 true,
+				 null,
 				 null,
 				 null));
 	}

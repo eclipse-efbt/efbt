@@ -5,14 +5,13 @@ package org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl;
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.SelectColumn;
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.Sql_litePackage;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.core.MEMBER;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute;
 import org.eclipse.emf.common.notify.Notification;
-
-import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -23,11 +22,12 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl.SelectColumnImpl#getAs <em>As</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl.SelectColumnImpl#getMemberAsConstant <em>Member As Constant</em>}</li>
  * </ul>
  *
  * @generated
  */
-public abstract class SelectColumnImpl extends MinimalEObjectImpl.Container implements SelectColumn {
+public class SelectColumnImpl extends ColumnImpl implements SelectColumn {
 	/**
 	 * The cached value of the '{@link #getAs() <em>As</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -36,7 +36,17 @@ public abstract class SelectColumnImpl extends MinimalEObjectImpl.Container impl
 	 * @generated
 	 * @ordered
 	 */
-	protected EAttribute as;
+	protected Attribute as;
+
+	/**
+	 * The cached value of the '{@link #getMemberAsConstant() <em>Member As Constant</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getMemberAsConstant()
+	 * @generated
+	 * @ordered
+	 */
+	protected MEMBER memberAsConstant;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -62,10 +72,10 @@ public abstract class SelectColumnImpl extends MinimalEObjectImpl.Container impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getAs() {
+	public Attribute getAs() {
 		if (as != null && as.eIsProxy()) {
 			InternalEObject oldAs = (InternalEObject)as;
-			as = (EAttribute)eResolveProxy(oldAs);
+			as = (Attribute)eResolveProxy(oldAs);
 			if (as != oldAs) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Sql_litePackage.SELECT_COLUMN__AS, oldAs, as));
@@ -79,7 +89,7 @@ public abstract class SelectColumnImpl extends MinimalEObjectImpl.Container impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute basicGetAs() {
+	public Attribute basicGetAs() {
 		return as;
 	}
 
@@ -88,11 +98,49 @@ public abstract class SelectColumnImpl extends MinimalEObjectImpl.Container impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setAs(EAttribute newAs) {
-		EAttribute oldAs = as;
+	public void setAs(Attribute newAs) {
+		Attribute oldAs = as;
 		as = newAs;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, Sql_litePackage.SELECT_COLUMN__AS, oldAs, as));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public MEMBER getMemberAsConstant() {
+		if (memberAsConstant != null && memberAsConstant.eIsProxy()) {
+			InternalEObject oldMemberAsConstant = (InternalEObject)memberAsConstant;
+			memberAsConstant = (MEMBER)eResolveProxy(oldMemberAsConstant);
+			if (memberAsConstant != oldMemberAsConstant) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Sql_litePackage.SELECT_COLUMN__MEMBER_AS_CONSTANT, oldMemberAsConstant, memberAsConstant));
+			}
+		}
+		return memberAsConstant;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public MEMBER basicGetMemberAsConstant() {
+		return memberAsConstant;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setMemberAsConstant(MEMBER newMemberAsConstant) {
+		MEMBER oldMemberAsConstant = memberAsConstant;
+		memberAsConstant = newMemberAsConstant;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, Sql_litePackage.SELECT_COLUMN__MEMBER_AS_CONSTANT, oldMemberAsConstant, memberAsConstant));
 	}
 
 	/**
@@ -106,6 +154,9 @@ public abstract class SelectColumnImpl extends MinimalEObjectImpl.Container impl
 			case Sql_litePackage.SELECT_COLUMN__AS:
 				if (resolve) return getAs();
 				return basicGetAs();
+			case Sql_litePackage.SELECT_COLUMN__MEMBER_AS_CONSTANT:
+				if (resolve) return getMemberAsConstant();
+				return basicGetMemberAsConstant();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -119,7 +170,10 @@ public abstract class SelectColumnImpl extends MinimalEObjectImpl.Container impl
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Sql_litePackage.SELECT_COLUMN__AS:
-				setAs((EAttribute)newValue);
+				setAs((Attribute)newValue);
+				return;
+			case Sql_litePackage.SELECT_COLUMN__MEMBER_AS_CONSTANT:
+				setMemberAsConstant((MEMBER)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -134,7 +188,10 @@ public abstract class SelectColumnImpl extends MinimalEObjectImpl.Container impl
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Sql_litePackage.SELECT_COLUMN__AS:
-				setAs((EAttribute)null);
+				setAs((Attribute)null);
+				return;
+			case Sql_litePackage.SELECT_COLUMN__MEMBER_AS_CONSTANT:
+				setMemberAsConstant((MEMBER)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -150,6 +207,8 @@ public abstract class SelectColumnImpl extends MinimalEObjectImpl.Container impl
 		switch (featureID) {
 			case Sql_litePackage.SELECT_COLUMN__AS:
 				return as != null;
+			case Sql_litePackage.SELECT_COLUMN__MEMBER_AS_CONSTANT:
+				return memberAsConstant != null;
 		}
 		return super.eIsSet(featureID);
 	}
