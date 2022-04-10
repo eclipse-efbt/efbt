@@ -1,0 +1,8 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="frtb" id="B9949356-A9D9-0EA7-D24C-F85FDD4963B7" version="3.5">
+<createdBy>Neil</createdBy>
+<createdTime>2022-03-27 10:53:01 UTC</createdTime>
+<ownerDesignName>frtb</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>B9949356-A9D9-0EA7-D24C-F85FDD4963B7</designId>
+</OSDM_Design>
