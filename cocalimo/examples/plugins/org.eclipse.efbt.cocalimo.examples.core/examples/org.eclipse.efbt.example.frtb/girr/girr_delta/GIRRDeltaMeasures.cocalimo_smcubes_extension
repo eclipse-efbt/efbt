@@ -100,15 +100,25 @@
     "name" : "weightedGIRRDeltaSensitivity",
     "displayName" : "weightedGIRRDeltaSensitivity"
   }, {
-    "code" : "GIRRDeltaKBInput",
-    "description" : "GIRRDeltaKBInput",
+    "code" : "weightedGIRRDeltaSensitivitySquared",
+    "description" : "weightedGIRRDeltaSensitivitySquared",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
       "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
     },
-    "variable_id" : "GIRRDeltaKBInput",
-    "name" : "GIRRDeltaKBInput",
-    "displayName" : "GIRRDeltaKBInput"
+    "variable_id" : "weightedGIRRDeltaSensitivitySquared",
+    "name" : "weightedGIRRDeltaSensitivitySquared",
+    "displayName" : "weightedGIRRDeltaSensitivitySquared"
+  }, {
+    "code" : "GIRRDeltaCorrelatedValue",
+    "description" : "GIRRDeltaCorrelatedValue",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+    },
+    "variable_id" : "GIRRDeltaCorrelatedValue",
+    "name" : "GIRRDeltaCorrelatedValue",
+    "displayName" : "GIRRDeltaCorrelatedValue"
   }, {
     "code" : "GIRRDeltaKB",
     "description" : "GIRRDeltaKB",
@@ -121,15 +131,15 @@
     "name" : "GIRRDeltaKB",
     "displayName" : "GIRRDeltaKB"
   }, {
-    "code" : "GIRRDeltaKBInputPerBucket",
-    "description" : "GIRRDeltaKBInputPerBucket",
+    "code" : "GIRRDeltaCorrelatedValuePerBucket",
+    "description" : "GIRRDeltaCorrelatedValuePerBucket",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
       "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
     },
-    "variable_id" : "GIRRDeltaKBInputPerBucket",
-    "name" : "GIRRDeltaKBInputPerBucket",
-    "displayName" : "GIRRDeltaKBInputPerBucket"
+    "variable_id" : "GIRRDeltaCorrelatedValuePerBucket",
+    "name" : "GIRRDeltaCorrelatedValuePerBucket",
+    "displayName" : "GIRRDeltaCorrelatedValuePerBucket"
   }, {
     "code" : "GIRRDeltaSensitivityPerBucketCorrelated",
     "description" : "GIRRDeltaSensitivityPerBucketCorrelated",
@@ -180,5 +190,15 @@
     "variable_id" : "totalGIRRDeltaSensitivityPerBucketl",
     "name" : "totalGIRRDeltaSensitivityPerBucketl",
     "displayName" : "totalGIRRDeltaSensitivityPerBucketl"
+  }, {
+    "code" : "totalGIRRDeltaSensitivitySquaredPerBucket",
+    "description" : "totalGIRRDeltaSensitivitySquaredPerBucket",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+    },
+    "variable_id" : "totalGIRRDeltaSensitivitySquaredPerBucket",
+    "name" : "totalGIRRDeltaSensitivitySquaredPerBucket",
+    "displayName" : "totalGIRRDeltaSensitivitySquaredPerBucket"
   } ]
 }

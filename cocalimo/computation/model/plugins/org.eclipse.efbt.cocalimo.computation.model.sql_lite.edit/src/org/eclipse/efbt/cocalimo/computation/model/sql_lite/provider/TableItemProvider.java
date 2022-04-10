@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.Sql_litePackage;
+import org.eclipse.efbt.cocalimo.computation.model.sql_lite.Table;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
@@ -88,7 +89,10 @@ public class TableItemProvider extends SQLEntityItemProvider {
 	 */
 	@Override
 	public String getText(Object object) {
-		return getString("_UI_Table_type");
+		String label = ((Table)object).getName();
+		return label == null || label.length() == 0 ?
+			getString("_UI_Table_type") :
+			getString("_UI_Table_type") + " " + label;
 	}
 
 

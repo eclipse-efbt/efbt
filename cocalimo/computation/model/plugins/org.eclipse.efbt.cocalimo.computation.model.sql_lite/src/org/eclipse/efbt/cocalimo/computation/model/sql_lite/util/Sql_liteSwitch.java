@@ -82,12 +82,7 @@ public class Sql_liteSwitch<T> extends Switch<T> {
 			case Sql_litePackage.SELECT_COLUMN: {
 				SelectColumn selectColumn = (SelectColumn)theEObject;
 				T result = caseSelectColumn(selectColumn);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case Sql_litePackage.COLUMN_AS_FUNCTION: {
-				ColumnAsFunction columnAsFunction = (ColumnAsFunction)theEObject;
-				T result = caseColumnAsFunction(columnAsFunction);
+				if (result == null) result = caseColumn(selectColumn);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -188,21 +183,6 @@ public class Sql_liteSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseSelectColumn(SelectColumn object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Column As Function</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Column As Function</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseColumnAsFunction(ColumnAsFunction object) {
 		return null;
 	}
 

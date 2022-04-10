@@ -17,6 +17,8 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="testModules" upperBound="-1"
         eType="#//TestModule"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="selectionLayers" upperBound="-1"
+        eType="#//SelectionLayer" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ActivityTag" eSuperTypes="../../org.eclipse.efbt.cocalimo.core.model.requirements_text/model/requirements_text.ecore#//Tag">
     <eStructuralFeatures xsi:type="ecore:EReference" name="activity" eType="ecore:EClass bpmn_lite.ecore#//Activity"/>
@@ -89,11 +91,10 @@
     <eLiterals name="greater_than" value="2"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SelectionLayer">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="requiredAttributes" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/data_meta_model.ecore#//Attribute"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="invisible" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="generatedEntity" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/data_meta_model.ecore#//GeneratedEntity"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TestScope">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"

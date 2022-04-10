@@ -4,6 +4,7 @@ package org.eclipse.efbt.cocalimo.computation.model.sql_lite;
 
 import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementPackage;
 
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
@@ -65,7 +66,16 @@ public interface Sql_litePackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl.Sql_litePackageImpl#getSQLEntity()
 	 * @generated
 	 */
-	int SQL_ENTITY = 7;
+	int SQL_ENTITY = 6;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SQL_ENTITY__NAME = 0;
 
 	/**
 	 * The number of structural features of the '<em>SQL Entity</em>' class.
@@ -74,7 +84,7 @@ public interface Sql_litePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SQL_ENTITY_FEATURE_COUNT = 0;
+	int SQL_ENTITY_FEATURE_COUNT = 1;
 
 	/**
 	 * The number of operations of the '<em>SQL Entity</em>' class.
@@ -94,6 +104,15 @@ public interface Sql_litePackage extends EPackage {
 	 * @generated
 	 */
 	int VIEW = 0;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VIEW__NAME = SQL_ENTITY__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Select Clause</b></em>' containment reference.
@@ -188,70 +207,6 @@ public interface Sql_litePackage extends EPackage {
 	int SELECT_COLUMN = 2;
 
 	/**
-	 * The feature id for the '<em><b>As</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SELECT_COLUMN__AS = 0;
-
-	/**
-	 * The number of structural features of the '<em>Select Column</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SELECT_COLUMN_FEATURE_COUNT = 1;
-
-	/**
-	 * The number of operations of the '<em>Select Column</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SELECT_COLUMN_OPERATION_COUNT = 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl.ColumnAsFunctionImpl <em>Column As Function</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl.ColumnAsFunctionImpl
-	 * @see org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl.Sql_litePackageImpl#getColumnAsFunction()
-	 * @generated
-	 */
-	int COLUMN_AS_FUNCTION = 3;
-
-	/**
-	 * The feature id for the '<em><b>Column</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int COLUMN_AS_FUNCTION__COLUMN = 0;
-
-	/**
-	 * The number of structural features of the '<em>Column As Function</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int COLUMN_AS_FUNCTION_FEATURE_COUNT = 1;
-
-	/**
-	 * The number of operations of the '<em>Column As Function</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int COLUMN_AS_FUNCTION_OPERATION_COUNT = 0;
-
-	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl.ColumnImpl <em>Column</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -259,7 +214,7 @@ public interface Sql_litePackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl.Sql_litePackageImpl#getColumn()
 	 * @generated
 	 */
-	int COLUMN = 4;
+	int COLUMN = 3;
 
 	/**
 	 * The feature id for the '<em><b>Attribute</b></em>' reference.
@@ -289,6 +244,51 @@ public interface Sql_litePackage extends EPackage {
 	int COLUMN_OPERATION_COUNT = 0;
 
 	/**
+	 * The feature id for the '<em><b>Attribute</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SELECT_COLUMN__ATTRIBUTE = COLUMN__ATTRIBUTE;
+
+	/**
+	 * The feature id for the '<em><b>As</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SELECT_COLUMN__AS = COLUMN_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Member As Constant</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SELECT_COLUMN__MEMBER_AS_CONSTANT = COLUMN_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Select Column</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SELECT_COLUMN_FEATURE_COUNT = COLUMN_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of operations of the '<em>Select Column</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SELECT_COLUMN_OPERATION_COUNT = COLUMN_OPERATION_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl.WhereClauseImpl <em>Where Clause</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -296,7 +296,7 @@ public interface Sql_litePackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl.Sql_litePackageImpl#getWhereClause()
 	 * @generated
 	 */
-	int WHERE_CLAUSE = 5;
+	int WHERE_CLAUSE = 4;
 
 	/**
 	 * The number of structural features of the '<em>Where Clause</em>' class.
@@ -324,7 +324,16 @@ public interface Sql_litePackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl.Sql_litePackageImpl#getTable()
 	 * @generated
 	 */
-	int TABLE = 6;
+	int TABLE = 5;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TABLE__NAME = SQL_ENTITY__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Entity</b></em>' reference.
@@ -361,7 +370,7 @@ public interface Sql_litePackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl.Sql_litePackageImpl#getFromClause()
 	 * @generated
 	 */
-	int FROM_CLAUSE = 8;
+	int FROM_CLAUSE = 7;
 
 	/**
 	 * The feature id for the '<em><b>Sql Entities</b></em>' reference.
@@ -398,7 +407,7 @@ public interface Sql_litePackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl.Sql_litePackageImpl#getSQLEntityModule()
 	 * @generated
 	 */
-	int SQL_ENTITY_MODULE = 9;
+	int SQL_ENTITY_MODULE = 8;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' containment reference.
@@ -489,7 +498,7 @@ public interface Sql_litePackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl.Sql_litePackageImpl#getGeneratedEntitySQL()
 	 * @generated
 	 */
-	int GENERATED_ENTITY_SQL = 10;
+	int GENERATED_ENTITY_SQL = 9;
 
 	/**
 	 * The feature id for the '<em><b>Generated Entity</b></em>' reference.
@@ -501,7 +510,7 @@ public interface Sql_litePackage extends EPackage {
 	int GENERATED_ENTITY_SQL__GENERATED_ENTITY = 0;
 
 	/**
-	 * The feature id for the '<em><b>View</b></em>' reference.
+	 * The feature id for the '<em><b>View</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -535,7 +544,7 @@ public interface Sql_litePackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl.Sql_litePackageImpl#getGeneratedEntitySQLModule()
 	 * @generated
 	 */
-	int GENERATED_ENTITY_SQL_MODULE = 11;
+	int GENERATED_ENTITY_SQL_MODULE = 10;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' containment reference.
@@ -705,25 +714,15 @@ public interface Sql_litePackage extends EPackage {
 	EReference getSelectColumn_As();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.ColumnAsFunction <em>Column As Function</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.SelectColumn#getMemberAsConstant <em>Member As Constant</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Column As Function</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.sql_lite.ColumnAsFunction
+	 * @return the meta object for the reference '<em>Member As Constant</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.sql_lite.SelectColumn#getMemberAsConstant()
+	 * @see #getSelectColumn()
 	 * @generated
 	 */
-	EClass getColumnAsFunction();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.ColumnAsFunction#getColumn <em>Column</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Column</em>'.
-	 * @see org.eclipse.efbt.cocalimo.computation.model.sql_lite.ColumnAsFunction#getColumn()
-	 * @see #getColumnAsFunction()
-	 * @generated
-	 */
-	EReference getColumnAsFunction_Column();
+	EReference getSelectColumn_MemberAsConstant();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.Column <em>Column</em>}'.
@@ -786,6 +785,17 @@ public interface Sql_litePackage extends EPackage {
 	 * @generated
 	 */
 	EClass getSQLEntity();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.SQLEntity#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see org.eclipse.efbt.cocalimo.computation.model.sql_lite.SQLEntity#getName()
+	 * @see #getSQLEntity()
+	 * @generated
+	 */
+	EAttribute getSQLEntity_Name();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.FromClause <em>From Clause</em>}'.
@@ -851,10 +861,10 @@ public interface Sql_litePackage extends EPackage {
 	EReference getGeneratedEntitySQL_GeneratedEntity();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.GeneratedEntitySQL#getView <em>View</em>}'.
+	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.GeneratedEntitySQL#getView <em>View</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>View</em>'.
+	 * @return the meta object for the reference list '<em>View</em>'.
 	 * @see org.eclipse.efbt.cocalimo.computation.model.sql_lite.GeneratedEntitySQL#getView()
 	 * @see #getGeneratedEntitySQL()
 	 * @generated
@@ -976,22 +986,12 @@ public interface Sql_litePackage extends EPackage {
 		EReference SELECT_COLUMN__AS = eINSTANCE.getSelectColumn_As();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl.ColumnAsFunctionImpl <em>Column As Function</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl.ColumnAsFunctionImpl
-		 * @see org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl.Sql_litePackageImpl#getColumnAsFunction()
-		 * @generated
-		 */
-		EClass COLUMN_AS_FUNCTION = eINSTANCE.getColumnAsFunction();
-
-		/**
-		 * The meta object literal for the '<em><b>Column</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Member As Constant</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference COLUMN_AS_FUNCTION__COLUMN = eINSTANCE.getColumnAsFunction_Column();
+		EReference SELECT_COLUMN__MEMBER_AS_CONSTANT = eINSTANCE.getSelectColumn_MemberAsConstant();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl.ColumnImpl <em>Column</em>}' class.
@@ -1050,6 +1050,14 @@ public interface Sql_litePackage extends EPackage {
 		EClass SQL_ENTITY = eINSTANCE.getSQLEntity();
 
 		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SQL_ENTITY__NAME = eINSTANCE.getSQLEntity_Name();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl.FromClauseImpl <em>From Clause</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1104,7 +1112,7 @@ public interface Sql_litePackage extends EPackage {
 		EReference GENERATED_ENTITY_SQL__GENERATED_ENTITY = eINSTANCE.getGeneratedEntitySQL_GeneratedEntity();
 
 		/**
-		 * The meta object literal for the '<em><b>View</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>View</b></em>' reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated

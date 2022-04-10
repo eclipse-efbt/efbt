@@ -262,6 +262,15 @@ public class Logical_transformationsPackageImpl extends EPackageImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getLogicalTransformationModule_SelectionLayers() {
+		return (EReference)logicalTransformationModuleEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getActivityTag() {
 		return activityTagEClass;
 	}
@@ -460,17 +469,8 @@ public class Logical_transformationsPackageImpl extends EPackageImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getSelectionLayer_RequiredAttributes() {
-		return (EReference)selectionLayerEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EAttribute getSelectionLayer_Name() {
-		return (EAttribute)selectionLayerEClass.getEStructuralFeatures().get(1);
+		return (EAttribute)selectionLayerEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -479,7 +479,16 @@ public class Logical_transformationsPackageImpl extends EPackageImpl implements 
 	 * @generated
 	 */
 	public EAttribute getSelectionLayer_Invisible() {
-		return (EAttribute)selectionLayerEClass.getEStructuralFeatures().get(2);
+		return (EAttribute)selectionLayerEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSelectionLayer_GeneratedEntity() {
+		return (EReference)selectionLayerEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -597,6 +606,7 @@ public class Logical_transformationsPackageImpl extends EPackageImpl implements 
 		createEReference(logicalTransformationModuleEClass, LOGICAL_TRANSFORMATION_MODULE__SUB_PROCESS);
 		createEReference(logicalTransformationModuleEClass, LOGICAL_TRANSFORMATION_MODULE__REQUIREMENTS);
 		createEReference(logicalTransformationModuleEClass, LOGICAL_TRANSFORMATION_MODULE__TEST_MODULES);
+		createEReference(logicalTransformationModuleEClass, LOGICAL_TRANSFORMATION_MODULE__SELECTION_LAYERS);
 
 		activityTagEClass = createEClass(ACTIVITY_TAG);
 		createEReference(activityTagEClass, ACTIVITY_TAG__ACTIVITY);
@@ -626,9 +636,9 @@ public class Logical_transformationsPackageImpl extends EPackageImpl implements 
 		createEAttribute(dataConstraintEClass, DATA_CONSTRAINT__COMPARISON);
 
 		selectionLayerEClass = createEClass(SELECTION_LAYER);
-		createEReference(selectionLayerEClass, SELECTION_LAYER__REQUIRED_ATTRIBUTES);
 		createEAttribute(selectionLayerEClass, SELECTION_LAYER__NAME);
 		createEAttribute(selectionLayerEClass, SELECTION_LAYER__INVISIBLE);
+		createEReference(selectionLayerEClass, SELECTION_LAYER__GENERATED_ENTITY);
 
 		testScopeEClass = createEClass(TEST_SCOPE);
 		createEAttribute(testScopeEClass, TEST_SCOPE__NAME);
@@ -694,6 +704,7 @@ public class Logical_transformationsPackageImpl extends EPackageImpl implements 
 		initEReference(getLogicalTransformationModule_SubProcess(), theBpmn_litePackage.getSubProcess(), null, "subProcess", null, 0, 1, LogicalTransformationModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getLogicalTransformationModule_Requirements(), theRequirements_textPackage.getRequirementsModule(), null, "requirements", null, 0, -1, LogicalTransformationModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getLogicalTransformationModule_TestModules(), this.getTestModule(), null, "testModules", null, 0, -1, LogicalTransformationModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getLogicalTransformationModule_SelectionLayers(), this.getSelectionLayer(), null, "selectionLayers", null, 0, -1, LogicalTransformationModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(activityTagEClass, ActivityTag.class, "ActivityTag", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getActivityTag_Activity(), theBpmn_litePackage.getActivity(), null, "activity", null, 0, 1, ActivityTag.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -723,9 +734,9 @@ public class Logical_transformationsPackageImpl extends EPackageImpl implements 
 		initEAttribute(getDataConstraint_Comparison(), this.getAttrComparison(), "comparison", null, 0, 1, DataConstraint.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(selectionLayerEClass, SelectionLayer.class, "SelectionLayer", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getSelectionLayer_RequiredAttributes(), theData_meta_modelPackage.getAttribute(), null, "requiredAttributes", null, 0, -1, SelectionLayer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSelectionLayer_Name(), ecorePackage.getEString(), "name", null, 0, 1, SelectionLayer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSelectionLayer_Invisible(), ecorePackage.getEBooleanObject(), "invisible", null, 0, 1, SelectionLayer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSelectionLayer_GeneratedEntity(), theData_meta_modelPackage.getGeneratedEntity(), null, "generatedEntity", null, 0, 1, SelectionLayer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(testScopeEClass, TestScope.class, "TestScope", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTestScope_Name(), ecorePackage.getEString(), "name", null, 0, 1, TestScope.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

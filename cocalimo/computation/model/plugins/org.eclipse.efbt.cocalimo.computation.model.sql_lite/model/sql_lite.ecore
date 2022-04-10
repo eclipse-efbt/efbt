@@ -13,20 +13,21 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="columns" upperBound="-1"
         eType="#//SelectColumn" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SelectColumn" abstract="true">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="as" eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EAttribute"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ColumnAsFunction">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="column" eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//ETypedElement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SelectColumn" eSuperTypes="#//Column">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="as" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/data_meta_model.ecore#//Attribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="memberAsConstant" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/core.ecore#//MEMBER"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Column">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EAttribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/data_meta_model.ecore#//Attribute"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="WhereClause"/>
   <eClassifiers xsi:type="ecore:EClass" name="Table" eSuperTypes="#//SQLEntity">
     <eStructuralFeatures xsi:type="ecore:EReference" name="entity" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/data_meta_model.ecore#//Entity"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SQLEntity"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SQLEntity">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EString"
+        iD="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FromClause">
     <eStructuralFeatures xsi:type="ecore:EReference" name="sqlEntities" eType="#//SQLEntity"/>
   </eClassifiers>
@@ -36,7 +37,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GeneratedEntitySQL">
     <eStructuralFeatures xsi:type="ecore:EReference" name="generatedEntity" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/data_meta_model.ecore#//GeneratedEntity"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="view" eType="#//View"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="view" upperBound="-1" eType="#//View"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GeneratedEntitySQLModule" eSuperTypes="../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.ecore#//Module">
     <eStructuralFeatures xsi:type="ecore:EReference" name="GeneratedEntitySQLs" upperBound="-1"
