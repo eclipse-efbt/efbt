@@ -10,7 +10,7 @@
 <fileName>frtb_domains</fileName>
 <logicalDatatype>LOGDT006</logicalDatatype>
 </Domain>
-<Domain class="oracle.dbtools.crest.model.design.Domain" name="Equity Factor Type" id="1427FBA3-05E0-CA88-F2BC-BC801DCE8AB8">
+<Domain class="oracle.dbtools.crest.model.design.Domain" name="Equity factor type" id="1427FBA3-05E0-CA88-F2BC-BC801DCE8AB8">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-10 07:42:57 UTC</createdTime>
 <ownerDesignName>frtb</ownerDesignName>
@@ -18,6 +18,7 @@
 <avTSortOrder>0</avTSortOrder>
 <fileName>frtb_domains</fileName>
 <logicalDatatype>LOGDT017</logicalDatatype>
+<synonym>EQUTY_FCTR_TYP</synonym>
 <listOfValues>
 <valueDef value="1" description="Spot"/>
 <valueDef value="2" description="Repo"/>
