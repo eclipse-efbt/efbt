@@ -72,24 +72,6 @@
 <fileName>frtb_domains</fileName>
 <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
 </Domain>
-<Domain class="oracle.dbtools.crest.model.design.Domain" name="RiskClass" directorySegmentName="seg_2" id="B5A21633-0D75-A1D8-4B4A-53B4A69988E5">
-<createdBy>Neil</createdBy>
-<createdTime>2022-03-28 10:14:16 UTC</createdTime>
-<ownerDesignName>frtb</ownerDesignName>
-<avTSortOrder>0</avTSortOrder>
-<dataTypeSize>3</dataTypeSize>
-<fileName>frtb_domains</fileName>
-<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
-<listOfValues>
-<valueDef value="1" description="GIRR"/>
-<valueDef value="2" description="Equity"/>
-<valueDef value="3" description="CSR_NonSec"/>
-<valueDef value="4" description="CSR_Sec_CTP"/>
-<valueDef value="5" description="Commodity"/>
-<valueDef value="6" description="FX"/>
-<valueDef value="7" description="CSR_Sec_Non_CTP"/>
-</listOfValues>
-</Domain>
 <Domain class="oracle.dbtools.crest.model.design.Domain" name="ShockDirection" directorySegmentName="seg_2" id="C1582D26-6C4D-DC4C-027A-545A166AF8A4">
 <createdBy>Neil</createdBy>
 <createdTime>2022-03-28 09:55:40 UTC</createdTime>
