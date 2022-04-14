@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="E7C4E383-AABB-082F-EAE7-A59D01E27340" name="RiskFactor">
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="E7C4E383-AABB-082F-EAE7-A59D01E27340" name="Risk factor">
 <createdBy>Neil</createdBy>
 <createdTime>2022-03-27 11:00:24 UTC</createdTime>
 <ownerDesignName>frtb</ownerDesignName>
@@ -27,6 +27,18 @@
 <use>0</use>
 <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
 <domain>DE255868-CD2A-9BCD-B873-2F9D3FCE185D</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Risk factor type" id="234F8B58-00BE-7DB5-5F7B-81EFF40BE2AD">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-14 05:44:27 UTC</createdTime>
+<ownerDesignName>frtb</ownerDesignName>
+<engineerTo>
+<item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<domain>27DE6432-B160-AF80-EE48-D0605ACFFB3B</domain>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 </attributes>

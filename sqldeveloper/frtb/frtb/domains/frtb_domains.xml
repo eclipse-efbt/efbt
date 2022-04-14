@@ -1,133 +1,143 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <DomainFile class="oracle.dbtools.crest.model.design.DomainFileWrapper" fileName="frtb_domains">
-   <domains>
-      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Boolean" directorySegmentName="seg_2" id="0C0CB380-50D3-FC6A-0B52-AC11D7B20657">
-         <createdBy>Neil</createdBy>
-         <createdTime>2022-03-28 10:13:58 UTC</createdTime>
-         <ownerDesignName>frtb_domains</ownerDesignName>
-         <avTSortOrder>0</avTSortOrder>
-         <fileName>frtb_domains</fileName>
-         <logicalDatatype>LOGDT006</logicalDatatype>
-      </Domain>
-      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Equity Factor Type" id="1427FBA3-05E0-CA88-F2BC-BC801DCE8AB8">
-         <createdBy>Neil</createdBy>
-         <createdTime>2022-04-10 07:42:57 UTC</createdTime>
-         <ownerDesignName>frtb</ownerDesignName>
-         <avTSortOrder>0</avTSortOrder>
-         <fileName>frtb_domains</fileName>
-         <logicalDatatype>LOGDT017</logicalDatatype>
-         <listOfValues>
-            <valueDef value="1" description="Spot"/>
-            <valueDef value="2" description="Repo"/>
-         </listOfValues>
-      </Domain>
-      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Risk factor type" id="27DE6432-B160-AF80-EE48-D0605ACFFB3B">
-         <createdBy>Neil</createdBy>
-         <createdTime>2022-04-02 14:54:13 UTC</createdTime>
-         <ownerDesignName>frtb</ownerDesignName>
-         <avTSortOrder>0</avTSortOrder>
-         <dataTypeSize>1</dataTypeSize>
-         <fileName>frtb_domains</fileName>
-         <logicalDatatype>LOGDT017</logicalDatatype>
-         <synonym>RSK_FCTR_TYP</synonym>
-         <listOfValues>
-            <valueDef value="1" description="GIRR risk factor"/>
-            <valueDef value="2" description="Commodity risk factor"/>
-            <valueDef value="3" description="FX risk factor"/>
-            <valueDef value="4" description="Equity risk factor"/>
-            <valueDef value="5" description="CSR non securitisation risk factor"/>
-            <valueDef value="6" description="Securitisation non CTP risk factor"/>
-            <valueDef value="7" description="Securitisation CTP Risk Factor"/>
-         </listOfValues>
-      </Domain>
-      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Currency" directorySegmentName="seg_2" id="61D993CB-3857-0254-82CE-4524A856851C">
-         <createdBy>Neil</createdBy>
-         <createdTime>2022-03-28 09:55:36 UTC</createdTime>
-         <ownerDesignName>frtb_domains</ownerDesignName>
-         <avTSortOrder>0</avTSortOrder>
-         <dataTypeSize>3</dataTypeSize>
-         <fileName>frtb_domains</fileName>
-         <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
-         <listOfValues>
-            <valueDef value="EUR" description="EUR"/>
-            <valueDef value="JPY" description="JYP"/>
-            <valueDef value="USD" description="USD"/>
-         </listOfValues>
-      </Domain>
-      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Commodity type" directorySegmentName="seg_2" id="674DA4DA-389E-A8EE-AE58-A91EA11BCF81">
-         <createdBy>Neil</createdBy>
-         <createdTime>2022-04-14 05:46:44 UTC</createdTime>
-         <ownerDesignName>frtb_domains</ownerDesignName>
-         <avTSortOrder>0</avTSortOrder>
-         <dataTypeSize>3</dataTypeSize>
-         <fileName>frtb_domains</fileName>
-         <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
-         <listOfValues>
-            <valueDef value="1" description="Energy solid combustables"/>
-            <valueDef value="10" description="Softs and other agriculturals"/>
-            <valueDef value="11" description="Other commodity"/>
-            <valueDef value="2" description="Energy liquid combustables"/>
-            <valueDef value="3" description="Energy electricity and carbon trading"/>
-            <valueDef value="4" description="Freight"/>
-            <valueDef value="5" description="Metals non precious"/>
-            <valueDef value="6" description="Gaseous combustables"/>
-            <valueDef value="7" description="Precious metals"/>
-            <valueDef value="8" description="Grains and oilseed"/>
-            <valueDef value="9" description="Livestock and dairy"/>
-         </listOfValues>
-      </Domain>
-      <Domain class="oracle.dbtools.crest.model.design.Domain" name="String up to 60 characters limited to letters (capital and low cases), numbers, dash and underscore_1" id="6FBEB348-B901-2CC5-03F9-29A90524DCDA">
-         <createdBy>Neil</createdBy>
-         <createdTime>2022-04-02 14:58:48 UTC</createdTime>
-         <ownerDesignName>frtb</ownerDesignName>
-         <avTSortOrder>0</avTSortOrder>
-         <fileName>frtb_domains</fileName>
-         <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
-         <synonym>STRNG_RSTRCTD_ID</synonym>
-      </Domain>
-      <Domain class="oracle.dbtools.crest.model.design.Domain" name="String" directorySegmentName="seg_2" id="78E25C16-8968-20B4-E330-DA4578EE46CF">
-         <createdBy>Neil</createdBy>
-         <createdTime>2022-03-28 10:12:43 UTC</createdTime>
-         <ownerDesignName>frtb_domains</ownerDesignName>
-         <avTSortOrder>0</avTSortOrder>
-         <dataTypeSize>156</dataTypeSize>
-         <fileName>frtb_domains</fileName>
-         <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
-      </Domain>
-      <Domain class="oracle.dbtools.crest.model.design.Domain" name="ShockDirection" directorySegmentName="seg_2" id="C1582D26-6C4D-DC4C-027A-545A166AF8A4">
-         <createdBy>Neil</createdBy>
-         <createdTime>2022-03-28 09:55:40 UTC</createdTime>
-         <ownerDesignName>frtb_domains</ownerDesignName>
-         <avTSortOrder>0</avTSortOrder>
-         <dataTypeSize>3</dataTypeSize>
-         <fileName>frtb_domains</fileName>
-         <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
-         <listOfValues>
-            <valueDef value="1" description="Up"/>
-            <valueDef value="2" description="Down"/>
-         </listOfValues>
-      </Domain>
-      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Number" directorySegmentName="seg_2" id="EF979509-4418-5FAC-812C-8FD0322FE1D6">
-         <createdBy>Neil</createdBy>
-         <createdTime>2022-03-28 10:13:28 UTC</createdTime>
-         <ownerDesignName>frtb_domains</ownerDesignName>
-         <avTSortOrder>0</avTSortOrder>
-         <fileName>frtb_domains</fileName>
-         <logicalDatatype>LOGDT019</logicalDatatype>
-      </Domain>
-      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Security position typev1" id="F4D6F1B0-6CAA-220C-6DE5-2C74E5361876">
-         <createdBy>Neil</createdBy>
-         <createdTime>2022-04-02 15:00:05 UTC</createdTime>
-         <ownerDesignName>frtb</ownerDesignName>
-         <avTSortOrder>0</avTSortOrder>
-         <dataTypeSize>1</dataTypeSize>
-         <fileName>frtb_domains</fileName>
-         <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
-         <synonym>SCRTY_PSTN_TYP</synonym>
-         <listOfValues>
-            <valueDef value="5" description="Long security position"/>
-            <valueDef value="6" description="Short security position"/>
-         </listOfValues>
-      </Domain>
-   </domains>
+<domains>
+<Domain class="oracle.dbtools.crest.model.design.Domain" name="Boolean" directorySegmentName="seg_2" id="0C0CB380-50D3-FC6A-0B52-AC11D7B20657">
+<createdBy>Neil</createdBy>
+<createdTime>2022-03-28 10:13:58 UTC</createdTime>
+<ownerDesignName>frtb_domains</ownerDesignName>
+<importedID>0C0CB380-50D3-FC6A-0B52-AC11D7B20657</importedID>
+<avTSortOrder>0</avTSortOrder>
+<fileName>frtb_domains</fileName>
+<logicalDatatype>LOGDT006</logicalDatatype>
+</Domain>
+<Domain class="oracle.dbtools.crest.model.design.Domain" name="Equity Factor Type" id="1427FBA3-05E0-CA88-F2BC-BC801DCE8AB8">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-10 07:42:57 UTC</createdTime>
+<ownerDesignName>frtb</ownerDesignName>
+<importedID>1427FBA3-05E0-CA88-F2BC-BC801DCE8AB8</importedID>
+<avTSortOrder>0</avTSortOrder>
+<fileName>frtb_domains</fileName>
+<logicalDatatype>LOGDT017</logicalDatatype>
+<listOfValues>
+<valueDef value="1" description="Spot"/>
+<valueDef value="2" description="Repo"/>
+</listOfValues>
+</Domain>
+<Domain class="oracle.dbtools.crest.model.design.Domain" name="Risk factor type" id="27DE6432-B160-AF80-EE48-D0605ACFFB3B">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-02 14:54:13 UTC</createdTime>
+<ownerDesignName>frtb</ownerDesignName>
+<importedID>27DE6432-B160-AF80-EE48-D0605ACFFB3B</importedID>
+<avTSortOrder>0</avTSortOrder>
+<dataTypeSize>1</dataTypeSize>
+<fileName>frtb_domains</fileName>
+<logicalDatatype>LOGDT017</logicalDatatype>
+<synonym>RSK_FCTR_TYP</synonym>
+<listOfValues>
+<valueDef value="1" description="GIRR risk factor"/>
+<valueDef value="2" description="Commodity risk factor"/>
+<valueDef value="3" description="FX risk factor"/>
+<valueDef value="4" description="Equity risk factor"/>
+<valueDef value="5" description="CSR non securitisation risk factor"/>
+<valueDef value="6" description="Securitisation non CTP risk factor"/>
+<valueDef value="7" description="Securitisation CTP Risk Factor"/>
+</listOfValues>
+</Domain>
+<Domain class="oracle.dbtools.crest.model.design.Domain" name="Currency" directorySegmentName="seg_2" id="61D993CB-3857-0254-82CE-4524A856851C">
+<createdBy>Neil</createdBy>
+<createdTime>2022-03-28 09:55:36 UTC</createdTime>
+<ownerDesignName>frtb_domains</ownerDesignName>
+<importedID>61D993CB-3857-0254-82CE-4524A856851C</importedID>
+<avTSortOrder>0</avTSortOrder>
+<dataTypeSize>3</dataTypeSize>
+<fileName>frtb_domains</fileName>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<listOfValues>
+<valueDef value="EUR" description="EUR"/>
+<valueDef value="JPY" description="JYP"/>
+<valueDef value="USD" description="USD"/>
+</listOfValues>
+</Domain>
+<Domain class="oracle.dbtools.crest.model.design.Domain" name="Commodity type" id="674DA4DA-389E-A8EE-AE58-A91EA11BCF81">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-14 06:30:10 UTC</createdTime>
+<ownerDesignName>frtb</ownerDesignName>
+<importedID>674DA4DA-389E-A8EE-AE58-A91EA11BCF81</importedID>
+<avTSortOrder>0</avTSortOrder>
+<dataTypeSize>3</dataTypeSize>
+<fileName>frtb_domains</fileName>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<listOfValues>
+<valueDef value="1" description="Energy solid combustables"/>
+<valueDef value="10" description="Softs and other agriculturals"/>
+<valueDef value="11" description="Other commodity"/>
+<valueDef value="2" description="Energy liquid combustables"/>
+<valueDef value="3" description="Energy electricity and carbon trading"/>
+<valueDef value="4" description="Freight"/>
+<valueDef value="5" description="Metals non precious"/>
+<valueDef value="6" description="Gaseous combustables"/>
+<valueDef value="7" description="Precious metals"/>
+<valueDef value="8" description="Grains and oilseed"/>
+<valueDef value="9" description="Livestock and dairy"/>
+</listOfValues>
+</Domain>
+<Domain class="oracle.dbtools.crest.model.design.Domain" name="String up to 60 characters limited to letters (capital and low cases), numbers, dash and underscore_1" id="6FBEB348-B901-2CC5-03F9-29A90524DCDA">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-02 14:58:48 UTC</createdTime>
+<ownerDesignName>frtb</ownerDesignName>
+<importedID>6FBEB348-B901-2CC5-03F9-29A90524DCDA</importedID>
+<avTSortOrder>0</avTSortOrder>
+<fileName>frtb_domains</fileName>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<synonym>STRNG_RSTRCTD_ID</synonym>
+</Domain>
+<Domain class="oracle.dbtools.crest.model.design.Domain" name="String" directorySegmentName="seg_2" id="78E25C16-8968-20B4-E330-DA4578EE46CF">
+<createdBy>Neil</createdBy>
+<createdTime>2022-03-28 10:12:43 UTC</createdTime>
+<ownerDesignName>frtb_domains</ownerDesignName>
+<importedID>78E25C16-8968-20B4-E330-DA4578EE46CF</importedID>
+<avTSortOrder>0</avTSortOrder>
+<dataTypeSize>156</dataTypeSize>
+<fileName>frtb_domains</fileName>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+</Domain>
+<Domain class="oracle.dbtools.crest.model.design.Domain" name="ShockDirection" directorySegmentName="seg_2" id="C1582D26-6C4D-DC4C-027A-545A166AF8A4">
+<createdBy>Neil</createdBy>
+<createdTime>2022-03-28 09:55:40 UTC</createdTime>
+<ownerDesignName>frtb_domains</ownerDesignName>
+<importedID>C1582D26-6C4D-DC4C-027A-545A166AF8A4</importedID>
+<avTSortOrder>0</avTSortOrder>
+<dataTypeSize>3</dataTypeSize>
+<fileName>frtb_domains</fileName>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<listOfValues>
+<valueDef value="1" description="Up"/>
+<valueDef value="2" description="Down"/>
+</listOfValues>
+</Domain>
+<Domain class="oracle.dbtools.crest.model.design.Domain" name="Number" directorySegmentName="seg_2" id="EF979509-4418-5FAC-812C-8FD0322FE1D6">
+<createdBy>Neil</createdBy>
+<createdTime>2022-03-28 10:13:28 UTC</createdTime>
+<ownerDesignName>frtb_domains</ownerDesignName>
+<importedID>EF979509-4418-5FAC-812C-8FD0322FE1D6</importedID>
+<avTSortOrder>0</avTSortOrder>
+<fileName>frtb_domains</fileName>
+<logicalDatatype>LOGDT019</logicalDatatype>
+</Domain>
+<Domain class="oracle.dbtools.crest.model.design.Domain" name="Security position typev1" id="F4D6F1B0-6CAA-220C-6DE5-2C74E5361876">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-02 15:00:05 UTC</createdTime>
+<ownerDesignName>frtb</ownerDesignName>
+<importedID>F4D6F1B0-6CAA-220C-6DE5-2C74E5361876</importedID>
+<avTSortOrder>0</avTSortOrder>
+<dataTypeSize>1</dataTypeSize>
+<fileName>frtb_domains</fileName>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<synonym>SCRTY_PSTN_TYP</synonym>
+<listOfValues>
+<valueDef value="5" description="Long security position"/>
+<valueDef value="6" description="Short security position"/>
+</listOfValues>
+</Domain>
+</domains>
 </DomainFile>

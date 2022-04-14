@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="E5488186-437C-BC1C-8AC2-048D08999A0A" name="CommodityRiskFactor">
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="E5488186-437C-BC1C-8AC2-048D08999A0A" name="Commodity risk factor">
 <createdBy>Neil</createdBy>
 <createdTime>2022-03-27 11:05:47 UTC</createdTime>
 <ownerDesignName>frtb</ownerDesignName>
@@ -17,4 +17,17 @@
 <normalForm>Third</normalForm>
 <preferredAbbreviation>CMMDTY_RSK_FCTR</preferredAbbreviation>
 <attributeInherType>All atributes</attributeInherType>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="Commodity type" id="41D094AE-CB6D-8185-8855-6D21A8F9D77C">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-14 06:14:13 UTC</createdTime>
+<ownerDesignName>frtb</ownerDesignName>
+<engineerTo>
+<item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
 </Entity>
