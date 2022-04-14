@@ -16,7 +16,7 @@
 <normalForm>Third</normalForm>
 <preferredAbbreviation>RSK_FCTR</preferredAbbreviation>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
-<Attribute name="Risk factor ID" id="6F905B6C-EC99-1422-CBA1-C8E591102FAE">
+<Attribute name="Risk factor Identifier" id="6F905B6C-EC99-1422-CBA1-C8E591102FAE">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-10 08:44:42 UTC</createdTime>
 <ownerDesignName>frtb</ownerDesignName>
@@ -25,7 +25,7 @@
 </engineerTo>
 <use>0</use>
 <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
-<domain>DE255868-CD2A-9BCD-B873-2F9D3FCE185D</domain>
+<domain>6FBEB348-B901-2CC5-03F9-29A90524DCDA</domain>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="Risk factor type" id="234F8B58-00BE-7DB5-5F7B-81EFF40BE2AD">

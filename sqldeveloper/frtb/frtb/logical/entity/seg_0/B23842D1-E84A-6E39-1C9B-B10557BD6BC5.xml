@@ -1,7 +1,7 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="58CA352E-DE50-CD54-EECC-B9D98C76ADE6" name="Security issue">
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="B23842D1-E84A-6E39-1C9B-B10557BD6BC5" name="Securitisation">
 <createdBy>Neil</createdBy>
-<createdTime>2022-04-14 08:05:53 UTC</createdTime>
+<createdTime>2022-04-14 08:45:04 UTC</createdTime>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
@@ -11,13 +11,14 @@
 <fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
 <growthPercent>0</growthPercent>
 <growthType>Year</growthType>
+<hierarchicalParent>58CA352E-DE50-CD54-EECC-B9D98C76ADE6</hierarchicalParent>
 <maxVolumes>9999999</maxVolumes>
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
-<Attribute name="Ratings grade" id="5157082B-7A37-50FA-C91E-90EB65674275">
+<Attribute name="Securitisation sector" id="FB497CE4-4809-1BC4-316A-6038C331240B">
 <createdBy>Neil</createdBy>
-<createdTime>2022-04-14 08:06:28 UTC</createdTime>
+<createdTime>2022-04-14 08:45:44 UTC</createdTime>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
@@ -25,20 +26,7 @@
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
-<domain>EAE9AB06-8C26-B8CC-733E-02CAD25C9CC8</domain>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="Issue Identifier" id="D59D2351-11DE-5835-5579-2B664C07C628">
-<createdBy>Neil</createdBy>
-<createdTime>2022-04-14 08:07:03 UTC</createdTime>
-<ownerDesignName>frtb</ownerDesignName>
-<engineerTo>
-<item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
-<domain>6FBEB348-B901-2CC5-03F9-29A90524DCDA</domain>
+<domain>B11F7524-2D69-9CB2-DC3A-EFE9FFEFE6AD</domain>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 </attributes>
