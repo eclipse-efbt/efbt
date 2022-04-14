@@ -101,6 +101,20 @@
          <fileName>frtb_domains</fileName>
          <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
       </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Market cap" directorySegmentName="seg_2" id="7F63E47C-D3DB-4A93-6AC8-9AEB283E41DA">
+         <createdBy>Neil</createdBy>
+         <createdTime>2022-04-14 07:26:14 UTC</createdTime>
+         <ownerDesignName>frtb_domains</ownerDesignName>
+         <avTSortOrder>0</avTSortOrder>
+         <dataTypeSize>3</dataTypeSize>
+         <fileName>frtb_domains</fileName>
+         <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+         <synonym>MRKT_CP</synonym>
+         <listOfValues>
+            <valueDef value="1" description="Large"/>
+            <valueDef value="2" description="Small"/>
+         </listOfValues>
+      </Domain>
       <Domain class="oracle.dbtools.crest.model.design.Domain" name="CSR curve type" directorySegmentName="seg_2" id="8777D069-1937-E11E-A414-E3DF0C1A9AEE">
          <createdBy>Neil</createdBy>
          <createdTime>2022-04-14 06:47:18 UTC</createdTime>
@@ -114,6 +128,19 @@
             <valueDef value="" description=""/>
             <valueDef value="1" description="Bond"/>
             <valueDef value="2" description="CDS"/>
+         </listOfValues>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Economy" directorySegmentName="seg_2" id="99DE0662-BAB5-5473-EAD0-5714FAC4965C">
+         <createdBy>Neil</createdBy>
+         <createdTime>2022-04-14 07:27:40 UTC</createdTime>
+         <ownerDesignName>frtb_domains</ownerDesignName>
+         <avTSortOrder>0</avTSortOrder>
+         <fileName>frtb_domains</fileName>
+         <logicalDatatype>LOGDT017</logicalDatatype>
+         <synonym>ECNMY</synonym>
+         <listOfValues>
+            <valueDef value="1" description="Emerging market"/>
+            <valueDef value="2" description="Advanced economy"/>
          </listOfValues>
       </Domain>
       <Domain class="oracle.dbtools.crest.model.design.Domain" name="GIRR risk factor type" directorySegmentName="seg_2" id="A38EA317-F0EC-770D-9FFB-56136AA62106">
@@ -131,6 +158,26 @@
             <valueDef value="3" description="Yield"/>
          </listOfValues>
       </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Securitisation sector" directorySegmentName="seg_2" id="B11F7524-2D69-9CB2-DC3A-EFE9FFEFE6AD">
+         <createdBy>Neil</createdBy>
+         <createdTime>2022-04-14 07:29:37 UTC</createdTime>
+         <ownerDesignName>frtb_domains</ownerDesignName>
+         <avTSortOrder>0</avTSortOrder>
+         <dataTypeSize>3</dataTypeSize>
+         <fileName>frtb_domains</fileName>
+         <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+         <synonym>SCRTSTN_SCTR</synonym>
+         <listOfValues>
+            <valueDef value="1" description="RMBS prime"/>
+            <valueDef value="2" description="RMBS mid pirme"/>
+            <valueDef value="3" description="RMBS sub prime"/>
+            <valueDef value="4" description="CMBS"/>
+            <valueDef value="5" description="ABS student loan"/>
+            <valueDef value="6" description="ABS auto"/>
+            <valueDef value="7" description="CLO non CTP"/>
+            <valueDef value="8" description="Other securitisation sector"/>
+         </listOfValues>
+      </Domain>
       <Domain class="oracle.dbtools.crest.model.design.Domain" name="ShockDirection" directorySegmentName="seg_2" id="C1582D26-6C4D-DC4C-027A-545A166AF8A4">
          <createdBy>Neil</createdBy>
          <createdTime>2022-03-28 09:55:40 UTC</createdTime>
@@ -143,6 +190,27 @@
          <listOfValues>
             <valueDef value="1" description="Up"/>
             <valueDef value="2" description="Down"/>
+         </listOfValues>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Sector" directorySegmentName="seg_2" id="C764DB9F-3245-FA18-0477-2FED20796BBA">
+         <createdBy>Neil</createdBy>
+         <createdTime>2022-04-14 06:51:30 UTC</createdTime>
+         <ownerDesignName>frtb_domains</ownerDesignName>
+         <avTSortOrder>0</avTSortOrder>
+         <dataTypeSize>3</dataTypeSize>
+         <fileName>frtb_domains</fileName>
+         <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+         <synonym>SCTR</synonym>
+         <listOfValues>
+            <valueDef value="1" description="Sovereign"/>
+            <valueDef value="2" description="Local government"/>
+            <valueDef value="3" description="Financials"/>
+            <valueDef value="4" description="Basic materials"/>
+            <valueDef value="5" description="Consumer goods"/>
+            <valueDef value="6" description="Technology"/>
+            <valueDef value="7" description="Health care"/>
+            <valueDef value="8" description="Covered bonds"/>
+            <valueDef value="9" description="Other sector"/>
          </listOfValues>
       </Domain>
       <Domain class="oracle.dbtools.crest.model.design.Domain" name="Rating grade" directorySegmentName="seg_2" id="EAE9AB06-8C26-B8CC-733E-02CAD25C9CC8">
