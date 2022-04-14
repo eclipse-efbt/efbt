@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.SelectClause;
+import org.eclipse.efbt.cocalimo.computation.model.sql_lite.Sql_liteFactory;
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.Sql_litePackage;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
@@ -146,6 +147,11 @@ public class SelectClauseItemProvider
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
+
+		newChildDescriptors.add
+			(createChildParameter
+				(Sql_litePackage.Literals.SELECT_CLAUSE__COLUMNS,
+				 Sql_liteFactory.eINSTANCE.createSelectColumn()));
 	}
 
 	/**

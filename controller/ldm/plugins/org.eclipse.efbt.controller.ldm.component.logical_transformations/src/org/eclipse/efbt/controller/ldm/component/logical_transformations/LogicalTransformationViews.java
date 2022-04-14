@@ -199,7 +199,7 @@ public class LogicalTransformationViews {
 				{
 					if (scriptTaskInScope.equals(o))
 					{										
-							EList<Attribute> scriptTaskAttributes = layer.getRequiredAttributes();
+							EList<Attribute> scriptTaskAttributes = layer.getGeneratedEntity().getAttributes();
 							for (Iterator iterator = scriptTaskAttributes.iterator(); iterator.hasNext();) {
 								Attribute eAttribute = (Attribute) iterator.next();
 								

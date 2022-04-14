@@ -14,6 +14,7 @@ import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transform
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.LogicalTransformationModule;
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.Logical_transformationsPackage;
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.ScenarioTag;
+import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.SelectionLayer;
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.TestModule;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -43,6 +44,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.impl.LogicalTransformationModuleImpl#getSubProcess <em>Sub Process</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.impl.LogicalTransformationModuleImpl#getRequirements <em>Requirements</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.impl.LogicalTransformationModuleImpl#getTestModules <em>Test Modules</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.impl.LogicalTransformationModuleImpl#getSelectionLayers <em>Selection Layers</em>}</li>
  * </ul>
  *
  * @generated
@@ -97,6 +99,16 @@ public class LogicalTransformationModuleImpl extends ModuleImpl implements Logic
 	 * @ordered
 	 */
 	protected EList<TestModule> testModules;
+
+	/**
+	 * The cached value of the '{@link #getSelectionLayers() <em>Selection Layers</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSelectionLayers()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<SelectionLayer> selectionLayers;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -213,6 +225,18 @@ public class LogicalTransformationModuleImpl extends ModuleImpl implements Logic
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<SelectionLayer> getSelectionLayers() {
+		if (selectionLayers == null) {
+			selectionLayers = new EObjectContainmentEList<SelectionLayer>(SelectionLayer.class, this, Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SELECTION_LAYERS);
+		}
+		return selectionLayers;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -224,6 +248,8 @@ public class LogicalTransformationModuleImpl extends ModuleImpl implements Logic
 				return basicSetSubProcess(null, msgs);
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__REQUIREMENTS:
 				return ((InternalEList<?>)getRequirements()).basicRemove(otherEnd, msgs);
+			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SELECTION_LAYERS:
+				return ((InternalEList<?>)getSelectionLayers()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -246,6 +272,8 @@ public class LogicalTransformationModuleImpl extends ModuleImpl implements Logic
 				return getRequirements();
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__TEST_MODULES:
 				return getTestModules();
+			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SELECTION_LAYERS:
+				return getSelectionLayers();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -278,6 +306,10 @@ public class LogicalTransformationModuleImpl extends ModuleImpl implements Logic
 				getTestModules().clear();
 				getTestModules().addAll((Collection<? extends TestModule>)newValue);
 				return;
+			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SELECTION_LAYERS:
+				getSelectionLayers().clear();
+				getSelectionLayers().addAll((Collection<? extends SelectionLayer>)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -305,6 +337,9 @@ public class LogicalTransformationModuleImpl extends ModuleImpl implements Logic
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__TEST_MODULES:
 				getTestModules().clear();
 				return;
+			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SELECTION_LAYERS:
+				getSelectionLayers().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -327,6 +362,8 @@ public class LogicalTransformationModuleImpl extends ModuleImpl implements Logic
 				return requirements != null && !requirements.isEmpty();
 			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__TEST_MODULES:
 				return testModules != null && !testModules.isEmpty();
+			case Logical_transformationsPackage.LOGICAL_TRANSFORMATION_MODULE__SELECTION_LAYERS:
+				return selectionLayers != null && !selectionLayers.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

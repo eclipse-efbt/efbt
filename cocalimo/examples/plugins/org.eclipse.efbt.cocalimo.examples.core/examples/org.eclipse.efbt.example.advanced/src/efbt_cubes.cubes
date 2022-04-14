@@ -1,0 +1,204 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/cubes#//FreeBirdToolsCubeModule",
+  "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
+  "name" : "efbt_cubes",
+  "version" : "1.0",
+  "cubes" : [ {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+    "name" : "cashflow"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+    "name" : "rating"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+    "name" : "trade"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+    "name" : "counterparty"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+    "name" : "bondInstrument"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+    "name" : "equityInstrument"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+    "name" : "instrument"
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "allInstruments",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "bondInstrumentAsInstrument"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "equityInstrumentAsInstrument"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "tradesWithInstruments",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "allInstruments"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "tradesAsOneColumn"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "bondTrades",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "tradesWithInstruments"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "modifiedDurationPerTrade",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "bondTrades"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "tradesWithIssuer",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "counterpartyAndRating"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "tradesWithInstruments"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "exposureAtDefault",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "tradesWithIssuer"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "tradesWithCashflowSet",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "tradesAsOneColumn"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "cashflowSetGroup"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "explodedCashflowSet",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "tradesWithCashflowSet"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "tradesPresentValue",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "tradesWithCashflowSet"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "bondInstrumentAsInstrument",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+      "$ref" : "bondInstrument"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "equityInstrumentAsInstrument",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+      "$ref" : "equityInstrument"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "tradesAsOneColumn",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+      "$ref" : "trade"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "counterpartyAsOneColumn",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+      "$ref" : "counterparty"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "ratingAsOneColumn",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+      "$ref" : "rating"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "counterpartyAndRating",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "counterpartyAsOneColumn"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "ratingAsOneColumn"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "cashflowAsOneColumn",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//BaseCube",
+      "$ref" : "cashflow"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+    "name" : "cashflowSetGroup",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "cashflowAsOneColumn"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//TargetCube",
+    "name" : "USDtradeNotionalsReportCell",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "tradesWithInstruments"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//TargetCube",
+    "name" : "EURtradeNotionalsReportCell",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "tradesWithInstruments"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//TargetCube",
+    "name" : "CorporateEAD",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "exposureAtDefault"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//TargetCube",
+    "name" : "GovernmentEAD",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "exposureAtDefault"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//TargetCube",
+    "name" : "FinancialInstitutionEAD",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "exposureAtDefault"
+    } ]
+  }, {
+    "eClass" : "http://www.eclipse.org/efbt/cubes#//TargetCube",
+    "name" : "totalPVofTrades",
+    "sourceCubes" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/cubes#//DerivedCube",
+      "$ref" : "tradesPresentValue"
+    } ]
+  } ]
+}

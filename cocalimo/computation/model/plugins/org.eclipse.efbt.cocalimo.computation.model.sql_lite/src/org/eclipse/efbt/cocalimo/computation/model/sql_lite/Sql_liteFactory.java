@@ -40,13 +40,13 @@ public interface Sql_liteFactory extends EFactory {
 	SelectClause createSelectClause();
 
 	/**
-	 * Returns a new object of class '<em>Column As Function</em>'.
+	 * Returns a new object of class '<em>Select Column</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Column As Function</em>'.
+	 * @return a new object of class '<em>Select Column</em>'.
 	 * @generated
 	 */
-	ColumnAsFunction createColumnAsFunction();
+	SelectColumn createSelectColumn();
 
 	/**
 	 * Returns a new object of class '<em>Column</em>'.

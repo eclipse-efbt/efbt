@@ -101,7 +101,10 @@ public class ViewItemProvider extends SQLEntityItemProvider {
 	 */
 	@Override
 	public String getText(Object object) {
-		return getString("_UI_View_type");
+		String label = ((View)object).getName();
+		return label == null || label.length() == 0 ?
+			getString("_UI_View_type") :
+			getString("_UI_View_type") + " " + label;
 	}
 
 

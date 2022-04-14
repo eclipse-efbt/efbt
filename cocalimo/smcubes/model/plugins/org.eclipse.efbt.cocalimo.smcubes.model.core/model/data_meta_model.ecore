@@ -7,12 +7,14 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="variable" eType="ecore:EClass core.ecore#//VARIABLE"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="ordered" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ForeignKeyAttribute" eSuperTypes="#//Attribute">
+  <eClassifiers xsi:type="ecore:EClass" name="RelationshipAttribute" eSuperTypes="#//Attribute">
     <eStructuralFeatures xsi:type="ecore:EReference" name="entity" eType="#//Entity"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="containment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cardinality" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="mandatory" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="OneToOneRelationshipAttribute" eSuperTypes="#//RelationshipAttribute"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ManyToOneRelationshipAttribute" eSuperTypes="#//RelationshipAttribute"/>
+  <eClassifiers xsi:type="ecore:EClass" name="OneToManyRelationshipAttribute" eSuperTypes="#//RelationshipAttribute"/>
   <eClassifiers xsi:type="ecore:EClass" name="Classifier" abstract="true" eSuperTypes="#//NamedElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="Element" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="NamedElement" abstract="true" eSuperTypes="#//Element">

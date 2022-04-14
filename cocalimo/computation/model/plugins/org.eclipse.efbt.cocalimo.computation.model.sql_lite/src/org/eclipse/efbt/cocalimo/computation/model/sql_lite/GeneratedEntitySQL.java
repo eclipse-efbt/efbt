@@ -4,6 +4,7 @@ package org.eclipse.efbt.cocalimo.computation.model.sql_lite;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.GeneratedEntity;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -47,25 +48,15 @@ public interface GeneratedEntitySQL extends EObject {
 	void setGeneratedEntity(GeneratedEntity value);
 
 	/**
-	 * Returns the value of the '<em><b>View</b></em>' reference.
+	 * Returns the value of the '<em><b>View</b></em>' reference list.
+	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.View}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>View</em>' reference.
-	 * @see #setView(View)
+	 * @return the value of the '<em>View</em>' reference list.
 	 * @see org.eclipse.efbt.cocalimo.computation.model.sql_lite.Sql_litePackage#getGeneratedEntitySQL_View()
 	 * @model
 	 * @generated
 	 */
-	View getView();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.GeneratedEntitySQL#getView <em>View</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>View</em>' reference.
-	 * @see #getView()
-	 * @generated
-	 */
-	void setView(View value);
+	EList<View> getView();
 
 } // GeneratedEntitySQL

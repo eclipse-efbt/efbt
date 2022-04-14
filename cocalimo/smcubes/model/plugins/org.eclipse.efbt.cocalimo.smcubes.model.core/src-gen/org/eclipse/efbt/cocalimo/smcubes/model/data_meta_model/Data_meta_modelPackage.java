@@ -66,7 +66,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getElement()
 	 * @generated
 	 */
-	int ELEMENT = 3;
+	int ELEMENT = 6;
 
 	/**
 	 * The number of structural features of the '<em>Element</em>' class.
@@ -94,7 +94,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getNamedElement()
 	 * @generated
 	 */
-	int NAMED_ELEMENT = 4;
+	int NAMED_ELEMENT = 7;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -131,7 +131,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getTypedElement()
 	 * @generated
 	 */
-	int TYPED_ELEMENT = 7;
+	int TYPED_ELEMENT = 10;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -177,7 +177,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getStructuralFeature()
 	 * @generated
 	 */
-	int STRUCTURAL_FEATURE = 6;
+	int STRUCTURAL_FEATURE = 9;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -289,14 +289,14 @@ public interface Data_meta_modelPackage extends EPackage {
 	int ATTRIBUTE_OPERATION_COUNT = STRUCTURAL_FEATURE_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.ForeignKeyAttributeImpl <em>Foreign Key Attribute</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.RelationshipAttributeImpl <em>Relationship Attribute</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.ForeignKeyAttributeImpl
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getForeignKeyAttribute()
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.RelationshipAttributeImpl
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getRelationshipAttribute()
 	 * @generated
 	 */
-	int FOREIGN_KEY_ATTRIBUTE = 1;
+	int RELATIONSHIP_ATTRIBUTE = 1;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -305,7 +305,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FOREIGN_KEY_ATTRIBUTE__NAME = ATTRIBUTE__NAME;
+	int RELATIONSHIP_ATTRIBUTE__NAME = ATTRIBUTE__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Classifier</b></em>' reference.
@@ -314,7 +314,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FOREIGN_KEY_ATTRIBUTE__CLASSIFIER = ATTRIBUTE__CLASSIFIER;
+	int RELATIONSHIP_ATTRIBUTE__CLASSIFIER = ATTRIBUTE__CLASSIFIER;
 
 	/**
 	 * The feature id for the '<em><b>Is PK</b></em>' attribute.
@@ -323,7 +323,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FOREIGN_KEY_ATTRIBUTE__IS_PK = ATTRIBUTE__IS_PK;
+	int RELATIONSHIP_ATTRIBUTE__IS_PK = ATTRIBUTE__IS_PK;
 
 	/**
 	 * The feature id for the '<em><b>Variable</b></em>' reference.
@@ -332,7 +332,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FOREIGN_KEY_ATTRIBUTE__VARIABLE = ATTRIBUTE__VARIABLE;
+	int RELATIONSHIP_ATTRIBUTE__VARIABLE = ATTRIBUTE__VARIABLE;
 
 	/**
 	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
@@ -341,7 +341,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FOREIGN_KEY_ATTRIBUTE__ORDERED = ATTRIBUTE__ORDERED;
+	int RELATIONSHIP_ATTRIBUTE__ORDERED = ATTRIBUTE__ORDERED;
 
 	/**
 	 * The feature id for the '<em><b>Entity</b></em>' reference.
@@ -350,7 +350,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FOREIGN_KEY_ATTRIBUTE__ENTITY = ATTRIBUTE_FEATURE_COUNT + 0;
+	int RELATIONSHIP_ATTRIBUTE__ENTITY = ATTRIBUTE_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Containment</b></em>' attribute.
@@ -359,16 +359,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FOREIGN_KEY_ATTRIBUTE__CONTAINMENT = ATTRIBUTE_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Cardinality</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FOREIGN_KEY_ATTRIBUTE__CARDINALITY = ATTRIBUTE_FEATURE_COUNT + 2;
+	int RELATIONSHIP_ATTRIBUTE__CONTAINMENT = ATTRIBUTE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Mandatory</b></em>' attribute.
@@ -377,25 +368,325 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FOREIGN_KEY_ATTRIBUTE__MANDATORY = ATTRIBUTE_FEATURE_COUNT + 3;
+	int RELATIONSHIP_ATTRIBUTE__MANDATORY = ATTRIBUTE_FEATURE_COUNT + 2;
 
 	/**
-	 * The number of structural features of the '<em>Foreign Key Attribute</em>' class.
+	 * The number of structural features of the '<em>Relationship Attribute</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FOREIGN_KEY_ATTRIBUTE_FEATURE_COUNT = ATTRIBUTE_FEATURE_COUNT + 4;
+	int RELATIONSHIP_ATTRIBUTE_FEATURE_COUNT = ATTRIBUTE_FEATURE_COUNT + 3;
 
 	/**
-	 * The number of operations of the '<em>Foreign Key Attribute</em>' class.
+	 * The number of operations of the '<em>Relationship Attribute</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FOREIGN_KEY_ATTRIBUTE_OPERATION_COUNT = ATTRIBUTE_OPERATION_COUNT + 0;
+	int RELATIONSHIP_ATTRIBUTE_OPERATION_COUNT = ATTRIBUTE_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.OneToOneRelationshipAttributeImpl <em>One To One Relationship Attribute</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.OneToOneRelationshipAttributeImpl
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getOneToOneRelationshipAttribute()
+	 * @generated
+	 */
+	int ONE_TO_ONE_RELATIONSHIP_ATTRIBUTE = 2;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ONE_TO_ONE_RELATIONSHIP_ATTRIBUTE__NAME = RELATIONSHIP_ATTRIBUTE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Classifier</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ONE_TO_ONE_RELATIONSHIP_ATTRIBUTE__CLASSIFIER = RELATIONSHIP_ATTRIBUTE__CLASSIFIER;
+
+	/**
+	 * The feature id for the '<em><b>Is PK</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ONE_TO_ONE_RELATIONSHIP_ATTRIBUTE__IS_PK = RELATIONSHIP_ATTRIBUTE__IS_PK;
+
+	/**
+	 * The feature id for the '<em><b>Variable</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ONE_TO_ONE_RELATIONSHIP_ATTRIBUTE__VARIABLE = RELATIONSHIP_ATTRIBUTE__VARIABLE;
+
+	/**
+	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ONE_TO_ONE_RELATIONSHIP_ATTRIBUTE__ORDERED = RELATIONSHIP_ATTRIBUTE__ORDERED;
+
+	/**
+	 * The feature id for the '<em><b>Entity</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ONE_TO_ONE_RELATIONSHIP_ATTRIBUTE__ENTITY = RELATIONSHIP_ATTRIBUTE__ENTITY;
+
+	/**
+	 * The feature id for the '<em><b>Containment</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ONE_TO_ONE_RELATIONSHIP_ATTRIBUTE__CONTAINMENT = RELATIONSHIP_ATTRIBUTE__CONTAINMENT;
+
+	/**
+	 * The feature id for the '<em><b>Mandatory</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ONE_TO_ONE_RELATIONSHIP_ATTRIBUTE__MANDATORY = RELATIONSHIP_ATTRIBUTE__MANDATORY;
+
+	/**
+	 * The number of structural features of the '<em>One To One Relationship Attribute</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ONE_TO_ONE_RELATIONSHIP_ATTRIBUTE_FEATURE_COUNT = RELATIONSHIP_ATTRIBUTE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of operations of the '<em>One To One Relationship Attribute</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ONE_TO_ONE_RELATIONSHIP_ATTRIBUTE_OPERATION_COUNT = RELATIONSHIP_ATTRIBUTE_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.ManyToOneRelationshipAttributeImpl <em>Many To One Relationship Attribute</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.ManyToOneRelationshipAttributeImpl
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getManyToOneRelationshipAttribute()
+	 * @generated
+	 */
+	int MANY_TO_ONE_RELATIONSHIP_ATTRIBUTE = 3;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MANY_TO_ONE_RELATIONSHIP_ATTRIBUTE__NAME = RELATIONSHIP_ATTRIBUTE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Classifier</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MANY_TO_ONE_RELATIONSHIP_ATTRIBUTE__CLASSIFIER = RELATIONSHIP_ATTRIBUTE__CLASSIFIER;
+
+	/**
+	 * The feature id for the '<em><b>Is PK</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MANY_TO_ONE_RELATIONSHIP_ATTRIBUTE__IS_PK = RELATIONSHIP_ATTRIBUTE__IS_PK;
+
+	/**
+	 * The feature id for the '<em><b>Variable</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MANY_TO_ONE_RELATIONSHIP_ATTRIBUTE__VARIABLE = RELATIONSHIP_ATTRIBUTE__VARIABLE;
+
+	/**
+	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MANY_TO_ONE_RELATIONSHIP_ATTRIBUTE__ORDERED = RELATIONSHIP_ATTRIBUTE__ORDERED;
+
+	/**
+	 * The feature id for the '<em><b>Entity</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MANY_TO_ONE_RELATIONSHIP_ATTRIBUTE__ENTITY = RELATIONSHIP_ATTRIBUTE__ENTITY;
+
+	/**
+	 * The feature id for the '<em><b>Containment</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MANY_TO_ONE_RELATIONSHIP_ATTRIBUTE__CONTAINMENT = RELATIONSHIP_ATTRIBUTE__CONTAINMENT;
+
+	/**
+	 * The feature id for the '<em><b>Mandatory</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MANY_TO_ONE_RELATIONSHIP_ATTRIBUTE__MANDATORY = RELATIONSHIP_ATTRIBUTE__MANDATORY;
+
+	/**
+	 * The number of structural features of the '<em>Many To One Relationship Attribute</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MANY_TO_ONE_RELATIONSHIP_ATTRIBUTE_FEATURE_COUNT = RELATIONSHIP_ATTRIBUTE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of operations of the '<em>Many To One Relationship Attribute</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MANY_TO_ONE_RELATIONSHIP_ATTRIBUTE_OPERATION_COUNT = RELATIONSHIP_ATTRIBUTE_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.OneToManyRelationshipAttributeImpl <em>One To Many Relationship Attribute</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.OneToManyRelationshipAttributeImpl
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getOneToManyRelationshipAttribute()
+	 * @generated
+	 */
+	int ONE_TO_MANY_RELATIONSHIP_ATTRIBUTE = 4;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ONE_TO_MANY_RELATIONSHIP_ATTRIBUTE__NAME = RELATIONSHIP_ATTRIBUTE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Classifier</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ONE_TO_MANY_RELATIONSHIP_ATTRIBUTE__CLASSIFIER = RELATIONSHIP_ATTRIBUTE__CLASSIFIER;
+
+	/**
+	 * The feature id for the '<em><b>Is PK</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ONE_TO_MANY_RELATIONSHIP_ATTRIBUTE__IS_PK = RELATIONSHIP_ATTRIBUTE__IS_PK;
+
+	/**
+	 * The feature id for the '<em><b>Variable</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ONE_TO_MANY_RELATIONSHIP_ATTRIBUTE__VARIABLE = RELATIONSHIP_ATTRIBUTE__VARIABLE;
+
+	/**
+	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ONE_TO_MANY_RELATIONSHIP_ATTRIBUTE__ORDERED = RELATIONSHIP_ATTRIBUTE__ORDERED;
+
+	/**
+	 * The feature id for the '<em><b>Entity</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ONE_TO_MANY_RELATIONSHIP_ATTRIBUTE__ENTITY = RELATIONSHIP_ATTRIBUTE__ENTITY;
+
+	/**
+	 * The feature id for the '<em><b>Containment</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ONE_TO_MANY_RELATIONSHIP_ATTRIBUTE__CONTAINMENT = RELATIONSHIP_ATTRIBUTE__CONTAINMENT;
+
+	/**
+	 * The feature id for the '<em><b>Mandatory</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ONE_TO_MANY_RELATIONSHIP_ATTRIBUTE__MANDATORY = RELATIONSHIP_ATTRIBUTE__MANDATORY;
+
+	/**
+	 * The number of structural features of the '<em>One To Many Relationship Attribute</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ONE_TO_MANY_RELATIONSHIP_ATTRIBUTE_FEATURE_COUNT = RELATIONSHIP_ATTRIBUTE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of operations of the '<em>One To Many Relationship Attribute</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ONE_TO_MANY_RELATIONSHIP_ATTRIBUTE_OPERATION_COUNT = RELATIONSHIP_ATTRIBUTE_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.ClassifierImpl <em>Classifier</em>}' class.
@@ -405,7 +696,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getClassifier()
 	 * @generated
 	 */
-	int CLASSIFIER = 2;
+	int CLASSIFIER = 5;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -442,7 +733,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getEntityModule()
 	 * @generated
 	 */
-	int ENTITY_MODULE = 5;
+	int ENTITY_MODULE = 8;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' containment reference.
@@ -551,7 +842,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getEntity()
 	 * @generated
 	 */
-	int ENTITY = 9;
+	int ENTITY = 12;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -588,7 +879,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getGeneratedEntity()
 	 * @generated
 	 */
-	int GENERATED_ENTITY = 8;
+	int GENERATED_ENTITY = 11;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -634,7 +925,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getDerivedEntity()
 	 * @generated
 	 */
-	int DERIVED_ENTITY = 10;
+	int DERIVED_ENTITY = 13;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -680,7 +971,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getBasicEntity()
 	 * @generated
 	 */
-	int BASIC_ENTITY = 11;
+	int BASIC_ENTITY = 14;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -772,58 +1063,77 @@ public interface Data_meta_modelPackage extends EPackage {
 	EAttribute getAttribute_Ordered();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ForeignKeyAttribute <em>Foreign Key Attribute</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.RelationshipAttribute <em>Relationship Attribute</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Foreign Key Attribute</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ForeignKeyAttribute
+	 * @return the meta object for class '<em>Relationship Attribute</em>'.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.RelationshipAttribute
 	 * @generated
 	 */
-	EClass getForeignKeyAttribute();
+	EClass getRelationshipAttribute();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ForeignKeyAttribute#getEntity <em>Entity</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.RelationshipAttribute#getEntity <em>Entity</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Entity</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ForeignKeyAttribute#getEntity()
-	 * @see #getForeignKeyAttribute()
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.RelationshipAttribute#getEntity()
+	 * @see #getRelationshipAttribute()
 	 * @generated
 	 */
-	EReference getForeignKeyAttribute_Entity();
+	EReference getRelationshipAttribute_Entity();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ForeignKeyAttribute#isContainment <em>Containment</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.RelationshipAttribute#isContainment <em>Containment</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Containment</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ForeignKeyAttribute#isContainment()
-	 * @see #getForeignKeyAttribute()
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.RelationshipAttribute#isContainment()
+	 * @see #getRelationshipAttribute()
 	 * @generated
 	 */
-	EAttribute getForeignKeyAttribute_Containment();
+	EAttribute getRelationshipAttribute_Containment();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ForeignKeyAttribute#getCardinality <em>Cardinality</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Cardinality</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ForeignKeyAttribute#getCardinality()
-	 * @see #getForeignKeyAttribute()
-	 * @generated
-	 */
-	EAttribute getForeignKeyAttribute_Cardinality();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ForeignKeyAttribute#isMandatory <em>Mandatory</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.RelationshipAttribute#isMandatory <em>Mandatory</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Mandatory</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ForeignKeyAttribute#isMandatory()
-	 * @see #getForeignKeyAttribute()
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.RelationshipAttribute#isMandatory()
+	 * @see #getRelationshipAttribute()
 	 * @generated
 	 */
-	EAttribute getForeignKeyAttribute_Mandatory();
+	EAttribute getRelationshipAttribute_Mandatory();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.OneToOneRelationshipAttribute <em>One To One Relationship Attribute</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>One To One Relationship Attribute</em>'.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.OneToOneRelationshipAttribute
+	 * @generated
+	 */
+	EClass getOneToOneRelationshipAttribute();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ManyToOneRelationshipAttribute <em>Many To One Relationship Attribute</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Many To One Relationship Attribute</em>'.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ManyToOneRelationshipAttribute
+	 * @generated
+	 */
+	EClass getManyToOneRelationshipAttribute();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.OneToManyRelationshipAttribute <em>One To Many Relationship Attribute</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>One To Many Relationship Attribute</em>'.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.OneToManyRelationshipAttribute
+	 * @generated
+	 */
+	EClass getOneToManyRelationshipAttribute();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Classifier <em>Classifier</em>}'.
@@ -1082,14 +1392,14 @@ public interface Data_meta_modelPackage extends EPackage {
 		EAttribute ATTRIBUTE__ORDERED = eINSTANCE.getAttribute_Ordered();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.ForeignKeyAttributeImpl <em>Foreign Key Attribute</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.RelationshipAttributeImpl <em>Relationship Attribute</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.ForeignKeyAttributeImpl
-		 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getForeignKeyAttribute()
+		 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.RelationshipAttributeImpl
+		 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getRelationshipAttribute()
 		 * @generated
 		 */
-		EClass FOREIGN_KEY_ATTRIBUTE = eINSTANCE.getForeignKeyAttribute();
+		EClass RELATIONSHIP_ATTRIBUTE = eINSTANCE.getRelationshipAttribute();
 
 		/**
 		 * The meta object literal for the '<em><b>Entity</b></em>' reference feature.
@@ -1097,7 +1407,7 @@ public interface Data_meta_modelPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference FOREIGN_KEY_ATTRIBUTE__ENTITY = eINSTANCE.getForeignKeyAttribute_Entity();
+		EReference RELATIONSHIP_ATTRIBUTE__ENTITY = eINSTANCE.getRelationshipAttribute_Entity();
 
 		/**
 		 * The meta object literal for the '<em><b>Containment</b></em>' attribute feature.
@@ -1105,15 +1415,7 @@ public interface Data_meta_modelPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute FOREIGN_KEY_ATTRIBUTE__CONTAINMENT = eINSTANCE.getForeignKeyAttribute_Containment();
-
-		/**
-		 * The meta object literal for the '<em><b>Cardinality</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute FOREIGN_KEY_ATTRIBUTE__CARDINALITY = eINSTANCE.getForeignKeyAttribute_Cardinality();
+		EAttribute RELATIONSHIP_ATTRIBUTE__CONTAINMENT = eINSTANCE.getRelationshipAttribute_Containment();
 
 		/**
 		 * The meta object literal for the '<em><b>Mandatory</b></em>' attribute feature.
@@ -1121,7 +1423,37 @@ public interface Data_meta_modelPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute FOREIGN_KEY_ATTRIBUTE__MANDATORY = eINSTANCE.getForeignKeyAttribute_Mandatory();
+		EAttribute RELATIONSHIP_ATTRIBUTE__MANDATORY = eINSTANCE.getRelationshipAttribute_Mandatory();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.OneToOneRelationshipAttributeImpl <em>One To One Relationship Attribute</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.OneToOneRelationshipAttributeImpl
+		 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getOneToOneRelationshipAttribute()
+		 * @generated
+		 */
+		EClass ONE_TO_ONE_RELATIONSHIP_ATTRIBUTE = eINSTANCE.getOneToOneRelationshipAttribute();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.ManyToOneRelationshipAttributeImpl <em>Many To One Relationship Attribute</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.ManyToOneRelationshipAttributeImpl
+		 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getManyToOneRelationshipAttribute()
+		 * @generated
+		 */
+		EClass MANY_TO_ONE_RELATIONSHIP_ATTRIBUTE = eINSTANCE.getManyToOneRelationshipAttribute();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.OneToManyRelationshipAttributeImpl <em>One To Many Relationship Attribute</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.OneToManyRelationshipAttributeImpl
+		 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getOneToManyRelationshipAttribute()
+		 * @generated
+		 */
+		EClass ONE_TO_MANY_RELATIONSHIP_ATTRIBUTE = eINSTANCE.getOneToManyRelationshipAttribute();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.ClassifierImpl <em>Classifier</em>}' class.

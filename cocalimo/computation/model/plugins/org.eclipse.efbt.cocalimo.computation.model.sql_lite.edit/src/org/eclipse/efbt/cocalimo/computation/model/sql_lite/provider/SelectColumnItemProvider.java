@@ -11,16 +11,8 @@ import org.eclipse.efbt.cocalimo.computation.model.sql_lite.Sql_litePackage;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 
-import org.eclipse.emf.common.util.ResourceLocator;
-
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
-import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
-import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
-import org.eclipse.emf.edit.provider.IItemPropertySource;
-import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
-import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
-import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 
 /**
  * This is the item provider adapter for a {@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.SelectColumn} object.
@@ -28,14 +20,7 @@ import org.eclipse.emf.edit.provider.ItemProviderAdapter;
  * <!-- end-user-doc -->
  * @generated
  */
-public class SelectColumnItemProvider 
-	extends ItemProviderAdapter
-	implements
-		IEditingDomainItemProvider,
-		IStructuredItemContentProvider,
-		ITreeItemContentProvider,
-		IItemLabelProvider,
-		IItemPropertySource {
+public class SelectColumnItemProvider extends ColumnItemProvider {
 	/**
 	 * This constructs an instance from a factory and a notifier.
 	 * <!-- begin-user-doc -->
@@ -58,6 +43,7 @@ public class SelectColumnItemProvider
 			super.getPropertyDescriptors(object);
 
 			addAsPropertyDescriptor(object);
+			addMemberAsConstantPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -76,6 +62,28 @@ public class SelectColumnItemProvider
 				 getString("_UI_SelectColumn_as_feature"),
 				 getString("_UI_PropertyDescriptor_description", "_UI_SelectColumn_as_feature", "_UI_SelectColumn_type"),
 				 Sql_litePackage.Literals.SELECT_COLUMN__AS,
+				 true,
+				 false,
+				 true,
+				 null,
+				 null,
+				 null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Member As Constant feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addMemberAsConstantPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_SelectColumn_memberAsConstant_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_SelectColumn_memberAsConstant_feature", "_UI_SelectColumn_type"),
+				 Sql_litePackage.Literals.SELECT_COLUMN__MEMBER_AS_CONSTANT,
 				 true,
 				 false,
 				 true,
@@ -119,17 +127,6 @@ public class SelectColumnItemProvider
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
-	}
-
-	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public ResourceLocator getResourceLocator() {
-		return Sql_liteEditPlugin.INSTANCE;
 	}
 
 }

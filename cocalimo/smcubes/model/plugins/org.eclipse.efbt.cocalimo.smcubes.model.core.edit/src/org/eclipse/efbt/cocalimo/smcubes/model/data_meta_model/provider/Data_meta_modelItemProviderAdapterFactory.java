@@ -94,26 +94,95 @@ public class Data_meta_modelItemProviderAdapterFactory extends Data_meta_modelAd
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ForeignKeyAttribute} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.RelationshipAttribute} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ForeignKeyAttributeItemProvider foreignKeyAttributeItemProvider;
+	protected RelationshipAttributeItemProvider relationshipAttributeItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ForeignKeyAttribute}.
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.RelationshipAttribute}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	public Adapter createForeignKeyAttributeAdapter() {
-		if (foreignKeyAttributeItemProvider == null) {
-			foreignKeyAttributeItemProvider = new ForeignKeyAttributeItemProvider(this);
+	public Adapter createRelationshipAttributeAdapter() {
+		if (relationshipAttributeItemProvider == null) {
+			relationshipAttributeItemProvider = new RelationshipAttributeItemProvider(this);
 		}
 
-		return foreignKeyAttributeItemProvider;
+		return relationshipAttributeItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.OneToOneRelationshipAttribute} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected OneToOneRelationshipAttributeItemProvider oneToOneRelationshipAttributeItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.OneToOneRelationshipAttribute}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createOneToOneRelationshipAttributeAdapter() {
+		if (oneToOneRelationshipAttributeItemProvider == null) {
+			oneToOneRelationshipAttributeItemProvider = new OneToOneRelationshipAttributeItemProvider(this);
+		}
+
+		return oneToOneRelationshipAttributeItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ManyToOneRelationshipAttribute} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ManyToOneRelationshipAttributeItemProvider manyToOneRelationshipAttributeItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ManyToOneRelationshipAttribute}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createManyToOneRelationshipAttributeAdapter() {
+		if (manyToOneRelationshipAttributeItemProvider == null) {
+			manyToOneRelationshipAttributeItemProvider = new ManyToOneRelationshipAttributeItemProvider(this);
+		}
+
+		return manyToOneRelationshipAttributeItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.OneToManyRelationshipAttribute} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected OneToManyRelationshipAttributeItemProvider oneToManyRelationshipAttributeItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.OneToManyRelationshipAttribute}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createOneToManyRelationshipAttributeAdapter() {
+		if (oneToManyRelationshipAttributeItemProvider == null) {
+			oneToManyRelationshipAttributeItemProvider = new OneToManyRelationshipAttributeItemProvider(this);
+		}
+
+		return oneToManyRelationshipAttributeItemProvider;
 	}
 
 	/**

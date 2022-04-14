@@ -76,14 +76,50 @@ public class Data_meta_modelSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case Data_meta_modelPackage.FOREIGN_KEY_ATTRIBUTE: {
-				ForeignKeyAttribute foreignKeyAttribute = (ForeignKeyAttribute)theEObject;
-				T result = caseForeignKeyAttribute(foreignKeyAttribute);
-				if (result == null) result = caseAttribute(foreignKeyAttribute);
-				if (result == null) result = caseStructuralFeature(foreignKeyAttribute);
-				if (result == null) result = caseTypedElement(foreignKeyAttribute);
-				if (result == null) result = caseNamedElement(foreignKeyAttribute);
-				if (result == null) result = caseElement(foreignKeyAttribute);
+			case Data_meta_modelPackage.RELATIONSHIP_ATTRIBUTE: {
+				RelationshipAttribute relationshipAttribute = (RelationshipAttribute)theEObject;
+				T result = caseRelationshipAttribute(relationshipAttribute);
+				if (result == null) result = caseAttribute(relationshipAttribute);
+				if (result == null) result = caseStructuralFeature(relationshipAttribute);
+				if (result == null) result = caseTypedElement(relationshipAttribute);
+				if (result == null) result = caseNamedElement(relationshipAttribute);
+				if (result == null) result = caseElement(relationshipAttribute);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Data_meta_modelPackage.ONE_TO_ONE_RELATIONSHIP_ATTRIBUTE: {
+				OneToOneRelationshipAttribute oneToOneRelationshipAttribute = (OneToOneRelationshipAttribute)theEObject;
+				T result = caseOneToOneRelationshipAttribute(oneToOneRelationshipAttribute);
+				if (result == null) result = caseRelationshipAttribute(oneToOneRelationshipAttribute);
+				if (result == null) result = caseAttribute(oneToOneRelationshipAttribute);
+				if (result == null) result = caseStructuralFeature(oneToOneRelationshipAttribute);
+				if (result == null) result = caseTypedElement(oneToOneRelationshipAttribute);
+				if (result == null) result = caseNamedElement(oneToOneRelationshipAttribute);
+				if (result == null) result = caseElement(oneToOneRelationshipAttribute);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Data_meta_modelPackage.MANY_TO_ONE_RELATIONSHIP_ATTRIBUTE: {
+				ManyToOneRelationshipAttribute manyToOneRelationshipAttribute = (ManyToOneRelationshipAttribute)theEObject;
+				T result = caseManyToOneRelationshipAttribute(manyToOneRelationshipAttribute);
+				if (result == null) result = caseRelationshipAttribute(manyToOneRelationshipAttribute);
+				if (result == null) result = caseAttribute(manyToOneRelationshipAttribute);
+				if (result == null) result = caseStructuralFeature(manyToOneRelationshipAttribute);
+				if (result == null) result = caseTypedElement(manyToOneRelationshipAttribute);
+				if (result == null) result = caseNamedElement(manyToOneRelationshipAttribute);
+				if (result == null) result = caseElement(manyToOneRelationshipAttribute);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Data_meta_modelPackage.ONE_TO_MANY_RELATIONSHIP_ATTRIBUTE: {
+				OneToManyRelationshipAttribute oneToManyRelationshipAttribute = (OneToManyRelationshipAttribute)theEObject;
+				T result = caseOneToManyRelationshipAttribute(oneToManyRelationshipAttribute);
+				if (result == null) result = caseRelationshipAttribute(oneToManyRelationshipAttribute);
+				if (result == null) result = caseAttribute(oneToManyRelationshipAttribute);
+				if (result == null) result = caseStructuralFeature(oneToManyRelationshipAttribute);
+				if (result == null) result = caseTypedElement(oneToManyRelationshipAttribute);
+				if (result == null) result = caseNamedElement(oneToManyRelationshipAttribute);
+				if (result == null) result = caseElement(oneToManyRelationshipAttribute);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -187,17 +223,62 @@ public class Data_meta_modelSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Foreign Key Attribute</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Relationship Attribute</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Foreign Key Attribute</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Relationship Attribute</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseForeignKeyAttribute(ForeignKeyAttribute object) {
+	public T caseRelationshipAttribute(RelationshipAttribute object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>One To One Relationship Attribute</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>One To One Relationship Attribute</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseOneToOneRelationshipAttribute(OneToOneRelationshipAttribute object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Many To One Relationship Attribute</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Many To One Relationship Attribute</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseManyToOneRelationshipAttribute(ManyToOneRelationshipAttribute object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>One To Many Relationship Attribute</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>One To Many Relationship Attribute</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseOneToManyRelationshipAttribute(OneToManyRelationshipAttribute object) {
 		return null;
 	}
 

@@ -477,12 +477,14 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_meta_model.ecore#//Attribute/variable"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_meta_model.ecore#//Attribute/ordered"/>
     </genClasses>
-    <genClasses ecoreClass="data_meta_model.ecore#//ForeignKeyAttribute">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_meta_model.ecore#//ForeignKeyAttribute/entity"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_meta_model.ecore#//ForeignKeyAttribute/containment"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_meta_model.ecore#//ForeignKeyAttribute/cardinality"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_meta_model.ecore#//ForeignKeyAttribute/mandatory"/>
+    <genClasses ecoreClass="data_meta_model.ecore#//RelationshipAttribute">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_meta_model.ecore#//RelationshipAttribute/entity"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_meta_model.ecore#//RelationshipAttribute/containment"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_meta_model.ecore#//RelationshipAttribute/mandatory"/>
     </genClasses>
+    <genClasses ecoreClass="data_meta_model.ecore#//OneToOneRelationshipAttribute"/>
+    <genClasses ecoreClass="data_meta_model.ecore#//ManyToOneRelationshipAttribute"/>
+    <genClasses ecoreClass="data_meta_model.ecore#//OneToManyRelationshipAttribute"/>
     <genClasses image="false" ecoreClass="data_meta_model.ecore#//Classifier"/>
     <genClasses image="false" ecoreClass="data_meta_model.ecore#//Element"/>
     <genClasses image="false" ecoreClass="data_meta_model.ecore#//NamedElement">
