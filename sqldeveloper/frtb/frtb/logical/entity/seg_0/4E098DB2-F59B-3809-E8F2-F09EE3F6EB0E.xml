@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="4E098DB2-F59B-3809-E8F2-F09EE3F6EB0E" name="Equity isuue">
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="4E098DB2-F59B-3809-E8F2-F09EE3F6EB0E" name="Equity issue">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 08:44:19 UTC</createdTime>
 <ownerDesignName>frtb</ownerDesignName>
@@ -15,4 +15,20 @@
 <maxVolumes>9999999</maxVolumes>
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="Risk factor Identifier" id="60DC73AF-3526-2660-D51C-C89B3F6DAB28">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-14 08:59:09 UTC</createdTime>
+<generatorID>51581835-0EB3-A20D-FE96-99D73DC26D32</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<engineerTo>
+<item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
+</engineerTo>
+<referedAttribute>6F905B6C-EC99-1422-CBA1-C8E591102FAE</referedAttribute>
+<use>0</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<domain>6FBEB348-B901-2CC5-03F9-29A90524DCDA</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
 </Entity>

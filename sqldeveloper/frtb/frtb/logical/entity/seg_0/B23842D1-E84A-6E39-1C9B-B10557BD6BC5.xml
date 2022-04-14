@@ -29,5 +29,19 @@
 <domain>B11F7524-2D69-9CB2-DC3A-EFE9FFEFE6AD</domain>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="Risk factor Identifier" id="1199BB78-74C1-33B3-7BEE-8817DA6E9C43">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-14 09:00:57 UTC</createdTime>
+<generatorID>609E646F-44F1-8B17-8BD3-D4B7E0B8E361</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<engineerTo>
+<item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
+</engineerTo>
+<referedAttribute>6F905B6C-EC99-1422-CBA1-C8E591102FAE</referedAttribute>
+<use>0</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<domain>6FBEB348-B901-2CC5-03F9-29A90524DCDA</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 </attributes>
 </Entity>

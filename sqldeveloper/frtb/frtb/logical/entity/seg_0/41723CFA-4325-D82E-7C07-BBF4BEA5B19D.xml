@@ -43,5 +43,20 @@
 <domain>EAE9AB06-8C26-B8CC-733E-02CAD25C9CC8</domain>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="Organisation identifier" id="3E2AAB99-1910-8B42-E304-EE2BE4544F2C">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-14 08:57:54 UTC</createdTime>
+<generatorID>F4967460-7822-C4DB-CBDD-8D936D400EDC</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<engineerTo>
+<item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>44B2D652-92E9-5FAE-AA89-6B63EB4037CA</referedAttribute>
+<use>0</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<domain>6FBEB348-B901-2CC5-03F9-29A90524DCDA</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 </attributes>
 </Entity>
