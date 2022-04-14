@@ -31,5 +31,18 @@
 <domain>674DA4DA-389E-A8EE-AE58-A91EA11BCF81</domain>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="Delivery location" id="34DBA1DF-E5A2-07F8-8478-C962E4ADBF61">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-14 07:40:09 UTC</createdTime>
+<ownerDesignName>frtb</ownerDesignName>
+<engineerTo>
+<item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<domain>78E25C16-8968-20B4-E330-DA4578EE46CF</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 </attributes>
 </Entity>

@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="C479F3DA-D525-3B6D-27B8-E0950E385F50" name="EquityRiskFactor">
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="C479F3DA-D525-3B6D-27B8-E0950E385F50" name="Equity risk factor">
 <createdBy>Neil</createdBy>
 <createdTime>2022-03-27 11:26:02 UTC</createdTime>
 <ownerDesignName>frtb</ownerDesignName>
