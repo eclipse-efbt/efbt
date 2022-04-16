@@ -1,0 +1,17 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="F05EEF6C-28B0-ECF7-AFC9-8BBD343B54E4" containerWithKeyObject="43C376FF-B049-E4D1-9C03-78D2F5522843" localFKIndex="84B98A3A-38C5-8213-1F5C-8CF54518F95E" name="DLT_SNSTVTY_SCRTY_EXCHNG_TRDBL_DRVTV_PSTN_FK">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 05:45:00 UTC</createdTime>
+<generatorID>2F9C701F-8755-3AF6-37C0-C8E75557AABE</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<referredTableLongName>SCRTY_EXCHNG_TRDBL_DRVTV_PSTN</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>8D224641-EB89-85CC-4FB6-D50637F67CB6</referredTableID>
+<keyObject>3B4D88C1-AF8E-C379-2EC4-F1978F3BCB6C</keyObject>
+<referredKeyID>3B4D88C1-AF8E-C379-2EC4-F1978F3BCB6C</referredKeyID>
+<mandatory>false</mandatory>
+<refColNames>Position_identifier</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

@@ -16,8 +16,9 @@
 <ownerDesignName>frtb</ownerDesignName>
 <importedID>1427FBA3-05E0-CA88-F2BC-BC801DCE8AB8</importedID>
 <avTSortOrder>0</avTSortOrder>
+<dataTypeSize>3</dataTypeSize>
 <fileName>frtb_domains</fileName>
-<logicalDatatype>LOGDT017</logicalDatatype>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
 <synonym>EQUTY_FCTR_TYP</synonym>
 <listOfValues>
 <valueDef value="1" description="Spot"/>
@@ -43,6 +44,17 @@
 <valueDef value="6" description="Securitisation non CTP risk factor"/>
 <valueDef value="7" description="Securitisation CTP Risk Factor"/>
 </listOfValues>
+</Domain>
+<Domain class="oracle.dbtools.crest.model.design.Domain" name="Risk measure type" id="4041534B-669E-8BBD-B449-AED36F6E4944">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 05:57:50 UTC</createdTime>
+<ownerDesignName>frtb</ownerDesignName>
+<importedID>4041534B-669E-8BBD-B449-AED36F6E4944</importedID>
+<avTSortOrder>0</avTSortOrder>
+<dataTypeSize>3</dataTypeSize>
+<fileName>frtb_domains</fileName>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<synonym>RSK_MSR_TYP</synonym>
 </Domain>
 <Domain class="oracle.dbtools.crest.model.design.Domain" name="Currency" directorySegmentName="seg_2" id="61D993CB-3857-0254-82CE-4524A856851C">
 <createdBy>Neil</createdBy>

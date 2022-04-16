@@ -1,0 +1,207 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="D23E64FC-EE22-1E30-0DC6-56E99E46CE66" name="RSK_FCTR">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 05:45:00 UTC</createdTime>
+<generatorID>E7C4E383-AABB-082F-EAE7-A59D01E27340</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="Risk_factor_Identifier" id="1049539A-FD92-25A1-F3D5-1310CB6690E5">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 05:45:00 UTC</createdTime>
+<generatorID>6F905B6C-EC99-1422-CBA1-C8E591102FAE</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<use>0</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<domain>6FBEB348-B901-2CC5-03F9-29A90524DCDA</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Risk_factor_type" id="EB41600D-9B61-949A-944D-4CA6A872AF9E">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 05:45:00 UTC</createdTime>
+<generatorID>234F8B58-00BE-7DB5-5F7B-81EFF40BE2AD</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<domain>27DE6432-B160-AF80-EE48-D0605ACFFB3B</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="CSR_curve_type" id="70FD8063-D46C-AEEC-2B44-6AF70F7061B1">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 05:45:00 UTC</createdTime>
+<generatorID>0A3B6592-CD7C-AB86-7DAE-AA430519D938</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<domain>8777D069-1937-E11E-A414-E3DF0C1A9AEE</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="CSR_credit_quality" id="A070B936-581F-A29D-2C35-365AA7CA47E1">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 05:45:00 UTC</createdTime>
+<generatorID>4A855998-5B1B-F6B7-9A7F-F5A2D53D0A2F</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<domain>EAE9AB06-8C26-B8CC-733E-02CAD25C9CC8</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Organisation_Organisation_identifier" id="48382EAD-5A8B-105F-E4FC-7B232585F103">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 05:45:00 UTC</createdTime>
+<generatorID>3E2AAB99-1910-8B42-E304-EE2BE4544F2C</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<domain>6FBEB348-B901-2CC5-03F9-29A90524DCDA</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="D6DBEF58-7613-AD93-0EE1-BDF7DB5F0889" referredColumn="23DDFEC6-4B39-5D62-9956-4743AB99B2FB"/>
+</associations>
+</Column>
+<Column name="Tranche_name" id="C0860F27-1EC0-D2D5-F42B-85D5A8D64FEA">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 05:45:00 UTC</createdTime>
+<generatorID>8102EC40-CC02-20E6-C2D4-D888711E368D</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<domain>78E25C16-8968-20B4-E330-DA4578EE46CF</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="EQUTY_FCTR_TYP" id="E200108F-0704-E951-4209-ED6ED9AEFCF7">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 05:45:00 UTC</createdTime>
+<generatorID>BAF2B796-C678-E47C-0645-8A1FFD2A0399</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<domain>1427FBA3-05E0-CA88-F2BC-BC801DCE8AB8</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="GIRR_risk_factor_type" id="69C86203-28D1-194D-5DE2-F2919F2A16CF">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 05:45:00 UTC</createdTime>
+<generatorID>0A77E337-549A-27A5-3B08-F70824F6D7EB</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<domain>A38EA317-F0EC-770D-9FFB-56136AA62106</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Main_currency" id="F766C4F4-B080-3A4A-9469-0B219962A90E">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 05:45:00 UTC</createdTime>
+<generatorID>6CB45D8D-6EFF-1928-F265-999371B2D27A</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<domain>61D993CB-3857-0254-82CE-4524A856851C</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Second_currency" id="F39885E4-0C7D-CAD9-035C-AEED28426C3D">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 05:45:00 UTC</createdTime>
+<generatorID>A58B61ED-C746-B60E-94B4-422E863E40B5</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<domain>61D993CB-3857-0254-82CE-4524A856851C</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ccy1" id="CA66B2FD-CE23-E1DD-8E68-8245BD5DF639">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 05:45:00 UTC</createdTime>
+<generatorID>1436AD10-075E-7747-A4F0-16924D5282AF</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<domain>78E25C16-8968-20B4-E330-DA4578EE46CF</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ccy2" id="42D10EB8-0716-FF8E-563A-51FBA0572EC9">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 05:45:00 UTC</createdTime>
+<generatorID>CEA079F2-E011-E332-677A-8E2446896C08</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<domain>78E25C16-8968-20B4-E330-DA4578EE46CF</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Commodity_type" id="974BF8EB-39E8-100D-432F-443588912AC8">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 05:45:00 UTC</createdTime>
+<generatorID>41D094AE-CB6D-8185-8855-6D21A8F9D77C</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<domain>674DA4DA-389E-A8EE-AE58-A91EA11BCF81</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Delivery_location" id="6C2F43DA-B886-8142-693A-E43F12CB7CCE">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 05:45:00 UTC</createdTime>
+<generatorID>34DBA1DF-E5A2-07F8-8478-C962E4ADBF61</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<domain>78E25C16-8968-20B4-E330-DA4578EE46CF</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="A2ED2BB1-D494-5DFD-64DA-E329EFEEE481" name="RSK_FCTR_PK">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 05:45:00 UTC</createdTime>
+<generatorID>9E7F110D-E570-2E2A-6E49-88AB2575D767</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="1049539A-FD92-25A1-F3D5-1310CB6690E5"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="5D38B334-F961-CDF1-943A-D24D07775C8E" name="RSK_FCTR_Organisation_FK">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 05:45:00 UTC</createdTime>
+<generatorID>F4967460-7822-C4DB-CBDD-8D936D400EDC</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="48382EAD-5A8B-105F-E4FC-7B232585F103"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

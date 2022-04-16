@@ -1,11 +1,10 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="E5488186-437C-BC1C-8AC2-048D08999A0A" name="Commodity risk factor">
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="A4E1F026-BF8E-548C-4A9D-C0B863F89F47" name="Risk measure">
 <createdBy>Neil</createdBy>
-<createdTime>2022-03-27 11:05:47 UTC</createdTime>
+<createdTime>2022-04-16 05:52:50 UTC</createdTime>
 <ownerDesignName>frtb</ownerDesignName>
-<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="4A877030-048B-D06C-4FDA-CFD46925CBD6" value="false"/>
+<item key="4A877030-048B-D06C-4FDA-CFD46925CBD6" value="true"/>
 <item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
 </engineerTo>
 <adequatelyNormalized>NO</adequatelyNormalized>
@@ -13,30 +12,27 @@
 <fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
 <growthPercent>0</growthPercent>
 <growthType>Year</growthType>
-<hierarchicalParent>E7C4E383-AABB-082F-EAE7-A59D01E27340</hierarchicalParent>
 <maxVolumes>9999999</maxVolumes>
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
-<preferredAbbreviation>CMMDTY_RSK_FCTR</preferredAbbreviation>
-<attributeInherType>All atributes</attributeInherType>
+<preferredAbbreviation>RSK_MSR</preferredAbbreviation>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
-<Attribute name="Commodity type" id="41D094AE-CB6D-8185-8855-6D21A8F9D77C">
+<Attribute name="Risk measure identifier" id="2CEEE7DA-CBD4-26D2-1EF9-EC7DD4E1E251">
 <createdBy>Neil</createdBy>
-<createdTime>2022-04-14 06:14:13 UTC</createdTime>
+<createdTime>2022-04-16 05:54:02 UTC</createdTime>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="4A877030-048B-D06C-4FDA-CFD46925CBD6" value="true"/>
 <item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
 </engineerTo>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
-<domain>674DA4DA-389E-A8EE-AE58-A91EA11BCF81</domain>
+<domain>6FBEB348-B901-2CC5-03F9-29A90524DCDA</domain>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="Delivery location" id="34DBA1DF-E5A2-07F8-8478-C962E4ADBF61">
+<Attribute name="Risk measure type" id="8DC4F242-60D0-1CB8-16D3-58E8B8CB2C64">
 <createdBy>Neil</createdBy>
-<createdTime>2022-04-14 07:40:09 UTC</createdTime>
+<createdTime>2022-04-16 05:58:04 UTC</createdTime>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="4A877030-048B-D06C-4FDA-CFD46925CBD6" value="true"/>
@@ -45,8 +41,23 @@
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
-<domain>78E25C16-8968-20B4-E330-DA4578EE46CF</domain>
+<domain>4041534B-669E-8BBD-B449-AED36F6E4944</domain>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 </attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="39C5F6E1-A7F6-E0E8-40FF-791D2727CD8B" name="Risk measure PK">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 05:54:17 UTC</createdTime>
+<ownerDesignName>frtb</ownerDesignName>
+<engineerTo>
+<item key="4A877030-048B-D06C-4FDA-CFD46925CBD6" value="true"/>
+<item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>2CEEE7DA-CBD4-26D2-1EF9-EC7DD4E1E251</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
 </Entity>

@@ -1,0 +1,17 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="E8168DF5-1288-5BC0-9717-E24E714CEDBC" containerWithKeyObject="14C2FD86-424C-E1EA-EFCF-FC818F64113D" localFKIndex="69A8AB68-E744-7DEE-389C-1A64A3749484" name="VG_SNSTVTY_SCRTY_EXCHNG_TRDBL_DRVTV_PSTN_FK">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 05:45:00 UTC</createdTime>
+<generatorID>8494D491-6667-3A59-291E-D4DE8BA77BBC</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<referredTableLongName>SCRTY_EXCHNG_TRDBL_DRVTV_PSTN</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>8D224641-EB89-85CC-4FB6-D50637F67CB6</referredTableID>
+<keyObject>3B4D88C1-AF8E-C379-2EC4-F1978F3BCB6C</keyObject>
+<referredKeyID>3B4D88C1-AF8E-C379-2EC4-F1978F3BCB6C</referredKeyID>
+<mandatory>false</mandatory>
+<refColNames>Position_identifier</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

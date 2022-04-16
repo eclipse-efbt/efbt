@@ -1,0 +1,35 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="8D224641-EB89-85CC-4FB6-D50637F67CB6" name="SCRTY_EXCHNG_TRDBL_DRVTV_PSTN">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 05:45:00 UTC</createdTime>
+<generatorID>7F7861A5-652D-E468-5DF9-35EEB805D06C</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="Position_identifier" id="6728CC5E-14C0-7848-BF47-7AE30E741D76">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 05:45:00 UTC</createdTime>
+<generatorID>F905716C-56AA-D854-32B3-33220A5D482E</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="3B4D88C1-AF8E-C379-2EC4-F1978F3BCB6C" name="SCRTY_EXCHNG_TRDBL_DRVTV_PSTN_PK">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 05:45:00 UTC</createdTime>
+<generatorID>266FA0A5-BEAD-6550-2E8E-73D04F5170B0</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="6728CC5E-14C0-7848-BF47-7AE30E741D76"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>
