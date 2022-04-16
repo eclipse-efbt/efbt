@@ -4,7 +4,7 @@
 <createdTime>2022-04-16 05:52:50 UTC</createdTime>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
-<item key="EF34D309-3CC0-708E-536C-B09F6950A02B" value="true"/>
+<item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
 <item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
 </engineerTo>
 <adequatelyNormalized>NO</adequatelyNormalized>
@@ -15,14 +15,13 @@
 <maxVolumes>9999999</maxVolumes>
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
-<preferredAbbreviation>RSK_MSR</preferredAbbreviation>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
 <Attribute name="Risk measure identifier" id="2CEEE7DA-CBD4-26D2-1EF9-EC7DD4E1E251">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-16 05:54:02 UTC</createdTime>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
-<item key="EF34D309-3CC0-708E-536C-B09F6950A02B" value="true"/>
+<item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
 <item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
 </engineerTo>
 <use>0</use>
@@ -35,7 +34,7 @@
 <createdTime>2022-04-16 05:58:04 UTC</createdTime>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
-<item key="EF34D309-3CC0-708E-536C-B09F6950A02B" value="true"/>
+<item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
 <item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
 </engineerTo>
 <nullsAllowed>true</nullsAllowed>
@@ -50,7 +49,7 @@
 <generatorID>61F68422-DB16-E699-396E-7F7E05929587</generatorID>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
-<item key="EF34D309-3CC0-708E-536C-B09F6950A02B" value="true"/>
+<item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
 <item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
 </engineerTo>
 <nullsAllowed>true</nullsAllowed>
@@ -66,7 +65,7 @@
 <generatorID>C5D7EE96-E799-F6F8-6B9D-E05B4B34EE4A</generatorID>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
-<item key="EF34D309-3CC0-708E-536C-B09F6950A02B" value="true"/>
+<item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
 <item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
 </engineerTo>
 <nullsAllowed>true</nullsAllowed>
@@ -83,7 +82,7 @@
 <createdTime>2022-04-16 05:54:17 UTC</createdTime>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
-<item key="EF34D309-3CC0-708E-536C-B09F6950A02B" value="true"/>
+<item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
 <item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
 </engineerTo>
 <pk>true</pk>
