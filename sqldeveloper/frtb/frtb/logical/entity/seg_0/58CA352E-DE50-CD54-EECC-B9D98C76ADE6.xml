@@ -4,6 +4,7 @@
 <createdTime>2022-04-14 08:05:53 UTC</createdTime>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
+<item key="2430595D-1BD7-5DC0-FCA1-CD2C817CB01E" value="true"/>
 <item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
 </engineerTo>
 <adequatelyNormalized>NO</adequatelyNormalized>
@@ -20,6 +21,7 @@
 <createdTime>2022-04-14 08:06:28 UTC</createdTime>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
+<item key="2430595D-1BD7-5DC0-FCA1-CD2C817CB01E" value="true"/>
 <item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
 </engineerTo>
 <nullsAllowed>true</nullsAllowed>
@@ -33,9 +35,9 @@
 <createdTime>2022-04-14 08:07:03 UTC</createdTime>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
+<item key="2430595D-1BD7-5DC0-FCA1-CD2C817CB01E" value="true"/>
 <item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
 </engineerTo>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
 <domain>6FBEB348-B901-2CC5-03F9-29A90524DCDA</domain>
@@ -47,6 +49,7 @@
 <generatorID>8D535C8F-2910-B878-51D6-91AC6852B8AC</generatorID>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
+<item key="2430595D-1BD7-5DC0-FCA1-CD2C817CB01E" value="true"/>
 <item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
 </engineerTo>
 <nullsAllowed>true</nullsAllowed>
@@ -57,4 +60,19 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 </attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="547DF613-70FC-63E6-6800-F5C6E65866A8" name="Security issue PK">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 06:36:45 UTC</createdTime>
+<ownerDesignName>frtb</ownerDesignName>
+<engineerTo>
+<item key="2430595D-1BD7-5DC0-FCA1-CD2C817CB01E" value="true"/>
+<item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>D59D2351-11DE-5835-5579-2B664C07C628</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
 </Entity>

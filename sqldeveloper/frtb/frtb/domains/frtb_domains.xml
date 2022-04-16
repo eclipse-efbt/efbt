@@ -31,9 +31,9 @@
 <ownerDesignName>frtb</ownerDesignName>
 <importedID>27DE6432-B160-AF80-EE48-D0605ACFFB3B</importedID>
 <avTSortOrder>0</avTSortOrder>
-<dataTypeSize>1</dataTypeSize>
+<dataTypeSize>3</dataTypeSize>
 <fileName>frtb_domains</fileName>
-<logicalDatatype>LOGDT017</logicalDatatype>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
 <synonym>RSK_FCTR_TYP</synonym>
 <listOfValues>
 <valueDef value="1" description="GIRR risk factor"/>

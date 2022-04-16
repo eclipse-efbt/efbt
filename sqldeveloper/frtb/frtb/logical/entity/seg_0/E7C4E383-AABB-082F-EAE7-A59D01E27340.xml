@@ -40,6 +40,7 @@
 </engineerTo>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
 <domain>27DE6432-B160-AF80-EE48-D0605ACFFB3B</domain>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
