@@ -1,0 +1,17 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="4EFA9621-B991-9996-D564-10CCD6EDE0E1" containerWithKeyObject="6A907C33-5B45-D5D7-EAB2-D461B1550F8B" localFKIndex="27FEDF91-940B-A2FC-14B6-5CD163315A3A" name="RSK_FCTR_Security_issue_FK">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 06:24:43 UTC</createdTime>
+<generatorID>51581835-0EB3-A20D-FE96-99D73DC26D32</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<referredTableLongName>Security_issue</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>8127F228-94DE-3233-E510-FF607AA064E2</referredTableID>
+<keyObject>4D37EC60-FB0D-9794-CD63-A324AFEC5D8C</keyObject>
+<referredKeyID>4D37EC60-FB0D-9794-CD63-A324AFEC5D8C</referredKeyID>
+<mandatory>false</mandatory>
+<refColNames>Security_issue_ID</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

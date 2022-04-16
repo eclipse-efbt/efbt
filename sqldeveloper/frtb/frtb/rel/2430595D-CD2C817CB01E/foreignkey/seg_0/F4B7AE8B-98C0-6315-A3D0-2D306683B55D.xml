@@ -1,0 +1,17 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="F4B7AE8B-98C0-6315-A3D0-2D306683B55D" containerWithKeyObject="6A907C33-5B45-D5D7-EAB2-D461B1550F8B" localFKIndex="C52B3E59-2412-35DD-EE8C-9BEF5DE4C3E9" name="RSK_FCTR_Organisation_FK">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 06:24:43 UTC</createdTime>
+<generatorID>F4967460-7822-C4DB-CBDD-8D936D400EDC</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<referredTableLongName>Organisation</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>3353BBAC-0A2A-8383-5CEF-1C5BECA5A7DB</referredTableID>
+<keyObject>ED1D91B5-5E3E-DD4D-2B64-566DC64952C6</keyObject>
+<referredKeyID>ED1D91B5-5E3E-DD4D-2B64-566DC64952C6</referredKeyID>
+<mandatory>false</mandatory>
+<refColNames>Organisation_identifier</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>
