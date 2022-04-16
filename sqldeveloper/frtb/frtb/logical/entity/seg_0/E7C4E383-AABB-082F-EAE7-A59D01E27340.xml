@@ -4,6 +4,7 @@
 <createdTime>2022-03-27 11:00:24 UTC</createdTime>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
+<item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
 <item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
 </engineerTo>
 <adequatelyNormalized>NO</adequatelyNormalized>
@@ -14,13 +15,13 @@
 <maxVolumes>9999999</maxVolumes>
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
-<preferredAbbreviation>RSK_FCTR</preferredAbbreviation>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
 <Attribute name="Risk factor Identifier" id="6F905B6C-EC99-1422-CBA1-C8E591102FAE">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-10 08:44:42 UTC</createdTime>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
+<item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
 <item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
 </engineerTo>
 <use>0</use>
@@ -33,10 +34,12 @@
 <createdTime>2022-04-14 05:44:27 UTC</createdTime>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
+<item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
 <item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
 </engineerTo>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
 <domain>27DE6432-B160-AF80-EE48-D0605ACFFB3B</domain>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
@@ -47,6 +50,7 @@
 <createdTime>2022-04-14 07:40:43 UTC</createdTime>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
+<item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
 <item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
 </engineerTo>
 <pk>true</pk>

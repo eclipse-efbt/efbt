@@ -3,7 +3,9 @@
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 09:11:19 UTC</createdTime>
 <ownerDesignName>frtb</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
+<item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="false"/>
 <item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
 </engineerTo>
 <adequatelyNormalized>NO</adequatelyNormalized>
@@ -11,56 +13,19 @@
 <fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
 <growthPercent>0</growthPercent>
 <growthType>Year</growthType>
+<hierarchicalParent>A4E1F026-BF8E-548C-4A9D-C0B863F89F47</hierarchicalParent>
 <maxVolumes>9999999</maxVolumes>
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <preferredAbbreviation>VG_SNSTVTY</preferredAbbreviation>
+<createSurrogateKey>true</createSurrogateKey>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
-<Attribute name="Risk factor Identifier" id="B0FF8B8F-15D5-44C3-A40F-F59B7AD9727F">
-<createdBy>Neil</createdBy>
-<createdTime>2022-04-14 09:12:13 UTC</createdTime>
-<generatorID>6183D666-8312-451D-F5DB-DF75B2D1649F</generatorID>
-<ownerDesignName>frtb</ownerDesignName>
-<engineerTo>
-<item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<referedAttribute>6F905B6C-EC99-1422-CBA1-C8E591102FAE</referedAttribute>
-<use>0</use>
-<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
-<domain>6FBEB348-B901-2CC5-03F9-29A90524DCDA</domain>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="Position identifier" id="BCCA16B2-9B1D-853E-4188-596F20DD4EAD">
-<createdBy>Neil</createdBy>
-<createdTime>2022-04-14 09:14:51 UTC</createdTime>
-<generatorID>8494D491-6667-3A59-291E-D4DE8BA77BBC</generatorID>
-<ownerDesignName>frtb</ownerDesignName>
-<engineerTo>
-<item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<referedAttribute>F905716C-56AA-D854-32B3-33220A5D482E</referedAttribute>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="Vega sensitivity identifier" id="00623F94-6E3E-BAD1-70A7-4E507A11AA64">
-<createdBy>Neil</createdBy>
-<createdTime>2022-04-14 09:15:03 UTC</createdTime>
-<ownerDesignName>frtb</ownerDesignName>
-<engineerTo>
-<item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
-</engineerTo>
-<use>0</use>
-<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
-<domain>6FBEB348-B901-2CC5-03F9-29A90524DCDA</domain>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
 <Attribute name="Currency of record" id="AAE0595B-9931-FFBE-745C-7F4816A6FBAA">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 09:15:26 UTC</createdTime>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
+<item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
 <item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
 </engineerTo>
 <nullsAllowed>true</nullsAllowed>
@@ -69,11 +34,12 @@
 <domain>6FBEB348-B901-2CC5-03F9-29A90524DCDA</domain>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="Vega option maturity" id="C78476ED-23B6-819D-275B-51A406887D78">
+<Attribute name="option maturity" id="C78476ED-23B6-819D-275B-51A406887D78">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 09:15:42 UTC</createdTime>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
+<item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
 <item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
 </engineerTo>
 <nullsAllowed>true</nullsAllowed>
@@ -82,11 +48,12 @@
 <domain>EF979509-4418-5FAC-812C-8FD0322FE1D6</domain>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="Vega option underlying residual maturity" id="4F905639-BB92-E626-3F22-F7B2CE64E33A">
+<Attribute name="underlying residual maturity" id="4F905639-BB92-E626-3F22-F7B2CE64E33A">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 09:16:16 UTC</createdTime>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
+<item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
 <item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
 </engineerTo>
 <nullsAllowed>true</nullsAllowed>
@@ -100,6 +67,7 @@
 <createdTime>2022-04-14 09:17:00 UTC</createdTime>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
+<item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
 <item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
 </engineerTo>
 <nullsAllowed>true</nullsAllowed>
@@ -109,18 +77,4 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 </attributes>
-<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
-<identifier id="75F508CE-CFCC-57F6-E0C2-9D3402FB0CE5" name="Vega sensitivity PK">
-<createdBy>Neil</createdBy>
-<createdTime>2022-04-14 09:15:23 UTC</createdTime>
-<ownerDesignName>frtb</ownerDesignName>
-<engineerTo>
-<item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
-</engineerTo>
-<pk>true</pk>
-<usedAttributes>
-<attributeRef>00623F94-6E3E-BAD1-70A7-4E507A11AA64</attributeRef>
-</usedAttributes>
-</identifier>
-</identifiers>
 </Entity>
