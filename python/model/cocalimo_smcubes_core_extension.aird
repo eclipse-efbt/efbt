@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" xsi:schemaLocation="http://www.eclipse.org/sirius/description/1.1.0 http://www.eclipse.org/sirius/1.1.0#//description" uid="_jYBFIM34Eeyp1KaeZDM8rw" selectedViews="_jwkIAM34Eeyp1KaeZDM8rw _jw9JkM34Eeyp1KaeZDM8rw _jw-XsM34Eeyp1KaeZDM8rw _jxD3QM34Eeyp1KaeZDM8rw" version="15.0.0.202201261500">
+  <semanticResources>cocalimo_smcubes_core_extension.ecore</semanticResources>
+  <semanticResources>module_management.ecore</semanticResources>
+  <semanticResources>core.ecore</semanticResources>
+  <semanticResources>data_meta_model.ecore</semanticResources>
+  <ownedViews xmi:type="viewpoint:DView" uid="_jwkIAM34Eeyp1KaeZDM8rw">
+    <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']"/>
+  </ownedViews>
+  <ownedViews xmi:type="viewpoint:DView" uid="_jw9JkM34Eeyp1KaeZDM8rw">
+    <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Review']"/>
+  </ownedViews>
+  <ownedViews xmi:type="viewpoint:DView" uid="_jw-XsM34Eeyp1KaeZDM8rw">
+    <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Archetype']"/>
+  </ownedViews>
+  <ownedViews xmi:type="viewpoint:DView" uid="_jxD3QM34Eeyp1KaeZDM8rw">
+    <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Generation']"/>
+  </ownedViews>
+</viewpoint:DAnalysis>
