@@ -4,7 +4,8 @@ Created on 22 Jan 2022
 @author: Neil
 '''
 from data_meta_model import EntityModule, Entity, DerivedEntity, BasicEntity
-from core import MEMBER
+from core import MEMBER, DOMAIN
+from cocalimo_smcubes_core_extension import DomainModule, SMCubesCoreModel, MemberModule, VariableModule
 from pyecore.resources import ResourceSet, URI
 import csv
 class SQLDeveloperImport(object):
@@ -58,6 +59,12 @@ class SQLDeveloperImport(object):
         fileLocation = fileDirectory + "\\DM_Domains.csv"
         headerSkipped = False
         counter = 0
+        domainsModule = DomainModule()
+        domainsModule.name = "domainsModule"
+        membersModule = MemberModule()
+        membersModule.name = "membersModule"
+        
+        
         with open(fileLocation) as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -70,8 +77,9 @@ class SQLDeveloperImport(object):
                     adaptedEnumName = SQLDeveloperImport.replaceSpaceWithUnderscore(self,enumName)
                     print(SQLDeveloperImport.inEnumBlackList(self,adaptedEnumName))
                     if(not SQLDeveloperImport.inEnumBlackList(self,adaptedEnumName)):
-                        theEnumeration = MEMBER(adaptedEnumName)
-                        birdpackage.eClassifiers.extend([theEnumeration])
+                        theEnumeration = DOMAIN()
+                        theEnumeration.name = adaptedEnumName
+                        domainsModule.domains.extend([theEnumeration])
                         enumMap[enumID] = theEnumeration
 
                         
@@ -94,12 +102,13 @@ class SQLDeveloperImport(object):
                         adaptedValue = SQLDeveloperImport.replaceSpaceWithUnderscore(self,value)
                         try:
                             theEnumeration = enumMap[enumID]
-                            literals = theEnumeration.eLiterals
+                            literals = SQLDeveloperImport.getLiteralsForEnumeration(theEnumeration,membersModule)
                             #if the literal does not exist already, then add it
                             if (not SQLDeveloperImport.containsLiteral(self,literals, adaptedValue)):
-                                literal = EEnumLiteral(adaptedValue)
-                                literal.value = counter
-                                literals.add(literal)
+                                literal = MEMBER()
+                                literal.name = adaptedValue
+                                #literal.value = counter
+                                membersModule.members.extend([literal])
                                 
                         except KeyError:
                             print( "missing domain: " + enumID )
@@ -107,9 +116,10 @@ class SQLDeveloperImport(object):
                         literals = theEnumeration.eLiterals
                         #if the literal does not exist already, then add it
                         if (not SQLDeveloperImport.containsLiteral(self,literals, adaptedValue)):
-                            literal = EEnumLiteral(adaptedValue)
-                            literal.value = counter;
-                            literals.add(literal)
+                            literal = MEMBER()
+                            literal.name = adaptedValue
+                            #literal.value = counter;
+                            literals.extend([literal])
                     except IndexError:
                         print( "row in DM_Domain_AVT.csv skipped  due to improper formatting at row number")
                         print(counter)
@@ -338,8 +348,13 @@ class SQLDeveloperImport(object):
             if (eEnumLiteral.name == adaptedValue):
                 contains = True
 
-        return contains     
+        return contains
     
+    def getLiteralsForEnumeration(self, enumeration):    
+        for eEnumLiteral in literals:
+            if (eEnumLiteral.name == adaptedValue):
+                contains = True
+        
 if __name__ == '__main__':
     SQLDeveloperImport().convert('C:\\Users\\Neil\\freebirdtools-develop-march22\\git\\efbt\\python\\resources','C:\\Users\\Neil\\freebirdtools-develop-march22\\git\\efbt\\python\\results\\')
     

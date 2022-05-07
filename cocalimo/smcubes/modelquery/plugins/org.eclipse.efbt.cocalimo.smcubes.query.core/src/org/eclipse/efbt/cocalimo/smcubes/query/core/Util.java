@@ -14,7 +14,7 @@ package org.eclipse.efbt.cocalimo.smcubes.query.core;
 
 import java.io.File;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.SmcubesModel;
+import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_core_extension.SMCubesCoreModel;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -38,7 +38,7 @@ public class Util {
 	 * @param o
 	 * @return
 	 */
-	public static SmcubesModel getDefaultBirdModel(EObject o) {
+	public static SMCubesCoreModel getDefaultBirdModel(EObject o) {
 	
 		/**ResourceSet rs = o.eResource().getResourceSet();
 		    String birdModelXMLFile = o.eResource().getURI().trimSegments(1)
@@ -46,7 +46,7 @@ public class Util {
 		    File file = new File(birdModelXMLFile);
 		    URI uri = file.isFile() ? URI.createFileURI(file.getAbsolutePath()) : URI.createURI(birdModelXMLFile);
 		    Resource resource = rs.getResource(uri, true);*/
-		    return (SmcubesModel) o.eResource().getContents().get(1);
+		    return (SMCubesCoreModel) o.eResource().getContents().get(1);
 	}
 
 }
