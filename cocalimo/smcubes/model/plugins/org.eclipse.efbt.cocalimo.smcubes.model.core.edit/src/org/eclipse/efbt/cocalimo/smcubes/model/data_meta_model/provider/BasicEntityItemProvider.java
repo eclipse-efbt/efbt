@@ -184,6 +184,11 @@ public class BasicEntityItemProvider extends EntityItemProvider {
 			(createChildParameter
 				(Data_meta_modelPackage.Literals.BASIC_ENTITY__ATTRIBUTES,
 				 Data_meta_modelFactory.eINSTANCE.createOneToManyRelationshipAttribute()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(Data_meta_modelPackage.Literals.BASIC_ENTITY__ATTRIBUTES,
+				 Data_meta_modelFactory.eINSTANCE.createManyToManyRelationshipAttribute()));
 	}
 
 }

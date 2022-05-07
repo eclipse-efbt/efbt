@@ -123,6 +123,18 @@ public class Data_meta_modelSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case Data_meta_modelPackage.MANY_TO_MANY_RELATIONSHIP_ATTRIBUTE: {
+				ManyToManyRelationshipAttribute manyToManyRelationshipAttribute = (ManyToManyRelationshipAttribute)theEObject;
+				T result = caseManyToManyRelationshipAttribute(manyToManyRelationshipAttribute);
+				if (result == null) result = caseRelationshipAttribute(manyToManyRelationshipAttribute);
+				if (result == null) result = caseAttribute(manyToManyRelationshipAttribute);
+				if (result == null) result = caseStructuralFeature(manyToManyRelationshipAttribute);
+				if (result == null) result = caseTypedElement(manyToManyRelationshipAttribute);
+				if (result == null) result = caseNamedElement(manyToManyRelationshipAttribute);
+				if (result == null) result = caseElement(manyToManyRelationshipAttribute);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case Data_meta_modelPackage.CLASSIFIER: {
 				Classifier classifier = (Classifier)theEObject;
 				T result = caseClassifier(classifier);
@@ -279,6 +291,21 @@ public class Data_meta_modelSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseOneToManyRelationshipAttribute(OneToManyRelationshipAttribute object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Many To Many Relationship Attribute</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Many To Many Relationship Attribute</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseManyToManyRelationshipAttribute(ManyToManyRelationshipAttribute object) {
 		return null;
 	}
 

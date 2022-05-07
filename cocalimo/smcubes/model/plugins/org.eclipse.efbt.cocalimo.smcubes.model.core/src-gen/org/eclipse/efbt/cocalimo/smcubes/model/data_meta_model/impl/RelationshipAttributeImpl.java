@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.RelationshipAttributeImpl#getEntity <em>Entity</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.RelationshipAttributeImpl#isContainment <em>Containment</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.RelationshipAttributeImpl#isMandatory <em>Mandatory</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.RelationshipAttributeImpl#isDominant <em>Dominant</em>}</li>
  * </ul>
  *
  * @generated
@@ -78,6 +79,26 @@ public class RelationshipAttributeImpl extends AttributeImpl implements Relation
 	 * @ordered
 	 */
 	protected boolean mandatory = MANDATORY_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isDominant() <em>Dominant</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDominant()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean DOMINANT_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isDominant() <em>Dominant</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDominant()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean dominant = DOMINANT_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -190,6 +211,29 @@ public class RelationshipAttributeImpl extends AttributeImpl implements Relation
 	 * @generated
 	 */
 	@Override
+	public boolean isDominant() {
+		return dominant;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDominant(boolean newDominant) {
+		boolean oldDominant = dominant;
+		dominant = newDominant;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, Data_meta_modelPackage.RELATIONSHIP_ATTRIBUTE__DOMINANT, oldDominant, dominant));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case Data_meta_modelPackage.RELATIONSHIP_ATTRIBUTE__ENTITY:
@@ -199,6 +243,8 @@ public class RelationshipAttributeImpl extends AttributeImpl implements Relation
 				return isContainment();
 			case Data_meta_modelPackage.RELATIONSHIP_ATTRIBUTE__MANDATORY:
 				return isMandatory();
+			case Data_meta_modelPackage.RELATIONSHIP_ATTRIBUTE__DOMINANT:
+				return isDominant();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -219,6 +265,9 @@ public class RelationshipAttributeImpl extends AttributeImpl implements Relation
 				return;
 			case Data_meta_modelPackage.RELATIONSHIP_ATTRIBUTE__MANDATORY:
 				setMandatory((Boolean)newValue);
+				return;
+			case Data_meta_modelPackage.RELATIONSHIP_ATTRIBUTE__DOMINANT:
+				setDominant((Boolean)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -241,6 +290,9 @@ public class RelationshipAttributeImpl extends AttributeImpl implements Relation
 			case Data_meta_modelPackage.RELATIONSHIP_ATTRIBUTE__MANDATORY:
 				setMandatory(MANDATORY_EDEFAULT);
 				return;
+			case Data_meta_modelPackage.RELATIONSHIP_ATTRIBUTE__DOMINANT:
+				setDominant(DOMINANT_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -259,6 +311,8 @@ public class RelationshipAttributeImpl extends AttributeImpl implements Relation
 				return containment != CONTAINMENT_EDEFAULT;
 			case Data_meta_modelPackage.RELATIONSHIP_ATTRIBUTE__MANDATORY:
 				return mandatory != MANDATORY_EDEFAULT;
+			case Data_meta_modelPackage.RELATIONSHIP_ATTRIBUTE__DOMINANT:
+				return dominant != DOMINANT_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -277,6 +331,8 @@ public class RelationshipAttributeImpl extends AttributeImpl implements Relation
 		result.append(containment);
 		result.append(", mandatory: ");
 		result.append(mandatory);
+		result.append(", dominant: ");
+		result.append(dominant);
 		result.append(')');
 		return result.toString();
 	}

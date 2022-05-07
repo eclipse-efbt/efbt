@@ -48,6 +48,7 @@ public class RelationshipAttributeItemProvider extends AttributeItemProvider {
 			addEntityPropertyDescriptor(object);
 			addContainmentPropertyDescriptor(object);
 			addMandatoryPropertyDescriptor(object);
+			addDominantPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -119,6 +120,28 @@ public class RelationshipAttributeItemProvider extends AttributeItemProvider {
 	}
 
 	/**
+	 * This adds a property descriptor for the Dominant feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addDominantPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_RelationshipAttribute_dominant_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_RelationshipAttribute_dominant_feature", "_UI_RelationshipAttribute_type"),
+				 Data_meta_modelPackage.Literals.RELATIONSHIP_ATTRIBUTE__DOMINANT,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
 	 * This returns RelationshipAttribute.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -158,6 +181,7 @@ public class RelationshipAttributeItemProvider extends AttributeItemProvider {
 		switch (notification.getFeatureID(RelationshipAttribute.class)) {
 			case Data_meta_modelPackage.RELATIONSHIP_ATTRIBUTE__CONTAINMENT:
 			case Data_meta_modelPackage.RELATIONSHIP_ATTRIBUTE__MANDATORY:
+			case Data_meta_modelPackage.RELATIONSHIP_ATTRIBUTE__DOMINANT:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 		}

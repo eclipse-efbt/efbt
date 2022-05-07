@@ -1,0 +1,22 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="risk factorv2" directorySegmentName="seg_0" id="002FA71D-BBA7-E42F-5E61-D0C4C62C5D57">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-17 04:19:26 UTC</createdTime>
+<ownerDesignName>frtb</ownerDesignName>
+<engineerTo>
+<item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
+<item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
+</engineerTo>
+<sourcePk>6ECD8691-A689-0761-B961-32CC2DB686DE</sourcePk>
+<targetPk>9E7F110D-E570-2E2A-6E49-88AB2575D767</targetPk>
+<dominantRole>E7C4E383-AABB-082F-EAE7-A59D01E27340</dominantRole>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>34908E02-53E1-6647-E07D-2921F33DDF28</sourceEntity>
+<targetCardinalityString>1</targetCardinalityString>
+<targetEntity>E7C4E383-AABB-082F-EAE7-A59D01E27340</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

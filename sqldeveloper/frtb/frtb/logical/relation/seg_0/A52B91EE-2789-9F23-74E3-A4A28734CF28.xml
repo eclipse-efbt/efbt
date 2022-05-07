@@ -1,0 +1,20 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="delta sensitivities" directorySegmentName="seg_0" id="A52B91EE-2789-9F23-74E3-A4A28734CF28">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-17 04:13:07 UTC</createdTime>
+<ownerDesignName>frtb</ownerDesignName>
+<engineerTo>
+<item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
+<item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
+</engineerTo>
+<sourcePk>E72C17E6-A839-B2C8-BF2E-A3AA29DDDD24</sourcePk>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>*</sourceCardinality>
+<sourceEntity>60687E2A-238B-B025-EF89-32711E7C2564</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>74FDE155-399A-5886-2419-C144B9B3EE90</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

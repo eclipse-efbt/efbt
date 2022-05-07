@@ -61,6 +61,7 @@ public class Data_meta_modelFactoryImpl extends EFactoryImpl implements Data_met
 			case Data_meta_modelPackage.ONE_TO_ONE_RELATIONSHIP_ATTRIBUTE: return createOneToOneRelationshipAttribute();
 			case Data_meta_modelPackage.MANY_TO_ONE_RELATIONSHIP_ATTRIBUTE: return createManyToOneRelationshipAttribute();
 			case Data_meta_modelPackage.ONE_TO_MANY_RELATIONSHIP_ATTRIBUTE: return createOneToManyRelationshipAttribute();
+			case Data_meta_modelPackage.MANY_TO_MANY_RELATIONSHIP_ATTRIBUTE: return createManyToManyRelationshipAttribute();
 			case Data_meta_modelPackage.ENTITY_MODULE: return createEntityModule();
 			case Data_meta_modelPackage.GENERATED_ENTITY: return createGeneratedEntity();
 			case Data_meta_modelPackage.DERIVED_ENTITY: return createDerivedEntity();
@@ -123,6 +124,17 @@ public class Data_meta_modelFactoryImpl extends EFactoryImpl implements Data_met
 	public OneToManyRelationshipAttribute createOneToManyRelationshipAttribute() {
 		OneToManyRelationshipAttributeImpl oneToManyRelationshipAttribute = new OneToManyRelationshipAttributeImpl();
 		return oneToManyRelationshipAttribute;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public ManyToManyRelationshipAttribute createManyToManyRelationshipAttribute() {
+		ManyToManyRelationshipAttributeImpl manyToManyRelationshipAttribute = new ManyToManyRelationshipAttributeImpl();
+		return manyToManyRelationshipAttribute;
 	}
 
 	/**

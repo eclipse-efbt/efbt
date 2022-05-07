@@ -3,8 +3,8 @@
 <createdBy>Neil</createdBy>
 <createdTime>2022-03-27 11:26:02 UTC</createdTime>
 <ownerDesignName>frtb</ownerDesignName>
-<shouldEngineer>false</shouldEngineer>
 <engineerTo>
+<item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
 <item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="false"/>
 <item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
 </engineerTo>
@@ -24,6 +24,7 @@
 <createdTime>2022-04-14 07:45:24 UTC</createdTime>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
+<item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
 <item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
 <item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
 </engineerTo>
@@ -33,6 +34,23 @@
 <domain>1427FBA3-05E0-CA88-F2BC-BC801DCE8AB8</domain>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <preferredAbbreviation>EQUTY_FCTR_TYP</preferredAbbreviation>
+</Attribute>
+<Attribute name="Issue Identifier" id="E018E7F5-EA38-5477-756A-90B090C11B75">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-17 04:07:05 UTC</createdTime>
+<generatorID>51581835-0EB3-A20D-FE96-99D73DC26D32</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<engineerTo>
+<item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
+<item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
+<item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>D59D2351-11DE-5835-5579-2B664C07C628</referedAttribute>
+<use>0</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<domain>6FBEB348-B901-2CC5-03F9-29A90524DCDA</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 </attributes>
 </Entity>
