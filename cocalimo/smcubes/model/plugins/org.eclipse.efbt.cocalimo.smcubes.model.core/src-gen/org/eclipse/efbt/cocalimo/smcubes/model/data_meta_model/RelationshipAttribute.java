@@ -15,6 +15,7 @@ package org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model;
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.RelationshipAttribute#getEntity <em>Entity</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.RelationshipAttribute#isContainment <em>Containment</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.RelationshipAttribute#isMandatory <em>Mandatory</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.RelationshipAttribute#isDominant <em>Dominant</em>}</li>
  * </ul>
  *
  * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage#getRelationshipAttribute()
@@ -87,5 +88,27 @@ public interface RelationshipAttribute extends Attribute {
 	 * @generated
 	 */
 	void setMandatory(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Dominant</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Dominant</em>' attribute.
+	 * @see #setDominant(boolean)
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage#getRelationshipAttribute_Dominant()
+	 * @model
+	 * @generated
+	 */
+	boolean isDominant();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.RelationshipAttribute#isDominant <em>Dominant</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Dominant</em>' attribute.
+	 * @see #isDominant()
+	 * @generated
+	 */
+	void setDominant(boolean value);
 
 } // RelationshipAttribute

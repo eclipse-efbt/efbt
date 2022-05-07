@@ -481,10 +481,12 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_meta_model.ecore#//RelationshipAttribute/entity"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_meta_model.ecore#//RelationshipAttribute/containment"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_meta_model.ecore#//RelationshipAttribute/mandatory"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_meta_model.ecore#//RelationshipAttribute/dominant"/>
     </genClasses>
     <genClasses ecoreClass="data_meta_model.ecore#//OneToOneRelationshipAttribute"/>
     <genClasses ecoreClass="data_meta_model.ecore#//ManyToOneRelationshipAttribute"/>
     <genClasses ecoreClass="data_meta_model.ecore#//OneToManyRelationshipAttribute"/>
+    <genClasses ecoreClass="data_meta_model.ecore#//ManyToManyRelationshipAttribute"/>
     <genClasses image="false" ecoreClass="data_meta_model.ecore#//Classifier"/>
     <genClasses image="false" ecoreClass="data_meta_model.ecore#//Element"/>
     <genClasses image="false" ecoreClass="data_meta_model.ecore#//NamedElement">

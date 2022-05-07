@@ -67,6 +67,15 @@ public interface Data_meta_modelFactory extends EFactory {
 	OneToManyRelationshipAttribute createOneToManyRelationshipAttribute();
 
 	/**
+	 * Returns a new object of class '<em>Many To Many Relationship Attribute</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Many To Many Relationship Attribute</em>'.
+	 * @generated
+	 */
+	ManyToManyRelationshipAttribute createManyToManyRelationshipAttribute();
+
+	/**
 	 * Returns a new object of class '<em>Entity Module</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

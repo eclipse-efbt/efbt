@@ -160,6 +160,11 @@ public class GeneratedEntityItemProvider extends EntityItemProvider {
 			(createChildParameter
 				(Data_meta_modelPackage.Literals.GENERATED_ENTITY__ATTRIBUTES,
 				 Data_meta_modelFactory.eINSTANCE.createOneToManyRelationshipAttribute()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(Data_meta_modelPackage.Literals.GENERATED_ENTITY__ATTRIBUTES,
+				 Data_meta_modelFactory.eINSTANCE.createManyToManyRelationshipAttribute()));
 	}
 
 }

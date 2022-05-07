@@ -88,6 +88,10 @@ public class Data_meta_modelAdapterFactory extends AdapterFactoryImpl {
 				return createOneToManyRelationshipAttributeAdapter();
 			}
 			@Override
+			public Adapter caseManyToManyRelationshipAttribute(ManyToManyRelationshipAttribute object) {
+				return createManyToManyRelationshipAttributeAdapter();
+			}
+			@Override
 			public Adapter caseClassifier(Classifier object) {
 				return createClassifierAdapter();
 			}
@@ -218,6 +222,20 @@ public class Data_meta_modelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createOneToManyRelationshipAttributeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ManyToManyRelationshipAttribute <em>Many To Many Relationship Attribute</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ManyToManyRelationshipAttribute
+	 * @generated
+	 */
+	public Adapter createManyToManyRelationshipAttributeAdapter() {
 		return null;
 	}
 

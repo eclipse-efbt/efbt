@@ -186,6 +186,29 @@ public class Data_meta_modelItemProviderAdapterFactory extends Data_meta_modelAd
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ManyToManyRelationshipAttribute} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ManyToManyRelationshipAttributeItemProvider manyToManyRelationshipAttributeItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ManyToManyRelationshipAttribute}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createManyToManyRelationshipAttributeAdapter() {
+		if (manyToManyRelationshipAttributeItemProvider == null) {
+			manyToManyRelationshipAttributeItemProvider = new ManyToManyRelationshipAttributeItemProvider(this);
+		}
+
+		return manyToManyRelationshipAttributeItemProvider;
+	}
+
+	/**
 	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.EntityModule} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

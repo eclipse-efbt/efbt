@@ -1,0 +1,21 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="Netted delta sensitivities" directorySegmentName="seg_0" id="7DA72B9E-2EF1-FAAD-317E-41FCD05ABF03">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-17 04:30:22 UTC</createdTime>
+<notes><![CDATA[Actually this is 1 to N]]></notes>
+<ownerDesignName>frtb</ownerDesignName>
+<engineerTo>
+<item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
+<item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
+</engineerTo>
+<sourcePk>626BEDF8-9402-37D3-E6DA-81CE80162A82</sourcePk>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>972DD5CD-E47A-05C9-2C63-F05F49DAC772</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>34908E02-53E1-6647-E07D-2921F33DDF28</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>
