@@ -4,6 +4,7 @@ Created on 22 Jan 2022
 @author: Neil
 '''
 from data_meta_model import EntityModule, Entity, DerivedEntity, BasicEntity
+from core import MEMBER
 from pyecore.resources import ResourceSet, URI
 import csv
 class SQLDeveloperImport(object):
@@ -69,7 +70,7 @@ class SQLDeveloperImport(object):
                     adaptedEnumName = SQLDeveloperImport.replaceSpaceWithUnderscore(self,enumName)
                     print(SQLDeveloperImport.inEnumBlackList(self,adaptedEnumName))
                     if(not SQLDeveloperImport.inEnumBlackList(self,adaptedEnumName)):
-                        theEnumeration = EEnum(adaptedEnumName)
+                        theEnumeration = MEMBER(adaptedEnumName)
                         birdpackage.eClassifiers.extend([theEnumeration])
                         enumMap[enumID] = theEnumeration
 

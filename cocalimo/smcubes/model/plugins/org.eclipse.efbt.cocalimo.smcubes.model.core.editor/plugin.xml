@@ -124,12 +124,12 @@
             id="org.eclipse.emf.ecore.Wizard.category.ID"
             name="%_UI_Wizard_category"/>
       <wizard
-            id="org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.presentation.Cocalimo_smcubes_extensionModelWizardID"
-            name="%_UI_Cocalimo_smcubes_extensionModelWizard_label"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.presentation.Cocalimo_smcubes_extensionModelWizard"
+            id="org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_core_extension.presentation.Cocalimo_smcubes_core_extensionModelWizardID"
+            name="%_UI_Cocalimo_smcubes_core_extensionModelWizard_label"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_core_extension.presentation.Cocalimo_smcubes_core_extensionModelWizard"
             category="org.eclipse.emf.ecore.Wizard.category.ID"
-            icon="icons/full/obj16/Cocalimo_smcubes_extensionModelFile.gif">
-         <description>%_UI_Cocalimo_smcubes_extensionModelWizard_description</description>
+            icon="icons/full/obj16/Cocalimo_smcubes_core_extensionModelFile.gif">
+         <description>%_UI_Cocalimo_smcubes_core_extensionModelWizard_description</description>
          <selection class="org.eclipse.core.resources.IResource"/>
       </wizard>
    </extension>
@@ -137,12 +137,40 @@
    <extension point="org.eclipse.ui.editors">
       <!-- @generated smcubes -->
       <editor
-            id="org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.presentation.Cocalimo_smcubes_extensionEditorID"
-            name="%_UI_Cocalimo_smcubes_extensionEditor_label"
-            icon="icons/full/obj16/Cocalimo_smcubes_extensionModelFile.gif"
-            extensions="cocalimo_smcubes_extension"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.presentation.Cocalimo_smcubes_extensionEditor"
-            contributorClass="org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.presentation.Cocalimo_smcubes_extensionActionBarContributor">
+            id="org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_core_extension.presentation.Cocalimo_smcubes_core_extensionEditorID"
+            name="%_UI_Cocalimo_smcubes_core_extensionEditor_label"
+            icon="icons/full/obj16/Cocalimo_smcubes_core_extensionModelFile.gif"
+            extensions="cocalimo_smcubes_core_extension"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_core_extension.presentation.Cocalimo_smcubes_core_extensionEditor"
+            contributorClass="org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_core_extension.presentation.Cocalimo_smcubes_core_extensionActionBarContributor">
+      </editor>
+   </extension>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <!-- @generated smcubes -->
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extra_extension.presentation.Cocalimo_smcubes_extra_extensionModelWizardID"
+            name="%_UI_Cocalimo_smcubes_extra_extensionModelWizard_label"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extra_extension.presentation.Cocalimo_smcubes_extra_extensionModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/Cocalimo_smcubes_extra_extensionModelFile.gif">
+         <description>%_UI_Cocalimo_smcubes_extra_extensionModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <!-- @generated smcubes -->
+      <editor
+            id="org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extra_extension.presentation.Cocalimo_smcubes_extra_extensionEditorID"
+            name="%_UI_Cocalimo_smcubes_extra_extensionEditor_label"
+            icon="icons/full/obj16/Cocalimo_smcubes_extra_extensionModelFile.gif"
+            extensions="cocalimo_smcubes_extra_extension"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extra_extension.presentation.Cocalimo_smcubes_extra_extensionEditor"
+            contributorClass="org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extra_extension.presentation.Cocalimo_smcubes_extra_extensionActionBarContributor">
       </editor>
    </extension>
 
