@@ -3,7 +3,7 @@ Created on 22 Jan 2022
 
 @author: Neil
 '''
-from data_meta_model import EntityModule, Entity, DerivedEntity, BasicEntity,Attribute
+from data_meta_model import EntityModule, Entity, DerivedEntity, BasicEntity,Attribute,OneToOneRelationshipAttribute,OneToManyRelationshipAttribute,RelationshipAttribute
 from core import MEMBER, DOMAIN, FACET_VALUE_TYPE, SUBDOMAIN,VARIABLE
 from cocalimo_smcubes_core_extension import DomainModule, SMCubesCoreModel, MemberModule, VariableModule
 from pyecore.resources import ResourceSet, URI
@@ -282,24 +282,42 @@ class SQLDeveloperImport(object):
                     numOfRelations = SQLDeveloperImport.numberofRelationShipsToThisClass(self,theClass,targetClass)
                     if(numOfRelations>0):
                         referenceName = referenceName + str(numOfRelations)
-                    
+                    relationalAttribute = None
                     if (target_Optional.strip() == "Y"):
                         if (sourceTo_Target_Cardinality.strip() == "*"):
                             referenceName = referenceName + "s"
-                            reference = EReference(referenceName,containment=False, eType=targetClass, lower=0,upper=-1)
+                            relationalAttribute = OneToManyRelationshipAttribute()
+                            relationalAttribute.name = referenceName
+                            relationalAttribute.entity = targetClass
+                            relationalAttribute.containment = False
+                            relationalAttribute.mandatory = False
+                           
                         else:
-                            reference = EReference(referenceName,containment=False, eType=targetClass, lower=0,upper=1)
+                            relationalAttribute = OneToOneRelationshipAttribute()
+                            relationalAttribute.name = referenceName
+                            relationalAttribute.entity = targetClass
+                            relationalAttribute.containment = False
+                            relationalAttribute.mandatory = False
                     else:
                         if (sourceTo_Target_Cardinality.strip() == "*"):
                             referenceName = referenceName + "s"
-                            reference = EReference(referenceName,containment=False, eType=targetClass, lower=1,upper=-1)
+                            relationalAttribute = OneToManyRelationshipAttribute()
+                            relationalAttribute.name = referenceName
+                            relationalAttribute.entity = targetClass
+                            relationalAttribute.containment = False
+                            relationalAttribute.mandatory = True
+                           
                         else:
-                            reference = EReference(referenceName,containment=False, eType=targetClass, lower=1,upper=1)
+                            relationalAttribute = OneToOneRelationshipAttribute()
+                            relationalAttribute.name = referenceName
+                            relationalAttribute.entity = targetClass
+                            relationalAttribute.containment = False
+                            relationalAttribute.mandatory = True
 
                     
                     
                     if (not (theClass is None) ) :
-                        theClass.eStructuralFeatures.append(reference)
+                        theClass.attributes.extend([relationalAttribute])
 
         rset = ResourceSet()
         resource = rset.create_resource(URI(outputDirectory + 'ldm.ecore'))  # This will create an XMI resource
