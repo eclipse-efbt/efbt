@@ -3,8 +3,8 @@ Created on 22 Jan 2022
 
 @author: Neil
 '''
-from data_meta_model import EntityModule, Entity, DerivedEntity, BasicEntity
-from core import MEMBER, DOMAIN
+from data_meta_model import EntityModule, Entity, DerivedEntity, BasicEntity,Attribute
+from core import MEMBER, DOMAIN, FACET_VALUE_TYPE, SUBDOMAIN,VARIABLE
 from cocalimo_smcubes_core_extension import DomainModule, SMCubesCoreModel, MemberModule, VariableModule
 from pyecore.resources import ResourceSet, URI
 import csv
@@ -77,10 +77,13 @@ class SQLDeveloperImport(object):
                     adaptedEnumName = SQLDeveloperImport.replaceSpaceWithUnderscore(self,enumName)
                     print(SQLDeveloperImport.inEnumBlackList(self,adaptedEnumName))
                     if(not SQLDeveloperImport.inEnumBlackList(self,adaptedEnumName)):
-                        theEnumeration = DOMAIN()
-                        theEnumeration.name = adaptedEnumName
-                        domainsModule.domains.extend([theEnumeration])
-                        enumMap[enumID] = theEnumeration
+                        theDomain = DOMAIN()
+                        theDomain.name = adaptedEnumName
+                        theSubDomain = SUBDOMAIN()
+                        theSubDomain.name = adaptedEnumName
+                        theSubDomain.domain_id = theDomain
+                        domainsModule.domains.extend([theDomain])
+                        enumMap[enumID] = theDomain
 
                         
                         
@@ -101,25 +104,26 @@ class SQLDeveloperImport(object):
                         value = row[3]
                         adaptedValue = SQLDeveloperImport.replaceSpaceWithUnderscore(self,value)
                         try:
-                            theEnumeration = enumMap[enumID]
-                            literals = SQLDeveloperImport.getLiteralsForEnumeration(theEnumeration,membersModule)
-                            #if the literal does not exist already, then add it
-                            if (not SQLDeveloperImport.containsLiteral(self,literals, adaptedValue)):
-                                literal = MEMBER()
-                                literal.name = adaptedValue
-                                #literal.value = counter
-                                membersModule.members.extend([literal])
+                            theDomain = enumMap[enumID]
+                            members = SQLDeveloperImport.getLiteralsForEnumeration(self,theDomain,membersModule)
+                            #if the member does not exist already, then add it
+                            if (not SQLDeveloperImport.containsLiteral(self,members, adaptedValue)):
+                                member = MEMBER()
+                                member.name = adaptedValue
+                                member.domain_id = theDomain
+                                #member.value = counter
+                                membersModule.members.extend([member])
                                 
                         except KeyError:
                             print( "missing domain: " + enumID )
                             
-                        literals = theEnumeration.eLiterals
-                        #if the literal does not exist already, then add it
-                        if (not SQLDeveloperImport.containsLiteral(self,literals, adaptedValue)):
-                            literal = MEMBER()
-                            literal.name = adaptedValue
-                            #literal.value = counter;
-                            literals.extend([literal])
+                        members = SQLDeveloperImport.getLiteralsForEnumeration(self,theDomain,membersModule)
+                        #if the member does not exist already, then add it
+                        if (not SQLDeveloperImport.containsLiteral(self,members, adaptedValue)):
+                            member = MEMBER()
+                            member.name = adaptedValue
+                            #member.value = counter;
+                            members.extend([member])
                     except IndexError:
                         print( "row in DM_Domain_AVT.csv skipped  due to improper formatting at row number")
                         print(counter)
@@ -128,6 +132,7 @@ class SQLDeveloperImport(object):
         # for each logicalDatatype for orcle 12c, make a Datatype if we have an
         # equivalent
         datatypeMap = {}
+        domainDataTypeMap = {}
         #ecorePackage = EcoreFactory.eINSTANCE.getEcorePackage();
         fileLocation = fileDirectory + "\\DM_Logical_To_Native.csv"
         headerSkipped = False
@@ -145,27 +150,27 @@ class SQLDeveloperImport(object):
 
                         if (native_type.strip() == "VARCHAR") :
 
-                            datatypeMap[dataTypeID] = EString
+                            datatypeMap[dataTypeID] = FACET_VALUE_TYPE.String
                       
                         if (native_type.strip() == "VARCHAR2") :
 
-                            datatypeMap[dataTypeID] = EString
+                            datatypeMap[dataTypeID] = FACET_VALUE_TYPE.String
                       
                         if (native_type.strip() == "INTEGER") :
 
-                            datatypeMap[dataTypeID] = EInt
+                            datatypeMap[dataTypeID] = FACET_VALUE_TYPE.BigInteger
                       
                         if (native_type.strip() == "DATE") :
 
-                            datatypeMap[dataTypeID] = EDate
+                            datatypeMap[dataTypeID] = FACET_VALUE_TYPE.DateTime
                         
                         if (native_type.strip() == "NUMBER") :
 
-                            datatypeMap[dataTypeID] = EDouble
+                            datatypeMap[dataTypeID] = FACET_VALUE_TYPE.Double
                         
                         if (native_type.strip() == "UNKNOWN") :
 
-                            datatypeMap[dataTypeID] = EString
+                            datatypeMap[dataTypeID] = FACET_VALUE_TYPE.String
              
         print("datatypeMap")
         print(datatypeMap)
@@ -185,20 +190,30 @@ class SQLDeveloperImport(object):
                     attributeName = row[0]
                     amendedAttributeName = SQLDeveloperImport.replaceSpaceWithUnderscore(self,attributeName);
                     attributeKind = row[7]
-                    attribute = EAttribute(amendedAttributeName)
+                    attribute = Attribute()
+                    attribute.name = amendedAttributeName
                     
 
                     if (attributeKind == "Domain"):
                         domainID = row[12]
-                        enumeration = enumMap[domainID]
-                        attribute = EAttribute(amendedAttributeName,enumeration)
+                        theDomain = enumMap[domainID]
+                        attribute = Attribute()
+                        attribute.name = amendedAttributeName
+                        variable  = VARIABLE()
+                        variable.name = amendedAttributeName
+                        variable.domain_id = theDomain
+                        attribute.variable = variable
                    
 
                     if (attributeKind == "Logical Type"):
                         dataTypeID = row[14]
                         try:
                             datatype = datatypeMap[dataTypeID]
-                            attribute = EAttribute(amendedAttributeName,datatype)
+                            attribute = EAttribute()
+                            attribue.name =amendedAttributeName
+                            variable  = VARIABLE()
+                            variable.name = amendedAttributeName
+                            theDomain = SQLDeveloperImport.getDomainForDataType(self,domainDataTypeMap,datatype)
                         except KeyError:
                             print("missing datatype: ")
                             print(dataTypeID)                       
@@ -216,19 +231,19 @@ class SQLDeveloperImport(object):
 
         for theClass in classesMap.values():
             
-            superclasses = theClass.eAllSuperTypes()
-            if (len(superclasses) > 0) :
-                for theSuperClass in superclasses:
-                    features = theClass.eStructuralFeatures
-                    featuresToDelete = []
-                for eStructuralFeature in features :
-                    if SQLDeveloperImport.superclassContainsFeature(self,theSuperClass, eStructuralFeature):
-                        featuresToDelete.append(eStructuralFeature);
+            superclass = theClass.superClass
+            if (superclass):
+                
+                attributes = superclass.attributes
+                attributesToDelete = []
+                for theAttribute in attributes :
+                    if SQLDeveloperImport.superclassContainsFeature(self,theSuperClass, theAttribute):
+                        attributesToDelete.append(theAttribute);
 
-                for eStructuralFeature in featuresToDelete :
-                    features.remove(eStructuralFeature);
+                for theAttribute in attributesToDelete :
+                    attributes.remove(theAttribute);
                     print( "removed eStructuralFeature since it exists in the superclass")
-                    print(  eStructuralFeature )
+                    print(  theAttribute )
                
           
         #for each relationship add a reference
@@ -302,13 +317,14 @@ class SQLDeveloperImport(object):
     
     def numberofRelationShipsToThisClass(self,sourceClass, targetClass):
         #TODO Auto-generated method stub
-        features = sourceClass.eStructuralFeatures
+        attributes = sourceClass.attributes
         counter = 0;
-        
-        for eStructuralFeature in features:
-            sourceFeatureType = eStructuralFeature.eType            
-            if (sourceFeatureType == targetClass):
-                counter = counter+1
+        # do this for relationship attributes only.
+        for attribute in attributes:
+            if ( isinstance(attribute,RelationshipAttribute)):
+                sourceAttributeType = attribute.entity            
+                if (sourceAttributeType == targetClass):
+                    counter = counter+1
             
         return counter
     
@@ -342,18 +358,29 @@ class SQLDeveloperImport(object):
         else:
             return False 
         
-    def containsLiteral(self,literals,adaptedValue):
+    def containsLiteral(self,members,adaptedValue):
         contains = False;
-        for eEnumLiteral in literals:
+        for eEnumLiteral in members:
             if (eEnumLiteral.name == adaptedValue):
                 contains = True
 
         return contains
     
-    def getLiteralsForEnumeration(self, enumeration):    
-        for eEnumLiteral in literals:
-            if (eEnumLiteral.name == adaptedValue):
-                contains = True
+    def getLiteralsForEnumeration(self, domain, membersModule): 
+        returnMembersList = []   
+        for member in membersModule.members:
+            if (member.domain_id == domain):
+                returnMembersList.append(member) 
+        return returnMembersList
+    
+    def getDomainForDataType(self,domainDataTypeMap,datatype):
+        returnDomain = domainDataTypeMap[datatypedatatype]
+        if (returnDomain == None):
+            returnDomain = Domain()
+            returnDomain.name = datatype.name
+            returnDomain.data_type[datatypedatatype] = returnDomain
+            
+        return returnDomain
         
 if __name__ == '__main__':
     SQLDeveloperImport().convert('C:\\Users\\Neil\\freebirdtools-develop-march22\\git\\efbt\\python\\resources','C:\\Users\\Neil\\freebirdtools-develop-march22\\git\\efbt\\python\\results\\')
