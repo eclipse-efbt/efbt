@@ -1,0 +1,139 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<data_meta_model:EntityModule xmlns:xmi="http://www.omg.org/XMI" xmlns:data_meta_model="http://www.eclipse.org/efbt/data_meta_model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" nsPrefix="bird" nsURI="&quot;http://www.eclipse.org/bird&quot;" name="bird" xmi:version="2.0">
+  <entities xsi:type="data_meta_model:BasicEntity" name="Commodity_risk_factor" superClass="//@entities.14">
+    <attributes xsi:type="data_meta_model:Attribute" name="Commodity_type" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Delivery_location" variable=""/>
+  </entities>
+  <entities xsi:type="data_meta_model:BasicEntity" name="CSR_non_securitisation_risk_factor" superClass="//@entities.14">
+    <attributes xsi:type="data_meta_model:Attribute" name="CSR_credit_quality" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="CSR_curve_type" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Organisation_identifier" variable=""/>
+    <attributes xsi:type="data_meta_model:OneToOneRelationshipAttribute" mandatory="true" name="theOrganisation" entity="//@entities.12"/>
+  </entities>
+  <entities xsi:type="data_meta_model:BasicEntity" name="Curvature" superClass="//@entities.15">
+    <attributes xsi:type="data_meta_model:Attribute" name="Currency_of_record" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Curvature_risk_weight" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Curvature_valuation_difference" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Shock_direction" variable=""/>
+  </entities>
+  <entities xsi:type="data_meta_model:BasicEntity" name="Delta_sensitivities_correlated_and_aggregated_derived">
+    <attributes xsi:type="data_meta_model:Attribute" name="GIRR_delta_correlated_value_per_bucket" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Sensitivities_correlated_and_aggregated_bucket_identifier" variable=""/>
+    <attributes xsi:type="data_meta_model:OneToManyRelationshipAttribute" mandatory="true" name="theDelta_sensitivity_combinations_deriveds" entity="//@entities.5"/>
+  </entities>
+  <entities xsi:type="data_meta_model:BasicEntity" name="Delta_sensitivity" superClass="//@entities.15">
+    <attributes xsi:type="data_meta_model:Attribute" name="Currency_of_record" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Delta_sensitivity" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Tenor" variable=""/>
+  </entities>
+  <entities xsi:type="data_meta_model:BasicEntity" name="Delta_sensitivity_combinations_derived">
+    <attributes xsi:type="data_meta_model:Attribute" name="Delta_sensitivity_combination_identifier" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="GIRR_delta_correlated_value" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="GIRR_delta_correlation_factor" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Netted_delta_sensitivities_identifier" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Netted_delta_sensitivities_identifier1" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Sensitivities_correlated_and_aggregated_bucket_identifier" variable=""/>
+    <attributes xsi:type="data_meta_model:OneToOneRelationshipAttribute" mandatory="true" name="theNetted_delta_sensitivities_per_risk_factor_and_tenor_derived" entity="//@entities.11"/>
+    <attributes xsi:type="data_meta_model:OneToOneRelationshipAttribute" mandatory="true" name="theNetted_delta_sensitivities_per_risk_factor_and_tenor_derived1" entity="//@entities.11"/>
+  </entities>
+  <entities xsi:type="data_meta_model:BasicEntity" name="Equity_issue" superClass="//@entities.19"/>
+  <entities xsi:type="data_meta_model:BasicEntity" name="Equity_risk_factor" superClass="//@entities.14">
+    <attributes xsi:type="data_meta_model:Attribute" name="Equity_factor_type" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Issue_Identifier" variable=""/>
+    <attributes xsi:type="data_meta_model:OneToOneRelationshipAttribute" mandatory="true" name="theEquity_issue" entity="//@entities.6"/>
+  </entities>
+  <entities xsi:type="data_meta_model:BasicEntity" name="FX_risk_factor" superClass="//@entities.14">
+    <attributes xsi:type="data_meta_model:Attribute" name="ccy1" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="ccy2" variable=""/>
+  </entities>
+  <entities xsi:type="data_meta_model:BasicEntity" name="GIRR_risk_factor" superClass="//@entities.14">
+    <attributes xsi:type="data_meta_model:Attribute" name="GIRR_risk_factor_type" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Main_currency" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Second_currency" variable=""/>
+  </entities>
+  <entities xsi:type="data_meta_model:BasicEntity" name="KB_per_bucket_derived">
+    <attributes xsi:type="data_meta_model:Attribute" name="Bucket_identifier" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="GIRR_delta_KB" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Sensitivities_correlated_and_aggregated_bucket_identifier" variable=""/>
+    <attributes xsi:type="data_meta_model:OneToOneRelationshipAttribute" mandatory="true" name="theDelta_sensitivities_correlated_and_aggregated_derived" entity="//@entities.3"/>
+    <attributes xsi:type="data_meta_model:OneToOneRelationshipAttribute" mandatory="true" name="theTotal_delta_sensitivity_per_bucket_derived" entity="//@entities.22"/>
+  </entities>
+  <entities xsi:type="data_meta_model:BasicEntity" name="Netted_delta_sensitivities_per_risk_factor_and_tenor_derived">
+    <attributes xsi:type="data_meta_model:Attribute" name="Bucket_identifier" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="GIRR_delta_risk_weight" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Netted_delta_sensitivities" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Netted_delta_sensitivities_identifier" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Risk_factor_Identifier" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Tenor" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Total_sensitivities_bucket_identifier" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Weighted_GIRR_delta_sensitivity" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Weighted_GIRR_delta_sensitivity_squared" variable=""/>
+    <attributes xsi:type="data_meta_model:OneToManyRelationshipAttribute" mandatory="true" name="theDelta_sensitivitys" entity="//@entities.4"/>
+    <attributes xsi:type="data_meta_model:OneToOneRelationshipAttribute" mandatory="true" name="theRisk_factor" entity="//@entities.14"/>
+  </entities>
+  <entities xsi:type="data_meta_model:BasicEntity" name="Organisation">
+    <attributes xsi:type="data_meta_model:Attribute" name="Economy" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Market_cap" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Organisation_identifier" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Ratings_grade" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Sector" variable=""/>
+  </entities>
+  <entities xsi:type="data_meta_model:BasicEntity" name="OUTPUT_LAYER_FRTB">
+    <attributes xsi:type="data_meta_model:Attribute" name="Approach_For_Prudential_Purposes" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Base" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Contingent_Scenario" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Delta_Vega_Or_Curvature_Risk" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Hypothetical_Value_Under_Specific_Assumptions" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Instrument" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Main_Catagory" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Market_Risk_Portfolio" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Own_Funds_Requirements" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Position_In_The_Instrument" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Prudentia_lPortfolio" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Sensitivity_To_Delta_Risk_Factors" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Type_And_Nature_Of_Sensitivity" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Type_Of_Risk" variable=""/>
+  </entities>
+  <entities xsi:type="data_meta_model:BasicEntity" name="Risk_factor"/>
+  <entities xsi:type="data_meta_model:BasicEntity" name="Risk_measure">
+    <attributes xsi:type="data_meta_model:OneToOneRelationshipAttribute" mandatory="true" name="theRisk_factor" entity="//@entities.14"/>
+    <attributes xsi:type="data_meta_model:OneToOneRelationshipAttribute" mandatory="true" name="theSecurity_or_exchange_tradable_derivative_position" entity="//@entities.20"/>
+  </entities>
+  <entities xsi:type="data_meta_model:BasicEntity" name="Securitisation" superClass="//@entities.19">
+    <attributes xsi:type="data_meta_model:Attribute" name="Securitisation_sector" variable=""/>
+  </entities>
+  <entities xsi:type="data_meta_model:BasicEntity" name="Securitisation_CTP_risk_factor_" superClass="//@entities.14"/>
+  <entities xsi:type="data_meta_model:BasicEntity" name="Securitisation_non_CTP_risk_factor" superClass="//@entities.14">
+    <attributes xsi:type="data_meta_model:Attribute" name="Issue_Identifier" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Tranche_name" variable=""/>
+    <attributes xsi:type="data_meta_model:OneToOneRelationshipAttribute" mandatory="true" name="theSecuritisation" entity="//@entities.16"/>
+  </entities>
+  <entities xsi:type="data_meta_model:BasicEntity" name="Security_issue">
+    <attributes xsi:type="data_meta_model:OneToOneRelationshipAttribute" mandatory="true" name="theOrganisation" entity="//@entities.12"/>
+  </entities>
+  <entities xsi:type="data_meta_model:BasicEntity" name="Security_or_exchange_tradable_derivative_position">
+    <attributes xsi:type="data_meta_model:Attribute" name="Position_identifier" variable=""/>
+  </entities>
+  <entities xsi:type="data_meta_model:BasicEntity" name="Summed_delta_sensitivities_per_position_and_risk_factor_derived">
+    <attributes xsi:type="data_meta_model:Attribute" name="Position_identifier" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Risk_factor_Identifier" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="summed_delta_per_position" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="summed_delta_per_position_identifier" variable=""/>
+    <attributes xsi:type="data_meta_model:OneToManyRelationshipAttribute" mandatory="true" name="theDelta_sensitivitys" entity="//@entities.4"/>
+    <attributes xsi:type="data_meta_model:OneToOneRelationshipAttribute" mandatory="true" name="theSecurity_or_exchange_tradable_derivative_position" entity="//@entities.20"/>
+    <attributes xsi:type="data_meta_model:OneToOneRelationshipAttribute" mandatory="true" name="theRisk_factor" entity="//@entities.14"/>
+  </entities>
+  <entities xsi:type="data_meta_model:BasicEntity" name="Total_delta_sensitivity_per_bucket_derived">
+    <attributes xsi:type="data_meta_model:Attribute" name="Bucket_identifier" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Total_GIRR_delta_sensitivity_per_bucket" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Total_GIRR_delta_sensitivity_squared_per_bucket" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Total_sensitivities_bucket_identifier" variable=""/>
+    <attributes xsi:type="data_meta_model:OneToManyRelationshipAttribute" mandatory="true" name="theNetted_delta_sensitivities_per_risk_factor_and_tenor_deriveds" entity="//@entities.11"/>
+  </entities>
+  <entities xsi:type="data_meta_model:BasicEntity" name="Vega_sensitivity" superClass="//@entities.15">
+    <attributes xsi:type="data_meta_model:Attribute" name="Currency_of_record" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="option_maturity" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="underlying_residual_maturity" variable=""/>
+    <attributes xsi:type="data_meta_model:Attribute" name="Vega_sensitivity" variable=""/>
+  </entities>
+</data_meta_model:EntityModule>

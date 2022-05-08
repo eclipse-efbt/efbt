@@ -5,7 +5,7 @@ Created on 22 Jan 2022
 '''
 from data_meta_model import EntityModule, Entity, DerivedEntity, BasicEntity,Attribute,OneToOneRelationshipAttribute,OneToManyRelationshipAttribute,RelationshipAttribute
 from core import MEMBER, DOMAIN, FACET_VALUE_TYPE, SUBDOMAIN,VARIABLE
-from cocalimo_smcubes_core_extension import DomainModule, SMCubesCoreModel, MemberModule, VariableModule
+from cocalimo_smcubes_core_extension import DomainModule, SMCubesCoreModel, MemberModule, VariableModule,SubDomainModule
 from pyecore.resources import ResourceSet, URI
 import csv
 class SQLDeveloperImport(object):
@@ -63,6 +63,10 @@ class SQLDeveloperImport(object):
         domainsModule.name = "domainsModule"
         membersModule = MemberModule()
         membersModule.name = "membersModule"
+        variablesModule = VariableModule()
+        variablesModule.name = "variablesModule"
+        subDomainsModule = SubDomainModule()
+        subDomainsModule.name = "subDomainsModule"
         
         
         with open(fileLocation) as csvfile:
@@ -82,6 +86,7 @@ class SQLDeveloperImport(object):
                         theSubDomain = SUBDOMAIN()
                         theSubDomain.name = adaptedEnumName
                         theSubDomain.domain_id = theDomain
+                        subDomainsModule.subdomains.extend([theSubDomain])
                         domainsModule.domains.extend([theDomain])
                         enumMap[enumID] = theDomain
 
@@ -214,6 +219,8 @@ class SQLDeveloperImport(object):
                             variable  = VARIABLE()
                             variable.name = amendedAttributeName
                             theDomain = SQLDeveloperImport.getDomainForDataType(self,domainDataTypeMap,datatype)
+                            variable.domain_id = theDomain
+                            attribute.variable = variable
                         except KeyError:
                             print("missing datatype: ")
                             print(dataTypeID)                       
@@ -222,9 +229,9 @@ class SQLDeveloperImport(object):
 
                     try:
                         theClass = classesMap[classID]
-                        theClass.eStructuralFeatures.append(attribute)
+                        theClass.attributes.extend([attribute])
                     except:
-                        print( "missing class: " )
+                        print( "missing class2: " )
                         print(classID)
                         
         #remove any attributes that already exist in superclass.
@@ -237,7 +244,7 @@ class SQLDeveloperImport(object):
                 attributes = superclass.attributes
                 attributesToDelete = []
                 for theAttribute in attributes :
-                    if SQLDeveloperImport.superclassContainsFeature(self,theSuperClass, theAttribute):
+                    if SQLDeveloperImport.superclassContainsFeature(self,superclass, theAttribute):
                         attributesToDelete.append(theAttribute);
 
                 for theAttribute in attributesToDelete :
@@ -272,7 +279,7 @@ class SQLDeveloperImport(object):
                     try:
                         theClass = classesMap[sourceID]
                     except KeyError:
-                        print("missing class: " + sourceID)
+                        print("missing class1: " + sourceID)
                     
                     try:   
                         targetClass = classesMap[targetID] 
@@ -320,15 +327,41 @@ class SQLDeveloperImport(object):
                         theClass.attributes.extend([relationalAttribute])
 
         rset = ResourceSet()
-        resource = rset.create_resource(URI(outputDirectory + 'ldm.ecore'))  # This will create an XMI resource
-        resource.append(birdpackage)  # we add the EPackage instance in the resource
-        resource.save()  # we then serialize it
         
-    def superclassContainsFeature(self,theSuperClass, eStructuralFeature) :
-        features = theSuperClass.eAllStructuralFeatures()
+        
+        
+        
+        resource = rset.create_resource(URI(outputDirectory + 'domains.ecore'))  # This will create an XMI resource
+        resource.append(domainsModule)  # we add the EPackage instance in the resource
+        resource.append(subDomainsModule)  # we add the EPackage instance in the resource
+        resource.append(membersModule)  # we add the EPackage instance in the resource
+        resource.append(variablesModule)  # we add the EPackage instance in the resource
+        resource.append(birdpackage)  # we add the EPackage instance in the resource
+        resource.save()# we then serialize it
+        
+        #subDomainsResource = rset.create_resource(URI(outputDirectory + 'subDomains.ecore'))  # This will create an XMI resource
+        #subDomainsResource.append(subDomainsModule)  # we add the EPackage instance in the resource
+        #subDomainsResource.save()# we then serialize it
+        
+        #membersResource = rset.create_resource(URI(outputDirectory + 'members.ecore'))  # This will create an XMI resource
+        #membersResource.append(membersModule)  # we add the EPackage instance in the resource
+        #membersResource.save()# we then serialize it
+        
+        #variabesResource = rset.create_resource(URI(outputDirectory + 'variabes.ecore'))  # This will create an XMI resource
+        #variabesResource.append(variablesModule)  # we add the EPackage instance in the resource
+        #variabesResource.save()# we then serialize it
+        
+        #resource = rset.create_resource(URI(outputDirectory + 'ldm.ecore'))  # This will create an XMI resource
+        #resource.append(birdpackage)  # we add the EPackage instance in the resource
+        #resource.save()
+        
+        
+        
+    def superclassContainsFeature(self,theSuperClass, attribute) :
+        attributes = theSuperClass.attributes
         contains = False;
-        for eStructuralFeature2 in features:
-            if (eStructuralFeature2.name == eStructuralFeature.name):
+        for attribute2 in attributes:
+            if (attribute2.name == attribute.name):
                 contains = True;
 
         return contains
