@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated bird_model -->
+      <package
+            uri="http://www.eclipse.org/efbt/bird_model"
+            class="bird_model.Bird_modelPackage"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated bird_model -->
+      <parser
+            type="bird_model"
+            class="bird_model.util.Bird_modelResourceFactoryImpl"/>
+   </extension>
+
+</plugin>

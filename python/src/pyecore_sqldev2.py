@@ -3,16 +3,19 @@ Created on 22 Jan 2022
 
 @author: Neil
 '''
-from data_meta_model import EntityModule, Entity, DerivedEntity, BasicEntity,Attribute,OneToOneRelationshipAttribute,OneToManyRelationshipAttribute,RelationshipAttribute
-from core import MEMBER, DOMAIN, FACET_VALUE_TYPE, SUBDOMAIN,VARIABLE
-from cocalimo_smcubes_core_extension import DomainModule, SMCubesCoreModel, MemberModule, VariableModule,SubDomainModule
+from bird_model import EntityModule, Entity, DerivedEntity, BasicEntity,Attribute,OneToOneRelationshipAttribute,OneToManyRelationshipAttribute,RelationshipAttribute, MEMBER, DOMAIN, FACET_VALUE_TYPE, SUBDOMAIN,VARIABLE,  DomainModule, BIRDModel, SMCubesCoreModel, MemberModule, VariableModule,SubDomainModule
 from pyecore.resources import ResourceSet, URI
 import csv
 class SQLDeveloperImport(object):
         
-    def convert (self,fileDirectory,outputDirectory):   
+    def convert (self,fileDirectory,outputDirectory):  
+        birdModel = BIRDModel() 
         birdpackage = EntityModule( nsURI='"http://www.eclipse.org/bird"', nsPrefix='bird')
         birdpackage.name = 'bird'
+        birdModel.entityModule.extend([birdpackage])
+        
+        smcubesCoreModel = SMCubesCoreModel()
+        birdModel.smcubesCoreModel = smcubesCoreModel
         classesMap = {}
         fileLocation = fileDirectory + "\\DM_Entities.csv"
         headerSkipped = False
@@ -67,6 +70,11 @@ class SQLDeveloperImport(object):
         variablesModule.name = "variablesModule"
         subDomainsModule = SubDomainModule()
         subDomainsModule.name = "subDomainsModule"
+        
+        smcubesCoreModel.variableModules.extend([variablesModule])
+        smcubesCoreModel.domainModules.extend([domainsModule])
+        smcubesCoreModel.memberModules.extend([membersModule])
+        smcubesCoreModel.subDomainModules.extend([subDomainsModule])
         
         
         with open(fileLocation) as csvfile:
@@ -331,13 +339,14 @@ class SQLDeveloperImport(object):
         
         
         
-        resource = rset.create_resource(URI(outputDirectory + 'domains.ecore'))  # This will create an XMI resource
-        resource.append(domainsModule)  # we add the EPackage instance in the resource
-        resource.append(subDomainsModule)  # we add the EPackage instance in the resource
-        resource.append(membersModule)  # we add the EPackage instance in the resource
-        resource.append(variablesModule)  # we add the EPackage instance in the resource
-        resource.append(birdpackage)  # we add the EPackage instance in the resource
-        resource.save()# we then serialize it
+        resource = rset.create_resource(URI(outputDirectory + 'ldm.ecore'))  # This will create an XMI resource
+        resource.append(birdModel)
+        #resource.append(domainsModule)  # we add the EPackage instance in the resource
+        #resource.append(subDomainsModule)  # we add the EPackage instance in the resource
+        #resource.append(membersModule)  # we add the EPackage instance in the resource
+        # resource.append(variablesModule)  # we add the EPackage instance in the resource
+        # resource.append(birdpackage)  # we add the EPackage instance in the resource
+        # resource.save()# we then serialize it
         
         #subDomainsResource = rset.create_resource(URI(outputDirectory + 'subDomains.ecore'))  # This will create an XMI resource
         #subDomainsResource.append(subDomainsModule)  # we add the EPackage instance in the resource
@@ -353,7 +362,7 @@ class SQLDeveloperImport(object):
         
         #resource = rset.create_resource(URI(outputDirectory + 'ldm.ecore'))  # This will create an XMI resource
         #resource.append(birdpackage)  # we add the EPackage instance in the resource
-        #resource.save()
+        resource.save()
         
         
         
