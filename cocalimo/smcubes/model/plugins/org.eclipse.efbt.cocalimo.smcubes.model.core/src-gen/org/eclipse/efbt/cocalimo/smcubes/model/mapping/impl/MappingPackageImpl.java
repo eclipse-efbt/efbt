@@ -4,10 +4,10 @@ package org.eclipse.efbt.cocalimo.smcubes.model.mapping.impl;
 
 import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementPackage;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.Cocalimo_smcubes_extensionPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.impl.Cocalimo_smcubes_extensionPackageImpl;
-
+import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_core_extension.Cocalimo_smcubes_core_extensionPackage;
+import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_core_extension.impl.Cocalimo_smcubes_core_extensionPackageImpl;
+import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extra_extension.Cocalimo_smcubes_extra_extensionPackage;
+import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extra_extension.impl.Cocalimo_smcubes_extra_extensionPackageImpl;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.core.impl.CorePackageImpl;
@@ -154,8 +154,10 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage {
 		Data_definitionPackageImpl theData_definitionPackage = (Data_definitionPackageImpl)(registeredPackage instanceof Data_definitionPackageImpl ? registeredPackage : Data_definitionPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(RenderingPackage.eNS_URI);
 		RenderingPackageImpl theRenderingPackage = (RenderingPackageImpl)(registeredPackage instanceof RenderingPackageImpl ? registeredPackage : RenderingPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Cocalimo_smcubes_extensionPackage.eNS_URI);
-		Cocalimo_smcubes_extensionPackageImpl theCocalimo_smcubes_extensionPackage = (Cocalimo_smcubes_extensionPackageImpl)(registeredPackage instanceof Cocalimo_smcubes_extensionPackageImpl ? registeredPackage : Cocalimo_smcubes_extensionPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Cocalimo_smcubes_core_extensionPackage.eNS_URI);
+		Cocalimo_smcubes_core_extensionPackageImpl theCocalimo_smcubes_core_extensionPackage = (Cocalimo_smcubes_core_extensionPackageImpl)(registeredPackage instanceof Cocalimo_smcubes_core_extensionPackageImpl ? registeredPackage : Cocalimo_smcubes_core_extensionPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Cocalimo_smcubes_extra_extensionPackage.eNS_URI);
+		Cocalimo_smcubes_extra_extensionPackageImpl theCocalimo_smcubes_extra_extensionPackage = (Cocalimo_smcubes_extra_extensionPackageImpl)(registeredPackage instanceof Cocalimo_smcubes_extra_extensionPackageImpl ? registeredPackage : Cocalimo_smcubes_extra_extensionPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Data_meta_modelPackage.eNS_URI);
 		Data_meta_modelPackageImpl theData_meta_modelPackage = (Data_meta_modelPackageImpl)(registeredPackage instanceof Data_meta_modelPackageImpl ? registeredPackage : Data_meta_modelPackage.eINSTANCE);
 
@@ -164,7 +166,8 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage {
 		theCorePackage.createPackageContents();
 		theData_definitionPackage.createPackageContents();
 		theRenderingPackage.createPackageContents();
-		theCocalimo_smcubes_extensionPackage.createPackageContents();
+		theCocalimo_smcubes_core_extensionPackage.createPackageContents();
+		theCocalimo_smcubes_extra_extensionPackage.createPackageContents();
 		theData_meta_modelPackage.createPackageContents();
 
 		// Initialize created meta-data
@@ -172,7 +175,8 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage {
 		theCorePackage.initializePackageContents();
 		theData_definitionPackage.initializePackageContents();
 		theRenderingPackage.initializePackageContents();
-		theCocalimo_smcubes_extensionPackage.initializePackageContents();
+		theCocalimo_smcubes_core_extensionPackage.initializePackageContents();
+		theCocalimo_smcubes_extra_extensionPackage.initializePackageContents();
 		theData_meta_modelPackage.initializePackageContents();
 
 		// Mark meta-data to indicate it can't be changed

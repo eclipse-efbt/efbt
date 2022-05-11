@@ -8,9 +8,12 @@ Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Export-Package: org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension,
- org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.impl,
- org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.util,
+Export-Package: org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_core_extension,
+ org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_core_extension.impl,
+ org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_core_extension.util,
+ org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extra_extension,
+ org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extra_extension.impl,
+ org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extra_extension.util,
  org.eclipse.efbt.cocalimo.smcubes.model.core,
  org.eclipse.efbt.cocalimo.smcubes.model.core.impl,
  org.eclipse.efbt.cocalimo.smcubes.model.core.util,

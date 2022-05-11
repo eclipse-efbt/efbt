@@ -61,8 +61,21 @@
    <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
       <!-- @generated smcubes -->
       <factory
-            uri="http://www.eclipse.org/efbt/cocalimo_smcubes_extension"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.provider.Cocalimo_smcubes_extensionItemProviderAdapterFactory"
+            uri="http://www.eclipse.org/efbt/cocalimo_smcubes_core_extension"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_core_extension.provider.Cocalimo_smcubes_core_extensionItemProviderAdapterFactory"
+            supportedTypes=
+              "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
+               org.eclipse.emf.edit.provider.IStructuredItemContentProvider
+               org.eclipse.emf.edit.provider.ITreeItemContentProvider
+               org.eclipse.emf.edit.provider.IItemLabelProvider
+               org.eclipse.emf.edit.provider.IItemPropertySource"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
+      <!-- @generated smcubes -->
+      <factory
+            uri="http://www.eclipse.org/efbt/cocalimo_smcubes_extra_extension"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extra_extension.provider.Cocalimo_smcubes_extra_extensionItemProviderAdapterFactory"
             supportedTypes=
               "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
                org.eclipse.emf.edit.provider.IStructuredItemContentProvider
