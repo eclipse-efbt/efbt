@@ -69,16 +69,31 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated smcubes -->
       <package
-            uri="http://www.eclipse.org/efbt/cocalimo_smcubes_extension"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.Cocalimo_smcubes_extensionPackage"
+            uri="http://www.eclipse.org/efbt/cocalimo_smcubes_core_extension"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_core_extension.Cocalimo_smcubes_core_extensionPackage"
             genModel="model/smcubes.genmodel"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.extension_parser">
       <!-- @generated smcubes -->
       <parser
-            type="cocalimo_smcubes_extension"
-            class="org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.util.Cocalimo_smcubes_extensionResourceFactoryImpl"/>
+            type="cocalimo_smcubes_core_extension"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_core_extension.util.Cocalimo_smcubes_core_extensionResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated smcubes -->
+      <package
+            uri="http://www.eclipse.org/efbt/cocalimo_smcubes_extra_extension"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extra_extension.Cocalimo_smcubes_extra_extensionPackage"
+            genModel="model/smcubes.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated smcubes -->
+      <parser
+            type="cocalimo_smcubes_extra_extension"
+            class="org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extra_extension.util.Cocalimo_smcubes_extra_extensionResourceFactoryImpl"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.generated_package">

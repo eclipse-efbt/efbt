@@ -35,8 +35,9 @@ import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE_STRUCTURE;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE_STRUCTURE_ITEM;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.Data_definitionFactory;
-import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.Cocalimo_smcubes_extensionFactory;
-import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extension.CombinationModule;
+import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extra_extension.Cocalimo_smcubes_extra_extensionFactory;
+import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extra_extension.CombinationModule;
+import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extra_extension.Cocalimo_smcubes_extra_extensionFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.CUBE_MAPPING;
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MAPPING_DEFINITION;
 import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MAPPING_TO_CUBE;
@@ -685,7 +686,7 @@ public class BIRDImporterImpl extends Importer {
 			for (AccessRow row : list) {
 
 				if (counter == 0) {
-					combinationsModule = Cocalimo_smcubes_extensionFactory.eINSTANCE.createCombinationModule();
+					combinationsModule = Cocalimo_smcubes_extra_extensionFactory.eINSTANCE.createCombinationModule();
 					combinationsModules.add(combinationsModule);
 					//birdModel.getCombinations().add(combinationsModule);
 				}
