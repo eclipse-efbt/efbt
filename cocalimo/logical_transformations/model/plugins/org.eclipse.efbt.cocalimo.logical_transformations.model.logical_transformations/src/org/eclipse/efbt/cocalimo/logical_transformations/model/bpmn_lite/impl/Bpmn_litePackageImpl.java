@@ -27,17 +27,12 @@ import org.eclipse.efbt.cocalimo.logical_transformations.model.bpmn_lite.UserTas
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.Logical_transformationsPackage;
 
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.impl.Logical_transformationsPackageImpl;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage;
-
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EcorePackage;
-
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
@@ -200,10 +195,8 @@ public class Bpmn_litePackageImpl extends EPackageImpl implements Bpmn_litePacka
 		isInited = true;
 
 		// Initialize simple dependencies
-		EcorePackage.eINSTANCE.eClass();
 		Module_managementPackage.eINSTANCE.eClass();
 		Requirements_textPackage.eINSTANCE.eClass();
-		CorePackage.eINSTANCE.eClass();
 		Data_meta_modelPackage.eINSTANCE.eClass();
 
 		// Obtain or create and register interdependencies

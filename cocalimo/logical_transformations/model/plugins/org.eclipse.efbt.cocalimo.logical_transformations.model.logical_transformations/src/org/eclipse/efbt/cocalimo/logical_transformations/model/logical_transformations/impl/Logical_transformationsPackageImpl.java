@@ -12,6 +12,7 @@ import org.eclipse.efbt.cocalimo.logical_transformations.model.bpmn_lite.impl.Bp
 
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.ActivityTag;
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.AttrComparison;
+import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.CSVFile;
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.DataConstraint;
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.E2ETestScope;
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.LogicalTransformationModule;
@@ -24,9 +25,6 @@ import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transform
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.TestModule;
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.TestScope;
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.UnitTestScope;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage;
-
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage;
 
 import org.eclipse.emf.ecore.EAttribute;
@@ -34,8 +32,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EcorePackage;
-
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
@@ -127,6 +123,13 @@ public class Logical_transformationsPackageImpl extends EPackageImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass csvFileEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EEnum attrComparisonEEnum = null;
 
 	/**
@@ -177,10 +180,8 @@ public class Logical_transformationsPackageImpl extends EPackageImpl implements 
 		isInited = true;
 
 		// Initialize simple dependencies
-		EcorePackage.eINSTANCE.eClass();
 		Module_managementPackage.eINSTANCE.eClass();
 		Requirements_textPackage.eINSTANCE.eClass();
-		CorePackage.eINSTANCE.eClass();
 		Data_meta_modelPackage.eINSTANCE.eClass();
 
 		// Obtain or create and register interdependencies
@@ -568,6 +569,24 @@ public class Logical_transformationsPackageImpl extends EPackageImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getCSVFile() {
+		return csvFileEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getCSVFile_FileName() {
+		return (EAttribute)csvFileEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EEnum getAttrComparison() {
 		return attrComparisonEEnum;
 	}
@@ -651,6 +670,9 @@ public class Logical_transformationsPackageImpl extends EPackageImpl implements 
 		createEReference(e2ETestScopeEClass, E2E_TEST_SCOPE__LAYER);
 		createEReference(e2ETestScopeEClass, E2E_TEST_SCOPE__SCRIPT_TASK);
 
+		csvFileEClass = createEClass(CSV_FILE);
+		createEAttribute(csvFileEClass, CSV_FILE__FILE_NAME);
+
 		// Create enums
 		attrComparisonEEnum = createEEnum(ATTR_COMPARISON);
 	}
@@ -683,7 +705,6 @@ public class Logical_transformationsPackageImpl extends EPackageImpl implements 
 		Bpmn_litePackage theBpmn_litePackage = (Bpmn_litePackage)EPackage.Registry.INSTANCE.getEPackage(Bpmn_litePackage.eNS_URI);
 		Requirements_textPackage theRequirements_textPackage = (Requirements_textPackage)EPackage.Registry.INSTANCE.getEPackage(Requirements_textPackage.eNS_URI);
 		Data_meta_modelPackage theData_meta_modelPackage = (Data_meta_modelPackage)EPackage.Registry.INSTANCE.getEPackage(Data_meta_modelPackage.eNS_URI);
-		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
 
 		// Create type parameters
 
@@ -720,8 +741,8 @@ public class Logical_transformationsPackageImpl extends EPackageImpl implements 
 		initEReference(getScenarioTag_Scenario(), this.getScenario(), null, "scenario", null, 0, 1, ScenarioTag.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(testEClass, Test.class, "Test", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getTest_InputData(), theEcorePackage.getEObject(), null, "inputData", null, 0, -1, Test.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getTest_ExpectedResult(), theEcorePackage.getEObject(), null, "expectedResult", null, 0, -1, Test.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTest_InputData(), this.getCSVFile(), null, "inputData", null, 0, -1, Test.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTest_ExpectedResult(), this.getCSVFile(), null, "expectedResult", null, 0, -1, Test.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTest_Name(), ecorePackage.getEString(), "name", null, 0, 1, Test.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTest_Scope(), this.getTestScope(), null, "scope", null, 0, 1, Test.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -748,6 +769,9 @@ public class Logical_transformationsPackageImpl extends EPackageImpl implements 
 		initEReference(getE2ETestScope_Scenarios(), this.getScenario(), null, "scenarios", null, 0, -1, E2ETestScope.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getE2ETestScope_Layer(), this.getSelectionLayer(), null, "layer", null, 0, 1, E2ETestScope.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getE2ETestScope_ScriptTask(), theBpmn_litePackage.getScriptTask(), null, "scriptTask", null, 0, 1, E2ETestScope.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(csvFileEClass, CSVFile.class, "CSVFile", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getCSVFile_FileName(), ecorePackage.getEString(), "fileName", null, 0, 1, CSVFile.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(attrComparisonEEnum, AttrComparison.class, "AttrComparison");

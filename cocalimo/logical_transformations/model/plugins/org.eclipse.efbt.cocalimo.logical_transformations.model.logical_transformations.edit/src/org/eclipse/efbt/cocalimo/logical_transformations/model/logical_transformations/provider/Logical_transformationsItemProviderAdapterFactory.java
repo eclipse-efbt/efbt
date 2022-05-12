@@ -325,6 +325,29 @@ public class Logical_transformationsItemProviderAdapterFactory extends Logical_t
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.CSVFile} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected CSVFileItemProvider csvFileItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.CSVFile}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createCSVFileAdapter() {
+		if (csvFileItemProvider == null) {
+			csvFileItemProvider = new CSVFileItemProvider(this);
+		}
+
+		return csvFileItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -434,6 +457,7 @@ public class Logical_transformationsItemProviderAdapterFactory extends Logical_t
 		if (testScopeItemProvider != null) testScopeItemProvider.dispose();
 		if (unitTestScopeItemProvider != null) unitTestScopeItemProvider.dispose();
 		if (e2ETestScopeItemProvider != null) e2ETestScopeItemProvider.dispose();
+		if (csvFileItemProvider != null) csvFileItemProvider.dispose();
 	}
 
 }

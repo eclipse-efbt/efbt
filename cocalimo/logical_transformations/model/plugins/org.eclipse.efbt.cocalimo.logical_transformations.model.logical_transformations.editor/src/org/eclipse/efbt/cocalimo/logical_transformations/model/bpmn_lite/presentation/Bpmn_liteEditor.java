@@ -162,13 +162,7 @@ import org.eclipse.efbt.cocalimo.core.model.module_management.provider.Module_ma
 import org.eclipse.efbt.cocalimo.core.model.requirements_text.provider.Requirements_textItemProviderAdapterFactory;
 
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.provider.Logical_transformationsItemProviderAdapterFactory;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.core.provider.CoreItemProviderAdapterFactory;
-
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.provider.Data_meta_modelItemProviderAdapterFactory;
-
-import org.eclipse.emf.ecore.provider.EcoreItemProviderAdapterFactory;
-
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 
@@ -714,10 +708,8 @@ public class Bpmn_liteEditor
 		adapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Bpmn_liteItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Logical_transformationsItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new EcoreItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Module_managementItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Requirements_textItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new CoreItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Data_meta_modelItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 

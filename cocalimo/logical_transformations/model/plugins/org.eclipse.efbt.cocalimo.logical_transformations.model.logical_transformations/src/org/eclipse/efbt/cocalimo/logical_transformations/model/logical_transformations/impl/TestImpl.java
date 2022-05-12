@@ -4,6 +4,7 @@ package org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transfor
 
 import java.util.Collection;
 
+import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.CSVFile;
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.Logical_transformationsPackage;
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.Test;
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.TestScope;
@@ -14,7 +15,6 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -47,7 +47,7 @@ public class TestImpl extends MinimalEObjectImpl.Container implements Test {
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<EObject> inputData;
+	protected EList<CSVFile> inputData;
 
 	/**
 	 * The cached value of the '{@link #getExpectedResult() <em>Expected Result</em>}' reference list.
@@ -57,7 +57,7 @@ public class TestImpl extends MinimalEObjectImpl.Container implements Test {
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<EObject> expectedResult;
+	protected EList<CSVFile> expectedResult;
 
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
@@ -113,9 +113,9 @@ public class TestImpl extends MinimalEObjectImpl.Container implements Test {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<EObject> getInputData() {
+	public EList<CSVFile> getInputData() {
 		if (inputData == null) {
-			inputData = new EObjectResolvingEList<EObject>(EObject.class, this, Logical_transformationsPackage.TEST__INPUT_DATA);
+			inputData = new EObjectResolvingEList<CSVFile>(CSVFile.class, this, Logical_transformationsPackage.TEST__INPUT_DATA);
 		}
 		return inputData;
 	}
@@ -125,9 +125,9 @@ public class TestImpl extends MinimalEObjectImpl.Container implements Test {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<EObject> getExpectedResult() {
+	public EList<CSVFile> getExpectedResult() {
 		if (expectedResult == null) {
-			expectedResult = new EObjectResolvingEList<EObject>(EObject.class, this, Logical_transformationsPackage.TEST__EXPECTED_RESULT);
+			expectedResult = new EObjectResolvingEList<CSVFile>(CSVFile.class, this, Logical_transformationsPackage.TEST__EXPECTED_RESULT);
 		}
 		return expectedResult;
 	}
@@ -241,11 +241,11 @@ public class TestImpl extends MinimalEObjectImpl.Container implements Test {
 		switch (featureID) {
 			case Logical_transformationsPackage.TEST__INPUT_DATA:
 				getInputData().clear();
-				getInputData().addAll((Collection<? extends EObject>)newValue);
+				getInputData().addAll((Collection<? extends CSVFile>)newValue);
 				return;
 			case Logical_transformationsPackage.TEST__EXPECTED_RESULT:
 				getExpectedResult().clear();
-				getExpectedResult().addAll((Collection<? extends EObject>)newValue);
+				getExpectedResult().addAll((Collection<? extends CSVFile>)newValue);
 				return;
 			case Logical_transformationsPackage.TEST__NAME:
 				setName((String)newValue);

@@ -68,9 +68,9 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Test">
     <eStructuralFeatures xsi:type="ecore:EReference" name="inputData" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
+        eType="#//CSVFile"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="expectedResult" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
+        eType="#//CSVFile"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="scope" eType="#//TestScope"
@@ -108,5 +108,8 @@
         eType="#//Scenario"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="layer" eType="#//SelectionLayer"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="scriptTask" eType="ecore:EClass bpmn_lite.ecore#//ScriptTask"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CSVFile">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="fileName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
 </ecore:EPackage>

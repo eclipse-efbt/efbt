@@ -14,8 +14,6 @@ import org.eclipse.emf.common.ui.EclipseUIPlugin;
 
 import org.eclipse.emf.common.util.ResourceLocator;
 
-import org.eclipse.emf.ecore.provider.EcoreEditPlugin;
-
 /**
  * This is the central singleton for the Logical_transformations editor plugin.
  * <!-- begin-user-doc -->
@@ -48,7 +46,6 @@ public final class Logical_transformationsEditorPlugin extends EMFPlugin {
 	public Logical_transformationsEditorPlugin() {
 		super
 			(new ResourceLocator [] {
-				EcoreEditPlugin.INSTANCE,
 				Module_managementEditPlugin.INSTANCE,
 				Requirements_textEditPlugin.INSTANCE,
 				SmcubesEditPlugin.INSTANCE,

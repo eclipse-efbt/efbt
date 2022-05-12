@@ -114,6 +114,10 @@ public class Logical_transformationsAdapterFactory extends AdapterFactoryImpl {
 				return createE2ETestScopeAdapter();
 			}
 			@Override
+			public Adapter caseCSVFile(CSVFile object) {
+				return createCSVFileAdapter();
+			}
+			@Override
 			public Adapter caseModule(org.eclipse.efbt.cocalimo.core.model.module_management.Module object) {
 				return createModuleAdapter();
 			}
@@ -292,6 +296,20 @@ public class Logical_transformationsAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createE2ETestScopeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.CSVFile <em>CSV File</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.CSVFile
+	 * @generated
+	 */
+	public Adapter createCSVFileAdapter() {
 		return null;
 	}
 
