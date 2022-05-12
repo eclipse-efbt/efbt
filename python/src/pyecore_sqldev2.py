@@ -58,7 +58,8 @@ class SQLDeveloperImport(object):
                         #print("theclass.eSuperTypes")
                         print('superclass = ' + theclass.superClass.name)
 
-        enumMap = {}
+        domainMap = {}
+        subDomainMap = {}
         fileLocation = fileDirectory + "\\DM_Domains.csv"
         headerSkipped = False
         counter = 0
@@ -96,7 +97,8 @@ class SQLDeveloperImport(object):
                         theSubDomain.domain_id = theDomain
                         subDomainsModule.subdomains.extend([theSubDomain])
                         domainsModule.domains.extend([theDomain])
-                        enumMap[enumID] = theDomain
+                        domainMap[enumID] = theDomain
+                        subDomainMap[enumID] = theSubDomain
 
                         
                         
@@ -117,7 +119,7 @@ class SQLDeveloperImport(object):
                         value = row[4]
                         adaptedValue = SQLDeveloperImport.replaceSpaceWithUnderscore(self,value)
                         try:
-                            theDomain = enumMap[enumID]
+                            theDomain = domainMap[enumID]
                             members = SQLDeveloperImport.getLiteralsForEnumeration(self,theDomain,membersModule)
                             #if the member does not exist already, then add it
                             if (not SQLDeveloperImport.containsLiteral(self,members, adaptedValue)):
@@ -209,13 +211,16 @@ class SQLDeveloperImport(object):
 
                     if (attributeKind == "Domain"):
                         domainID = row[12]
-                        theDomain = enumMap[domainID]
+                        theDomain = domainMap[domainID]
+                        theSubDomain = subDomainMap[domainID]
                         attribute = Attribute()
                         attribute.name = amendedAttributeName
                         variable  = VARIABLE()
                         variable.name = amendedAttributeName
                         variable.domain_id = theDomain
+                        variablesModule.variables.extend([variable])
                         attribute.variable = variable
+                        attribute.classifier = theSubDomain
                    
 
                     if (attributeKind == "Logical Type"):
@@ -227,8 +232,11 @@ class SQLDeveloperImport(object):
                             variable  = VARIABLE()
                             variable.name = amendedAttributeName
                             theDomain = SQLDeveloperImport.getDomainForDataType(self,domainDataTypeMap,datatype)
+                            theSubDomain = subDomainMap[datatype.name]
                             variable.domain_id = theDomain
+                            variablesModule.variables.extend([variable])
                             attribute.variable = variable
+                            attribute.classifier = theSubDomain
                         except KeyError:
                             print("missing datatype: ")
                             print(dataTypeID)                       
@@ -336,32 +344,8 @@ class SQLDeveloperImport(object):
 
         rset = ResourceSet()
         
-        
-        
-        
         resource = rset.create_resource(URI(outputDirectory + 'ldm.bird_model'))  # This will create an XMI resource
         resource.append(birdModel)
-        #resource.append(domainsModule)  # we add the EPackage instance in the resource
-        #resource.append(subDomainsModule)  # we add the EPackage instance in the resource
-        #resource.append(membersModule)  # we add the EPackage instance in the resource
-        # resource.append(variablesModule)  # we add the EPackage instance in the resource
-        # resource.append(birdpackage)  # we add the EPackage instance in the resource
-        # resource.save()# we then serialize it
-        
-        #subDomainsResource = rset.create_resource(URI(outputDirectory + 'subDomains.ecore'))  # This will create an XMI resource
-        #subDomainsResource.append(subDomainsModule)  # we add the EPackage instance in the resource
-        #subDomainsResource.save()# we then serialize it
-        
-        #membersResource = rset.create_resource(URI(outputDirectory + 'members.ecore'))  # This will create an XMI resource
-        #membersResource.append(membersModule)  # we add the EPackage instance in the resource
-        #membersResource.save()# we then serialize it
-        
-        #variabesResource = rset.create_resource(URI(outputDirectory + 'variabes.ecore'))  # This will create an XMI resource
-        #variabesResource.append(variablesModule)  # we add the EPackage instance in the resource
-        #variabesResource.save()# we then serialize it
-        
-        #resource = rset.create_resource(URI(outputDirectory + 'ldm.ecore'))  # This will create an XMI resource
-        #resource.append(birdpackage)  # we add the EPackage instance in the resource
         resource.save()
         
         
@@ -434,11 +418,14 @@ class SQLDeveloperImport(object):
         return returnMembersList
     
     def getDomainForDataType(self,domainDataTypeMap,datatype):
-        returnDomain = domainDataTypeMap[datatypedatatype]
+        returnDomain = domainDataTypeMap[datatype]
         if (returnDomain == None):
-            returnDomain = Domain()
+            returnDomain = DOMAIN()
             returnDomain.name = datatype.name
-            returnDomain.data_type[datatypedatatype] = returnDomain
+            returnDomain.data_type[datatype] = returnDomain
+            subDomain  = SUBDOMAIN()
+            domainMap[datatype.name] = theDomain
+            subDomainMap[datatype.name] = theSubDomain
             
         return returnDomain
         
