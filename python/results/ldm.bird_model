@@ -2,140 +2,140 @@
 <bird_model:BIRDModel xmlns:xmi="http://www.omg.org/XMI" xmlns:bird_model="http://www.eclipse.org/efbt/bird_model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmi:version="2.0">
   <entityModule xsi:type="bird_model:EntityModule" nsPrefix="bird" nsURI="&quot;http://www.eclipse.org/bird&quot;" name="bird">
     <entities xsi:type="bird_model:BasicEntity" superClass="//@entityModule.0/@entities.14" name="Commodity_risk_factor">
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.3" name="Commodity_type" variable="Commodity_type"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.24" name="Delivery_location" variable="Delivery_location"/>
+      <attributes xsi:type="bird_model:Attribute" name="Commodity_type" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.3" variable="Commodity_type_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Delivery_location" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.24" variable="Delivery_location_variable"/>
     </entities>
     <entities xsi:type="bird_model:BasicEntity" superClass="//@entityModule.0/@entities.14" name="CSR_non_securitisation_risk_factor">
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.18" name="CSR_credit_quality" variable="CSR_credit_quality"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.5" name="CSR_curve_type" variable="CSR_curve_type"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" name="Organisation_identifier" variable="Organisation_identifier"/>
-      <attributes xsi:type="bird_model:OneToOneRelationshipAttribute" mandatory="true" entity="//@entityModule.0/@entities.12" name="theOrganisation"/>
+      <attributes xsi:type="bird_model:Attribute" name="CSR_credit_quality" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.18" variable="CSR_credit_quality_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="CSR_curve_type" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.5" variable="CSR_curve_type_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Organisation_identifier" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" variable="Organisation_identifier_variable"/>
+      <attributes xsi:type="bird_model:OneToOneRelationshipAttribute" mandatory="true" name="theOrganisation" entity="//@entityModule.0/@entities.12"/>
     </entities>
     <entities xsi:type="bird_model:BasicEntity" superClass="//@entityModule.0/@entities.15" name="Curvature">
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.6" name="Currency_of_record" variable="Currency_of_record"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" name="Curvature_risk_weight" variable="Curvature_risk_weight"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" name="Curvature_valuation_difference" variable="Curvature_valuation_difference"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.23" name="Shock_direction" variable="Shock_direction"/>
+      <attributes xsi:type="bird_model:Attribute" name="Currency_of_record" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.6" variable="Currency_of_record_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Curvature_risk_weight" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" variable="Curvature_risk_weight_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Curvature_valuation_difference" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" variable="Curvature_valuation_difference_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Shock_direction" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.23" variable="Shock_direction_variable"/>
     </entities>
     <entities xsi:type="bird_model:BasicEntity" name="Delta_sensitivities_correlated_and_aggregated_derived">
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" name="GIRR_delta_correlated_value_per_bucket" variable="GIRR_delta_correlated_value_per_bucket"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" name="Sensitivities_correlated_and_aggregated_bucket_identifier" variable="Sensitivities_correlated_and_aggregated_bucket_identifier"/>
-      <attributes xsi:type="bird_model:OneToManyRelationshipAttribute" mandatory="true" entity="//@entityModule.0/@entities.5" name="theDelta_sensitivity_combinations_deriveds"/>
+      <attributes xsi:type="bird_model:Attribute" name="GIRR_delta_correlated_value_per_bucket" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" variable="GIRR_delta_correlated_value_per_bucket_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Sensitivities_correlated_and_aggregated_bucket_identifier" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" variable="Sensitivities_correlated_and_aggregated_bucket_identifier_variable"/>
+      <attributes xsi:type="bird_model:OneToManyRelationshipAttribute" mandatory="true" name="theDelta_sensitivity_combinations_deriveds" entity="//@entityModule.0/@entities.5"/>
     </entities>
     <entities xsi:type="bird_model:BasicEntity" superClass="//@entityModule.0/@entities.15" name="Delta_sensitivity">
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.6" name="Currency_of_record" variable="Currency_of_record"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" name="Delta_sensitivity" variable="Delta_sensitivity"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" name="Tenor" variable="Tenor"/>
+      <attributes xsi:type="bird_model:Attribute" name="Currency_of_record" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.6" variable="Currency_of_record_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Delta_sensitivity" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" variable="Delta_sensitivity_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Tenor" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" variable="Tenor_variable"/>
     </entities>
     <entities xsi:type="bird_model:BasicEntity" name="Delta_sensitivity_combinations_derived">
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" name="Delta_sensitivity_combination_identifier" variable="Delta_sensitivity_combination_identifier"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" name="GIRR_delta_correlated_value" variable="GIRR_delta_correlated_value"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" name="GIRR_delta_correlation_factor" variable="GIRR_delta_correlation_factor"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" name="Netted_delta_sensitivities_identifier" variable="Netted_delta_sensitivities_identifier"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" name="Netted_delta_sensitivities_identifier1" variable="Netted_delta_sensitivities_identifier1"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" name="Sensitivities_correlated_and_aggregated_bucket_identifier" variable="Sensitivities_correlated_and_aggregated_bucket_identifier"/>
-      <attributes xsi:type="bird_model:OneToOneRelationshipAttribute" mandatory="true" entity="//@entityModule.0/@entities.11" name="theNetted_delta_sensitivities_per_risk_factor_and_tenor_derived"/>
-      <attributes xsi:type="bird_model:OneToOneRelationshipAttribute" mandatory="true" entity="//@entityModule.0/@entities.11" name="theNetted_delta_sensitivities_per_risk_factor_and_tenor_derived1"/>
+      <attributes xsi:type="bird_model:Attribute" name="Delta_sensitivity_combination_identifier" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" variable="Delta_sensitivity_combination_identifier_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="GIRR_delta_correlated_value" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" variable="GIRR_delta_correlated_value_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="GIRR_delta_correlation_factor" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" variable="GIRR_delta_correlation_factor_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Netted_delta_sensitivities_identifier" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" variable="Netted_delta_sensitivities_identifier_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Netted_delta_sensitivities_identifier1" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" variable="Netted_delta_sensitivities_identifier1_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Sensitivities_correlated_and_aggregated_bucket_identifier" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" variable="Sensitivities_correlated_and_aggregated_bucket_identifier_variable"/>
+      <attributes xsi:type="bird_model:OneToOneRelationshipAttribute" mandatory="true" name="theNetted_delta_sensitivities_per_risk_factor_and_tenor_derived" entity="//@entityModule.0/@entities.11"/>
+      <attributes xsi:type="bird_model:OneToOneRelationshipAttribute" mandatory="true" name="theNetted_delta_sensitivities_per_risk_factor_and_tenor_derived1" entity="//@entityModule.0/@entities.11"/>
     </entities>
     <entities xsi:type="bird_model:BasicEntity" superClass="//@entityModule.0/@entities.19" name="Equity_issue"/>
     <entities xsi:type="bird_model:BasicEntity" superClass="//@entityModule.0/@entities.14" name="Equity_risk_factor">
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.9" name="Equity_factor_type" variable="Equity_factor_type"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" name="Issue_Identifier" variable="Issue_Identifier"/>
-      <attributes xsi:type="bird_model:OneToOneRelationshipAttribute" mandatory="true" entity="//@entityModule.0/@entities.6" name="theEquity_issue"/>
+      <attributes xsi:type="bird_model:Attribute" name="Equity_factor_type" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.9" variable="Equity_factor_type_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Issue_Identifier" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" variable="Issue_Identifier_variable"/>
+      <attributes xsi:type="bird_model:OneToOneRelationshipAttribute" mandatory="true" name="theEquity_issue" entity="//@entityModule.0/@entities.6"/>
     </entities>
     <entities xsi:type="bird_model:BasicEntity" superClass="//@entityModule.0/@entities.14" name="FX_risk_factor">
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.24" name="ccy1" variable="ccy1"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.24" name="ccy2" variable="ccy2"/>
+      <attributes xsi:type="bird_model:Attribute" name="ccy1" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.24" variable="ccy1_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="ccy2" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.24" variable="ccy2_variable"/>
     </entities>
     <entities xsi:type="bird_model:BasicEntity" superClass="//@entityModule.0/@entities.14" name="GIRR_risk_factor">
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.10" name="GIRR_risk_factor_type" variable="GIRR_risk_factor_type"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.6" name="Main_currency" variable="Main_currency"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.6" name="Second_currency" variable="Second_currency"/>
+      <attributes xsi:type="bird_model:Attribute" name="GIRR_risk_factor_type" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.10" variable="GIRR_risk_factor_type_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Main_currency" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.6" variable="Main_currency_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Second_currency" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.6" variable="Second_currency_variable"/>
     </entities>
     <entities xsi:type="bird_model:BasicEntity" name="KB_per_bucket_derived">
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" name="Bucket_identifier" variable="Bucket_identifier"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" name="GIRR_delta_KB" variable="GIRR_delta_KB"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" name="Sensitivities_correlated_and_aggregated_bucket_identifier" variable="Sensitivities_correlated_and_aggregated_bucket_identifier"/>
-      <attributes xsi:type="bird_model:OneToOneRelationshipAttribute" mandatory="true" entity="//@entityModule.0/@entities.3" name="theDelta_sensitivities_correlated_and_aggregated_derived"/>
-      <attributes xsi:type="bird_model:OneToOneRelationshipAttribute" mandatory="true" entity="//@entityModule.0/@entities.22" name="theTotal_delta_sensitivity_per_bucket_derived"/>
+      <attributes xsi:type="bird_model:Attribute" name="Bucket_identifier" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" variable="Bucket_identifier_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="GIRR_delta_KB" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" variable="GIRR_delta_KB_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Sensitivities_correlated_and_aggregated_bucket_identifier" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" variable="Sensitivities_correlated_and_aggregated_bucket_identifier_variable"/>
+      <attributes xsi:type="bird_model:OneToOneRelationshipAttribute" mandatory="true" name="theDelta_sensitivities_correlated_and_aggregated_derived" entity="//@entityModule.0/@entities.3"/>
+      <attributes xsi:type="bird_model:OneToOneRelationshipAttribute" mandatory="true" name="theTotal_delta_sensitivity_per_bucket_derived" entity="//@entityModule.0/@entities.22"/>
     </entities>
     <entities xsi:type="bird_model:BasicEntity" name="Netted_delta_sensitivities_per_risk_factor_and_tenor_derived">
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.24" name="Bucket_identifier" variable="Bucket_identifier"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" name="GIRR_delta_risk_weight" variable="GIRR_delta_risk_weight"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" name="Netted_delta_sensitivities" variable="Netted_delta_sensitivities"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" name="Netted_delta_sensitivities_identifier" variable="Netted_delta_sensitivities_identifier"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" name="Risk_factor_Identifier" variable="Risk_factor_Identifier"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" name="Tenor" variable="Tenor"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.29" name="Total_sensitivities_bucket_identifier" variable="Total_sensitivities_bucket_identifier"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" name="Weighted_GIRR_delta_sensitivity" variable="Weighted_GIRR_delta_sensitivity"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" name="Weighted_GIRR_delta_sensitivity_squared" variable="Weighted_GIRR_delta_sensitivity_squared"/>
-      <attributes xsi:type="bird_model:OneToManyRelationshipAttribute" mandatory="true" entity="//@entityModule.0/@entities.4" name="theDelta_sensitivitys"/>
-      <attributes xsi:type="bird_model:OneToOneRelationshipAttribute" mandatory="true" entity="//@entityModule.0/@entities.14" name="theRisk_factor"/>
+      <attributes xsi:type="bird_model:Attribute" name="Bucket_identifier" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.24" variable="Bucket_identifier_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="GIRR_delta_risk_weight" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" variable="GIRR_delta_risk_weight_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Netted_delta_sensitivities" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" variable="Netted_delta_sensitivities_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Netted_delta_sensitivities_identifier" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" variable="Netted_delta_sensitivities_identifier_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Risk_factor_Identifier" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" variable="Risk_factor_Identifier_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Tenor" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" variable="Tenor_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Total_sensitivities_bucket_identifier" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.29" variable="Total_sensitivities_bucket_identifier_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Weighted_GIRR_delta_sensitivity" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" variable="Weighted_GIRR_delta_sensitivity_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Weighted_GIRR_delta_sensitivity_squared" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" variable="Weighted_GIRR_delta_sensitivity_squared_variable"/>
+      <attributes xsi:type="bird_model:OneToManyRelationshipAttribute" mandatory="true" name="theDelta_sensitivitys" entity="//@entityModule.0/@entities.4"/>
+      <attributes xsi:type="bird_model:OneToOneRelationshipAttribute" mandatory="true" name="theRisk_factor" entity="//@entityModule.0/@entities.14"/>
     </entities>
     <entities xsi:type="bird_model:BasicEntity" name="Organisation">
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.8" name="Economy" variable="Economy"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.13" name="Market_cap" variable="Market_cap"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" name="Organisation_identifier" variable="Organisation_identifier"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.18" name="Ratings_grade" variable="Ratings_grade"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.21" name="Sector" variable="Sector"/>
+      <attributes xsi:type="bird_model:Attribute" name="Economy" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.8" variable="Economy_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Market_cap" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.13" variable="Market_cap_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Organisation_identifier" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" variable="Organisation_identifier_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Ratings_grade" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.18" variable="Ratings_grade_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Sector" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.21" variable="Sector_variable"/>
     </entities>
     <entities xsi:type="bird_model:BasicEntity" name="OUTPUT_LAYER_FRTB">
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.0" name="Approach_For_Prudential_Purposes" variable="Approach_For_Prudential_Purposes"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.1" name="Base" variable="Base"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.4" name="Contingent_Scenario" variable="Contingent_Scenario"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.7" name="Delta_Vega_Or_Curvature_Risk" variable="Delta_Vega_Or_Curvature_Risk"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.2" name="Hypothetical_Value_Under_Specific_Assumptions" variable="Hypothetical_Value_Under_Specific_Assumptions"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.11" name="Instrument" variable="Instrument"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.12" name="Main_Catagory" variable="Main_Catagory"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.14" name="Market_Risk_Portfolio" variable="Market_Risk_Portfolio"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" name="Own_Funds_Requirements" variable="Own_Funds_Requirements"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.16" name="Position_In_The_Instrument" variable="Position_In_The_Instrument"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.17" name="Prudentia_lPortfolio" variable="Prudentia_lPortfolio"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" name="Sensitivity_To_Delta_Risk_Factors" variable="Sensitivity_To_Delta_Risk_Factors"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.27" name="Type_And_Nature_Of_Sensitivity" variable="Type_And_Nature_Of_Sensitivity"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.28" name="Type_Of_Risk" variable="Type_Of_Risk"/>
+      <attributes xsi:type="bird_model:Attribute" name="Approach_For_Prudential_Purposes" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.0" variable="Approach_For_Prudential_Purposes_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Base" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.1" variable="Base_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Contingent_Scenario" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.4" variable="Contingent_Scenario_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Delta_Vega_Or_Curvature_Risk" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.7" variable="Delta_Vega_Or_Curvature_Risk_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Hypothetical_Value_Under_Specific_Assumptions" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.2" variable="Hypothetical_Value_Under_Specific_Assumptions_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Instrument" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.11" variable="Instrument_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Main_Catagory" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.12" variable="Main_Catagory_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Market_Risk_Portfolio" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.14" variable="Market_Risk_Portfolio_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Own_Funds_Requirements" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" variable="Own_Funds_Requirements_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Position_In_The_Instrument" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.16" variable="Position_In_The_Instrument_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Prudentia_lPortfolio" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.17" variable="Prudentia_lPortfolio_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Sensitivity_To_Delta_Risk_Factors" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" variable="Sensitivity_To_Delta_Risk_Factors_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Type_And_Nature_Of_Sensitivity" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.27" variable="Type_And_Nature_Of_Sensitivity_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Type_Of_Risk" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.28" variable="Type_Of_Risk_variable"/>
     </entities>
     <entities xsi:type="bird_model:BasicEntity" name="Risk_factor"/>
     <entities xsi:type="bird_model:BasicEntity" name="Risk_measure">
-      <attributes xsi:type="bird_model:OneToOneRelationshipAttribute" mandatory="true" entity="//@entityModule.0/@entities.14" name="theRisk_factor"/>
-      <attributes xsi:type="bird_model:OneToOneRelationshipAttribute" mandatory="true" entity="//@entityModule.0/@entities.20" name="theSecurity_or_exchange_tradable_derivative_position"/>
+      <attributes xsi:type="bird_model:OneToOneRelationshipAttribute" mandatory="true" name="theRisk_factor" entity="//@entityModule.0/@entities.14"/>
+      <attributes xsi:type="bird_model:OneToOneRelationshipAttribute" mandatory="true" name="theSecurity_or_exchange_tradable_derivative_position" entity="//@entityModule.0/@entities.20"/>
     </entities>
     <entities xsi:type="bird_model:BasicEntity" superClass="//@entityModule.0/@entities.19" name="Securitisation">
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.22" name="Securitisation_sector" variable="Securitisation_sector"/>
+      <attributes xsi:type="bird_model:Attribute" name="Securitisation_sector" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.22" variable="Securitisation_sector_variable"/>
     </entities>
     <entities xsi:type="bird_model:BasicEntity" superClass="//@entityModule.0/@entities.14" name="Securitisation_CTP_risk_factor_"/>
     <entities xsi:type="bird_model:BasicEntity" superClass="//@entityModule.0/@entities.14" name="Securitisation_non_CTP_risk_factor">
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" name="Issue_Identifier" variable="Issue_Identifier"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.24" name="Tranche_name" variable="Tranche_name"/>
-      <attributes xsi:type="bird_model:OneToOneRelationshipAttribute" mandatory="true" entity="//@entityModule.0/@entities.16" name="theSecuritisation"/>
+      <attributes xsi:type="bird_model:Attribute" name="Issue_Identifier" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" variable="Issue_Identifier_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Tranche_name" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.24" variable="Tranche_name_variable"/>
+      <attributes xsi:type="bird_model:OneToOneRelationshipAttribute" mandatory="true" name="theSecuritisation" entity="//@entityModule.0/@entities.16"/>
     </entities>
     <entities xsi:type="bird_model:BasicEntity" name="Security_issue">
-      <attributes xsi:type="bird_model:OneToOneRelationshipAttribute" mandatory="true" entity="//@entityModule.0/@entities.12" name="theOrganisation"/>
+      <attributes xsi:type="bird_model:OneToOneRelationshipAttribute" mandatory="true" name="theOrganisation" entity="//@entityModule.0/@entities.12"/>
     </entities>
     <entities xsi:type="bird_model:BasicEntity" name="Security_or_exchange_tradable_derivative_position">
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" name="Position_identifier" variable="Position_identifier"/>
+      <attributes xsi:type="bird_model:Attribute" name="Position_identifier" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" variable="Position_identifier_variable"/>
     </entities>
     <entities xsi:type="bird_model:BasicEntity" name="Summed_delta_sensitivities_per_position_and_risk_factor_derived">
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" name="Position_identifier" variable="Position_identifier"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" name="Risk_factor_Identifier" variable="Risk_factor_Identifier"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" name="summed_delta_per_position" variable="summed_delta_per_position"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" name="summed_delta_per_position_identifier" variable="summed_delta_per_position_identifier"/>
-      <attributes xsi:type="bird_model:OneToManyRelationshipAttribute" mandatory="true" entity="//@entityModule.0/@entities.4" name="theDelta_sensitivitys"/>
-      <attributes xsi:type="bird_model:OneToOneRelationshipAttribute" mandatory="true" entity="//@entityModule.0/@entities.20" name="theSecurity_or_exchange_tradable_derivative_position"/>
-      <attributes xsi:type="bird_model:OneToOneRelationshipAttribute" mandatory="true" entity="//@entityModule.0/@entities.14" name="theRisk_factor"/>
+      <attributes xsi:type="bird_model:Attribute" name="Position_identifier" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" variable="Position_identifier_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Risk_factor_Identifier" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" variable="Risk_factor_Identifier_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="summed_delta_per_position" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" variable="summed_delta_per_position_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="summed_delta_per_position_identifier" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" variable="summed_delta_per_position_identifier_variable"/>
+      <attributes xsi:type="bird_model:OneToManyRelationshipAttribute" mandatory="true" name="theDelta_sensitivitys" entity="//@entityModule.0/@entities.4"/>
+      <attributes xsi:type="bird_model:OneToOneRelationshipAttribute" mandatory="true" name="theSecurity_or_exchange_tradable_derivative_position" entity="//@entityModule.0/@entities.20"/>
+      <attributes xsi:type="bird_model:OneToOneRelationshipAttribute" mandatory="true" name="theRisk_factor" entity="//@entityModule.0/@entities.14"/>
     </entities>
     <entities xsi:type="bird_model:BasicEntity" name="Total_delta_sensitivity_per_bucket_derived">
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" name="Bucket_identifier" variable="Bucket_identifier"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" name="Total_GIRR_delta_sensitivity_per_bucket" variable="Total_GIRR_delta_sensitivity_per_bucket"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" name="Total_GIRR_delta_sensitivity_squared_per_bucket" variable="Total_GIRR_delta_sensitivity_squared_per_bucket"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.29" name="Total_sensitivities_bucket_identifier" variable="Total_sensitivities_bucket_identifier"/>
-      <attributes xsi:type="bird_model:OneToManyRelationshipAttribute" mandatory="true" entity="//@entityModule.0/@entities.11" name="theNetted_delta_sensitivities_per_risk_factor_and_tenor_deriveds"/>
+      <attributes xsi:type="bird_model:Attribute" name="Bucket_identifier" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" variable="Bucket_identifier_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Total_GIRR_delta_sensitivity_per_bucket" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" variable="Total_GIRR_delta_sensitivity_per_bucket_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Total_GIRR_delta_sensitivity_squared_per_bucket" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" variable="Total_GIRR_delta_sensitivity_squared_per_bucket_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Total_sensitivities_bucket_identifier" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.29" variable="Total_sensitivities_bucket_identifier_variable"/>
+      <attributes xsi:type="bird_model:OneToManyRelationshipAttribute" mandatory="true" name="theNetted_delta_sensitivities_per_risk_factor_and_tenor_deriveds" entity="//@entityModule.0/@entities.11"/>
     </entities>
     <entities xsi:type="bird_model:BasicEntity" superClass="//@entityModule.0/@entities.15" name="Vega_sensitivity">
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" name="Currency_of_record" variable="Currency_of_record"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" name="option_maturity" variable="option_maturity"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" name="underlying_residual_maturity" variable="underlying_residual_maturity"/>
-      <attributes xsi:type="bird_model:Attribute" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" name="Vega_sensitivity" variable="Vega_sensitivity"/>
+      <attributes xsi:type="bird_model:Attribute" name="Currency_of_record" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.26" variable="Currency_of_record_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="option_maturity" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" variable="option_maturity_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="underlying_residual_maturity" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" variable="underlying_residual_maturity_variable"/>
+      <attributes xsi:type="bird_model:Attribute" name="Vega_sensitivity" classifier="//@smcubesCoreModel/@subDomainModules.0/@subdomains.15" variable="Vega_sensitivity_variable"/>
     </entities>
   </entityModule>
   <smcubesCoreModel xsi:type="bird_model:SMCubesCoreModel">
@@ -171,123 +171,6 @@
       <domains xsi:type="bird_model:DOMAIN" name="Type_Of_Risk"/>
       <domains xsi:type="bird_model:DOMAIN" name="Unknown"/>
     </domainModules>
-    <variableModules xsi:type="bird_model:VariableModule" name="variablesModule">
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Approach_For_Prudential_Purposes" name="Approach_For_Prudential_Purposes"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Base" name="Base"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="String" name="Bucket_identifier"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Bucket_identifier"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Bucket_identifier"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="String" name="ccy1"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="String" name="ccy2"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Commodity_type" name="Commodity_type"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Contingent_Scenario" name="Contingent_Scenario"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Rating_grade" name="CSR_credit_quality"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="CSR_curve_type" name="CSR_curve_type"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Currency_of_record"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Currency" name="Currency_of_record"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Currency" name="Currency_of_record"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="Curvature_risk_weight"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="Curvature_valuation_difference"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="String" name="Delivery_location"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="Delta_sensitivity"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Delta_sensitivity_combination_identifier"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Delta_Vega_Or_Curvature_Risk" name="Delta_Vega_Or_Curvature_Risk"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Economy" name="Economy"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Equity_factor_type" name="Equity_factor_type"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="GIRR_delta_correlated_value"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="GIRR_delta_correlated_value_per_bucket"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="GIRR_delta_correlation_factor"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="GIRR_delta_KB"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="GIRR_delta_risk_weight"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="GIRR_risk_factor_type" name="GIRR_risk_factor_type"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Boolean" name="Hypothetical_Value_Under_Specific_Assumptions"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Instrument" name="Instrument"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Issue_Identifier"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Issue_Identifier"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Issue_Identifier"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Main_Catagory" name="Main_Catagory"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Currency" name="Main_currency"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Market_cap" name="Market_cap"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Market_Risk_Portfolio" name="Market_Risk_Portfolio"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="Netted_delta_sensitivities"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Netted_delta_sensitivities_identifier"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Netted_delta_sensitivities_identifier"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Netted_delta_sensitivities_identifier1"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="option_maturity"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Organisation_identifier"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Organisation_identifier"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Organisation_identifier"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="Own_Funds_Requirements"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Position_identifier"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Position_identifier"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Position_identifier"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Position_In_The_Instrument" name="Position_In_The_Instrument"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Prudential_Portfolio" name="Prudentia_lPortfolio"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Rating_grade" name="Ratings_grade"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Rating_grade" name="Ratings_grade"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Risk_factor_Identifier"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Risk_factor_Identifier"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Risk_factor_Identifier"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Risk_factor_Identifier"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Risk_factor_type" name="Risk_factor_type"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Risk_measure_identifier"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Risk_measure_type" name="Risk_measure_type"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Currency" name="Second_currency"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Sector" name="Sector"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Securitisation_sector" name="Securitisation_sector"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Sensitivities_correlated_and_aggregated_bucket_identifier"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Sensitivities_correlated_and_aggregated_bucket_identifier"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Sensitivities_correlated_and_aggregated_bucket_identifier"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="Sensitivity_To_Delta_Risk_Factors"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="ShockDirection" name="Shock_direction"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="summed_delta_per_position"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="summed_delta_per_position_identifier"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="Tenor"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="Tenor"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="Total_GIRR_delta_sensitivity_per_bucket"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="Total_GIRR_delta_sensitivity_squared_per_bucket"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Unknown" name="Total_sensitivities_bucket_identifier"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Unknown" name="Total_sensitivities_bucket_identifier"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="String" name="Tranche_name"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Type_And_Nature_Of_Sensitivity" name="Type_And_Nature_Of_Sensitivity"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Type_Of_Risk" name="Type_Of_Risk"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="underlying_residual_maturity"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="Vega_sensitivity"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="Weighted_GIRR_delta_sensitivity"/>
-      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="Weighted_GIRR_delta_sensitivity_squared"/>
-    </variableModules>
-    <subDomainModules xsi:type="bird_model:SubDomainModule" name="subDomainsModule">
-      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Approach_For_Prudential_Purposes" domain_id="Approach_For_Prudential_Purposes"/>
-      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Base" domain_id="Base"/>
-      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Boolean" domain_id="Boolean"/>
-      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Commodity_type" domain_id="Commodity_type"/>
-      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Contingent_Scenario" domain_id="Contingent_Scenario"/>
-      <subdomains xsi:type="bird_model:SUBDOMAIN" name="CSR_curve_type" domain_id="CSR_curve_type"/>
-      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Currency" domain_id="Currency"/>
-      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Delta_Vega_Or_Curvature_Risk" domain_id="Delta_Vega_Or_Curvature_Risk"/>
-      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Economy" domain_id="Economy"/>
-      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Equity_factor_type" domain_id="Equity_factor_type"/>
-      <subdomains xsi:type="bird_model:SUBDOMAIN" name="GIRR_risk_factor_type" domain_id="GIRR_risk_factor_type"/>
-      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Instrument" domain_id="Instrument"/>
-      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Main_Catagory" domain_id="Main_Catagory"/>
-      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Market_cap" domain_id="Market_cap"/>
-      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Market_Risk_Portfolio" domain_id="Market_Risk_Portfolio"/>
-      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Number" domain_id="Number"/>
-      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Position_In_The_Instrument" domain_id="Position_In_The_Instrument"/>
-      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Prudential_Portfolio" domain_id="Prudential_Portfolio"/>
-      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Rating_grade" domain_id="Rating_grade"/>
-      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Risk_factor_type" domain_id="Risk_factor_type"/>
-      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Risk_measure_type" domain_id="Risk_measure_type"/>
-      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Sector" domain_id="Sector"/>
-      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Securitisation_sector" domain_id="Securitisation_sector"/>
-      <subdomains xsi:type="bird_model:SUBDOMAIN" name="ShockDirection" domain_id="ShockDirection"/>
-      <subdomains xsi:type="bird_model:SUBDOMAIN" name="String" domain_id="String"/>
-      <subdomains xsi:type="bird_model:SUBDOMAIN" name="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore"/>
-      <subdomains xsi:type="bird_model:SUBDOMAIN" name="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1"/>
-      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Type_And_Nature_Of_Sensitivity" domain_id="Type_And_Nature_Of_Sensitivity"/>
-      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Type_Of_Risk" domain_id="Type_Of_Risk"/>
-      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Unknown" domain_id="Unknown"/>
-    </subDomainModules>
     <memberModules xsi:type="bird_model:MemberModule" name="membersModule">
       <members xsi:type="bird_model:MEMBER" domain_id="Approach_For_Prudential_Purposes" name="Sensitivities_Based_Method"/>
       <members xsi:type="bird_model:MEMBER" domain_id="Approach_For_Prudential_Purposes" name="Method_To_Determine_The_Default_Risk_Charge"/>
@@ -375,5 +258,103 @@
       <members xsi:type="bird_model:MEMBER" domain_id="Type_Of_Risk" name="Default_Risk"/>
       <members xsi:type="bird_model:MEMBER" domain_id="Type_Of_Risk" name="Residual_Risk"/>
     </memberModules>
+    <variableModules xsi:type="bird_model:VariableModule" name="variablesModule">
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Approach_For_Prudential_Purposes" name="Approach_For_Prudential_Purposes_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Base" name="Base_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="String" name="Bucket_identifier_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="String" name="ccy1_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="String" name="ccy2_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Commodity_type" name="Commodity_type_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Contingent_Scenario" name="Contingent_Scenario_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Rating_grade" name="CSR_credit_quality_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="CSR_curve_type" name="CSR_curve_type_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Currency_of_record_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="Curvature_risk_weight_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="Curvature_valuation_difference_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="String" name="Delivery_location_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="Delta_sensitivity_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Delta_sensitivity_combination_identifier_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Delta_Vega_Or_Curvature_Risk" name="Delta_Vega_Or_Curvature_Risk_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Economy" name="Economy_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Equity_factor_type" name="Equity_factor_type_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="GIRR_delta_correlated_value_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="GIRR_delta_correlated_value_per_bucket_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="GIRR_delta_correlation_factor_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="GIRR_delta_KB_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="GIRR_delta_risk_weight_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="GIRR_risk_factor_type" name="GIRR_risk_factor_type_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Boolean" name="Hypothetical_Value_Under_Specific_Assumptions_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Instrument" name="Instrument_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Issue_Identifier_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Main_Catagory" name="Main_Catagory_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Currency" name="Main_currency_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Market_cap" name="Market_cap_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Market_Risk_Portfolio" name="Market_Risk_Portfolio_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="Netted_delta_sensitivities_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Netted_delta_sensitivities_identifier_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Netted_delta_sensitivities_identifier1_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="option_maturity_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Organisation_identifier_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="Own_Funds_Requirements_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Position_identifier_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Position_In_The_Instrument" name="Position_In_The_Instrument_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Prudential_Portfolio" name="Prudentia_lPortfolio_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Rating_grade" name="Ratings_grade_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Risk_factor_Identifier_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Risk_factor_type" name="Risk_factor_type_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Risk_measure_identifier_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Risk_measure_type" name="Risk_measure_type_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Currency" name="Second_currency_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Sector" name="Sector_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Securitisation_sector" name="Securitisation_sector_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Sensitivities_correlated_and_aggregated_bucket_identifier_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="Sensitivity_To_Delta_Risk_Factors_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="ShockDirection" name="Shock_direction_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="summed_delta_per_position_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="summed_delta_per_position_identifier_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="Tenor_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="Total_GIRR_delta_sensitivity_per_bucket_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="Total_GIRR_delta_sensitivity_squared_per_bucket_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Unknown" name="Total_sensitivities_bucket_identifier_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="String" name="Tranche_name_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Type_And_Nature_Of_Sensitivity" name="Type_And_Nature_Of_Sensitivity_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Type_Of_Risk" name="Type_Of_Risk_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="underlying_residual_maturity_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="Vega_sensitivity_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="Weighted_GIRR_delta_sensitivity_variable"/>
+      <variables xsi:type="bird_model:VARIABLE" domain_id="Number" name="Weighted_GIRR_delta_sensitivity_squared_variable"/>
+    </variableModules>
+    <subDomainModules xsi:type="bird_model:SubDomainModule" name="subDomainsModule">
+      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Approach_For_Prudential_Purposes" domain_id="Approach_For_Prudential_Purposes"/>
+      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Base" domain_id="Base"/>
+      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Boolean" domain_id="Boolean"/>
+      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Commodity_type" domain_id="Commodity_type"/>
+      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Contingent_Scenario" domain_id="Contingent_Scenario"/>
+      <subdomains xsi:type="bird_model:SUBDOMAIN" name="CSR_curve_type" domain_id="CSR_curve_type"/>
+      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Currency" domain_id="Currency"/>
+      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Delta_Vega_Or_Curvature_Risk" domain_id="Delta_Vega_Or_Curvature_Risk"/>
+      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Economy" domain_id="Economy"/>
+      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Equity_factor_type" domain_id="Equity_factor_type"/>
+      <subdomains xsi:type="bird_model:SUBDOMAIN" name="GIRR_risk_factor_type" domain_id="GIRR_risk_factor_type"/>
+      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Instrument" domain_id="Instrument"/>
+      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Main_Catagory" domain_id="Main_Catagory"/>
+      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Market_cap" domain_id="Market_cap"/>
+      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Market_Risk_Portfolio" domain_id="Market_Risk_Portfolio"/>
+      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Number" domain_id="Number"/>
+      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Position_In_The_Instrument" domain_id="Position_In_The_Instrument"/>
+      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Prudential_Portfolio" domain_id="Prudential_Portfolio"/>
+      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Rating_grade" domain_id="Rating_grade"/>
+      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Risk_factor_type" domain_id="Risk_factor_type"/>
+      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Risk_measure_type" domain_id="Risk_measure_type"/>
+      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Sector" domain_id="Sector"/>
+      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Securitisation_sector" domain_id="Securitisation_sector"/>
+      <subdomains xsi:type="bird_model:SUBDOMAIN" name="ShockDirection" domain_id="ShockDirection"/>
+      <subdomains xsi:type="bird_model:SUBDOMAIN" name="String" domain_id="String"/>
+      <subdomains xsi:type="bird_model:SUBDOMAIN" name="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore"/>
+      <subdomains xsi:type="bird_model:SUBDOMAIN" name="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1"/>
+      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Type_And_Nature_Of_Sensitivity" domain_id="Type_And_Nature_Of_Sensitivity"/>
+      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Type_Of_Risk" domain_id="Type_Of_Risk"/>
+      <subdomains xsi:type="bird_model:SUBDOMAIN" name="Unknown" domain_id="Unknown"/>
+    </subDomainModules>
   </smcubesCoreModel>
 </bird_model:BIRDModel>

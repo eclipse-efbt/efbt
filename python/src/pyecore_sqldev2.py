@@ -60,6 +60,7 @@ class SQLDeveloperImport(object):
 
         domainMap = {}
         subDomainMap = {}
+        variableMap = {}
         fileLocation = fileDirectory + "\\DM_Domains.csv"
         headerSkipped = False
         counter = 0
@@ -215,10 +216,14 @@ class SQLDeveloperImport(object):
                         theSubDomain = subDomainMap[domainID]
                         attribute = Attribute()
                         attribute.name = amendedAttributeName
-                        variable  = VARIABLE()
-                        variable.name = amendedAttributeName
-                        variable.domain_id = theDomain
-                        variablesModule.variables.extend([variable])
+                        try:
+                            variable = variableMap[amendedAttributeName]
+                        except KeyError:
+                            variable  = VARIABLE()
+                            variable.name = amendedAttributeName + "_variable"
+                            variable.domain_id = theDomain
+                            variableMap[amendedAttributeName] = variable
+                            variablesModule.variables.extend([variable])
                         attribute.variable = variable
                         attribute.classifier = theSubDomain
                    
@@ -229,8 +234,14 @@ class SQLDeveloperImport(object):
                             datatype = datatypeMap[dataTypeID]
                             attribute = EAttribute()
                             attribue.name =amendedAttributeName
-                            variable  = VARIABLE()
-                            variable.name = amendedAttributeName
+                            try:
+                                variable = variableMap[amendedAttributeName]
+                            except KeyError:
+                                variable  = VARIABLE()
+                                variable.name = amendedAttributeName + "_variable"
+                                variable.domain_id = theDomain
+                                variableMap[amendedAttributeName] = variable
+                                variablesModule.variables.extend([variable])
                             theDomain = SQLDeveloperImport.getDomainForDataType(self,domainDataTypeMap,datatype)
                             theSubDomain = subDomainMap[datatype.name]
                             variable.domain_id = theDomain
