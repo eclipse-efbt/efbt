@@ -7,12 +7,14 @@ import bird_model.BIRDModel;
 import bird_model.BasicEntity;
 import bird_model.Bird_modelPackage;
 import bird_model.Classifier;
+import bird_model.Concept;
 import bird_model.DOMAIN;
 import bird_model.DerivedEntity;
 import bird_model.DomainModule;
 import bird_model.Element;
 import bird_model.Entity;
 import bird_model.EntityModule;
+import bird_model.EnumMember;
 import bird_model.FACET_COLLECTION;
 import bird_model.FACET_ENUMERATION;
 import bird_model.GeneratedEntity;
@@ -265,6 +267,14 @@ public class Bird_modelAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseBIRDModel(BIRDModel object) {
 				return createBIRDModelAdapter();
+			}
+			@Override
+			public Adapter caseConcept(Concept object) {
+				return createConceptAdapter();
+			}
+			@Override
+			public Adapter caseEnumMember(EnumMember object) {
+				return createEnumMemberAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -843,6 +853,34 @@ public class Bird_modelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createBIRDModelAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link bird_model.Concept <em>Concept</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see bird_model.Concept
+	 * @generated
+	 */
+	public Adapter createConceptAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link bird_model.EnumMember <em>Enum Member</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see bird_model.EnumMember
+	 * @generated
+	 */
+	public Adapter createEnumMemberAdapter() {
 		return null;
 	}
 

@@ -8,11 +8,13 @@ import bird_model.BasicEntity;
 import bird_model.Bird_modelFactory;
 import bird_model.Bird_modelPackage;
 import bird_model.Classifier;
+import bird_model.Concept;
 import bird_model.DerivedEntity;
 import bird_model.DomainModule;
 import bird_model.Element;
 import bird_model.Entity;
 import bird_model.EntityModule;
+import bird_model.EnumMember;
 import bird_model.GeneratedEntity;
 import bird_model.ManyToManyRelationshipAttribute;
 import bird_model.ManyToOneRelationshipAttribute;
@@ -327,6 +329,20 @@ public class Bird_modelPackageImpl extends EPackageImpl implements Bird_modelPac
 	 * @generated
 	 */
 	private EClass birdModelEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass conceptEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass enumMemberEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1929,6 +1945,33 @@ public class Bird_modelPackageImpl extends EPackageImpl implements Bird_modelPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getConcept() {
+		return conceptEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getConcept_ConceptName() {
+		return (EAttribute)conceptEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getEnumMember() {
+		return enumMemberEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EEnum getFACET_VALUE_TYPE() {
 		return faceT_VALUE_TYPEEEnum;
 	}
@@ -2179,6 +2222,11 @@ public class Bird_modelPackageImpl extends EPackageImpl implements Bird_modelPac
 		createEReference(birdModelEClass, BIRD_MODEL__ENTITY_MODULE);
 		createEReference(birdModelEClass, BIRD_MODEL__SMCUBES_CORE_MODEL);
 
+		conceptEClass = createEClass(CONCEPT);
+		createEAttribute(conceptEClass, CONCEPT__CONCEPT_NAME);
+
+		enumMemberEClass = createEClass(ENUM_MEMBER);
+
 		// Create enums
 		faceT_VALUE_TYPEEEnum = createEEnum(FACET_VALUE_TYPE);
 
@@ -2219,7 +2267,9 @@ public class Bird_modelPackageImpl extends EPackageImpl implements Bird_modelPac
 		memberModuleEClass.getESuperTypes().add(this.getModule());
 		variableModuleEClass.getESuperTypes().add(this.getModule());
 		subDomainModuleEClass.getESuperTypes().add(this.getModule());
+		memberEClass.getESuperTypes().add(this.getEnumMember());
 		subdomainEClass.getESuperTypes().add(this.getClassifier());
+		variableEClass.getESuperTypes().add(this.getConcept());
 		attributeEClass.getESuperTypes().add(this.getStructuralFeature());
 		relationshipAttributeEClass.getESuperTypes().add(this.getAttribute());
 		oneToOneRelationshipAttributeEClass.getESuperTypes().add(this.getRelationshipAttribute());
@@ -2445,6 +2495,11 @@ public class Bird_modelPackageImpl extends EPackageImpl implements Bird_modelPac
 		initEClass(birdModelEClass, BIRDModel.class, "BIRDModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getBIRDModel_EntityModule(), this.getEntityModule(), null, "entityModule", null, 0, -1, BIRDModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getBIRDModel_SmcubesCoreModel(), this.getSMCubesCoreModel(), null, "smcubesCoreModel", null, 0, 1, BIRDModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(conceptEClass, Concept.class, "Concept", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getConcept_ConceptName(), ecorePackage.getEString(), "conceptName", null, 0, 1, Concept.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(enumMemberEClass, EnumMember.class, "EnumMember", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		// Initialize enums and add enum literals
 		initEEnum(faceT_VALUE_TYPEEEnum, bird_model.FACET_VALUE_TYPE.class, "FACET_VALUE_TYPE");

@@ -72,6 +72,10 @@ public class Data_meta_modelAdapterFactory extends AdapterFactoryImpl {
 				return createAttributeAdapter();
 			}
 			@Override
+			public Adapter caseConcept(Concept object) {
+				return createConceptAdapter();
+			}
+			@Override
 			public Adapter caseRelationshipAttribute(RelationshipAttribute object) {
 				return createRelationshipAttributeAdapter();
 			}
@@ -132,6 +136,10 @@ public class Data_meta_modelAdapterFactory extends AdapterFactoryImpl {
 				return createBasicEntityAdapter();
 			}
 			@Override
+			public Adapter caseEnumMember(EnumMember object) {
+				return createEnumMemberAdapter();
+			}
+			@Override
 			public Adapter caseModule(org.eclipse.efbt.cocalimo.core.model.module_management.Module object) {
 				return createModuleAdapter();
 			}
@@ -166,6 +174,20 @@ public class Data_meta_modelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createAttributeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Concept <em>Concept</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Concept
+	 * @generated
+	 */
+	public Adapter createConceptAdapter() {
 		return null;
 	}
 
@@ -376,6 +398,20 @@ public class Data_meta_modelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createBasicEntityAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.EnumMember <em>Enum Member</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.EnumMember
+	 * @generated
+	 */
+	public Adapter createEnumMemberAdapter() {
 		return null;
 	}
 

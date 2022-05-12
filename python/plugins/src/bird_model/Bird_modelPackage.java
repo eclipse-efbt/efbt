@@ -1130,6 +1130,34 @@ public interface Bird_modelPackage extends EPackage {
 	int MAINTENANCE_AGENCY_OPERATION_COUNT = 0;
 
 	/**
+	 * The meta object id for the '{@link bird_model.impl.EnumMemberImpl <em>Enum Member</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see bird_model.impl.EnumMemberImpl
+	 * @see bird_model.impl.Bird_modelPackageImpl#getEnumMember()
+	 * @generated
+	 */
+	int ENUM_MEMBER = 41;
+
+	/**
+	 * The number of structural features of the '<em>Enum Member</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_MEMBER_FEATURE_COUNT = 0;
+
+	/**
+	 * The number of operations of the '<em>Enum Member</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_MEMBER_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link bird_model.impl.MEMBERImpl <em>MEMBER</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1146,7 +1174,7 @@ public interface Bird_modelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MEMBER__CODE = 0;
+	int MEMBER__CODE = ENUM_MEMBER_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute.
@@ -1155,7 +1183,7 @@ public interface Bird_modelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MEMBER__DESCRIPTION = 1;
+	int MEMBER__DESCRIPTION = ENUM_MEMBER_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Domain id</b></em>' reference.
@@ -1164,7 +1192,7 @@ public interface Bird_modelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MEMBER__DOMAIN_ID = 2;
+	int MEMBER__DOMAIN_ID = ENUM_MEMBER_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Maintenance agency id</b></em>' reference.
@@ -1173,7 +1201,7 @@ public interface Bird_modelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MEMBER__MAINTENANCE_AGENCY_ID = 3;
+	int MEMBER__MAINTENANCE_AGENCY_ID = ENUM_MEMBER_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Member id</b></em>' attribute.
@@ -1182,7 +1210,7 @@ public interface Bird_modelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MEMBER__MEMBER_ID = 4;
+	int MEMBER__MEMBER_ID = ENUM_MEMBER_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1191,7 +1219,7 @@ public interface Bird_modelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MEMBER__NAME = 5;
+	int MEMBER__NAME = ENUM_MEMBER_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Display Name</b></em>' attribute.
@@ -1200,7 +1228,7 @@ public interface Bird_modelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MEMBER__DISPLAY_NAME = 6;
+	int MEMBER__DISPLAY_NAME = ENUM_MEMBER_FEATURE_COUNT + 6;
 
 	/**
 	 * The number of structural features of the '<em>MEMBER</em>' class.
@@ -1209,7 +1237,7 @@ public interface Bird_modelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MEMBER_FEATURE_COUNT = 7;
+	int MEMBER_FEATURE_COUNT = ENUM_MEMBER_FEATURE_COUNT + 7;
 
 	/**
 	 * The number of operations of the '<em>MEMBER</em>' class.
@@ -1218,7 +1246,7 @@ public interface Bird_modelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MEMBER_OPERATION_COUNT = 0;
+	int MEMBER_OPERATION_COUNT = ENUM_MEMBER_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link bird_model.impl.MEMBER_HIERARCHYImpl <em>MEMBER HIERARCHY</em>}' class.
@@ -1687,6 +1715,43 @@ public interface Bird_modelPackage extends EPackage {
 	int SUBDOMAIN_ENUMERATION_OPERATION_COUNT = 0;
 
 	/**
+	 * The meta object id for the '{@link bird_model.impl.ConceptImpl <em>Concept</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see bird_model.impl.ConceptImpl
+	 * @see bird_model.impl.Bird_modelPackageImpl#getConcept()
+	 * @generated
+	 */
+	int CONCEPT = 40;
+
+	/**
+	 * The feature id for the '<em><b>Concept Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONCEPT__CONCEPT_NAME = 0;
+
+	/**
+	 * The number of structural features of the '<em>Concept</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONCEPT_FEATURE_COUNT = 1;
+
+	/**
+	 * The number of operations of the '<em>Concept</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONCEPT_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link bird_model.impl.VARIABLEImpl <em>VARIABLE</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1697,13 +1762,22 @@ public interface Bird_modelPackage extends EPackage {
 	int VARIABLE = 16;
 
 	/**
+	 * The feature id for the '<em><b>Concept Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VARIABLE__CONCEPT_NAME = CONCEPT__CONCEPT_NAME;
+
+	/**
 	 * The feature id for the '<em><b>Code</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE__CODE = 0;
+	int VARIABLE__CODE = CONCEPT_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute.
@@ -1712,7 +1786,7 @@ public interface Bird_modelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE__DESCRIPTION = 1;
+	int VARIABLE__DESCRIPTION = CONCEPT_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Domain id</b></em>' reference.
@@ -1721,7 +1795,7 @@ public interface Bird_modelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE__DOMAIN_ID = 2;
+	int VARIABLE__DOMAIN_ID = CONCEPT_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Maintenance agency id</b></em>' reference.
@@ -1730,7 +1804,7 @@ public interface Bird_modelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE__MAINTENANCE_AGENCY_ID = 3;
+	int VARIABLE__MAINTENANCE_AGENCY_ID = CONCEPT_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Primary concept</b></em>' attribute.
@@ -1739,7 +1813,7 @@ public interface Bird_modelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE__PRIMARY_CONCEPT = 4;
+	int VARIABLE__PRIMARY_CONCEPT = CONCEPT_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Variable id</b></em>' attribute.
@@ -1748,7 +1822,7 @@ public interface Bird_modelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE__VARIABLE_ID = 5;
+	int VARIABLE__VARIABLE_ID = CONCEPT_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1757,7 +1831,7 @@ public interface Bird_modelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE__NAME = 6;
+	int VARIABLE__NAME = CONCEPT_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Display Name</b></em>' attribute.
@@ -1766,7 +1840,7 @@ public interface Bird_modelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE__DISPLAY_NAME = 7;
+	int VARIABLE__DISPLAY_NAME = CONCEPT_FEATURE_COUNT + 7;
 
 	/**
 	 * The number of structural features of the '<em>VARIABLE</em>' class.
@@ -1775,7 +1849,7 @@ public interface Bird_modelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_FEATURE_COUNT = 8;
+	int VARIABLE_FEATURE_COUNT = CONCEPT_FEATURE_COUNT + 8;
 
 	/**
 	 * The number of operations of the '<em>VARIABLE</em>' class.
@@ -1784,7 +1858,7 @@ public interface Bird_modelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_OPERATION_COUNT = 0;
+	int VARIABLE_OPERATION_COUNT = CONCEPT_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link bird_model.impl.VARIABLE_SETImpl <em>VARIABLE SET</em>}' class.
@@ -3145,7 +3219,7 @@ public interface Bird_modelPackage extends EPackage {
 	 * @see bird_model.impl.Bird_modelPackageImpl#getFACET_VALUE_TYPE()
 	 * @generated
 	 */
-	int FACET_VALUE_TYPE = 40;
+	int FACET_VALUE_TYPE = 42;
 
 	/**
 	 * The meta object id for the '<em>FACET VALUE TYPE Object</em>' data type.
@@ -3155,7 +3229,7 @@ public interface Bird_modelPackage extends EPackage {
 	 * @see bird_model.impl.Bird_modelPackageImpl#getFACET_VALUE_TYPEObject()
 	 * @generated
 	 */
-	int FACET_VALUE_TYPE_OBJECT = 41;
+	int FACET_VALUE_TYPE_OBJECT = 43;
 
 
 	/**
@@ -4978,6 +5052,37 @@ public interface Bird_modelPackage extends EPackage {
 	EReference getBIRDModel_SmcubesCoreModel();
 
 	/**
+	 * Returns the meta object for class '{@link bird_model.Concept <em>Concept</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Concept</em>'.
+	 * @see bird_model.Concept
+	 * @generated
+	 */
+	EClass getConcept();
+
+	/**
+	 * Returns the meta object for the attribute '{@link bird_model.Concept#getConceptName <em>Concept Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Concept Name</em>'.
+	 * @see bird_model.Concept#getConceptName()
+	 * @see #getConcept()
+	 * @generated
+	 */
+	EAttribute getConcept_ConceptName();
+
+	/**
+	 * Returns the meta object for class '{@link bird_model.EnumMember <em>Enum Member</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Enum Member</em>'.
+	 * @see bird_model.EnumMember
+	 * @generated
+	 */
+	EClass getEnumMember();
+
+	/**
 	 * Returns the meta object for enum '{@link bird_model.FACET_VALUE_TYPE <em>FACET VALUE TYPE</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6453,6 +6558,34 @@ public interface Bird_modelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference BIRD_MODEL__SMCUBES_CORE_MODEL = eINSTANCE.getBIRDModel_SmcubesCoreModel();
+
+		/**
+		 * The meta object literal for the '{@link bird_model.impl.ConceptImpl <em>Concept</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see bird_model.impl.ConceptImpl
+		 * @see bird_model.impl.Bird_modelPackageImpl#getConcept()
+		 * @generated
+		 */
+		EClass CONCEPT = eINSTANCE.getConcept();
+
+		/**
+		 * The meta object literal for the '<em><b>Concept Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CONCEPT__CONCEPT_NAME = eINSTANCE.getConcept_ConceptName();
+
+		/**
+		 * The meta object literal for the '{@link bird_model.impl.EnumMemberImpl <em>Enum Member</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see bird_model.impl.EnumMemberImpl
+		 * @see bird_model.impl.Bird_modelPackageImpl#getEnumMember()
+		 * @generated
+		 */
+		EClass ENUM_MEMBER = eINSTANCE.getEnumMember();
 
 		/**
 		 * The meta object literal for the '{@link bird_model.FACET_VALUE_TYPE <em>FACET VALUE TYPE</em>}' enum.

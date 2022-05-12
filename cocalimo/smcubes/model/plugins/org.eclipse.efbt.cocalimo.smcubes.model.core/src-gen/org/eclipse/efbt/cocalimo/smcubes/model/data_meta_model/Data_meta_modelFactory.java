@@ -31,6 +31,15 @@ public interface Data_meta_modelFactory extends EFactory {
 	Attribute createAttribute();
 
 	/**
+	 * Returns a new object of class '<em>Concept</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Concept</em>'.
+	 * @generated
+	 */
+	Concept createConcept();
+
+	/**
 	 * Returns a new object of class '<em>Relationship Attribute</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -110,6 +119,15 @@ public interface Data_meta_modelFactory extends EFactory {
 	 * @generated
 	 */
 	BasicEntity createBasicEntity();
+
+	/**
+	 * Returns a new object of class '<em>Enum Member</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Enum Member</em>'.
+	 * @generated
+	 */
+	EnumMember createEnumMember();
 
 	/**
 	 * Returns the package supported by this factory.

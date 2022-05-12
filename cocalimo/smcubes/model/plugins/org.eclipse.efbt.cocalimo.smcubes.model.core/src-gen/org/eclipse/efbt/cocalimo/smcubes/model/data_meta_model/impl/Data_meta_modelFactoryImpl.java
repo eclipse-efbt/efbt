@@ -57,6 +57,7 @@ public class Data_meta_modelFactoryImpl extends EFactoryImpl implements Data_met
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case Data_meta_modelPackage.ATTRIBUTE: return createAttribute();
+			case Data_meta_modelPackage.CONCEPT: return createConcept();
 			case Data_meta_modelPackage.RELATIONSHIP_ATTRIBUTE: return createRelationshipAttribute();
 			case Data_meta_modelPackage.ONE_TO_ONE_RELATIONSHIP_ATTRIBUTE: return createOneToOneRelationshipAttribute();
 			case Data_meta_modelPackage.MANY_TO_ONE_RELATIONSHIP_ATTRIBUTE: return createManyToOneRelationshipAttribute();
@@ -66,6 +67,7 @@ public class Data_meta_modelFactoryImpl extends EFactoryImpl implements Data_met
 			case Data_meta_modelPackage.GENERATED_ENTITY: return createGeneratedEntity();
 			case Data_meta_modelPackage.DERIVED_ENTITY: return createDerivedEntity();
 			case Data_meta_modelPackage.BASIC_ENTITY: return createBasicEntity();
+			case Data_meta_modelPackage.ENUM_MEMBER: return createEnumMember();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -80,6 +82,17 @@ public class Data_meta_modelFactoryImpl extends EFactoryImpl implements Data_met
 	public Attribute createAttribute() {
 		AttributeImpl attribute = new AttributeImpl();
 		return attribute;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Concept createConcept() {
+		ConceptImpl concept = new ConceptImpl();
+		return concept;
 	}
 
 	/**
@@ -179,6 +192,17 @@ public class Data_meta_modelFactoryImpl extends EFactoryImpl implements Data_met
 	public BasicEntity createBasicEntity() {
 		BasicEntityImpl basicEntity = new BasicEntityImpl();
 		return basicEntity;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EnumMember createEnumMember() {
+		EnumMemberImpl enumMember = new EnumMemberImpl();
+		return enumMember;
 	}
 
 	/**

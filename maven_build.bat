@@ -25,9 +25,6 @@ cd ..\..
 cd controller\ldm
 call mvn install
 cd ..\..
-cd controller\data_meta_model
-call mvn install
-cd ..\..
 cd controller\smcubes\access_dependencies_external
 call mvn install
 cd ..\..\..

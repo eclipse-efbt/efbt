@@ -66,7 +66,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getElement()
 	 * @generated
 	 */
-	int ELEMENT = 7;
+	int ELEMENT = 8;
 
 	/**
 	 * The number of structural features of the '<em>Element</em>' class.
@@ -94,7 +94,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getNamedElement()
 	 * @generated
 	 */
-	int NAMED_ELEMENT = 8;
+	int NAMED_ELEMENT = 9;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -131,7 +131,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getTypedElement()
 	 * @generated
 	 */
-	int TYPED_ELEMENT = 11;
+	int TYPED_ELEMENT = 12;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -177,7 +177,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getStructuralFeature()
 	 * @generated
 	 */
-	int STRUCTURAL_FEATURE = 10;
+	int STRUCTURAL_FEATURE = 11;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -253,13 +253,13 @@ public interface Data_meta_modelPackage extends EPackage {
 	int ATTRIBUTE__IS_PK = STRUCTURAL_FEATURE_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Variable</b></em>' reference.
+	 * The feature id for the '<em><b>Concept</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ATTRIBUTE__VARIABLE = STRUCTURAL_FEATURE_FEATURE_COUNT + 1;
+	int ATTRIBUTE__CONCEPT = STRUCTURAL_FEATURE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
@@ -289,6 +289,43 @@ public interface Data_meta_modelPackage extends EPackage {
 	int ATTRIBUTE_OPERATION_COUNT = STRUCTURAL_FEATURE_OPERATION_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.ConceptImpl <em>Concept</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.ConceptImpl
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getConcept()
+	 * @generated
+	 */
+	int CONCEPT = 1;
+
+	/**
+	 * The feature id for the '<em><b>Concept Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONCEPT__CONCEPT_NAME = 0;
+
+	/**
+	 * The number of structural features of the '<em>Concept</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONCEPT_FEATURE_COUNT = 1;
+
+	/**
+	 * The number of operations of the '<em>Concept</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONCEPT_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.RelationshipAttributeImpl <em>Relationship Attribute</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -296,7 +333,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getRelationshipAttribute()
 	 * @generated
 	 */
-	int RELATIONSHIP_ATTRIBUTE = 1;
+	int RELATIONSHIP_ATTRIBUTE = 2;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -326,13 +363,13 @@ public interface Data_meta_modelPackage extends EPackage {
 	int RELATIONSHIP_ATTRIBUTE__IS_PK = ATTRIBUTE__IS_PK;
 
 	/**
-	 * The feature id for the '<em><b>Variable</b></em>' reference.
+	 * The feature id for the '<em><b>Concept</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int RELATIONSHIP_ATTRIBUTE__VARIABLE = ATTRIBUTE__VARIABLE;
+	int RELATIONSHIP_ATTRIBUTE__CONCEPT = ATTRIBUTE__CONCEPT;
 
 	/**
 	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
@@ -405,7 +442,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getOneToOneRelationshipAttribute()
 	 * @generated
 	 */
-	int ONE_TO_ONE_RELATIONSHIP_ATTRIBUTE = 2;
+	int ONE_TO_ONE_RELATIONSHIP_ATTRIBUTE = 3;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -435,13 +472,13 @@ public interface Data_meta_modelPackage extends EPackage {
 	int ONE_TO_ONE_RELATIONSHIP_ATTRIBUTE__IS_PK = RELATIONSHIP_ATTRIBUTE__IS_PK;
 
 	/**
-	 * The feature id for the '<em><b>Variable</b></em>' reference.
+	 * The feature id for the '<em><b>Concept</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ONE_TO_ONE_RELATIONSHIP_ATTRIBUTE__VARIABLE = RELATIONSHIP_ATTRIBUTE__VARIABLE;
+	int ONE_TO_ONE_RELATIONSHIP_ATTRIBUTE__CONCEPT = RELATIONSHIP_ATTRIBUTE__CONCEPT;
 
 	/**
 	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
@@ -514,7 +551,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getManyToOneRelationshipAttribute()
 	 * @generated
 	 */
-	int MANY_TO_ONE_RELATIONSHIP_ATTRIBUTE = 3;
+	int MANY_TO_ONE_RELATIONSHIP_ATTRIBUTE = 4;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -544,13 +581,13 @@ public interface Data_meta_modelPackage extends EPackage {
 	int MANY_TO_ONE_RELATIONSHIP_ATTRIBUTE__IS_PK = RELATIONSHIP_ATTRIBUTE__IS_PK;
 
 	/**
-	 * The feature id for the '<em><b>Variable</b></em>' reference.
+	 * The feature id for the '<em><b>Concept</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MANY_TO_ONE_RELATIONSHIP_ATTRIBUTE__VARIABLE = RELATIONSHIP_ATTRIBUTE__VARIABLE;
+	int MANY_TO_ONE_RELATIONSHIP_ATTRIBUTE__CONCEPT = RELATIONSHIP_ATTRIBUTE__CONCEPT;
 
 	/**
 	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
@@ -623,7 +660,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getOneToManyRelationshipAttribute()
 	 * @generated
 	 */
-	int ONE_TO_MANY_RELATIONSHIP_ATTRIBUTE = 4;
+	int ONE_TO_MANY_RELATIONSHIP_ATTRIBUTE = 5;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -653,13 +690,13 @@ public interface Data_meta_modelPackage extends EPackage {
 	int ONE_TO_MANY_RELATIONSHIP_ATTRIBUTE__IS_PK = RELATIONSHIP_ATTRIBUTE__IS_PK;
 
 	/**
-	 * The feature id for the '<em><b>Variable</b></em>' reference.
+	 * The feature id for the '<em><b>Concept</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ONE_TO_MANY_RELATIONSHIP_ATTRIBUTE__VARIABLE = RELATIONSHIP_ATTRIBUTE__VARIABLE;
+	int ONE_TO_MANY_RELATIONSHIP_ATTRIBUTE__CONCEPT = RELATIONSHIP_ATTRIBUTE__CONCEPT;
 
 	/**
 	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
@@ -732,7 +769,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getManyToManyRelationshipAttribute()
 	 * @generated
 	 */
-	int MANY_TO_MANY_RELATIONSHIP_ATTRIBUTE = 5;
+	int MANY_TO_MANY_RELATIONSHIP_ATTRIBUTE = 6;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -762,13 +799,13 @@ public interface Data_meta_modelPackage extends EPackage {
 	int MANY_TO_MANY_RELATIONSHIP_ATTRIBUTE__IS_PK = RELATIONSHIP_ATTRIBUTE__IS_PK;
 
 	/**
-	 * The feature id for the '<em><b>Variable</b></em>' reference.
+	 * The feature id for the '<em><b>Concept</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MANY_TO_MANY_RELATIONSHIP_ATTRIBUTE__VARIABLE = RELATIONSHIP_ATTRIBUTE__VARIABLE;
+	int MANY_TO_MANY_RELATIONSHIP_ATTRIBUTE__CONCEPT = RELATIONSHIP_ATTRIBUTE__CONCEPT;
 
 	/**
 	 * The feature id for the '<em><b>Ordered</b></em>' attribute.
@@ -841,7 +878,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getClassifier()
 	 * @generated
 	 */
-	int CLASSIFIER = 6;
+	int CLASSIFIER = 7;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -878,7 +915,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getEntityModule()
 	 * @generated
 	 */
-	int ENTITY_MODULE = 9;
+	int ENTITY_MODULE = 10;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' containment reference.
@@ -987,7 +1024,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getEntity()
 	 * @generated
 	 */
-	int ENTITY = 13;
+	int ENTITY = 14;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1024,7 +1061,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getGeneratedEntity()
 	 * @generated
 	 */
-	int GENERATED_ENTITY = 12;
+	int GENERATED_ENTITY = 13;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1070,7 +1107,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getDerivedEntity()
 	 * @generated
 	 */
-	int DERIVED_ENTITY = 14;
+	int DERIVED_ENTITY = 15;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1116,7 +1153,7 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getBasicEntity()
 	 * @generated
 	 */
-	int BASIC_ENTITY = 15;
+	int BASIC_ENTITY = 16;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1165,6 +1202,35 @@ public interface Data_meta_modelPackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.EnumMemberImpl <em>Enum Member</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.EnumMemberImpl
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getEnumMember()
+	 * @generated
+	 */
+	int ENUM_MEMBER = 17;
+
+	/**
+	 * The number of structural features of the '<em>Enum Member</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_MEMBER_FEATURE_COUNT = 0;
+
+	/**
+	 * The number of operations of the '<em>Enum Member</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_MEMBER_OPERATION_COUNT = 0;
+
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute <em>Attribute</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1186,15 +1252,15 @@ public interface Data_meta_modelPackage extends EPackage {
 	EAttribute getAttribute_IsPK();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute#getVariable <em>Variable</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute#getConcept <em>Concept</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Variable</em>'.
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute#getVariable()
+	 * @return the meta object for the reference '<em>Concept</em>'.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute#getConcept()
 	 * @see #getAttribute()
 	 * @generated
 	 */
-	EReference getAttribute_Variable();
+	EReference getAttribute_Concept();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute#isOrdered <em>Ordered</em>}'.
@@ -1206,6 +1272,27 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getAttribute_Ordered();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Concept <em>Concept</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Concept</em>'.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Concept
+	 * @generated
+	 */
+	EClass getConcept();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Concept#getConceptName <em>Concept Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Concept Name</em>'.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Concept#getConceptName()
+	 * @see #getConcept()
+	 * @generated
+	 */
+	EAttribute getConcept_ConceptName();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.RelationshipAttribute <em>Relationship Attribute</em>}'.
@@ -1501,6 +1588,16 @@ public interface Data_meta_modelPackage extends EPackage {
 	EReference getBasicEntity_SuperClass();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.EnumMember <em>Enum Member</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Enum Member</em>'.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.EnumMember
+	 * @generated
+	 */
+	EClass getEnumMember();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1542,12 +1639,12 @@ public interface Data_meta_modelPackage extends EPackage {
 		EAttribute ATTRIBUTE__IS_PK = eINSTANCE.getAttribute_IsPK();
 
 		/**
-		 * The meta object literal for the '<em><b>Variable</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Concept</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference ATTRIBUTE__VARIABLE = eINSTANCE.getAttribute_Variable();
+		EReference ATTRIBUTE__CONCEPT = eINSTANCE.getAttribute_Concept();
 
 		/**
 		 * The meta object literal for the '<em><b>Ordered</b></em>' attribute feature.
@@ -1556,6 +1653,24 @@ public interface Data_meta_modelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute ATTRIBUTE__ORDERED = eINSTANCE.getAttribute_Ordered();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.ConceptImpl <em>Concept</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.ConceptImpl
+		 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getConcept()
+		 * @generated
+		 */
+		EClass CONCEPT = eINSTANCE.getConcept();
+
+		/**
+		 * The meta object literal for the '<em><b>Concept Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CONCEPT__CONCEPT_NAME = eINSTANCE.getConcept_ConceptName();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.RelationshipAttributeImpl <em>Relationship Attribute</em>}' class.
@@ -1810,6 +1925,16 @@ public interface Data_meta_modelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference BASIC_ENTITY__SUPER_CLASS = eINSTANCE.getBasicEntity_SuperClass();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.EnumMemberImpl <em>Enum Member</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.EnumMemberImpl
+		 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.Data_meta_modelPackageImpl#getEnumMember()
+		 * @generated
+		 */
+		EClass ENUM_MEMBER = eINSTANCE.getEnumMember();
 
 	}
 

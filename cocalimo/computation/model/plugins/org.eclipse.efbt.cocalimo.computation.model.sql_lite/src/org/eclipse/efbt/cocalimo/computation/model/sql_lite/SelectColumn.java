@@ -2,8 +2,8 @@
  */
 package org.eclipse.efbt.cocalimo.computation.model.sql_lite;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.core.MEMBER;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.EnumMember;
 
 /**
  * <!-- begin-user-doc -->
@@ -50,12 +50,12 @@ public interface SelectColumn extends Column {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Member As Constant</em>' reference.
-	 * @see #setMemberAsConstant(MEMBER)
+	 * @see #setMemberAsConstant(EnumMember)
 	 * @see org.eclipse.efbt.cocalimo.computation.model.sql_lite.Sql_litePackage#getSelectColumn_MemberAsConstant()
 	 * @model
 	 * @generated
 	 */
-	MEMBER getMemberAsConstant();
+	EnumMember getMemberAsConstant();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.computation.model.sql_lite.SelectColumn#getMemberAsConstant <em>Member As Constant</em>}' reference.
@@ -65,6 +65,6 @@ public interface SelectColumn extends Column {
 	 * @see #getMemberAsConstant()
 	 * @generated
 	 */
-	void setMemberAsConstant(MEMBER value);
+	void setMemberAsConstant(EnumMember value);
 
 } // SelectColumn

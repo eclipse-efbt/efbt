@@ -4,9 +4,8 @@ package org.eclipse.efbt.cocalimo.computation.model.sql_lite.impl;
 
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.SelectColumn;
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.Sql_litePackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.core.MEMBER;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.EnumMember;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -46,7 +45,7 @@ public class SelectColumnImpl extends ColumnImpl implements SelectColumn {
 	 * @generated
 	 * @ordered
 	 */
-	protected MEMBER memberAsConstant;
+	protected EnumMember memberAsConstant;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -110,10 +109,10 @@ public class SelectColumnImpl extends ColumnImpl implements SelectColumn {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MEMBER getMemberAsConstant() {
+	public EnumMember getMemberAsConstant() {
 		if (memberAsConstant != null && memberAsConstant.eIsProxy()) {
 			InternalEObject oldMemberAsConstant = (InternalEObject)memberAsConstant;
-			memberAsConstant = (MEMBER)eResolveProxy(oldMemberAsConstant);
+			memberAsConstant = (EnumMember)eResolveProxy(oldMemberAsConstant);
 			if (memberAsConstant != oldMemberAsConstant) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Sql_litePackage.SELECT_COLUMN__MEMBER_AS_CONSTANT, oldMemberAsConstant, memberAsConstant));
@@ -127,7 +126,7 @@ public class SelectColumnImpl extends ColumnImpl implements SelectColumn {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MEMBER basicGetMemberAsConstant() {
+	public EnumMember basicGetMemberAsConstant() {
 		return memberAsConstant;
 	}
 
@@ -136,8 +135,8 @@ public class SelectColumnImpl extends ColumnImpl implements SelectColumn {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setMemberAsConstant(MEMBER newMemberAsConstant) {
-		MEMBER oldMemberAsConstant = memberAsConstant;
+	public void setMemberAsConstant(EnumMember newMemberAsConstant) {
+		EnumMember oldMemberAsConstant = memberAsConstant;
 		memberAsConstant = newMemberAsConstant;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, Sql_litePackage.SELECT_COLUMN__MEMBER_AS_CONSTANT, oldMemberAsConstant, memberAsConstant));
@@ -173,7 +172,7 @@ public class SelectColumnImpl extends ColumnImpl implements SelectColumn {
 				setAs((Attribute)newValue);
 				return;
 			case Sql_litePackage.SELECT_COLUMN__MEMBER_AS_CONSTANT:
-				setMemberAsConstant((MEMBER)newValue);
+				setMemberAsConstant((EnumMember)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -191,7 +190,7 @@ public class SelectColumnImpl extends ColumnImpl implements SelectColumn {
 				setAs((Attribute)null);
 				return;
 			case Sql_litePackage.SELECT_COLUMN__MEMBER_AS_CONSTANT:
-				setMemberAsConstant((MEMBER)null);
+				setMemberAsConstant((EnumMember)null);
 				return;
 		}
 		super.eUnset(featureID);

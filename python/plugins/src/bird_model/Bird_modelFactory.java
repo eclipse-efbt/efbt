@@ -328,6 +328,24 @@ public interface Bird_modelFactory extends EFactory {
 	BIRDModel createBIRDModel();
 
 	/**
+	 * Returns a new object of class '<em>Concept</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Concept</em>'.
+	 * @generated
+	 */
+	Concept createConcept();
+
+	/**
+	 * Returns a new object of class '<em>Enum Member</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Enum Member</em>'.
+	 * @generated
+	 */
+	EnumMember createEnumMember();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

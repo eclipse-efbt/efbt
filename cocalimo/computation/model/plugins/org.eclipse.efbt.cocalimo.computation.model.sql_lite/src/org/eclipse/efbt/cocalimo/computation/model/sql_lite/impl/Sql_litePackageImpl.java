@@ -17,9 +17,6 @@ import org.eclipse.efbt.cocalimo.computation.model.sql_lite.View;
 import org.eclipse.efbt.cocalimo.computation.model.sql_lite.WhereClause;
 
 import org.eclipse.efbt.cocalimo.core.model.module_management.Module_managementPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage;
-
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage;
 
 import org.eclipse.emf.ecore.EAttribute;
@@ -164,7 +161,6 @@ public class Sql_litePackageImpl extends EPackageImpl implements Sql_litePackage
 		// Initialize simple dependencies
 		EcorePackage.eINSTANCE.eClass();
 		Module_managementPackage.eINSTANCE.eClass();
-		CorePackage.eINSTANCE.eClass();
 		Data_meta_modelPackage.eINSTANCE.eClass();
 
 		// Create package meta-data objects
@@ -496,7 +492,6 @@ public class Sql_litePackageImpl extends EPackageImpl implements Sql_litePackage
 
 		// Obtain other dependent packages
 		Data_meta_modelPackage theData_meta_modelPackage = (Data_meta_modelPackage)EPackage.Registry.INSTANCE.getEPackage(Data_meta_modelPackage.eNS_URI);
-		CorePackage theCorePackage = (CorePackage)EPackage.Registry.INSTANCE.getEPackage(CorePackage.eNS_URI);
 		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
 		Module_managementPackage theModule_managementPackage = (Module_managementPackage)EPackage.Registry.INSTANCE.getEPackage(Module_managementPackage.eNS_URI);
 
@@ -522,7 +517,7 @@ public class Sql_litePackageImpl extends EPackageImpl implements Sql_litePackage
 
 		initEClass(selectColumnEClass, SelectColumn.class, "SelectColumn", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getSelectColumn_As(), theData_meta_modelPackage.getAttribute(), null, "as", null, 0, 1, SelectColumn.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getSelectColumn_MemberAsConstant(), theCorePackage.getMEMBER(), null, "memberAsConstant", null, 0, 1, SelectColumn.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSelectColumn_MemberAsConstant(), theData_meta_modelPackage.getEnumMember(), null, "memberAsConstant", null, 0, 1, SelectColumn.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(columnEClass, Column.class, "Column", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getColumn_Attribute(), theData_meta_modelPackage.getAttribute(), null, "attribute", null, 0, 1, Column.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -114,7 +114,7 @@ class SQLDeveloperImport(object):
                         enumID = row[0]
                         enumName = row[5]
                         adaptedEnumName = SQLDeveloperImport.replaceSpaceWithUnderscore(self,enumName)
-                        value = row[3]
+                        value = row[4]
                         adaptedValue = SQLDeveloperImport.replaceSpaceWithUnderscore(self,value)
                         try:
                             theDomain = enumMap[enumID]
@@ -339,7 +339,7 @@ class SQLDeveloperImport(object):
         
         
         
-        resource = rset.create_resource(URI(outputDirectory + 'ldm.ecore'))  # This will create an XMI resource
+        resource = rset.create_resource(URI(outputDirectory + 'ldm.bird_model'))  # This will create an XMI resource
         resource.append(birdModel)
         #resource.append(domainsModule)  # we add the EPackage instance in the resource
         #resource.append(subDomainsModule)  # we add the EPackage instance in the resource

@@ -46,7 +46,7 @@ public class AttributeItemProvider extends StructuralFeatureItemProvider {
 			super.getPropertyDescriptors(object);
 
 			addIsPKPropertyDescriptor(object);
-			addVariablePropertyDescriptor(object);
+			addConceptPropertyDescriptor(object);
 			addOrderedPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
@@ -75,19 +75,19 @@ public class AttributeItemProvider extends StructuralFeatureItemProvider {
 	}
 
 	/**
-	 * This adds a property descriptor for the Variable feature.
+	 * This adds a property descriptor for the Concept feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addVariablePropertyDescriptor(Object object) {
+	protected void addConceptPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_Attribute_variable_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_Attribute_variable_feature", "_UI_Attribute_type"),
-				 Data_meta_modelPackage.Literals.ATTRIBUTE__VARIABLE,
+				 getString("_UI_Attribute_concept_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_Attribute_concept_feature", "_UI_Attribute_type"),
+				 Data_meta_modelPackage.Literals.ATTRIBUTE__CONCEPT,
 				 true,
 				 false,
 				 true,

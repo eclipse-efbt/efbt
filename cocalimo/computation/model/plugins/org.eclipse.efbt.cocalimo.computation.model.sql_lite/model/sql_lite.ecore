@@ -15,7 +15,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SelectColumn" eSuperTypes="#//Column">
     <eStructuralFeatures xsi:type="ecore:EReference" name="as" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/data_meta_model.ecore#//Attribute"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="memberAsConstant" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/core.ecore#//MEMBER"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="memberAsConstant" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/data_meta_model.ecore#//EnumMember"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Column">
     <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" eType="ecore:EClass ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/data_meta_model.ecore#//Attribute"/>

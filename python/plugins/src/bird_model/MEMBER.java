@@ -2,8 +2,6 @@
  */
 package bird_model;
 
-import org.eclipse.emf.ecore.EObject;
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>MEMBER</b></em>'.
@@ -26,7 +24,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='MEMBER' kind='empty'"
  * @generated
  */
-public interface MEMBER extends EObject {
+public interface MEMBER extends EnumMember {
 	/**
 	 * Returns the value of the '<em><b>Code</b></em>' attribute.
 	 * <!-- begin-user-doc -->

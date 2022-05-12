@@ -372,7 +372,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="MEMBER">
+  <eClassifiers xsi:type="ecore:EClass" name="MEMBER" eSuperTypes="#//EnumMember">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="MEMBER"/>
       <details key="kind" value="empty"/>
@@ -589,7 +589,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="VARIABLE">
+  <eClassifiers xsi:type="ecore:EClass" name="VARIABLE" eSuperTypes="#//Concept">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="VARIABLE"/>
       <details key="kind" value="empty"/>
@@ -895,4 +895,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="smcubesCoreModel" eType="#//SMCubesCoreModel"
         containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Concept">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="conceptName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EnumMember"/>
 </ecore:EPackage>

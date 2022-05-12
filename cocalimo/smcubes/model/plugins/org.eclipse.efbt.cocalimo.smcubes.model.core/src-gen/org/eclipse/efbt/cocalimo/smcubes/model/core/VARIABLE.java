@@ -2,7 +2,7 @@
  */
 package org.eclipse.efbt.cocalimo.smcubes.model.core;
 
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Concept;
 
 /**
  * <!-- begin-user-doc -->
@@ -27,7 +27,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='VARIABLE' kind='empty'"
  * @generated
  */
-public interface VARIABLE extends EObject {
+public interface VARIABLE extends Concept {
 	/**
 	 * Returns the value of the '<em><b>Code</b></em>' attribute.
 	 * <!-- begin-user-doc -->

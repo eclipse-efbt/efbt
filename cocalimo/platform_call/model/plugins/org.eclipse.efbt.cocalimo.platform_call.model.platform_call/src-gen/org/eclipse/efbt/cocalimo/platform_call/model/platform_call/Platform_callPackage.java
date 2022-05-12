@@ -211,79 +211,6 @@ public interface Platform_callPackage extends EPackage {
 	int PLATFORM_CALL_MODULE_OPERATION_COUNT = Module_managementPackage.MODULE_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.platform_call.model.platform_call.impl.ConvertSQLDeveloperModelToEcoreImpl <em>Convert SQL Developer Model To Ecore</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.cocalimo.platform_call.model.platform_call.impl.ConvertSQLDeveloperModelToEcoreImpl
-	 * @see org.eclipse.efbt.cocalimo.platform_call.model.platform_call.impl.Platform_callPackageImpl#getConvertSQLDeveloperModelToEcore()
-	 * @generated
-	 */
-	int CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE = 2;
-
-	/**
-	 * The feature id for the '<em><b>Error Message</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE__ERROR_MESSAGE = PLATFORM_CALL__ERROR_MESSAGE;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE__NAME = PLATFORM_CALL__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Return Status</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE__RETURN_STATUS = PLATFORM_CALL__RETURN_STATUS;
-
-	/**
-	 * The feature id for the '<em><b>Input Directory</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE__INPUT_DIRECTORY = PLATFORM_CALL_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Output Directory</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE__OUTPUT_DIRECTORY = PLATFORM_CALL_FEATURE_COUNT + 1;
-
-	/**
-	 * The number of structural features of the '<em>Convert SQL Developer Model To Ecore</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE_FEATURE_COUNT = PLATFORM_CALL_FEATURE_COUNT + 2;
-
-	/**
-	 * The number of operations of the '<em>Convert SQL Developer Model To Ecore</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE_OPERATION_COUNT = PLATFORM_CALL_OPERATION_COUNT + 0;
-
-	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.platform_call.model.platform_call.impl.ImportBIRDFromMSAccessImpl <em>Import BIRD From MS Access</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -291,7 +218,7 @@ public interface Platform_callPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.platform_call.model.platform_call.impl.Platform_callPackageImpl#getImportBIRDFromMSAccess()
 	 * @generated
 	 */
-	int IMPORT_BIRD_FROM_MS_ACCESS = 3;
+	int IMPORT_BIRD_FROM_MS_ACCESS = 2;
 
 	/**
 	 * The feature id for the '<em><b>Error Message</b></em>' attribute.
@@ -364,7 +291,7 @@ public interface Platform_callPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.platform_call.model.platform_call.impl.Platform_callPackageImpl#getCreateLogicalTransformationViewForScope()
 	 * @generated
 	 */
-	int CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE = 4;
+	int CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE = 3;
 
 	/**
 	 * The feature id for the '<em><b>Error Message</b></em>' attribute.
@@ -446,7 +373,7 @@ public interface Platform_callPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.platform_call.model.platform_call.impl.Platform_callPackageImpl#getConvertDataMetaModelToEcore()
 	 * @generated
 	 */
-	int CONVERT_DATA_META_MODEL_TO_ECORE = 5;
+	int CONVERT_DATA_META_MODEL_TO_ECORE = 4;
 
 	/**
 	 * The feature id for the '<em><b>Error Message</b></em>' attribute.
@@ -575,38 +502,6 @@ public interface Platform_callPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getPlatformCallModule_PlatformCalls();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.platform_call.model.platform_call.ConvertSQLDeveloperModelToEcore <em>Convert SQL Developer Model To Ecore</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Convert SQL Developer Model To Ecore</em>'.
-	 * @see org.eclipse.efbt.cocalimo.platform_call.model.platform_call.ConvertSQLDeveloperModelToEcore
-	 * @generated
-	 */
-	EClass getConvertSQLDeveloperModelToEcore();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.platform_call.model.platform_call.ConvertSQLDeveloperModelToEcore#getInputDirectory <em>Input Directory</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Input Directory</em>'.
-	 * @see org.eclipse.efbt.cocalimo.platform_call.model.platform_call.ConvertSQLDeveloperModelToEcore#getInputDirectory()
-	 * @see #getConvertSQLDeveloperModelToEcore()
-	 * @generated
-	 */
-	EAttribute getConvertSQLDeveloperModelToEcore_InputDirectory();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.platform_call.model.platform_call.ConvertSQLDeveloperModelToEcore#getOutputDirectory <em>Output Directory</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Output Directory</em>'.
-	 * @see org.eclipse.efbt.cocalimo.platform_call.model.platform_call.ConvertSQLDeveloperModelToEcore#getOutputDirectory()
-	 * @see #getConvertSQLDeveloperModelToEcore()
-	 * @generated
-	 */
-	EAttribute getConvertSQLDeveloperModelToEcore_OutputDirectory();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.platform_call.model.platform_call.ImportBIRDFromMSAccess <em>Import BIRD From MS Access</em>}'.
@@ -789,32 +684,6 @@ public interface Platform_callPackage extends EPackage {
 		 * @generated
 		 */
 		EReference PLATFORM_CALL_MODULE__PLATFORM_CALLS = eINSTANCE.getPlatformCallModule_PlatformCalls();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.platform_call.model.platform_call.impl.ConvertSQLDeveloperModelToEcoreImpl <em>Convert SQL Developer Model To Ecore</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.cocalimo.platform_call.model.platform_call.impl.ConvertSQLDeveloperModelToEcoreImpl
-		 * @see org.eclipse.efbt.cocalimo.platform_call.model.platform_call.impl.Platform_callPackageImpl#getConvertSQLDeveloperModelToEcore()
-		 * @generated
-		 */
-		EClass CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE = eINSTANCE.getConvertSQLDeveloperModelToEcore();
-
-		/**
-		 * The meta object literal for the '<em><b>Input Directory</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE__INPUT_DIRECTORY = eINSTANCE.getConvertSQLDeveloperModelToEcore_InputDirectory();
-
-		/**
-		 * The meta object literal for the '<em><b>Output Directory</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE__OUTPUT_DIRECTORY = eINSTANCE.getConvertSQLDeveloperModelToEcore_OutputDirectory();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.platform_call.model.platform_call.impl.ImportBIRDFromMSAccessImpl <em>Import BIRD From MS Access</em>}' class.

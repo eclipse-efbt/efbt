@@ -478,8 +478,11 @@
       resource="XMI" ecorePackage="data_meta_model.ecore#/">
     <genClasses ecoreClass="data_meta_model.ecore#//Attribute">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_meta_model.ecore#//Attribute/isPK"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_meta_model.ecore#//Attribute/variable"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_meta_model.ecore#//Attribute/concept"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_meta_model.ecore#//Attribute/ordered"/>
+    </genClasses>
+    <genClasses ecoreClass="data_meta_model.ecore#//Concept">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_meta_model.ecore#//Concept/conceptName"/>
     </genClasses>
     <genClasses ecoreClass="data_meta_model.ecore#//RelationshipAttribute">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_meta_model.ecore#//RelationshipAttribute/entity"/>
@@ -516,5 +519,6 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference data_meta_model.ecore#//BasicEntity/attributes"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_meta_model.ecore#//BasicEntity/superClass"/>
     </genClasses>
+    <genClasses ecoreClass="data_meta_model.ecore#//EnumMember"/>
   </genPackages>
 </genmodel:GenModel>

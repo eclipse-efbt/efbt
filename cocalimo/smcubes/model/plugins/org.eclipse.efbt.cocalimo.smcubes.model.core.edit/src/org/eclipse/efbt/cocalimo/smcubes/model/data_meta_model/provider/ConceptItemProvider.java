@@ -1,36 +1,53 @@
 /**
  */
-package org.eclipse.efbt.cocalimo.platform_call.model.platform_call.provider;
+package org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.provider;
 
 
 import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.efbt.cocalimo.platform_call.model.platform_call.ConvertSQLDeveloperModelToEcore;
-import org.eclipse.efbt.cocalimo.platform_call.model.platform_call.Platform_callPackage;
+import org.eclipse.efbt.cocalimo.smcubes.model.core.provider.SmcubesEditPlugin;
+
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Concept;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.util.ResourceLocator;
+
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
+import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
+import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
+import org.eclipse.emf.edit.provider.IItemPropertySource;
+import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
+import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
+import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.efbt.cocalimo.platform_call.model.platform_call.ConvertSQLDeveloperModelToEcore} object.
+ * This is the item provider adapter for a {@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Concept} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class ConvertSQLDeveloperModelToEcoreItemProvider extends PlatformCallItemProvider {
+public class ConceptItemProvider 
+	extends ItemProviderAdapter
+	implements
+		IEditingDomainItemProvider,
+		IStructuredItemContentProvider,
+		ITreeItemContentProvider,
+		IItemLabelProvider,
+		IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ConvertSQLDeveloperModelToEcoreItemProvider(AdapterFactory adapterFactory) {
+	public ConceptItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -45,26 +62,25 @@ public class ConvertSQLDeveloperModelToEcoreItemProvider extends PlatformCallIte
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addInputDirectoryPropertyDescriptor(object);
-			addOutputDirectoryPropertyDescriptor(object);
+			addConceptNamePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
 
 	/**
-	 * This adds a property descriptor for the Input Directory feature.
+	 * This adds a property descriptor for the Concept Name feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addInputDirectoryPropertyDescriptor(Object object) {
+	protected void addConceptNamePropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_ConvertSQLDeveloperModelToEcore_inputDirectory_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_ConvertSQLDeveloperModelToEcore_inputDirectory_feature", "_UI_ConvertSQLDeveloperModelToEcore_type"),
-				 Platform_callPackage.Literals.CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE__INPUT_DIRECTORY,
+				 getString("_UI_Concept_conceptName_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_Concept_conceptName_feature", "_UI_Concept_type"),
+				 Data_meta_modelPackage.Literals.CONCEPT__CONCEPT_NAME,
 				 true,
 				 false,
 				 false,
@@ -74,36 +90,14 @@ public class ConvertSQLDeveloperModelToEcoreItemProvider extends PlatformCallIte
 	}
 
 	/**
-	 * This adds a property descriptor for the Output Directory feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addOutputDirectoryPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_ConvertSQLDeveloperModelToEcore_outputDirectory_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_ConvertSQLDeveloperModelToEcore_outputDirectory_feature", "_UI_ConvertSQLDeveloperModelToEcore_type"),
-				 Platform_callPackage.Literals.CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE__OUTPUT_DIRECTORY,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This returns ConvertSQLDeveloperModelToEcore.gif.
+	 * This returns Concept.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/ConvertSQLDeveloperModelToEcore"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/Concept"));
 	}
 
 	/**
@@ -114,10 +108,10 @@ public class ConvertSQLDeveloperModelToEcoreItemProvider extends PlatformCallIte
 	 */
 	@Override
 	public String getText(Object object) {
-		String label = ((ConvertSQLDeveloperModelToEcore)object).getName();
+		String label = ((Concept)object).getConceptName();
 		return label == null || label.length() == 0 ?
-			getString("_UI_ConvertSQLDeveloperModelToEcore_type") :
-			getString("_UI_ConvertSQLDeveloperModelToEcore_type") + " " + label;
+			getString("_UI_Concept_type") :
+			getString("_UI_Concept_type") + " " + label;
 	}
 
 
@@ -132,9 +126,8 @@ public class ConvertSQLDeveloperModelToEcoreItemProvider extends PlatformCallIte
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 
-		switch (notification.getFeatureID(ConvertSQLDeveloperModelToEcore.class)) {
-			case Platform_callPackage.CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE__INPUT_DIRECTORY:
-			case Platform_callPackage.CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE__OUTPUT_DIRECTORY:
+		switch (notification.getFeatureID(Concept.class)) {
+			case Data_meta_modelPackage.CONCEPT__CONCEPT_NAME:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 		}
@@ -151,6 +144,17 @@ public class ConvertSQLDeveloperModelToEcoreItemProvider extends PlatformCallIte
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
+	}
+
+	/**
+	 * Return the resource locator for this item provider's resources.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public ResourceLocator getResourceLocator() {
+		return SmcubesEditPlugin.INSTANCE;
 	}
 
 }

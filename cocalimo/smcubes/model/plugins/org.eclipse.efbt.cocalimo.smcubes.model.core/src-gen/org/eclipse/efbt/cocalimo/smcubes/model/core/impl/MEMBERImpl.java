@@ -7,13 +7,13 @@ import org.eclipse.efbt.cocalimo.smcubes.model.core.DOMAIN;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.MAINTENANCE_AGENCY;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.MEMBER;
 
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.EnumMemberImpl;
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -34,7 +34,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class MEMBERImpl extends MinimalEObjectImpl.Container implements MEMBER {
+public class MEMBERImpl extends EnumMemberImpl implements MEMBER {
 	/**
 	 * The default value of the '{@link #getCode() <em>Code</em>}' attribute.
 	 * <!-- begin-user-doc -->
