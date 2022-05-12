@@ -19,12 +19,14 @@ import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.impl.Data_definit
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.BasicEntity;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Classifier;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Concept;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelFactory;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.DerivedEntity;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Element;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Entity;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.EntityModule;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.EnumMember;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.GeneratedEntity;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ManyToManyRelationshipAttribute;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.ManyToOneRelationshipAttribute;
@@ -63,6 +65,13 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 	 * @generated
 	 */
 	private EClass attributeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass conceptEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -168,6 +177,13 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 	 * @generated
 	 */
 	private EClass basicEntityEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass enumMemberEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -285,7 +301,7 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 	 * @generated
 	 */
 	@Override
-	public EReference getAttribute_Variable() {
+	public EReference getAttribute_Concept() {
 		return (EReference)attributeEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -297,6 +313,26 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 	@Override
 	public EAttribute getAttribute_Ordered() {
 		return (EAttribute)attributeEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getConcept() {
+		return conceptEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getConcept_ConceptName() {
+		return (EAttribute)conceptEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -585,6 +621,16 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 	 * @generated
 	 */
 	@Override
+	public EClass getEnumMember() {
+		return enumMemberEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Data_meta_modelFactory getData_meta_modelFactory() {
 		return (Data_meta_modelFactory)getEFactoryInstance();
 	}
@@ -610,8 +656,11 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 		// Create classes and their features
 		attributeEClass = createEClass(ATTRIBUTE);
 		createEAttribute(attributeEClass, ATTRIBUTE__IS_PK);
-		createEReference(attributeEClass, ATTRIBUTE__VARIABLE);
+		createEReference(attributeEClass, ATTRIBUTE__CONCEPT);
 		createEAttribute(attributeEClass, ATTRIBUTE__ORDERED);
+
+		conceptEClass = createEClass(CONCEPT);
+		createEAttribute(conceptEClass, CONCEPT__CONCEPT_NAME);
 
 		relationshipAttributeEClass = createEClass(RELATIONSHIP_ATTRIBUTE);
 		createEReference(relationshipAttributeEClass, RELATIONSHIP_ATTRIBUTE__ENTITY);
@@ -655,6 +704,8 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 		basicEntityEClass = createEClass(BASIC_ENTITY);
 		createEReference(basicEntityEClass, BASIC_ENTITY__ATTRIBUTES);
 		createEReference(basicEntityEClass, BASIC_ENTITY__SUPER_CLASS);
+
+		enumMemberEClass = createEClass(ENUM_MEMBER);
 	}
 
 	/**
@@ -681,7 +732,6 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 		setNsURI(eNS_URI);
 
 		// Obtain other dependent packages
-		CorePackage theCorePackage = (CorePackage)EPackage.Registry.INSTANCE.getEPackage(CorePackage.eNS_URI);
 		Module_managementPackage theModule_managementPackage = (Module_managementPackage)EPackage.Registry.INSTANCE.getEPackage(Module_managementPackage.eNS_URI);
 
 		// Create type parameters
@@ -708,8 +758,11 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 		// Initialize classes, features, and operations; add parameters
 		initEClass(attributeEClass, Attribute.class, "Attribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getAttribute_IsPK(), ecorePackage.getEBoolean(), "isPK", null, 0, 1, Attribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getAttribute_Variable(), theCorePackage.getVARIABLE(), null, "variable", null, 0, 1, Attribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getAttribute_Concept(), this.getConcept(), null, "concept", null, 0, 1, Attribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getAttribute_Ordered(), ecorePackage.getEBoolean(), "ordered", null, 0, 1, Attribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(conceptEClass, Concept.class, "Concept", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getConcept_ConceptName(), ecorePackage.getEString(), "conceptName", null, 0, 1, Concept.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(relationshipAttributeEClass, RelationshipAttribute.class, "RelationshipAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getRelationshipAttribute_Entity(), this.getEntity(), null, "entity", null, 0, 1, RelationshipAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -753,6 +806,8 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 		initEClass(basicEntityEClass, BasicEntity.class, "BasicEntity", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getBasicEntity_Attributes(), this.getAttribute(), null, "attributes", null, 0, -1, BasicEntity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getBasicEntity_SuperClass(), this.getBasicEntity(), null, "superClass", null, 0, 1, BasicEntity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(enumMemberEClass, EnumMember.class, "EnumMember", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

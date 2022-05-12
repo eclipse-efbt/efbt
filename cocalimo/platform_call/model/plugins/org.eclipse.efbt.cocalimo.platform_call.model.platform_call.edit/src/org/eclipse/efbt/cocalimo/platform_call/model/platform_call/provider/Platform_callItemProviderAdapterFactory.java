@@ -118,29 +118,6 @@ public class Platform_callItemProviderAdapterFactory extends Platform_callAdapte
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.platform_call.model.platform_call.ConvertSQLDeveloperModelToEcore} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected ConvertSQLDeveloperModelToEcoreItemProvider convertSQLDeveloperModelToEcoreItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.platform_call.model.platform_call.ConvertSQLDeveloperModelToEcore}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createConvertSQLDeveloperModelToEcoreAdapter() {
-		if (convertSQLDeveloperModelToEcoreItemProvider == null) {
-			convertSQLDeveloperModelToEcoreItemProvider = new ConvertSQLDeveloperModelToEcoreItemProvider(this);
-		}
-
-		return convertSQLDeveloperModelToEcoreItemProvider;
-	}
-
-	/**
 	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.platform_call.model.platform_call.ImportBIRDFromMSAccess} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -316,7 +293,6 @@ public class Platform_callItemProviderAdapterFactory extends Platform_callAdapte
 	public void dispose() {
 		if (platformCallItemProvider != null) platformCallItemProvider.dispose();
 		if (platformCallModuleItemProvider != null) platformCallModuleItemProvider.dispose();
-		if (convertSQLDeveloperModelToEcoreItemProvider != null) convertSQLDeveloperModelToEcoreItemProvider.dispose();
 		if (importBIRDFromMSAccessItemProvider != null) importBIRDFromMSAccessItemProvider.dispose();
 		if (createLogicalTransformationViewForScopeItemProvider != null) createLogicalTransformationViewForScopeItemProvider.dispose();
 		if (convertDataMetaModelToEcoreItemProvider != null) convertDataMetaModelToEcoreItemProvider.dispose();

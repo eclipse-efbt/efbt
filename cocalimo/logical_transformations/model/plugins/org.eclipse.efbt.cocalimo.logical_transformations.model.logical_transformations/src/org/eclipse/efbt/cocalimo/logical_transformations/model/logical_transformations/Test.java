@@ -28,7 +28,7 @@ import org.eclipse.emf.ecore.EObject;
 public interface Test extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Input Data</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.emf.ecore.EObject}.
+	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.CSVFile}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Input Data</em>' reference list.
@@ -36,11 +36,11 @@ public interface Test extends EObject {
 	 * @model
 	 * @generated
 	 */
-	EList<EObject> getInputData();
+	EList<CSVFile> getInputData();
 
 	/**
 	 * Returns the value of the '<em><b>Expected Result</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.emf.ecore.EObject}.
+	 * The list contents are of type {@link org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.CSVFile}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Expected Result</em>' reference list.
@@ -48,7 +48,7 @@ public interface Test extends EObject {
 	 * @model
 	 * @generated
 	 */
-	EList<EObject> getExpectedResult();
+	EList<CSVFile> getExpectedResult();
 
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.

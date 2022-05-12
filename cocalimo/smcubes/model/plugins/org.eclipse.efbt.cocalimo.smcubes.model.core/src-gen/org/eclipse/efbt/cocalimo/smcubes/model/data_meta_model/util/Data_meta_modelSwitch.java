@@ -76,6 +76,12 @@ public class Data_meta_modelSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case Data_meta_modelPackage.CONCEPT: {
+				Concept concept = (Concept)theEObject;
+				T result = caseConcept(concept);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case Data_meta_modelPackage.RELATIONSHIP_ATTRIBUTE: {
 				RelationshipAttribute relationshipAttribute = (RelationshipAttribute)theEObject;
 				T result = caseRelationshipAttribute(relationshipAttribute);
@@ -215,6 +221,12 @@ public class Data_meta_modelSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case Data_meta_modelPackage.ENUM_MEMBER: {
+				EnumMember enumMember = (EnumMember)theEObject;
+				T result = caseEnumMember(enumMember);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -231,6 +243,21 @@ public class Data_meta_modelSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseAttribute(Attribute object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Concept</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Concept</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseConcept(Concept object) {
 		return null;
 	}
 
@@ -456,6 +483,21 @@ public class Data_meta_modelSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseBasicEntity(BasicEntity object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Enum Member</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Enum Member</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseEnumMember(EnumMember object) {
 		return null;
 	}
 

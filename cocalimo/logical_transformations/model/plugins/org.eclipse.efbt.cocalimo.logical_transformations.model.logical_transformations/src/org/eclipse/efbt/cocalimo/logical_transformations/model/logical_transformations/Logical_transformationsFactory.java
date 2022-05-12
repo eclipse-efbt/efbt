@@ -121,6 +121,15 @@ public interface Logical_transformationsFactory extends EFactory {
 	E2ETestScope createE2ETestScope();
 
 	/**
+	 * Returns a new object of class '<em>CSV File</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>CSV File</em>'.
+	 * @generated
+	 */
+	CSVFile createCSVFile();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

@@ -2,8 +2,6 @@
  */
 package org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.core.VARIABLE;
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Attribute</b></em>'.
@@ -14,7 +12,7 @@ import org.eclipse.efbt.cocalimo.smcubes.model.core.VARIABLE;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute#isIsPK <em>Is PK</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute#getVariable <em>Variable</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute#getConcept <em>Concept</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute#isOrdered <em>Ordered</em>}</li>
  * </ul>
  *
@@ -46,26 +44,26 @@ public interface Attribute extends StructuralFeature {
 	void setIsPK(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Variable</b></em>' reference.
+	 * Returns the value of the '<em><b>Concept</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Variable</em>' reference.
-	 * @see #setVariable(VARIABLE)
-	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage#getAttribute_Variable()
+	 * @return the value of the '<em>Concept</em>' reference.
+	 * @see #setConcept(Concept)
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage#getAttribute_Concept()
 	 * @model
 	 * @generated
 	 */
-	VARIABLE getVariable();
+	Concept getConcept();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute#getVariable <em>Variable</em>}' reference.
+	 * Sets the value of the '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute#getConcept <em>Concept</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Variable</em>' reference.
-	 * @see #getVariable()
+	 * @param value the new value of the '<em>Concept</em>' reference.
+	 * @see #getConcept()
 	 * @generated
 	 */
-	void setVariable(VARIABLE value);
+	void setConcept(Concept value);
 
 	/**
 	 * Returns the value of the '<em><b>Ordered</b></em>' attribute.

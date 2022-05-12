@@ -2,7 +2,7 @@
  */
 package org.eclipse.efbt.cocalimo.smcubes.model.core;
 
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.EnumMember;
 
 /**
  * <!-- begin-user-doc -->
@@ -26,7 +26,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='MEMBER' kind='empty'"
  * @generated
  */
-public interface MEMBER extends EObject {
+public interface MEMBER extends EnumMember {
 	/**
 	 * Returns the value of the '<em><b>Code</b></em>' attribute.
 	 * <!-- begin-user-doc -->

@@ -7,7 +7,7 @@
     rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" importerID="org.eclipse.emf.importer.ecore"
     complianceLevel="8.0" copyrightFields="false" editPluginID="org.eclipse.efbt.cocalimo.platform_call.model.platform_call.edit"
     editorPluginID="org.eclipse.efbt.cocalimo.platform_call.model.platform_call.editor"
-    usedGenPackages="../../org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore ../../org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations/model/logical_transformations.genmodel#//bpmn_lite ../../org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations/model/logical_transformations.genmodel#//logical_transformations ../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.cocalimo.core.model.requirements_text/model/requirements_text.genmodel#//requirements_text ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//core ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//data_meta_model"
+    usedGenPackages="../../org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore ../../org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations/model/logical_transformations.genmodel#//bpmn_lite ../../org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations/model/logical_transformations.genmodel#//logical_transformations ../../org.eclipse.efbt.cocalimo.core.model.module_management/model/module_management.genmodel#//module_management ../../org.eclipse.efbt.cocalimo.core.model.requirements_text/model/requirements_text.genmodel#//requirements_text ../../org.eclipse.efbt.cocalimo.smcubes.model.core/model/smcubes.genmodel#//data_meta_model"
     operationReflection="true" importOrganizing="true">
   <foreignModel>platform_call.ecore</foreignModel>
   <genPackages prefix="Platform_call" basePackage="org.eclipse.efbt.cocalimo.platform_call.model"
@@ -19,10 +19,6 @@
     </genClasses>
     <genClasses ecoreClass="platform_call.ecore#//PlatformCallModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform_call.ecore#//PlatformCallModule/platformCalls"/>
-    </genClasses>
-    <genClasses ecoreClass="platform_call.ecore#//ConvertSQLDeveloperModelToEcore">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//ConvertSQLDeveloperModelToEcore/inputDirectory"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//ConvertSQLDeveloperModelToEcore/outputDirectory"/>
     </genClasses>
     <genClasses ecoreClass="platform_call.ecore#//ImportBIRDFromMSAccess">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//ImportBIRDFromMSAccess/inputDirectory"/>

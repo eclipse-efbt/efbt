@@ -2,9 +2,8 @@
  */
 package org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl;
 
-import org.eclipse.efbt.cocalimo.smcubes.model.core.VARIABLE;
-
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Attribute;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Concept;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -23,7 +22,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.AttributeImpl#isIsPK <em>Is PK</em>}</li>
- *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.AttributeImpl#getVariable <em>Variable</em>}</li>
+ *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.AttributeImpl#getConcept <em>Concept</em>}</li>
  *   <li>{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.impl.AttributeImpl#isOrdered <em>Ordered</em>}</li>
  * </ul>
  *
@@ -51,14 +50,14 @@ public class AttributeImpl extends StructuralFeatureImpl implements Attribute {
 	protected boolean isPK = IS_PK_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getVariable() <em>Variable</em>}' reference.
+	 * The cached value of the '{@link #getConcept() <em>Concept</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getVariable()
+	 * @see #getConcept()
 	 * @generated
 	 * @ordered
 	 */
-	protected VARIABLE variable;
+	protected Concept concept;
 
 	/**
 	 * The default value of the '{@link #isOrdered() <em>Ordered</em>}' attribute.
@@ -128,16 +127,16 @@ public class AttributeImpl extends StructuralFeatureImpl implements Attribute {
 	 * @generated
 	 */
 	@Override
-	public VARIABLE getVariable() {
-		if (variable != null && variable.eIsProxy()) {
-			InternalEObject oldVariable = (InternalEObject)variable;
-			variable = (VARIABLE)eResolveProxy(oldVariable);
-			if (variable != oldVariable) {
+	public Concept getConcept() {
+		if (concept != null && concept.eIsProxy()) {
+			InternalEObject oldConcept = (InternalEObject)concept;
+			concept = (Concept)eResolveProxy(oldConcept);
+			if (concept != oldConcept) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Data_meta_modelPackage.ATTRIBUTE__VARIABLE, oldVariable, variable));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Data_meta_modelPackage.ATTRIBUTE__CONCEPT, oldConcept, concept));
 			}
 		}
-		return variable;
+		return concept;
 	}
 
 	/**
@@ -145,8 +144,8 @@ public class AttributeImpl extends StructuralFeatureImpl implements Attribute {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public VARIABLE basicGetVariable() {
-		return variable;
+	public Concept basicGetConcept() {
+		return concept;
 	}
 
 	/**
@@ -155,11 +154,11 @@ public class AttributeImpl extends StructuralFeatureImpl implements Attribute {
 	 * @generated
 	 */
 	@Override
-	public void setVariable(VARIABLE newVariable) {
-		VARIABLE oldVariable = variable;
-		variable = newVariable;
+	public void setConcept(Concept newConcept) {
+		Concept oldConcept = concept;
+		concept = newConcept;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, Data_meta_modelPackage.ATTRIBUTE__VARIABLE, oldVariable, variable));
+			eNotify(new ENotificationImpl(this, Notification.SET, Data_meta_modelPackage.ATTRIBUTE__CONCEPT, oldConcept, concept));
 	}
 
 	/**
@@ -195,9 +194,9 @@ public class AttributeImpl extends StructuralFeatureImpl implements Attribute {
 		switch (featureID) {
 			case Data_meta_modelPackage.ATTRIBUTE__IS_PK:
 				return isIsPK();
-			case Data_meta_modelPackage.ATTRIBUTE__VARIABLE:
-				if (resolve) return getVariable();
-				return basicGetVariable();
+			case Data_meta_modelPackage.ATTRIBUTE__CONCEPT:
+				if (resolve) return getConcept();
+				return basicGetConcept();
 			case Data_meta_modelPackage.ATTRIBUTE__ORDERED:
 				return isOrdered();
 		}
@@ -215,8 +214,8 @@ public class AttributeImpl extends StructuralFeatureImpl implements Attribute {
 			case Data_meta_modelPackage.ATTRIBUTE__IS_PK:
 				setIsPK((Boolean)newValue);
 				return;
-			case Data_meta_modelPackage.ATTRIBUTE__VARIABLE:
-				setVariable((VARIABLE)newValue);
+			case Data_meta_modelPackage.ATTRIBUTE__CONCEPT:
+				setConcept((Concept)newValue);
 				return;
 			case Data_meta_modelPackage.ATTRIBUTE__ORDERED:
 				setOrdered((Boolean)newValue);
@@ -236,8 +235,8 @@ public class AttributeImpl extends StructuralFeatureImpl implements Attribute {
 			case Data_meta_modelPackage.ATTRIBUTE__IS_PK:
 				setIsPK(IS_PK_EDEFAULT);
 				return;
-			case Data_meta_modelPackage.ATTRIBUTE__VARIABLE:
-				setVariable((VARIABLE)null);
+			case Data_meta_modelPackage.ATTRIBUTE__CONCEPT:
+				setConcept((Concept)null);
 				return;
 			case Data_meta_modelPackage.ATTRIBUTE__ORDERED:
 				setOrdered(ORDERED_EDEFAULT);
@@ -256,8 +255,8 @@ public class AttributeImpl extends StructuralFeatureImpl implements Attribute {
 		switch (featureID) {
 			case Data_meta_modelPackage.ATTRIBUTE__IS_PK:
 				return isPK != IS_PK_EDEFAULT;
-			case Data_meta_modelPackage.ATTRIBUTE__VARIABLE:
-				return variable != null;
+			case Data_meta_modelPackage.ATTRIBUTE__CONCEPT:
+				return concept != null;
 			case Data_meta_modelPackage.ATTRIBUTE__ORDERED:
 				return ordered != ORDERED_EDEFAULT;
 		}

@@ -5,7 +5,9 @@ package org.eclipse.efbt.cocalimo.smcubes.model.core.util;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.*;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Classifier;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Concept;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Element;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.EnumMember;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.NamedElement;
 
 import org.eclipse.emf.common.notify.Adapter;
@@ -124,6 +126,10 @@ public class CoreAdapterFactory extends AdapterFactoryImpl {
 				return createVARIABLE_SET_ENUMERATIONAdapter();
 			}
 			@Override
+			public Adapter caseEnumMember(EnumMember object) {
+				return createEnumMemberAdapter();
+			}
+			@Override
 			public Adapter caseElement(Element object) {
 				return createElementAdapter();
 			}
@@ -134,6 +140,10 @@ public class CoreAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseClassifier(Classifier object) {
 				return createClassifierAdapter();
+			}
+			@Override
+			public Adapter caseConcept(Concept object) {
+				return createConceptAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -338,6 +348,20 @@ public class CoreAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.EnumMember <em>Enum Member</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.EnumMember
+	 * @generated
+	 */
+	public Adapter createEnumMemberAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Element <em>Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -376,6 +400,20 @@ public class CoreAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createClassifierAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Concept <em>Concept</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Concept
+	 * @generated
+	 */
+	public Adapter createConceptAdapter() {
 		return null;
 	}
 

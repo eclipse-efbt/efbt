@@ -76,10 +76,6 @@ public class Platform_callAdapterFactory extends AdapterFactoryImpl {
 				return createPlatformCallModuleAdapter();
 			}
 			@Override
-			public Adapter caseConvertSQLDeveloperModelToEcore(ConvertSQLDeveloperModelToEcore object) {
-				return createConvertSQLDeveloperModelToEcoreAdapter();
-			}
-			@Override
 			public Adapter caseImportBIRDFromMSAccess(ImportBIRDFromMSAccess object) {
 				return createImportBIRDFromMSAccessAdapter();
 			}
@@ -140,20 +136,6 @@ public class Platform_callAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createPlatformCallModuleAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.cocalimo.platform_call.model.platform_call.ConvertSQLDeveloperModelToEcore <em>Convert SQL Developer Model To Ecore</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.efbt.cocalimo.platform_call.model.platform_call.ConvertSQLDeveloperModelToEcore
-	 * @generated
-	 */
-	public Adapter createConvertSQLDeveloperModelToEcoreAdapter() {
 		return null;
 	}
 

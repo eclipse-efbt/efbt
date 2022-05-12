@@ -527,7 +527,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MEMBER__CODE = 0;
+	int MEMBER__CODE = Data_meta_modelPackage.ENUM_MEMBER_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute.
@@ -536,7 +536,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MEMBER__DESCRIPTION = 1;
+	int MEMBER__DESCRIPTION = Data_meta_modelPackage.ENUM_MEMBER_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Domain id</b></em>' reference.
@@ -545,7 +545,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MEMBER__DOMAIN_ID = 2;
+	int MEMBER__DOMAIN_ID = Data_meta_modelPackage.ENUM_MEMBER_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Maintenance agency id</b></em>' reference.
@@ -554,7 +554,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MEMBER__MAINTENANCE_AGENCY_ID = 3;
+	int MEMBER__MAINTENANCE_AGENCY_ID = Data_meta_modelPackage.ENUM_MEMBER_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Member id</b></em>' attribute.
@@ -563,7 +563,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MEMBER__MEMBER_ID = 4;
+	int MEMBER__MEMBER_ID = Data_meta_modelPackage.ENUM_MEMBER_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -572,7 +572,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MEMBER__NAME = 5;
+	int MEMBER__NAME = Data_meta_modelPackage.ENUM_MEMBER_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Display Name</b></em>' attribute.
@@ -581,7 +581,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MEMBER__DISPLAY_NAME = 6;
+	int MEMBER__DISPLAY_NAME = Data_meta_modelPackage.ENUM_MEMBER_FEATURE_COUNT + 6;
 
 	/**
 	 * The number of structural features of the '<em>MEMBER</em>' class.
@@ -590,7 +590,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MEMBER_FEATURE_COUNT = 7;
+	int MEMBER_FEATURE_COUNT = Data_meta_modelPackage.ENUM_MEMBER_FEATURE_COUNT + 7;
 
 	/**
 	 * The number of operations of the '<em>MEMBER</em>' class.
@@ -599,7 +599,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MEMBER_OPERATION_COUNT = 0;
+	int MEMBER_OPERATION_COUNT = Data_meta_modelPackage.ENUM_MEMBER_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.core.impl.MEMBER_HIERARCHYImpl <em>MEMBER HIERARCHY</em>}' class.
@@ -976,13 +976,22 @@ public interface CorePackage extends EPackage {
 	int VARIABLE = 10;
 
 	/**
+	 * The feature id for the '<em><b>Concept Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VARIABLE__CONCEPT_NAME = Data_meta_modelPackage.CONCEPT__CONCEPT_NAME;
+
+	/**
 	 * The feature id for the '<em><b>Code</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE__CODE = 0;
+	int VARIABLE__CODE = Data_meta_modelPackage.CONCEPT_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute.
@@ -991,7 +1000,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE__DESCRIPTION = 1;
+	int VARIABLE__DESCRIPTION = Data_meta_modelPackage.CONCEPT_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Domain id</b></em>' reference.
@@ -1000,7 +1009,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE__DOMAIN_ID = 2;
+	int VARIABLE__DOMAIN_ID = Data_meta_modelPackage.CONCEPT_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Maintenance agency id</b></em>' reference.
@@ -1009,7 +1018,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE__MAINTENANCE_AGENCY_ID = 3;
+	int VARIABLE__MAINTENANCE_AGENCY_ID = Data_meta_modelPackage.CONCEPT_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Primary concept</b></em>' attribute.
@@ -1018,7 +1027,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE__PRIMARY_CONCEPT = 4;
+	int VARIABLE__PRIMARY_CONCEPT = Data_meta_modelPackage.CONCEPT_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Variable id</b></em>' attribute.
@@ -1027,7 +1036,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE__VARIABLE_ID = 5;
+	int VARIABLE__VARIABLE_ID = Data_meta_modelPackage.CONCEPT_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1036,7 +1045,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE__NAME = 6;
+	int VARIABLE__NAME = Data_meta_modelPackage.CONCEPT_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Display Name</b></em>' attribute.
@@ -1045,7 +1054,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE__DISPLAY_NAME = 7;
+	int VARIABLE__DISPLAY_NAME = Data_meta_modelPackage.CONCEPT_FEATURE_COUNT + 7;
 
 	/**
 	 * The number of structural features of the '<em>VARIABLE</em>' class.
@@ -1054,7 +1063,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_FEATURE_COUNT = 8;
+	int VARIABLE_FEATURE_COUNT = Data_meta_modelPackage.CONCEPT_FEATURE_COUNT + 8;
 
 	/**
 	 * The number of operations of the '<em>VARIABLE</em>' class.
@@ -1063,7 +1072,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_OPERATION_COUNT = 0;
+	int VARIABLE_OPERATION_COUNT = Data_meta_modelPackage.CONCEPT_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.smcubes.model.core.impl.VARIABLE_SETImpl <em>VARIABLE SET</em>}' class.

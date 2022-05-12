@@ -11,16 +11,12 @@ import org.eclipse.efbt.cocalimo.logical_transformations.model.bpmn_lite.Bpmn_li
 import org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.Logical_transformationsPackage;
 
 import org.eclipse.efbt.cocalimo.platform_call.model.platform_call.ConvertDataMetaModelToEcore;
-import org.eclipse.efbt.cocalimo.platform_call.model.platform_call.ConvertSQLDeveloperModelToEcore;
 import org.eclipse.efbt.cocalimo.platform_call.model.platform_call.CreateLogicalTransformationViewForScope;
 import org.eclipse.efbt.cocalimo.platform_call.model.platform_call.ImportBIRDFromMSAccess;
 import org.eclipse.efbt.cocalimo.platform_call.model.platform_call.PlatformCall;
 import org.eclipse.efbt.cocalimo.platform_call.model.platform_call.PlatformCallModule;
 import org.eclipse.efbt.cocalimo.platform_call.model.platform_call.Platform_callFactory;
 import org.eclipse.efbt.cocalimo.platform_call.model.platform_call.Platform_callPackage;
-
-import org.eclipse.efbt.cocalimo.smcubes.model.core.CorePackage;
-
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Data_meta_modelPackage;
 
 import org.eclipse.emf.ecore.EAttribute;
@@ -51,13 +47,6 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 	 * @generated
 	 */
 	private EClass platformCallModuleEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass convertSQLDeveloperModelToEcoreEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -133,7 +122,6 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 		Logical_transformationsPackage.eINSTANCE.eClass();
 		Module_managementPackage.eINSTANCE.eClass();
 		Requirements_textPackage.eINSTANCE.eClass();
-		CorePackage.eINSTANCE.eClass();
 		Data_meta_modelPackage.eINSTANCE.eClass();
 
 		// Create package meta-data objects
@@ -208,36 +196,6 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 	@Override
 	public EReference getPlatformCallModule_PlatformCalls() {
 		return (EReference)platformCallModuleEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EClass getConvertSQLDeveloperModelToEcore() {
-		return convertSQLDeveloperModelToEcoreEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EAttribute getConvertSQLDeveloperModelToEcore_InputDirectory() {
-		return (EAttribute)convertSQLDeveloperModelToEcoreEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EAttribute getConvertSQLDeveloperModelToEcore_OutputDirectory() {
-		return (EAttribute)convertSQLDeveloperModelToEcoreEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -377,10 +335,6 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 		platformCallModuleEClass = createEClass(PLATFORM_CALL_MODULE);
 		createEReference(platformCallModuleEClass, PLATFORM_CALL_MODULE__PLATFORM_CALLS);
 
-		convertSQLDeveloperModelToEcoreEClass = createEClass(CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE);
-		createEAttribute(convertSQLDeveloperModelToEcoreEClass, CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE__INPUT_DIRECTORY);
-		createEAttribute(convertSQLDeveloperModelToEcoreEClass, CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE__OUTPUT_DIRECTORY);
-
 		importBIRDFromMSAccessEClass = createEClass(IMPORT_BIRD_FROM_MS_ACCESS);
 		createEAttribute(importBIRDFromMSAccessEClass, IMPORT_BIRD_FROM_MS_ACCESS__INPUT_DIRECTORY);
 		createEAttribute(importBIRDFromMSAccessEClass, IMPORT_BIRD_FROM_MS_ACCESS__OUTPUT_DIRECTORY);
@@ -429,7 +383,6 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 
 		// Add supertypes to classes
 		platformCallModuleEClass.getESuperTypes().add(theModule_managementPackage.getModule());
-		convertSQLDeveloperModelToEcoreEClass.getESuperTypes().add(this.getPlatformCall());
 		importBIRDFromMSAccessEClass.getESuperTypes().add(this.getPlatformCall());
 		createLogicalTransformationViewForScopeEClass.getESuperTypes().add(this.getPlatformCall());
 		convertDataMetaModelToEcoreEClass.getESuperTypes().add(this.getPlatformCall());
@@ -442,10 +395,6 @@ public class Platform_callPackageImpl extends EPackageImpl implements Platform_c
 
 		initEClass(platformCallModuleEClass, PlatformCallModule.class, "PlatformCallModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getPlatformCallModule_PlatformCalls(), this.getPlatformCall(), null, "platformCalls", null, 0, -1, PlatformCallModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(convertSQLDeveloperModelToEcoreEClass, ConvertSQLDeveloperModelToEcore.class, "ConvertSQLDeveloperModelToEcore", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getConvertSQLDeveloperModelToEcore_InputDirectory(), ecorePackage.getEString(), "inputDirectory", null, 0, 1, ConvertSQLDeveloperModelToEcore.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getConvertSQLDeveloperModelToEcore_OutputDirectory(), ecorePackage.getEString(), "outputDirectory", null, 0, 1, ConvertSQLDeveloperModelToEcore.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(importBIRDFromMSAccessEClass, ImportBIRDFromMSAccess.class, "ImportBIRDFromMSAccess", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getImportBIRDFromMSAccess_InputDirectory(), ecorePackage.getEString(), "inputDirectory", null, 0, 1, ImportBIRDFromMSAccess.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -5,7 +5,9 @@ package org.eclipse.efbt.cocalimo.smcubes.model.core.util;
 import org.eclipse.efbt.cocalimo.smcubes.model.core.*;
 
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Classifier;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Concept;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Element;
+import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.EnumMember;
 import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.NamedElement;
 
 import org.eclipse.emf.ecore.EObject;
@@ -103,6 +105,7 @@ public class CoreSwitch<T> extends Switch<T> {
 			case CorePackage.MEMBER: {
 				MEMBER member = (MEMBER)theEObject;
 				T result = caseMEMBER(member);
+				if (result == null) result = caseEnumMember(member);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -136,6 +139,7 @@ public class CoreSwitch<T> extends Switch<T> {
 			case CorePackage.VARIABLE: {
 				VARIABLE variable = (VARIABLE)theEObject;
 				T result = caseVARIABLE(variable);
+				if (result == null) result = caseConcept(variable);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -351,6 +355,21 @@ public class CoreSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Enum Member</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Enum Member</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseEnumMember(EnumMember object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Element</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -392,6 +411,21 @@ public class CoreSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseClassifier(Classifier object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Concept</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Concept</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseConcept(Concept object) {
 		return null;
 	}
 

@@ -58,7 +58,6 @@ public class Platform_callFactoryImpl extends EFactoryImpl implements Platform_c
 		switch (eClass.getClassifierID()) {
 			case Platform_callPackage.PLATFORM_CALL: return createPlatformCall();
 			case Platform_callPackage.PLATFORM_CALL_MODULE: return createPlatformCallModule();
-			case Platform_callPackage.CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE: return createConvertSQLDeveloperModelToEcore();
 			case Platform_callPackage.IMPORT_BIRD_FROM_MS_ACCESS: return createImportBIRDFromMSAccess();
 			case Platform_callPackage.CREATE_LOGICAL_TRANSFORMATION_VIEW_FOR_SCOPE: return createCreateLogicalTransformationViewForScope();
 			case Platform_callPackage.CONVERT_DATA_META_MODEL_TO_ECORE: return createConvertDataMetaModelToEcore();
@@ -87,17 +86,6 @@ public class Platform_callFactoryImpl extends EFactoryImpl implements Platform_c
 	public PlatformCallModule createPlatformCallModule() {
 		PlatformCallModuleImpl platformCallModule = new PlatformCallModuleImpl();
 		return platformCallModule;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public ConvertSQLDeveloperModelToEcore createConvertSQLDeveloperModelToEcore() {
-		ConvertSQLDeveloperModelToEcoreImpl convertSQLDeveloperModelToEcore = new ConvertSQLDeveloperModelToEcoreImpl();
-		return convertSQLDeveloperModelToEcore;
 	}
 
 	/**

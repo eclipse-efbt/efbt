@@ -427,20 +427,5 @@
 <fileName>frtb_domains</fileName>
 <logicalDatatype>LOGDT019</logicalDatatype>
 </Domain>
-<Domain class="oracle.dbtools.crest.model.design.Domain" name="Security position typev1" id="F4D6F1B0-6CAA-220C-6DE5-2C74E5361876">
-<createdBy>Neil</createdBy>
-<createdTime>2022-04-02 15:00:05 UTC</createdTime>
-<ownerDesignName>frtb</ownerDesignName>
-<importedID>F4D6F1B0-6CAA-220C-6DE5-2C74E5361876</importedID>
-<avTSortOrder>0</avTSortOrder>
-<dataTypeSize>1</dataTypeSize>
-<fileName>frtb_domains</fileName>
-<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
-<synonym>SCRTY_PSTN_TYP</synonym>
-<listOfValues>
-<valueDef value="5" description="Long security position"/>
-<valueDef value="6" description="Short security position"/>
-</listOfValues>
-</Domain>
 </domains>
 </DomainFile>

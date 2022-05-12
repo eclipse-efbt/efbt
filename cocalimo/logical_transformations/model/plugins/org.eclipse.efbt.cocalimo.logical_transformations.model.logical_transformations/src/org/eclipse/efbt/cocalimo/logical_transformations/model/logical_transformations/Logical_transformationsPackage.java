@@ -812,6 +812,43 @@ public interface Logical_transformationsPackage extends EPackage {
 	int E2E_TEST_SCOPE_OPERATION_COUNT = TEST_SCOPE_OPERATION_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.impl.CSVFileImpl <em>CSV File</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.impl.CSVFileImpl
+	 * @see org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.impl.Logical_transformationsPackageImpl#getCSVFile()
+	 * @generated
+	 */
+	int CSV_FILE = 11;
+
+	/**
+	 * The feature id for the '<em><b>File Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CSV_FILE__FILE_NAME = 0;
+
+	/**
+	 * The number of structural features of the '<em>CSV File</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CSV_FILE_FEATURE_COUNT = 1;
+
+	/**
+	 * The number of operations of the '<em>CSV File</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CSV_FILE_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.AttrComparison <em>Attr Comparison</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -819,7 +856,7 @@ public interface Logical_transformationsPackage extends EPackage {
 	 * @see org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.impl.Logical_transformationsPackageImpl#getAttrComparison()
 	 * @generated
 	 */
-	int ATTR_COMPARISON = 11;
+	int ATTR_COMPARISON = 12;
 
 
 	/**
@@ -1252,6 +1289,27 @@ public interface Logical_transformationsPackage extends EPackage {
 	EReference getE2ETestScope_ScriptTask();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.CSVFile <em>CSV File</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>CSV File</em>'.
+	 * @see org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.CSVFile
+	 * @generated
+	 */
+	EClass getCSVFile();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.CSVFile#getFileName <em>File Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>File Name</em>'.
+	 * @see org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.CSVFile#getFileName()
+	 * @see #getCSVFile()
+	 * @generated
+	 */
+	EAttribute getCSVFile_FileName();
+
+	/**
 	 * Returns the meta object for enum '{@link org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.AttrComparison <em>Attr Comparison</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1625,6 +1683,24 @@ public interface Logical_transformationsPackage extends EPackage {
 		 * @generated
 		 */
 		EReference E2E_TEST_SCOPE__SCRIPT_TASK = eINSTANCE.getE2ETestScope_ScriptTask();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.impl.CSVFileImpl <em>CSV File</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.impl.CSVFileImpl
+		 * @see org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.impl.Logical_transformationsPackageImpl#getCSVFile()
+		 * @generated
+		 */
+		EClass CSV_FILE = eINSTANCE.getCSVFile();
+
+		/**
+		 * The meta object literal for the '<em><b>File Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CSV_FILE__FILE_NAME = eINSTANCE.getCSVFile_FileName();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations.AttrComparison <em>Attr Comparison</em>}' enum.

@@ -79,13 +79,6 @@ public class Platform_callSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case Platform_callPackage.CONVERT_SQL_DEVELOPER_MODEL_TO_ECORE: {
-				ConvertSQLDeveloperModelToEcore convertSQLDeveloperModelToEcore = (ConvertSQLDeveloperModelToEcore)theEObject;
-				T result = caseConvertSQLDeveloperModelToEcore(convertSQLDeveloperModelToEcore);
-				if (result == null) result = casePlatformCall(convertSQLDeveloperModelToEcore);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case Platform_callPackage.IMPORT_BIRD_FROM_MS_ACCESS: {
 				ImportBIRDFromMSAccess importBIRDFromMSAccess = (ImportBIRDFromMSAccess)theEObject;
 				T result = caseImportBIRDFromMSAccess(importBIRDFromMSAccess);
@@ -138,21 +131,6 @@ public class Platform_callSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T casePlatformCallModule(PlatformCallModule object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Convert SQL Developer Model To Ecore</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Convert SQL Developer Model To Ecore</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseConvertSQLDeveloperModelToEcore(ConvertSQLDeveloperModelToEcore object) {
 		return null;
 	}
 

@@ -34,9 +34,6 @@ pipeline {
                     cd ../..                   
                     cd controller/ldm
                     mvn install
-                    cd ../..
-                    cd controller/data_meta_model
-					mvn install
 					cd ../..
                     cd controller/smcubes/access_dependencies_external
                     mvn install

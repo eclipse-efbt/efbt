@@ -7,10 +7,12 @@ import bird_model.BIRDModel;
 import bird_model.BasicEntity;
 import bird_model.Bird_modelFactory;
 import bird_model.Bird_modelPackage;
+import bird_model.Concept;
 import bird_model.DOMAIN;
 import bird_model.DerivedEntity;
 import bird_model.DomainModule;
 import bird_model.EntityModule;
+import bird_model.EnumMember;
 import bird_model.FACET_COLLECTION;
 import bird_model.FACET_ENUMERATION;
 import bird_model.FACET_VALUE_TYPE;
@@ -126,6 +128,8 @@ public class Bird_modelFactoryImpl extends EFactoryImpl implements Bird_modelFac
 			case Bird_modelPackage.MODULE_DEPENDENCIES: return createModuleDependencies();
 			case Bird_modelPackage.MODULE_DEPENDENCY: return createModuleDependency();
 			case Bird_modelPackage.BIRD_MODEL: return createBIRDModel();
+			case Bird_modelPackage.CONCEPT: return createConcept();
+			case Bird_modelPackage.ENUM_MEMBER: return createEnumMember();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -503,6 +507,26 @@ public class Bird_modelFactoryImpl extends EFactoryImpl implements Bird_modelFac
 	public BIRDModel createBIRDModel() {
 		BIRDModelImpl birdModel = new BIRDModelImpl();
 		return birdModel;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Concept createConcept() {
+		ConceptImpl concept = new ConceptImpl();
+		return concept;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EnumMember createEnumMember() {
+		EnumMemberImpl enumMember = new EnumMemberImpl();
+		return enumMember;
 	}
 
 	/**

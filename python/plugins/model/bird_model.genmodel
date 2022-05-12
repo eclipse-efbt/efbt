@@ -228,5 +228,9 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bird_model.ecore#//BIRDModel/entityModule"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bird_model.ecore#//BIRDModel/smcubesCoreModel"/>
     </genClasses>
+    <genClasses ecoreClass="bird_model.ecore#//Concept">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bird_model.ecore#//Concept/conceptName"/>
+    </genClasses>
+    <genClasses ecoreClass="bird_model.ecore#//EnumMember"/>
   </genPackages>
 </genmodel:GenModel>

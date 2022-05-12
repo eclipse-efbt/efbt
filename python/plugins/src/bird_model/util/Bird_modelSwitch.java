@@ -7,12 +7,14 @@ import bird_model.BIRDModel;
 import bird_model.BasicEntity;
 import bird_model.Bird_modelPackage;
 import bird_model.Classifier;
+import bird_model.Concept;
 import bird_model.DOMAIN;
 import bird_model.DerivedEntity;
 import bird_model.DomainModule;
 import bird_model.Element;
 import bird_model.Entity;
 import bird_model.EntityModule;
+import bird_model.EnumMember;
 import bird_model.FACET_COLLECTION;
 import bird_model.FACET_ENUMERATION;
 import bird_model.GeneratedEntity;
@@ -179,6 +181,7 @@ public class Bird_modelSwitch<T> extends Switch<T> {
 			case Bird_modelPackage.MEMBER: {
 				MEMBER member = (MEMBER)theEObject;
 				T result = caseMEMBER(member);
+				if (result == null) result = caseEnumMember(member);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -212,6 +215,7 @@ public class Bird_modelSwitch<T> extends Switch<T> {
 			case Bird_modelPackage.VARIABLE: {
 				VARIABLE variable = (VARIABLE)theEObject;
 				T result = caseVARIABLE(variable);
+				if (result == null) result = caseConcept(variable);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -403,6 +407,18 @@ public class Bird_modelSwitch<T> extends Switch<T> {
 			case Bird_modelPackage.BIRD_MODEL: {
 				BIRDModel birdModel = (BIRDModel)theEObject;
 				T result = caseBIRDModel(birdModel);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Bird_modelPackage.CONCEPT: {
+				Concept concept = (Concept)theEObject;
+				T result = caseConcept(concept);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Bird_modelPackage.ENUM_MEMBER: {
+				EnumMember enumMember = (EnumMember)theEObject;
+				T result = caseEnumMember(enumMember);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1007,6 +1023,36 @@ public class Bird_modelSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseBIRDModel(BIRDModel object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Concept</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Concept</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseConcept(Concept object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Enum Member</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Enum Member</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseEnumMember(EnumMember object) {
 		return null;
 	}
 

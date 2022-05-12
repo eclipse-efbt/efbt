@@ -68,6 +68,7 @@ public class Logical_transformationsFactoryImpl extends EFactoryImpl implements 
 			case Logical_transformationsPackage.TEST_SCOPE: return createTestScope();
 			case Logical_transformationsPackage.UNIT_TEST_SCOPE: return createUnitTestScope();
 			case Logical_transformationsPackage.E2E_TEST_SCOPE: return createE2ETestScope();
+			case Logical_transformationsPackage.CSV_FILE: return createCSVFile();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -211,6 +212,16 @@ public class Logical_transformationsFactoryImpl extends EFactoryImpl implements 
 	public E2ETestScope createE2ETestScope() {
 		E2ETestScopeImpl e2ETestScope = new E2ETestScopeImpl();
 		return e2ETestScope;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public CSVFile createCSVFile() {
+		CSVFileImpl csvFile = new CSVFileImpl();
+		return csvFile;
 	}
 
 	/**

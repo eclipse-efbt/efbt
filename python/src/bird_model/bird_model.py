@@ -239,44 +239,6 @@ class MAINTENANCE_AGENCY(EObject, metaclass=MetaEClass):
             self.name = name
 
 
-class MEMBER(EObject, metaclass=MetaEClass):
-
-    code = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    description = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    member_id = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
-    displayName = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    domain_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    maintenance_agency_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, code=None, description=None, domain_id=None, maintenance_agency_id=None, member_id=None, name=None, displayName=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if code is not None:
-            self.code = code
-
-        if description is not None:
-            self.description = description
-
-        if member_id is not None:
-            self.member_id = member_id
-
-        if name is not None:
-            self.name = name
-
-        if displayName is not None:
-            self.displayName = displayName
-
-        if domain_id is not None:
-            self.domain_id = domain_id
-
-        if maintenance_agency_id is not None:
-            self.maintenance_agency_id = maintenance_agency_id
-
-
 class MEMBER_HIERARCHY(EObject, metaclass=MetaEClass):
 
     code = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
@@ -377,48 +339,6 @@ class SUBDOMAIN_ENUMERATION(EObject, metaclass=MetaEClass):
 
         if member_id is not None:
             self.member_id = member_id
-
-
-class VARIABLE(EObject, metaclass=MetaEClass):
-
-    code = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    description = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    primary_concept = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    variable_id = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
-    displayName = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    domain_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    maintenance_agency_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, code=None, description=None, domain_id=None, maintenance_agency_id=None, primary_concept=None, variable_id=None, name=None, displayName=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if code is not None:
-            self.code = code
-
-        if description is not None:
-            self.description = description
-
-        if primary_concept is not None:
-            self.primary_concept = primary_concept
-
-        if variable_id is not None:
-            self.variable_id = variable_id
-
-        if name is not None:
-            self.name = name
-
-        if displayName is not None:
-            self.displayName = displayName
-
-        if domain_id is not None:
-            self.domain_id = domain_id
-
-        if maintenance_agency_id is not None:
-            self.maintenance_agency_id = maintenance_agency_id
 
 
 class VARIABLE_SET(EObject, metaclass=MetaEClass):
@@ -606,6 +526,29 @@ class BIRDModel(EObject, metaclass=MetaEClass):
             self.smcubesCoreModel = smcubesCoreModel
 
 
+class Concept(EObject, metaclass=MetaEClass):
+
+    conceptName = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+
+    def __init__(self, *, conceptName=None):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+        if conceptName is not None:
+            self.conceptName = conceptName
+
+
+class EnumMember(EObject, metaclass=MetaEClass):
+
+    def __init__(self):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+
 class DomainModule(Module):
     """A Module storing a list of Domains"""
     domains = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
@@ -670,6 +613,82 @@ class SubDomainModule(Module):
 
         if subdomains:
             self.subdomains.extend(subdomains)
+
+
+class MEMBER(EnumMember):
+
+    code = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    description = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    member_id = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
+    displayName = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    domain_id = EReference(ordered=True, unique=True, containment=False, derived=False)
+    maintenance_agency_id = EReference(ordered=True, unique=True, containment=False, derived=False)
+
+    def __init__(self, *, code=None, description=None, domain_id=None, maintenance_agency_id=None, member_id=None, name=None, displayName=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if code is not None:
+            self.code = code
+
+        if description is not None:
+            self.description = description
+
+        if member_id is not None:
+            self.member_id = member_id
+
+        if name is not None:
+            self.name = name
+
+        if displayName is not None:
+            self.displayName = displayName
+
+        if domain_id is not None:
+            self.domain_id = domain_id
+
+        if maintenance_agency_id is not None:
+            self.maintenance_agency_id = maintenance_agency_id
+
+
+class VARIABLE(Concept):
+
+    code = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    description = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    primary_concept = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    variable_id = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
+    displayName = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    domain_id = EReference(ordered=True, unique=True, containment=False, derived=False)
+    maintenance_agency_id = EReference(ordered=True, unique=True, containment=False, derived=False)
+
+    def __init__(self, *, code=None, description=None, domain_id=None, maintenance_agency_id=None, primary_concept=None, variable_id=None, name=None, displayName=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if code is not None:
+            self.code = code
+
+        if description is not None:
+            self.description = description
+
+        if primary_concept is not None:
+            self.primary_concept = primary_concept
+
+        if variable_id is not None:
+            self.variable_id = variable_id
+
+        if name is not None:
+            self.name = name
+
+        if displayName is not None:
+            self.displayName = displayName
+
+        if domain_id is not None:
+            self.domain_id = domain_id
+
+        if maintenance_agency_id is not None:
+            self.maintenance_agency_id = maintenance_agency_id
 
 
 @abstract

@@ -40,15 +40,6 @@ public interface Platform_callFactory extends EFactory {
 	PlatformCallModule createPlatformCallModule();
 
 	/**
-	 * Returns a new object of class '<em>Convert SQL Developer Model To Ecore</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Convert SQL Developer Model To Ecore</em>'.
-	 * @generated
-	 */
-	ConvertSQLDeveloperModelToEcore createConvertSQLDeveloperModelToEcore();
-
-	/**
 	 * Returns a new object of class '<em>Import BIRD From MS Access</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -65,6 +56,8 @@ public interface Platform_callFactory extends EFactory {
 	 * @generated
 	 */
 	CreateLogicalTransformationViewForScope createCreateLogicalTransformationViewForScope();
+
+	
 
 	/**
 	 * Returns a new object of class '<em>Convert Data Meta Model To Ecore</em>'.

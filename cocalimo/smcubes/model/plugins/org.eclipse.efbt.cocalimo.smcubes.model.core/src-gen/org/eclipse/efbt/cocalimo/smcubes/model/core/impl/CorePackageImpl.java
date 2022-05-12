@@ -1450,7 +1450,9 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		// Set bounds for type parameters
 
 		// Add supertypes to classes
+		memberEClass.getESuperTypes().add(theData_meta_modelPackage.getEnumMember());
 		subdomainEClass.getESuperTypes().add(theData_meta_modelPackage.getClassifier());
+		variableEClass.getESuperTypes().add(theData_meta_modelPackage.getConcept());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(domainEClass, org.eclipse.efbt.cocalimo.smcubes.model.core.DOMAIN.class, "DOMAIN", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

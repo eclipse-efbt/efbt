@@ -148,11 +148,6 @@ public class PlatformCallModuleItemProvider extends ModuleItemProvider {
 		newChildDescriptors.add
 			(createChildParameter
 				(Platform_callPackage.Literals.PLATFORM_CALL_MODULE__PLATFORM_CALLS,
-				 Platform_callFactory.eINSTANCE.createConvertSQLDeveloperModelToEcore()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(Platform_callPackage.Literals.PLATFORM_CALL_MODULE__PLATFORM_CALLS,
 				 Platform_callFactory.eINSTANCE.createImportBIRDFromMSAccess()));
 
 		newChildDescriptors.add

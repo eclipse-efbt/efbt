@@ -94,6 +94,29 @@ public class Data_meta_modelItemProviderAdapterFactory extends Data_meta_modelAd
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Concept} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ConceptItemProvider conceptItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.Concept}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createConceptAdapter() {
+		if (conceptItemProvider == null) {
+			conceptItemProvider = new ConceptItemProvider(this);
+		}
+
+		return conceptItemProvider;
+	}
+
+	/**
 	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.RelationshipAttribute} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -298,6 +321,29 @@ public class Data_meta_modelItemProviderAdapterFactory extends Data_meta_modelAd
 		}
 
 		return basicEntityItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.EnumMember} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected EnumMemberItemProvider enumMemberItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.EnumMember}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createEnumMemberAdapter() {
+		if (enumMemberItemProvider == null) {
+			enumMemberItemProvider = new EnumMemberItemProvider(this);
+		}
+
+		return enumMemberItemProvider;
 	}
 
 	/**
