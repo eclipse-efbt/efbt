@@ -107,7 +107,7 @@
 					<target>
 						<artifact>
 							<groupId>org.eclipse.efbt.openregspecs.core.model</groupId>
-							<artifactId>org.eclipse.efbt.openregspecs.core.model.target</artifactId>
+							<artifactId>org.eclipse.efbt.openregspecs.model.target</artifactId>
 							<version>${project.version}</version>
 						</artifact>
 					</target>
