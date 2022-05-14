@@ -18,7 +18,7 @@
         },
         "memberAsConstant" : {
           "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
-          "$ref" : "../sdd/FRTBOutputLayerDomainMembers.cocalimo_smcubes_extension#MemorandumItems"
+          "$ref" : "../sdd/FRTBOutputLayerDomainMembers.openregspecs_smcubes_extension#MemorandumItems"
         }
       }, {
         "as" : {
@@ -27,7 +27,7 @@
         },
         "memberAsConstant" : {
           "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
-          "$ref" : "../sdd/FRTBOutputLayerDomainMembers.cocalimo_smcubes_extension#InstrumentsSubjectToMarketRisk"
+          "$ref" : "../sdd/FRTBOutputLayerDomainMembers.openregspecs_smcubes_extension#InstrumentsSubjectToMarketRisk"
         }
       }, {
         "as" : {
@@ -36,7 +36,7 @@
         },
         "memberAsConstant" : {
           "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
-          "$ref" : "../sdd/FRTBOutputLayerDomainMembers.cocalimo_smcubes_extension#SensitivitiesBasedMethod"
+          "$ref" : "../sdd/FRTBOutputLayerDomainMembers.openregspecs_smcubes_extension#SensitivitiesBasedMethod"
         }
       }, {
         "as" : {
@@ -50,7 +50,7 @@
         },
         "memberAsConstant" : {
           "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
-          "$ref" : "../sdd/FRTBOutputLayerDomainMembers.cocalimo_smcubes_extension#SensitivityNetPerRiskClassUnweighted"
+          "$ref" : "../sdd/FRTBOutputLayerDomainMembers.openregspecs_smcubes_extension#SensitivityNetPerRiskClassUnweighted"
         }
       }, {
         "as" : {
@@ -64,7 +64,7 @@
         },
         "memberAsConstant" : {
           "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
-          "$ref" : "../sdd/FRTBOutputLayerDomainMembers.cocalimo_smcubes_extension#BankingAndTradingBook"
+          "$ref" : "../sdd/FRTBOutputLayerDomainMembers.openregspecs_smcubes_extension#BankingAndTradingBook"
         }
       }, {
         "as" : {
@@ -83,7 +83,7 @@
         },
         "memberAsConstant" : {
           "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
-          "$ref" : "../sdd/FRTBSourceDomainMembers.cocalimo_smcubes_extension#GIRR"
+          "$ref" : "../sdd/FRTBSourceDomainMembers.openregspecs_smcubes_extension#GIRR"
         }
       }, {
         "as" : {

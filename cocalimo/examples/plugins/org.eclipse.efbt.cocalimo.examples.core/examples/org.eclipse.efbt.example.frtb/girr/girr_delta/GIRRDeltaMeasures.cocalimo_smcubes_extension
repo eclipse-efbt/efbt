@@ -1,5 +1,5 @@
 {
-  "eClass" : "http://www.eclipse.org/efbt/cocalimo_smcubes_extension#//VariableModule",
+  "eClass" : "http://www.eclipse.org/efbt/openregspecs_smcubes_extension#//VariableModule",
   "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
   "name" : "GIRRDeltaMeasures",
   "version" : "1.0",
@@ -8,7 +8,7 @@
     "description" : "GIRRDeltaSensitivityk",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "GIRRDeltaSensitivityk",
     "name" : "GIRRDeltaSensitivityk",
@@ -18,7 +18,7 @@
     "description" : "GIRRDeltaCorrelationFactor",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "GIRRDeltaCorrelationFactor",
     "name" : "GIRRDeltaCorrelationFactor",
@@ -34,7 +34,7 @@
     "description" : "summedGIRRDelta",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "summedGIRRDelta",
     "name" : "summedGIRRDelta",
@@ -44,7 +44,7 @@
     "description" : "tenork",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#ratingsGrade"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#ratingsGrade"
     },
     "variable_id" : "tenork",
     "name" : "tenork",
@@ -54,7 +54,7 @@
     "description" : "tenorl",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "tenorl",
     "name" : "tenorl",
@@ -64,7 +64,7 @@
     "description" : "mainCurrencyl",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Currency"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Currency"
     },
     "variable_id" : "mainCurrencyl",
     "name" : "mainCurrencyl",
@@ -74,7 +74,7 @@
     "description" : "mainCurrencyk",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Currency"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Currency"
     },
     "variable_id" : "mainCurrencyk",
     "name" : "mainCurrencyk",
@@ -84,7 +84,7 @@
     "description" : "GIRRDeltaRiskWeight",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "GIRRDeltaRiskWeight",
     "name" : "GIRRDeltaRiskWeight",
@@ -94,7 +94,7 @@
     "description" : "weightedGIRRDeltaSensitivity",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "weightedGIRRDeltaSensitivity",
     "name" : "weightedGIRRDeltaSensitivity",
@@ -104,7 +104,7 @@
     "description" : "weightedGIRRDeltaSensitivitySquared",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "weightedGIRRDeltaSensitivitySquared",
     "name" : "weightedGIRRDeltaSensitivitySquared",
@@ -114,7 +114,7 @@
     "description" : "GIRRDeltaCorrelatedValue",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "GIRRDeltaCorrelatedValue",
     "name" : "GIRRDeltaCorrelatedValue",
@@ -124,7 +124,7 @@
     "description" : "GIRRDeltaKB",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "primary_concept" : "GIRRDeltaKB",
     "variable_id" : "GIRRDeltaKB",
@@ -135,7 +135,7 @@
     "description" : "GIRRDeltaCorrelatedValuePerBucket",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "GIRRDeltaCorrelatedValuePerBucket",
     "name" : "GIRRDeltaCorrelatedValuePerBucket",
@@ -145,7 +145,7 @@
     "description" : "GIRRDeltaSensitivityPerBucketCorrelated",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "GIRRDeltaSensitivityPerBucketCorrelated",
     "name" : "GIRRDeltaSensitivityPerBucketCorrelated",
@@ -155,7 +155,7 @@
     "description" : "totalGIRRDeltaSensitivityPerBucket",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "totalGIRRDeltaSensitivityPerBucket",
     "name" : "totalGIRRDeltaSensitivityPerBucket",
@@ -165,7 +165,7 @@
     "description" : "GIRRDeltaBucketCorrelationFactor",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "GIRRDeltaBucketCorrelationFactor",
     "name" : "GIRRDeltaBucketCorrelationFactor",
@@ -175,7 +175,7 @@
     "description" : "totalGIRRDeltaSensitivityPerBucketk",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "totalGIRRDeltaSensitivityPerBucketk",
     "name" : "totalGIRRDeltaSensitivityPerBucketk",
@@ -185,7 +185,7 @@
     "description" : "totalGIRRDeltaSensitivityPerBucketl",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "totalGIRRDeltaSensitivityPerBucketl",
     "name" : "totalGIRRDeltaSensitivityPerBucketl",
@@ -195,7 +195,7 @@
     "description" : "totalGIRRDeltaSensitivitySquaredPerBucket",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "totalGIRRDeltaSensitivitySquaredPerBucket",
     "name" : "totalGIRRDeltaSensitivitySquaredPerBucket",

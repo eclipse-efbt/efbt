@@ -8,28 +8,28 @@ pipeline {
         stage('Build') {
             steps {
                 sh '''                                     
-                    cd cocalimo/core/model
+                    cd openregspecs/core/model
                     mvn install
                     cd ../../..                 
-                    cd cocalimo/smcubes/model
+                    cd openregspecs/smcubes/model
                     mvn install
                     cd ../../..
-                    cd cocalimo/logical_transformations/model
+                    cd openregspecs/testing/model
 					mvn install
 					cd ../../..
-					cd cocalimo/logical_transformations/ui_sirius
+					cd openregspecs/testing/ui_sirius
 					mvn install
 					cd ../../..
-                    cd cocalimo/platform_call/model
+                    cd openregspecs/platform_call/model
 					mvn install
 					cd ../../..
-                    cd cocalimo/smcubes/modelquery
+                    cd openregspecs/smcubes/modelquery
                     mvn install
                     cd ../../..
-                    cd cocalimo/smcubes/ui_sirius
+                    cd openregspecs/smcubes/ui_sirius
                     mvn install                    
                     cd ../../..
-		    cd cocalimo/examples
+		    cd openregspecs/examples
                     mvn install 
                     cd ../..                   
                     cd controller/ldm
@@ -47,7 +47,7 @@ pipeline {
                     cd controller/platformcall/component
                     mvn install
                     cd ../../..
-                    cd cocalimo/platform_call/ui_sirius
+                    cd openregspecs/platform_call/ui_sirius
 					mvn install
 					cd ../../..
                     cd installations/complete_repo/

@@ -92,13 +92,13 @@
       xsi:type="setup.workingsets:WorkingSetTask"
       id="efbt_working_sets">
     <workingSet
-        name="cocalimo_core"
-        id="cocalimo_core">
+        name="openregspecs_core"
+        id="openregspecs_core">
       <predicate
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.cocalimo.core.*"/>
+            pattern=".*\.eclipse.efbt.openregspecs.core.*"/>
         <operand
             xsi:type="predicates:NotPredicate">
           <operand
@@ -114,13 +114,13 @@
       </predicate>
     </workingSet>
     <workingSet
-        name="cocalimo_smcubes"
-        id="cocalimo_smcubes">
+        name="openregspecs_smcubes"
+        id="openregspecs_smcubes">
       <predicate
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.cocalimo.smcubes.*"/>
+            pattern=".*\.eclipse.efbt.openregspecs.smcubes.*"/>
         <operand
             xsi:type="predicates:NotPredicate">
           <operand
@@ -164,7 +164,7 @@
             xsi:type="predicates:OrPredicate">
           <operand
               xsi:type="predicates:NamePredicate"
-              pattern=".*\.eclipse.efbt.cocalimo.examples.*"/>
+              pattern=".*\.eclipse.efbt.openregspecs.examples.*"/>
           <operand
               xsi:type="predicates:NamePredicate"
               pattern=".*\.eclipse.efbt.examples.*"/>
@@ -244,13 +244,13 @@
       </predicate>
     </workingSet>
     <workingSet
-        name="cocalimo_platform_call"
-        id="cocalimo_platform_call">
+        name="openregspecs_platform_call"
+        id="openregspecs_platform_call">
       <predicate
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.cocalimo.platform_call.*"/>
+            pattern=".*\.eclipse.efbt.openregspecs.platform_call.*"/>
         <operand
             xsi:type="predicates:NotPredicate">
           <operand
@@ -266,13 +266,13 @@
       </predicate>
     </workingSet>
     <workingSet
-        name="cocalimo_computation"
-        id="cocalimo_computation">
+        name="openregspecs_computation"
+        id="openregspecs_computation">
       <predicate
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.cocalimo.computation.*"/>
+            pattern=".*\.eclipse.efbt.openregspecs.computation.*"/>
         <operand
             xsi:type="predicates:NotPredicate">
           <operand
@@ -288,13 +288,13 @@
       </predicate>
     </workingSet>
     <workingSet
-        name="cocalimo_logical_transformations"
-        id="cocalimo_logical_transformations">
+        name="openregspecs_testing"
+        id="openregspecs_testing">
       <predicate
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.cocalimo.cocalimo_logical_transformations.*"/>
+            pattern=".*\.eclipse.efbt.openregspecs.openregspecs_testing.*"/>
         <operand
             xsi:type="predicates:NotPredicate">
           <operand

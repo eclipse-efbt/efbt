@@ -1,12 +1,12 @@
 {
-  "eClass" : "http://www.eclipse.org/efbt/cocalimo_smcubes_extension#//VariableModule",
+  "eClass" : "http://www.eclipse.org/efbt/openregspecs_smcubes_extension#//VariableModule",
   "name" : "FRTBDerivedDimensions",
   "variables" : [ {
     "code" : "correlation_type",
     "description" : "correlation_type",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBDerivedDomain.cocalimo_smcubes_extension#Correlation_types"
+      "$ref" : "FRTBDerivedDomain.openregspecs_smcubes_extension#Correlation_types"
     },
     "variable_id" : "correlation_type",
     "name" : "correlation_type",
@@ -16,7 +16,7 @@
     "description" : "risk_type",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBDerivedDomain.cocalimo_smcubes_extension#risk_types"
+      "$ref" : "FRTBDerivedDomain.openregspecs_smcubes_extension#risk_types"
     },
     "variable_id" : "risk_type",
     "name" : "risk_type",
@@ -26,7 +26,7 @@
     "description" : "GIRR_Bucket",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#Currency"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#Currency"
     },
     "variable_id" : "GIRR_Bucket",
     "name" : "GIRR_Bucket",
@@ -36,7 +36,7 @@
     "description" : "Currency2",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#Currency"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#Currency"
     },
     "variable_id" : "Currency2",
     "name" : "Currency2",

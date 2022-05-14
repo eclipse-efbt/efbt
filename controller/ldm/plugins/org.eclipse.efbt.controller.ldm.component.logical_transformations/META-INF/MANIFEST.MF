@@ -1,14 +1,13 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Sqldevconvertor
-Bundle-SymbolicName: org.eclipse.efbt.controller.ldm.component.logical_transformations
+Bundle-SymbolicName: org.eclipse.efbt.controller.ldm.component.testing
 Bundle-Version: 1.0.0.qualifier
-Automatic-Module-Name: org.eclipse.efbt.datastructures.ldm.component.logical_transformations
+Automatic-Module-Name: org.eclipse.efbt.datastructures.ldm.component.testing
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.xmi,
  org.apache.commons.csv,
- org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core,
- org.eclipse.efbt.cocalimo.platform_call.model.platform_call,
- org.eclipse.efbt.cocalimo.logical_transformations.model.logical_transformations
-Export-Package: org.eclipse.efbt.controller.ldm.component.logical_transformations
+ org.eclipse.efbt.openregspecs.testing.ui.sirius.core,
+ org.eclipse.efbt.openregspecs.model
+Export-Package: org.eclipse.efbt.controller.ldm.component.testing

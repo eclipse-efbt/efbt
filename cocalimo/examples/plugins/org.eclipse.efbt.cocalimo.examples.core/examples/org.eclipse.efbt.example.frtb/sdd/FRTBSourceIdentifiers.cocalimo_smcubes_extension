@@ -1,12 +1,12 @@
 {
-  "eClass" : "http://www.eclipse.org/efbt/cocalimo_smcubes_extension#//VariableModule",
+  "eClass" : "http://www.eclipse.org/efbt/openregspecs_smcubes_extension#//VariableModule",
   "name" : "FRTBSourceIdentifiers",
   "variables" : [ {
     "code" : "riskFactorID",
     "description" : "riskFactorID",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#String"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#String"
     },
     "variable_id" : "riskFactorID",
     "name" : "riskFactorID",
@@ -16,7 +16,7 @@
     "description" : "positionID",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#String"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#String"
     },
     "variable_id" : "positionID",
     "name" : "positionID",
@@ -26,7 +26,7 @@
     "description" : "issueID",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#String"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#String"
     },
     "variable_id" : "issueID",
     "name" : "issueID",
@@ -36,7 +36,7 @@
     "description" : "issuerID",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#String"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#String"
     },
     "variable_id" : "issuerID",
     "name" : "issuerID",
@@ -46,7 +46,7 @@
     "description" : "trancheName",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#String"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#String"
     },
     "variable_id" : "trancheName",
     "name" : "trancheName",
@@ -56,7 +56,7 @@
     "description" : "securitisationID",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#String"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#String"
     },
     "variable_id" : "securitisationID",
     "name" : "securitisationID",
@@ -66,7 +66,7 @@
     "description" : "deliveryLocation",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#String"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#String"
     },
     "variable_id" : "deliveryLocation",
     "name" : "deliveryLocation",
@@ -76,7 +76,7 @@
     "description" : "riskFactorLongName",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#String"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#String"
     },
     "variable_id" : "riskFactorLongName",
     "name" : "riskFactorLongName",
@@ -86,7 +86,7 @@
     "description" : "organisation_id",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#String"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#String"
     },
     "variable_id" : "organisation_id",
     "name" : "organisation_id",
@@ -96,7 +96,7 @@
     "description" : "delta_sensitivity_id",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#String"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#String"
     },
     "variable_id" : "delta_sensitivity_id",
     "name" : "delta_sensitivity_id",
@@ -106,7 +106,7 @@
     "description" : "vega_sensitivity_id",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#String"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#String"
     },
     "variable_id" : "vega_sensitivity_id",
     "name" : "vega_sensitivity_id",
@@ -116,7 +116,7 @@
     "description" : "curvature_id",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#String"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#String"
     },
     "variable_id" : "curvature_id",
     "name" : "curvature_id",

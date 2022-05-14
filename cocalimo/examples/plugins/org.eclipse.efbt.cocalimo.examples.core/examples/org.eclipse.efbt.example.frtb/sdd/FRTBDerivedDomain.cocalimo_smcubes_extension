@@ -1,5 +1,5 @@
 {
-  "eClass" : "http://www.eclipse.org/efbt/cocalimo_smcubes_extension#//DomainModule",
+  "eClass" : "http://www.eclipse.org/efbt/openregspecs_smcubes_extension#//DomainModule",
   "name" : "FRTBDerivedDomain",
   "domains" : [ {
     "code" : "Correlation_types",

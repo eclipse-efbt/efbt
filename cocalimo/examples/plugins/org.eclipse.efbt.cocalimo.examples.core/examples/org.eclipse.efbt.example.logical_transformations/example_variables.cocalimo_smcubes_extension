@@ -1,12 +1,12 @@
 {
-  "eClass" : "http://www.eclipse.org/efbt/cocalimo_smcubes_extension#//VariableModule",
+  "eClass" : "http://www.eclipse.org/efbt/openregspecs_smcubes_extension#//VariableModule",
   "name" : "example_variable_module",
   "variables" : [ {
     "code" : "instrument_id",
     "description" : "instrument_id",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "example_domains.cocalimo_smcubes_extension#STRING"
+      "$ref" : "example_domains.openregspecs_smcubes_extension#STRING"
     },
     "variable_id" : "instrument_id",
     "name" : "instrument_id",
@@ -16,7 +16,7 @@
     "description" : "mkt_value",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "example_domains.cocalimo_smcubes_extension#MNTRY"
+      "$ref" : "example_domains.openregspecs_smcubes_extension#MNTRY"
     },
     "variable_id" : "mkt_value",
     "name" : "mkt_value",
@@ -26,7 +26,7 @@
     "description" : "issuer_id",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "example_domains.cocalimo_smcubes_extension#STRING"
+      "$ref" : "example_domains.openregspecs_smcubes_extension#STRING"
     },
     "variable_id" : "issuer_id",
     "name" : "issuer_id",
@@ -36,7 +36,7 @@
     "description" : "coupon_rate",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "example_domains.cocalimo_smcubes_extension#RL"
+      "$ref" : "example_domains.openregspecs_smcubes_extension#RL"
     },
     "variable_id" : "coupon_rate",
     "name" : "coupon_rate",
@@ -46,7 +46,7 @@
     "description" : "entity_id",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "example_domains.cocalimo_smcubes_extension#STRING"
+      "$ref" : "example_domains.openregspecs_smcubes_extension#STRING"
     },
     "variable_id" : "entity_id",
     "name" : "entity_id",
@@ -56,7 +56,7 @@
     "description" : "market_cap",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "example_domains.cocalimo_smcubes_extension#MNTRY"
+      "$ref" : "example_domains.openregspecs_smcubes_extension#MNTRY"
     },
     "variable_id" : "market_cap",
     "name" : "market_cap",
@@ -66,7 +66,7 @@
     "description" : "credit_quality",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "example_domains.cocalimo_smcubes_extension#INTGR"
+      "$ref" : "example_domains.openregspecs_smcubes_extension#INTGR"
     },
     "variable_id" : "credit_quality",
     "name" : "credit_quality",
@@ -76,7 +76,7 @@
     "description" : "counteparty_id",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "example_domains.cocalimo_smcubes_extension#STRING"
+      "$ref" : "example_domains.openregspecs_smcubes_extension#STRING"
     },
     "variable_id" : "counteparty_id",
     "name" : "counteparty_id",
@@ -85,7 +85,7 @@
     "code" : "quantity",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "example_domains.cocalimo_smcubes_extension#INTGR"
+      "$ref" : "example_domains.openregspecs_smcubes_extension#INTGR"
     },
     "variable_id" : "quantity",
     "name" : "quantity",
@@ -95,7 +95,7 @@
     "description" : "trade_id",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "example_domains.cocalimo_smcubes_extension#STRING"
+      "$ref" : "example_domains.openregspecs_smcubes_extension#STRING"
     },
     "variable_id" : "trade_id",
     "name" : "trade_id",
@@ -104,7 +104,7 @@
     "code" : "size",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "example_domains.cocalimo_smcubes_extension#SIZE"
+      "$ref" : "example_domains.openregspecs_smcubes_extension#SIZE"
     },
     "variable_id" : "size",
     "name" : "size",
@@ -114,7 +114,7 @@
     "description" : "exposure_at_defualt",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "example_domains.cocalimo_smcubes_extension#MNTRY"
+      "$ref" : "example_domains.openregspecs_smcubes_extension#MNTRY"
     },
     "variable_id" : "exposure_at_defualt",
     "name" : "exposure_at_defualt",
@@ -124,7 +124,7 @@
     "description" : "risk_weight",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "example_domains.cocalimo_smcubes_extension#MNTRY"
+      "$ref" : "example_domains.openregspecs_smcubes_extension#MNTRY"
     },
     "variable_id" : "risk_weight",
     "name" : "risk_weight"
@@ -133,7 +133,7 @@
     "description" : "duration",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "example_domains.cocalimo_smcubes_extension#RL"
+      "$ref" : "example_domains.openregspecs_smcubes_extension#RL"
     },
     "variable_id" : "duration",
     "name" : "duration",

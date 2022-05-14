@@ -12,7 +12,7 @@
        Neil Mackenzie - initial API and implementation
  -->
 <feature
-      id="org.eclipse.efbt.controller.ldm.component.logical_transformations.feature"
+      id="org.eclipse.efbt.controller.ldm.component.testing.feature"
       label="Controller Logical Transformations Component"
       version="1.0.0.qualifier"
       provider-name="Bird Software Solutions">
@@ -121,7 +121,7 @@ Exhibit A – Form of Secondary Licenses Notice
    </license>
 
    <plugin
-         id="org.eclipse.efbt.controller.ldm.component.logical_transformations"
+         id="org.eclipse.efbt.controller.ldm.component.testing"
          download-size="0"
          install-size="0"
          version="0.0.0"
