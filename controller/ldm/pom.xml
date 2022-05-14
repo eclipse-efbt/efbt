@@ -35,11 +35,8 @@
 		<additionalTestArguments></additionalTestArguments>
 	</properties>
 	<modules>
-		<module>plugins/org.eclipse.efbt.controller.ldm.component.sqldevconvertor</module>
 		<module>plugins/org.eclipse.efbt.controller.ldm.component.testing</module>
-		<module>features/org.eclipse.efbt.controller.ldm.component.sqldevconvertor.feature</module>	
 		<module>features/org.eclipse.efbt.controller.ldm.component.testing.feature</module>
-
 	</modules>
 
 	<build>

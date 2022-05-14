@@ -3,13 +3,7 @@ call mvn install
 cd ..\..
 cd openregspecs\query
 call mvn install
-cd ..\..
-cd openregspecs\sirius_ui
-call mvn install
-cd ..\..
-cd cocalimo\examples
-call mvn install 
-cd ..\..                  
+cd ..\..  
 cd controller\ldm
 call mvn install
 cd ..\..
@@ -25,9 +19,9 @@ cd ..\..\..
 cd controller\platformcall\component
 call mvn install
 cd ..\..\..
-cd openregspecs\platform_call\ui_sirius
+cd openregspecs\sirius_ui
 call mvn install
-cd ..\..\..
+cd ..\..
 cd installations\complete_repo\
 call mvn install
 cd ..\..

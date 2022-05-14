@@ -15,7 +15,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.eclipse.efbt.openregspecs.model</groupId>
 	<version>1.0.0-SNAPSHOT</version>
-	<artifactId>org.eclipse.efbt.openregspecs.model</artifactId>
+	<artifactId>org.eclipse.efbt.openregspecs.model.parent</artifactId>
 	<packaging>pom</packaging>
 <prerequisites>
     <maven>3.0</maven>
