@@ -7,7 +7,7 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.efbt.openregspecs.model.bpmn_lite,
  org.eclipse.efbt.openregspecs.model.bpmn_lite.impl,
  org.eclipse.efbt.openregspecs.model.bpmn_lite.util,

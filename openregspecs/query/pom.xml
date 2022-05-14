@@ -36,6 +36,7 @@
 	</properties>
 	<modules>
 		<module>plugins/org.eclipse.efbt.openregspecs.smcubes.query.core</module>
+		<module>features/org.eclipse.efbt.openregspecs.smcubes.query.feature</module>
 	</modules>
 
 	<build>

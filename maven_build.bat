@@ -1,25 +1,13 @@
-cd openregspecs\core\model
+cd openregspecs\model
 call mvn install
-cd ..\..\..
-cd openregspecs\smcubes\model
+cd ..\..
+cd openregspecs\query
 call mvn install
-cd ..\..\..
-cd openregspecs\testing\model
+cd ..\..
+cd openregspecs\sirius_ui
 call mvn install
-cd ..\..\..
-cd openregspecs\testing\ui_sirius
-call mvn install
-cd ..\..\..
-cd openregspecs\platform_call\model
-call mvn install
-cd ..\..\..
- cd openregspecs\smcubes\modelquery
-call mvn install
-cd ..\..\..
-cd openregspecs\smcubes\ui_sirius
-call mvn install
-cd ..\..\..
-cd openregspecs\examples
+cd ..\..
+cd cocalimo\examples
 call mvn install 
 cd ..\..                  
 cd controller\ldm

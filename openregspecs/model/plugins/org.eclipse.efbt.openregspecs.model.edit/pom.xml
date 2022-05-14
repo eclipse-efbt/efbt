@@ -18,8 +18,8 @@
 		<artifactId>org.eclipse.efbt.openregspecs.model</artifactId>
 		<version>1.0.0-SNAPSHOT</version>  <relativePath>../../pom.xml</relativePath>
 	</parent>
-	<artifactId>org.eclipse.efbt.openregspecs.model.target</artifactId>
-	<packaging>eclipse-target-definition</packaging>
-	<dependencies>
-	</dependencies>
+	
+	<artifactId>org.eclipse.efbt.openregspecs.smcubes.model.edit</artifactId>
+	<packaging>eclipse-plugin</packaging>
+
 </project>

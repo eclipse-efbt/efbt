@@ -37,7 +37,8 @@
 	<modules>
 		<module>plugins/org.eclipse.efbt.openregspecs.model</module>
 		<module>plugins/org.eclipse.efbt.openregspecs.model.edit</module>
-		<module>plugins/org.eclipse.efbt.openregspecs.model.editor</module>	
+		<module>plugins/org.eclipse.efbt.openregspecs.model.editor</module>
+		<module>features/org.eclipse.efbt.openregspecs.model.feature</module>
 		<module>releng/org.eclipse.efbt.openregspecs.model.target</module>
 	</modules>
 
