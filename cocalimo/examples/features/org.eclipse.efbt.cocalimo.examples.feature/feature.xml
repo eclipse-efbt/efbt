@@ -12,8 +12,8 @@
        Neil Mackenzie - initial API and implementation
  -->
 <feature
-      id="org.eclipse.efbt.cocalimo.examples.feature"
-      label="CoCaLiMo Examples"
+      id="org.eclipse.efbt.openregspecs.examples.feature"
+      label="openregspecs Examples"
       version="1.0.0.qualifier"
       provider-name="Bird Software Solutions">
 
@@ -125,7 +125,7 @@ Exhibit A – Form of Secondary Licenses Notice
    </requires>
 
    <plugin
-         id="org.eclipse.efbt.cocalimo.examples.core"
+         id="org.eclipse.efbt.openregspecs.examples.core"
          download-size="0"
          install-size="0"
          version="0.0.0"

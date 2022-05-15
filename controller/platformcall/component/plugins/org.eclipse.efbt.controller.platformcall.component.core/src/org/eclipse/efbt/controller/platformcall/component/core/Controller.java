@@ -12,14 +12,8 @@
  *******************************************************************************/
 package org.eclipse.efbt.controller.platformcall.component.core;
 
-import org.eclipse.efbt.cocalimo.platform_call.model.platform_call.ConvertDataMetaModelToEcore;
-import org.eclipse.efbt.cocalimo.platform_call.model.platform_call.ConvertSQLDeveloperModelToEcore;
-import org.eclipse.efbt.cocalimo.platform_call.model.platform_call.CreateLogicalTransformationViewForScope;
-import org.eclipse.efbt.cocalimo.platform_call.model.platform_call.PlatformCall;
-import org.eclipse.efbt.cocalimo.smcubes.model.data_meta_model.EntityModule;
-import org.eclipse.efbt.cocalimo.platform_call.model.platform_call.ImportBIRDFromMSAccess;
-import org.eclipse.efbt.controller.ldm.component.logical_transformations.LogicalTransformationViews;
-import org.eclipse.efbt.controller.ldm.component.sqldevconvertor.SQLDevConverter;
+import org.eclipse.efbt.openregspecs.model.platform_call.*;
+import org.eclipse.efbt.controller.ldm.component.testing.LogicalTransformationViews;
 import org.eclipse.efbt.controller.smcubes.component.importexport.impl.ImportOfBIRDFromMSAccess;
 
 public class Controller {
@@ -29,10 +23,6 @@ public class Controller {
 		if (call instanceof ImportBIRDFromMSAccess)
 		{
 			ImportBIRDFromMSAccess((ImportBIRDFromMSAccess) call);
-		}
-		if (call instanceof ConvertSQLDeveloperModelToEcore)
-		{
-			convertSQLDeveloperModelToEcore((ConvertSQLDeveloperModelToEcore) call);
 		}
 		if (call instanceof CreateLogicalTransformationViewForScope)
 		{
@@ -47,10 +37,6 @@ public class Controller {
 	}
 
 	
-	private static void convertSQLDeveloperModelToEcore(ConvertSQLDeveloperModelToEcore call) {
-		// TODO Auto-generated method stub
-		SQLDevConverter.convert(call.getInputDirectory(), call.getOutputDirectory());
-	}
 	
 	private static void createLogicalTransformationViewForScope(CreateLogicalTransformationViewForScope call) {
 		// TODO Auto-generated method stub

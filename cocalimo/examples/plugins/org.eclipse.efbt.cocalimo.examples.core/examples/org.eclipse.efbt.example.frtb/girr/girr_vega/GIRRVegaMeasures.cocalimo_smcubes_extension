@@ -1,5 +1,5 @@
 {
-  "eClass" : "http://www.eclipse.org/efbt/cocalimo_smcubes_extension#//VariableModule",
+  "eClass" : "http://www.eclipse.org/efbt/openregspecs_smcubes_extension#//VariableModule",
   "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
   "name" : "GIRRVegaMeasures",
   "version" : "1.0",
@@ -8,7 +8,7 @@
     "description" : "GIRRVegaSensitivityk",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "GIRRVegaSensitivityk",
     "name" : "GIRRVegaSensitivityk",
@@ -18,7 +18,7 @@
     "description" : "GIRRVegaCorrelationFactor",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "GIRRVegaCorrelationFactor",
     "name" : "GIRRVegaCorrelationFactor",
@@ -34,7 +34,7 @@
     "description" : "summedGIRRVega",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "summedGIRRVega",
     "name" : "summedGIRRVega",
@@ -44,7 +44,7 @@
     "description" : "tenork",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#ratingsGrade"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#ratingsGrade"
     },
     "variable_id" : "tenork",
     "name" : "tenork",
@@ -54,7 +54,7 @@
     "description" : "tenorl",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "tenorl",
     "name" : "tenorl",
@@ -64,7 +64,7 @@
     "description" : "mainCurrencyl",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Currency"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Currency"
     },
     "variable_id" : "mainCurrencyl",
     "name" : "mainCurrencyl",
@@ -74,7 +74,7 @@
     "description" : "mainCurrencyk",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Currency"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Currency"
     },
     "variable_id" : "mainCurrencyk",
     "name" : "mainCurrencyk",
@@ -84,7 +84,7 @@
     "description" : "GIRRVegaRiskWeight",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "GIRRVegaRiskWeight",
     "name" : "GIRRVegaRiskWeight",
@@ -94,7 +94,7 @@
     "description" : "weightedGIRRVegaSensitivity",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "weightedGIRRVegaSensitivity",
     "name" : "weightedGIRRVegaSensitivity",
@@ -104,7 +104,7 @@
     "description" : "GIRRVegaKBInput",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "GIRRVegaKBInput",
     "name" : "GIRRVegaKBInput",
@@ -114,7 +114,7 @@
     "description" : "GIRRVegaKB",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "primary_concept" : "GIRRVegaKB",
     "variable_id" : "GIRRVegaKB",
@@ -125,7 +125,7 @@
     "description" : "GIRRVegaKBInputPerBucket",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "GIRRVegaKBInputPerBucket",
     "name" : "GIRRVegaKBInputPerBucket",
@@ -135,7 +135,7 @@
     "description" : "GIRRVegaSensitivityPerBucketCorrelated",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "GIRRVegaSensitivityPerBucketCorrelated",
     "name" : "GIRRVegaSensitivityPerBucketCorrelated",
@@ -145,7 +145,7 @@
     "description" : "totalGIRRVegaSensitivityPerBucket",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "totalGIRRVegaSensitivityPerBucket",
     "name" : "totalGIRRVegaSensitivityPerBucket",
@@ -155,7 +155,7 @@
     "description" : "GIRRVegaBucketCorrelationFactor",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "GIRRVegaBucketCorrelationFactor",
     "name" : "GIRRVegaBucketCorrelationFactor",
@@ -165,7 +165,7 @@
     "description" : "totalGIRRVegaSensitivityPerBucketk",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "totalGIRRVegaSensitivityPerBucketk",
     "name" : "totalGIRRVegaSensitivityPerBucketk",
@@ -175,7 +175,7 @@
     "description" : "totalGIRRVegaSensitivityPerBucketl",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "totalGIRRVegaSensitivityPerBucketl",
     "name" : "totalGIRRVegaSensitivityPerBucketl",

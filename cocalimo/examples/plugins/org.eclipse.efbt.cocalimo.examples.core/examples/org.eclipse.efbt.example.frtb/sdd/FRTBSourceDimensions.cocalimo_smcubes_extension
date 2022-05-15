@@ -1,12 +1,12 @@
 {
-  "eClass" : "http://www.eclipse.org/efbt/cocalimo_smcubes_extension#//VariableModule",
+  "eClass" : "http://www.eclipse.org/efbt/openregspecs_smcubes_extension#//VariableModule",
   "name" : "FRTBSourceDimensions",
   "variables" : [ {
     "code" : "ShockDirection",
     "description" : "ShockDirection",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#shockDirection"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#shockDirection"
     },
     "variable_id" : "ShockDirection",
     "name" : "ShockDirection",
@@ -16,7 +16,7 @@
     "description" : "mainCurrency",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#Currency"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#Currency"
     },
     "variable_id" : "mainCurrency",
     "name" : "mainCurrency",
@@ -26,7 +26,7 @@
     "description" : "secondCurrency",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#Currency"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#Currency"
     },
     "variable_id" : "secondCurrency",
     "name" : "secondCurrency",
@@ -36,7 +36,7 @@
     "description" : "currencyOfRecord",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#Currency"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#Currency"
     },
     "variable_id" : "currencyOfRecord",
     "name" : "currencyOfRecord",
@@ -46,7 +46,7 @@
     "description" : "Currency",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#Currency"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#Currency"
     },
     "variable_id" : "Currency",
     "name" : "Currency",
@@ -56,7 +56,7 @@
     "description" : "Dummy",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#String"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#String"
     },
     "variable_id" : "Dummy",
     "name" : "Dummy",
@@ -66,7 +66,7 @@
     "description" : "ccy1",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#Currency"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#Currency"
     },
     "variable_id" : "ccy1",
     "name" : "ccy1",
@@ -76,7 +76,7 @@
     "description" : "ccy2",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#Currency"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#Currency"
     },
     "variable_id" : "ccy2",
     "name" : "ccy2",
@@ -86,7 +86,7 @@
     "description" : "equityFactorType",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#shockDirection"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#shockDirection"
     },
     "variable_id" : "equityFactorType",
     "name" : "equityFactorType",
@@ -96,7 +96,7 @@
     "description" : "ratingsGrade",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#ratingsGrade"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#ratingsGrade"
     },
     "variable_id" : "ratingsGrade",
     "name" : "ratingsGrade",
@@ -106,7 +106,7 @@
     "description" : "CSRCurveType",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#CSRCurveType"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#CSRCurveType"
     },
     "variable_id" : "CSRCurveType",
     "name" : "CSRCurveType",
@@ -116,7 +116,7 @@
     "description" : "commodityType",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#commodityType"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#commodityType"
     },
     "variable_id" : "commodityType",
     "name" : "commodityType",
@@ -126,7 +126,7 @@
     "description" : "marketCap",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#marketCap"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#marketCap"
     },
     "variable_id" : "marketCap",
     "name" : "marketCap",
@@ -136,7 +136,7 @@
     "description" : "economy",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#economy"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#economy"
     },
     "variable_id" : "economy",
     "name" : "economy",
@@ -146,7 +146,7 @@
     "description" : "sector",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#sector"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#sector"
     },
     "variable_id" : "sector",
     "name" : "sector",
@@ -156,7 +156,7 @@
     "description" : "securitisationSector",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#securitisationSector"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#securitisationSector"
     },
     "variable_id" : "securitisationSector",
     "name" : "securitisationSector",
@@ -166,7 +166,7 @@
     "description" : "riskClass",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#riskClass"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#riskClass"
     },
     "variable_id" : "riskClass",
     "name" : "riskClass",
@@ -176,7 +176,7 @@
     "description" : "issueType",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#issueType"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#issueType"
     },
     "variable_id" : "issueType",
     "name" : "issueType",
@@ -192,7 +192,7 @@
     "description" : "girrRiskFactorType",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#girrRiskFactorType"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#girrRiskFactorType"
     },
     "variable_id" : "girrRiskFactorType",
     "name" : "girrRiskFactorType",
@@ -202,7 +202,7 @@
     "description" : "sensitivityType",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#sensitivityType"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#sensitivityType"
     },
     "variable_id" : "sensitivityType",
     "name" : "sensitivityType",

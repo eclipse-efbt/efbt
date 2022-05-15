@@ -1,12 +1,12 @@
 {
-  "eClass" : "http://www.eclipse.org/efbt/cocalimo_smcubes_extension#//MemberModule",
+  "eClass" : "http://www.eclipse.org/efbt/openregspecs_smcubes_extension#//MemberModule",
   "name" : "FRTBDerivedDomainMembers",
   "members" : [ {
     "code" : "Delta",
     "description" : "Delta",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBDerivedDomain.cocalimo_smcubes_extension#risk_types"
+      "$ref" : "FRTBDerivedDomain.openregspecs_smcubes_extension#risk_types"
     },
     "member_id" : "Delta",
     "name" : "Delta",
@@ -16,7 +16,7 @@
     "description" : "Curvature",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBDerivedDomain.cocalimo_smcubes_extension#risk_types"
+      "$ref" : "FRTBDerivedDomain.openregspecs_smcubes_extension#risk_types"
     },
     "member_id" : "Curvature",
     "name" : "Curvature",
@@ -26,7 +26,7 @@
     "description" : "Vega",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBDerivedDomain.cocalimo_smcubes_extension#risk_types"
+      "$ref" : "FRTBDerivedDomain.openregspecs_smcubes_extension#risk_types"
     },
     "member_id" : "Vega",
     "name" : "Vega",
@@ -36,7 +36,7 @@
     "description" : "High",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBDerivedDomain.cocalimo_smcubes_extension#Correlation_types"
+      "$ref" : "FRTBDerivedDomain.openregspecs_smcubes_extension#Correlation_types"
     },
     "member_id" : "High",
     "name" : "High",
@@ -46,7 +46,7 @@
     "description" : "Low",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBDerivedDomain.cocalimo_smcubes_extension#Correlation_types"
+      "$ref" : "FRTBDerivedDomain.openregspecs_smcubes_extension#Correlation_types"
     },
     "member_id" : "Low",
     "name" : "Low",
@@ -56,7 +56,7 @@
     "description" : "Medium",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBDerivedDomain.cocalimo_smcubes_extension#Correlation_types"
+      "$ref" : "FRTBDerivedDomain.openregspecs_smcubes_extension#Correlation_types"
     },
     "member_id" : "Medium",
     "name" : "Medium",

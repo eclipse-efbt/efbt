@@ -12,55 +12,28 @@
        Neil Mackenzie - initial API and implementation
  -->
 <site>
-   <feature id="org.eclipse.efbt.controller.ldm.component.sqldevconvertor.feature">
-      <category name="efbt"/>
-   </feature>
-   <feature id="org.eclipse.efbt.cocalimo.core.model.feature">
-      <category name="efbt"/>
-   </feature>
    <feature id="org.eclipse.efbt.controller.smcubes.component.feature">
-      <category name="efbt"/>
-   </feature>
-   <feature id="org.eclipse.efbt.cocalimo.smcubes.model.feature">
-      <category name="efbt"/>
-   </feature>
-   <feature id="org.eclipse.efbt.cocalimo.smcubes.query.feature">
-      <category name="efbt"/>
-   </feature>
-   <feature id="org.eclipse.efbt.cocalimo.smcubes.ui.sirius.feature">
       <category name="efbt"/>
    </feature>
    <feature id="org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.feature">
       <category name="efbt"/>
    </feature>
-   <feature id="org.eclipse.efbt.cocalimo.examples.feature">
-      <category name="efbt"/>
-   </feature>
-   <feature id="org.eclipse.efbt.cocalimo.logical_transformations.model.feature">
-      <category name="efbt"/>
-   </feature>
-   <feature id="org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core.feature">
-      <category name="efbt"/>
-   </feature>
-   <feature id="org.eclipse.efbt.cocalimo.platform_call.model.feature">
-      <category name="efbt"/>
-   </feature>
-   <feature id="org.eclipse.efbt.cocalimo.platform_call.ui.sirius.core.feature">
-      <category name="efbt"/>
-   </feature>
-   <feature id="org.eclipse.efbt.controller.data_meta_model.component.dmm_to_ecore.feature">
-      <category name="efbt"/>
-   </feature>
-   <feature id="org.eclipse.efbt.controller.ldm.component.logical_transformations.feature">
+   <feature id="org.eclipse.efbt.controller.ldm.component.testing.feature">
       <category name="efbt"/>
    </feature>
    <feature id="org.eclipse.efbt.controller.platformcall.component.core.feature">
       <category name="efbt"/>
    </feature>
-   <bundle id="org.eclipse.efbt.cocalimo.platform_call.model.platform_call">
+   <feature id="org.eclipse.efbt.openregspecs.model.feature">
       <category name="efbt"/>
-   </bundle>
-   <bundle id="org.eclipse.efbt.cocalimo.platform_call.ui.sirius.core">
+   </feature>
+   <feature id="org.eclipse.efbt.openregspecs.query.feature">
+      <category name="efbt"/>
+   </feature>
+   <feature id="org.eclipse.efbt.openregspecs.sirius_ui.feature">
+      <category name="efbt"/>
+   </feature>
+   <bundle id="org.eclipse.efbt.openregspecs.platform_call.ui.sirius.core">
       <category name="efbt"/>
    </bundle>
    <category-def name="efbt" label="Complete EFBT Repository"/>

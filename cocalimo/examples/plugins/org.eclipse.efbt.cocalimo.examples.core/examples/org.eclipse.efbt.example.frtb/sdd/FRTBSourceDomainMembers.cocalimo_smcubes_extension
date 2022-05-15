@@ -1,11 +1,11 @@
 {
-  "eClass" : "http://www.eclipse.org/efbt/cocalimo_smcubes_extension#//MemberModule",
+  "eClass" : "http://www.eclipse.org/efbt/openregspecs_smcubes_extension#//MemberModule",
   "name" : "FRTBSourceDomainMembers",
   "members" : [ {
     "code" : "UP",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#shockDirection"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#shockDirection"
     },
     "member_id" : "UP",
     "name" : "UP"
@@ -13,7 +13,7 @@
     "code" : "DOWN",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#shockDirection"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#shockDirection"
     },
     "member_id" : "DOWN",
     "name" : "DOWN"
@@ -21,7 +21,7 @@
     "code" : "NONE",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#shockDirection"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#shockDirection"
     },
     "member_id" : "NONE",
     "name" : "NONE"
@@ -29,7 +29,7 @@
     "code" : "UP",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#shockDirection"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#shockDirection"
     },
     "member_id" : "UP",
     "name" : "UP"
@@ -41,7 +41,7 @@
     "code" : "USD",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#Currency"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#Currency"
     },
     "member_id" : "USD",
     "name" : "USD"
@@ -49,7 +49,7 @@
     "code" : "GIRR",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#riskClass"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#riskClass"
     },
     "member_id" : "GIRR",
     "name" : "GIRR"
@@ -57,7 +57,7 @@
     "code" : "Equity",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#riskClass"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#riskClass"
     },
     "member_id" : "Equity",
     "name" : "Equity"
@@ -65,7 +65,7 @@
     "code" : "CSR_NonSec",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#riskClass"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#riskClass"
     },
     "member_id" : "CSR_NonSec",
     "name" : "CSR_NonSec"
@@ -73,7 +73,7 @@
     "code" : "CSR_Sec_CTP",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#riskClass"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#riskClass"
     },
     "member_id" : "CSR_Sec_CTP",
     "name" : "CSR_Sec_CTP"
@@ -81,7 +81,7 @@
     "code" : "CSR_Sec_Non_CTP",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#riskClass"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#riskClass"
     },
     "member_id" : "CSR_Sec_Non_CTP",
     "name" : "CSR_Sec_Non_CTP"
@@ -89,7 +89,7 @@
     "code" : "Commodity",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#riskClass"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#riskClass"
     },
     "member_id" : "Commodity",
     "name" : "Commodity"
@@ -97,7 +97,7 @@
     "code" : "FX",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#riskClass"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#riskClass"
     },
     "member_id" : "FX",
     "name" : "FX"
@@ -105,7 +105,7 @@
     "code" : "Spot",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#equityFactorType"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#equityFactorType"
     },
     "member_id" : "Spot",
     "name" : "Spot"
@@ -113,7 +113,7 @@
     "code" : "Repo",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#equityFactorType"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#equityFactorType"
     },
     "member_id" : "Repo",
     "name" : "Repo"
@@ -121,7 +121,7 @@
     "code" : "Bond",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#CSRCurveType"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#CSRCurveType"
     },
     "member_id" : "Bond",
     "name" : "Bond"
@@ -129,7 +129,7 @@
     "code" : "CDS",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#CSRCurveType"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#CSRCurveType"
     },
     "member_id" : "CDS",
     "name" : "CDS"
@@ -137,7 +137,7 @@
     "code" : "SENIOR_IG",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#ratingsGrade"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#ratingsGrade"
     },
     "member_id" : "SENIOR_IG",
     "name" : "SENIOR_IG"
@@ -145,7 +145,7 @@
     "code" : "NON_SENIOR_IG",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#ratingsGrade"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#ratingsGrade"
     },
     "member_id" : "NON_SENIOR_IG",
     "name" : "NON_SENIOR_IG"
@@ -153,7 +153,7 @@
     "code" : "HIGH_YIELD",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#ratingsGrade"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#ratingsGrade"
     },
     "member_id" : "HIGH_YIELD",
     "name" : "HIGH_YIELD"
@@ -161,7 +161,7 @@
     "code" : "NON_RATED",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#ratingsGrade"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#ratingsGrade"
     },
     "member_id" : "NON_RATED",
     "name" : "NON_RATED"
@@ -169,7 +169,7 @@
     "code" : "IG",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#ratingsGrade"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#ratingsGrade"
     },
     "member_id" : "IG",
     "name" : "IG"
@@ -177,7 +177,7 @@
     "code" : "ENERGY_SOLID_COMBUSTABLES",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#commodityType"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#commodityType"
     },
     "member_id" : "ENERGY_SOLID_COMBUSTABLES",
     "name" : "ENERGY_SOLID_COMBUSTABLES"
@@ -185,7 +185,7 @@
     "code" : "ENERGY_LIQUID_COMBUSTABLES",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#commodityType"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#commodityType"
     },
     "member_id" : "ENERGY_LIQUID_COMBUSTABLES",
     "name" : "ENERGY_LIQUID_COMBUSTABLES"
@@ -193,7 +193,7 @@
     "code" : "ENERGY_ELECTRICITY_AND_CARBON_TRADING",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#commodityType"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#commodityType"
     },
     "member_id" : "ENERGY_ELECTRICITY_AND_CARBON_TRADING",
     "name" : "ENERGY_ELECTRICITY_AND_CARBON_TRADING"
@@ -201,7 +201,7 @@
     "code" : "FREIGHT",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#commodityType"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#commodityType"
     },
     "member_id" : "FREIGHT",
     "name" : "FREIGHT"
@@ -209,7 +209,7 @@
     "code" : "METALS_NON_PRECIOUS",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#commodityType"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#commodityType"
     },
     "member_id" : "METALS_NON_PRECIOUS",
     "name" : "METALS_NON_PRECIOUS"
@@ -217,7 +217,7 @@
     "code" : "GASEOUS_COMBUSTABLES",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#commodityType"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#commodityType"
     },
     "member_id" : "GASEOUS_COMBUSTABLES",
     "name" : "GASEOUS_COMBUSTABLES"
@@ -225,7 +225,7 @@
     "code" : "PRECIOUS_METALS",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#commodityType"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#commodityType"
     },
     "member_id" : "PRECIOUS_METALS",
     "name" : "PRECIOUS_METALS"
@@ -233,7 +233,7 @@
     "code" : "GRAINS_AND_OILSEED",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#commodityType"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#commodityType"
     },
     "member_id" : "GRAINS_AND_OILSEED",
     "name" : "GRAINS_AND_OILSEED"
@@ -241,7 +241,7 @@
     "code" : "LIVESTOCK_AND_DAIRY",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#commodityType"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#commodityType"
     },
     "member_id" : "LIVESTOCK_AND_DAIRY",
     "name" : "LIVESTOCK_AND_DAIRY"
@@ -249,7 +249,7 @@
     "code" : "SOFTS_AND_OTHER_AGRICULTURALS",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#commodityType"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#commodityType"
     },
     "member_id" : "SOFTS_AND_OTHER_AGRICULTURALS",
     "name" : "SOFTS_AND_OTHER_AGRICULTURALS"
@@ -257,7 +257,7 @@
     "code" : "OTHER_COMMODITY",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#commodityType"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#commodityType"
     },
     "member_id" : "OTHER_COMMODITY",
     "name" : "OTHER_COMMODITY"
@@ -265,7 +265,7 @@
     "code" : "LARGE",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#marketCap"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#marketCap"
     },
     "member_id" : "LARGE",
     "name" : "LARGE"
@@ -273,7 +273,7 @@
     "code" : "SMALL",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#marketCap"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#marketCap"
     },
     "member_id" : "SMALL",
     "name" : "SMALL"
@@ -281,7 +281,7 @@
     "code" : "EMERGING_MARKET",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#economy"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#economy"
     },
     "member_id" : "EMERGING_MARKET",
     "name" : "EMERGING_MARKET"
@@ -289,7 +289,7 @@
     "code" : "ADVANCED_ECONOMY",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#economy"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#economy"
     },
     "member_id" : "ADVANCED_ECONOMY",
     "name" : "ADVANCED_ECONOMY"
@@ -297,7 +297,7 @@
     "code" : "SOVEREIGN",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#sector"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#sector"
     },
     "member_id" : "SOVEREIGN",
     "name" : "SOVEREIGN"
@@ -305,7 +305,7 @@
     "code" : "LOCAL_GOVERNMENT",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#sector"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#sector"
     },
     "member_id" : "LOCAL_GOVERNMENT",
     "name" : "LOCAL_GOVERNMENT"
@@ -313,7 +313,7 @@
     "code" : "FINANCIALS",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#sector"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#sector"
     },
     "member_id" : "FINANCIALS",
     "name" : "FINANCIALS"
@@ -321,7 +321,7 @@
     "code" : "BASIC_MATERIALS",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#sector"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#sector"
     },
     "member_id" : "BASIC_MATERIALS",
     "name" : "BASIC_MATERIALS"
@@ -329,7 +329,7 @@
     "code" : "CONSUMER_GOODS",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#sector"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#sector"
     },
     "member_id" : "CONSUMER_GOODS",
     "name" : "CONSUMER_GOODS"
@@ -337,7 +337,7 @@
     "code" : "TECHNOLOGY",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#sector"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#sector"
     },
     "member_id" : "TECHNOLOGY",
     "name" : "TECHNOLOGY"
@@ -345,7 +345,7 @@
     "code" : "HEALTH_CARE",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#sector"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#sector"
     },
     "member_id" : "HEALTH_CARE",
     "name" : "HEALTH_CARE"
@@ -353,7 +353,7 @@
     "code" : "COVERED_BONDS",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#sector"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#sector"
     },
     "member_id" : "COVERED_BONDS",
     "name" : "COVERED_BONDS"
@@ -361,7 +361,7 @@
     "code" : "OTHER_SECTOR",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#sector"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#sector"
     },
     "member_id" : "OTHER_SECTOR",
     "name" : "OTHER_SECTOR"
@@ -369,7 +369,7 @@
     "code" : "RMBS_PRIME",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#sector"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#sector"
     },
     "member_id" : "RMBS_PRIME",
     "name" : "RMBS_PRIME"
@@ -377,7 +377,7 @@
     "code" : "RMBS_MID_PRIME",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#securitisationSector"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#securitisationSector"
     },
     "member_id" : "RMBS_MID_PRIME",
     "name" : "RMBS_MID_PRIME"
@@ -385,7 +385,7 @@
     "code" : "RMBS_SUB_PRIME",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#securitisationSector"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#securitisationSector"
     },
     "member_id" : "RMBS_SUB_PRIME",
     "name" : "RMBS_SUB_PRIME"
@@ -393,7 +393,7 @@
     "code" : "CMBS",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#securitisationSector"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#securitisationSector"
     },
     "member_id" : "CMBS",
     "name" : "CMBS"
@@ -401,7 +401,7 @@
     "code" : "ABS_STUDENT_LOAN",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#securitisationSector"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#securitisationSector"
     },
     "member_id" : "ABS_STUDENT_LOAN",
     "name" : "ABS_STUDENT_LOAN"
@@ -409,7 +409,7 @@
     "code" : "ABS_AUTO",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#securitisationSector"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#securitisationSector"
     },
     "member_id" : "ABS_AUTO",
     "name" : "ABS_AUTO"
@@ -417,7 +417,7 @@
     "code" : "CLO_NON_CTP",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#securitisationSector"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#securitisationSector"
     },
     "member_id" : "CLO_NON_CTP",
     "name" : "CLO_NON_CTP"
@@ -425,7 +425,7 @@
     "code" : "OTHER_securitisationSector",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#securitisationSector"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#securitisationSector"
     },
     "member_id" : "OTHER_securitisationSector",
     "name" : "OTHER_securitisationSector"
@@ -434,7 +434,7 @@
     "description" : "Equity",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#issueType"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#issueType"
     },
     "member_id" : "Equity",
     "name" : "Equity",
@@ -444,7 +444,7 @@
     "description" : "Bond",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#issueType"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#issueType"
     },
     "member_id" : "Bond",
     "name" : "Bond",
@@ -454,7 +454,7 @@
     "description" : "Securitisation",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#issueType"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#issueType"
     },
     "member_id" : "Securitisation",
     "name" : "Securitisation",
@@ -464,7 +464,7 @@
     "description" : "INFLATION",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#girrRiskFactorType"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#girrRiskFactorType"
     },
     "member_id" : "INFLATION",
     "name" : "INFLATION",
@@ -474,7 +474,7 @@
     "description" : "BASIS",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#girrRiskFactorType"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#girrRiskFactorType"
     },
     "member_id" : "BASIS",
     "name" : "BASIS",
@@ -484,7 +484,7 @@
     "description" : "YIELD",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#girrRiskFactorType"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#girrRiskFactorType"
     },
     "member_id" : "YIELD",
     "name" : "YIELD",
@@ -494,7 +494,7 @@
     "description" : "DELTA",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#sensitivityType"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#sensitivityType"
     },
     "member_id" : "DELTA",
     "name" : "DELTA",
@@ -504,7 +504,7 @@
     "description" : "VEGA",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#sensitivityType"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#sensitivityType"
     },
     "member_id" : "VEGA",
     "name" : "VEGA",
@@ -514,7 +514,7 @@
     "description" : "CURVATURE",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBSourceDomains.cocalimo_smcubes_extension#sensitivityType"
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#sensitivityType"
     },
     "member_id" : "CURVATURE",
     "name" : "CURVATURE",

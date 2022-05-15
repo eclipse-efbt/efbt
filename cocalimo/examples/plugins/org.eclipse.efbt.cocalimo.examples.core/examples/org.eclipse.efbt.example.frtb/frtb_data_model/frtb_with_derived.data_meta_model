@@ -10,12 +10,12 @@
       "name" : "name",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#String"
       },
       "isPK" : true,
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#positionID"
+        "$ref" : "../sdd/FRTBSourceIdentifiers.openregspecs_smcubes_extension#positionID"
       }
     } ]
   }, {
@@ -25,48 +25,48 @@
       "name" : "ratingGrade",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#ratingsGrade"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#ratingsGrade"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#ratingsGrade"
+        "$ref" : "../sdd/FRTBSourceDimensions.openregspecs_smcubes_extension#ratingsGrade"
       }
     }, {
       "name" : "sector",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#sector"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#sector"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#sector"
+        "$ref" : "../sdd/FRTBSourceDimensions.openregspecs_smcubes_extension#sector"
       }
     }, {
       "name" : "marketCap",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#marketCap"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#marketCap"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#marketCap"
+        "$ref" : "../sdd/FRTBSourceDimensions.openregspecs_smcubes_extension#marketCap"
       }
     }, {
       "name" : "organisation_id",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#String"
       },
       "isPK" : true,
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#organisation_id"
+        "$ref" : "../sdd/FRTBSourceIdentifiers.openregspecs_smcubes_extension#organisation_id"
       }
     }, {
       "name" : "economy",
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#economy"
+        "$ref" : "../sdd/FRTBSourceDimensions.openregspecs_smcubes_extension#economy"
       }
     } ]
   }, {
@@ -76,22 +76,22 @@
       "name" : "issueType",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#issueType"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#issueType"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#issueType"
+        "$ref" : "../sdd/FRTBSourceDimensions.openregspecs_smcubes_extension#issueType"
       }
     }, {
       "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//ForeignKeyAttribute",
       "name" : "issuerID",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#String"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#issuerID"
+        "$ref" : "../sdd/FRTBSourceIdentifiers.openregspecs_smcubes_extension#issuerID"
       },
       "entity" : {
         "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
@@ -102,28 +102,28 @@
       "name" : "ratingGrade",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#ratingsGrade"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#ratingsGrade"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#ratingsGrade"
+        "$ref" : "../sdd/FRTBSourceDimensions.openregspecs_smcubes_extension#ratingsGrade"
       }
     }, {
       "name" : "issueID",
       "isPK" : true,
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#issueID"
+        "$ref" : "../sdd/FRTBSourceIdentifiers.openregspecs_smcubes_extension#issueID"
       }
     }, {
       "name" : "securitisationSector",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#securitisationSector"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#securitisationSector"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#securitisationSector"
+        "$ref" : "../sdd/FRTBSourceDimensions.openregspecs_smcubes_extension#securitisationSector"
       }
     } ]
   }, {
@@ -133,93 +133,93 @@
       "name" : "riskFactorID",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#String"
       },
       "isPK" : true,
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#riskFactorID"
+        "$ref" : "../sdd/FRTBSourceIdentifiers.openregspecs_smcubes_extension#riskFactorID"
       }
     }, {
       "name" : "riskClass",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#riskClass"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#riskClass"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#riskClass"
+        "$ref" : "../sdd/FRTBSourceDimensions.openregspecs_smcubes_extension#riskClass"
       }
     }, {
       "name" : "volFactor",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#Boolean"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#Boolean"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#volFactor"
+        "$ref" : "../sdd/FRTBSourceDimensions.openregspecs_smcubes_extension#volFactor"
       }
     }, {
       "name" : "ccy1",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#currency"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#currency"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#ccy1"
+        "$ref" : "../sdd/FRTBSourceDimensions.openregspecs_smcubes_extension#ccy1"
       }
     }, {
       "name" : "ccy2",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#currency"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#currency"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#ccy2"
+        "$ref" : "../sdd/FRTBSourceDimensions.openregspecs_smcubes_extension#ccy2"
       }
     }, {
       "name" : "girrRiskFactorType",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#girrRiskFactorType"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#girrRiskFactorType"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#girrRiskFactorType"
+        "$ref" : "../sdd/FRTBSourceDimensions.openregspecs_smcubes_extension#girrRiskFactorType"
       }
     }, {
       "name" : "mainCurrency",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#currency"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#currency"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#mainCurrency"
+        "$ref" : "../sdd/FRTBSourceDimensions.openregspecs_smcubes_extension#mainCurrency"
       }
     }, {
       "name" : "secondCurrency",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#currency"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#currency"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#secondCurrency"
+        "$ref" : "../sdd/FRTBSourceDimensions.openregspecs_smcubes_extension#secondCurrency"
       }
     }, {
       "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//ForeignKeyAttribute",
       "name" : "issueID",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#String"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#issueID"
+        "$ref" : "../sdd/FRTBSourceIdentifiers.openregspecs_smcubes_extension#issueID"
       },
       "entity" : {
         "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
@@ -229,22 +229,22 @@
       "name" : "equityFactorType",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#equityFactorType"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#equityFactorType"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#equityFactorType"
+        "$ref" : "../sdd/FRTBSourceDimensions.openregspecs_smcubes_extension#equityFactorType"
       }
     }, {
       "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//ForeignKeyAttribute",
       "name" : "issuerID",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#String"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#issuerID"
+        "$ref" : "../sdd/FRTBSourceIdentifiers.openregspecs_smcubes_extension#issuerID"
       },
       "entity" : {
         "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
@@ -254,51 +254,51 @@
       "name" : "CSRCurveType",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#CSRCurveType"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#CSRCurveType"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#CSRCurveType"
+        "$ref" : "../sdd/FRTBSourceDimensions.openregspecs_smcubes_extension#CSRCurveType"
       }
     }, {
       "name" : "CSRCreditQuality",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#ratingsGrade"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#ratingsGrade"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#ratingsGrade"
+        "$ref" : "../sdd/FRTBSourceDimensions.openregspecs_smcubes_extension#ratingsGrade"
       }
     }, {
       "name" : "trancheName",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#String"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#trancheName"
+        "$ref" : "../sdd/FRTBSourceIdentifiers.openregspecs_smcubes_extension#trancheName"
       }
     }, {
       "name" : "commodityType",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#commodityType"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#commodityType"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#commodityType"
+        "$ref" : "../sdd/FRTBSourceDimensions.openregspecs_smcubes_extension#commodityType"
       }
     }, {
       "name" : "deliveryLocation",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#String"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#deliveryLocation"
+        "$ref" : "../sdd/FRTBSourceIdentifiers.openregspecs_smcubes_extension#deliveryLocation"
       }
     } ]
   }, {
@@ -308,62 +308,62 @@
       "name" : "sensitivityType",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#sensitivityType"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#sensitivityType"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#sensitivityType"
+        "$ref" : "../sdd/FRTBSourceDimensions.openregspecs_smcubes_extension#sensitivityType"
       }
     }, {
       "name" : "tenor",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#number"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#number"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceMeasures.cocalimo_smcubes_extension#tenor"
+        "$ref" : "../sdd/FRTBSourceMeasures.openregspecs_smcubes_extension#tenor"
       }
     }, {
       "name" : "sensitivity",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#number"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#number"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceMeasures.cocalimo_smcubes_extension#sensitivity"
+        "$ref" : "../sdd/FRTBSourceMeasures.openregspecs_smcubes_extension#sensitivity"
       }
     }, {
       "name" : "vegaOptionMaturity",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#number"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#number"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceMeasures.cocalimo_smcubes_extension#vegaOptionMaturity"
+        "$ref" : "../sdd/FRTBSourceMeasures.openregspecs_smcubes_extension#vegaOptionMaturity"
       }
     }, {
       "name" : "vegaOptionUnderlyingResidualMaturity",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#number"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#number"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceMeasures.cocalimo_smcubes_extension#vegaOptionUnderlyingResidualMaturity"
+        "$ref" : "../sdd/FRTBSourceMeasures.openregspecs_smcubes_extension#vegaOptionUnderlyingResidualMaturity"
       }
     }, {
       "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//ForeignKeyAttribute",
       "name" : "riskFactorID",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#String"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#riskFactorID"
+        "$ref" : "../sdd/FRTBSourceIdentifiers.openregspecs_smcubes_extension#riskFactorID"
       },
       "entity" : {
         "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
@@ -374,11 +374,11 @@
       "name" : "positionID",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#String"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#positionID"
+        "$ref" : "../sdd/FRTBSourceIdentifiers.openregspecs_smcubes_extension#positionID"
       },
       "entity" : {
         "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
@@ -388,52 +388,52 @@
       "name" : "ccyOfRecord",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#currency"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#currency"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#currencyOfRecord"
+        "$ref" : "../sdd/FRTBSourceDimensions.openregspecs_smcubes_extension#currencyOfRecord"
       }
     }, {
       "name" : "curvatureValuationDifference",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#number"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#number"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceMeasures.cocalimo_smcubes_extension#curvatureValuationDifference"
+        "$ref" : "../sdd/FRTBSourceMeasures.openregspecs_smcubes_extension#curvatureValuationDifference"
       }
     }, {
       "name" : "shockDirection",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#shockDirection"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#shockDirection"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceDimensions.cocalimo_smcubes_extension#ShockDirection"
+        "$ref" : "../sdd/FRTBSourceDimensions.openregspecs_smcubes_extension#ShockDirection"
       }
     }, {
       "name" : "curvaturRiskWeight",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#number"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#number"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceMeasures.cocalimo_smcubes_extension#curvatureRiskWeight"
+        "$ref" : "../sdd/FRTBSourceMeasures.openregspecs_smcubes_extension#curvatureRiskWeight"
       }
     }, {
       "name" : "sensitivity_id",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#String"
       },
       "isPK" : true,
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#sensitivity_id"
+        "$ref" : "../sdd/FRTBSourceIdentifiers.openregspecs_smcubes_extension#sensitivity_id"
       }
     } ]
   }, {
@@ -443,7 +443,7 @@
       "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//ForeignKeyAttribute",
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#riskFactorID"
+        "$ref" : "../sdd/FRTBSourceIdentifiers.openregspecs_smcubes_extension#riskFactorID"
       }
     } ]
   }, {
@@ -454,12 +454,12 @@
       "name" : "sensitivity_id",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#String"
       },
       "isPK" : true,
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#sensitivity_id"
+        "$ref" : "../sdd/FRTBSourceIdentifiers.openregspecs_smcubes_extension#sensitivity_id"
       },
       "entity" : {
         "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
@@ -471,11 +471,11 @@
       "name" : "riskFactorLongName",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#String"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#riskFactorLongName"
+        "$ref" : "../sdd/FRTBSourceIdentifiers.openregspecs_smcubes_extension#riskFactorLongName"
       }
     } ]
   }, {
@@ -486,11 +486,11 @@
       "name" : "sensitivity_id",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#String"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#sensitivity_id"
+        "$ref" : "../sdd/FRTBSourceIdentifiers.openregspecs_smcubes_extension#sensitivity_id"
       },
       "entity" : {
         "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//DerivedEntity",
@@ -501,21 +501,21 @@
       "name" : "summedDeltaPerPosition",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#String"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../common/CommonMeasures.cocalimo_smcubes_extension#summedDeltaPerPosition"
+        "$ref" : "../common/CommonMeasures.openregspecs_smcubes_extension#summedDeltaPerPosition"
       }
     }, {
       "name" : "summedDeltaSensitivitiesPerPosition_id",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#String"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBDerivedIdentifiers.cocalimo_smcubes_extension#summedDeltaSensitivitiesPerPosition_id"
+        "$ref" : "../sdd/FRTBDerivedIdentifiers.openregspecs_smcubes_extension#summedDeltaSensitivitiesPerPosition_id"
       }
     } ]
   }, {
@@ -526,11 +526,11 @@
       "name" : "summedDeltaSensitivitiesPerPosition_id",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#String"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBDerivedIdentifiers.cocalimo_smcubes_extension#summedDeltaSensitivitiesPerPosition_id"
+        "$ref" : "../sdd/FRTBDerivedIdentifiers.openregspecs_smcubes_extension#summedDeltaSensitivitiesPerPosition_id"
       },
       "entity" : {
         "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//DerivedEntity",
@@ -541,22 +541,22 @@
       "name" : "nettedDeltaSensitivities",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#number"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#number"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../common/CommonMeasures.cocalimo_smcubes_extension#nettedDeltaSensitivity"
+        "$ref" : "../common/CommonMeasures.openregspecs_smcubes_extension#nettedDeltaSensitivity"
       }
     }, {
       "name" : "nettedDeltaSensitivities_id",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#String"
       },
       "isPK" : true,
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBDerivedIdentifiers.cocalimo_smcubes_extension#nettedDeltaSensitivities_id"
+        "$ref" : "../sdd/FRTBDerivedIdentifiers.openregspecs_smcubes_extension#nettedDeltaSensitivities_id"
       }
     } ]
   }, {
@@ -567,11 +567,11 @@
       "name" : "riskFactorID",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#String"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#riskFactorID"
+        "$ref" : "../sdd/FRTBSourceIdentifiers.openregspecs_smcubes_extension#riskFactorID"
       },
       "entity" : {
         "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//DerivedEntity",
@@ -584,7 +584,7 @@
       "name" : "sensitivity_id",
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBSourceIdentifiers.cocalimo_smcubes_extension#sensitivity_id"
+        "$ref" : "../sdd/FRTBSourceIdentifiers.openregspecs_smcubes_extension#sensitivity_id"
       },
       "entity" : {
         "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//DerivedEntity",
@@ -596,38 +596,38 @@
       "name" : "bucket_id",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#String"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBDerivedIdentifiers.cocalimo_smcubes_extension#bucketID"
+        "$ref" : "../sdd/FRTBDerivedIdentifiers.openregspecs_smcubes_extension#bucketID"
       }
     }, {
       "name" : "GIRRDeltaRiskWeight",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#number"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#number"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../girr/girr_delta/GIRRDeltaMeasures.cocalimo_smcubes_extension#GIRRDeltaRiskWeight"
+        "$ref" : "../girr/girr_delta/GIRRDeltaMeasures.openregspecs_smcubes_extension#GIRRDeltaRiskWeight"
       }
     }, {
       "name" : "weightedGIRRDeltaSensitivity",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#number"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#number"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../girr/girr_delta/GIRRDeltaMeasures.cocalimo_smcubes_extension#weightedGIRRDeltaSensitivity"
+        "$ref" : "../girr/girr_delta/GIRRDeltaMeasures.openregspecs_smcubes_extension#weightedGIRRDeltaSensitivity"
       }
     }, {
       "name" : "deltaSensitivitiesAndRiskFactor_id",
       "isPK" : true,
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBDerivedIdentifiers.cocalimo_smcubes_extension#deltaSensitivitiesAndRiskFactor_id"
+        "$ref" : "../sdd/FRTBDerivedIdentifiers.openregspecs_smcubes_extension#deltaSensitivitiesAndRiskFactor_id"
       }
     } ]
   }, {
@@ -638,7 +638,7 @@
       "name" : "deltaSensitivitiesAndRiskFactor_id",
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBDerivedIdentifiers.cocalimo_smcubes_extension#deltaSensitivitiesAndRiskFactor_id"
+        "$ref" : "../sdd/FRTBDerivedIdentifiers.openregspecs_smcubes_extension#deltaSensitivitiesAndRiskFactor_id"
       },
       "entity" : {
         "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//DerivedEntity",
@@ -649,11 +649,11 @@
       "name" : "totalGIRRDeltaSensitivityPerBucket",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#number"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#number"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../girr/girr_delta/GIRRDeltaMeasures.cocalimo_smcubes_extension#totalGIRRDeltaSensitivityPerBucket"
+        "$ref" : "../girr/girr_delta/GIRRDeltaMeasures.openregspecs_smcubes_extension#totalGIRRDeltaSensitivityPerBucket"
       }
     } ]
   }, {
@@ -664,11 +664,11 @@
       "name" : "deltaSensitivitiesAndRiskFactor_id1",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#String"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBDerivedIdentifiers.cocalimo_smcubes_extension#deltaSensitivitiesAndRiskFactor_id"
+        "$ref" : "../sdd/FRTBDerivedIdentifiers.openregspecs_smcubes_extension#deltaSensitivitiesAndRiskFactor_id"
       },
       "entity" : {
         "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//DerivedEntity",
@@ -679,11 +679,11 @@
       "name" : "deltaSensitivitiesAndRiskFactor_id2",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#String"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBDerivedIdentifiers.cocalimo_smcubes_extension#deltaSensitivitiesAndRiskFactor_id"
+        "$ref" : "../sdd/FRTBDerivedIdentifiers.openregspecs_smcubes_extension#deltaSensitivitiesAndRiskFactor_id"
       },
       "entity" : {
         "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//DerivedEntity",
@@ -693,23 +693,23 @@
       "name" : "GIRRDeltaCorrelationFactor",
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../girr/girr_delta/GIRRDeltaMeasures.cocalimo_smcubes_extension#GIRRDeltaCorrelationFactor"
+        "$ref" : "../girr/girr_delta/GIRRDeltaMeasures.openregspecs_smcubes_extension#GIRRDeltaCorrelationFactor"
       }
     }, {
       "name" : "GIRRDeltaKBInput",
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../girr/girr_delta/GIRRDeltaMeasures.cocalimo_smcubes_extension#GIRRDeltaKBInput"
+        "$ref" : "../girr/girr_delta/GIRRDeltaMeasures.openregspecs_smcubes_extension#GIRRDeltaKBInput"
       }
     }, {
       "name" : "deltaSensitivityCombination_id",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#String"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBDerivedIdentifiers.cocalimo_smcubes_extension#deltaSensitivityCombination_id"
+        "$ref" : "../sdd/FRTBDerivedIdentifiers.openregspecs_smcubes_extension#deltaSensitivityCombination_id"
       }
     } ]
   }, {
@@ -720,11 +720,11 @@
       "name" : "deltaSensitivityCombination_id",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#String"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#String"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../sdd/FRTBDerivedIdentifiers.cocalimo_smcubes_extension#deltaSensitivityCombination_id"
+        "$ref" : "../sdd/FRTBDerivedIdentifiers.openregspecs_smcubes_extension#deltaSensitivityCombination_id"
       },
       "entity" : {
         "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//DerivedEntity",
@@ -735,21 +735,21 @@
       "name" : "GIRRDeltaKBInput_per_bucket",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#number"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#number"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../girr/girr_delta/GIRRDeltaMeasures.cocalimo_smcubes_extension#GIRRDeltaKBInputPerBucket"
+        "$ref" : "../girr/girr_delta/GIRRDeltaMeasures.openregspecs_smcubes_extension#GIRRDeltaKBInputPerBucket"
       }
     }, {
       "name" : "GIRRDeltaKB",
       "classifier" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//SUBDOMAIN",
-        "$ref" : "../sdd/FRTBSourceSubDomains.cocalimo_smcubes_extension#number"
+        "$ref" : "../sdd/FRTBSourceSubDomains.openregspecs_smcubes_extension#number"
       },
       "variable" : {
         "eClass" : "http://www.eclipse.org/efbt/core#//VARIABLE",
-        "$ref" : "../girr/girr_delta/GIRRDeltaMeasures.cocalimo_smcubes_extension#GIRRDeltaKB"
+        "$ref" : "../girr/girr_delta/GIRRDeltaMeasures.openregspecs_smcubes_extension#GIRRDeltaKB"
       }
     } ]
   } ]

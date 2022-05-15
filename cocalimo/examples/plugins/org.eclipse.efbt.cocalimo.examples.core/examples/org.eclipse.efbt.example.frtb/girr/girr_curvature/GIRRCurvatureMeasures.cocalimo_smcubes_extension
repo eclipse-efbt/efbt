@@ -1,5 +1,5 @@
 {
-  "eClass" : "http://www.eclipse.org/efbt/cocalimo_smcubes_extension#//VariableModule",
+  "eClass" : "http://www.eclipse.org/efbt/openregspecs_smcubes_extension#//VariableModule",
   "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
   "name" : "GIRRCurvautureMaasures",
   "version" : "1.0",
@@ -8,7 +8,7 @@
     "description" : "GIRRCurvatureInstrumentValuation",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "GIRRCurvatureInstrumentValuation",
     "name" : "GIRRCurvatureInstrumentValuation",
@@ -18,7 +18,7 @@
     "description" : "GIRRCurvatureUpshockValuationDifference",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "GIRRCurvatureUpshockValuationDifference",
     "name" : "GIRRCurvatureUpshockValuationDifference",
@@ -28,7 +28,7 @@
     "description" : "GIRRCurvatureDownshockValuationDifference",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "GIRRCurvatureDownshockValuationDifference",
     "name" : "GIRRCurvatureDownshockValuationDifference",
@@ -38,7 +38,7 @@
     "description" : "curvatureValuationDifference",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "curvatureValuationDifference",
     "name" : "curvatureValuationDifference",
@@ -48,7 +48,7 @@
     "description" : "GIRRCurvatureDeltaStrippedShift",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "GIRRCurvatureDeltaStrippedShift",
     "name" : "GIRRCurvatureDeltaStrippedShift",
@@ -58,7 +58,7 @@
     "description" : "GIRRCurvatureShiftedValuation",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "GIRRCurvatureShiftedValuation",
     "name" : "GIRRCurvatureShiftedValuation",
@@ -68,7 +68,7 @@
     "description" : "GIRRCurvatureMinimumShiftedTotal",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "GIRRCurvatureMinimumShiftedTotal",
     "name" : "GIRRCurvatureMinimumShiftedTotal",
@@ -78,7 +78,7 @@
     "description" : "GIRRCurvatureUpshiftDeltaStrippedValuation",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "GIRRCurvatureUpshiftDeltaStrippedValuation",
     "name" : "GIRRCurvatureUpshiftDeltaStrippedValuation",
@@ -88,7 +88,7 @@
     "description" : "GIRRCurvatureDownshiftDeltaStrippedValuation",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "GIRRCurvatureDownshiftDeltaStrippedValuation",
     "name" : "GIRRCurvatureDownshiftDeltaStrippedValuation",
@@ -98,7 +98,7 @@
     "description" : "GIRRCurvatureFlooredMinimumShiftedTotalSquared",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "GIRRCurvatureFlooredMinimumShiftedTotalSquared",
     "name" : "GIRRCurvatureFlooredMinimumShiftedTotalSquared",
@@ -108,7 +108,7 @@
     "description" : "GIRRCurvatureCVRk",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "GIRRCurvatureCVRk",
     "name" : "GIRRCurvatureCVRk",
@@ -118,7 +118,7 @@
     "description" : "GIRRCurvatureCVRl",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "GIRRCurvatureCVRl",
     "name" : "GIRRCurvatureCVRl",
@@ -128,7 +128,7 @@
     "description" : "GIRRCurvatureCVRCorrelationFactor",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "GIRRCurvatureCVRCorrelationFactor",
     "name" : "GIRRCurvatureCVRCorrelationFactor",
@@ -138,7 +138,7 @@
     "description" : "GIRRCurvatureCVRCorrelatedProduct",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "GIRRCurvatureCVRCorrelatedProduct",
     "name" : "GIRRCurvatureCVRCorrelatedProduct",
@@ -148,7 +148,7 @@
     "description" : "sumOfproductOfGIRRCurvatureCorrelatedCombinations",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "sumOfproductOfGIRRCurvatureCorrelatedCombinations",
     "name" : "sumOfproductOfGIRRCurvatureCorrelatedCombinations",
@@ -158,7 +158,7 @@
     "description" : "GIRRCurvatureTotalGroupedSummedMinimums",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "GIRRCurvatureTotalGroupedSummedMinimums",
     "name" : "GIRRCurvatureTotalGroupedSummedMinimums",
@@ -168,7 +168,7 @@
     "description" : "GIRRCurvatureRiskExposureK",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "GIRRCurvatureRiskExposureK",
     "name" : "GIRRCurvatureRiskExposureK",
@@ -178,7 +178,7 @@
     "description" : "sqrtOfMaximumOfGIRRCurvatureCVRFinal",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "sqrtOfMaximumOfGIRRCurvatureCVRFinal",
     "name" : "sqrtOfMaximumOfGIRRCurvatureCVRFinal",
@@ -188,7 +188,7 @@
     "description" : "maximumOfGIRRCurvatureCVRFinal",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "maximumOfGIRRCurvatureCVRFinal",
     "name" : "maximumOfGIRRCurvatureCVRFinal",
@@ -198,7 +198,7 @@
     "description" : "GIRRCurvatureCVRFinal",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "GIRRCurvatureCVRFinal",
     "name" : "GIRRCurvatureCVRFinal",
@@ -208,7 +208,7 @@
     "description" : "summedGIRRCurvatureDeltaStrippedShiftUp",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "summedGIRRCurvatureDeltaStrippedShiftUp",
     "name" : "summedGIRRCurvatureDeltaStrippedShiftUp",
@@ -218,7 +218,7 @@
     "description" : "summedGIRRCurvatureDeltaStrippedShiftDown",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "summedGIRRCurvatureDeltaStrippedShiftDown",
     "name" : "summedGIRRCurvatureDeltaStrippedShiftDown",
@@ -228,7 +228,7 @@
     "description" : "summedGIRRCurvatureDeltaStrippedShiftUp2",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "summedGIRRCurvatureDeltaStrippedShiftUp2",
     "name" : "summedGIRRCurvatureDeltaStrippedShiftUp2",
@@ -238,7 +238,7 @@
     "description" : "summedGIRRCurvatureDeltaStrippedShiftDown2",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "summedGIRRCurvatureDeltaStrippedShiftDown2",
     "name" : "summedGIRRCurvatureDeltaStrippedShiftDown2",
@@ -248,7 +248,7 @@
     "description" : "doubleOfMaxOfGIRRCurvatureCVRFinal",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "doubleOfMaxOfGIRRCurvatureCVRFinal",
     "name" : "doubleOfMaxOfGIRRCurvatureCVRFinal",
@@ -258,7 +258,7 @@
     "description" : "curvatureRiskWeight",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "../../sdd/FRTBSourceDomains.cocalimo_smcubes_extension#Numbers"
+      "$ref" : "../../sdd/FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
     },
     "variable_id" : "curvatureRiskWeight",
     "name" : "curvatureRiskWeight",

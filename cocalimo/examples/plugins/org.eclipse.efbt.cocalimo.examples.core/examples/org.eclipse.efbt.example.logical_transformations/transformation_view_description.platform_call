@@ -2,8 +2,8 @@
   "eClass" : "http://www.eclipse.org/efbt/platform_call#//CreateLogicalTransformationViewForScope",
   "name" : "limited_scope",
   "logicalTransformationModule" : {
-    "eClass" : "http://www.eclipse.org/efbt/logical_transformations#//LogicalTransformationModule",
-    "$ref" : "BIRD_transformations.logical_transformations#transformations"
+    "eClass" : "http://www.eclipse.org/efbt/testing#//LogicalTransformationModule",
+    "$ref" : "BIRD_transformations.testing#transformations"
   },
   "attributeLineage" : [ {
     "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//Attribute",
@@ -24,19 +24,19 @@
   "testScope" : [ {
     "name" : "scope2",
     "scenarios" : [ {
-      "eClass" : "http://www.eclipse.org/efbt/logical_transformations#//Scenario",
-      "$ref" : "BIRD_transformations.logical_transformations#primary EAD Scenario"
+      "eClass" : "http://www.eclipse.org/efbt/testing#//Scenario",
+      "$ref" : "BIRD_transformations.testing#primary EAD Scenario"
     }, {
-      "eClass" : "http://www.eclipse.org/efbt/logical_transformations#//Scenario",
-      "$ref" : "BIRD_transformations.logical_transformations#primary Risk Weight Scenario"
+      "eClass" : "http://www.eclipse.org/efbt/testing#//Scenario",
+      "$ref" : "BIRD_transformations.testing#primary Risk Weight Scenario"
     } ],
     "layer" : {
-      "eClass" : "http://www.eclipse.org/efbt/logical_transformations#//SelectionLayer",
-      "$ref" : "BIRD_transformations.logical_transformations#credit_risk_report$layer1"
+      "eClass" : "http://www.eclipse.org/efbt/testing#//SelectionLayer",
+      "$ref" : "BIRD_transformations.testing#credit_risk_report$layer1"
     },
     "scriptTask" : {
       "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ScriptTask",
-      "$ref" : "BIRD_transformations.logical_transformations#Generate Credit Risk Report"
+      "$ref" : "BIRD_transformations.testing#Generate Credit Risk Report"
     }
   } ]
 }

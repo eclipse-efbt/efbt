@@ -35,11 +35,8 @@
 		<additionalTestArguments></additionalTestArguments>
 	</properties>
 	<modules>
-		<module>plugins/org.eclipse.efbt.controller.ldm.component.sqldevconvertor</module>
-		<module>plugins/org.eclipse.efbt.controller.ldm.component.logical_transformations</module>
-		<module>features/org.eclipse.efbt.controller.ldm.component.sqldevconvertor.feature</module>	
-		<module>features/org.eclipse.efbt.controller.ldm.component.logical_transformations.feature</module>
-
+		<module>plugins/org.eclipse.efbt.controller.ldm.component.testing</module>
+		<module>features/org.eclipse.efbt.controller.ldm.component.testing.feature</module>
 	</modules>
 
 	<build>
@@ -109,8 +106,8 @@
 				  <pomDependencies>consider</pomDependencies>
 					<target>
 						<artifact>
-							<groupId>org.eclipse.efbt.cocalimo.core.model</groupId>
-							<artifactId>org.eclipse.efbt.cocalimo.core.model.target</artifactId>
+							<groupId>org.eclipse.efbt.openregspecs.model</groupId>
+							<artifactId>org.eclipse.efbt.openregspecs.model.target</artifactId>
 							<version>${project.version}</version>
 						</artifact>
 					</target>

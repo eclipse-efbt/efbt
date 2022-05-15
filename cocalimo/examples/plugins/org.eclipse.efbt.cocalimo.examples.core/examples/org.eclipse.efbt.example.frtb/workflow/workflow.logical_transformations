@@ -1,5 +1,5 @@
 {
-  "eClass" : "http://www.eclipse.org/efbt/logical_transformations#//LogicalTransformationModule",
+  "eClass" : "http://www.eclipse.org/efbt/testing#//LogicalTransformationModule",
   "subProcess" : {
     "flowElements" : [ {
       "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",

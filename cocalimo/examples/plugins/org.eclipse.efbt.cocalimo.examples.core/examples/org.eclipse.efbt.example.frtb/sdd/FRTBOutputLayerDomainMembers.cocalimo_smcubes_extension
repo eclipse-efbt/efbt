@@ -1,12 +1,12 @@
 {
-  "eClass" : "http://www.eclipse.org/efbt/cocalimo_smcubes_extension#//MemberModule",
+  "eClass" : "http://www.eclipse.org/efbt/openregspecs_smcubes_extension#//MemberModule",
   "name" : "FRTBOutputLayerDomainMembers",
   "members" : [ {
     "code" : "SensitivitiesBasedMethod",
     "description" : "SensitivitiesBasedMethod",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#ApproachForPrudentialPurposes"
+      "$ref" : "FRTBOutputLayerDomains.openregspecs_smcubes_extension#ApproachForPrudentialPurposes"
     },
     "member_id" : "SensitivitiesBasedMethod",
     "name" : "SensitivitiesBasedMethod",
@@ -16,7 +16,7 @@
     "description" : "MethodToDetermineTheDefaultRiskCharge",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#ApproachForPrudentialPurposes"
+      "$ref" : "FRTBOutputLayerDomains.openregspecs_smcubes_extension#ApproachForPrudentialPurposes"
     },
     "member_id" : "MethodToDetermineTheDefaultRiskCharge",
     "name" : "MethodToDetermineTheDefaultRiskCharge",
@@ -26,7 +26,7 @@
     "description" : "MethodToDetermineTheResidualRiskCharge",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#ApproachForPrudentialPurposes"
+      "$ref" : "FRTBOutputLayerDomains.openregspecs_smcubes_extension#ApproachForPrudentialPurposes"
     },
     "member_id" : "MethodToDetermineTheResidualRiskCharge",
     "name" : "MethodToDetermineTheResidualRiskCharge",
@@ -36,7 +36,7 @@
     "description" : "MemorandumItems",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#Base"
+      "$ref" : "FRTBOutputLayerDomains.openregspecs_smcubes_extension#Base"
     },
     "member_id" : "MemorandumItems",
     "name" : "MemorandumItems",
@@ -46,7 +46,7 @@
     "description" : "Exposures",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#Base"
+      "$ref" : "FRTBOutputLayerDomains.openregspecs_smcubes_extension#Base"
     },
     "member_id" : "Exposures",
     "name" : "Exposures",
@@ -56,7 +56,7 @@
     "description" : "LowCorrelationScenario",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#ContingentScenario"
+      "$ref" : "FRTBOutputLayerDomains.openregspecs_smcubes_extension#ContingentScenario"
     },
     "member_id" : "LowCorrelationScenario",
     "name" : "LowCorrelationScenario",
@@ -66,7 +66,7 @@
     "description" : "HighCorrelationScenario",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#ContingentScenario"
+      "$ref" : "FRTBOutputLayerDomains.openregspecs_smcubes_extension#ContingentScenario"
     },
     "member_id" : "HighCorrelationScenario",
     "name" : "HighCorrelationScenario",
@@ -76,7 +76,7 @@
     "description" : "MediumCorrelationScenario",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#ContingentScenario"
+      "$ref" : "FRTBOutputLayerDomains.openregspecs_smcubes_extension#ContingentScenario"
     },
     "member_id" : "MediumCorrelationScenario",
     "name" : "MediumCorrelationScenario",
@@ -86,7 +86,7 @@
     "description" : "DeltaRisk",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#DeltaVegaOrCurvatureRisk"
+      "$ref" : "FRTBOutputLayerDomains.openregspecs_smcubes_extension#DeltaVegaOrCurvatureRisk"
     },
     "member_id" : "DeltaRisk",
     "name" : "DeltaRisk",
@@ -96,7 +96,7 @@
     "description" : "VegaRisk",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#DeltaVegaOrCurvatureRisk"
+      "$ref" : "FRTBOutputLayerDomains.openregspecs_smcubes_extension#DeltaVegaOrCurvatureRisk"
     },
     "member_id" : "VegaRisk",
     "name" : "VegaRisk",
@@ -106,7 +106,7 @@
     "description" : "Curvature risk",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#DeltaVegaOrCurvatureRisk"
+      "$ref" : "FRTBOutputLayerDomains.openregspecs_smcubes_extension#DeltaVegaOrCurvatureRisk"
     },
     "member_id" : "Curvature risk",
     "name" : "Curvature risk",
@@ -116,7 +116,7 @@
     "description" : "DeltaVegaAndCurvatureRisk",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#DeltaVegaOrCurvatureRisk"
+      "$ref" : "FRTBOutputLayerDomains.openregspecs_smcubes_extension#DeltaVegaOrCurvatureRisk"
     },
     "member_id" : "DeltaVegaAndCurvatureRisk",
     "name" : "DeltaVegaAndCurvatureRisk",
@@ -126,7 +126,7 @@
     "description" : "InstrumentsOtherThanSecuritisationPositions",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#Instrument"
+      "$ref" : "FRTBOutputLayerDomains.openregspecs_smcubes_extension#Instrument"
     },
     "member_id" : "InstrumentsOtherThanSecuritisationPositions",
     "name" : "InstrumentsOtherThanSecuritisationPositions",
@@ -136,7 +136,7 @@
     "description" : "SecuritisationPositions",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#Instrument"
+      "$ref" : "FRTBOutputLayerDomains.openregspecs_smcubes_extension#Instrument"
     },
     "member_id" : "SecuritisationPositions",
     "name" : "SecuritisationPositions",
@@ -146,7 +146,7 @@
     "description" : "InstrumentsWithExoticUnderlyings",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#Instrument"
+      "$ref" : "FRTBOutputLayerDomains.openregspecs_smcubes_extension#Instrument"
     },
     "member_id" : "InstrumentsWithExoticUnderlyings",
     "name" : "InstrumentsWithExoticUnderlyings",
@@ -156,7 +156,7 @@
     "description" : "AlternativeCorrelationTradingPortfolio",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#Instrument"
+      "$ref" : "FRTBOutputLayerDomains.openregspecs_smcubes_extension#Instrument"
     },
     "member_id" : "AlternativeCorrelationTradingPortfolio",
     "name" : "AlternativeCorrelationTradingPortfolio",
@@ -166,7 +166,7 @@
     "description" : "InstrumentsSubjectToMarketRisk",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#MainCatagory"
+      "$ref" : "FRTBOutputLayerDomains.openregspecs_smcubes_extension#MainCatagory"
     },
     "member_id" : "InstrumentsSubjectToMarketRisk",
     "name" : "InstrumentsSubjectToMarketRisk",
@@ -176,7 +176,7 @@
     "description" : "BankingAndTradingBook",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#PrudentialPortfolio"
+      "$ref" : "FRTBOutputLayerDomains.openregspecs_smcubes_extension#PrudentialPortfolio"
     },
     "member_id" : "BankingAndTradingBook",
     "name" : "BankingAndTradingBook",
@@ -186,7 +186,7 @@
     "description" : "TradingBook",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#PrudentialPortfolio"
+      "$ref" : "FRTBOutputLayerDomains.openregspecs_smcubes_extension#PrudentialPortfolio"
     },
     "member_id" : "TradingBook",
     "name" : "TradingBook",
@@ -196,7 +196,7 @@
     "description" : "LongPosition",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#PositionInTheInstrument"
+      "$ref" : "FRTBOutputLayerDomains.openregspecs_smcubes_extension#PositionInTheInstrument"
     },
     "member_id" : "LongPosition",
     "name" : "LongPosition",
@@ -206,7 +206,7 @@
     "description" : "ShortPosition",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#PositionInTheInstrument"
+      "$ref" : "FRTBOutputLayerDomains.openregspecs_smcubes_extension#PositionInTheInstrument"
     },
     "member_id" : "ShortPosition",
     "name" : "ShortPosition",
@@ -216,7 +216,7 @@
     "description" : "NonACTP",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#MarketRiskPortfolio"
+      "$ref" : "FRTBOutputLayerDomains.openregspecs_smcubes_extension#MarketRiskPortfolio"
     },
     "member_id" : "NonACTP",
     "name" : "NonACTP",
@@ -226,7 +226,7 @@
     "description" : "ACTP",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#MarketRiskPortfolio"
+      "$ref" : "FRTBOutputLayerDomains.openregspecs_smcubes_extension#MarketRiskPortfolio"
     },
     "member_id" : "ACTP",
     "name" : "ACTP",
@@ -236,7 +236,7 @@
     "description" : "PositiveSensitivityGrossPerRiskClassUnweighted",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#TypeAndNatureOfSensitivity"
+      "$ref" : "FRTBOutputLayerDomains.openregspecs_smcubes_extension#TypeAndNatureOfSensitivity"
     },
     "member_id" : "PositiveSensitivityGrossPerRiskClassUnweighted",
     "name" : "PositiveSensitivityGrossPerRiskClassUnweighted",
@@ -246,7 +246,7 @@
     "description" : "NegativeSensitivityGrossPerRiskClassUnweighted",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#TypeAndNatureOfSensitivity"
+      "$ref" : "FRTBOutputLayerDomains.openregspecs_smcubes_extension#TypeAndNatureOfSensitivity"
     },
     "member_id" : "NegativeSensitivityGrossPerRiskClassUnweighted",
     "name" : "NegativeSensitivityGrossPerRiskClassUnweighted",
@@ -256,7 +256,7 @@
     "description" : "SensitivityNetPerRiskClassUnweighted",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#TypeAndNatureOfSensitivity"
+      "$ref" : "FRTBOutputLayerDomains.openregspecs_smcubes_extension#TypeAndNatureOfSensitivity"
     },
     "member_id" : "SensitivityNetPerRiskClassUnweighted",
     "name" : "SensitivityNetPerRiskClassUnweighted",
@@ -266,7 +266,7 @@
     "description" : "GIRR",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#TypeOfRisk"
+      "$ref" : "FRTBOutputLayerDomains.openregspecs_smcubes_extension#TypeOfRisk"
     },
     "member_id" : "GIRR",
     "name" : "GIRR",
@@ -276,7 +276,7 @@
     "description" : "CSR",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#TypeOfRisk"
+      "$ref" : "FRTBOutputLayerDomains.openregspecs_smcubes_extension#TypeOfRisk"
     },
     "member_id" : "CSR",
     "name" : "CSR",
@@ -286,7 +286,7 @@
     "description" : "EquityRisk",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#TypeOfRisk"
+      "$ref" : "FRTBOutputLayerDomains.openregspecs_smcubes_extension#TypeOfRisk"
     },
     "member_id" : "EquityRisk",
     "name" : "EquityRisk",
@@ -296,7 +296,7 @@
     "description" : "ForeignExchangeRisk",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#TypeOfRisk"
+      "$ref" : "FRTBOutputLayerDomains.openregspecs_smcubes_extension#TypeOfRisk"
     },
     "member_id" : "ForeignExchangeRisk",
     "name" : "ForeignExchangeRisk",
@@ -306,7 +306,7 @@
     "description" : "DefaultRisk",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#TypeOfRisk"
+      "$ref" : "FRTBOutputLayerDomains.openregspecs_smcubes_extension#TypeOfRisk"
     },
     "member_id" : "DefaultRisk",
     "name" : "DefaultRisk",
@@ -316,7 +316,7 @@
     "description" : "ResidualRisk",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#TypeOfRisk"
+      "$ref" : "FRTBOutputLayerDomains.openregspecs_smcubes_extension#TypeOfRisk"
     },
     "member_id" : "ResidualRisk",
     "name" : "ResidualRisk",
@@ -326,7 +326,7 @@
     "description" : "CommodityRisk",
     "domain_id" : {
       "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
-      "$ref" : "FRTBOutputLayerDomains.cocalimo_smcubes_extension#TypeOfRisk"
+      "$ref" : "FRTBOutputLayerDomains.openregspecs_smcubes_extension#TypeOfRisk"
     },
     "member_id" : "CommodityRisk",
     "name" : "CommodityRisk",
