@@ -1,25 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" uid="_AO96YNJvEeyPiIbRdN9CDQ" version="15.0.0.202201261500">
-  <semanticResources>platform:/resource/org.eclipse.efbt.openregspecs.smcubes.model.core/model/data_meta_model.ecore</semanticResources>
-  <semanticResources>platform:/resource/org.eclipse.efbt.openregspecs.core.model.module_management/model/module_management.ecore</semanticResources>
-  <semanticResources>platform:/resource/org.eclipse.efbt.openregspecs.core.model.requirements_text/model/requirements_text.ecore</semanticResources>
-  <semanticResources>platform:/resource/org.eclipse.emf.ecore/model/Ecore.ecore</semanticResources>
+<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" uid="_0sVjwNQmEey3u9Kk3hBxSw" version="15.0.0.202201261500">
   <semanticResources>core_model/bpmn_lite.ecore</semanticResources>
-  <semanticResources>core_model/testing.ecore</semanticResources>
   <semanticResources>core_model/data_meta_model.ecore</semanticResources>
   <semanticResources>core_model/module_management.ecore</semanticResources>
+  <semanticResources>core_model/testing.ecore</semanticResources>
   <semanticResources>core_model/requirements_text.ecore</semanticResources>
+  <semanticResources>core_model/core_model.genmodel</semanticResources>
   <semanticResources>core_model/sql_lite.ecore</semanticResources>
+  <semanticResources>platform_calls/platform_call.ecore</semanticResources>
+  <semanticResources>platform_calls/platform_call.genmodel</semanticResources>
   <semanticResources>smcubes_model/core.ecore</semanticResources>
   <semanticResources>smcubes_model/data_definition.ecore</semanticResources>
   <semanticResources>smcubes_model/mapping.ecore</semanticResources>
-  <semanticResources>smcubes_model/rendering.ecore</semanticResources>
   <semanticResources>smcubes_model/openregspecs_smcubes_core_extension.ecore</semanticResources>
   <semanticResources>smcubes_model/openregspecs_smcubes_extra_extension.ecore</semanticResources>
-  <semanticResources>platform:/resource/org.eclipse.efbt.openregspecs.testing.model.testing/model/testing.ecore</semanticResources>
-  <semanticResources>platform:/resource/org.eclipse.efbt.openregspecs.testing.model.testing/model/bpmn_lite.ecore</semanticResources>
-  <semanticResources>platform_calls/platform_call.ecore</semanticResources>
-  <semanticResources>core_model/core_model.genmodel</semanticResources>
-  <semanticResources>platform_calls/platform_call.genmodel</semanticResources>
+  <semanticResources>smcubes_model/rendering.ecore</semanticResources>
   <semanticResources>smcubes_model/smcubes_model.genmodel</semanticResources>
 </viewpoint:DAnalysis>

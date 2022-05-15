@@ -8,6 +8,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.xmi,
  org.apache.commons.csv,
- org.eclipse.efbt.openregspecs.testing.ui.sirius.core,
  org.eclipse.efbt.openregspecs.model
 Export-Package: org.eclipse.efbt.controller.ldm.component.testing

@@ -12,9 +12,6 @@
        Neil Mackenzie - initial API and implementation
  -->
 <site>
-   <feature id="org.eclipse.efbt.controller.ldm.component.sqldevconvertor.feature">
-      <category name="efbt"/>
-   </feature>
    <feature id="org.eclipse.efbt.controller.smcubes.component.feature">
       <category name="efbt"/>
    </feature>
@@ -28,6 +25,15 @@
       <category name="efbt"/>
    </feature>
    <feature id="org.eclipse.efbt.controller.platformcall.component.core.feature">
+      <category name="efbt"/>
+   </feature>
+   <feature id="org.eclipse.efbt.openregspecs.model.feature">
+      <category name="efbt"/>
+   </feature>
+   <feature id="org.eclipse.efbt.openregspecs.query.feature">
+      <category name="efbt"/>
+   </feature>
+   <feature id="org.eclipse.efbt.openregspecs.sirius_ui.feature">
       <category name="efbt"/>
    </feature>
    <bundle id="org.eclipse.efbt.openregspecs.platform_call.ui.sirius.core">

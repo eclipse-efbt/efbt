@@ -106,7 +106,7 @@
 				  <pomDependencies>consider</pomDependencies>
 					<target>
 						<artifact>
-							<groupId>org.eclipse.efbt.openregspecs.core.model</groupId>
+							<groupId>org.eclipse.efbt.openregspecs.model</groupId>
 							<artifactId>org.eclipse.efbt.openregspecs.model.target</artifactId>
 							<version>${project.version}</version>
 						</artifact>
