@@ -8,51 +8,33 @@ pipeline {
         stage('Build') {
             steps {
                 sh '''                                     
-                    cd openregspecs/core/model
-                    mvn install
-                    cd ../../..                 
-                    cd openregspecs/smcubes/model
-                    mvn install
-                    cd ../../..
-                    cd openregspecs/testing/model
+                    cd openregspecs/model
 					mvn install
-					cd ../../..
-					cd openregspecs/testing/ui_sirius
-					mvn install
-					cd ../../..
-                    cd openregspecs/platform_call/model
-					mvn install
-					cd ../../..
-                    cd openregspecs/smcubes/modelquery
-                    mvn install
-                    cd ../../..
-                    cd openregspecs/smcubes/ui_sirius
-                    mvn install                    
-                    cd ../../..
-		    cd openregspecs/examples
-                    mvn install 
-                    cd ../..                   
-                    cd controller/ldm
-                    mvn install
 					cd ../..
-                    cd controller/smcubes/access_dependencies_external
-                    mvn install
-                    cd ../../..
-                    cd controller/smcubes/access_dependencies_plugin
-                    mvn install
-                    cd ../../..
-                    cd controller/smcubes/component
-                    mvn install
-                    cd ../../..
-                    cd controller/platformcall/component
-                    mvn install
-                    cd ../../..
-                    cd openregspecs/platform_call/ui_sirius
+					cd openregspecs/query
+					mvn install
+					cd ../..  
+					cd controller/ldm
+					mvn install
+					cd ../..
+					cd controller/smcubes/access_dependencies_external
 					mvn install
 					cd ../../..
-                    cd installations/complete_repo/
-                    mvn install
-                    cd ../..
+					cd controller/smcubes/access_dependencies_plugin
+					mvn install
+					cd ../../..
+					cd controller/smcubes/component
+					mvn install
+					cd ../../..
+					cd controller/platformcall/component
+					mvn install
+					cd ../../..
+					cd openregspecs/sirius_ui
+					mvn install
+					cd ../..
+					cd installations/complete_repo/
+					mvn install
+					cd ../..
                     
                 '''
             }

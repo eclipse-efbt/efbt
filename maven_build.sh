@@ -1,29 +1,9 @@
-
-pwd
-cd openregspecs/core/model
+cd openregspecs/model
 mvn install
-cd ../../..
-cd openregspecs/smcubes/model
+cd ../..
+cd openregspecs/query
 mvn install
-cd ../../..
-cd openregspecs/testing/model
-mvn install
-cd ../../..
-cd openregspecs/testing/ui_sirius
-mvn install
-cd ../../..
-cd openregspecs/platform_call/model
-mvn install
-cd ../../..
-cd openregspecs/smcubes/modelquery
-mvn install
-cd ../../..
-cd openregspecs/smcubes/ui_sirius
-mvn install
-cd ../../..
-cd openregspecs/examples
-mvn install 
-cd ../..                 
+cd ../..  
 cd controller/ldm
 mvn install
 cd ../..
@@ -39,9 +19,9 @@ cd ../../..
 cd controller/platformcall/component
 mvn install
 cd ../../..
-cd openregspecs/platform_call/ui_sirius
+cd openregspecs/sirius_ui
 mvn install
-cd ../../..
+cd ../..
 cd installations/complete_repo/
 mvn install
 cd ../..
