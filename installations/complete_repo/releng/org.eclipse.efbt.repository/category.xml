@@ -18,9 +18,6 @@
    <feature id="org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.feature">
       <category name="efbt"/>
    </feature>
-   <feature id="org.eclipse.efbt.openregspecs.examples.feature">
-      <category name="efbt"/>
-   </feature>
    <feature id="org.eclipse.efbt.controller.ldm.component.testing.feature">
       <category name="efbt"/>
    </feature>
