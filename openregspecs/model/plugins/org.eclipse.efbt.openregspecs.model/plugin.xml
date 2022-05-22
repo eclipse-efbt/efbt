@@ -143,21 +143,6 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated smcubes_model -->
       <package
-            uri="http://www.eclipse.org/efbt/mapping"
-            class="org.eclipse.efbt.openregspecs.model.mapping.MappingPackage"
-            genModel="smcubes_model/smcubes_model.genmodel"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.extension_parser">
-      <!-- @generated smcubes_model -->
-      <parser
-            type="mapping"
-            class="org.eclipse.efbt.openregspecs.model.mapping.util.MappingResourceFactoryImpl"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated smcubes_model -->
-      <package
             uri="http://www.eclipse.org/efbt/openregspecs_smcubes_core_extension"
             class="org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.openregspecs_smcubes_core_extensionPackage"
             genModel="smcubes_model/smcubes_model.genmodel"/>
@@ -173,30 +158,8 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated smcubes_model -->
       <package
-            uri="http://www.eclipse.org/efbt/openregspecs_smcubes_extra_extension"
-            class="org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_extra_extension.openregspecs_smcubes_extra_extensionPackage"
+            uri="http://www.eclipse.org/efbt/bird_model"
+            class="bird_model.Bird_modelPackage"
             genModel="smcubes_model/smcubes_model.genmodel"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.extension_parser">
-      <!-- @generated smcubes_model -->
-      <parser
-            type="openregspecs_smcubes_extra_extension"
-            class="org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_extra_extension.util.openregspecs_smcubes_extra_extensionResourceFactoryImpl"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated smcubes_model -->
-      <package
-            uri="http://www.eclipse.org/efbt/rendering"
-            class="org.eclipse.efbt.openregspecs.model.rendering.RenderingPackage"
-            genModel="smcubes_model/smcubes_model.genmodel"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.extension_parser">
-      <!-- @generated smcubes_model -->
-      <parser
-            type="rendering"
-            class="org.eclipse.efbt.openregspecs.model.rendering.util.RenderingResourceFactoryImpl"/>
    </extension>
 </plugin>

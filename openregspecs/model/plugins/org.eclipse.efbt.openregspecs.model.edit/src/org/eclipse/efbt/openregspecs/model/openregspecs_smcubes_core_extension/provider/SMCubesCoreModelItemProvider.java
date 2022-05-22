@@ -9,6 +9,7 @@ import java.util.List;
 import org.eclipse.efbt.openregspecs.model.core.provider.Smcubes_modelEditPlugin;
 
 import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.SMCubesCoreModel;
+import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.openregspecs_smcubes_core_extensionFactory;
 import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.openregspecs_smcubes_core_extensionPackage;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
@@ -16,6 +17,7 @@ import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.common.util.ResourceLocator;
 
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -90,6 +92,40 @@ public class SMCubesCoreModelItemProvider
 	}
 
 	/**
+	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
+	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
+	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
+		if (childrenFeatures == null) {
+			super.getChildrenFeatures(object);
+			childrenFeatures.add(openregspecs_smcubes_core_extensionPackage.Literals.SM_CUBES_CORE_MODEL__VARIABLE_MODULES);
+			childrenFeatures.add(openregspecs_smcubes_core_extensionPackage.Literals.SM_CUBES_CORE_MODEL__DOMAIN_MODULES);
+			childrenFeatures.add(openregspecs_smcubes_core_extensionPackage.Literals.SM_CUBES_CORE_MODEL__MEMBER_MODULES);
+			childrenFeatures.add(openregspecs_smcubes_core_extensionPackage.Literals.SM_CUBES_CORE_MODEL__SUB_DOMAIN_MODULES);
+			childrenFeatures.add(openregspecs_smcubes_core_extensionPackage.Literals.SM_CUBES_CORE_MODEL__MEMBER_HIERARCHY_MODULES);
+		}
+		return childrenFeatures;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	protected EStructuralFeature getChildFeature(Object object, Object child) {
+		// Check the type of the specified child object and return the proper feature to use for
+		// adding (see {@link AddCommand}) it as a child.
+
+		return super.getChildFeature(object, child);
+	}
+
+	/**
 	 * This returns SMCubesCoreModel.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -130,6 +166,13 @@ public class SMCubesCoreModelItemProvider
 			case openregspecs_smcubes_core_extensionPackage.SM_CUBES_CORE_MODEL__NAME:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
+			case openregspecs_smcubes_core_extensionPackage.SM_CUBES_CORE_MODEL__VARIABLE_MODULES:
+			case openregspecs_smcubes_core_extensionPackage.SM_CUBES_CORE_MODEL__DOMAIN_MODULES:
+			case openregspecs_smcubes_core_extensionPackage.SM_CUBES_CORE_MODEL__MEMBER_MODULES:
+			case openregspecs_smcubes_core_extensionPackage.SM_CUBES_CORE_MODEL__SUB_DOMAIN_MODULES:
+			case openregspecs_smcubes_core_extensionPackage.SM_CUBES_CORE_MODEL__MEMBER_HIERARCHY_MODULES:
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
+				return;
 		}
 		super.notifyChanged(notification);
 	}
@@ -144,6 +187,31 @@ public class SMCubesCoreModelItemProvider
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
+
+		newChildDescriptors.add
+			(createChildParameter
+				(openregspecs_smcubes_core_extensionPackage.Literals.SM_CUBES_CORE_MODEL__VARIABLE_MODULES,
+				 openregspecs_smcubes_core_extensionFactory.eINSTANCE.createVariableModule()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(openregspecs_smcubes_core_extensionPackage.Literals.SM_CUBES_CORE_MODEL__DOMAIN_MODULES,
+				 openregspecs_smcubes_core_extensionFactory.eINSTANCE.createDomainModule()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(openregspecs_smcubes_core_extensionPackage.Literals.SM_CUBES_CORE_MODEL__MEMBER_MODULES,
+				 openregspecs_smcubes_core_extensionFactory.eINSTANCE.createMemberModule()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(openregspecs_smcubes_core_extensionPackage.Literals.SM_CUBES_CORE_MODEL__SUB_DOMAIN_MODULES,
+				 openregspecs_smcubes_core_extensionFactory.eINSTANCE.createSubDomainModule()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(openregspecs_smcubes_core_extensionPackage.Literals.SM_CUBES_CORE_MODEL__MEMBER_HIERARCHY_MODULES,
+				 openregspecs_smcubes_core_extensionFactory.eINSTANCE.createMemberHierarchyModule()));
 	}
 
 	/**

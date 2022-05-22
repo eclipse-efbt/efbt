@@ -101,5 +101,15 @@
   <eClassifiers xsi:type="ecore:EClass" name="SMCubesCoreModel">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="variableModules" upperBound="-1"
+        eType="#//VariableModule" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="domainModules" upperBound="-1"
+        eType="#//DomainModule" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="memberModules" upperBound="-1"
+        eType="#//MemberModule" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="subDomainModules" upperBound="-1"
+        eType="#//SubDomainModule" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="memberHierarchyModules"
+        upperBound="-1" eType="#//MemberHierarchyModule" containment="true"/>
   </eClassifiers>
 </ecore:EPackage>

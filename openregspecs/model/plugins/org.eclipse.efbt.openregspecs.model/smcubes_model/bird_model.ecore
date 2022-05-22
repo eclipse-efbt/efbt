@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="bird_model" nsURI="http://www.eclipse.org/efbt/bird_model" nsPrefix="bird_model">
+  <eClassifiers xsi:type="ecore:EClass" name="BIRDModel">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="smCubesCoreModel" eType="ecore:EClass openregspecs_smcubes_core_extension.ecore#//SMCubesCoreModel"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entityModules" upperBound="-1"
+        eType="ecore:EClass ../core_model/data_meta_model.ecore#//EntityModule" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="SQLEntityModules" upperBound="-1"
+        eType="ecore:EClass ../core_model/sql_lite.ecore#//SQLEntityModule" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="subProcesses" upperBound="-1"
+        eType="ecore:EClass ../core_model/bpmn_lite.ecore#//SubProcess" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="requirements" upperBound="-1"
+        eType="ecore:EClass ../core_model/requirements_text.ecore#//RequirementsModule"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tests" upperBound="-1"
+        eType="ecore:EClass ../core_model/testing.ecore#//TestModule" containment="true"/>
+  </eClassifiers>
+</ecore:EPackage>

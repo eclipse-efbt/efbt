@@ -126,19 +126,6 @@
    <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
       <!-- @generated smcubes_model -->
       <factory
-            uri="http://www.eclipse.org/efbt/mapping"
-            class="org.eclipse.efbt.openregspecs.model.mapping.provider.MappingItemProviderAdapterFactory"
-            supportedTypes=
-              "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
-               org.eclipse.emf.edit.provider.IStructuredItemContentProvider
-               org.eclipse.emf.edit.provider.ITreeItemContentProvider
-               org.eclipse.emf.edit.provider.IItemLabelProvider
-               org.eclipse.emf.edit.provider.IItemPropertySource"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
-      <!-- @generated smcubes_model -->
-      <factory
             uri="http://www.eclipse.org/efbt/openregspecs_smcubes_core_extension"
             class="org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.provider.openregspecs_smcubes_core_extensionItemProviderAdapterFactory"
             supportedTypes=
@@ -152,21 +139,8 @@
    <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
       <!-- @generated smcubes_model -->
       <factory
-            uri="http://www.eclipse.org/efbt/openregspecs_smcubes_extra_extension"
-            class="org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_extra_extension.provider.openregspecs_smcubes_extra_extensionItemProviderAdapterFactory"
-            supportedTypes=
-              "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
-               org.eclipse.emf.edit.provider.IStructuredItemContentProvider
-               org.eclipse.emf.edit.provider.ITreeItemContentProvider
-               org.eclipse.emf.edit.provider.IItemLabelProvider
-               org.eclipse.emf.edit.provider.IItemPropertySource"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
-      <!-- @generated smcubes_model -->
-      <factory
-            uri="http://www.eclipse.org/efbt/rendering"
-            class="org.eclipse.efbt.openregspecs.model.rendering.provider.RenderingItemProviderAdapterFactory"
+            uri="http://www.eclipse.org/efbt/bird_model"
+            class="bird_model.provider.Bird_modelItemProviderAdapterFactory"
             supportedTypes=
               "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
                org.eclipse.emf.edit.provider.IStructuredItemContentProvider

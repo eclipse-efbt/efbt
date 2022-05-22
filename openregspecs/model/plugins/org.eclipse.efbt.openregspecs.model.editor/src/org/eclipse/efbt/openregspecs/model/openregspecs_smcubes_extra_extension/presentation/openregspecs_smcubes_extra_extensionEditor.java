@@ -157,6 +157,7 @@ import org.eclipse.emf.edit.ui.view.ExtendedPropertySheetPage;
 
 import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_extra_extension.provider.openregspecs_smcubes_extra_extensionItemProviderAdapterFactory;
 
+import bird_model.provider.Bird_modelItemProviderAdapterFactory;
 import org.eclipse.efbt.openregspecs.model.core.presentation.Smcubes_modelEditorPlugin;
 
 import org.eclipse.efbt.openregspecs.model.core.provider.CoreItemProviderAdapterFactory;
@@ -722,6 +723,7 @@ public class openregspecs_smcubes_extra_extensionEditor
 		adapterFactory.addAdapterFactory(new openregspecs_smcubes_core_extensionItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new openregspecs_smcubes_extra_extensionItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new RenderingItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new Bird_modelItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Data_meta_modelItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Module_managementItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());

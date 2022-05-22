@@ -548,13 +548,58 @@ public interface openregspecs_smcubes_core_extensionPackage extends EPackage {
 	int SM_CUBES_CORE_MODEL__NAME = 0;
 
 	/**
+	 * The feature id for the '<em><b>Variable Modules</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SM_CUBES_CORE_MODEL__VARIABLE_MODULES = 1;
+
+	/**
+	 * The feature id for the '<em><b>Domain Modules</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SM_CUBES_CORE_MODEL__DOMAIN_MODULES = 2;
+
+	/**
+	 * The feature id for the '<em><b>Member Modules</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SM_CUBES_CORE_MODEL__MEMBER_MODULES = 3;
+
+	/**
+	 * The feature id for the '<em><b>Sub Domain Modules</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SM_CUBES_CORE_MODEL__SUB_DOMAIN_MODULES = 4;
+
+	/**
+	 * The feature id for the '<em><b>Member Hierarchy Modules</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SM_CUBES_CORE_MODEL__MEMBER_HIERARCHY_MODULES = 5;
+
+	/**
 	 * The number of structural features of the '<em>SM Cubes Core Model</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SM_CUBES_CORE_MODEL_FEATURE_COUNT = 1;
+	int SM_CUBES_CORE_MODEL_FEATURE_COUNT = 6;
 
 	/**
 	 * The number of operations of the '<em>SM Cubes Core Model</em>' class.
@@ -704,6 +749,61 @@ public interface openregspecs_smcubes_core_extensionPackage extends EPackage {
 	EAttribute getSMCubesCoreModel_Name();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.SMCubesCoreModel#getVariableModules <em>Variable Modules</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Variable Modules</em>'.
+	 * @see org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.SMCubesCoreModel#getVariableModules()
+	 * @see #getSMCubesCoreModel()
+	 * @generated
+	 */
+	EReference getSMCubesCoreModel_VariableModules();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.SMCubesCoreModel#getDomainModules <em>Domain Modules</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Domain Modules</em>'.
+	 * @see org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.SMCubesCoreModel#getDomainModules()
+	 * @see #getSMCubesCoreModel()
+	 * @generated
+	 */
+	EReference getSMCubesCoreModel_DomainModules();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.SMCubesCoreModel#getMemberModules <em>Member Modules</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Member Modules</em>'.
+	 * @see org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.SMCubesCoreModel#getMemberModules()
+	 * @see #getSMCubesCoreModel()
+	 * @generated
+	 */
+	EReference getSMCubesCoreModel_MemberModules();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.SMCubesCoreModel#getSubDomainModules <em>Sub Domain Modules</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Sub Domain Modules</em>'.
+	 * @see org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.SMCubesCoreModel#getSubDomainModules()
+	 * @see #getSMCubesCoreModel()
+	 * @generated
+	 */
+	EReference getSMCubesCoreModel_SubDomainModules();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.SMCubesCoreModel#getMemberHierarchyModules <em>Member Hierarchy Modules</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Member Hierarchy Modules</em>'.
+	 * @see org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.SMCubesCoreModel#getMemberHierarchyModules()
+	 * @see #getSMCubesCoreModel()
+	 * @generated
+	 */
+	EReference getSMCubesCoreModel_MemberHierarchyModules();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -841,6 +941,46 @@ public interface openregspecs_smcubes_core_extensionPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute SM_CUBES_CORE_MODEL__NAME = eINSTANCE.getSMCubesCoreModel_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Variable Modules</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SM_CUBES_CORE_MODEL__VARIABLE_MODULES = eINSTANCE.getSMCubesCoreModel_VariableModules();
+
+		/**
+		 * The meta object literal for the '<em><b>Domain Modules</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SM_CUBES_CORE_MODEL__DOMAIN_MODULES = eINSTANCE.getSMCubesCoreModel_DomainModules();
+
+		/**
+		 * The meta object literal for the '<em><b>Member Modules</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SM_CUBES_CORE_MODEL__MEMBER_MODULES = eINSTANCE.getSMCubesCoreModel_MemberModules();
+
+		/**
+		 * The meta object literal for the '<em><b>Sub Domain Modules</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SM_CUBES_CORE_MODEL__SUB_DOMAIN_MODULES = eINSTANCE.getSMCubesCoreModel_SubDomainModules();
+
+		/**
+		 * The meta object literal for the '<em><b>Member Hierarchy Modules</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SM_CUBES_CORE_MODEL__MEMBER_HIERARCHY_MODULES = eINSTANCE.getSMCubesCoreModel_MemberHierarchyModules();
 
 	}
 

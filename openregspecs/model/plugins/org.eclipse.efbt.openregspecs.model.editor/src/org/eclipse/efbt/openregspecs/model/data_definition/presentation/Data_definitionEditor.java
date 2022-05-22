@@ -157,22 +157,18 @@ import org.eclipse.emf.edit.ui.view.ExtendedPropertySheetPage;
 
 import org.eclipse.efbt.openregspecs.model.data_definition.provider.Data_definitionItemProviderAdapterFactory;
 
+import bird_model.provider.Bird_modelItemProviderAdapterFactory;
+import org.eclipse.efbt.openregspecs.model.bpmn_lite.provider.Bpmn_liteItemProviderAdapterFactory;
 import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.provider.openregspecs_smcubes_core_extensionItemProviderAdapterFactory;
-
-import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_extra_extension.provider.openregspecs_smcubes_extra_extensionItemProviderAdapterFactory;
-
+import org.eclipse.efbt.openregspecs.model.requirements_text.provider.Requirements_textItemProviderAdapterFactory;
+import org.eclipse.efbt.openregspecs.model.sql_lite.provider.Sql_liteItemProviderAdapterFactory;
+import org.eclipse.efbt.openregspecs.model.testing.provider.TestingItemProviderAdapterFactory;
 import org.eclipse.efbt.openregspecs.model.core.presentation.Smcubes_modelEditorPlugin;
 
 import org.eclipse.efbt.openregspecs.model.core.provider.CoreItemProviderAdapterFactory;
 
 import org.eclipse.efbt.openregspecs.model.data_meta_model.provider.Data_meta_modelItemProviderAdapterFactory;
-
-import org.eclipse.efbt.openregspecs.model.mapping.provider.MappingItemProviderAdapterFactory;
-
 import org.eclipse.efbt.openregspecs.model.module_management.provider.Module_managementItemProviderAdapterFactory;
-
-import org.eclipse.efbt.openregspecs.model.rendering.provider.RenderingItemProviderAdapterFactory;
-
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 
@@ -718,12 +714,14 @@ public class Data_definitionEditor
 		adapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new CoreItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Data_definitionItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new MappingItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new openregspecs_smcubes_core_extensionItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new openregspecs_smcubes_extra_extensionItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new RenderingItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new Bird_modelItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Data_meta_modelItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new Module_managementItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new Sql_liteItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new Bpmn_liteItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new Requirements_textItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new TestingItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 
 		// Create the command stack that will notify this editor as commands are executed.

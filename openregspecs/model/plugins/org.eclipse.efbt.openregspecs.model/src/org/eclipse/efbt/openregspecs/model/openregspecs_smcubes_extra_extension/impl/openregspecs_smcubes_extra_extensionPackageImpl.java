@@ -2,6 +2,8 @@
  */
 package org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_extra_extension.impl;
 
+import bird_model.Bird_modelPackage;
+import bird_model.impl.Bird_modelPackageImpl;
 import org.eclipse.efbt.openregspecs.model.core.CorePackage;
 
 import org.eclipse.efbt.openregspecs.model.core.impl.CorePackageImpl;
@@ -225,6 +227,8 @@ public class openregspecs_smcubes_extra_extensionPackageImpl extends EPackageImp
 		openregspecs_smcubes_core_extensionPackageImpl theopenregspecs_smcubes_core_extensionPackage = (openregspecs_smcubes_core_extensionPackageImpl)(registeredPackage instanceof openregspecs_smcubes_core_extensionPackageImpl ? registeredPackage : openregspecs_smcubes_core_extensionPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(RenderingPackage.eNS_URI);
 		RenderingPackageImpl theRenderingPackage = (RenderingPackageImpl)(registeredPackage instanceof RenderingPackageImpl ? registeredPackage : RenderingPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Bird_modelPackage.eNS_URI);
+		Bird_modelPackageImpl theBird_modelPackage = (Bird_modelPackageImpl)(registeredPackage instanceof Bird_modelPackageImpl ? registeredPackage : Bird_modelPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theopenregspecs_smcubes_extra_extensionPackage.createPackageContents();
@@ -233,6 +237,7 @@ public class openregspecs_smcubes_extra_extensionPackageImpl extends EPackageImp
 		theMappingPackage.createPackageContents();
 		theopenregspecs_smcubes_core_extensionPackage.createPackageContents();
 		theRenderingPackage.createPackageContents();
+		theBird_modelPackage.createPackageContents();
 
 		// Initialize created meta-data
 		theopenregspecs_smcubes_extra_extensionPackage.initializePackageContents();
@@ -241,6 +246,7 @@ public class openregspecs_smcubes_extra_extensionPackageImpl extends EPackageImp
 		theMappingPackage.initializePackageContents();
 		theopenregspecs_smcubes_core_extensionPackage.initializePackageContents();
 		theRenderingPackage.initializePackageContents();
+		theBird_modelPackage.initializePackageContents();
 
 		// Mark meta-data to indicate it can't be changed
 		theopenregspecs_smcubes_extra_extensionPackage.freeze();

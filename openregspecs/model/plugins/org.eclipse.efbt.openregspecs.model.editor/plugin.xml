@@ -263,34 +263,6 @@
             id="org.eclipse.emf.ecore.Wizard.category.ID"
             name="%_UI_Wizard_category"/>
       <wizard
-            id="org.eclipse.efbt.openregspecs.model.mapping.presentation.MappingModelWizardID"
-            name="%_UI_MappingModelWizard_label"
-            class="org.eclipse.efbt.openregspecs.model.mapping.presentation.MappingModelWizard"
-            category="org.eclipse.emf.ecore.Wizard.category.ID"
-            icon="icons/full/obj16/MappingModelFile.gif">
-         <description>%_UI_MappingModelWizard_description</description>
-         <selection class="org.eclipse.core.resources.IResource"/>
-      </wizard>
-   </extension>
-
-   <extension point="org.eclipse.ui.editors">
-      <!-- @generated smcubes_model -->
-      <editor
-            id="org.eclipse.efbt.openregspecs.model.mapping.presentation.MappingEditorID"
-            name="%_UI_MappingEditor_label"
-            icon="icons/full/obj16/MappingModelFile.gif"
-            extensions="mapping"
-            class="org.eclipse.efbt.openregspecs.model.mapping.presentation.MappingEditor"
-            contributorClass="org.eclipse.efbt.openregspecs.model.mapping.presentation.MappingActionBarContributor">
-      </editor>
-   </extension>
-
-   <extension point="org.eclipse.ui.newWizards">
-      <!-- @generated smcubes_model -->
-      <category
-            id="org.eclipse.emf.ecore.Wizard.category.ID"
-            name="%_UI_Wizard_category"/>
-      <wizard
             id="org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.presentation.openregspecs_smcubes_core_extensionModelWizardID"
             name="%_UI_openregspecs_smcubes_core_extensionModelWizard_label"
             class="org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.presentation.openregspecs_smcubes_core_extensionModelWizard"
@@ -319,12 +291,12 @@
             id="org.eclipse.emf.ecore.Wizard.category.ID"
             name="%_UI_Wizard_category"/>
       <wizard
-            id="org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_extra_extension.presentation.openregspecs_smcubes_extra_extensionModelWizardID"
-            name="%_UI_openregspecs_smcubes_extra_extensionModelWizard_label"
-            class="org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_extra_extension.presentation.openregspecs_smcubes_extra_extensionModelWizard"
+            id="bird_model.presentation.Bird_modelModelWizardID"
+            name="%_UI_Bird_modelModelWizard_label"
+            class="bird_model.presentation.Bird_modelModelWizard"
             category="org.eclipse.emf.ecore.Wizard.category.ID"
-            icon="icons/full/obj16/openregspecs_smcubes_extra_extensionModelFile.gif">
-         <description>%_UI_openregspecs_smcubes_extra_extensionModelWizard_description</description>
+            icon="icons/full/obj16/Bird_modelModelFile.gif">
+         <description>%_UI_Bird_modelModelWizard_description</description>
          <selection class="org.eclipse.core.resources.IResource"/>
       </wizard>
    </extension>
@@ -332,40 +304,12 @@
    <extension point="org.eclipse.ui.editors">
       <!-- @generated smcubes_model -->
       <editor
-            id="org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_extra_extension.presentation.openregspecs_smcubes_extra_extensionEditorID"
-            name="%_UI_openregspecs_smcubes_extra_extensionEditor_label"
-            icon="icons/full/obj16/openregspecs_smcubes_extra_extensionModelFile.gif"
-            extensions="openregspecs_smcubes_extra_extension"
-            class="org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_extra_extension.presentation.openregspecs_smcubes_extra_extensionEditor"
-            contributorClass="org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_extra_extension.presentation.openregspecs_smcubes_extra_extensionActionBarContributor">
-      </editor>
-   </extension>
-
-   <extension point="org.eclipse.ui.newWizards">
-      <!-- @generated smcubes_model -->
-      <category
-            id="org.eclipse.emf.ecore.Wizard.category.ID"
-            name="%_UI_Wizard_category"/>
-      <wizard
-            id="org.eclipse.efbt.openregspecs.model.rendering.presentation.RenderingModelWizardID"
-            name="%_UI_RenderingModelWizard_label"
-            class="org.eclipse.efbt.openregspecs.model.rendering.presentation.RenderingModelWizard"
-            category="org.eclipse.emf.ecore.Wizard.category.ID"
-            icon="icons/full/obj16/RenderingModelFile.gif">
-         <description>%_UI_RenderingModelWizard_description</description>
-         <selection class="org.eclipse.core.resources.IResource"/>
-      </wizard>
-   </extension>
-
-   <extension point="org.eclipse.ui.editors">
-      <!-- @generated smcubes_model -->
-      <editor
-            id="org.eclipse.efbt.openregspecs.model.rendering.presentation.RenderingEditorID"
-            name="%_UI_RenderingEditor_label"
-            icon="icons/full/obj16/RenderingModelFile.gif"
-            extensions="rendering"
-            class="org.eclipse.efbt.openregspecs.model.rendering.presentation.RenderingEditor"
-            contributorClass="org.eclipse.efbt.openregspecs.model.rendering.presentation.RenderingActionBarContributor">
+            id="bird_model.presentation.Bird_modelEditorID"
+            name="%_UI_Bird_modelEditor_label"
+            icon="icons/full/obj16/Bird_modelModelFile.gif"
+            extensions="bird_model"
+            class="bird_model.presentation.Bird_modelEditor"
+            contributorClass="bird_model.presentation.Bird_modelActionBarContributor">
       </editor>
    </extension>
 </plugin>

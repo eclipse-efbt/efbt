@@ -2,14 +2,15 @@
  */
 package org.eclipse.efbt.openregspecs.model.data_definition.impl;
 
+import bird_model.Bird_modelPackage;
+import bird_model.impl.Bird_modelPackageImpl;
+import org.eclipse.efbt.openregspecs.model.bpmn_lite.Bpmn_litePackage;
 import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.openregspecs_smcubes_core_extensionPackage;
 
+import org.eclipse.efbt.openregspecs.model.requirements_text.Requirements_textPackage;
+import org.eclipse.efbt.openregspecs.model.sql_lite.Sql_litePackage;
+import org.eclipse.efbt.openregspecs.model.testing.TestingPackage;
 import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.impl.openregspecs_smcubes_core_extensionPackageImpl;
-
-import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_extra_extension.openregspecs_smcubes_extra_extensionPackage;
-
-import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_extra_extension.impl.openregspecs_smcubes_extra_extensionPackageImpl;
-
 import org.eclipse.efbt.openregspecs.model.core.CorePackage;
 
 import org.eclipse.efbt.openregspecs.model.core.impl.CorePackageImpl;
@@ -18,17 +19,7 @@ import org.eclipse.efbt.openregspecs.model.data_definition.Data_definitionFactor
 import org.eclipse.efbt.openregspecs.model.data_definition.Data_definitionPackage;
 
 import org.eclipse.efbt.openregspecs.model.data_meta_model.Data_meta_modelPackage;
-
-import org.eclipse.efbt.openregspecs.model.mapping.MappingPackage;
-
-import org.eclipse.efbt.openregspecs.model.mapping.impl.MappingPackageImpl;
-
 import org.eclipse.efbt.openregspecs.model.module_management.Module_managementPackage;
-
-import org.eclipse.efbt.openregspecs.model.rendering.RenderingPackage;
-
-import org.eclipse.efbt.openregspecs.model.rendering.impl.RenderingPackageImpl;
-
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -221,34 +212,30 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 		// Initialize simple dependencies
 		Data_meta_modelPackage.eINSTANCE.eClass();
 		Module_managementPackage.eINSTANCE.eClass();
+		Sql_litePackage.eINSTANCE.eClass();
+		Bpmn_litePackage.eINSTANCE.eClass();
+		Requirements_textPackage.eINSTANCE.eClass();
+		TestingPackage.eINSTANCE.eClass();
 
 		// Obtain or create and register interdependencies
 		Object registeredPackage = EPackage.Registry.INSTANCE.getEPackage(CorePackage.eNS_URI);
 		CorePackageImpl theCorePackage = (CorePackageImpl)(registeredPackage instanceof CorePackageImpl ? registeredPackage : CorePackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(MappingPackage.eNS_URI);
-		MappingPackageImpl theMappingPackage = (MappingPackageImpl)(registeredPackage instanceof MappingPackageImpl ? registeredPackage : MappingPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(openregspecs_smcubes_core_extensionPackage.eNS_URI);
 		openregspecs_smcubes_core_extensionPackageImpl theopenregspecs_smcubes_core_extensionPackage = (openregspecs_smcubes_core_extensionPackageImpl)(registeredPackage instanceof openregspecs_smcubes_core_extensionPackageImpl ? registeredPackage : openregspecs_smcubes_core_extensionPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(openregspecs_smcubes_extra_extensionPackage.eNS_URI);
-		openregspecs_smcubes_extra_extensionPackageImpl theopenregspecs_smcubes_extra_extensionPackage = (openregspecs_smcubes_extra_extensionPackageImpl)(registeredPackage instanceof openregspecs_smcubes_extra_extensionPackageImpl ? registeredPackage : openregspecs_smcubes_extra_extensionPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(RenderingPackage.eNS_URI);
-		RenderingPackageImpl theRenderingPackage = (RenderingPackageImpl)(registeredPackage instanceof RenderingPackageImpl ? registeredPackage : RenderingPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Bird_modelPackage.eNS_URI);
+		Bird_modelPackageImpl theBird_modelPackage = (Bird_modelPackageImpl)(registeredPackage instanceof Bird_modelPackageImpl ? registeredPackage : Bird_modelPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theData_definitionPackage.createPackageContents();
 		theCorePackage.createPackageContents();
-		theMappingPackage.createPackageContents();
 		theopenregspecs_smcubes_core_extensionPackage.createPackageContents();
-		theopenregspecs_smcubes_extra_extensionPackage.createPackageContents();
-		theRenderingPackage.createPackageContents();
+		theBird_modelPackage.createPackageContents();
 
 		// Initialize created meta-data
 		theData_definitionPackage.initializePackageContents();
 		theCorePackage.initializePackageContents();
-		theMappingPackage.initializePackageContents();
 		theopenregspecs_smcubes_core_extensionPackage.initializePackageContents();
-		theopenregspecs_smcubes_extra_extensionPackage.initializePackageContents();
-		theRenderingPackage.initializePackageContents();
+		theBird_modelPackage.initializePackageContents();
 
 		// Mark meta-data to indicate it can't be changed
 		theData_definitionPackage.freeze();
