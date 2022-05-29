@@ -71,7 +71,7 @@
     <genClasses ecoreClass="data_meta_model.ecore#//ManyToOneRelationshipAttribute"/>
     <genClasses ecoreClass="data_meta_model.ecore#//OneToManyRelationshipAttribute"/>
     <genClasses ecoreClass="data_meta_model.ecore#//ManyToManyRelationshipAttribute"/>
-    <genClasses image="false" ecoreClass="data_meta_model.ecore#//Classifier"/>
+    <genClasses image="false" ecoreClass="data_meta_model.ecore#//Type"/>
     <genClasses image="false" ecoreClass="data_meta_model.ecore#//Element"/>
     <genClasses image="false" ecoreClass="data_meta_model.ecore#//NamedElement">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_meta_model.ecore#//NamedElement/name"/>
@@ -97,6 +97,7 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_meta_model.ecore#//BasicEntity/superClass"/>
     </genClasses>
     <genClasses ecoreClass="data_meta_model.ecore#//EnumMember"/>
+    <genClasses ecoreClass="data_meta_model.ecore#//TypesAndConcepts"/>
   </genPackages>
   <genPackages prefix="Module_management" basePackage="org.eclipse.efbt.openregspecs.model"
       resource="XMI" disposableProviderFactory="true" ecorePackage="module_management.ecore#/">

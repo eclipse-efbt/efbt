@@ -3,13 +3,12 @@
 package org.eclipse.efbt.openregspecs.model.core.util;
 
 import org.eclipse.efbt.openregspecs.model.core.*;
-
-import org.eclipse.efbt.openregspecs.model.data_meta_model.Classifier;
 import org.eclipse.efbt.openregspecs.model.data_meta_model.Concept;
 import org.eclipse.efbt.openregspecs.model.data_meta_model.Element;
 import org.eclipse.efbt.openregspecs.model.data_meta_model.EnumMember;
 import org.eclipse.efbt.openregspecs.model.data_meta_model.NamedElement;
 
+import org.eclipse.efbt.openregspecs.model.data_meta_model.Type;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 
@@ -124,7 +123,7 @@ public class CoreSwitch<T> extends Switch<T> {
 			case CorePackage.SUBDOMAIN: {
 				SUBDOMAIN subdomain = (SUBDOMAIN)theEObject;
 				T result = caseSUBDOMAIN(subdomain);
-				if (result == null) result = caseClassifier(subdomain);
+				if (result == null) result = caseType(subdomain);
 				if (result == null) result = caseNamedElement(subdomain);
 				if (result == null) result = caseElement(subdomain);
 				if (result == null) result = defaultCase(theEObject);
@@ -400,17 +399,17 @@ public class CoreSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Classifier</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Type</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Classifier</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Type</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseClassifier(Classifier object) {
+	public T caseType(Type object) {
 		return null;
 	}
 

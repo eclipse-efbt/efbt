@@ -10,9 +10,7 @@ import org.eclipse.efbt.openregspecs.model.core.FACET_COLLECTION;
 import org.eclipse.efbt.openregspecs.model.core.MAINTENANCE_AGENCY;
 import org.eclipse.efbt.openregspecs.model.core.SUBDOMAIN;
 import org.eclipse.efbt.openregspecs.model.core.SUBDOMAIN_ENUMERATION;
-
-import org.eclipse.efbt.openregspecs.model.data_meta_model.impl.ClassifierImpl;
-
+import org.eclipse.efbt.openregspecs.model.data_meta_model.impl.TypeImpl;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
@@ -47,7 +45,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class SUBDOMAINImpl extends ClassifierImpl implements SUBDOMAIN {
+public class SUBDOMAINImpl extends TypeImpl implements SUBDOMAIN {
 	/**
 	 * The default value of the '{@link #getCode() <em>Code</em>}' attribute.
 	 * <!-- begin-user-doc -->

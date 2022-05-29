@@ -3,6 +3,7 @@
 package org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.impl;
 
 import java.util.Collection;
+import org.eclipse.efbt.openregspecs.model.data_meta_model.impl.TypesAndConceptsImpl;
 import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.DomainModule;
 import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.MemberHierarchyModule;
 import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.MemberModule;
@@ -19,7 +20,6 @@ import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -41,7 +41,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class SMCubesCoreModelImpl extends MinimalEObjectImpl.Container implements SMCubesCoreModel {
+public class SMCubesCoreModelImpl extends TypesAndConceptsImpl implements SMCubesCoreModel {
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->

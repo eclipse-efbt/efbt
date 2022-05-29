@@ -2,6 +2,7 @@
  */
 package org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension;
 
+import org.eclipse.efbt.openregspecs.model.data_meta_model.Data_meta_modelPackage;
 import org.eclipse.efbt.openregspecs.model.module_management.Module_managementPackage;
 
 import org.eclipse.emf.ecore.EAttribute;
@@ -545,7 +546,7 @@ public interface openregspecs_smcubes_core_extensionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SM_CUBES_CORE_MODEL__NAME = 0;
+	int SM_CUBES_CORE_MODEL__NAME = Data_meta_modelPackage.TYPES_AND_CONCEPTS_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Variable Modules</b></em>' containment reference list.
@@ -554,7 +555,7 @@ public interface openregspecs_smcubes_core_extensionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SM_CUBES_CORE_MODEL__VARIABLE_MODULES = 1;
+	int SM_CUBES_CORE_MODEL__VARIABLE_MODULES = Data_meta_modelPackage.TYPES_AND_CONCEPTS_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Domain Modules</b></em>' containment reference list.
@@ -563,7 +564,7 @@ public interface openregspecs_smcubes_core_extensionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SM_CUBES_CORE_MODEL__DOMAIN_MODULES = 2;
+	int SM_CUBES_CORE_MODEL__DOMAIN_MODULES = Data_meta_modelPackage.TYPES_AND_CONCEPTS_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Member Modules</b></em>' containment reference list.
@@ -572,7 +573,7 @@ public interface openregspecs_smcubes_core_extensionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SM_CUBES_CORE_MODEL__MEMBER_MODULES = 3;
+	int SM_CUBES_CORE_MODEL__MEMBER_MODULES = Data_meta_modelPackage.TYPES_AND_CONCEPTS_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Sub Domain Modules</b></em>' containment reference list.
@@ -581,7 +582,7 @@ public interface openregspecs_smcubes_core_extensionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SM_CUBES_CORE_MODEL__SUB_DOMAIN_MODULES = 4;
+	int SM_CUBES_CORE_MODEL__SUB_DOMAIN_MODULES = Data_meta_modelPackage.TYPES_AND_CONCEPTS_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Member Hierarchy Modules</b></em>' containment reference list.
@@ -590,7 +591,7 @@ public interface openregspecs_smcubes_core_extensionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SM_CUBES_CORE_MODEL__MEMBER_HIERARCHY_MODULES = 5;
+	int SM_CUBES_CORE_MODEL__MEMBER_HIERARCHY_MODULES = Data_meta_modelPackage.TYPES_AND_CONCEPTS_FEATURE_COUNT + 5;
 
 	/**
 	 * The number of structural features of the '<em>SM Cubes Core Model</em>' class.
@@ -599,7 +600,7 @@ public interface openregspecs_smcubes_core_extensionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SM_CUBES_CORE_MODEL_FEATURE_COUNT = 6;
+	int SM_CUBES_CORE_MODEL_FEATURE_COUNT = Data_meta_modelPackage.TYPES_AND_CONCEPTS_FEATURE_COUNT + 6;
 
 	/**
 	 * The number of operations of the '<em>SM Cubes Core Model</em>' class.
@@ -608,7 +609,7 @@ public interface openregspecs_smcubes_core_extensionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SM_CUBES_CORE_MODEL_OPERATION_COUNT = 0;
+	int SM_CUBES_CORE_MODEL_OPERATION_COUNT = Data_meta_modelPackage.TYPES_AND_CONCEPTS_OPERATION_COUNT + 0;
 
 
 	/**

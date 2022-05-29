@@ -158,8 +158,16 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated smcubes_model -->
       <package
-            uri="http://www.eclipse.org/efbt/bird_model"
-            class="bird_model.Bird_modelPackage"
+            uri="http://www.eclipse.org/efbt/open_reg_specs"
+            class="org.eclipse.efbt.openregspecs.model.open_reg_specs.Open_reg_specsPackage"
             genModel="smcubes_model/smcubes_model.genmodel"/>
    </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated smcubes_model -->
+      <parser
+            type="open_reg_specs"
+            class="org.eclipse.efbt.openregspecs.model.open_reg_specs.util.Open_reg_specsResourceFactoryImpl"/>
+   </extension>
+
 </plugin>

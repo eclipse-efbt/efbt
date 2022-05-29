@@ -871,14 +871,14 @@ public interface Data_meta_modelPackage extends EPackage {
 	int MANY_TO_MANY_RELATIONSHIP_ATTRIBUTE_OPERATION_COUNT = RELATIONSHIP_ATTRIBUTE_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.openregspecs.model.data_meta_model.impl.ClassifierImpl <em>Classifier</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.efbt.openregspecs.model.data_meta_model.impl.TypeImpl <em>Type</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.openregspecs.model.data_meta_model.impl.ClassifierImpl
-	 * @see org.eclipse.efbt.openregspecs.model.data_meta_model.impl.Data_meta_modelPackageImpl#getClassifier()
+	 * @see org.eclipse.efbt.openregspecs.model.data_meta_model.impl.TypeImpl
+	 * @see org.eclipse.efbt.openregspecs.model.data_meta_model.impl.Data_meta_modelPackageImpl#getType()
 	 * @generated
 	 */
-	int CLASSIFIER = 7;
+	int TYPE = 7;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -887,25 +887,25 @@ public interface Data_meta_modelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CLASSIFIER__NAME = NAMED_ELEMENT__NAME;
+	int TYPE__NAME = NAMED_ELEMENT__NAME;
 
 	/**
-	 * The number of structural features of the '<em>Classifier</em>' class.
+	 * The number of structural features of the '<em>Type</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CLASSIFIER_FEATURE_COUNT = NAMED_ELEMENT_FEATURE_COUNT + 0;
+	int TYPE_FEATURE_COUNT = NAMED_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of operations of the '<em>Classifier</em>' class.
+	 * The number of operations of the '<em>Type</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CLASSIFIER_OPERATION_COUNT = NAMED_ELEMENT_OPERATION_COUNT + 0;
+	int TYPE_OPERATION_COUNT = NAMED_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.openregspecs.model.data_meta_model.impl.EntityModuleImpl <em>Entity Module</em>}' class.
@@ -1230,6 +1230,35 @@ public interface Data_meta_modelPackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.openregspecs.model.data_meta_model.impl.TypesAndConceptsImpl <em>Types And Concepts</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.openregspecs.model.data_meta_model.impl.TypesAndConceptsImpl
+	 * @see org.eclipse.efbt.openregspecs.model.data_meta_model.impl.Data_meta_modelPackageImpl#getTypesAndConcepts()
+	 * @generated
+	 */
+	int TYPES_AND_CONCEPTS = 18;
+
+	/**
+	 * The number of structural features of the '<em>Types And Concepts</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPES_AND_CONCEPTS_FEATURE_COUNT = 0;
+
+	/**
+	 * The number of operations of the '<em>Types And Concepts</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPES_AND_CONCEPTS_OPERATION_COUNT = 0;
+
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.openregspecs.model.data_meta_model.Attribute <em>Attribute</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1388,14 +1417,14 @@ public interface Data_meta_modelPackage extends EPackage {
 	EClass getManyToManyRelationshipAttribute();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.openregspecs.model.data_meta_model.Classifier <em>Classifier</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.efbt.openregspecs.model.data_meta_model.Type <em>Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Classifier</em>'.
-	 * @see org.eclipse.efbt.openregspecs.model.data_meta_model.Classifier
+	 * @return the meta object for class '<em>Type</em>'.
+	 * @see org.eclipse.efbt.openregspecs.model.data_meta_model.Type
 	 * @generated
 	 */
-	EClass getClassifier();
+	EClass getType();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.openregspecs.model.data_meta_model.Element <em>Element</em>}'.
@@ -1597,6 +1626,16 @@ public interface Data_meta_modelPackage extends EPackage {
 	EClass getEnumMember();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.openregspecs.model.data_meta_model.TypesAndConcepts <em>Types And Concepts</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Types And Concepts</em>'.
+	 * @see org.eclipse.efbt.openregspecs.model.data_meta_model.TypesAndConcepts
+	 * @generated
+	 */
+	EClass getTypesAndConcepts();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1754,14 +1793,14 @@ public interface Data_meta_modelPackage extends EPackage {
 		EClass MANY_TO_MANY_RELATIONSHIP_ATTRIBUTE = eINSTANCE.getManyToManyRelationshipAttribute();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.efbt.openregspecs.model.data_meta_model.impl.ClassifierImpl <em>Classifier</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.efbt.openregspecs.model.data_meta_model.impl.TypeImpl <em>Type</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.efbt.openregspecs.model.data_meta_model.impl.ClassifierImpl
-		 * @see org.eclipse.efbt.openregspecs.model.data_meta_model.impl.Data_meta_modelPackageImpl#getClassifier()
+		 * @see org.eclipse.efbt.openregspecs.model.data_meta_model.impl.TypeImpl
+		 * @see org.eclipse.efbt.openregspecs.model.data_meta_model.impl.Data_meta_modelPackageImpl#getType()
 		 * @generated
 		 */
-		EClass CLASSIFIER = eINSTANCE.getClassifier();
+		EClass TYPE = eINSTANCE.getType();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.efbt.openregspecs.model.data_meta_model.impl.ElementImpl <em>Element</em>}' class.
@@ -1934,6 +1973,16 @@ public interface Data_meta_modelPackage extends EPackage {
 		 * @generated
 		 */
 		EClass ENUM_MEMBER = eINSTANCE.getEnumMember();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.efbt.openregspecs.model.data_meta_model.impl.TypesAndConceptsImpl <em>Types And Concepts</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.efbt.openregspecs.model.data_meta_model.impl.TypesAndConceptsImpl
+		 * @see org.eclipse.efbt.openregspecs.model.data_meta_model.impl.Data_meta_modelPackageImpl#getTypesAndConcepts()
+		 * @generated
+		 */
+		EClass TYPES_AND_CONCEPTS = eINSTANCE.getTypesAndConcepts();
 
 	}
 

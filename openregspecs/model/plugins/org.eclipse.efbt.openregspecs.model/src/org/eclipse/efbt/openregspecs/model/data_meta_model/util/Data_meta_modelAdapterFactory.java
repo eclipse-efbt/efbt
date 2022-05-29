@@ -96,8 +96,8 @@ public class Data_meta_modelAdapterFactory extends AdapterFactoryImpl {
 				return createManyToManyRelationshipAttributeAdapter();
 			}
 			@Override
-			public Adapter caseClassifier(Classifier object) {
-				return createClassifierAdapter();
+			public Adapter caseType(Type object) {
+				return createTypeAdapter();
 			}
 			@Override
 			public Adapter caseElement(Element object) {
@@ -138,6 +138,10 @@ public class Data_meta_modelAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseEnumMember(EnumMember object) {
 				return createEnumMemberAdapter();
+			}
+			@Override
+			public Adapter caseTypesAndConcepts(TypesAndConcepts object) {
+				return createTypesAndConceptsAdapter();
 			}
 			@Override
 			public Adapter caseModule(org.eclipse.efbt.openregspecs.model.module_management.Module object) {
@@ -262,16 +266,16 @@ public class Data_meta_modelAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.openregspecs.model.data_meta_model.Classifier <em>Classifier</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.openregspecs.model.data_meta_model.Type <em>Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.efbt.openregspecs.model.data_meta_model.Classifier
+	 * @see org.eclipse.efbt.openregspecs.model.data_meta_model.Type
 	 * @generated
 	 */
-	public Adapter createClassifierAdapter() {
+	public Adapter createTypeAdapter() {
 		return null;
 	}
 
@@ -412,6 +416,20 @@ public class Data_meta_modelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createEnumMemberAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.openregspecs.model.data_meta_model.TypesAndConcepts <em>Types And Concepts</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.openregspecs.model.data_meta_model.TypesAndConcepts
+	 * @generated
+	 */
+	public Adapter createTypesAndConceptsAdapter() {
 		return null;
 	}
 

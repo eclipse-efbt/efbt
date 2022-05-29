@@ -20,7 +20,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="ManyToOneRelationshipAttribute" eSuperTypes="#//RelationshipAttribute"/>
   <eClassifiers xsi:type="ecore:EClass" name="OneToManyRelationshipAttribute" eSuperTypes="#//RelationshipAttribute"/>
   <eClassifiers xsi:type="ecore:EClass" name="ManyToManyRelationshipAttribute" eSuperTypes="#//RelationshipAttribute"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Classifier" abstract="true" eSuperTypes="#//NamedElement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Type" abstract="true" eSuperTypes="#//NamedElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="Element" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="NamedElement" abstract="true" eSuperTypes="#//Element">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -33,7 +33,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="StructuralFeature" abstract="true" eSuperTypes="#//TypedElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="TypedElement" abstract="true" eSuperTypes="#//NamedElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="classifier" eType="#//Classifier"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="classifier" eType="#//Type"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GeneratedEntity" eSuperTypes="#//Entity">
     <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" upperBound="-1"
@@ -50,4 +50,5 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="superClass" eType="#//BasicEntity"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EnumMember"/>
+  <eClassifiers xsi:type="ecore:EClass" name="TypesAndConcepts"/>
 </ecore:EPackage>

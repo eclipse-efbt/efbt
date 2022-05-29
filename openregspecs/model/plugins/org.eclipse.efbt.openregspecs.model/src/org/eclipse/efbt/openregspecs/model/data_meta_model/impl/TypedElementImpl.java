@@ -2,8 +2,8 @@
  */
 package org.eclipse.efbt.openregspecs.model.data_meta_model.impl;
 
-import org.eclipse.efbt.openregspecs.model.data_meta_model.Classifier;
 import org.eclipse.efbt.openregspecs.model.data_meta_model.Data_meta_modelPackage;
+import org.eclipse.efbt.openregspecs.model.data_meta_model.Type;
 import org.eclipse.efbt.openregspecs.model.data_meta_model.TypedElement;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -35,7 +35,7 @@ public abstract class TypedElementImpl extends NamedElementImpl implements Typed
 	 * @generated
 	 * @ordered
 	 */
-	protected Classifier classifier;
+	protected Type classifier;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -61,10 +61,10 @@ public abstract class TypedElementImpl extends NamedElementImpl implements Typed
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Classifier getClassifier() {
+	public Type getClassifier() {
 		if (classifier != null && classifier.eIsProxy()) {
 			InternalEObject oldClassifier = (InternalEObject)classifier;
-			classifier = (Classifier)eResolveProxy(oldClassifier);
+			classifier = (Type)eResolveProxy(oldClassifier);
 			if (classifier != oldClassifier) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Data_meta_modelPackage.TYPED_ELEMENT__CLASSIFIER, oldClassifier, classifier));
@@ -78,7 +78,7 @@ public abstract class TypedElementImpl extends NamedElementImpl implements Typed
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Classifier basicGetClassifier() {
+	public Type basicGetClassifier() {
 		return classifier;
 	}
 
@@ -87,8 +87,8 @@ public abstract class TypedElementImpl extends NamedElementImpl implements Typed
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setClassifier(Classifier newClassifier) {
-		Classifier oldClassifier = classifier;
+	public void setClassifier(Type newClassifier) {
+		Type oldClassifier = classifier;
 		classifier = newClassifier;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, Data_meta_modelPackage.TYPED_ELEMENT__CLASSIFIER, oldClassifier, classifier));
@@ -118,7 +118,7 @@ public abstract class TypedElementImpl extends NamedElementImpl implements Typed
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Data_meta_modelPackage.TYPED_ELEMENT__CLASSIFIER:
-				setClassifier((Classifier)newValue);
+				setClassifier((Type)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -133,7 +133,7 @@ public abstract class TypedElementImpl extends NamedElementImpl implements Typed
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Data_meta_modelPackage.TYPED_ELEMENT__CLASSIFIER:
-				setClassifier((Classifier)null);
+				setClassifier((Type)null);
 				return;
 		}
 		super.eUnset(featureID);

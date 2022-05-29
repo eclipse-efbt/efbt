@@ -2,8 +2,6 @@
  */
 package org.eclipse.efbt.openregspecs.model.core.impl;
 
-import bird_model.Bird_modelPackage;
-import bird_model.impl.Bird_modelPackageImpl;
 import org.eclipse.efbt.openregspecs.model.bpmn_lite.Bpmn_litePackage;
 import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.openregspecs_smcubes_core_extensionPackage;
 
@@ -21,6 +19,8 @@ import org.eclipse.efbt.openregspecs.model.data_definition.impl.Data_definitionP
 
 import org.eclipse.efbt.openregspecs.model.data_meta_model.Data_meta_modelPackage;
 import org.eclipse.efbt.openregspecs.model.module_management.Module_managementPackage;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.Open_reg_specsPackage;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.impl.Open_reg_specsPackageImpl;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -202,20 +202,20 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		Data_definitionPackageImpl theData_definitionPackage = (Data_definitionPackageImpl)(registeredPackage instanceof Data_definitionPackageImpl ? registeredPackage : Data_definitionPackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(openregspecs_smcubes_core_extensionPackage.eNS_URI);
 		openregspecs_smcubes_core_extensionPackageImpl theopenregspecs_smcubes_core_extensionPackage = (openregspecs_smcubes_core_extensionPackageImpl)(registeredPackage instanceof openregspecs_smcubes_core_extensionPackageImpl ? registeredPackage : openregspecs_smcubes_core_extensionPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Bird_modelPackage.eNS_URI);
-		Bird_modelPackageImpl theBird_modelPackage = (Bird_modelPackageImpl)(registeredPackage instanceof Bird_modelPackageImpl ? registeredPackage : Bird_modelPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Open_reg_specsPackage.eNS_URI);
+		Open_reg_specsPackageImpl theOpen_reg_specsPackage = (Open_reg_specsPackageImpl)(registeredPackage instanceof Open_reg_specsPackageImpl ? registeredPackage : Open_reg_specsPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theCorePackage.createPackageContents();
 		theData_definitionPackage.createPackageContents();
 		theopenregspecs_smcubes_core_extensionPackage.createPackageContents();
-		theBird_modelPackage.createPackageContents();
+		theOpen_reg_specsPackage.createPackageContents();
 
 		// Initialize created meta-data
 		theCorePackage.initializePackageContents();
 		theData_definitionPackage.initializePackageContents();
 		theopenregspecs_smcubes_core_extensionPackage.initializePackageContents();
-		theBird_modelPackage.initializePackageContents();
+		theOpen_reg_specsPackage.initializePackageContents();
 
 		// Mark meta-data to indicate it can't be changed
 		theCorePackage.freeze();
@@ -1333,7 +1333,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 
 		// Add supertypes to classes
 		memberEClass.getESuperTypes().add(theData_meta_modelPackage.getEnumMember());
-		subdomainEClass.getESuperTypes().add(theData_meta_modelPackage.getClassifier());
+		subdomainEClass.getESuperTypes().add(theData_meta_modelPackage.getType());
 		variableEClass.getESuperTypes().add(theData_meta_modelPackage.getConcept());
 
 		// Initialize classes, features, and operations; add parameters

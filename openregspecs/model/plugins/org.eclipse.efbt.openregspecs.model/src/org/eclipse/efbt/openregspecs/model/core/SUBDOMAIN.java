@@ -2,8 +2,7 @@
  */
 package org.eclipse.efbt.openregspecs.model.core;
 
-import org.eclipse.efbt.openregspecs.model.data_meta_model.Classifier;
-
+import org.eclipse.efbt.openregspecs.model.data_meta_model.Type;
 import org.eclipse.emf.common.util.EList;
 
 /**
@@ -30,7 +29,7 @@ import org.eclipse.emf.common.util.EList;
  * @model extendedMetaData="name='SUBDOMAIN' kind='empty'"
  * @generated
  */
-public interface SUBDOMAIN extends Classifier {
+public interface SUBDOMAIN extends Type {
 	/**
 	 * Returns the value of the '<em><b>Code</b></em>' attribute.
 	 * <!-- begin-user-doc -->

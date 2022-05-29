@@ -2,8 +2,8 @@
  */
 package org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension;
 
+import org.eclipse.efbt.openregspecs.model.data_meta_model.TypesAndConcepts;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -26,7 +26,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface SMCubesCoreModel extends EObject {
+public interface SMCubesCoreModel extends TypesAndConcepts {
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->

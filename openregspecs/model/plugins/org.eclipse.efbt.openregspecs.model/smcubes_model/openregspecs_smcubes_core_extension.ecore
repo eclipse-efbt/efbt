@@ -98,7 +98,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="subdomains" upperBound="-1"
         eType="ecore:EClass core.ecore#//SUBDOMAIN" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SMCubesCoreModel">
+  <eClassifiers xsi:type="ecore:EClass" name="SMCubesCoreModel" eSuperTypes="../core_model/data_meta_model.ecore#//TypesAndConcepts">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="variableModules" upperBound="-1"

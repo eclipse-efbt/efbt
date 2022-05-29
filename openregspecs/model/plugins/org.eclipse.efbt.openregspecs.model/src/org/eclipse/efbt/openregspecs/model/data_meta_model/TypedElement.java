@@ -25,12 +25,12 @@ public interface TypedElement extends NamedElement {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Classifier</em>' reference.
-	 * @see #setClassifier(Classifier)
+	 * @see #setClassifier(Type)
 	 * @see org.eclipse.efbt.openregspecs.model.data_meta_model.Data_meta_modelPackage#getTypedElement_Classifier()
 	 * @model
 	 * @generated
 	 */
-	Classifier getClassifier();
+	Type getClassifier();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.efbt.openregspecs.model.data_meta_model.TypedElement#getClassifier <em>Classifier</em>}' reference.
@@ -40,6 +40,6 @@ public interface TypedElement extends NamedElement {
 	 * @see #getClassifier()
 	 * @generated
 	 */
-	void setClassifier(Classifier value);
+	void setClassifier(Type value);
 
 } // TypedElement

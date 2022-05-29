@@ -8,7 +8,6 @@ import org.eclipse.efbt.openregspecs.model.bpmn_lite.impl.Bpmn_litePackageImpl;
 
 import org.eclipse.efbt.openregspecs.model.data_meta_model.Attribute;
 import org.eclipse.efbt.openregspecs.model.data_meta_model.BasicEntity;
-import org.eclipse.efbt.openregspecs.model.data_meta_model.Classifier;
 import org.eclipse.efbt.openregspecs.model.data_meta_model.Concept;
 import org.eclipse.efbt.openregspecs.model.data_meta_model.Data_meta_modelFactory;
 import org.eclipse.efbt.openregspecs.model.data_meta_model.Data_meta_modelPackage;
@@ -25,8 +24,10 @@ import org.eclipse.efbt.openregspecs.model.data_meta_model.OneToManyRelationship
 import org.eclipse.efbt.openregspecs.model.data_meta_model.OneToOneRelationshipAttribute;
 import org.eclipse.efbt.openregspecs.model.data_meta_model.RelationshipAttribute;
 import org.eclipse.efbt.openregspecs.model.data_meta_model.StructuralFeature;
+import org.eclipse.efbt.openregspecs.model.data_meta_model.Type;
 import org.eclipse.efbt.openregspecs.model.data_meta_model.TypedElement;
 
+import org.eclipse.efbt.openregspecs.model.data_meta_model.TypesAndConcepts;
 import org.eclipse.efbt.openregspecs.model.module_management.Module_managementPackage;
 
 import org.eclipse.efbt.openregspecs.model.module_management.impl.Module_managementPackageImpl;
@@ -111,7 +112,7 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass classifierEClass = null;
+	private EClass typeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -182,6 +183,13 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 	 * @generated
 	 */
 	private EClass enumMemberEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass typesAndConceptsEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -406,8 +414,8 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getClassifier() {
-		return classifierEClass;
+	public EClass getType() {
+		return typeEClass;
 	}
 
 	/**
@@ -586,6 +594,15 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getTypesAndConcepts() {
+		return typesAndConceptsEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public Data_meta_modelFactory getData_meta_modelFactory() {
 		return (Data_meta_modelFactory)getEFactoryInstance();
 	}
@@ -631,7 +648,7 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 
 		manyToManyRelationshipAttributeEClass = createEClass(MANY_TO_MANY_RELATIONSHIP_ATTRIBUTE);
 
-		classifierEClass = createEClass(CLASSIFIER);
+		typeEClass = createEClass(TYPE);
 
 		elementEClass = createEClass(ELEMENT);
 
@@ -661,6 +678,8 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 		createEReference(basicEntityEClass, BASIC_ENTITY__SUPER_CLASS);
 
 		enumMemberEClass = createEClass(ENUM_MEMBER);
+
+		typesAndConceptsEClass = createEClass(TYPES_AND_CONCEPTS);
 	}
 
 	/**
@@ -700,7 +719,7 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 		manyToOneRelationshipAttributeEClass.getESuperTypes().add(this.getRelationshipAttribute());
 		oneToManyRelationshipAttributeEClass.getESuperTypes().add(this.getRelationshipAttribute());
 		manyToManyRelationshipAttributeEClass.getESuperTypes().add(this.getRelationshipAttribute());
-		classifierEClass.getESuperTypes().add(this.getNamedElement());
+		typeEClass.getESuperTypes().add(this.getNamedElement());
 		namedElementEClass.getESuperTypes().add(this.getElement());
 		entityModuleEClass.getESuperTypes().add(theModule_managementPackage.getModule());
 		structuralFeatureEClass.getESuperTypes().add(this.getTypedElement());
@@ -733,7 +752,7 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 
 		initEClass(manyToManyRelationshipAttributeEClass, ManyToManyRelationshipAttribute.class, "ManyToManyRelationshipAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-		initEClass(classifierEClass, Classifier.class, "Classifier", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(typeEClass, Type.class, "Type", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(elementEClass, Element.class, "Element", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -748,7 +767,7 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 		initEClass(structuralFeatureEClass, StructuralFeature.class, "StructuralFeature", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(typedElementEClass, TypedElement.class, "TypedElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getTypedElement_Classifier(), this.getClassifier(), null, "classifier", null, 0, 1, TypedElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTypedElement_Classifier(), this.getType(), null, "classifier", null, 0, 1, TypedElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(generatedEntityEClass, GeneratedEntity.class, "GeneratedEntity", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getGeneratedEntity_Attributes(), this.getAttribute(), null, "attributes", null, 0, -1, GeneratedEntity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -763,6 +782,8 @@ public class Data_meta_modelPackageImpl extends EPackageImpl implements Data_met
 		initEReference(getBasicEntity_SuperClass(), this.getBasicEntity(), null, "superClass", null, 0, 1, BasicEntity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(enumMemberEClass, EnumMember.class, "EnumMember", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(typesAndConceptsEClass, TypesAndConcepts.class, "TypesAndConcepts", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

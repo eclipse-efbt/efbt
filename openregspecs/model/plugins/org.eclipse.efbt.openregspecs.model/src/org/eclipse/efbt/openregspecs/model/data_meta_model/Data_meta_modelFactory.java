@@ -130,6 +130,15 @@ public interface Data_meta_modelFactory extends EFactory {
 	EnumMember createEnumMember();
 
 	/**
+	 * Returns a new object of class '<em>Types And Concepts</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Types And Concepts</em>'.
+	 * @generated
+	 */
+	TypesAndConcepts createTypesAndConcepts();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

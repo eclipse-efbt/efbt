@@ -403,7 +403,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SUBDOMAIN" eSuperTypes="../core_model/data_meta_model.ecore#//Classifier">
+  <eClassifiers xsi:type="ecore:EClass" name="SUBDOMAIN" eSuperTypes="../core_model/data_meta_model.ecore#//Type">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="SUBDOMAIN"/>
       <details key="kind" value="empty"/>

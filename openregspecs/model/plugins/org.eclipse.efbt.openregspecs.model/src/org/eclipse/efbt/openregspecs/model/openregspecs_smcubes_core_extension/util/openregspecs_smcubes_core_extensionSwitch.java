@@ -2,6 +2,7 @@
  */
 package org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.util;
 
+import org.eclipse.efbt.openregspecs.model.data_meta_model.TypesAndConcepts;
 import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.*;
 
 import org.eclipse.emf.ecore.EObject;
@@ -104,6 +105,7 @@ public class openregspecs_smcubes_core_extensionSwitch<T> extends Switch<T> {
 			case openregspecs_smcubes_core_extensionPackage.SM_CUBES_CORE_MODEL: {
 				SMCubesCoreModel smCubesCoreModel = (SMCubesCoreModel)theEObject;
 				T result = caseSMCubesCoreModel(smCubesCoreModel);
+				if (result == null) result = caseTypesAndConcepts(smCubesCoreModel);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -213,6 +215,21 @@ public class openregspecs_smcubes_core_extensionSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseModule(org.eclipse.efbt.openregspecs.model.module_management.Module object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Types And Concepts</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Types And Concepts</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseTypesAndConcepts(TypesAndConcepts object) {
 		return null;
 	}
 

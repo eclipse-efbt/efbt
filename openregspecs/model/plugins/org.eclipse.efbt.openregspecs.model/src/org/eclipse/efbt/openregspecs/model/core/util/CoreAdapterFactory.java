@@ -3,13 +3,12 @@
 package org.eclipse.efbt.openregspecs.model.core.util;
 
 import org.eclipse.efbt.openregspecs.model.core.*;
-
-import org.eclipse.efbt.openregspecs.model.data_meta_model.Classifier;
 import org.eclipse.efbt.openregspecs.model.data_meta_model.Concept;
 import org.eclipse.efbt.openregspecs.model.data_meta_model.Element;
 import org.eclipse.efbt.openregspecs.model.data_meta_model.EnumMember;
 import org.eclipse.efbt.openregspecs.model.data_meta_model.NamedElement;
 
+import org.eclipse.efbt.openregspecs.model.data_meta_model.Type;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 
@@ -138,8 +137,8 @@ public class CoreAdapterFactory extends AdapterFactoryImpl {
 				return createNamedElementAdapter();
 			}
 			@Override
-			public Adapter caseClassifier(Classifier object) {
-				return createClassifierAdapter();
+			public Adapter caseType(Type object) {
+				return createTypeAdapter();
 			}
 			@Override
 			public Adapter caseConcept(Concept object) {
@@ -390,16 +389,16 @@ public class CoreAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.openregspecs.model.data_meta_model.Classifier <em>Classifier</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.openregspecs.model.data_meta_model.Type <em>Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.efbt.openregspecs.model.data_meta_model.Classifier
+	 * @see org.eclipse.efbt.openregspecs.model.data_meta_model.Type
 	 * @generated
 	 */
-	public Adapter createClassifierAdapter() {
+	public Adapter createTypeAdapter() {
 		return null;
 	}
 

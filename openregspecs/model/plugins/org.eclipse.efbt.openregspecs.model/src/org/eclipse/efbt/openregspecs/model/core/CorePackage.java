@@ -800,7 +800,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SUBDOMAIN__NAME = Data_meta_modelPackage.CLASSIFIER__NAME;
+	int SUBDOMAIN__NAME = Data_meta_modelPackage.TYPE__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Code</b></em>' attribute.
@@ -809,7 +809,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SUBDOMAIN__CODE = Data_meta_modelPackage.CLASSIFIER_FEATURE_COUNT + 0;
+	int SUBDOMAIN__CODE = Data_meta_modelPackage.TYPE_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute.
@@ -818,7 +818,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SUBDOMAIN__DESCRIPTION = Data_meta_modelPackage.CLASSIFIER_FEATURE_COUNT + 1;
+	int SUBDOMAIN__DESCRIPTION = Data_meta_modelPackage.TYPE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Domain id</b></em>' reference.
@@ -827,7 +827,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SUBDOMAIN__DOMAIN_ID = Data_meta_modelPackage.CLASSIFIER_FEATURE_COUNT + 2;
+	int SUBDOMAIN__DOMAIN_ID = Data_meta_modelPackage.TYPE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Facet id</b></em>' reference.
@@ -836,7 +836,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SUBDOMAIN__FACET_ID = Data_meta_modelPackage.CLASSIFIER_FEATURE_COUNT + 3;
+	int SUBDOMAIN__FACET_ID = Data_meta_modelPackage.TYPE_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Is listed</b></em>' attribute.
@@ -845,7 +845,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SUBDOMAIN__IS_LISTED = Data_meta_modelPackage.CLASSIFIER_FEATURE_COUNT + 4;
+	int SUBDOMAIN__IS_LISTED = Data_meta_modelPackage.TYPE_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Is natural</b></em>' attribute.
@@ -854,7 +854,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SUBDOMAIN__IS_NATURAL = Data_meta_modelPackage.CLASSIFIER_FEATURE_COUNT + 5;
+	int SUBDOMAIN__IS_NATURAL = Data_meta_modelPackage.TYPE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Maintenance agency id</b></em>' reference.
@@ -863,7 +863,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SUBDOMAIN__MAINTENANCE_AGENCY_ID = Data_meta_modelPackage.CLASSIFIER_FEATURE_COUNT + 6;
+	int SUBDOMAIN__MAINTENANCE_AGENCY_ID = Data_meta_modelPackage.TYPE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Subdomain id</b></em>' attribute.
@@ -872,7 +872,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SUBDOMAIN__SUBDOMAIN_ID = Data_meta_modelPackage.CLASSIFIER_FEATURE_COUNT + 7;
+	int SUBDOMAIN__SUBDOMAIN_ID = Data_meta_modelPackage.TYPE_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Items</b></em>' containment reference list.
@@ -881,7 +881,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SUBDOMAIN__ITEMS = Data_meta_modelPackage.CLASSIFIER_FEATURE_COUNT + 8;
+	int SUBDOMAIN__ITEMS = Data_meta_modelPackage.TYPE_FEATURE_COUNT + 8;
 
 	/**
 	 * The number of structural features of the '<em>SUBDOMAIN</em>' class.
@@ -890,7 +890,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SUBDOMAIN_FEATURE_COUNT = Data_meta_modelPackage.CLASSIFIER_FEATURE_COUNT + 9;
+	int SUBDOMAIN_FEATURE_COUNT = Data_meta_modelPackage.TYPE_FEATURE_COUNT + 9;
 
 	/**
 	 * The number of operations of the '<em>SUBDOMAIN</em>' class.
@@ -899,7 +899,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SUBDOMAIN_OPERATION_COUNT = Data_meta_modelPackage.CLASSIFIER_OPERATION_COUNT + 0;
+	int SUBDOMAIN_OPERATION_COUNT = Data_meta_modelPackage.TYPE_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.openregspecs.model.core.impl.SUBDOMAIN_ENUMERATIONImpl <em>SUBDOMAIN ENUMERATION</em>}' class.

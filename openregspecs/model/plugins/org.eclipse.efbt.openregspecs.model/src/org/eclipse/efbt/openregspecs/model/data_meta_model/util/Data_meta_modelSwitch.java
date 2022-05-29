@@ -141,11 +141,11 @@ public class Data_meta_modelSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case Data_meta_modelPackage.CLASSIFIER: {
-				Classifier classifier = (Classifier)theEObject;
-				T result = caseClassifier(classifier);
-				if (result == null) result = caseNamedElement(classifier);
-				if (result == null) result = caseElement(classifier);
+			case Data_meta_modelPackage.TYPE: {
+				Type type = (Type)theEObject;
+				T result = caseType(type);
+				if (result == null) result = caseNamedElement(type);
+				if (result == null) result = caseElement(type);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -224,6 +224,12 @@ public class Data_meta_modelSwitch<T> extends Switch<T> {
 			case Data_meta_modelPackage.ENUM_MEMBER: {
 				EnumMember enumMember = (EnumMember)theEObject;
 				T result = caseEnumMember(enumMember);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Data_meta_modelPackage.TYPES_AND_CONCEPTS: {
+				TypesAndConcepts typesAndConcepts = (TypesAndConcepts)theEObject;
+				T result = caseTypesAndConcepts(typesAndConcepts);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -337,17 +343,17 @@ public class Data_meta_modelSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Classifier</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Type</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Classifier</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Type</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseClassifier(Classifier object) {
+	public T caseType(Type object) {
 		return null;
 	}
 
@@ -498,6 +504,21 @@ public class Data_meta_modelSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseEnumMember(EnumMember object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Types And Concepts</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Types And Concepts</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseTypesAndConcepts(TypesAndConcepts object) {
 		return null;
 	}
 

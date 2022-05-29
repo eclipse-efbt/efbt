@@ -2,6 +2,7 @@
  */
 package org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.util;
 
+import org.eclipse.efbt.openregspecs.model.data_meta_model.TypesAndConcepts;
 import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.*;
 
 import org.eclipse.emf.common.notify.Adapter;
@@ -94,6 +95,10 @@ public class openregspecs_smcubes_core_extensionAdapterFactory extends AdapterFa
 			@Override
 			public Adapter caseModule(org.eclipse.efbt.openregspecs.model.module_management.Module object) {
 				return createModuleAdapter();
+			}
+			@Override
+			public Adapter caseTypesAndConcepts(TypesAndConcepts object) {
+				return createTypesAndConceptsAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -210,6 +215,20 @@ public class openregspecs_smcubes_core_extensionAdapterFactory extends AdapterFa
 	 * @generated
 	 */
 	public Adapter createModuleAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.openregspecs.model.data_meta_model.TypesAndConcepts <em>Types And Concepts</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.openregspecs.model.data_meta_model.TypesAndConcepts
+	 * @generated
+	 */
+	public Adapter createTypesAndConceptsAdapter() {
 		return null;
 	}
 

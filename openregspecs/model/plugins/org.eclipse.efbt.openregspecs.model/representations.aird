@@ -15,6 +15,6 @@
   <semanticResources>smcubes_model/openregspecs_smcubes_core_extension.ecore</semanticResources>
   <semanticResources>smcubes_model/openregspecs_smcubes_extra_extension.ecore</semanticResources>
   <semanticResources>smcubes_model/rendering.ecore</semanticResources>
-  <semanticResources>smcubes_model/smcubes_model.genmodel</semanticResources>
-  <semanticResources>smcubes_model/bird_model.ecore</semanticResources>
+  <semanticResources>smcubes_model/open_reg_specs.ecore</semanticResources>
+  <semanticResources>smcubes_model/open_reg_specs.genmodel</semanticResources>
 </viewpoint:DAnalysis>

@@ -68,6 +68,7 @@ public class Data_meta_modelFactoryImpl extends EFactoryImpl implements Data_met
 			case Data_meta_modelPackage.DERIVED_ENTITY: return createDerivedEntity();
 			case Data_meta_modelPackage.BASIC_ENTITY: return createBasicEntity();
 			case Data_meta_modelPackage.ENUM_MEMBER: return createEnumMember();
+			case Data_meta_modelPackage.TYPES_AND_CONCEPTS: return createTypesAndConcepts();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -191,6 +192,16 @@ public class Data_meta_modelFactoryImpl extends EFactoryImpl implements Data_met
 	public EnumMember createEnumMember() {
 		EnumMemberImpl enumMember = new EnumMemberImpl();
 		return enumMember;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public TypesAndConcepts createTypesAndConcepts() {
+		TypesAndConceptsImpl typesAndConcepts = new TypesAndConceptsImpl();
+		return typesAndConcepts;
 	}
 
 	/**

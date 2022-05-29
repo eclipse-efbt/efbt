@@ -2,8 +2,6 @@
  */
 package org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.impl;
 
-import bird_model.Bird_modelPackage;
-import bird_model.impl.Bird_modelPackageImpl;
 import org.eclipse.efbt.openregspecs.model.bpmn_lite.Bpmn_litePackage;
 import org.eclipse.efbt.openregspecs.model.core.CorePackage;
 
@@ -16,6 +14,8 @@ import org.eclipse.efbt.openregspecs.model.data_definition.impl.Data_definitionP
 import org.eclipse.efbt.openregspecs.model.data_meta_model.Data_meta_modelPackage;
 import org.eclipse.efbt.openregspecs.model.module_management.Module_managementPackage;
 
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.Open_reg_specsPackage;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.impl.Open_reg_specsPackageImpl;
 import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.DomainModule;
 import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.MemberHierarchyModule;
 import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.MemberModule;
@@ -143,20 +143,20 @@ public class openregspecs_smcubes_core_extensionPackageImpl extends EPackageImpl
 		CorePackageImpl theCorePackage = (CorePackageImpl)(registeredPackage instanceof CorePackageImpl ? registeredPackage : CorePackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Data_definitionPackage.eNS_URI);
 		Data_definitionPackageImpl theData_definitionPackage = (Data_definitionPackageImpl)(registeredPackage instanceof Data_definitionPackageImpl ? registeredPackage : Data_definitionPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Bird_modelPackage.eNS_URI);
-		Bird_modelPackageImpl theBird_modelPackage = (Bird_modelPackageImpl)(registeredPackage instanceof Bird_modelPackageImpl ? registeredPackage : Bird_modelPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Open_reg_specsPackage.eNS_URI);
+		Open_reg_specsPackageImpl theOpen_reg_specsPackage = (Open_reg_specsPackageImpl)(registeredPackage instanceof Open_reg_specsPackageImpl ? registeredPackage : Open_reg_specsPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theopenregspecs_smcubes_core_extensionPackage.createPackageContents();
 		theCorePackage.createPackageContents();
 		theData_definitionPackage.createPackageContents();
-		theBird_modelPackage.createPackageContents();
+		theOpen_reg_specsPackage.createPackageContents();
 
 		// Initialize created meta-data
 		theopenregspecs_smcubes_core_extensionPackage.initializePackageContents();
 		theCorePackage.initializePackageContents();
 		theData_definitionPackage.initializePackageContents();
-		theBird_modelPackage.initializePackageContents();
+		theOpen_reg_specsPackage.initializePackageContents();
 
 		// Mark meta-data to indicate it can't be changed
 		theopenregspecs_smcubes_core_extensionPackage.freeze();
@@ -407,6 +407,7 @@ public class openregspecs_smcubes_core_extensionPackageImpl extends EPackageImpl
 		// Obtain other dependent packages
 		Module_managementPackage theModule_managementPackage = (Module_managementPackage)EPackage.Registry.INSTANCE.getEPackage(Module_managementPackage.eNS_URI);
 		CorePackage theCorePackage = (CorePackage)EPackage.Registry.INSTANCE.getEPackage(CorePackage.eNS_URI);
+		Data_meta_modelPackage theData_meta_modelPackage = (Data_meta_modelPackage)EPackage.Registry.INSTANCE.getEPackage(Data_meta_modelPackage.eNS_URI);
 
 		// Create type parameters
 
@@ -418,6 +419,7 @@ public class openregspecs_smcubes_core_extensionPackageImpl extends EPackageImpl
 		memberModuleEClass.getESuperTypes().add(theModule_managementPackage.getModule());
 		variableModuleEClass.getESuperTypes().add(theModule_managementPackage.getModule());
 		subDomainModuleEClass.getESuperTypes().add(theModule_managementPackage.getModule());
+		smCubesCoreModelEClass.getESuperTypes().add(theData_meta_modelPackage.getTypesAndConcepts());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(domainModuleEClass, DomainModule.class, "DomainModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

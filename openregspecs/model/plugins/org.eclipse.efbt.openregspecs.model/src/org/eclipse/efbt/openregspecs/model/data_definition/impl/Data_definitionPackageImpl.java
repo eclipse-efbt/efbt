@@ -2,8 +2,6 @@
  */
 package org.eclipse.efbt.openregspecs.model.data_definition.impl;
 
-import bird_model.Bird_modelPackage;
-import bird_model.impl.Bird_modelPackageImpl;
 import org.eclipse.efbt.openregspecs.model.bpmn_lite.Bpmn_litePackage;
 import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.openregspecs_smcubes_core_extensionPackage;
 
@@ -20,6 +18,8 @@ import org.eclipse.efbt.openregspecs.model.data_definition.Data_definitionPackag
 
 import org.eclipse.efbt.openregspecs.model.data_meta_model.Data_meta_modelPackage;
 import org.eclipse.efbt.openregspecs.model.module_management.Module_managementPackage;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.Open_reg_specsPackage;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.impl.Open_reg_specsPackageImpl;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -222,20 +222,20 @@ public class Data_definitionPackageImpl extends EPackageImpl implements Data_def
 		CorePackageImpl theCorePackage = (CorePackageImpl)(registeredPackage instanceof CorePackageImpl ? registeredPackage : CorePackage.eINSTANCE);
 		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(openregspecs_smcubes_core_extensionPackage.eNS_URI);
 		openregspecs_smcubes_core_extensionPackageImpl theopenregspecs_smcubes_core_extensionPackage = (openregspecs_smcubes_core_extensionPackageImpl)(registeredPackage instanceof openregspecs_smcubes_core_extensionPackageImpl ? registeredPackage : openregspecs_smcubes_core_extensionPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Bird_modelPackage.eNS_URI);
-		Bird_modelPackageImpl theBird_modelPackage = (Bird_modelPackageImpl)(registeredPackage instanceof Bird_modelPackageImpl ? registeredPackage : Bird_modelPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(Open_reg_specsPackage.eNS_URI);
+		Open_reg_specsPackageImpl theOpen_reg_specsPackage = (Open_reg_specsPackageImpl)(registeredPackage instanceof Open_reg_specsPackageImpl ? registeredPackage : Open_reg_specsPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theData_definitionPackage.createPackageContents();
 		theCorePackage.createPackageContents();
 		theopenregspecs_smcubes_core_extensionPackage.createPackageContents();
-		theBird_modelPackage.createPackageContents();
+		theOpen_reg_specsPackage.createPackageContents();
 
 		// Initialize created meta-data
 		theData_definitionPackage.initializePackageContents();
 		theCorePackage.initializePackageContents();
 		theopenregspecs_smcubes_core_extensionPackage.initializePackageContents();
-		theBird_modelPackage.initializePackageContents();
+		theOpen_reg_specsPackage.initializePackageContents();
 
 		// Mark meta-data to indicate it can't be changed
 		theData_definitionPackage.freeze();
