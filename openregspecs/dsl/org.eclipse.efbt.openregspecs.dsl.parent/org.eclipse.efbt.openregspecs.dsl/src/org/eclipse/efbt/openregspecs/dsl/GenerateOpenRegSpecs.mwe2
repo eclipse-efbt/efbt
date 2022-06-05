@@ -13,13 +13,13 @@ Workflow {
 				baseName = "org.eclipse.efbt.openregspecs.dsl"
 				rootPath = rootPath
 				runtimeTest = {
-					enabled = true
+					enabled = false
 				}
 				eclipsePlugin = {
 					enabled = true
 				}
 				eclipsePluginTest = {
-					enabled = true
+					enabled = false
 				}
 				createEclipseMetaData = true
 			}
@@ -33,7 +33,7 @@ Workflow {
 		language = StandardLanguage {
 			name = "org.eclipse.efbt.openregspecs.dsl.OpenRegSpecs"
 			fileExtensions = "open_reg_specs"
-			referencedResource = "platform:/resource/org.eclipse.efbt.openregspecs.model/smcubes_model/open_reg_specs.genmodel"
+			referencedResource = "platform:/resource/org.eclipse.efbt.openregspecs.model/model/open_reg_specs.genmodel"
 			
 			fragment = ecore2xtext.Ecore2XtextValueConverterServiceFragment2 auto-inject {}
 

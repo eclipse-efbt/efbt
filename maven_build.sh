@@ -3,7 +3,10 @@ mvn install
 cd ../..
 cd openregspecs/query
 mvn install
-cd ../..  
+cd ../..
+cd openregspecs/dsl/org.eclipse.efbt.openregspecs.dsl.parent
+mvn install
+cd ../../..  
 cd controller/ldm
 mvn install
 cd ../..

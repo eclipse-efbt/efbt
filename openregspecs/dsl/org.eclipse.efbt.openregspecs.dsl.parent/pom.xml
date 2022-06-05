@@ -27,8 +27,6 @@
 		<module>org.eclipse.efbt.openregspecs.dsl.target</module>
 		<module>org.eclipse.efbt.openregspecs.dsl.feature</module>
 		<module>org.eclipse.efbt.openregspecs.dsl.repository</module>
-		<module>org.eclipse.efbt.openregspecs.dsl.tests</module>
-		<module>org.eclipse.efbt.openregspecs.dsl.ui.tests</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
