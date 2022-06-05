@@ -6,165 +6,22 @@
 
 <plugin>
 
-   <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated core_model -->
-      <package
-            uri="http://www.eclipse.org/efbt/bpmn_lite"
-            class="org.eclipse.efbt.openregspecs.model.bpmn_lite.Bpmn_litePackage"
-            genModel="core_model/core_model.genmodel"/>
-   </extension>
 
-   <extension point="org.eclipse.emf.ecore.extension_parser">
-      <!-- @generated core_model -->
-      <parser
-            type="bpmn_lite"
-            class="org.eclipse.efbt.openregspecs.model.bpmn_lite.util.Bpmn_liteResourceFactoryImpl"/>
-   </extension>
+
+
+
+
 
    <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated core_model -->
-      <package
-            uri="http://www.eclipse.org/efbt/data_meta_model"
-            class="org.eclipse.efbt.openregspecs.model.data_meta_model.Data_meta_modelPackage"
-            genModel="core_model/core_model.genmodel"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.extension_parser">
-      <!-- @generated core_model -->
-      <parser
-            type="data_meta_model"
-            class="org.eclipse.efbt.openregspecs.model.data_meta_model.util.Data_meta_modelResourceFactoryImpl"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated core_model -->
-      <package
-            uri="http://www.eclipse.org/efbt/module_management"
-            class="org.eclipse.efbt.openregspecs.model.module_management.Module_managementPackage"
-            genModel="core_model/core_model.genmodel"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.extension_parser">
-      <!-- @generated core_model -->
-      <parser
-            type="module_management"
-            class="org.eclipse.efbt.openregspecs.model.module_management.util.Module_managementResourceFactoryImpl"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated core_model -->
-      <package
-            uri="http://www.eclipse.org/efbt/requirements_text"
-            class="org.eclipse.efbt.openregspecs.model.requirements_text.Requirements_textPackage"
-            genModel="core_model/core_model.genmodel"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.extension_parser">
-      <!-- @generated core_model -->
-      <parser
-            type="requirements_text"
-            class="org.eclipse.efbt.openregspecs.model.requirements_text.util.Requirements_textResourceFactoryImpl"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated core_model -->
-      <package
-            uri="http://www.example.org/sql_lite"
-            class="org.eclipse.efbt.openregspecs.model.sql_lite.Sql_litePackage"
-            genModel="core_model/core_model.genmodel"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.extension_parser">
-      <!-- @generated core_model -->
-      <parser
-            type="sql_lite"
-            class="org.eclipse.efbt.openregspecs.model.sql_lite.util.Sql_liteResourceFactoryImpl"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated core_model -->
-      <package
-            uri="http://www.eclipse.org/efbt/testing"
-            class="org.eclipse.efbt.openregspecs.model.testing.TestingPackage"
-            genModel="core_model/core_model.genmodel"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.extension_parser">
-      <!-- @generated core_model -->
-      <parser
-            type="testing"
-            class="org.eclipse.efbt.openregspecs.model.testing.util.TestingResourceFactoryImpl"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated platform_call -->
-      <package
-            uri="http://www.eclipse.org/efbt/platform_call"
-            class="org.eclipse.efbt.openregspecs.model.platform_call.Platform_callPackage"
-            genModel="platform_calls/platform_call.genmodel"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.extension_parser">
-      <!-- @generated platform_call -->
-      <parser
-            type="platform_call"
-            class="org.eclipse.efbt.openregspecs.model.platform_call.util.Platform_callResourceFactoryImpl"/>
-   </extension>
-   <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated smcubes_model -->
-      <package
-            uri="http://www.eclipse.org/efbt/core"
-            class="org.eclipse.efbt.openregspecs.model.core.CorePackage"
-            genModel="smcubes_model/smcubes_model.genmodel"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.extension_parser">
-      <!-- @generated smcubes_model -->
-      <parser
-            type="core"
-            class="org.eclipse.efbt.openregspecs.model.core.util.CoreResourceFactoryImpl"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated smcubes_model -->
-      <package
-            uri="http://www.eclipse.org/efbt/data_definition"
-            class="org.eclipse.efbt.openregspecs.model.data_definition.Data_definitionPackage"
-            genModel="smcubes_model/smcubes_model.genmodel"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.extension_parser">
-      <!-- @generated smcubes_model -->
-      <parser
-            type="data_definition"
-            class="org.eclipse.efbt.openregspecs.model.data_definition.util.Data_definitionResourceFactoryImpl"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated smcubes_model -->
-      <package
-            uri="http://www.eclipse.org/efbt/openregspecs_smcubes_core_extension"
-            class="org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.openregspecs_smcubes_core_extensionPackage"
-            genModel="smcubes_model/smcubes_model.genmodel"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.extension_parser">
-      <!-- @generated smcubes_model -->
-      <parser
-            type="openregspecs_smcubes_core_extension"
-            class="org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.util.openregspecs_smcubes_core_extensionResourceFactoryImpl"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated smcubes_model -->
+      <!-- @generated open_reg_specs -->
       <package
             uri="http://www.eclipse.org/efbt/open_reg_specs"
             class="org.eclipse.efbt.openregspecs.model.open_reg_specs.Open_reg_specsPackage"
-            genModel="smcubes_model/smcubes_model.genmodel"/>
+            genModel="model/open_reg_specs.genmodel"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.extension_parser">
-      <!-- @generated smcubes_model -->
+      <!-- @generated open_reg_specs -->
       <parser
             type="open_reg_specs"
             class="org.eclipse.efbt.openregspecs.model.open_reg_specs.util.Open_reg_specsResourceFactoryImpl"/>

@@ -12,8 +12,8 @@
   <foreignModel>openregspecs_smcubes_extra_extension.ecore</foreignModel>
   <foreignModel>rendering.ecore</foreignModel>
   <foreignModel>open_reg_specs.ecore</foreignModel>
-  <genPackages prefix="Core" basePackage="org.eclipse.efbt.openregspecs.model" resource="XMI"
-      disposableProviderFactory="true" ecorePackage="core.ecore#/">
+  <genPackages prefix="Core" basePackage="org.eclipse.efbt.openregspecs.model" disposableProviderFactory="true"
+      ecorePackage="core.ecore#/">
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="core.ecore#//FACET_VALUE_TYPE">
       <genEnumLiterals ecoreEnumLiteral="core.ecore#//FACET_VALUE_TYPE/BigInteger"/>
       <genEnumLiterals ecoreEnumLiteral="core.ecore#//FACET_VALUE_TYPE/Boolean"/>
@@ -150,7 +150,7 @@
     </genClasses>
   </genPackages>
   <genPackages prefix="Data_definition" basePackage="org.eclipse.efbt.openregspecs.model"
-      resource="XMI" disposableProviderFactory="true" ecorePackage="data_definition.ecore#/">
+      disposableProviderFactory="true" ecorePackage="data_definition.ecore#/">
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="data_definition.ecore#//TYP_DMNSN">
       <genEnumLiterals ecoreEnumLiteral="data_definition.ecore#//TYP_DMNSN/B"/>
       <genEnumLiterals ecoreEnumLiteral="data_definition.ecore#//TYP_DMNSN/M"/>
@@ -292,7 +292,7 @@
     </genClasses>
   </genPackages>
   <genPackages prefix="openregspecs_smcubes_core_extension" basePackage="org.eclipse.efbt.openregspecs.model"
-      resource="XMI" disposableProviderFactory="true" ecorePackage="openregspecs_smcubes_core_extension.ecore#/">
+      disposableProviderFactory="true" ecorePackage="openregspecs_smcubes_core_extension.ecore#/">
     <genClasses ecoreClass="openregspecs_smcubes_core_extension.ecore#//DomainModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference openregspecs_smcubes_core_extension.ecore#//DomainModule/domains"/>
     </genClasses>
@@ -319,7 +319,7 @@
     </genClasses>
   </genPackages>
   <genPackages prefix="Open_reg_specs" basePackage="org.eclipse.efbt.openregspecs.model"
-      resource="XMI" disposableProviderFactory="true" ecorePackage="open_reg_specs.ecore#/">
+      disposableProviderFactory="true" ecorePackage="open_reg_specs.ecore#/">
     <genClasses ecoreClass="open_reg_specs.ecore#//OpenRegSpecs">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//OpenRegSpecs/requirements"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//OpenRegSpecs/types_and_concepts"/>

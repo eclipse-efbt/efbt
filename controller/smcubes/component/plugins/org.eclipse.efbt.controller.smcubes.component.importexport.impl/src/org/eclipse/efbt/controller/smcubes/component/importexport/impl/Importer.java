@@ -22,18 +22,13 @@ import java.util.List;
 import org.eclipse.efbt.openregspecs.model.module_management.ModuleDependencies;
 import org.eclipse.efbt.openregspecs.model.module_management.ModuleDependency;
 import org.eclipse.efbt.openregspecs.model.module_management.Module_managementFactory;
-import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_extra_extension.openregspecs_smcubes_extra_extensionFactory;
-import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_extra_extension.CombinationModule;
-import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_extra_extension.CubeModule;
+
 import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.openregspecs_smcubes_core_extensionFactory;
 import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.DomainModule;
 import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.MemberModule;
 import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.SMCubesCoreModel;
 import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.VariableModule;
-import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_extra_extension.CubeMappingModule;
-import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_extra_extension.MappingDefinitionModule;
-import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_extra_extension.MemberMappingModule;
-import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_extra_extension.VariableMappingModule;
+
 import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.SubDomainModule;
 import org.eclipse.efbt.controller.smcubes.component.importexport.api.BirdImporter;
 import org.eclipse.emf.common.util.BasicEList;
@@ -79,35 +74,35 @@ public abstract class Importer implements BirdImporter {
 	/**
 	 * The subdomain enumerations
 	 */
-	protected List<CombinationModule> combinationsModules;
+	//protected List<CombinationModule> combinationsModules;
 	/**
 	 * The cubesModule
 	 */
-	protected CubeModule cubesModule;
+	//protected CubeModule cubesModule;
 	/**
 	 * The cubeStructuresModule
 	 */
-	protected CubeModule cubeStructuresModule;
+	//protected CubeModule cubeStructuresModule;
 	/**
 	 * The cubeStructureItemsModule
 	 */
-	protected CubeModule cubeStructureItemsModule;
+	//protected CubeModule cubeStructureItemsModule;
 	/**
 	 * The cubeMappingModule
 	 */
-	protected CubeMappingModule cubeMappingModule;
+	//protected CubeMappingModule cubeMappingModule;
 	/**
 	 * The mappingDefinitionModule
 	 */
-	protected MappingDefinitionModule mappingDefinitionModule;
+	//protected MappingDefinitionModule mappingDefinitionModule;
 	/**
 	 * The memberMappingModule
 	 */
-	protected MemberMappingModule memberMappingModule;
+	//protected MemberMappingModule memberMappingModule;
 	/**
 	 * The variableMappingModule
 	 */
-	protected VariableMappingModule variableMappingModule;
+	//protected VariableMappingModule variableMappingModule;
 	
 	public String logMessage = "";
 	
@@ -144,17 +139,17 @@ public abstract class Importer implements BirdImporter {
 		subdomains = openregspecs_smcubes_core_extensionFactory.eINSTANCE.createSubDomainModule();
 		subdomains.setName("subdomainsModule");
 
-		cubesModule = openregspecs_smcubes_extra_extensionFactory.eINSTANCE.createCubeModule();
-		cubesModule.setName("cubesModule");
-		cubeStructuresModule = openregspecs_smcubes_extra_extensionFactory.eINSTANCE.createCubeModule();
-		cubeStructuresModule.setName("cubeStructuresModule");
-		cubeStructureItemsModule = openregspecs_smcubes_extra_extensionFactory.eINSTANCE.createCubeModule();
-		cubeStructureItemsModule.setName("cubeStructureItemsModule");
-		combinationsModules = new BasicEList<CombinationModule>();
-		cubeMappingModule = openregspecs_smcubes_extra_extensionFactory.eINSTANCE.createCubeMappingModule();
-		mappingDefinitionModule = openregspecs_smcubes_extra_extensionFactory.eINSTANCE.createMappingDefinitionModule();
-		memberMappingModule = openregspecs_smcubes_extra_extensionFactory.eINSTANCE.createMemberMappingModule();
-		variableMappingModule = openregspecs_smcubes_extra_extensionFactory.eINSTANCE.createVariableMappingModule();
+		//cubesModule = openregspecs_smcubes_extra_extensionFactory.eINSTANCE.createCubeModule();
+		//cubesModule.setName("cubesModule");
+		//cubeStructuresModule = openregspecs_smcubes_extra_extensionFactory.eINSTANCE.createCubeModule();
+		//cubeStructuresModule.setName("cubeStructuresModule");
+		////cubeStructureItemsModule = openregspecs_smcubes_extra_extensionFactory.eINSTANCE.createCubeModule();
+		//cubeStructureItemsModule.setName("cubeStructureItemsModule");
+		//combinationsModules = new BasicEList<CombinationModule>();
+		//cubeMappingModule = openregspecs_smcubes_extra_extensionFactory.eINSTANCE.createCubeMappingModule();
+		//mappingDefinitionModule = openregspecs_smcubes_extra_extensionFactory.eINSTANCE.createMappingDefinitionModule();
+		//memberMappingModule = openregspecs_smcubes_extra_extensionFactory.eINSTANCE.createMemberMappingModule();
+		//variableMappingModule = openregspecs_smcubes_extra_extensionFactory.eINSTANCE.createVariableMappingModule();
 
 		birdModel = openregspecs_smcubes_core_extensionFactory.eINSTANCE.createSMCubesCoreModel();
 		// birdModel.setCombinations(combinationModule);
@@ -182,12 +177,12 @@ public abstract class Importer implements BirdImporter {
 	/**
 	 * Create all the Combination EObjects
 	 */
-	public abstract void createAllCombinations();
+	//public abstract void createAllCombinations();
 
 	/**
 	 * Create all the Cube EObjects
 	 */
-	public abstract void createAllCubes();
+	//public abstract void createAllCubes();
 
 	/**
 	 * Create all the Domain EObjects
@@ -197,7 +192,7 @@ public abstract class Importer implements BirdImporter {
 	/**
 	 * Create all the Mapping EObjects
 	 */
-	public abstract void createAllMappings();
+	//public abstract void createAllMappings();
 
 	/**
 	 * Create all the Members EObjects

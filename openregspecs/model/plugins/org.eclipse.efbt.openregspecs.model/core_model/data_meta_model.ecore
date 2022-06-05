@@ -33,7 +33,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="StructuralFeature" abstract="true" eSuperTypes="#//TypedElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="TypedElement" abstract="true" eSuperTypes="#//NamedElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="classifier" eType="#//Type"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//Type"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GeneratedEntity" eSuperTypes="#//Entity">
     <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" upperBound="-1"

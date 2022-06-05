@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="ASCII"?>
 <description:Group xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:filter="http://www.eclipse.org/sirius/diagram/description/filter/1.1.0" xmlns:properties="http://www.eclipse.org/sirius/properties/1.0.0" xmlns:style="http://www.eclipse.org/sirius/diagram/description/style/1.1.0" xmlns:tool="http://www.eclipse.org/sirius/diagram/description/tool/1.1.0" xmlns:tool_1="http://www.eclipse.org/sirius/description/tool/1.1.0" name="bpmn_lite" version="12.0.0.2017041100">
-  <ownedViewpoints name="Process" label="bpmn_lite - Process" modelFileExtension="testing">
+  <ownedViewpoints name="Process" label="bpmn_lite - Process" modelFileExtension="open_reg_specs">
     <ownedRepresentations xsi:type="description_1:DiagramDescription" name="SubProcessDiagram" label="SubProcess Diagram" titleExpression="aql:self.name" domainClass="bpmn_lite.SubProcess" enablePopupBars="true">
+      <metamodel href="../../org.eclipse.efbt.openregspecs.model/model/open_reg_specs.ecore#/"/>
       <filters xsi:type="filter:CompositeFilterDescription" name="FitlerOnVisibility">
         <filters xsi:type="filter:MappingFilter" mappings="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPSubProcess'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='LabelEdge'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='SequenceFlow'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPExclusiveGateway'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPExternalLabel'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPInclusiveGateway'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPParallelGateway']" semanticConditionExpression="aql: not (self.invisible)"/>
       </filters>
@@ -762,6 +763,18 @@
             <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
           </style>
         </containerMappings>
+      </defaultLayer>
+    </ownedRepresentations>
+    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="OpenRegSpecs" initialisation="true" domainClass="OpenRegSpecs" enablePopupBars="true">
+      <metamodel href="../../org.eclipse.efbt.openregspecs.model/model/open_reg_specs.ecore#/"/>
+      <defaultLayer name="Default">
+        <nodeMappings name="OpenRegSpecsNode" semanticCandidatesExpression="aql:self" domainClass="OpenRegSpecs">
+          <style xsi:type="style:SquareDescription" labelSize="12" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+          </style>
+        </nodeMappings>
       </defaultLayer>
     </ownedRepresentations>
     <ownedJavaExtensions qualifiedClassName="org.eclipse.efbt.openregspecs.testing.ui.sirius.core.TaskService"/>
