@@ -21,4 +21,5 @@
   <semanticResources>src/org/eclipse/efbt/openregspecs/model/GenerateSMCubesModel.mwe2</semanticResources>
   <semanticResources>src/org/eclipse/efbt/openregspecs/model/GeneratePlatformCallModel.mwe2</semanticResources>
   <semanticResources>src/org/eclipse/efbt/openregspecs/model/generate/GenerateOpenRegSpecsModel.mwe2</semanticResources>
+  <semanticResources>src/org/eclipse/efbt/openregspecs/model/open_reg_specs/impl/open_reg_specs.ecore</semanticResources>
 </viewpoint:DAnalysis>

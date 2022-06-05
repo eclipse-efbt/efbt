@@ -22,19 +22,19 @@ import java.util.List;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
-import org.eclipse.efbt.openregspecs.model.core.CoreFactory;
-import org.eclipse.efbt.openregspecs.model.core.DOMAIN;
-import org.eclipse.efbt.openregspecs.model.core.FACET_VALUE_TYPE;
-import org.eclipse.efbt.openregspecs.model.core.MEMBER;
-import org.eclipse.efbt.openregspecs.model.core.SUBDOMAIN;
-import org.eclipse.efbt.openregspecs.model.core.SUBDOMAIN_ENUMERATION;
-import org.eclipse.efbt.openregspecs.model.core.VARIABLE;
-import org.eclipse.efbt.openregspecs.model.data_definition.COMBINATION;
-import org.eclipse.efbt.openregspecs.model.data_definition.COMBINATION_ITEM;
-import org.eclipse.efbt.openregspecs.model.data_definition.CUBE;
-import org.eclipse.efbt.openregspecs.model.data_definition.CUBE_STRUCTURE;
-import org.eclipse.efbt.openregspecs.model.data_definition.CUBE_STRUCTURE_ITEM;
-import org.eclipse.efbt.openregspecs.model.data_definition.Data_definitionFactory;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.Open_reg_specsFactory;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.DOMAIN;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.FACET_VALUE_TYPE;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.MEMBER;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.SUBDOMAIN;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.SUBDOMAIN_ENUMERATION;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.VARIABLE;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.COMBINATION;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.COMBINATION_ITEM;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.CUBE;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.CUBE_STRUCTURE;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.CUBE_STRUCTURE_ITEM;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.Open_reg_specsFactory;
 import org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.access.api.AccessRow;
 import org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.access.api.AccessUtils;
 import org.eclipse.efbt.controller.smcubes.component.access.provider.AccessUtilProvider;
@@ -327,7 +327,7 @@ public class BIRDImporterImpl extends Importer {
 			List<AccessRow> list = accessUtils.getRowsForTable(filepath, "DOMAIN");
 			for (AccessRow row : list) {
 				
-				DOMAIN domain = CoreFactory.eINSTANCE.createDOMAIN();
+				DOMAIN domain = Open_reg_specsFactory.eINSTANCE.createDOMAIN();
 				domain.setCode(row.getString("CODE"));
 				domain.setDomain_id(replaceDots(row.getString("DOMAIN_ID")));
 				domain.setDescription(row.getString("DESCRIPTION"));
@@ -390,7 +390,7 @@ public class BIRDImporterImpl extends Importer {
 			List<AccessRow> list = accessUtils.getRowsForTable(filepath, "SUBDOMAIN");
 			for (AccessRow row : list) {
 
-				SUBDOMAIN subDomain = CoreFactory.eINSTANCE.createSUBDOMAIN();
+				SUBDOMAIN subDomain = Open_reg_specsFactory.eINSTANCE.createSUBDOMAIN();
 				subDomain.setCode(row.getString("CODE"));
 				subDomain.setSubdomain_id(replaceDots(row.getString("SUBDOMAIN_ID")));
 				subDomain.setName(replaceDots(row.getString("SUBDOMAIN_ID")));
@@ -430,7 +430,7 @@ public class BIRDImporterImpl extends Importer {
 				DOMAIN domain= subdomain.getDomain_id();
 				MEMBER member= getMemberWithIDAndDomain(memberID, domain);
 				
-				SUBDOMAIN_ENUMERATION subDomainEnum = CoreFactory.eINSTANCE.createSUBDOMAIN_ENUMERATION();
+				SUBDOMAIN_ENUMERATION subDomainEnum = Open_reg_specsFactory.eINSTANCE.createSUBDOMAIN_ENUMERATION();
 				subDomainEnum.setMember_id(member);
 				try
 				{
@@ -463,7 +463,7 @@ public class BIRDImporterImpl extends Importer {
 			List<AccessRow> list = accessUtils.getRowsForTable(filepath, "MEMBER");
 			for (AccessRow row : list) {
 
-				MEMBER member = CoreFactory.eINSTANCE.createMEMBER();
+				MEMBER member = Open_reg_specsFactory.eINSTANCE.createMEMBER();
 				member.setCode(row.getString("CODE"));
 				member.setMember_id(replaceDots(row.getString("MEMBER_ID")));
 				member.setDescription(row.getString("DESCRIPTION"));
@@ -548,7 +548,7 @@ public class BIRDImporterImpl extends Importer {
 
 			for (AccessRow row : list) {
 
-				VARIABLE variable = CoreFactory.eINSTANCE.createVARIABLE();
+				VARIABLE variable = Open_reg_specsFactory.eINSTANCE.createVARIABLE();
 				variable.setCode(row.getString("CODE"));
 				variable.setVariable_id(replaceDots(row.getString("VARIABLE_ID")));
 				variable.setDescription(row.getString("DESCRIPTION"));

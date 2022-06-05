@@ -3,19 +3,19 @@ Created on 22 Jan 2022
 
 @author: Neil
 '''
-from bird_model import EntityModule, Entity, DerivedEntity, BasicEntity,Attribute,OneToOneRelationshipAttribute,OneToManyRelationshipAttribute,RelationshipAttribute, MEMBER, DOMAIN, FACET_VALUE_TYPE, SUBDOMAIN,VARIABLE,  DomainModule, BIRDModel, SMCubesCoreModel, MemberModule, VariableModule,SubDomainModule
+from open_reg_specs import EntityModule, Entity, DerivedEntity, BasicEntity,Attribute,OneToOneRelationshipAttribute,OneToManyRelationshipAttribute,RelationshipAttribute, MEMBER, DOMAIN, FACET_VALUE_TYPE, SUBDOMAIN,VARIABLE,  DomainModule, OpenRegSpecs, SMCubesCoreModel, MemberModule, VariableModule,SubDomainModule
 from pyecore.resources import ResourceSet, URI
 import csv
 class SQLDeveloperImport(object):
         
     def convert (self,fileDirectory,outputDirectory):  
-        birdModel = BIRDModel() 
-        birdpackage = EntityModule( nsURI='"http://www.eclipse.org/bird"', nsPrefix='bird')
-        birdpackage.name = 'bird'
-        birdModel.entityModule.extend([birdpackage])
+        openRegSpecs = OpenRegSpecs() 
+        entityModule = EntityModule( nsURI='"http://www.eclipse.org/open_reg_specs"', nsPrefix='open_reg_specs')
+        entityModule.name = 'open_reg_specs'
+        openRegSpecs.data_model.extend([entityModule])
         
         smcubesCoreModel = SMCubesCoreModel()
-        birdModel.smcubesCoreModel = smcubesCoreModel
+        openRegSpecs.types_and_concepts = smcubesCoreModel
         classesMap = {}
         fileLocation = fileDirectory + "\\DM_Entities.csv"
         headerSkipped = False
@@ -31,10 +31,10 @@ class SQLDeveloperImport(object):
                     alteredClassName = SQLDeveloperImport.replaceSpaceWithUnderscore(self,className);
                     eclass = BasicEntity()
                     eclass.name = alteredClassName
-                    birdpackage.entities.extend([eclass])
+                    entityModule.entities.extend([eclass])
                     classesMap[objectID]=eclass
-                    #print("birdpackage.eClassifiers")
-                    #print(birdpackage.eClassifiers)
+                    #print("entityModule.eClassifiers")
+                    #print(entityModule.eClassifiers)
                     #print("classesMap")
                     #print(classesMap)
 
@@ -355,8 +355,8 @@ class SQLDeveloperImport(object):
 
         rset = ResourceSet()
         
-        resource = rset.create_resource(URI(outputDirectory + 'ldm.bird_model'))  # This will create an XMI resource
-        resource.append(birdModel)
+        resource = rset.create_resource(URI(outputDirectory + 'ldm.open_reg_specs'))  # This will create an XMI resource
+        resource.append(openRegSpecs)
         resource.save()
         
         

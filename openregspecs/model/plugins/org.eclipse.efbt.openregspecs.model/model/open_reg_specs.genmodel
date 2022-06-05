@@ -549,5 +549,26 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//SMCubesCoreModel/subDomainModules"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//SMCubesCoreModel/memberHierarchyModules"/>
     </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//PlatformCall">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//PlatformCall/errorMessage"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//PlatformCall/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//PlatformCall/returnStatus"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//PlatformCallModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//PlatformCallModule/platformCalls"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//ImportBIRDFromMSAccess">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//ImportBIRDFromMSAccess/inputDirectory"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//ImportBIRDFromMSAccess/outputDirectory"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//CreateLogicalTransformationViewForScope">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CreateLogicalTransformationViewForScope/logicalTransformationModule"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CreateLogicalTransformationViewForScope/attributeLineage"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CreateLogicalTransformationViewForScope/testScope"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//ConvertDataMetaModelToEcore">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//ConvertDataMetaModelToEcore/outputDirectory"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//ConvertDataMetaModelToEcore/entityModule"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>

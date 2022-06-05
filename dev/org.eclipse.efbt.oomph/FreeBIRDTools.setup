@@ -92,47 +92,23 @@
       xsi:type="setup.workingsets:WorkingSetTask"
       id="efbt_working_sets">
     <workingSet
-        name="openregspecs_core"
-        id="openregspecs_core">
+        name="openregspecs_model"
+        id="openregspecs_model">
       <predicate
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.openregspecs.core.*"/>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.edit"/>
-        </operand>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.editor"/>
-        </operand>
+            pattern=".*\.eclipse.efbt.openregspecs.model.*"/>
       </predicate>
     </workingSet>
     <workingSet
-        name="openregspecs_smcubes"
-        id="openregspecs_smcubes">
+        name="openregspecs_dsl"
+        id="openregspecs_dsl">
       <predicate
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.openregspecs.smcubes.*"/>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.edit"/>
-        </operand>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.editor"/>
-        </operand>
+            pattern=".*\.eclipse.efbt.openregspecs.dsl.*"/>
       </predicate>
     </workingSet>
     <workingSet
@@ -143,16 +119,6 @@
         <operand
             xsi:type="predicates:NamePredicate"
             pattern=".*\.eclipse.efbt.controller.ldm.*"/>
-      </predicate>
-    </workingSet>
-    <workingSet
-        name="controller_dmm"
-        id="controller_dmm">
-      <predicate
-          xsi:type="predicates:AndPredicate">
-        <operand
-            xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.controller.data_meta_model.*"/>
       </predicate>
     </workingSet>
     <workingSet
@@ -208,19 +174,6 @@
           pattern=".*\.eclipse.efbt.oomph.*"/>
     </workingSet>
     <workingSet
-        name="generated"
-        id="generated">
-      <predicate
-          xsi:type="predicates:OrPredicate">
-        <operand
-            xsi:type="predicates:NamePredicate"
-            pattern=".*\.edit"/>
-        <operand
-            xsi:type="predicates:NamePredicate"
-            pattern=".*\.editor"/>
-      </predicate>
-    </workingSet>
-    <workingSet
         name="installations"
         id="installations">
       <predicate
@@ -241,72 +194,6 @@
         <operand
             xsi:type="predicates:NamePredicate"
             pattern=".*\.eclipse.efbt.controller.platformcall.*"/>
-      </predicate>
-    </workingSet>
-    <workingSet
-        name="openregspecs_platform_call"
-        id="openregspecs_platform_call">
-      <predicate
-          xsi:type="predicates:AndPredicate">
-        <operand
-            xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.openregspecs.platform_call.*"/>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.edit"/>
-        </operand>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.editor"/>
-        </operand>
-      </predicate>
-    </workingSet>
-    <workingSet
-        name="openregspecs_computation"
-        id="openregspecs_computation">
-      <predicate
-          xsi:type="predicates:AndPredicate">
-        <operand
-            xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.openregspecs.computation.*"/>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.edit"/>
-        </operand>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.editor"/>
-        </operand>
-      </predicate>
-    </workingSet>
-    <workingSet
-        name="openregspecs_testing"
-        id="openregspecs_testing">
-      <predicate
-          xsi:type="predicates:AndPredicate">
-        <operand
-            xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.openregspecs.openregspecs_testing.*"/>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.edit"/>
-        </operand>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.editor"/>
-        </operand>
       </predicate>
     </workingSet>
     <description>efbt_working_sets</description>

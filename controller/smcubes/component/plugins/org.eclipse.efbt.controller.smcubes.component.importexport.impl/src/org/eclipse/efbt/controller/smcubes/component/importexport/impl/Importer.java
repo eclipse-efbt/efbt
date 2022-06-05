@@ -19,17 +19,17 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.efbt.openregspecs.model.module_management.ModuleDependencies;
-import org.eclipse.efbt.openregspecs.model.module_management.ModuleDependency;
-import org.eclipse.efbt.openregspecs.model.module_management.Module_managementFactory;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.ModuleDependencies;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.ModuleDependency;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.Open_reg_specsFactory;
 
-import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.openregspecs_smcubes_core_extensionFactory;
-import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.DomainModule;
-import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.MemberModule;
-import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.SMCubesCoreModel;
-import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.VariableModule;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.Open_reg_specsFactory;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.DomainModule;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.MemberModule;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.SMCubesCoreModel;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.VariableModule;
 
-import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.SubDomainModule;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.SubDomainModule;
 import org.eclipse.efbt.controller.smcubes.component.importexport.api.BirdImporter;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.URI;
@@ -130,13 +130,13 @@ public abstract class Importer implements BirdImporter {
 	 * Constructor
 	 */
 	public Importer() {
-		domains = openregspecs_smcubes_core_extensionFactory.eINSTANCE.createDomainModule();
+		domains = Open_reg_specsFactory.eINSTANCE.createDomainModule();
 		domains.setName("domainsModule");
-		variables = openregspecs_smcubes_core_extensionFactory.eINSTANCE.createVariableModule();
+		variables = Open_reg_specsFactory.eINSTANCE.createVariableModule();
 		variables.setName("variablesModule");
-		members = openregspecs_smcubes_core_extensionFactory.eINSTANCE.createMemberModule();
+		members = Open_reg_specsFactory.eINSTANCE.createMemberModule();
 		members.setName("membersModule");
-		subdomains = openregspecs_smcubes_core_extensionFactory.eINSTANCE.createSubDomainModule();
+		subdomains = Open_reg_specsFactory.eINSTANCE.createSubDomainModule();
 		subdomains.setName("subdomainsModule");
 
 		//cubesModule = openregspecs_smcubes_extra_extensionFactory.eINSTANCE.createCubeModule();
@@ -151,7 +151,7 @@ public abstract class Importer implements BirdImporter {
 		//memberMappingModule = openregspecs_smcubes_extra_extensionFactory.eINSTANCE.createMemberMappingModule();
 		//variableMappingModule = openregspecs_smcubes_extra_extensionFactory.eINSTANCE.createVariableMappingModule();
 
-		birdModel = openregspecs_smcubes_core_extensionFactory.eINSTANCE.createSMCubesCoreModel();
+		birdModel = Open_reg_specsFactory.eINSTANCE.createSMCubesCoreModel();
 		// birdModel.setCombinations(combinationModule);
 		//birdModel.getCubes().add(cubesModule);
 		//birdModel.getCubes().add(cubeStructuresModule);
@@ -162,11 +162,11 @@ public abstract class Importer implements BirdImporter {
 		//birdModel.getMembers().add(members);
 		//birdModel.getVariables().add(variables);
 		
-		ModuleDependencies dependencies = Module_managementFactory.eINSTANCE.createModuleDependencies();
+		ModuleDependencies dependencies = Open_reg_specsFactory.eINSTANCE.createModuleDependencies();
 		
 		domains.setDependencies(dependencies);
 		
-		ModuleDependency dependency = Module_managementFactory.eINSTANCE.createModuleDependency();
+		ModuleDependency dependency = Open_reg_specsFactory.eINSTANCE.createModuleDependency();
 		
 		dependencies.getTheModules().add(dependency);
 		dependency.setTheModule(members);
