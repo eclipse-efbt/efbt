@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.efbt.controller.platformcall.component.core;
 
-import org.eclipse.efbt.openregspecs.model.platform_call.*;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.*;
 import org.eclipse.efbt.controller.ldm.component.testing.LogicalTransformationViews;
 import org.eclipse.efbt.controller.smcubes.component.importexport.impl.ImportOfBIRDFromMSAccess;
 
