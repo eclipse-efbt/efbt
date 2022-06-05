@@ -33,6 +33,9 @@
    <feature id="org.eclipse.efbt.openregspecs.sirius_ui.feature">
       <category name="efbt"/>
    </feature>
+   <feature id="org.eclipse.efbt.openregspecs.dsl.feature">
+      <category name="efbt"/>
+   </feature>
    <bundle id="org.eclipse.efbt.openregspecs.platform_call.ui.sirius.core">
       <category name="efbt"/>
    </bundle>
