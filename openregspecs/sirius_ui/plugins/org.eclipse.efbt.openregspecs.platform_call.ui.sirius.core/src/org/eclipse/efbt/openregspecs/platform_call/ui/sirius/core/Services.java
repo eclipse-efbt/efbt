@@ -14,7 +14,7 @@ package org.eclipse.efbt.openregspecs.platform_call.ui.sirius.core;
 
 
 import org.eclipse.efbt.controller.platformcall.component.core.Controller;
-import org.eclipse.efbt.openregspecs.model.platform_call.PlatformCall;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.PlatformCall;
 
 
 
