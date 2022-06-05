@@ -14,8 +14,8 @@ package org.eclipse.efbt.openregspecs.smcubes.ui.sirius;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.efbt.openregspecs.model.core.DOMAIN;
-import org.eclipse.efbt.openregspecs.model.core.MEMBER;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.DOMAIN;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.MEMBER;
 import org.eclipse.efbt.openregspecs.smcubes.query.core.CustomQuery;
 
 
