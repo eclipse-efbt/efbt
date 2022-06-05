@@ -34,7 +34,7 @@ import org.eclipse.efbt.controller.smcubes.component.importexport.api.BirdImport
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.emfjson.jackson.resource.JsonResourceFactory;
+
 
 
 
@@ -244,11 +244,11 @@ public abstract class Importer implements BirdImporter {
 	 * Serialize all the EObjects to files.
 	 */
 	public void saveArtifactsAsJSON() {
-		JsonResourceFactory factory = new JsonResourceFactory();
-		URI domainsURI = URI.createFileURI(outputFilepath + "domains.openregspecs_smcubes_extension");
-		URI membersURI = URI.createFileURI(outputFilepath + "members.openregspecs_smcubes_extension");
-		URI variablesURI = URI.createFileURI(outputFilepath + "variables.openregspecs_smcubes_extension");
-		URI subdomainsURI = URI.createFileURI(outputFilepath + "subdomains.openregspecs_smcubes_extension");
+		//JsonResourceFactory factory = new JsonResourceFactory();
+		//URI domainsURI = URI.createFileURI(outputFilepath + "domains.openregspecs_smcubes_extension");
+		//URI membersURI = URI.createFileURI(outputFilepath + "members.openregspecs_smcubes_extension");
+		//URI variablesURI = URI.createFileURI(outputFilepath + "variables.openregspecs_smcubes_extension");
+		//URI subdomainsURI = URI.createFileURI(outputFilepath + "subdomains.openregspecs_smcubes_extension");
 		
 		//URI cubesURI = URI.createFileURI(outputFilepath + "cubes.openregspecs_smcubes_extension");
 		//URI cubestructuresURI = URI.createFileURI(outputFilepath + "cube_structures.openregspecs_smcubes_extension");
@@ -267,10 +267,10 @@ public abstract class Importer implements BirdImporter {
 
 		//URI birdURI = URI.createFileURI(outputFilepath + "bird.bird_model");
 
-		Resource domainsResource = factory.createResource(domainsURI);
-		Resource membersResource = factory.createResource(membersURI);
-		Resource variablesResource = factory.createResource(variablesURI);
-		Resource subdomainsResource = factory.createResource(subdomainsURI);
+		//Resource domainsResource = factory.createResource(domainsURI);
+		//Resource membersResource = factory.createResource(membersURI);
+		//Resource variablesResource = factory.createResource(variablesURI);
+		//Resource subdomainsResource = factory.createResource(subdomainsURI);
 		//Resource cubesResource = factory.createResource(cubesURI);
 		//Resource cubestructuresResource = factory.createResource(cubestructuresURI);
 		//Resource cubestructureitemsResource = factory.createResource(cubestructureitemsURI);
@@ -286,10 +286,10 @@ public abstract class Importer implements BirdImporter {
 
 		// Resource birdResource = factory.createResource(birdURI);
 
-		domainsResource.getContents().add(domains);
-		membersResource.getContents().add(members);
-		variablesResource.getContents().add(variables);
-		subdomainsResource.getContents().add(subdomains);
+		//domainsResource.getContents().add(domains);
+		//membersResource.getContents().add(members);
+		//variablesResource.getContents().add(variables);
+		//subdomainsResource.getContents().add(subdomains);
 		
 		//cubesResource.getContents().add(cubesModule);
 		//cubestructuresResource.getContents().add(cubeStructuresModule);
@@ -302,10 +302,10 @@ public abstract class Importer implements BirdImporter {
 		// birdResource.getContents().add(birdModel);
 
 		try {
-			domainsResource.save(Collections.EMPTY_MAP);
-			membersResource.save(Collections.EMPTY_MAP);
-			variablesResource.save(Collections.EMPTY_MAP);
-			subdomainsResource.save(Collections.EMPTY_MAP);
+			//domainsResource.save(Collections.EMPTY_MAP);
+			//membersResource.save(Collections.EMPTY_MAP);
+			//variablesResource.save(Collections.EMPTY_MAP);
+			//subdomainsResource.save(Collections.EMPTY_MAP);
 			//cubesResource.save(Collections.EMPTY_MAP);
 			//cubestructuresResource.save(Collections.EMPTY_MAP);
 			//cubestructureitemsResource.save(Collections.EMPTY_MAP);			
