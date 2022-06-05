@@ -14,13 +14,13 @@ package org.eclipse.efbt.openregspecs.smcubes.query.core;
 
 import java.util.Iterator;
 
-import org.eclipse.efbt.openregspecs.model.module_management.Module;
-import org.eclipse.efbt.openregspecs.model.module_management.ModuleDependency;
-import org.eclipse.efbt.openregspecs.model.core.DOMAIN;
-import org.eclipse.efbt.openregspecs.model.core.MEMBER;
-import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.DomainModule;
-import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.MemberModule;
-import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.SMCubesCoreModel;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.Module;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.ModuleDependency;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.DOMAIN;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.MEMBER;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.DomainModule;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.MemberModule;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.SMCubesCoreModel;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 

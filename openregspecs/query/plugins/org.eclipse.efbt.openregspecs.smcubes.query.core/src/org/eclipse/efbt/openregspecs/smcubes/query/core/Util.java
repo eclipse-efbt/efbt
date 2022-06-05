@@ -14,7 +14,7 @@ package org.eclipse.efbt.openregspecs.smcubes.query.core;
 
 import java.io.File;
 
-import org.eclipse.efbt.openregspecs.model.openregspecs_smcubes_core_extension.SMCubesCoreModel;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.SMCubesCoreModel;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
