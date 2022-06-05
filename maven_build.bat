@@ -4,6 +4,9 @@ cd ..\..
 cd openregspecs\query
 call mvn install
 cd ..\..  
+cd openregspecs\dsl\org.eclipse.efbt.openregspecs.dsl.parent
+call mvn install
+cd ..\..\..  
 cd controller\ldm
 call mvn install
 cd ..\..

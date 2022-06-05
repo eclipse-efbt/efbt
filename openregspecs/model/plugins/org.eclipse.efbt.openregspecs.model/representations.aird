@@ -15,5 +15,11 @@
   <semanticResources>smcubes_model/openregspecs_smcubes_core_extension.ecore</semanticResources>
   <semanticResources>smcubes_model/openregspecs_smcubes_extra_extension.ecore</semanticResources>
   <semanticResources>smcubes_model/rendering.ecore</semanticResources>
-  <semanticResources>smcubes_model/smcubes_model.genmodel</semanticResources>
+  <semanticResources>smcubes_model/open_reg_specs.ecore</semanticResources>
+  <semanticResources>smcubes_model/open_reg_specs.genmodel</semanticResources>
+  <semanticResources>src/org/eclipse/efbt/openregspecs/model/GenerateOpenRegSpecsModel.mwe2</semanticResources>
+  <semanticResources>src/org/eclipse/efbt/openregspecs/model/GenerateSMCubesModel.mwe2</semanticResources>
+  <semanticResources>src/org/eclipse/efbt/openregspecs/model/GeneratePlatformCallModel.mwe2</semanticResources>
+  <semanticResources>src/org/eclipse/efbt/openregspecs/model/generate/GenerateOpenRegSpecsModel.mwe2</semanticResources>
+  <semanticResources>src/org/eclipse/efbt/openregspecs/model/open_reg_specs/impl/open_reg_specs.ecore</semanticResources>
 </viewpoint:DAnalysis>

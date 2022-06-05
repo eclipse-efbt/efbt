@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: EcoreJsonGenerator
-Bundle-SymbolicName: org.eclipse.efbt.compile.EcoreJsonGenerator
-Bundle-Version: 1.0.0.qualifier
-Automatic-Module-Name: org.eclipse.efbt.compile.EcoreJsonGenerator
-Bundle-RequiredExecutionEnvironment: JavaSE-11
-Require-Bundle: org.eclipse.emf.mwe2.lib,
- org.eclipse.emf.codegen.ecore

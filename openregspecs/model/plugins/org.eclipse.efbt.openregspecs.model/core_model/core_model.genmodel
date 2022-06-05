@@ -11,7 +11,7 @@
   <foreignModel>sql_lite.ecore</foreignModel>
   <foreignModel>testing.ecore</foreignModel>
   <genPackages prefix="Bpmn_lite" basePackage="org.eclipse.efbt.openregspecs.model"
-      resource="XMI" disposableProviderFactory="true" ecorePackage="bpmn_lite.ecore#/">
+      disposableProviderFactory="true" ecorePackage="bpmn_lite.ecore#/">
     <genClasses image="false" ecoreClass="bpmn_lite.ecore#//BaseElement">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn_lite.ecore#//BaseElement/id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn_lite.ecore#//BaseElement/description"/>
@@ -52,7 +52,7 @@
     </genClasses>
   </genPackages>
   <genPackages prefix="Data_meta_model" basePackage="org.eclipse.efbt.openregspecs.model"
-      resource="XMI" disposableProviderFactory="true" ecorePackage="data_meta_model.ecore#/">
+      disposableProviderFactory="true" ecorePackage="data_meta_model.ecore#/">
     <genClasses ecoreClass="data_meta_model.ecore#//Attribute">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_meta_model.ecore#//Attribute/isPK"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_meta_model.ecore#//Attribute/concept"/>
@@ -71,7 +71,7 @@
     <genClasses ecoreClass="data_meta_model.ecore#//ManyToOneRelationshipAttribute"/>
     <genClasses ecoreClass="data_meta_model.ecore#//OneToManyRelationshipAttribute"/>
     <genClasses ecoreClass="data_meta_model.ecore#//ManyToManyRelationshipAttribute"/>
-    <genClasses image="false" ecoreClass="data_meta_model.ecore#//Classifier"/>
+    <genClasses image="false" ecoreClass="data_meta_model.ecore#//Type"/>
     <genClasses image="false" ecoreClass="data_meta_model.ecore#//Element"/>
     <genClasses image="false" ecoreClass="data_meta_model.ecore#//NamedElement">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute data_meta_model.ecore#//NamedElement/name"/>
@@ -97,9 +97,10 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference data_meta_model.ecore#//BasicEntity/superClass"/>
     </genClasses>
     <genClasses ecoreClass="data_meta_model.ecore#//EnumMember"/>
+    <genClasses ecoreClass="data_meta_model.ecore#//TypesAndConcepts"/>
   </genPackages>
   <genPackages prefix="Module_management" basePackage="org.eclipse.efbt.openregspecs.model"
-      resource="XMI" disposableProviderFactory="true" ecorePackage="module_management.ecore#/">
+      disposableProviderFactory="true" ecorePackage="module_management.ecore#/">
     <genClasses ecoreClass="module_management.ecore#//Module">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference module_management.ecore#//Module/dependencies"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute module_management.ecore#//Module/theDescription"/>
@@ -122,7 +123,7 @@
     </genClasses>
   </genPackages>
   <genPackages prefix="Requirements_text" basePackage="org.eclipse.efbt.openregspecs.model"
-      resource="XMI" disposableProviderFactory="true" ecorePackage="requirements_text.ecore#/">
+      disposableProviderFactory="true" ecorePackage="requirements_text.ecore#/">
     <genClasses ecoreClass="requirements_text.ecore#//AllowedTypes">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference requirements_text.ecore#//AllowedTypes/allowedTypes"/>
     </genClasses>
@@ -164,7 +165,7 @@
     </genClasses>
   </genPackages>
   <genPackages prefix="Sql_lite" basePackage="org.eclipse.efbt.openregspecs.model"
-      resource="XMI" disposableProviderFactory="true" ecorePackage="sql_lite.ecore#/">
+      disposableProviderFactory="true" ecorePackage="sql_lite.ecore#/">
     <genClasses ecoreClass="sql_lite.ecore#//View">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sql_lite.ecore#//View/selectClause"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sql_lite.ecore#//View/fromClause"/>
@@ -202,7 +203,7 @@
     </genClasses>
   </genPackages>
   <genPackages prefix="Testing" basePackage="org.eclipse.efbt.openregspecs.model"
-      resource="XMI" disposableProviderFactory="true" ecorePackage="testing.ecore#/">
+      disposableProviderFactory="true" ecorePackage="testing.ecore#/">
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="testing.ecore#//AttrComparison">
       <genEnumLiterals ecoreEnumLiteral="testing.ecore#//AttrComparison/equals"/>
       <genEnumLiterals ecoreEnumLiteral="testing.ecore#//AttrComparison/less_than"/>

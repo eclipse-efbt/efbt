@@ -21,6 +21,8 @@
     <maven>3.0</maven>
   </prerequisites>
 	<properties>
+	 <xtextVersion>2.26.0</xtextVersion>
+		<mwe2Version>2.12.2</mwe2Version>
 		<junit-version>5.0.3</junit-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>11</maven.compiler.source>
@@ -36,8 +38,6 @@
 	</properties>
 	<modules>
 		<module>plugins/org.eclipse.efbt.openregspecs.model</module>
-		<module>plugins/org.eclipse.efbt.openregspecs.model.edit</module>
-		<module>plugins/org.eclipse.efbt.openregspecs.model.editor</module>
 		<module>features/org.eclipse.efbt.openregspecs.model.feature</module>
 		<module>releng/org.eclipse.efbt.openregspecs.model.target</module>
 	</modules>

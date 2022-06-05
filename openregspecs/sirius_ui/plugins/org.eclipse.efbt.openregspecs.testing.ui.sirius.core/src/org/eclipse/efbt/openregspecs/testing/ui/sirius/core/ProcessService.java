@@ -12,15 +12,15 @@
  *******************************************************************************/
 package org.eclipse.efbt.openregspecs.testing.ui.sirius.core;
 
-import org.eclipse.efbt.openregspecs.model.bpmn_lite.Bpmn_liteFactory;
-import org.eclipse.efbt.openregspecs.model.bpmn_lite.ExclusiveGateway;
-import org.eclipse.efbt.openregspecs.model.bpmn_lite.FlowElement;
-import org.eclipse.efbt.openregspecs.model.bpmn_lite.FlowElementsContainer;
-import org.eclipse.efbt.openregspecs.model.bpmn_lite.FlowNode;
-import org.eclipse.efbt.openregspecs.model.bpmn_lite.InclusiveGateway;
-import org.eclipse.efbt.openregspecs.model.bpmn_lite.ParallelGateway;
-import org.eclipse.efbt.openregspecs.model.bpmn_lite.SubProcess;
-import org.eclipse.efbt.openregspecs.model.bpmn_lite.Task;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.Open_reg_specsFactory;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.ExclusiveGateway;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.FlowElement;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.FlowElementsContainer;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.FlowNode;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.InclusiveGateway;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.ParallelGateway;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.SubProcess;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.Task;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
@@ -69,19 +69,19 @@ public class ProcessService {
 	private FlowNode createElement(String typeToCreate) {
 		FlowNode result = null;
 		if ("Task".equals(typeToCreate)) {
-			result = Bpmn_liteFactory.eINSTANCE.createTask();
+			result = Open_reg_specsFactory.eINSTANCE.createTask();
 		}  else if ("ServiceTask".equals(typeToCreate)) {
-			result = Bpmn_liteFactory.eINSTANCE.createServiceTask();
+			result = Open_reg_specsFactory.eINSTANCE.createServiceTask();
 		}  else if ("ScriptTask".equals(typeToCreate)) {
-			result = Bpmn_liteFactory.eINSTANCE.createScriptTask();
+			result = Open_reg_specsFactory.eINSTANCE.createScriptTask();
 		} else if ("UserTask".equals(typeToCreate)) {
-			result = Bpmn_liteFactory.eINSTANCE.createUserTask();
+			result = Open_reg_specsFactory.eINSTANCE.createUserTask();
 		}else if ("ParallelGateway".equals(typeToCreate)) {
-			result = Bpmn_liteFactory.eINSTANCE.createParallelGateway();
+			result = Open_reg_specsFactory.eINSTANCE.createParallelGateway();
 		} else if ("ExclusiveGateway".equals(typeToCreate)) {
-			result = Bpmn_liteFactory.eINSTANCE.createExclusiveGateway();
+			result = Open_reg_specsFactory.eINSTANCE.createExclusiveGateway();
 		} else if ("InclusiveGateway".equals(typeToCreate)) {
-			result = Bpmn_liteFactory.eINSTANCE.createInclusiveGateway();
+			result = Open_reg_specsFactory.eINSTANCE.createInclusiveGateway();
 		} 
 		return result;
 	}

@@ -1,0 +1,574 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.openregspecs.model/src" modelPluginID="org.eclipse.efbt.openregspecs.model"
+    modelName="Open_reg_specs" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="5.0" copyrightFields="false"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>open_reg_specs.ecore</foreignModel>
+  <genPackages prefix="Open_reg_specs" basePackage="org.eclipse.efbt.openregspecs.model"
+      resource="XMI" disposableProviderFactory="true" loadInitialization="true" literalsInterface="false"
+      ecorePackage="open_reg_specs.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="open_reg_specs.ecore#//AttrComparison">
+      <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//AttrComparison/equals"/>
+      <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//AttrComparison/less_than"/>
+      <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//AttrComparison/greater_than"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="open_reg_specs.ecore#//FACET_VALUE_TYPE">
+      <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//FACET_VALUE_TYPE/BigInteger"/>
+      <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//FACET_VALUE_TYPE/Boolean"/>
+      <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//FACET_VALUE_TYPE/DateTime"/>
+      <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//FACET_VALUE_TYPE/DayMonthDayMonth"/>
+      <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//FACET_VALUE_TYPE/Decimal"/>
+      <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//FACET_VALUE_TYPE/Double"/>
+      <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//FACET_VALUE_TYPE/Duration"/>
+      <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//FACET_VALUE_TYPE/Float"/>
+      <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//FACET_VALUE_TYPE/GregorianDay"/>
+      <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//FACET_VALUE_TYPE/GregorianMonth"/>
+      <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//FACET_VALUE_TYPE/GregorianYear"/>
+      <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//FACET_VALUE_TYPE/Integer"/>
+      <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//FACET_VALUE_TYPE/Long"/>
+      <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//FACET_VALUE_TYPE/Short"/>
+      <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//FACET_VALUE_TYPE/String"/>
+      <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//FACET_VALUE_TYPE/Time"/>
+      <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//FACET_VALUE_TYPE/URI"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="open_reg_specs.ecore#//TYP_DMNSN">
+      <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//TYP_DMNSN/B"/>
+      <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//TYP_DMNSN/M"/>
+      <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//TYP_DMNSN/T"/>
+      <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//TYP_DMNSN/U"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="open_reg_specs.ecore#//TYP_RL">
+      <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//TYP_RL/O"/>
+      <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//TYP_RL/A"/>
+      <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//TYP_RL/D"/>
+    </genEnums>
+    <genDataTypes ecoreDataType="open_reg_specs.ecore#//FACET_VALUE_TYPEObject"/>
+    <genDataTypes ecoreDataType="open_reg_specs.ecore#//TYP_DMNSNObject"/>
+    <genDataTypes ecoreDataType="open_reg_specs.ecore#//TYP_RLObject"/>
+    <genClasses ecoreClass="open_reg_specs.ecore#//OpenRegSpecs">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//OpenRegSpecs/requirements"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//OpenRegSpecs/types_and_concepts"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//OpenRegSpecs/data_model"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//OpenRegSpecs/process_workflow"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//OpenRegSpecs/report_generation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//OpenRegSpecs/tests"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="open_reg_specs.ecore#//BaseElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//BaseElement/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//BaseElement/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//BaseElement/invisible"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="open_reg_specs.ecore#//FlowElementsContainer">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//FlowElementsContainer/flowElements"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="open_reg_specs.ecore#//FlowElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//FlowElement/name"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="open_reg_specs.ecore#//FlowNode">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//FlowNode/outgoing"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//FlowNode/incoming"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//SequenceFlow">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//SequenceFlow/targetRef"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//SequenceFlow/sourceRef"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//Task"/>
+    <genClasses image="false" ecoreClass="open_reg_specs.ecore#//Activity"/>
+    <genClasses image="false" ecoreClass="open_reg_specs.ecore#//Gateway"/>
+    <genClasses ecoreClass="open_reg_specs.ecore#//ExclusiveGateway"/>
+    <genClasses ecoreClass="open_reg_specs.ecore#//InclusiveGateway"/>
+    <genClasses ecoreClass="open_reg_specs.ecore#//ParallelGateway"/>
+    <genClasses ecoreClass="open_reg_specs.ecore#//ServiceTask">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//ServiceTask/enrichedAttribute"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//ServiceTask/scenarios"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//ServiceTask/secondAttribute"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//SubProcess"/>
+    <genClasses ecoreClass="open_reg_specs.ecore#//ScriptTask">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//ScriptTask/selectionLayers"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//ScriptTask/outputLayer"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//UserTask">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//UserTask/entity"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//Attribute">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//Attribute/isPK"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//Attribute/concept"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//Attribute/ordered"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//Concept">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//Concept/conceptName"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//RelationshipAttribute">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//RelationshipAttribute/entity"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//RelationshipAttribute/containment"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//RelationshipAttribute/mandatory"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//RelationshipAttribute/dominant"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//OneToOneRelationshipAttribute"/>
+    <genClasses ecoreClass="open_reg_specs.ecore#//ManyToOneRelationshipAttribute"/>
+    <genClasses ecoreClass="open_reg_specs.ecore#//OneToManyRelationshipAttribute"/>
+    <genClasses ecoreClass="open_reg_specs.ecore#//ManyToManyRelationshipAttribute"/>
+    <genClasses image="false" ecoreClass="open_reg_specs.ecore#//Type"/>
+    <genClasses image="false" ecoreClass="open_reg_specs.ecore#//Element"/>
+    <genClasses image="false" ecoreClass="open_reg_specs.ecore#//NamedElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//NamedElement/name"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//EntityModule">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//EntityModule/nsURI"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//EntityModule/nsPrefix"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//EntityModule/entities"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="open_reg_specs.ecore#//StructuralFeature"/>
+    <genClasses image="false" ecoreClass="open_reg_specs.ecore#//TypedElement">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//TypedElement/type"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//GeneratedEntity">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//GeneratedEntity/attributes"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="open_reg_specs.ecore#//Entity"/>
+    <genClasses ecoreClass="open_reg_specs.ecore#//DerivedEntity">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//DerivedEntity/attributes"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//BasicEntity">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//BasicEntity/attributes"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//BasicEntity/superClass"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//EnumMember"/>
+    <genClasses ecoreClass="open_reg_specs.ecore#//TypesAndConcepts"/>
+    <genClasses ecoreClass="open_reg_specs.ecore#//Module">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//Module/dependencies"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//Module/theDescription"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//Module/license"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//Module/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//Module/version"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//Module/longName"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//ModuleLongName">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//ModuleLongName/name"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//ModuleDependencies">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//ModuleDependencies/theModules"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//ModuleDependency">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//ModuleDependency/moduleName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//ModuleDependency/moduleVersion"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//ModuleDependency/theModule"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//ModuleDependency/longName"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//AllowedTypes">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//AllowedTypes/allowedTypes"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//RequirementsModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//RequirementsModule/rules"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//RequirementsModule/allowedtypes"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="open_reg_specs.ecore#//RequirementsSection">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//RequirementsSection/name"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//RequirementsSectionImage">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//RequirementsSectionImage/style"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//RequirementsSectionImage/uri"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//RequirementsSectionLinkWithText">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//RequirementsSectionLinkWithText/linkedRuleSection"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//RequirementsSectionLinkWithText/linkText"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//RequirementsSectionLinkWithText/subsection"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//RequirementsSectionText">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//RequirementsSectionText/text"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//RequirementType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//RequirementType/name"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//TitledRequirementsSection">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//TitledRequirementsSection/sections"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//TitledRequirementsSection/referencingSections"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//TitledRequirementsSection/requirementsType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//TitledRequirementsSection/title"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//Tag">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//Tag/displayName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//Tag/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//Tag/requirements"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//TagGroup">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//TagGroup/tags"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//View">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//View/selectClause"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//View/fromClause"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//View/whereClause"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//SelectClause">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//SelectClause/columns"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//SelectColumn">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//SelectColumn/as"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//SelectColumn/memberAsConstant"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//Column">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//Column/attribute"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//WhereClause"/>
+    <genClasses ecoreClass="open_reg_specs.ecore#//Table">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//Table/entity"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//SQLEntity">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//SQLEntity/name"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//FromClause">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//FromClause/sqlEntities"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//SQLEntityModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//SQLEntityModule/sqlEntities"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//GeneratedEntitySQL">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//GeneratedEntitySQL/generatedEntity"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//GeneratedEntitySQL/view"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//GeneratedEntitySQLModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//GeneratedEntitySQLModule/GeneratedEntitySQLs"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//LogicalTransformationModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//LogicalTransformationModule/taskTags"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//LogicalTransformationModule/scenarioTags"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//LogicalTransformationModule/subProcess"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//LogicalTransformationModule/requirements"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//LogicalTransformationModule/testModules"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//LogicalTransformationModule/selectionLayers"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//ActivityTag">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//ActivityTag/activity"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//Scenario">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//Scenario/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//Scenario/invisible"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//Scenario/description"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//Scenario/requiredAttributes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//Scenario/data_constraints"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//ScenarioTag">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//ScenarioTag/scenario"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//Test">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//Test/inputData"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//Test/expectedResult"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//Test/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//Test/scope"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//TestModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//TestModule/tests"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//DataConstraint">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//DataConstraint/attr1"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//DataConstraint/attr2"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//DataConstraint/comparison"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//SelectionLayer">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//SelectionLayer/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//SelectionLayer/invisible"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//SelectionLayer/generatedEntity"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//TestScope">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//TestScope/name"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//UnitTestScope">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//UnitTestScope/scenarios"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//E2ETestScope">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//E2ETestScope/scenarios"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//E2ETestScope/layer"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//E2ETestScope/scriptTask"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//CSVFile">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CSVFile/fileName"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//DOMAIN">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//DOMAIN/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//DOMAIN/data_type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//DOMAIN/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//DOMAIN/domain_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//DOMAIN/facet_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//DOMAIN/is_enumerated"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//DOMAIN/is_reference"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//DOMAIN/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//DOMAIN/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//DOMAIN/displayName"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//FACET_COLLECTION">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//FACET_COLLECTION/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//FACET_COLLECTION/facet_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//FACET_COLLECTION/facet_value_type"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//FACET_COLLECTION/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//FACET_COLLECTION/name"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//FACET_ENUMERATION">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//FACET_ENUMERATION/facet_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//FACET_ENUMERATION/facet_type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//FACET_ENUMERATION/observation_value"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//facet_type">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//facet_type/decimals"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//facet_type/endTime"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//facet_type/endValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//facet_type/interval"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//facet_type/isSequence"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//facet_type/maxLength"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//facet_type/maxValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//facet_type/minLength"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//facet_type/minValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//facet_type/pattern"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//facet_type/startTime"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//facet_type/startValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//facet_type/timeInterval"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//MAINTENANCE_AGENCY">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//MAINTENANCE_AGENCY/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//MAINTENANCE_AGENCY/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//MAINTENANCE_AGENCY/name"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//MEMBER">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//MEMBER/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//MEMBER/description"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//MEMBER/domain_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//MEMBER/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//MEMBER/member_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//MEMBER/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//MEMBER/displayName"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//MEMBER_HIERARCHY">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//MEMBER_HIERARCHY/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//MEMBER_HIERARCHY/description"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//MEMBER_HIERARCHY/domain_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//MEMBER_HIERARCHY/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//MEMBER_HIERARCHY/member_hierarchy_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//MEMBER_HIERARCHY/name"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//MEMBER_HIERARCHY_NODE">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//MEMBER_HIERARCHY_NODE/comparator"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//MEMBER_HIERARCHY_NODE/level"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//MEMBER_HIERARCHY_NODE/member_hierarchy_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//MEMBER_HIERARCHY_NODE/member_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//MEMBER_HIERARCHY_NODE/operator"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//MEMBER_HIERARCHY_NODE/parent_member_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//MEMBER_HIERARCHY_NODE/valid_from"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//MEMBER_HIERARCHY_NODE/valid_to"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//SUBDOMAIN">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//SUBDOMAIN/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//SUBDOMAIN/description"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//SUBDOMAIN/domain_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//SUBDOMAIN/facet_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//SUBDOMAIN/is_listed"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//SUBDOMAIN/is_natural"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//SUBDOMAIN/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//SUBDOMAIN/subdomain_id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//SUBDOMAIN/items"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//SUBDOMAIN_ENUMERATION">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//SUBDOMAIN_ENUMERATION/member_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//SUBDOMAIN_ENUMERATION/order"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//SUBDOMAIN_ENUMERATION/valid_from"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//SUBDOMAIN_ENUMERATION/valid_to"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//VARIABLE">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//VARIABLE/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//VARIABLE/description"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//VARIABLE/domain_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//VARIABLE/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//VARIABLE/primary_concept"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//VARIABLE/variable_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//VARIABLE/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//VARIABLE/displayName"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//VARIABLE_SET">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//VARIABLE_SET/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//VARIABLE_SET/description"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//VARIABLE_SET/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//VARIABLE_SET/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//VARIABLE_SET/variable_set_id"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//VARIABLE_SET_ENUMERATION">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//VARIABLE_SET_ENUMERATION/is_flow"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//VARIABLE_SET_ENUMERATION/order"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//VARIABLE_SET_ENUMERATION/subdomain_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//VARIABLE_SET_ENUMERATION/valid_from"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//VARIABLE_SET_ENUMERATION/valid_to"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//VARIABLE_SET_ENUMERATION/variable_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//VARIABLE_SET_ENUMERATION/variable_set_id"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//COMBINATION">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//COMBINATION/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//COMBINATION/combination_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//COMBINATION/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//COMBINATION/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//COMBINATION/valid_from"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//COMBINATION/valid_to"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//COMBINATION/version"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//COMBINATION/combination_items"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//COMBINATION_ITEM">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//COMBINATION_ITEM/member_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//COMBINATION_ITEM/subdomain_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//COMBINATION_ITEM/variable_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//COMBINATION_ITEM/variable_set_id"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//CUBE">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE/cube_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CUBE/cube_structure_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE/cube_type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE/description"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CUBE/framework_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE/is_allowed"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CUBE/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE/published"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE/valid_from"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE/valid_to"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE/version"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE/displayName"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//CUBE_GROUP">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_GROUP/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_GROUP/cube_group_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_GROUP/description"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CUBE_GROUP/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_GROUP/name"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//CUBE_GROUP_ENUMERATION">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CUBE_GROUP_ENUMERATION/cube_group_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CUBE_GROUP_ENUMERATION/cube_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_GROUP_ENUMERATION/order"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_GROUP_ENUMERATION/valid_from"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_GROUP_ENUMERATION/valid_to"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//CUBE_HIERARCHY">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_HIERARCHY/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_HIERARCHY/cube_hierarchy_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_HIERARCHY/cube_hierarchy_type"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CUBE_HIERARCHY/framework_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CUBE_HIERARCHY/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_HIERARCHY/name"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//CUBE_HIERARCHY_NODE">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CUBE_HIERARCHY_NODE/cube_group_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CUBE_HIERARCHY_NODE/cube_hierarchy_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_HIERARCHY_NODE/level"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_HIERARCHY_NODE/nODE_CODE"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_HIERARCHY_NODE/node_name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_HIERARCHY_NODE/order"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CUBE_HIERARCHY_NODE/parent_node_code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_HIERARCHY_NODE/valid_from"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_HIERARCHY_NODE/valid_to"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//CUBE_RELATIONSHIP">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_RELATIONSHIP/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_RELATIONSHIP/cube_relationship_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_RELATIONSHIP/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_RELATIONSHIP/establishes_integrity"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CUBE_RELATIONSHIP/foreign_cube_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CUBE_RELATIONSHIP/foreign_cube_variable_code"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CUBE_RELATIONSHIP/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_RELATIONSHIP/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CUBE_RELATIONSHIP/primary_cube_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CUBE_RELATIONSHIP/primary_cube_variable_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_RELATIONSHIP/valid_from"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_RELATIONSHIP/valid_to"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_RELATIONSHIP/version"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//CUBE_STRUCTURE">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_STRUCTURE/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_STRUCTURE/cube_structure_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_STRUCTURE/description"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CUBE_STRUCTURE/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_STRUCTURE/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_STRUCTURE/valid_from"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_STRUCTURE/valid_to"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_STRUCTURE/version"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_STRUCTURE/displayName"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//CUBE_STRUCTURE_ITEM">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CUBE_STRUCTURE_ITEM/attribute_associated_variable"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CUBE_STRUCTURE_ITEM/cube_structure_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_STRUCTURE_ITEM/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_STRUCTURE_ITEM/dimension_type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_STRUCTURE_ITEM/is_flow"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_STRUCTURE_ITEM/is_mandatory"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CUBE_STRUCTURE_ITEM/member_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_STRUCTURE_ITEM/order"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_STRUCTURE_ITEM/role"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CUBE_STRUCTURE_ITEM/subdomain_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CUBE_STRUCTURE_ITEM/variable_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CUBE_STRUCTURE_ITEM/variable_set_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_STRUCTURE_ITEM/isIdentifier"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CUBE_STRUCTURE_ITEM/cube_variable_code"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//CUBE_TO_COMBINATION">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CUBE_TO_COMBINATION/combination_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CUBE_TO_COMBINATION/cube_id"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//FRAMEWORK">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//FRAMEWORK/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//FRAMEWORK/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//FRAMEWORK/framework_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//FRAMEWORK/maintenance_agency_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//FRAMEWORK/name"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//FRAMEWORK_SUBDOMAIN">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//FRAMEWORK_SUBDOMAIN/framework_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//FRAMEWORK_SUBDOMAIN/subdomain_id"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//FRAMEWORK_VARIABLE_SET">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//FRAMEWORK_VARIABLE_SET/framework_id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//FRAMEWORK_VARIABLE_SET/variable_set_id"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//DomainModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//DomainModule/domains"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//MemberHierarchyModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//MemberHierarchyModule/memberHierarchies"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//MemberHierarchyModule/memberHierarchiesNodes"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//MemberModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//MemberModule/members"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//VariableModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//VariableModule/variables"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//SubDomainModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//SubDomainModule/subdomains"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//SMCubesCoreModel">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//SMCubesCoreModel/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//SMCubesCoreModel/variableModules"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//SMCubesCoreModel/domainModules"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//SMCubesCoreModel/memberModules"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//SMCubesCoreModel/subDomainModules"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//SMCubesCoreModel/memberHierarchyModules"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//PlatformCall">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//PlatformCall/errorMessage"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//PlatformCall/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//PlatformCall/returnStatus"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//PlatformCallModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//PlatformCallModule/platformCalls"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//ImportBIRDFromMSAccess">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//ImportBIRDFromMSAccess/inputDirectory"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//ImportBIRDFromMSAccess/outputDirectory"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//CreateLogicalTransformationViewForScope">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CreateLogicalTransformationViewForScope/logicalTransformationModule"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CreateLogicalTransformationViewForScope/attributeLineage"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CreateLogicalTransformationViewForScope/testScope"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//ConvertDataMetaModelToEcore">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//ConvertDataMetaModelToEcore/outputDirectory"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//ConvertDataMetaModelToEcore/entityModule"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

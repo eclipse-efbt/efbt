@@ -17,9 +17,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.sirius.diagram.DNode;
-import org.eclipse.efbt.openregspecs.model.bpmn_lite.BaseElement;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.BaseElement;
 
-import org.eclipse.efbt.openregspecs.model.bpmn_lite.FlowElement;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.FlowElement;
 
 
 import com.google.common.base.Strings;
