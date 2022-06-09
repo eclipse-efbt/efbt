@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+
+
+
+
+
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated open_reg_specs -->
+      <package
+            uri="http://www.eclipse.org/efbt/open_reg_specs"
+            class="org.eclipse.efbt.openregspecs.model.open_reg_specs.Open_reg_specsPackage"
+            genModel="model/open_reg_specs.genmodel"/>
+   </extension>
+
+
+
+</plugin>

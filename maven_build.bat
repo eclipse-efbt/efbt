@@ -1,7 +1,10 @@
-cd openregspecs\model
+cd openregspecs\java_model
 call mvn install
 cd ..\..
-cd openregspecs\query
+cd openregspecs\java_query
+call mvn install
+cd ..\.. 
+cd openregspecs\java_examples
 call mvn install
 cd ..\..  
 cd openregspecs\dsl\org.eclipse.efbt.openregspecs.dsl.parent
