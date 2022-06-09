@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.efbt.openregspecs.sirius_ui.feature"
-      label="Feature"
-      version="1.0.0.qualifier">
+      label="OpenRegSpecs Sirius UI"
+      version="1.0.0.qualifier"
+      provider-name="BIRD Software Solutions">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -28,8 +29,8 @@
       <import plugin="org.eclipse.efbt.openregspecs.model"/>
       <import plugin="org.eclipse.efbt.openregspecs.model" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.efbt.openregspecs.smcubes.query.core" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.efbt.controller.platformcall.component.core" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.common"/>
+      <import plugin="org.eclipse.efbt.controller.platformcall.component.core" version="1.0.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin

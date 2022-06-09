@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.efbt.openregspecs.dsl.feature"
-      label="OpenRegSpecs Feature "
-      version="1.0.0.qualifier">
+      label="OpenRegSpecs DSL Feature"
+      version="1.0.0.qualifier"
+      provider-name="BIRD Software Solutions">
 
    <requires>
       <import plugin="org.eclipse.efbt.openregspecs.model"/>
