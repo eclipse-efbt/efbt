@@ -20,11 +20,5 @@
             genModel="model/open_reg_specs.genmodel"/>
    </extension>
 
-   <extension point="org.eclipse.emf.ecore.extension_parser">
-      <!-- @generated open_reg_specs -->
-      <parser
-            type="open_reg_specs"
-            class="org.eclipse.efbt.openregspecs.model.open_reg_specs.util.Open_reg_specsResourceFactoryImpl"/>
-   </extension>
 
 </plugin>

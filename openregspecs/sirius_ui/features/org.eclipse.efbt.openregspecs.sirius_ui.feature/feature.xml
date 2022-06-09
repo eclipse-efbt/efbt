@@ -29,6 +29,7 @@
       <import plugin="org.eclipse.efbt.openregspecs.model" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.efbt.openregspecs.smcubes.query.core" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.efbt.controller.platformcall.component.core" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.emf.common"/>
    </requires>
 
    <plugin
