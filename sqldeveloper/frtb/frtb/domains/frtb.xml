@@ -1,23 +1,6 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <DomainFile class="oracle.dbtools.crest.model.design.DomainFileWrapper" fileName="frtb">
 <domains>
-<Domain class="oracle.dbtools.crest.model.design.Domain" name="Security position type" id="D6BBD7AE-6C07-C3C6-AA15-C8FE1C189F81">
-<createdBy>Neil</createdBy>
-<createdTime>2022-04-02 14:52:02 UTC</createdTime>
-<ownerDesignName>frtb</ownerDesignName>
-<remoteDesignID>1EE796C4-5082-2872-8EC1-3EBDBF9F1C22</remoteDesignID>
-<remoteObjectID>C383BC87-3800-82BD-668B-B96C24A53866</remoteObjectID>
-<remoteObjectRelativeStorageName>\domains\birdDomains.xml</remoteObjectRelativeStorageName>
-<avTSortOrder>0</avTSortOrder>
-<dataTypeSize>1</dataTypeSize>
-<fileName>frtb</fileName>
-<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
-<synonym>SCRTY_PSTN_TYP</synonym>
-<listOfValues>
-<valueDef value="5" description="Long security position"/>
-<valueDef value="6" description="Short security position"/>
-</listOfValues>
-</Domain>
 <Domain class="oracle.dbtools.crest.model.design.Domain" name="String up to 60 characters limited to letters (capital and low cases), numbers, dash and underscore" id="DE255868-CD2A-9BCD-B873-2F9D3FCE185D">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-02 14:39:48 UTC</createdTime>

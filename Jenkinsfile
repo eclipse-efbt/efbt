@@ -8,54 +8,39 @@ pipeline {
         stage('Build') {
             steps {
                 sh '''                                     
-                    cd cocalimo/core/model
-                    mvn install
-                    cd ../../..                 
-                    cd cocalimo/smcubes/model
-                    mvn install
-                    cd ../../..
-                    cd cocalimo/logical_transformations/model
-					mvn install
-					cd ../../..
-					cd cocalimo/logical_transformations/ui_sirius
-					mvn install
-					cd ../../..
-                    cd cocalimo/platform_call/model
-					mvn install
-					cd ../../..
-                    cd cocalimo/smcubes/modelquery
-                    mvn install
-                    cd ../../..
-                    cd cocalimo/smcubes/ui_sirius
-                    mvn install                    
-                    cd ../../..
-		    cd cocalimo/examples
-                    mvn install 
-                    cd ../..                   
-                    cd controller/ldm
-                    mvn install
-                    cd ../..
-                    cd controller/data_meta_model
+                    cd openregspecs/java_model
 					mvn install
 					cd ../..
-                    cd controller/smcubes/access_dependencies_external
-                    mvn install
-                    cd ../../..
-                    cd controller/smcubes/access_dependencies_plugin
-                    mvn install
-                    cd ../../..
-                    cd controller/smcubes/component
-                    mvn install
-                    cd ../../..
-                    cd controller/platformcall/component
-                    mvn install
-                    cd ../../..
-                    cd cocalimo/platform_call/ui_sirius
+					cd openregspecs/java_query
+					mvn install
+					cd ../..
+					cd openregspecs/java_examples
+					mvn install
+					cd ../..
+					cd openregspecs/dsl/org.eclipse.efbt.openregspecs.dsl.parent
+					mvn install
+					cd ../../..  
+					cd controller/ldm
+					mvn install
+					cd ../..
+					cd controller/smcubes/access_dependencies_external
 					mvn install
 					cd ../../..
-                    cd installations/complete_repo/
-                    mvn install
-                    cd ../..
+					cd controller/smcubes/access_dependencies_plugin
+					mvn install
+					cd ../../..
+					cd controller/smcubes/component
+					mvn install
+					cd ../../..
+					cd controller/platformcall/component
+					mvn install
+					cd ../../..
+					cd openregspecs/sirius_ui
+					mvn install
+					cd ../..
+					cd installations/complete_repo/
+					mvn install
+					cd ../..
                     
                 '''
             }

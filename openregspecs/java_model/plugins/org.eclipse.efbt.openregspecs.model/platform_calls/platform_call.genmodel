@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.openregspecs.model/src" modelPluginID="org.eclipse.efbt.openregspecs.model"
+    modelName="Platform_call" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="5.0" copyrightFields="false"
+    usedGenPackages="../core_model/core_model.genmodel#//bpmn_lite ../core_model/core_model.genmodel#//data_meta_model ../core_model/core_model.genmodel#//module_management ../core_model/core_model.genmodel#//requirements_text ../core_model/core_model.genmodel#//testing"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>platform_call.ecore</foreignModel>
+  <genPackages prefix="Platform_call" basePackage="org.eclipse.efbt.openregspecs.model"
+      disposableProviderFactory="true" ecorePackage="platform_call.ecore#/">
+    <genClasses ecoreClass="platform_call.ecore#//PlatformCall">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//PlatformCall/errorMessage"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//PlatformCall/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//PlatformCall/returnStatus"/>
+    </genClasses>
+    <genClasses ecoreClass="platform_call.ecore#//PlatformCallModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform_call.ecore#//PlatformCallModule/platformCalls"/>
+    </genClasses>
+    <genClasses ecoreClass="platform_call.ecore#//ImportBIRDFromMSAccess">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//ImportBIRDFromMSAccess/inputDirectory"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//ImportBIRDFromMSAccess/outputDirectory"/>
+    </genClasses>
+    <genClasses ecoreClass="platform_call.ecore#//CreateLogicalTransformationViewForScope">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform_call.ecore#//CreateLogicalTransformationViewForScope/logicalTransformationModule"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform_call.ecore#//CreateLogicalTransformationViewForScope/attributeLineage"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform_call.ecore#//CreateLogicalTransformationViewForScope/testScope"/>
+    </genClasses>
+    <genClasses ecoreClass="platform_call.ecore#//ConvertDataMetaModelToEcore">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform_call.ecore#//ConvertDataMetaModelToEcore/outputDirectory"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform_call.ecore#//ConvertDataMetaModelToEcore/entityModule"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

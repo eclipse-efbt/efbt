@@ -1,0 +1,38 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/openregspecs_smcubes_extension#//DomainModule",
+  "name" : "example_domain_module",
+  "domains" : [ {
+    "code" : "RL",
+    "data_type" : "Double",
+    "description" : "Real Number",
+    "domain_id" : "RL",
+    "name" : "RL",
+    "displayName" : "RL"
+  }, {
+    "code" : "MNTRY",
+    "description" : "Monetary Value",
+    "domain_id" : "MNTRY",
+    "name" : "MNTRY",
+    "displayName" : "MNTRY"
+  }, {
+    "code" : "STRING",
+    "data_type" : "String",
+    "description" : "STRING",
+    "domain_id" : "STRING",
+    "name" : "STRING",
+    "displayName" : "STRING"
+  }, {
+    "code" : "INTGR",
+    "domain_id" : "INTGR",
+    "name" : "INTGR",
+    "displayName" : "INTGR"
+  }, {
+    "code" : "SIZE",
+    "data_type" : "String",
+    "description" : "Enterprise size",
+    "domain_id" : "SIZE",
+    "is_enumerated" : true,
+    "name" : "SIZE",
+    "displayName" : "SIZE"
+  } ]
+}

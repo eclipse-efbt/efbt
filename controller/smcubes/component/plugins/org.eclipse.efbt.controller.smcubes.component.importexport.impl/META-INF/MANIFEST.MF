@@ -7,13 +7,10 @@ Automatic-Module-Name: org.eclipse.efbt.controller.smcubes.component.importexpor
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.efbt.controller.smcubes.component.importexport.impl
 Require-Bundle: org.apache.commons.logging,
- org.eclipse.efbt.cocalimo.smcubes.model.core;bundle-version="1.0.0",
+ org.eclipse.efbt.openregspecs.model;bundle-version="1.0.0",
  org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.access.api;bundle-version="1.0.0",
  org.eclipse.efbt.controller.smcubes.component.access.provider;bundle-version="1.0.0",
  org.eclipse.efbt.controller.smcubes.component.importexport.api,
- org.eclipse.efbt.cocalimo.logical_transformations.ui.sirius.core,
- org.eclipse.efbt.cocalimo.core.model.requirements_text,
  org.apache.commons.csv,
- org.emfjson.jackson,
  org.eclipse.emf.ecore
 

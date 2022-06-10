@@ -92,47 +92,23 @@
       xsi:type="setup.workingsets:WorkingSetTask"
       id="efbt_working_sets">
     <workingSet
-        name="cocalimo_core"
-        id="cocalimo_core">
+        name="openregspecs_model"
+        id="openregspecs_model">
       <predicate
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.cocalimo.core.*"/>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.edit"/>
-        </operand>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.editor"/>
-        </operand>
+            pattern=".*\.eclipse.efbt.openregspecs.model.*"/>
       </predicate>
     </workingSet>
     <workingSet
-        name="cocalimo_smcubes"
-        id="cocalimo_smcubes">
+        name="openregspecs_dsl"
+        id="openregspecs_dsl">
       <predicate
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.cocalimo.smcubes.*"/>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.edit"/>
-        </operand>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.editor"/>
-        </operand>
+            pattern=".*\.eclipse.efbt.openregspecs.dsl.*"/>
       </predicate>
     </workingSet>
     <workingSet
@@ -146,16 +122,6 @@
       </predicate>
     </workingSet>
     <workingSet
-        name="controller_dmm"
-        id="controller_dmm">
-      <predicate
-          xsi:type="predicates:AndPredicate">
-        <operand
-            xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.controller.data_meta_model.*"/>
-      </predicate>
-    </workingSet>
-    <workingSet
         name="examples"
         id="examples">
       <predicate
@@ -164,7 +130,7 @@
             xsi:type="predicates:OrPredicate">
           <operand
               xsi:type="predicates:NamePredicate"
-              pattern=".*\.eclipse.efbt.cocalimo.examples.*"/>
+              pattern=".*\.eclipse.efbt.openregspecs.examples.*"/>
           <operand
               xsi:type="predicates:NamePredicate"
               pattern=".*\.eclipse.efbt.examples.*"/>
@@ -208,19 +174,6 @@
           pattern=".*\.eclipse.efbt.oomph.*"/>
     </workingSet>
     <workingSet
-        name="generated"
-        id="generated">
-      <predicate
-          xsi:type="predicates:OrPredicate">
-        <operand
-            xsi:type="predicates:NamePredicate"
-            pattern=".*\.edit"/>
-        <operand
-            xsi:type="predicates:NamePredicate"
-            pattern=".*\.editor"/>
-      </predicate>
-    </workingSet>
-    <workingSet
         name="installations"
         id="installations">
       <predicate
@@ -241,72 +194,6 @@
         <operand
             xsi:type="predicates:NamePredicate"
             pattern=".*\.eclipse.efbt.controller.platformcall.*"/>
-      </predicate>
-    </workingSet>
-    <workingSet
-        name="cocalimo_platform_call"
-        id="cocalimo_platform_call">
-      <predicate
-          xsi:type="predicates:AndPredicate">
-        <operand
-            xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.cocalimo.platform_call.*"/>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.edit"/>
-        </operand>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.editor"/>
-        </operand>
-      </predicate>
-    </workingSet>
-    <workingSet
-        name="cocalimo_computation"
-        id="cocalimo_computation">
-      <predicate
-          xsi:type="predicates:AndPredicate">
-        <operand
-            xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.cocalimo.computation.*"/>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.edit"/>
-        </operand>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.editor"/>
-        </operand>
-      </predicate>
-    </workingSet>
-    <workingSet
-        name="cocalimo_logical_transformations"
-        id="cocalimo_logical_transformations">
-      <predicate
-          xsi:type="predicates:AndPredicate">
-        <operand
-            xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.cocalimo.cocalimo_logical_transformations.*"/>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.edit"/>
-        </operand>
-        <operand
-            xsi:type="predicates:NotPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.editor"/>
-        </operand>
       </predicate>
     </workingSet>
     <description>efbt_working_sets</description>

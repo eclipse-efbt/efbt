@@ -123,8 +123,8 @@
 					<pomDependencies>consider</pomDependencies>
 					<target>
 						<artifact>
-							<groupId>org.eclipse.efbt.cocalimo.core.model</groupId>
-							<artifactId>org.eclipse.efbt.cocalimo.core.model.target</artifactId>
+							<groupId>org.eclipse.efbt.openregspecs.model</groupId>
+							<artifactId>org.eclipse.efbt.openregspecs.model.target</artifactId>
 							<version>${project.version}</version>
 						</artifact>
 					</target>

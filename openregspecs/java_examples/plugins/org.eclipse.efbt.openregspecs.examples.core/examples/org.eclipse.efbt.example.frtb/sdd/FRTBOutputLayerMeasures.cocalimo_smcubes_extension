@@ -1,0 +1,25 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/openregspecs_smcubes_extension#//VariableModule",
+  "name" : "FRTBOutputLayerMeasures",
+  "variables" : [ {
+    "code" : "SensitivityToDeltaRiskFactors",
+    "description" : "SensitivityToDeltaRiskFactors",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
+    },
+    "variable_id" : "SensitivityToDeltaRiskFactors",
+    "name" : "SensitivityToDeltaRiskFactors",
+    "displayName" : "SensitivityToDeltaRiskFactors"
+  }, {
+    "code" : "OwnFundsRequirements",
+    "description" : "OwnFundsRequirements",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#Numbers"
+    },
+    "variable_id" : "OwnFundsRequirements",
+    "name" : "OwnFundsRequirements",
+    "displayName" : "OwnFundsRequirements"
+  } ]
+}

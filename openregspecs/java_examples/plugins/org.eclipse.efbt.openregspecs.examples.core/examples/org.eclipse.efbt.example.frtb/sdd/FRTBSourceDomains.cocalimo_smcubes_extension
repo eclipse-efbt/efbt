@@ -1,0 +1,112 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/openregspecs_smcubes_extension#//DomainModule",
+  "name" : "FRTBSourceDomains",
+  "domains" : [ {
+    "code" : "Currency",
+    "data_type" : "String",
+    "is_enumerated" : true,
+    "name" : "Currency",
+    "displayName" : "Currency"
+  }, {
+    "code" : "shockDirection",
+    "data_type" : "String",
+    "is_enumerated" : true,
+    "name" : "shockDirection",
+    "displayName" : "CurrshockDirectionency"
+  }, {
+    "code" : "String",
+    "data_type" : "String",
+    "name" : "String",
+    "displayName" : "String"
+  }, {
+    "code" : "Numbers",
+    "data_type" : "Double",
+    "name" : "Numbers",
+    "displayName" : "Numbers"
+  }, {
+    "code" : "Boolean",
+    "data_type" : "Boolean",
+    "description" : "Boolean",
+    "domain_id" : "Boolean",
+    "name" : "Boolean",
+    "displayName" : "Boolean"
+  }, {
+    "code" : "riskClass",
+    "data_type" : "String",
+    "is_enumerated" : true,
+    "name" : "riskClass",
+    "displayName" : "riskClass"
+  }, {
+    "code" : "equityFactorType",
+    "data_type" : "String",
+    "is_enumerated" : true,
+    "name" : "equityFactorType",
+    "displayName" : "equityFactorType"
+  }, {
+    "code" : "CSRCurveType",
+    "data_type" : "String",
+    "is_enumerated" : true,
+    "name" : "CSRCurveType",
+    "displayName" : "CSRCurveType"
+  }, {
+    "code" : "ratingsGrade",
+    "data_type" : "String",
+    "is_enumerated" : true,
+    "name" : "ratingsGrade",
+    "displayName" : "ratingsGrade"
+  }, {
+    "code" : "commodityType",
+    "data_type" : "String",
+    "is_enumerated" : true,
+    "name" : "commodityType",
+    "displayName" : "commodityType"
+  }, {
+    "code" : "marketCap",
+    "data_type" : "String",
+    "is_enumerated" : true,
+    "name" : "marketCap",
+    "displayName" : "marketCap"
+  }, {
+    "code" : "economy",
+    "data_type" : "String",
+    "is_enumerated" : true,
+    "name" : "economy",
+    "displayName" : "economy"
+  }, {
+    "code" : "sector",
+    "data_type" : "String",
+    "is_enumerated" : true,
+    "name" : "sector",
+    "displayName" : "sector"
+  }, {
+    "code" : "securitisationSector",
+    "data_type" : "String",
+    "is_enumerated" : true,
+    "name" : "securitisationSector",
+    "displayName" : "securitisationSector"
+  }, {
+    "code" : "issueType",
+    "data_type" : "String",
+    "description" : "issueType",
+    "domain_id" : "issueType",
+    "is_enumerated" : true,
+    "name" : "issueType",
+    "displayName" : "issueType"
+  }, {
+    "code" : "girrRiskFactorType",
+    "data_type" : "String",
+    "description" : "girrRiskFactorType",
+    "domain_id" : "girrRiskFactorType",
+    "is_enumerated" : true,
+    "name" : "girrRiskFactorType",
+    "displayName" : "girrRiskFactorType"
+  }, {
+    "code" : "sensitivityType",
+    "data_type" : "String",
+    "description" : "sensitivityType",
+    "domain_id" : "sensitivityType",
+    "is_enumerated" : true,
+    "name" : "sensitivityType",
+    "displayName" : "sensitivityType"
+  } ]
+}

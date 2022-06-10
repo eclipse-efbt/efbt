@@ -1,0 +1,69 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/openregspecs_smcubes_extension#//SubDomainModule",
+  "name" : "example_subdomain_module",
+  "subdomains" : [ {
+    "name" : "STRING",
+    "code" : "STRING",
+    "description" : "STRING",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "example_domains.openregspecs_smcubes_extension#STRING"
+    },
+    "subdomain_id" : "STRING"
+  }, {
+    "name" : "RL",
+    "code" : "RL",
+    "description" : "Real Number",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "example_domains.openregspecs_smcubes_extension#RL"
+    },
+    "subdomain_id" : "RL"
+  }, {
+    "name" : "MNTRY",
+    "code" : "MNTRY",
+    "description" : "Monetary",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "example_domains.openregspecs_smcubes_extension#MNTRY"
+    },
+    "subdomain_id" : "MNTRY"
+  }, {
+    "name" : "INTGR_NN_NGTV",
+    "code" : "INTGR_NN_NGTV",
+    "description" : "Non-negative integers",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "example_domains.openregspecs_smcubes_extension#INTGR"
+    },
+    "subdomain_id" : "INTGR_NN_NGTV"
+  }, {
+    "name" : "SIZE",
+    "code" : "SIZE",
+    "description" : "SIZE",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "example_domains.openregspecs_smcubes_extension#SIZE"
+    },
+    "IS_LISTED" : true,
+    "subdomain_id" : "SIZE",
+    "items" : [ {
+      "member_id" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
+        "$ref" : "example_members.openregspecs_smcubes_extension#LARGE"
+      }
+    }, {
+      "member_id" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
+        "$ref" : "example_members.openregspecs_smcubes_extension#MEDIUM"
+      },
+      "order" : 1
+    }, {
+      "member_id" : {
+        "eClass" : "http://www.eclipse.org/efbt/core#//MEMBER",
+        "$ref" : "example_members.openregspecs_smcubes_extension#SMALL"
+      },
+      "order" : 2
+    } ]
+  } ]
+}

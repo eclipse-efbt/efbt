@@ -1,0 +1,95 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/openregspecs_smcubes_extension#//VariableModule",
+  "name" : "FRTBDerivedIdentifiers",
+  "variables" : [ {
+    "code" : "riskFactorID1",
+    "description" : "riskFactorID1",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#String"
+    },
+    "variable_id" : "riskFactorID1",
+    "name" : "riskFactorID1",
+    "displayName" : "riskFactorID1"
+  }, {
+    "code" : "riskFactorIDk",
+    "description" : "riskFactorIDk",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#String"
+    },
+    "variable_id" : "riskFactorIDk",
+    "name" : "riskFactorIDk",
+    "displayName" : "riskFactorIDk"
+  }, {
+    "code" : "riskFactorIDl",
+    "description" : "riskFactorIDl",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#String"
+    },
+    "variable_id" : "riskFactorIDl",
+    "name" : "riskFactorIDl",
+    "displayName" : "riskFactorIDl"
+  }, {
+    "code" : "rowID",
+    "description" : "rowID",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#String"
+    },
+    "variable_id" : "rowID",
+    "name" : "rowID",
+    "displayName" : "rowID"
+  }, {
+    "code" : "bucketID",
+    "description" : "bucketID",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#String"
+    },
+    "variable_id" : "bucketID",
+    "name" : "bucketID",
+    "displayName" : "bucketID"
+  }, {
+    "code" : "summedDeltaSensitivitiesPerPosition_id",
+    "description" : "summedDeltaSensitivitiesPerPosition_id",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#String"
+    },
+    "variable_id" : "summedDeltaSensitivitiesPerPosition_id",
+    "name" : "summedDeltaSensitivitiesPerPosition_id",
+    "displayName" : "summedDeltaSensitivitiesPerPosition_id"
+  }, {
+    "code" : "nettedDeltaSensitivities_id",
+    "description" : "nettedDeltaSensitivities_id",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#String"
+    },
+    "variable_id" : "nettedDeltaSensitivities_id",
+    "name" : "nettedDeltaSensitivities_id",
+    "displayName" : "nettedDeltaSensitivities_id"
+  }, {
+    "code" : "deltaSensitivitiesAndRiskFactor_id",
+    "description" : "deltaSensitivitiesAndRiskFactor_id",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#String"
+    },
+    "variable_id" : "deltaSensitivitiesAndRiskFactor_id",
+    "name" : "deltaSensitivitiesAndRiskFactor_id",
+    "displayName" : "deltaSensitivitiesAndRiskFactor_id"
+  }, {
+    "code" : "deltaSensitivityCombination_id",
+    "description" : "deltaSensitivityCombination_id",
+    "domain_id" : {
+      "eClass" : "http://www.eclipse.org/efbt/core#//DOMAIN",
+      "$ref" : "FRTBSourceDomains.openregspecs_smcubes_extension#String"
+    },
+    "variable_id" : "deltaSensitivityCombination_id",
+    "name" : "deltaSensitivityCombination_id",
+    "displayName" : "deltaSensitivityCombination_id"
+  } ]
+}

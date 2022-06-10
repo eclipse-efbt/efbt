@@ -1,0 +1,543 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/testing#//LogicalTransformationModule",
+  "theDescription" : "",
+  "license" : "Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/efbt/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;",
+  "name" : "transformations",
+  "taskTags" : [ {
+    "displayName" : "duration_tag",
+    "name" : "duration_tag",
+    "requirements" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/requirements_text#//TitledRequirementsSection",
+      "$ref" : "requirements/CRR2.requirements_text#Article_325_1_a"
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/requirements_text#//TitledRequirementsSection",
+      "$ref" : "requirements/CRR2.requirements_text#Article_325_1_b"
+    } ],
+    "activity" : {
+      "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ServiceTask",
+      "$ref" : "Calculate_Duration"
+    }
+  } ],
+  "scenarioTags" : [ {
+    "displayName" : "zero_coupon_rate_scenarioTag",
+    "name" : "zero_coupon_rate_scenarioTag",
+    "requirements" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/requirements_text#//TitledRequirementsSection",
+      "$ref" : "requirements/CRR2.requirements_text#Article_325"
+    } ],
+    "scenario" : {
+      "eClass" : "http://www.eclipse.org/efbt/testing#//Scenario",
+      "$ref" : "zero coupon rate edge case"
+    }
+  } ],
+  "subProcess" : {
+    "id" : "Regulatory Processing Chain",
+    "name" : "Regulatory Processing Chain",
+    "flowElements" : [ {
+      "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+      "id" : "Read Data",
+      "name" : "Read Data",
+      "incoming" : [ {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+        "$ref" : "sf14"
+      } ],
+      "flowElements" : [ {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
+        "id" : "Read_Trade",
+        "name" : "Read_Trade",
+        "incoming" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "sf5"
+        } ],
+        "entity" : {
+          "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+          "$ref" : "example_ldm.data_meta_model#//@entities.4"
+        }
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
+        "id" : "Read_Entity",
+        "name" : "Read_Entity",
+        "incoming" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "sf6"
+        } ],
+        "entity" : {
+          "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+          "$ref" : "example_ldm.data_meta_model#//@entities.3"
+        }
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+        "id" : "Read Instrument Data",
+        "name" : "Read Instrument Data",
+        "incoming" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "sf4"
+        } ],
+        "flowElements" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
+          "id" : "Read_Bond_Instrument",
+          "invisible" : true,
+          "name" : "Read_Bond_Instrument",
+          "incoming" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+            "$ref" : "sf1"
+          } ],
+          "entity" : {
+            "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+            "$ref" : "example_ldm.data_meta_model#//@entities.1"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
+          "id" : "Read Equity Instrument",
+          "invisible" : true,
+          "name" : "Read Equity Instrument",
+          "incoming" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+            "$ref" : "sf2"
+          } ],
+          "entity" : {
+            "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+            "$ref" : "example_ldm.data_meta_model#//@entities.2"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
+          "id" : "Read Instrument",
+          "name" : "Read Instrument",
+          "incoming" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+            "$ref" : "sf3"
+          } ],
+          "entity" : {
+            "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//BasicEntity",
+            "$ref" : "example_ldm.data_meta_model#//@entities.0"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+          "id" : "pg1",
+          "outgoing" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+            "$ref" : "sf1"
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+            "$ref" : "sf2"
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+            "$ref" : "sf3"
+          } ]
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "id" : "sf1",
+          "targetRef" : {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
+            "$ref" : "Read_Bond_Instrument"
+          },
+          "sourceRef" : {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+            "$ref" : "pg1"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "id" : "sf2",
+          "targetRef" : {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
+            "$ref" : "Read Equity Instrument"
+          },
+          "sourceRef" : {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+            "$ref" : "pg1"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "id" : "sf3",
+          "targetRef" : {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
+            "$ref" : "Read Instrument"
+          },
+          "sourceRef" : {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+            "$ref" : "pg1"
+          }
+        } ]
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+        "id" : "pg2",
+        "outgoing" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "sf4"
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "sf5"
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "sf6"
+        } ]
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+        "id" : "sf4",
+        "targetRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+          "$ref" : "Read Instrument Data"
+        },
+        "sourceRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+          "$ref" : "pg2"
+        }
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+        "id" : "sf5",
+        "targetRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
+          "$ref" : "Read_Trade"
+        },
+        "sourceRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+          "$ref" : "pg2"
+        }
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+        "id" : "sf6",
+        "targetRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//UserTask",
+          "$ref" : "Read_Entity"
+        },
+        "sourceRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+          "$ref" : "pg2"
+        }
+      } ]
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+      "id" : "Derivations",
+      "description" : "Derivations",
+      "name" : "Derivations",
+      "incoming" : [ {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+        "$ref" : "sf15"
+      } ],
+      "flowElements" : [ {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+        "id" : "Credit Risk Processing",
+        "name" : "Credit Risk Processing",
+        "incoming" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "sf9"
+        } ],
+        "flowElements" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ServiceTask",
+          "id" : "Calculate_Risk_Weight",
+          "description" : "Calculate_Risk_Weight",
+          "name" : "Calculate_Risk_Weight",
+          "incoming" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+            "$ref" : "sf7"
+          } ],
+          "enrichedAttribute" : {
+            "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//Attribute",
+            "$ref" : "example_ldm.data_meta_model#//@entities.6/@attributes.2"
+          },
+          "scenarios" : [ {
+            "name" : "primary Risk Weight Scenario",
+            "description" : "primaryRiskWeightScenario",
+            "requiredAttributes" : [ {
+              "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//Attribute",
+              "$ref" : "example_ldm.data_meta_model#//@entities.3/@attributes.2"
+            } ]
+          } ]
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ServiceTask",
+          "id" : "Calculate_Exposure_At_Default",
+          "name" : "Calculate_Exposure_At_Default",
+          "incoming" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+            "$ref" : "sf8"
+          } ],
+          "enrichedAttribute" : {
+            "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//Attribute",
+            "$ref" : "example_ldm.data_meta_model#//@entities.6/@attributes.0"
+          },
+          "scenarios" : [ {
+            "name" : "primary EAD Scenario",
+            "description" : "The is the primary sceanrio which is calculateing EAD, EAD is exposure at default ..etc...etc",
+            "requiredAttributes" : [ {
+              "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//Attribute",
+              "$ref" : "example_ldm.data_meta_model#//@entities.0/@attributes.1"
+            }, {
+              "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//Attribute",
+              "$ref" : "example_ldm.data_meta_model#//@entities.6/@attributes.2"
+            } ]
+          } ]
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+          "id" : "ig1",
+          "outgoing" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+            "$ref" : "sf7"
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+            "$ref" : "sf8"
+          } ]
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "id" : "sf7",
+          "targetRef" : {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ServiceTask",
+            "$ref" : "Calculate_Risk_Weight"
+          },
+          "sourceRef" : {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+            "$ref" : "ig1"
+          }
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "id" : "sf8",
+          "targetRef" : {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ServiceTask",
+            "$ref" : "Calculate_Exposure_At_Default"
+          },
+          "sourceRef" : {
+            "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+            "$ref" : "ig1"
+          }
+        } ]
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+        "id" : "Market Risk Processing",
+        "description" : "Market Risk Processing",
+        "invisible" : true,
+        "name" : "Market Risk Processing",
+        "incoming" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "sf10"
+        } ],
+        "flowElements" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ServiceTask",
+          "id" : "Calculate_Duration",
+          "description" : "Here we have the business requirements for the task, duration is measure of sensitivity of a bond to interest rates etc, etc",
+          "invisible" : true,
+          "name" : "Calculate_Duration",
+          "enrichedAttribute" : {
+            "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//Attribute",
+            "$ref" : "example_ldm.data_meta_model#//@entities.7/@attributes.0"
+          },
+          "scenarios" : [ {
+            "name" : "main duration scenario",
+            "description" : "Here we have the business requirments for the sceanrio, duration is a measure if sensitivity ot the bond, etc, etc.",
+            "requiredAttributes" : [ {
+              "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//Attribute",
+              "$ref" : "example_ldm.data_meta_model#//@entities.1/@attributes.0"
+            } ]
+          }, {
+            "name" : "zero coupon rate edge case",
+            "description" : "Here we have the business requirements for the task, duration is measure of sensitivity of a bond to interest rates but in the sepcial case of zero coupon bonds we calculate as etc,etc",
+            "requiredAttributes" : [ {
+              "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//Attribute",
+              "$ref" : "example_ldm.data_meta_model#//@entities.1/@attributes.0"
+            } ]
+          } ]
+        } ]
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+        "id" : "pg3",
+        "outgoing" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "sf9"
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "sf10"
+        } ]
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+        "id" : "sf9",
+        "targetRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+          "$ref" : "Credit Risk Processing"
+        },
+        "sourceRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+          "$ref" : "pg3"
+        }
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+        "id" : "sf10",
+        "targetRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+          "$ref" : "Market Risk Processing"
+        },
+        "sourceRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+          "$ref" : "pg3"
+        }
+      } ]
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+      "id" : "Generation Of Output",
+      "name" : "Generation Of Output",
+      "incoming" : [ {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+        "$ref" : "sf16"
+      } ],
+      "flowElements" : [ {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ScriptTask",
+        "id" : "Generate Credit Risk Report",
+        "name" : "Generate Credit Risk Report",
+        "incoming" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "sf11"
+        } ],
+        "selectionLayers" : [ {
+          "requiredAttributes" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//Attribute",
+            "$ref" : "example_ldm.data_meta_model#//@entities.6/@attributes.0"
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//Attribute",
+            "$ref" : "example_ldm.data_meta_model#//@entities.6/@attributes.2"
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//Attribute",
+            "$ref" : "example_ldm.data_meta_model#//@entities.4/@attributes.3"
+          } ],
+          "name" : "credit_risk_report$layer1",
+          "invisible" : false
+        } ],
+        "outputLayer" : {
+          "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//GeneratedEntity",
+          "$ref" : "example_ldm.data_meta_model#//@entities.8"
+        }
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ScriptTask",
+        "id" : "Generate Market Risk Report",
+        "invisible" : true,
+        "name" : "Generate Market Risk Report",
+        "incoming" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "sf12"
+        } ],
+        "selectionLayers" : [ {
+          "requiredAttributes" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//Attribute",
+            "$ref" : "example_ldm.data_meta_model#//@entities.4/@attributes.3"
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//Attribute",
+            "$ref" : "example_ldm.data_meta_model#//@entities.0/@attributes.0"
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//Attribute",
+            "$ref" : "example_ldm.data_meta_model#//@entities.7/@attributes.0"
+          } ],
+          "name" : "market_risk_report$layer1",
+          "invisible" : true
+        } ]
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ScriptTask",
+        "id" : "Generat Trade Report",
+        "invisible" : true,
+        "name" : "Generat Trade Report",
+        "incoming" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "sf13"
+        } ],
+        "selectionLayers" : [ {
+          "requiredAttributes" : [ {
+            "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//Attribute",
+            "$ref" : "example_ldm.data_meta_model#//@entities.4/@attributes.3"
+          }, {
+            "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//Attribute",
+            "$ref" : "example_ldm.data_meta_model#//@entities.0/@attributes.1"
+          } ],
+          "name" : "trade_report_layer1",
+          "invisible" : true
+        } ]
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+        "id" : "pg4",
+        "outgoing" : [ {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "sf11"
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "sf12"
+        }, {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+          "$ref" : "sf13"
+        } ]
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+        "id" : "sf11",
+        "targetRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ScriptTask",
+          "$ref" : "Generate Credit Risk Report"
+        },
+        "sourceRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+          "$ref" : "pg4"
+        }
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+        "id" : "sf12",
+        "targetRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ScriptTask",
+          "$ref" : "Generate Market Risk Report"
+        },
+        "sourceRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+          "$ref" : "pg4"
+        }
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+        "id" : "sf13",
+        "targetRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ScriptTask",
+          "$ref" : "Generat Trade Report"
+        },
+        "sourceRef" : {
+          "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//ParallelGateway",
+          "$ref" : "pg4"
+        }
+      } ]
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+      "id" : "ig4",
+      "outgoing" : [ {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+        "$ref" : "sf14"
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+        "$ref" : "sf15"
+      }, {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+        "$ref" : "sf16"
+      } ]
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+      "id" : "sf14",
+      "targetRef" : {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+        "$ref" : "Read Data"
+      },
+      "sourceRef" : {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+        "$ref" : "ig4"
+      }
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+      "id" : "sf15",
+      "targetRef" : {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+        "$ref" : "Derivations"
+      },
+      "sourceRef" : {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+        "$ref" : "ig4"
+      }
+    }, {
+      "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SequenceFlow",
+      "id" : "sf16",
+      "targetRef" : {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//SubProcess",
+        "$ref" : "Generation Of Output"
+      },
+      "sourceRef" : {
+        "eClass" : "http://www.eclipse.org/efbt/bpmn_lite#//InclusiveGateway",
+        "$ref" : "ig4"
+      }
+    } ]
+  }
+}

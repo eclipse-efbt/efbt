@@ -22,28 +22,19 @@ import java.util.List;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
-import org.eclipse.efbt.cocalimo.smcubes.model.core.CoreFactory;
-import org.eclipse.efbt.cocalimo.smcubes.model.core.DOMAIN;
-import org.eclipse.efbt.cocalimo.smcubes.model.core.FACET_VALUE_TYPE;
-import org.eclipse.efbt.cocalimo.smcubes.model.core.MEMBER;
-import org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN;
-import org.eclipse.efbt.cocalimo.smcubes.model.core.SUBDOMAIN_ENUMERATION;
-import org.eclipse.efbt.cocalimo.smcubes.model.core.VARIABLE;
-import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.COMBINATION;
-import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.COMBINATION_ITEM;
-import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE;
-import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE_STRUCTURE;
-import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.CUBE_STRUCTURE_ITEM;
-import org.eclipse.efbt.cocalimo.smcubes.model.data_definition.Data_definitionFactory;
-import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extra_extension.Cocalimo_smcubes_extra_extensionFactory;
-import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extra_extension.CombinationModule;
-import org.eclipse.efbt.cocalimo.smcubes.model.cocalimo_smcubes_extra_extension.Cocalimo_smcubes_extra_extensionFactory;
-import org.eclipse.efbt.cocalimo.smcubes.model.mapping.CUBE_MAPPING;
-import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MAPPING_DEFINITION;
-import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MAPPING_TO_CUBE;
-import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MEMBER_MAPPING;
-import org.eclipse.efbt.cocalimo.smcubes.model.mapping.MappingFactory;
-import org.eclipse.efbt.cocalimo.smcubes.model.mapping.VARIABLE_MAPPING;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.Open_reg_specsFactory;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.DOMAIN;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.FACET_VALUE_TYPE;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.MEMBER;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.SUBDOMAIN;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.SUBDOMAIN_ENUMERATION;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.VARIABLE;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.COMBINATION;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.COMBINATION_ITEM;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.CUBE;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.CUBE_STRUCTURE;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.CUBE_STRUCTURE_ITEM;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.Open_reg_specsFactory;
 import org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.access.api.AccessRow;
 import org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.access.api.AccessUtils;
 import org.eclipse.efbt.controller.smcubes.component.access.provider.AccessUtilProvider;
@@ -132,7 +123,7 @@ public class BIRDImporterImpl extends Importer {
 	 * CUBE_MAPPING and MAPPING_TO_CUBE model instances from the BIRD Access
 	 * Database.
 	 */
-	public void createAllMappings() {
+	/*public void createAllMappings() {
 
 		// create all mapping defintions
 		// attach all memebr mapping and variable maapings
@@ -234,7 +225,7 @@ public class BIRDImporterImpl extends Importer {
 			e.printStackTrace();
 		}
 
-	}
+	}*/
 
 	/**
 	 * get the CUBE_MAPPING instance which corresponds to the String ID of the
@@ -243,7 +234,7 @@ public class BIRDImporterImpl extends Importer {
 	 * @param elementID
 	 * @return
 	 */
-	private CUBE_MAPPING findCubeMappingWithID(String elementID) {
+	/*private CUBE_MAPPING findCubeMappingWithID(String elementID) {
 		EList<CUBE_MAPPING> cubeMappingList = cubeMappingModule.getCubeMappings();
 		CUBE_MAPPING returnCubeMapping = null;
 		for (Iterator iterator = cubeMappingList.iterator(); iterator.hasNext();) {
@@ -252,7 +243,7 @@ public class BIRDImporterImpl extends Importer {
 				returnCubeMapping = cubeMapping;
 		}
 		return returnCubeMapping;
-	}
+	}*/
 
 	/**
 	 * get the MAPPING_DEFINITION instance which corresponds to the String ID of the
@@ -261,7 +252,7 @@ public class BIRDImporterImpl extends Importer {
 	 * @param elementID
 	 * @return
 	 */
-	private MAPPING_DEFINITION findMappingDefWithID(String elementID) {
+	/*private MAPPING_DEFINITION findMappingDefWithID(String elementID) {
 		EList<MAPPING_DEFINITION> mappingList = mappingDefinitionModule.getMappings();
 		MAPPING_DEFINITION returnMapping = null;
 		for (Iterator iterator = mappingList.iterator(); iterator.hasNext();) {
@@ -270,7 +261,7 @@ public class BIRDImporterImpl extends Importer {
 				returnMapping = mapping;
 		}
 		return returnMapping;
-	}
+	}*/
 
 	/**
 	 * get the CUBE instance which corresponds to the String ID of the CUBE
@@ -278,7 +269,7 @@ public class BIRDImporterImpl extends Importer {
 	 * @param elementID
 	 * @return
 	 */
-	private CUBE findCubeWithID(String elementID) {
+	/*private CUBE findCubeWithID(String elementID) {
 		EList<CUBE> cubeList = cubesModule.getCubes();
 		CUBE returnCube = null;
 		for (Iterator iterator = cubeList.iterator(); iterator.hasNext();) {
@@ -287,7 +278,7 @@ public class BIRDImporterImpl extends Importer {
 				returnCube = cube;
 		}
 		return returnCube;
-	}
+	}*/
 
 	/**
 	 * get the VARIABLE_MAPPING instance which corresponds to the String ID of the
@@ -296,7 +287,7 @@ public class BIRDImporterImpl extends Importer {
 	 * @param elementID
 	 * @return
 	 */
-	private VARIABLE_MAPPING findVariableMappingWithID(String elementID) {
+	/*private VARIABLE_MAPPING findVariableMappingWithID(String elementID) {
 		EList<VARIABLE_MAPPING> variableMappingList = variableMappingModule.getVariableMappings();
 		VARIABLE_MAPPING returnVariableMapping = null;
 		for (Iterator iterator = variableMappingList.iterator(); iterator.hasNext();) {
@@ -305,7 +296,7 @@ public class BIRDImporterImpl extends Importer {
 				returnVariableMapping = varmapping;
 		}
 		return returnVariableMapping;
-	}
+	}*/
 
 	/**
 	 * get the MEMBER_MAPPING instance which corresponds to the String ID of the
@@ -314,7 +305,7 @@ public class BIRDImporterImpl extends Importer {
 	 * @param elementID
 	 * @return
 	 */
-	private MEMBER_MAPPING findMemberMappingWithID(String elementID) {
+	/*private MEMBER_MAPPING findMemberMappingWithID(String elementID) {
 		EList<MEMBER_MAPPING> memberMappingList = memberMappingModule.getMemberMappings();
 		MEMBER_MAPPING returnMemberMapping = null;
 		for (Iterator iterator = memberMappingList.iterator(); iterator.hasNext();) {
@@ -323,7 +314,7 @@ public class BIRDImporterImpl extends Importer {
 				returnMemberMapping = memMapping;
 		}
 		return returnMemberMapping;
-	}
+	}*/
 
 	/**
 	 * create the DOMAIN model instances from the BIRD Access Database
@@ -336,7 +327,7 @@ public class BIRDImporterImpl extends Importer {
 			List<AccessRow> list = accessUtils.getRowsForTable(filepath, "DOMAIN");
 			for (AccessRow row : list) {
 				
-				DOMAIN domain = CoreFactory.eINSTANCE.createDOMAIN();
+				DOMAIN domain = Open_reg_specsFactory.eINSTANCE.createDOMAIN();
 				domain.setCode(row.getString("CODE"));
 				domain.setDomain_id(replaceDots(row.getString("DOMAIN_ID")));
 				domain.setDescription(row.getString("DESCRIPTION"));
@@ -399,7 +390,7 @@ public class BIRDImporterImpl extends Importer {
 			List<AccessRow> list = accessUtils.getRowsForTable(filepath, "SUBDOMAIN");
 			for (AccessRow row : list) {
 
-				SUBDOMAIN subDomain = CoreFactory.eINSTANCE.createSUBDOMAIN();
+				SUBDOMAIN subDomain = Open_reg_specsFactory.eINSTANCE.createSUBDOMAIN();
 				subDomain.setCode(row.getString("CODE"));
 				subDomain.setSubdomain_id(replaceDots(row.getString("SUBDOMAIN_ID")));
 				subDomain.setName(replaceDots(row.getString("SUBDOMAIN_ID")));
@@ -439,7 +430,7 @@ public class BIRDImporterImpl extends Importer {
 				DOMAIN domain= subdomain.getDomain_id();
 				MEMBER member= getMemberWithIDAndDomain(memberID, domain);
 				
-				SUBDOMAIN_ENUMERATION subDomainEnum = CoreFactory.eINSTANCE.createSUBDOMAIN_ENUMERATION();
+				SUBDOMAIN_ENUMERATION subDomainEnum = Open_reg_specsFactory.eINSTANCE.createSUBDOMAIN_ENUMERATION();
 				subDomainEnum.setMember_id(member);
 				try
 				{
@@ -472,7 +463,7 @@ public class BIRDImporterImpl extends Importer {
 			List<AccessRow> list = accessUtils.getRowsForTable(filepath, "MEMBER");
 			for (AccessRow row : list) {
 
-				MEMBER member = CoreFactory.eINSTANCE.createMEMBER();
+				MEMBER member = Open_reg_specsFactory.eINSTANCE.createMEMBER();
 				member.setCode(row.getString("CODE"));
 				member.setMember_id(replaceDots(row.getString("MEMBER_ID")));
 				member.setDescription(row.getString("DESCRIPTION"));
@@ -557,7 +548,7 @@ public class BIRDImporterImpl extends Importer {
 
 			for (AccessRow row : list) {
 
-				VARIABLE variable = CoreFactory.eINSTANCE.createVARIABLE();
+				VARIABLE variable = Open_reg_specsFactory.eINSTANCE.createVARIABLE();
 				variable.setCode(row.getString("CODE"));
 				variable.setVariable_id(replaceDots(row.getString("VARIABLE_ID")));
 				variable.setDescription(row.getString("DESCRIPTION"));
@@ -580,7 +571,7 @@ public class BIRDImporterImpl extends Importer {
 	 * create the CUBE_STRUCTURE, CUBE, and CUBE_STRUCTURE_ITEM model instances from
 	 * the BIRD Access Database
 	 */
-	public void createAllCubes() {
+	/*public void createAllCubes() {
 		AccessUtils accessUtils = AccessUtilProvider.getAccessUtils();
 		try {
 			List<AccessRow> list = accessUtils.getRowsForTable(filepath, "CUBE_STRUCTURE");
@@ -654,7 +645,7 @@ public class BIRDImporterImpl extends Importer {
 			e.printStackTrace();
 		}
 
-	}
+	}*/
 
 	/**
 	 * get the CUBE_STRUCTURE instance which corresponds to the String ID of the
@@ -663,7 +654,7 @@ public class BIRDImporterImpl extends Importer {
 	 * @param elementID
 	 * @return
 	 */
-	private CUBE_STRUCTURE findCubeStructureWithID(String elementID) {
+	/*private CUBE_STRUCTURE findCubeStructureWithID(String elementID) {
 		EList<CUBE_STRUCTURE> structureList = cubeStructuresModule.getCubeStructures();
 		CUBE_STRUCTURE returnStructure = null;
 		for (Iterator iterator = structureList.iterator(); iterator.hasNext();) {
@@ -672,12 +663,12 @@ public class BIRDImporterImpl extends Importer {
 				returnStructure = structure;
 		}
 		return returnStructure;
-	}
+	}*/
 
 	/**
 	 * create the COMBINATION model instances from the BIRD Access Database.
 	 */
-	public void createAllCombinations() {
+/*	public void createAllCombinations() {
 		AccessUtils accessUtils = AccessUtilProvider.getAccessUtils();
 		try {
 			List<AccessRow> list = accessUtils.getRowsForTable(filepath, "COMBINATION");
@@ -686,7 +677,7 @@ public class BIRDImporterImpl extends Importer {
 			for (AccessRow row : list) {
 
 				if (counter == 0) {
-					combinationsModule = Cocalimo_smcubes_extra_extensionFactory.eINSTANCE.createCombinationModule();
+					combinationsModule = openregspecs_smcubes_extra_extensionFactory.eINSTANCE.createCombinationModule();
 					combinationsModules.add(combinationsModule);
 					//birdModel.getCombinations().add(combinationsModule);
 				}
@@ -728,7 +719,7 @@ public class BIRDImporterImpl extends Importer {
 			e.printStackTrace();
 		}
 
-	}
+	}*/
 
 	/**
 	 * get the COMBINATION instance which corresponds to the String ID of the
@@ -737,7 +728,7 @@ public class BIRDImporterImpl extends Importer {
 	 * @param elementID
 	 * @return
 	 */
-	private COMBINATION findCombinationWithID(String elementID) {
+	/*private COMBINATION findCombinationWithID(String elementID) {
 		COMBINATION returnCombination = null;
 		for (Iterator iterator = combinationsModules.iterator(); iterator.hasNext();) {
 			CombinationModule combinationModule = (CombinationModule) iterator.next();
@@ -752,7 +743,7 @@ public class BIRDImporterImpl extends Importer {
 		}
 
 		return returnCombination;
-	}
+	}*/
 
 	/**
 	 * Get the ColumnStructuredEntity for a String cube ID.
@@ -1107,7 +1098,7 @@ public class BIRDImporterImpl extends Importer {
 	 * @param value
 	 * @return
 	 */
-	private MEMBER getMember(String cube, String variable, String value) {
+	/*private MEMBER getMember(String cube, String variable, String value) {
 		
 		EList<CUBE> cubes = cubesModule.getCubes();
 			
@@ -1141,7 +1132,7 @@ public class BIRDImporterImpl extends Importer {
 
 		}
 		return returnedMember;
-	}
+	}*/
 
 	
 	private EList<MEMBER> getDomainMembers(DOMAIN domain) {
@@ -1155,7 +1146,7 @@ public class BIRDImporterImpl extends Importer {
 		return returnMembers;
 	}
 
-	private EList<CUBE_STRUCTURE_ITEM> getColumnsForCube(CUBE columnStructuredEntity) {
+	/*private EList<CUBE_STRUCTURE_ITEM> getColumnsForCube(CUBE columnStructuredEntity) {
 		// TODO Auto-generated method stub
 		EList<CUBE_STRUCTURE_ITEM> returnItems = new BasicEList<CUBE_STRUCTURE_ITEM>();
 		CUBE_STRUCTURE cs = columnStructuredEntity.getCube_structure_id();
@@ -1169,7 +1160,7 @@ public class BIRDImporterImpl extends Importer {
 			}
 		}
 		return returnItems;
-	}
+	}*/
 
 	/**
 	 * Return true if the variable for a cube is an enumberated varaible
@@ -1179,7 +1170,7 @@ public class BIRDImporterImpl extends Importer {
 	 * @param variable
 	 * @return
 	 */
-	private boolean checkIsEnumeratedColumn(String cube, String variable) {
+	/*private boolean checkIsEnumeratedColumn(String cube, String variable) {
 	
 		EList<CUBE> cubes = cubesModule.getCubes();
 		boolean isEnumerated = false;
@@ -1198,7 +1189,7 @@ public class BIRDImporterImpl extends Importer {
 		}
 		return isEnumerated;
 	}
-
+*/
 	
 	/**
 	 * Get the Column instance for a particular cube, 
@@ -1207,7 +1198,7 @@ public class BIRDImporterImpl extends Importer {
 	 * @param variable
 	 * @return
 	 */
-	private VARIABLE getColumnFromCube(String cube, String variable) {
+	/*private VARIABLE getColumnFromCube(String cube, String variable) {
 		
 		EList<CUBE> cubes = cubesModule.getCubes();
 		VARIABLE returnedColumn = null;
@@ -1226,7 +1217,7 @@ public class BIRDImporterImpl extends Importer {
 
 		return returnedColumn;
 	}
-
+*/
 
 	/**
 	 * Return true if the cube exists, otherwise return false.
@@ -1234,7 +1225,7 @@ public class BIRDImporterImpl extends Importer {
 	 * @param cube
 	 * @return
 	 */
-	private boolean checkCubeExists(String cube) {
+	/*private boolean checkCubeExists(String cube) {
 		
 		EList<CUBE> cubes = cubesModule.getCubes();
 		boolean exists = false;
@@ -1245,7 +1236,7 @@ public class BIRDImporterImpl extends Importer {
 
 		}
 		return exists;
-	}
+	}*/
 	
 	private static List<CSVRecord> getCSVRowsFromFile(String fileName) throws IOException  {
 		// TODO Auto-generated method stub
@@ -1264,7 +1255,7 @@ public class BIRDImporterImpl extends Importer {
 	 * @param cube
 	 * @return
 	 */
-	private CUBE getCubeForCubeName(String cube) {
+	/*private CUBE getCubeForCubeName(String cube) {
 		
 		EList<CUBE> column_structured_entities =
 				cubesModule.getCubes();
@@ -1276,7 +1267,7 @@ public class BIRDImporterImpl extends Importer {
 				return columnStructuredEntity;
 		}
 		return null;
-	}
+	}*/
 	
 	/**
 	 * A main method for initial test.

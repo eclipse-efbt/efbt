@@ -1,0 +1,93 @@
+{
+  "eClass" : "http://www.eclipse.org/efbt/openregspecs_smcubes_extension#//DomainModule",
+  "name" : "FRTBOutputLayerDomains",
+  "domains" : [ {
+    "code" : "Base",
+    "data_type" : "String",
+    "description" : "Base",
+    "domain_id" : "Base",
+    "is_enumerated" : true,
+    "name" : "Base",
+    "displayName" : "Base"
+  }, {
+    "code" : "MainCatagory",
+    "data_type" : "String",
+    "description" : "MainCatagory",
+    "domain_id" : "MainCatagory",
+    "is_enumerated" : true,
+    "name" : "MainCatagory",
+    "displayName" : "MainCatagory"
+  }, {
+    "code" : "ApproachForPrudentialPurposes",
+    "data_type" : "String",
+    "description" : "ApproachForPrudentialPurposes",
+    "domain_id" : "ApproachForPrudentialPurposes",
+    "is_enumerated" : true,
+    "name" : "ApproachForPrudentialPurposes",
+    "displayName" : "ApproachForPrudentialPurposes"
+  }, {
+    "code" : "DeltaVegaOrCurvatureRisk",
+    "data_type" : "String",
+    "description" : "DeltaVegaOrCurvatureRisk",
+    "domain_id" : "DeltaVegaOrCurvatureRisk",
+    "is_enumerated" : true,
+    "name" : "DeltaVegaOrCurvatureRisk",
+    "displayName" : "DeltaVegaOrCurvatureRisk"
+  }, {
+    "code" : "TypeAndNatureOfSensitivity",
+    "data_type" : "String",
+    "description" : "TypeAndNatureOfSensitivity",
+    "domain_id" : "TypeAndNatureOfSensitivity",
+    "is_enumerated" : true,
+    "name" : "TypeAndNatureOfSensitivity",
+    "displayName" : "TypeAndNatureOfSensitivity"
+  }, {
+    "code" : "PositionInTheInstrument",
+    "data_type" : "String",
+    "description" : "PositionInTheInstrument",
+    "domain_id" : "PositionInTheInstrument",
+    "is_enumerated" : true,
+    "name" : "PositionInTheInstrument",
+    "displayName" : "PositionInTheInstrument"
+  }, {
+    "code" : "PrudentialPortfolio",
+    "data_type" : "String",
+    "description" : "PrudentialPortfolio",
+    "domain_id" : "PrudentialPortfolio",
+    "is_enumerated" : true,
+    "name" : "PrudentialPortfolio",
+    "displayName" : "PrudentialPortfolio"
+  }, {
+    "code" : "ContingentScenario",
+    "data_type" : "String",
+    "description" : "ContingentScenario",
+    "domain_id" : "ContingentScenario",
+    "is_enumerated" : true,
+    "name" : "ContingentScenario",
+    "displayName" : "ContingentScenario"
+  }, {
+    "code" : "TypeOfRisk",
+    "data_type" : "String",
+    "description" : "TypeOfRisk",
+    "domain_id" : "TypeOfRisk",
+    "is_enumerated" : true,
+    "name" : "TypeOfRisk",
+    "displayName" : "TypeOfRisk"
+  }, {
+    "code" : "MarketRiskPortfolio",
+    "data_type" : "String",
+    "description" : "MarketRiskPortfolio",
+    "domain_id" : "MarketRiskPortfolio",
+    "is_enumerated" : true,
+    "name" : "MarketRiskPortfolio",
+    "displayName" : "MarketRiskPortfolio"
+  }, {
+    "code" : "Instrument",
+    "data_type" : "String",
+    "description" : "Instrument",
+    "domain_id" : "Instrument",
+    "is_enumerated" : true,
+    "name" : "Instrument",
+    "displayName" : "Instrument"
+  } ]
+}

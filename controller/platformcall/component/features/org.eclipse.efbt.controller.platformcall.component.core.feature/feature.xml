@@ -120,6 +120,12 @@ Exhibit A – Form of Secondary Licenses Notice
     You may add additional accurate notices of copyright ownership.
    </license>
 
+   <requires>
+      <import plugin="org.eclipse.efbt.openregspecs.model" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.efbt.controller.smcubes.component.importexport.impl" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.efbt.controller.ldm.component.testing"/>
+   </requires>
+
    <plugin
          id="org.eclipse.efbt.controller.platformcall.component.core"
          download-size="0"
