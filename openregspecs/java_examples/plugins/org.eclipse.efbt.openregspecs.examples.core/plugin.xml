@@ -31,9 +31,8 @@
     </extension>
    <extension point="org.eclipse.emf.common.ui.examples">
         <example wizardID="org.eclipse.efbt.wizard.EFBTExampleWizard" pageImage="icons/EObject.gif">
-            <projectDescriptor name="org.eclipse.efbt.example.testing" contentURI="examples/org.eclipse.efbt.example.testing/" description="Logical Transformations Example"/>
-            <projectDescriptor name="org.eclipse.efbt.example.ldm" contentURI="examples/org.eclipse.efbt.example.ldm/" description="LDM Example"/>
             <projectDescriptor name="org.eclipse.efbt.example.frtb" contentURI="examples/org.eclipse.efbt.example.frtb/" description="FRTB Example"/>
+            <projectDescriptor name="org.eclipse.efbt.example.openregspecs" contentURI="examples/org.eclipse.efbt.example.open_reg_specs/" description="OpenRegSpecs Example"/>
         </example>
     </extension>
 </plugin>

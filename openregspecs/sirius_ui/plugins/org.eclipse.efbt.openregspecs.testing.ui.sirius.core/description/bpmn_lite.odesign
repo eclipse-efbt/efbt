@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="ASCII"?>
 <description:Group xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:filter="http://www.eclipse.org/sirius/diagram/description/filter/1.1.0" xmlns:properties="http://www.eclipse.org/sirius/properties/1.0.0" xmlns:style="http://www.eclipse.org/sirius/diagram/description/style/1.1.0" xmlns:tool="http://www.eclipse.org/sirius/diagram/description/tool/1.1.0" xmlns:tool_1="http://www.eclipse.org/sirius/description/tool/1.1.0" name="bpmn_lite" version="12.0.0.2017041100">
   <ownedViewpoints name="Process" label="bpmn_lite - Process" modelFileExtension="open_reg_specs">
-    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="SubProcessDiagram" label="SubProcess Diagram" titleExpression="aql:self.name" domainClass="bpmn_lite.SubProcess" enablePopupBars="true">
-      <metamodel href="../../org.eclipse.efbt.openregspecs.model/model/open_reg_specs.ecore#/"/>
+    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="SubProcessDiagram" titleExpression="aql:self.name" domainClass="SubProcess" enablePopupBars="true">
+      <metamodel href="../../../../../../org.eclipse.efbt.openregspecs.model/model/open_reg_specs.ecore#/"/>
       <filters xsi:type="filter:CompositeFilterDescription" name="FitlerOnVisibility">
         <filters xsi:type="filter:MappingFilter" mappings="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPSubProcess'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='LabelEdge'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='SequenceFlow'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPExclusiveGateway'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPExternalLabel'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPInclusiveGateway'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPParallelGateway']" semanticConditionExpression="aql: not (self.invisible)"/>
       </filters>
       <layout xsi:type="description_1:CompositeLayout" direction="LeftToRight"/>
       <defaultLayer name="Default">
-        <edgeMappings name="SequenceFlow" labelDirectEdit="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.0/@ownedTools[name='FlowElementNameEdit']" semanticCandidatesExpression="aql:containerView.target.eAllContents(bpmn_lite::SequenceFlow)" sourceMapping="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPExclusiveGateway'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPInclusiveGateway'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPParallelGateway'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']" targetMapping="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPExclusiveGateway'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPInclusiveGateway'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPParallelGateway'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']" targetFinderExpression="aql:self.targetRef" sourceFinderExpression="aql:self.sourceRef" domainClass="bpmn_lite::SequenceFlow" useDomainElement="true">
+        <edgeMappings name="SequenceFlow" labelDirectEdit="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.0/@ownedTools[name='FlowElementNameEdit']" semanticCandidatesExpression="aql:containerView.target.eAllContents(open_reg_specs::SequenceFlow)" sourceMapping="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPExclusiveGateway'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPInclusiveGateway'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPParallelGateway'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']" targetMapping="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPExclusiveGateway'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPInclusiveGateway'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPParallelGateway'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']" targetFinderExpression="aql:self.targetRef" sourceFinderExpression="aql:self.sourceRef" domainClass="SequenceFlow" useDomainElement="true">
           <style strokeColor="//@userColorsPalettes[name='Colors']/@entries[name='SequenceFlowColor']" targetArrow="InputFillClosedArrow" sizeComputationExpression="2" routingStyle="manhattan">
             <centerLabelStyleDescription showIcon="false" labelExpression="aql:self.name">
               <labelFormat>italic</labelFormat>
@@ -24,31 +24,31 @@
             </centerLabelStyleDescription>
           </style>
         </edgeMappings>
-        <containerMappings name="SubProcess" deletionDescription="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.0/@ownedTools[name='DeleteSubProcess']" labelDirectEdit="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.0/@ownedTools[name='FlowElementNameEdit']" semanticCandidatesExpression="aql:self" domainClass="bpmn_lite.SubProcess">
-          <subNodeMappings name="SPExternalLabel" labelDirectEdit="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.0/@ownedTools[name='FlowElementNameEdit']" semanticCandidatesExpression="aql:containerView.getElementsWithExternalLabel()" semanticElements="aql:self.eventDefinitions->union(Sequence{self})" domainClass="bpmn_lite.BaseElement">
+        <containerMappings name="SubProcess" deletionDescription="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.0/@ownedTools[name='DeleteSubProcess']" labelDirectEdit="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.0/@ownedTools[name='FlowElementNameEdit']" semanticCandidatesExpression="aql:self" domainClass="SubProcess">
+          <subNodeMappings name="SPExternalLabel" labelDirectEdit="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.0/@ownedTools[name='FlowElementNameEdit']" semanticCandidatesExpression="aql:containerView.getElementsWithExternalLabel()" semanticElements="aql:self.eventDefinitions->union(Sequence{self})" domainClass="BaseElement">
             <style xsi:type="style:SquareDescription" borderColor="//@userColorsPalettes[name='Colors']/@entries[name='LightYellow']" showIcon="false" labelExpression="aql:self.getExternalLabel()" labelColor="//@userColorsPalettes[name='Colors']/@entries[name='TextBackground']" labelAlignment="LEFT" sizeComputationExpression="aql:self.getExternalLabelSize()" labelPosition="node" resizeKind="NSEW" color="//@userColorsPalettes[name='Colors']/@entries[name='LightYellow']"/>
           </subNodeMappings>
-          <subNodeMappings name="SPParallelGateway" labelDirectEdit="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.0/@ownedTools[name='FlowElementNameEdit']" semanticCandidatesExpression="aql:self.flowElements->filter(bpmn_lite::ParallelGateway)" domainClass="bpmn_lite.ParallelGateway">
+          <subNodeMappings name="SPParallelGateway" labelDirectEdit="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.0/@ownedTools[name='FlowElementNameEdit']" semanticCandidatesExpression="aql:self.flowElements->filter(open_reg_specs::ParallelGateway)" domainClass="ParallelGateway">
             <style xsi:type="style:WorkspaceImageDescription" showIcon="false" labelExpression="aql:self.getNonExternalLabel(view)" labelColor="//@userColorsPalettes[name='Colors']/@entries[name='TextBackground']" sizeComputationExpression="-1" arcWidth="1" arcHeight="1" workspacePath="/org.eclipse.efbt.openregspecs.testing.ui.sirius.core/icons2/nodes/gateway/parallel-gateway.svg">
               <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             </style>
           </subNodeMappings>
-          <subNodeMappings name="SPInclusiveGateway" labelDirectEdit="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.0/@ownedTools[name='FlowElementNameEdit']" semanticCandidatesExpression="aql:self.flowElements->filter(bpmn_lite::InclusiveGateway)" domainClass="bpmn_lite.InclusiveGateway">
+          <subNodeMappings name="SPInclusiveGateway" labelDirectEdit="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.0/@ownedTools[name='FlowElementNameEdit']" semanticCandidatesExpression="aql:self.flowElements->filter(open_reg_specs::InclusiveGateway)" domainClass="InclusiveGateway">
             <style xsi:type="style:WorkspaceImageDescription" showIcon="false" labelExpression="aql:self.getNonExternalLabel(view)" labelColor="//@userColorsPalettes[name='Colors']/@entries[name='TextBackground']" sizeComputationExpression="-1" arcWidth="1" arcHeight="1" workspacePath="/org.eclipse.efbt.openregspecs.testing.ui.sirius.core/icons2/nodes/gateway/inclusive-gateway.svg">
               <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             </style>
           </subNodeMappings>
-          <subNodeMappings name="SPExclusiveGateway" labelDirectEdit="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.0/@ownedTools[name='FlowElementNameEdit']" semanticCandidatesExpression="aql:self.flowElements->filter(bpmn_lite::ExclusiveGateway)" domainClass="bpmn_lite.ExclusiveGateway">
+          <subNodeMappings name="SPExclusiveGateway" labelDirectEdit="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.0/@ownedTools[name='FlowElementNameEdit']" semanticCandidatesExpression="aql:self.flowElements->filter(open_reg_specs::ExclusiveGateway)" domainClass="ExclusiveGateway">
             <style xsi:type="style:WorkspaceImageDescription" showIcon="false" labelExpression="aql:self.getNonExternalLabel(view)" labelColor="//@userColorsPalettes[name='Colors']/@entries[name='TextBackground']" sizeComputationExpression="-1" arcWidth="1" arcHeight="1" workspacePath="/org.eclipse.efbt.openregspecs.testing.ui.sirius.core/icons2/nodes/gateway/exclusive-gateway.svg">
               <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             </style>
           </subNodeMappings>
-          <subContainerMappings name="SPTask" detailDescriptions="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.5/@ownedTools[name='TheServiceTaskLink'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.5/@ownedTools[name='TheScriptTaskLink'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.5/@ownedTools[name='TheUserTaskLink']" labelDirectEdit="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.0/@ownedTools[name='FlowElementNameEdit']" semanticCandidatesExpression="aql:self.flowElements->filter(bpmn_lite::Task)" domainClass="bpmn_lite.Task">
+          <subContainerMappings name="SPTask" detailDescriptions="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.5/@ownedTools[name='TheServiceTaskLink'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.5/@ownedTools[name='TheScriptTaskLink'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.5/@ownedTools[name='TheUserTaskLink']" labelDirectEdit="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.0/@ownedTools[name='FlowElementNameEdit']" semanticCandidatesExpression="aql:self.flowElements->filter(open_reg_specs::Task)" domainClass="Task">
             <style xsi:type="style:FlatContainerStyleDescription" arcWidth="20" arcHeight="20" borderSizeComputationExpression="1" borderColor="//@userColorsPalettes[name='Colors']/@entries[name='TextBackground']" labelSize="9" showIcon="false" labelExpression="aql:self.getLabel(not view.ownedBorderedNodes->isEmpty())" labelColor="//@userColorsPalettes[name='Colors']/@entries[name='TextBackground']" roundedCorner="true" backgroundColor="//@userColorsPalettes[name='Colors']/@entries[name='Yellow']" foregroundColor="//@userColorsPalettes[name='Colors']/@entries[name='Yellow']">
               <labelFormat>bold</labelFormat>
             </style>
           </subContainerMappings>
-          <subContainerMappings xsi:type="description_1:ContainerMappingImport" name="SPSubProcess" deletionDescription="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.0/@ownedTools[name='DeleteSubProcess']" labelDirectEdit="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.0/@ownedTools[name='FlowElementNameEdit']" semanticCandidatesExpression="service:getSubElements()" domainClass="bpmn_lite.SubProcess" reusedNodeMappings="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPExclusiveGateway'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPInclusiveGateway'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPParallelGateway']" reusedContainerMappings="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPSubProcess'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']" importedMapping="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']"/>
+          <subContainerMappings xsi:type="description_1:ContainerMappingImport" name="SPSubProcess" deletionDescription="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.0/@ownedTools[name='DeleteSubProcess']" labelDirectEdit="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.0/@ownedTools[name='FlowElementNameEdit']" semanticCandidatesExpression="service:getSubElements()" domainClass="SubProcess" reusedNodeMappings="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPExclusiveGateway'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPInclusiveGateway'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subNodeMappings[name='SPParallelGateway']" reusedContainerMappings="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPSubProcess'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']/@subContainerMappings[name='SPTask']" importedMapping="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@containerMappings[name='SubProcess']"/>
           <style xsi:type="style:FlatContainerStyleDescription" arcWidth="20" arcHeight="20" borderSizeComputationExpression="3" borderColor="//@userColorsPalettes[name='Colors']/@entries[name='DarkYellow']" labelSize="9" showIcon="false" roundedCorner="true" backgroundColor="//@userColorsPalettes[name='Colors']/@entries[name='LightYellow']" foregroundColor="//@userColorsPalettes[name='Colors']/@entries[name='LightYellow']">
             <labelFormat>bold</labelFormat>
             <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
@@ -65,10 +65,10 @@
             <mask mask="{0}"/>
             <initialOperation>
               <firstModelOperations xsi:type="tool_1:ChangeContext" browseExpression="aql:self">
-                <subModelOperations xsi:type="tool_1:If" conditionExpression="aql:not self.oclIsKindOf(bpmn_lite::TextAnnotation)">
+                <subModelOperations xsi:type="tool_1:If" conditionExpression="aql:not self.oclIsKindOf(TextAnnotation)">
                   <subModelOperations xsi:type="tool_1:SetValue" featureName="name" valueExpression="aql:self.trimLabel(arg0)"/>
                 </subModelOperations>
-                <subModelOperations xsi:type="tool_1:If" conditionExpression="aql:self.oclIsKindOf(bpmn_lite::TextAnnotation)">
+                <subModelOperations xsi:type="tool_1:If" conditionExpression="aql:self.oclIsKindOf(TextAnnotation)">
                   <subModelOperations xsi:type="tool_1:SetValue" featureName="text" valueExpression="aql:self.trimLabel(arg0)"/>
                 </subModelOperations>
               </firstModelOperations>
@@ -79,13 +79,13 @@
             <elementView name="elementView"/>
             <containerView name="containerView"/>
             <initialOperation>
-              <firstModelOperations xsi:type="tool_1:ChangeContext" browseExpression="aql:element.eContainer(bpmn_lite::FlowElementsContainer)">
+              <firstModelOperations xsi:type="tool_1:ChangeContext" browseExpression="aql:element.eContainer(FlowElementsContainer)">
                 <subModelOperations xsi:type="tool_1:Unset" featureName="flowElements" elementExpression="aql:element"/>
               </firstModelOperations>
             </initialOperation>
           </ownedTools>
         </toolSections>
-        <toolSections name="Connectors" label="%Connectors" icon="/org.eclipse.efbt.openregspecs.smcubes.model.logical_transformation.edit/icons/full/obj16/SequenceFlow.png">
+        <toolSections name="Connectors" label="%Connectors" icon="/org.eclipse.efbt.openregspecs.testing.ui.sirius.core/icons/connector/sequenceflow.png">
           <ownedTools xsi:type="tool:ToolGroup" name="Sequence" label="%Sequence">
             <tools xsi:type="tool:EdgeCreationDescription" name="SequenceFlowCreationTool" label="%Sequence" precondition="aql:preSource.eInverse('flowNodeRefs').eContainer() = preTarget.eInverse('flowNodeRefs').eContainer()" forceRefresh="true" edgeMappings="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@edgeMappings[name='SequenceFlow']" iconPath="/org.eclipse.efbt.openregspecs.smcubes.model.logical_transformation.edit/icons/full/obj16/SequenceFlow.png">
               <sourceVariable name="source"/>
@@ -94,7 +94,7 @@
               <targetViewVariable name="targetView"/>
               <initialOperation>
                 <firstModelOperations xsi:type="tool_1:ChangeContext" browseExpression="aql:source.eContainer()">
-                  <subModelOperations xsi:type="tool_1:CreateInstance" typeName="bpmn_lite.SequenceFlow" referenceName="flowElements">
+                  <subModelOperations xsi:type="tool_1:CreateInstance" typeName="SequenceFlow" referenceName="flowElements">
                     <subModelOperations xsi:type="tool_1:ChangeContext" browseExpression="aql:instance">
                       <subModelOperations xsi:type="tool_1:SetValue" featureName="sourceRef" valueExpression="aql:source"/>
                       <subModelOperations xsi:type="tool_1:SetValue" featureName="targetRef" valueExpression="aql:target"/>
@@ -105,8 +105,8 @@
             </tools>
           </ownedTools>
         </toolSections>
-        <toolSections name="Activities" label="%Activities" icon="/org.eclipse.efbt.openregspecs.smcubes.model.logical_transformation.edit/icons/full/obj16/Task.png">
-          <ownedTools xsi:type="tool_1:ToolDescription" name="Task" label="%Task" precondition="aql:element.isApplicableType()" forceRefresh="true" iconPath="/org.eclipse.efbt.openregspecs.smcubes.model.logical_transformation.edit/icons/full/obj16/Task.png">
+        <toolSections name="Activities" label="%Activities" icon="/org.eclipse.efbt.openregspecs.testing.ui.sirius.core/icons/activity/task.png">
+          <ownedTools xsi:type="tool_1:ToolDescription" name="Task" label="%Task" precondition="aql:element.isApplicableType()" forceRefresh="true" iconPath="/org.eclipse.efbt.openregspecs.testing.ui.sirius.core/icons/activity/task.png">
             <element name="element"/>
             <elementView name="elementView"/>
             <initialOperation>
@@ -118,8 +118,8 @@
                   <buttons labelExpression="OK" default="true" closeDialogOnClick="true">
                     <initialOperation/>
                   </buttons>
-                  <page name="TaskPage" domainClass="bpmn_lite::Task" semanticCandidateExpression="var:self" groups="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.2/@ownedTools[name='Task']/@initialOperation/@firstModelOperations/@subModelOperations.0/@groups.0"/>
-                  <groups name="TaskGroup" labelExpression="service:getAttributesLabel()" domainClass="bpmn_lite::Task" semanticCandidateExpression="var:self">
+                  <page name="TaskPage" domainClass="Task" semanticCandidateExpression="var:self" groups="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.2/@ownedTools[name='Task']/@initialOperation/@firstModelOperations/@subModelOperations.0/@groups.0"/>
+                  <groups name="TaskGroup" labelExpression="service:getAttributesLabel()" domainClass="Task" semanticCandidateExpression="var:self">
                     <controls xsi:type="properties:TextDescription" name="TaskName" labelExpression="service:getNameLabel()" helpExpression="service:getHelpNameLabel()">
                       <initialOperation>
                         <firstModelOperations xsi:type="tool_1:ChangeContext" browseExpression="var:self">
@@ -139,7 +139,7 @@
               </firstModelOperations>
             </initialOperation>
           </ownedTools>
-          <ownedTools xsi:type="tool_1:ToolDescription" name="Service Task" label="%ServiceTask" precondition="aql:element.isApplicableType()" forceRefresh="true" iconPath="/org.eclipse.efbt.openregspecs.smcubes.model.logical_transformation.edit/icons/full/obj16/ServiceTask.png">
+          <ownedTools xsi:type="tool_1:ToolDescription" name="Service Task" label="%ServiceTask" precondition="aql:element.isApplicableType()" forceRefresh="true" iconPath="/org.eclipse.efbt.openregspecs.testing.ui.sirius.core/icons2/decorations/process/north-west/service-task.png">
             <element name="element"/>
             <elementView name="elementView"/>
             <initialOperation>
@@ -151,8 +151,8 @@
                   <buttons labelExpression="OK" default="true" closeDialogOnClick="true">
                     <initialOperation/>
                   </buttons>
-                  <page name="TaskPage" domainClass="bpmn_lite::Task" semanticCandidateExpression="var:self" groups="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.2/@ownedTools[name='Service%20Task']/@initialOperation/@firstModelOperations/@subModelOperations.0/@groups.0"/>
-                  <groups name="TaskGroup" labelExpression="service:getAttributesLabel()" domainClass="bpmn_lite::Task" semanticCandidateExpression="var:self">
+                  <page name="TaskPage" domainClass="Task" semanticCandidateExpression="var:self" groups="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.2/@ownedTools[name='Service%20Task']/@initialOperation/@firstModelOperations/@subModelOperations.0/@groups.0"/>
+                  <groups name="TaskGroup" labelExpression="service:getAttributesLabel()" domainClass="Task" semanticCandidateExpression="var:self">
                     <controls xsi:type="properties:TextDescription" name="TaskName" labelExpression="service:getNameLabel()" helpExpression="service:getHelpNameLabel()">
                       <initialOperation>
                         <firstModelOperations xsi:type="tool_1:ChangeContext" browseExpression="var:self">
@@ -172,12 +172,12 @@
               </firstModelOperations>
             </initialOperation>
           </ownedTools>
-          <ownedTools xsi:type="tool_1:ToolDescription" name="Sub Process" label="%SubProcess" precondition="aql:element.isApplicableType()" forceRefresh="true" iconPath="/org.eclipse.efbt.openregspecs.smcubes.model.logical_transformation.edit/icons/full/obj16/SubProcess.png">
+          <ownedTools xsi:type="tool_1:ToolDescription" name="Sub Process" label="%SubProcess" precondition="aql:element.isApplicableType()" forceRefresh="true" iconPath="/org.eclipse.efbt.openregspecs.testing.ui.sirius.core/icons/activity/subprocess.png">
             <element name="element"/>
             <elementView name="elementView"/>
             <initialOperation>
-              <firstModelOperations xsi:type="tool_1:ChangeContext" browseExpression="aql:element.eContainerOrSelf(bpmn_lite::FlowElementsContainer)">
-                <subModelOperations xsi:type="tool_1:CreateInstance" typeName="bpmn_lite.SubProcess" referenceName="flowElements">
+              <firstModelOperations xsi:type="tool_1:ChangeContext" browseExpression="aql:element.eContainerOrSelf(FlowElementsContainer)">
+                <subModelOperations xsi:type="tool_1:CreateInstance" typeName="SubProcess" referenceName="flowElements">
                   <subModelOperations xsi:type="tool_1:SetValue" featureName="name" valueExpression="New Sub Process"/>
                   <subModelOperations xsi:type="properties:DialogModelOperation" titleExpression="service:getPropertiesTitle()">
                     <buttons labelExpression="service:getCancelLabel()" closeDialogOnClick="true" rollbackChangesOnClose="true">
@@ -186,8 +186,8 @@
                     <buttons labelExpression="OK" default="true" closeDialogOnClick="true">
                       <initialOperation/>
                     </buttons>
-                    <page name="SubProcessPage" domainClass="bpmn_lite::SubProcess" semanticCandidateExpression="var:self" groups="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.2/@ownedTools[name='Sub%20Process']/@initialOperation/@firstModelOperations/@subModelOperations.0/@subModelOperations.1/@groups.0"/>
-                    <groups name="Group" labelExpression="service:getAttributesLabel()" domainClass="bpmn_lite::SubProcess" semanticCandidateExpression="var:self">
+                    <page name="SubProcessPage" domainClass="SubProcess" semanticCandidateExpression="var:self" groups="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.2/@ownedTools[name='Sub%20Process']/@initialOperation/@firstModelOperations/@subModelOperations.0/@subModelOperations.1/@groups.0"/>
+                    <groups name="Group" labelExpression="service:getAttributesLabel()" domainClass="SubProcess" semanticCandidateExpression="var:self">
                       <controls xsi:type="properties:TextAreaDescription" name="TaskDescription" labelExpression="service:getDescriptionLabel()" helpExpression="service:getHelpDescriptionLabel()">
                         <initialOperation>
                           <firstModelOperations xsi:type="tool_1:ChangeContext" browseExpression="var:self">
@@ -208,7 +208,7 @@
               </firstModelOperations>
             </initialOperation>
           </ownedTools>
-          <ownedTools xsi:type="tool_1:ToolDescription" name="Script Task" label="%ScriptTask" precondition="aql:element.isApplicableType()" forceRefresh="true" iconPath="/org.eclipse.efbt.openregspecs.smcubes.model.logical_transformation.edit/icons/full/obj16/ScriptTask.png">
+          <ownedTools xsi:type="tool_1:ToolDescription" name="Script Task" label="%ScriptTask" precondition="aql:element.isApplicableType()" forceRefresh="true" iconPath="/org.eclipse.efbt.openregspecs.testing.ui.sirius.core/icons2/decorations/process/north-west/script-task.png">
             <element name="element"/>
             <elementView name="elementView"/>
             <initialOperation>
@@ -220,8 +220,8 @@
                   <buttons labelExpression="OK" default="true" closeDialogOnClick="true">
                     <initialOperation/>
                   </buttons>
-                  <page name="TaskPage" domainClass="bpmn_lite::Task" semanticCandidateExpression="var:self" groups="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.2/@ownedTools[name='Service%20Task']/@initialOperation/@firstModelOperations/@subModelOperations.0/@groups.0"/>
-                  <groups name="TaskGroup" labelExpression="service:getAttributesLabel()" domainClass="bpmn_lite::Task" semanticCandidateExpression="var:self">
+                  <page name="TaskPage" domainClass="Task" semanticCandidateExpression="var:self" groups="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.2/@ownedTools[name='Service%20Task']/@initialOperation/@firstModelOperations/@subModelOperations.0/@groups.0"/>
+                  <groups name="TaskGroup" labelExpression="service:getAttributesLabel()" domainClass="Task" semanticCandidateExpression="var:self">
                     <controls xsi:type="properties:TextDescription" name="TaskName" labelExpression="service:getNameLabel()" helpExpression="service:getHelpNameLabel()">
                       <initialOperation>
                         <firstModelOperations xsi:type="tool_1:ChangeContext" browseExpression="var:self">
@@ -241,7 +241,7 @@
               </firstModelOperations>
             </initialOperation>
           </ownedTools>
-          <ownedTools xsi:type="tool_1:ToolDescription" name="User Task" label="%UserTask" precondition="aql:element.isApplicableType()" forceRefresh="true" iconPath="/org.eclipse.efbt.openregspecs.smcubes.model.logical_transformation.edit/icons/full/obj16/UserTask.png">
+          <ownedTools xsi:type="tool_1:ToolDescription" name="User Task" label="%UserTask" precondition="aql:element.isApplicableType()" forceRefresh="true" iconPath="/org.eclipse.efbt.openregspecs.testing.ui.sirius.core/icons2/decorations/process/north-west/user-task.png">
             <element name="element"/>
             <elementView name="elementView"/>
             <initialOperation>
@@ -253,8 +253,8 @@
                   <buttons labelExpression="OK" default="true" closeDialogOnClick="true">
                     <initialOperation/>
                   </buttons>
-                  <page name="TaskPage" domainClass="bpmn_lite::Task" semanticCandidateExpression="var:self" groups="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.2/@ownedTools[name='Service%20Task']/@initialOperation/@firstModelOperations/@subModelOperations.0/@groups.0"/>
-                  <groups name="TaskGroup" labelExpression="service:getAttributesLabel()" domainClass="bpmn_lite::Task" semanticCandidateExpression="var:self">
+                  <page name="TaskPage" domainClass="Task" semanticCandidateExpression="var:self" groups="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcessDiagram']/@defaultLayer/@toolSections.2/@ownedTools[name='Service%20Task']/@initialOperation/@firstModelOperations/@subModelOperations.0/@groups.0"/>
+                  <groups name="TaskGroup" labelExpression="service:getAttributesLabel()" domainClass="Task" semanticCandidateExpression="var:self">
                     <controls xsi:type="properties:TextDescription" name="TaskName" labelExpression="service:getNameLabel()" helpExpression="service:getHelpNameLabel()">
                       <initialOperation>
                         <firstModelOperations xsi:type="tool_1:ChangeContext" browseExpression="var:self">
@@ -276,21 +276,21 @@
           </ownedTools>
         </toolSections>
         <toolSections name="Gateways" label="%Gateways" icon="/org.eclipse.efbt.openregspecs.smcubes.model.logical_transformation.edit/icons/full/obj16/ParallelGateway.png">
-          <ownedTools xsi:type="tool_1:ToolDescription" name="Parallel Gateway" label="%ParallelGateway" precondition="aql:element.isApplicableType()" forceRefresh="true" iconPath="/org.eclipse.efbt.openregspecs.smcubes.model.logical_transformation.edit/icons/full/obj16/ParallelGateway.png">
+          <ownedTools xsi:type="tool_1:ToolDescription" name="Parallel Gateway" label="%ParallelGateway" precondition="aql:element.isApplicableType()" forceRefresh="true" iconPath="/org.eclipse.efbt.openregspecs.testing.ui.sirius.core/icons/gateway/parallel.png">
             <element name="element"/>
             <elementView name="elementView"/>
             <initialOperation>
               <firstModelOperations xsi:type="tool_1:ChangeContext" browseExpression="aql:element.createFlowElement('ParallelGateway')"/>
             </initialOperation>
           </ownedTools>
-          <ownedTools xsi:type="tool_1:ToolDescription" name="Exclusive Gateway" label="%ExclusiveGateway" precondition="aql:element.isApplicableType()" forceRefresh="true" iconPath="/org.eclipse.efbt.openregspecs.smcubes.model.logical_transformation.edit/icons/full/obj16/ExclusiveGateway.png">
+          <ownedTools xsi:type="tool_1:ToolDescription" name="Exclusive Gateway" label="%ExclusiveGateway" precondition="aql:element.isApplicableType()" forceRefresh="true" iconPath="/org.eclipse.efbt.openregspecs.testing.ui.sirius.core/icons/gateway/exclusive.databased.png">
             <element name="element"/>
             <elementView name="elementView"/>
             <initialOperation>
               <firstModelOperations xsi:type="tool_1:ChangeContext" browseExpression="aql:element.createFlowElement('ExclusiveGateway')"/>
             </initialOperation>
           </ownedTools>
-          <ownedTools xsi:type="tool_1:ToolDescription" name="Inclusive Gateway" label="%InclusiveGateway" precondition="aql:element.isApplicableType()" forceRefresh="true" iconPath="/org.eclipse.efbt.openregspecs.smcubes.model.logical_transformation.edit/icons/full/obj16/InclusiveGateway.png">
+          <ownedTools xsi:type="tool_1:ToolDescription" name="Inclusive Gateway" label="%InclusiveGateway" precondition="aql:element.isApplicableType()" forceRefresh="true" iconPath="/org.eclipse.efbt.openregspecs.testing.ui.sirius.core/icons/gateway/inclusive.png">
             <element name="element"/>
             <elementView name="elementView"/>
             <initialOperation>
@@ -298,7 +298,7 @@
             </initialOperation>
           </ownedTools>
         </toolSections>
-        <toolSections name="Other" label="%Other" icon="/org.eclipse.efbt.openregspecs.smcubes.model.logical_transformation.edit/icons/full/obj16/Lane.png">
+        <toolSections name="Other" label="%Other">
           <ownedTools xsi:type="tool:DirectEditLabel" name="GroupDirectEdit" forceRefresh="true">
             <mask mask="{0}"/>
             <initialOperation>
@@ -346,6 +346,7 @@
       </additionalLayers>
     </ownedRepresentations>
     <ownedRepresentations xsi:type="description_1:DiagramDescription" name="ActivityTag" label="ActivityTag" domainClass="ActivityTag">
+      <metamodel href="../../../../../../org.eclipse.efbt.openregspecs.model/model/open_reg_specs.ecore#/"/>
       <defaultLayer name="Default">
         <nodeMappings name="Activity" semanticCandidatesExpression="feature:activity" domainClass="Activity">
           <style xsi:type="style:SquareDescription" labelSize="12" sizeComputationExpression="15" labelPosition="node" resizeKind="NSEW">
@@ -653,6 +654,7 @@
       </defaultLayer>
     </ownedRepresentations>
     <ownedRepresentations xsi:type="description_1:DiagramDescription" name="UserTask" domainClass="UserTask" enablePopupBars="true">
+      <metamodel href="../../../../../../org.eclipse.efbt.openregspecs.model/model/open_reg_specs.ecore#/"/>
       <defaultLayer name="Default">
         <nodeMappings name="UserTask" semanticCandidatesExpression="aql:self" domainClass="UserTask">
           <style xsi:type="style:SquareDescription" labelSize="12" sizeComputationExpression="15" labelPosition="node" resizeKind="NSEW">
@@ -685,7 +687,7 @@
         </toolSections>
       </defaultLayer>
     </ownedRepresentations>
-    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="SubProcess_attrLineage" domainClass="bpmn_lite.SubProcess" enablePopupBars="true">
+    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="SubProcess_attrLineage" domainClass="SubProcess" enablePopupBars="true">
       <filters xsi:type="filter:CompositeFilterDescription" name="FilterOnVisibility">
         <filters xsi:type="filter:MappingFilter" mappings="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ScriptTask'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ServiceTask'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ServiceTask']/@subNodeMappings[name='Scenario'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']" semanticConditionExpression="aql: not (self.invisible)"/>
         <filters xsi:type="filter:MappingFilter" mappings="//@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='ServiceTask']/@subNodeMappings[name='EnrichedLayerAttributes'] //@ownedViewpoints[name='Process']/@ownedRepresentations[name='SubProcess_attrLineage']/@defaultLayer/@containerMappings[name='UserTask']/@subNodeMappings[name='InputLayerAttributes']" semanticConditionExpression="aql: not (self.ordered)"/>
@@ -766,7 +768,7 @@
       </defaultLayer>
     </ownedRepresentations>
     <ownedRepresentations xsi:type="description_1:DiagramDescription" name="OpenRegSpecs" initialisation="true" domainClass="OpenRegSpecs" enablePopupBars="true">
-      <metamodel href="../../org.eclipse.efbt.openregspecs.model/model/open_reg_specs.ecore#/"/>
+      <metamodel href="../../../../../../org.eclipse.efbt.openregspecs.model/model/open_reg_specs.ecore#/"/>
       <defaultLayer name="Default">
         <nodeMappings name="OpenRegSpecsNode" semanticCandidatesExpression="aql:self" domainClass="OpenRegSpecs">
           <style xsi:type="style:SquareDescription" labelSize="12" labelPosition="node" resizeKind="NSEW">
