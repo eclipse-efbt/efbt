@@ -1,0 +1,14 @@
+OpenRegSpecs { 
+	process_workflow {
+		SubProcess sub_process1 {
+			name sub_process1
+			flowElements {
+				UserTask user_task1 { name user_task1 },
+				ServiceTask service_task1 { name service_task1},
+				ParallelGateway parallel_gateway1 { name parallel_gateway1 }, 
+				SequenceFlow sequenceflow1 { name sequenceflow1 targetRef user_task1 sourceRef"sub_process1.parallel_gateway1" },
+				SequenceFlow sequenceflow2 { name sequenceflow1 targetRef service_task1 sourceRef"sub_process1.parallel_gateway1" }
+				}			
+			}
+		}
+	}
