@@ -402,9 +402,9 @@ class Scenario(EObject, metaclass=MetaEClass):
 class Test(EObject, metaclass=MetaEClass):
 
     name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
-    inputData = EReference(ordered=True, unique=True, containment=False, derived=False, upper=-1)
+    inputData = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
     expectedResult = EReference(ordered=True, unique=True,
-                                containment=False, derived=False, upper=-1)
+                                containment=True, derived=False, upper=-1)
     scope = EReference(ordered=True, unique=True, containment=True, derived=False)
 
     def __init__(self, *, inputData=None, expectedResult=None, name=None, scope=None):
@@ -487,8 +487,9 @@ class TestScope(EObject, metaclass=MetaEClass):
 class CSVFile(EObject, metaclass=MetaEClass):
 
     fileName = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    rows = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
-    def __init__(self, *, fileName=None):
+    def __init__(self, *, fileName=None, rows=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
@@ -496,6 +497,27 @@ class CSVFile(EObject, metaclass=MetaEClass):
 
         if fileName is not None:
             self.fileName = fileName
+
+        if rows:
+            self.rows.extend(rows)
+
+
+class CSVRow(EObject, metaclass=MetaEClass):
+
+    value = EAttribute(eType=EString, unique=True, derived=False, changeable=True, upper=-1)
+    isHeader = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
+
+    def __init__(self, *, value=None, isHeader=None):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+        if value:
+            self.value.extend(value)
+
+        if isHeader is not None:
+            self.isHeader = isHeader
 
 
 class DOMAIN(EObject, metaclass=MetaEClass):
@@ -1392,6 +1414,28 @@ class FRAMEWORK_VARIABLE_SET(EObject, metaclass=MetaEClass):
             self.variable_set_id = variable_set_id
 
 
+class PlatformCall(EObject, metaclass=MetaEClass):
+    """ A Platform Call """
+    errorMessage = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
+    returnStatus = EAttribute(eType=EInt, unique=True, derived=False, changeable=True)
+
+    def __init__(self, *, errorMessage=None, name=None, returnStatus=None):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+        if errorMessage is not None:
+            self.errorMessage = errorMessage
+
+        if name is not None:
+            self.name = name
+
+        if returnStatus is not None:
+            self.returnStatus = returnStatus
+
+
 @abstract
 class FlowElementsContainer(BaseElement):
 
@@ -1625,39 +1669,6 @@ class GeneratedEntitySQLModule(Module):
 
         if GeneratedEntitySQLs:
             self.GeneratedEntitySQLs.extend(GeneratedEntitySQLs)
-
-
-class LogicalTransformationModule(Module):
-
-    taskTags = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-    scenarioTags = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-    subProcess = EReference(ordered=True, unique=True, containment=True, derived=False)
-    requirements = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-    testModules = EReference(ordered=True, unique=True, containment=False, derived=False, upper=-1)
-    selectionLayers = EReference(ordered=True, unique=True,
-                                 containment=True, derived=False, upper=-1)
-
-    def __init__(self, *, taskTags=None, scenarioTags=None, subProcess=None, requirements=None, testModules=None, selectionLayers=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if taskTags:
-            self.taskTags.extend(taskTags)
-
-        if scenarioTags:
-            self.scenarioTags.extend(scenarioTags)
-
-        if subProcess is not None:
-            self.subProcess = subProcess
-
-        if requirements:
-            self.requirements.extend(requirements)
-
-        if testModules:
-            self.testModules.extend(testModules)
-
-        if selectionLayers:
-            self.selectionLayers.extend(selectionLayers)
 
 
 class ActivityTag(Tag):
@@ -1903,6 +1914,54 @@ class SMCubesCoreModel(TypesAndConcepts):
 
         if memberHierarchyModules:
             self.memberHierarchyModules.extend(memberHierarchyModules)
+
+
+class PlatformCallModule(Module):
+    """A Module of PlatfromCalls"""
+    platformCalls = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+
+    def __init__(self, *, platformCalls=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if platformCalls:
+            self.platformCalls.extend(platformCalls)
+
+
+class ImportBIRDFromMSAccess(PlatformCall):
+
+    inputDirectory = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    outputDirectory = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+
+    def __init__(self, *, inputDirectory=None, outputDirectory=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if inputDirectory is not None:
+            self.inputDirectory = inputDirectory
+
+        if outputDirectory is not None:
+            self.outputDirectory = outputDirectory
+
+
+class WorkflowModule(Module):
+
+    taskTags = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    scenarioTags = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    subProcess = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+
+    def __init__(self, *, taskTags=None, scenarioTags=None, subProcess=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if taskTags:
+            self.taskTags.extend(taskTags)
+
+        if scenarioTags:
+            self.scenarioTags.extend(scenarioTags)
+
+        if subProcess:
+            self.subProcess.extend(subProcess)
 
 
 @abstract

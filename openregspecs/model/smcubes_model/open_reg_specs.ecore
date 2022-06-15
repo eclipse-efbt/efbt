@@ -11,7 +11,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="data_model" upperBound="-1"
         eType="ecore:EClass ../core_model/data_meta_model.ecore#//EntityModule" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="process_workflow" upperBound="-1"
-        eType="ecore:EClass ../core_model/bpmn_lite.ecore#//SubProcess" containment="true"/>
+        eType="ecore:EClass ../core_model/bpmn_lite.ecore#//WorkflowModule" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="report_generation" upperBound="-1"
         eType="ecore:EClass ../core_model/sql_lite.ecore#//SQLEntityModule" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="tests" upperBound="-1"
