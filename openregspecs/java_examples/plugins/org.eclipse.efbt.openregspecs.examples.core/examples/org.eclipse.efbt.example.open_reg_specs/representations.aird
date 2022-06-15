@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:diagram="http://www.eclipse.org/sirius/diagram/1.1.0" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.3/notation" xmlns:open_reg_specs="http://www.eclipse.org/efbt/open_reg_specs" xmlns:style="http://www.eclipse.org/sirius/diagram/description/style/1.1.0" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" xsi:schemaLocation="http://www.eclipse.org/sirius/description/1.1.0 http://www.eclipse.org/sirius/1.1.0#//description http://www.eclipse.org/sirius/diagram/description/1.1.0 http://www.eclipse.org/sirius/diagram/1.1.0#//description http://www.eclipse.org/sirius/diagram/description/style/1.1.0 http://www.eclipse.org/sirius/diagram/1.1.0#//description/style">
   <viewpoint:DAnalysis uid="_aIAxoOiMEeyYIfdUrx699g" selectedViews="_5jN0QOiMEeyL0uVBk82YIA" version="15.0.0.202201261500">
-    <semanticResources>src/sub_process1.open_reg_specs</semanticResources>
     <semanticResources>src/example.open_reg_specs</semanticResources>
     <ownedViews xmi:type="viewpoint:DView" uid="_5jN0QOiMEeyL0uVBk82YIA">
       <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.efbt.openregspecs.testing.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']"/>
