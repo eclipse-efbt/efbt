@@ -284,6 +284,11 @@
     </genClasses>
     <genClasses ecoreClass="open_reg_specs.ecore#//CSVFile">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CSVFile/fileName"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CSVFile/rows"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//CSVRow">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CSVRow/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CSVRow/isHeader"/>
     </genClasses>
     <genClasses ecoreClass="open_reg_specs.ecore#//DOMAIN">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//DOMAIN/code"/>
