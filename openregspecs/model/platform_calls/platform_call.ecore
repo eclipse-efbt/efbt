@@ -68,17 +68,4 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="inputDirectory" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="outputDirectory" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CreateLogicalTransformationViewForScope"
-      eSuperTypes="#//PlatformCall">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="logicalTransformationModule"
-        eType="ecore:EClass ../core_model/testing.ecore#//LogicalTransformationModule"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="attributeLineage" upperBound="-1"
-        eType="ecore:EClass ../core_model/data_meta_model.ecore#//Attribute"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="testScope" upperBound="-1"
-        eType="ecore:EClass ../core_model/testing.ecore#//E2ETestScope" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ConvertDataMetaModelToEcore" eSuperTypes="#//PlatformCall">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="outputDirectory" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="entityModule" eType="ecore:EClass ../core_model/data_meta_model.ecore#//EntityModule"/>
-  </eClassifiers>
 </ecore:EPackage>

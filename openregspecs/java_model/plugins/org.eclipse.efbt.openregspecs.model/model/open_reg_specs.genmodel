@@ -231,14 +231,6 @@
     <genClasses ecoreClass="open_reg_specs.ecore#//GeneratedEntitySQLModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//GeneratedEntitySQLModule/GeneratedEntitySQLs"/>
     </genClasses>
-    <genClasses ecoreClass="open_reg_specs.ecore#//LogicalTransformationModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//LogicalTransformationModule/taskTags"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//LogicalTransformationModule/scenarioTags"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//LogicalTransformationModule/subProcess"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//LogicalTransformationModule/requirements"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//LogicalTransformationModule/testModules"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//LogicalTransformationModule/selectionLayers"/>
-    </genClasses>
     <genClasses ecoreClass="open_reg_specs.ecore#//ActivityTag">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//ActivityTag/activity"/>
     </genClasses>
@@ -566,14 +558,10 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//ImportBIRDFromMSAccess/inputDirectory"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//ImportBIRDFromMSAccess/outputDirectory"/>
     </genClasses>
-    <genClasses ecoreClass="open_reg_specs.ecore#//CreateLogicalTransformationViewForScope">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CreateLogicalTransformationViewForScope/logicalTransformationModule"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CreateLogicalTransformationViewForScope/attributeLineage"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CreateLogicalTransformationViewForScope/testScope"/>
-    </genClasses>
-    <genClasses ecoreClass="open_reg_specs.ecore#//ConvertDataMetaModelToEcore">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//ConvertDataMetaModelToEcore/outputDirectory"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//ConvertDataMetaModelToEcore/entityModule"/>
+    <genClasses ecoreClass="open_reg_specs.ecore#//WorkflowModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//WorkflowModule/taskTags"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//WorkflowModule/scenarioTags"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//WorkflowModule/subProcess"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

@@ -38,10 +38,10 @@
                 <path d="M14 69 L178 69 L178 87 L14 87 L14 69 Z"/>
             </clipPath>
             <clipPath clipPathUnits="userSpaceOnUse" id="clipPath11">
-                <path d="M14 85 L198 85 L198 103 L14 103 L14 85 Z"/>
+                <path d="M14 85 L231 85 L231 103 L14 103 L14 85 Z"/>
             </clipPath>
             <clipPath clipPathUnits="userSpaceOnUse" id="clipPath12">
-                <path d="M14 85 L200 85 L200 103 L14 103 L14 85 Z"/>
+                <path d="M14 85 L233 85 L233 103 L14 103 L14 85 Z"/>
             </clipPath>
             <clipPath clipPathUnits="userSpaceOnUse" id="clipPath13">
                 <path d="M14 101 L229 101 L229 119 L14 119 L14 101 Z"/>
@@ -75,7 +75,7 @@
             <image x="15" y="70" clip-path="url(#clipPath9)" width="16" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAApklEQVR4XmNgGAUY&#13;&#10;YG6N/n98GKTGPyQOTGMFUysM///4eRErPr13NtwAcwcn7IZ0FZliaHStXwHGHsWT&#13;&#10;/vsklPwHGYDTkNocy//ff1wD4x8/UfGBHfMJu6AozfZ/VpI9VgySA6nBGwZkg/n7&#13;&#10;Xv+XtC8DYxAbXR4EQHJHb3wGYxAbQxIbGxnANMIMQpEkZABMIzpGUYCNjQzwugBb&#13;&#10;GMAMQqZxhgG5AACPt95cgHqxCAAAAABJRU5ErkJggg==" xlink:type="simple" xlink:actuate="onLoad" height="16" preserveAspectRatio="none" xlink:show="embed"/>
             <text x="34" xml:space="preserve" y="82" clip-path="url(#clipPath10)" stroke="none"> data_model : EntityModule</text>
             <image x="15" y="86" clip-path="url(#clipPath11)" width="16" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAApklEQVR4XmNgGAUY&#13;&#10;YG6N/n98GKTGPyQOTGMFUysM///4eRErPr13NtwAcwcn7IZ0FZliaHStXwHGHsWT&#13;&#10;/vsklPwHGYDTkNocy//ff1wD4x8/UfGBHfMJu6AozfZ/VpI9VgySA6nBGwZkg/n7&#13;&#10;Xv+XtC8DYxAbXR4EQHJHb3wGYxAbQxIbGxnANMIMQpEkZABMIzpGUYCNjQzwugBb&#13;&#10;GMAMQqZxhgG5AACPt95cgHqxCAAAAABJRU5ErkJggg==" xlink:type="simple" xlink:actuate="onLoad" height="16" preserveAspectRatio="none" xlink:show="embed"/>
-            <text x="34" xml:space="preserve" y="98" clip-path="url(#clipPath12)" stroke="none"> process_workflow : SubProcess</text>
+            <text x="34" xml:space="preserve" y="98" clip-path="url(#clipPath12)" stroke="none"> process_workflow : WorkflowModule</text>
             <image x="15" y="102" clip-path="url(#clipPath13)" width="16" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAApklEQVR4XmNgGAUY&#13;&#10;YG6N/n98GKTGPyQOTGMFUysM///4eRErPr13NtwAcwcn7IZ0FZliaHStXwHGHsWT&#13;&#10;/vsklPwHGYDTkNocy//ff1wD4x8/UfGBHfMJu6AozfZ/VpI9VgySA6nBGwZkg/n7&#13;&#10;Xv+XtC8DYxAbXR4EQHJHb3wGYxAbQxIbGxnANMIMQpEkZABMIzpGUYCNjQzwugBb&#13;&#10;GMAMQqZxhgG5AACPt95cgHqxCAAAAABJRU5ErkJggg==" xlink:type="simple" xlink:actuate="onLoad" height="16" preserveAspectRatio="none" xlink:show="embed"/>
             <text x="34" xml:space="preserve" y="114" clip-path="url(#clipPath14)" stroke="none"> report_generation : SQLEntityModule</text>
             <image x="15" y="118" clip-path="url(#clipPath15)" width="16" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAApklEQVR4XmNgGAUY&#13;&#10;YG6N/n98GKTGPyQOTGMFUysM///4eRErPr13NtwAcwcn7IZ0FZliaHStXwHGHsWT&#13;&#10;/vsklPwHGYDTkNocy//ff1wD4x8/UfGBHfMJu6AozfZ/VpI9VgySA6nBGwZkg/n7&#13;&#10;Xv+XtC8DYxAbXR4EQHJHb3wGYxAbQxIbGxnANMIMQpEkZABMIzpGUYCNjQzwugBb&#13;&#10;GMAMQqZxhgG5AACPt95cgHqxCAAAAABJRU5ErkJggg==" xlink:type="simple" xlink:actuate="onLoad" height="16" preserveAspectRatio="none" xlink:show="embed"/>

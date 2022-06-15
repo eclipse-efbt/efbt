@@ -12,7 +12,7 @@
     <semanticResources>../../core_model/sql_lite.ecore</semanticResources>
     <ownedViews xmi:type="viewpoint:DView" uid="_WUucYOowEeyhsbSJK8ZqRg">
       <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']"/>
-      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_iyT-cOowEeyhsbSJK8ZqRg" name="open_reg_specs class diagram" repPath="#_iyQUEOowEeyhsbSJK8ZqRg" changeId="86f628cb-c851-42b5-a9f7-8bd18680c4fe">
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_iyT-cOowEeyhsbSJK8ZqRg" name="open_reg_specs class diagram" repPath="#_iyQUEOowEeyhsbSJK8ZqRg" changeId="5a5bd993-6a0d-4f16-a895-f07c156078f3">
         <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']"/>
         <target xmi:type="ecore:EPackage" href="../open_reg_specs.ecore#/"/>
       </ownedRepresentationDescriptors>
@@ -100,7 +100,7 @@
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EReferenceNode']"/>
       </ownedElements>
-      <ownedElements xmi:type="diagram:DNodeListElement" uid="_jHI-8-owEeyhsbSJK8ZqRg" name=" process_workflow : SubProcess" tooltipText="">
+      <ownedElements xmi:type="diagram:DNodeListElement" uid="_jHI-8-owEeyhsbSJK8ZqRg" name=" process_workflow : WorkflowModule" tooltipText="">
         <target xmi:type="ecore:EReference" href="../open_reg_specs.ecore#//OpenRegSpecs/process_workflow"/>
         <semanticElements xmi:type="ecore:EReference" href="../open_reg_specs.ecore#//OpenRegSpecs/process_workflow"/>
         <ownedStyle xmi:type="diagram:BundledImage" uid="_jHI-9OowEeyhsbSJK8ZqRg" labelAlignment="LEFT" color="114,159,207">

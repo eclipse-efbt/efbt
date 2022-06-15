@@ -1,13 +1,13 @@
 
 from .open_reg_specs import getEClassifier, eClassifiers
 from .open_reg_specs import name, nsURI, nsPrefix, eClass
-from .open_reg_specs import OpenRegSpecs, BaseElement, FlowElementsContainer, FlowElement, FlowNode, SequenceFlow, Task, Activity, Gateway, ExclusiveGateway, InclusiveGateway, ParallelGateway, ServiceTask, SubProcess, ScriptTask, UserTask, Attribute, Concept, RelationshipAttribute, OneToOneRelationshipAttribute, ManyToOneRelationshipAttribute, OneToManyRelationshipAttribute, ManyToManyRelationshipAttribute, Type, Element, NamedElement, EntityModule, StructuralFeature, TypedElement, GeneratedEntity, Entity, DerivedEntity, BasicEntity, EnumMember, TypesAndConcepts, Module, ModuleLongName, ModuleDependencies, ModuleDependency, AllowedTypes, RequirementsModule, RequirementsSection, RequirementsSectionImage, RequirementsSectionLinkWithText, RequirementsSectionText, RequirementType, TitledRequirementsSection, Tag, TagGroup, View, SelectClause, SelectColumn, Column, WhereClause, Table, SQLEntity, FromClause, SQLEntityModule, GeneratedEntitySQL, GeneratedEntitySQLModule, LogicalTransformationModule, ActivityTag, Scenario, ScenarioTag, Test, TestModule, DataConstraint, AttrComparison, SelectionLayer, TestScope, UnitTestScope, E2ETestScope, CSVFile, DOMAIN, FACET_COLLECTION, FACET_ENUMERATION, facet_type, FACET_VALUE_TYPE, FACET_VALUE_TYPEObject, MAINTENANCE_AGENCY, MEMBER, MEMBER_HIERARCHY, MEMBER_HIERARCHY_NODE, SUBDOMAIN, SUBDOMAIN_ENUMERATION, VARIABLE, VARIABLE_SET, VARIABLE_SET_ENUMERATION, COMBINATION, COMBINATION_ITEM, CUBE, CUBE_GROUP, CUBE_GROUP_ENUMERATION, CUBE_HIERARCHY, CUBE_HIERARCHY_NODE, CUBE_RELATIONSHIP, CUBE_STRUCTURE, CUBE_STRUCTURE_ITEM, CUBE_TO_COMBINATION, FRAMEWORK, FRAMEWORK_SUBDOMAIN, FRAMEWORK_VARIABLE_SET, TYP_DMNSN, TYP_DMNSNObject, TYP_RL, TYP_RLObject, DomainModule, MemberHierarchyModule, MemberModule, VariableModule, SubDomainModule, SMCubesCoreModel
+from .open_reg_specs import OpenRegSpecs, BaseElement, FlowElementsContainer, FlowElement, FlowNode, SequenceFlow, Task, Activity, Gateway, ExclusiveGateway, InclusiveGateway, ParallelGateway, ServiceTask, SubProcess, ScriptTask, UserTask, Attribute, Concept, RelationshipAttribute, OneToOneRelationshipAttribute, ManyToOneRelationshipAttribute, OneToManyRelationshipAttribute, ManyToManyRelationshipAttribute, Type, Element, NamedElement, EntityModule, StructuralFeature, TypedElement, GeneratedEntity, Entity, DerivedEntity, BasicEntity, EnumMember, TypesAndConcepts, Module, ModuleLongName, ModuleDependencies, ModuleDependency, AllowedTypes, RequirementsModule, RequirementsSection, RequirementsSectionImage, RequirementsSectionLinkWithText, RequirementsSectionText, RequirementType, TitledRequirementsSection, Tag, TagGroup, View, SelectClause, SelectColumn, Column, WhereClause, Table, SQLEntity, FromClause, SQLEntityModule, GeneratedEntitySQL, GeneratedEntitySQLModule, ActivityTag, Scenario, ScenarioTag, Test, TestModule, DataConstraint, AttrComparison, SelectionLayer, TestScope, UnitTestScope, E2ETestScope, CSVFile, CSVRow, DOMAIN, FACET_COLLECTION, FACET_ENUMERATION, facet_type, FACET_VALUE_TYPE, FACET_VALUE_TYPEObject, MAINTENANCE_AGENCY, MEMBER, MEMBER_HIERARCHY, MEMBER_HIERARCHY_NODE, SUBDOMAIN, SUBDOMAIN_ENUMERATION, VARIABLE, VARIABLE_SET, VARIABLE_SET_ENUMERATION, COMBINATION, COMBINATION_ITEM, CUBE, CUBE_GROUP, CUBE_GROUP_ENUMERATION, CUBE_HIERARCHY, CUBE_HIERARCHY_NODE, CUBE_RELATIONSHIP, CUBE_STRUCTURE, CUBE_STRUCTURE_ITEM, CUBE_TO_COMBINATION, FRAMEWORK, FRAMEWORK_SUBDOMAIN, FRAMEWORK_VARIABLE_SET, TYP_DMNSN, TYP_DMNSNObject, TYP_RL, TYP_RLObject, DomainModule, MemberHierarchyModule, MemberModule, VariableModule, SubDomainModule, SMCubesCoreModel, PlatformCall, PlatformCallModule, ImportBIRDFromMSAccess, WorkflowModule
 
 
 from . import open_reg_specs
 
-__all__ = ['OpenRegSpecs', 'BaseElement', 'FlowElementsContainer', 'FlowElement', 'FlowNode', 'SequenceFlow', 'Task', 'Activity', 'Gateway', 'ExclusiveGateway', 'InclusiveGateway', 'ParallelGateway', 'ServiceTask', 'SubProcess', 'ScriptTask', 'UserTask', 'Attribute', 'Concept', 'RelationshipAttribute', 'OneToOneRelationshipAttribute', 'ManyToOneRelationshipAttribute', 'OneToManyRelationshipAttribute', 'ManyToManyRelationshipAttribute', 'Type', 'Element', 'NamedElement', 'EntityModule', 'StructuralFeature', 'TypedElement', 'GeneratedEntity', 'Entity', 'DerivedEntity', 'BasicEntity', 'EnumMember', 'TypesAndConcepts', 'Module', 'ModuleLongName', 'ModuleDependencies', 'ModuleDependency', 'AllowedTypes', 'RequirementsModule', 'RequirementsSection', 'RequirementsSectionImage', 'RequirementsSectionLinkWithText', 'RequirementsSectionText', 'RequirementType', 'TitledRequirementsSection', 'Tag', 'TagGroup', 'View', 'SelectClause', 'SelectColumn', 'Column', 'WhereClause', 'Table', 'SQLEntity', 'FromClause',
-           'SQLEntityModule', 'GeneratedEntitySQL', 'GeneratedEntitySQLModule', 'LogicalTransformationModule', 'ActivityTag', 'Scenario', 'ScenarioTag', 'Test', 'TestModule', 'DataConstraint', 'AttrComparison', 'SelectionLayer', 'TestScope', 'UnitTestScope', 'E2ETestScope', 'CSVFile', 'DOMAIN', 'FACET_COLLECTION', 'FACET_ENUMERATION', 'facet_type', 'FACET_VALUE_TYPE', 'FACET_VALUE_TYPEObject', 'MAINTENANCE_AGENCY', 'MEMBER', 'MEMBER_HIERARCHY', 'MEMBER_HIERARCHY_NODE', 'SUBDOMAIN', 'SUBDOMAIN_ENUMERATION', 'VARIABLE', 'VARIABLE_SET', 'VARIABLE_SET_ENUMERATION', 'COMBINATION', 'COMBINATION_ITEM', 'CUBE', 'CUBE_GROUP', 'CUBE_GROUP_ENUMERATION', 'CUBE_HIERARCHY', 'CUBE_HIERARCHY_NODE', 'CUBE_RELATIONSHIP', 'CUBE_STRUCTURE', 'CUBE_STRUCTURE_ITEM', 'CUBE_TO_COMBINATION', 'FRAMEWORK', 'FRAMEWORK_SUBDOMAIN', 'FRAMEWORK_VARIABLE_SET', 'TYP_DMNSN', 'TYP_DMNSNObject', 'TYP_RL', 'TYP_RLObject', 'DomainModule', 'MemberHierarchyModule', 'MemberModule', 'VariableModule', 'SubDomainModule', 'SMCubesCoreModel']
+__all__ = ['OpenRegSpecs', 'BaseElement', 'FlowElementsContainer', 'FlowElement', 'FlowNode', 'SequenceFlow', 'Task', 'Activity', 'Gateway', 'ExclusiveGateway', 'InclusiveGateway', 'ParallelGateway', 'ServiceTask', 'SubProcess', 'ScriptTask', 'UserTask', 'Attribute', 'Concept', 'RelationshipAttribute', 'OneToOneRelationshipAttribute', 'ManyToOneRelationshipAttribute', 'OneToManyRelationshipAttribute', 'ManyToManyRelationshipAttribute', 'Type', 'Element', 'NamedElement', 'EntityModule', 'StructuralFeature', 'TypedElement', 'GeneratedEntity', 'Entity', 'DerivedEntity', 'BasicEntity', 'EnumMember', 'TypesAndConcepts', 'Module', 'ModuleLongName', 'ModuleDependencies', 'ModuleDependency', 'AllowedTypes', 'RequirementsModule', 'RequirementsSection', 'RequirementsSectionImage', 'RequirementsSectionLinkWithText', 'RequirementsSectionText', 'RequirementType', 'TitledRequirementsSection', 'Tag', 'TagGroup', 'View', 'SelectClause', 'SelectColumn', 'Column', 'WhereClause', 'Table', 'SQLEntity', 'FromClause', 'SQLEntityModule',
+           'GeneratedEntitySQL', 'GeneratedEntitySQLModule', 'ActivityTag', 'Scenario', 'ScenarioTag', 'Test', 'TestModule', 'DataConstraint', 'AttrComparison', 'SelectionLayer', 'TestScope', 'UnitTestScope', 'E2ETestScope', 'CSVFile', 'CSVRow', 'DOMAIN', 'FACET_COLLECTION', 'FACET_ENUMERATION', 'facet_type', 'FACET_VALUE_TYPE', 'FACET_VALUE_TYPEObject', 'MAINTENANCE_AGENCY', 'MEMBER', 'MEMBER_HIERARCHY', 'MEMBER_HIERARCHY_NODE', 'SUBDOMAIN', 'SUBDOMAIN_ENUMERATION', 'VARIABLE', 'VARIABLE_SET', 'VARIABLE_SET_ENUMERATION', 'COMBINATION', 'COMBINATION_ITEM', 'CUBE', 'CUBE_GROUP', 'CUBE_GROUP_ENUMERATION', 'CUBE_HIERARCHY', 'CUBE_HIERARCHY_NODE', 'CUBE_RELATIONSHIP', 'CUBE_STRUCTURE', 'CUBE_STRUCTURE_ITEM', 'CUBE_TO_COMBINATION', 'FRAMEWORK', 'FRAMEWORK_SUBDOMAIN', 'FRAMEWORK_VARIABLE_SET', 'TYP_DMNSN', 'TYP_DMNSNObject', 'TYP_RL', 'TYP_RLObject', 'DomainModule', 'MemberHierarchyModule', 'MemberModule', 'VariableModule', 'SubDomainModule', 'SMCubesCoreModel', 'PlatformCall', 'PlatformCallModule', 'ImportBIRDFromMSAccess', 'WorkflowModule']
 
 eSubpackages = []
 eSuperPackage = None
@@ -17,7 +17,7 @@ open_reg_specs.eSuperPackage = eSuperPackage
 OpenRegSpecs.requirements.eType = RequirementsModule
 OpenRegSpecs.types_and_concepts.eType = SMCubesCoreModel
 OpenRegSpecs.data_model.eType = EntityModule
-OpenRegSpecs.process_workflow.eType = SubProcess
+OpenRegSpecs.process_workflow.eType = WorkflowModule
 OpenRegSpecs.report_generation.eType = SQLEntityModule
 OpenRegSpecs.tests.eType = TestModule
 FlowElementsContainer.flowElements.eType = FlowElement
@@ -60,12 +60,6 @@ SQLEntityModule.sqlEntities.eType = SQLEntity
 GeneratedEntitySQL.generatedEntity.eType = GeneratedEntity
 GeneratedEntitySQL.view.eType = View
 GeneratedEntitySQLModule.GeneratedEntitySQLs.eType = GeneratedEntitySQL
-LogicalTransformationModule.taskTags.eType = ActivityTag
-LogicalTransformationModule.scenarioTags.eType = ScenarioTag
-LogicalTransformationModule.subProcess.eType = SubProcess
-LogicalTransformationModule.requirements.eType = RequirementsModule
-LogicalTransformationModule.testModules.eType = TestModule
-LogicalTransformationModule.selectionLayers.eType = SelectionLayer
 ActivityTag.activity.eType = Activity
 Scenario.requiredAttributes.eType = Attribute
 Scenario.data_constraints.eType = DataConstraint
@@ -81,6 +75,7 @@ UnitTestScope.scenarios.eType = Scenario
 E2ETestScope.scenarios.eType = Scenario
 E2ETestScope.layer.eType = SelectionLayer
 E2ETestScope.scriptTask.eType = ScriptTask
+CSVFile.rows.eType = CSVRow
 DOMAIN.facet_id.eType = FACET_COLLECTION
 DOMAIN.maintenance_agency_id.eType = MAINTENANCE_AGENCY
 FACET_COLLECTION.maintenance_agency_id.eType = MAINTENANCE_AGENCY
@@ -151,6 +146,10 @@ SMCubesCoreModel.domainModules.eType = DomainModule
 SMCubesCoreModel.memberModules.eType = MemberModule
 SMCubesCoreModel.subDomainModules.eType = SubDomainModule
 SMCubesCoreModel.memberHierarchyModules.eType = MemberHierarchyModule
+PlatformCallModule.platformCalls.eType = PlatformCall
+WorkflowModule.taskTags.eType = ActivityTag
+WorkflowModule.scenarioTags.eType = ScenarioTag
+WorkflowModule.subProcess.eType = SubProcess
 FlowNode.outgoing.eType = SequenceFlow
 FlowNode.incoming.eType = SequenceFlow
 SequenceFlow.targetRef.eType = FlowNode

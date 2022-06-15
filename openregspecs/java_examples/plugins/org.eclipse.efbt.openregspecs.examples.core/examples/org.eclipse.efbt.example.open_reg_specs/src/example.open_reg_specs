@@ -1,5 +1,50 @@
 OpenRegSpecs { 
-	
+	requirements { 
+		RequirementsModule CRR { 
+			rules { 
+				TitledRequirementsSection Title1  { 
+					title "Title_1" requirementsType Title sections
+					{ 
+						TitledRequirementsSection Chapter1 { 
+							title "Chapter1" requirementsType Chapter sections {
+								TitledRequirementsSection Article1 {
+									title "Article 1 general definitions" requirementsType Article sections
+									{ 
+										RequirementsSectionText  Article1_Text
+										{ 
+											text "Here are some general definitions related to this regulation" 
+										}
+										
+									}
+								},
+								TitledRequirementsSection Article2{
+									title "Article 2 some extra definitions" requirementsType Article sections
+									{ 
+										RequirementsSectionText  Article2_Text
+										{ 
+											text "Here are some more extra definitions related to this regulation" 
+										}
+										
+									}
+								}
+								}
+							}
+						}
+					}
+				}
+			allowedtypes AllowedTypes {
+				allowedTypes { 
+					RequirementType Title,
+					RequirementType Chapter,
+					RequirementType Section,
+					RequirementType Article,
+					RequirementType NumericParagraph,
+					RequirementType LetterParagraph,
+					RequirementType RomanNumeralParagraph
+					} 
+				}
+			}
+			}
     types_and_concepts SMCubesCoreModel  smcubes_model1 {
     	domainModules { 
     		DomainModule domain_module1{
@@ -58,41 +103,61 @@ OpenRegSpecs {
 				}
 			} 
 		} 
-	process_workflow  { 
-		SubProcess sub_process1 {
-			name sub_process1
-			flowElements {
-				UserTask Read_Trade { 
-					name Read_Trade 
-					entity "entity_module1.Trade"
-				},
-				ServiceTask calculate_exposure_at_default { 
-					name calculate_exposure_at_default 
-					enrichedAttribute "entity_module1.Trade_derived.exposure_at_default"
-					scenarios {
-						Scenario primaryEADSenario {
-							description "this is the main scenario"
-							requiredAttributes ( 
-								"entity_module1.Trade_derived.risk_weight",
-								"entity_module1.Instrument.mkt_value"								
-							)
-							
-						},
-						Scenario UnratedInstrumentEADSenario {
-							description "this and edge case where an instrument has no rating"
-							requiredAttributes ( 
-								"entity_module1.Trade_derived.risk_weight"							
-							)
-							
-						}
+	process_workflow   { 
+		WorkflowModule workflowModule1 {
+			taskTags { 
+				ActivityTag EADTaskTag{
+					displayName EADTaskTag		
+					requirements ( "CRR.Title1.Chapter1.Article1" )			 
+					activity "sub_process1.calculate_exposure_at_default"
 					}
-				},
-				ParallelGateway parallel_gateway1 { name parallel_gateway1 }, 
-				SequenceFlow sequenceflow1 { name sequenceflow1 targetRef Read_Trade sourceRef "sub_process1.parallel_gateway1" },
-				SequenceFlow sequenceflow2 { name sequenceflow1 targetRef calculate_exposure_at_default sourceRef "sub_process1.parallel_gateway1" }
-				}			
+				} 
+			scenarioTags { 
+				ScenarioTag EADPrimarySceanrioTag { 
+					displayName EADtag 
+					requirements ( "CRR.Title1.Chapter1.Article1" , "CRR.Title1.Chapter1.Article2")
+					scenario "sub_process1.calculate_exposure_at_default.primaryEADSenario"
+					}
 			}
-		}
+			subProcess {
+				SubProcess sub_process1 { 
+					name sub_process1
+					flowElements {
+						UserTask Read_Trade { 
+							name Read_Trade 
+							entity "entity_module1.Trade"
+						},
+						ServiceTask calculate_exposure_at_default { 
+							name calculate_exposure_at_default 
+							enrichedAttribute "entity_module1.Trade_derived.exposure_at_default"
+							scenarios {
+								Scenario primaryEADSenario {
+									description "this is the main scenario"
+									requiredAttributes ( 
+										"entity_module1.Trade_derived.risk_weight",
+										"entity_module1.Instrument.mkt_value"								
+									)
+									
+								},
+								Scenario UnratedInstrumentEADSenario {
+									description "this and edge case where an instrument has no rating"
+									requiredAttributes ( 
+										"entity_module1.Trade_derived.risk_weight"							
+									)
+									
+								}
+							}
+						},
+						ParallelGateway parallel_gateway1 { name parallel_gateway1 }, 
+						SequenceFlow sequenceflow1 { name sequenceflow1 targetRef Read_Trade sourceRef "sub_process1.parallel_gateway1" },
+						SequenceFlow sequenceflow2 { name sequenceflow1 targetRef calculate_exposure_at_default sourceRef "sub_process1.parallel_gateway1" }
+						}			
+					}
+				}
+				
+			} 
+		
+			}
 	report_generation {
 		SQLEntityModule report_generation_module1 {
 			sqlEntities {
@@ -128,7 +193,7 @@ OpenRegSpecs {
 				tests { 
 					Test test1 {
 						scope UnitTestScope unitTestScope1 {
-							scenarios "sub_process1.calculate_exposure_at_default.primaryEADSenario"
+							scenarios "workflowModule1.sub_process1.calculate_exposure_at_default.primaryEADSenario"
 							}
 							inputData { 
 								CSVFile { 
