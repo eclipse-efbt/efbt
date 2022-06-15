@@ -75,7 +75,7 @@ FlowNode returns FlowNode:
 	Task_Impl | ExclusiveGateway | InclusiveGateway | ParallelGateway | ServiceTask | SubProcess | ScriptTask | UserTask;
 
 Attribute returns Attribute:
-	Attribute_Impl | RelationshipAttribute_Impl | OneToOneRelationshipAttribute | ManyToOneRelationshipAttribute | OneToManyRelationshipAttribute | ManyToManyRelationshipAttribute;
+	Attribute_Impl | OneToOneRelationshipAttribute | ManyToOneRelationshipAttribute | OneToManyRelationshipAttribute | ManyToManyRelationshipAttribute;
 
 
 
@@ -142,9 +142,8 @@ EntityModule returns EntityModule:
 		('nsPrefix' nsPrefix=EString)?
 		('dependencies' dependencies=ModuleDependencies)?
 		('longName' longName=ModuleLongName)?
-		('entities' '{' entities+=Entity ( "," entities+=Entity)* '}' )?
+		( '{' (entities+=Entity)* '}' )?
 	'}';
-
 SubProcess returns SubProcess:
 	{SubProcess}
 	(invisible?='invisible')?
@@ -497,14 +496,12 @@ ParallelGateway returns ParallelGateway:
 
 Attribute_Impl returns Attribute:
 	{Attribute}
-	(isPK?='isPK')?
-	(ordered?='ordered')?
 	'Attribute'
 	name=EString
-	'{'
 		('type' type=[Type|EString])?
 		('concept' concept=[Concept|EString])?
-	'}';
+		(isPK?='isPK')?
+	;
 
 Scenario returns Scenario:
 	{Scenario}
@@ -524,80 +521,42 @@ Concept_Impl returns Concept:
 		('conceptName' conceptName=EString)?
 	'}';
 
-RelationshipAttribute_Impl returns RelationshipAttribute:
-	{RelationshipAttribute}
-	(isPK?='isPK')?
-	(ordered?='ordered')?
-	(containment?='containment')?
-	(mandatory?='mandatory')?
-	(dominant?='dominant')?
-	'RelationshipAttribute'
-	name=EString
-	'{'
-		('type' type=[Type|EString])?
-		('concept' concept=[Concept|EString])?
-		('entity' entity=[Entity|EString])?
-	'}';
 
 OneToOneRelationshipAttribute returns OneToOneRelationshipAttribute:
 	{OneToOneRelationshipAttribute}
-	(isPK?='isPK')?
-	(ordered?='ordered')?
-	(containment?='containment')?
-	(mandatory?='mandatory')?
-	(dominant?='dominant')?
 	'OneToOneRelationshipAttribute'
 	name=EString
-	'{'
-		('type' type=[Type|EString])?
-		('concept' concept=[Concept|EString])?
 		('entity' entity=[Entity|EString])?
-	'}';
+	(containment?='owning')?
+	(mandatory?='mandatory')?
+	(dominant?='dominant')?;
 
 ManyToOneRelationshipAttribute returns ManyToOneRelationshipAttribute:
-	{ManyToOneRelationshipAttribute}
-	(isPK?='isPK')?
-	(ordered?='ordered')?
-	(containment?='containment')?
-	(mandatory?='mandatory')?
-	(dominant?='dominant')?
+	{ManyToOneRelationshipAttribute}	
 	'ManyToOneRelationshipAttribute'
 	name=EString
-	'{'
-		('type' type=[Type|EString])?
-		('concept' concept=[Concept|EString])?
 		('entity' entity=[Entity|EString])?
-	'}';
+	(containment?='owning')?
+	(mandatory?='mandatory')?
+	(dominant?='dominant')?;
 
 OneToManyRelationshipAttribute returns OneToManyRelationshipAttribute:
 	{OneToManyRelationshipAttribute}
-	(isPK?='isPK')?
-	(ordered?='ordered')?
-	(containment?='containment')?
-	(mandatory?='mandatory')?
-	(dominant?='dominant')?
 	'OneToManyRelationshipAttribute'
 	name=EString
-	'{'
-		('type' type=[Type|EString])?
-		('concept' concept=[Concept|EString])?
 		('entity' entity=[Entity|EString])?
-	'}';
+	(containment?='owning')?
+	(mandatory?='mandatory')?
+	(dominant?='dominant')?;
 
 ManyToManyRelationshipAttribute returns ManyToManyRelationshipAttribute:
 	{ManyToManyRelationshipAttribute}
-	(isPK?='isPK')?
-	(ordered?='ordered')?
-	(containment?='containment')?
-	(mandatory?='mandatory')?
-	(dominant?='dominant')?
 	'ManyToManyRelationshipAttribute'
 	name=EString
-	'{'
-		('type' type=[Type|EString])?
-		('concept' concept=[Concept|EString])?
 		('entity' entity=[Entity|EString])?
-	'}';
+	(containment?='owning')?
+	(mandatory?='mandatory')?
+	(dominant?='dominant')?;
 
 SUBDOMAIN returns SUBDOMAIN:
 	{SUBDOMAIN}
@@ -703,7 +662,7 @@ GeneratedEntity returns GeneratedEntity:
 	'GeneratedEntity'
 	name=EString
 	'{'
-		('attributes' '{' attributes+=Attribute ( "," attributes+=Attribute)* '}' )?
+		(attributes+=Attribute)* 
 	'}';
 
 DerivedEntity returns DerivedEntity:
@@ -711,16 +670,16 @@ DerivedEntity returns DerivedEntity:
 	'DerivedEntity'
 	name=EString
 	'{'
-		('attributes' '{' attributes+=Attribute ( "," attributes+=Attribute)* '}' )?
+		(attributes+=Attribute)* 
 	'}';
 
 BasicEntity returns BasicEntity:
 	{BasicEntity}
 	'BasicEntity'
 	name=EString
+	('inheritsFrom' superClass=[BasicEntity|EString])?
 	'{'
-		('superClass' superClass=[BasicEntity|EString])?
-		('attributes' '{' attributes+=Attribute ( "," attributes+=Attribute)* '}' )?
+		(attributes+=Attribute)* 
 	'}';
 
 DataConstraint returns DataConstraint:
@@ -927,9 +886,9 @@ Test returns Test:
 	'Test'
 	name=EString
 	'{'
-		('inputData' '(' inputData+=[CSVFile|EString] ( "," inputData+=[CSVFile|EString])* ')' )?
-		('expectedResult' '(' expectedResult+=[CSVFile|EString] ( "," expectedResult+=[CSVFile|EString])* ')' )?
 		('scope' scope=TestScope)?
+		('inputData' '{' inputData+=CSVFile ( "," inputData+=CSVFile)* '}' )?
+		('expectedResult' '{' expectedResult+=CSVFile ( "," expectedResult+=CSVFile)* '}' )?	
 	'}';
 
 CSVFile returns CSVFile:
@@ -937,12 +896,21 @@ CSVFile returns CSVFile:
 	'CSVFile'
 	'{'
 		('fileName' fileName=EString)?
+		('rows' '{' rows+=CSVRow ( "," rows+=CSVRow)* '}' )?
 	'}';
 
 TestScope_Impl returns TestScope:
 	{TestScope}
 	'TestScope'
 	name=EString;
+
+CSVRow returns CSVRow:
+	{CSVRow}
+	(isHeader?='isHeader')?
+	'CSVRow'
+	'{'
+		('value' '{' value+=EString ( "," value+=EString)* '}' )?
+	'}';
 
 UnitTestScope returns UnitTestScope:
 	{UnitTestScope}
