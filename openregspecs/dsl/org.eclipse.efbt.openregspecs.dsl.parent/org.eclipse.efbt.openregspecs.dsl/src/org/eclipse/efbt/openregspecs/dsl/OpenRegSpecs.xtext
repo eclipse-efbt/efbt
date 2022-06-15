@@ -927,9 +927,9 @@ Test returns Test:
 	'Test'
 	name=EString
 	'{'
-		('inputData' '(' inputData+=[CSVFile|EString] ( "," inputData+=[CSVFile|EString])* ')' )?
-		('expectedResult' '(' expectedResult+=[CSVFile|EString] ( "," expectedResult+=[CSVFile|EString])* ')' )?
 		('scope' scope=TestScope)?
+		('inputData' '{' inputData+=CSVFile ( "," inputData+=CSVFile)* '}' )?
+		('expectedResult' '{' expectedResult+=CSVFile ( "," expectedResult+=CSVFile)* '}' )?	
 	'}';
 
 CSVFile returns CSVFile:
@@ -937,12 +937,21 @@ CSVFile returns CSVFile:
 	'CSVFile'
 	'{'
 		('fileName' fileName=EString)?
+		('rows' '{' rows+=CSVRow ( "," rows+=CSVRow)* '}' )?
 	'}';
 
 TestScope_Impl returns TestScope:
 	{TestScope}
 	'TestScope'
 	name=EString;
+
+CSVRow returns CSVRow:
+	{CSVRow}
+	(isHeader?='isHeader')?
+	'CSVRow'
+	'{'
+		('value' '{' value+=EString ( "," value+=EString)* '}' )?
+	'}';
 
 UnitTestScope returns UnitTestScope:
 	{UnitTestScope}

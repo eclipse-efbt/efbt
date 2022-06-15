@@ -1,0 +1,188 @@
+OpenRegSpecs { 
+	
+    types_and_concepts SMCubesCoreModel  smcubes_model1 {
+    	domainModules { 
+    		DomainModule domain_module1{
+    			domains { 
+    				DOMAIN NumberDomain { 
+    					domain_id NumberDomain 
+    					} ,
+    				DOMAIN StringDomain { 
+    					domain_id StringDomain 
+    					} 
+    				}
+
+    			}
+    		}
+    		subDomainModules { 
+    			SubDomainModule subdomain_module1 {
+    				subdomains {
+    					SUBDOMAIN Number {
+    						name Number
+    						domain_id "domain_module1.NumberDomain"
+    					},
+    					SUBDOMAIN string {
+    						name string
+    						domain_id "domain_module1.StringDomain"
+    					}
+    					}
+    				}
+    			}
+    		}
+     
+	data_model { 
+
+		EntityModule entity_module1 {
+			entities {
+				BasicEntity Trade { 
+					attributes {
+						Attribute quantity {   
+							 type "smcubes_model1.subdomain_module1.Number"
+						},
+						Attribute trade_id {
+							type "smcubes_model1.subdomain_module1.string" 
+						}
+					}
+				},
+				BasicEntity Instrument { 
+					attributes {
+						Attribute mkt_value {   
+							 type "smcubes_model1.subdomain_module1.Number"
+						},
+						Attribute instrument_id {
+							type "smcubes_model1.subdomain_module1.string" 
+						}
+					}
+				},
+				DerivedEntity Trade_derived { 
+					attributes {
+						Attribute exposure_at_default {   
+							 type "smcubes_model1.subdomain_module1.Number"
+						},
+						Attribute risk_weight {
+							type "smcubes_model1.subdomain_module1.Number"
+						},
+						OneToOneRelationshipAttribute trade {
+							entity Trade 
+						}
+					}
+				},
+				GeneratedEntity OUTPUT_LAYER_CREDIT_RISK {
+					attributes {
+						Attribute EAD { 
+							type "smcubes_model1.subdomain_module1.Number"
+						},
+						Attribute RW {
+							type "smcubes_model1.subdomain_module1.string" 
+						},
+						Attribute TRADE_ID {
+							type "smcubes_model1.subdomain_module1.string" 
+						}
+					}
+				}
+			} 
+		} 
+	}  
+	process_workflow  { 
+		SubProcess sub_process1 {
+			name sub_process1
+			flowElements {
+				UserTask Read_Trade { 
+					name Read_Trade 
+					entity "entity_module1.Trade"
+				},
+				ServiceTask calculate_exposure_at_default { 
+					name calculate_exposure_at_default 
+					enrichedAttribute "entity_module1.Trade_derived.exposure_at_default"
+					scenarios {
+						Scenario primaryEADSenario {
+							description "this is the main scenario"
+							requiredAttributes ( 
+								"entity_module1.Trade_derived.risk_weight",
+								"entity_module1.Instrument.mkt_value"								
+							)
+							
+						},
+						Scenario UnratedInstrumentEADSenario {
+							description "this and edge case where an instrument has no rating"
+							requiredAttributes ( 
+								"entity_module1.Trade_derived.risk_weight"							
+							)
+							
+						}
+					}
+				},
+				ParallelGateway parallel_gateway1 { name parallel_gateway1 }, 
+				SequenceFlow sequenceflow1 { name sequenceflow1 targetRef Read_Trade sourceRef "sub_process1.parallel_gateway1" },
+				SequenceFlow sequenceflow2 { name sequenceflow1 targetRef calculate_exposure_at_default sourceRef "sub_process1.parallel_gateway1" }
+				}			
+			}
+		}
+	report_generation {
+		SQLEntityModule report_generation_module1 {
+			sqlEntities {
+				Table trade_table { 
+					entity "entity_module1.Trade"
+				},
+				View credit_risk_output_layer1 {
+					selectClause SelectClause { 
+						columns { 
+							SelectColumn { 
+								attribute "entity_module1.Trade_derived.exposure_at_default" as "entity_module1.OUTPUT_LAYER_CREDIT_RISK.EAD"
+								},
+							SelectColumn {
+									attribute "entity_module1.Trade_derived.risk_weight" as "entity_module1.OUTPUT_LAYER_CREDIT_RISK.RW"
+								},
+							SelectColumn { 
+								attribute "entity_module1.Trade.trade_id" as "entity_module1.OUTPUT_LAYER_CREDIT_RISK.TRADE_ID"
+								}
+								
+							}
+						}
+					fromClause 
+						FromClause {
+							sqlEntities trade_table 
+							}
+					} 	
+					
+				}  
+			}
+		}
+		tests { 
+			TestModule testModule1  {
+				tests { 
+					Test test1 {
+						scope UnitTestScope unitTestScope1 {
+							scenarios "sub_process1.calculate_exposure_at_default.primaryEADSenario"
+							}
+							inputData { 
+								CSVFile { 
+									fileName "trade.csv" 
+									rows {
+										isHeader CSVRow  { value { "trade_id", "quantity"} } ,
+												 CSVRow  { value {"trade1", "10"} }
+										}   
+									},
+								CSVFile {
+									fileName "instrument.csv"
+									rows { isHeader CSVRow  { value { "instrument_id" , "mkt_value" } } ,
+													CSVRow  { value { "instrument1", "10.0" } } 
+									}
+								}
+									
+							}
+							expectedResult { 
+								CSVFile { fileName "trade_derived.csv" 
+									rows { isHeader CSVRow { value { "trade_id" , "exposure_at_default"  } } ,
+													CSVRow { value { "trade1", "50"} }
+									}
+								}
+							}
+
+						}
+					}
+					
+				}
+				
+			}
+		}
