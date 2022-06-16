@@ -24,10 +24,10 @@ public class Controller {
 		{
 			ImportBIRDFromMSAccess((ImportBIRDFromMSAccess) call);
 		}
-		if (call instanceof CreateLogicalTransformationViewForScope)
-		{
-			createLogicalTransformationViewForScope((CreateLogicalTransformationViewForScope) call);
-		}
+		//if (call instanceof CreateLogicalTransformationViewForScope)
+		//{
+		//	createLogicalTransformationViewForScope((CreateLogicalTransformationViewForScope) call);
+		//}
 		
 	}
 
@@ -38,12 +38,12 @@ public class Controller {
 
 	
 	
-	private static void createLogicalTransformationViewForScope(CreateLogicalTransformationViewForScope call) {
+	/**private static void createLogicalTransformationViewForScope(CreateLogicalTransformationViewForScope call) {
 		// TODO Auto-generated method stub
 		LogicalTransformationViews.createLogicalTransformationViewForScope(call.getLogicalTransformationModule(),
 																			call.getTestScope(),
 																			call);
-	}
+	}*/
 	
 
 

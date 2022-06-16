@@ -23,10 +23,10 @@ import org.eclipse.efbt.openregspecs.model.open_reg_specs.ServiceTask;
 import org.eclipse.efbt.openregspecs.model.open_reg_specs.SubProcess;
 import org.eclipse.efbt.openregspecs.model.open_reg_specs.UserTask;
 import org.eclipse.efbt.openregspecs.model.open_reg_specs.E2ETestScope;
-import org.eclipse.efbt.openregspecs.model.open_reg_specs.LogicalTransformationModule;
+//import org.eclipse.efbt.openregspecs.model.open_reg_specs.LogicalTransformationModule;
 import org.eclipse.efbt.openregspecs.model.open_reg_specs.Scenario;
 import org.eclipse.efbt.openregspecs.model.open_reg_specs.SelectionLayer;
-import org.eclipse.efbt.openregspecs.model.open_reg_specs.CreateLogicalTransformationViewForScope;
+//import org.eclipse.efbt.openregspecs.model.open_reg_specs.CreateLogicalTransformationViewForScope;
 import org.eclipse.efbt.openregspecs.model.open_reg_specs.Attribute;
 import org.eclipse.efbt.openregspecs.model.open_reg_specs.BasicEntity;
 import org.eclipse.emf.common.util.BasicEList;
@@ -36,7 +36,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 
 public class LogicalTransformationViews {
 
-	public static void createLogicalTransformationViewForScope(LogicalTransformationModule logicalTransformationModule,
+	/**public static void createLogicalTransformationViewForScope(LogicalTransformationModule logicalTransformationModule,
 			EList<E2ETestScope> eList, CreateLogicalTransformationViewForScope call) {
 		markScriptTaskAsInvisible(logicalTransformationModule, eList);
 
@@ -404,6 +404,6 @@ public class LogicalTransformationViews {
 		}
 		return returnValue;
 		
-	}
+	}*/
 
 }
