@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Created-By: 14.0.2 (Oracle Corporation)
+Created-By: 11.0.14.1 (Eclipse Adoptium)
 Tool: Bnd-0.0.357
-Bnd-LastModified: 1609156069755
+Bnd-LastModified: 1655351164004
 Export-Package: org.eclipse.efbt.dependencies.access.jackcess;uses:="com
  .healthmarketscience.jackcess";version="1.0.0.SNAPSHOT"
 Import-Package: com.healthmarketscience.jackcess;version="3.0",org.eclip
