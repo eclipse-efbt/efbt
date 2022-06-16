@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Created-By: Apache Maven Bundle Plugin
 Tool: Bnd-0.0.357
-Bnd-LastModified: 1655351165555
+Bnd-LastModified: 1655353248603
 Export-Package: com.healthmarketscience.jackcess.complex;version="3.0.1"
  ,com.healthmarketscience.jackcess.impl.query;version="3.0.1",com.health
  marketscience.jackcess.query;version="3.0.1",com.healthmarketscience.ja
