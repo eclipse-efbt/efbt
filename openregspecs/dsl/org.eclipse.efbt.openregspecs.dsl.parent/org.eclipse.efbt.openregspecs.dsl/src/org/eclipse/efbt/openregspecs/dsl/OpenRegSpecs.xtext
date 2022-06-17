@@ -11,7 +11,7 @@ OpenRegSpecs returns OpenRegSpecs:
 		('requirements' '{' requirements+=RequirementsModule ( "," requirements+=RequirementsModule)* '}' )?
 		('types_and_concepts' types_and_concepts=SMCubesCoreModel)?
 		('data_model' '{' data_model+=EntityModule ( "," data_model+=EntityModule)* '}' )?
-		('process_workflow' '{' process_workflow+=SubProcess ( "," process_workflow+=SubProcess)* '}' )?
+		('process_workflow' '{' process_workflow+=WorkflowModule ( "," process_workflow+=WorkflowModule)* '}' )?
 		('report_generation' '{' report_generation+=SQLEntityModule ( "," report_generation+=SQLEntityModule)* '}' )?
 		('tests' '{' tests+=TestModule ( "," tests+=TestModule)* '}' )?
 	'}';
@@ -35,8 +35,7 @@ Entity returns Entity:
 	GeneratedEntity | DerivedEntity | BasicEntity;
 
 
-FlowElement returns FlowElement:
-	SequenceFlow | Task_Impl | ExclusiveGateway | InclusiveGateway | ParallelGateway | ServiceTask | SubProcess | ScriptTask | UserTask;
+
 
 SQLEntity returns SQLEntity:
 	SQLEntity_Impl | View | Table;
@@ -49,7 +48,7 @@ RequirementsSection returns RequirementsSection:
 
 
 Module returns Module:
-	Module_Impl | EntityModule | RequirementsModule | TagGroup | SQLEntityModule | GeneratedEntitySQLModule | LogicalTransformationModule | TestModule | DomainModule | MemberHierarchyModule | MemberModule | VariableModule | SubDomainModule | PlatformCallModule;
+	Module_Impl | EntityModule | RequirementsModule | TagGroup | SQLEntityModule | GeneratedEntitySQLModule | TestModule | DomainModule | MemberHierarchyModule | MemberModule | VariableModule | SubDomainModule | PlatformCallModule | WorkflowModule;
 
 Tag returns Tag:
 	Tag_Impl | ActivityTag | ScenarioTag;
@@ -61,11 +60,8 @@ Tag returns Tag:
 
 
 
-
-
-
 PlatformCall returns PlatformCall:
-	PlatformCall_Impl | ImportBIRDFromMSAccess | CreateLogicalTransformationViewForScope | ConvertDataMetaModelToEcore;
+	PlatformCall_Impl | ImportBIRDFromMSAccess;
 
 Activity returns Activity:
 	Task_Impl | ServiceTask | SubProcess | ScriptTask | UserTask;
@@ -74,8 +70,13 @@ Activity returns Activity:
 FlowNode returns FlowNode:
 	Task_Impl | ExclusiveGateway | InclusiveGateway | ParallelGateway | ServiceTask | SubProcess | ScriptTask | UserTask;
 
+
 Attribute returns Attribute:
 	Attribute_Impl | OneToOneRelationshipAttribute | ManyToOneRelationshipAttribute | OneToManyRelationshipAttribute | ManyToManyRelationshipAttribute;
+
+FlowElement returns FlowElement:
+	SequenceFlow | Task_Impl | ExclusiveGateway | InclusiveGateway | ParallelGateway | ServiceTask | SubProcess | ScriptTask | UserTask;
+
 
 
 
@@ -98,11 +99,10 @@ EnumMember returns EnumMember:
 	EnumMember_Impl | MEMBER;
 
 
-
-
-
 TestScope returns TestScope:
 	TestScope_Impl | UnitTestScope | E2ETestScope;
+
+
 
 RequirementsModule returns RequirementsModule:
 	{RequirementsModule}
@@ -144,17 +144,20 @@ EntityModule returns EntityModule:
 		('longName' longName=ModuleLongName)?
 		( '{' (entities+=Entity)* '}' )?
 	'}';
-SubProcess returns SubProcess:
-	{SubProcess}
-	(invisible?='invisible')?
-	'SubProcess'
-	id=EString
+
+WorkflowModule returns WorkflowModule:
+	{WorkflowModule}
+	'WorkflowModule'
+	name=EString
 	'{'
-		('description' description=EString)?
-		('name' name=EString)?
-		('outgoing' '(' outgoing+=[SequenceFlow|EString] ( "," outgoing+=[SequenceFlow|EString])* ')' )?
-		('incoming' '(' incoming+=[SequenceFlow|EString] ( "," incoming+=[SequenceFlow|EString])* ')' )?
-		('flowElements' '{' flowElements+=FlowElement ( "," flowElements+=FlowElement)* '}' )?
+		('theDescription' theDescription=EString)?
+		('license' license=EString)?
+		('version' version=EString)?
+		('dependencies' dependencies=ModuleDependencies)?
+		('longName' longName=ModuleLongName)?
+		('taskTags' '{' taskTags+=ActivityTag ( "," taskTags+=ActivityTag)* '}' )?
+		('scenarioTags' '{' scenarioTags+=ScenarioTag ( "," scenarioTags+=ScenarioTag)* '}' )?
+		('subProcess' '{' subProcess+=SubProcess ( "," subProcess+=SubProcess)* '}' )?
 	'}';
 
 SQLEntityModule returns SQLEntityModule:
@@ -261,24 +264,6 @@ GeneratedEntitySQLModule returns GeneratedEntitySQLModule:
 		('dependencies' dependencies=ModuleDependencies)?
 		('longName' longName=ModuleLongName)?
 		('GeneratedEntitySQLs' '{' GeneratedEntitySQLs+=GeneratedEntitySQL ( "," GeneratedEntitySQLs+=GeneratedEntitySQL)* '}' )?
-	'}';
-
-LogicalTransformationModule returns LogicalTransformationModule:
-	{LogicalTransformationModule}
-	'LogicalTransformationModule'
-	name=EString
-	'{'
-		('theDescription' theDescription=EString)?
-		('license' license=EString)?
-		('version' version=EString)?
-		('testModules' '(' testModules+=[TestModule|EString] ( "," testModules+=[TestModule|EString])* ')' )?
-		('dependencies' dependencies=ModuleDependencies)?
-		('longName' longName=ModuleLongName)?
-		('taskTags' '{' taskTags+=ActivityTag ( "," taskTags+=ActivityTag)* '}' )?
-		('scenarioTags' '{' scenarioTags+=ScenarioTag ( "," scenarioTags+=ScenarioTag)* '}' )?
-		('subProcess' subProcess=SubProcess)?
-		('requirements' '{' requirements+=RequirementsModule ( "," requirements+=RequirementsModule)* '}' )?
-		('selectionLayers' '{' selectionLayers+=SelectionLayer ( "," selectionLayers+=SelectionLayer)* '}' )?
 	'}';
 
 DomainModule returns DomainModule:
@@ -431,6 +416,19 @@ ServiceTask returns ServiceTask:
 		('scenarios' '{' scenarios+=Scenario ( "," scenarios+=Scenario)* '}' )?
 	'}';
 
+SubProcess returns SubProcess:
+	{SubProcess}
+	(invisible?='invisible')?
+	'SubProcess'
+	id=EString
+	'{'
+		('description' description=EString)?
+		('name' name=EString)?
+		('outgoing' '(' outgoing+=[SequenceFlow|EString] ( "," outgoing+=[SequenceFlow|EString])* ')' )?
+		('incoming' '(' incoming+=[SequenceFlow|EString] ( "," incoming+=[SequenceFlow|EString])* ')' )?
+		('flowElements' '{' flowElements+=FlowElement ( "," flowElements+=FlowElement)* '}' )?
+	'}';
+
 ScriptTask returns ScriptTask:
 	{ScriptTask}
 	(invisible?='invisible')?
@@ -520,7 +518,6 @@ Concept_Impl returns Concept:
 	'{'
 		('conceptName' conceptName=EString)?
 	'}';
-
 
 OneToOneRelationshipAttribute returns OneToOneRelationshipAttribute:
 	{OneToOneRelationshipAttribute}
@@ -681,7 +678,7 @@ BasicEntity returns BasicEntity:
 	'{'
 		(attributes+=Attribute)* 
 	'}';
-
+	
 DataConstraint returns DataConstraint:
 	{DataConstraint}
 	'DataConstraint'
@@ -816,39 +813,6 @@ ImportBIRDFromMSAccess returns ImportBIRDFromMSAccess:
 		('outputDirectory' outputDirectory=EString)?
 	'}';
 
-CreateLogicalTransformationViewForScope returns CreateLogicalTransformationViewForScope:
-	{CreateLogicalTransformationViewForScope}
-	'CreateLogicalTransformationViewForScope'
-	name=EString
-	'{'
-		('errorMessage' errorMessage=EString)?
-		('returnStatus' returnStatus=EInt)?
-		('logicalTransformationModule' logicalTransformationModule=[LogicalTransformationModule|EString])?
-		('attributeLineage' '(' attributeLineage+=[Attribute|EString] ( "," attributeLineage+=[Attribute|EString])* ')' )?
-		('testScope' '{' testScope+=E2ETestScope ( "," testScope+=E2ETestScope)* '}' )?
-	'}';
-
-ConvertDataMetaModelToEcore returns ConvertDataMetaModelToEcore:
-	{ConvertDataMetaModelToEcore}
-	'ConvertDataMetaModelToEcore'
-	name=EString
-	'{'
-		('errorMessage' errorMessage=EString)?
-		('returnStatus' returnStatus=EInt)?
-		('outputDirectory' outputDirectory=EString)?
-		('entityModule' entityModule=[EntityModule|EString])?
-	'}';
-
-E2ETestScope returns E2ETestScope:
-	{E2ETestScope}
-	'E2ETestScope'
-	name=EString
-	'{'
-		('scenarios' '(' scenarios+=[Scenario|EString] ( "," scenarios+=[Scenario|EString])* ')' )?
-		('layer' layer=[SelectionLayer|EString])?
-		('scriptTask' scriptTask=[ScriptTask|EString])?
-	'}';
-
 RequirementsSectionLinkWithText returns RequirementsSectionLinkWithText:
 	{RequirementsSectionLinkWithText}
 	'RequirementsSectionLinkWithText'
@@ -888,7 +852,8 @@ Test returns Test:
 	'{'
 		('scope' scope=TestScope)?
 		('inputData' '{' inputData+=CSVFile ( "," inputData+=CSVFile)* '}' )?
-		('expectedResult' '{' expectedResult+=CSVFile ( "," expectedResult+=CSVFile)* '}' )?	
+		('expectedResult' '{' expectedResult+=CSVFile ( "," expectedResult+=CSVFile)* '}' )?
+
 	'}';
 
 CSVFile returns CSVFile:
@@ -918,4 +883,14 @@ UnitTestScope returns UnitTestScope:
 	name=EString
 	'{'
 		('scenarios' scenarios=[Scenario|EString])?
+	'}';
+
+E2ETestScope returns E2ETestScope:
+	{E2ETestScope}
+	'E2ETestScope'
+	name=EString
+	'{'
+		('scenarios' '(' scenarios+=[Scenario|EString] ( "," scenarios+=[Scenario|EString])* ')' )?
+		('layer' layer=[SelectionLayer|EString])?
+		('scriptTask' scriptTask=[ScriptTask|EString])?
 	'}';

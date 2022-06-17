@@ -1,242 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <open_reg_specs:OpenRegSpecs xmlns:xmi="http://www.omg.org/XMI" xmlns:open_reg_specs="http://www.eclipse.org/efbt/open_reg_specs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmi:version="2.0">
-  <data_model xsi:type="open_reg_specs:EntityModule" name="open_reg_specs" nsPrefix="open_reg_specs" nsURI="&quot;http://www.eclipse.org/open_reg_specs&quot;">
-    <entities xsi:type="open_reg_specs:BasicEntity" name="Commodity_risk_factor" superClass="//@data_model.0/@entities.14">
-      <attributes xsi:type="open_reg_specs:Attribute" name="Commodity_type"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Delivery_location"/>
-    </entities>
-    <entities xsi:type="open_reg_specs:BasicEntity" name="CSR_non_securitisation_risk_factor" superClass="//@data_model.0/@entities.14">
-      <attributes xsi:type="open_reg_specs:Attribute" name="CSR_credit_quality"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="CSR_curve_type"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Organisation_identifier"/>
-      <attributes xsi:type="open_reg_specs:OneToOneRelationshipAttribute" name="theOrganisation" mandatory="true" entity="//@data_model.0/@entities.12"/>
-    </entities>
-    <entities xsi:type="open_reg_specs:BasicEntity" name="Curvature" superClass="//@data_model.0/@entities.15">
-      <attributes xsi:type="open_reg_specs:Attribute" name="Currency_of_record"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Curvature_risk_weight"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Curvature_valuation_difference"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Shock_direction"/>
-    </entities>
-    <entities xsi:type="open_reg_specs:BasicEntity" name="Delta_sensitivities_correlated_and_aggregated_derived">
-      <attributes xsi:type="open_reg_specs:Attribute" name="GIRR_delta_correlated_value_per_bucket"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Sensitivities_correlated_and_aggregated_bucket_identifier"/>
-      <attributes xsi:type="open_reg_specs:OneToManyRelationshipAttribute" name="theDelta_sensitivity_combinations_deriveds" mandatory="true" entity="//@data_model.0/@entities.5"/>
-    </entities>
-    <entities xsi:type="open_reg_specs:BasicEntity" name="Delta_sensitivity" superClass="//@data_model.0/@entities.15">
-      <attributes xsi:type="open_reg_specs:Attribute" name="Currency_of_record"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Delta_sensitivity"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Tenor"/>
-    </entities>
-    <entities xsi:type="open_reg_specs:BasicEntity" name="Delta_sensitivity_combinations_derived">
-      <attributes xsi:type="open_reg_specs:Attribute" name="Delta_sensitivity_combination_identifier"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="GIRR_delta_correlated_value"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="GIRR_delta_correlation_factor"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Netted_delta_sensitivities_identifier"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Netted_delta_sensitivities_identifier1"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Sensitivities_correlated_and_aggregated_bucket_identifier"/>
-      <attributes xsi:type="open_reg_specs:OneToOneRelationshipAttribute" name="theNetted_delta_sensitivities_per_risk_factor_and_tenor_derived" mandatory="true" entity="//@data_model.0/@entities.11"/>
-      <attributes xsi:type="open_reg_specs:OneToOneRelationshipAttribute" name="theNetted_delta_sensitivities_per_risk_factor_and_tenor_derived1" mandatory="true" entity="//@data_model.0/@entities.11"/>
-    </entities>
-    <entities xsi:type="open_reg_specs:BasicEntity" name="Equity_issue" superClass="//@data_model.0/@entities.19"/>
-    <entities xsi:type="open_reg_specs:BasicEntity" name="Equity_risk_factor" superClass="//@data_model.0/@entities.14">
-      <attributes xsi:type="open_reg_specs:Attribute" name="Equity_factor_type"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Issue_Identifier"/>
-      <attributes xsi:type="open_reg_specs:OneToOneRelationshipAttribute" name="theEquity_issue" mandatory="true" entity="//@data_model.0/@entities.6"/>
-    </entities>
-    <entities xsi:type="open_reg_specs:BasicEntity" name="FX_risk_factor" superClass="//@data_model.0/@entities.14">
-      <attributes xsi:type="open_reg_specs:Attribute" name="ccy1"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="ccy2"/>
-    </entities>
-    <entities xsi:type="open_reg_specs:BasicEntity" name="GIRR_risk_factor" superClass="//@data_model.0/@entities.14">
-      <attributes xsi:type="open_reg_specs:Attribute" name="GIRR_risk_factor_type"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Main_currency"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Second_currency"/>
-    </entities>
-    <entities xsi:type="open_reg_specs:BasicEntity" name="KB_per_bucket_derived">
-      <attributes xsi:type="open_reg_specs:Attribute" name="Bucket_identifier"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="GIRR_delta_KB"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Sensitivities_correlated_and_aggregated_bucket_identifier"/>
-      <attributes xsi:type="open_reg_specs:OneToOneRelationshipAttribute" name="theDelta_sensitivities_correlated_and_aggregated_derived" mandatory="true" entity="//@data_model.0/@entities.3"/>
-      <attributes xsi:type="open_reg_specs:OneToOneRelationshipAttribute" name="theTotal_delta_sensitivity_per_bucket_derived" mandatory="true" entity="//@data_model.0/@entities.22"/>
-    </entities>
-    <entities xsi:type="open_reg_specs:BasicEntity" name="Netted_delta_sensitivities_per_risk_factor_and_tenor_derived">
-      <attributes xsi:type="open_reg_specs:Attribute" name="Bucket_identifier"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="GIRR_delta_risk_weight"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Netted_delta_sensitivities"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Netted_delta_sensitivities_identifier"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Risk_factor_Identifier"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Tenor"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Total_sensitivities_bucket_identifier"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Weighted_GIRR_delta_sensitivity"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Weighted_GIRR_delta_sensitivity_squared"/>
-      <attributes xsi:type="open_reg_specs:OneToManyRelationshipAttribute" name="theDelta_sensitivitys" mandatory="true" entity="//@data_model.0/@entities.4"/>
-      <attributes xsi:type="open_reg_specs:OneToOneRelationshipAttribute" name="theRisk_factor" mandatory="true" entity="//@data_model.0/@entities.14"/>
-    </entities>
-    <entities xsi:type="open_reg_specs:BasicEntity" name="Organisation">
-      <attributes xsi:type="open_reg_specs:Attribute" name="Economy"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Market_cap"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Organisation_identifier"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Ratings_grade"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Sector"/>
-    </entities>
-    <entities xsi:type="open_reg_specs:BasicEntity" name="OUTPUT_LAYER_FRTB">
-      <attributes xsi:type="open_reg_specs:Attribute" name="Approach_For_Prudential_Purposes"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Base"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Contingent_Scenario"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Delta_Vega_Or_Curvature_Risk"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Hypothetical_Value_Under_Specific_Assumptions"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Instrument"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Main_Catagory"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Market_Risk_Portfolio"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Own_Funds_Requirements"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Position_In_The_Instrument"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Prudentia_lPortfolio"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Sensitivity_To_Delta_Risk_Factors"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Type_And_Nature_Of_Sensitivity"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Type_Of_Risk"/>
-    </entities>
-    <entities xsi:type="open_reg_specs:BasicEntity" name="Risk_factor"/>
-    <entities xsi:type="open_reg_specs:BasicEntity" name="Risk_measure">
-      <attributes xsi:type="open_reg_specs:OneToOneRelationshipAttribute" name="theRisk_factor" mandatory="true" entity="//@data_model.0/@entities.14"/>
-      <attributes xsi:type="open_reg_specs:OneToOneRelationshipAttribute" name="theSecurity_or_exchange_tradable_derivative_position" mandatory="true" entity="//@data_model.0/@entities.20"/>
-    </entities>
-    <entities xsi:type="open_reg_specs:BasicEntity" name="Securitisation" superClass="//@data_model.0/@entities.19">
-      <attributes xsi:type="open_reg_specs:Attribute" name="Securitisation_sector"/>
-    </entities>
-    <entities xsi:type="open_reg_specs:BasicEntity" name="Securitisation_CTP_risk_factor_" superClass="//@data_model.0/@entities.14"/>
-    <entities xsi:type="open_reg_specs:BasicEntity" name="Securitisation_non_CTP_risk_factor" superClass="//@data_model.0/@entities.14">
-      <attributes xsi:type="open_reg_specs:Attribute" name="Issue_Identifier"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Tranche_name"/>
-      <attributes xsi:type="open_reg_specs:OneToOneRelationshipAttribute" name="theSecuritisation" mandatory="true" entity="//@data_model.0/@entities.16"/>
-    </entities>
-    <entities xsi:type="open_reg_specs:BasicEntity" name="Security_issue">
-      <attributes xsi:type="open_reg_specs:OneToOneRelationshipAttribute" name="theOrganisation" mandatory="true" entity="//@data_model.0/@entities.12"/>
-    </entities>
-    <entities xsi:type="open_reg_specs:BasicEntity" name="Security_or_exchange_tradable_derivative_position">
-      <attributes xsi:type="open_reg_specs:Attribute" name="Position_identifier"/>
-    </entities>
-    <entities xsi:type="open_reg_specs:BasicEntity" name="Summed_delta_sensitivities_per_position_and_risk_factor_derived">
-      <attributes xsi:type="open_reg_specs:Attribute" name="Position_identifier"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Risk_factor_Identifier"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="summed_delta_per_position"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="summed_delta_per_position_identifier"/>
-      <attributes xsi:type="open_reg_specs:OneToManyRelationshipAttribute" name="theDelta_sensitivitys" mandatory="true" entity="//@data_model.0/@entities.4"/>
-      <attributes xsi:type="open_reg_specs:OneToOneRelationshipAttribute" name="theSecurity_or_exchange_tradable_derivative_position" mandatory="true" entity="//@data_model.0/@entities.20"/>
-      <attributes xsi:type="open_reg_specs:OneToOneRelationshipAttribute" name="theRisk_factor" mandatory="true" entity="//@data_model.0/@entities.14"/>
-    </entities>
-    <entities xsi:type="open_reg_specs:BasicEntity" name="Total_delta_sensitivity_per_bucket_derived">
-      <attributes xsi:type="open_reg_specs:Attribute" name="Bucket_identifier"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Total_GIRR_delta_sensitivity_per_bucket"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Total_GIRR_delta_sensitivity_squared_per_bucket"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Total_sensitivities_bucket_identifier"/>
-      <attributes xsi:type="open_reg_specs:OneToManyRelationshipAttribute" name="theNetted_delta_sensitivities_per_risk_factor_and_tenor_deriveds" mandatory="true" entity="//@data_model.0/@entities.11"/>
-    </entities>
-    <entities xsi:type="open_reg_specs:BasicEntity" name="Vega_sensitivity" superClass="//@data_model.0/@entities.15">
-      <attributes xsi:type="open_reg_specs:Attribute" name="Currency_of_record"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="option_maturity"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="underlying_residual_maturity"/>
-      <attributes xsi:type="open_reg_specs:Attribute" name="Vega_sensitivity"/>
-    </entities>
-  </data_model>
   <types_and_concepts xsi:type="open_reg_specs:SMCubesCoreModel">
-    <variableModules xsi:type="open_reg_specs:VariableModule" name="variablesModule">
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Approach_For_Prudential_Purposes_variable" domain_id="Approach_For_Prudential_Purposes"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Base_variable" domain_id="Base"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Bucket_identifier_variable" domain_id="String"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="ccy1_variable" domain_id="String"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="ccy2_variable" domain_id="String"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Commodity_type_variable" domain_id="Commodity_type"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Contingent_Scenario_variable" domain_id="Contingent_Scenario"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="CSR_credit_quality_variable" domain_id="Rating_grade"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="CSR_curve_type_variable" domain_id="CSR_curve_type"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Currency_of_record_variable" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Curvature_risk_weight_variable" domain_id="Number"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Curvature_valuation_difference_variable" domain_id="Number"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Delivery_location_variable" domain_id="String"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Delta_sensitivity_variable" domain_id="Number"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Delta_sensitivity_combination_identifier_variable" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Delta_Vega_Or_Curvature_Risk_variable" domain_id="Delta_Vega_Or_Curvature_Risk"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Economy_variable" domain_id="Economy"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Equity_factor_type_variable" domain_id="Equity_factor_type"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="GIRR_delta_correlated_value_variable" domain_id="Number"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="GIRR_delta_correlated_value_per_bucket_variable" domain_id="Number"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="GIRR_delta_correlation_factor_variable" domain_id="Number"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="GIRR_delta_KB_variable" domain_id="Number"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="GIRR_delta_risk_weight_variable" domain_id="Number"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="GIRR_risk_factor_type_variable" domain_id="GIRR_risk_factor_type"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Hypothetical_Value_Under_Specific_Assumptions_variable" domain_id="Boolean"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Instrument_variable" domain_id="Instrument"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Issue_Identifier_variable" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Main_Catagory_variable" domain_id="Main_Catagory"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Main_currency_variable" domain_id="Currency"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Market_cap_variable" domain_id="Market_cap"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Market_Risk_Portfolio_variable" domain_id="Market_Risk_Portfolio"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Netted_delta_sensitivities_variable" domain_id="Number"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Netted_delta_sensitivities_identifier_variable" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Netted_delta_sensitivities_identifier1_variable" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="option_maturity_variable" domain_id="Number"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Organisation_identifier_variable" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Own_Funds_Requirements_variable" domain_id="Number"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Position_identifier_variable" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Position_In_The_Instrument_variable" domain_id="Position_In_The_Instrument"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Prudentia_lPortfolio_variable" domain_id="Prudential_Portfolio"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Ratings_grade_variable" domain_id="Rating_grade"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Risk_factor_Identifier_variable" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Risk_factor_type_variable" domain_id="Risk_factor_type"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Risk_measure_identifier_variable" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Risk_measure_type_variable" domain_id="Risk_measure_type"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Second_currency_variable" domain_id="Currency"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Sector_variable" domain_id="Sector"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Securitisation_sector_variable" domain_id="Securitisation_sector"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Sensitivities_correlated_and_aggregated_bucket_identifier_variable" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Sensitivity_To_Delta_Risk_Factors_variable" domain_id="Number"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Shock_direction_variable" domain_id="ShockDirection"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="summed_delta_per_position_variable" domain_id="Number"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="summed_delta_per_position_identifier_variable" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Tenor_variable" domain_id="Number"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Total_GIRR_delta_sensitivity_per_bucket_variable" domain_id="Number"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Total_GIRR_delta_sensitivity_squared_per_bucket_variable" domain_id="Number"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Total_sensitivities_bucket_identifier_variable" domain_id="Unknown"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Tranche_name_variable" domain_id="String"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Type_And_Nature_Of_Sensitivity_variable" domain_id="Type_And_Nature_Of_Sensitivity"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Type_Of_Risk_variable" domain_id="Type_Of_Risk"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="underlying_residual_maturity_variable" domain_id="Number"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Vega_sensitivity_variable" domain_id="Number"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Weighted_GIRR_delta_sensitivity_variable" domain_id="Number"/>
-      <variables xsi:type="open_reg_specs:VARIABLE" name="Weighted_GIRR_delta_sensitivity_squared_variable" domain_id="Number"/>
-    </variableModules>
-    <subDomainModules xsi:type="open_reg_specs:SubDomainModule" name="subDomainsModule">
-      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" name="Approach_For_Prudential_Purposes" domain_id="Approach_For_Prudential_Purposes"/>
-      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" name="Base" domain_id="Base"/>
-      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" name="Boolean" domain_id="Boolean"/>
-      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" name="Commodity_type" domain_id="Commodity_type"/>
-      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" name="Contingent_Scenario" domain_id="Contingent_Scenario"/>
-      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" name="CSR_curve_type" domain_id="CSR_curve_type"/>
-      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" name="Currency" domain_id="Currency"/>
-      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" name="Delta_Vega_Or_Curvature_Risk" domain_id="Delta_Vega_Or_Curvature_Risk"/>
-      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" name="Economy" domain_id="Economy"/>
-      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" name="Equity_factor_type" domain_id="Equity_factor_type"/>
-      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" name="GIRR_risk_factor_type" domain_id="GIRR_risk_factor_type"/>
-      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" name="Instrument" domain_id="Instrument"/>
-      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" name="Main_Catagory" domain_id="Main_Catagory"/>
-      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" name="Market_cap" domain_id="Market_cap"/>
-      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" name="Market_Risk_Portfolio" domain_id="Market_Risk_Portfolio"/>
-      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" name="Number" domain_id="Number"/>
-      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" name="Position_In_The_Instrument" domain_id="Position_In_The_Instrument"/>
-      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" name="Prudential_Portfolio" domain_id="Prudential_Portfolio"/>
-      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" name="Rating_grade" domain_id="Rating_grade"/>
-      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" name="Risk_factor_type" domain_id="Risk_factor_type"/>
-      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" name="Risk_measure_type" domain_id="Risk_measure_type"/>
-      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" name="Sector" domain_id="Sector"/>
-      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" name="Securitisation_sector" domain_id="Securitisation_sector"/>
-      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" name="ShockDirection" domain_id="ShockDirection"/>
-      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" name="String" domain_id="String"/>
-      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" name="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore"/>
-      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" name="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1"/>
-      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" name="Type_And_Nature_Of_Sensitivity" domain_id="Type_And_Nature_Of_Sensitivity"/>
-      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" name="Type_Of_Risk" domain_id="Type_Of_Risk"/>
-      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" name="Unknown" domain_id="Unknown"/>
-    </subDomainModules>
     <domainModules xsi:type="open_reg_specs:DomainModule" name="domainsModule">
       <domains xsi:type="open_reg_specs:DOMAIN" name="Approach_For_Prudential_Purposes"/>
       <domains xsi:type="open_reg_specs:DOMAIN" name="Base"/>
@@ -269,6 +33,38 @@
       <domains xsi:type="open_reg_specs:DOMAIN" name="Type_Of_Risk"/>
       <domains xsi:type="open_reg_specs:DOMAIN" name="Unknown"/>
     </domainModules>
+    <subDomainModules xsi:type="open_reg_specs:SubDomainModule" name="subDomainsModule">
+      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" domain_id="Approach_For_Prudential_Purposes" name="Approach_For_Prudential_Purposes"/>
+      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" domain_id="Base" name="Base"/>
+      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" domain_id="Boolean" name="Boolean"/>
+      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" domain_id="Commodity_type" name="Commodity_type"/>
+      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" domain_id="Contingent_Scenario" name="Contingent_Scenario"/>
+      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" domain_id="CSR_curve_type" name="CSR_curve_type"/>
+      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" domain_id="Currency" name="Currency"/>
+      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" domain_id="Delta_Vega_Or_Curvature_Risk" name="Delta_Vega_Or_Curvature_Risk"/>
+      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" domain_id="Economy" name="Economy"/>
+      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" domain_id="Equity_factor_type" name="Equity_factor_type"/>
+      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" domain_id="GIRR_risk_factor_type" name="GIRR_risk_factor_type"/>
+      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" domain_id="Instrument" name="Instrument"/>
+      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" domain_id="Main_Catagory" name="Main_Catagory"/>
+      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" domain_id="Market_cap" name="Market_cap"/>
+      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" domain_id="Market_Risk_Portfolio" name="Market_Risk_Portfolio"/>
+      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" domain_id="Number" name="Number"/>
+      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" domain_id="Position_In_The_Instrument" name="Position_In_The_Instrument"/>
+      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" domain_id="Prudential_Portfolio" name="Prudential_Portfolio"/>
+      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" domain_id="Rating_grade" name="Rating_grade"/>
+      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" domain_id="Risk_factor_type" name="Risk_factor_type"/>
+      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" domain_id="Risk_measure_type" name="Risk_measure_type"/>
+      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" domain_id="Sector" name="Sector"/>
+      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" domain_id="Securitisation_sector" name="Securitisation_sector"/>
+      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" domain_id="ShockDirection" name="ShockDirection"/>
+      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" domain_id="String" name="String"/>
+      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore" name="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore"/>
+      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1"/>
+      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" domain_id="Type_And_Nature_Of_Sensitivity" name="Type_And_Nature_Of_Sensitivity"/>
+      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" domain_id="Type_Of_Risk" name="Type_Of_Risk"/>
+      <subdomains xsi:type="open_reg_specs:SUBDOMAIN" domain_id="Unknown" name="Unknown"/>
+    </subDomainModules>
     <memberModules xsi:type="open_reg_specs:MemberModule" name="membersModule">
       <members xsi:type="open_reg_specs:MEMBER" domain_id="Approach_For_Prudential_Purposes" name="Sensitivities_Based_Method"/>
       <members xsi:type="open_reg_specs:MEMBER" domain_id="Approach_For_Prudential_Purposes" name="Method_To_Determine_The_Default_Risk_Charge"/>
@@ -356,5 +152,209 @@
       <members xsi:type="open_reg_specs:MEMBER" domain_id="Type_Of_Risk" name="Default_Risk"/>
       <members xsi:type="open_reg_specs:MEMBER" domain_id="Type_Of_Risk" name="Residual_Risk"/>
     </memberModules>
+    <variableModules xsi:type="open_reg_specs:VariableModule" name="variablesModule">
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Approach_For_Prudential_Purposes" name="Approach_For_Prudential_Purposes_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Base" name="Base_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="String" name="Bucket_identifier_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="String" name="ccy1_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="String" name="ccy2_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Commodity_type" name="Commodity_type_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Contingent_Scenario" name="Contingent_Scenario_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Rating_grade" name="CSR_credit_quality_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="CSR_curve_type" name="CSR_curve_type_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Currency_of_record_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Number" name="Curvature_risk_weight_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Number" name="Curvature_valuation_difference_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="String" name="Delivery_location_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Number" name="Delta_sensitivity_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Delta_sensitivity_combination_identifier_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Delta_Vega_Or_Curvature_Risk" name="Delta_Vega_Or_Curvature_Risk_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Economy" name="Economy_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Equity_factor_type" name="Equity_factor_type_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Number" name="GIRR_delta_correlated_value_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Number" name="GIRR_delta_correlated_value_per_bucket_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Number" name="GIRR_delta_correlation_factor_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Number" name="GIRR_delta_KB_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Number" name="GIRR_delta_risk_weight_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="GIRR_risk_factor_type" name="GIRR_risk_factor_type_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Boolean" name="Hypothetical_Value_Under_Specific_Assumptions_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Instrument" name="Instrument_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Issue_Identifier_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Main_Catagory" name="Main_Catagory_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Currency" name="Main_currency_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Market_cap" name="Market_cap_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Market_Risk_Portfolio" name="Market_Risk_Portfolio_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Number" name="Netted_delta_sensitivities_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Netted_delta_sensitivities_identifier_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Netted_delta_sensitivities_identifier1_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Number" name="option_maturity_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Organisation_identifier_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Number" name="Own_Funds_Requirements_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Position_identifier_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Position_In_The_Instrument" name="Position_In_The_Instrument_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Prudential_Portfolio" name="Prudentia_lPortfolio_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Rating_grade" name="Ratings_grade_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Risk_factor_Identifier_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Risk_factor_type" name="Risk_factor_type_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Risk_measure_identifier_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Risk_measure_type" name="Risk_measure_type_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Currency" name="Second_currency_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Sector" name="Sector_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Securitisation_sector" name="Securitisation_sector_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="Sensitivities_correlated_and_aggregated_bucket_identifier_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Number" name="Sensitivity_To_Delta_Risk_Factors_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="ShockDirection" name="Shock_direction_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Number" name="summed_delta_per_position_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1" name="summed_delta_per_position_identifier_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Number" name="Tenor_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Number" name="Total_GIRR_delta_sensitivity_per_bucket_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Number" name="Total_GIRR_delta_sensitivity_squared_per_bucket_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Unknown" name="Total_sensitivities_bucket_identifier_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="String" name="Tranche_name_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Type_And_Nature_Of_Sensitivity" name="Type_And_Nature_Of_Sensitivity_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Type_Of_Risk" name="Type_Of_Risk_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Number" name="underlying_residual_maturity_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Number" name="Vega_sensitivity_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Number" name="Weighted_GIRR_delta_sensitivity_variable"/>
+      <variables xsi:type="open_reg_specs:VARIABLE" domain_id="Number" name="Weighted_GIRR_delta_sensitivity_squared_variable"/>
+    </variableModules>
   </types_and_concepts>
+  <data_model xsi:type="open_reg_specs:EntityModule" name="open_reg_specs" nsPrefix="open_reg_specs" nsURI="&quot;http://www.eclipse.org/open_reg_specs&quot;">
+    <entities xsi:type="open_reg_specs:BasicEntity" superClass="//@data_model.0/@entities.14" name="Commodity_risk_factor">
+      <attributes xsi:type="open_reg_specs:Attribute" name="Commodity_type"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Delivery_location"/>
+    </entities>
+    <entities xsi:type="open_reg_specs:BasicEntity" superClass="//@data_model.0/@entities.14" name="CSR_non_securitisation_risk_factor">
+      <attributes xsi:type="open_reg_specs:Attribute" name="CSR_credit_quality"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="CSR_curve_type"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Organisation_identifier"/>
+      <attributes xsi:type="open_reg_specs:OneToOneRelationshipAttribute" mandatory="true" entity="//@data_model.0/@entities.12" name="theOrganisation"/>
+    </entities>
+    <entities xsi:type="open_reg_specs:BasicEntity" superClass="//@data_model.0/@entities.15" name="Curvature">
+      <attributes xsi:type="open_reg_specs:Attribute" name="Currency_of_record"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Curvature_risk_weight"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Curvature_valuation_difference"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Shock_direction"/>
+    </entities>
+    <entities xsi:type="open_reg_specs:BasicEntity" name="Delta_sensitivities_correlated_and_aggregated_derived">
+      <attributes xsi:type="open_reg_specs:Attribute" name="GIRR_delta_correlated_value_per_bucket"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Sensitivities_correlated_and_aggregated_bucket_identifier"/>
+      <attributes xsi:type="open_reg_specs:OneToManyRelationshipAttribute" mandatory="true" entity="//@data_model.0/@entities.5" name="theDelta_sensitivity_combinations_deriveds"/>
+    </entities>
+    <entities xsi:type="open_reg_specs:BasicEntity" superClass="//@data_model.0/@entities.15" name="Delta_sensitivity">
+      <attributes xsi:type="open_reg_specs:Attribute" name="Currency_of_record"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Delta_sensitivity"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Tenor"/>
+    </entities>
+    <entities xsi:type="open_reg_specs:BasicEntity" name="Delta_sensitivity_combinations_derived">
+      <attributes xsi:type="open_reg_specs:Attribute" name="Delta_sensitivity_combination_identifier"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="GIRR_delta_correlated_value"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="GIRR_delta_correlation_factor"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Netted_delta_sensitivities_identifier"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Netted_delta_sensitivities_identifier1"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Sensitivities_correlated_and_aggregated_bucket_identifier"/>
+      <attributes xsi:type="open_reg_specs:OneToOneRelationshipAttribute" mandatory="true" entity="//@data_model.0/@entities.11" name="theNetted_delta_sensitivities_per_risk_factor_and_tenor_derived"/>
+      <attributes xsi:type="open_reg_specs:OneToOneRelationshipAttribute" mandatory="true" entity="//@data_model.0/@entities.11" name="theNetted_delta_sensitivities_per_risk_factor_and_tenor_derived1"/>
+    </entities>
+    <entities xsi:type="open_reg_specs:BasicEntity" superClass="//@data_model.0/@entities.19" name="Equity_issue"/>
+    <entities xsi:type="open_reg_specs:BasicEntity" superClass="//@data_model.0/@entities.14" name="Equity_risk_factor">
+      <attributes xsi:type="open_reg_specs:Attribute" name="Equity_factor_type"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Issue_Identifier"/>
+      <attributes xsi:type="open_reg_specs:OneToOneRelationshipAttribute" mandatory="true" entity="//@data_model.0/@entities.6" name="theEquity_issue"/>
+    </entities>
+    <entities xsi:type="open_reg_specs:BasicEntity" superClass="//@data_model.0/@entities.14" name="FX_risk_factor">
+      <attributes xsi:type="open_reg_specs:Attribute" name="ccy1"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="ccy2"/>
+    </entities>
+    <entities xsi:type="open_reg_specs:BasicEntity" superClass="//@data_model.0/@entities.14" name="GIRR_risk_factor">
+      <attributes xsi:type="open_reg_specs:Attribute" name="GIRR_risk_factor_type"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Main_currency"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Second_currency"/>
+    </entities>
+    <entities xsi:type="open_reg_specs:BasicEntity" name="KB_per_bucket_derived">
+      <attributes xsi:type="open_reg_specs:Attribute" name="Bucket_identifier"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="GIRR_delta_KB"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Sensitivities_correlated_and_aggregated_bucket_identifier"/>
+      <attributes xsi:type="open_reg_specs:OneToOneRelationshipAttribute" mandatory="true" entity="//@data_model.0/@entities.3" name="theDelta_sensitivities_correlated_and_aggregated_derived"/>
+      <attributes xsi:type="open_reg_specs:OneToOneRelationshipAttribute" mandatory="true" entity="//@data_model.0/@entities.22" name="theTotal_delta_sensitivity_per_bucket_derived"/>
+    </entities>
+    <entities xsi:type="open_reg_specs:BasicEntity" name="Netted_delta_sensitivities_per_risk_factor_and_tenor_derived">
+      <attributes xsi:type="open_reg_specs:Attribute" name="Bucket_identifier"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="GIRR_delta_risk_weight"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Netted_delta_sensitivities"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Netted_delta_sensitivities_identifier"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Risk_factor_Identifier"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Tenor"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Total_sensitivities_bucket_identifier"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Weighted_GIRR_delta_sensitivity"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Weighted_GIRR_delta_sensitivity_squared"/>
+      <attributes xsi:type="open_reg_specs:OneToManyRelationshipAttribute" mandatory="true" entity="//@data_model.0/@entities.4" name="theDelta_sensitivitys"/>
+      <attributes xsi:type="open_reg_specs:OneToOneRelationshipAttribute" mandatory="true" entity="//@data_model.0/@entities.14" name="theRisk_factor"/>
+    </entities>
+    <entities xsi:type="open_reg_specs:BasicEntity" name="Organisation">
+      <attributes xsi:type="open_reg_specs:Attribute" name="Economy"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Market_cap"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Organisation_identifier"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Ratings_grade"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Sector"/>
+    </entities>
+    <entities xsi:type="open_reg_specs:BasicEntity" name="OUTPUT_LAYER_FRTB">
+      <attributes xsi:type="open_reg_specs:Attribute" name="Approach_For_Prudential_Purposes"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Base"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Contingent_Scenario"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Delta_Vega_Or_Curvature_Risk"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Hypothetical_Value_Under_Specific_Assumptions"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Instrument"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Main_Catagory"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Market_Risk_Portfolio"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Own_Funds_Requirements"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Position_In_The_Instrument"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Prudentia_lPortfolio"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Sensitivity_To_Delta_Risk_Factors"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Type_And_Nature_Of_Sensitivity"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Type_Of_Risk"/>
+    </entities>
+    <entities xsi:type="open_reg_specs:BasicEntity" name="Risk_factor"/>
+    <entities xsi:type="open_reg_specs:BasicEntity" name="Risk_measure">
+      <attributes xsi:type="open_reg_specs:OneToOneRelationshipAttribute" mandatory="true" entity="//@data_model.0/@entities.14" name="theRisk_factor"/>
+      <attributes xsi:type="open_reg_specs:OneToOneRelationshipAttribute" mandatory="true" entity="//@data_model.0/@entities.20" name="theSecurity_or_exchange_tradable_derivative_position"/>
+    </entities>
+    <entities xsi:type="open_reg_specs:BasicEntity" superClass="//@data_model.0/@entities.19" name="Securitisation">
+      <attributes xsi:type="open_reg_specs:Attribute" name="Securitisation_sector"/>
+    </entities>
+    <entities xsi:type="open_reg_specs:BasicEntity" superClass="//@data_model.0/@entities.14" name="Securitisation_CTP_risk_factor_"/>
+    <entities xsi:type="open_reg_specs:BasicEntity" superClass="//@data_model.0/@entities.14" name="Securitisation_non_CTP_risk_factor">
+      <attributes xsi:type="open_reg_specs:Attribute" name="Issue_Identifier"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Tranche_name"/>
+      <attributes xsi:type="open_reg_specs:OneToOneRelationshipAttribute" mandatory="true" entity="//@data_model.0/@entities.16" name="theSecuritisation"/>
+    </entities>
+    <entities xsi:type="open_reg_specs:BasicEntity" name="Security_issue">
+      <attributes xsi:type="open_reg_specs:OneToOneRelationshipAttribute" mandatory="true" entity="//@data_model.0/@entities.12" name="theOrganisation"/>
+    </entities>
+    <entities xsi:type="open_reg_specs:BasicEntity" name="Security_or_exchange_tradable_derivative_position">
+      <attributes xsi:type="open_reg_specs:Attribute" name="Position_identifier"/>
+    </entities>
+    <entities xsi:type="open_reg_specs:BasicEntity" name="Summed_delta_sensitivities_per_position_and_risk_factor_derived">
+      <attributes xsi:type="open_reg_specs:Attribute" name="Position_identifier"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Risk_factor_Identifier"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="summed_delta_per_position"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="summed_delta_per_position_identifier"/>
+      <attributes xsi:type="open_reg_specs:OneToManyRelationshipAttribute" mandatory="true" entity="//@data_model.0/@entities.4" name="theDelta_sensitivitys"/>
+      <attributes xsi:type="open_reg_specs:OneToOneRelationshipAttribute" mandatory="true" entity="//@data_model.0/@entities.20" name="theSecurity_or_exchange_tradable_derivative_position"/>
+      <attributes xsi:type="open_reg_specs:OneToOneRelationshipAttribute" mandatory="true" entity="//@data_model.0/@entities.14" name="theRisk_factor"/>
+    </entities>
+    <entities xsi:type="open_reg_specs:BasicEntity" name="Total_delta_sensitivity_per_bucket_derived">
+      <attributes xsi:type="open_reg_specs:Attribute" name="Bucket_identifier"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Total_GIRR_delta_sensitivity_per_bucket"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Total_GIRR_delta_sensitivity_squared_per_bucket"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Total_sensitivities_bucket_identifier"/>
+      <attributes xsi:type="open_reg_specs:OneToManyRelationshipAttribute" mandatory="true" entity="//@data_model.0/@entities.11" name="theNetted_delta_sensitivities_per_risk_factor_and_tenor_deriveds"/>
+    </entities>
+    <entities xsi:type="open_reg_specs:BasicEntity" superClass="//@data_model.0/@entities.15" name="Vega_sensitivity">
+      <attributes xsi:type="open_reg_specs:Attribute" name="Currency_of_record"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="option_maturity"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="underlying_residual_maturity"/>
+      <attributes xsi:type="open_reg_specs:Attribute" name="Vega_sensitivity"/>
+    </entities>
+  </data_model>
 </open_reg_specs:OpenRegSpecs>

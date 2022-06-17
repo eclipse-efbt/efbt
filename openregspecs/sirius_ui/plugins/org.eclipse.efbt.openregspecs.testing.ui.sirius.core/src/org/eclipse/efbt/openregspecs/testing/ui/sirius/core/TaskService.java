@@ -20,7 +20,6 @@ import org.eclipse.efbt.openregspecs.model.open_reg_specs.Task;
 import org.eclipse.efbt.openregspecs.model.open_reg_specs.UserTask;
 import org.eclipse.efbt.openregspecs.model.open_reg_specs.ActivityTag;
 import org.eclipse.efbt.openregspecs.model.open_reg_specs.E2ETestScope;
-import org.eclipse.efbt.openregspecs.model.open_reg_specs.LogicalTransformationModule;
 import org.eclipse.efbt.openregspecs.model.open_reg_specs.Scenario;
 import org.eclipse.efbt.openregspecs.model.open_reg_specs.ScenarioTag;
 import org.eclipse.efbt.openregspecs.model.open_reg_specs.Test;
@@ -162,7 +161,7 @@ public class TaskService {
 	
 	
 		
-	public EList<Test> getTests(Scenario self) {
+	/**public EList<Test> getTests(Scenario self) {
 
 		EList<Test> tests = new BasicEList<Test>();
 		EObject root = EcoreUtil.getRootContainer(self);
@@ -201,7 +200,7 @@ public class TaskService {
 	
 		return tests;
 		
-	}
+	}*/
 
 
 }

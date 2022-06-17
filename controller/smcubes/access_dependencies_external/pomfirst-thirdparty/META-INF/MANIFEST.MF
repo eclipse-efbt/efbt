@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Created-By: Apache Maven Bundle Plugin
 Tool: Bnd-0.0.357
-Bnd-LastModified: 1609156073253
+Bnd-LastModified: 1655353248603
 Export-Package: com.healthmarketscience.jackcess.complex;version="3.0.1"
  ,com.healthmarketscience.jackcess.impl.query;version="3.0.1",com.health
  marketscience.jackcess.query;version="3.0.1",com.healthmarketscience.ja
@@ -30,6 +30,6 @@ Bundle-SymbolicName: org.eclipse.efbt.dependencies.accessdb.pomfirst-thi
 Embed-Dependency: jackcess
 Embed-Directory: jars
 Bundle-Name: pomfirst-thirdparty
-Built-By: neil
-Build-Jdk: 14.0.2
+Built-By: Neil
+Build-Jdk: 11.0.14.1
 

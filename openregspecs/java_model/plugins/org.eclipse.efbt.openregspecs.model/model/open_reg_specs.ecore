@@ -10,7 +10,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="data_model" upperBound="-1"
         eType="#//EntityModule" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="process_workflow" upperBound="-1"
-        eType="#//SubProcess" containment="true"/>
+        eType="#//WorkflowModule" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="report_generation" upperBound="-1"
         eType="#//SQLEntityModule" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="tests" upperBound="-1"
@@ -531,20 +531,6 @@
   <eClassifiers xsi:type="ecore:EClass" name="GeneratedEntitySQLModule" eSuperTypes="#//Module">
     <eStructuralFeatures xsi:type="ecore:EReference" name="GeneratedEntitySQLs" upperBound="-1"
         eType="#//GeneratedEntitySQL" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="LogicalTransformationModule" eSuperTypes="#//Module">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="taskTags" upperBound="-1"
-        eType="#//ActivityTag" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="scenarioTags" upperBound="-1"
-        eType="#//ScenarioTag" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="subProcess" eType="#//SubProcess"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="requirements" upperBound="-1"
-        eType="#//RequirementsModule" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="testModules" upperBound="-1"
-        eType="#//TestModule"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="selectionLayers" upperBound="-1"
-        eType="#//SelectionLayer" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ActivityTag" eSuperTypes="#//Tag">
     <eStructuralFeatures xsi:type="ecore:EReference" name="activity" eType="#//Activity"/>
@@ -2110,17 +2096,12 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="inputDirectory" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="outputDirectory" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CreateLogicalTransformationViewForScope"
-      eSuperTypes="#//PlatformCall">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="logicalTransformationModule"
-        eType="#//LogicalTransformationModule"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="attributeLineage" upperBound="-1"
-        eType="#//Attribute"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="testScope" upperBound="-1"
-        eType="#//E2ETestScope" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ConvertDataMetaModelToEcore" eSuperTypes="#//PlatformCall">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="outputDirectory" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="entityModule" eType="#//EntityModule"/>
+  <eClassifiers xsi:type="ecore:EClass" name="WorkflowModule" eSuperTypes="#//Module">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="taskTags" upperBound="-1"
+        eType="#//ActivityTag" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="scenarioTags" upperBound="-1"
+        eType="#//ScenarioTag" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="subProcess" upperBound="-1"
+        eType="#//SubProcess" containment="true"/>
   </eClassifiers>
 </ecore:EPackage>

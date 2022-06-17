@@ -24,6 +24,16 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="incoming" ordered="false"
         upperBound="-1" eType="#//SequenceFlow" eOpposite="#//SequenceFlow/targetRef"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DataConstraint">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attr1" eType="ecore:EClass data_meta_model.ecore#//Attribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attr2" eType="ecore:EClass data_meta_model.ecore#//Attribute"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="comparison" eType="#//AttrComparison"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="AttrComparison">
+    <eLiterals name="equals"/>
+    <eLiterals name="less_than" value="1"/>
+    <eLiterals name="greater_than" value="2"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SequenceFlow" eSuperTypes="#//FlowElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="targetRef" ordered="false"
         eType="#//FlowNode" eOpposite="#//FlowNode/incoming"/>
@@ -39,16 +49,76 @@
   <eClassifiers xsi:type="ecore:EClass" name="ServiceTask" eSuperTypes="#//Task">
     <eStructuralFeatures xsi:type="ecore:EReference" name="enrichedAttribute" eType="ecore:EClass data_meta_model.ecore#//Attribute"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="scenarios" upperBound="-1"
-        eType="ecore:EClass testing.ecore#//Scenario" containment="true"/>
+        eType="#//Scenario" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="secondAttribute" eType="ecore:EClass data_meta_model.ecore#//Attribute"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SubProcess" eSuperTypes="#//Activity #//FlowElementsContainer"/>
   <eClassifiers xsi:type="ecore:EClass" name="ScriptTask" eSuperTypes="#//Task">
     <eStructuralFeatures xsi:type="ecore:EReference" name="selectionLayers" upperBound="-1"
-        eType="ecore:EClass testing.ecore#//SelectionLayer" containment="true"/>
+        eType="#//SelectionLayer" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="outputLayer" eType="ecore:EClass data_meta_model.ecore#//GeneratedEntity"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UserTask" eSuperTypes="#//Task">
     <eStructuralFeatures xsi:type="ecore:EReference" name="entity" eType="ecore:EClass data_meta_model.ecore#//BasicEntity"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ActivityTag" eSuperTypes="requirements_text.ecore#//Tag">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="activity" eType="#//Activity"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Scenario">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A Scenario"/>
+    </eAnnotations>
+    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+      <details key="name" value="Scenario"/>
+      <details key="kind" value="empty"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The name of the Scenario"/>
+      </eAnnotations>
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="kind" value="attribute"/>
+        <details key="name" value="name"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="invisible" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The name of the Scenario"/>
+      </eAnnotations>
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="kind" value="attribute"/>
+        <details key="name" value="description"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="requiredAttributes" upperBound="-1"
+        eType="ecore:EClass data_meta_model.ecore#//Attribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="data_constraints" eType="#//DataConstraint"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ScenarioTag" eSuperTypes="requirements_text.ecore#//Tag">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A Tag which tags a Scenario in order to link it with requirements."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="scenario" eType="#//Scenario">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The tagged Scenario."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="WorkflowModule" eSuperTypes="module_management.ecore#//Module">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="taskTags" upperBound="-1"
+        eType="#//ActivityTag" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="scenarioTags" upperBound="-1"
+        eType="#//ScenarioTag" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="subProcess" upperBound="-1"
+        eType="#//SubProcess" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SelectionLayer">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="invisible" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="generatedEntity" eType="ecore:EClass data_meta_model.ecore#//GeneratedEntity"/>
   </eClassifiers>
 </ecore:EPackage>
