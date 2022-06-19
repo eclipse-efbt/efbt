@@ -70,18 +70,18 @@ class OpenRegSpecs(EObject, metaclass=MetaEClass):
 @abstract
 class BaseElement(EObject, metaclass=MetaEClass):
 
-    id = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
+    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
     description = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     invisible = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
 
-    def __init__(self, *, id=None, description=None, invisible=None):
+    def __init__(self, *, name=None, description=None, invisible=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
         super().__init__()
 
-        if id is not None:
-            self.id = id
+        if name is not None:
+            self.name = name
 
         if description is not None:
             self.description = description
@@ -133,7 +133,7 @@ class TypesAndConcepts(EObject, metaclass=MetaEClass):
 
 
 class Module(EObject, metaclass=MetaEClass):
-    """A grouping of related artifacts, persisted as a resource, with a version number, and a description, and a description of which Modules it depends upon (and importantly which version of those Modules)."""
+
     theDescription = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     license = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
@@ -167,7 +167,7 @@ class Module(EObject, metaclass=MetaEClass):
 
 
 class ModuleLongName(EObject, metaclass=MetaEClass):
-    """A long name associated with a module"""
+
     name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
 
     def __init__(self, *, name=None):
@@ -181,7 +181,7 @@ class ModuleLongName(EObject, metaclass=MetaEClass):
 
 
 class ModuleDependencies(EObject, metaclass=MetaEClass):
-    """a  list of module dependencies"""
+
     theModules = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
     def __init__(self, *, theModules=None):
@@ -195,7 +195,7 @@ class ModuleDependencies(EObject, metaclass=MetaEClass):
 
 
 class ModuleDependency(EObject, metaclass=MetaEClass):
-    """A module dependency, including its version number and its long name"""
+
     moduleName = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     moduleVersion = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     theModule = EReference(ordered=True, unique=True, containment=False, derived=False)
@@ -221,7 +221,7 @@ class ModuleDependency(EObject, metaclass=MetaEClass):
 
 
 class AllowedTypes(EObject, metaclass=MetaEClass):
-    """Allowed Types  like article, chapter, rulebook"""
+
     allowedTypes = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
     def __init__(self, *, allowedTypes=None):
@@ -236,7 +236,7 @@ class AllowedTypes(EObject, metaclass=MetaEClass):
 
 @abstract
 class RequirementsSection(EObject, metaclass=MetaEClass):
-    """A Requirements Section"""
+
     name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
 
     def __init__(self, *, name=None):
@@ -250,7 +250,7 @@ class RequirementsSection(EObject, metaclass=MetaEClass):
 
 
 class RequirementType(EObject, metaclass=MetaEClass):
-    """A requirement type such as Article, Chapter, Rulebook"""
+
     name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
 
     def __init__(self, *, name=None):
@@ -264,7 +264,7 @@ class RequirementType(EObject, metaclass=MetaEClass):
 
 
 class Tag(EObject, metaclass=MetaEClass):
-    """A Tag for linking things to Requirements, This is Subclassed per thing , e.g. ScenarioTag will link a Scenario to requirements."""
+
     displayName = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
     requirements = EReference(ordered=True, unique=True, containment=False, derived=False, upper=-1)
@@ -283,6 +283,32 @@ class Tag(EObject, metaclass=MetaEClass):
 
         if requirements:
             self.requirements.extend(requirements)
+
+
+class View(EObject, metaclass=MetaEClass):
+
+    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
+    selectClause = EReference(ordered=True, unique=True, containment=True, derived=False)
+    whereClause = EReference(ordered=True, unique=True, containment=True, derived=False)
+    selectionLayer = EReference(ordered=True, unique=True, containment=False, derived=False)
+
+    def __init__(self, *, selectClause=None, whereClause=None, name=None, selectionLayer=None):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+        if name is not None:
+            self.name = name
+
+        if selectClause is not None:
+            self.selectClause = selectClause
+
+        if whereClause is not None:
+            self.whereClause = whereClause
+
+        if selectionLayer is not None:
+            self.selectionLayer = selectionLayer
 
 
 class SelectClause(EObject, metaclass=MetaEClass):
@@ -315,61 +341,20 @@ class Column(EObject, metaclass=MetaEClass):
 
 class WhereClause(EObject, metaclass=MetaEClass):
 
-    def __init__(self):
+    text = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+
+    def __init__(self, *, text=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
         super().__init__()
 
-
-class SQLEntity(EObject, metaclass=MetaEClass):
-
-    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
-
-    def __init__(self, *, name=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if name is not None:
-            self.name = name
-
-
-class FromClause(EObject, metaclass=MetaEClass):
-
-    sqlEntities = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, sqlEntities=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if sqlEntities is not None:
-            self.sqlEntities = sqlEntities
-
-
-class GeneratedEntitySQL(EObject, metaclass=MetaEClass):
-
-    generatedEntity = EReference(ordered=True, unique=True, containment=False, derived=False)
-    view = EReference(ordered=True, unique=True, containment=False, derived=False, upper=-1)
-
-    def __init__(self, *, generatedEntity=None, view=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if generatedEntity is not None:
-            self.generatedEntity = generatedEntity
-
-        if view:
-            self.view.extend(view)
+        if text is not None:
+            self.text = text
 
 
 class Scenario(EObject, metaclass=MetaEClass):
-    """A Scenario"""
+
     name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
     invisible = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
     description = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
@@ -525,7 +510,6 @@ class DOMAIN(EObject, metaclass=MetaEClass):
     code = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     data_type = EAttribute(eType=FACET_VALUE_TYPE, unique=True, derived=False, changeable=True)
     description = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    domain_id = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     is_enumerated = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
     is_reference = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
     name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
@@ -533,7 +517,7 @@ class DOMAIN(EObject, metaclass=MetaEClass):
     facet_id = EReference(ordered=True, unique=True, containment=False, derived=False)
     maintenance_agency_id = EReference(ordered=True, unique=True, containment=False, derived=False)
 
-    def __init__(self, *, code=None, data_type=None, description=None, domain_id=None, facet_id=None, is_enumerated=None, is_reference=None, maintenance_agency_id=None, name=None, displayName=None):
+    def __init__(self, *, code=None, data_type=None, description=None, facet_id=None, is_enumerated=None, is_reference=None, maintenance_agency_id=None, name=None, displayName=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
@@ -547,9 +531,6 @@ class DOMAIN(EObject, metaclass=MetaEClass):
 
         if description is not None:
             self.description = description
-
-        if domain_id is not None:
-            self.domain_id = domain_id
 
         if is_enumerated is not None:
             self.is_enumerated = is_enumerated
@@ -573,13 +554,12 @@ class DOMAIN(EObject, metaclass=MetaEClass):
 class FACET_COLLECTION(EObject, metaclass=MetaEClass):
 
     code = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    facet_id = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
     facet_value_type = EAttribute(eType=FACET_VALUE_TYPE, unique=True,
                                   derived=False, changeable=True)
-    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
     maintenance_agency_id = EReference(ordered=True, unique=True, containment=False, derived=False)
 
-    def __init__(self, *, code=None, facet_id=None, facet_value_type=None, maintenance_agency_id=None, name=None):
+    def __init__(self, *, code=None, facet_value_type=None, maintenance_agency_id=None, name=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
@@ -587,9 +567,6 @@ class FACET_COLLECTION(EObject, metaclass=MetaEClass):
 
         if code is not None:
             self.code = code
-
-        if facet_id is not None:
-            self.facet_id = facet_id
 
         if facet_value_type is not None:
             self.facet_value_type = facet_value_type
@@ -711,12 +688,11 @@ class MEMBER_HIERARCHY(EObject, metaclass=MetaEClass):
 
     code = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     description = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    member_hierarchy_id = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
     domain_id = EReference(ordered=True, unique=True, containment=False, derived=False)
     maintenance_agency_id = EReference(ordered=True, unique=True, containment=False, derived=False)
 
-    def __init__(self, *, code=None, description=None, domain_id=None, maintenance_agency_id=None, member_hierarchy_id=None, name=None):
+    def __init__(self, *, code=None, description=None, domain_id=None, maintenance_agency_id=None, name=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
@@ -727,9 +703,6 @@ class MEMBER_HIERARCHY(EObject, metaclass=MetaEClass):
 
         if description is not None:
             self.description = description
-
-        if member_hierarchy_id is not None:
-            self.member_hierarchy_id = member_hierarchy_id
 
         if name is not None:
             self.name = name
@@ -1415,7 +1388,7 @@ class FRAMEWORK_VARIABLE_SET(EObject, metaclass=MetaEClass):
 
 
 class PlatformCall(EObject, metaclass=MetaEClass):
-    """ A Platform Call """
+
     errorMessage = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
     returnStatus = EAttribute(eType=EInt, unique=True, derived=False, changeable=True)
@@ -1452,20 +1425,20 @@ class FlowElementsContainer(BaseElement):
 @abstract
 class FlowElement(BaseElement):
 
-    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    display_name = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
 
-    def __init__(self, *, name=None, **kwargs):
+    def __init__(self, *, display_name=None, **kwargs):
 
         super().__init__(**kwargs)
 
-        if name is not None:
-            self.name = name
+        if display_name is not None:
+            self.display_name = display_name
 
 
 @abstract
 class NamedElement(Element):
 
-    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
 
     def __init__(self, *, name=None, **kwargs):
 
@@ -1496,7 +1469,7 @@ class EntityModule(Module):
 
 
 class RequirementsModule(Module):
-    """A Module containing a Set of Requirements"""
+
     rules = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
     allowedtypes = EReference(ordered=True, unique=True, containment=True, derived=False)
 
@@ -1512,7 +1485,7 @@ class RequirementsModule(Module):
 
 
 class RequirementsSectionImage(RequirementsSection):
-    """A Requirements Section represented by an image"""
+
     style = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     uri = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
 
@@ -1528,9 +1501,7 @@ class RequirementsSectionImage(RequirementsSection):
 
 
 class RequirementsSectionLinkWithText(RequirementsSection):
-    """This is similar to the HTML idea of a HyperLink. It contains some text to be shown as part of the Requirement,
-      and contains a link to another TitledRequirementsSection in the Requirements. This helps natural navigation of
-      A requirements document which has  multiple cross references between sections"""
+
     linkText = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     subsection = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     linkedRuleSection = EReference(ordered=True, unique=True, containment=False, derived=False)
@@ -1550,7 +1521,7 @@ class RequirementsSectionLinkWithText(RequirementsSection):
 
 
 class RequirementsSectionText(RequirementsSection):
-    """A section of text"""
+
     text = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
 
     def __init__(self, *, text=None, **kwargs):
@@ -1562,8 +1533,7 @@ class RequirementsSectionText(RequirementsSection):
 
 
 class TitledRequirementsSection(RequirementsSection):
-    """A Requirements Section which has a title, such as an Article 321 or  Chapter 5.
-       Note that this contains other requirements sections, which could in turn be other TitledRequirementsSections """
+
     title = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     sections = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
     referencingSections = EReference(ordered=True, unique=True, containment=False, derived=False)
@@ -1587,7 +1557,7 @@ class TitledRequirementsSection(RequirementsSection):
 
 
 class TagGroup(Module):
-    """A group of Tags"""
+
     tags = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
     def __init__(self, *, tags=None, **kwargs):
@@ -1596,26 +1566,6 @@ class TagGroup(Module):
 
         if tags:
             self.tags.extend(tags)
-
-
-class View(SQLEntity):
-
-    selectClause = EReference(ordered=True, unique=True, containment=True, derived=False)
-    fromClause = EReference(ordered=True, unique=True, containment=True, derived=False)
-    whereClause = EReference(ordered=True, unique=True, containment=True, derived=False)
-
-    def __init__(self, *, selectClause=None, fromClause=None, whereClause=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if selectClause is not None:
-            self.selectClause = selectClause
-
-        if fromClause is not None:
-            self.fromClause = fromClause
-
-        if whereClause is not None:
-            self.whereClause = whereClause
 
 
 class SelectColumn(Column):
@@ -1634,41 +1584,16 @@ class SelectColumn(Column):
             self.memberAsConstant = memberAsConstant
 
 
-class Table(SQLEntity):
+class ViewModule(Module):
 
-    entity = EReference(ordered=True, unique=True, containment=False, derived=False)
+    views = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
-    def __init__(self, *, entity=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if entity is not None:
-            self.entity = entity
-
-
-class SQLEntityModule(Module):
-
-    sqlEntities = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-
-    def __init__(self, *, sqlEntities=None, **kwargs):
+    def __init__(self, *, views=None, **kwargs):
 
         super().__init__(**kwargs)
 
-        if sqlEntities:
-            self.sqlEntities.extend(sqlEntities)
-
-
-class GeneratedEntitySQLModule(Module):
-
-    GeneratedEntitySQLs = EReference(ordered=True, unique=True,
-                                     containment=True, derived=False, upper=-1)
-
-    def __init__(self, *, GeneratedEntitySQLs=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if GeneratedEntitySQLs:
-            self.GeneratedEntitySQLs.extend(GeneratedEntitySQLs)
+        if views:
+            self.views.extend(views)
 
 
 class ActivityTag(Tag):
@@ -1684,7 +1609,7 @@ class ActivityTag(Tag):
 
 
 class ScenarioTag(Tag):
-    """A Tag which tags a Scenario in order to link it with requirements."""
+
     scenario = EReference(ordered=True, unique=True, containment=False, derived=False)
 
     def __init__(self, *, scenario=None, **kwargs):
@@ -1743,13 +1668,12 @@ class MEMBER(EnumMember):
 
     code = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     description = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    member_id = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
     displayName = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     domain_id = EReference(ordered=True, unique=True, containment=False, derived=False)
     maintenance_agency_id = EReference(ordered=True, unique=True, containment=False, derived=False)
 
-    def __init__(self, *, code=None, description=None, domain_id=None, maintenance_agency_id=None, member_id=None, name=None, displayName=None, **kwargs):
+    def __init__(self, *, code=None, description=None, domain_id=None, maintenance_agency_id=None, name=None, displayName=None, **kwargs):
 
         super().__init__(**kwargs)
 
@@ -1758,9 +1682,6 @@ class MEMBER(EnumMember):
 
         if description is not None:
             self.description = description
-
-        if member_id is not None:
-            self.member_id = member_id
 
         if name is not None:
             self.name = name
@@ -1780,13 +1701,12 @@ class VARIABLE(Concept):
     code = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     description = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     primary_concept = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    variable_id = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
     displayName = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     domain_id = EReference(ordered=True, unique=True, containment=False, derived=False)
     maintenance_agency_id = EReference(ordered=True, unique=True, containment=False, derived=False)
 
-    def __init__(self, *, code=None, description=None, domain_id=None, maintenance_agency_id=None, primary_concept=None, variable_id=None, name=None, displayName=None, **kwargs):
+    def __init__(self, *, code=None, description=None, domain_id=None, maintenance_agency_id=None, primary_concept=None, name=None, displayName=None, **kwargs):
 
         super().__init__(**kwargs)
 
@@ -1798,9 +1718,6 @@ class VARIABLE(Concept):
 
         if primary_concept is not None:
             self.primary_concept = primary_concept
-
-        if variable_id is not None:
-            self.variable_id = variable_id
 
         if name is not None:
             self.name = name
@@ -1816,7 +1733,7 @@ class VARIABLE(Concept):
 
 
 class DomainModule(Module):
-    """A Module storing a list of Domains"""
+
     domains = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
     def __init__(self, *, domains=None, **kwargs):
@@ -1828,7 +1745,7 @@ class DomainModule(Module):
 
 
 class MemberHierarchyModule(Module):
-    """A Module storing a list of MemberHierarchies and MemberHierarchiesNodes"""
+
     memberHierarchies = EReference(ordered=True, unique=True,
                                    containment=True, derived=False, upper=-1)
     memberHierarchiesNodes = EReference(
@@ -1846,7 +1763,7 @@ class MemberHierarchyModule(Module):
 
 
 class MemberModule(Module):
-    """A Module storing a list of Members"""
+
     members = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
     def __init__(self, *, members=None, **kwargs):
@@ -1858,7 +1775,7 @@ class MemberModule(Module):
 
 
 class VariableModule(Module):
-    """A Module containing a list of variables"""
+
     variables = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
     def __init__(self, *, variables=None, **kwargs):
@@ -1917,7 +1834,7 @@ class SMCubesCoreModel(TypesAndConcepts):
 
 
 class PlatformCallModule(Module):
-    """A Module of PlatfromCalls"""
+
     platformCalls = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
     def __init__(self, *, platformCalls=None, **kwargs):
@@ -2096,13 +2013,12 @@ class SUBDOMAIN(Type):
     description = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     is_listed = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
     is_natural = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
-    subdomain_id = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
     domain_id = EReference(ordered=True, unique=True, containment=False, derived=False)
     facet_id = EReference(ordered=True, unique=True, containment=False, derived=False)
     maintenance_agency_id = EReference(ordered=True, unique=True, containment=False, derived=False)
     items = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
-    def __init__(self, *, code=None, description=None, domain_id=None, facet_id=None, is_listed=None, is_natural=None, maintenance_agency_id=None, subdomain_id=None, items=None, **kwargs):
+    def __init__(self, *, code=None, description=None, domain_id=None, facet_id=None, is_listed=None, is_natural=None, maintenance_agency_id=None, items=None, **kwargs):
 
         super().__init__(**kwargs)
 
@@ -2117,9 +2033,6 @@ class SUBDOMAIN(Type):
 
         if is_natural is not None:
             self.is_natural = is_natural
-
-        if subdomain_id is not None:
-            self.subdomain_id = subdomain_id
 
         if domain_id is not None:
             self.domain_id = domain_id

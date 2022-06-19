@@ -60,7 +60,7 @@ public class CustomQuery {
 				for (Iterator iterator2 = birdMembers.iterator(); iterator2.hasNext();) {
 					MEMBER member = (MEMBER) iterator2.next();
 	
-					if (member.getDomain_id().getDomain_id().equals(domain.getDomain_id()))
+					if (member.getDomain_id().getName().equals(domain.getName()))
 						members.add(member);
 	
 				}
