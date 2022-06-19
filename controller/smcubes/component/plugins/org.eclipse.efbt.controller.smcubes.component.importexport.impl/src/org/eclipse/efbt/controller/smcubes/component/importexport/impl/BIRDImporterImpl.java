@@ -94,7 +94,7 @@ public class BIRDImporterImpl extends Importer {
 		MEMBER returnMember = null;
 		for (Iterator iterator = memberList.iterator(); iterator.hasNext();) {
 			MEMBER mem = (MEMBER) iterator.next();
-			if (elementID.equals(mem.getMember_id()))
+			if (elementID.equals(mem.getName()))
 				returnMember = mem;
 		}
 		return returnMember;
@@ -111,7 +111,7 @@ public class BIRDImporterImpl extends Importer {
 		VARIABLE returnVariable = null;
 		for (Iterator iterator = variableList.iterator(); iterator.hasNext();) {
 			VARIABLE var = (VARIABLE) iterator.next();
-			if (elementID.equals(var.getVariable_id()))
+			if (elementID.equals(var.getName()))
 				returnVariable = var;
 		}
 		return returnVariable;
@@ -329,7 +329,7 @@ public class BIRDImporterImpl extends Importer {
 				
 				DOMAIN domain = Open_reg_specsFactory.eINSTANCE.createDOMAIN();
 				domain.setCode(row.getString("CODE"));
-				domain.setDomain_id(replaceDots(row.getString("DOMAIN_ID")));
+				//domain.setDomain_id(replaceDots(row.getString("DOMAIN_ID")));
 				domain.setDescription(row.getString("DESCRIPTION"));
 				FACET_VALUE_TYPE valueType;
 				String dataTypeString = row.getString("DATA_TYPE");
@@ -392,7 +392,7 @@ public class BIRDImporterImpl extends Importer {
 
 				SUBDOMAIN subDomain = Open_reg_specsFactory.eINSTANCE.createSUBDOMAIN();
 				subDomain.setCode(row.getString("CODE"));
-				subDomain.setSubdomain_id(replaceDots(row.getString("SUBDOMAIN_ID")));
+				//subDomain.setSubdomain_id(replaceDots(row.getString("SUBDOMAIN_ID")));
 				subDomain.setName(replaceDots(row.getString("SUBDOMAIN_ID")));
 				subDomain.setDescription(row.getString("DESCRIPTION"));
 
@@ -465,7 +465,7 @@ public class BIRDImporterImpl extends Importer {
 
 				MEMBER member = Open_reg_specsFactory.eINSTANCE.createMEMBER();
 				member.setCode(row.getString("CODE"));
-				member.setMember_id(replaceDots(row.getString("MEMBER_ID")));
+				//member.setMember_id(replaceDots(row.getString("MEMBER_ID")));
 				member.setDescription(row.getString("DESCRIPTION"));
 				member.setName(replaceDots(row.getString("MEMBER_ID")));
 				member.setDisplayName(row.getString("NAME"));
@@ -495,7 +495,7 @@ public class BIRDImporterImpl extends Importer {
 		DOMAIN returnDomain = null;
 		for (Iterator iterator = domainList.iterator(); iterator.hasNext();) {
 			DOMAIN dom = (DOMAIN) iterator.next();
-			if (domainIDString.equals(dom.getDomain_id()))
+			if (domainIDString.equals(dom.getName()))
 				returnDomain = dom;
 		}
 		return returnDomain;
@@ -513,7 +513,7 @@ public class BIRDImporterImpl extends Importer {
 		SUBDOMAIN returnSubDomain = null;
 		for (Iterator iterator = subdomainList.iterator(); iterator.hasNext();) {
 			SUBDOMAIN subdom = (SUBDOMAIN) iterator.next();
-			if (subDomainIDString.equals(subdom.getSubdomain_id()))
+			if (subDomainIDString.equals(subdom.getName()))
 				returnSubDomain = subdom;
 		}
 		return returnSubDomain;
@@ -530,7 +530,7 @@ public class BIRDImporterImpl extends Importer {
 		MEMBER returnMember = null;
 		for (Iterator iterator = memberList.iterator(); iterator.hasNext();) {
 			MEMBER member = (MEMBER) iterator.next();
-			if ((memberID.equals(member.getMember_id()) && (member.getDomain_id().equals(domain))  ))
+			if ((memberID.equals(member.getName()) && (member.getDomain_id().equals(domain))  ))
 					returnMember = member;
 		}
 		return returnMember;
@@ -550,7 +550,7 @@ public class BIRDImporterImpl extends Importer {
 
 				VARIABLE variable = Open_reg_specsFactory.eINSTANCE.createVARIABLE();
 				variable.setCode(row.getString("CODE"));
-				variable.setVariable_id(replaceDots(row.getString("VARIABLE_ID")));
+				//variable.setVariable_id(replaceDots(row.getString("VARIABLE_ID")));
 				variable.setDescription(row.getString("DESCRIPTION"));
 				variable.setName(replaceDots(row.getString("VARIABLE_ID")));
 				variable.setDisplayName(row.getString("NAME"));
