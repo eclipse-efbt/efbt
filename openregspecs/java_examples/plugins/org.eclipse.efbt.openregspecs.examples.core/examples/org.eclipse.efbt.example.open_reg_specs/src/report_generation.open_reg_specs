@@ -1,0 +1,18 @@
+OpenRegSpecs {  
+	report_generation {
+		ViewModule report_generation_module1 {
+			views{
+				
+				View credit_risk_output_layer1 select columns  { 
+					 Column attribute "entity_module1.Trade_derived.exposure_at_default" as "entity_module1.OUTPUT_LAYER_CREDIT_RISK.EAD" ,
+					 Column attribute "entity_module1.Trade_derived.risk_weight" as "entity_module1.OUTPUT_LAYER_CREDIT_RISK.RW",
+					 Column attribute "entity_module1.Trade.trade_id" as "entity_module1.OUTPUT_LAYER_CREDIT_RISK.TRADE_ID"
+	
+					} 
+					selectionLayer "workflowModule1.sub_process1.GenerateMarketRisk.derivativesMarketRiskLayer"
+
+					} 	
+					
+				}  
+			}
+		}

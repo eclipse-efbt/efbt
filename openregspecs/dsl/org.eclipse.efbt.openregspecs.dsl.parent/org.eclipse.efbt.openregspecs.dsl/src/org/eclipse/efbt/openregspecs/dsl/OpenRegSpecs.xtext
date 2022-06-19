@@ -12,7 +12,7 @@ OpenRegSpecs returns OpenRegSpecs:
 		('types_and_concepts' types_and_concepts=SMCubesCoreModel)?
 		('data_model' '{' data_model+=EntityModule ( "," data_model+=EntityModule)* '}' )?
 		('process_workflow' '{' process_workflow+=WorkflowModule ( "," process_workflow+=WorkflowModule)* '}' )?
-		('report_generation' '{' report_generation+=SQLEntityModule ( "," report_generation+=SQLEntityModule)* '}' )?
+		('report_generation' '{' report_generation+=ViewModule ( "," report_generation+=ViewModule)* '}' )?
 		('tests' '{' tests+=TestModule ( "," tests+=TestModule)* '}' )?
 	'}';
 
@@ -37,10 +37,6 @@ Entity returns Entity:
 
 
 
-SQLEntity returns SQLEntity:
-	SQLEntity_Impl | View | Table;
-
-
 
 RequirementsSection returns RequirementsSection:
 	RequirementsSectionImage | RequirementsSectionLinkWithText | RequirementsSectionText | TitledRequirementsSection;
@@ -48,7 +44,7 @@ RequirementsSection returns RequirementsSection:
 
 
 Module returns Module:
-	Module_Impl | EntityModule | RequirementsModule | TagGroup | SQLEntityModule | GeneratedEntitySQLModule | TestModule | DomainModule | MemberHierarchyModule | MemberModule | VariableModule | SubDomainModule | PlatformCallModule | WorkflowModule;
+	Module_Impl | EntityModule | RequirementsModule | TagGroup | ViewModule | TestModule | DomainModule | MemberHierarchyModule | MemberModule | VariableModule | SubDomainModule | PlatformCallModule | WorkflowModule;
 
 Tag returns Tag:
 	Tag_Impl | ActivityTag | ScenarioTag;
@@ -114,8 +110,9 @@ RequirementsModule returns RequirementsModule:
 		('version' version=EString)?
 		('dependencies' dependencies=ModuleDependencies)?
 		('longName' longName=ModuleLongName)?
-		('rules' '{' rules+=TitledRequirementsSection ( "," rules+=TitledRequirementsSection)* '}' )?
 		('allowedtypes' allowedtypes=AllowedTypes)?
+		('rules' '{' rules+=TitledRequirementsSection ( "," rules+=TitledRequirementsSection)* '}' )?
+		
 	'}';
 
 SMCubesCoreModel returns SMCubesCoreModel:
@@ -160,9 +157,9 @@ WorkflowModule returns WorkflowModule:
 		('subProcess' '{' subProcess+=SubProcess ( "," subProcess+=SubProcess)* '}' )?
 	'}';
 
-SQLEntityModule returns SQLEntityModule:
-	{SQLEntityModule}
-	'SQLEntityModule'
+ViewModule returns ViewModule:
+	{ViewModule}
+	'ViewModule'
 	name=EString
 	'{'
 		('theDescription' theDescription=EString)?
@@ -170,7 +167,7 @@ SQLEntityModule returns SQLEntityModule:
 		('version' version=EString)?
 		('dependencies' dependencies=ModuleDependencies)?
 		('longName' longName=ModuleLongName)?
-		('sqlEntities' '{' sqlEntities+=SQLEntity ( "," sqlEntities+=SQLEntity)* '}' )?
+		('views' '{' views+=View ( "," views+=View)* '}' )?
 	'}';
 
 TestModule returns TestModule:
@@ -253,18 +250,7 @@ TagGroup returns TagGroup:
 		('tags' '{' tags+=Tag ( "," tags+=Tag)* '}' )?
 	'}';
 
-GeneratedEntitySQLModule returns GeneratedEntitySQLModule:
-	{GeneratedEntitySQLModule}
-	'GeneratedEntitySQLModule'
-	name=EString
-	'{'
-		('theDescription' theDescription=EString)?
-		('license' license=EString)?
-		('version' version=EString)?
-		('dependencies' dependencies=ModuleDependencies)?
-		('longName' longName=ModuleLongName)?
-		('GeneratedEntitySQLs' '{' GeneratedEntitySQLs+=GeneratedEntitySQL ( "," GeneratedEntitySQLs+=GeneratedEntitySQL)* '}' )?
-	'}';
+
 
 DomainModule returns DomainModule:
 	{DomainModule}
@@ -276,7 +262,7 @@ DomainModule returns DomainModule:
 		('version' version=EString)?
 		('dependencies' dependencies=ModuleDependencies)?
 		('longName' longName=ModuleLongName)?
-		('domains' '{' domains+=DOMAIN ( "," domains+=DOMAIN)* '}' )?
+		( '{' (domains+=DOMAIN)* '}' )?		
 	'}';
 
 MemberHierarchyModule returns MemberHierarchyModule:
@@ -303,7 +289,7 @@ MemberModule returns MemberModule:
 		('version' version=EString)?
 		('dependencies' dependencies=ModuleDependencies)?
 		('longName' longName=ModuleLongName)?
-		('members' '{' members+=MEMBER ( "," members+=MEMBER)* '}' )?
+		( '{' (members+=MEMBER)* '}' )?			
 	'}';
 
 VariableModule returns VariableModule:
@@ -316,7 +302,7 @@ VariableModule returns VariableModule:
 		('version' version=EString)?
 		('dependencies' dependencies=ModuleDependencies)?
 		('longName' longName=ModuleLongName)?
-		('variables' '{' variables+=VARIABLE ( "," variables+=VARIABLE)* '}' )?
+		( '{' (variables+=VARIABLE)* '}' )?		
 	'}';
 
 SubDomainModule returns SubDomainModule:
@@ -329,7 +315,7 @@ SubDomainModule returns SubDomainModule:
 		('version' version=EString)?
 		('dependencies' dependencies=ModuleDependencies)?
 		('longName' longName=ModuleLongName)?
-		('subdomains' '{' subdomains+=SUBDOMAIN ( "," subdomains+=SUBDOMAIN)* '}' )?
+		( '{' (subdomains+=SUBDOMAIN)* '}' )?		
 	'}';
 
 PlatformCallModule returns PlatformCallModule:
@@ -381,116 +367,101 @@ SequenceFlow returns SequenceFlow:
 	{SequenceFlow}
 	(invisible?='invisible')?
 	'SequenceFlow'
-	id=EString
-	'{'
+	name=EString
+		('from' sourceRef=[FlowNode|EString])?
+		('to' targetRef=[FlowNode|EString])?
 		('description' description=EString)?
-		('name' name=EString)?
-		('targetRef' targetRef=[FlowNode|EString])?
-		('sourceRef' sourceRef=[FlowNode|EString])?
-	'}';
+	;
 
 Task_Impl returns Task:
 	{Task}
 	(invisible?='invisible')?
 	'Task'
-	id=EString
-	'{'
-		('description' description=EString)?
-		('name' name=EString)?
+	name=EString
 		('outgoing' '(' outgoing+=[SequenceFlow|EString] ( "," outgoing+=[SequenceFlow|EString])* ')' )?
 		('incoming' '(' incoming+=[SequenceFlow|EString] ( "," incoming+=[SequenceFlow|EString])* ')' )?
-	'}';
+		('description' description=EString)?
+	;
 
 ServiceTask returns ServiceTask:
 	{ServiceTask}
 	(invisible?='invisible')?
 	'ServiceTask'
-	id=EString
-	'{'
-		('description' description=EString)?
-		('name' name=EString)?
+	name=EString
+		
+		
 		('outgoing' '(' outgoing+=[SequenceFlow|EString] ( "," outgoing+=[SequenceFlow|EString])* ')' )?
 		('incoming' '(' incoming+=[SequenceFlow|EString] ( "," incoming+=[SequenceFlow|EString])* ')' )?
 		('enrichedAttribute' enrichedAttribute=[Attribute|EString])?
 		('secondAttribute' secondAttribute=[Attribute|EString])?
 		('scenarios' '{' scenarios+=Scenario ( "," scenarios+=Scenario)* '}' )?
+		('description' description=EString)?
 	'}';
 
 SubProcess returns SubProcess:
 	{SubProcess}
 	(invisible?='invisible')?
 	'SubProcess'
-	id=EString
-	'{'
-		('description' description=EString)?
-		('name' name=EString)?
+	name=EString
 		('outgoing' '(' outgoing+=[SequenceFlow|EString] ( "," outgoing+=[SequenceFlow|EString])* ')' )?
 		('incoming' '(' incoming+=[SequenceFlow|EString] ( "," incoming+=[SequenceFlow|EString])* ')' )?
 		('flowElements' '{' flowElements+=FlowElement ( "," flowElements+=FlowElement)* '}' )?
-	'}';
+		('description' description=EString)?
+		;
 
 ScriptTask returns ScriptTask:
 	{ScriptTask}
 	(invisible?='invisible')?
 	'ScriptTask'
-	id=EString
-	'{'
-		('description' description=EString)?
-		('name' name=EString)?
+	name=EString
 		('outgoing' '(' outgoing+=[SequenceFlow|EString] ( "," outgoing+=[SequenceFlow|EString])* ')' )?
 		('incoming' '(' incoming+=[SequenceFlow|EString] ( "," incoming+=[SequenceFlow|EString])* ')' )?
 		('outputLayer' outputLayer=[GeneratedEntity|EString])?
 		('selectionLayers' '{' selectionLayers+=SelectionLayer ( "," selectionLayers+=SelectionLayer)* '}' )?
-	'}';
+		('description' description=EString)?
+;
 
 UserTask returns UserTask:
 	{UserTask}
 	(invisible?='invisible')?
 	'UserTask'
-	id=EString
-	'{'
-		('description' description=EString)?
-		('name' name=EString)?
+	name=EString
+
 		('outgoing' '(' outgoing+=[SequenceFlow|EString] ( "," outgoing+=[SequenceFlow|EString])* ')' )?
 		('incoming' '(' incoming+=[SequenceFlow|EString] ( "," incoming+=[SequenceFlow|EString])* ')' )?
 		('entity' entity=[BasicEntity|EString])?
-	'}';
+		('description' description=EString)?
+;
 
 ExclusiveGateway returns ExclusiveGateway:
 	{ExclusiveGateway}
 	(invisible?='invisible')?
 	'ExclusiveGateway'
-	id=EString
-	'{'
-		('description' description=EString)?
-		('name' name=EString)?
+	name=EString
 		('outgoing' '(' outgoing+=[SequenceFlow|EString] ( "," outgoing+=[SequenceFlow|EString])* ')' )?
 		('incoming' '(' incoming+=[SequenceFlow|EString] ( "," incoming+=[SequenceFlow|EString])* ')' )?
-	'}';
+		('description' description=EString)?
+;
 
 InclusiveGateway returns InclusiveGateway:
 	{InclusiveGateway}
 	(invisible?='invisible')?
 	'InclusiveGateway'
-	id=EString
-	'{'
-		('description' description=EString)?
-		('name' name=EString)?
-		('outgoing' '(' outgoing+=[SequenceFlow|EString] ( "," outgoing+=[SequenceFlow|EString])* ')' )?
-		('incoming' '(' incoming+=[SequenceFlow|EString] ( "," incoming+=[SequenceFlow|EString])* ')' )?
-	'}';
+	name=EString
+	('outgoing' '(' outgoing+=[SequenceFlow|EString] ( "," outgoing+=[SequenceFlow|EString])* ')' )?
+	('incoming' '(' incoming+=[SequenceFlow|EString] ( "," incoming+=[SequenceFlow|EString])* ')' )?
+	('description' description=EString)?
+;
 
 ParallelGateway returns ParallelGateway:
 	{ParallelGateway}
 	(invisible?='invisible')?
 	'ParallelGateway'
-	id=EString
-	'{'
-		('description' description=EString)?
-		('name' name=EString)?
+	name=EString
 		('outgoing' '(' outgoing+=[SequenceFlow|EString] ( "," outgoing+=[SequenceFlow|EString])* ')' )?
 		('incoming' '(' incoming+=[SequenceFlow|EString] ( "," incoming+=[SequenceFlow|EString])* ')' )?
-	'}';
+		('description' description=EString)?
+;
 
 Attribute_Impl returns Attribute:
 	{Attribute}
@@ -506,11 +477,10 @@ Scenario returns Scenario:
 	(invisible?='invisible')?
 	'Scenario'
 	name=EString
-	'{'
-		('description' description=EString)?
 		('requiredAttributes' '(' requiredAttributes+=[Attribute|EString] ( "," requiredAttributes+=[Attribute|EString])* ')' )?
 		('data_constraints' data_constraints=DataConstraint)?
-	'}';
+		('description' description=EString)?
+;
 
 Concept_Impl returns Concept:
 	{Concept}
@@ -560,62 +530,44 @@ SUBDOMAIN returns SUBDOMAIN:
 	(is_listed?='is_listed')?
 	(is_natural?='is_natural')?
 	'SUBDOMAIN'
-	subdomain_id=EString
-	'{'
-		('name' name=EString)?
-		('code' code=EString)?
-		('description' description=EString)?
-		('domain_id' domain_id=[DOMAIN|EString])?
+	name=EString
+		('domain' domain_id=[DOMAIN|EString])?
 		('facet_id' facet_id=[FACET_COLLECTION|EString])?
-		('maintenance_agency_id' maintenance_agency_id=[MAINTENANCE_AGENCY|EString])?
 		('items' '{' items+=SUBDOMAIN_ENUMERATION ( "," items+=SUBDOMAIN_ENUMERATION)* '}' )?
-	'}';
+		('description' description=EString)?
+;
 
 DOMAIN returns DOMAIN:
 	{DOMAIN}
-	(is_enumerated?='is_enumerated')?
-	(is_reference?='is_reference')?
 	'DOMAIN'
 	name=EString
-	'{'
-		('code' code=EString)?
 		('data_type' data_type=FACET_VALUE_TYPE)?
 		('description' description=EString)?
-		('domain_id' domain_id=EString)?
-		('displayName' displayName=EString)?
 		('facet_id' facet_id=[FACET_COLLECTION|EString])?
-		('maintenance_agency_id' maintenance_agency_id=[MAINTENANCE_AGENCY|EString])?
-	'}';
+		(is_enumerated?='is_enumerated')?
+		(is_reference?='is_reference')?
+;
+	
+	
 
 FACET_COLLECTION returns FACET_COLLECTION:
 	{FACET_COLLECTION}
 	'FACET_COLLECTION'
-	facet_id=EString
-	'{'
-		('code' code=EString)?
-		('facet_value_type' facet_value_type=FACET_VALUE_TYPE)?
-		('name' name=EString)?
-		('maintenance_agency_id' maintenance_agency_id=[MAINTENANCE_AGENCY|EString])?
-	'}';
+	name=EString
+	('facet_value_type' facet_value_type=FACET_VALUE_TYPE)?
+	;
 
 MAINTENANCE_AGENCY returns MAINTENANCE_AGENCY:
 	{MAINTENANCE_AGENCY}
 	'MAINTENANCE_AGENCY'
-	name=EString
-	'{'
-		('code' code=EString)?
-		('maintenance_agency_id' maintenance_agency_id=EString)?
-	'}';
+	name=EString;
+	
 
 SUBDOMAIN_ENUMERATION returns SUBDOMAIN_ENUMERATION:
 	{SUBDOMAIN_ENUMERATION}
-	'SUBDOMAIN_ENUMERATION'
-	'{'
-		('order' order=EInt)?
-		('valid_from' valid_from=EDate)?
-		('valid_to' valid_to=EDate)?
-		('member_id' member_id=[MEMBER|EString])?
-	'}';
+	'ITEM'
+		('member_id' member_id=[MEMBER|EString])?;
+
 
 enum FACET_VALUE_TYPE returns FACET_VALUE_TYPE:
 				BigInteger = 'BigInteger' | Boolean = 'Boolean' | DateTime = 'DateTime' | DayMonthDayMonth = 'DayMonthDayMonth' | Decimal = 'Decimal' | Double = 'Double' | Duration = 'Duration' | Float = 'Float' | GregorianDay = 'GregorianDay' | GregorianMonth = 'GregorianMonth' | GregorianYear = 'GregorianYear' | Integer = 'Integer' | Long = 'Long' | Short = 'Short' | String = 'String' | Time = 'Time' | URI = 'URI';
@@ -623,15 +575,11 @@ enum FACET_VALUE_TYPE returns FACET_VALUE_TYPE:
 MEMBER returns MEMBER:
 	{MEMBER}
 	'MEMBER'
-	name=EString
-	'{'
-		('code' code=EString)?
+	name=EString	
+		('domain' domain_id=[DOMAIN|EString])?
 		('description' description=EString)?
-		('member_id' member_id=EString)?
-		('displayName' displayName=EString)?
-		('domain_id' domain_id=[DOMAIN|EString])?
-		('maintenance_agency_id' maintenance_agency_id=[MAINTENANCE_AGENCY|EString])?
-	'}';
+		
+	;
 
 EInt returns ecore::EInt:
 	'-'? INT;
@@ -643,16 +591,9 @@ VARIABLE returns VARIABLE:
 	{VARIABLE}
 	'VARIABLE'
 	name=EString
-	'{'
-		('conceptName' conceptName=EString)?
-		('code' code=EString)?
-		('description' description=EString)?
-		('primary_concept' primary_concept=EString)?
-		('variable_id' variable_id=EString)?
-		('displayName' displayName=EString)?
-		('domain_id' domain_id=[DOMAIN|EString])?
-		('maintenance_agency_id' maintenance_agency_id=[MAINTENANCE_AGENCY|EString])?
-	'}';
+
+		('domain' domain_id=[DOMAIN|EString])?
+;
 
 GeneratedEntity returns GeneratedEntity:
 	{GeneratedEntity}
@@ -703,37 +644,22 @@ SelectionLayer returns SelectionLayer:
 EBooleanObject returns ecore::EBooleanObject:
 	'true' | 'false';
 
-GeneratedEntitySQL returns GeneratedEntitySQL:
-	{GeneratedEntitySQL}
-	'GeneratedEntitySQL'
-	'{'
-		('generatedEntity' generatedEntity=[GeneratedEntity|EString])?
-		('view' '(' view+=[View|EString] ( "," view+=[View|EString])* ')' )?
-	'}';
 
 View returns View:
 	{View}
 	'View'
 	name=EString
-	'{'
-		('selectClause' selectClause=SelectClause)?
-		('fromClause' fromClause=FromClause)?
-		('whereClause' whereClause=WhereClause)?
-	'}';
+		('select' selectClause=SelectClause)?
+		('where' whereClause=WhereClause)?
+		('selectionLayer' selectionLayer=[SelectionLayer|EString])?
+	;
 
 SelectClause returns SelectClause:
 	{SelectClause}
-	'SelectClause'
-	'{'
-		('columns' '{' columns+=SelectColumn ( "," columns+=SelectColumn)* '}' )?
-	'}';
 
-FromClause returns FromClause:
-	{FromClause}
-	'FromClause'
-	'{'
-		('sqlEntities' sqlEntities=[SQLEntity|EString])?
-	'}';
+		('columns' '{' columns+=SelectColumn ( "," columns+=SelectColumn)* '}' )?
+	;
+
 
 WhereClause returns WhereClause:
 	{WhereClause}
@@ -742,30 +668,17 @@ WhereClause returns WhereClause:
 
 SelectColumn returns SelectColumn:
 	{SelectColumn}
-	'SelectColumn'
-	'{'
+	'Column'
 		('attribute' attribute=[Attribute|EString])?
 		('as' ^as=[Attribute|EString])?
 		('memberAsConstant' memberAsConstant=[EnumMember|EString])?
-	'}';
+;
 
 EnumMember_Impl returns EnumMember:
 	{EnumMember}
 	'EnumMember'
 	;
 
-SQLEntity_Impl returns SQLEntity:
-	{SQLEntity}
-	'SQLEntity'
-	name=EString;
-
-Table returns Table:
-	{Table}
-	'Table'
-	name=EString
-	'{'
-		('entity' entity=[Entity|EString])?
-	'}';
 
 MEMBER_HIERARCHY returns MEMBER_HIERARCHY:
 	{MEMBER_HIERARCHY}
@@ -774,8 +687,7 @@ MEMBER_HIERARCHY returns MEMBER_HIERARCHY:
 	'{'
 		('code' code=EString)?
 		('description' description=EString)?
-		('member_hierarchy_id' member_hierarchy_id=EString)?
-		('domain_id' domain_id=[DOMAIN|EString])?
+		('domain' domain_id=[DOMAIN|EString])?
 		('maintenance_agency_id' maintenance_agency_id=[MAINTENANCE_AGENCY|EString])?
 	'}';
 
