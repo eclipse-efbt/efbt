@@ -12,5 +12,8 @@ Require-Bundle: org.apache.commons.logging,
  org.eclipse.efbt.controller.smcubes.component.access.provider;bundle-version="1.0.0",
  org.eclipse.efbt.controller.smcubes.component.importexport.api,
  org.apache.commons.csv,
- org.eclipse.emf.ecore
+ org.eclipse.emf.ecore,
+ org.eclipse.xtext,
+ org.eclipse.efbt.openregspecs.dsl
+Import-Package: com.google.inject
 
