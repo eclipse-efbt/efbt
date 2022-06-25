@@ -1,0 +1,9 @@
+OpenRegSpecs { 
+	process_workflow { 
+		WorkflowModule frtb_workflow_module {
+			subProcess {
+				 SubProcess frtb flowElements { InclusiveGateway gw1 outgoing ( sf1 , sf2 , sf3 ) , SubProcess "Read Data" incoming ( sf1 ) flowElements { ParallelGateway gw2 outgoing ( sf4 , sf5 , sf6 , sf7 , sf8 , sf9 ) , UserTask Risk_factor incoming ( sf4 ) entity "open_reg_specs.Risk_factor", UserTask GIRR_risk_factor incoming ( sf5 ) entity "open_reg_specs.GIRR_risk_factor" , UserTask Delta_sensitivity incoming ( sf6 ) entity "open_reg_specs.Delta_sensitivity", UserTask Vega_sensitivity incoming ( sf7 ) entity "open_reg_specs.Vega_sensitivity" , UserTask Position incoming ( sf8 ) , UserTask Curvature  incoming ( sf9 ) entity "open_reg_specs.Curvature" , SequenceFlow sf4 from gw2 to Risk_factor , SequenceFlow sf5 from gw2 to GIRR_risk_factor , SequenceFlow sf6 from gw2 to Delta_sensitivity , SequenceFlow sf7 from gw2 to Vega_sensitivity , SequenceFlow sf8 from gw2 to Position , SequenceFlow sf9 from gw2 to Curvature } , SubProcess Derivation incoming ( sf2 ) , SubProcess "Report Generation" incoming ( sf3 ) , SequenceFlow sf1 from gateway1 to "Read Data" , SequenceFlow sf2 from gateway1 to Derivation , SequenceFlow sf3 from gateway1 to "Report Generation" }
+			}
+		}
+	}
+}

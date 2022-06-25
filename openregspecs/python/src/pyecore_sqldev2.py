@@ -15,6 +15,7 @@ class SQLDeveloperImport(object):
         openRegSpecs.data_model.extend([entityModule])
         
         smcubesCoreModel = SMCubesCoreModel()
+        smcubesCoreModel.name = "SMCubesCoreModel"
         openRegSpecs.types_and_concepts = smcubesCoreModel
         classesMap = {}
         fileLocation = fileDirectory + "\\DM_Entities.csv"
@@ -92,9 +93,9 @@ class SQLDeveloperImport(object):
                     print(SQLDeveloperImport.inEnumBlackList(self,adaptedEnumName))
                     if(not SQLDeveloperImport.inEnumBlackList(self,adaptedEnumName)):
                         theDomain = DOMAIN()
-                        theDomain.name = adaptedEnumName
+                        theDomain.name = adaptedEnumName+"_Domain"
                         theSubDomain = SUBDOMAIN()
-                        theSubDomain.name = adaptedEnumName
+                        theSubDomain.name = adaptedEnumName+"_SubDomain"
                         theSubDomain.domain_id = theDomain
                         subDomainsModule.subdomains.extend([theSubDomain])
                         domainsModule.domains.extend([theDomain])
@@ -224,8 +225,8 @@ class SQLDeveloperImport(object):
                             variable.domain_id = theDomain
                             variableMap[amendedAttributeName] = variable
                             variablesModule.variables.extend([variable])
-                        attribute.variable = variable
-                        attribute.classifier = theSubDomain
+                        # attribute.concept = variable
+                        attribute.type = theSubDomain
                    
 
                     if (attributeKind == "Logical Type"):
@@ -246,8 +247,8 @@ class SQLDeveloperImport(object):
                             theSubDomain = subDomainMap[datatype.name]
                             variable.domain_id = theDomain
                             variablesModule.variables.extend([variable])
-                            attribute.variable = variable
-                            attribute.classifier = theSubDomain
+                            # attribute.concept = variable
+                            attribute.type = theSubDomain
                         except KeyError:
                             print("missing datatype: ")
                             print(dataTypeID)                       
@@ -256,6 +257,7 @@ class SQLDeveloperImport(object):
 
                     try:
                         theClass = classesMap[classID]
+                        attribute.name=theClass.name+"_"+ attribute.name
                         theClass.attributes.extend([attribute])
                     except:
                         print( "missing class2: " )
@@ -351,6 +353,7 @@ class SQLDeveloperImport(object):
                     
                     
                     if (not (theClass is None) ) :
+                        relationalAttribute.name=theClass.name+"_"+ relationalAttribute.name
                         theClass.attributes.extend([relationalAttribute])
 
         rset = ResourceSet()
