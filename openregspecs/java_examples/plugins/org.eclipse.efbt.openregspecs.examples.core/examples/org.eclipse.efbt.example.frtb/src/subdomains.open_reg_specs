@@ -1,0 +1,40 @@
+OpenRegSpecs {  
+	
+    types_and_concepts SMCubesCoreModel  SMCubesCoreModel1 {
+    	
+		subDomainModules {
+			SubDomainModule subDomainsModule {
+				{
+					SUBDOMAIN Approach_For_Prudential_Purposes domain "SMCubesCoreModel1.domainsModule.Approach_For_Prudential_Purposes"
+					SUBDOMAIN Base domain "SMCubesCoreModel1.domainsModule.Base" 
+					SUBDOMAIN BooleanDomain domain "SMCubesCoreModel1.domainsModule.BooleanDomain" 
+					SUBDOMAIN Commodity_type domain "SMCubesCoreModel1.domainsModule.Commodity_type" 
+					SUBDOMAIN Contingent_Scenario domain "SMCubesCoreModel1.domainsModule.Contingent_Scenario" 
+					SUBDOMAIN CSR_curve_type domain "SMCubesCoreModel1.domainsModule.CSR_curve_type" 
+					SUBDOMAIN Currency domain "SMCubesCoreModel1.domainsModule.Currency" 
+					SUBDOMAIN Delta_Vega_Or_Curvature_Risk domain "SMCubesCoreModel1.domainsModule.Delta_Vega_Or_Curvature_Risk" 
+					SUBDOMAIN Economy domain "SMCubesCoreModel1.domainsModule.Economy" 
+					SUBDOMAIN Equity_factor_type domain "SMCubesCoreModel1.domainsModule.Equity_factor_type" 
+					SUBDOMAIN GIRR_risk_factor_type domain "SMCubesCoreModel1.domainsModule.GIRR_risk_factor_type" 
+					SUBDOMAIN Instrument domain "SMCubesCoreModel1.domainsModule.Instrument" 
+					SUBDOMAIN Main_Catagory domain "SMCubesCoreModel1.domainsModule.Main_Catagory" 
+					SUBDOMAIN Market_cap domain "SMCubesCoreModel1.domainsModule.Market_cap" 
+					SUBDOMAIN Market_Risk_Portfolio domain "SMCubesCoreModel1.domainsModule.Market_Risk_Portfolio" 
+					SUBDOMAIN Number domain "SMCubesCoreModel1.domainsModule.Number" 
+					SUBDOMAIN Position_In_The_Instrument domain "SMCubesCoreModel1.domainsModule.Position_In_The_Instrument" 
+					SUBDOMAIN Prudential_Portfolio domain "SMCubesCoreModel1.domainsModule.Prudential_Portfolio" 
+					SUBDOMAIN Rating_grade domain "SMCubesCoreModel1.domainsModule.Rating_grade" 
+					SUBDOMAIN Risk_factor_type domain "SMCubesCoreModel1.domainsModule.Risk_factor_type" 
+					SUBDOMAIN Risk_measure_type domain "SMCubesCoreModel1.domainsModule.Risk_measure_type" 
+					SUBDOMAIN Sector domain "SMCubesCoreModel1.domainsModule.Sector" 
+					SUBDOMAIN Securitisation_sector domain "SMCubesCoreModel1.domainsModule.Securitisation_sector" 
+					SUBDOMAIN ShockDirection domain "SMCubesCoreModel1.domainsModule.ShockDirection" 
+					SUBDOMAIN StringDomain domain "SMCubesCoreModel1.domainsModule.StringDomain" 
+					SUBDOMAIN StringID domain "SMCubesCoreModel1.domainsModule.StringID" 
+					SUBDOMAIN Type_And_Nature_Of_Sensitivity domain "SMCubesCoreModel1.domainsModule.Type_And_Nature_Of_Sensitivity" SUBDOMAIN Type_Of_Risk domain "SMCubesCoreModel1.domainsModule.Type_Of_Risk" 
+					SUBDOMAIN Unknown domain "SMCubesCoreModel1.domainsModule.Unknown"
+				}
+			}
+		}
+	} 
+}
