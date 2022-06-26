@@ -1,46 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:diagram="http://www.eclipse.org/sirius/diagram/1.1.0" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.3/notation" xmlns:open_reg_specs="http://www.eclipse.org/efbt/open_reg_specs" xmlns:style="http://www.eclipse.org/sirius/diagram/description/style/1.1.0" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" xsi:schemaLocation="http://www.eclipse.org/sirius/description/1.1.0 http://www.eclipse.org/sirius/1.1.0#//description http://www.eclipse.org/sirius/diagram/description/1.1.0 http://www.eclipse.org/sirius/diagram/1.1.0#//description http://www.eclipse.org/sirius/diagram/description/style/1.1.0 http://www.eclipse.org/sirius/diagram/1.1.0#//description/style">
-  <viewpoint:DAnalysis uid="_aIAxoOiMEeyYIfdUrx699g" selectedViews="_5jN0QOiMEeyL0uVBk82YIA" version="15.0.0.202201261500">
-    <semanticResources>src/example.open_reg_specs</semanticResources>
-    <ownedViews xmi:type="viewpoint:DView" uid="_5jN0QOiMEeyL0uVBk82YIA">
-      <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.efbt.openregspecs.testing.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']"/>
-      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_5kbVMOiMEeyL0uVBk82YIA" name="OpenRegSpecs" repPath="#_5j04QOiMEeyL0uVBk82YIA" changeId="ade4cfbb-0098-4209-a3f1-04748da85712">
-        <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.efbt.openregspecs.testing.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='OpenRegSpecs']"/>
-        <target xmi:type="open_reg_specs:OpenRegSpecs" href="src/sub_process1.open_reg_specs#/"/>
-      </ownedRepresentationDescriptors>
-    </ownedViews>
-  </viewpoint:DAnalysis>
-  <diagram:DSemanticDiagram uid="_5j04QOiMEeyL0uVBk82YIA">
-    <ownedAnnotationEntries xmi:type="description:AnnotationEntry" uid="_5lOmcOiMEeyL0uVBk82YIA" source="GMF_DIAGRAMS">
-      <data xmi:type="notation:Diagram" xmi:id="_5lOmceiMEeyL0uVBk82YIA" type="Sirius" element="_5j04QOiMEeyL0uVBk82YIA" measurementUnit="Pixel">
-        <children xmi:type="notation:Node" xmi:id="_5npoUOiMEeyL0uVBk82YIA" type="2001" element="_5nGOsOiMEeyL0uVBk82YIA">
-          <children xmi:type="notation:Node" xmi:id="_5nw9EOiMEeyL0uVBk82YIA" type="5002">
-            <layoutConstraint xmi:type="notation:Location" xmi:id="_5nw9EeiMEeyL0uVBk82YIA" y="5"/>
-          </children>
-          <children xmi:type="notation:Node" xmi:id="_5n444OiMEeyL0uVBk82YIA" type="3003" element="_5nMVUOiMEeyL0uVBk82YIA">
-            <styles xmi:type="notation:ShapeStyle" xmi:id="_5n444eiMEeyL0uVBk82YIA" fontName="Segoe UI"/>
-            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_5n444uiMEeyL0uVBk82YIA"/>
-          </children>
-          <styles xmi:type="notation:ShapeStyle" xmi:id="_5npoUeiMEeyL0uVBk82YIA" fontName="Segoe UI" fontHeight="12"/>
-          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_5npoUuiMEeyL0uVBk82YIA" width="30" height="30"/>
-        </children>
-        <styles xmi:type="notation:DiagramStyle" xmi:id="_5lOmcuiMEeyL0uVBk82YIA"/>
-      </data>
-    </ownedAnnotationEntries>
-    <ownedAnnotationEntries xmi:type="description:AnnotationEntry" uid="_5nZJoOiMEeyL0uVBk82YIA" source="DANNOTATION_CUSTOMIZATION_KEY">
-      <data xmi:type="diagram:ComputedStyleDescriptionRegistry" uid="_5nZJoeiMEeyL0uVBk82YIA"/>
-    </ownedAnnotationEntries>
-    <ownedDiagramElements xmi:type="diagram:DNode" uid="_5nGOsOiMEeyL0uVBk82YIA" name="Invalid feature as name" width="3" height="3" resizeKind="NSEW">
-      <target xmi:type="open_reg_specs:OpenRegSpecs" href="src/sub_process1.open_reg_specs#/"/>
-      <semanticElements xmi:type="open_reg_specs:OpenRegSpecs" href="src/sub_process1.open_reg_specs#/"/>
-      <ownedStyle xmi:type="diagram:Square" uid="_5nMVUOiMEeyL0uVBk82YIA" labelSize="12" labelPosition="node">
-        <description xmi:type="style:SquareDescription" href="platform:/plugin/org.eclipse.efbt.openregspecs.testing.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='OpenRegSpecs']/@defaultLayer/@nodeMappings[name='OpenRegSpecsNode']/@style"/>
-      </ownedStyle>
-      <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.efbt.openregspecs.testing.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='OpenRegSpecs']/@defaultLayer/@nodeMappings[name='OpenRegSpecsNode']"/>
-    </ownedDiagramElements>
-    <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.efbt.openregspecs.testing.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='OpenRegSpecs']"/>
-    <filterVariableHistory xmi:type="diagram:FilterVariableHistory" uid="_5kJoYOiMEeyL0uVBk82YIA"/>
-    <activatedLayers xmi:type="description_1:Layer" href="platform:/plugin/org.eclipse.efbt.openregspecs.testing.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']/@ownedRepresentations[name='OpenRegSpecs']/@defaultLayer"/>
-    <target xmi:type="open_reg_specs:OpenRegSpecs" href="src/sub_process1.open_reg_specs#/"/>
-  </diagram:DSemanticDiagram>
-</xmi:XMI>
+<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" uid="_37GsIO_NEeyKv6cwEnD26g" version="15.0.0.202201261500">
+  <semanticResources>src/data_model.open_reg_specs</semanticResources>
+  <semanticResources>src/types_and_concepts.open_reg_specs</semanticResources>
+  <semanticResources>src/report_generation.open_reg_specs</semanticResources>
+  <semanticResources>src/workflow.open_reg_specs</semanticResources>
+  <semanticResources>src/requirements.open_reg_specs</semanticResources>
+  <semanticResources>src/tests.open_reg_specs</semanticResources>
+</viewpoint:DAnalysis>

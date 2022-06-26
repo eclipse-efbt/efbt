@@ -1,0 +1,40 @@
+OpenRegSpecs {  
+	
+    types_and_concepts SMCubesCoreModel  SMCubesCoreModel1 {
+    	domainModules {
+			DomainModule domainsModule {
+				{ 
+					DOMAIN Approach_For_Prudential_Purposes is_enumerated
+					DOMAIN Base  is_enumerated
+					DOMAIN BooleanDomain data_type Boolean
+					DOMAIN Commodity_type is_enumerated
+					DOMAIN Contingent_Scenario is_enumerated
+					DOMAIN CSR_curve_type  is_enumerated
+					DOMAIN Currency  is_enumerated
+					DOMAIN Delta_Vega_Or_Curvature_Risk  is_enumerated
+					DOMAIN Economy  is_enumerated
+					DOMAIN Equity_factor_type  is_enumerated
+					DOMAIN GIRR_risk_factor_type  is_enumerated
+					DOMAIN Instrument  is_enumerated
+					DOMAIN Main_Catagory is_enumerated
+					DOMAIN Market_cap  is_enumerated
+					DOMAIN Market_Risk_Portfolio  is_enumerated
+					DOMAIN Number data_type Decimal 
+					DOMAIN Position_In_The_Instrument  is_enumerated
+					DOMAIN Prudential_Portfolio  is_enumerated
+					DOMAIN Rating_grade  is_enumerated
+					DOMAIN Risk_factor_type  is_enumerated
+					DOMAIN Risk_measure_type  is_enumerated
+					DOMAIN Sector  is_enumerated
+					DOMAIN Securitisation_sector  is_enumerated
+					DOMAIN ShockDirection  is_enumerated
+					DOMAIN StringDomain data_type String
+					DOMAIN StringID  data_type String
+					DOMAIN Type_And_Nature_Of_Sensitivity  is_enumerated
+					DOMAIN Type_Of_Risk  is_enumerated
+					DOMAIN Unknown
+				}
+			}
+		}
+	} 
+}

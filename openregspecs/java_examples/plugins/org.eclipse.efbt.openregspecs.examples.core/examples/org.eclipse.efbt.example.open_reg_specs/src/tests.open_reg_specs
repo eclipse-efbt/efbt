@@ -1,0 +1,39 @@
+OpenRegSpecs {  
+	tests { 
+			TestModule testModule1  {
+				tests { 
+					Test test1 {
+						scope UnitTestScope unitTestScope1 {
+							scenarios "workflowModule1.sub_process1.calculate_exposure_at_default.primaryEADSenario"
+							}
+							inputData { 
+								CSVFile { 
+									fileName "trade.csv" 
+									rows {
+										isHeader CSVRow  { value { "trade_id", "quantity"} } ,
+												 CSVRow  { value {"trade1", "10"} }
+										}   
+									},
+								CSVFile {
+									fileName "instrument.csv"
+									rows { isHeader CSVRow  { value { "instrument_id" , "mkt_value" } } ,
+													CSVRow  { value { "instrument1", "10.0" } } 
+									}
+								}
+									
+							}
+							expectedResult { 
+								CSVFile { fileName "trade_derived.csv" 
+									rows { isHeader CSVRow { value { "trade_id" , "exposure_at_default"  } } ,
+													CSVRow { value { "trade1", "50"} }
+									}
+								}
+							}
+
+						}
+					}
+					
+				}
+				
+			}
+		}

@@ -1,0 +1,50 @@
+OpenRegSpecs {  
+	requirements {  
+		RequirementsModule CRR { 
+			allowedtypes AllowedTypes {
+				allowedTypes { 
+					RequirementType Title,
+					RequirementType Chapter,
+					RequirementType Section,
+					RequirementType Article,
+					RequirementType NumericParagraph,
+					RequirementType LetterParagraph,
+					RequirementType RomanNumeralParagraph 
+					} 
+				}
+			rules { 
+				TitledRequirementsSection Title1  { 
+					title "Title_1" requirementsType Title sections
+					{ 
+						TitledRequirementsSection Chapter1 { 
+							title "Chapter1" requirementsType Chapter sections {
+								TitledRequirementsSection Article1 {
+									title "Article 1 general definitions" requirementsType Article sections
+									{ 
+										RequirementsSectionText  Article1_Text
+										{ 
+											text "Here are some general definitions related to this regulation" 
+										}
+										
+									}
+								},
+								TitledRequirementsSection Article2{
+									title "Article 2 some extra definitions" requirementsType Article sections
+									{ 
+										RequirementsSectionText  Article2_Text
+										{ 
+											text "Here are some more extra definitions related to this regulation" 
+										}
+										
+									}
+								}
+								}
+							}
+						}
+					}
+				}
+			
+			} 
+		} 
+	} 
+			

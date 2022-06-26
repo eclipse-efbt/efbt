@@ -55,7 +55,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//OpenRegSpecs/tests"/>
     </genClasses>
     <genClasses image="false" ecoreClass="open_reg_specs.ecore#//BaseElement">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//BaseElement/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//BaseElement/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//BaseElement/description"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//BaseElement/invisible"/>
     </genClasses>
@@ -63,7 +63,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//FlowElementsContainer/flowElements"/>
     </genClasses>
     <genClasses image="false" ecoreClass="open_reg_specs.ecore#//FlowElement">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//FlowElement/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//FlowElement/display_name"/>
     </genClasses>
     <genClasses image="false" ecoreClass="open_reg_specs.ecore#//FlowNode">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//FlowNode/outgoing"/>
@@ -198,8 +198,9 @@
     </genClasses>
     <genClasses ecoreClass="open_reg_specs.ecore#//View">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//View/selectClause"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//View/fromClause"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//View/whereClause"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//View/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//View/selectionLayer"/>
     </genClasses>
     <genClasses ecoreClass="open_reg_specs.ecore#//SelectClause">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//SelectClause/columns"/>
@@ -211,25 +212,11 @@
     <genClasses ecoreClass="open_reg_specs.ecore#//Column">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//Column/attribute"/>
     </genClasses>
-    <genClasses ecoreClass="open_reg_specs.ecore#//WhereClause"/>
-    <genClasses ecoreClass="open_reg_specs.ecore#//Table">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//Table/entity"/>
+    <genClasses ecoreClass="open_reg_specs.ecore#//WhereClause">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//WhereClause/text"/>
     </genClasses>
-    <genClasses ecoreClass="open_reg_specs.ecore#//SQLEntity">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//SQLEntity/name"/>
-    </genClasses>
-    <genClasses ecoreClass="open_reg_specs.ecore#//FromClause">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//FromClause/sqlEntities"/>
-    </genClasses>
-    <genClasses ecoreClass="open_reg_specs.ecore#//SQLEntityModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//SQLEntityModule/sqlEntities"/>
-    </genClasses>
-    <genClasses ecoreClass="open_reg_specs.ecore#//GeneratedEntitySQL">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//GeneratedEntitySQL/generatedEntity"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//GeneratedEntitySQL/view"/>
-    </genClasses>
-    <genClasses ecoreClass="open_reg_specs.ecore#//GeneratedEntitySQLModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//GeneratedEntitySQLModule/GeneratedEntitySQLs"/>
+    <genClasses ecoreClass="open_reg_specs.ecore#//ViewModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//ViewModule/views"/>
     </genClasses>
     <genClasses ecoreClass="open_reg_specs.ecore#//ActivityTag">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//ActivityTag/activity"/>
@@ -286,7 +273,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//DOMAIN/code"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//DOMAIN/data_type"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//DOMAIN/description"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//DOMAIN/domain_id"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//DOMAIN/facet_id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//DOMAIN/is_enumerated"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//DOMAIN/is_reference"/>
@@ -296,7 +282,6 @@
     </genClasses>
     <genClasses ecoreClass="open_reg_specs.ecore#//FACET_COLLECTION">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//FACET_COLLECTION/code"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//FACET_COLLECTION/facet_id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//FACET_COLLECTION/facet_value_type"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//FACET_COLLECTION/maintenance_agency_id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//FACET_COLLECTION/name"/>
@@ -331,7 +316,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//MEMBER/description"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//MEMBER/domain_id"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//MEMBER/maintenance_agency_id"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//MEMBER/member_id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//MEMBER/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//MEMBER/displayName"/>
     </genClasses>
@@ -340,7 +324,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//MEMBER_HIERARCHY/description"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//MEMBER_HIERARCHY/domain_id"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//MEMBER_HIERARCHY/maintenance_agency_id"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//MEMBER_HIERARCHY/member_hierarchy_id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//MEMBER_HIERARCHY/name"/>
     </genClasses>
     <genClasses ecoreClass="open_reg_specs.ecore#//MEMBER_HIERARCHY_NODE">
@@ -361,7 +344,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//SUBDOMAIN/is_listed"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//SUBDOMAIN/is_natural"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//SUBDOMAIN/maintenance_agency_id"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//SUBDOMAIN/subdomain_id"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//SUBDOMAIN/items"/>
     </genClasses>
     <genClasses ecoreClass="open_reg_specs.ecore#//SUBDOMAIN_ENUMERATION">
@@ -376,7 +358,6 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//VARIABLE/domain_id"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//VARIABLE/maintenance_agency_id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//VARIABLE/primary_concept"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//VARIABLE/variable_id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//VARIABLE/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//VARIABLE/displayName"/>
     </genClasses>
