@@ -193,7 +193,7 @@ SequenceFlow sf10 from gw3 to PreNetting ,
  		SelectionLayer GIRR_Delta_Risk_Layer { generatedEntity "open_reg_specs.OUTPUT_LAYER_FRTB" }
  		
  	} , 
- 	SequenceFlow sf80 from gw80 to FRTB_C90
+ 	SequenceFlow sf80 from gw80 to FRTB_C91 
  } , 
  SequenceFlow sf1 from gateway1 to "Read Data" , 
  SequenceFlow sf2 from gateway1 to Derivation , 
