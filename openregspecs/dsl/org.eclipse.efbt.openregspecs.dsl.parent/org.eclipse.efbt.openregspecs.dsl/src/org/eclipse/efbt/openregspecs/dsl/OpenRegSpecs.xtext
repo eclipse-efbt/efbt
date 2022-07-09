@@ -660,20 +660,43 @@ SelectClause returns SelectClause:
 		('columns' '{' columns+=SelectColumn ( "," columns+=SelectColumn)* '}' )?
 	;
 
-
+enum Comparitor returns Comparitor:
+				less_than = 'less_than' | equals = 'equals' | greater_than = 'greater_than';
+				
+				
 WhereClause returns WhereClause:
 	{WhereClause}
-	'WhereClause'
-	;
+	'condition'
 
-SelectColumn returns SelectColumn:
-	{SelectColumn}
-	'Column'
-		('attribute' attribute=[Attribute|EString])?
-		('as' ^as=[Attribute|EString])?
-		('memberAsConstant' memberAsConstant=[EnumMember|EString])?
+		( attribute1=[Attribute|EString])?
+		( comparitor=Comparitor)?
+		('member' member=[EnumMember|EString])?
+		('value' value=EString)?
 ;
 
+
+SelectColumn returns SelectColumn:
+	SelectColumnMemberAs | SelectColumnAttributeAs;
+	
+
+
+
+
+SelectColumnMemberAs returns SelectColumnMemberAs:
+	{SelectColumnMemberAs}
+	'SelectColumnMember'
+		( memberAsConstant=[EnumMember|EString])?
+		('as' ^as=[Attribute|EString])?
+		;
+
+
+SelectColumnAttributeAs returns SelectColumnAttributeAs:
+	{SelectColumnAttributeAs}
+	'SelectColumnAttribute'
+		( attribute=[Attribute|EString])?
+		('as' ^as=[Attribute|EString])?
+	;
+	
 EnumMember_Impl returns EnumMember:
 	{EnumMember}
 	'EnumMember'

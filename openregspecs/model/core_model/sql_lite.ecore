@@ -13,16 +13,20 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="columns" upperBound="-1"
         eType="#//SelectColumn" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SelectColumn" eSuperTypes="#//Column">
+  <eClassifiers xsi:type="ecore:EClass" name="SelectColumn">
     <eStructuralFeatures xsi:type="ecore:EReference" name="as" eType="ecore:EClass data_meta_model.ecore#//Attribute"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SelectColumnMemberAs" eSuperTypes="#//SelectColumn">
     <eStructuralFeatures xsi:type="ecore:EReference" name="memberAsConstant" eType="ecore:EClass data_meta_model.ecore#//EnumMember"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Column">
+  <eClassifiers xsi:type="ecore:EClass" name="SelectColumnAttributeAs" eSuperTypes="#//SelectColumn">
     <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" eType="ecore:EClass data_meta_model.ecore#//Attribute"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="WhereClause"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Table" eSuperTypes="#//SQLEntity">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="entity" eType="ecore:EClass data_meta_model.ecore#//Entity"/>
+  <eClassifiers xsi:type="ecore:EClass" name="WhereClause">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute1" eType="ecore:EClass data_meta_model.ecore#//Attribute"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="comparitor" eType="#//Comparitor"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="member" eType="ecore:EClass data_meta_model.ecore#//EnumMember"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SQLEntity">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
@@ -42,5 +46,10 @@
   <eClassifiers xsi:type="ecore:EClass" name="GeneratedEntitySQLModule" eSuperTypes="module_management.ecore#//Module">
     <eStructuralFeatures xsi:type="ecore:EReference" name="GeneratedEntitySQLs" upperBound="-1"
         eType="#//GeneratedEntitySQL" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="Comparitor">
+    <eLiterals name="less_than"/>
+    <eLiterals name="equals"/>
+    <eLiterals name="greater_than"/>
   </eClassifiers>
 </ecore:EPackage>
