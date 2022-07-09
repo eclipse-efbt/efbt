@@ -183,7 +183,17 @@ SubProcess VegaIntraBucketProcessing incoming ( sf120 ) flowElements {
 SequenceFlow sf15 from gw5 to VegaProcessing } , 
 SequenceFlow sf10 from gw3 to PreNetting ,
  SequenceFlow sf11 from gw3 to RiskClassProcessing } , 
- SubProcess "Report Generation" incoming ( sf3 ) , 
+ SubProcess "Report Generation" incoming ( sf3 ) flowElements { 
+ 	ParallelGateway gw80 outgoing ( sf80 ) , 
+ 	ScriptTask FRTB_C91 incoming ( sf80 ) 
+ 	selectionLayers { 
+ 		SelectionLayer GIRR_Sensitivity_Layer {generatedEntity "open_reg_specs.OUTPUT_LAYER_FRTB" } ,
+ 		SelectionLayer GIRR_Net_Sensitivity_Layer { generatedEntity "open_reg_specs.OUTPUT_LAYER_FRTB" },
+ 		SelectionLayer GIRR_Delta_Risk_Layer { generatedEntity "open_reg_specs.OUTPUT_LAYER_FRTB" }
+ 		
+ 	} , 
+ 	SequenceFlow sf80 from gw80 to FRTB_C90
+ } , 
  SequenceFlow sf1 from gateway1 to "Read Data" , 
  SequenceFlow sf2 from gateway1 to Derivation , 
  SequenceFlow sf3 from gateway1 to "Report Generation" } } } } }

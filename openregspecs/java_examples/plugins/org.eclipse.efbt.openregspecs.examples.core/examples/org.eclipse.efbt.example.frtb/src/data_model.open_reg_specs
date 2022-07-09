@@ -20,26 +20,13 @@ OpenRegSpecs {
 					Attribute Curvature_Curvature_valuation_difference type "SMCubesCoreModel1.subDomainsModule.Number" 
 					Attribute Curvature_Shock_direction type "SMCubesCoreModel1.subDomainsModule.ShockDirection"
 				} 
-				BasicEntity Delta_sensitivities_correlated_and_aggregated_derived { 
-					Attribute Delta_sensitivities_correlated_and_aggregated_derived_GIRR_delta_correlated_value_per_bucket type "SMCubesCoreModel1.subDomainsModule.Number" 
-					Attribute Delta_sensitivities_correlated_and_aggregated_derived_Sensitivities_correlated_and_aggregated_bucket_identifier type "SMCubesCoreModel1.subDomainsModule.StringID" 
-					OneToManyRelationshipAttribute Delta_sensitivities_correlated_and_aggregated_derived_theDelta_sensitivity_combinations_deriveds entity Delta_sensitivity_combinations_derived mandatory
-				} 
+				 
 				BasicEntity Delta_sensitivity inheritsFrom Risk_measure { 
 					Attribute Delta_sensitivity_Currency_of_record type "SMCubesCoreModel1.subDomainsModule.Currency" 
 					Attribute Delta_sensitivity_Delta_sensitivity type "SMCubesCoreModel1.subDomainsModule.Number" 
 					Attribute Delta_sensitivity_Tenor type "SMCubesCoreModel1.subDomainsModule.Number"
 				} 
-				BasicEntity Delta_sensitivity_combinations_derived { 
-					Attribute Delta_sensitivity_combinations_derived_Delta_sensitivity_combination_identifier type "SMCubesCoreModel1.subDomainsModule.StringID" 
-					Attribute Delta_sensitivity_combinations_derived_GIRR_delta_correlated_value type "SMCubesCoreModel1.subDomainsModule.Number" 
-					Attribute Delta_sensitivity_combinations_derived_GIRR_delta_correlation_factor type "SMCubesCoreModel1.subDomainsModule.Number" 
-					Attribute Delta_sensitivity_combinations_derived_Netted_delta_sensitivities_identifier type "SMCubesCoreModel1.subDomainsModule.StringID" 
-					Attribute Delta_sensitivity_combinations_derived_Netted_delta_sensitivities_identifier1 type "SMCubesCoreModel1.subDomainsModule.StringID" 
-					Attribute Delta_sensitivity_combinations_derived_Sensitivities_correlated_and_aggregated_bucket_identifier type "SMCubesCoreModel1.subDomainsModule.StringID" 
-					OneToOneRelationshipAttribute Delta_sensitivity_combinations_derived_theNetted_delta_sensitivities_per_risk_factor_and_tenor_derived entity Netted_delta_sensitivities_per_risk_factor_and_tenor_derived mandatory 
-					OneToOneRelationshipAttribute Delta_sensitivity_combinations_derived_theNetted_delta_sensitivities_per_risk_factor_and_tenor_derived1 entity Netted_delta_sensitivities_per_risk_factor_and_tenor_derived mandatory
-				} 
+				
 				BasicEntity Equity_issue inheritsFrom Security_issue {
 					
 				} 
@@ -57,34 +44,15 @@ OpenRegSpecs {
 					Attribute GIRR_risk_factor_Main_currency type "SMCubesCoreModel1.subDomainsModule.Currency" 
 					Attribute GIRR_risk_factor_Second_currency type "SMCubesCoreModel1.subDomainsModule.Currency"
 				} 
-				BasicEntity KB_per_bucket_derived { 
-					Attribute KB_per_bucket_derived_Bucket_identifier type "SMCubesCoreModel1.subDomainsModule.StringID" 
-					Attribute KB_per_bucket_derived_GIRR_delta_KB type "SMCubesCoreModel1.subDomainsModule.Number" 
-					Attribute KB_per_bucket_derived_Sensitivities_correlated_and_aggregated_bucket_identifier type "SMCubesCoreModel1.subDomainsModule.StringID" 
-					OneToOneRelationshipAttribute KB_per_bucket_derived_theDelta_sensitivities_correlated_and_aggregated_derived entity Delta_sensitivities_correlated_and_aggregated_derived mandatory 
-					OneToOneRelationshipAttribute KB_per_bucket_derived_theTotal_delta_sensitivity_per_bucket_derived entity Total_delta_sensitivity_per_bucket_derived mandatory
-				} 
-				BasicEntity Netted_delta_sensitivities_per_risk_factor_and_tenor_derived { 
-					Attribute Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_Bucket_identifier type "SMCubesCoreModel1.subDomainsModule.StringDomain" 
-					Attribute Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_GIRR_delta_risk_weight type "SMCubesCoreModel1.subDomainsModule.Number" 
-					Attribute Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_Netted_delta_sensitivities type "SMCubesCoreModel1.subDomainsModule.Number" 
-					Attribute Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_Netted_delta_sensitivities_identifier type "SMCubesCoreModel1.subDomainsModule.StringID" 
-					Attribute Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_Risk_factor_Identifier type "SMCubesCoreModel1.subDomainsModule.StringID" 
-					Attribute Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_Tenor type "SMCubesCoreModel1.subDomainsModule.Number" 
-					Attribute Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_Total_sensitivities_bucket_identifier type "SMCubesCoreModel1.subDomainsModule.Unknown" 
-					Attribute Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_Weighted_GIRR_delta_sensitivity type "SMCubesCoreModel1.subDomainsModule.Number" 
-					Attribute Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_Weighted_GIRR_delta_sensitivity_squared type "SMCubesCoreModel1.subDomainsModule.Number" 
-					OneToManyRelationshipAttribute Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_theDelta_sensitivitys entity Delta_sensitivity mandatory 
-					OneToOneRelationshipAttribute Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_theRisk_factor entity Risk_factor mandatory
-				} 
+				
 				BasicEntity Organisation { 
 					Attribute Organisation_Economy type "SMCubesCoreModel1.subDomainsModule.Economy" 
 					Attribute Organisation_Market_cap type "SMCubesCoreModel1.subDomainsModule.Market_cap" 
-					Attribute Organisation_Organisation_identifier type "SMCubesCoreModel1.subDomainsModule.StringID" 
+					Attribute Organisation_Organisation_identifier type "SMCubesCoreModel1.subDomainsModule.StringID" isPK
 					Attribute Organisation_Ratings_grade type "SMCubesCoreModel1.subDomainsModule.Rating_grade" 
 					Attribute Organisation_Sector type "SMCubesCoreModel1.subDomainsModule.Sector"
 				} 
-				BasicEntity OUTPUT_LAYER_FRTB { 
+				GeneratedEntity OUTPUT_LAYER_FRTB { 
 					Attribute OUTPUT_LAYER_FRTB_Approach_For_Prudential_Purposes type "SMCubesCoreModel1.subDomainsModule.Approach_For_Prudential_Purposes" 
 					Attribute OUTPUT_LAYER_FRTB_Base type "SMCubesCoreModel1.subDomainsModule.Base" 
 					Attribute OUTPUT_LAYER_FRTB_Contingent_Scenario type "SMCubesCoreModel1.subDomainsModule.Contingent_Scenario" 
@@ -122,29 +90,65 @@ OpenRegSpecs {
 					OneToOneRelationshipAttribute Security_issue_theOrganisation entity Organisation mandatory
 				} 
 				BasicEntity Security_or_exchange_tradable_derivative_position { 
-					Attribute Security_or_exchange_tradable_derivative_position_Position_identifier type "SMCubesCoreModel1.subDomainsModule.StringID"
+					Attribute Security_or_exchange_tradable_derivative_position_Position_identifier type "SMCubesCoreModel1.subDomainsModule.StringID" isPK
 				} 
-				BasicEntity Summed_delta_sensitivities_per_position_and_risk_factor_derived { 
-					Attribute Summed_delta_sensitivities_per_position_and_risk_factor_derived_Position_identifier type "SMCubesCoreModel1.subDomainsModule.StringID" 
-					Attribute Summed_delta_sensitivities_per_position_and_risk_factor_derived_Risk_factor_Identifier type "SMCubesCoreModel1.subDomainsModule.StringID" 
-					Attribute Summed_delta_sensitivities_per_position_and_risk_factor_derived_summed_delta_per_position type "SMCubesCoreModel1.subDomainsModule.Number" 
-					Attribute Summed_delta_sensitivities_per_position_and_risk_factor_derived_summed_delta_per_position_identifier type "SMCubesCoreModel1.subDomainsModule.StringID" 
-					OneToManyRelationshipAttribute Summed_delta_sensitivities_per_position_and_risk_factor_derived_theDelta_sensitivitys entity Delta_sensitivity mandatory 
-					OneToOneRelationshipAttribute Summed_delta_sensitivities_per_position_and_risk_factor_derived_theSecurity_or_exchange_tradable_derivative_position entity Security_or_exchange_tradable_derivative_position mandatory 
-					OneToOneRelationshipAttribute Summed_delta_sensitivities_per_position_and_risk_factor_derived_theRisk_factor entity Risk_factor mandatory
-				} 
-				BasicEntity Total_delta_sensitivity_per_bucket_derived { 
-					Attribute Total_delta_sensitivity_per_bucket_derived_Bucket_identifier type "SMCubesCoreModel1.subDomainsModule.StringID" 
-					Attribute Total_delta_sensitivity_per_bucket_derived_Total_GIRR_delta_sensitivity_per_bucket type "SMCubesCoreModel1.subDomainsModule.Number" 
-					Attribute Total_delta_sensitivity_per_bucket_derived_Total_GIRR_delta_sensitivity_squared_per_bucket type "SMCubesCoreModel1.subDomainsModule.Number" 
-					Attribute Total_delta_sensitivity_per_bucket_derived_Total_sensitivities_bucket_identifier type "SMCubesCoreModel1.subDomainsModule.Unknown" 
-					OneToManyRelationshipAttribute Total_delta_sensitivity_per_bucket_derived_theNetted_delta_sensitivities_per_risk_factor_and_tenor_deriveds entity Netted_delta_sensitivities_per_risk_factor_and_tenor_derived mandatory
-				} 
+				
 				BasicEntity Vega_sensitivity inheritsFrom Risk_measure { 
 					Attribute Vega_sensitivity_Currency_of_record type "SMCubesCoreModel1.subDomainsModule.StringID" 
 					Attribute Vega_sensitivity_option_maturity type "SMCubesCoreModel1.subDomainsModule.Number" 
 					Attribute Vega_sensitivity_underlying_residual_maturity type "SMCubesCoreModel1.subDomainsModule.Number" 
 					Attribute Vega_sensitivity_Vega_sensitivity type "SMCubesCoreModel1.subDomainsModule.Number"
+				} 
+				
+				DerivedEntity Netted_delta_sensitivities_per_risk_factor_and_tenor_derived { 
+					Attribute Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_Bucket_identifier type "SMCubesCoreModel1.subDomainsModule.StringDomain"
+					Attribute Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_GIRR_delta_risk_weight type "SMCubesCoreModel1.subDomainsModule.Number" 
+					Attribute Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_Netted_delta_sensitivities type "SMCubesCoreModel1.subDomainsModule.Number" 
+					Attribute Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_Netted_delta_sensitivities_identifier type "SMCubesCoreModel1.subDomainsModule.StringID" isPK
+					Attribute Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_Risk_factor_Identifier type "SMCubesCoreModel1.subDomainsModule.StringID" 
+					Attribute Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_Tenor type "SMCubesCoreModel1.subDomainsModule.Number" 
+					Attribute Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_Total_sensitivities_bucket_identifier type "SMCubesCoreModel1.subDomainsModule.Unknown" 
+					Attribute Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_Weighted_GIRR_delta_sensitivity type "SMCubesCoreModel1.subDomainsModule.Number" 
+					Attribute Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_Weighted_GIRR_delta_sensitivity_squared type "SMCubesCoreModel1.subDomainsModule.Number" 
+					OneToManyRelationshipAttribute Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_theDelta_sensitivitys entity Delta_sensitivity mandatory 
+					OneToOneRelationshipAttribute Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_theRisk_factor entity Risk_factor mandatory
+				} 
+				DerivedEntity Summed_delta_sensitivities_per_position_and_risk_factor_derived { 
+					Attribute Summed_delta_sensitivities_per_position_and_risk_factor_derived_Position_identifier type "SMCubesCoreModel1.subDomainsModule.StringID" 
+					Attribute Summed_delta_sensitivities_per_position_and_risk_factor_derived_Risk_factor_Identifier type "SMCubesCoreModel1.subDomainsModule.StringID" 
+					Attribute Summed_delta_sensitivities_per_position_and_risk_factor_derived_summed_delta_per_position type "SMCubesCoreModel1.subDomainsModule.Number" 
+					Attribute Summed_delta_sensitivities_per_position_and_risk_factor_derived_summed_delta_per_position_identifier type "SMCubesCoreModel1.subDomainsModule.StringID"  isPK
+					OneToManyRelationshipAttribute Summed_delta_sensitivities_per_position_and_risk_factor_derived_theDelta_sensitivitys entity Delta_sensitivity mandatory 
+					OneToOneRelationshipAttribute Summed_delta_sensitivities_per_position_and_risk_factor_derived_theSecurity_or_exchange_tradable_derivative_position entity Security_or_exchange_tradable_derivative_position mandatory 
+					OneToOneRelationshipAttribute Summed_delta_sensitivities_per_position_and_risk_factor_derived_theRisk_factor entity Risk_factor mandatory
+				} 
+				DerivedEntity Total_delta_sensitivity_per_bucket_derived { 
+					Attribute Total_delta_sensitivity_per_bucket_derived_Bucket_identifier type "SMCubesCoreModel1.subDomainsModule.StringID" isPK
+					Attribute Total_delta_sensitivity_per_bucket_derived_Total_GIRR_delta_sensitivity_per_bucket type "SMCubesCoreModel1.subDomainsModule.Number" 
+					Attribute Total_delta_sensitivity_per_bucket_derived_Total_GIRR_delta_sensitivity_squared_per_bucket type "SMCubesCoreModel1.subDomainsModule.Number" 
+					OneToManyRelationshipAttribute Total_delta_sensitivity_per_bucket_derived_theNetted_delta_sensitivities_per_risk_factor_and_tenor_deriveds entity Netted_delta_sensitivities_per_risk_factor_and_tenor_derived mandatory
+				} 
+				DerivedEntity Delta_sensitivity_combinations_derived { 
+					Attribute Delta_sensitivity_combinations_derived_Delta_sensitivity_combination_identifier type "SMCubesCoreModel1.subDomainsModule.StringID" isPK
+					Attribute Delta_sensitivity_combinations_derived_GIRR_delta_correlated_value type "SMCubesCoreModel1.subDomainsModule.Number" 
+					Attribute Delta_sensitivity_combinations_derived_GIRR_delta_correlation_factor type "SMCubesCoreModel1.subDomainsModule.Number" 
+					Attribute Delta_sensitivity_combinations_derived_Netted_delta_sensitivities_identifier type "SMCubesCoreModel1.subDomainsModule.StringID" 
+					Attribute Delta_sensitivity_combinations_derived_Netted_delta_sensitivities_identifier1 type "SMCubesCoreModel1.subDomainsModule.StringID" 
+					OneToOneRelationshipAttribute Delta_sensitivity_combinations_derived_theNetted_delta_sensitivities_per_risk_factor_and_tenor_derived entity Netted_delta_sensitivities_per_risk_factor_and_tenor_derived mandatory 
+					OneToOneRelationshipAttribute Delta_sensitivity_combinations_derived_theNetted_delta_sensitivities_per_risk_factor_and_tenor_derived1 entity Netted_delta_sensitivities_per_risk_factor_and_tenor_derived mandatory
+				} 
+				DerivedEntity Delta_sensitivities_correlated_and_aggregated_derived { 
+					Attribute Delta_sensitivities_correlated_and_aggregated_derived_GIRR_delta_correlated_value_per_bucket type "SMCubesCoreModel1.subDomainsModule.Number" 
+					Attribute Delta_sensitivities_correlated_and_aggregated_derived_Sensitivities_correlated_and_aggregated_bucket_identifier type "SMCubesCoreModel1.subDomainsModule.StringID" isPK
+					OneToManyRelationshipAttribute Delta_sensitivities_correlated_and_aggregated_derived_theDelta_sensitivity_combinations_deriveds entity Delta_sensitivity_combinations_derived mandatory
+				}
+
+				BasicEntity KB_per_bucket_derived { 
+					Attribute KB_per_bucket_derived_Bucket_identifier type "SMCubesCoreModel1.subDomainsModule.StringID" isPK
+					Attribute KB_per_bucket_derived_GIRR_delta_KB type "SMCubesCoreModel1.subDomainsModule.Number" 
+					Attribute KB_per_bucket_derived_Sensitivities_correlated_and_aggregated_bucket_identifier type "SMCubesCoreModel1.subDomainsModule.StringID" 
+					OneToOneRelationshipAttribute KB_per_bucket_derived_theDelta_sensitivities_correlated_and_aggregated_derived entity Delta_sensitivities_correlated_and_aggregated_derived mandatory 
+					OneToOneRelationshipAttribute KB_per_bucket_derived_theTotal_delta_sensitivity_per_bucket_derived entity Total_delta_sensitivity_per_bucket_derived mandatory
 				} 
 			} 
 		} 
