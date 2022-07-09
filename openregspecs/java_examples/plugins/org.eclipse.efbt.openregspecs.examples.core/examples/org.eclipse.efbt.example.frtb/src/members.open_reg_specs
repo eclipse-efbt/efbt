@@ -89,6 +89,9 @@ OpenRegSpecs {
 					MEMBER CSR domain "SMCubesCoreModel1.domainsModule.Type_Of_Risk" 
 					MEMBER Default_Risk domain "SMCubesCoreModel1.domainsModule.Type_Of_Risk" 
 					MEMBER Residual_Risk domain "SMCubesCoreModel1.domainsModule.Type_Of_Risk"
+					MEMBER Low_Correlation_Scenario domain "SMCubesCoreModel1.domainsModule.Contingent_Scenario"
+					MEMBER Medium_Correlation_Scenario domain "SMCubesCoreModel1.domainsModule.Contingent_Scenario"
+					MEMBER High_Correlation_Scenario domain "SMCubesCoreModel1.domainsModule.Contingent_Scenario"
 				}
 			}
 		} 

@@ -8,6 +8,11 @@
   <genPackages prefix="Open_reg_specs" basePackage="org.eclipse.efbt.openregspecs.model"
       resource="XMI" disposableProviderFactory="true" loadInitialization="true" literalsInterface="false"
       ecorePackage="open_reg_specs.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="open_reg_specs.ecore#//Comparitor">
+      <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//Comparitor/less_than"/>
+      <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//Comparitor/equals"/>
+      <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//Comparitor/greater_than"/>
+    </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="open_reg_specs.ecore#//AttrComparison">
       <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//AttrComparison/equals"/>
       <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//AttrComparison/less_than"/>
@@ -207,13 +212,18 @@
     </genClasses>
     <genClasses ecoreClass="open_reg_specs.ecore#//SelectColumn">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//SelectColumn/as"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//SelectColumn/memberAsConstant"/>
     </genClasses>
-    <genClasses ecoreClass="open_reg_specs.ecore#//Column">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//Column/attribute"/>
+    <genClasses ecoreClass="open_reg_specs.ecore#//SelectColumnMemberAs">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//SelectColumnMemberAs/memberAsConstant"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//SelectColumnAttributeAs">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//SelectColumnAttributeAs/attribute"/>
     </genClasses>
     <genClasses ecoreClass="open_reg_specs.ecore#//WhereClause">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//WhereClause/text"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//WhereClause/attribute1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//WhereClause/comparitor"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//WhereClause/member"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//WhereClause/value"/>
     </genClasses>
     <genClasses ecoreClass="open_reg_specs.ecore#//ViewModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//ViewModule/views"/>
