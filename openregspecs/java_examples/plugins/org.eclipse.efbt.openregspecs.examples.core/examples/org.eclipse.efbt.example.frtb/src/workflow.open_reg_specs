@@ -1,7 +1,17 @@
 OpenRegSpecs { 
 	process_workflow {
 		WorkflowModule frtb_workflow_module 
-		{ subProcess { 
+		{taskTags
+			{ ActivityTag tenorTag 
+				{displayName tenorTag 
+					requirements ( 
+					"CRRRuleBook.Title_IV.Title_IV;Chapter_1_General_Provisions.Article_325.Artice_325_1.Article_325_1_a" ,
+					"CRRRuleBook.Title_IV.Title_IV;Chapter_1_General_Provisions.Article_325.Artice_325_1.Article_325_1_b"
+					)
+						activity "frtb.Derivation.PreNetting.DeltaNetting.Tenor"
+				}
+			} 
+			subProcess { 
 			SubProcess frtb flowElements { 
 				InclusiveGateway gateway1 outgoing ( sf2 , sf3 , sf1 ) , 
 				SubProcess "Read Data" incoming ( sf1 ) flowElements { 
