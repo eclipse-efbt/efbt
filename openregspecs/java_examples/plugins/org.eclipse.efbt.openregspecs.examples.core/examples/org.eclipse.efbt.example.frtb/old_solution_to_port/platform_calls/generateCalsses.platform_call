@@ -1,9 +1,0 @@
-{
-  "eClass" : "http://www.eclipse.org/efbt/platform_call#//ConvertDataMetaModelToEcore",
-  "name" : "generate_classes",
-  "outputDirectory" : "C:\\\\Users\\\\Neil\\\\freebirdtools-develop\\\\runtime-efbt\\\\org.eclipse.efbt.example.frtb\\\\generated_classes\\\\",
-  "entityModule" : {
-    "eClass" : "http://www.eclipse.org/efbt/data_meta_model#//EntityModule",
-    "$ref" : "../ldm/ldm.data_meta_model#LDM_EntityModule"
-  }
-}

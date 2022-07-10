@@ -1,6 +1,7 @@
 OpenRegSpecs {  
 	
     types_and_concepts SMCubesCoreModel  smcubes_model1 {
+    	
     	domainModules { 
     		DomainModule domain_module1{
 					{ 
