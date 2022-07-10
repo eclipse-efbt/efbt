@@ -33,6 +33,9 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CSVFile">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="fileName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entity" eType="ecore:EClass data_meta_model.ecore#//Entity"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="header" eType="#//CSVHeader"
+        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rows" upperBound="-1" eType="#//CSVRow"
         containment="true"/>
   </eClassifiers>
@@ -40,5 +43,9 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" upperBound="-1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isHeader" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CSVHeader">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" upperBound="-1"
+        eType="ecore:EClass data_meta_model.ecore#//Attribute"/>
   </eClassifiers>
 </ecore:EPackage>

@@ -1,0 +1,62 @@
+OpenRegSpecs { 
+	tests {
+		TestModule testModule1 {
+			license "Copyright (c) 2020 Bird Software Solutions Ltd
+ All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html
+
+SPDX-License-Identifier: EPL-2.0 
+
+ Contributors:
+ Neil Mackenzie - initial API and implementation"
+
+			tests {
+				Test test1 {
+					scope UnitTestScope tenor_primary_scenario {
+						scenarios "frtb_workflow_module.frtb.Derivation.PreNetting.DeltaNetting.Tenor.primary_scenario" 						
+						}
+					inputData { 
+						CSVFile { 
+							fileName "Delta_sensitivity.csv"
+							entity "open_reg_specs.Delta_sensitivity"
+							header CSVHeader { attributes ( 
+							 "open_reg_specs.Delta_sensitivity.Delta_sensitivity_Tenor" ,
+							 "open_reg_specs.Risk_measure.Risk_measure_theRisk_factor"
+							) 
+							} 
+							rows {
+							CSVRow { value { "5.0" , "EURIBOR_3M"} } 
+						}} ,
+						CSVFile { 
+							fileName "GIRR_risk_factor.csv"
+							entity "open_reg_specs.GIRR_risk_factor"
+							header CSVHeader { attributes ( 
+								"open_reg_specs.Risk_factor.Risk_factor_Risk_factor_id" ,
+								"open_reg_specs.GIRR_risk_factor.GIRR_risk_factor_GIRR_risk_factor_type"
+							)
+							}
+							rows {
+							CSVRow { value { "EURIBOR_3M", "Yield"} } 
+						} 
+						}
+					}
+
+					expectedResult {
+						CSVFile { 
+							fileName "Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.csv"
+							entity "open_reg_specs.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived"
+							header CSVHeader { attributes ( 
+							"open_reg_specs.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_Tenor"
+							)
+							}
+							rows {
+							CSVRow { value { "5.0" } } 
+						} 
+					}
+				}
+			} 
+		} 
+	}
+ } 
+ }
+			 
+		

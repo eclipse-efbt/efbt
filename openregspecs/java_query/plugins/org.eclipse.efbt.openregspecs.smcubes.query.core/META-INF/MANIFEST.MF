@@ -8,4 +8,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.efbt.openregspecs.smcubes.query.core
 Require-Bundle: org.eclipse.emf.common,
  org.eclipse.efbt.openregspecs.model;bundle-version="1.0.0"
-Bundle-Vendor: BIRD Software Solutions
+Bundle-Vendor: Eclipse Free BIRD Tools

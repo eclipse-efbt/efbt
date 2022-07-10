@@ -1,7 +1,24 @@
 OpenRegSpecs { 
 	process_workflow {
 		WorkflowModule frtb_workflow_module 
-		{ subProcess { 
+		{license "Copyright (c) 2020 Bird Software Solutions Ltd
+ All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html
+
+SPDX-License-Identifier: EPL-2.0 
+
+ Contributors:
+ Neil Mackenzie - initial API and implementation"
+ taskTags
+			{ ActivityTag tenorTag 
+				{displayName tenorTag 
+					requirements ( 
+					"CRRRuleBook.Title_IV.Title_IV;Chapter_1_General_Provisions.Article_325.Artice_325_1.Article_325_1_a" ,
+					"CRRRuleBook.Title_IV.Title_IV;Chapter_1_General_Provisions.Article_325.Artice_325_1.Article_325_1_b"
+					)
+						activity "frtb.Derivation.PreNetting.DeltaNetting.Tenor"
+				}
+			} 
+			subProcess { 
 			SubProcess frtb flowElements { 
 				InclusiveGateway gateway1 outgoing ( sf2 , sf3 , sf1 ) , 
 				SubProcess "Read Data" incoming ( sf1 ) flowElements { 
@@ -25,9 +42,29 @@ OpenRegSpecs {
 						ParallelGateway gw4 outgoing ( sf12 , sf13 ) , 
 						SubProcess DeltaNetting incoming ( sf12 ) flowElements { 
 							InclusiveGateway gw8 outgoing ( sf25 , sf26 , sf27 , sf28 , sf22 , sf23 , sf24 , sf29 ) ,
-							ServiceTask Netted_delta_sensitivities_identifier incoming ( sf25 ) enrichedAttribute "open_reg_specs.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_Netted_delta_sensitivities_identifier"
+							ServiceTask Netted_delta_sensitivities_identifier incoming ( sf25 ) enrichedAttribute "open_reg_specs.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_Netted_delta_sensitivities_identifier" 
+								
 						} , ServiceTask Risk_factor_Identifier incoming ( sf26 ) enrichedAttribute "open_reg_specs.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_Risk_factor_Identifier"
 						} , ServiceTask Tenor incoming ( sf27 ) enrichedAttribute "open_reg_specs.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_Tenor"
+						scenarios {
+									Scenario  primary_scenario 
+										requiredAttributes ( "open_reg_specs.Delta_sensitivity.Delta_sensitivity_Tenor" ,
+											"open_reg_specs.Risk_measure.Risk_measure_theRisk_factor",
+											 "open_reg_specs.Risk_factor.Risk_factor_Risk_factor_id" ,
+											"open_reg_specs.GIRR_risk_factor.GIRR_risk_factor_GIRR_risk_factor_type" )    
+										data_constraints conditional 
+										 "open_reg_specs.GIRR_risk_factor.GIRR_risk_factor_GIRR_risk_factor_type" not_equals member  "SMCubesCoreModel1.membersModule.Inflation" ,
+										
+										Scenario inflation_risk_factor  
+											requiredAttributes ( "open_reg_specs.Delta_sensitivity.Delta_sensitivity_Tenor" ,
+											"open_reg_specs.Risk_measure.Risk_measure_theRisk_factor",
+											 "open_reg_specs.Risk_factor.Risk_factor_Risk_factor_id" ,
+											"open_reg_specs.GIRR_risk_factor.GIRR_risk_factor_GIRR_risk_factor_type") 
+										data_constraints conditional 
+										 "open_reg_specs.GIRR_risk_factor.GIRR_risk_factor_GIRR_risk_factor_type" equals member  "SMCubesCoreModel1.membersModule.Inflation"
+										
+										
+										}
 						} , ServiceTask Netted_delta_sensitivities incoming ( sf28 ) enrichedAttribute "open_reg_specs.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_Netted_delta_sensitivities"
 						} , ServiceTask summed_delta_per_position_identifier incoming ( sf22 ) enrichedAttribute "open_reg_specs.Summed_delta_sensitivities_per_position_and_risk_factor_derived.Summed_delta_sensitivities_per_position_and_risk_factor_derived_summed_delta_per_position_identifier"
 						} , ServiceTask Position_identifier incoming ( sf23 ) enrichedAttribute "open_reg_specs.Summed_delta_sensitivities_per_position_and_risk_factor_derived.Summed_delta_sensitivities_per_position_and_risk_factor_derived_Position_identifier" } , ServiceTask Risk_factor_Identifier2 incoming ( sf29 ) enrichedAttribute "open_reg_specs.Summed_delta_sensitivities_per_position_and_risk_factor_derived.Summed_delta_sensitivities_per_position_and_risk_factor_derived_Risk_factor_Identifier"

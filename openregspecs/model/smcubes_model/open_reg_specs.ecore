@@ -2,6 +2,9 @@
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="open_reg_specs" nsURI="http://www.eclipse.org/efbt/open_reg_specs"
     nsPrefix="open_reg_specs">
+  <eAnnotations source="license">
+    <details key="license" value="Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"/>
+  </eAnnotations>
   <eClassifiers xsi:type="ecore:EClass" name="OpenRegSpecs">
     <eStructuralFeatures xsi:type="ecore:EReference" name="requirements" upperBound="-1"
         eType="ecore:EClass ../core_model/requirements_text.ecore#//RequirementsModule"
