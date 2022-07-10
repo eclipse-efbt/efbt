@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Automatic-Module-Name: org.eclipse.efbt.openregspecs.dsl.ide
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.efbt.openregspecs.dsl.ide
-Bundle-Vendor: My Company
+Bundle-Vendor: Eclipse Free BIRD Tools
 Bundle-Version: 1.0.0.qualifier
 Bundle-SymbolicName: org.eclipse.efbt.openregspecs.dsl.ide; singleton:=true
 Bundle-ActivationPolicy: lazy
