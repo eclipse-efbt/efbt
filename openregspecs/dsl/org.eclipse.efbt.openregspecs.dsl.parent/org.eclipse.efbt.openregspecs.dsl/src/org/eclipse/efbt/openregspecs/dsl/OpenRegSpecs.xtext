@@ -622,15 +622,16 @@ BasicEntity returns BasicEntity:
 	
 DataConstraint returns DataConstraint:
 	{DataConstraint}
-	'DataConstraint'
-	'{'
-		('comparison' comparison=AttrComparison)?
-		('attr1' attr1=[Attribute|EString])?
-		('attr2' attr2=[Attribute|EString])?
-	'}';
+	'conditional'
+
+		( attr1=[Attribute|EString])?
+		( comparison=AttrComparison)?
+		('member' member=[EnumMember|EString])?
+		('value' value=EString)?
+	;
 
 enum AttrComparison returns AttrComparison:
-				equals = 'equals' | less_than = 'less_than' | greater_than = 'greater_than';
+				equals = 'equals' | less_than = 'less_than' | greater_than = 'greater_than' | not_equals = 'not_equals';
 
 SelectionLayer returns SelectionLayer:
 	{SelectionLayer}
@@ -796,7 +797,16 @@ CSVFile returns CSVFile:
 	'CSVFile'
 	'{'
 		('fileName' fileName=EString)?
+		('entity' entity=[Entity|EString])?
+		('header' header=CSVHeader)?
 		('rows' '{' rows+=CSVRow ( "," rows+=CSVRow)* '}' )?
+	'}';
+	
+CSVHeader returns CSVHeader:
+	{CSVHeader}
+	'CSVHeader'
+	'{'
+		('attributes' '(' attributes+=[Attribute|EString] ( "," attributes+=[Attribute|EString])* ')' )?
 	'}';
 
 TestScope_Impl returns TestScope:
@@ -806,7 +816,6 @@ TestScope_Impl returns TestScope:
 
 CSVRow returns CSVRow:
 	{CSVRow}
-	(isHeader?='isHeader')?
 	'CSVRow'
 	'{'
 		('value' '{' value+=EString ( "," value+=EString)* '}' )?

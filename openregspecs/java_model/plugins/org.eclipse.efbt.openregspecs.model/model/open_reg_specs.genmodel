@@ -17,6 +17,7 @@
       <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//AttrComparison/equals"/>
       <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//AttrComparison/less_than"/>
       <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//AttrComparison/greater_than"/>
+      <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//AttrComparison/not_equals"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="open_reg_specs.ecore#//FACET_VALUE_TYPE">
       <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//FACET_VALUE_TYPE/BigInteger"/>
@@ -252,8 +253,9 @@
     </genClasses>
     <genClasses ecoreClass="open_reg_specs.ecore#//DataConstraint">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//DataConstraint/attr1"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//DataConstraint/attr2"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//DataConstraint/comparison"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//DataConstraint/member"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//DataConstraint/value"/>
     </genClasses>
     <genClasses ecoreClass="open_reg_specs.ecore#//SelectionLayer">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//SelectionLayer/name"/>
@@ -273,7 +275,12 @@
     </genClasses>
     <genClasses ecoreClass="open_reg_specs.ecore#//CSVFile">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CSVFile/fileName"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CSVFile/entity"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CSVFile/header"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CSVFile/rows"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//CSVHeader">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//CSVHeader/attributes"/>
     </genClasses>
     <genClasses ecoreClass="open_reg_specs.ecore#//CSVRow">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//CSVRow/value"/>
