@@ -9,6 +9,7 @@
     <semanticResources>src/report_generation.open_reg_specs</semanticResources>
     <semanticResources>src/temp.open_reg_specs</semanticResources>
     <semanticResources>src/tests.open_reg_specs</semanticResources>
+    <semanticResources>src/crr_regulation_text.open_reg_specs</semanticResources>
     <ownedViews xmi:type="viewpoint:DView" uid="_ojUZgPRREeyJT5zAurSjiA">
       <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.efbt.openregspecs.testing.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']"/>
       <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_ojjqEPRREeyJT5zAurSjiA" name="OpenRegSpecs" repPath="#_ojgmwPRREeyJT5zAurSjiA" changeId="c08419bc-e487-47f5-9940-9ca5cb295940">
