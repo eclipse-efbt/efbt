@@ -26,13 +26,15 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DataConstraint">
     <eStructuralFeatures xsi:type="ecore:EReference" name="attr1" eType="ecore:EClass data_meta_model.ecore#//Attribute"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="attr2" eType="ecore:EClass data_meta_model.ecore#//Attribute"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="comparison" eType="#//AttrComparison"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="member" eType="ecore:EClass data_meta_model.ecore#//EnumMember"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="AttrComparison">
     <eLiterals name="equals"/>
     <eLiterals name="less_than" value="1"/>
     <eLiterals name="greater_than" value="2"/>
+    <eLiterals name="not_equals" value="4"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SequenceFlow" eSuperTypes="#//FlowElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="targetRef" ordered="false"

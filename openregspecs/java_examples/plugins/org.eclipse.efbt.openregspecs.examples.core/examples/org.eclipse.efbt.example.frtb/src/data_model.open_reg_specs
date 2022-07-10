@@ -68,8 +68,8 @@ OpenRegSpecs {
 					Attribute OUTPUT_LAYER_FRTB_Type_And_Nature_Of_Sensitivity type "SMCubesCoreModel1.subDomainsModule.Type_And_Nature_Of_Sensitivity" 
 					Attribute OUTPUT_LAYER_FRTB_Type_Of_Risk type "SMCubesCoreModel1.subDomainsModule.Type_Of_Risk"
 				} BasicEntity Risk_factor 
-				{
-					
+				{ 
+					Attribute Risk_factor_Risk_factor_id isPK
 				} 
 				BasicEntity Risk_measure { 
 					OneToOneRelationshipAttribute Risk_measure_theRisk_factor entity Risk_factor mandatory 
