@@ -9,22 +9,27 @@ OpenRegSpecs {
 							inputData { 
 								CSVFile { 
 									fileName "trade.csv" 
+									entity "entity_module1.Trade"
+									header CSVHeader { attributes ( "entity_module1.Trade.trade_id" , "entity_module1.Trade.quantity" ) }
 									rows {
-										isHeader CSVRow  { value { "trade_id", "quantity"} } ,
-												 CSVRow  { value {"trade1", "10"} }
+										 CSVRow  { value {"trade1", "10"} }
 										}   
 									},
 								CSVFile {
 									fileName "instrument.csv"
-									rows { isHeader CSVRow  { value { "instrument_id" , "mkt_value" } } ,
-													CSVRow  { value { "instrument1", "10.0" } } 
+									entity "entity_module1.Instrument" 
+									header CSVHeader { attributes ( "entity_module1.Instrument.instrument_id" ,  "entity_module1.Instrument.mkt_value" ) }
+									rows {  CSVRow  { value { "instrument1", "10.0" } } 
 									}
 								}
 									
 							}
 							expectedResult { 
-								CSVFile { fileName "trade_derived.csv" 
-									rows { isHeader CSVRow { value { "trade_id" , "exposure_at_default"  } } ,
+								CSVFile { 
+									fileName "trade_derived.csv"
+									entity "entity_module1.Trade_derived"
+									header CSVHeader { attributes ( "entity_module1.Trade.trade_id" , "entity_module1.Trade_derived.exposure_at_default" ) } 
+									rows {  CSVRow { value { "trade_id" , "exposure_at_default"  } } ,
 													CSVRow { value { "trade1", "50"} }
 									}
 								}
