@@ -1,0 +1,62 @@
+OpenRegSpecs { 
+	tests {
+		TestModule netted_delta_sensitivitiesModule {
+						license "Copyright (c) 2020 Bird Software Solutions Ltd
+ All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html
+
+SPDX-License-Identifier: EPL-2.0 
+
+ Contributors:
+ Neil Mackenzie - initial API and implementation"
+			tests {
+				Test netted_delta_sensitivities {
+					scope UnitTestScope tenor_primary_scenario {
+						scenarios "frtb_workflow_module.frtb.Derivation.PreNetting.DeltaNetting.Netted_delta_sensitivities.Netted_delta_sensitivities_primary_sceanrio"						
+						}
+					inputData { 
+						CSVFile { 
+							fileName "Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.csv"
+							entity "open_reg_specs.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived"
+							header CSVHeader { attributes ( 
+							 "open_reg_specs.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_theDelta_sensitivitys" 					
+							) 
+							} 
+							rows {
+							CSVRow { value { "[delta_1,delta_2]"} } 
+						}} ,
+						CSVFile { 
+							fileName "Delta_sensitivity.csv"
+							entity "open_reg_specs.Delta_sensitivity"
+							header CSVHeader { attributes ( 
+							 "open_reg_specs.Risk_measure.Risk_measure_Risk_measure_identifier",
+							 "open_reg_specs.Delta_sensitivity.Delta_sensitivity_Delta_sensitivity",
+							 "open_reg_specs.Delta_sensitivity.Delta_sensitivity_Currency_of_record"
+							) 
+							} 
+							rows {
+							CSVRow { value { "delta_1", "100.00" , "USD"} } ,
+							CSVRow { value { "delta_2", "300.00" ,  "USD"} } 
+						}} 
+						}
+				
+
+					expectedResult {
+						CSVFile { 
+							fileName "Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.csv"
+							entity "open_reg_specs.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived"
+							header CSVHeader { attributes ( 
+							"open_reg_specs.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_Netted_delta_sensitivities"
+							)
+							}
+							rows {
+							CSVRow { value { "400.0" } } 
+						} 
+					}
+				}
+			} 
+		} 
+	}
+ } 
+ }
+			 
+		
