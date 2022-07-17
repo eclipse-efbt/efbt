@@ -1,0 +1,63 @@
+OpenRegSpecs { 
+	tests {
+		TestModule test_delta_sensitivity_nettingModule {
+			tests {
+				Test test_delta_sensitivity_netting {
+					scope UnitTestScope Netted_delta_sensitivities_identifier_primary_sceanrio {
+						scenarios "frtb_workflow_module.frtb.Derivation.PreNetting.DeltaNetting.Netted_delta_sensitivities_identifier.Netted_delta_sensitivities_identifier_primary_sceanrio"						
+						}
+					inputData { 
+						CSVFile { 
+							fileName "Delta_sensitivity.csv"
+							entity "open_reg_specs.Delta_sensitivity"
+							header CSVHeader { attributes ( 
+							 "open_reg_specs.Risk_measure.Risk_measure_Risk_measure_identifier",
+							 "open_reg_specs.Delta_sensitivity.Delta_sensitivity_Tenor" ,
+							 "open_reg_specs.Risk_measure.Risk_measure_theRisk_factor"
+							) 
+							} 
+							rows {
+							CSVRow { value { "delta_1", "5.0" , "EURIBOR"} } ,
+							CSVRow { value { "delta_2", "5.0" , "EURIBOR"} } ,
+							CSVRow { value { "delta_3", "10.0" , "LIBOR"} } ,
+							CSVRow { value { "delta_4", "10.0" , "LIBOR"} } 
+							
+						}} ,
+						CSVFile { 
+							fileName "GIRR_risk_factor.csv"
+							entity "open_reg_specs.GIRR_risk_factor"
+							header CSVHeader { attributes ( 
+								"open_reg_specs.Risk_factor.Risk_factor_Risk_factor_id" 
+							)
+							}
+							rows {
+							CSVRow { value {  "EURIBOR"} } ,
+							CSVRow { value { "LIBOR"} } 
+						} 
+						}
+					}
+
+					expectedResult {
+						CSVFile { 
+							fileName "Netted_delta_sensitivities_identifier.csv"
+							entity "open_reg_specs.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived"
+							header CSVHeader { attributes ( 
+							"open_reg_specs.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_Netted_delta_sensitivities_identifier",
+							"open_reg_specs.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_theDelta_sensitivitys",
+							"open_reg_specs.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_theRisk_factor"
+							)
+							}
+							rows {
+							CSVRow { value { "Netted_deltas_id_1", "[delta_1,delta_2]", "EURIBOR" } } ,
+							CSVRow { value { "Netted_deltas_id_2", "[delta_2,delta_3]", "LIBOR" } } 
+							
+						} 
+					}
+				}
+			} 
+		} 
+	}
+ } 
+ }
+			 
+		

@@ -2,13 +2,6 @@ OpenRegSpecs {
       
 	data_model {
 		EntityModule open_reg_specs {
-			license "Copyright (c) 2020 Bird Software Solutions Ltd
- All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html
-
-SPDX-License-Identifier: EPL-2.0 
-
- Contributors:
- Neil Mackenzie - initial API and implementation"
 			nsURI "http://www.eclipse.org/open_reg_specs" 
 			nsPrefix open_reg_specs {
 				BasicEntity Commodity_risk_factor inheritsFrom Risk_factor {
@@ -79,6 +72,7 @@ SPDX-License-Identifier: EPL-2.0
 					Attribute Risk_factor_Risk_factor_id isPK
 				} 
 				BasicEntity Risk_measure { 
+					Attribute Risk_measure_Risk_measure_identifier type "SMCubesCoreModel1.subDomainsModule.StringID" isPK
 					OneToOneRelationshipAttribute Risk_measure_theRisk_factor entity Risk_factor mandatory 
 					OneToOneRelationshipAttribute Risk_measure_theSecurity_or_exchange_tradable_derivative_position entity Security_or_exchange_tradable_derivative_position mandatory
 				}
