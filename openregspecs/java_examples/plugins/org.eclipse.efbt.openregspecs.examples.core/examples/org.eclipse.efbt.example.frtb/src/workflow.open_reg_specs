@@ -70,6 +70,13 @@ OpenRegSpecs {
 										
 										}
 						} , ServiceTask Netted_delta_sensitivities incoming ( sf28 ) enrichedAttribute "open_reg_specs.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_Netted_delta_sensitivities"
+						scenarios { 
+							 	Scenario Netted_delta_sensitivities_primary_sceanrio 
+							 		requiredAttributes ( "open_reg_specs.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_theDelta_sensitivitys",
+											"open_reg_specs.Delta_sensitivity.Delta_sensitivity_Delta_sensitivity" ,
+											"open_reg_specs.Delta_sensitivity.Delta_sensitivity_Currency_of_record",
+											"open_reg_specs.Risk_measure.Risk_measure_Risk_measure_identifier")   
+							 		} 
 						} , ServiceTask summed_delta_per_position_identifier incoming ( sf22 ) enrichedAttribute "open_reg_specs.Summed_delta_sensitivities_per_position_and_risk_factor_derived.Summed_delta_sensitivities_per_position_and_risk_factor_derived_summed_delta_per_position_identifier"
 						} , ServiceTask Position_identifier incoming ( sf23 ) enrichedAttribute "open_reg_specs.Summed_delta_sensitivities_per_position_and_risk_factor_derived.Summed_delta_sensitivities_per_position_and_risk_factor_derived_Position_identifier" } , ServiceTask Risk_factor_Identifier2 incoming ( sf29 ) enrichedAttribute "open_reg_specs.Summed_delta_sensitivities_per_position_and_risk_factor_derived.Summed_delta_sensitivities_per_position_and_risk_factor_derived_Risk_factor_Identifier"
 						} , ServiceTask summed_delta_per_position incoming ( sf24 ) enrichedAttribute "open_reg_specs.Summed_delta_sensitivities_per_position_and_risk_factor_derived.Summed_delta_sensitivities_per_position_and_risk_factor_derived_summed_delta_per_position"
