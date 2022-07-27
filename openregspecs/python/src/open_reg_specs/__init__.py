@@ -1,24 +1,13 @@
-#
-# Copyright (c) 2020 Bird Software Solutions Ltd
-# This program and the accompanying materials
-# are made available under the terms of the Eclipse Public License 2.0
-# which accompanies this distribution, and is available at
-# https://www.eclipse.org/legal/epl-2.0/
-#
-# SPDX-License-Identifier: EPL-2.0
-#
-# Contributors:
-#    Neil Mackenzie - initial API and implementation
-#
+
 from .open_reg_specs import getEClassifier, eClassifiers
 from .open_reg_specs import name, nsURI, nsPrefix, eClass
-from .open_reg_specs import OpenRegSpecs, BaseElement, FlowElementsContainer, FlowElement, FlowNode, SequenceFlow, Task, Activity, Gateway, ExclusiveGateway, InclusiveGateway, ParallelGateway, ServiceTask, SubProcess, ScriptTask, UserTask, Attribute, Concept, RelationshipAttribute, OneToOneRelationshipAttribute, ManyToOneRelationshipAttribute, OneToManyRelationshipAttribute, ManyToManyRelationshipAttribute, Type, Element, NamedElement, EntityModule, StructuralFeature, TypedElement, GeneratedEntity, Entity, DerivedEntity, BasicEntity, EnumMember, TypesAndConcepts, Module, ModuleLongName, ModuleDependencies, ModuleDependency, AllowedTypes, RequirementsModule, RequirementsSection, RequirementsSectionImage, RequirementsSectionLinkWithText, RequirementsSectionText, RequirementType, TitledRequirementsSection, Tag, TagGroup, View, SelectClause, SelectColumn, Column, WhereClause, ViewModule, ActivityTag, Scenario, ScenarioTag, Test, TestModule, DataConstraint, AttrComparison, SelectionLayer, TestScope, UnitTestScope, E2ETestScope, CSVFile, CSVRow, DOMAIN, FACET_COLLECTION, FACET_ENUMERATION, facet_type, FACET_VALUE_TYPE, FACET_VALUE_TYPEObject, MAINTENANCE_AGENCY, MEMBER, MEMBER_HIERARCHY, MEMBER_HIERARCHY_NODE, SUBDOMAIN, SUBDOMAIN_ENUMERATION, VARIABLE, VARIABLE_SET, VARIABLE_SET_ENUMERATION, COMBINATION, COMBINATION_ITEM, CUBE, CUBE_GROUP, CUBE_GROUP_ENUMERATION, CUBE_HIERARCHY, CUBE_HIERARCHY_NODE, CUBE_RELATIONSHIP, CUBE_STRUCTURE, CUBE_STRUCTURE_ITEM, CUBE_TO_COMBINATION, FRAMEWORK, FRAMEWORK_SUBDOMAIN, FRAMEWORK_VARIABLE_SET, TYP_DMNSN, TYP_DMNSNObject, TYP_RL, TYP_RLObject, DomainModule, MemberHierarchyModule, MemberModule, VariableModule, SubDomainModule, SMCubesCoreModel, PlatformCall, PlatformCallModule, ImportBIRDFromMSAccess, WorkflowModule
+from .open_reg_specs import OpenRegSpecs, BaseElement, FlowElementsContainer, FlowElement, FlowNode, SequenceFlow, Task, Activity, Gateway, ExclusiveGateway, InclusiveGateway, ParallelGateway, ServiceTask, SubProcess, ScriptTask, UserTask, Attribute, Concept, RelationshipAttribute, OneToOneRelationshipAttribute, ManyToOneRelationshipAttribute, OneToManyRelationshipAttribute, ManyToManyRelationshipAttribute, Type, Element, NamedElement, EntityModule, StructuralFeature, TypedElement, GeneratedEntity, Entity, DerivedEntity, BasicEntity, EnumMember, TypesAndConcepts, Module, ModuleLongName, ModuleDependencies, ModuleDependency, AllowedTypes, RequirementsModule, RequirementsSection, RequirementsSectionImage, RequirementsSectionLinkWithText, RequirementsSectionText, RequirementType, TitledRequirementsSection, Tag, TagGroup, View, SelectClause, SelectColumn, SelectColumnMemberAs, SelectColumnAttributeAs, Comparitor, WhereClause, ViewModule, ActivityTag, Scenario, ScenarioTag, Test, TestModule, DataConstraint, AttrComparison, SelectionLayer, TestScope, UnitTestScope, E2ETestScope, CSVFile, CSVHeader, CSVRow, DOMAIN, FACET_COLLECTION, FACET_ENUMERATION, facet_type, FACET_VALUE_TYPE, FACET_VALUE_TYPEObject, MAINTENANCE_AGENCY, MEMBER, MEMBER_HIERARCHY, MEMBER_HIERARCHY_NODE, SUBDOMAIN, SUBDOMAIN_ENUMERATION, VARIABLE, VARIABLE_SET, VARIABLE_SET_ENUMERATION, COMBINATION, COMBINATION_ITEM, CUBE, CUBE_GROUP, CUBE_GROUP_ENUMERATION, CUBE_HIERARCHY, CUBE_HIERARCHY_NODE, CUBE_RELATIONSHIP, CUBE_STRUCTURE, CUBE_STRUCTURE_ITEM, CUBE_TO_COMBINATION, FRAMEWORK, FRAMEWORK_SUBDOMAIN, FRAMEWORK_VARIABLE_SET, TYP_DMNSN, TYP_DMNSNObject, TYP_RL, TYP_RLObject, DomainModule, MemberHierarchyModule, MemberModule, VariableModule, SubDomainModule, SMCubesCoreModel, PlatformCall, PlatformCallModule, ImportBIRDFromMSAccess, WorkflowModule
 
 
 from . import open_reg_specs
 
-__all__ = ['OpenRegSpecs', 'BaseElement', 'FlowElementsContainer', 'FlowElement', 'FlowNode', 'SequenceFlow', 'Task', 'Activity', 'Gateway', 'ExclusiveGateway', 'InclusiveGateway', 'ParallelGateway', 'ServiceTask', 'SubProcess', 'ScriptTask', 'UserTask', 'Attribute', 'Concept', 'RelationshipAttribute', 'OneToOneRelationshipAttribute', 'ManyToOneRelationshipAttribute', 'OneToManyRelationshipAttribute', 'ManyToManyRelationshipAttribute', 'Type', 'Element', 'NamedElement', 'EntityModule', 'StructuralFeature', 'TypedElement', 'GeneratedEntity', 'Entity', 'DerivedEntity', 'BasicEntity', 'EnumMember', 'TypesAndConcepts', 'Module', 'ModuleLongName', 'ModuleDependencies', 'ModuleDependency', 'AllowedTypes', 'RequirementsModule', 'RequirementsSection', 'RequirementsSectionImage', 'RequirementsSectionLinkWithText', 'RequirementsSectionText', 'RequirementType', 'TitledRequirementsSection', 'Tag', 'TagGroup', 'View', 'SelectClause', 'SelectColumn', 'Column', 'WhereClause', 'ViewModule',
-           'ActivityTag', 'Scenario', 'ScenarioTag', 'Test', 'TestModule', 'DataConstraint', 'AttrComparison', 'SelectionLayer', 'TestScope', 'UnitTestScope', 'E2ETestScope', 'CSVFile', 'CSVRow', 'DOMAIN', 'FACET_COLLECTION', 'FACET_ENUMERATION', 'facet_type', 'FACET_VALUE_TYPE', 'FACET_VALUE_TYPEObject', 'MAINTENANCE_AGENCY', 'MEMBER', 'MEMBER_HIERARCHY', 'MEMBER_HIERARCHY_NODE', 'SUBDOMAIN', 'SUBDOMAIN_ENUMERATION', 'VARIABLE', 'VARIABLE_SET', 'VARIABLE_SET_ENUMERATION', 'COMBINATION', 'COMBINATION_ITEM', 'CUBE', 'CUBE_GROUP', 'CUBE_GROUP_ENUMERATION', 'CUBE_HIERARCHY', 'CUBE_HIERARCHY_NODE', 'CUBE_RELATIONSHIP', 'CUBE_STRUCTURE', 'CUBE_STRUCTURE_ITEM', 'CUBE_TO_COMBINATION', 'FRAMEWORK', 'FRAMEWORK_SUBDOMAIN', 'FRAMEWORK_VARIABLE_SET', 'TYP_DMNSN', 'TYP_DMNSNObject', 'TYP_RL', 'TYP_RLObject', 'DomainModule', 'MemberHierarchyModule', 'MemberModule', 'VariableModule', 'SubDomainModule', 'SMCubesCoreModel', 'PlatformCall', 'PlatformCallModule', 'ImportBIRDFromMSAccess', 'WorkflowModule']
+__all__ = ['OpenRegSpecs', 'BaseElement', 'FlowElementsContainer', 'FlowElement', 'FlowNode', 'SequenceFlow', 'Task', 'Activity', 'Gateway', 'ExclusiveGateway', 'InclusiveGateway', 'ParallelGateway', 'ServiceTask', 'SubProcess', 'ScriptTask', 'UserTask', 'Attribute', 'Concept', 'RelationshipAttribute', 'OneToOneRelationshipAttribute', 'ManyToOneRelationshipAttribute', 'OneToManyRelationshipAttribute', 'ManyToManyRelationshipAttribute', 'Type', 'Element', 'NamedElement', 'EntityModule', 'StructuralFeature', 'TypedElement', 'GeneratedEntity', 'Entity', 'DerivedEntity', 'BasicEntity', 'EnumMember', 'TypesAndConcepts', 'Module', 'ModuleLongName', 'ModuleDependencies', 'ModuleDependency', 'AllowedTypes', 'RequirementsModule', 'RequirementsSection', 'RequirementsSectionImage', 'RequirementsSectionLinkWithText', 'RequirementsSectionText', 'RequirementType', 'TitledRequirementsSection', 'Tag', 'TagGroup', 'View', 'SelectClause', 'SelectColumn', 'SelectColumnMemberAs', 'SelectColumnAttributeAs', 'Comparitor', 'WhereClause',
+           'ViewModule', 'ActivityTag', 'Scenario', 'ScenarioTag', 'Test', 'TestModule', 'DataConstraint', 'AttrComparison', 'SelectionLayer', 'TestScope', 'UnitTestScope', 'E2ETestScope', 'CSVFile', 'CSVHeader', 'CSVRow', 'DOMAIN', 'FACET_COLLECTION', 'FACET_ENUMERATION', 'facet_type', 'FACET_VALUE_TYPE', 'FACET_VALUE_TYPEObject', 'MAINTENANCE_AGENCY', 'MEMBER', 'MEMBER_HIERARCHY', 'MEMBER_HIERARCHY_NODE', 'SUBDOMAIN', 'SUBDOMAIN_ENUMERATION', 'VARIABLE', 'VARIABLE_SET', 'VARIABLE_SET_ENUMERATION', 'COMBINATION', 'COMBINATION_ITEM', 'CUBE', 'CUBE_GROUP', 'CUBE_GROUP_ENUMERATION', 'CUBE_HIERARCHY', 'CUBE_HIERARCHY_NODE', 'CUBE_RELATIONSHIP', 'CUBE_STRUCTURE', 'CUBE_STRUCTURE_ITEM', 'CUBE_TO_COMBINATION', 'FRAMEWORK', 'FRAMEWORK_SUBDOMAIN', 'FRAMEWORK_VARIABLE_SET', 'TYP_DMNSN', 'TYP_DMNSNObject', 'TYP_RL', 'TYP_RLObject', 'DomainModule', 'MemberHierarchyModule', 'MemberModule', 'VariableModule', 'SubDomainModule', 'SMCubesCoreModel', 'PlatformCall', 'PlatformCallModule', 'ImportBIRDFromMSAccess', 'WorkflowModule']
 
 eSubpackages = []
 eSuperPackage = None
@@ -63,8 +52,10 @@ View.whereClause.eType = WhereClause
 View.selectionLayer.eType = SelectionLayer
 SelectClause.columns.eType = SelectColumn
 SelectColumn.as_.eType = Attribute
-SelectColumn.memberAsConstant.eType = EnumMember
-Column.attribute.eType = Attribute
+SelectColumnMemberAs.memberAsConstant.eType = EnumMember
+SelectColumnAttributeAs.attribute.eType = Attribute
+WhereClause.attribute1.eType = Attribute
+WhereClause.member.eType = EnumMember
 ViewModule.views.eType = View
 ActivityTag.activity.eType = Activity
 Scenario.requiredAttributes.eType = Attribute
@@ -75,13 +66,16 @@ Test.expectedResult.eType = CSVFile
 Test.scope.eType = TestScope
 TestModule.tests.eType = Test
 DataConstraint.attr1.eType = Attribute
-DataConstraint.attr2.eType = Attribute
+DataConstraint.member.eType = EnumMember
 SelectionLayer.generatedEntity.eType = GeneratedEntity
 UnitTestScope.scenarios.eType = Scenario
 E2ETestScope.scenarios.eType = Scenario
 E2ETestScope.layer.eType = SelectionLayer
 E2ETestScope.scriptTask.eType = ScriptTask
+CSVFile.entity.eType = Entity
+CSVFile.header.eType = CSVHeader
 CSVFile.rows.eType = CSVRow
+CSVHeader.attributes.eType = Attribute
 DOMAIN.facet_id.eType = FACET_COLLECTION
 DOMAIN.maintenance_agency_id.eType = MAINTENANCE_AGENCY
 FACET_COLLECTION.maintenance_agency_id.eType = MAINTENANCE_AGENCY
@@ -166,7 +160,7 @@ RequirementsSectionLinkWithText.linkedRuleSection.eType = TitledRequirementsSect
 TitledRequirementsSection.referencingSections.eType = RequirementsSectionLinkWithText
 TitledRequirementsSection.referencingSections.eOpposite = RequirementsSectionLinkWithText.linkedRuleSection
 
-otherClassifiers = [AttrComparison, FACET_VALUE_TYPE,
+otherClassifiers = [Comparitor, AttrComparison, FACET_VALUE_TYPE,
                     FACET_VALUE_TYPEObject, TYP_DMNSN, TYP_DMNSNObject, TYP_RL, TYP_RLObject]
 
 for classif in otherClassifiers:

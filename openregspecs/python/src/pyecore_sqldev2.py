@@ -15,7 +15,7 @@ Created on 22 Jan 2022
 
 @author: Neil
 '''
-from open_reg_specs import EntityModule, Entity, DerivedEntity, BasicEntity,Attribute,OneToOneRelationshipAttribute,OneToManyRelationshipAttribute,RelationshipAttribute, MEMBER, DOMAIN, FACET_VALUE_TYPE, SUBDOMAIN,VARIABLE,  DomainModule, OpenRegSpecs, SMCubesCoreModel, MemberModule, VariableModule,SubDomainModule
+from open_reg_specs import EntityModule, Entity, DerivedEntity, GeneratedEntity, BasicEntity,Attribute,OneToOneRelationshipAttribute,OneToManyRelationshipAttribute,RelationshipAttribute, MEMBER, DOMAIN, FACET_VALUE_TYPE, SUBDOMAIN,VARIABLE,  DomainModule, OpenRegSpecs, SMCubesCoreModel, MemberModule, VariableModule,SubDomainModule
 from pyecore.resources import ResourceSet, URI
 import csv
 class SQLDeveloperImport(object):
@@ -27,7 +27,7 @@ class SQLDeveloperImport(object):
         openRegSpecs.data_model.extend([entityModule])
         
         smcubesCoreModel = SMCubesCoreModel()
-        smcubesCoreModel.name = "SMCubesCoreModel"
+        smcubesCoreModel.name = "SMCubesCoreModel1"
         openRegSpecs.types_and_concepts = smcubesCoreModel
         classesMap = {}
         fileLocation = fileDirectory + "\\DM_Entities.csv"
@@ -42,14 +42,16 @@ class SQLDeveloperImport(object):
                     className = row[0];
                     objectID = row[1];
                     alteredClassName = SQLDeveloperImport.replaceSpaceWithUnderscore(self,className);
-                    eclass = BasicEntity()
+                    if(alteredClassName.endswith("_derived")):
+                        eclass = DerivedEntity()
+                    elif(className.startswith("OUTPUT_LAYER_")):
+                        eclass = GeneratedEntity()
+                    else:
+                        eclass = BasicEntity()
                     eclass.name = alteredClassName
                     entityModule.entities.extend([eclass])
                     classesMap[objectID]=eclass
-                    #print("entityModule.eClassifiers")
-                    #print(entityModule.eClassifiers)
-                    #print("classesMap")
-                    #print(classesMap)
+                 
 
         fileLocation = fileDirectory + "\\DM_Entities.csv"
         headerSkipped = False
@@ -226,6 +228,7 @@ class SQLDeveloperImport(object):
                     if (attributeKind == "Domain"):
                         domainID = row[12]
                         theDomain = domainMap[domainID]
+                        theDomain.is_enumerated = True
                         theSubDomain = subDomainMap[domainID]
                         attribute = Attribute()
                         attribute.name = amendedAttributeName
@@ -246,7 +249,7 @@ class SQLDeveloperImport(object):
                         try:
                             datatype = datatypeMap[dataTypeID]
                             attribute = EAttribute()
-                            attribue.name =amendedAttributeName
+                            attribute.name =amendedAttributeName
                             try:
                                 variable = variableMap[amendedAttributeName]
                             except KeyError:
@@ -278,20 +281,20 @@ class SQLDeveloperImport(object):
         #remove any attributes that already exist in superclass.
 
         for theClass in classesMap.values():
-            
-            superclass = theClass.superClass
-            if (superclass):
-                
-                attributes = superclass.attributes
-                attributesToDelete = []
-                for theAttribute in attributes :
-                    if SQLDeveloperImport.superclassContainsFeature(self,superclass, theAttribute):
-                        attributesToDelete.append(theAttribute);
-
-                for theAttribute in attributesToDelete :
-                    attributes.remove(theAttribute);
-                    print( "removed eStructuralFeature since it exists in the superclass")
-                    print(  theAttribute )
+            if (isinstance(theClass, BasicEntity)):
+                superclass = theClass.superClass
+                if (superclass):
+                    
+                    attributes = superclass.attributes
+                    attributesToDelete = []
+                    for theAttribute in attributes :
+                        if SQLDeveloperImport.superclassContainsFeature(self,superclass, theAttribute):
+                            attributesToDelete.append(theAttribute);
+    
+                    for theAttribute in attributesToDelete :
+                        attributes.remove(theAttribute);
+                        print( "removed eStructuralFeature since it exists in the superclass")
+                        print(  theAttribute )
                
           
         #for each relationship add a reference
@@ -368,13 +371,170 @@ class SQLDeveloperImport(object):
                         relationalAttribute.name=theClass.name+"_"+ relationalAttribute.name
                         theClass.attributes.extend([relationalAttribute])
 
+        SQLDeveloperImport.saveModelAsXMIFile(self, openRegSpecs, outputDirectory )  
+        SQLDeveloperImport.saveModelAsRPMNFile(self, openRegSpecs, outputDirectory )                  
+        
+        
+    def saveModelAsXMIFile(self, openRegSpecs, outputDirectory ):
+        # save model as a xmi file
         rset = ResourceSet()
         
         resource = rset.create_resource(URI(outputDirectory + 'ldm.open_reg_specs'))  # This will create an XMI resource
         resource.append(openRegSpecs)
         resource.save()
+    
+    def saveModelAsRPMNFile(self, openRegSpecs, outputDirectory ):
+        f = open(outputDirectory + 'data_model.open_reg_specs', "a")
+        f.write("OpenRegSpecs {\r")
+        for entityModule in openRegSpecs.data_model:
+            f.write("\t data_model { \r")
+            f.write("\t\t EntityModule " + entityModule.name + "{ { \r")    
+            for entity in entityModule.entities:
+                if isinstance(entity,DerivedEntity):
+                    f.write("\t\t\t DerivedEntity " + entity.name + "{\r")
+                    
+                    for attribute in entity.attributes:
+                        f.write("\t\t\t\t" + type(attribute).__name__  + " " + attribute.name  )
+                        if isinstance(attribute, RelationshipAttribute):
+                            f.write(" entity "   + attribute.entity.name)
+                            if (attribute.containment):
+                                 f.write(" owning"  )
+                            if (attribute.mandatory):
+                                 f.write(" mandatory"  )
+                            if (attribute.dominant):
+                                 f.write(" dominant"  )
+                            f.write(" \r"  )
+                        else:
+                            f.write(" type \""  + SQLDeveloperImport.qualifiedTypeName(self,attribute.type) + "\"\r" )
+                            
+                    f.write("\t\t\t}\r")
+                if isinstance(entity,BasicEntity):
+                    f.write("\t\t\t BasicEntity " + entity.name)
+                    if entity.superClass:
+                        f.write("inheritsFrom" +  entity.superClass.name) 
+                    f.write(" { \r")  
+                    for attribute in entity.attributes:
+                        f.write("\t\t\t\t" + type(attribute).__name__  + " " + attribute.name  )
+                        if isinstance(attribute, RelationshipAttribute):
+                            f.write(" entity "   + attribute.entity.name)
+                            if (attribute.containment):
+                                 f.write(" owning"  )
+                            if (attribute.mandatory):
+                                 f.write(" mandatory"  )
+                            if (attribute.dominant):
+                                 f.write(" dominant"  )
+                            f.write(" \r"  )
+                        else:
+                            f.write(" type \""  + SQLDeveloperImport.qualifiedTypeName(self,attribute.type) + "\"\r" )
+                            
+                    f.write("\t\t\t}\r")
+                if isinstance(entity,GeneratedEntity):
+                    f.write("\t\t\t GeneratedEntity " + entity.name + "{\r")
+                    for attribute in entity.attributes:
+                        f.write("\t\t\t\t  Attribute " + attribute.name )
+                        f.write(" type \""  + SQLDeveloperImport.qualifiedTypeName(self,attribute.type) + "\"\r" ) 
+                    f.write("\t\t\t  }\r")
+
+            f.write("\t\t  }\r")
+        f.write("\t  }\r")
+        f.write("  }\r")
+        f.close()
         
+        f1 = open(outputDirectory + 'domains.open_reg_specs', "a")
+        f1.write("OpenRegSpecs {\r")
+        f1.write("\t types_and_concepts SMCubesCoreModel " + openRegSpecs.types_and_concepts.name + " {\r")
+        for domainModule in openRegSpecs.types_and_concepts.domainModules:
+            f1.write("\t\t domainModules { DomainModule " + domainModule.name + " { {\r")
+            for domain in domainModule.domains:
+                f1.write("\t\t\t DOMAIN " + domain.name )
+                if domain.is_enumerated:
+                    f1.write(" is_enumerated")
+                else:
+                    f1.write( " data_type " + domain.data_type.name)
+                f1.write("\r")
+        f1.write("\t\t  }\r")
+        f1.write("\t  }\r")
+        f1.write("  }\r")
+        f1.close()
+                    
+        f2 = open(outputDirectory + 'members.open_reg_specs', "a")
+        f2.write("OpenRegSpecs {\r")
+        f2.write("\t types_and_concepts SMCubesCoreModel " + openRegSpecs.types_and_concepts.name + " {\r")
         
+        for memberModule in openRegSpecs.types_and_concepts.memberModules:
+            f2.write("\t\t memberModules { MemberModule " + memberModule.name + " { {\r")
+            for member in memberModule.members:
+                f2.write("\t\t\t MEMBER " + member.name )
+                f2.write( " domain \"" + SQLDeveloperImport.qualifiedDomainName(self,member.domain_id) + "\"\r")
+                f2.write("\r")
+        f2.write("\t\t  }\r")
+        f2.write("\t  }\r")
+        f2.write("  }\r")
+        f2.close()
+        
+        f3 = open(outputDirectory + 'subdomains.open_reg_specs', "a")
+        f3.write("OpenRegSpecs {\r")
+        f3.write("\t types_and_concepts SMCubesCoreModel " + openRegSpecs.types_and_concepts.name + " {\r")
+        
+        for subDomainModule in openRegSpecs.types_and_concepts.subDomainModules:
+            f3.write("\t\t subDomainModules { SubDomainModule " + subDomainModule.name + " { {\r")
+            for subdomain in subDomainModule.subdomains:
+                f3.write("\t\t\t SUBDOMAIN " + subdomain.name )
+                f3.write( " domain \"" + SQLDeveloperImport.qualifiedDomainName(self,member.domain_id) + "\"\r")
+                f3.write("\r")
+        f3.write("\t\t  }\r")
+        f3.write("\t  }\r")
+        f3.write("  }\r")
+        f3.close()
+        
+    def qualifiedEntityName(self, entity):
+        returnName = entity.name
+        if entity.eContainer():
+            if not(isinstance(type.eContainer(),OpenRegSpecs)):
+                returnName = entity.eContainer().name + "." +returnName
+        if entity.eContainer().eContainer():
+            if not(isinstance(type.eContainer().eContainer(),OpenRegSpecs)):
+                returnName = entity.eContainer().eContainer().name + "." +returnName
+        if entity.eContainer().eContainer().eContainer():
+            if not(isinstance(type.eContainer().eContainer().eContainer(),OpenRegSpecs)):
+                returnName = entity.eContainer().eContainer().eContainer().name + "." +returnName
+        if entity.eContainer().eContainer().eContainer().eContainer():
+            if not(isinstance(type.eContainer().eContainer().eContainer(),OpenRegSpecs)):
+                returnName = entity.eContainer().eContainer().eContainer().eContainer().name + "." +returnName
+        return returnName;
+        
+    def qualifiedTypeName(self, type):
+        returnName = type.name
+        if type.eContainer():
+            if not(isinstance(type.eContainer(),OpenRegSpecs)):
+                returnName = type.eContainer().name + "." + returnName
+        if type.eContainer().eContainer():
+            if not(isinstance(type.eContainer().eContainer(),OpenRegSpecs)):
+                returnName = type.eContainer().eContainer().name + "." + returnName
+        if type.eContainer().eContainer().eContainer():
+            if not(isinstance(type.eContainer().eContainer().eContainer(),OpenRegSpecs)):
+                returnName = type.eContainer().eContainer().eContainer().name + "." + returnName
+        if type.eContainer().eContainer().eContainer().eContainer():
+            if not(isinstance(type.eContainer().eContainer().eContainer().eContainer(),OpenRegSpecs)):
+                returnName = type.eContainer().eContainer().eContainer().eContainer().name + "." + returnName
+        return returnName;
+    
+    def qualifiedDomainName(self, domain):
+        returnName = domain.name
+        if domain.eContainer():
+            if not(isinstance(domain.eContainer(),OpenRegSpecs)):
+                returnName = domain.eContainer().name + "." + returnName
+        if domain.eContainer().eContainer():
+            if not(isinstance(domain.eContainer().eContainer(),OpenRegSpecs)):
+                returnName = domain.eContainer().eContainer().name + "." + returnName
+        if domain.eContainer().eContainer().eContainer():
+            if not(isinstance(domain.eContainer().eContainer().eContainer(),OpenRegSpecs)):
+                returnName = domain.eContainer().eContainer().eContainer().name + "." + returnName
+        if domain.eContainer().eContainer().eContainer().eContainer():
+            if not(isinstance(domain.eContainer().eContainer().eContainer().eContainer(),OpenRegSpecs)):
+                returnName = domain.eContainer().eContainer().eContainer().eContainer().name + "." + returnName
+        return returnName;
+    
         
     def superclassContainsFeature(self,theSuperClass, attribute) :
         attributes = theSuperClass.attributes
