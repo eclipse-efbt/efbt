@@ -38,7 +38,7 @@ OpenRegSpecs {
 							ServiceTask Netted_delta_sensitivities_identifier incoming ( sf25 ) enrichedAttribute "open_reg_specs.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_Netted_delta_sensitivities_identifier"
 							 scenarios { 
 							 	Scenario Netted_delta_sensitivities_identifier_primary_sceanrio 
-							 		requiredAttributes ("open_reg_specs.Risk_factor.Risk_factor_Risk_factor_id" , 
+							 		requiredAttributes ("open_reg_specs.Risk_factor.Risk_factor_Risk_factor_Identifier" , 
 							 		"open_reg_specs.Delta_sensitivity.Delta_sensitivity_Tenor" ,
 							 		"open_reg_specs.Risk_measure.Risk_measure_theRisk_factor"
 							 		)
@@ -52,7 +52,7 @@ OpenRegSpecs {
 											"open_reg_specs.Delta_sensitivity.Delta_sensitivity_Tenor" ,
 											"open_reg_specs.Risk_measure.Risk_measure_theRisk_factor",
 											"open_reg_specs.Risk_measure.Risk_measure_Risk_measure_identifier",
-											 "open_reg_specs.Risk_factor.Risk_factor_Risk_factor_id" ,
+											 "open_reg_specs.Risk_factor.Risk_factor_Risk_factor_Identifier" ,
 											"open_reg_specs.GIRR_risk_factor.GIRR_risk_factor_GIRR_risk_factor_type")    
 										data_constraints conditional 
 										 "open_reg_specs.GIRR_risk_factor.GIRR_risk_factor_GIRR_risk_factor_type" not_equals member  "SMCubesCoreModel1.membersModule.Inflation" ,
@@ -62,7 +62,7 @@ OpenRegSpecs {
 											"open_reg_specs.Delta_sensitivity.Delta_sensitivity_Tenor" ,
 											"open_reg_specs.Risk_measure.Risk_measure_theRisk_factor",
 											"open_reg_specs.Risk_measure.Risk_measure_Risk_measure_identifier",
-											 "open_reg_specs.Risk_factor.Risk_factor_Risk_factor_id" ,
+											 "open_reg_specs.Risk_factor.Risk_factor_Risk_factor_Identifier" ,
 											"open_reg_specs.GIRR_risk_factor.GIRR_risk_factor_GIRR_risk_factor_type") 
 										data_constraints conditional 
 										 "open_reg_specs.GIRR_risk_factor.GIRR_risk_factor_GIRR_risk_factor_type" equals member  "SMCubesCoreModel1.membersModule.Inflation"

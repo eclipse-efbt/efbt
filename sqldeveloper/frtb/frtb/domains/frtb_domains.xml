@@ -385,6 +385,11 @@
 <fileName>frtb_domains</fileName>
 <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
 <synonym>CNTNGNT_SCNR</synonym>
+<listOfValues>
+<valueDef value="1" description="Low_Correlation_Scenario"/>
+<valueDef value="2" description="Medium_Correlation_Scenario"/>
+<valueDef value="3" description="High_Correlation_Scenario"/>
+</listOfValues>
 </Domain>
 <Domain class="oracle.dbtools.crest.model.design.Domain" name="Main Catagory" id="E41BF2C1-36E3-6B32-D73A-8F8901FE5B50">
 <createdBy>Neil</createdBy>

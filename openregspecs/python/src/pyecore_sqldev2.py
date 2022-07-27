@@ -285,16 +285,16 @@ class SQLDeveloperImport(object):
                 superclass = theClass.superClass
                 if (superclass):
                     
-                    attributes = superclass.attributes
+                    attributes = theClass.attributes
                     attributesToDelete = []
                     for theAttribute in attributes :
                         if SQLDeveloperImport.superclassContainsFeature(self,superclass, theAttribute):
                             attributesToDelete.append(theAttribute);
     
                     for theAttribute in attributesToDelete :
-                        attributes.remove(theAttribute);
+                        theClass.attributes.remove(theAttribute);
                         print( "removed eStructuralFeature since it exists in the superclass")
-                        print(  theAttribute )
+                        print(  theAttribute.name )
                
           
         #for each relationship add a reference
@@ -411,7 +411,7 @@ class SQLDeveloperImport(object):
                 if isinstance(entity,BasicEntity):
                     f.write("\t\t\t BasicEntity " + entity.name)
                     if entity.superClass:
-                        f.write("inheritsFrom" +  entity.superClass.name) 
+                        f.write(" inheritsFrom " +  entity.superClass.name) 
                     f.write(" { \r")  
                     for attribute in entity.attributes:
                         f.write("\t\t\t\t" + type(attribute).__name__  + " " + attribute.name  )
