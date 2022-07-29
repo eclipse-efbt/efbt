@@ -43,7 +43,7 @@ SPDX-License-Identifier: EPL-2.0
 							fileName "GIRR_risk_factor.csv"
 							entity "open_reg_specs.GIRR_risk_factor"
 							header CSVHeader { attributes ( 
-								"open_reg_specs.Risk_factor.Risk_factor_Risk_factor_id" ,
+								"open_reg_specs.Risk_factor.Risk_factor_Risk_factor_Identifier" ,
 								"open_reg_specs.GIRR_risk_factor.GIRR_risk_factor_GIRR_risk_factor_type"
 							)
 							}

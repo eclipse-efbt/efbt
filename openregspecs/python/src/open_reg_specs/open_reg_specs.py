@@ -1,15 +1,3 @@
-#
-# Copyright (c) 2020 Bird Software Solutions Ltd
-# This program and the accompanying materials
-# are made available under the terms of the Eclipse Public License 2.0
-# which accompanies this distribution, and is available at
-# https://www.eclipse.org/legal/epl-2.0/
-#
-# SPDX-License-Identifier: EPL-2.0
-#
-# Contributors:
-#    Neil Mackenzie - initial API and implementation
-#
 """Definition of meta model 'open_reg_specs'."""
 from functools import partial
 import pyecore.ecore as Ecore
@@ -24,7 +12,10 @@ eClass = EPackage(name=name, nsURI=nsURI, nsPrefix=nsPrefix)
 
 eClassifiers = {}
 getEClassifier = partial(Ecore.getEClassifier, searchspace=eClassifiers)
-AttrComparison = EEnum('AttrComparison', literals=['equals', 'less_than', 'greater_than'])
+Comparitor = EEnum('Comparitor', literals=['less_than', 'equals', 'greater_than'])
+
+AttrComparison = EEnum('AttrComparison', literals=[
+                       'equals', 'less_than', 'greater_than', 'not_equals'])
 
 FACET_VALUE_TYPE = EEnum('FACET_VALUE_TYPE', literals=['BigInteger', 'Boolean', 'DateTime', 'DayMonthDayMonth', 'Decimal', 'Double',
                          'Duration', 'Float', 'GregorianDay', 'GregorianMonth', 'GregorianYear', 'Integer', 'Long', 'Short', 'String', 'Time', 'URI'])
@@ -337,32 +328,44 @@ class SelectClause(EObject, metaclass=MetaEClass):
             self.columns.extend(columns)
 
 
-class Column(EObject, metaclass=MetaEClass):
+class SelectColumn(EObject, metaclass=MetaEClass):
 
-    attribute = EReference(ordered=True, unique=True, containment=False, derived=False)
+    as_ = EReference(ordered=True, unique=True, containment=False, derived=False)
 
-    def __init__(self, *, attribute=None):
+    def __init__(self, *, as_=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
         super().__init__()
 
-        if attribute is not None:
-            self.attribute = attribute
+        if as_ is not None:
+            self.as_ = as_
 
 
 class WhereClause(EObject, metaclass=MetaEClass):
 
-    text = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    comparitor = EAttribute(eType=Comparitor, unique=True, derived=False, changeable=True)
+    value = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    attribute1 = EReference(ordered=True, unique=True, containment=False, derived=False)
+    member = EReference(ordered=True, unique=True, containment=False, derived=False)
 
-    def __init__(self, *, text=None):
+    def __init__(self, *, attribute1=None, comparitor=None, member=None, value=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
         super().__init__()
 
-        if text is not None:
-            self.text = text
+        if comparitor is not None:
+            self.comparitor = comparitor
+
+        if value is not None:
+            self.value = value
+
+        if attribute1 is not None:
+            self.attribute1 = attribute1
+
+        if member is not None:
+            self.member = member
 
 
 class Scenario(EObject, metaclass=MetaEClass):
@@ -426,10 +429,11 @@ class Test(EObject, metaclass=MetaEClass):
 class DataConstraint(EObject, metaclass=MetaEClass):
 
     comparison = EAttribute(eType=AttrComparison, unique=True, derived=False, changeable=True)
+    value = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     attr1 = EReference(ordered=True, unique=True, containment=False, derived=False)
-    attr2 = EReference(ordered=True, unique=True, containment=False, derived=False)
+    member = EReference(ordered=True, unique=True, containment=False, derived=False)
 
-    def __init__(self, *, attr1=None, attr2=None, comparison=None):
+    def __init__(self, *, attr1=None, comparison=None, member=None, value=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
@@ -438,11 +442,14 @@ class DataConstraint(EObject, metaclass=MetaEClass):
         if comparison is not None:
             self.comparison = comparison
 
+        if value is not None:
+            self.value = value
+
         if attr1 is not None:
             self.attr1 = attr1
 
-        if attr2 is not None:
-            self.attr2 = attr2
+        if member is not None:
+            self.member = member
 
 
 class SelectionLayer(EObject, metaclass=MetaEClass):
@@ -484,9 +491,11 @@ class TestScope(EObject, metaclass=MetaEClass):
 class CSVFile(EObject, metaclass=MetaEClass):
 
     fileName = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    entity = EReference(ordered=True, unique=True, containment=False, derived=False)
+    header = EReference(ordered=True, unique=True, containment=True, derived=False)
     rows = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
-    def __init__(self, *, fileName=None, rows=None):
+    def __init__(self, *, fileName=None, entity=None, header=None, rows=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
@@ -495,8 +504,28 @@ class CSVFile(EObject, metaclass=MetaEClass):
         if fileName is not None:
             self.fileName = fileName
 
+        if entity is not None:
+            self.entity = entity
+
+        if header is not None:
+            self.header = header
+
         if rows:
             self.rows.extend(rows)
+
+
+class CSVHeader(EObject, metaclass=MetaEClass):
+
+    attributes = EReference(ordered=True, unique=True, containment=False, derived=False, upper=-1)
+
+    def __init__(self, *, attributes=None):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+        if attributes:
+            self.attributes.extend(attributes)
 
 
 class CSVRow(EObject, metaclass=MetaEClass):
@@ -1580,20 +1609,28 @@ class TagGroup(Module):
             self.tags.extend(tags)
 
 
-class SelectColumn(Column):
+class SelectColumnMemberAs(SelectColumn):
 
-    as_ = EReference(ordered=True, unique=True, containment=False, derived=False)
     memberAsConstant = EReference(ordered=True, unique=True, containment=False, derived=False)
 
-    def __init__(self, *, as_=None, memberAsConstant=None, **kwargs):
+    def __init__(self, *, memberAsConstant=None, **kwargs):
 
         super().__init__(**kwargs)
 
-        if as_ is not None:
-            self.as_ = as_
-
         if memberAsConstant is not None:
             self.memberAsConstant = memberAsConstant
+
+
+class SelectColumnAttributeAs(SelectColumn):
+
+    attribute = EReference(ordered=True, unique=True, containment=False, derived=False)
+
+    def __init__(self, *, attribute=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if attribute is not None:
+            self.attribute = attribute
 
 
 class ViewModule(Module):
