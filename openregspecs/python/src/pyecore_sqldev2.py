@@ -17,6 +17,10 @@ Created on 22 Jan 2022
 '''
 from open_reg_specs import EntityModule, Entity, DerivedEntity, GeneratedEntity, BasicEntity,Attribute,OneToOneRelationshipAttribute,OneToManyRelationshipAttribute,RelationshipAttribute, MEMBER, DOMAIN, FACET_VALUE_TYPE, SUBDOMAIN,VARIABLE,  DomainModule, OpenRegSpecs, SMCubesCoreModel, MemberModule, VariableModule,SubDomainModule
 from pyecore.resources import ResourceSet, URI
+from pyecore.ecore import *
+from pyecore.resources.xmi import XMIResource
+from pyecore.resources.xmi import XMIOptions
+
 import csv
 class SQLDeveloperImport(object):
         
@@ -372,8 +376,69 @@ class SQLDeveloperImport(object):
                         theClass.attributes.extend([relationalAttribute])
 
         SQLDeveloperImport.saveModelAsXMIFile(self, openRegSpecs, outputDirectory )  
-        SQLDeveloperImport.saveModelAsRPMNFile(self, openRegSpecs, outputDirectory )                  
+        SQLDeveloperImport.saveModelAsRPMNFile(self, openRegSpecs, outputDirectory ) 
+        #SQLDeveloperImport.createAndSaveDetailedMetaModel(self, openRegSpecs, outputDirectory )                  
         
+    def addMembersToEnum(self, openRegSpecs, enum):
+        for membersModule in openRegSpecs.types_and_concepts.memberModules:
+            for member in membersModule.members:
+                theDomain = member.domain_id
+                if(theDomain.name == enum.name):
+                    theEnumLiteral =EEnumLiteral(member.name)
+                    enum.eLiterals.extend([theEnumLiteral])
+                    
+    def createAndSaveDetailedMetaModel(self, openRegSpecs, outputDirectory ):
+        # create the enums first.
+        
+        my_ecore_schema = EPackage('detailed_model', nsURI='http://detailed_model', nsPrefix='detailed_model')
+        
+        for domainsModel in openRegSpecs.types_and_concepts.domainModules:
+            for domain in domainsModel.domains:
+                theEnum =EEnum(domain.name)
+                print ("DDD")
+                print (theEnum.eClass.ePackage.name)
+                SQLDeveloperImport.addMembersToEnum(self,openRegSpecs,theEnum)
+                my_ecore_schema.eClassifiers.extend([theEnum])
+                print (theEnum.eClass.ePackage.name)
+                
+        for entityModule in openRegSpecs.data_model:
+            
+            for entity in entityModule.entities:
+                if isinstance(entity,BasicEntity):
+                    # Define a Root that can contain A and B instances,
+                    # B instances can hold references towards A instances
+
+                    theClass = EClass(entity.name)
+                    # theClass.ePackage = my_ecore_schema
+
+                    # Add all the concepts to an EPackage
+                    
+                    my_ecore_schema.eClassifiers.extend([theClass])
+
+                    
+                    for attribute in entity.attributes:
+                        if not(isinstance(attribute, RelationshipAttribute)):
+                            if(attribute.type.domain_id.is_enumerated):
+                                eenum = SQLDeveloperImport.getEEnumForDomain(self,attribute.type.name, my_ecore_schema.eClassifiers)
+                                theClass.eStructuralFeatures.append(EAttribute(attribute.name, eenum))
+
+            rset = ResourceSet()
+            print(rset.metamodel_registry)
+            resource = rset.create_resource(URI(outputDirectory + 'detailed_model.ecore'))  # This will create an XMI resource
+            print(resource.reverse_nsmap)
+            resource = XMIResource(URI(outputDirectory + 'detailed_model.ecore'))
+            resource.append(my_ecore_schema)  # we add the EPackage instance in the resource
+            resource.save()  # we then serialize it
+            print(resource.reverse_nsmap)
+                   
+
+    def getEEnumForDomain(self,attributeTypeName, classifiers):
+        for classifier in classifiers:
+            if classifier.name == attributeTypeName:
+                return classifier
+        
+    def getETypeForAttribute(self, attribute):
+        return EString
         
     def saveModelAsXMIFile(self, openRegSpecs, outputDirectory ):
         # save model as a xmi file
