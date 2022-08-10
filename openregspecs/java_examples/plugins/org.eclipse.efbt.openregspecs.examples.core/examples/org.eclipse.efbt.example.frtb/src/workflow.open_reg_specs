@@ -34,7 +34,7 @@ OpenRegSpecs {
 					SubProcess PreNetting incoming ( sf10 ) flowElements { 
 						ParallelGateway gw4 outgoing ( sf12 , sf13 ) , 
 						SubProcess DeltaNetting incoming ( sf12 ) flowElements { 
-							InclusiveGateway gw8 outgoing ( sf25 , sf26 , sf27 , sf28 , sf22 , sf23 , sf24 , sf29 ) ,
+							InclusiveGateway gw8 outgoing ( sf25 , sf26 , sf27 , sf28 ) ,
 							ServiceTask Netted_delta_sensitivities_identifier incoming ( sf25 ) enrichedAttribute "open_reg_specs.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_Netted_delta_sensitivities_identifier"
 							 scenarios { 
 							 	Scenario Netted_delta_sensitivities_identifier_primary_sceanrio 
@@ -77,18 +77,12 @@ OpenRegSpecs {
 											"open_reg_specs.Delta_sensitivity.Delta_sensitivity_Currency_of_record",
 											"open_reg_specs.Risk_measure.Risk_measure_Risk_measure_identifier")   
 							 		} 
-						} , ServiceTask summed_delta_per_position_identifier incoming ( sf22 ) enrichedAttribute "open_reg_specs.Summed_delta_sensitivities_per_position_and_risk_factor_derived.Summed_delta_sensitivities_per_position_and_risk_factor_derived_summed_delta_per_position_identifier"
-						} , ServiceTask Position_identifier incoming ( sf23 ) enrichedAttribute "open_reg_specs.Summed_delta_sensitivities_per_position_and_risk_factor_derived.Summed_delta_sensitivities_per_position_and_risk_factor_derived_Position_identifier" } , ServiceTask Risk_factor_Identifier2 incoming ( sf29 ) enrichedAttribute "open_reg_specs.Summed_delta_sensitivities_per_position_and_risk_factor_derived.Summed_delta_sensitivities_per_position_and_risk_factor_derived_Risk_factor_Identifier"
-						} , ServiceTask summed_delta_per_position incoming ( sf24 ) enrichedAttribute "open_reg_specs.Summed_delta_sensitivities_per_position_and_risk_factor_derived.Summed_delta_sensitivities_per_position_and_risk_factor_derived_summed_delta_per_position"
+						 
 				} , 
 				SequenceFlow sf25 from gw8 to Netted_delta_sensitivities_identifier , 
 				SequenceFlow sf26 from gw8 to Risk_factor_Identifier , 
 				SequenceFlow sf27 from gw8 to Tenor , 
-				SequenceFlow sf28 from gw8 to Netted_delta_sensitivities , 
-				SequenceFlow sf22 from gw8 to summed_delta_per_position_identifier , 
-				SequenceFlow sf23 from gw8 to Position_identifier , 
-				SequenceFlow sf29 from gw8 to Risk_factor_Identifier2 , 
-				SequenceFlow sf24 from gw8 to summed_delta_per_position } , 
+				SequenceFlow sf28 from gw8 to Netted_delta_sensitivities } , 
 				SubProcess VegaNetting incoming ( sf13 ) , 
 				SequenceFlow sf12 from gw4 to DeltaNetting , 
 				SequenceFlow sf13 from gw4 to VegaNetting } , 
