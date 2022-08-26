@@ -17,58 +17,6 @@ Comparitor = EEnum('Comparitor', literals=['less_than', 'equals', 'greater_than'
 AttrComparison = EEnum('AttrComparison', literals=[
                        'equals', 'less_than', 'greater_than', 'not_equals'])
 
-FACET_VALUE_TYPE = EEnum('FACET_VALUE_TYPE', literals=['BigInteger', 'Boolean', 'DateTime', 'DayMonthDayMonth', 'Decimal', 'Double',
-                         'Duration', 'Float', 'GregorianDay', 'GregorianMonth', 'GregorianYear', 'Integer', 'Long', 'Short', 'String', 'Time', 'URI'])
-
-TYP_DMNSN = EEnum('TYP_DMNSN', literals=['B', 'M', 'T', 'U'])
-
-TYP_RL = EEnum('TYP_RL', literals=['O', 'A', 'D'])
-
-
-FACET_VALUE_TYPEObject = EDataType(
-    'FACET_VALUE_TYPEObject', instanceClassName='org.eclipse.emf.common.util.Enumerator')
-
-TYP_DMNSNObject = EDataType(
-    'TYP_DMNSNObject', instanceClassName='org.eclipse.emf.common.util.Enumerator')
-
-TYP_RLObject = EDataType('TYP_RLObject', instanceClassName='org.eclipse.emf.common.util.Enumerator')
-
-
-class OpenRegSpecs(EObject, metaclass=MetaEClass):
-
-    requirements = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-    types_and_concepts = EReference(ordered=True, unique=True, containment=True, derived=False)
-    data_model = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-    process_workflow = EReference(ordered=True, unique=True,
-                                  containment=True, derived=False, upper=-1)
-    report_generation = EReference(ordered=True, unique=True,
-                                   containment=True, derived=False, upper=-1)
-    tests = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-
-    def __init__(self, *, requirements=None, types_and_concepts=None, data_model=None, process_workflow=None, report_generation=None, tests=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if requirements:
-            self.requirements.extend(requirements)
-
-        if types_and_concepts is not None:
-            self.types_and_concepts = types_and_concepts
-
-        if data_model:
-            self.data_model.extend(data_model)
-
-        if process_workflow:
-            self.process_workflow.extend(process_workflow)
-
-        if report_generation:
-            self.report_generation.extend(report_generation)
-
-        if tests:
-            self.tests.extend(tests)
-
 
 @abstract
 class BaseElement(EObject, metaclass=MetaEClass):
@@ -91,48 +39,6 @@ class BaseElement(EObject, metaclass=MetaEClass):
 
         if invisible is not None:
             self.invisible = invisible
-
-
-class Concept(EObject, metaclass=MetaEClass):
-
-    conceptName = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-
-    def __init__(self, *, conceptName=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if conceptName is not None:
-            self.conceptName = conceptName
-
-
-@abstract
-class Element(EObject, metaclass=MetaEClass):
-
-    def __init__(self):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-
-class EnumMember(EObject, metaclass=MetaEClass):
-
-    def __init__(self):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-
-class TypesAndConcepts(EObject, metaclass=MetaEClass):
-
-    def __init__(self):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
 
 
 class Module(EObject, metaclass=MetaEClass):
@@ -488,14 +394,12 @@ class TestScope(EObject, metaclass=MetaEClass):
             self.name = name
 
 
-class CSVFile(EObject, metaclass=MetaEClass):
+class InputFile(EObject, metaclass=MetaEClass):
 
     fileName = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     entity = EReference(ordered=True, unique=True, containment=False, derived=False)
-    header = EReference(ordered=True, unique=True, containment=True, derived=False)
-    rows = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
-    def __init__(self, *, fileName=None, entity=None, header=None, rows=None):
+    def __init__(self, *, fileName=None, entity=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
@@ -506,926 +410,6 @@ class CSVFile(EObject, metaclass=MetaEClass):
 
         if entity is not None:
             self.entity = entity
-
-        if header is not None:
-            self.header = header
-
-        if rows:
-            self.rows.extend(rows)
-
-
-class CSVHeader(EObject, metaclass=MetaEClass):
-
-    attributes = EReference(ordered=True, unique=True, containment=False, derived=False, upper=-1)
-
-    def __init__(self, *, attributes=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if attributes:
-            self.attributes.extend(attributes)
-
-
-class CSVRow(EObject, metaclass=MetaEClass):
-
-    value = EAttribute(eType=EString, unique=True, derived=False, changeable=True, upper=-1)
-    isHeader = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
-
-    def __init__(self, *, value=None, isHeader=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if value:
-            self.value.extend(value)
-
-        if isHeader is not None:
-            self.isHeader = isHeader
-
-
-class DOMAIN(EObject, metaclass=MetaEClass):
-
-    code = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    data_type = EAttribute(eType=FACET_VALUE_TYPE, unique=True, derived=False, changeable=True)
-    description = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    is_enumerated = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
-    is_reference = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
-    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
-    displayName = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    facet_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    maintenance_agency_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, code=None, data_type=None, description=None, facet_id=None, is_enumerated=None, is_reference=None, maintenance_agency_id=None, name=None, displayName=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if code is not None:
-            self.code = code
-
-        if data_type is not None:
-            self.data_type = data_type
-
-        if description is not None:
-            self.description = description
-
-        if is_enumerated is not None:
-            self.is_enumerated = is_enumerated
-
-        if is_reference is not None:
-            self.is_reference = is_reference
-
-        if name is not None:
-            self.name = name
-
-        if displayName is not None:
-            self.displayName = displayName
-
-        if facet_id is not None:
-            self.facet_id = facet_id
-
-        if maintenance_agency_id is not None:
-            self.maintenance_agency_id = maintenance_agency_id
-
-
-class FACET_COLLECTION(EObject, metaclass=MetaEClass):
-
-    code = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    facet_value_type = EAttribute(eType=FACET_VALUE_TYPE, unique=True,
-                                  derived=False, changeable=True)
-    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
-    maintenance_agency_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, code=None, facet_value_type=None, maintenance_agency_id=None, name=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if code is not None:
-            self.code = code
-
-        if facet_value_type is not None:
-            self.facet_value_type = facet_value_type
-
-        if name is not None:
-            self.name = name
-
-        if maintenance_agency_id is not None:
-            self.maintenance_agency_id = maintenance_agency_id
-
-
-class FACET_ENUMERATION(EObject, metaclass=MetaEClass):
-
-    observation_value = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    facet_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    facet_type = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, facet_id=None, facet_type=None, observation_value=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if observation_value is not None:
-            self.observation_value = observation_value
-
-        if facet_id is not None:
-            self.facet_id = facet_id
-
-        if facet_type is not None:
-            self.facet_type = facet_type
-
-
-class facet_type(EObject, metaclass=MetaEClass):
-
-    decimals = EAttribute(eType=EInt, unique=True, derived=False, changeable=True)
-    endTime = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    endValue = EAttribute(eType=EInt, unique=True, derived=False, changeable=True)
-    interval = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    isSequence = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    maxLength = EAttribute(eType=EInt, unique=True, derived=False, changeable=True)
-    maxValue = EAttribute(eType=EInt, unique=True, derived=False, changeable=True)
-    minLength = EAttribute(eType=EInt, unique=True, derived=False, changeable=True)
-    minValue = EAttribute(eType=EInt, unique=True, derived=False, changeable=True)
-    pattern = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    startTime = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    startValue = EAttribute(eType=EInt, unique=True, derived=False, changeable=True)
-    timeInterval = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-
-    def __init__(self, *, decimals=None, endTime=None, endValue=None, interval=None, isSequence=None, maxLength=None, maxValue=None, minLength=None, minValue=None, pattern=None, startTime=None, startValue=None, timeInterval=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if decimals is not None:
-            self.decimals = decimals
-
-        if endTime is not None:
-            self.endTime = endTime
-
-        if endValue is not None:
-            self.endValue = endValue
-
-        if interval is not None:
-            self.interval = interval
-
-        if isSequence is not None:
-            self.isSequence = isSequence
-
-        if maxLength is not None:
-            self.maxLength = maxLength
-
-        if maxValue is not None:
-            self.maxValue = maxValue
-
-        if minLength is not None:
-            self.minLength = minLength
-
-        if minValue is not None:
-            self.minValue = minValue
-
-        if pattern is not None:
-            self.pattern = pattern
-
-        if startTime is not None:
-            self.startTime = startTime
-
-        if startValue is not None:
-            self.startValue = startValue
-
-        if timeInterval is not None:
-            self.timeInterval = timeInterval
-
-
-class MAINTENANCE_AGENCY(EObject, metaclass=MetaEClass):
-
-    code = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    maintenance_agency_id = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
-
-    def __init__(self, *, code=None, maintenance_agency_id=None, name=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if code is not None:
-            self.code = code
-
-        if maintenance_agency_id is not None:
-            self.maintenance_agency_id = maintenance_agency_id
-
-        if name is not None:
-            self.name = name
-
-
-class MEMBER_HIERARCHY(EObject, metaclass=MetaEClass):
-
-    code = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    description = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
-    domain_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    maintenance_agency_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, code=None, description=None, domain_id=None, maintenance_agency_id=None, name=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if code is not None:
-            self.code = code
-
-        if description is not None:
-            self.description = description
-
-        if name is not None:
-            self.name = name
-
-        if domain_id is not None:
-            self.domain_id = domain_id
-
-        if maintenance_agency_id is not None:
-            self.maintenance_agency_id = maintenance_agency_id
-
-
-class MEMBER_HIERARCHY_NODE(EObject, metaclass=MetaEClass):
-
-    comparator = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    level = EAttribute(eType=EInt, unique=True, derived=False, changeable=True)
-    operator = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    valid_from = EAttribute(eType=EDate, unique=True, derived=False, changeable=True)
-    valid_to = EAttribute(eType=EDate, unique=True, derived=False, changeable=True)
-    member_hierarchy_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    member_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    parent_member_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, comparator=None, level=None, member_hierarchy_id=None, member_id=None, operator=None, parent_member_id=None, valid_from=None, valid_to=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if comparator is not None:
-            self.comparator = comparator
-
-        if level is not None:
-            self.level = level
-
-        if operator is not None:
-            self.operator = operator
-
-        if valid_from is not None:
-            self.valid_from = valid_from
-
-        if valid_to is not None:
-            self.valid_to = valid_to
-
-        if member_hierarchy_id is not None:
-            self.member_hierarchy_id = member_hierarchy_id
-
-        if member_id is not None:
-            self.member_id = member_id
-
-        if parent_member_id is not None:
-            self.parent_member_id = parent_member_id
-
-
-class SUBDOMAIN_ENUMERATION(EObject, metaclass=MetaEClass):
-
-    order = EAttribute(eType=EInt, unique=True, derived=False, changeable=True)
-    valid_from = EAttribute(eType=EDate, unique=True, derived=False, changeable=True)
-    valid_to = EAttribute(eType=EDate, unique=True, derived=False, changeable=True)
-    member_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, member_id=None, order=None, valid_from=None, valid_to=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if order is not None:
-            self.order = order
-
-        if valid_from is not None:
-            self.valid_from = valid_from
-
-        if valid_to is not None:
-            self.valid_to = valid_to
-
-        if member_id is not None:
-            self.member_id = member_id
-
-
-class VARIABLE_SET(EObject, metaclass=MetaEClass):
-
-    code = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    description = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    variable_set_id = EAttribute(eType=EString, unique=True,
-                                 derived=False, changeable=True, iD=True)
-    maintenance_agency_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, code=None, description=None, maintenance_agency_id=None, name=None, variable_set_id=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if code is not None:
-            self.code = code
-
-        if description is not None:
-            self.description = description
-
-        if name is not None:
-            self.name = name
-
-        if variable_set_id is not None:
-            self.variable_set_id = variable_set_id
-
-        if maintenance_agency_id is not None:
-            self.maintenance_agency_id = maintenance_agency_id
-
-
-class VARIABLE_SET_ENUMERATION(EObject, metaclass=MetaEClass):
-
-    is_flow = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
-    order = EAttribute(eType=EInt, unique=True, derived=False, changeable=True)
-    valid_from = EAttribute(eType=EDate, unique=True, derived=False, changeable=True)
-    valid_to = EAttribute(eType=EDate, unique=True, derived=False, changeable=True)
-    subdomain_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    variable_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    variable_set_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, is_flow=None, order=None, subdomain_id=None, valid_from=None, valid_to=None, variable_id=None, variable_set_id=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if is_flow is not None:
-            self.is_flow = is_flow
-
-        if order is not None:
-            self.order = order
-
-        if valid_from is not None:
-            self.valid_from = valid_from
-
-        if valid_to is not None:
-            self.valid_to = valid_to
-
-        if subdomain_id is not None:
-            self.subdomain_id = subdomain_id
-
-        if variable_id is not None:
-            self.variable_id = variable_id
-
-        if variable_set_id is not None:
-            self.variable_set_id = variable_set_id
-
-
-class COMBINATION(EObject, metaclass=MetaEClass):
-
-    code = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    combination_id = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
-    valid_from = EAttribute(eType=EDate, unique=True, derived=False, changeable=True)
-    valid_to = EAttribute(eType=EDate, unique=True, derived=False, changeable=True)
-    version = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    maintenance_agency_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    combination_items = EReference(ordered=True, unique=True,
-                                   containment=True, derived=False, upper=-1)
-
-    def __init__(self, *, code=None, combination_id=None, maintenance_agency_id=None, name=None, valid_from=None, valid_to=None, version=None, combination_items=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if code is not None:
-            self.code = code
-
-        if combination_id is not None:
-            self.combination_id = combination_id
-
-        if name is not None:
-            self.name = name
-
-        if valid_from is not None:
-            self.valid_from = valid_from
-
-        if valid_to is not None:
-            self.valid_to = valid_to
-
-        if version is not None:
-            self.version = version
-
-        if maintenance_agency_id is not None:
-            self.maintenance_agency_id = maintenance_agency_id
-
-        if combination_items:
-            self.combination_items.extend(combination_items)
-
-
-class COMBINATION_ITEM(EObject, metaclass=MetaEClass):
-
-    member_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    subdomain_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    variable_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    variable_set_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, member_id=None, subdomain_id=None, variable_id=None, variable_set_id=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if member_id is not None:
-            self.member_id = member_id
-
-        if subdomain_id is not None:
-            self.subdomain_id = subdomain_id
-
-        if variable_id is not None:
-            self.variable_id = variable_id
-
-        if variable_set_id is not None:
-            self.variable_set_id = variable_set_id
-
-
-class CUBE(EObject, metaclass=MetaEClass):
-
-    code = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    cube_id = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    cube_type = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    description = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    is_allowed = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
-    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
-    published = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
-    valid_from = EAttribute(eType=EDate, unique=True, derived=False, changeable=True)
-    valid_to = EAttribute(eType=EDate, unique=True, derived=False, changeable=True)
-    version = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    displayName = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    cube_structure_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    framework_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    maintenance_agency_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, code=None, cube_id=None, cube_structure_id=None, cube_type=None, description=None, framework_id=None, is_allowed=None, maintenance_agency_id=None, name=None, published=None, valid_from=None, valid_to=None, version=None, displayName=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if code is not None:
-            self.code = code
-
-        if cube_id is not None:
-            self.cube_id = cube_id
-
-        if cube_type is not None:
-            self.cube_type = cube_type
-
-        if description is not None:
-            self.description = description
-
-        if is_allowed is not None:
-            self.is_allowed = is_allowed
-
-        if name is not None:
-            self.name = name
-
-        if published is not None:
-            self.published = published
-
-        if valid_from is not None:
-            self.valid_from = valid_from
-
-        if valid_to is not None:
-            self.valid_to = valid_to
-
-        if version is not None:
-            self.version = version
-
-        if displayName is not None:
-            self.displayName = displayName
-
-        if cube_structure_id is not None:
-            self.cube_structure_id = cube_structure_id
-
-        if framework_id is not None:
-            self.framework_id = framework_id
-
-        if maintenance_agency_id is not None:
-            self.maintenance_agency_id = maintenance_agency_id
-
-
-class CUBE_GROUP(EObject, metaclass=MetaEClass):
-
-    code = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    cube_group_id = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
-    description = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    maintenance_agency_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, code=None, cube_group_id=None, description=None, maintenance_agency_id=None, name=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if code is not None:
-            self.code = code
-
-        if cube_group_id is not None:
-            self.cube_group_id = cube_group_id
-
-        if description is not None:
-            self.description = description
-
-        if name is not None:
-            self.name = name
-
-        if maintenance_agency_id is not None:
-            self.maintenance_agency_id = maintenance_agency_id
-
-
-class CUBE_GROUP_ENUMERATION(EObject, metaclass=MetaEClass):
-
-    order = EAttribute(eType=EInt, unique=True, derived=False, changeable=True)
-    valid_from = EAttribute(eType=EDate, unique=True, derived=False, changeable=True)
-    valid_to = EAttribute(eType=EDate, unique=True, derived=False, changeable=True)
-    cube_group_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    cube_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, cube_group_id=None, cube_id=None, order=None, valid_from=None, valid_to=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if order is not None:
-            self.order = order
-
-        if valid_from is not None:
-            self.valid_from = valid_from
-
-        if valid_to is not None:
-            self.valid_to = valid_to
-
-        if cube_group_id is not None:
-            self.cube_group_id = cube_group_id
-
-        if cube_id is not None:
-            self.cube_id = cube_id
-
-
-class CUBE_HIERARCHY(EObject, metaclass=MetaEClass):
-
-    code = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    cube_hierarchy_id = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    cube_hierarchy_type = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    framework_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    maintenance_agency_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, code=None, cube_hierarchy_id=None, cube_hierarchy_type=None, framework_id=None, maintenance_agency_id=None, name=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if code is not None:
-            self.code = code
-
-        if cube_hierarchy_id is not None:
-            self.cube_hierarchy_id = cube_hierarchy_id
-
-        if cube_hierarchy_type is not None:
-            self.cube_hierarchy_type = cube_hierarchy_type
-
-        if name is not None:
-            self.name = name
-
-        if framework_id is not None:
-            self.framework_id = framework_id
-
-        if maintenance_agency_id is not None:
-            self.maintenance_agency_id = maintenance_agency_id
-
-
-class CUBE_HIERARCHY_NODE(EObject, metaclass=MetaEClass):
-
-    level = EAttribute(eType=EInt, unique=True, derived=False, changeable=True)
-    nODE_CODE = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
-    node_name = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    order = EAttribute(eType=EInt, unique=True, derived=False, changeable=True)
-    valid_from = EAttribute(eType=EDate, unique=True, derived=False, changeable=True)
-    valid_to = EAttribute(eType=EDate, unique=True, derived=False, changeable=True)
-    cube_group_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    cube_hierarchy_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    parent_node_code = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, cube_group_id=None, cube_hierarchy_id=None, level=None, nODE_CODE=None, node_name=None, order=None, parent_node_code=None, valid_from=None, valid_to=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if level is not None:
-            self.level = level
-
-        if nODE_CODE is not None:
-            self.nODE_CODE = nODE_CODE
-
-        if node_name is not None:
-            self.node_name = node_name
-
-        if order is not None:
-            self.order = order
-
-        if valid_from is not None:
-            self.valid_from = valid_from
-
-        if valid_to is not None:
-            self.valid_to = valid_to
-
-        if cube_group_id is not None:
-            self.cube_group_id = cube_group_id
-
-        if cube_hierarchy_id is not None:
-            self.cube_hierarchy_id = cube_hierarchy_id
-
-        if parent_node_code is not None:
-            self.parent_node_code = parent_node_code
-
-
-class CUBE_RELATIONSHIP(EObject, metaclass=MetaEClass):
-
-    code = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    cube_relationship_id = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    description = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    establishes_integrity = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
-    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    valid_from = EAttribute(eType=EDate, unique=True, derived=False, changeable=True)
-    valid_to = EAttribute(eType=EDate, unique=True, derived=False, changeable=True)
-    version = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    foreign_cube_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    foreign_cube_variable_code = EReference(
-        ordered=True, unique=True, containment=False, derived=False)
-    maintenance_agency_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    primary_cube_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    primary_cube_variable_id = EReference(
-        ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, code=None, cube_relationship_id=None, description=None, establishes_integrity=None, foreign_cube_id=None, foreign_cube_variable_code=None, maintenance_agency_id=None, name=None, primary_cube_id=None, primary_cube_variable_id=None, valid_from=None, valid_to=None, version=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if code is not None:
-            self.code = code
-
-        if cube_relationship_id is not None:
-            self.cube_relationship_id = cube_relationship_id
-
-        if description is not None:
-            self.description = description
-
-        if establishes_integrity is not None:
-            self.establishes_integrity = establishes_integrity
-
-        if name is not None:
-            self.name = name
-
-        if valid_from is not None:
-            self.valid_from = valid_from
-
-        if valid_to is not None:
-            self.valid_to = valid_to
-
-        if version is not None:
-            self.version = version
-
-        if foreign_cube_id is not None:
-            self.foreign_cube_id = foreign_cube_id
-
-        if foreign_cube_variable_code is not None:
-            self.foreign_cube_variable_code = foreign_cube_variable_code
-
-        if maintenance_agency_id is not None:
-            self.maintenance_agency_id = maintenance_agency_id
-
-        if primary_cube_id is not None:
-            self.primary_cube_id = primary_cube_id
-
-        if primary_cube_variable_id is not None:
-            self.primary_cube_variable_id = primary_cube_variable_id
-
-
-class CUBE_STRUCTURE(EObject, metaclass=MetaEClass):
-
-    code = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    cube_structure_id = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    description = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
-    valid_from = EAttribute(eType=EDate, unique=True, derived=False, changeable=True)
-    valid_to = EAttribute(eType=EDate, unique=True, derived=False, changeable=True)
-    version = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    displayName = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    maintenance_agency_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, code=None, cube_structure_id=None, description=None, maintenance_agency_id=None, name=None, valid_from=None, valid_to=None, version=None, displayName=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if code is not None:
-            self.code = code
-
-        if cube_structure_id is not None:
-            self.cube_structure_id = cube_structure_id
-
-        if description is not None:
-            self.description = description
-
-        if name is not None:
-            self.name = name
-
-        if valid_from is not None:
-            self.valid_from = valid_from
-
-        if valid_to is not None:
-            self.valid_to = valid_to
-
-        if version is not None:
-            self.version = version
-
-        if displayName is not None:
-            self.displayName = displayName
-
-        if maintenance_agency_id is not None:
-            self.maintenance_agency_id = maintenance_agency_id
-
-
-class CUBE_STRUCTURE_ITEM(EObject, metaclass=MetaEClass):
-
-    description = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    dimension_type = EAttribute(eType=TYP_DMNSN, unique=True, derived=False, changeable=True)
-    is_flow = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
-    is_mandatory = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
-    order = EAttribute(eType=EInt, unique=True, derived=False, changeable=True)
-    role = EAttribute(eType=TYP_RL, unique=True, derived=False, changeable=True)
-    isIdentifier = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
-    cube_variable_code = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    attribute_associated_variable = EReference(
-        ordered=True, unique=True, containment=False, derived=False)
-    cube_structure_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    member_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    subdomain_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    variable_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    variable_set_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, attribute_associated_variable=None, cube_structure_id=None, description=None, dimension_type=None, is_flow=None, is_mandatory=None, member_id=None, order=None, role=None, subdomain_id=None, variable_id=None, variable_set_id=None, isIdentifier=None, cube_variable_code=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if description is not None:
-            self.description = description
-
-        if dimension_type is not None:
-            self.dimension_type = dimension_type
-
-        if is_flow is not None:
-            self.is_flow = is_flow
-
-        if is_mandatory is not None:
-            self.is_mandatory = is_mandatory
-
-        if order is not None:
-            self.order = order
-
-        if role is not None:
-            self.role = role
-
-        if isIdentifier is not None:
-            self.isIdentifier = isIdentifier
-
-        if cube_variable_code is not None:
-            self.cube_variable_code = cube_variable_code
-
-        if attribute_associated_variable is not None:
-            self.attribute_associated_variable = attribute_associated_variable
-
-        if cube_structure_id is not None:
-            self.cube_structure_id = cube_structure_id
-
-        if member_id is not None:
-            self.member_id = member_id
-
-        if subdomain_id is not None:
-            self.subdomain_id = subdomain_id
-
-        if variable_id is not None:
-            self.variable_id = variable_id
-
-        if variable_set_id is not None:
-            self.variable_set_id = variable_set_id
-
-
-class CUBE_TO_COMBINATION(EObject, metaclass=MetaEClass):
-
-    combination_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    cube_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, combination_id=None, cube_id=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if combination_id is not None:
-            self.combination_id = combination_id
-
-        if cube_id is not None:
-            self.cube_id = cube_id
-
-
-class FRAMEWORK(EObject, metaclass=MetaEClass):
-
-    code = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    description = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    framework_id = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
-    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    maintenance_agency_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, code=None, description=None, framework_id=None, maintenance_agency_id=None, name=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if code is not None:
-            self.code = code
-
-        if description is not None:
-            self.description = description
-
-        if framework_id is not None:
-            self.framework_id = framework_id
-
-        if name is not None:
-            self.name = name
-
-        if maintenance_agency_id is not None:
-            self.maintenance_agency_id = maintenance_agency_id
-
-
-class FRAMEWORK_SUBDOMAIN(EObject, metaclass=MetaEClass):
-
-    framework_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    subdomain_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, framework_id=None, subdomain_id=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if framework_id is not None:
-            self.framework_id = framework_id
-
-        if subdomain_id is not None:
-            self.subdomain_id = subdomain_id
-
-
-class FRAMEWORK_VARIABLE_SET(EObject, metaclass=MetaEClass):
-
-    framework_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    variable_set_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, framework_id=None, variable_set_id=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if framework_id is not None:
-            self.framework_id = framework_id
-
-        if variable_set_id is not None:
-            self.variable_set_id = variable_set_id
 
 
 class PlatformCall(EObject, metaclass=MetaEClass):
@@ -1448,6 +432,44 @@ class PlatformCall(EObject, metaclass=MetaEClass):
 
         if returnStatus is not None:
             self.returnStatus = returnStatus
+
+
+class DataModel(EObject, metaclass=MetaEClass):
+
+    package = EReference(ordered=True, unique=True, containment=True, derived=False)
+
+    def __init__(self, *, package=None):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+        if package is not None:
+            self.package = package
+
+
+@abstract
+class XModelElement(EObject, metaclass=MetaEClass):
+
+    def __init__(self):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+
+class XFunction(EObject, metaclass=MetaEClass):
+
+    functionName = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+
+    def __init__(self, *, functionName=None):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+        if functionName is not None:
+            self.functionName = functionName
 
 
 @abstract
@@ -1474,39 +496,6 @@ class FlowElement(BaseElement):
 
         if display_name is not None:
             self.display_name = display_name
-
-
-@abstract
-class NamedElement(Element):
-
-    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
-
-    def __init__(self, *, name=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if name is not None:
-            self.name = name
-
-
-class EntityModule(Module):
-
-    nsURI = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    nsPrefix = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    entities = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-
-    def __init__(self, *, nsURI=None, nsPrefix=None, entities=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if nsURI is not None:
-            self.nsURI = nsURI
-
-        if nsPrefix is not None:
-            self.nsPrefix = nsPrefix
-
-        if entities:
-            self.entities.extend(entities)
 
 
 class RequirementsModule(Module):
@@ -1713,175 +702,6 @@ class E2ETestScope(TestScope):
             self.scriptTask = scriptTask
 
 
-class MEMBER(EnumMember):
-
-    code = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    description = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
-    displayName = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    domain_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    maintenance_agency_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, code=None, description=None, domain_id=None, maintenance_agency_id=None, name=None, displayName=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if code is not None:
-            self.code = code
-
-        if description is not None:
-            self.description = description
-
-        if name is not None:
-            self.name = name
-
-        if displayName is not None:
-            self.displayName = displayName
-
-        if domain_id is not None:
-            self.domain_id = domain_id
-
-        if maintenance_agency_id is not None:
-            self.maintenance_agency_id = maintenance_agency_id
-
-
-class VARIABLE(Concept):
-
-    code = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    description = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    primary_concept = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
-    displayName = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    domain_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    maintenance_agency_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, code=None, description=None, domain_id=None, maintenance_agency_id=None, primary_concept=None, name=None, displayName=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if code is not None:
-            self.code = code
-
-        if description is not None:
-            self.description = description
-
-        if primary_concept is not None:
-            self.primary_concept = primary_concept
-
-        if name is not None:
-            self.name = name
-
-        if displayName is not None:
-            self.displayName = displayName
-
-        if domain_id is not None:
-            self.domain_id = domain_id
-
-        if maintenance_agency_id is not None:
-            self.maintenance_agency_id = maintenance_agency_id
-
-
-class DomainModule(Module):
-
-    domains = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-
-    def __init__(self, *, domains=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if domains:
-            self.domains.extend(domains)
-
-
-class MemberHierarchyModule(Module):
-
-    memberHierarchies = EReference(ordered=True, unique=True,
-                                   containment=True, derived=False, upper=-1)
-    memberHierarchiesNodes = EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1)
-
-    def __init__(self, *, memberHierarchies=None, memberHierarchiesNodes=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if memberHierarchies:
-            self.memberHierarchies.extend(memberHierarchies)
-
-        if memberHierarchiesNodes:
-            self.memberHierarchiesNodes.extend(memberHierarchiesNodes)
-
-
-class MemberModule(Module):
-
-    members = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-
-    def __init__(self, *, members=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if members:
-            self.members.extend(members)
-
-
-class VariableModule(Module):
-
-    variables = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-
-    def __init__(self, *, variables=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if variables:
-            self.variables.extend(variables)
-
-
-class SubDomainModule(Module):
-
-    subdomains = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-
-    def __init__(self, *, subdomains=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if subdomains:
-            self.subdomains.extend(subdomains)
-
-
-class SMCubesCoreModel(TypesAndConcepts):
-
-    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
-    variableModules = EReference(ordered=True, unique=True,
-                                 containment=True, derived=False, upper=-1)
-    domainModules = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-    memberModules = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-    subDomainModules = EReference(ordered=True, unique=True,
-                                  containment=True, derived=False, upper=-1)
-    memberHierarchyModules = EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1)
-
-    def __init__(self, *, name=None, variableModules=None, domainModules=None, memberModules=None, subDomainModules=None, memberHierarchyModules=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if name is not None:
-            self.name = name
-
-        if variableModules:
-            self.variableModules.extend(variableModules)
-
-        if domainModules:
-            self.domainModules.extend(domainModules)
-
-        if memberModules:
-            self.memberModules.extend(memberModules)
-
-        if subDomainModules:
-            self.subDomainModules.extend(subDomainModules)
-
-        if memberHierarchyModules:
-            self.memberHierarchyModules.extend(memberHierarchyModules)
-
-
 class PlatformCallModule(Module):
 
     platformCalls = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
@@ -1892,22 +712,6 @@ class PlatformCallModule(Module):
 
         if platformCalls:
             self.platformCalls.extend(platformCalls)
-
-
-class ImportBIRDFromMSAccess(PlatformCall):
-
-    inputDirectory = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    outputDirectory = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-
-    def __init__(self, *, inputDirectory=None, outputDirectory=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if inputDirectory is not None:
-            self.inputDirectory = inputDirectory
-
-        if outputDirectory is not None:
-            self.outputDirectory = outputDirectory
 
 
 class WorkflowModule(Module):
@@ -1928,6 +732,49 @@ class WorkflowModule(Module):
 
         if subProcess:
             self.subProcess.extend(subProcess)
+
+
+@abstract
+class XNamedElement(XModelElement):
+
+    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+
+    def __init__(self, *, name=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if name is not None:
+            self.name = name
+
+
+class OpenRegSpecs(E2ETestScope):
+
+    requirements = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    data_model = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    process_workflow = EReference(ordered=True, unique=True,
+                                  containment=True, derived=False, upper=-1)
+    report_generation = EReference(ordered=True, unique=True,
+                                   containment=True, derived=False, upper=-1)
+    tests = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+
+    def __init__(self, *, requirements=None, data_model=None, process_workflow=None, report_generation=None, tests=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if requirements:
+            self.requirements.extend(requirements)
+
+        if data_model:
+            self.data_model.extend(data_model)
+
+        if process_workflow:
+            self.process_workflow.extend(process_workflow)
+
+        if report_generation:
+            self.report_generation.extend(report_generation)
+
+        if tests:
+            self.tests.extend(tests)
 
 
 @abstract
@@ -1964,32 +811,70 @@ class SequenceFlow(FlowElement):
 
 
 @abstract
-class Type(NamedElement):
+class XClassifier(XNamedElement):
 
-    def __init__(self, **kwargs):
+    package = EReference(ordered=True, unique=True, containment=False,
+                         derived=False, transient=True)
+
+    def __init__(self, *, package=None, **kwargs):
 
         super().__init__(**kwargs)
+
+        if package is not None:
+            self.package = package
+
+
+class XEnumLiteral(XNamedElement):
+
+    value = EAttribute(eType=EInt, unique=True, derived=False, changeable=True)
+    literal = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    enum = EReference(ordered=True, unique=True, containment=False, derived=False, transient=True)
+
+    def __init__(self, *, value=None, literal=None, enum=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if value is not None:
+            self.value = value
+
+        if literal is not None:
+            self.literal = literal
+
+        if enum is not None:
+            self.enum = enum
+
+
+class XPackage(XNamedElement):
+
+    classifiers = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+
+    def __init__(self, *, classifiers=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if classifiers:
+            self.classifiers.extend(classifiers)
 
 
 @abstract
-class TypedElement(NamedElement):
+class XTypedElement(XNamedElement):
 
+    upperBound = EAttribute(eType=EInt, unique=True, derived=False, changeable=True)
+    lowerBound = EAttribute(eType=EInt, unique=True, derived=False, changeable=True)
     type = EReference(ordered=True, unique=True, containment=False, derived=False)
 
-    def __init__(self, *, type=None, **kwargs):
+    def __init__(self, *, type=None, upperBound=None, lowerBound=None, **kwargs):
 
         super().__init__(**kwargs)
+
+        if upperBound is not None:
+            self.upperBound = upperBound
+
+        if lowerBound is not None:
+            self.lowerBound = lowerBound
 
         if type is not None:
             self.type = type
-
-
-@abstract
-class Entity(NamedElement):
-
-    def __init__(self, **kwargs):
-
-        super().__init__(**kwargs)
 
 
 @abstract
@@ -2008,92 +893,67 @@ class Gateway(FlowNode):
         super().__init__(**kwargs)
 
 
+class XClass(XClassifier):
+
+    abstract = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
+    members = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    superTypes = EReference(ordered=True, unique=True, containment=False, derived=False, upper=-1)
+
+    def __init__(self, *, abstract=None, members=None, superTypes=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if abstract is not None:
+            self.abstract = abstract
+
+        if members:
+            self.members.extend(members)
+
+        if superTypes:
+            self.superTypes.extend(superTypes)
+
+
+class XDataType(XClassifier):
+
+    createBody = EReference(ordered=True, unique=True, containment=True, derived=False)
+    convertBody = EReference(ordered=True, unique=True, containment=True, derived=False)
+
+    def __init__(self, *, createBody=None, convertBody=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if createBody is not None:
+            self.createBody = createBody
+
+        if convertBody is not None:
+            self.convertBody = convertBody
+
+
 @abstract
-class StructuralFeature(TypedElement):
+class XMember(XTypedElement):
 
-    def __init__(self, **kwargs):
+    containingClass = EReference(ordered=True, unique=True,
+                                 containment=False, derived=False, transient=True)
 
-        super().__init__(**kwargs)
-
-
-class GeneratedEntity(Entity):
-
-    attributes = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-
-    def __init__(self, *, attributes=None, **kwargs):
+    def __init__(self, *, containingClass=None, **kwargs):
 
         super().__init__(**kwargs)
 
-        if attributes:
-            self.attributes.extend(attributes)
+        if containingClass is not None:
+            self.containingClass = containingClass
 
 
-class DerivedEntity(Entity):
+class XParameter(XTypedElement):
 
-    attributes = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    operation = EReference(ordered=True, unique=True, containment=False,
+                           derived=False, transient=True)
 
-    def __init__(self, *, attributes=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if attributes:
-            self.attributes.extend(attributes)
-
-
-class BasicEntity(Entity):
-
-    attributes = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-    superClass = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, attributes=None, superClass=None, **kwargs):
+    def __init__(self, *, operation=None, **kwargs):
 
         super().__init__(**kwargs)
 
-        if attributes:
-            self.attributes.extend(attributes)
-
-        if superClass is not None:
-            self.superClass = superClass
-
-
-class SUBDOMAIN(Type):
-
-    code = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    description = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    is_listed = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
-    is_natural = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
-    domain_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    facet_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    maintenance_agency_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    items = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-
-    def __init__(self, *, code=None, description=None, domain_id=None, facet_id=None, is_listed=None, is_natural=None, maintenance_agency_id=None, items=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if code is not None:
-            self.code = code
-
-        if description is not None:
-            self.description = description
-
-        if is_listed is not None:
-            self.is_listed = is_listed
-
-        if is_natural is not None:
-            self.is_natural = is_natural
-
-        if domain_id is not None:
-            self.domain_id = domain_id
-
-        if facet_id is not None:
-            self.facet_id = facet_id
-
-        if maintenance_agency_id is not None:
-            self.maintenance_agency_id = maintenance_agency_id
-
-        if items:
-            self.items.extend(items)
+        if operation is not None:
+            self.operation = operation
 
 
 class Task(Activity):
@@ -2124,24 +984,40 @@ class ParallelGateway(Gateway):
         super().__init__(**kwargs)
 
 
-class Attribute(StructuralFeature):
+class XEnum(XDataType):
 
-    isPK = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
-    ordered = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
-    concept = EReference(ordered=True, unique=True, containment=False, derived=False)
+    literals = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
-    def __init__(self, *, isPK=None, concept=None, ordered=None, **kwargs):
+    def __init__(self, *, literals=None, **kwargs):
 
         super().__init__(**kwargs)
 
-        if isPK is not None:
-            self.isPK = isPK
+        if literals:
+            self.literals.extend(literals)
 
-        if ordered is not None:
-            self.ordered = ordered
 
-        if concept is not None:
-            self.concept = concept
+class XOperation(XMember):
+
+    parameters = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    body = EReference(ordered=True, unique=True, containment=True, derived=False)
+
+    def __init__(self, *, parameters=None, body=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if parameters:
+            self.parameters.extend(parameters)
+
+        if body is not None:
+            self.body = body
+
+
+@abstract
+class XStructuralFeature(XMember):
+
+    def __init__(self, **kwargs):
+
+        super().__init__(**kwargs)
 
 
 class ServiceTask(Task):
@@ -2200,53 +1076,29 @@ class UserTask(Task):
             self.entity = entity
 
 
-class RelationshipAttribute(Attribute):
+class XAttribute(XStructuralFeature):
+
+    defaultValueLiteral = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    iD = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
+
+    def __init__(self, *, defaultValueLiteral=None, iD=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if defaultValueLiteral is not None:
+            self.defaultValueLiteral = defaultValueLiteral
+
+        if iD is not None:
+            self.iD = iD
+
+
+class XReference(XStructuralFeature):
 
     containment = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
-    mandatory = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
-    dominant = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
-    entity = EReference(ordered=True, unique=True, containment=False, derived=False)
 
-    def __init__(self, *, entity=None, containment=None, mandatory=None, dominant=None, **kwargs):
+    def __init__(self, *, containment=None, **kwargs):
 
         super().__init__(**kwargs)
 
         if containment is not None:
             self.containment = containment
-
-        if mandatory is not None:
-            self.mandatory = mandatory
-
-        if dominant is not None:
-            self.dominant = dominant
-
-        if entity is not None:
-            self.entity = entity
-
-
-class OneToOneRelationshipAttribute(RelationshipAttribute):
-
-    def __init__(self, **kwargs):
-
-        super().__init__(**kwargs)
-
-
-class ManyToOneRelationshipAttribute(RelationshipAttribute):
-
-    def __init__(self, **kwargs):
-
-        super().__init__(**kwargs)
-
-
-class OneToManyRelationshipAttribute(RelationshipAttribute):
-
-    def __init__(self, **kwargs):
-
-        super().__init__(**kwargs)
-
-
-class ManyToManyRelationshipAttribute(RelationshipAttribute):
-
-    def __init__(self, **kwargs):
-
-        super().__init__(**kwargs)
