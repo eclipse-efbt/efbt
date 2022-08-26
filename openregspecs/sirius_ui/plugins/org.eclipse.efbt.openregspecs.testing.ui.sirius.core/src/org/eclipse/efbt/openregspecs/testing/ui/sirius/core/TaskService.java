@@ -13,21 +13,14 @@
 package org.eclipse.efbt.openregspecs.testing.ui.sirius.core;
 
 import org.eclipse.efbt.openregspecs.model.open_reg_specs.Activity;
-import org.eclipse.efbt.openregspecs.model.open_reg_specs.ScriptTask;
-import org.eclipse.efbt.openregspecs.model.open_reg_specs.ServiceTask;
-import org.eclipse.efbt.openregspecs.model.open_reg_specs.SubProcess;
-import org.eclipse.efbt.openregspecs.model.open_reg_specs.Task;
-import org.eclipse.efbt.openregspecs.model.open_reg_specs.UserTask;
 import org.eclipse.efbt.openregspecs.model.open_reg_specs.ActivityTag;
-import org.eclipse.efbt.openregspecs.model.open_reg_specs.E2ETestScope;
 import org.eclipse.efbt.openregspecs.model.open_reg_specs.Scenario;
 import org.eclipse.efbt.openregspecs.model.open_reg_specs.ScenarioTag;
-import org.eclipse.efbt.openregspecs.model.open_reg_specs.Test;
-import org.eclipse.efbt.openregspecs.model.open_reg_specs.TestModule;
-import org.eclipse.efbt.openregspecs.model.open_reg_specs.TestScope;
-import org.eclipse.efbt.openregspecs.model.open_reg_specs.UnitTestScope;
-import org.eclipse.efbt.openregspecs.model.open_reg_specs.Attribute;
-import org.eclipse.efbt.openregspecs.model.open_reg_specs.BasicEntity;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.ScriptTask;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.ServiceTask;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.Task;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.UserTask;
+import org.eclipse.efbt.openregspecs.model.open_reg_specs.XAttribute;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
@@ -109,7 +102,7 @@ public class TaskService {
 		if (self instanceof ServiceTask)
 		{
 			ServiceTask serviceTask = (ServiceTask) self;
-			Attribute attr = serviceTask.getEnrichedAttribute();
+			XAttribute attr = serviceTask.getEnrichedAttribute();
 			EList<Scenario> scenarios = serviceTask.getScenarios();
 			for (Scenario scenario : scenarios) {
 				scenario.getRequiredAttributes();
@@ -119,88 +112,7 @@ public class TaskService {
 		return returnTasks;
 	}
 	
-	public EList<Attribute> getILAttributes(SubProcess self)
-	{
-		EList<Attribute> returnAttributes = new BasicEList<Attribute>();
-		TreeIterator<EObject> contents = self.eAllContents();
-		while(contents.hasNext())
-		{
-			EObject item = contents.next();
-			if(item instanceof UserTask )
-			{
-				UserTask userTask= (UserTask) item;
-				BasicEntity eclass = userTask.getEntity();
-				EList<Attribute> attributes = eclass.getAttributes();
-				returnAttributes.addAll(attributes);
-			}
-		}
-		
-		return returnAttributes;
-		
-	}
 	
-	public EList<Attribute> getEILAttributes(SubProcess self)
-	{
-		EList<Attribute> returnAttributes = new BasicEList<Attribute>();
-		TreeIterator<EObject> contents = self.eAllContents();
-		while(contents.hasNext())
-		{
-			EObject item = contents.next();
-			if(item instanceof ServiceTask )
-			{
-				ServiceTask serviceTask= (ServiceTask) item;
-				
-				Attribute attribute = serviceTask.getEnrichedAttribute();
-				returnAttributes.add(attribute);
-			}
-		}
-		
-		return returnAttributes;
-		
-	}
-	
-	
-		
-	/**public EList<Test> getTests(Scenario self) {
-
-		EList<Test> tests = new BasicEList<Test>();
-		EObject root = EcoreUtil.getRootContainer(self);
-		LogicalTransformationModule theRoot = (LogicalTransformationModule) root;
-		EList<TestModule> testModules = theRoot.getTestModules();
-		for (TestModule testModule : testModules)
-		{
-			
-			EList<Test> theTests = testModule.getTests();
-			for (Test test : theTests) {
-				TestScope testScope = test.getScope();
-		
-				if(testScope instanceof E2ETestScope)
-				{
-					EList<Scenario> testScenarios = ((E2ETestScope) testScope).getScenarios();
-				
-					if (testScenarios.contains(self))
-					{
-						tests.add(test);
-					}
-				}
-				if(testScope instanceof UnitTestScope)
-				{
-					Scenario testScenario = ((UnitTestScope) testScope).getScenarios();
-				
-					if (testScenario.equals(self))
-					{
-						tests.add(test);
-					}
-				}
-				
-			}
-		
-		
-		}
-	
-		return tests;
-		
-	}*/
 
 
 }

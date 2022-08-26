@@ -39,7 +39,6 @@
       <import plugin="org.eclipse.sirius.diagram"/>
       <import plugin="com.google.guava"/>
       <import plugin="org.eclipse.efbt.openregspecs.model" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.emf.common"/>
    </requires>
 
    <plugin
@@ -48,6 +47,5 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
 
 </feature>
