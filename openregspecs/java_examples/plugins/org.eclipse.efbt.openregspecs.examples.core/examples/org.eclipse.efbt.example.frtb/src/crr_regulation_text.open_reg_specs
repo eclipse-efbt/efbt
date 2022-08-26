@@ -1,17 +1,6 @@
-OpenRegSpecs {  
+OpenRegSpecs crr{  
 	requirements {  
 		RequirementsModule CRRRuleBook { 
-			allowedtypes AllowedTypes {
-				allowedTypes { 
-					RequirementType Title,
-					RequirementType Chapter,
-					RequirementType Section,
-					RequirementType Article,
-					RequirementType NumericParagraph,
-					RequirementType LetterParagraph,
-					RequirementType RomanNumeralParagraph 
-					} 
-				}
 			rules { 
 				TitledRequirementsSection Title_IV  { 
 					title Title_IV requirementsType Title sections
@@ -26,9 +15,22 @@ OpenRegSpecs {
 								} } }
 						}
 					}
-				}
-			
+				} 
+			allowedtypes AllowedTypes {
+				allowedTypes { 
+					RequirementType Title,
+					RequirementType Chapter,
+					RequirementType Section,
+					RequirementType Article,
+					RequirementType NumericParagraph,
+					RequirementType LetterParagraph,
+					RequirementType RomanNumeralParagraph 
+					} 
+				} 
+
 			} 
+			
 		} 
+		
 	} 
 			
