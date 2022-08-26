@@ -35,8 +35,6 @@
 		<additionalTestArguments></additionalTestArguments>
 	</properties>
 	<modules>
-		<module>plugins/org.eclipse.efbt.openregspecs.platform_call.ui.sirius.core</module>
-		<module>plugins/org.eclipse.efbt.openregspecs.smcubes.ui.sirius</module>
 		<module>plugins/org.eclipse.efbt.openregspecs.testing.ui.sirius.core</module>
 		<module>features/org.eclipse.efbt.openregspecs.sirius_ui.feature</module>
 	</modules>

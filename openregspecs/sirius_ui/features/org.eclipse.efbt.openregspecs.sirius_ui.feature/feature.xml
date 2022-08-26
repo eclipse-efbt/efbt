@@ -39,9 +39,7 @@
       <import plugin="org.eclipse.sirius.diagram"/>
       <import plugin="com.google.guava"/>
       <import plugin="org.eclipse.efbt.openregspecs.model" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.efbt.openregspecs.smcubes.query.core" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.common"/>
-      <import plugin="org.eclipse.efbt.controller.platformcall.component.core" version="1.0.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
@@ -51,18 +49,5 @@
          version="0.0.0"
          unpack="false"/>
 
-   <plugin
-         id="org.eclipse.efbt.openregspecs.smcubes.ui.sirius"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.efbt.openregspecs.platform_call.ui.sirius.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
 </feature>
