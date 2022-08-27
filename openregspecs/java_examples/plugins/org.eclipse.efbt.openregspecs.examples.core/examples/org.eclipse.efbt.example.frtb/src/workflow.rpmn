@@ -1,12 +1,10 @@
-OpenRegSpecs b { 
-	process_workflow {
-		WorkflowModule frtb_workflow_module 
+ModuleList { modules {WorkflowModule  frtb_workflow_module 
 		{taskTags
 			{ ActivityTag tenorTag 
 				{displayName tenorTag  
 					requirements (  
-					"crr.CRRRuleBook.Title_IV.Title_IV;Chapter_1_General_Provisions.Article_325.Artice_325_1.Article_325_1_a" ,
-					"crr.CRRRuleBook.Title_IV.Title_IV;Chapter_1_General_Provisions.Article_325.Artice_325_1.Article_325_1_b"
+					"CRRRuleBook.Title_IV.Title_IV;Chapter_1_General_Provisions.Article_325.Artice_325_1.Article_325_1_a" ,
+					"CRRRuleBook.Title_IV.Title_IV;Chapter_1_General_Provisions.Article_325.Artice_325_1.Article_325_1_b"
 					)
 				 activity  "frtb.Derivation.PreNetting.DeltaNetting.Tenor"
 				}

@@ -26,6 +26,7 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="convertBody" eType="#//XFunction"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="industryName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="XEnum" eSuperTypes="#//XDataType">
     <eStructuralFeatures xsi:type="ecore:EReference" name="literals" upperBound="-1"

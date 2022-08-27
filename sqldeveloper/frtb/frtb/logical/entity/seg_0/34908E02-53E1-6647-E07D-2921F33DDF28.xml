@@ -103,7 +103,7 @@
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
-<domain>78E25C16-8968-20B4-E330-DA4578EE46CF</domain>
+<domain>6FBEB348-B901-2CC5-03F9-29A90524DCDA</domain>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="Weighted GIRR delta sensitivity squared" id="9F1B56AF-CD34-F99D-ED1A-FC8615773C47">
@@ -133,6 +133,8 @@
 </engineerTo>
 <referedAttribute>AD21ADFC-78E5-C980-E83F-5BEB2EDDD367</referedAttribute>
 <use>0</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<domain>6FBEB348-B901-2CC5-03F9-29A90524DCDA</domain>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="Risk factor Identifier" id="BE7360C2-B60A-40E8-DF64-EAC51C9948A0">

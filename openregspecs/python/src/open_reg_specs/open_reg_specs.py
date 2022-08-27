@@ -75,6 +75,20 @@ class Module(EObject, metaclass=MetaEClass):
             self.longName = longName
 
 
+class ModuleList(EObject, metaclass=MetaEClass):
+
+    modules = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+
+    def __init__(self, *, modules=None):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+        if modules:
+            self.modules.extend(modules)
+
+
 class ModuleLongName(EObject, metaclass=MetaEClass):
 
     name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
@@ -412,42 +426,6 @@ class InputFile(EObject, metaclass=MetaEClass):
             self.entity = entity
 
 
-class PlatformCall(EObject, metaclass=MetaEClass):
-
-    errorMessage = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
-    returnStatus = EAttribute(eType=EInt, unique=True, derived=False, changeable=True)
-
-    def __init__(self, *, errorMessage=None, name=None, returnStatus=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if errorMessage is not None:
-            self.errorMessage = errorMessage
-
-        if name is not None:
-            self.name = name
-
-        if returnStatus is not None:
-            self.returnStatus = returnStatus
-
-
-class DataModel(EObject, metaclass=MetaEClass):
-
-    package = EReference(ordered=True, unique=True, containment=True, derived=False)
-
-    def __init__(self, *, package=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if package is not None:
-            self.package = package
-
-
 @abstract
 class XModelElement(EObject, metaclass=MetaEClass):
 
@@ -702,18 +680,6 @@ class E2ETestScope(TestScope):
             self.scriptTask = scriptTask
 
 
-class PlatformCallModule(Module):
-
-    platformCalls = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-
-    def __init__(self, *, platformCalls=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if platformCalls:
-            self.platformCalls.extend(platformCalls)
-
-
 class WorkflowModule(Module):
 
     taskTags = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
@@ -734,6 +700,18 @@ class WorkflowModule(Module):
             self.subProcess.extend(subProcess)
 
 
+class EntityModule(Module):
+
+    package = EReference(ordered=True, unique=True, containment=True, derived=False)
+
+    def __init__(self, *, package=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if package is not None:
+            self.package = package
+
+
 @abstract
 class XNamedElement(XModelElement):
 
@@ -745,36 +723,6 @@ class XNamedElement(XModelElement):
 
         if name is not None:
             self.name = name
-
-
-class OpenRegSpecs(E2ETestScope):
-
-    requirements = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-    data_model = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-    process_workflow = EReference(ordered=True, unique=True,
-                                  containment=True, derived=False, upper=-1)
-    report_generation = EReference(ordered=True, unique=True,
-                                   containment=True, derived=False, upper=-1)
-    tests = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-
-    def __init__(self, *, requirements=None, data_model=None, process_workflow=None, report_generation=None, tests=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if requirements:
-            self.requirements.extend(requirements)
-
-        if data_model:
-            self.data_model.extend(data_model)
-
-        if process_workflow:
-            self.process_workflow.extend(process_workflow)
-
-        if report_generation:
-            self.report_generation.extend(report_generation)
-
-        if tests:
-            self.tests.extend(tests)
 
 
 @abstract
@@ -859,7 +807,8 @@ class XPackage(XNamedElement):
 @abstract
 class XTypedElement(XNamedElement):
 
-    upperBound = EAttribute(eType=EInt, unique=True, derived=False, changeable=True)
+    upperBound = EAttribute(eType=EInt, unique=True, derived=False,
+                            changeable=True, default_value=1)
     lowerBound = EAttribute(eType=EInt, unique=True, derived=False, changeable=True)
     type = EReference(ordered=True, unique=True, containment=False, derived=False)
 
@@ -915,12 +864,16 @@ class XClass(XClassifier):
 
 class XDataType(XClassifier):
 
+    industryName = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     createBody = EReference(ordered=True, unique=True, containment=True, derived=False)
     convertBody = EReference(ordered=True, unique=True, containment=True, derived=False)
 
-    def __init__(self, *, createBody=None, convertBody=None, **kwargs):
+    def __init__(self, *, createBody=None, convertBody=None, industryName=None, **kwargs):
 
         super().__init__(**kwargs)
+
+        if industryName is not None:
+            self.industryName = industryName
 
         if createBody is not None:
             self.createBody = createBody

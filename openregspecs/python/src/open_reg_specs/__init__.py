@@ -1,24 +1,19 @@
 
 from .open_reg_specs import getEClassifier, eClassifiers
 from .open_reg_specs import name, nsURI, nsPrefix, eClass
-from .open_reg_specs import OpenRegSpecs, BaseElement, FlowElementsContainer, FlowElement, FlowNode, SequenceFlow, Task, Activity, Gateway, ExclusiveGateway, InclusiveGateway, ParallelGateway, ServiceTask, SubProcess, ScriptTask, UserTask, Module, ModuleLongName, ModuleDependencies, ModuleDependency, AllowedTypes, RequirementsModule, RequirementsSection, RequirementsSectionImage, RequirementsSectionLinkWithText, RequirementsSectionText, RequirementType, TitledRequirementsSection, Tag, TagGroup, View, SelectClause, SelectColumn, SelectColumnMemberAs, SelectColumnAttributeAs, Comparitor, WhereClause, ViewModule, ActivityTag, Scenario, ScenarioTag, Test, TestModule, DataConstraint, AttrComparison, SelectionLayer, TestScope, UnitTestScope, E2ETestScope, InputFile, PlatformCall, PlatformCallModule, WorkflowModule, DataModel, XAttribute, XClass, XClassifier, XDataType, XEnum, XEnumLiteral, XMember, XModelElement, XNamedElement, XOperation, XPackage, XParameter, XReference, XStructuralFeature, XTypedElement, XFunction
+from .open_reg_specs import BaseElement, FlowElementsContainer, FlowElement, FlowNode, SequenceFlow, Task, Activity, Gateway, ExclusiveGateway, InclusiveGateway, ParallelGateway, ServiceTask, SubProcess, ScriptTask, UserTask, Module, ModuleList, ModuleLongName, ModuleDependencies, ModuleDependency, AllowedTypes, RequirementsModule, RequirementsSection, RequirementsSectionImage, RequirementsSectionLinkWithText, RequirementsSectionText, RequirementType, TitledRequirementsSection, Tag, TagGroup, View, SelectClause, SelectColumn, SelectColumnMemberAs, SelectColumnAttributeAs, Comparitor, WhereClause, ViewModule, ActivityTag, Scenario, ScenarioTag, Test, TestModule, DataConstraint, AttrComparison, SelectionLayer, TestScope, UnitTestScope, E2ETestScope, InputFile, WorkflowModule, EntityModule, XAttribute, XClass, XClassifier, XDataType, XEnum, XEnumLiteral, XMember, XModelElement, XNamedElement, XOperation, XPackage, XParameter, XReference, XStructuralFeature, XTypedElement, XFunction
 
 
 from . import open_reg_specs
 
-__all__ = ['OpenRegSpecs', 'BaseElement', 'FlowElementsContainer', 'FlowElement', 'FlowNode', 'SequenceFlow', 'Task', 'Activity', 'Gateway', 'ExclusiveGateway', 'InclusiveGateway', 'ParallelGateway', 'ServiceTask', 'SubProcess', 'ScriptTask', 'UserTask', 'Module', 'ModuleLongName', 'ModuleDependencies', 'ModuleDependency', 'AllowedTypes', 'RequirementsModule', 'RequirementsSection', 'RequirementsSectionImage', 'RequirementsSectionLinkWithText', 'RequirementsSectionText', 'RequirementType', 'TitledRequirementsSection', 'Tag', 'TagGroup', 'View', 'SelectClause', 'SelectColumn',
-           'SelectColumnMemberAs', 'SelectColumnAttributeAs', 'Comparitor', 'WhereClause', 'ViewModule', 'ActivityTag', 'Scenario', 'ScenarioTag', 'Test', 'TestModule', 'DataConstraint', 'AttrComparison', 'SelectionLayer', 'TestScope', 'UnitTestScope', 'E2ETestScope', 'InputFile', 'PlatformCall', 'PlatformCallModule', 'WorkflowModule', 'DataModel', 'XAttribute', 'XClass', 'XClassifier', 'XDataType', 'XEnum', 'XEnumLiteral', 'XMember', 'XModelElement', 'XNamedElement', 'XOperation', 'XPackage', 'XParameter', 'XReference', 'XStructuralFeature', 'XTypedElement', 'XFunction']
+__all__ = ['BaseElement', 'FlowElementsContainer', 'FlowElement', 'FlowNode', 'SequenceFlow', 'Task', 'Activity', 'Gateway', 'ExclusiveGateway', 'InclusiveGateway', 'ParallelGateway', 'ServiceTask', 'SubProcess', 'ScriptTask', 'UserTask', 'Module', 'ModuleList', 'ModuleLongName', 'ModuleDependencies', 'ModuleDependency', 'AllowedTypes', 'RequirementsModule', 'RequirementsSection', 'RequirementsSectionImage', 'RequirementsSectionLinkWithText', 'RequirementsSectionText', 'RequirementType', 'TitledRequirementsSection', 'Tag', 'TagGroup', 'View', 'SelectClause',
+           'SelectColumn', 'SelectColumnMemberAs', 'SelectColumnAttributeAs', 'Comparitor', 'WhereClause', 'ViewModule', 'ActivityTag', 'Scenario', 'ScenarioTag', 'Test', 'TestModule', 'DataConstraint', 'AttrComparison', 'SelectionLayer', 'TestScope', 'UnitTestScope', 'E2ETestScope', 'InputFile', 'WorkflowModule', 'EntityModule', 'XAttribute', 'XClass', 'XClassifier', 'XDataType', 'XEnum', 'XEnumLiteral', 'XMember', 'XModelElement', 'XNamedElement', 'XOperation', 'XPackage', 'XParameter', 'XReference', 'XStructuralFeature', 'XTypedElement', 'XFunction']
 
 eSubpackages = []
 eSuperPackage = None
 open_reg_specs.eSubpackages = eSubpackages
 open_reg_specs.eSuperPackage = eSuperPackage
 
-OpenRegSpecs.requirements.eType = RequirementsModule
-OpenRegSpecs.data_model.eType = DataModel
-OpenRegSpecs.process_workflow.eType = WorkflowModule
-OpenRegSpecs.report_generation.eType = ViewModule
-OpenRegSpecs.tests.eType = TestModule
 FlowElementsContainer.flowElements.eType = FlowElement
 ServiceTask.enrichedAttribute.eType = XAttribute
 ServiceTask.scenarios.eType = Scenario
@@ -28,6 +23,7 @@ ScriptTask.outputLayer.eType = XClass
 UserTask.entity.eType = XClass
 Module.dependencies.eType = ModuleDependencies
 Module.longName.eType = ModuleLongName
+ModuleList.modules.eType = Module
 ModuleDependencies.theModules.eType = ModuleDependency
 ModuleDependency.theModule.eType = Module
 ModuleDependency.longName.eType = ModuleLongName
@@ -64,11 +60,10 @@ E2ETestScope.scenarios.eType = Scenario
 E2ETestScope.layer.eType = SelectionLayer
 E2ETestScope.scriptTask.eType = ScriptTask
 InputFile.entity.eType = XClass
-PlatformCallModule.platformCalls.eType = PlatformCall
 WorkflowModule.taskTags.eType = ActivityTag
 WorkflowModule.scenarioTags.eType = ScenarioTag
 WorkflowModule.subProcess.eType = SubProcess
-DataModel.package.eType = XPackage
+EntityModule.package.eType = XPackage
 XClass.superTypes.eType = XClass
 XDataType.createBody.eType = XFunction
 XDataType.convertBody.eType = XFunction

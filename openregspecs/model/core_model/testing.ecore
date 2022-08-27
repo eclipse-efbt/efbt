@@ -14,7 +14,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="scope" eType="#//TestScope"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TestModule">
+  <eClassifiers xsi:type="ecore:EClass" name="TestModule" eSuperTypes="module_management.ecore#//Module">
     <eStructuralFeatures xsi:type="ecore:EReference" name="tests" upperBound="-1"
         eType="#//Test" containment="true"/>
   </eClassifiers>

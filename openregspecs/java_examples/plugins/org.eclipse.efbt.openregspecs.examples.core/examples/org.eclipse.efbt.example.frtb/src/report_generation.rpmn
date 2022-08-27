@@ -1,13 +1,11 @@
-OpenRegSpecs report_generation1{  
-      
-	report_generation {
-		ViewModule veiwModule1 {
+ModuleList { modules { ViewModule 
+veiwModule1 {
 			views { 
-				View GIRR_LongDeltaSensitivity_View 
+				View GIRR_LongDeltaSensitivity_View  
 				
 				select SelectClause  { 
 					columns {
-					SelectColumnMember "ors.pack.Approach_For_Prudential_Purposes.Sensitivities_Based_Method" as "ors.pack.OUTPUT_LAYER_FRTB.Approach_For_Prudential_Purposes",
+					SelectColumnMember   "ors.pack.Approach_For_Prudential_Purposes.Sensitivities_Based_Method" as "ors.pack.OUTPUT_LAYER_FRTB.Approach_For_Prudential_Purposes",
 					SelectColumnMember "ors.pack.Base.Memorandum_Items" as "ors.pack.OUTPUT_LAYER_FRTB.Base",
 					SelectColumnMember  "ors.pack.Main_Catagory.Instruments_Subject_To_Market_Risk" as "ors.pack.OUTPUT_LAYER_FRTB.Main_Catagory",
 					SelectColumnMember  "ors.pack.Prudential_Portfolio.Banking_And_Trading_Book" as "ors.pack.OUTPUT_LAYER_FRTB.Prudentia_lPortfolio",
@@ -17,7 +15,7 @@ OpenRegSpecs report_generation1{
 					} }
 					
 					where condition  "ors.pack.Delta_sensitivity.Delta_sensitivity" greater_than value "0" 
-					selectionLayer "b.frtb_workflow_module.frtb.Report Generation.FRTB_C91.GIRR_LongDeltaSensitivity_Layer" ,
+					selectionLayer "frtb_workflow_module.frtb.Report Generation.FRTB_C91.GIRR_LongDeltaSensitivity_Layer" ,
 					
 				View GIRR_ShortDeltaSensitivity_View 
 				
@@ -32,7 +30,7 @@ OpenRegSpecs report_generation1{
 					SelectColumnMember  "ors.pack.Type_Of_Risk.GIRR" as "ors.pack.OUTPUT_LAYER_FRTB.Type_Of_Risk"
 					} }
 					where condition  "ors.pack.Delta_sensitivity.Delta_sensitivity" less_than value "0" 
-					selectionLayer "b.frtb_workflow_module.frtb.Report Generation.FRTB_C91.GIRR_ShortDeltaSensitivity_Layer" ,
+					selectionLayer "frtb_workflow_module.frtb.Report Generation.FRTB_C91.GIRR_ShortDeltaSensitivity_Layer" ,
 					
 				View  GIRR_Net_Sensitivity_View
 				
@@ -48,7 +46,7 @@ OpenRegSpecs report_generation1{
 					}}
 					
 	
-					selectionLayer "b.frtb_workflow_module.frtb.Report Generation.FRTB_C91.GIRR_Net_Sensitivity_Layer" ,
+					selectionLayer "frtb_workflow_module.frtb.Report Generation.FRTB_C91.GIRR_Net_Sensitivity_Layer" ,
 				
 				View  GIRR_Delta_Risk_View
 				
@@ -63,7 +61,7 @@ OpenRegSpecs report_generation1{
 					SelectColumnMember "ors.pack.Type_Of_Risk.GIRR" as "ors.pack.OUTPUT_LAYER_FRTB.Type_Of_Risk"
 					
 					} }
-					selectionLayer "b.frtb_workflow_module.frtb.Report Generation.FRTB_C91.GIRR_Delta_Risk_Layer"
+					selectionLayer "frtb_workflow_module.frtb.Report Generation.FRTB_C91.GIRR_Delta_Risk_Layer"
 					
 			}
 		}

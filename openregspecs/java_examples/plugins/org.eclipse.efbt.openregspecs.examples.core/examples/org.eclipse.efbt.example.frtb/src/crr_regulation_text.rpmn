@@ -1,5 +1,6 @@
-OpenRegSpecs crr{  
-	requirements {  
+ModuleList {
+	modules {
+
 		RequirementsModule CRRRuleBook { 
 			rules { 
 				TitledRequirementsSection Title_IV  { 
