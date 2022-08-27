@@ -4,20 +4,16 @@ grammar org.eclipse.efbt.openregspecs.dsl.OpenRegSpecs with org.eclipse.xtext.co
 import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 import "http://www.eclipse.org/efbt/open_reg_specs" as open_reg_specs
 
-OpenRegSpecs returns open_reg_specs::OpenRegSpecs:
-	{open_reg_specs::OpenRegSpecs}
-	'OpenRegSpecs'
-	name=EString
+ModuleList returns open_reg_specs::ModuleList:
+	{open_reg_specs::ModuleList}
+	'ModuleList'
 	'{'
-		('requirements' '{' requirements+=RequirementsModule ( "," requirements+=RequirementsModule)* '}' )?
-		('data_model' '{' data_model+=DataModel ( "," data_model+=DataModel)* '}' )?
-		('process_workflow' '{' process_workflow+=WorkflowModule ( "," process_workflow+=WorkflowModule)* '}' )?
-		('report_generation' '{' report_generation+=ViewModule ( "," report_generation+=ViewModule)* '}' )?
-		('tests' '{' tests+=TestModule ( "," tests+=TestModule)* '}' )?
+		('modules' '{' modules+=Module ( "," modules+=Module)* '}' )?
 	'}';
 
-
-
+Module returns open_reg_specs::Module:
+	Module_Impl | RequirementsModule | TagGroup | ViewModule | TestModule | WorkflowModule | EntityModule;
+	
 XClassifier returns open_reg_specs::XClassifier:
 	XClass | XDataType_Impl | XEnum;
 
@@ -39,14 +35,10 @@ RequirementsSection returns open_reg_specs::RequirementsSection:
 
 
 
-Module returns open_reg_specs::Module:
-	Module_Impl | RequirementsModule | TagGroup | ViewModule | TestModule | PlatformCallModule | WorkflowModule;
-
 Tag returns open_reg_specs::Tag:
 	Tag_Impl | ActivityTag | ScenarioTag;
 
-PlatformCall returns open_reg_specs::PlatformCall:
-	PlatformCall_Impl ;
+
 
 Activity returns open_reg_specs::Activity:
 	Task_Impl | ServiceTask | SubProcess | ScriptTask | UserTask;
@@ -58,7 +50,7 @@ SelectColumn returns open_reg_specs::SelectColumn:
 
 
 TestScope returns open_reg_specs::TestScope:
-	TestScope_Impl | OpenRegSpecs | UnitTestScope | E2ETestScope_Impl;
+	TestScope_Impl  | UnitTestScope | E2ETestScope_Impl;
 
 EString returns ecore::EString:
 	STRING | ID;
@@ -101,9 +93,10 @@ RequirementsModule returns open_reg_specs::RequirementsModule:
 		('allowedtypes' allowedtypes=AllowedTypes)?
 	'}';
 
-DataModel returns open_reg_specs::DataModel:
-	{open_reg_specs::DataModel}
-	'DataModel'
+EntityModule returns open_reg_specs::EntityModule:
+	{open_reg_specs::EntityModule}
+	'EntityModule'
+	name=EString
 	'{'
 		( package=XPackage)?
 	'}';
@@ -155,7 +148,7 @@ EBoolean returns ecore::EBoolean:
 XAttribute returns open_reg_specs::XAttribute:
 	{open_reg_specs::XAttribute}
 	(iD?='iD')?
-	type=[open_reg_specs::XClassifier|EString] ("["(  lowerBound=EInt) ".." ( upperBound=EInt) "]")?
+	type=[open_reg_specs::XClassifier|EString] ("[" ((  lowerBound=EInt) ".." ( upperBound=EInt))?   "]")?
 	name=ID 
 	;
 
@@ -182,6 +175,7 @@ XClass returns open_reg_specs::XClass:
 XDataType_Impl returns open_reg_specs::XDataType:
 	{open_reg_specs::XDataType}
 	'type' name = ID
+	'wraps' industryName = EString
 	(
 	  ('create' createBody=XFunction)? &
 	  ('convert' convertBody=XFunction)?
@@ -198,7 +192,7 @@ XEnum returns open_reg_specs::XEnum:
 XOperation returns open_reg_specs::XOperation:
 	{open_reg_specs::XOperation}
 	'op'
-	type=[open_reg_specs::XClassifier|EString] ("["(  lowerBound=EInt) ".." ( upperBound=EInt) "]")?
+	type=[open_reg_specs::XClassifier|EString] ("["((  lowerBound=EInt) ".." ( upperBound=EInt))?  "]")?
 	name=ID
 	'(' (parameters+=XParameter (',' parameters+=XParameter)*)? ')'
 	(body=XFunction)?
@@ -209,13 +203,13 @@ XReference returns open_reg_specs::XReference:
 	((containment?='contains' ) |
 	 ('refers') 
 	)
-	type=[open_reg_specs::XClassifier|EString] ("["(  lowerBound=EInt) ".." ( upperBound=EInt) "]")?
+	type=[open_reg_specs::XClassifier|EString] ("["((  lowerBound=EInt) ".." ( upperBound=EInt))?  "]")?
 	name=ID
 	;
 
 XParameter returns open_reg_specs::XParameter:
 	{open_reg_specs::XParameter}
-	type=[open_reg_specs::XClassifier|EString] ("["(  lowerBound=EInt) ".." ( upperBound=EInt) "]")?
+	type=[open_reg_specs::XClassifier|EString] ("["((  lowerBound=EInt) ".." ( upperBound=EInt))?  "]")?
 	name=ID;
 
 XFunction returns open_reg_specs::XFunction:
@@ -415,18 +409,6 @@ TagGroup returns open_reg_specs::TagGroup:
 		('tags' '{' tags+=Tag ( "," tags+=Tag)* '}' )?
 	'}';
 
-PlatformCallModule returns open_reg_specs::PlatformCallModule:
-	{open_reg_specs::PlatformCallModule}
-	'PlatformCallModule'
-	name=EString
-	'{'
-		('theDescription' theDescription=EString)?
-		('license' license=EString)?
-		('version' version=EString)?
-		('dependencies' dependencies=ModuleDependencies)?
-		('longName' longName=ModuleLongName)?
-		('platformCalls' '{' platformCalls+=PlatformCall ( "," platformCalls+=PlatformCall)* '}' )?
-	'}';
 
 Tag_Impl returns open_reg_specs::Tag:
 	{open_reg_specs::Tag}
@@ -455,15 +437,6 @@ ScenarioTag returns open_reg_specs::ScenarioTag:
 		('displayName' displayName=EString)?
 		('requirements' '(' requirements+=[open_reg_specs::TitledRequirementsSection|EString] ( "," requirements+=[open_reg_specs::TitledRequirementsSection|EString])* ')' )?
 		('scenario' scenario=[open_reg_specs::Scenario|EString])?
-	'}';
-
-PlatformCall_Impl returns open_reg_specs::PlatformCall:
-	{open_reg_specs::PlatformCall}
-	'PlatformCall'
-	name=EString
-	'{'
-		('errorMessage' errorMessage=EString)?
-		('returnStatus' returnStatus=EInt)?
 	'}';
 
 

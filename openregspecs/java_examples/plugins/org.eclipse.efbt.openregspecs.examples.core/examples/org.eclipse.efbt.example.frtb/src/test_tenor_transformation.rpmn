@@ -1,6 +1,4 @@
-OpenRegSpecs tests1{ 
-	tests {
-		TestModule frtb_e2e_test1Module {
+ModuleList { modules { TestModule  test_tenor_transformationModule {
 						license "Copyright (c) 2020 Bird Software Solutions Ltd
  All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html
 
@@ -8,26 +6,22 @@ SPDX-License-Identifier: EPL-2.0
 
  Contributors:
  Neil Mackenzie - initial API and implementation"
-			tests { 
-				Test frtb_e2e_test1 {
+			tests {
+				Test test_tenor_transformation {
 					inputData { 
 						InputFile {fileName "Delta_sensitivity.csv" entity "ors.pack.Delta_sensitivity" } , 
+						InputFile {fileName "GIRR_risk_factor.csv" entity "ors.pack.GIRR_risk_factor" } ,
 						InputFile {fileName "Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.csv" entity "ors.pack.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived" }
 					} 
 					expectedResult { InputFile  {fileName "OUTPUT_LAYER_FRTB.csv"  entity "ors.pack.OUTPUT_LAYER_FRTB" }  }
-					scope E2ETestScope  frtb_e2e_test1_scope {
-						
-						scenarios (
-							"b.frtb_workflow_module.frtb.Derivation.PreNetting.DeltaNetting.Netted_delta_sensitivities_identifier.Netted_delta_sensitivities_identifier_primary_sceanrio" ,
-							"b.frtb_workflow_module.frtb.Derivation.PreNetting.DeltaNetting.Netted_delta_sensitivities.Netted_delta_sensitivities_primary_sceanrio"
-							)
-						layer "b.frtb_workflow_module.frtb.Report Generation.FRTB_C91.GIRR_Net_Sensitivity_Layer"
-						scriptTask"b.frtb_workflow_module.frtb.Report Generation.FRTB_C91"
-						
+					scope UnitTestScope tenor_primary_scenario {
+						scenarios "frtb_workflow_module.frtb.Derivation.PreNetting.DeltaNetting.Tenor.primary_scenario"						
 						}
-					 } 
-				} 
-				} 
-				}
-				}
-						
+					
+			} 
+		} 
+	}
+ } 
+ }
+			 
+		

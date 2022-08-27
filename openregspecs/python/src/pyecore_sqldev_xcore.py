@@ -34,8 +34,9 @@ class SQLDeveloperImport(object):
         xDouble = XDataType()
         xDouble.name = "Double"
     
-        openRegSpecs = OpenRegSpecs() 
-        dataModel = DataModel()
+        moduleList = ModuleList() 
+        dataModel = EntityModule()
+        dataModel.name="ors"
         rpmnPackage = XPackage(name='pack')
         dataModel.package = rpmnPackage
         # baseEntityModule = BaseEntityModule()
@@ -44,7 +45,7 @@ class SQLDeveloperImport(object):
         # baseEntityModule.name = 'baseEntityModule'
         # derivedEntityModule.name = 'derivedEntityModule'
         # generatedEntityModule.name = 'generatedEntityModule'
-        openRegSpecs.data_model.extend([dataModel])
+        moduleList.modules.extend([dataModel])
         # dataModel.baseEntityModule = baseEntityModule
         # dataModel.derivedEntityModule = derivedEntityModule
         # dataModel.generatedEntityModule = generatedEntityModule
@@ -340,6 +341,8 @@ class SQLDeveloperImport(object):
                                           
                     numOfRelations = SQLDeveloperImport.numberofRelationShipsToThisClass(self,theClass,targetClass)
                     if(numOfRelations>0):
+                        print("numOfRelations")
+                        print(numOfRelations)
                         referenceName = referenceName + str(numOfRelations)
                     relationalAttribute = None
                     if (target_Optional.strip() == "Y"):
@@ -380,17 +383,17 @@ class SQLDeveloperImport(object):
                        
                         theClass.members.append(eReference)
                    
-        SQLDeveloperImport.saveModelAsXMIFile(self, openRegSpecs, outputDirectory )  
-        SQLDeveloperImport.saveModelAsRPMNFile(self, openRegSpecs, outputDirectory ) 
+        SQLDeveloperImport.saveModelAsXMIFile(self, moduleList, outputDirectory )  
+        SQLDeveloperImport.saveModelAsRPMNFile(self, moduleList, outputDirectory ) 
 
         
-    def saveModelAsRPMNFile(self, openRegSpecs, outputDirectory ):
-        f = open(outputDirectory + 'data_model.open_reg_specs', "a")
-        f.write("OpenRegSpecs ors{\r")
-        f.write("\t data_model { \r")
-        for datamodel in openRegSpecs.data_model:
+    def saveModelAsRPMNFile(self, moduleList, outputDirectory ):
+        f = open(outputDirectory + 'data_model.rpmn', "a")
+        f.write("ModuleList{\r")
+        f.write("\t modules{ \r")
+        for datamodel in moduleList.modules:
             
-            f.write("\t\t DataModel { \r")
+            f.write("\t\t EntityModule " + datamodel.name +"  { \r")
             f.write("\t\t package " + datamodel.package.name + "\r")    
             for classifier in  datamodel.package.classifiers:
                 if isinstance(classifier,XClass):
@@ -402,19 +405,28 @@ class SQLDeveloperImport(object):
                     for member in classifier.members:
                         
                         if isinstance(member, XReference):
-                            
                             if (member.containment):
                                 f.write("\t\t\t\tcontains "  )
                             else:
                                 f.write("\t\t\t\trefers "  )
                           
                             f.write(member.type.name + " " )
-                            f.write("[" + str(member.lowerBound) + ".." +str(member.upperBound) + "] ")
+                            if member.upperBound == -1:
+                                f.write("[] ")
+                            elif ( (member.lowerBound == 0) and (member.upperBound == 1)):
+                                f.write(" ")
+                            else:
+                                f.write("[" + str(member.lowerBound) + ".." +str(member.upperBound) + "] ")
                             f.write(member.name)
                             f.write(" \r"  )
                         elif isinstance(member, XAttribute):
                             f.write("\t\t\t\t" + member.type.name + " " )
-                            f.write("[" + str(member.lowerBound) + ".." + str(member.upperBound) + "] ")
+                            if member.upperBound == -1:
+                                f.write("[] ")
+                            elif ( (member.lowerBound == 0) and (member.upperBound == 1)):
+                                f.write(" ")
+                            else:
+                                f.write("[" + str(member.lowerBound) + ".." +str(member.upperBound) + "] ")
                             f.write(member.name)
                             f.write(" \r"  )
                             
@@ -428,8 +440,8 @@ class SQLDeveloperImport(object):
                         
                     f.write(" }\r")
                 
-            f.write("\t\t\ttype Double\r")
-            f.write("\t\t\ttype String\r")    
+            f.write("\t\t\ttype Double wraps Double\r")
+            f.write("\t\t\ttype String wraps String\r")    
             f.write("\t\t  }\r")
             
         f.write("\t  }\r")
@@ -443,58 +455,11 @@ class SQLDeveloperImport(object):
         print("openRegSpecs")
         print(openRegSpecs)
         print("openRegSpecs")
-        resource = rset.create_resource(URI(outputDirectory + 'ldm.open_reg_specs'))  # This will create an XMI resource
+        resource = rset.create_resource(URI(outputDirectory + 'ldm.rpmn'))  # This will create an XMI resource
         resource.append(openRegSpecs)
         resource.save()
     
-    def qualifiedEntityName(self, entity):
-        returnName = entity.name
-        if entity.eContainer():
-            if not(isinstance(type.eContainer(),OpenRegSpecs)):
-                returnName = entity.eContainer().name + "." +returnName
-        if entity.eContainer().eContainer():
-            if not(isinstance(type.eContainer().eContainer(),OpenRegSpecs)):
-                returnName = entity.eContainer().eContainer().name + "." +returnName
-        if entity.eContainer().eContainer().eContainer():
-            if not(isinstance(type.eContainer().eContainer().eContainer(),OpenRegSpecs)):
-                returnName = entity.eContainer().eContainer().eContainer().name + "." +returnName
-        if entity.eContainer().eContainer().eContainer().eContainer():
-            if not(isinstance(type.eContainer().eContainer().eContainer(),OpenRegSpecs)):
-                returnName = entity.eContainer().eContainer().eContainer().eContainer().name + "." +returnName
-        return returnName;
-        
-    def qualifiedTypeName(self, type):
-        returnName = type.name
-        if type.eContainer():
-            if not(isinstance(type.eContainer(),OpenRegSpecs)):
-                returnName = type.eContainer().name + "." + returnName
-        if type.eContainer().eContainer():
-            if not(isinstance(type.eContainer().eContainer(),OpenRegSpecs)):
-                returnName = type.eContainer().eContainer().name + "." + returnName
-        if type.eContainer().eContainer().eContainer():
-            if not(isinstance(type.eContainer().eContainer().eContainer(),OpenRegSpecs)):
-                returnName = type.eContainer().eContainer().eContainer().name + "." + returnName
-        if type.eContainer().eContainer().eContainer().eContainer():
-            if not(isinstance(type.eContainer().eContainer().eContainer().eContainer(),OpenRegSpecs)):
-                returnName = type.eContainer().eContainer().eContainer().eContainer().name + "." + returnName
-        return returnName;
-    
-    def qualifiedDomainName(self, domain):
-        returnName = domain.name
-        if domain.eContainer():
-            if not(isinstance(domain.eContainer(),OpenRegSpecs)):
-                returnName = domain.eContainer().name + "." + returnName
-        if domain.eContainer().eContainer():
-            if not(isinstance(domain.eContainer().eContainer(),OpenRegSpecs)):
-                returnName = domain.eContainer().eContainer().name + "." + returnName
-        if domain.eContainer().eContainer().eContainer():
-            if not(isinstance(domain.eContainer().eContainer().eContainer(),OpenRegSpecs)):
-                returnName = domain.eContainer().eContainer().eContainer().name + "." + returnName
-        if domain.eContainer().eContainer().eContainer().eContainer():
-            if not(isinstance(domain.eContainer().eContainer().eContainer().eContainer(),OpenRegSpecs)):
-                returnName = domain.eContainer().eContainer().eContainer().eContainer().name + "." + returnName
-        return returnName;
-    
+   
         
     def superclassContainsFeature(self,theSuperClass, attribute) :
         attributes = theSuperClass.members
@@ -513,7 +478,7 @@ class SQLDeveloperImport(object):
         for feature in features:
             if ( isinstance(feature,XReference)):
                 featureType = feature.type            
-                if (feature == targetClass):
+                if (featureType == targetClass):
                     counter = counter+1
             
         return counter

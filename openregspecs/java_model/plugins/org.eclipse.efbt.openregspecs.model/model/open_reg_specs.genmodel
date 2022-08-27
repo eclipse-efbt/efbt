@@ -19,13 +19,6 @@
       <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//AttrComparison/greater_than"/>
       <genEnumLiterals ecoreEnumLiteral="open_reg_specs.ecore#//AttrComparison/not_equals"/>
     </genEnums>
-    <genClasses ecoreClass="open_reg_specs.ecore#//OpenRegSpecs">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//OpenRegSpecs/requirements"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//OpenRegSpecs/data_model"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//OpenRegSpecs/process_workflow"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//OpenRegSpecs/report_generation"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//OpenRegSpecs/tests"/>
-    </genClasses>
     <genClasses image="false" ecoreClass="open_reg_specs.ecore#//BaseElement">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//BaseElement/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//BaseElement/description"/>
@@ -71,6 +64,9 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//Module/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//Module/version"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//Module/longName"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//ModuleList">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//ModuleList/modules"/>
     </genClasses>
     <genClasses ecoreClass="open_reg_specs.ecore#//ModuleLongName">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//ModuleLongName/name"/>
@@ -198,21 +194,13 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//InputFile/fileName"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//InputFile/entity"/>
     </genClasses>
-    <genClasses ecoreClass="open_reg_specs.ecore#//PlatformCall">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//PlatformCall/errorMessage"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//PlatformCall/name"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//PlatformCall/returnStatus"/>
-    </genClasses>
-    <genClasses ecoreClass="open_reg_specs.ecore#//PlatformCallModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//PlatformCallModule/platformCalls"/>
-    </genClasses>
     <genClasses ecoreClass="open_reg_specs.ecore#//WorkflowModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//WorkflowModule/taskTags"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//WorkflowModule/scenarioTags"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//WorkflowModule/subProcess"/>
     </genClasses>
-    <genClasses ecoreClass="open_reg_specs.ecore#//DataModel">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//DataModel/package"/>
+    <genClasses ecoreClass="open_reg_specs.ecore#//EntityModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//EntityModule/package"/>
     </genClasses>
     <genClasses ecoreClass="open_reg_specs.ecore#//XAttribute">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//XAttribute/defaultValueLiteral"/>
@@ -229,6 +217,7 @@
     <genClasses ecoreClass="open_reg_specs.ecore#//XDataType">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//XDataType/createBody"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//XDataType/convertBody"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//XDataType/industryName"/>
     </genClasses>
     <genClasses ecoreClass="open_reg_specs.ecore#//XEnum">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//XEnum/literals"/>

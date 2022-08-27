@@ -181,16 +181,6 @@
 <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
 <synonym>STRNG_RSTRCTD_ID</synonym>
 </Domain>
-<Domain class="oracle.dbtools.crest.model.design.Domain" name="String" directorySegmentName="seg_2" id="78E25C16-8968-20B4-E330-DA4578EE46CF">
-<createdBy>Neil</createdBy>
-<createdTime>2022-03-28 10:12:43 UTC</createdTime>
-<ownerDesignName>frtb_domains</ownerDesignName>
-<importedID>78E25C16-8968-20B4-E330-DA4578EE46CF</importedID>
-<avTSortOrder>0</avTSortOrder>
-<dataTypeSize>156</dataTypeSize>
-<fileName>frtb_domains</fileName>
-<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
-</Domain>
 <Domain class="oracle.dbtools.crest.model.design.Domain" name="Market cap" id="7F63E47C-D3DB-4A93-6AC8-9AEB283E41DA">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 07:36:18 UTC</createdTime>
