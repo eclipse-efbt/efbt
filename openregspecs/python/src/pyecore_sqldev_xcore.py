@@ -436,7 +436,7 @@ class SQLDeveloperImport(object):
                     
                     f.write(" { ")  
                     for theLiteral in classifier.literals:
-                        f.write(" " + theLiteral.name + " as" + theLiteral.literal + " = " + str(theLiteral.value)  )
+                        f.write(" " + theLiteral.name + " as \"" + theLiteral.literal + "\" = " + str(theLiteral.value)  )
                         
                     f.write(" }\r")
                 
