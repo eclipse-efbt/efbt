@@ -103,7 +103,7 @@
             xsi:type="predicates:NotPredicate">
           <operand
               xsi:type="predicates:NamePredicate"
-              pattern=".*\openregspecs.model.core_model.*"/>
+              pattern=".*\.eclipse.efbt.openregspecs.model.core_model*"/>
         </operand>
       </predicate>
     </workingSet>
@@ -124,7 +124,7 @@
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:NamePredicate"
-            pattern=".*\openregspecs.model.core_model.*"/>
+            pattern=".*\.eclipse.efbt.openregspecs.model.core_model*"/>
       </predicate>
     </workingSet>
     <workingSet
@@ -150,7 +150,7 @@
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:NamePredicate"
-            pattern=".*\openregspecs.python.*"/>
+            pattern=".*\.eclipse.efbt.openregspecs.python*"/>
       </predicate>
     </workingSet>
     <workingSet
