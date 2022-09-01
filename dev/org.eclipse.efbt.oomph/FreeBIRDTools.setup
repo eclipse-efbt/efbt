@@ -99,6 +99,12 @@
         <operand
             xsi:type="predicates:NamePredicate"
             pattern=".*\.eclipse.efbt.openregspecs.model.*"/>
+        <operand
+            xsi:type="predicates:NotPredicate">
+          <operand
+              xsi:type="predicates:NamePredicate"
+              pattern=".*\openregspecs.model.core_model.*"/>
+        </operand>
       </predicate>
     </workingSet>
     <workingSet
@@ -112,13 +118,13 @@
       </predicate>
     </workingSet>
     <workingSet
-        name="controller_ldm"
-        id="controller_ldm">
+        name="core_model"
+        id="core_model">
       <predicate
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.controller.ldm.*"/>
+            pattern=".*\openregspecs.model.core_model.*"/>
       </predicate>
     </workingSet>
     <workingSet
@@ -138,32 +144,23 @@
       </predicate>
     </workingSet>
     <workingSet
-        name="controller_smcubes_component"
-        id="controller_smcubes_component">
+        name="python"
+        id="python">
       <predicate
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.controller.smcubes.component.*"/>
+            pattern=".*\openregspecs.python.*"/>
       </predicate>
     </workingSet>
     <workingSet
-        name="smcubes_dependencies"
-        id="smcubes_dependencies">
+        name="sql_developer"
+        id="sql_developer">
       <predicate
           xsi:type="predicates:AndPredicate">
         <operand
-            xsi:type="predicates:OrPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.eclipse.efbt.controller.smcubes.access_dependencies.plugin.*"/>
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.eclipse.efbt.dependencies.*"/>
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern="pomfirst-thirdparty"/>
-        </operand>
+            xsi:type="predicates:NamePredicate"
+            pattern=".*\sqldeveloper.*"/>
       </predicate>
     </workingSet>
     <workingSet
@@ -184,16 +181,6 @@
         <operand
             xsi:type="predicates:NamePredicate"
             pattern="org.eclipse.efbt.target"/>
-      </predicate>
-    </workingSet>
-    <workingSet
-        name="controller_platformcall"
-        id="controller_platformcall">
-      <predicate
-          xsi:type="predicates:AndPredicate">
-        <operand
-            xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.controller.platformcall.*"/>
       </predicate>
     </workingSet>
     <description>efbt_working_sets</description>
