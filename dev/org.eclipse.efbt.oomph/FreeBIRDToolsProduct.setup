@@ -177,20 +177,6 @@
       <requirement
           name="org.eclipse.jdt.feature.group"/>
       <requirement
-          name="org.eclipse.mylyn.bugzilla_feature.feature.group"/>
-      <requirement
-          name="org.eclipse.mylyn.context_feature.feature.group"/>
-      <requirement
-          name="org.eclipse.mylyn.ide_feature.feature.group"/>
-      <requirement
-          name="org.eclipse.mylyn.java_feature.feature.group"/>
-      <requirement
-          name="org.eclipse.mylyn.pde_feature.feature.group"/>
-      <requirement
-          name="org.eclipse.mylyn.wikitext_feature.feature.group"/>
-      <requirement
-          name="org.eclipse.mylyn_feature.feature.group"/>
-      <requirement
           name="org.eclipse.ocl.all.sdk.feature.group"/>
       <requirement
           name="org.eclipse.pde.feature.group"/>
@@ -217,28 +203,11 @@
       <requirement
           name="org.eclipse.sirius.specifier.feature.group"/>
       <requirement
-          name="org.eclipse.mylyn.github.feature.feature.group"/>
-      <requirement
           name="org.eclipse.buildship.feature.group"/>
       <requirement
           name="org.apache.commons.csv"/>
       <requirement
           name="org.eclipse.xtext.sdk.feature.group"/>
-      <requirement
-          name="org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.feature.feature.group"/>
-      <requirement
-          name="org.emfjson.jackson"/>
-      <requirement
-          name="com.fasterxml.jackson.core.jackson-annotations"
-          versionRange="[2.9.1,2.9.1]"/>
-      <requirement
-          name="com.fasterxml.jackson.core.jackson-core"
-          versionRange="[2.9.1,2.9.1]"/>
-      <requirement
-          name="com.fasterxml.jackson.core.jackson-databind"
-          versionRange="[2.9.1,2.9.1]"/>
-      <repository
-          url="http://ghillairet.github.io/p2"/>
       <repository
           url="http://download.eclipse.org/releases/2022-06"/>
       <repository
