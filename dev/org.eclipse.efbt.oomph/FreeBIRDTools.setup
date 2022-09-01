@@ -160,7 +160,7 @@
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:NamePredicate"
-            pattern=".*\sqldeveloper.*"/>
+            pattern=".*\.eclipse.efbt.sqldeveloper*"/>
       </predicate>
     </workingSet>
     <workingSet
