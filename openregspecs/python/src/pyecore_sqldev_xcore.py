@@ -39,26 +39,17 @@ class SQLDeveloperImport(object):
         dataModel.name="ors"
         rpmnPackage = XPackage(name='pack')
         dataModel.package = rpmnPackage
-        # baseEntityModule = BaseEntityModule()
-        # derivedEntityModule = DerivedEntityModule()
-        # generatedEntityModule = GeneratedEntityModule()
-        # baseEntityModule.name = 'baseEntityModule'
-        # derivedEntityModule.name = 'derivedEntityModule'
-        # generatedEntityModule.name = 'generatedEntityModule'
+
         moduleList.modules.extend([dataModel])
-        # dataModel.baseEntityModule = baseEntityModule
-        # dataModel.derivedEntityModule = derivedEntityModule
-        # dataModel.generatedEntityModule = generatedEntityModule
-        
-        # smcubesCoreModel = SMCubesCoreModel()
-        # smcubesCoreModel.name = "SMCubesCoreModel1"
-        # openRegSpecs.types_and_concepts = smcubesCoreModel
+
         rpmnPackage.classifiers.append(xString)
         rpmnPackage.classifiers.append(xDouble)
         classesMap = {}
         fileLocation = fileDirectory + "\\DM_Entities.csv"
         enumMap = {}
         headerSkipped = False
+        # Load all the entities from the csv file, make an XClass per entity,
+        # and add the XClass to the package
         with open(fileLocation) as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -68,25 +59,16 @@ class SQLDeveloperImport(object):
                 else:
                     className = row[0];
                     objectID = row[1];
-                    alteredClassName = SQLDeveloperImport.replaceSpaceWithUnderscore(self,className);
-                    if(alteredClassName.endswith("_derived")):
-                        eclass = XClass(name=alteredClassName)     
-                        rpmnPackage.classifiers.extend([eclass])
-                    elif(className.startswith("OUTPUT_LAYER_")):
-                        eclass = XClass(name=alteredClassName)
-                        
-                        rpmnPackage.classifiers.extend([eclass])
-                      
-                    else:
-                        eclass = XClass(name=alteredClassName)                   
-                        rpmnPackage.classifiers.extend([eclass])
-
-                    # eclass.name = alteredClassName
-                    print("objectID")
-                    print(objectID)
-                    classesMap[objectID]=eclass
+                    alteredClassName = SQLDeveloperImport.replaceSpaceWithUnderscore(self,className);                    
+                    xclass = XClass(name=alteredClassName)                   
+                    rpmnPackage.classifiers.extend([xclass])
+                    # maintain a map a objectIDs to XClasses
+                    classesMap[objectID]=xclass
+                    
         fileLocation = fileDirectory + "\\DM_Entities.csv"
         headerSkipped = False
+        
+        # Where an nxtity has a superclass, set the superclass on the XClass
         with open(fileLocation) as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -103,11 +85,10 @@ class SQLDeveloperImport(object):
                         
                        
 
-        
         fileLocation = fileDirectory + "\\DM_Domains.csv"
         headerSkipped = False
         counter = 0
-
+        # Creat an XEnum for each domain, and add it to the XPackage
         with open(fileLocation) as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -121,6 +102,7 @@ class SQLDeveloperImport(object):
                     if(not SQLDeveloperImport.inEnumBlackList(self,adaptedEnumName)):
                         theEnum = XEnum()
                         theEnum.name = adaptedEnumName
+                        #maintain a map of enum IDS to XEnum objects
                         enumMap[enumID] = theEnum
                         rpmnPackage.classifiers.extend([theEnum])
                         
@@ -128,6 +110,7 @@ class SQLDeveloperImport(object):
         fileLocation = fileDirectory + "\\DM_Domain_AVT.csv"
         headerSkipped = False
         counter = 0
+        # Add the members of a domain as literals of the related Enum
         with open(fileLocation) as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -161,7 +144,6 @@ class SQLDeveloperImport(object):
         # equivalent
         datatypeMap = {}
         domainDataTypeMap = {}
-        #ecorePackage = EcoreFactory.eINSTANCE.getEcorePackage();
         fileLocation = fileDirectory + "\\DM_Logical_To_Native.csv"
         headerSkipped = False
         with open(fileLocation) as csvfile:
@@ -200,15 +182,13 @@ class SQLDeveloperImport(object):
 
                             datatypeMap[dataTypeID] = EString
              
-        print("datatypeMap")
-        print(datatypeMap)
-        # Add all the concepts to an EPackage
-        # for each attribute add an attribute to the correct Entity
+        
+        fileLocation = fileDirectory + "\\DM_Attributes.csv"
+        headerSkipped = False
+        # or each attribute add an Xattribute to the correct XClass represtnting the Entity
         # the attribute should have the correct type, which may be a specific
         # enumeration
 
-        fileLocation = fileDirectory + "\\DM_Attributes.csv"
-        headerSkipped = False
         with open(fileLocation) as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -239,16 +219,14 @@ class SQLDeveloperImport(object):
                         elif(theEnum.name == "Number"):
                             attribute.name = theAttributeName
                             attribute.type = xDouble
+                        # This is a common domain used for String identifiers in BIRD in SQLDeveloper
                         elif(theEnum.name == "String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1"):
                             attribute.name = theAttributeName
                             attribute.type = xString
                                 
                         else:
                             attribute.name = theAttributeName
-                            attribute.type = theEnum
-                        # attribute.concept = variable
-                        # attribute.eAttributeType = theEnum
-                   
+                            attribute.type = theEnum            
 
                     if (attributeKind == "Logical Type"):
                         print("Logical Type")
@@ -267,22 +245,10 @@ class SQLDeveloperImport(object):
                     
 
                     try:
-                        print("attribute")
-                        print(attribute)
-                        print("classesMap")
-                        print(classesMap)
-                        
+
                         theClass = classesMap[classID]
-                        print("theClass")
-                        print(theClass)
-                  
-                        print("attribute.eAttributeType")
-                        # print(attribute.eAttributeType)
-                        print("attribute.name")
-                        print(attribute.name)
                         theClass.members.extend([attribute])
-                        print("theClass.members")
-                        print(theClass.members)
+
                     except:
                         print( "missing class2: " )
                         print(classID)
@@ -295,8 +261,6 @@ class SQLDeveloperImport(object):
                 if (superclass):
                     
                     attributes = theClass.members
-                    print("theClass.members")
-                    print(theClass.members)
                     attributesToDelete = []
                     for theAttribute in attributes :
                         if SQLDeveloperImport.superclassContainsFeature(self,superclass, theAttribute):
@@ -304,11 +268,11 @@ class SQLDeveloperImport(object):
     
                     for theAttribute in attributesToDelete :
                         theClass.members.remove(theAttribute);
-                        print( "removed eStructuralFeature since it exists in the superclass")
+                        print( "removed attribute or reference since it exists in the superclass")
                         print(  theAttribute.name )
                
           
-        #for each relationship add a reference
+        #for each relationship of the entity add a Xreference to the XClass for the entity
         fileLocation = fileDirectory + "\\DM_Relations.csv"
         headerSkipped = False
         with open(fileLocation) as csvfile:
@@ -351,36 +315,29 @@ class SQLDeveloperImport(object):
                             eReference  = XReference()
                             eReference.name=referenceName
                             eReference.type=targetClass
+                            #upper bound of -1 means there is no upper bounds, so represents an open list of reference
                             eReference.upperBound = -1
                             eReference.lowerBound=0
                             eReference.containment= False
-
                         else:
-
-                            eReference = XReference(referenceName, targetClass, upper=1, lower=0, containment=False)
-                           
+                            eReference = XReference(referenceName, targetClass, upper=1, lower=0, containment=False)                 
                     else:
                         if (sourceTo_Target_Cardinality.strip() == "*"):
-                            referenceName = referenceName + "s"
-                            
+                            referenceName = referenceName + "s"                       
                             eReference  = XReference()
                             eReference.name=referenceName
                             eReference.type=targetClass
                             eReference.upperBound = -1
                             eReference.lowerBound=1
-                            eReference.containment= False
-                           
-                        else:
-                            
+                            eReference.containment= False                        
+                        else:      
                             eReference  = XReference()
                             eReference.name=referenceName
                             eReference.type=targetClass
                             eReference.upperBound = 1
                             eReference.lowerBound=1
                             eReference.containment= False
-
-                    if (not (theClass is None) ) :
-                       
+                    if (not (theClass is None) ) :                 
                         theClass.members.append(eReference)
                    
         SQLDeveloperImport.saveModelAsXMIFile(self, moduleList, outputDirectory )  
@@ -471,7 +428,6 @@ class SQLDeveloperImport(object):
         return contains
     
     def numberofRelationShipsToThisClass(self,sourceClass, targetClass):
-        #TODO Auto-generated method stub
         features = sourceClass.members
         counter = 0;
         # do this for relationship attributes only.
@@ -496,10 +452,7 @@ class SQLDeveloperImport(object):
                 .replace('&', '_').replace('%', '_').replace('[', '_').replace(']', '_') \
                 .replace( chr(0x2019), '_').replace( chr(65533), '_') \
                 .replace(chr(0x2018), '_').replace(chr(0x0060), '_').replace(chr(0x00B4), '_')
-        
-        #if(not (originalClassName == newClassName)) :
-        #    print( " replaced identifier " + originalClassName +  " with " + newClassName +"\n")
-        
+             
         return newClassName;
 
     def inEnumBlackList(self,adaptedEnumName):
