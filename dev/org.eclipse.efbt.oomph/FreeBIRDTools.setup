@@ -183,6 +183,29 @@
             pattern="org.eclipse.efbt.target"/>
       </predicate>
     </workingSet>
+    <workingSet
+        name="sirius_ui"
+        id="sirius_ui">
+      <predicate
+          xsi:type="predicates:OrPredicate">
+        <operand
+            xsi:type="predicates:NamePredicate"
+            pattern=".*\.eclipse.efbt.openregspecs.sirius_ui.*"/>
+        <operand
+            xsi:type="predicates:NamePredicate"
+            pattern=".*\.eclipse.efbt.openregspecs.testing.ui.sirius.*"/>
+      </predicate>
+    </workingSet>
+    <workingSet
+        name="wiki_images"
+        id="wiki_images">
+      <predicate
+          xsi:type="predicates:AndPredicate">
+        <operand
+            xsi:type="predicates:NamePredicate"
+            pattern=".*\.eclipse.efbt.wiki_images*"/>
+      </predicate>
+    </workingSet>
     <description>efbt_working_sets</description>
   </setupTask>
   <setupTask
