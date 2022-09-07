@@ -203,7 +203,7 @@
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.wiki_images*"/>
+            pattern="*.eclipse.efbt.wiki_images"/>
       </predicate>
     </workingSet>
     <description>efbt_working_sets</description>
