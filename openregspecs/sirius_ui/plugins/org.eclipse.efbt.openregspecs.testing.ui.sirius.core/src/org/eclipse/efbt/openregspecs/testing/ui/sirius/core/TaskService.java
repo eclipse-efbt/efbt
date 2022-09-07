@@ -95,22 +95,7 @@ public class TaskService {
 		return null;
 		
 	}
-	public EList<Task> getDependantTasks(Task self) 
-	{
-		EList<Task> returnTasks = new BasicEList<Task>();
-		
-		if (self instanceof ServiceTask)
-		{
-			ServiceTask serviceTask = (ServiceTask) self;
-			XAttribute attr = serviceTask.getEnrichedAttribute();
-			EList<Scenario> scenarios = serviceTask.getScenarios();
-			for (Scenario scenario : scenarios) {
-				scenario.getRequiredAttributes();
-				//get the other service tasks and user tasks that contain theis atribute, then add them to the list of they dont exist.
-			}
-		}
-		return returnTasks;
-	}
+	
 	
 	
 
