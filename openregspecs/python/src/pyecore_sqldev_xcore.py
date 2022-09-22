@@ -59,8 +59,15 @@ class SQLDeveloperImport(object):
                 else:
                     className = row[0];
                     objectID = row[1];
+                    engineering_type = row[27];
+                    Num_SuperTypeEntity_ID = row[26];
+                    # of engineering type is single table, as i should be for all members of a type
+                    # heirarchy, and num_suptype is blanck, then this means that this class is a root
+                    # of a type heirarchy....we will set such classes to be abstract.
                     alteredClassName = SQLDeveloperImport.replaceSpaceWithUnderscore(self,className);                    
-                    xclass = XClass(name=alteredClassName)                   
+                    xclass = XClass(name=alteredClassName)      
+                    if((engineering_type == "Single Table") and (Num_SuperTypeEntity_ID=="")   )    :
+                       xclass.abstract=True       
                     rpmnPackage.classifiers.extend([xclass])
                     # maintain a map a objectIDs to XClasses
                     classesMap[objectID]=xclass
@@ -201,57 +208,60 @@ class SQLDeveloperImport(object):
                     attributeKind = row[7]
                    
                     classID = row[4]
+                    relationID = row[32]
                     theClass = classesMap[classID]
                     theAttributeName =  amendedAttributeName
                     
-
-                    if (attributeKind == "Domain"):
-                        enumID = row[12]
-                        theEnum = enumMap[enumID]
-                        print("Domain")
-                        attribute = XAttribute()
-                        attribute.lowerBound=0
-                        attribute.upperBound=1
-                        if(theEnum.name == "String"):
-                            attribute.name = theAttributeName
-                            attribute.type = xString
-                            
-                        elif(theEnum.name == "Number"):
-                            attribute.name = theAttributeName
-                            attribute.type = xDouble
-                        # This is a common domain used for String identifiers in BIRD in SQLDeveloper
-                        elif(theEnum.name == "String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1"):
-                            attribute.name = theAttributeName
-                            attribute.type = xString
-                                
-                        else:
-                            attribute.name = theAttributeName
-                            attribute.type = theEnum            
-
-                    if (attributeKind == "Logical Type"):
-                        print("Logical Type")
-                        dataTypeID = row[14]
-                        try:
-                            datatype = datatypeMap[dataTypeID]
+                    # we only add attributes here if they are not representing a relationship
+                    if relationID == "":
+                    
+                        if (attributeKind == "Domain"):
+                            enumID = row[12]
+                            theEnum = enumMap[enumID]
+                            print("Domain")
                             attribute = XAttribute()
                             attribute.lowerBound=0
                             attribute.upperBound=1
-                            attribute.name =amendedAttributeName
-                            attribute.type = SQLDeveloperImport.getEcoreDataTypeForDataType(self,datatype)
-                        except KeyError:
-                            print("missing datatype: ")
-                            print(dataTypeID)                       
-
-                    
-
-                    try:
-
-                        theClass = classesMap[classID]
-                        theClass.members.extend([attribute])
-
-                    except:
-                        print( "missing class2: " )
-                        print(classID)
+                            if(theEnum.name == "String"):
+                                attribute.name = theAttributeName
+                                attribute.type = xString
+                                
+                            elif(theEnum.name == "Number"):
+                                attribute.name = theAttributeName
+                                attribute.type = xDouble
+                            # This is a common domain used for String identifiers in BIRD in SQLDeveloper
+                            elif(theEnum.name == "String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1"):
+                                attribute.name = theAttributeName
+                                attribute.type = xString
+                                    
+                            else:
+                                attribute.name = theAttributeName
+                                attribute.type = theEnum            
+    
+                        if (attributeKind == "Logical Type"):
+                            print("Logical Type")
+                            dataTypeID = row[14]
+                            try:
+                                datatype = datatypeMap[dataTypeID]
+                                attribute = XAttribute()
+                                attribute.lowerBound=0
+                                attribute.upperBound=1
+                                attribute.name =amendedAttributeName
+                                attribute.type = SQLDeveloperImport.getEcoreDataTypeForDataType(self,datatype)
+                            except KeyError:
+                                print("missing datatype: ")
+                                print(dataTypeID)                       
+    
+                        
+    
+                        try:
+    
+                            theClass = classesMap[classID]
+                            theClass.members.extend([attribute])
+    
+                        except:
+                            print( "missing class2: " )
+                            print(classID)
                         
         #remove any attributes that already exist in superclass.
 
@@ -354,8 +364,10 @@ class SQLDeveloperImport(object):
             f.write("\t\t package " + datamodel.package.name + "\r")    
             for classifier in  datamodel.package.classifiers:
                 if isinstance(classifier,XClass):
-
-                    f.write("\t\t\tclass " + classifier.name)
+                    f.write("\t\t\t")
+                    if classifier.abstract==True:
+                        f.write("abstract ")
+                    f.write("class " + classifier.name)
                     if (hasattr(classifier, "superTypes")  and len(classifier.superTypes) > 0):
                         f.write(" extends " +  classifier.superTypes[0].name) 
                     f.write( " {\r")
@@ -498,7 +510,7 @@ class SQLDeveloperImport(object):
         return xString
         
 if __name__ == '__main__':
-    SQLDeveloperImport().convert('C:\\Users\\Neil\\freebirdtools-develop-jun22\\git\\efbt\\openregspecs\\python\\resources','C:\\Users\\Neil\\freebirdtools-develop-jun22\\git\\efbt\\openregspecs\\python\\results\\')
+    SQLDeveloperImport().convert('C:\\Users\\Neil\\freebirdtools-develop-presep\\git\\efbt\\openregspecs\\python\\resources','C:\\Users\\Neil\\freebirdtools-develop-presep\\git\\efbt\\openregspecs\\python\\results\\')
     
             
             

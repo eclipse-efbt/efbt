@@ -21,28 +21,9 @@
 <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
 <synonym>EQUTY_FCTR_TYP</synonym>
 <listOfValues>
+<valueDef value="0" description="NA"/>
 <valueDef value="1" description="Spot"/>
 <valueDef value="2" description="Repo"/>
-</listOfValues>
-</Domain>
-<Domain class="oracle.dbtools.crest.model.design.Domain" name="Risk factor type" id="27DE6432-B160-AF80-EE48-D0605ACFFB3B">
-<createdBy>Neil</createdBy>
-<createdTime>2022-04-02 14:54:13 UTC</createdTime>
-<ownerDesignName>frtb</ownerDesignName>
-<importedID>27DE6432-B160-AF80-EE48-D0605ACFFB3B</importedID>
-<avTSortOrder>0</avTSortOrder>
-<dataTypeSize>3</dataTypeSize>
-<fileName>frtb_domains</fileName>
-<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
-<synonym>RSK_FCTR_TYP</synonym>
-<listOfValues>
-<valueDef value="1" description="GIRR risk factor"/>
-<valueDef value="2" description="Commodity risk factor"/>
-<valueDef value="3" description="FX risk factor"/>
-<valueDef value="4" description="Equity risk factor"/>
-<valueDef value="5" description="CSR non securitisation risk factor"/>
-<valueDef value="6" description="Securitisation non CTP risk factor"/>
-<valueDef value="7" description="Securitisation CTP Risk Factor"/>
 </listOfValues>
 </Domain>
 <Domain class="oracle.dbtools.crest.model.design.Domain" name="Instrument" id="29BAC856-67BB-03AF-68AC-03A6A98312D7">
@@ -55,22 +36,12 @@
 <logicalDatatype>LOGDT017</logicalDatatype>
 <synonym>INSTRMNT</synonym>
 <listOfValues>
+<valueDef value="0" description="NA"/>
 <valueDef value="1" description="Instruments Other Than Securitisation Positions"/>
 <valueDef value="2" description="Securitisation Positions"/>
 <valueDef value="3" description="Instruments With Exotic Underlyings"/>
 <valueDef value="4" description="Alternative Correlation Trading Portfolio"/>
 </listOfValues>
-</Domain>
-<Domain class="oracle.dbtools.crest.model.design.Domain" name="Risk measure type" id="4041534B-669E-8BBD-B449-AED36F6E4944">
-<createdBy>Neil</createdBy>
-<createdTime>2022-04-16 05:57:50 UTC</createdTime>
-<ownerDesignName>frtb</ownerDesignName>
-<importedID>4041534B-669E-8BBD-B449-AED36F6E4944</importedID>
-<avTSortOrder>0</avTSortOrder>
-<dataTypeSize>3</dataTypeSize>
-<fileName>frtb_domains</fileName>
-<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
-<synonym>RSK_MSR_TYP</synonym>
 </Domain>
 <Domain class="oracle.dbtools.crest.model.design.Domain" name="Base" id="4C5C6DA6-F352-DA68-3066-9A084355A5F4">
 <createdBy>Neil</createdBy>
@@ -83,6 +54,7 @@
 <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
 <synonym>BS</synonym>
 <listOfValues>
+<valueDef value="0" description="NA"/>
 <valueDef value="1" description="Memorandum Items"/>
 <valueDef value="2" description="Exposures"/>
 </listOfValues>
@@ -98,6 +70,7 @@
 <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
 <synonym>TYP_NTR_SNSTVTY</synonym>
 <listOfValues>
+<valueDef value="0" description="NA"/>
 <valueDef value="1" description="Positive Sensitivity Gross Per Risk Class Unweighted"/>
 <valueDef value="2" description="Negative Sensitivity Gross Per Risk Class Unweighted"/>
 <valueDef value="3" description="Sensitivity Net Per Risk Class Unweighted"/>
@@ -114,6 +87,7 @@
 <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
 <synonym>PSTN_N_TH_NSTRMNT</synonym>
 <listOfValues>
+<valueDef value="0" description="NA"/>
 <valueDef value="1" description="Long Position"/>
 <valueDef value="2" description="Short Position"/>
 </listOfValues>
@@ -121,13 +95,14 @@
 <Domain class="oracle.dbtools.crest.model.design.Domain" name="Currency" directorySegmentName="seg_2" id="61D993CB-3857-0254-82CE-4524A856851C">
 <createdBy>Neil</createdBy>
 <createdTime>2022-03-28 09:55:36 UTC</createdTime>
-<ownerDesignName>frtb_domains</ownerDesignName>
+<ownerDesignName>frtb</ownerDesignName>
 <importedID>61D993CB-3857-0254-82CE-4524A856851C</importedID>
 <avTSortOrder>0</avTSortOrder>
 <dataTypeSize>3</dataTypeSize>
 <fileName>frtb_domains</fileName>
 <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
 <listOfValues>
+<valueDef value="0" description="NA"/>
 <valueDef value="EUR" description="EUR"/>
 <valueDef value="JPY" description="JYP"/>
 <valueDef value="USD" description="USD"/>
@@ -143,6 +118,7 @@
 <fileName>frtb_domains</fileName>
 <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
 <listOfValues>
+<valueDef value="0" description="NA"/>
 <valueDef value="1" description="Energy solid combustables"/>
 <valueDef value="10" description="Softs and other agriculturals"/>
 <valueDef value="11" description="Other commodity"/>
@@ -167,6 +143,7 @@
 <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
 <synonym>MRKT_RSK_PTFL</synonym>
 <listOfValues>
+<valueDef value="0" description="NA"/>
 <valueDef value="1" description="Non ACTP"/>
 <valueDef value="2" description="ACTP"/>
 </listOfValues>
@@ -192,6 +169,7 @@
 <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
 <synonym>MRKT_CP</synonym>
 <listOfValues>
+<valueDef value="0" description="NA"/>
 <valueDef value="1" description="Large"/>
 <valueDef value="2" description="Small"/>
 </listOfValues>
@@ -207,6 +185,7 @@
 <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
 <synonym>CSR_CRV_TYP</synonym>
 <listOfValues>
+<valueDef value="0" description="NA"/>
 <valueDef value="1" description="Bond"/>
 <valueDef value="2" description="CDS"/>
 </listOfValues>
@@ -222,6 +201,7 @@
 <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
 <synonym>APPRCH_FR_PRDNTL_PRPSS</synonym>
 <listOfValues>
+<valueDef value="0" description="NA"/>
 <valueDef value="1" description="Sensitivities Based Method"/>
 <valueDef value="2" description="Method To Determine The Default Risk Charge"/>
 <valueDef value="3" description="Method To Determine The Residual Risk Charge"/>
@@ -237,6 +217,7 @@
 <logicalDatatype>LOGDT017</logicalDatatype>
 <synonym>ECNMY</synonym>
 <listOfValues>
+<valueDef value="0" description="NA"/>
 <valueDef value="1" description="Emerging market"/>
 <valueDef value="2" description="Advanced economy"/>
 </listOfValues>
@@ -252,6 +233,7 @@
 <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
 <synonym>DLT_VG_CVTR_RSK</synonym>
 <listOfValues>
+<valueDef value="0" description="NA"/>
 <valueDef value="1" description="Delta Risk"/>
 <valueDef value="2" description="Vega Risk"/>
 <valueDef value="3" description="Curvature Risk"/>
@@ -268,6 +250,7 @@
 <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
 <synonym>TYP_F_RSK</synonym>
 <listOfValues>
+<valueDef value="0" description="NA"/>
 <valueDef value="1" description="GIRR"/>
 <valueDef value="2" description="Equity Risk"/>
 <valueDef value="3" description="Foreign Exchange Risk"/>
@@ -288,6 +271,7 @@
 <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
 <synonym>GRR_RSK_FCTR_TYP</synonym>
 <listOfValues>
+<valueDef value="0" description="NA"/>
 <valueDef value="1" description="Inflation"/>
 <valueDef value="2" description="Basis"/>
 <valueDef value="3" description="Yield"/>
@@ -304,6 +288,7 @@
 <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
 <synonym>PRDNTL_PRTFL</synonym>
 <listOfValues>
+<valueDef value="0" description="NA"/>
 <valueDef value="1" description="Trading Book"/>
 <valueDef value="2" description="Banking And Trading Book"/>
 </listOfValues>
@@ -319,6 +304,7 @@
 <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
 <synonym>SCRTSTN_SCTR</synonym>
 <listOfValues>
+<valueDef value="0" description="NA"/>
 <valueDef value="1" description="RMBS prime"/>
 <valueDef value="2" description="RMBS mid pirme"/>
 <valueDef value="3" description="RMBS sub prime"/>
@@ -332,13 +318,14 @@
 <Domain class="oracle.dbtools.crest.model.design.Domain" name="ShockDirection" directorySegmentName="seg_2" id="C1582D26-6C4D-DC4C-027A-545A166AF8A4">
 <createdBy>Neil</createdBy>
 <createdTime>2022-03-28 09:55:40 UTC</createdTime>
-<ownerDesignName>frtb_domains</ownerDesignName>
+<ownerDesignName>frtb</ownerDesignName>
 <importedID>C1582D26-6C4D-DC4C-027A-545A166AF8A4</importedID>
 <avTSortOrder>0</avTSortOrder>
 <dataTypeSize>3</dataTypeSize>
 <fileName>frtb_domains</fileName>
 <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
 <listOfValues>
+<valueDef value="0" description="NA"/>
 <valueDef value="1" description="Up"/>
 <valueDef value="2" description="Down"/>
 </listOfValues>
@@ -354,6 +341,7 @@
 <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
 <synonym>SCTR</synonym>
 <listOfValues>
+<valueDef value="0" description="NA"/>
 <valueDef value="1" description="Sovereign"/>
 <valueDef value="2" description="Local government"/>
 <valueDef value="3" description="Financials"/>
@@ -376,6 +364,7 @@
 <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
 <synonym>CNTNGNT_SCNR</synonym>
 <listOfValues>
+<valueDef value="0" description="NA"/>
 <valueDef value="1" description="Low_Correlation_Scenario"/>
 <valueDef value="2" description="Medium_Correlation_Scenario"/>
 <valueDef value="3" description="High_Correlation_Scenario"/>
@@ -392,6 +381,7 @@
 <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
 <synonym>MN_CTGRY</synonym>
 <listOfValues>
+<valueDef value="0" description="NA"/>
 <valueDef value="1" description="Instruments Subject To Market Risk"/>
 </listOfValues>
 </Domain>
@@ -406,6 +396,7 @@
 <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
 <synonym>RTNG_GRD</synonym>
 <listOfValues>
+<valueDef value="0" description="NA"/>
 <valueDef value="1" description="Senior IG"/>
 <valueDef value="2" description="Non senior IG"/>
 <valueDef value="3" description="High yield"/>
@@ -416,7 +407,7 @@
 <Domain class="oracle.dbtools.crest.model.design.Domain" name="Number" directorySegmentName="seg_2" id="EF979509-4418-5FAC-812C-8FD0322FE1D6">
 <createdBy>Neil</createdBy>
 <createdTime>2022-03-28 10:13:28 UTC</createdTime>
-<ownerDesignName>frtb_domains</ownerDesignName>
+<ownerDesignName>frtb</ownerDesignName>
 <importedID>EF979509-4418-5FAC-812C-8FD0322FE1D6</importedID>
 <avTSortOrder>0</avTSortOrder>
 <fileName>frtb_domains</fileName>
