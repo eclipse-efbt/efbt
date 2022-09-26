@@ -1,21 +1,14 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.eclipse.efbt.openregspecs.examples.core;singleton:=true
+Bundle-SymbolicName: org.eclipse.efbt.example.frtb.xcore.fe_input_layer;singleton:=true
+Automatic-Module-Name: org.eclipse.efbt.example.frtb.xcore.fe_input_layer
 Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: .
-Automatic-Module-Name: org.eclipse.efbt.openregspecs.examples.core
-Bundle-RequiredExecutionEnvironment: JavaSE-11
-Export-Package: pack,
- pack.impl,
- pack.util,
- pack_il,
- pack_il.impl,
- pack_il.util,
- pack_IL,
- pack_IL.impl,
- pack_IL.util,
- pack2,
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: J2SE-11
+Export-Package: pack2,
  pack2.impl,
  pack2.util
 Require-Bundle: org.eclipse.emf.common.ui,
@@ -27,5 +20,3 @@ Require-Bundle: org.eclipse.emf.common.ui,
  org.eclipse.xtext.xbase.lib,
  org.eclipse.emf.ecore.xcore.lib
 Bundle-ActivationPolicy: lazy
-Bundle-Vendor: %providerName
-Bundle-Localization: plugin

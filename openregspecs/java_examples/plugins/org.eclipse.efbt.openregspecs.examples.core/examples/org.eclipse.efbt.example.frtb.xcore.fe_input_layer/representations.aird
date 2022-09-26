@@ -785,6 +785,11 @@
   <semanticResources>java:/Objects/java.text.SimpleDateFormat</semanticResources>
   <semanticResources>java:/Objects/java.text.CalendarBuilder</semanticResources>
   <semanticResources>java:/Objects/org.eclipse.emf.ecore.util.Switch</semanticResources>
+  <semanticResources>xcore_fe/pack.history</semanticResources>
+  <semanticResources>xcore_fe/pack.ecore</semanticResources>
+  <semanticResources>xcore_fe/pack.genmodel</semanticResources>
+  <semanticResources>platform:/resource/org.eclipse.emf.ecore.xcore.lib/model/XcoreLang.xcore</semanticResources>
+  <semanticResources>xcore_fe/Pack.xcore</semanticResources>
   <ownedViews xmi:type="viewpoint:DView" uid="_FIwqgCXXEe2Mcvp32IErCw">
     <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.efbt.openregspecs.testing.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']"/>
   </ownedViews>

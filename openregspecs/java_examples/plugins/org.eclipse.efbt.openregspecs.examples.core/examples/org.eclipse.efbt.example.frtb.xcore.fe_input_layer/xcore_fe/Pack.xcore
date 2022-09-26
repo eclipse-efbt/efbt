@@ -1,0 +1,334 @@
+@Ecore(nsURI="pack2")
+
+package pack2 
+
+class Commodity_risk_factor extends Risk_factor {
+	Commodity_type Commodity_type
+	String Delivery_location
+}
+
+class CSR_non_securitisation_risk_factor extends Risk_factor {
+	Rating_grade CSR_credit_quality
+	CSR_curve_type CSR_curve_type
+	refers Organisation[1] theOrganisation
+}
+
+class Delta_sensitivities_correlated_and_aggregated_derived {
+	Double GIRR_delta_correlated_value_per_bucket
+	String Sensitivities_correlated_and_aggregated_bucket_identifier
+	refers Delta_sensitivity_combinations_derived[] theDelta_sensitivity_combinations_deriveds
+}
+
+class Delta_sensitivity_combinations_derived {
+	String Delta_sensitivity_combination_identifier
+	Double GIRR_delta_correlated_value
+	Double GIRR_delta_correlation_factor
+	refers Netted_delta_sensitivities_per_risk_factor_and_tenor_derived[1] theNetted_delta_sensitivities_per_risk_factor_and_tenor_derived
+	refers Netted_delta_sensitivities_per_risk_factor_and_tenor_derived[1] theNetted_delta_sensitivities_per_risk_factor_and_tenor_derived1
+}
+
+class Equity_issue extends Security_issue {
+}
+
+class Equity_risk_factor extends Risk_factor {
+	Equity_factor_type Equity_factor_type
+	refers Equity_issue[1] theEquity_issue
+}
+
+class FX_risk_factor extends Risk_factor {
+	Currency ccy1
+	Currency ccy2
+}
+
+class GIRR_risk_factor extends Risk_factor {
+	GIRR_risk_factor_type GIRR_risk_factor_type
+	Currency Main_currency
+	Currency Second_currency
+}
+
+class KB_per_bucket_derived {
+	String Bucket_identifier
+	Double GIRR_delta_KB
+	refers Delta_sensitivities_correlated_and_aggregated_derived[1] theDelta_sensitivities_correlated_and_aggregated_derived
+	refers Total_delta_sensitivity_per_bucket_derived[1] theTotal_delta_sensitivity_per_bucket_derived
+}
+
+class Netted_delta_sensitivities_per_risk_factor_and_tenor_derived {
+	String Bucket_identifier
+	Double GIRR_delta_risk_weight
+	Double Netted_delta_sensitivities
+	String Netted_delta_sensitivities_identifier
+	Double Tenor
+	Double Weighted_GIRR_delta_sensitivity
+	Double Weighted_GIRR_delta_sensitivity_squared
+	refers Risk_measure[] theDelta_sensitivitys
+	refers Risk_factor[1] theRisk_factor
+}
+
+class Organisation {
+	Economy Economy
+	Market_cap Market_cap
+	String Organisation_identifier
+	Rating_grade Ratings_grade
+	Sector Sector
+}
+
+class OUTPUT_LAYER_FRTB {
+	Approach_For_Prudential_Purposes Approach_For_Prudential_Purposes
+	Base Base
+	Contingent_Scenario Contingent_Scenario
+	Delta_Vega_Or_Curvature_Risk Delta_Vega_Or_Curvature_Risk
+	Boolean Hypothetical_Value_Under_Specific_Assumptions
+	Instrument Instrument
+	Main_Catagory Main_Catagory
+	Market_Risk_Portfolio Market_Risk_Portfolio
+	Double Own_Funds_Requirements
+	Position_In_The_Instrument Position_In_The_Instrument
+	Prudential_Portfolio Prudentia_lPortfolio
+	Double Sensitivity_To_Delta_Risk_Factors
+	Type_And_Nature_Of_Sensitivity Type_And_Nature_Of_Sensitivity
+	Type_Of_Risk Type_Of_Risk
+}
+
+abstract class Risk_factor {
+	String Risk_factor_Identifier
+}
+
+class Risk_measure {
+	String Risk_measure_identifier
+	refers Risk_factor[1] theRisk_factor
+	refers Security_or_exchange_tradable_derivative_position[1] theSecurity_or_exchange_tradable_derivative_position
+	ShockDirection Shock_direction
+	Double Curvature_valuation_difference
+	Double Curvature_risk_weight
+	Double Tenor
+	Double Delta_sensitivity
+	Double option_maturity
+	Double Vega_sensitivity
+	Double underlying_residual_maturity
+	Currency Currency_of_record
+	Risk_measure_type[1] Risk_measure_type
+}
+
+class Securitisation extends Security_issue {
+	Securitisation_sector Securitisation_sector
+}
+
+class Securitisation_CTP_risk_factor_ extends Risk_factor {
+}
+
+class Securitisation_non_CTP_risk_factor extends Risk_factor {
+	String Tranche_name
+	refers Securitisation[1] theSecuritisation
+}
+
+abstract class Security_issue {
+	String Issue_Identifier
+	Rating_grade Ratings_grade
+	refers Organisation[1] theOrganisation
+}
+
+class Security_or_exchange_tradable_derivative_position {
+	String Position_identifier
+}
+
+class Total_delta_sensitivity_per_bucket_derived {
+	Double Total_GIRR_delta_sensitivity_per_bucket
+	Double Total_GIRR_delta_sensitivity_squared_per_bucket
+	String Total_sensitivities_bucket_identifier
+	refers Netted_delta_sensitivities_per_risk_factor_and_tenor_derived[] theNetted_delta_sensitivities_per_risk_factor_and_tenor_deriveds
+}
+
+enum Approach_For_Prudential_Purposes {
+	NA = 1
+	Sensitivities_Based_Method = 2
+	Method_To_Determine_The_Default_Risk_Charge = 3
+	Method_To_Determine_The_Residual_Risk_Charge = 4
+}
+
+enum Base {
+	NA = 5
+	Memorandum_Items = 6
+	Exposures = 7
+}
+
+enum Boolean {
+}
+
+enum Commodity_type {
+	NA = 8
+	Energy_solid_combustables = 9
+	Softs_and_other_agriculturals = 10
+	Other_commodity = 11
+	Energy_liquid_combustables = 12
+	Energy_electricity_and_carbon_trading = 13
+	Freight = 14
+	Metals_non_precious = 15
+	Gaseous_combustables = 16
+	Precious_metals = 17
+	Grains_and_oilseed = 18
+	Livestock_and_dairy = 19
+}
+
+enum Contingent_Scenario {
+	NA = 20
+	Low_Correlation_Scenario = 21
+	Medium_Correlation_Scenario = 22
+	High_Correlation_Scenario = 23
+}
+
+enum CSR_curve_type {
+	NA = 24
+	Bond = 25
+	CDS = 26
+}
+
+enum Currency {
+	NA = 27
+	EUR = 28
+	JYP = 29
+	USD = 30
+}
+
+enum Delta_Vega_Or_Curvature_Risk {
+	NA = 31
+	Delta_Risk = 32
+	Vega_Risk = 33
+	Curvature_Risk = 34
+}
+
+enum Economy {
+	NA = 35
+	Emerging_market = 36
+	Advanced_economy = 37
+}
+
+enum Equity_factor_type {
+	NA = 38
+	Spot = 39
+	Repo = 40
+}
+
+enum GIRR_risk_factor_type {
+	NA = 41
+	Inflation = 42
+	Basis = 43
+	Yield = 44
+}
+
+enum Instrument {
+	NA = 45
+	Instruments_Other_Than_Securitisation_Positions = 46
+	Securitisation_Positions = 47
+	Instruments_With_Exotic_Underlyings = 48
+	Alternative_Correlation_Trading_Portfolio = 49
+}
+
+enum Main_Catagory {
+	NA = 50
+	Instruments_Subject_To_Market_Risk = 51
+}
+
+enum Market_cap {
+	NA = 52
+	Large = 53
+	Small = 54
+}
+
+enum Market_Risk_Portfolio {
+	NA = 55
+	Non_ACTP = 56
+	ACTP = 57
+}
+
+enum Number {
+}
+
+enum Position_In_The_Instrument {
+	NA = 58
+	Long_Position = 59
+	Short_Position = 60
+}
+
+enum Prudential_Portfolio {
+	NA = 61
+	Trading_Book = 62
+	Banking_And_Trading_Book = 63
+}
+
+enum Rating_grade {
+	NA = 64
+	Senior_IG = 65
+	Non_senior_IG = 66
+	High_yield = 67
+	Non_rated = 68
+	IG = 69
+}
+
+enum Sector {
+	NA = 70
+	Sovereign = 71
+	Local_government = 72
+	Financials = 73
+	Basic_materials = 74
+	Consumer_goods = 75
+	Technology = 76
+	Health_care = 77
+	Covered_bonds = 78
+	Other_sector = 79
+}
+
+enum Securitisation_sector {
+	NA = 80
+	RMBS_prime = 81
+	RMBS_mid_pirme = 82
+	RMBS_sub_prime = 83
+	CMBS = 84
+	ABS_student_loan = 85
+	ABS_auto = 86
+	CLO_non_CTP = 87
+	Other_securitisation_sector = 88
+}
+
+enum ShockDirection {
+	NA = 89
+	Up = 90
+	Down = 91
+}
+
+enum String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore {
+}
+
+enum String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1 {
+}
+
+enum Type_And_Nature_Of_Sensitivity {
+	NA = 92
+	Positive_Sensitivity_Gross_Per_Risk_Class_Unweighted = 93
+	Negative_Sensitivity_Gross_Per_Risk_Class_Unweighted = 94
+	Sensitivity_Net_Per_Risk_Class_Unweighted = 95
+}
+
+enum Type_Of_Risk {
+	NA = 96
+	GIRR = 97
+	Equity_Risk = 98
+	Foreign_Exchange_Risk = 99
+	Commodity_Risk = 100
+	CSR = 101
+	Default_Risk = 102
+	Residual_Risk = 103
+}
+
+enum Unknown {
+}
+
+type Double wraps Double
+
+type String wraps String
+
+enum Risk_measure_type {
+	Curvature
+	Delta_sensitivity = 1
+	Vega_sensitivity = 2
+}
