@@ -8,9 +8,6 @@ Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: J2SE-11
-Export-Package: pack2,
- pack2.impl,
- pack2.util
 Require-Bundle: org.eclipse.emf.common.ui,
  org.eclipse.emf.edapt.migration,
  org.eclipse.emf.edapt.common,

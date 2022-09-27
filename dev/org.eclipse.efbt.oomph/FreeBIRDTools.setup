@@ -200,11 +200,8 @@
         name="wiki_images"
         id="wiki_images">
       <predicate
-          xsi:type="predicates:AndPredicate">
-        <operand
-            xsi:type="predicates:NamePredicate"
-            pattern="*.eclipse.efbt.wiki_images"/>
-      </predicate>
+          xsi:type="predicates:NamePredicate"
+          pattern="*.eclipse.efbt.wiki_images"/>
     </workingSet>
     <description>efbt_working_sets</description>
   </setupTask>

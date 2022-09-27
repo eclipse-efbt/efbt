@@ -6,12 +6,6 @@
 
 <plugin>
 
-   <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated data_model -->
-      <package
-            uri="pack"
-            class="pack.PackPackage"
-            genModel="xcore_fe/data_model.xcore"/>
-   </extension>
+
 
 </plugin>
