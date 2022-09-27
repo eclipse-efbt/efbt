@@ -16,7 +16,7 @@ SPDX-License-Identifier: EPL-2.0
 					scope E2ETestScope  frtb_e2e_test1_scope {
 						
 						scenarios (
-							"frtb_workflow_module.frtb.Derivation.PreNetting.DeltaNetting.Netted_delta_sensitivities_identifier.Netted_delta_sensitivities_identifier_primary_sceanrio" ,
+							
 							"frtb_workflow_module.frtb.Derivation.PreNetting.DeltaNetting.Netted_delta_sensitivities.Netted_delta_sensitivities_primary_sceanrio"
 							)
 						layer "frtb_workflow_module.frtb.Report Generation.FRTB_C91.GIRR_Net_Sensitivity_Layer"

@@ -510,7 +510,7 @@ class SQLDeveloperImport(object):
         return xString
         
 if __name__ == '__main__':
-    SQLDeveloperImport().convert('C:\\Users\\Neil\\freebirdtools-develop-presep\\git\\efbt\\openregspecs\\python\\resources','C:\\Users\\Neil\\freebirdtools-develop-presep\\git\\efbt\\openregspecs\\python\\results\\')
+    SQLDeveloperImport().convert('C:\\Users\\Neil\\freebirdtools-develop-sep5\\git\\efbt\\openregspecs\\python\\resources','C:\\Users\\Neil\\freebirdtools-develop-sep5\\git\\efbt\\openregspecs\\python\\results\\')
     
             
             
