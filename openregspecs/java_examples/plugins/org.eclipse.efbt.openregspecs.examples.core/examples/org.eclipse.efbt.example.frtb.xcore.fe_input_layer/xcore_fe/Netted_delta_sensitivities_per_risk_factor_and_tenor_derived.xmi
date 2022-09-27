@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pack:Netted_delta_sensitivities_per_risk_factor_and_tenor_derived
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:pack="pack"
+    xsi:schemaLocation="pack data_model_ldm.xcore#/EPackage"
+    Bucket_identifier="Bucket1"
+    GIRR_delta_risk_weight="1.2"
+    Netted_delta_sensitivities="120.0"
+    Netted_delta_sensitivities_identifier="NettedSensitivitiesBucket1"
+    Tenor="5.0"
+    Weighted_GIRR_delta_sensitivity="120.0"
+    Weighted_GIRR_delta_sensitivity_squared="14400.0">
+  <theDelta_sensitivitys
+      href="Delta_sensitivity.xmi#/"/>
+  <theRisk_factor
+      xsi:type="pack:GIRR_risk_factor"
+      href="GIRR_risk_factor.xmi#/"/>
+</pack:Netted_delta_sensitivities_per_risk_factor_and_tenor_derived>

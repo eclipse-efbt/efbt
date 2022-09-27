@@ -25,9 +25,9 @@
 <generatorID>8DC4F242-60D0-1CB8-16D3-58E8B8CB2C64</generatorID>
 <ownerDesignName>frtb</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
-<use>0</use>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
 <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
-<domain>4041534B-669E-8BBD-B449-AED36F6E4944</domain>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>

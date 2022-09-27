@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.openregspecs.examples.core/src"
+    modelPluginID="org.eclipse.efbt.openregspecs.examples.core" modelName="Pack" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="5.0" copyrightFields="false"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>pack.ecore</foreignModel>
+  <genPackages prefix="Pack" disposableProviderFactory="true" ecorePackage="pack.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="pack.ecore#//Approach_For_Prudential_Purposes">
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Approach_For_Prudential_Purposes/NA"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Approach_For_Prudential_Purposes/Sensitivities_Based_Method"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Approach_For_Prudential_Purposes/Method_To_Determine_The_Default_Risk_Charge"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Approach_For_Prudential_Purposes/Method_To_Determine_The_Residual_Risk_Charge"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="pack.ecore#//Base">
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Base/NA"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Base/Memorandum_Items"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Base/Exposures"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="pack.ecore#//Boolean"/>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="pack.ecore#//Commodity_type">
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Commodity_type/NA"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Commodity_type/Energy_solid_combustables"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Commodity_type/Softs_and_other_agriculturals"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Commodity_type/Other_commodity"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Commodity_type/Energy_liquid_combustables"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Commodity_type/Energy_electricity_and_carbon_trading"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Commodity_type/Freight"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Commodity_type/Metals_non_precious"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Commodity_type/Gaseous_combustables"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Commodity_type/Precious_metals"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Commodity_type/Grains_and_oilseed"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Commodity_type/Livestock_and_dairy"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="pack.ecore#//Contingent_Scenario">
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Contingent_Scenario/NA"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Contingent_Scenario/Low_Correlation_Scenario"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Contingent_Scenario/Medium_Correlation_Scenario"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Contingent_Scenario/High_Correlation_Scenario"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="pack.ecore#//CSR_curve_type">
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//CSR_curve_type/NA"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//CSR_curve_type/Bond"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//CSR_curve_type/CDS"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="pack.ecore#//Currency">
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Currency/NA"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Currency/EUR"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Currency/JYP"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Currency/USD"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="pack.ecore#//Delta_Vega_Or_Curvature_Risk">
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Delta_Vega_Or_Curvature_Risk/NA"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Delta_Vega_Or_Curvature_Risk/Delta_Risk"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Delta_Vega_Or_Curvature_Risk/Vega_Risk"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Delta_Vega_Or_Curvature_Risk/Curvature_Risk"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="pack.ecore#//Economy">
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Economy/NA"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Economy/Emerging_market"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Economy/Advanced_economy"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="pack.ecore#//Equity_factor_type">
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Equity_factor_type/NA"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Equity_factor_type/Spot"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Equity_factor_type/Repo"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="pack.ecore#//GIRR_risk_factor_type">
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//GIRR_risk_factor_type/NA"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//GIRR_risk_factor_type/Inflation"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//GIRR_risk_factor_type/Basis"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//GIRR_risk_factor_type/Yield"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="pack.ecore#//Instrument">
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Instrument/NA"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Instrument/Instruments_Other_Than_Securitisation_Positions"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Instrument/Securitisation_Positions"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Instrument/Instruments_With_Exotic_Underlyings"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Instrument/Alternative_Correlation_Trading_Portfolio"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="pack.ecore#//Main_Catagory">
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Main_Catagory/NA"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Main_Catagory/Instruments_Subject_To_Market_Risk"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="pack.ecore#//Market_cap">
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Market_cap/NA"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Market_cap/Large"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Market_cap/Small"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="pack.ecore#//Market_Risk_Portfolio">
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Market_Risk_Portfolio/NA"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Market_Risk_Portfolio/Non_ACTP"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Market_Risk_Portfolio/ACTP"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="pack.ecore#//Number"/>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="pack.ecore#//Position_In_The_Instrument">
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Position_In_The_Instrument/NA"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Position_In_The_Instrument/Long_Position"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Position_In_The_Instrument/Short_Position"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="pack.ecore#//Prudential_Portfolio">
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Prudential_Portfolio/NA"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Prudential_Portfolio/Trading_Book"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Prudential_Portfolio/Banking_And_Trading_Book"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="pack.ecore#//Rating_grade">
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Rating_grade/NA"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Rating_grade/Senior_IG"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Rating_grade/Non_senior_IG"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Rating_grade/High_yield"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Rating_grade/Non_rated"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Rating_grade/IG"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="pack.ecore#//Sector">
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Sector/NA"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Sector/Sovereign"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Sector/Local_government"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Sector/Financials"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Sector/Basic_materials"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Sector/Consumer_goods"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Sector/Technology"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Sector/Health_care"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Sector/Covered_bonds"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Sector/Other_sector"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="pack.ecore#//Securitisation_sector">
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Securitisation_sector/NA"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Securitisation_sector/RMBS_prime"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Securitisation_sector/RMBS_mid_pirme"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Securitisation_sector/RMBS_sub_prime"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Securitisation_sector/CMBS"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Securitisation_sector/ABS_student_loan"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Securitisation_sector/ABS_auto"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Securitisation_sector/CLO_non_CTP"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Securitisation_sector/Other_securitisation_sector"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="pack.ecore#//ShockDirection">
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//ShockDirection/NA"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//ShockDirection/Up"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//ShockDirection/Down"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="pack.ecore#//String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore"/>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="pack.ecore#//String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1"/>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="pack.ecore#//Type_And_Nature_Of_Sensitivity">
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Type_And_Nature_Of_Sensitivity/NA"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Type_And_Nature_Of_Sensitivity/Positive_Sensitivity_Gross_Per_Risk_Class_Unweighted"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Type_And_Nature_Of_Sensitivity/Negative_Sensitivity_Gross_Per_Risk_Class_Unweighted"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Type_And_Nature_Of_Sensitivity/Sensitivity_Net_Per_Risk_Class_Unweighted"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="pack.ecore#//Type_Of_Risk">
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Type_Of_Risk/NA"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Type_Of_Risk/GIRR"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Type_Of_Risk/Equity_Risk"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Type_Of_Risk/Foreign_Exchange_Risk"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Type_Of_Risk/Commodity_Risk"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Type_Of_Risk/CSR"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Type_Of_Risk/Default_Risk"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Type_Of_Risk/Residual_Risk"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="pack.ecore#//Unknown"/>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="pack.ecore#//Risk_measure_type">
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Risk_measure_type/Curvature"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Risk_measure_type/Delta_sensitivity"/>
+      <genEnumLiterals ecoreEnumLiteral="pack.ecore#//Risk_measure_type/Vega_sensitivity"/>
+    </genEnums>
+    <genDataTypes ecoreDataType="pack.ecore#//Double"/>
+    <genDataTypes ecoreDataType="pack.ecore#//String"/>
+    <genClasses ecoreClass="pack.ecore#//Commodity_risk_factor">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Commodity_risk_factor/Commodity_type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Commodity_risk_factor/Delivery_location"/>
+    </genClasses>
+    <genClasses ecoreClass="pack.ecore#//CSR_non_securitisation_risk_factor">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//CSR_non_securitisation_risk_factor/CSR_credit_quality"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//CSR_non_securitisation_risk_factor/CSR_curve_type"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference pack.ecore#//CSR_non_securitisation_risk_factor/theOrganisation"/>
+    </genClasses>
+    <genClasses ecoreClass="pack.ecore#//Delta_sensitivities_correlated_and_aggregated_derived">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Delta_sensitivities_correlated_and_aggregated_derived/GIRR_delta_correlated_value_per_bucket"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Delta_sensitivities_correlated_and_aggregated_derived/Sensitivities_correlated_and_aggregated_bucket_identifier"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference pack.ecore#//Delta_sensitivities_correlated_and_aggregated_derived/theDelta_sensitivity_combinations_deriveds"/>
+    </genClasses>
+    <genClasses ecoreClass="pack.ecore#//Delta_sensitivity_combinations_derived">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Delta_sensitivity_combinations_derived/Delta_sensitivity_combination_identifier"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Delta_sensitivity_combinations_derived/GIRR_delta_correlated_value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Delta_sensitivity_combinations_derived/GIRR_delta_correlation_factor"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference pack.ecore#//Delta_sensitivity_combinations_derived/theNetted_delta_sensitivities_per_risk_factor_and_tenor_derived"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference pack.ecore#//Delta_sensitivity_combinations_derived/theNetted_delta_sensitivities_per_risk_factor_and_tenor_derived1"/>
+    </genClasses>
+    <genClasses ecoreClass="pack.ecore#//Equity_issue"/>
+    <genClasses ecoreClass="pack.ecore#//Equity_risk_factor">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Equity_risk_factor/Equity_factor_type"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference pack.ecore#//Equity_risk_factor/theEquity_issue"/>
+    </genClasses>
+    <genClasses ecoreClass="pack.ecore#//FX_risk_factor">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//FX_risk_factor/ccy1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//FX_risk_factor/ccy2"/>
+    </genClasses>
+    <genClasses ecoreClass="pack.ecore#//GIRR_risk_factor">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//GIRR_risk_factor/GIRR_risk_factor_type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//GIRR_risk_factor/Main_currency"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//GIRR_risk_factor/Second_currency"/>
+    </genClasses>
+    <genClasses ecoreClass="pack.ecore#//KB_per_bucket_derived">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//KB_per_bucket_derived/Bucket_identifier"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//KB_per_bucket_derived/GIRR_delta_KB"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference pack.ecore#//KB_per_bucket_derived/theDelta_sensitivities_correlated_and_aggregated_derived"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference pack.ecore#//KB_per_bucket_derived/theTotal_delta_sensitivity_per_bucket_derived"/>
+    </genClasses>
+    <genClasses ecoreClass="pack.ecore#//Netted_delta_sensitivities_per_risk_factor_and_tenor_derived">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Netted_delta_sensitivities_per_risk_factor_and_tenor_derived/Bucket_identifier"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Netted_delta_sensitivities_per_risk_factor_and_tenor_derived/GIRR_delta_risk_weight"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Netted_delta_sensitivities_per_risk_factor_and_tenor_derived/Netted_delta_sensitivities"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Netted_delta_sensitivities_per_risk_factor_and_tenor_derived/Netted_delta_sensitivities_identifier"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Netted_delta_sensitivities_per_risk_factor_and_tenor_derived/Tenor"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Netted_delta_sensitivities_per_risk_factor_and_tenor_derived/Weighted_GIRR_delta_sensitivity"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Netted_delta_sensitivities_per_risk_factor_and_tenor_derived/Weighted_GIRR_delta_sensitivity_squared"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference pack.ecore#//Netted_delta_sensitivities_per_risk_factor_and_tenor_derived/theDelta_sensitivitys"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference pack.ecore#//Netted_delta_sensitivities_per_risk_factor_and_tenor_derived/theRisk_factor"/>
+    </genClasses>
+    <genClasses ecoreClass="pack.ecore#//Organisation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Organisation/Economy"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Organisation/Market_cap"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Organisation/Organisation_identifier"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Organisation/Ratings_grade"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Organisation/Sector"/>
+    </genClasses>
+    <genClasses ecoreClass="pack.ecore#//OUTPUT_LAYER_FRTB">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//OUTPUT_LAYER_FRTB/Approach_For_Prudential_Purposes"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//OUTPUT_LAYER_FRTB/Base"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//OUTPUT_LAYER_FRTB/Contingent_Scenario"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//OUTPUT_LAYER_FRTB/Delta_Vega_Or_Curvature_Risk"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//OUTPUT_LAYER_FRTB/Hypothetical_Value_Under_Specific_Assumptions"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//OUTPUT_LAYER_FRTB/Instrument"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//OUTPUT_LAYER_FRTB/Main_Catagory"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//OUTPUT_LAYER_FRTB/Market_Risk_Portfolio"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//OUTPUT_LAYER_FRTB/Own_Funds_Requirements"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//OUTPUT_LAYER_FRTB/Position_In_The_Instrument"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//OUTPUT_LAYER_FRTB/Prudentia_lPortfolio"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//OUTPUT_LAYER_FRTB/Sensitivity_To_Delta_Risk_Factors"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//OUTPUT_LAYER_FRTB/Type_And_Nature_Of_Sensitivity"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//OUTPUT_LAYER_FRTB/Type_Of_Risk"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="pack.ecore#//Risk_factor">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Risk_factor/Risk_factor_Identifier"/>
+    </genClasses>
+    <genClasses ecoreClass="pack.ecore#//Risk_measure">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Risk_measure/Risk_measure_identifier"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference pack.ecore#//Risk_measure/theRisk_factor"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference pack.ecore#//Risk_measure/theSecurity_or_exchange_tradable_derivative_position"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Risk_measure/Shock_direction"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Risk_measure/Curvature_valuation_difference"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Risk_measure/Curvature_risk_weight"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Risk_measure/Tenor"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Risk_measure/Delta_sensitivity"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Risk_measure/option_maturity"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Risk_measure/Vega_sensitivity"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Risk_measure/underlying_residual_maturity"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Risk_measure/Currency_of_record"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Risk_measure/Risk_measure_type"/>
+    </genClasses>
+    <genClasses ecoreClass="pack.ecore#//Securitisation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Securitisation/Securitisation_sector"/>
+    </genClasses>
+    <genClasses ecoreClass="pack.ecore#//Securitisation_CTP_risk_factor_"/>
+    <genClasses ecoreClass="pack.ecore#//Securitisation_non_CTP_risk_factor">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Securitisation_non_CTP_risk_factor/Tranche_name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference pack.ecore#//Securitisation_non_CTP_risk_factor/theSecuritisation"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="pack.ecore#//Security_issue">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Security_issue/Issue_Identifier"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Security_issue/Ratings_grade"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference pack.ecore#//Security_issue/theOrganisation"/>
+    </genClasses>
+    <genClasses ecoreClass="pack.ecore#//Security_or_exchange_tradable_derivative_position">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Security_or_exchange_tradable_derivative_position/Position_identifier"/>
+    </genClasses>
+    <genClasses ecoreClass="pack.ecore#//Total_delta_sensitivity_per_bucket_derived">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Total_delta_sensitivity_per_bucket_derived/Total_GIRR_delta_sensitivity_per_bucket"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Total_delta_sensitivity_per_bucket_derived/Total_GIRR_delta_sensitivity_squared_per_bucket"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute pack.ecore#//Total_delta_sensitivity_per_bucket_derived/Total_sensitivities_bucket_identifier"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference pack.ecore#//Total_delta_sensitivity_per_bucket_derived/theNetted_delta_sensitivities_per_risk_factor_and_tenor_deriveds"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

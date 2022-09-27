@@ -29,9 +29,11 @@
              project="true">
        </wizard>      
     </extension>
-   <extension point="org.eclipse.emf.common.ui.examples">
+       <extension point="org.eclipse.emf.common.ui.examples">
         <example wizardID="org.eclipse.efbt.wizard.EFBTExampleWizard" pageImage="icons/EObject.gif">
-            <projectDescriptor name="org.eclipse.efbt.example.frtb" contentURI="examples/org.eclipse.efbt.example.frtb/" description="FRTB Example"/>            
+            <projectDescriptor name="org.eclipse.efbt.example.frtb" contentURI="examples/org.eclipse.efbt.example.frtb/" description="FRTB Example"/>   
+            <projectDescriptor name="org.eclipse.efbt.example.frtb.xcore.fe_input_layer" contentURI="examples/org.eclipse.efbt.example.frtb.xcore.fe_input_layer/" description="FRTB LDM/IL FE Example"/>                         
         </example>
     </extension>
+  
 </plugin>
