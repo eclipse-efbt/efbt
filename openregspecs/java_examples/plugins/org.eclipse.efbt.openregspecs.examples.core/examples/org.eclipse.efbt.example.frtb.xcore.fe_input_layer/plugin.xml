@@ -6,13 +6,7 @@
 
 <plugin>
 
-   <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated Pack -->
-      <package
-            uri="pack2"
-            class="pack2.Pack2Package"
-            genModel="xcore_fe/Pack.xcore"/>
-   </extension>
+
      <extension
          point="org.eclipse.emf.edapt.migrators">
       <migrator
