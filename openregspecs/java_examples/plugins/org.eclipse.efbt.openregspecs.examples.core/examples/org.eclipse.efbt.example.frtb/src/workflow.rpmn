@@ -32,18 +32,8 @@ ModuleList { modules {WorkflowModule  frtb_workflow_module
 					SubProcess PreNetting incoming ( sf10 ) flowElements { 
 						ParallelGateway gw4 outgoing ( sf12 , sf13 ) , 
 						SubProcess DeltaNetting incoming ( sf12 ) flowElements { 
-							InclusiveGateway gw8 outgoing ( sf25 , sf26 , sf27 , sf28 ) ,
-							ServiceTask Netted_delta_sensitivities_identifier incoming ( sf25 ) enrichedAttribute "ors.pack.Delta_sensitivity_combinations_derived.Netted_delta_sensitivities_identifier"
-							 scenarios { 
-							 	Scenario Netted_delta_sensitivities_identifier_primary_sceanrio { 
-							 		requiredAttributes ("ors.pack.Risk_factor.Risk_factor_Identifier" , 
-							 		"ors.pack.Delta_sensitivity.Tenor" ,
-							 		"ors.pack.Risk_measure.theRisk_factor"
-							 		)
-							 		}
-								
-						} }, ServiceTask Risk_factor_Identifier incoming ( sf26 ) enrichedAttribute "ors.pack.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.Risk_factor_Identifier"
-						} , ServiceTask Tenor incoming ( sf27 ) enrichedAttribute "ors.pack.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.Tenor"
+							InclusiveGateway gw8 outgoing (  sf27 , sf28 ) ,
+							ServiceTask Tenor incoming ( sf27 ) enrichedAttribute "ors.pack.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.Tenor"
 						scenarios {
 									Scenario  primary_scenario {
 										requiredAttributes ( "ors.pack.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.theDelta_sensitivitys",
@@ -77,8 +67,7 @@ ModuleList { modules {WorkflowModule  frtb_workflow_module
 							 		} 
 						 
 				} } , 
-				SequenceFlow sf25 from gw8 to Netted_delta_sensitivities_identifier , 
-				SequenceFlow sf26 from gw8 to Risk_factor_Identifier , 
+				
 				SequenceFlow sf27 from gw8 to Tenor , 
 				SequenceFlow sf28 from gw8 to Netted_delta_sensitivities } , 
 				SubProcess VegaNetting incoming ( sf13 ) , 
@@ -107,37 +96,35 @@ ModuleList { modules {WorkflowModule  frtb_workflow_module
 										SubProcess DeltaIntraBucketPairsAndSquares incoming ( sf32 ) flowElements { 
 											ParallelGateway gw12 outgoing ( sf34 , sf35 ) , 
 											SubProcess DeltaCreateCorrelatedPairs incoming ( sf34 ) flowElements { 
-												InclusiveGateway gw13 outgoing ( sf36 , sf38 , sf39 , sf40 , sf41 , sf45 , sf46 ) , 
+												InclusiveGateway gw13 outgoing ( sf36  ,  sf40 , sf41 , sf45 , sf46 ) , 
 												ServiceTask Delta_sensitivity_combination_identifier incoming ( sf36 ) enrichedAttribute "ors.pack.Delta_sensitivity_combinations_derived.Delta_sensitivity_combination_identifier"
-											} , ServiceTask Netted_delta_sensitivities_identifier1 incoming ( sf38 ) enrichedAttribute "ors.pack.Delta_sensitivity_combinations_derived.Netted_delta_sensitivities_identifier"
-											} , ServiceTask Netted_delta_sensitivities_identifier2 incoming ( sf39 ) enrichedAttribute "ors.pack.Delta_sensitivity_combinations_derived.Netted_delta_sensitivities_identifier1"
 											} , ServiceTask GIRR_delta_correlation_factor incoming ( sf40 ) enrichedAttribute "ors.pack.Delta_sensitivity_combinations_derived.GIRR_delta_correlation_factor"} , 
 												ServiceTask GIRR_delta_correlated_value incoming ( sf41 ) enrichedAttribute "ors.pack.Delta_sensitivity_combinations_derived.GIRR_delta_correlated_value" } , 
 												ServiceTask Sensitivities_correlated_and_aggregated_bucket_identifier incoming ( sf45 ) enrichedAttribute "ors.pack.Delta_sensitivities_correlated_and_aggregated_derived.Sensitivities_correlated_and_aggregated_bucket_identifier" } , 
 												ServiceTask GIRR_delta_correlated_value_per_bucket incoming ( sf46 ) enrichedAttribute "ors.pack.Delta_sensitivities_correlated_and_aggregated_derived.GIRR_delta_correlated_value_per_bucket" } , 
 												SequenceFlow sf36 from gw13 to Delta_sensitivity_combination_identifier , 
-												SequenceFlow sf38 from gw13 to Netted_delta_sensitivities_identifier1 , 
-												SequenceFlow sf39 from gw13 to Netted_delta_sensitivities_identifier2 , 
+											
+										
 												SequenceFlow sf40 from gw13 to GIRR_delta_correlation_factor , 
 												SequenceFlow sf41 from gw13 to GIRR_delta_correlated_value , 
 												SequenceFlow sf45 from gw13 to Sensitivities_correlated_and_aggregated_bucket_identifier , 
 												SequenceFlow sf46 from gw13 to GIRR_delta_correlated_value_per_bucket } , 
 												SubProcess DeltaCreateSquares incoming ( sf35 ) flowElements { 
-													InclusiveGateway gw14 outgoing ( sf42 , sf43 , sf44 ) , 		
-													ServiceTask Total_Bucket_identifier incoming ( sf42 ) enrichedAttribute"ors.pack.Total_delta_sensitivity_per_bucket_derived.Bucket_identifier"
-												} , ServiceTask Total_GIRR_delta_sensitivity_per_bucket incoming ( sf43 ) enrichedAttribute "ors.pack.Total_delta_sensitivity_per_bucket_derived.Total_GIRR_delta_sensitivity_per_bucket" } , 
+													InclusiveGateway gw14 outgoing (  sf43 , sf44 ) , 		
+													
+											 ServiceTask Total_GIRR_delta_sensitivity_per_bucket incoming ( sf43 ) enrichedAttribute "ors.pack.Total_delta_sensitivity_per_bucket_derived.Total_GIRR_delta_sensitivity_per_bucket" } , 
 													ServiceTask Total_GIRR_delta_sensitivity_squared_per_bucket incoming ( sf44 ) enrichedAttribute "ors.pack.Total_delta_sensitivity_per_bucket_derived.Total_GIRR_delta_sensitivity_squared_per_bucket" } , 
-													SequenceFlow sf42 from gw14 to Total_Bucket_identifier , 
+													
 													SequenceFlow sf43 from gw14 to Total_GIRR_delta_sensitivity_per_bucket , 
 													SequenceFlow sf44 from gw14 to Total_GIRR_delta_sensitivity_squared_per_bucket } , 
 													SequenceFlow sf34 from gw12 to DeltaCreateCorrelatedPairs , SequenceFlow sf35 from gw12 to DeltaCreateSquares } , 
 													SubProcess DeltaCreateBucketValue incoming ( sf33 ) flowElements { 
-														InclusiveGateway gw15 outgoing ( sf47 , sf48 , sf49 ) , 
+														InclusiveGateway gw15 outgoing ( sf47  , sf49 ) , 
 														ServiceTask KB_per_bucket_derived_Bucket_identifier incoming ( sf47 ) enrichedAttribute "ors.pack.KB_per_bucket_derived.Bucket_identifier"
-													} , ServiceTask KB_per_bucket_derived_Sensitivities_correlated_and_aggregated_bucket_identifier incoming ( sf48 ) enrichedAttribute "ors.pack.KB_per_bucket_derived.Sensitivities_correlated_and_aggregated_bucket_identifier" } , 
+													} , 
 														ServiceTask KB_per_bucket_derived_GIRR_delta_KB incoming ( sf49 ) enrichedAttribute "ors.pack.KB_per_bucket_derived.GIRR_delta_KB" } , 
 														SequenceFlow sf47 from gw15 to KB_per_bucket_derived_Bucket_identifier , 
-														SequenceFlow sf48 from gw15 to KB_per_bucket_derived_Sensitivities_correlated_and_aggregated_bucket_identifier , 
+														
 														SequenceFlow sf49 from gw15 to KB_per_bucket_derived_GIRR_delta_KB } , 
 														SequenceFlow sf32 from gw11 to DeltaIntraBucketPairsAndSquares , 
 														SequenceFlow sf33 from gw11 to DeltaCreateBucketValue } , 
