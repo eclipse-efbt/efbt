@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<pack:Delta_sensitivity xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pack="pack" Risk_measure_identifier="deltaSensitivity1" Currency_of_record="EUR" Delta_sensitivity="100.0" Tenor="5.0">
-  <theRisk_factor xsi:type="pack:GIRR_risk_factor" href="GIRR_risk_factor.xmi.backup#/"/>
-  <theSecurity_or_exchange_tradable_derivative_position href="Security_or_exchange_tradable_derivative_position.xmi.backup#/"/>
-</pack:Delta_sensitivity>

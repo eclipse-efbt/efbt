@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pack:Security_or_exchange_tradable_derivative_position xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:pack="pack2" Position_identifier="Position1"/>
+<pack:Security_or_exchange_tradable_derivative_position xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pack="pack" xsi:schemaLocation="pack data_model_ldm.xcore#/EPackage" Position_identifier="Position1"/>

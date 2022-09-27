@@ -29,20 +29,11 @@
              project="true">
        </wizard>      
     </extension>
-   <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated data_model -->
-      <package
-            uri="pack"
-            class="pack.PackPackage"
-            genModel="examples/org.eclipse.efbt.example.frtb.xcore.ldm/src/data_model.xcore"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated Pack -->
-      <package
-            uri="pack2"
-            class="pack2.Pack2Package"
-            genModel="examples/org.eclipse.efbt.example.frtb.xcore.fe_input_layer/xcore_fe/Pack.xcore"/>
-   </extension>
-
+       <extension point="org.eclipse.emf.common.ui.examples">
+        <example wizardID="org.eclipse.efbt.wizard.EFBTExampleWizard" pageImage="icons/EObject.gif">
+            <projectDescriptor name="org.eclipse.efbt.example.frtb" contentURI="examples/org.eclipse.efbt.example.frtb/" description="FRTB Example"/>   
+            <projectDescriptor name="org.eclipse.efbt.example.frtb.xcore.fe_input_layer" contentURI="examples/org.eclipse.efbt.example.frtb.xcore.fe_input_layer/" description="FRTB LDM/IL FE Example"/>                         
+        </example>
+    </extension>
+  
 </plugin>
