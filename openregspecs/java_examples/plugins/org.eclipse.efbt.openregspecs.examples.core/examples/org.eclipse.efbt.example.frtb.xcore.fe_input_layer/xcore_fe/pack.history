@@ -122,72 +122,51 @@
           <element href="pack.ecore#//Risk_factor"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_zF8gJj1pEe2nkoNG1iAiqg" referenceName="eClassifiers">
+      <changes xsi:type="history:Create" xmi:id="_zF8gJj1pEe2nkoNG1iAiqg" referenceName="eClassifiers" element="_94h2jD7iEe2FnpMUrGicEg">
         <target href="pack.ecore#/"/>
-        <element href="pack.ecore#//Commodity_risk_factor"/>
-        <changes xsi:type="history:Set" xmi:id="_zF8gJz1pEe2nkoNG1iAiqg" featureName="name" dataValue="Commodity_risk_factor">
-          <element href="pack.ecore#//Commodity_risk_factor"/>
-        </changes>
-        <changes xsi:type="history:Add" xmi:id="_zF8gKD1pEe2nkoNG1iAiqg" featureName="eSuperTypes">
-          <element href="pack.ecore#//Commodity_risk_factor"/>
+        <changes xsi:type="history:Set" xmi:id="_zF8gJz1pEe2nkoNG1iAiqg" element="_94h2jD7iEe2FnpMUrGicEg" featureName="name" dataValue="Commodity_risk_factor"/>
+        <changes xsi:type="history:Add" xmi:id="_zF8gKD1pEe2nkoNG1iAiqg" element="_94h2jD7iEe2FnpMUrGicEg" featureName="eSuperTypes">
           <referenceValue href="pack.ecore#//Risk_factor"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_zF8gKT1pEe2nkoNG1iAiqg" referenceName="eClassifiers">
+      <changes xsi:type="history:Create" xmi:id="_zF8gKT1pEe2nkoNG1iAiqg" referenceName="eClassifiers" element="_94h2kz7iEe2FnpMUrGicEg">
         <target href="pack.ecore#/"/>
-        <element href="pack.ecore#//CSR_non_securitisation_risk_factor"/>
-        <changes xsi:type="history:Set" xmi:id="_zF8gKj1pEe2nkoNG1iAiqg" featureName="name" dataValue="CSR_non_securitisation_risk_factor">
-          <element href="pack.ecore#//CSR_non_securitisation_risk_factor"/>
-        </changes>
-        <changes xsi:type="history:Add" xmi:id="_zF8gKz1pEe2nkoNG1iAiqg" featureName="eSuperTypes">
-          <element href="pack.ecore#//CSR_non_securitisation_risk_factor"/>
+        <changes xsi:type="history:Set" xmi:id="_zF8gKj1pEe2nkoNG1iAiqg" element="_94h2kz7iEe2FnpMUrGicEg" featureName="name" dataValue="CSR_non_securitisation_risk_factor"/>
+        <changes xsi:type="history:Add" xmi:id="_zF8gKz1pEe2nkoNG1iAiqg" element="_94h2kz7iEe2FnpMUrGicEg" featureName="eSuperTypes">
           <referenceValue href="pack.ecore#//Risk_factor"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_zF8gLD1pEe2nkoNG1iAiqg" referenceName="eStructuralFeatures">
-        <target href="pack.ecore#//CSR_non_securitisation_risk_factor"/>
-        <element href="pack.ecore#//CSR_non_securitisation_risk_factor/theOrganisation"/>
+      <changes xsi:type="history:Create" xmi:id="_zF8gLD1pEe2nkoNG1iAiqg" target="_94h2kz7iEe2FnpMUrGicEg" referenceName="eStructuralFeatures">
+        <element href="pack.ecore#//Risk_factor/theOrganisation"/>
         <changes xsi:type="history:Set" xmi:id="_zF8gLT1pEe2nkoNG1iAiqg" featureName="name" dataValue="theOrganisation">
-          <element href="pack.ecore#//CSR_non_securitisation_risk_factor/theOrganisation"/>
+          <element href="pack.ecore#//Risk_factor/theOrganisation"/>
         </changes>
         <changes xsi:type="history:Set" xmi:id="_zF8gLj1pEe2nkoNG1iAiqg" featureName="lowerBound" dataValue="1" oldDataValue="0">
-          <element href="pack.ecore#//CSR_non_securitisation_risk_factor/theOrganisation"/>
+          <element href="pack.ecore#//Risk_factor/theOrganisation"/>
         </changes>
         <changes xsi:type="history:Set" xmi:id="_zF8gLz1pEe2nkoNG1iAiqg" featureName="eType">
-          <element href="pack.ecore#//CSR_non_securitisation_risk_factor/theOrganisation"/>
+          <element href="pack.ecore#//Risk_factor/theOrganisation"/>
           <referenceValue href="pack.ecore#//Organisation"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_zF8gMD1pEe2nkoNG1iAiqg" referenceName="eClassifiers">
+      <changes xsi:type="history:Create" xmi:id="_zF8gMD1pEe2nkoNG1iAiqg" referenceName="eClassifiers" element="_94h2mj7iEe2FnpMUrGicEg">
         <target href="pack.ecore#/"/>
-        <element href="pack.ecore#//Equity_risk_factor"/>
-        <changes xsi:type="history:Set" xmi:id="_zF8gMT1pEe2nkoNG1iAiqg" featureName="name" dataValue="Equity_risk_factor">
-          <element href="pack.ecore#//Equity_risk_factor"/>
-        </changes>
-        <changes xsi:type="history:Add" xmi:id="_zF9HED1pEe2nkoNG1iAiqg" featureName="eSuperTypes">
-          <element href="pack.ecore#//Equity_risk_factor"/>
+        <changes xsi:type="history:Set" xmi:id="_zF8gMT1pEe2nkoNG1iAiqg" element="_94h2mj7iEe2FnpMUrGicEg" featureName="name" dataValue="Equity_risk_factor"/>
+        <changes xsi:type="history:Add" xmi:id="_zF9HED1pEe2nkoNG1iAiqg" element="_94h2mj7iEe2FnpMUrGicEg" featureName="eSuperTypes">
           <referenceValue href="pack.ecore#//Risk_factor"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_zF9HET1pEe2nkoNG1iAiqg" referenceName="eClassifiers">
+      <changes xsi:type="history:Create" xmi:id="_zF9HET1pEe2nkoNG1iAiqg" referenceName="eClassifiers" element="_94h2oT7iEe2FnpMUrGicEg">
         <target href="pack.ecore#/"/>
-        <element href="pack.ecore#//FX_risk_factor"/>
-        <changes xsi:type="history:Set" xmi:id="_zF9HEj1pEe2nkoNG1iAiqg" featureName="name" dataValue="FX_risk_factor">
-          <element href="pack.ecore#//FX_risk_factor"/>
-        </changes>
-        <changes xsi:type="history:Add" xmi:id="_zF9HEz1pEe2nkoNG1iAiqg" featureName="eSuperTypes">
-          <element href="pack.ecore#//FX_risk_factor"/>
+        <changes xsi:type="history:Set" xmi:id="_zF9HEj1pEe2nkoNG1iAiqg" element="_94h2oT7iEe2FnpMUrGicEg" featureName="name" dataValue="FX_risk_factor"/>
+        <changes xsi:type="history:Add" xmi:id="_zF9HEz1pEe2nkoNG1iAiqg" element="_94h2oT7iEe2FnpMUrGicEg" featureName="eSuperTypes">
           <referenceValue href="pack.ecore#//Risk_factor"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_zF9HFD1pEe2nkoNG1iAiqg" referenceName="eClassifiers">
+      <changes xsi:type="history:Create" xmi:id="_zF9HFD1pEe2nkoNG1iAiqg" referenceName="eClassifiers" element="_94h2qD7iEe2FnpMUrGicEg">
         <target href="pack.ecore#/"/>
-        <element href="pack.ecore#//GIRR_risk_factor"/>
-        <changes xsi:type="history:Set" xmi:id="_zF9HFT1pEe2nkoNG1iAiqg" featureName="name" dataValue="GIRR_risk_factor">
-          <element href="pack.ecore#//GIRR_risk_factor"/>
-        </changes>
-        <changes xsi:type="history:Add" xmi:id="_zF9HFj1pEe2nkoNG1iAiqg" featureName="eSuperTypes">
-          <element href="pack.ecore#//GIRR_risk_factor"/>
+        <changes xsi:type="history:Set" xmi:id="_zF9HFT1pEe2nkoNG1iAiqg" element="_94h2qD7iEe2FnpMUrGicEg" featureName="name" dataValue="GIRR_risk_factor"/>
+        <changes xsi:type="history:Add" xmi:id="_zF9HFj1pEe2nkoNG1iAiqg" element="_94h2qD7iEe2FnpMUrGicEg" featureName="eSuperTypes">
           <referenceValue href="pack.ecore#//Risk_factor"/>
         </changes>
       </changes>
@@ -256,25 +235,17 @@
           <referenceValue href="pack.ecore#//Risk_factor"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_zF9HLD1pEe2nkoNG1iAiqg" referenceName="eClassifiers">
+      <changes xsi:type="history:Create" xmi:id="_zF9HLD1pEe2nkoNG1iAiqg" referenceName="eClassifiers" element="_94h2rz7iEe2FnpMUrGicEg">
         <target href="pack.ecore#/"/>
-        <element href="pack.ecore#//Securitisation_CTP_risk_factor_"/>
-        <changes xsi:type="history:Set" xmi:id="_zF9HLT1pEe2nkoNG1iAiqg" featureName="name" dataValue="Securitisation_CTP_risk_factor_">
-          <element href="pack.ecore#//Securitisation_CTP_risk_factor_"/>
-        </changes>
-        <changes xsi:type="history:Add" xmi:id="_zF9HLj1pEe2nkoNG1iAiqg" featureName="eSuperTypes">
-          <element href="pack.ecore#//Securitisation_CTP_risk_factor_"/>
+        <changes xsi:type="history:Set" xmi:id="_zF9HLT1pEe2nkoNG1iAiqg" element="_94h2rz7iEe2FnpMUrGicEg" featureName="name" dataValue="Securitisation_CTP_risk_factor_"/>
+        <changes xsi:type="history:Add" xmi:id="_zF9HLj1pEe2nkoNG1iAiqg" element="_94h2rz7iEe2FnpMUrGicEg" featureName="eSuperTypes">
           <referenceValue href="pack.ecore#//Risk_factor"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_zF9HLz1pEe2nkoNG1iAiqg" referenceName="eClassifiers">
+      <changes xsi:type="history:Create" xmi:id="_zF9HLz1pEe2nkoNG1iAiqg" referenceName="eClassifiers" element="_94h2tj7iEe2FnpMUrGicEg">
         <target href="pack.ecore#/"/>
-        <element href="pack.ecore#//Securitisation_non_CTP_risk_factor"/>
-        <changes xsi:type="history:Set" xmi:id="_zF9HMD1pEe2nkoNG1iAiqg" featureName="name" dataValue="Securitisation_non_CTP_risk_factor">
-          <element href="pack.ecore#//Securitisation_non_CTP_risk_factor"/>
-        </changes>
-        <changes xsi:type="history:Add" xmi:id="_zF9HMT1pEe2nkoNG1iAiqg" featureName="eSuperTypes">
-          <element href="pack.ecore#//Securitisation_non_CTP_risk_factor"/>
+        <changes xsi:type="history:Set" xmi:id="_zF9HMD1pEe2nkoNG1iAiqg" element="_94h2tj7iEe2FnpMUrGicEg" featureName="name" dataValue="Securitisation_non_CTP_risk_factor"/>
+        <changes xsi:type="history:Add" xmi:id="_zF9HMT1pEe2nkoNG1iAiqg" element="_94h2tj7iEe2FnpMUrGicEg" featureName="eSuperTypes">
           <referenceValue href="pack.ecore#//Risk_factor"/>
         </changes>
       </changes>
@@ -288,54 +259,42 @@
           <element href="pack.ecore#//Security_issue"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_zF9HNT1pEe2nkoNG1iAiqg" referenceName="eClassifiers">
+      <changes xsi:type="history:Create" xmi:id="_zF9HNT1pEe2nkoNG1iAiqg" referenceName="eClassifiers" element="_JlWffT7iEe2FnpMUrGicEg">
         <target href="pack.ecore#/"/>
-        <element href="pack.ecore#//Equity_issue"/>
-        <changes xsi:type="history:Set" xmi:id="_zF9HNj1pEe2nkoNG1iAiqg" featureName="name" dataValue="Equity_issue">
-          <element href="pack.ecore#//Equity_issue"/>
-        </changes>
-        <changes xsi:type="history:Add" xmi:id="_zF9HNz1pEe2nkoNG1iAiqg" featureName="eSuperTypes">
-          <element href="pack.ecore#//Equity_issue"/>
+        <changes xsi:type="history:Set" xmi:id="_zF9HNj1pEe2nkoNG1iAiqg" element="_JlWffT7iEe2FnpMUrGicEg" featureName="name" dataValue="Equity_issue"/>
+        <changes xsi:type="history:Add" xmi:id="_zF9HNz1pEe2nkoNG1iAiqg" element="_JlWffT7iEe2FnpMUrGicEg" featureName="eSuperTypes">
           <referenceValue href="pack.ecore#//Security_issue"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_zF9HOD1pEe2nkoNG1iAiqg" referenceName="eStructuralFeatures">
-        <target href="pack.ecore#//Equity_risk_factor"/>
-        <element href="pack.ecore#//Equity_risk_factor/theEquity_issue"/>
+      <changes xsi:type="history:Create" xmi:id="_zF9HOD1pEe2nkoNG1iAiqg" target="_94h2mj7iEe2FnpMUrGicEg" referenceName="eStructuralFeatures">
+        <element href="pack.ecore#//Risk_factor/theEquity_issue"/>
         <changes xsi:type="history:Set" xmi:id="_zF9HOT1pEe2nkoNG1iAiqg" featureName="name" dataValue="theEquity_issue">
-          <element href="pack.ecore#//Equity_risk_factor/theEquity_issue"/>
+          <element href="pack.ecore#//Risk_factor/theEquity_issue"/>
         </changes>
         <changes xsi:type="history:Set" xmi:id="_zF9HOj1pEe2nkoNG1iAiqg" featureName="lowerBound" dataValue="1" oldDataValue="0">
-          <element href="pack.ecore#//Equity_risk_factor/theEquity_issue"/>
+          <element href="pack.ecore#//Risk_factor/theEquity_issue"/>
         </changes>
-        <changes xsi:type="history:Set" xmi:id="_zF9HOz1pEe2nkoNG1iAiqg" featureName="eType">
-          <element href="pack.ecore#//Equity_risk_factor/theEquity_issue"/>
-          <referenceValue href="pack.ecore#//Equity_issue"/>
+        <changes xsi:type="history:Set" xmi:id="_zF9HOz1pEe2nkoNG1iAiqg" featureName="eType" referenceValue="_JlWffT7iEe2FnpMUrGicEg">
+          <element href="pack.ecore#//Risk_factor/theEquity_issue"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_zF9HPD1pEe2nkoNG1iAiqg" referenceName="eClassifiers">
+      <changes xsi:type="history:Create" xmi:id="_zF9HPD1pEe2nkoNG1iAiqg" referenceName="eClassifiers" element="_JlWfhT7iEe2FnpMUrGicEg">
         <target href="pack.ecore#/"/>
-        <element href="pack.ecore#//Securitisation"/>
-        <changes xsi:type="history:Set" xmi:id="_zF9HPT1pEe2nkoNG1iAiqg" featureName="name" dataValue="Securitisation">
-          <element href="pack.ecore#//Securitisation"/>
-        </changes>
-        <changes xsi:type="history:Add" xmi:id="_zF9HPj1pEe2nkoNG1iAiqg" featureName="eSuperTypes">
-          <element href="pack.ecore#//Securitisation"/>
+        <changes xsi:type="history:Set" xmi:id="_zF9HPT1pEe2nkoNG1iAiqg" element="_JlWfhT7iEe2FnpMUrGicEg" featureName="name" dataValue="Securitisation"/>
+        <changes xsi:type="history:Add" xmi:id="_zF9HPj1pEe2nkoNG1iAiqg" element="_JlWfhT7iEe2FnpMUrGicEg" featureName="eSuperTypes">
           <referenceValue href="pack.ecore#//Security_issue"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_zF9HPz1pEe2nkoNG1iAiqg" referenceName="eStructuralFeatures">
-        <target href="pack.ecore#//Securitisation_non_CTP_risk_factor"/>
-        <element href="pack.ecore#//Securitisation_non_CTP_risk_factor/theSecuritisation"/>
+      <changes xsi:type="history:Create" xmi:id="_zF9HPz1pEe2nkoNG1iAiqg" target="_94h2tj7iEe2FnpMUrGicEg" referenceName="eStructuralFeatures">
+        <element href="pack.ecore#//Risk_factor/theSecuritisation"/>
         <changes xsi:type="history:Set" xmi:id="_zF9HQD1pEe2nkoNG1iAiqg" featureName="name" dataValue="theSecuritisation">
-          <element href="pack.ecore#//Securitisation_non_CTP_risk_factor/theSecuritisation"/>
+          <element href="pack.ecore#//Risk_factor/theSecuritisation"/>
         </changes>
         <changes xsi:type="history:Set" xmi:id="_zF9HQT1pEe2nkoNG1iAiqg" featureName="lowerBound" dataValue="1" oldDataValue="0">
-          <element href="pack.ecore#//Securitisation_non_CTP_risk_factor/theSecuritisation"/>
+          <element href="pack.ecore#//Risk_factor/theSecuritisation"/>
         </changes>
-        <changes xsi:type="history:Set" xmi:id="_zF9HQj1pEe2nkoNG1iAiqg" featureName="eType">
-          <element href="pack.ecore#//Securitisation_non_CTP_risk_factor/theSecuritisation"/>
-          <referenceValue href="pack.ecore#//Securitisation"/>
+        <changes xsi:type="history:Set" xmi:id="_zF9HQj1pEe2nkoNG1iAiqg" featureName="eType" referenceValue="_JlWfhT7iEe2FnpMUrGicEg">
+          <element href="pack.ecore#//Risk_factor/theSecuritisation"/>
         </changes>
       </changes>
       <changes xsi:type="history:Create" xmi:id="_zF9HQz1pEe2nkoNG1iAiqg" referenceName="eStructuralFeatures">
@@ -576,17 +535,16 @@
           <element href="pack.ecore#//Commodity_type"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_zF9Hij1pEe2nkoNG1iAiqg" referenceName="eStructuralFeatures">
-        <target href="pack.ecore#//Commodity_risk_factor"/>
-        <element href="pack.ecore#//Commodity_risk_factor/Commodity_type"/>
+      <changes xsi:type="history:Create" xmi:id="_zF9Hij1pEe2nkoNG1iAiqg" target="_94h2jD7iEe2FnpMUrGicEg" referenceName="eStructuralFeatures">
+        <element href="pack.ecore#//Risk_factor/Commodity_type"/>
         <changes xsi:type="history:Set" xmi:id="_zF9Hiz1pEe2nkoNG1iAiqg" featureName="name" dataValue="Commodity_type">
-          <element href="pack.ecore#//Commodity_risk_factor/Commodity_type"/>
+          <element href="pack.ecore#//Risk_factor/Commodity_type"/>
         </changes>
         <changes xsi:type="history:Set" xmi:id="_zF9HjD1pEe2nkoNG1iAiqg" featureName="unique" dataValue="false" oldDataValue="true">
-          <element href="pack.ecore#//Commodity_risk_factor/Commodity_type"/>
+          <element href="pack.ecore#//Risk_factor/Commodity_type"/>
         </changes>
         <changes xsi:type="history:Set" xmi:id="_zF9HjT1pEe2nkoNG1iAiqg" featureName="eType">
-          <element href="pack.ecore#//Commodity_risk_factor/Commodity_type"/>
+          <element href="pack.ecore#//Risk_factor/Commodity_type"/>
           <referenceValue href="pack.ecore#//Commodity_type"/>
         </changes>
       </changes>
@@ -826,17 +784,16 @@
           <element href="pack.ecore#//CSR_curve_type"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_zF9H1j1pEe2nkoNG1iAiqg" referenceName="eStructuralFeatures">
-        <target href="pack.ecore#//CSR_non_securitisation_risk_factor"/>
-        <element href="pack.ecore#//CSR_non_securitisation_risk_factor/CSR_curve_type"/>
+      <changes xsi:type="history:Create" xmi:id="_zF9H1j1pEe2nkoNG1iAiqg" target="_94h2kz7iEe2FnpMUrGicEg" referenceName="eStructuralFeatures">
+        <element href="pack.ecore#//Risk_factor/CSR_curve_type"/>
         <changes xsi:type="history:Set" xmi:id="_zF9H1z1pEe2nkoNG1iAiqg" featureName="name" dataValue="CSR_curve_type">
-          <element href="pack.ecore#//CSR_non_securitisation_risk_factor/CSR_curve_type"/>
+          <element href="pack.ecore#//Risk_factor/CSR_curve_type"/>
         </changes>
         <changes xsi:type="history:Set" xmi:id="_zF9H2D1pEe2nkoNG1iAiqg" featureName="unique" dataValue="false" oldDataValue="true">
-          <element href="pack.ecore#//CSR_non_securitisation_risk_factor/CSR_curve_type"/>
+          <element href="pack.ecore#//Risk_factor/CSR_curve_type"/>
         </changes>
         <changes xsi:type="history:Set" xmi:id="_zF9H2T1pEe2nkoNG1iAiqg" featureName="eType">
-          <element href="pack.ecore#//CSR_non_securitisation_risk_factor/CSR_curve_type"/>
+          <element href="pack.ecore#//Risk_factor/CSR_curve_type"/>
           <referenceValue href="pack.ecore#//CSR_curve_type"/>
         </changes>
       </changes>
@@ -906,59 +863,55 @@
           <referenceValue href="pack.ecore#//Currency"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_zF9H8D1pEe2nkoNG1iAiqg" referenceName="eStructuralFeatures">
-        <target href="pack.ecore#//FX_risk_factor"/>
-        <element href="pack.ecore#//FX_risk_factor/ccy1"/>
+      <changes xsi:type="history:Create" xmi:id="_zF9H8D1pEe2nkoNG1iAiqg" target="_94h2oT7iEe2FnpMUrGicEg" referenceName="eStructuralFeatures">
+        <element href="pack.ecore#//Risk_factor/ccy1"/>
         <changes xsi:type="history:Set" xmi:id="_zF9H8T1pEe2nkoNG1iAiqg" featureName="name" dataValue="ccy1">
-          <element href="pack.ecore#//FX_risk_factor/ccy1"/>
+          <element href="pack.ecore#//Risk_factor/ccy1"/>
         </changes>
         <changes xsi:type="history:Set" xmi:id="_zF9H8j1pEe2nkoNG1iAiqg" featureName="unique" dataValue="false" oldDataValue="true">
-          <element href="pack.ecore#//FX_risk_factor/ccy1"/>
+          <element href="pack.ecore#//Risk_factor/ccy1"/>
         </changes>
         <changes xsi:type="history:Set" xmi:id="_zF9H8z1pEe2nkoNG1iAiqg" featureName="eType">
-          <element href="pack.ecore#//FX_risk_factor/ccy1"/>
+          <element href="pack.ecore#//Risk_factor/ccy1"/>
           <referenceValue href="pack.ecore#//Currency"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_zF9H9D1pEe2nkoNG1iAiqg" referenceName="eStructuralFeatures">
-        <target href="pack.ecore#//FX_risk_factor"/>
-        <element href="pack.ecore#//FX_risk_factor/ccy2"/>
+      <changes xsi:type="history:Create" xmi:id="_zF9H9D1pEe2nkoNG1iAiqg" target="_94h2oT7iEe2FnpMUrGicEg" referenceName="eStructuralFeatures">
+        <element href="pack.ecore#//Risk_factor/ccy2"/>
         <changes xsi:type="history:Set" xmi:id="_zF9H9T1pEe2nkoNG1iAiqg" featureName="name" dataValue="ccy2">
-          <element href="pack.ecore#//FX_risk_factor/ccy2"/>
+          <element href="pack.ecore#//Risk_factor/ccy2"/>
         </changes>
         <changes xsi:type="history:Set" xmi:id="_zF9H9j1pEe2nkoNG1iAiqg" featureName="unique" dataValue="false" oldDataValue="true">
-          <element href="pack.ecore#//FX_risk_factor/ccy2"/>
+          <element href="pack.ecore#//Risk_factor/ccy2"/>
         </changes>
         <changes xsi:type="history:Set" xmi:id="_zF9H9z1pEe2nkoNG1iAiqg" featureName="eType">
-          <element href="pack.ecore#//FX_risk_factor/ccy2"/>
+          <element href="pack.ecore#//Risk_factor/ccy2"/>
           <referenceValue href="pack.ecore#//Currency"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_zF9H-D1pEe2nkoNG1iAiqg" referenceName="eStructuralFeatures">
-        <target href="pack.ecore#//GIRR_risk_factor"/>
-        <element href="pack.ecore#//GIRR_risk_factor/Main_currency"/>
+      <changes xsi:type="history:Create" xmi:id="_zF9H-D1pEe2nkoNG1iAiqg" target="_94h2qD7iEe2FnpMUrGicEg" referenceName="eStructuralFeatures">
+        <element href="pack.ecore#//Risk_factor/Main_currency"/>
         <changes xsi:type="history:Set" xmi:id="_zF9H-T1pEe2nkoNG1iAiqg" featureName="name" dataValue="Main_currency">
-          <element href="pack.ecore#//GIRR_risk_factor/Main_currency"/>
+          <element href="pack.ecore#//Risk_factor/Main_currency"/>
         </changes>
         <changes xsi:type="history:Set" xmi:id="_zF9H-j1pEe2nkoNG1iAiqg" featureName="unique" dataValue="false" oldDataValue="true">
-          <element href="pack.ecore#//GIRR_risk_factor/Main_currency"/>
+          <element href="pack.ecore#//Risk_factor/Main_currency"/>
         </changes>
         <changes xsi:type="history:Set" xmi:id="_zF9H-z1pEe2nkoNG1iAiqg" featureName="eType">
-          <element href="pack.ecore#//GIRR_risk_factor/Main_currency"/>
+          <element href="pack.ecore#//Risk_factor/Main_currency"/>
           <referenceValue href="pack.ecore#//Currency"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_zF9H_D1pEe2nkoNG1iAiqg" referenceName="eStructuralFeatures">
-        <target href="pack.ecore#//GIRR_risk_factor"/>
-        <element href="pack.ecore#//GIRR_risk_factor/Second_currency"/>
+      <changes xsi:type="history:Create" xmi:id="_zF9H_D1pEe2nkoNG1iAiqg" target="_94h2qD7iEe2FnpMUrGicEg" referenceName="eStructuralFeatures">
+        <element href="pack.ecore#//Risk_factor/Second_currency"/>
         <changes xsi:type="history:Set" xmi:id="_zF9H_T1pEe2nkoNG1iAiqg" featureName="name" dataValue="Second_currency">
-          <element href="pack.ecore#//GIRR_risk_factor/Second_currency"/>
+          <element href="pack.ecore#//Risk_factor/Second_currency"/>
         </changes>
         <changes xsi:type="history:Set" xmi:id="_zF9H_j1pEe2nkoNG1iAiqg" featureName="unique" dataValue="false" oldDataValue="true">
-          <element href="pack.ecore#//GIRR_risk_factor/Second_currency"/>
+          <element href="pack.ecore#//Risk_factor/Second_currency"/>
         </changes>
         <changes xsi:type="history:Set" xmi:id="_zF9H_z1pEe2nkoNG1iAiqg" featureName="eType">
-          <element href="pack.ecore#//GIRR_risk_factor/Second_currency"/>
+          <element href="pack.ecore#//Risk_factor/Second_currency"/>
           <referenceValue href="pack.ecore#//Currency"/>
         </changes>
       </changes>
@@ -1161,17 +1114,16 @@
           <element href="pack.ecore#//Equity_factor_type"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_zF9IPj1pEe2nkoNG1iAiqg" referenceName="eStructuralFeatures">
-        <target href="pack.ecore#//Equity_risk_factor"/>
-        <element href="pack.ecore#//Equity_risk_factor/Equity_factor_type"/>
+      <changes xsi:type="history:Create" xmi:id="_zF9IPj1pEe2nkoNG1iAiqg" target="_94h2mj7iEe2FnpMUrGicEg" referenceName="eStructuralFeatures">
+        <element href="pack.ecore#//Risk_factor/Equity_factor_type"/>
         <changes xsi:type="history:Set" xmi:id="_zF9IPz1pEe2nkoNG1iAiqg" featureName="name" dataValue="Equity_factor_type">
-          <element href="pack.ecore#//Equity_risk_factor/Equity_factor_type"/>
+          <element href="pack.ecore#//Risk_factor/Equity_factor_type"/>
         </changes>
         <changes xsi:type="history:Set" xmi:id="_zF9IQD1pEe2nkoNG1iAiqg" featureName="unique" dataValue="false" oldDataValue="true">
-          <element href="pack.ecore#//Equity_risk_factor/Equity_factor_type"/>
+          <element href="pack.ecore#//Risk_factor/Equity_factor_type"/>
         </changes>
         <changes xsi:type="history:Set" xmi:id="_zF9IQT1pEe2nkoNG1iAiqg" featureName="eType">
-          <element href="pack.ecore#//Equity_risk_factor/Equity_factor_type"/>
+          <element href="pack.ecore#//Risk_factor/Equity_factor_type"/>
           <referenceValue href="pack.ecore#//Equity_factor_type"/>
         </changes>
       </changes>
@@ -1221,17 +1173,16 @@
           <element href="pack.ecore#//GIRR_risk_factor_type"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_zF9IUD1pEe2nkoNG1iAiqg" referenceName="eStructuralFeatures">
-        <target href="pack.ecore#//GIRR_risk_factor"/>
-        <element href="pack.ecore#//GIRR_risk_factor/GIRR_risk_factor_type"/>
+      <changes xsi:type="history:Create" xmi:id="_zF9IUD1pEe2nkoNG1iAiqg" target="_94h2qD7iEe2FnpMUrGicEg" referenceName="eStructuralFeatures">
+        <element href="pack.ecore#//Risk_factor/GIRR_risk_factor_type"/>
         <changes xsi:type="history:Set" xmi:id="_zF9IUT1pEe2nkoNG1iAiqg" featureName="name" dataValue="GIRR_risk_factor_type">
-          <element href="pack.ecore#//GIRR_risk_factor/GIRR_risk_factor_type"/>
+          <element href="pack.ecore#//Risk_factor/GIRR_risk_factor_type"/>
         </changes>
         <changes xsi:type="history:Set" xmi:id="_zF9IUj1pEe2nkoNG1iAiqg" featureName="unique" dataValue="false" oldDataValue="true">
-          <element href="pack.ecore#//GIRR_risk_factor/GIRR_risk_factor_type"/>
+          <element href="pack.ecore#//Risk_factor/GIRR_risk_factor_type"/>
         </changes>
         <changes xsi:type="history:Set" xmi:id="_zF9IUz1pEe2nkoNG1iAiqg" featureName="eType">
-          <element href="pack.ecore#//GIRR_risk_factor/GIRR_risk_factor_type"/>
+          <element href="pack.ecore#//Risk_factor/GIRR_risk_factor_type"/>
           <referenceValue href="pack.ecore#//GIRR_risk_factor_type"/>
         </changes>
       </changes>
@@ -1674,17 +1625,16 @@
           <element href="pack.ecore#//Rating_grade"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_zF9I2D1pEe2nkoNG1iAiqg" referenceName="eStructuralFeatures">
-        <target href="pack.ecore#//CSR_non_securitisation_risk_factor"/>
-        <element href="pack.ecore#//CSR_non_securitisation_risk_factor/CSR_credit_quality"/>
+      <changes xsi:type="history:Create" xmi:id="_zF9I2D1pEe2nkoNG1iAiqg" target="_94h2kz7iEe2FnpMUrGicEg" referenceName="eStructuralFeatures">
+        <element href="pack.ecore#//Risk_factor/CSR_credit_quality"/>
         <changes xsi:type="history:Set" xmi:id="_zF9I2T1pEe2nkoNG1iAiqg" featureName="name" dataValue="CSR_credit_quality">
-          <element href="pack.ecore#//CSR_non_securitisation_risk_factor/CSR_credit_quality"/>
+          <element href="pack.ecore#//Risk_factor/CSR_credit_quality"/>
         </changes>
         <changes xsi:type="history:Set" xmi:id="_zF9I2j1pEe2nkoNG1iAiqg" featureName="unique" dataValue="false" oldDataValue="true">
-          <element href="pack.ecore#//CSR_non_securitisation_risk_factor/CSR_credit_quality"/>
+          <element href="pack.ecore#//Risk_factor/CSR_credit_quality"/>
         </changes>
         <changes xsi:type="history:Set" xmi:id="_zF9I2z1pEe2nkoNG1iAiqg" featureName="eType">
-          <element href="pack.ecore#//CSR_non_securitisation_risk_factor/CSR_credit_quality"/>
+          <element href="pack.ecore#//Risk_factor/CSR_credit_quality"/>
           <referenceValue href="pack.ecore#//Rating_grade"/>
         </changes>
       </changes>
@@ -1952,17 +1902,16 @@
           <element href="pack.ecore#//Securitisation_sector"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_zF9JLD1pEe2nkoNG1iAiqg" referenceName="eStructuralFeatures">
-        <target href="pack.ecore#//Securitisation"/>
-        <element href="pack.ecore#//Securitisation/Securitisation_sector"/>
+      <changes xsi:type="history:Create" xmi:id="_zF9JLD1pEe2nkoNG1iAiqg" target="_JlWfhT7iEe2FnpMUrGicEg" referenceName="eStructuralFeatures">
+        <element href="pack.ecore#//Security_issue/Securitisation_sector"/>
         <changes xsi:type="history:Set" xmi:id="_zF9JLT1pEe2nkoNG1iAiqg" featureName="name" dataValue="Securitisation_sector">
-          <element href="pack.ecore#//Securitisation/Securitisation_sector"/>
+          <element href="pack.ecore#//Security_issue/Securitisation_sector"/>
         </changes>
         <changes xsi:type="history:Set" xmi:id="_zF9JLj1pEe2nkoNG1iAiqg" featureName="unique" dataValue="false" oldDataValue="true">
-          <element href="pack.ecore#//Securitisation/Securitisation_sector"/>
+          <element href="pack.ecore#//Security_issue/Securitisation_sector"/>
         </changes>
         <changes xsi:type="history:Set" xmi:id="_zF9JLz1pEe2nkoNG1iAiqg" featureName="eType">
-          <element href="pack.ecore#//Securitisation/Securitisation_sector"/>
+          <element href="pack.ecore#//Security_issue/Securitisation_sector"/>
           <referenceValue href="pack.ecore#//Securitisation_sector"/>
         </changes>
       </changes>
@@ -2660,17 +2609,16 @@
           <element href="pack.ecore#//String"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_zF9KAD1pEe2nkoNG1iAiqg" referenceName="eStructuralFeatures">
-        <target href="pack.ecore#//Commodity_risk_factor"/>
-        <element href="pack.ecore#//Commodity_risk_factor/Delivery_location"/>
+      <changes xsi:type="history:Create" xmi:id="_zF9KAD1pEe2nkoNG1iAiqg" target="_94h2jD7iEe2FnpMUrGicEg" referenceName="eStructuralFeatures">
+        <element href="pack.ecore#//Risk_factor/Delivery_location"/>
         <changes xsi:type="history:Set" xmi:id="_zF9KAT1pEe2nkoNG1iAiqg" featureName="name" dataValue="Delivery_location">
-          <element href="pack.ecore#//Commodity_risk_factor/Delivery_location"/>
+          <element href="pack.ecore#//Risk_factor/Delivery_location"/>
         </changes>
         <changes xsi:type="history:Set" xmi:id="_zF9KAj1pEe2nkoNG1iAiqg" featureName="unique" dataValue="false" oldDataValue="true">
-          <element href="pack.ecore#//Commodity_risk_factor/Delivery_location"/>
+          <element href="pack.ecore#//Risk_factor/Delivery_location"/>
         </changes>
         <changes xsi:type="history:Set" xmi:id="_zF9KAz1pEe2nkoNG1iAiqg" featureName="eType">
-          <element href="pack.ecore#//Commodity_risk_factor/Delivery_location"/>
+          <element href="pack.ecore#//Risk_factor/Delivery_location"/>
           <referenceValue href="pack.ecore#//String"/>
         </changes>
       </changes>
@@ -2786,17 +2734,16 @@
           <referenceValue href="pack.ecore#//String"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_zF9KJD1pEe2nkoNG1iAiqg" referenceName="eStructuralFeatures">
-        <target href="pack.ecore#//Securitisation_non_CTP_risk_factor"/>
-        <element href="pack.ecore#//Securitisation_non_CTP_risk_factor/Tranche_name"/>
+      <changes xsi:type="history:Create" xmi:id="_zF9KJD1pEe2nkoNG1iAiqg" target="_94h2tj7iEe2FnpMUrGicEg" referenceName="eStructuralFeatures">
+        <element href="pack.ecore#//Risk_factor/Tranche_name"/>
         <changes xsi:type="history:Set" xmi:id="_zF9KJT1pEe2nkoNG1iAiqg" featureName="name" dataValue="Tranche_name">
-          <element href="pack.ecore#//Securitisation_non_CTP_risk_factor/Tranche_name"/>
+          <element href="pack.ecore#//Risk_factor/Tranche_name"/>
         </changes>
         <changes xsi:type="history:Set" xmi:id="_zF9KJj1pEe2nkoNG1iAiqg" featureName="unique" dataValue="false" oldDataValue="true">
-          <element href="pack.ecore#//Securitisation_non_CTP_risk_factor/Tranche_name"/>
+          <element href="pack.ecore#//Risk_factor/Tranche_name"/>
         </changes>
         <changes xsi:type="history:Set" xmi:id="_zF9KJz1pEe2nkoNG1iAiqg" featureName="eType">
-          <element href="pack.ecore#//Securitisation_non_CTP_risk_factor/Tranche_name"/>
+          <element href="pack.ecore#//Risk_factor/Tranche_name"/>
           <referenceValue href="pack.ecore#//String"/>
         </changes>
       </changes>
@@ -2844,7 +2791,7 @@
       </changes>
     </changes>
   </releases>
-  <releases xmi:id="_BhYO0D1qEe2nkoNG1iAiqg" date="2022-09-26T09:15:09.583+0100">
+  <releases xmi:id="_BhYO0D1qEe2nkoNG1iAiqg" date="2022-09-28T06:07:42.554+0100">
     <changes xsi:type="history:OperationChange" xmi:id="_UCmHQD1qEe2nkoNG1iAiqg">
       <changes xsi:type="history:Move" xmi:id="_UCmHQT1qEe2nkoNG1iAiqg" referenceName="eStructuralFeatures" source="_1sUP7D1qEe2nkoNG1iAiqg">
         <target href="pack.ecore#//Risk_measure"/>
@@ -3141,9 +3088,577 @@
         </parameters>
       </operation>
     </changes>
-    <changes xsi:type="history:Set" xmi:id="_9HoK4D1qEe2nkoNG1iAiqg" featureName="nsURI" dataValue="pack2" oldDataValue="pack">
-      <element href="pack.ecore#/"/>
+    <changes xsi:type="history:OperationChange" xmi:id="_BJefUD7iEe2FnpMUrGicEg">
+      <changes xsi:type="history:Move" xmi:id="_BJefUT7iEe2FnpMUrGicEg" referenceName="eStructuralFeatures" source="_JlWfhT7iEe2FnpMUrGicEg">
+        <target href="pack.ecore#//Security_issue"/>
+        <element href="pack.ecore#//Security_issue/Securitisation_sector"/>
+      </changes>
+      <operation xmi:id="_BJefUj7iEe2FnpMUrGicEg" name="pullFeature">
+        <parameters xmi:id="_BJefUz7iEe2FnpMUrGicEg" name="features">
+          <referenceValue xmi:id="_BJefVD7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Security_issue/Securitisation_sector"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_BJefVT7iEe2FnpMUrGicEg" name="targetClass">
+          <referenceValue xmi:id="_BJefVj7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Security_issue"/>
+          </referenceValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange" xmi:id="_SXlKED7iEe2FnpMUrGicEg">
+      <changes xsi:type="history:Set" xmi:id="_SXlKET7iEe2FnpMUrGicEg" featureName="eType" oldReferenceValue="_JlWffT7iEe2FnpMUrGicEg">
+        <element href="pack.ecore#//Risk_factor/theEquity_issue"/>
+        <referenceValue href="pack.ecore#//Security_issue"/>
+      </changes>
+      <operation xmi:id="_SXlKEj7iEe2FnpMUrGicEg" name="generalizeReference">
+        <parameters xmi:id="_SXlKEz7iEe2FnpMUrGicEg" name="reference">
+          <referenceValue xmi:id="_SXlKFD7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Risk_factor/theEquity_issue"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_SXlKFT7iEe2FnpMUrGicEg" name="type">
+          <referenceValue xmi:id="_SXlKFj7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Security_issue"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_SXlKFz7iEe2FnpMUrGicEg" name="lowerBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters xmi:id="_SXlKGD7iEe2FnpMUrGicEg" name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange" xmi:id="_T0plAD7iEe2FnpMUrGicEg">
+      <changes xsi:type="history:Set" xmi:id="_T0plAT7iEe2FnpMUrGicEg" featureName="eType" oldReferenceValue="_JlWfhT7iEe2FnpMUrGicEg">
+        <element href="pack.ecore#//Risk_factor/theSecuritisation"/>
+        <referenceValue href="pack.ecore#//Security_issue"/>
+      </changes>
+      <operation xmi:id="_T0plAj7iEe2FnpMUrGicEg" name="generalizeReference">
+        <parameters xmi:id="_T0plAz7iEe2FnpMUrGicEg" name="reference">
+          <referenceValue xmi:id="_T0plBD7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Risk_factor/theSecuritisation"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_T0plBT7iEe2FnpMUrGicEg" name="type">
+          <referenceValue xmi:id="_T0plBj7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Security_issue"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_T0plBz7iEe2FnpMUrGicEg" name="lowerBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters xmi:id="_T0plCD7iEe2FnpMUrGicEg" name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange" xmi:id="_YmIXAD7iEe2FnpMUrGicEg">
+      <changes xsi:type="history:Create" xmi:id="_YmIXAT7iEe2FnpMUrGicEg" referenceName="eClassifiers">
+        <target href="pack.ecore#/"/>
+        <element href="pack.ecore#//Security_issue_type"/>
+        <changes xsi:type="history:Set" xmi:id="_YmIXAj7iEe2FnpMUrGicEg" featureName="name" dataValue="Security_issue_type">
+          <element href="pack.ecore#//Security_issue_type"/>
+        </changes>
+      </changes>
+      <changes xsi:type="history:Create" xmi:id="_YmIXAz7iEe2FnpMUrGicEg" referenceName="eStructuralFeatures">
+        <target href="pack.ecore#//Security_issue"/>
+        <element href="pack.ecore#//Security_issue/Security_issue_type"/>
+        <changes xsi:type="history:Set" xmi:id="_YmIXBD7iEe2FnpMUrGicEg" featureName="name" dataValue="Security_issue_type">
+          <element href="pack.ecore#//Security_issue/Security_issue_type"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_YmIXBT7iEe2FnpMUrGicEg" featureName="lowerBound" dataValue="1" oldDataValue="0">
+          <element href="pack.ecore#//Security_issue/Security_issue_type"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_YmIXBj7iEe2FnpMUrGicEg" featureName="eType">
+          <element href="pack.ecore#//Security_issue/Security_issue_type"/>
+          <referenceValue href="pack.ecore#//Security_issue_type"/>
+        </changes>
+      </changes>
+      <changes xsi:type="history:Set" xmi:id="_YmIXBz7iEe2FnpMUrGicEg" featureName="abstract" dataValue="false" oldDataValue="true">
+        <element href="pack.ecore#//Security_issue"/>
+      </changes>
+      <changes xsi:type="history:Create" xmi:id="_YmIXCD7iEe2FnpMUrGicEg" referenceName="eLiterals">
+        <target href="pack.ecore#//Security_issue_type"/>
+        <element href="pack.ecore#//Security_issue_type/Equity_issue"/>
+        <changes xsi:type="history:Set" xmi:id="_YmIXCT7iEe2FnpMUrGicEg" featureName="name" dataValue="Equity_issue">
+          <element href="pack.ecore#//Security_issue_type/Equity_issue"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_YmIXCj7iEe2FnpMUrGicEg" featureName="literal" dataValue="Equity_issue">
+          <element href="pack.ecore#//Security_issue_type/Equity_issue"/>
+        </changes>
+      </changes>
+      <changes xsi:type="history:Delete" xmi:id="_YmIXCz7iEe2FnpMUrGicEg" referenceName="eClassifiers">
+        <target href="pack.ecore#/"/>
+        <element xsi:type="ecore:EClass" xmi:id="_JlWffT7iEe2FnpMUrGicEg" name="Equity_issue">
+          <eSuperTypes href="pack.ecore#//Security_issue"/>
+        </element>
+      </changes>
+      <changes xsi:type="history:Create" xmi:id="_YmI-ED7iEe2FnpMUrGicEg" referenceName="eLiterals">
+        <target href="pack.ecore#//Security_issue_type"/>
+        <element href="pack.ecore#//Security_issue_type/Securitisation"/>
+        <changes xsi:type="history:Set" xmi:id="_YmI-ET7iEe2FnpMUrGicEg" featureName="name" dataValue="Securitisation">
+          <element href="pack.ecore#//Security_issue_type/Securitisation"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_YmI-Ej7iEe2FnpMUrGicEg" featureName="literal" dataValue="Securitisation">
+          <element href="pack.ecore#//Security_issue_type/Securitisation"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_YmI-Ez7iEe2FnpMUrGicEg" featureName="value" dataValue="1" oldDataValue="0">
+          <element href="pack.ecore#//Security_issue_type/Securitisation"/>
+        </changes>
+      </changes>
+      <changes xsi:type="history:Delete" xmi:id="_YmI-FD7iEe2FnpMUrGicEg" referenceName="eClassifiers">
+        <target href="pack.ecore#/"/>
+        <element xsi:type="ecore:EClass" xmi:id="_JlWfhT7iEe2FnpMUrGicEg" name="Securitisation">
+          <eSuperTypes href="pack.ecore#//Security_issue"/>
+        </element>
+      </changes>
+      <operation xmi:id="_YmI-FT7iEe2FnpMUrGicEg" name="subClassesToEnumeration">
+        <parameters xmi:id="_YmI-Fj7iEe2FnpMUrGicEg" name="contextClass">
+          <referenceValue xmi:id="_YmI-Fz7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Security_issue"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_YmI-GD7iEe2FnpMUrGicEg" name="attributeName">
+          <dataValue>Security_issue_type</dataValue>
+        </parameters>
+        <parameters xmi:id="_YmI-GT7iEe2FnpMUrGicEg" name="ePackage">
+          <referenceValue xmi:id="_YmI-Gj7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#/"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_YmI-Gz7iEe2FnpMUrGicEg" name="enumName">
+          <dataValue>Security_issue_type</dataValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange" xmi:id="_h9yp8D7iEe2FnpMUrGicEg">
+      <changes xsi:type="history:Move" xmi:id="_h9yp8T7iEe2FnpMUrGicEg" referenceName="eStructuralFeatures" source="_94h2qD7iEe2FnpMUrGicEg">
+        <target href="pack.ecore#//Risk_factor"/>
+        <element href="pack.ecore#//Risk_factor/GIRR_risk_factor_type"/>
+      </changes>
+      <operation xmi:id="_h9yp8j7iEe2FnpMUrGicEg" name="pullFeature">
+        <parameters xmi:id="_h9yp8z7iEe2FnpMUrGicEg" name="features">
+          <referenceValue xmi:id="_h9yp9D7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Risk_factor/GIRR_risk_factor_type"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_h9yp9T7iEe2FnpMUrGicEg" name="targetClass">
+          <referenceValue xmi:id="_h9yp9j7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Risk_factor"/>
+          </referenceValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange" xmi:id="_i8XyED7iEe2FnpMUrGicEg">
+      <changes xsi:type="history:Move" xmi:id="_i8XyET7iEe2FnpMUrGicEg" referenceName="eStructuralFeatures" source="_94h2qD7iEe2FnpMUrGicEg">
+        <target href="pack.ecore#//Risk_factor"/>
+        <element href="pack.ecore#//Risk_factor/Main_currency"/>
+      </changes>
+      <operation xmi:id="_i8XyEj7iEe2FnpMUrGicEg" name="pullFeature">
+        <parameters xmi:id="_i8XyEz7iEe2FnpMUrGicEg" name="features">
+          <referenceValue xmi:id="_i8XyFD7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Risk_factor/Main_currency"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_i8XyFT7iEe2FnpMUrGicEg" name="targetClass">
+          <referenceValue xmi:id="_i8XyFj7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Risk_factor"/>
+          </referenceValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange" xmi:id="_jrVw4D7iEe2FnpMUrGicEg">
+      <changes xsi:type="history:Move" xmi:id="_jrVw4T7iEe2FnpMUrGicEg" referenceName="eStructuralFeatures" source="_94h2qD7iEe2FnpMUrGicEg">
+        <target href="pack.ecore#//Risk_factor"/>
+        <element href="pack.ecore#//Risk_factor/Second_currency"/>
+      </changes>
+      <operation xmi:id="_jrVw4j7iEe2FnpMUrGicEg" name="pullFeature">
+        <parameters xmi:id="_jrVw4z7iEe2FnpMUrGicEg" name="features">
+          <referenceValue xmi:id="_jrVw5D7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Risk_factor/Second_currency"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_jrVw5T7iEe2FnpMUrGicEg" name="targetClass">
+          <referenceValue xmi:id="_jrVw5j7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Risk_factor"/>
+          </referenceValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange" xmi:id="_lBzNgD7iEe2FnpMUrGicEg">
+      <changes xsi:type="history:Move" xmi:id="_lBzNgT7iEe2FnpMUrGicEg" referenceName="eStructuralFeatures" source="_94h2oT7iEe2FnpMUrGicEg">
+        <target href="pack.ecore#//Risk_factor"/>
+        <element href="pack.ecore#//Risk_factor/ccy1"/>
+      </changes>
+      <operation xmi:id="_lBzNgj7iEe2FnpMUrGicEg" name="pullFeature">
+        <parameters xmi:id="_lBzNgz7iEe2FnpMUrGicEg" name="features">
+          <referenceValue xmi:id="_lBzNhD7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Risk_factor/ccy1"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_lBzNhT7iEe2FnpMUrGicEg" name="targetClass">
+          <referenceValue xmi:id="_lBzNhj7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Risk_factor"/>
+          </referenceValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange" xmi:id="_mDKj4D7iEe2FnpMUrGicEg">
+      <changes xsi:type="history:Move" xmi:id="_mDKj4T7iEe2FnpMUrGicEg" referenceName="eStructuralFeatures" source="_94h2oT7iEe2FnpMUrGicEg">
+        <target href="pack.ecore#//Risk_factor"/>
+        <element href="pack.ecore#//Risk_factor/ccy2"/>
+      </changes>
+      <operation xmi:id="_mDKj4j7iEe2FnpMUrGicEg" name="pullFeature">
+        <parameters xmi:id="_mDKj4z7iEe2FnpMUrGicEg" name="features">
+          <referenceValue xmi:id="_mDKj5D7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Risk_factor/ccy2"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_mDKj5T7iEe2FnpMUrGicEg" name="targetClass">
+          <referenceValue xmi:id="_mDKj5j7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Risk_factor"/>
+          </referenceValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange" xmi:id="_nTgKYD7iEe2FnpMUrGicEg">
+      <changes xsi:type="history:Move" xmi:id="_nTgKYT7iEe2FnpMUrGicEg" referenceName="eStructuralFeatures" source="_94h2mj7iEe2FnpMUrGicEg">
+        <target href="pack.ecore#//Risk_factor"/>
+        <element href="pack.ecore#//Risk_factor/Equity_factor_type"/>
+      </changes>
+      <operation xmi:id="_nTgKYj7iEe2FnpMUrGicEg" name="pullFeature">
+        <parameters xmi:id="_nTgKYz7iEe2FnpMUrGicEg" name="features">
+          <referenceValue xmi:id="_nTgKZD7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Risk_factor/Equity_factor_type"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_nTgKZT7iEe2FnpMUrGicEg" name="targetClass">
+          <referenceValue xmi:id="_nTgKZj7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Risk_factor"/>
+          </referenceValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange" xmi:id="_pCrpAD7iEe2FnpMUrGicEg">
+      <changes xsi:type="history:Move" xmi:id="_pCrpAT7iEe2FnpMUrGicEg" referenceName="eStructuralFeatures" source="_94h2mj7iEe2FnpMUrGicEg">
+        <target href="pack.ecore#//Risk_factor"/>
+        <element href="pack.ecore#//Risk_factor/theEquity_issue"/>
+      </changes>
+      <operation xmi:id="_pCrpAj7iEe2FnpMUrGicEg" name="pullFeature">
+        <parameters xmi:id="_pCrpAz7iEe2FnpMUrGicEg" name="features">
+          <referenceValue xmi:id="_pCrpBD7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Risk_factor/theEquity_issue"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_pCrpBT7iEe2FnpMUrGicEg" name="targetClass">
+          <referenceValue xmi:id="_pCrpBj7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Risk_factor"/>
+          </referenceValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange" xmi:id="_rYH2YD7iEe2FnpMUrGicEg">
+      <changes xsi:type="history:Move" xmi:id="_rYH2YT7iEe2FnpMUrGicEg" referenceName="eStructuralFeatures" source="_94h2kz7iEe2FnpMUrGicEg">
+        <target href="pack.ecore#//Risk_factor"/>
+        <element href="pack.ecore#//Risk_factor/CSR_credit_quality"/>
+      </changes>
+      <operation xmi:id="_rYH2Yj7iEe2FnpMUrGicEg" name="pullFeature">
+        <parameters xmi:id="_rYH2Yz7iEe2FnpMUrGicEg" name="features">
+          <referenceValue xmi:id="_rYH2ZD7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Risk_factor/CSR_credit_quality"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_rYH2ZT7iEe2FnpMUrGicEg" name="targetClass">
+          <referenceValue xmi:id="_rYH2Zj7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Risk_factor"/>
+          </referenceValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange" xmi:id="_sdzFAD7iEe2FnpMUrGicEg">
+      <changes xsi:type="history:Move" xmi:id="_sdzFAT7iEe2FnpMUrGicEg" referenceName="eStructuralFeatures" source="_94h2kz7iEe2FnpMUrGicEg">
+        <target href="pack.ecore#//Risk_factor"/>
+        <element href="pack.ecore#//Risk_factor/CSR_curve_type"/>
+      </changes>
+      <operation xmi:id="_sdzFAj7iEe2FnpMUrGicEg" name="pullFeature">
+        <parameters xmi:id="_sdzFAz7iEe2FnpMUrGicEg" name="features">
+          <referenceValue xmi:id="_sdzFBD7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Risk_factor/CSR_curve_type"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_sdzFBT7iEe2FnpMUrGicEg" name="targetClass">
+          <referenceValue xmi:id="_sdzFBj7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Risk_factor"/>
+          </referenceValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange" xmi:id="_tYP7ED7iEe2FnpMUrGicEg">
+      <changes xsi:type="history:Move" xmi:id="_tYP7ET7iEe2FnpMUrGicEg" referenceName="eStructuralFeatures" source="_94h2kz7iEe2FnpMUrGicEg">
+        <target href="pack.ecore#//Risk_factor"/>
+        <element href="pack.ecore#//Risk_factor/theOrganisation"/>
+      </changes>
+      <operation xmi:id="_tYP7Ej7iEe2FnpMUrGicEg" name="pullFeature">
+        <parameters xmi:id="_tYP7Ez7iEe2FnpMUrGicEg" name="features">
+          <referenceValue xmi:id="_tYP7FD7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Risk_factor/theOrganisation"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_tYP7FT7iEe2FnpMUrGicEg" name="targetClass">
+          <referenceValue xmi:id="_tYP7Fj7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Risk_factor"/>
+          </referenceValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange" xmi:id="_upLXcD7iEe2FnpMUrGicEg">
+      <changes xsi:type="history:Move" xmi:id="_upLXcT7iEe2FnpMUrGicEg" referenceName="eStructuralFeatures" source="_94h2jD7iEe2FnpMUrGicEg">
+        <target href="pack.ecore#//Risk_factor"/>
+        <element href="pack.ecore#//Risk_factor/Commodity_type"/>
+      </changes>
+      <operation xmi:id="_upLXcj7iEe2FnpMUrGicEg" name="pullFeature">
+        <parameters xmi:id="_upLXcz7iEe2FnpMUrGicEg" name="features">
+          <referenceValue xmi:id="_upLXdD7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Risk_factor/Commodity_type"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_upLXdT7iEe2FnpMUrGicEg" name="targetClass">
+          <referenceValue xmi:id="_upLXdj7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Risk_factor"/>
+          </referenceValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange" xmi:id="_vZeL8D7iEe2FnpMUrGicEg">
+      <changes xsi:type="history:Move" xmi:id="_vZeL8T7iEe2FnpMUrGicEg" referenceName="eStructuralFeatures" source="_94h2jD7iEe2FnpMUrGicEg">
+        <target href="pack.ecore#//Risk_factor"/>
+        <element href="pack.ecore#//Risk_factor/Delivery_location"/>
+      </changes>
+      <operation xmi:id="_vZeL8j7iEe2FnpMUrGicEg" name="pullFeature">
+        <parameters xmi:id="_vZeL8z7iEe2FnpMUrGicEg" name="features">
+          <referenceValue xmi:id="_vZeL9D7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Risk_factor/Delivery_location"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_vZeL9T7iEe2FnpMUrGicEg" name="targetClass">
+          <referenceValue xmi:id="_vZeL9j7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Risk_factor"/>
+          </referenceValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange" xmi:id="_1FnPYD7iEe2FnpMUrGicEg">
+      <changes xsi:type="history:Move" xmi:id="_1FnPYT7iEe2FnpMUrGicEg" referenceName="eStructuralFeatures" source="_94h2tj7iEe2FnpMUrGicEg">
+        <target href="pack.ecore#//Risk_factor"/>
+        <element href="pack.ecore#//Risk_factor/Tranche_name"/>
+      </changes>
+      <operation xmi:id="_1FnPYj7iEe2FnpMUrGicEg" name="pullFeature">
+        <parameters xmi:id="_1FnPYz7iEe2FnpMUrGicEg" name="features">
+          <referenceValue xmi:id="_1FnPZD7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Risk_factor/Tranche_name"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_1FnPZT7iEe2FnpMUrGicEg" name="targetClass">
+          <referenceValue xmi:id="_1FnPZj7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Risk_factor"/>
+          </referenceValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange" xmi:id="_2NkV8D7iEe2FnpMUrGicEg">
+      <changes xsi:type="history:Move" xmi:id="_2NkV8T7iEe2FnpMUrGicEg" referenceName="eStructuralFeatures" source="_94h2tj7iEe2FnpMUrGicEg">
+        <target href="pack.ecore#//Risk_factor"/>
+        <element href="pack.ecore#//Risk_factor/theSecuritisation"/>
+      </changes>
+      <operation xmi:id="_2NkV8j7iEe2FnpMUrGicEg" name="pullFeature">
+        <parameters xmi:id="_2NkV8z7iEe2FnpMUrGicEg" name="features">
+          <referenceValue xmi:id="_2NkV9D7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Risk_factor/theSecuritisation"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_2NkV9T7iEe2FnpMUrGicEg" name="targetClass">
+          <referenceValue xmi:id="_2NkV9j7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Risk_factor"/>
+          </referenceValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange" xmi:id="_94h2gD7iEe2FnpMUrGicEg">
+      <changes xsi:type="history:Create" xmi:id="_94h2gT7iEe2FnpMUrGicEg" referenceName="eClassifiers">
+        <target href="pack.ecore#/"/>
+        <element href="pack.ecore#//Risk_factor_type"/>
+        <changes xsi:type="history:Set" xmi:id="_94h2gj7iEe2FnpMUrGicEg" featureName="name" dataValue="Risk_factor_type">
+          <element href="pack.ecore#//Risk_factor_type"/>
+        </changes>
+      </changes>
+      <changes xsi:type="history:Create" xmi:id="_94h2gz7iEe2FnpMUrGicEg" referenceName="eStructuralFeatures">
+        <target href="pack.ecore#//Risk_factor"/>
+        <element href="pack.ecore#//Risk_factor/Risk_factor_type"/>
+        <changes xsi:type="history:Set" xmi:id="_94h2hD7iEe2FnpMUrGicEg" featureName="name" dataValue="Risk_factor_type">
+          <element href="pack.ecore#//Risk_factor/Risk_factor_type"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_94h2hT7iEe2FnpMUrGicEg" featureName="lowerBound" dataValue="1" oldDataValue="0">
+          <element href="pack.ecore#//Risk_factor/Risk_factor_type"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_94h2hj7iEe2FnpMUrGicEg" featureName="eType">
+          <element href="pack.ecore#//Risk_factor/Risk_factor_type"/>
+          <referenceValue href="pack.ecore#//Risk_factor_type"/>
+        </changes>
+      </changes>
+      <changes xsi:type="history:Set" xmi:id="_94h2hz7iEe2FnpMUrGicEg" featureName="abstract" dataValue="false" oldDataValue="true">
+        <element href="pack.ecore#//Risk_factor"/>
+      </changes>
+      <changes xsi:type="history:Create" xmi:id="_94h2iD7iEe2FnpMUrGicEg" referenceName="eLiterals">
+        <target href="pack.ecore#//Risk_factor_type"/>
+        <element href="pack.ecore#//Risk_factor_type/Commodity_risk_factor"/>
+        <changes xsi:type="history:Set" xmi:id="_94h2iT7iEe2FnpMUrGicEg" featureName="name" dataValue="Commodity_risk_factor">
+          <element href="pack.ecore#//Risk_factor_type/Commodity_risk_factor"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_94h2ij7iEe2FnpMUrGicEg" featureName="literal" dataValue="Commodity_risk_factor">
+          <element href="pack.ecore#//Risk_factor_type/Commodity_risk_factor"/>
+        </changes>
+      </changes>
+      <changes xsi:type="history:Delete" xmi:id="_94h2iz7iEe2FnpMUrGicEg" referenceName="eClassifiers">
+        <target href="pack.ecore#/"/>
+        <element xsi:type="ecore:EClass" xmi:id="_94h2jD7iEe2FnpMUrGicEg" name="Commodity_risk_factor">
+          <eSuperTypes href="pack.ecore#//Risk_factor"/>
+        </element>
+      </changes>
+      <changes xsi:type="history:Create" xmi:id="_94h2jj7iEe2FnpMUrGicEg" referenceName="eLiterals">
+        <target href="pack.ecore#//Risk_factor_type"/>
+        <element href="pack.ecore#//Risk_factor_type/CSR_non_securitisation_risk_factor"/>
+        <changes xsi:type="history:Set" xmi:id="_94h2jz7iEe2FnpMUrGicEg" featureName="name" dataValue="CSR_non_securitisation_risk_factor">
+          <element href="pack.ecore#//Risk_factor_type/CSR_non_securitisation_risk_factor"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_94h2kD7iEe2FnpMUrGicEg" featureName="literal" dataValue="CSR_non_securitisation_risk_factor">
+          <element href="pack.ecore#//Risk_factor_type/CSR_non_securitisation_risk_factor"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_94h2kT7iEe2FnpMUrGicEg" featureName="value" dataValue="1" oldDataValue="0">
+          <element href="pack.ecore#//Risk_factor_type/CSR_non_securitisation_risk_factor"/>
+        </changes>
+      </changes>
+      <changes xsi:type="history:Delete" xmi:id="_94h2kj7iEe2FnpMUrGicEg" referenceName="eClassifiers">
+        <target href="pack.ecore#/"/>
+        <element xsi:type="ecore:EClass" xmi:id="_94h2kz7iEe2FnpMUrGicEg" name="CSR_non_securitisation_risk_factor">
+          <eSuperTypes href="pack.ecore#//Risk_factor"/>
+        </element>
+      </changes>
+      <changes xsi:type="history:Create" xmi:id="_94h2lT7iEe2FnpMUrGicEg" referenceName="eLiterals">
+        <target href="pack.ecore#//Risk_factor_type"/>
+        <element href="pack.ecore#//Risk_factor_type/Equity_risk_factor"/>
+        <changes xsi:type="history:Set" xmi:id="_94h2lj7iEe2FnpMUrGicEg" featureName="name" dataValue="Equity_risk_factor">
+          <element href="pack.ecore#//Risk_factor_type/Equity_risk_factor"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_94h2lz7iEe2FnpMUrGicEg" featureName="literal" dataValue="Equity_risk_factor">
+          <element href="pack.ecore#//Risk_factor_type/Equity_risk_factor"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_94h2mD7iEe2FnpMUrGicEg" featureName="value" dataValue="2" oldDataValue="0">
+          <element href="pack.ecore#//Risk_factor_type/Equity_risk_factor"/>
+        </changes>
+      </changes>
+      <changes xsi:type="history:Delete" xmi:id="_94h2mT7iEe2FnpMUrGicEg" referenceName="eClassifiers">
+        <target href="pack.ecore#/"/>
+        <element xsi:type="ecore:EClass" xmi:id="_94h2mj7iEe2FnpMUrGicEg" name="Equity_risk_factor">
+          <eSuperTypes href="pack.ecore#//Risk_factor"/>
+        </element>
+      </changes>
+      <changes xsi:type="history:Create" xmi:id="_94h2nD7iEe2FnpMUrGicEg" referenceName="eLiterals">
+        <target href="pack.ecore#//Risk_factor_type"/>
+        <element href="pack.ecore#//Risk_factor_type/FX_risk_factor"/>
+        <changes xsi:type="history:Set" xmi:id="_94h2nT7iEe2FnpMUrGicEg" featureName="name" dataValue="FX_risk_factor">
+          <element href="pack.ecore#//Risk_factor_type/FX_risk_factor"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_94h2nj7iEe2FnpMUrGicEg" featureName="literal" dataValue="FX_risk_factor">
+          <element href="pack.ecore#//Risk_factor_type/FX_risk_factor"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_94h2nz7iEe2FnpMUrGicEg" featureName="value" dataValue="3" oldDataValue="0">
+          <element href="pack.ecore#//Risk_factor_type/FX_risk_factor"/>
+        </changes>
+      </changes>
+      <changes xsi:type="history:Delete" xmi:id="_94h2oD7iEe2FnpMUrGicEg" referenceName="eClassifiers">
+        <target href="pack.ecore#/"/>
+        <element xsi:type="ecore:EClass" xmi:id="_94h2oT7iEe2FnpMUrGicEg" name="FX_risk_factor">
+          <eSuperTypes href="pack.ecore#//Risk_factor"/>
+        </element>
+      </changes>
+      <changes xsi:type="history:Create" xmi:id="_94h2oz7iEe2FnpMUrGicEg" referenceName="eLiterals">
+        <target href="pack.ecore#//Risk_factor_type"/>
+        <element href="pack.ecore#//Risk_factor_type/GIRR_risk_factor"/>
+        <changes xsi:type="history:Set" xmi:id="_94h2pD7iEe2FnpMUrGicEg" featureName="name" dataValue="GIRR_risk_factor">
+          <element href="pack.ecore#//Risk_factor_type/GIRR_risk_factor"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_94h2pT7iEe2FnpMUrGicEg" featureName="literal" dataValue="GIRR_risk_factor">
+          <element href="pack.ecore#//Risk_factor_type/GIRR_risk_factor"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_94h2pj7iEe2FnpMUrGicEg" featureName="value" dataValue="4" oldDataValue="0">
+          <element href="pack.ecore#//Risk_factor_type/GIRR_risk_factor"/>
+        </changes>
+      </changes>
+      <changes xsi:type="history:Delete" xmi:id="_94h2pz7iEe2FnpMUrGicEg" referenceName="eClassifiers">
+        <target href="pack.ecore#/"/>
+        <element xsi:type="ecore:EClass" xmi:id="_94h2qD7iEe2FnpMUrGicEg" name="GIRR_risk_factor">
+          <eSuperTypes href="pack.ecore#//Risk_factor"/>
+        </element>
+      </changes>
+      <changes xsi:type="history:Create" xmi:id="_94h2qj7iEe2FnpMUrGicEg" referenceName="eLiterals">
+        <target href="pack.ecore#//Risk_factor_type"/>
+        <element href="pack.ecore#//Risk_factor_type/Securitisation_CTP_risk_factor_"/>
+        <changes xsi:type="history:Set" xmi:id="_94h2qz7iEe2FnpMUrGicEg" featureName="name" dataValue="Securitisation_CTP_risk_factor_">
+          <element href="pack.ecore#//Risk_factor_type/Securitisation_CTP_risk_factor_"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_94h2rD7iEe2FnpMUrGicEg" featureName="literal" dataValue="Securitisation_CTP_risk_factor_">
+          <element href="pack.ecore#//Risk_factor_type/Securitisation_CTP_risk_factor_"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_94h2rT7iEe2FnpMUrGicEg" featureName="value" dataValue="5" oldDataValue="0">
+          <element href="pack.ecore#//Risk_factor_type/Securitisation_CTP_risk_factor_"/>
+        </changes>
+      </changes>
+      <changes xsi:type="history:Delete" xmi:id="_94h2rj7iEe2FnpMUrGicEg" referenceName="eClassifiers">
+        <target href="pack.ecore#/"/>
+        <element xsi:type="ecore:EClass" xmi:id="_94h2rz7iEe2FnpMUrGicEg" name="Securitisation_CTP_risk_factor_">
+          <eSuperTypes href="pack.ecore#//Risk_factor"/>
+        </element>
+      </changes>
+      <changes xsi:type="history:Create" xmi:id="_94h2sT7iEe2FnpMUrGicEg" referenceName="eLiterals">
+        <target href="pack.ecore#//Risk_factor_type"/>
+        <element href="pack.ecore#//Risk_factor_type/Securitisation_non_CTP_risk_factor"/>
+        <changes xsi:type="history:Set" xmi:id="_94h2sj7iEe2FnpMUrGicEg" featureName="name" dataValue="Securitisation_non_CTP_risk_factor">
+          <element href="pack.ecore#//Risk_factor_type/Securitisation_non_CTP_risk_factor"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_94h2sz7iEe2FnpMUrGicEg" featureName="literal" dataValue="Securitisation_non_CTP_risk_factor">
+          <element href="pack.ecore#//Risk_factor_type/Securitisation_non_CTP_risk_factor"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_94h2tD7iEe2FnpMUrGicEg" featureName="value" dataValue="6" oldDataValue="0">
+          <element href="pack.ecore#//Risk_factor_type/Securitisation_non_CTP_risk_factor"/>
+        </changes>
+      </changes>
+      <changes xsi:type="history:Delete" xmi:id="_94h2tT7iEe2FnpMUrGicEg" referenceName="eClassifiers">
+        <target href="pack.ecore#/"/>
+        <element xsi:type="ecore:EClass" xmi:id="_94h2tj7iEe2FnpMUrGicEg" name="Securitisation_non_CTP_risk_factor">
+          <eSuperTypes href="pack.ecore#//Risk_factor"/>
+        </element>
+      </changes>
+      <operation xmi:id="_94h2uD7iEe2FnpMUrGicEg" name="subClassesToEnumeration">
+        <parameters xmi:id="_94h2uT7iEe2FnpMUrGicEg" name="contextClass">
+          <referenceValue xmi:id="_94h2uj7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#//Risk_factor"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_94h2uz7iEe2FnpMUrGicEg" name="attributeName">
+          <dataValue>Risk_factor_type</dataValue>
+        </parameters>
+        <parameters xmi:id="_94h2vD7iEe2FnpMUrGicEg" name="ePackage">
+          <referenceValue xmi:id="_94h2vT7iEe2FnpMUrGicEg">
+            <element href="pack.ecore#/"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_94h2vj7iEe2FnpMUrGicEg" name="enumName">
+          <dataValue>Risk_factor_type</dataValue>
+        </parameters>
+      </operation>
     </changes>
   </releases>
-  <releases xmi:id="_9Hox8D1qEe2nkoNG1iAiqg"/>
+  <releases xmi:id="_GY1DoD7jEe2FnpMUrGicEg"/>
 </history:History>

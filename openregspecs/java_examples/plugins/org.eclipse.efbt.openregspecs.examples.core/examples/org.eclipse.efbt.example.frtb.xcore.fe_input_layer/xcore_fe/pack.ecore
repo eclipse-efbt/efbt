@@ -1,21 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="pack" nsURI="pack2" nsPrefix="pack">
-  <eClassifiers xsi:type="ecore:EClass" name="Commodity_risk_factor" eSuperTypes="#//Risk_factor">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Commodity_type" unique="false"
-        eType="#//Commodity_type"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Delivery_location" unique="false"
-        eType="#//String"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CSR_non_securitisation_risk_factor"
-      eSuperTypes="#//Risk_factor">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="CSR_credit_quality" unique="false"
-        eType="#//Rating_grade"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="CSR_curve_type" unique="false"
-        eType="#//CSR_curve_type"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="theOrganisation" lowerBound="1"
-        eType="#//Organisation"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Delta_sensitivities_correlated_and_aggregated_derived">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="GIRR_delta_correlated_value_per_bucket"
         unique="false" eType="#//Double"/>
@@ -35,25 +20,6 @@
         lowerBound="1" eType="#//Netted_delta_sensitivities_per_risk_factor_and_tenor_derived"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="theNetted_delta_sensitivities_per_risk_factor_and_tenor_derived1"
         lowerBound="1" eType="#//Netted_delta_sensitivities_per_risk_factor_and_tenor_derived"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Equity_issue" eSuperTypes="#//Security_issue"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Equity_risk_factor" eSuperTypes="#//Risk_factor">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Equity_factor_type" unique="false"
-        eType="#//Equity_factor_type"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="theEquity_issue" lowerBound="1"
-        eType="#//Equity_issue"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="FX_risk_factor" eSuperTypes="#//Risk_factor">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ccy1" unique="false" eType="#//Currency"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ccy2" unique="false" eType="#//Currency"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="GIRR_risk_factor" eSuperTypes="#//Risk_factor">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="GIRR_risk_factor_type"
-        unique="false" eType="#//GIRR_risk_factor_type"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Main_currency" unique="false"
-        eType="#//Currency"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Second_currency" unique="false"
-        eType="#//Currency"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="KB_per_bucket_derived">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="Bucket_identifier" unique="false"
@@ -125,9 +91,37 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="Type_Of_Risk" unique="false"
         eType="#//Type_Of_Risk"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Risk_factor" abstract="true">
+  <eClassifiers xsi:type="ecore:EClass" name="Risk_factor">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="Risk_factor_Identifier"
         unique="false" eType="#//String"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="GIRR_risk_factor_type"
+        unique="false" eType="#//GIRR_risk_factor_type"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Main_currency" unique="false"
+        eType="#//Currency"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Second_currency" unique="false"
+        eType="#//Currency"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ccy1" unique="false" eType="#//Currency"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ccy2" unique="false" eType="#//Currency"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Equity_factor_type" unique="false"
+        eType="#//Equity_factor_type"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="theEquity_issue" lowerBound="1"
+        eType="#//Security_issue"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="CSR_credit_quality" unique="false"
+        eType="#//Rating_grade"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="CSR_curve_type" unique="false"
+        eType="#//CSR_curve_type"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="theOrganisation" lowerBound="1"
+        eType="#//Organisation"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Commodity_type" unique="false"
+        eType="#//Commodity_type"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Delivery_location" unique="false"
+        eType="#//String"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Tranche_name" unique="false"
+        eType="#//String"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="theSecuritisation" lowerBound="1"
+        eType="#//Security_issue"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Risk_factor_type" lowerBound="1"
+        eType="#//Risk_factor_type"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Risk_measure">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="Risk_measure_identifier"
@@ -156,25 +150,17 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="Risk_measure_type" lowerBound="1"
         eType="#//Risk_measure_type"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Securitisation" eSuperTypes="#//Security_issue">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Securitisation_sector"
-        unique="false" eType="#//Securitisation_sector"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Securitisation_CTP_risk_factor_" eSuperTypes="#//Risk_factor"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Securitisation_non_CTP_risk_factor"
-      eSuperTypes="#//Risk_factor">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Tranche_name" unique="false"
-        eType="#//String"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="theSecuritisation" lowerBound="1"
-        eType="#//Securitisation"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Security_issue" abstract="true">
+  <eClassifiers xsi:type="ecore:EClass" name="Security_issue">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="Issue_Identifier" unique="false"
         eType="#//String"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="Ratings_grade" unique="false"
         eType="#//Rating_grade"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="theOrganisation" lowerBound="1"
         eType="#//Organisation"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Securitisation_sector"
+        unique="false" eType="#//Securitisation_sector"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Security_issue_type" lowerBound="1"
+        eType="#//Security_issue_type"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Security_or_exchange_tradable_derivative_position">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="Position_identifier" unique="false"
@@ -350,5 +336,18 @@
     <eLiterals name="Curvature"/>
     <eLiterals name="Delta_sensitivity" value="1"/>
     <eLiterals name="Vega_sensitivity" value="2"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="Security_issue_type">
+    <eLiterals name="Equity_issue"/>
+    <eLiterals name="Securitisation" value="1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="Risk_factor_type">
+    <eLiterals name="Commodity_risk_factor"/>
+    <eLiterals name="CSR_non_securitisation_risk_factor" value="1"/>
+    <eLiterals name="Equity_risk_factor" value="2"/>
+    <eLiterals name="FX_risk_factor" value="3"/>
+    <eLiterals name="GIRR_risk_factor" value="4"/>
+    <eLiterals name="Securitisation_CTP_risk_factor_" value="5"/>
+    <eLiterals name="Securitisation_non_CTP_risk_factor" value="6"/>
   </eClassifiers>
 </ecore:EPackage>

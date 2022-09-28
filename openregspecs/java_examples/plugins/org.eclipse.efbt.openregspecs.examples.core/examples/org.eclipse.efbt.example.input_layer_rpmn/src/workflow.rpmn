@@ -1,0 +1,222 @@
+ModuleList { modules {WorkflowModule  frtb_workflow_module 
+		{taskTags
+			{ ActivityTag tenorTag 
+				{displayName tenorTag  
+					requirements (  
+					"CRRRuleBook.Title_IV.Title_IV;Chapter_1_General_Provisions.Article_325.Artice_325_1.Article_325_1_a" ,
+					"CRRRuleBook.Title_IV.Title_IV;Chapter_1_General_Provisions.Article_325.Artice_325_1.Article_325_1_b"
+					)
+				 activity  "frtb.Derivation.PreNetting.DeltaNetting.Tenor"
+				}
+			}  
+			subProcess { 
+			SubProcess frtb flowElements { 
+				InclusiveGateway gateway1 outgoing ( sf2 , sf3 , sf1 ) , 
+				SubProcess "Read Data" incoming ( sf1 ) flowElements { 
+					ParallelGateway gw2 outgoing ( sf4 , sf6 , sf8 ) , 
+					UserTask Risk_factor incoming ( sf4 ) entity "ors.pack.Risk_factor", 
+					UserTask Risk_measure incoming ( sf6 ) entity "ors.pack.Risk_measure", 
+
+					UserTask Position incoming ( sf8 ) , 
+					SequenceFlow sf4 from gw2 to Risk_factor , 
+					SequenceFlow sf6 from gw2 to Risk_measure , 
+					SequenceFlow sf8 from gw2 to Position 
+				} , 
+				SubProcess Derivation incoming ( sf2 ) flowElements {
+					InclusiveGateway gw3 outgoing ( sf10 , sf11 ) , 
+					SubProcess PreNetting incoming ( sf10 ) flowElements { 
+						ParallelGateway gw4 outgoing ( sf12 , sf13 ) , 
+						SubProcess DeltaNetting incoming ( sf12 ) flowElements { 
+							InclusiveGateway gw8 outgoing (  sf27 , sf28 ) ,
+							ServiceTask Tenor incoming ( sf27 ) enrichedAttribute "ors.pack.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.Tenor"
+						scenarios {
+									Scenario  primary_scenario {
+										requiredAttributes ( "ors.pack.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.theDelta_sensitivitys",
+											"ors.pack.Risk_measure.Tenor",
+											"ors.pack.Risk_measure.theRisk_factor",
+											"ors.pack.Risk_measure.Risk_measure_identifier",
+											 "ors.pack.Risk_factor.Risk_factor_Identifier" ,
+											"ors.pack.Risk_factor.GIRR_risk_factor_type")    
+										data_constraints conditional 
+										"ors.pack.Risk_factor.GIRR_risk_factor_type" not_equals member  "ors.pack.GIRR_risk_factor_type.Inflation" },
+										
+										Scenario inflation_risk_factor  {
+											requiredAttributes ( "ors.pack.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.theDelta_sensitivitys",
+											"ors.pack.Risk_measure.Tenor",
+											"ors.pack.Risk_measure.theRisk_factor",
+											"ors.pack.Risk_measure.Risk_measure_identifier",
+											 "ors.pack.Risk_factor.Risk_factor_Identifier" ,
+											"ors.pack.Risk_factor.GIRR_risk_factor_type") 
+										data_constraints conditional 
+										 "ors.pack.Risk_factor.GIRR_risk_factor_type" equals member  "ors.pack.GIRR_risk_factor_type.Inflation"
+										
+										
+										}
+						} }, ServiceTask Netted_delta_sensitivities incoming ( sf28 ) enrichedAttribute "ors.pack.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.Netted_delta_sensitivities"
+						scenarios { 
+							 	Scenario Netted_delta_sensitivities_primary_sceanrio {
+							 		requiredAttributes ( "ors.pack.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.theDelta_sensitivitys",
+											"ors.pack.Risk_measure.Delta_sensitivity" ,
+											"ors.pack.Risk_measure.Currency_of_record",
+											"ors.pack.Risk_measure.Risk_measure_identifier")   
+							 		} 
+						 
+				} } , 
+				
+				SequenceFlow sf27 from gw8 to Tenor , 
+				SequenceFlow sf28 from gw8 to Netted_delta_sensitivities } , 
+				SubProcess VegaNetting incoming ( sf13 ) , 
+				SequenceFlow sf12 from gw4 to DeltaNetting , 
+				SequenceFlow sf13 from gw4 to VegaNetting } , 
+				SubProcess RiskClassProcessing incoming ( sf11 ) flowElements { 
+					ParallelGateway gw5 outgoing ( sf14 , sf15 ) , 
+					SubProcess DeltaAndCurvatureProcesssing incoming ( sf14 ) flowElements { 
+						InclusiveGateway gw6 outgoing ( sf16 , sf17 ) , 
+						SubProcess DeltaProcessing incoming ( sf16 ) flowElements { 
+							InclusiveGateway gw7 outgoing ( sf18 , sf19 , sf20 , sf21 ) , 
+							SubProcess AssignDeltaBucket incoming ( sf18 ) flowElements {  
+								ServiceTask Bucket_identifier enrichedAttribute "ors.pack.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.Bucket_identifier"
+								}
+								} ,
+								SubProcess AssignDeltaWeighting incoming ( sf19 ) flowElements { 
+									InclusiveGateway gw9 outgoing ( sf30 , sf31 , sf37 ) , 
+									ServiceTask GIRR_delta_risk_weight incoming ( sf30 ) enrichedAttribute "ors.pack.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.GIRR_delta_risk_weight"
+								} , ServiceTask Weighted_GIRR_delta_sensitivity incoming ( sf31 ) enrichedAttribute "ors.pack.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.Weighted_GIRR_delta_sensitivity"
+								} , ServiceTask Weighted_GIRR_delta_sensitivity_squared incoming ( sf37 ) enrichedAttribute "ors.pack.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.Weighted_GIRR_delta_sensitivity_squared" } , 
+									SequenceFlow sf30 from gw9 to GIRR_delta_risk_weight , 
+									SequenceFlow sf31 from gw9 to Weighted_GIRR_delta_sensitivity , 
+									SequenceFlow sf37 from gw9 to Weighted_GIRR_delta_sensitivity_squared } , 
+									SubProcess DeltaIntraBucketProcessing incoming ( sf20 ) flowElements { 
+										InclusiveGateway gw11 outgoing ( sf32 , sf33 ) , 
+										SubProcess DeltaIntraBucketPairsAndSquares incoming ( sf32 ) flowElements { 
+											ParallelGateway gw12 outgoing ( sf34 , sf35 ) , 
+											SubProcess DeltaCreateCorrelatedPairs incoming ( sf34 ) flowElements { 
+												InclusiveGateway gw13 outgoing ( sf36  ,  sf40 , sf41 , sf45 , sf46 ) , 
+												ServiceTask Delta_sensitivity_combination_identifier incoming ( sf36 ) enrichedAttribute "ors.pack.Delta_sensitivity_combinations_derived.Delta_sensitivity_combination_identifier"
+											} , ServiceTask GIRR_delta_correlation_factor incoming ( sf40 ) enrichedAttribute "ors.pack.Delta_sensitivity_combinations_derived.GIRR_delta_correlation_factor"} , 
+												ServiceTask GIRR_delta_correlated_value incoming ( sf41 ) enrichedAttribute "ors.pack.Delta_sensitivity_combinations_derived.GIRR_delta_correlated_value" } , 
+												ServiceTask Sensitivities_correlated_and_aggregated_bucket_identifier incoming ( sf45 ) enrichedAttribute "ors.pack.Delta_sensitivities_correlated_and_aggregated_derived.Sensitivities_correlated_and_aggregated_bucket_identifier" } , 
+												ServiceTask GIRR_delta_correlated_value_per_bucket incoming ( sf46 ) enrichedAttribute "ors.pack.Delta_sensitivities_correlated_and_aggregated_derived.GIRR_delta_correlated_value_per_bucket" } , 
+												SequenceFlow sf36 from gw13 to Delta_sensitivity_combination_identifier , 
+											
+										
+												SequenceFlow sf40 from gw13 to GIRR_delta_correlation_factor , 
+												SequenceFlow sf41 from gw13 to GIRR_delta_correlated_value , 
+												SequenceFlow sf45 from gw13 to Sensitivities_correlated_and_aggregated_bucket_identifier , 
+												SequenceFlow sf46 from gw13 to GIRR_delta_correlated_value_per_bucket } , 
+												SubProcess DeltaCreateSquares incoming ( sf35 ) flowElements { 
+													InclusiveGateway gw14 outgoing (  sf43 , sf44 ) , 		
+													
+											 ServiceTask Total_GIRR_delta_sensitivity_per_bucket incoming ( sf43 ) enrichedAttribute "ors.pack.Total_delta_sensitivity_per_bucket_derived.Total_GIRR_delta_sensitivity_per_bucket" } , 
+													ServiceTask Total_GIRR_delta_sensitivity_squared_per_bucket incoming ( sf44 ) enrichedAttribute "ors.pack.Total_delta_sensitivity_per_bucket_derived.Total_GIRR_delta_sensitivity_squared_per_bucket" } , 
+													
+													SequenceFlow sf43 from gw14 to Total_GIRR_delta_sensitivity_per_bucket , 
+													SequenceFlow sf44 from gw14 to Total_GIRR_delta_sensitivity_squared_per_bucket } , 
+													SequenceFlow sf34 from gw12 to DeltaCreateCorrelatedPairs , SequenceFlow sf35 from gw12 to DeltaCreateSquares } , 
+													SubProcess DeltaCreateBucketValue incoming ( sf33 ) flowElements { 
+														InclusiveGateway gw15 outgoing ( sf47  , sf49 ) , 
+														ServiceTask KB_per_bucket_derived_Bucket_identifier incoming ( sf47 ) enrichedAttribute "ors.pack.KB_per_bucket_derived.Bucket_identifier"
+													} , 
+														ServiceTask KB_per_bucket_derived_GIRR_delta_KB incoming ( sf49 ) enrichedAttribute "ors.pack.KB_per_bucket_derived.GIRR_delta_KB" } , 
+														SequenceFlow sf47 from gw15 to KB_per_bucket_derived_Bucket_identifier , 
+														
+														SequenceFlow sf49 from gw15 to KB_per_bucket_derived_GIRR_delta_KB } , 
+														SequenceFlow sf32 from gw11 to DeltaIntraBucketPairsAndSquares , 
+														SequenceFlow sf33 from gw11 to DeltaCreateBucketValue } , 
+														SubProcess DeltaInterBucketProcessing incoming ( sf21 ) flowElements { 
+															InclusiveGateway gw16 outgoing ( sf50 , sf51 ) , 
+															SubProcess DeltaInterBucketPairsAndSquares incoming ( sf50 ) flowElements { 
+																ParallelGateway gw17 outgoing ( sf52 , sf53 ) , 
+																SubProcess DeltaBucketsCreateCorrelatedPairs incoming ( sf52 ) , 
+																SubProcess DeltaBucketsCreateSquares incoming ( sf53 ) , 
+																SequenceFlow sf52 from gw17 to DeltaBucketsCreateCorrelatedPairs , 
+																SequenceFlow sf53 from gw17 to DeltaBucketsCreateSquares
+															} , SubProcess DeltaCreateCapitalCharge incoming ( sf51 ) , 
+																SequenceFlow sf50 from gw16 to DeltaInterBucketPairsAndSquares , 
+																SequenceFlow sf51 from gw16 to DeltaCreateCapitalCharge
+															} , SequenceFlow sf18 from gw7 to AssignDeltaBucket , 
+																SequenceFlow sf19 from gw7 to AssignDeltaWeighting , 
+																SequenceFlow sf20 from gw7 to DeltaIntraBucketProcessing , 
+																SequenceFlow sf21 from gw7 to DeltaInterBucketProcessing } 
+								, SubProcess CurvatureProcessing incoming ( sf17 ) flowElements { 
+									InclusiveGateway gw18 outgoing ( sf54 , sf55 , sf56 , sf57 ) , 
+									SubProcess CurvatureDeltaSripping incoming ( sf54 ) , 
+									SubProcess CurvatureCalculateCVR incoming ( sf55 ) , 
+									SubProcess CurvatureAssignBucket incoming ( sf56 ) , 
+									SubProcess CurvatureBucketProcessing incoming ( sf57 ) flowElements {
+										InclusiveGateway gw19 outgoing ( sf58 , sf59 , sf60 , sf61 ) , 
+										SubProcess CurvatureIntraBucketPairsAndSquares incoming ( sf58 ) flowElements { 
+											ParallelGateway gw20 outgoing ( sf62 , sf63 ) ,
+											 SubProcess CurvatureCreateCorrelatedPairs incoming ( sf62 ) ,
+											  SubProcess CurvatureCreateSquares incoming ( sf63 ) , 
+											  SequenceFlow sf62 from gw20 to CurvatureCreateCorrelatedPairs , 
+											  SequenceFlow sf63 from gw20 to CurvatureCreateSquares
+										} , SubProcess CurvatureCreateBucketValue incoming ( sf59 ) , 
+										SubProcess CurvatureInterBucketPairsAndSquares incoming ( sf60 ) flowElements { 
+											ParallelGateway gw21 outgoing ( sf64 , sf65 ) , 
+											SubProcess CurvatureBucketsCreateCorrelatedPairs incoming ( sf64 ) , 
+											SubProcess CurvatureBucketsCreateSquares incoming ( sf65 ) , 
+											SequenceFlow sf64 from gw21 to CurvatureBucketsCreateCorrelatedPairs , 
+											SequenceFlow sf65 from gw21 to CurvatureBucketsCreateSquares
+										} , SubProcess CurvaureCreateCapitalCharge incoming ( sf61 ) , 
+										SequenceFlow sf58 from gw19 to CurvatureIntraBucketPairsAndSquares , 
+										SequenceFlow sf59 from gw19 to CurvatureCreateBucketValue , 
+										SequenceFlow sf60 from gw19 to CurvatureInterBucketPairsAndSquares , 
+										SequenceFlow sf61 from gw19 to CurvaureCreateCapitalCharge
+									} , SequenceFlow sf54 from gw18 to CurvatureDeltaSripping , 
+									SequenceFlow sf55 from gw18 to CurvatureCalculateCVR , 
+									SequenceFlow sf56 from gw18 to CurvatureAssignBucket , 
+									SequenceFlow sf57 from gw18 to CurvatureBucketProcessing
+								} , SequenceFlow sf16 from gw6 to DeltaProcessing , 
+								SequenceFlow sf17 from gw6 to CurvatureProcessing } , 
+			SubProcess VegaProcessing incoming ( sf15 ) 
+				flowElements { 
+					InclusiveGateway gwv7 outgoing ( sf118 , sf119 , sf120 , sf121 ) , 
+					SubProcess AssignVegaBucket incoming ( sf118 ) 
+					 , 
+				SubProcess AssignVegaWeighting incoming ( sf119 ) 
+				, 
+SubProcess VegaIntraBucketProcessing incoming ( sf120 ) flowElements { 
+	InclusiveGateway gwv11 outgoing ( sf132 , sf133 ) , 
+	SubProcess VegaIntraBucketPairsAndSquares incoming ( sf132 ) flowElements { 
+		ParallelGateway gwv12 outgoing ( sf134 , sf135 ) , 
+		SubProcess VegaCreateCorrelatedPairs incoming ( sf134 )  , 
+	 	SubProcess VegaCreateSquares incoming ( sf135 )  , 
+	 	SequenceFlow sf134 from gwv12 to VegaCreateCorrelatedPairs , 
+	 	SequenceFlow sf135 from gwv12 to VegaCreateSquares } , 
+	 	SubProcess VegaCreateBucketValue incoming ( sf133 )  , 
+	 	SequenceFlow sf132 from gwv11 to VegaIntraBucketPairsAndSquares , 
+	 	SequenceFlow sf133 from gwv11 to VegaCreateBucketValue } , 
+	 	SubProcess VegaInterBucketProcessing incoming ( sf121 ) flowElements { 	
+	 		InclusiveGateway gwv16 outgoing ( sf150 , sf151 ) , 
+	 	
+	 	SubProcess VegaInterBucketPairsAndSquares incoming ( sf150 ) flowElements { ParallelGateway gwv17 outgoing ( sf152 , sf153 ) , 
+	 	SubProcess VegaBucketsCreateCorrelatedPairs incoming ( sf152 ) , 
+ 		SubProcess VegaBucketsCreateSquares incoming ( sf153 ) ,
+ 		 SequenceFlow sf152 from gwv17 to VegaBucketsCreateCorrelatedPairs , 
+ 		 SequenceFlow sf153 from gwv17 to VegaBucketsCreateSquares
+ 	} , SubProcess VegaCreateCapitalCharge incoming ( sf151 ) , 
+ 	SequenceFlow sf150 from gwv16 to VegaInterBucketPairsAndSquares , SequenceFlow sf151 from gwv16 to VegaCreateCapitalCharge
+ } , SequenceFlow sf118 from gwv7 to AssignVegaBucket , 
+ SequenceFlow sf119 from gwv7 to AssignVegaWeighting , 
+ SequenceFlow sf120 from gwv7 to VegaIntraBucketProcessing , 
+ SequenceFlow sf121 from gwv7 to VegaInterBucketProcessing } 
+, SequenceFlow sf14 from gw5 to DeltaAndCurvatureProcesssing , 
+SequenceFlow sf15 from gw5 to VegaProcessing } , 
+SequenceFlow sf10 from gw3 to PreNetting ,
+ SequenceFlow sf11 from gw3 to RiskClassProcessing } , 
+ SubProcess "Report Generation" incoming ( sf3 ) flowElements { 
+ 	ParallelGateway gw80 outgoing ( sf80 ) , 
+ 	ScriptTask FRTB_C91 incoming ( sf80 ) 
+ 	selectionLayers { 
+ 		SelectionLayer GIRR_LongDeltaSensitivity_Layer {generatedEntity "ors.pack.OUTPUT_LAYER_FRTB" } ,
+ 		SelectionLayer GIRR_ShortDeltaSensitivity_Layer { generatedEntity "ors.pack.OUTPUT_LAYER_FRTB" },
+ 		SelectionLayer GIRR_Net_Sensitivity_Layer { generatedEntity "ors.pack.OUTPUT_LAYER_FRTB" },
+ 		SelectionLayer GIRR_Delta_Risk_Layer { generatedEntity "ors.pack.OUTPUT_LAYER_FRTB" }
+ 		
+ 	} , 
+ 	SequenceFlow sf80 from gw80 to FRTB_C91 
+ } , 
+ SequenceFlow sf1 from gateway1 to "Read Data" , 
+ SequenceFlow sf2 from gateway1 to Derivation , 
+ SequenceFlow sf3 from gateway1 to "Report Generation" } } } } }

@@ -1,0 +1,79 @@
+ModuleList { modules { ViewModule 
+veiwModule1 {
+			views { 
+				View GIRR_LongDeltaSensitivity_View  
+				
+				select SelectClause  { 
+					columns {
+					SelectColumnMember   "ors.pack.Approach_For_Prudential_Purposes.Sensitivities_Based_Method" as "ors.pack.OUTPUT_LAYER_FRTB.Approach_For_Prudential_Purposes",
+					SelectColumnMember "ors.pack.Base.Memorandum_Items" as "ors.pack.OUTPUT_LAYER_FRTB.Base",
+					SelectColumnMember  "ors.pack.Main_Catagory.Instruments_Subject_To_Market_Risk" as "ors.pack.OUTPUT_LAYER_FRTB.Main_Catagory",
+					SelectColumnMember  "ors.pack.Prudential_Portfolio.Banking_And_Trading_Book" as "ors.pack.OUTPUT_LAYER_FRTB.Prudentia_lPortfolio",
+					SelectColumnAttribute "ors.pack.Risk_measure.Delta_sensitivity" as "ors.pack.OUTPUT_LAYER_FRTB.Sensitivity_To_Delta_Risk_Factors",
+					SelectColumnMember  "ors.pack.Type_And_Nature_Of_Sensitivity.Positive_Sensitivity_Gross_Per_Risk_Class_Unweighted" as "ors.pack.OUTPUT_LAYER_FRTB.Type_And_Nature_Of_Sensitivity",
+					SelectColumnMember  "ors.pack.Type_Of_Risk.GIRR" as "ors.pack.OUTPUT_LAYER_FRTB.Type_Of_Risk"
+					} }
+					// we need to ensure this is only for risk measures with risk_measire type delta sensitivity
+					// we need to make sure this is only for risk measures with risk factors which have a type of GIRR_Risk_Factor
+					// 
+					where condition  "ors.pack.Risk_measure.Delta_sensitivity" greater_than value "0"   
+					selectionLayer "frtb_workflow_module.frtb.Report Generation.FRTB_C91.GIRR_LongDeltaSensitivity_Layer" ,
+					
+				View GIRR_ShortDeltaSensitivity_View 
+				
+				select  SelectClause {
+					columns { 
+					SelectColumnMember "ors.pack.Approach_For_Prudential_Purposes.Sensitivities_Based_Method" as "ors.pack.OUTPUT_LAYER_FRTB.Approach_For_Prudential_Purposes",
+					SelectColumnMember "ors.pack.Base.Memorandum_Items" as "ors.pack.OUTPUT_LAYER_FRTB.Base",
+					SelectColumnMember "ors.pack.Main_Catagory.Instruments_Subject_To_Market_Risk" as "ors.pack.OUTPUT_LAYER_FRTB.Main_Catagory",
+					SelectColumnMember "ors.pack.Prudential_Portfolio.Banking_And_Trading_Book" as "ors.pack.OUTPUT_LAYER_FRTB.Prudentia_lPortfolio",
+					SelectColumnAttribute  "ors.pack.Risk_measure.Delta_sensitivity" as "ors.pack.OUTPUT_LAYER_FRTB.Sensitivity_To_Delta_Risk_Factors",
+					SelectColumnMember   "ors.pack.Type_And_Nature_Of_Sensitivity.Positive_Sensitivity_Gross_Per_Risk_Class_Unweighted" as "ors.pack.OUTPUT_LAYER_FRTB.Type_And_Nature_Of_Sensitivity",
+					SelectColumnMember  "ors.pack.Type_Of_Risk.GIRR" as "ors.pack.OUTPUT_LAYER_FRTB.Type_Of_Risk"
+					} }
+					// we need to ensure this is only for risk measures with risk_measire type delta sensitivity
+					// we need to make sure this is only for risk measures with risk factors which have a type of GIRR_Risk_Factor
+					where condition  "ors.pack.Risk_measure.Delta_sensitivity" less_than value "0" 
+					selectionLayer "frtb_workflow_module.frtb.Report Generation.FRTB_C91.GIRR_ShortDeltaSensitivity_Layer" ,
+					
+				View  GIRR_Net_Sensitivity_View
+				
+				select SelectClause {
+					 columns { 
+					SelectColumnMember "ors.pack.Approach_For_Prudential_Purposes.Sensitivities_Based_Method" as "ors.pack.OUTPUT_LAYER_FRTB.Approach_For_Prudential_Purposes",
+					SelectColumnMember "ors.pack.Base.Memorandum_Items" as "ors.pack.OUTPUT_LAYER_FRTB.Base",
+					SelectColumnMember "ors.pack.Main_Catagory.Instruments_Subject_To_Market_Risk" as "ors.pack.OUTPUT_LAYER_FRTB.Main_Catagory",
+					SelectColumnMember "ors.pack.Prudential_Portfolio.Banking_And_Trading_Book" as "ors.pack.OUTPUT_LAYER_FRTB.Prudentia_lPortfolio",
+					SelectColumnAttribute "ors.pack.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.Netted_delta_sensitivities" as "ors.pack.OUTPUT_LAYER_FRTB.Sensitivity_To_Delta_Risk_Factors" ,
+					SelectColumnMember  "ors.pack.Type_And_Nature_Of_Sensitivity.Sensitivity_Net_Per_Risk_Class_Unweighted" as "ors.pack.OUTPUT_LAYER_FRTB.Type_And_Nature_Of_Sensitivity",
+					SelectColumnMember  "ors.pack.Type_Of_Risk.GIRR" as "ors.pack.OUTPUT_LAYER_FRTB.Type_Of_Risk"
+					}}
+					
+	
+					selectionLayer "frtb_workflow_module.frtb.Report Generation.FRTB_C91.GIRR_Net_Sensitivity_Layer" ,
+				
+				View  GIRR_Delta_Risk_View
+				
+				select SelectClause { columns { 
+					SelectColumnMember "ors.pack.Approach_For_Prudential_Purposes.Sensitivities_Based_Method" as "ors.pack.OUTPUT_LAYER_FRTB.Approach_For_Prudential_Purposes",
+					SelectColumnMember "ors.pack.Base.Exposures"as "ors.pack.OUTPUT_LAYER_FRTB.Base",
+					SelectColumnMember "ors.pack.Contingent_Scenario.Low_Correlation_Scenario" as "ors.pack.OUTPUT_LAYER_FRTB.Contingent_Scenario",
+					SelectColumnMember "ors.pack.Delta_Vega_Or_Curvature_Risk.Delta_Risk" as "ors.pack.OUTPUT_LAYER_FRTB.Type_Of_Risk", 
+					SelectColumnMember "ors.pack.Main_Catagory.Instruments_Subject_To_Market_Risk" as "ors.pack.OUTPUT_LAYER_FRTB.Main_Catagory",
+					SelectColumnMember "ors.pack.Prudential_Portfolio.Banking_And_Trading_Book" as "ors.pack.OUTPUT_LAYER_FRTB.Prudentia_lPortfolio",
+					SelectColumnAttribute  "ors.pack.KB_per_bucket_derived.GIRR_delta_KB"  as "ors.pack.OUTPUT_LAYER_FRTB.Own_Funds_Requirements" ,
+					SelectColumnMember "ors.pack.Type_Of_Risk.GIRR" as "ors.pack.OUTPUT_LAYER_FRTB.Type_Of_Risk"
+					
+					} }
+					selectionLayer "frtb_workflow_module.frtb.Report Generation.FRTB_C91.GIRR_Delta_Risk_Layer"
+					
+			}
+		}
+		
+	}
+}
+	
+			
+	
+
+		
