@@ -34,6 +34,7 @@
             <projectDescriptor name="org.eclipse.efbt.example.frtb" contentURI="examples/org.eclipse.efbt.example.frtb/" description="FRTB LDM Example"/>   
             <projectDescriptor name="org.eclipse.efbt.example.frtb.xcore.fe_input_layer" contentURI="examples/org.eclipse.efbt.example.frtb.xcore.fe_input_layer/" description="FRTB LDM/IL FE Example"/>                         
             <projectDescriptor name="org.eclipse.efbt.example.input_layer_rpmn" contentURI="examples/org.eclipse.efbt.example.input_layer_rpmn/" description="FRTB IL Example"/>
+            <projectDescriptor name="org.eclipse.efbt.example.computation_model" contentURI="examples/org.eclipse.efbt.example.computation_model/" description="FRTB Computation Example"/>
         </example>
     </extension>
   
