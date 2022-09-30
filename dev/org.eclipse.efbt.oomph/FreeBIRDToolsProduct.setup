@@ -193,8 +193,6 @@
       <requirement
           name="org.eclipse.xtend.sdk.feature.group"/>
       <requirement
-          name="org.eclipse.emf.ecore.xcore.sdk.feature.group"/>  
-      <requirement
           name="org.eclipse.cbi.targetplatform-feature.feature.group"/>
       <requirement
           name="org.eclipse.sirius.specifier.feature.group"/>
@@ -204,14 +202,6 @@
           name="org.eclipse.xtext.sdk.feature.group"/>
       <requirement
           name="hu.bme.mit.ecoredocgen.feature.feature.group"/>
-      <requirement
-          name="org.eclipse.emf.edapt.recorder.feature.feature.group"/>
-      <requirement
-          name="org.eclipse.emf.edapt.runtime.feature.feature.group"/>
-      <requirement
-          name="org.eclipse.emf.edapt.recorder.feature.source.feature.group"/>
-      <requirement
-          name="org.eclipse.emf.edapt.runtime.feature.source.feature.group"/>
       <requirement
           name="org.python.pydev.feature.feature.group"/>
       <repository
@@ -228,8 +218,6 @@
           url="http://static.incquerylabs.com/projects/ecoredocgen/release/"/>
       <repository
           url="http://update.liclipse.com/latest"/>
-      <repository
-          url="https://download.eclipse.org/edapt/releases/15x/150/"/>    
     </setupTask>
     <description></description>
   </version>
