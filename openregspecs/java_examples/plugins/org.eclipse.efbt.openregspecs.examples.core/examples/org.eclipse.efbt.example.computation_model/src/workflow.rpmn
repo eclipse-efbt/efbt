@@ -13,14 +13,19 @@ ModuleList { modules {WorkflowModule  frtb_workflow_module
 			SubProcess frtb flowElements { 
 				InclusiveGateway gateway1 outgoing ( sf2 , sf3 , sf1 ) , 
 				SubProcess "Read Data" incoming ( sf1 ) flowElements { 
-					ParallelGateway gw2 outgoing ( sf4 , sf6 , sf8 ) , 
+					ParallelGateway gw2 outgoing ( sf4 , sf5 , sf6 , sf7 , sf8 , sf9 ) , 
 					UserTask Risk_factor incoming ( sf4 ) entity "ors.pack.Risk_factor", 
-					UserTask Risk_measure incoming ( sf6 ) entity "ors.pack.Risk_measure", 
-
+					UserTask GIRR_risk_factor incoming ( sf5 ) entity "ors.pack.GIRR_risk_factor" , 
+					UserTask Delta_sensitivity incoming ( sf6 ) entity "ors.pack.Delta_sensitivity", 
+					UserTask Vega_sensitivity incoming ( sf7 ) entity "ors.pack.Vega_sensitivity" , 
 					UserTask Position incoming ( sf8 ) , 
+					UserTask Curvature incoming ( sf9 ) entity "ors.pack.Curvature" , 
 					SequenceFlow sf4 from gw2 to Risk_factor , 
-					SequenceFlow sf6 from gw2 to Risk_measure , 
-					SequenceFlow sf8 from gw2 to Position 
+					SequenceFlow sf5 from gw2 to GIRR_risk_factor , 
+					SequenceFlow sf6 from gw2 to Delta_sensitivity , 
+					SequenceFlow sf7 from gw2 to Vega_sensitivity , 
+					SequenceFlow sf8 from gw2 to Position , 
+					SequenceFlow sf9 from gw2 to Curvature
 				} , 
 				SubProcess Derivation incoming ( sf2 ) flowElements {
 					InclusiveGateway gw3 outgoing ( sf10 , sf11 ) , 
@@ -32,23 +37,23 @@ ModuleList { modules {WorkflowModule  frtb_workflow_module
 						scenarios {
 									Scenario  primary_scenario {
 										requiredAttributes ( "ors.pack.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.theDelta_sensitivitys",
-											"ors.pack.Risk_measure.Tenor",
+											"ors.pack.Delta_sensitivity.Tenor",
 											"ors.pack.Risk_measure.theRisk_factor",
 											"ors.pack.Risk_measure.Risk_measure_identifier",
 											 "ors.pack.Risk_factor.Risk_factor_Identifier" ,
-											"ors.pack.Risk_factor.GIRR_risk_factor_type")    
+											"ors.pack.GIRR_risk_factor.GIRR_risk_factor_type")    
 										data_constraints conditional 
-										"ors.pack.Risk_factor.GIRR_risk_factor_type" not_equals member  "ors.pack.GIRR_risk_factor_type.Inflation" },
+										"ors.pack.GIRR_risk_factor.GIRR_risk_factor_type" not_equals member  "ors.pack.GIRR_risk_factor_type.Inflation" },
 										
 										Scenario inflation_risk_factor  {
 											requiredAttributes ( "ors.pack.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.theDelta_sensitivitys",
-											"ors.pack.Risk_measure.Tenor",
+											"ors.pack.Delta_sensitivity.Tenor",
 											"ors.pack.Risk_measure.theRisk_factor",
 											"ors.pack.Risk_measure.Risk_measure_identifier",
 											 "ors.pack.Risk_factor.Risk_factor_Identifier" ,
-											"ors.pack.Risk_factor.GIRR_risk_factor_type") 
+											"ors.pack.GIRR_risk_factor.GIRR_risk_factor_type") 
 										data_constraints conditional 
-										 "ors.pack.Risk_factor.GIRR_risk_factor_type" equals member  "ors.pack.GIRR_risk_factor_type.Inflation"
+										 "ors.pack.GIRR_risk_factor.GIRR_risk_factor_type" equals member  "ors.pack.GIRR_risk_factor_type.Inflation"
 										
 										
 										}
@@ -56,8 +61,8 @@ ModuleList { modules {WorkflowModule  frtb_workflow_module
 						scenarios { 
 							 	Scenario Netted_delta_sensitivities_primary_sceanrio {
 							 		requiredAttributes ( "ors.pack.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.theDelta_sensitivitys",
-											"ors.pack.Risk_measure.Delta_sensitivity" ,
-											"ors.pack.Risk_measure.Currency_of_record",
+											"ors.pack.Delta_sensitivity.Delta_sensitivity" ,
+											"ors.pack.Delta_sensitivity.Currency_of_record",
 											"ors.pack.Risk_measure.Risk_measure_identifier")   
 							 		} 
 						 
