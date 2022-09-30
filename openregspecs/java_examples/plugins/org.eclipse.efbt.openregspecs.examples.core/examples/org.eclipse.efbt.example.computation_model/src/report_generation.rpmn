@@ -9,14 +9,12 @@ veiwModule1 {
 					SelectColumnMember "ors.pack.Base.Memorandum_Items" as "ors.pack.OUTPUT_LAYER_FRTB.Base",
 					SelectColumnMember  "ors.pack.Main_Catagory.Instruments_Subject_To_Market_Risk" as "ors.pack.OUTPUT_LAYER_FRTB.Main_Catagory",
 					SelectColumnMember  "ors.pack.Prudential_Portfolio.Banking_And_Trading_Book" as "ors.pack.OUTPUT_LAYER_FRTB.Prudentia_lPortfolio",
-					SelectColumnAttribute "ors.pack.Risk_measure.Delta_sensitivity" as "ors.pack.OUTPUT_LAYER_FRTB.Sensitivity_To_Delta_Risk_Factors",
+					SelectColumnAttribute "ors.pack.Delta_sensitivity.Delta_sensitivity" as "ors.pack.OUTPUT_LAYER_FRTB.Sensitivity_To_Delta_Risk_Factors",
 					SelectColumnMember  "ors.pack.Type_And_Nature_Of_Sensitivity.Positive_Sensitivity_Gross_Per_Risk_Class_Unweighted" as "ors.pack.OUTPUT_LAYER_FRTB.Type_And_Nature_Of_Sensitivity",
 					SelectColumnMember  "ors.pack.Type_Of_Risk.GIRR" as "ors.pack.OUTPUT_LAYER_FRTB.Type_Of_Risk"
 					} }
-					// we need to ensure this is only for risk measures with risk_measire type delta sensitivity
-					// we need to make sure this is only for risk measures with risk factors which have a type of GIRR_Risk_Factor
-					// 
-					where condition  "ors.pack.Risk_measure.Delta_sensitivity" greater_than value "0"   
+					
+					where condition  "ors.pack.Delta_sensitivity.Delta_sensitivity" greater_than value "0" 
 					selectionLayer "frtb_workflow_module.frtb.Report Generation.FRTB_C91.GIRR_LongDeltaSensitivity_Layer" ,
 					
 				View GIRR_ShortDeltaSensitivity_View 
@@ -27,13 +25,11 @@ veiwModule1 {
 					SelectColumnMember "ors.pack.Base.Memorandum_Items" as "ors.pack.OUTPUT_LAYER_FRTB.Base",
 					SelectColumnMember "ors.pack.Main_Catagory.Instruments_Subject_To_Market_Risk" as "ors.pack.OUTPUT_LAYER_FRTB.Main_Catagory",
 					SelectColumnMember "ors.pack.Prudential_Portfolio.Banking_And_Trading_Book" as "ors.pack.OUTPUT_LAYER_FRTB.Prudentia_lPortfolio",
-					SelectColumnAttribute  "ors.pack.Risk_measure.Delta_sensitivity" as "ors.pack.OUTPUT_LAYER_FRTB.Sensitivity_To_Delta_Risk_Factors",
+					SelectColumnAttribute  "ors.pack.Delta_sensitivity.Delta_sensitivity" as "ors.pack.OUTPUT_LAYER_FRTB.Sensitivity_To_Delta_Risk_Factors",
 					SelectColumnMember   "ors.pack.Type_And_Nature_Of_Sensitivity.Positive_Sensitivity_Gross_Per_Risk_Class_Unweighted" as "ors.pack.OUTPUT_LAYER_FRTB.Type_And_Nature_Of_Sensitivity",
 					SelectColumnMember  "ors.pack.Type_Of_Risk.GIRR" as "ors.pack.OUTPUT_LAYER_FRTB.Type_Of_Risk"
 					} }
-					// we need to ensure this is only for risk measures with risk_measire type delta sensitivity
-					// we need to make sure this is only for risk measures with risk factors which have a type of GIRR_Risk_Factor
-					where condition  "ors.pack.Risk_measure.Delta_sensitivity" less_than value "0" 
+					where condition  "ors.pack.Delta_sensitivity.Delta_sensitivity" less_than value "0" 
 					selectionLayer "frtb_workflow_module.frtb.Report Generation.FRTB_C91.GIRR_ShortDeltaSensitivity_Layer" ,
 					
 				View  GIRR_Net_Sensitivity_View
