@@ -1,9 +1,9 @@
 <!-- This file was created using the HTML documentation generator. -->
-<!-- Creation date: Sat Aug 27 10:10:31 BST 2022-->
+<!-- Creation date: Tue Oct 04 06:34:59 BST 2022-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-      	<title>Metamodel Documentation (platform:/resource/efbt/openregspecs/model/core_model/Xcore.ecore)</title>
+      	<title>Metamodel Documentation (platform:/resource/org.eclipse.efbt.openregspecs.model.core_model/Xcore.ecore)</title>
     	<script type="text/javascript">
 //<![CDATA[				    	
 // TOC script based on code taken from http://www.quirksmode.org/dom/toc.html
@@ -250,14 +250,14 @@ function getElementsByTagNames(list,obj) {
 </tr>
 <tr>	<td><div id="xcoreXDataType.convertBody" class="teletype">convertBody</div>
 	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#xcoreXFunction">XFunction</a></span></div>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><div class="alert">MISSING TYPE elem!</div></span></div>
 <div class="label">Cardinality: [0..1]</div>
 <div class="label">Containment</div>
 </td> 
 <td> </td>
 		</tr><tr>	<td><div id="xcoreXDataType.createBody" class="teletype">createBody</div>
 	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#xcoreXFunction">XFunction</a></span></div>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><div class="alert">MISSING TYPE elem!</div></span></div>
 <div class="label">Cardinality: [0..1]</div>
 <div class="label">Containment</div>
 </td> 
@@ -329,24 +329,6 @@ function getElementsByTagNames(list,obj) {
 <td> </td>
 		</tr></table>
 <a href="#xcore.XEnumLiteral.ref"></a>
-<h2 id="xcoreXFunction"><a href="#xcoreXFunction"><a href="#xcoreXFunction">XFunction</a></a></h2>
-
-<table>
-<tr>
-	<th colspan="3"><div class="tableHeader">Attributes</div></th>
-</tr>
-<tr>
-	<th><div class="columnHeader">Name</div></th>
-	<th><div class="columnHeader">Properties</div></th>
-	<th><div class="columnHeader">Documentation</div></th>
-</tr>
-<tr>	<td><div id="xcoreXFunction.functionName" class="teletype">functionName</div>
-	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EString</span></div>
-<div class="label">Cardinality: [1..1]</div>
- </td> <td></td>
-		</tr></table>
-<a href="#xcore.XFunction.attr"></a>
 <h2 id="xcoreXMember"><a href="#xcoreXMember"><a href="#xcoreXMember">XMember</a></a></h2>
 
 <div class="eclassProps">EClass properties:<div class="eclassPropList"><span class="label">Abstract</span></div></div><h4><b>Supertype:</b><a href="#xcoreXTypedElement">XTypedElement</a></h4><table>
@@ -394,7 +376,7 @@ function getElementsByTagNames(list,obj) {
 
 <h4><b>Supertype:</b><a href="#xcoreXMember">XMember</a></h4><table>
 <tr>
-	<th colspan="3"><div class="tableHeader">References</div></th>
+	<th colspan="3"><div class="tableHeader">Attributes</div></th>
 </tr>
 <tr>
 	<th><div class="columnHeader">Name</div></th>
@@ -403,12 +385,21 @@ function getElementsByTagNames(list,obj) {
 </tr>
 <tr>	<td><div id="xcoreXOperation.body" class="teletype">body</div>
 	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#xcoreXFunction">XFunction</a></span></div>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EString</span></div>
 <div class="label">Cardinality: [0..1]</div>
-<div class="label">Containment</div>
-</td> 
-<td> </td>
-		</tr><tr>	<td><div id="xcoreXOperation.parameters" class="teletype">parameters</div>
+ </td> <td></td>
+		</tr></table>
+<a href="#xcore.XOperation.attr"></a>
+<table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="xcoreXOperation.parameters" class="teletype">parameters</div>
 	</td>
 	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#xcoreXParameter">XParameter</a></span></div>
 <div class="label">Cardinality: [0..*]</div>
@@ -420,7 +411,7 @@ function getElementsByTagNames(list,obj) {
 <a href="#xcore.XOperation.ref"></a>
 <h2 id="xcoreXPackage"><a href="#xcoreXPackage"><a href="#xcoreXPackage">XPackage</a></a></h2>
 
-<h4><b>Supertype:</b><a href="#xcoreXNamedElement">XNamedElement</a></h4><table>
+<h4><b>Supertype:</b><a href="#modulemanagementModule">Module</a></h4><table>
 <tr>
 	<th colspan="3"><div class="tableHeader">References</div></th>
 </tr>

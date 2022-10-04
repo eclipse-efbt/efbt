@@ -22,10 +22,8 @@
         changeable="false" transient="true" eOpposite="#//XPackage/classifiers"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="XDataType" eSuperTypes="#//XClassifier">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="createBody" eType="#//XFunction"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="convertBody" eType="#//XFunction"
-        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="createBody" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="convertBody" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="industryName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="XEnum" eSuperTypes="#//XDataType">
@@ -49,10 +47,9 @@
   <eClassifiers xsi:type="ecore:EClass" name="XOperation" eSuperTypes="#//XMember">
     <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1"
         eType="#//XParameter" containment="true" resolveProxies="false" eOpposite="#//XParameter/operation"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="#//XFunction"
-        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="body" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="XPackage" eSuperTypes="#//XNamedElement">
+  <eClassifiers xsi:type="ecore:EClass" name="XPackage" eSuperTypes="module_management.ecore#//Module">
     <eStructuralFeatures xsi:type="ecore:EReference" name="classifiers" upperBound="-1"
         eType="#//XClassifier" containment="true" eOpposite="#//XClassifier/package"/>
   </eClassifiers>
@@ -75,9 +72,5 @@
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="upperBound" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="lowerBound" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="XFunction">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="functionName" lowerBound="1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
 </ecore:EPackage>

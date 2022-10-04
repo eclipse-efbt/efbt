@@ -1,18 +1,18 @@
-ModuleList { modules {  TestModule frtb_e2e_test1Module {
-						license "Copyright (c) 2020 Bird Software Solutions Ltd
+TestModule frtb_e2e_test1Module {
+						/**Copyright (c) 2020 Bird Software Solutions Ltd
  All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html
 
 SPDX-License-Identifier: EPL-2.0 
 
  Contributors:
- Neil Mackenzie - initial API and implementation"
+ Neil Mackenzie - initial API and implementation*/
 			tests { 
 				Test frtb_e2e_test1 {
 					inputData { 
-						InputFile {fileName "Delta_sensitivity.csv" entity "ors.pack.Delta_sensitivity" } , 
-						InputFile {fileName "Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.csv" entity "ors.pack.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived" }
+						InputFile {fileName "Delta_sensitivity.csv" entity "pack.Delta_sensitivity" } , 
+						InputFile {fileName "Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.csv" entity "pack.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived" }
 					} 
-					expectedResult { InputFile  {fileName "OUTPUT_LAYER_FRTB.csv"  entity "ors.pack.OUTPUT_LAYER_FRTB" }  }
+					expectedResult { InputFile  {fileName "OUTPUT_LAYER_FRTB.csv"  entity "pack.OUTPUT_LAYER_FRTB" }  }
 					scope E2ETestScope  frtb_e2e_test1_scope {
 						
 						scenarios (
@@ -26,6 +26,4 @@ SPDX-License-Identifier: EPL-2.0
 					 } 
 				} 
 				} 
-				}
-				}
-						
+					
