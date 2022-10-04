@@ -34,13 +34,9 @@ class SQLDeveloperImport(object):
         xDouble = XDataType()
         xDouble.name = "Double"
     
-        moduleList = ModuleList() 
-        dataModel = EntityModule()
-        dataModel.name="ors"
+        
         rpmnPackage = XPackage(name='pack')
-        dataModel.package = rpmnPackage
-
-        moduleList.modules.extend([dataModel])
+        
 
         rpmnPackage.classifiers.append(xString)
         rpmnPackage.classifiers.append(xDouble)
@@ -58,8 +54,19 @@ class SQLDeveloperImport(object):
                 if (not headerSkipped):
                     headerSkipped = True
                 else:
+                    
+                    
+                                  
+                      
+                           
+                       
+                       
                     className = row[0];
                     objectID = row[1];
+                    engineering_type = row[27];
+                    Num_SuperTypeEntity_ID = row[26];
+                    
+                    
                     alteredClassName = SQLDeveloperImport.replaceSpaceWithUnderscore(self,className);  
                     if(alteredClassName.endswith("_derived")):
                         xclass = XClass(name=alteredClassName)
@@ -81,6 +88,11 @@ class SQLDeveloperImport(object):
                       
                     else:
                         xclass = XClass(name=alteredClassName)
+                        # of engineering type is single table, as i should be for all members of a type
+                        # heirarchy, and num_suptype is blanck, then this means that this class is a root
+                        # of a type heirarchy....we will set such classes to be abstract.
+                        if((engineering_type == "Single Table") and (Num_SuperTypeEntity_ID=="")   )    :
+                            xclass.abstract=True
                         xclassTable = XClass(name=alteredClassName+"_BaseTable")
                         containmentReference  = XReference()
                         containmentReference.name=xclass.name+"s"
@@ -232,57 +244,97 @@ class SQLDeveloperImport(object):
                     attributeKind = row[7]
                    
                     classID = row[4]
+                    relationID = row[32]
                     theClass = classesMap[classID]
+                    
+                    classIsDerived = False
+                    if (theClass.name.endswith("_derived")):
+                        classIsDerived = True
+                        
                     theAttributeName =  amendedAttributeName
                     
-
-                    if (attributeKind == "Domain"):
-                        enumID = row[12]
-                        theEnum = enumMap[enumID]
-                        print("Domain")
-                        attribute = XAttribute()
-                        attribute.lowerBound=0
-                        attribute.upperBound=1
-                        if(theEnum.name == "String"):
-                            attribute.name = theAttributeName
-                            attribute.type = xString
+                    # we only add attributes here if they are not representing a relationship
+                    if relationID == "":
+                        
+                        if (attributeKind == "Domain"):
+                            enumID = row[12]
+                            theEnum = enumMap[enumID]
+                            print("Domain")
                             
-                        elif(theEnum.name == "Number"):
-                            attribute.name = theAttributeName
-                            attribute.type = xDouble
-                        # This is a common domain used for String identifiers in BIRD in SQLDeveloper
-                        elif(theEnum.name == "String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1"):
-                            attribute.name = theAttributeName
-                            attribute.type = xString
-                                
-                        else:
-                            attribute.name = theAttributeName
-                            attribute.type = theEnum            
-
-                    if (attributeKind == "Logical Type"):
-                        print("Logical Type")
-                        dataTypeID = row[14]
-                        try:
-                            datatype = datatypeMap[dataTypeID]
                             attribute = XAttribute()
                             attribute.lowerBound=0
                             attribute.upperBound=1
-                            attribute.name =amendedAttributeName
-                            attribute.type = SQLDeveloperImport.getEcoreDataTypeForDataType(self,datatype)
-                        except KeyError:
-                            print("missing datatype: ")
-                            print(dataTypeID)                       
-
-                    
-
-                    try:
-
-                        theClass = classesMap[classID]
-                        theClass.members.extend([attribute])
-
-                    except:
-                        print( "missing class2: " )
-                        print(classID)
+                            if(theEnum.name == "String"):
+                                attribute.name = theAttributeName
+                                attribute.type = xString
+                                
+                            elif(theEnum.name == "Number"):
+                                attribute.name = theAttributeName
+                                attribute.type = xDouble
+                            # This is a common domain used for String identifiers in BIRD in SQLDeveloper
+                            elif(theEnum.name == "String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1"):
+                                attribute.name = theAttributeName
+                                attribute.type = xString
+                                    
+                            else:
+                                attribute.name = theAttributeName
+                                attribute.type = theEnum  
+                            
+                            if classIsDerived:
+                                operation = XOperation()
+                                operation.lowerBound=0
+                                operation.upperBound=1
+                                if(theEnum.name == "String"):
+                                    operation.name = theAttributeName
+                                    operation.type = xString
+                                    
+                                elif(theEnum.name == "Number"):
+                                    operation.name = theAttributeName
+                                    operation.type = xDouble
+                                # This is a common domain used for String identifiers in BIRD in SQLDeveloper
+                                elif(theEnum.name == "String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1"):
+                                    operation.name = theAttributeName
+                                    operation.type = xString
+                                        
+                                else:
+                                    operation.name = theAttributeName
+                                    operation.type = theEnum  
+                                          
+    
+                        if (attributeKind == "Logical Type"):
+                            print("Logical Type")
+                            dataTypeID = row[14]
+                            try:
+                                datatype = datatypeMap[dataTypeID]
+                                attribute = XAttribute()
+                                attribute.lowerBound=0
+                                attribute.upperBound=1
+                                attribute.name =amendedAttributeName
+                                attribute.type = SQLDeveloperImport.getEcoreDataTypeForDataType(self,datatype)
+                                
+                                if classIsDerived:
+                                    operation = XOperation()
+                                    operation.lowerBound=0
+                                    operation.upperBound=1
+                                    operation.name =amendedAttributeName
+                                    operation.type = SQLDeveloperImport.getEcoreDataTypeForDataType(self,datatype)
+                                
+                            except KeyError:
+                                print("missing datatype: ")
+                                print(dataTypeID)                       
+    
+                        
+    
+                        try:
+    
+                            theClass = classesMap[classID]
+                            theClass.members.extend([attribute])
+                            if classIsDerived:
+                                 theClass.members.extend([operation])
+    
+                        except:
+                            print( "missing class2: " )
+                            print(classID)
                         
         #remove any attributes that already exist in superclass.
 
@@ -453,22 +505,20 @@ class SQLDeveloperImport(object):
                     if (not (theClass is None) ) :                 
                         theClass.members.append(eReference)
                    
-        SQLDeveloperImport.saveModelAsXMIFile(self, moduleList, outputDirectory )  
-        SQLDeveloperImport.saveModelAsRPMNFile(self, moduleList, outputDirectory ) 
+        SQLDeveloperImport.saveModelAsXMIFile(self, rpmnPackage, outputDirectory )  
+        SQLDeveloperImport.saveModelAsRPMNFile(self, rpmnPackage, outputDirectory ) 
 
         
-    def saveModelAsRPMNFile(self, moduleList, outputDirectory ):
-        f = open(outputDirectory + 'data_model.rpmn', "a")
-        f.write("ModuleList{\r")
-        f.write("\t modules{ \r")
-        for datamodel in moduleList.modules:
-            
-            f.write("\t\t EntityModule " + datamodel.name +"  { \r")
-            f.write("\t\t package " + datamodel.package.name + "\r")    
-            for classifier in  datamodel.package.classifiers:
+    def saveModelAsRPMNFile(self, rpmnPackage, outputDirectory ):
+        
+            f = open(outputDirectory + 'data_model.rpmn', "a")
+            f.write("\t\t package " + rpmnPackage.name + "\r")    
+            for classifier in  rpmnPackage.classifiers:
                 if isinstance(classifier,XClass):
-
-                    f.write("\t\t\tclass " + classifier.name)
+                    f.write("\t\t\t")
+                    if classifier.abstract==True:
+                        f.write("abstract ")
+                    f.write("class " + classifier.name)
                     if (hasattr(classifier, "superTypes")  and len(classifier.superTypes) > 0):
                         f.write(" extends " +  classifier.superTypes[0].name) 
                     f.write( " {\r")
@@ -499,6 +549,17 @@ class SQLDeveloperImport(object):
                                 f.write("[" + str(member.lowerBound) + ".." +str(member.upperBound) + "] ")
                             f.write(member.name)
                             f.write(" \r"  )
+                        elif isinstance(member, XOperation):
+                            f.write("\t\t\t\top " + member.type.name + " " )
+                            if member.upperBound == -1:
+                                f.write("[] ")
+                            elif ( (member.lowerBound == 0) and (member.upperBound == 1)):
+                                f.write(" ")
+                            else:
+                                f.write("[" + str(member.lowerBound) + ".." +str(member.upperBound) + "] ")
+                            f.write(member.name)
+                            f.write("() {}")
+                            f.write(" \r"  )
                             
                     f.write("\t\t\t}\r")
                 if isinstance(classifier,XEnum):
@@ -512,21 +573,17 @@ class SQLDeveloperImport(object):
                 
             f.write("\t\t\ttype Double wraps Double\r")
             f.write("\t\t\ttype String wraps String\r")    
-            f.write("\t\t  }\r")
-            
-        f.write("\t  }\r")
-        f.write("  }\r")
-        f.close()
+            f.close()
         
         
-    def saveModelAsXMIFile(self, openRegSpecs, outputDirectory ):
+    def saveModelAsXMIFile(self, rpmnPackage, outputDirectory ):
         # save model as a xmi file
         rset = ResourceSet()
         print("openRegSpecs")
-        print(openRegSpecs)
+        print(rpmnPackage)
         print("openRegSpecs")
         resource = rset.create_resource(URI(outputDirectory + 'ldm.rpmn'))  # This will create an XMI resource
-        resource.append(openRegSpecs)
+        resource.append(rpmnPackage)
         resource.save()
     
    

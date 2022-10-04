@@ -47,10 +47,9 @@ class Module(EObject, metaclass=MetaEClass):
     license = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
     version = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    dependencies = EReference(ordered=True, unique=True, containment=True, derived=False)
-    longName = EReference(ordered=True, unique=True, containment=True, derived=False)
+    dependencies = EReference(ordered=True, unique=True, containment=False, derived=False, upper=-1)
 
-    def __init__(self, *, dependencies=None, theDescription=None, license=None, name=None, version=None, longName=None):
+    def __init__(self, *, dependencies=None, theDescription=None, license=None, name=None, version=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
@@ -68,79 +67,8 @@ class Module(EObject, metaclass=MetaEClass):
         if version is not None:
             self.version = version
 
-        if dependencies is not None:
-            self.dependencies = dependencies
-
-        if longName is not None:
-            self.longName = longName
-
-
-class ModuleList(EObject, metaclass=MetaEClass):
-
-    modules = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-
-    def __init__(self, *, modules=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if modules:
-            self.modules.extend(modules)
-
-
-class ModuleLongName(EObject, metaclass=MetaEClass):
-
-    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
-
-    def __init__(self, *, name=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if name is not None:
-            self.name = name
-
-
-class ModuleDependencies(EObject, metaclass=MetaEClass):
-
-    theModules = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-
-    def __init__(self, *, theModules=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if theModules:
-            self.theModules.extend(theModules)
-
-
-class ModuleDependency(EObject, metaclass=MetaEClass):
-
-    moduleName = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    moduleVersion = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    theModule = EReference(ordered=True, unique=True, containment=False, derived=False)
-    longName = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, moduleName=None, moduleVersion=None, theModule=None, longName=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if moduleName is not None:
-            self.moduleName = moduleName
-
-        if moduleVersion is not None:
-            self.moduleVersion = moduleVersion
-
-        if theModule is not None:
-            self.theModule = theModule
-
-        if longName is not None:
-            self.longName = longName
+        if dependencies:
+            self.dependencies.extend(dependencies)
 
 
 class AllowedTypes(EObject, metaclass=MetaEClass):
@@ -436,20 +364,6 @@ class XModelElement(EObject, metaclass=MetaEClass):
         super().__init__()
 
 
-class XFunction(EObject, metaclass=MetaEClass):
-
-    functionName = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-
-    def __init__(self, *, functionName=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if functionName is not None:
-            self.functionName = functionName
-
-
 @abstract
 class FlowElementsContainer(BaseElement):
 
@@ -700,18 +614,6 @@ class WorkflowModule(Module):
             self.subProcess.extend(subProcess)
 
 
-class EntityModule(Module):
-
-    package = EReference(ordered=True, unique=True, containment=True, derived=False)
-
-    def __init__(self, *, package=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if package is not None:
-            self.package = package
-
-
 @abstract
 class XNamedElement(XModelElement):
 
@@ -723,6 +625,18 @@ class XNamedElement(XModelElement):
 
         if name is not None:
             self.name = name
+
+
+class XPackage(Module):
+
+    classifiers = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+
+    def __init__(self, *, classifiers=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if classifiers:
+            self.classifiers.extend(classifiers)
 
 
 @abstract
@@ -792,18 +706,6 @@ class XEnumLiteral(XNamedElement):
             self.enum = enum
 
 
-class XPackage(XNamedElement):
-
-    classifiers = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-
-    def __init__(self, *, classifiers=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if classifiers:
-            self.classifiers.extend(classifiers)
-
-
 @abstract
 class XTypedElement(XNamedElement):
 
@@ -865,21 +767,13 @@ class XClass(XClassifier):
 class XDataType(XClassifier):
 
     industryName = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    createBody = EReference(ordered=True, unique=True, containment=True, derived=False)
-    convertBody = EReference(ordered=True, unique=True, containment=True, derived=False)
 
-    def __init__(self, *, createBody=None, convertBody=None, industryName=None, **kwargs):
+    def __init__(self, *, industryName=None, **kwargs):
 
         super().__init__(**kwargs)
 
         if industryName is not None:
             self.industryName = industryName
-
-        if createBody is not None:
-            self.createBody = createBody
-
-        if convertBody is not None:
-            self.convertBody = convertBody
 
 
 @abstract
@@ -951,18 +845,18 @@ class XEnum(XDataType):
 
 class XOperation(XMember):
 
+    body = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     parameters = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-    body = EReference(ordered=True, unique=True, containment=True, derived=False)
 
     def __init__(self, *, parameters=None, body=None, **kwargs):
 
         super().__init__(**kwargs)
 
-        if parameters:
-            self.parameters.extend(parameters)
-
         if body is not None:
             self.body = body
+
+        if parameters:
+            self.parameters.extend(parameters)
 
 
 @abstract
