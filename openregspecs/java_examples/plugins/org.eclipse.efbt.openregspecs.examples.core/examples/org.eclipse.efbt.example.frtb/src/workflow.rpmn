@@ -1,4 +1,4 @@
-WorkflowModule  frtb_workflow_module 
+WorkflowModule  frtb_workflow_module  
 		{
 			/**  "Copyright (c) 2020 Bird Software Solutions Ltd
  All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html
@@ -8,8 +8,9 @@ SPDX-License-Identifier: EPL-2.0
  Contributors:
  Neil Mackenzie - initial API and implementation */
  	
-			annotation "dependency" as CRRRuleBook
-			
+			annotation "dependency" as CRRRuleBook 
+			annotation "dependency" as pack  
+			 
 			
 			taskTags
 			{ ActivityTag tenorTag 
@@ -20,9 +21,9 @@ SPDX-License-Identifier: EPL-2.0
 					)
 				 activity  "frtb.Derivation.PreNetting.DeltaNetting.Tenor"
 				}
-			}  
+			}   
 			subProcess { 
-			SubProcess frtb flowElements { 
+			SubProcess frtb flowElements {  
 				InclusiveGateway gateway1 outgoing ( sf2 , sf3 , sf1 ) , 
 				SubProcess "Read Data" incoming ( sf1 ) flowElements { 
 					ParallelGateway gw2 outgoing ( sf4 , sf5 , sf6 , sf7 , sf8 , sf9 ) , 
@@ -30,8 +31,8 @@ SPDX-License-Identifier: EPL-2.0
 					UserTask GIRR_risk_factor incoming ( sf5 ) entity "pack.GIRR_risk_factor" , 
 					UserTask Delta_sensitivity incoming ( sf6 ) entity "pack.Delta_sensitivity", 
 					UserTask Vega_sensitivity incoming ( sf7 ) entity "pack.Vega_sensitivity" , 
-					UserTask Position incoming ( sf8 ) , 
-					UserTask Curvature incoming ( sf9 ) entity "pack.Curvature" , 
+					UserTask Security_or_exchange_tradable_derivative_position incoming ( sf8 ) entity "pack.Security_or_exchange_tradable_derivative_position" , 
+					UserTask Curvature incoming ( sf9 ) entity "pack.Curvature" ,  
 					SequenceFlow sf4 from gw2 to Risk_factor , 
 					SequenceFlow sf5 from gw2 to GIRR_risk_factor , 
 					SequenceFlow sf6 from gw2 to Delta_sensitivity , 

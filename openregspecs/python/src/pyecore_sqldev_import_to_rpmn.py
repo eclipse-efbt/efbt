@@ -79,6 +79,12 @@ class SQLDeveloperImport(object):
                         containmentReference.lowerBound=0
                         containmentReference.containment= True
                         xclassTable.members.append(containmentReference)
+                        xclassTableOperation = XOperation()
+                        xclassTableOperation.name=xclass.name+"s"
+                        xclassTableOperation.type=xclass
+                        xclassTableOperation.upperBound = -1
+                        xclassTableOperation.lowerBound=0
+                        xclassTable.members.append(xclassTableOperation)
                         rpmnPackage.classifiers.extend([xclass])
                         rpmnPackage.classifiers.extend([xclassTable])
                     elif(className.startswith("OUTPUT_LAYER_")):
@@ -677,7 +683,7 @@ class SQLDeveloperImport(object):
         return xString
         
 if __name__ == '__main__':
-    SQLDeveloperImport().convert('C:\\Users\\Neil\\freebirdtools-develop-sep6\\git\\efbt\\openregspecs\\python\\resources','C:\\Users\\Neil\\freebirdtools-develop-sep6\\git\\efbt\\openregspecs\\python\\results\\')
+    SQLDeveloperImport().convert('C:\\Users\\Neil\\freebirdtools-develop-sep22\\git\\efbt\\openregspecs\\python\\resources','C:\\Users\\Neil\\freebirdtools-develop-sep22\\git\\efbt\\openregspecs\\python\\results\\')
     
             
             
