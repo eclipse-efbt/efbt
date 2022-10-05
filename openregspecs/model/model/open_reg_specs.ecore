@@ -480,18 +480,11 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="XOperation" eSuperTypes="#//XMember">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1"
-        eType="#//XParameter" containment="true" resolveProxies="false" eOpposite="#//XParameter/operation"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="#//XFunction"
-        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="body" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="XPackage" eSuperTypes="#//XNamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="classifiers" upperBound="-1"
         eType="#//XClassifier" containment="true" eOpposite="#//XClassifier/package"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="XParameter" eSuperTypes="#//XTypedElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="operation" eType="#//XOperation"
-        changeable="false" transient="true" resolveProxies="false" eOpposite="#//XOperation/parameters"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="XReference" eSuperTypes="#//XStructuralFeature">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="containment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
