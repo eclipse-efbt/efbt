@@ -34,7 +34,7 @@ package «xpackage.name»
 «FOR xclass : resource.allContents.filter(XClass).toIterable»
 «IF xclass.abstract»abstract «ENDIF»class «xclass.name» «IF xclass.superTypes.length == 1» extends «xclass.superTypes.get(0).name» «ENDIF»{
 «FOR xmember : xclass.members»  
-«IF xmember instanceof XAttribute» 	«IF xmember.ID»id «ENDIF»«xmember.type.name» «IF xmember.upperBound == -1»[]  «ELSEIF !((xmember.lowerBound == 0) && (xmember.upperBound == 1)) »[«xmember.lowerBound»..«xmember.upperBound»]«ENDIF» «xmember.name»«xmember.type.name» «ENDIF»
+«IF xmember instanceof XAttribute» 	«IF xmember.ID»id «ENDIF»«xmember.type.name» «IF xmember.upperBound == -1»[]  «ELSEIF !((xmember.lowerBound == 0) && (xmember.upperBound == 1)) »[«xmember.lowerBound»..«xmember.upperBound»]«ENDIF» «xmember.name» «ENDIF»
 «IF xmember instanceof XReference» 	«IF xmember.containment»contains «ELSE»refers«ENDIF» «xmember.type.name» «IF xmember.upperBound == -1»[]  «ELSEIF !((xmember.lowerBound == 0) && (xmember.upperBound == 1)) »[«xmember.lowerBound»..«xmember.upperBound»]«ENDIF» «xmember.name»«ENDIF»	
 «IF xmember instanceof XOperation» 	op «xmember.type.name» «IF xmember.upperBound == -1»[]  «ELSEIF !((xmember.lowerBound == 0) && (xmember.upperBound == 1)) »[«xmember.lowerBound»..«xmember.upperBound»]«ENDIF» «xmember.name»() 
 	{
@@ -95,7 +95,7 @@ public class JavaRunner {
 		    ResourceSet resSet = new ResourceSetImpl();
 «var counter = 0» 
 «FOR userTask : resource.allContents.filter(UserTask).toIterable»
-Resource resource«counter++»  = resSet.getResource(URI.createURI("«userTask.name»_BaseTable.xmi"), true);
+Resource resource«counter++»  = resSet.getResource(URI.createURI("«userTask.entity.name»_BaseTable.xmi"), true);
 «ENDFOR»
 try {
 «var counter2 = 0» 	
@@ -111,8 +111,9 @@ catch (IOException e) {
 «var counter3 = 0» 	
 «FOR userTask3 : resource.allContents.filter(UserTask).toIterable»
 
-«userTask3.name»_BaseTable «userTask3.name»_BaseTable1 = («userTask3.name»_BaseTable) resource«counter3++».getContents().get(0);
-«ENDFOR»	
+«userTask3.entity.name»_BaseTable «userTask3.entity.name»_BaseTable1 = («userTask3.entity.name»_BaseTable) resource«counter3++».getContents().get(0);
+«ENDFOR»
+«var counter4 = 0»	
 «FOR serviceTask : resource.allContents.filter(ServiceTask).toIterable»	 
 «IF serviceTask.enrichedAttribute.ID »
 «var tableName = serviceTask.enrichedAttribute.containingClass.name»
@@ -120,17 +121,13 @@ catch (IOException e) {
 «IF derived »
 «tableName»_DerivedTable «tableName»_DerivedTable1 = «capatilisedPackageNme»Factory.eINSTANCE.create«tableName»_DerivedTable();
 «var sourceTable1Name = ""»	
-«var sourceTable2Name = ""»	
-«FOR member : serviceTask.enrichedAttribute.containingClass.members»
-«IF member instanceof XReference »	«sourceTable1Name = member.type.name»«ENDIF»
-«IF ((member instanceof XReference) && !(sourceTable1Name == "")) »	«sourceTable2Name = member.type.name»«ENDIF»			 
-«tableName»_DerivedTable1.setSourceTable1(«sourceTable1Name»1);
-«IF !(sourceTable2Name == "")»	«tableName»1.setSourceTable1(«sourceTable1Name»1);«ENDIF»	
-EList<«tableName»> details = «tableName»1.«tableName»_op();
-«tableName»1.get«tableName.substring(0,tableName.length - 13 )»().addAll(details);
-		    
-«ENDFOR» 
-«ENDIF»		    
+«FOR member : (serviceTask.enrichedAttribute.eContainer as XClass).members»
+«IF ((member instanceof XReference) && (sourceTable1Name == ""))» «tableName»_DerivedTable1.setSourceTable1(«sourceTable1Name = member.type.name»_BaseTable1);
+«ELSEIF ((member instanceof XReference) && !(sourceTable1Name == "")) » «tableName»_DerivedTable1.setSourceTable2(«member.type.name»_BaseTable1);«ENDIF»
+«ENDFOR»			 
+EList<«tableName»> details«counter4» 	 = «tableName»_DerivedTable1.«tableName»s();
+«tableName»_DerivedTable1.get«tableName»s().addAll(details«counter4++»);
+«ENDIF»
 «ENDIF»
 «ENDFOR»
 // save netted_delta_sensitivities_per_risk_factor_and_tenor_derived_DerivedTable
@@ -138,11 +135,11 @@ EList<«tableName»> details = «tableName»1.«tableName»_op();
 «FOR serviceTask : resource.allContents.filter(ServiceTask).toIterable»	 
 «IF serviceTask.enrichedAttribute.ID »
 «var tableName = serviceTask.enrichedAttribute.containingClass.name»
-«var derived = tableName.endsWith("derived_DerivedTable")»
+«var derived = tableName.endsWith("derived")»
 «IF derived »
 	        
-	        Resource «tableName»Resource = resourceSet2.createResource(URI.createFileURI("«tableName»1.xmi"));
-	        xmiResource.getContents().add(«tableName»1);
+	        Resource «tableName»Resource = resourceSet2.createResource(URI.createFileURI("«tableName»_DerivedTable1.xmi"));
+	        «tableName»Resource.getContents().add(«tableName»_DerivedTable1);
 	        try {
 				«tableName»Resource.save(null);
 			} catch (IOException e) {
