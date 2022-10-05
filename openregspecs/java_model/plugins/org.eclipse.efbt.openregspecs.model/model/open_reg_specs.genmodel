@@ -214,14 +214,10 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//XNamedElement/name"/>
     </genClasses>
     <genClasses ecoreClass="open_reg_specs.ecore#//XOperation">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//XOperation/parameters"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//XOperation/body"/>
     </genClasses>
     <genClasses ecoreClass="open_reg_specs.ecore#//XPackage">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//XPackage/classifiers"/>
-    </genClasses>
-    <genClasses ecoreClass="open_reg_specs.ecore#//XParameter">
-      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference open_reg_specs.ecore#//XParameter/operation"/>
     </genClasses>
     <genClasses ecoreClass="open_reg_specs.ecore#//XReference">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//XReference/containment"/>

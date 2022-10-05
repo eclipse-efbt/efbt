@@ -163,7 +163,7 @@ XOperation returns open_reg_specs::XOperation:
 	'op'
 	type=[open_reg_specs::XClassifier|EString] ("["((  lowerBound=EInt) ".." ( upperBound=EInt))?  "]")?
 	name=ID
-	'(' (parameters+=XParameter (',' parameters+=XParameter)*)? ')'
+	'()'
 	'{'(body=EString)?'}'
 	;
 
@@ -175,12 +175,6 @@ XReference returns open_reg_specs::XReference:
 	type=[open_reg_specs::XClassifier|EString] ("["((  lowerBound=EInt) ".." ( upperBound=EInt))?  "]")?
 	name=ID
 	;
-
-XParameter returns open_reg_specs::XParameter:
-	{open_reg_specs::XParameter}
-	type=[open_reg_specs::XClassifier|EString] ("["((  lowerBound=EInt) ".." ( upperBound=EInt))?  "]")?
-	name=ID;
-
 
 
 XEnumLiteral returns open_reg_specs::XEnumLiteral:

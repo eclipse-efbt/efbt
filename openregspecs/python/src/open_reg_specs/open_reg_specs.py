@@ -790,19 +790,6 @@ class XMember(XTypedElement):
             self.containingClass = containingClass
 
 
-class XParameter(XTypedElement):
-
-    operation = EReference(ordered=True, unique=True, containment=False,
-                           derived=False, transient=True)
-
-    def __init__(self, *, operation=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if operation is not None:
-            self.operation = operation
-
-
 class Task(Activity):
 
     def __init__(self, **kwargs):
@@ -846,17 +833,13 @@ class XEnum(XDataType):
 class XOperation(XMember):
 
     body = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    parameters = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
-    def __init__(self, *, parameters=None, body=None, **kwargs):
+    def __init__(self, *, body=None, **kwargs):
 
         super().__init__(**kwargs)
 
         if body is not None:
             self.body = body
-
-        if parameters:
-            self.parameters.extend(parameters)
 
 
 @abstract

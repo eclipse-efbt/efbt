@@ -29,24 +29,24 @@ class OpenRegSpecsGenerator extends AbstractGenerator {
 package «xpackage.name»
 «ENDFOR»
 «FOR xclass : resource.allContents.filter(XClass).toIterable»
-    «IF xclass.abstract»abstract «ENDIF»class «xclass.name» «IF xclass.superTypes.length == 1» extends «xclass.superTypes.get(0)» «ENDIF»
-	«FOR xmember : xclass.members»  
-		«IF xmember instanceof XAttribute» «IF xmember.ID»id «ENDIF» «xmember.type.name» «ENDIF»
-		«IF xmember instanceof XReference» «IF xmember.containment»contains «ELSE»refers«ENDIF» «xmember.type.name» «IF xmember.upperBound == -1»[]  «ELSEIF !((xmember.lowerBound == 0) && (xmember.upperBound == 1)) »[«xmember.lowerBound»,«xmember.upperBound»] «xmember.name»«ENDIF»«ENDIF»	
-		«IF xmember instanceof XEnum» enum «xmember.name» {
-			«FOR xliteral : xmember.literals»  «xliteral.name»  as «xliteral.literal»  = «xliteral.value» «ENDFOR» 
-		  
-		}«ENDIF»	
-		«IF xmember instanceof XOperation» op «xmember.name» «xmember.type.name» «IF xmember.upperBound == -1»[]  «ELSEIF !((xmember.lowerBound == 0) && (xmember.upperBound == 1)) »[«xmember.lowerBound»,«xmember.upperBound»] «xmember.name»«ENDIF» () {
-			 {
-			 	«xmember.body»
-			 }
-		}«ENDIF»
-		
-	«ENDFOR»  
+«IF xclass.abstract»abstract «ENDIF»class «xclass.name» «IF xclass.superTypes.length == 1» extends «xclass.superTypes.get(0).name» «ENDIF»{
+«FOR xmember : xclass.members»  
+«IF xmember instanceof XAttribute» 	«IF xmember.ID»id «ENDIF»«xmember.type.name» «IF xmember.upperBound == -1»[]  «ELSEIF !((xmember.lowerBound == 0) && (xmember.upperBound == 1)) »[«xmember.lowerBound»..«xmember.upperBound»]«ENDIF» «xmember.name»«xmember.type.name» «ENDIF»
+«IF xmember instanceof XReference» 	«IF xmember.containment»contains «ELSE»refers«ENDIF» «xmember.type.name» «IF xmember.upperBound == -1»[]  «ELSEIF !((xmember.lowerBound == 0) && (xmember.upperBound == 1)) »[«xmember.lowerBound»..«xmember.upperBound»]«ENDIF» «xmember.name»«ENDIF»	
+«IF xmember instanceof XOperation» 	op «xmember.type.name» «IF xmember.upperBound == -1»[]  «ELSEIF !((xmember.lowerBound == 0) && (xmember.upperBound == 1)) »[«xmember.lowerBound»..«xmember.upperBound»]«ENDIF» «xmember.name»() 
+	{
+	 	«IF xmember.body !== null»«xmember.body»«ENDIF»
+	}
+	«ENDIF»«ENDFOR» 
+}
+«ENDFOR»
+«FOR xEnum : resource.allContents.filter(XEnum).toIterable»
+enum «xEnum.name» {«FOR xliteral : xEnum.literals»  «xliteral.name»  as "«xliteral.literal»"  = «xliteral.value» «ENDFOR»}
 «ENDFOR»
 «FOR xDataType : resource.allContents.filter(XDataType).toIterable»
+«IF !(xDataType instanceof XEnum)»
 type  «xDataType.name» wraps «xDataType.name» 
+«ENDIF»	
 «ENDFOR»
         ''')
 	}
