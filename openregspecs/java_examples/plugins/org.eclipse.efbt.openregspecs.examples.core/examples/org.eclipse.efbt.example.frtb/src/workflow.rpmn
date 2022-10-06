@@ -9,7 +9,7 @@ SPDX-License-Identifier: EPL-2.0
  Neil Mackenzie - initial API and implementation */
  	
 			annotation "dependency" as CRRRuleBook 
-			annotation "dependency" as pack  
+			annotation "dependency" as pack     
 			 
 			
 			taskTags
@@ -37,7 +37,7 @@ SPDX-License-Identifier: EPL-2.0
 					SequenceFlow sf5 from gw2 to GIRR_risk_factor , 
 					SequenceFlow sf6 from gw2 to Delta_sensitivity , 
 					SequenceFlow sf7 from gw2 to Vega_sensitivity , 
-					SequenceFlow sf8 from gw2 to Position , 
+					SequenceFlow sf8 from gw2 to Security_or_exchange_tradable_derivative_position , 
 					SequenceFlow sf9 from gw2 to Curvature
 				} , 
 				SubProcess Derivation incoming ( sf2 ) flowElements {
@@ -45,26 +45,20 @@ SPDX-License-Identifier: EPL-2.0
 					SubProcess PreNetting incoming ( sf10 ) flowElements { 
 						ParallelGateway gw4 outgoing ( sf12 , sf13 ) , 
 						SubProcess DeltaNetting incoming ( sf12 ) flowElements { 
-							InclusiveGateway gw8 outgoing (  sf27 , sf28 ) ,
+							InclusiveGateway gw8 outgoing ( sf226, sf27 , sf28 ) ,
+							ServiceTask Netted_delta_sensitivities_identifier incoming ( sf226 ) enrichedAttribute "pack.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.Netted_delta_sensitivities_identifier"
+								} , 
 							ServiceTask Tenor incoming ( sf27 ) enrichedAttribute "pack.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.Tenor"
-						scenarios {
+							scenarios {
 									Scenario  primary_scenario {
-										requiredAttributes ( "pack.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.theDelta_sensitivitys",
-											"pack.Delta_sensitivity.Tenor",
-											"pack.Risk_measure.theRisk_factor",
-											"pack.Risk_measure.Risk_measure_identifier",
-											 "pack.Risk_factor.Risk_factor_Identifier" ,
-											"pack.GIRR_risk_factor.GIRR_risk_factor_type")    
+										requiredAttributes ( 
+											"pack.Delta_sensitivity.Tenor"
+											)    
 										data_constraints conditional 
 										"pack.GIRR_risk_factor.GIRR_risk_factor_type" not_equals member  "pack.GIRR_risk_factor_type.Inflation" },
 										
 										Scenario inflation_risk_factor  {
-											requiredAttributes ( "pack.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.theDelta_sensitivitys",
-											"pack.Delta_sensitivity.Tenor",
-											"pack.Risk_measure.theRisk_factor",
-											"pack.Risk_measure.Risk_measure_identifier",
-											 "pack.Risk_factor.Risk_factor_Identifier" ,
-											"pack.GIRR_risk_factor.GIRR_risk_factor_type") 
+											
 										data_constraints conditional 
 										 "pack.GIRR_risk_factor.GIRR_risk_factor_type" equals member  "pack.GIRR_risk_factor_type.Inflation"
 										
@@ -73,14 +67,12 @@ SPDX-License-Identifier: EPL-2.0
 						} }, ServiceTask Netted_delta_sensitivities incoming ( sf28 ) enrichedAttribute "pack.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.Netted_delta_sensitivities"
 						scenarios { 
 							 	Scenario Netted_delta_sensitivities_primary_sceanrio {
-							 		requiredAttributes ( "pack.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.theDelta_sensitivitys",
-											"pack.Delta_sensitivity.Delta_sensitivity" ,
-											"pack.Delta_sensitivity.Currency_of_record",
-											"pack.Risk_measure.Risk_measure_identifier")   
+							 		requiredAttributes (
+											"pack.Delta_sensitivity.Delta_sensitivity")   
 							 		} 
 						 
 				} } , 
-				
+				SequenceFlow sf226 from gw8 to Netted_delta_sensitivities_identifier , 
 				SequenceFlow sf27 from gw8 to Tenor , 
 				SequenceFlow sf28 from gw8 to Netted_delta_sensitivities } , 
 				SubProcess VegaNetting incoming ( sf13 ) , 
@@ -123,11 +115,13 @@ SPDX-License-Identifier: EPL-2.0
 												SequenceFlow sf45 from gw13 to Sensitivities_correlated_and_aggregated_bucket_identifier , 
 												SequenceFlow sf46 from gw13 to GIRR_delta_correlated_value_per_bucket } , 
 												SubProcess DeltaCreateSquares incoming ( sf35 ) flowElements { 
-													InclusiveGateway gw14 outgoing (  sf43 , sf44 ) , 		
+													InclusiveGateway gw14 outgoing (  sf243 ,sf43 , sf44 ) , 		
 													
-											 ServiceTask Total_GIRR_delta_sensitivity_per_bucket incoming ( sf43 ) enrichedAttribute "pack.Total_delta_sensitivity_per_bucket_derived.Total_GIRR_delta_sensitivity_per_bucket" } , 
-													ServiceTask Total_GIRR_delta_sensitivity_squared_per_bucket incoming ( sf44 ) enrichedAttribute "pack.Total_delta_sensitivity_per_bucket_derived.Total_GIRR_delta_sensitivity_squared_per_bucket" } , 
+											 		ServiceTask Total_GIRR_delta_sensitivity_per_bucket_identifier incoming ( sf243 ) enrichedAttribute "pack.Total_delta_sensitivity_per_bucket_derived.Total_sensitivities_bucket_identifier" } , 
+											 		ServiceTask Total_GIRR_delta_sensitivity_per_bucket incoming ( sf43 ) enrichedAttribute "pack.Total_delta_sensitivity_per_bucket_derived.Total_GIRR_delta_sensitivity_per_bucket" } , 
+													ServiceTask Total_GIRR_delta_sensitivity_squared_per_bucket incoming ( sf44 ) enrichedAttribute "pack.Total_delta_sensitivity_per_bucket_derived.Total_GIRR_delta_sensitivity_squared_per_bucket" } ,  
 													
+													SequenceFlow sf243 from gw14 to Total_GIRR_delta_sensitivity_per_bucket_identifier , 
 													SequenceFlow sf43 from gw14 to Total_GIRR_delta_sensitivity_per_bucket , 
 													SequenceFlow sf44 from gw14 to Total_GIRR_delta_sensitivity_squared_per_bucket } , 
 													SequenceFlow sf34 from gw12 to DeltaCreateCorrelatedPairs , SequenceFlow sf35 from gw12 to DeltaCreateSquares } , 

@@ -115,21 +115,26 @@ catch (IOException e) {
 «ENDFOR»
 «var counter4 = 0»	
 «FOR serviceTask : resource.allContents.filter(ServiceTask).toIterable»	 
-«IF serviceTask.enrichedAttribute.ID »
+
 «var tableName = serviceTask.enrichedAttribute.containingClass.name»
 «var derived = tableName.endsWith("derived")»
 «IF derived »
+«IF serviceTask.enrichedAttribute.ID »
 «tableName»_DerivedTable «tableName»_DerivedTable1 = «capatilisedPackageNme»Factory.eINSTANCE.create«tableName»_DerivedTable();
 «var sourceTable1Name = ""»	
 «FOR member : (serviceTask.enrichedAttribute.eContainer as XClass).members»
-«IF ((member instanceof XReference) && (sourceTable1Name == ""))» «tableName»_DerivedTable1.setSourceTable1(«sourceTable1Name = member.type.name»_BaseTable1);
-«ELSEIF ((member instanceof XReference) && !(sourceTable1Name == "")) » «tableName»_DerivedTable1.setSourceTable2(«member.type.name»_BaseTable1);«ENDIF»
-«ENDFOR»			 
+«IF ((member instanceof XReference) && (sourceTable1Name == ""))» «tableName»_DerivedTable1.setSourceTable1(«sourceTable1Name = member.type.name»«IF member.type.name.endsWith("derived")»_DerivedTable1«ELSE»_BaseTable1«ENDIF»);
+«ELSEIF ((member instanceof XReference) && !(sourceTable1Name == "")) » «tableName»_DerivedTable1.setSourceTable2(«member.type.name»«IF member.type.name.endsWith("derived")»_DerivedTable1«ELSE»_BaseTable1«ENDIF»);
 EList<«tableName»> details«counter4» 	 = «tableName»_DerivedTable1.«tableName»s();
-«tableName»_DerivedTable1.get«tableName»s().addAll(details«counter4++»);
-«ENDIF»
+«tableName»_DerivedTable1.get«tableName»s().addAll(details«counter4»);
+for («tableName» «tableName»1 : details«counter4++») {«ENDIF»
+«ENDFOR»
+«ENDIF»			 
+«IF (serviceTask.enrichedAttribute instanceof XAttribute) » «tableName»1.set«serviceTask.enrichedAttribute.name»(«tableName»1.«serviceTask.enrichedAttribute.name»_default());«ENDIF»
+
 «ENDIF»
 «ENDFOR»
+}
 // save netted_delta_sensitivities_per_risk_factor_and_tenor_derived_DerivedTable
 		    final ResourceSet resourceSet2 = new ResourceSetImpl();
 «FOR serviceTask : resource.allContents.filter(ServiceTask).toIterable»	 

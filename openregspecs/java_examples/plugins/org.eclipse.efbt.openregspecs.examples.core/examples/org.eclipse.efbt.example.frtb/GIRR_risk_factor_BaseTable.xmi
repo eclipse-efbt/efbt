@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pack:GIRR_risk_factor_BaseTable xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pack="pack" xsi:schemaLocation="pack datamodel.xcore#/EPackage">
+  <GIRR_risk_factors Risk_factor_Identifier="GIRR_Risk_Factor1" GIRR_risk_factor_type="Yield" Main_currency="USD"/>
+  <GIRR_risk_factors Risk_factor_Identifier="GIRR_Risk_Factor2" GIRR_risk_factor_type="Yield" Main_currency="USD"/>
+</pack:GIRR_risk_factor_BaseTable>

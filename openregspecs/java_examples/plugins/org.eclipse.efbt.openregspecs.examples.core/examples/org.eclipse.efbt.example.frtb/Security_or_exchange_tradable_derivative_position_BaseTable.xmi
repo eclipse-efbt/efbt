@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pack:Security_or_exchange_tradable_derivative_position_BaseTable xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pack="pack" xsi:schemaLocation="pack datamodel.xcore#/EPackage">
+  <Security_or_exchange_tradable_derivative_positions Position_identifier="position1"/>
+  <Security_or_exchange_tradable_derivative_positions Position_identifier="position2"/>
+</pack:Security_or_exchange_tradable_derivative_position_BaseTable>
