@@ -169,14 +169,21 @@ class SQLDeveloperImport(object):
                     try:
                         counter=counter+1
                         enumID = row[0]
+                        enumUsedName = row[3]
                         enumName = row[5]
                         adaptedEnumName = SQLDeveloperImport.replaceSpaceWithUnderscore(self,enumName)
                         value = row[4]
                         adaptedValue = SQLDeveloperImport.replaceSpaceWithUnderscore(self,value)
                         try:
                             theEnum = enumMap[enumID]
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue ):
+                                adaptedValue = adaptedValue +"_2"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_2" ):
+                                adaptedValue = adaptedValue +"_3"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_3" ):
+                                adaptedValue = adaptedValue +"_4"
                             enumLiteral = XEnumLiteral()
-                            enumLiteral.name = adaptedValue
+                            enumLiteral.name = enumUsedName
                             enumLiteral.literal = adaptedValue
                             enumLiteral.value = counter
                             theEnum.literals.extend([enumLiteral])
@@ -578,7 +585,7 @@ class SQLDeveloperImport(object):
                     
                     f.write(" { ")  
                     for theLiteral in classifier.literals:
-                        f.write(" " + theLiteral.name + " as \"" + theLiteral.literal + "\" = " + str(theLiteral.value)  )
+                        f.write(" " + theLiteral.literal+ " as \"" + theLiteral.name + "\" = " + str(theLiteral.value)  )
                         
                     f.write(" }\r")
                 
@@ -675,7 +682,7 @@ class SQLDeveloperImport(object):
     def containsLiteral(self,members,adaptedValue):
         contains = False;
         for eEnumLiteral in members:
-            if (eEnumLiteral.name == adaptedValue):
+            if (eEnumLiteral.literal == adaptedValue):
                 contains = True
 
         return contains
