@@ -316,14 +316,14 @@ class SQLDeveloperImport(object):
                                 attribute.lowerBound=0
                                 attribute.upperBound=1
                                 attribute.name =amendedAttributeName
-                                attribute.type = SQLDeveloperImport.getEcoreDataTypeForDataType(self,datatype)
+                                attribute.type = SQLDeveloperImport.getEcoreDataTypeForDataType(self,datatypeMap,datatype,xString)
                                 
                                 if classIsDerived:
                                     operation = XOperation()
                                     operation.lowerBound=0
                                     operation.upperBound=1
                                     operation.name =amendedAttributeName
-                                    operation.type = SQLDeveloperImport.getEcoreDataTypeForDataType(self,datatype)
+                                    operation.type = SQLDeveloperImport.getEcoreDataTypeForDataType(self,datatypeMap,datatype,xString)
                                 
                             except KeyError:
                                 print("missing datatype: ")
@@ -430,7 +430,12 @@ class SQLDeveloperImport(object):
                                     sourceTablesReference.containment= False
                                     theSourceTable.members.append(sourceTablesReference)
                         else:
-                            eReference = XReference(referenceName, targetClass, upper=1, lower=0, containment=False)
+                            eReference  = XReference()
+                            eReference.name=referenceName
+                            eReference.type=targetClass
+                            eReference.upperBound = 1
+                            eReference.lowerBound=0
+                            eReference.containment= False
                             if (theClass.name.endswith("_derived")):
                                 theSourceTable = tableMap[theClass]
                                 theTargetTable = tableMap[targetClass]
@@ -636,7 +641,12 @@ class SQLDeveloperImport(object):
                 .replace('<', '_').replace('\"', '_').replace(';', '_').replace('$', '_').replace('=', '_').replace('#', '_') \
                 .replace('&', '_').replace('%', '_').replace('[', '_').replace(']', '_') \
                 .replace( chr(0x2019), '_').replace( chr(65533), '_') \
-                .replace(chr(0x2018), '_').replace(chr(0x0060), '_').replace(chr(0x00B4), '_')
+                .replace(chr(0x2018), '_').replace(chr(0x0060), '_').replace(chr(0x00B4), '_') \
+                .replace(chr(0x00E9), 'e').replace(chr(0x00E7), 'c').replace(chr(0x00FC), 'u').replace(chr(0x00F6), 'o') \
+                .replace(chr(0x200B), '_').replace(chr(0x202F), '_').replace(chr(0x205F), '_').replace(chr(0x3000), '_') \
+                .replace(chr(0x2000), '_').replace(chr(0x2001), '_').replace(chr(0x2002), '_').replace(chr(0x2003), '_') \
+                .replace(chr(0x2004), '_').replace(chr(0x2005), '_').replace(chr(0x2006), '_').replace(chr(0x2007), '_') \
+                .replace(chr(0x2008), '_').replace(chr(0x2009), '_').replace(chr(0x200A), '_').replace(chr(0x00A0), '_')
              
         return newClassName;
 
@@ -678,7 +688,7 @@ class SQLDeveloperImport(object):
             
         return returnDomain
     
-    def getEcoreDataTypeForDataType(self,domainDataTypeMap,datatype):
+    def getEcoreDataTypeForDataType(self,domainDataTypeMap,datatype,xString):
 
         return xString
         
