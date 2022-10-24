@@ -12,44 +12,44 @@ SPDX-License-Identifier: EPL-2.0
 				
 				select SelectClause  { 
 					columns {
-					SelectColumnMember   "pack.Approach_For_Prudential_Purposes.Sensitivities_Based_Method" as "pack.OUTPUT_LAYER_FRTB.Approach_For_Prudential_Purposes",
-					SelectColumnMember "pack.Base.Memorandum_Items" as "pack.OUTPUT_LAYER_FRTB.Base",
-					SelectColumnMember  "pack.Main_Catagory.Instruments_Subject_To_Market_Risk" as "pack.OUTPUT_LAYER_FRTB.Main_Catagory",
-					SelectColumnMember  "pack.Prudential_Portfolio.Banking_And_Trading_Book" as "pack.OUTPUT_LAYER_FRTB.Prudentia_lPortfolio",
-					SelectColumnAttribute "pack.Delta_sensitivity.Delta_sensitivity" as "pack.OUTPUT_LAYER_FRTB.Sensitivity_To_Delta_Risk_Factors",
-					SelectColumnMember  "pack.Type_And_Nature_Of_Sensitivity.Positive_Sensitivity_Gross_Per_Risk_Class_Unweighted" as "pack.OUTPUT_LAYER_FRTB.Type_And_Nature_Of_Sensitivity",
-					SelectColumnMember  "pack.Type_Of_Risk.GIRR" as "pack.OUTPUT_LAYER_FRTB.Type_Of_Risk"
+					SelectColumnMember   "bird.Approach_For_Prudential_Purposes.Sensitivities_Based_Method" as "bird.OUTPUT_LAYER_FRTB.Approach_For_Prudential_Purposes",
+					SelectColumnMember "bird.Base.Memorandum_Items" as "bird.OUTPUT_LAYER_FRTB.Base",
+					SelectColumnMember  "bird.Main_Catagory.Instruments_Subject_To_Market_Risk" as "bird.OUTPUT_LAYER_FRTB.Main_Catagory",
+					SelectColumnMember  "bird.Prudential_Portfolio.Banking_And_Trading_Book" as "bird.OUTPUT_LAYER_FRTB.Prudentia_lPortfolio",
+					SelectColumnAttribute "bird.Delta_sensitivity.Delta_sensitivity" as "bird.OUTPUT_LAYER_FRTB.Sensitivity_To_Delta_Risk_Factors",
+					SelectColumnMember  "bird.Type_And_Nature_Of_Sensitivity.Positive_Sensitivity_Gross_Per_Risk_Class_Unweighted" as "bird.OUTPUT_LAYER_FRTB.Type_And_Nature_Of_Sensitivity",
+					SelectColumnMember  "bird.Type_Of_Risk.GIRR" as "bird.OUTPUT_LAYER_FRTB.Type_Of_Risk"
 					} }
 					
-					where condition  "pack.Delta_sensitivity.Delta_sensitivity" greater_than value "0" 
+					where condition  "bird.Delta_sensitivity.Delta_sensitivity" greater_than value "0" 
 					selectionLayer "frtb_workflow_module.frtb.Report Generation.FRTB_C91.GIRR_LongDeltaSensitivity_Layer" ,
 					
 				View GIRR_ShortDeltaSensitivity_View 
 				
 				select  SelectClause {
 					columns { 
-					SelectColumnMember "pack.Approach_For_Prudential_Purposes.Sensitivities_Based_Method" as "pack.OUTPUT_LAYER_FRTB.Approach_For_Prudential_Purposes",
-					SelectColumnMember "pack.Base.Memorandum_Items" as "pack.OUTPUT_LAYER_FRTB.Base",
-					SelectColumnMember "pack.Main_Catagory.Instruments_Subject_To_Market_Risk" as "pack.OUTPUT_LAYER_FRTB.Main_Catagory",
-					SelectColumnMember "pack.Prudential_Portfolio.Banking_And_Trading_Book" as "pack.OUTPUT_LAYER_FRTB.Prudentia_lPortfolio",
-					SelectColumnAttribute  "pack.Delta_sensitivity.Delta_sensitivity" as "pack.OUTPUT_LAYER_FRTB.Sensitivity_To_Delta_Risk_Factors",
-					SelectColumnMember   "pack.Type_And_Nature_Of_Sensitivity.Positive_Sensitivity_Gross_Per_Risk_Class_Unweighted" as "pack.OUTPUT_LAYER_FRTB.Type_And_Nature_Of_Sensitivity",
-					SelectColumnMember  "pack.Type_Of_Risk.GIRR" as "pack.OUTPUT_LAYER_FRTB.Type_Of_Risk"
+					SelectColumnMember "bird.Approach_For_Prudential_Purposes.Sensitivities_Based_Method" as "bird.OUTPUT_LAYER_FRTB.Approach_For_Prudential_Purposes",
+					SelectColumnMember "bird.Base.Memorandum_Items" as "bird.OUTPUT_LAYER_FRTB.Base",
+					SelectColumnMember "bird.Main_Catagory.Instruments_Subject_To_Market_Risk" as "bird.OUTPUT_LAYER_FRTB.Main_Catagory",
+					SelectColumnMember "bird.Prudential_Portfolio.Banking_And_Trading_Book" as "bird.OUTPUT_LAYER_FRTB.Prudentia_lPortfolio",
+					SelectColumnAttribute  "bird.Delta_sensitivity.Delta_sensitivity" as "bird.OUTPUT_LAYER_FRTB.Sensitivity_To_Delta_Risk_Factors",
+					SelectColumnMember   "bird.Type_And_Nature_Of_Sensitivity.Positive_Sensitivity_Gross_Per_Risk_Class_Unweighted" as "bird.OUTPUT_LAYER_FRTB.Type_And_Nature_Of_Sensitivity",
+					SelectColumnMember  "bird.Type_Of_Risk.GIRR" as "bird.OUTPUT_LAYER_FRTB.Type_Of_Risk"
 					} }
-					where condition  "pack.Delta_sensitivity.Delta_sensitivity" less_than value "0" 
+					where condition  "bird.Delta_sensitivity.Delta_sensitivity" less_than value "0" 
 					selectionLayer "frtb_workflow_module.frtb.Report Generation.FRTB_C91.GIRR_ShortDeltaSensitivity_Layer" ,
 					
 				View  GIRR_Net_Sensitivity_View
 				
 				select SelectClause {
 					 columns { 
-					SelectColumnMember "pack.Approach_For_Prudential_Purposes.Sensitivities_Based_Method" as "pack.OUTPUT_LAYER_FRTB.Approach_For_Prudential_Purposes",
-					SelectColumnMember "pack.Base.Memorandum_Items" as "pack.OUTPUT_LAYER_FRTB.Base",
-					SelectColumnMember "pack.Main_Catagory.Instruments_Subject_To_Market_Risk" as "pack.OUTPUT_LAYER_FRTB.Main_Catagory",
-					SelectColumnMember "pack.Prudential_Portfolio.Banking_And_Trading_Book" as "pack.OUTPUT_LAYER_FRTB.Prudentia_lPortfolio",
-					SelectColumnAttribute "pack.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.Netted_delta_sensitivities" as "pack.OUTPUT_LAYER_FRTB.Sensitivity_To_Delta_Risk_Factors" ,
-					SelectColumnMember  "pack.Type_And_Nature_Of_Sensitivity.Sensitivity_Net_Per_Risk_Class_Unweighted" as "pack.OUTPUT_LAYER_FRTB.Type_And_Nature_Of_Sensitivity",
-					SelectColumnMember  "pack.Type_Of_Risk.GIRR" as "pack.OUTPUT_LAYER_FRTB.Type_Of_Risk"
+					SelectColumnMember "bird.Approach_For_Prudential_Purposes.Sensitivities_Based_Method" as "bird.OUTPUT_LAYER_FRTB.Approach_For_Prudential_Purposes",
+					SelectColumnMember "bird.Base.Memorandum_Items" as "bird.OUTPUT_LAYER_FRTB.Base",
+					SelectColumnMember "bird.Main_Catagory.Instruments_Subject_To_Market_Risk" as "bird.OUTPUT_LAYER_FRTB.Main_Catagory",
+					SelectColumnMember "bird.Prudential_Portfolio.Banking_And_Trading_Book" as "bird.OUTPUT_LAYER_FRTB.Prudentia_lPortfolio",
+					SelectColumnAttribute "bird.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.Netted_delta_sensitivities" as "bird.OUTPUT_LAYER_FRTB.Sensitivity_To_Delta_Risk_Factors" ,
+					SelectColumnMember  "bird.Type_And_Nature_Of_Sensitivity.Sensitivity_Net_Per_Risk_Class_Unweighted" as "bird.OUTPUT_LAYER_FRTB.Type_And_Nature_Of_Sensitivity",
+					SelectColumnMember  "bird.Type_Of_Risk.GIRR" as "bird.OUTPUT_LAYER_FRTB.Type_Of_Risk"
 					}}
 					
 	

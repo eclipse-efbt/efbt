@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pack:Delta_sensitivity_BaseTable
+<bird:Delta_sensitivity_BaseTable
     xmi:version="2.0"
     xmlns:xmi="http://www.omg.org/XMI"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:pack="pack"
-    xsi:schemaLocation="pack datamodel.xcore#/EPackage">
+    xmlns:bird="bird"
+    xsi:schemaLocation="bird datamodel.xcore#/EPackage">
   <Delta_sensitivitys
       Risk_measure_identifier="DeltaSensitivity1"
       Currency_of_record="USD"
       Delta_sensitivity="100.0"
       Tenor="1.0">
     <theRisk_factor
-        xsi:type="pack:GIRR_risk_factor"
+        xsi:type="bird:GIRR_risk_factor"
         href="GIRR_risk_factor_BaseTable.xmi#//@GIRR_risk_factors.0"/>
     <theSecurity_or_exchange_tradable_derivative_position
         href="Security_or_exchange_tradable_derivative_position_BaseTable.xmi#//@Security_or_exchange_tradable_derivative_positions.0"/>
@@ -22,7 +22,7 @@
       Delta_sensitivity="100.0"
       Tenor="5.0">
     <theRisk_factor
-        xsi:type="pack:GIRR_risk_factor"
+        xsi:type="bird:GIRR_risk_factor"
         href="GIRR_risk_factor_BaseTable.xmi#//@GIRR_risk_factors.0"/>
     <theSecurity_or_exchange_tradable_derivative_position
         href="Security_or_exchange_tradable_derivative_position_BaseTable.xmi#//@Security_or_exchange_tradable_derivative_positions.0"/>
@@ -33,7 +33,7 @@
       Delta_sensitivity="400.0"
       Tenor="5.0">
     <theRisk_factor
-        xsi:type="pack:GIRR_risk_factor"
+        xsi:type="bird:GIRR_risk_factor"
         href="GIRR_risk_factor_BaseTable.xmi#//@GIRR_risk_factors.0"/>
     <theSecurity_or_exchange_tradable_derivative_position
         href="Security_or_exchange_tradable_derivative_position_BaseTable.xmi#//@Security_or_exchange_tradable_derivative_positions.1"/>
@@ -44,9 +44,9 @@
       Delta_sensitivity="400.0"
       Tenor="5.0">
     <theRisk_factor
-        xsi:type="pack:GIRR_risk_factor"
+        xsi:type="bird:GIRR_risk_factor"
         href="GIRR_risk_factor_BaseTable.xmi#//@GIRR_risk_factors.1"/>
     <theSecurity_or_exchange_tradable_derivative_position
         href="Security_or_exchange_tradable_derivative_position_BaseTable.xmi#//@Security_or_exchange_tradable_derivative_positions.1"/>
   </Delta_sensitivitys>
-</pack:Delta_sensitivity_BaseTable>
+</bird:Delta_sensitivity_BaseTable>

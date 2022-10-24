@@ -9,10 +9,10 @@ SPDX-License-Identifier: EPL-2.0
 			tests { 
 				Test frtb_e2e_test1 {
 					inputData { 
-						InputFile {fileName "Delta_sensitivity.csv" entity "pack.Delta_sensitivity" } , 
-						InputFile {fileName "Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.csv" entity "pack.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived" }
+						InputFile {fileName "Delta_sensitivity.csv" entity "bird.Delta_sensitivity" } , 
+						InputFile {fileName "Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.csv" entity "bird.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived" }
 					} 
-					expectedResult { InputFile  {fileName "OUTPUT_LAYER_FRTB.csv"  entity "pack.OUTPUT_LAYER_FRTB" }  }
+					expectedResult { InputFile  {fileName "OUTPUT_LAYER_FRTB.csv"  entity "bird.OUTPUT_LAYER_FRTB" }  }
 					scope E2ETestScope  frtb_e2e_test1_scope {
 						
 						scenarios (

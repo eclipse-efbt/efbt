@@ -1,4 +1,4 @@
-#
+# coding=UTF-8#
 # Copyright (c) 2020 Bird Software Solutions Ltd
 # This program and the accompanying materials
 # are made available under the terms of the Eclipse Public License 2.0
@@ -10,6 +10,7 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 #
+from pickle import TRUE
 '''
 Created on 22 Jan 2022
 
@@ -33,13 +34,18 @@ class SQLDeveloperImport(object):
         
         xDouble = XDataType()
         xDouble.name = "Double"
+        
+        xInt = XDataType()
+        xInt.name = "Integer"
+        
+        xDate = XDataType()
+        xDate.name = "Date"
     
+        rpmnPackage = XPackage(name='bird')
         
-        rpmnPackage = XPackage(name='pack')
-        
-
         rpmnPackage.classifiers.append(xString)
         rpmnPackage.classifiers.append(xDouble)
+        rpmnPackage.classifiers.append(xInt)
         classesMap = {}
         tableMap = {}
         fileLocation = fileDirectory + "\\DM_Entities.csv"
@@ -147,7 +153,7 @@ class SQLDeveloperImport(object):
                     counter=counter+1
                     enumID = row[0]
                     enumName = row[1]
-                    adaptedEnumName = SQLDeveloperImport.replaceSpaceWithUnderscore(self,enumName)
+                    adaptedEnumName = SQLDeveloperImport.replaceSpaceWithUnderscore(self,enumName)+"_domain"
                     if(not SQLDeveloperImport.inEnumBlackList(self,adaptedEnumName)):
                         theEnum = XEnum()
                         theEnum.name = adaptedEnumName
@@ -169,15 +175,73 @@ class SQLDeveloperImport(object):
                     try:
                         counter=counter+1
                         enumID = row[0]
+                        enumUsedName = row[3]
                         enumName = row[5]
                         adaptedEnumName = SQLDeveloperImport.replaceSpaceWithUnderscore(self,enumName)
                         value = row[4]
                         adaptedValue = SQLDeveloperImport.replaceSpaceWithUnderscore(self,value)
+                        newAdaptedValue = adaptedValue
                         try:
                             theEnum = enumMap[enumID]
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue ):
+                                newAdaptedValue = adaptedValue +"_2"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_2" ):
+                                newAdaptedValue = adaptedValue +"_3"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_3" ):
+                                newAdaptedValue = adaptedValue +"_4"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_4" ):
+                                newAdaptedValue = adaptedValue +"_5"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_5" ):
+                                newAdaptedValue = adaptedValue +"_6"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_6" ):
+                                newAdaptedValue = adaptedValue +"_7"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_7" ):
+                                newAdaptedValue = adaptedValue +"_8"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_8" ):
+                                newAdaptedValue = adaptedValue +"_9"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_9" ):
+                                newAdaptedValue = adaptedValue +"_10"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_10" ):
+                                newAdaptedValue = adaptedValue +"_11"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_11" ):
+                                newAdaptedValue = adaptedValue +"_12"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_12" ):
+                                newAdaptedValue = adaptedValue +"_13"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_13" ):
+                                newAdaptedValue = adaptedValue +"_14"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_14" ):
+                                newAdaptedValue = adaptedValue +"_15"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_15" ):
+                                newAdaptedValue = adaptedValue +"_16"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_16" ):
+                                newAdaptedValue = adaptedValue +"_17"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_17" ):
+                                newAdaptedValue = adaptedValue +"_18"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_18" ):
+                                newAdaptedValue = adaptedValue +"_19"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_19" ):
+                                newAdaptedValue = adaptedValue +"_20"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_20" ):
+                                newAdaptedValue = adaptedValue +"_21"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_21" ):
+                                newAdaptedValue = adaptedValue +"_22"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_22" ):
+                                newAdaptedValue = adaptedValue +"_23"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_23" ):
+                                newAdaptedValue = adaptedValue +"_24"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_24" ):
+                                newAdaptedValue = adaptedValue +"_25"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_25" ):
+                                newAdaptedValue = adaptedValue +"_26"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_26" ):
+                                newAdaptedValue = adaptedValue +"_27"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_27" ):
+                                newAdaptedValue = adaptedValue +"_28"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_28" ):
+                                newAdaptedValue = adaptedValue +"_29"
                             enumLiteral = XEnumLiteral()
-                            enumLiteral.name = adaptedValue
-                            enumLiteral.literal = adaptedValue
+                            enumLiteral.name = enumUsedName
+                            enumLiteral.literal = newAdaptedValue
                             enumLiteral.value = counter
                             theEnum.literals.extend([enumLiteral])
                                 
@@ -209,27 +273,27 @@ class SQLDeveloperImport(object):
 
                         if (native_type.strip() == "VARCHAR") :
 
-                            datatypeMap[dataTypeID] = EString
+                            datatypeMap[dataTypeID] = xString
                       
                         if (native_type.strip() == "VARCHAR2") :
 
-                            datatypeMap[dataTypeID] = EString
+                            datatypeMap[dataTypeID] = xString
                       
                         if (native_type.strip() == "INTEGER") :
 
-                            datatypeMap[dataTypeID] = EInt
+                            datatypeMap[dataTypeID] = xInt
                       
                         if (native_type.strip() == "DATE") :
 
-                            datatypeMap[dataTypeID] = EDate
+                            datatypeMap[dataTypeID] = xDate
                         
                         if (native_type.strip() == "NUMBER") :
 
-                            datatypeMap[dataTypeID] = EDouble
+                            datatypeMap[dataTypeID] = xDouble
                         
                         if (native_type.strip() == "UNKNOWN") :
 
-                            datatypeMap[dataTypeID] = EString
+                            datatypeMap[dataTypeID] = xString
              
         
         fileLocation = fileDirectory + "\\DM_Attributes.csv"
@@ -251,6 +315,7 @@ class SQLDeveloperImport(object):
                    
                     classID = row[4]
                     relationID = row[32]
+                    primary_key_or_not = row[35]
                     theClass = classesMap[classID]
                     
                     classIsDerived = False
@@ -268,20 +333,38 @@ class SQLDeveloperImport(object):
                             print("Domain")
                             
                             attribute = XAttribute()
+                            if(primary_key_or_not == "P"):
+                                attribute.iD = True
+                                
                             attribute.lowerBound=0
                             attribute.upperBound=1
                             if(theEnum.name == "String"):
                                 attribute.name = theAttributeName
                                 attribute.type = xString
-                                
+                            elif(theEnum.name.startswith("String_")):
+                                attribute.name = theAttributeName
+                                attribute.type = xString
                             elif(theEnum.name == "Number"):
                                 attribute.name = theAttributeName
                                 attribute.type = xDouble
-                            # This is a common domain used for String identifiers in BIRD in SQLDeveloper
-                            elif(theEnum.name == "String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1"):
+                            elif(theEnum.name.startswith("Real_")):
                                 attribute.name = theAttributeName
-                                attribute.type = xString
-                                    
+                                attribute.type = xDouble
+                            elif(theEnum.name.startswith("Monetary")):
+                                attribute.name = theAttributeName
+                                attribute.type = xInt
+                            elif(theEnum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")): 
+                                attribute.name = theAttributeName
+                                attribute.type = xInt
+                            elif(theEnum.name.startswith("Non_negative_integers")): 
+                                attribute.name = theAttributeName
+                                attribute.type = xInt
+                            elif(theEnum.name.startswith("All_possible_dates")):
+                                attribute.name = theAttributeName
+                                attribute.type = xDate
+                                
+                            # This is a common domain used for String identifiers in BIRD in SQLDeveloper
+                            
                             else:
                                 attribute.name = theAttributeName
                                 attribute.type = theEnum  
@@ -293,15 +376,28 @@ class SQLDeveloperImport(object):
                                 if(theEnum.name == "String"):
                                     operation.name = theAttributeName
                                     operation.type = xString
-                                    
+                                elif(theEnum.name.startswith("String_")):
+                                    operation.name = theAttributeName
+                                    operation.type = xString
                                 elif(theEnum.name == "Number"):
                                     operation.name = theAttributeName
                                     operation.type = xDouble
-                                # This is a common domain used for String identifiers in BIRD in SQLDeveloper
-                                elif(theEnum.name == "String_up_to_60_characters_limited_to_letters__capital_and_low_cases___numbers__dash_and_underscore_1"):
+                                
+                                elif(theEnum.name.startswith("Real_")):
                                     operation.name = theAttributeName
-                                    operation.type = xString
-                                        
+                                    operation.type = xDouble
+                                elif(theEnum.name.startswith("Monetary")): 
+                                    operation.name = theAttributeName
+                                    operation.type = xInt
+                                elif(theEnum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")): 
+                                    operation.name = theAttributeName
+                                    operation.type = xInt
+                                elif(theEnum.name.startswith("Non_negative_integers")): 
+                                    operation.name = theAttributeName
+                                    operation.type = xInt
+                                elif(theEnum.name.startswith("All_possible_dates")):   
+                                    operation.name = theAttributeName
+                                    operation.type = xDate  
                                 else:
                                     operation.name = theAttributeName
                                     operation.type = theEnum  
@@ -551,7 +647,11 @@ class SQLDeveloperImport(object):
                             f.write(member.name)
                             f.write(" \r"  )
                         elif isinstance(member, XAttribute):
-                            f.write("\t\t\t\t" + member.type.name + " " )
+                            f.write("\t\t\t\t")
+                            if member.iD:
+                                f.write("id ")
+                            f.write(member.type.name + " " )
+                            
                             if member.upperBound == -1:
                                 f.write("[] ")
                             elif ( (member.lowerBound == 0) and (member.upperBound == 1)):
@@ -578,12 +678,14 @@ class SQLDeveloperImport(object):
                     
                     f.write(" { ")  
                     for theLiteral in classifier.literals:
-                        f.write(" " + theLiteral.name + " as \"" + theLiteral.literal + "\" = " + str(theLiteral.value)  )
+                        f.write(" " + theLiteral.literal+ " as \"" + theLiteral.name + "\" = " + str(theLiteral.value)  )
                         
                     f.write(" }\r")
                 
             f.write("\t\t\ttype Double wraps Double\r")
-            f.write("\t\t\ttype String wraps String\r")    
+            f.write("\t\t\ttype String wraps String\r")
+            f.write("\t\t\ttype Integer wraps Integer\r")  
+            f.write("\t\t\ttype Date wraps Date\r")        
             f.close()
         
         
@@ -639,14 +741,25 @@ class SQLDeveloperImport(object):
                 .replace(',', '_').replace('\\', '_').replace('/', '_').replace('-', '_').replace(':', '_') \
                 .replace('+', '_').replace('.', '_').replace('?', '_').replace('\'', '_').replace('>', '_') \
                 .replace('<', '_').replace('\"', '_').replace(';', '_').replace('$', '_').replace('=', '_').replace('#', '_') \
-                .replace('&', '_').replace('%', '_').replace('[', '_').replace(']', '_') \
+                .replace('&', '_').replace('%', '_').replace('[', '_').replace(']', '_').replace('?', '_').replace('–', '_') \
                 .replace( chr(0x2019), '_').replace( chr(65533), '_') \
                 .replace(chr(0x2018), '_').replace(chr(0x0060), '_').replace(chr(0x00B4), '_') \
-                .replace(chr(0x00E9), 'e').replace(chr(0x00E7), 'c').replace(chr(0x00FC), 'u').replace(chr(0x00F6), 'o') \
+                .replace(chr(0x00E9), 'e').replace(chr(0x00C9), 'E').replace(chr(0x00E8), 'e').replace(chr(0x00EB), 'e').replace(chr(0x00CB), 'E') \
+                .replace(chr(0x00CA), 'E').replace(chr(0x00EA), 'e').replace(chr(0x00E7), 'c').replace(chr(0x00FC), 'u') \
+                .replace(chr(0x00DA), 'U').replace(chr(0x00FA), 'u').replace(chr(0x00DC), 'U').replace(chr(0x00FC), 'u').replace(chr(0x00F6), 'o') \
                 .replace(chr(0x200B), '_').replace(chr(0x202F), '_').replace(chr(0x205F), '_').replace(chr(0x3000), '_') \
                 .replace(chr(0x2000), '_').replace(chr(0x2001), '_').replace(chr(0x2002), '_').replace(chr(0x2003), '_') \
                 .replace(chr(0x2004), '_').replace(chr(0x2005), '_').replace(chr(0x2006), '_').replace(chr(0x2007), '_') \
-                .replace(chr(0x2008), '_').replace(chr(0x2009), '_').replace(chr(0x200A), '_').replace(chr(0x00A0), '_')
+                .replace(chr(0x2008), '_').replace(chr(0x2009), '_').replace(chr(0x200A), '_').replace(chr(0x00A0), '_') \
+                .replace(chr(0x00ED), 'i').replace(chr(0x00CC), 'I').replace(chr(0x00EC), 'i').replace(chr(0x00CE), 'I').replace(chr(0x00EE), 'i').replace(chr(0x00E4), 'a').replace(chr(0x00E1), 'a').replace(chr(0x00C1), 'A').replace(chr(0x00D6), 'O') \
+                .replace(chr(0x00D3), 'O').replace(chr(0x00F3), 'o').replace(chr(0x00D1), 'N').replace(chr(0x00F1), 'n') \
+                .replace(chr(0x00DF), 'ss').replace(chr(0x00E0), 'a').replace(chr(0x00C0), 'A').replace(chr(0x00C2), 'A').replace(chr(0x00E2), 'a') \
+                .replace(chr(0x00C3), 'A').replace(chr(0x00E3), 'a') \
+                .replace(chr(0x00FD), 'y').replace(chr(0x017D), 'Z').replace(chr(0x017E), 'z') \
+                .replace(chr(0x0160), 'S').replace(chr(0x0161), 's').replace(chr(0x00D8), 'O').replace(chr(0x00F8), 'o').replace(chr(0x00F4), 'o').replace(chr(0x00D5), 'O').replace(chr(0x00F5), 'o')  \
+                .replace(chr(0x00C6), 'AE').replace(chr(0x01E2), 'AE').replace(chr(0x01FC), 'AE')   \
+                .replace(chr(0x00E6), 'ae').replace(chr(0x01E3), 'ae').replace(chr(0x01FD), 'ae')    \
+                .replace(chr(0x00C5), 'A').replace(chr(0x00E5), 'a')
              
         return newClassName;
 
@@ -664,7 +777,7 @@ class SQLDeveloperImport(object):
     def containsLiteral(self,members,adaptedValue):
         contains = False;
         for eEnumLiteral in members:
-            if (eEnumLiteral.name == adaptedValue):
+            if (eEnumLiteral.literal.lower() == adaptedValue.lower()):
                 contains = True
 
         return contains
@@ -693,7 +806,7 @@ class SQLDeveloperImport(object):
         return xString
         
 if __name__ == '__main__':
-    SQLDeveloperImport().convert('C:\\Users\\Neil\\freebirdtools-develop-sep22\\git\\efbt\\openregspecs\\python\\resources','C:\\Users\\Neil\\freebirdtools-develop-sep22\\git\\efbt\\openregspecs\\python\\results\\')
+    SQLDeveloperImport().convert('C:\\Users\\Neil\\freebirdtools-develop-oct-22\\git\\efbt\\openregspecs\\python\\resources','C:\\Users\\Neil\\freebirdtools-develop-oct-22\\git\\efbt\\openregspecs\\python\\results\\')
     
             
             

@@ -119,7 +119,7 @@ EBoolean returns ecore::EBoolean:
 
 XAttribute returns open_reg_specs::XAttribute:
 	{open_reg_specs::XAttribute}
-	(iD?='iD')?
+	(iD?='id')?
 	type=[open_reg_specs::XClassifier|EString] ("[" ((  lowerBound=EInt) ".." ( upperBound=EInt))?   "]")?
 	name=ID 
 	;
