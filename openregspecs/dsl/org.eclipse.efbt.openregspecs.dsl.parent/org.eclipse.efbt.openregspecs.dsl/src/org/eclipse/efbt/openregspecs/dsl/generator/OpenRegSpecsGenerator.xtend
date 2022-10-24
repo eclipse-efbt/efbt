@@ -48,7 +48,7 @@ enum «xEnum.name» {«FOR xliteral : xEnum.literals»  «xliteral.name»  as "�
 «ENDFOR»
 «FOR xDataType : resource.allContents.filter(XDataType).toIterable»
 «IF !(xDataType instanceof XEnum)»
-type  «xDataType.name» wraps «xDataType.name» 
+type  «xDataType.name» wraps «IF xDataType.name == "Date"»java.util.Date «ELSE»«xDataType.name» «ENDIF» 
 «ENDIF»	
 «ENDFOR»
         ''')
