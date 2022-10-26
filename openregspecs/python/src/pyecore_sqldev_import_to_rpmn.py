@@ -175,7 +175,7 @@ class SQLDeveloperImport(object):
                     try:
                         counter=counter+1
                         enumID = row[0]
-                        enumUsedName = row[3]
+                        enumUsedName = "m_" + SQLDeveloperImport.replaceSpaceWithUnderscore(self,row[3])
                         enumName = row[5]
                         adaptedEnumName = SQLDeveloperImport.replaceSpaceWithUnderscore(self,enumName)
                         value = row[4]
@@ -648,8 +648,8 @@ class SQLDeveloperImport(object):
                             f.write(" \r"  )
                         elif isinstance(member, XAttribute):
                             f.write("\t\t\t\t")
-                            if member.iD:
-                                f.write("id ")
+                            # if member.iD:
+                            #   f.write("id ")
                             f.write(member.type.name + " " )
                             
                             if member.upperBound == -1:
@@ -678,7 +678,7 @@ class SQLDeveloperImport(object):
                     
                     f.write(" { ")  
                     for theLiteral in classifier.literals:
-                        f.write(" " + theLiteral.literal+ " as \"" + theLiteral.name + "\" = " + str(theLiteral.value)  )
+                        f.write(" " + theLiteral.name + " as \"" + theLiteral.literal + "\" = " + str(theLiteral.value)  )
                         
                     f.write(" }\r")
                 
