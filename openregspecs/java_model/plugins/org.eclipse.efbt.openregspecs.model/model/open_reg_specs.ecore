@@ -247,18 +247,20 @@
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="View">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="selectClause" eType="#//SelectClause"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="whereClause" eType="#//WhereClause"
-        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="selectionLayer" eType="#//SelectionLayer"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="outputLayer" eType="#//XClass"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="selectionLayerSQL" upperBound="-1"
+        eType="#//LayerSQL" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SelectClause">
+  <eClassifiers xsi:type="ecore:EClass" name="LayerSQL">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="selectionLayer" eType="#//SelectionLayer"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="columns" upperBound="-1"
         eType="#//SelectColumn" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="whereClause" upperBound="-1"
+        eType="#//WhereClause" containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SelectClause"/>
   <eClassifiers xsi:type="ecore:EClass" name="SelectColumn">
     <eStructuralFeatures xsi:type="ecore:EReference" name="as" eType="#//XAttribute"/>
   </eClassifiers>
