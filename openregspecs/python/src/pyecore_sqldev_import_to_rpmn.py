@@ -27,7 +27,7 @@ class SQLDeveloperImport(object):
         
     
     
-    def convert (self,fileDirectory,outputDirectory):  
+    def convert (self,fileDirectory,outputDirectory, ROLAvailable):  
         
         xString = XDataType()
         xString.name = "String"
@@ -50,6 +50,7 @@ class SQLDeveloperImport(object):
         tableMap = {}
         fileLocation = fileDirectory + "\\DM_Entities.csv"
         enumMap = {}
+        missingDomains = []
         headerSkipped = False
         # Load all the entities from the csv file, make an XClass per entity,
         # and add the XClass to the package
@@ -184,63 +185,128 @@ class SQLDeveloperImport(object):
                         try:
                             theEnum = enumMap[enumID]
                             if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue ):
-                                newAdaptedValue = adaptedValue +"_2"
-                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_2" ):
-                                newAdaptedValue = adaptedValue +"_3"
-                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_3" ):
-                                newAdaptedValue = adaptedValue +"_4"
-                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_4" ):
-                                newAdaptedValue = adaptedValue +"_5"
-                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_5" ):
-                                newAdaptedValue = adaptedValue +"_6"
-                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_6" ):
-                                newAdaptedValue = adaptedValue +"_7"
-                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_7" ):
-                                newAdaptedValue = adaptedValue +"_8"
-                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_8" ):
-                                newAdaptedValue = adaptedValue +"_9"
-                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_9" ):
-                                newAdaptedValue = adaptedValue +"_10"
-                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_10" ):
-                                newAdaptedValue = adaptedValue +"_11"
-                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_11" ):
-                                newAdaptedValue = adaptedValue +"_12"
-                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_12" ):
-                                newAdaptedValue = adaptedValue +"_13"
-                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_13" ):
-                                newAdaptedValue = adaptedValue +"_14"
-                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_14" ):
-                                newAdaptedValue = adaptedValue +"_15"
-                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_15" ):
-                                newAdaptedValue = adaptedValue +"_16"
-                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_16" ):
-                                newAdaptedValue = adaptedValue +"_17"
-                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_17" ):
-                                newAdaptedValue = adaptedValue +"_18"
-                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_18" ):
-                                newAdaptedValue = adaptedValue +"_19"
-                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_19" ):
-                                newAdaptedValue = adaptedValue +"_20"
-                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_20" ):
-                                newAdaptedValue = adaptedValue +"_21"
-                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_21" ):
-                                newAdaptedValue = adaptedValue +"_22"
-                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_22" ):
-                                newAdaptedValue = adaptedValue +"_23"
-                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_23" ):
-                                newAdaptedValue = adaptedValue +"_24"
-                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_24" ):
-                                newAdaptedValue = adaptedValue +"_25"
-                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_25" ):
-                                newAdaptedValue = adaptedValue +"_26"
-                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_26" ):
-                                newAdaptedValue = adaptedValue +"_27"
-                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_27" ):
-                                newAdaptedValue = adaptedValue +"_28"
-                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_28" ):
-                                newAdaptedValue = adaptedValue +"_29"
+                                newAdaptedValue = adaptedValue +"_x2"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x2" ):
+                                newAdaptedValue = adaptedValue +"_x3"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x3" ):
+                                newAdaptedValue = adaptedValue +"_x4"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x4" ):
+                                newAdaptedValue = adaptedValue +"_x5"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x5" ):
+                                newAdaptedValue = adaptedValue +"_x6"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x6" ):
+                                newAdaptedValue = adaptedValue +"_x7"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x7" ):
+                                newAdaptedValue = adaptedValue +"_x8"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x8" ):
+                                newAdaptedValue = adaptedValue +"_x9"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x9" ):
+                                newAdaptedValue = adaptedValue +"_x10"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x10" ):
+                                newAdaptedValue = adaptedValue +"_x11"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x11" ):
+                                newAdaptedValue = adaptedValue +"_x12"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x12" ):
+                                newAdaptedValue = adaptedValue +"_x13"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x13" ):
+                                newAdaptedValue = adaptedValue +"_x14"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x14" ):
+                                newAdaptedValue = adaptedValue +"_x15"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x15" ):
+                                newAdaptedValue = adaptedValue +"_x16"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x16" ):
+                                newAdaptedValue = adaptedValue +"_x17"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x17" ):
+                                newAdaptedValue = adaptedValue +"_x18"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x18" ):
+                                newAdaptedValue = adaptedValue +"_x19"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x19" ):
+                                newAdaptedValue = adaptedValue +"_x20"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x20" ):
+                                newAdaptedValue = adaptedValue +"_x21"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x21" ):
+                                newAdaptedValue = adaptedValue +"_x22"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x22" ):
+                                newAdaptedValue = adaptedValue +"_x23"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x23" ):
+                                newAdaptedValue = adaptedValue +"_x24"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x24" ):
+                                newAdaptedValue = adaptedValue +"_x25"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x25" ):
+                                newAdaptedValue = adaptedValue +"_x26"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x26" ):
+                                newAdaptedValue = adaptedValue +"_x27"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x27" ):
+                                newAdaptedValue = adaptedValue +"_x28"
+                            if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x28" ):
+                                newAdaptedValue = adaptedValue +"_x29"
+                                
+                            newAdaptedName = enumUsedName
+                            if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName ):
+                                newAdaptedName = enumUsedName +"_x2"
+                            if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x2" ):
+                                newAdaptedName = enumUsedName +"_x3"
+                            if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x3" ):
+                                newAdaptedName = enumUsedName +"_x4"
+                            if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x4" ):
+                                newAdaptedName = enumUsedName +"_x5"
+                            if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x5" ):
+                                newAdaptedName = enumUsedName +"_x6"
+                            if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x6" ):
+                                newAdaptedName = enumUsedName +"_x7"
+                            if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x7" ):
+                                newAdaptedName = enumUsedName +"_x8"
+                            if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x8" ):
+                                newAdaptedName = enumUsedName +"_x9"
+                            if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x9" ):
+                                newAdaptedName = enumUsedName +"_x10"
+                            if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x10" ):
+                                newAdaptedName = enumUsedName +"_x11"
+                            if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x11" ):
+                                newAdaptedName = enumUsedName +"_x12"
+                            if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_12" ):
+                                newAdaptedName = enumUsedName +"_x13"
+                            if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x13" ):
+                                newAdaptedName = enumUsedName +"_x14"
+                            if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x14" ):
+                                newAdaptedName = enumUsedName +"_x15"
+                            if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x15" ):
+                                newAdaptedName = enumUsedName +"_x16"
+                            if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x16" ):
+                                newAdaptedName = enumUsedName +"_x17"
+                            if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x17" ):
+                                newAdaptedName = enumUsedName +"_x18"
+                            if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x18" ):
+                                newAdaptedName = enumUsedName +"_x19"
+                            if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x19" ):
+                                newAdaptedName = enumUsedName +"_x20"
+                            if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x20" ):
+                                newAdaptedName = enumUsedName +"_x21"
+                            if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x21" ):
+                                newAdaptedName = enumUsedName +"_x22"
+                            if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x22" ):
+                                newAdaptedName = enumUsedName +"_x23"
+                            if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x23" ):
+                                newAdaptedName = enumUsedName +"_x24"
+                            if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x24" ):
+                                newAdaptedName = enumUsedName +"_x25"
+                            if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x25" ):
+                                newAdaptedName = enumUsedName +"_x26"
+                            if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x26" ):
+                                newAdaptedName = enumUsedName +"_x27"
+                            if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x27" ):
+                                newAdaptedName = enumUsedName +"_x28"
+                            if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x28" ):
+                                newAdaptedName = enumUsedName +"_x29"
+                            if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x29" ):
+                                newAdaptedName = enumUsedName +"_x30"
+                            if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x30" ):
+                                newAdaptedName = enumUsedName +"_x31"
+                            if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x31" ):
+                                newAdaptedName = enumUsedName +"_x32"
+                            
                             enumLiteral = XEnumLiteral()
-                            enumLiteral.name = enumUsedName
+                            enumLiteral.name = newAdaptedName
                             enumLiteral.literal = newAdaptedValue
                             enumLiteral.value = counter
                             theEnum.literals.extend([enumLiteral])
@@ -309,7 +375,6 @@ class SQLDeveloperImport(object):
                         headerSkipped = True
                 else:
                     attributeName = row[0]
-                    print(attributeName)
                     amendedAttributeName = SQLDeveloperImport.replaceSpaceWithUnderscore(self,attributeName);
                     attributeKind = row[7]
                    
@@ -330,7 +395,6 @@ class SQLDeveloperImport(object):
                         if (attributeKind == "Domain"):
                             enumID = row[12]
                             theEnum = enumMap[enumID]
-                            print("Domain")
                             
                             attribute = XAttribute()
                             if(primary_key_or_not == "P"):
@@ -563,10 +627,7 @@ class SQLDeveloperImport(object):
                             eReference.lowerBound=1
                             eReference.containment= False
                             if (theClass.name.endswith("_derived")):
-                                print("theClass")
-                                print(theClass)
-                                print("targetClass")
-                                print(targetClass)
+
                                 theSourceTable = tableMap[theClass]
                                 theTargetTable = tableMap[targetClass]
                                 if not(SQLDeveloperImport.hasMemberCalled(self, theSourceTable, "sourceTable1")):
@@ -611,14 +672,428 @@ class SQLDeveloperImport(object):
                                     theSourceTable.members.append(sourceTablesReference)
                     if (not (theClass is None) ) :                 
                         theClass.members.append(eReference)
-                   
+        if ROLAvailable:           
+            fileLocation = fileDirectory + "\\cube.csv"
+            headerSkipped = False
+            # Load all the entities from the csv file, make an XClass per entity,
+            # and add the XClass to the package
+            with open(fileLocation,  encoding='utf-8') as csvfile:
+                filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+                for row in filereader:
+                    # skip the first line which is the header.
+                    if (not headerSkipped):
+                        headerSkipped = True
+                    else:
+    
+                        className = row[5]
+                        objectID  = className
+                        cube_type = row[6]
+                        valid_to  = row[9]
+                        version   = row[10]
+                        
+                        if ( (version ==  "FINREP 3.0") and (cube_type == "RC") and (valid_to == "31.12.9999") ) :
+    
+                            alteredClassName = SQLDeveloperImport.replaceSpaceWithUnderscore(self,className);  
+                            
+                            xclass = XClass(name=alteredClassName+"_OutputItem")
+                            xclassTable = XClass(name=alteredClassName+"_OutputTable")
+                            xclassTable.containedEntityType = xclass
+                            containmentReference  = XReference()
+                            containmentReference.name=xclass.name+"s"
+                            containmentReference.type=xclass
+                            containmentReference.upperBound = -1
+                            containmentReference.lowerBound=0
+                            containmentReference.containment= True
+                            xclassTable.members.append(containmentReference)
+                            xclassTableOperation = XOperation()
+                            xclassTableOperation.name=xclass.name+"s"
+                            xclassTableOperation.type=xclass
+                            xclassTableOperation.upperBound = -1
+                            xclassTableOperation.lowerBound=0
+                            xclassTable.members.append(xclassTableOperation)
+                            rpmnPackage.classifiers.extend([xclass])
+                            rpmnPackage.classifiers.extend([xclassTable])
+                            
+                
+                            # maintain a map a objectIDs to XClasses
+                            classesMap[objectID]=xclass
+                            tableMap[xclass]=xclassTable
+                            
+            
+            # Make a variable to Domain Map
+            fileLocation = fileDirectory + "\\variable.csv"
+            headerSkipped = False
+            # or each attribute add an Xattribute to the correct XClass represtnting the Entity
+            # the attribute should have the correct type, which may be a specific
+            # enumeration
+            variableToDomainMap = {}
+            with open(fileLocation,  encoding='utf-8') as csvfile:
+                filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+                for row in filereader:
+                    if (not headerSkipped):
+                            headerSkipped = True
+                    else:
+                        variableName = row[1]
+                        #domainName = SQLDeveloperImport.replaceSpaceWithUnderscore(self,row[3])
+                        domain = row[4]
+                        variableToDomainMap[variableName] = domain
+                       
+            # Make a domain  to Domain Name Map 
+            fileLocation = fileDirectory + "\\domain.csv"
+            headerSkipped = False
+    
+            domainToDomainNameMap = {}
+            with open(fileLocation,  encoding='utf-8') as csvfile:
+                filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+                for row in filereader:
+                    if (not headerSkipped):
+                            headerSkipped = True
+                    else:
+                        domainID = row[1]
+                        #domainName = SQLDeveloperImport.replaceSpaceWithUnderscore(self,row[3])
+                        domainName = row[2]
+                        domainToDomainNameMap[domainID] = domainName
+                       
+            
+             # Make a domain  to Domain Name Map 
+            fileLocation = fileDirectory + "\\member.csv"
+            headerSkipped = False
+    
+            memberIDToDomainMap = {}
+            memberIDToMemberNameMap = {}
+            memberIDToMemberCodeMap = {}
+            with open(fileLocation,  encoding='utf-8') as csvfile:
+                filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+                for row in filereader:
+                    if (not headerSkipped):
+                            headerSkipped = True
+                    else:
+                        memberID = row[1]
+                        #domainName = SQLDeveloperImport.replaceSpaceWithUnderscore(self,row[3])
+                        memberCode= row[2]
+                        memberName = row[3]
+                        domainId =  row[4]
+                        memberIDToDomainMap[memberID] = domainId
+                        memberIDToMemberNameMap[memberID] = memberName
+                        memberIDToMemberCodeMap[memberID] = memberCode
+                        
+                       
+                       
+                       
+            fileLocation = fileDirectory + "\\cube_structure_item.csv"
+            headerSkipped = False
+            # or each attribute add an Xattribute to the correct XClass represtnting the Entity
+            # the attribute should have the correct type, which may be a specific
+            # enumeration
+    
+            with open(fileLocation,  encoding='utf-8') as csvfile:
+                filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+                for row in filereader:
+                    if (not headerSkipped):
+                            headerSkipped = True
+                    else:
+                        attributeName = row[1]
+                        amendedAttributeName = SQLDeveloperImport.replaceSpaceWithUnderscore(self,attributeName)
+                        variable = row[2]
+                       
+                        classID = row[0]
+                        try: 
+                            theClass = classesMap[classID]
+                            
+                            classIsDerived = True
+                                
+                            theAttributeName =  amendedAttributeName
+           
+                            domainID = variableToDomainMap[variable]
+                            domain_ID_Name = domainToDomainNameMap[domainID]
+                            amendedDomainName = SQLDeveloperImport.replaceSpaceWithUnderscore(self,domain_ID_Name)
+                            theEnum =  SQLDeveloperImport.findROLEnum(self,amendedDomainName+"_domain",enumMap)
+                            if  theEnum is not None:                     
+                                print( "not missing domainID: " )
+                            else:
+                                print( "missing domainID: " )
+                                print(domainID)
+                                print(classID)
+                                if not(domainID in missingDomains):
+                                    missingDomains.append(domainID)
+                        except:
+                                print( "missing ROL class: " )
+                                print(classID)    
+                                
+            for theDomain in missingDomains:
+                
+                domain_ID_Name = domainToDomainNameMap[theDomain]
+                amendedDomainName = SQLDeveloperImport.replaceSpaceWithUnderscore(self,domain_ID_Name)+ "_domain"
+                if not( (amendedDomainName == "String") or (amendedDomainName == "Date")  ):
+                    theEnum = XEnum()
+                    theEnum.name = amendedDomainName 
+                    #maintain a map of enum IDS to XEnum objects
+                    enumMap[amendedDomainName] = theEnum
+                    rpmnPackage.classifiers.extend([theEnum])
+                    theDomainMembers= SQLDeveloperImport.getMembersOfTheDomain(self,theDomain, memberIDToDomainMap)
+                    counter1 = 0
+                    for member in theDomainMembers:
+                        enumLiteral = XEnumLiteral()
+                        enumUsedName = "m_" + SQLDeveloperImport.replaceSpaceWithUnderscore(self,memberIDToMemberCodeMap[member])
+                        adaptedValue = SQLDeveloperImport.replaceSpaceWithUnderscore(self,memberIDToMemberNameMap[member])
+                        newAdaptedValue = adaptedValue
+                        if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue ):
+                            newAdaptedValue = adaptedValue +"_x2"
+                        if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x2" ):
+                            newAdaptedValue = adaptedValue +"_x3"
+                        if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x3" ):
+                            newAdaptedValue = adaptedValue +"_x4"
+                        if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x4" ):
+                            newAdaptedValue = adaptedValue +"_x5"
+                        if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x5" ):
+                            newAdaptedValue = adaptedValue +"_x6"
+                        if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x6" ):
+                            newAdaptedValue = adaptedValue +"_x7"
+                        if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x7" ):
+                            newAdaptedValue = adaptedValue +"_x8"
+                        if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x8" ):
+                            newAdaptedValue = adaptedValue +"_x9"
+                        if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x9" ):
+                            newAdaptedValue = adaptedValue +"_x10"
+                        if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x10" ):
+                            newAdaptedValue = adaptedValue +"_x11"
+                        if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x11" ):
+                            newAdaptedValue = adaptedValue +"_x12"
+                        if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x12" ):
+                            newAdaptedValue = adaptedValue +"_x13"
+                        if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x13" ):
+                            newAdaptedValue = adaptedValue +"_x14"
+                        if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x14" ):
+                            newAdaptedValue = adaptedValue +"_x15"
+                        if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x15" ):
+                            newAdaptedValue = adaptedValue +"_x16"
+                        if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x16" ):
+                            newAdaptedValue = adaptedValue +"_x17"
+                        if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x17" ):
+                            newAdaptedValue = adaptedValue +"_x18"
+                        if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x18" ):
+                            newAdaptedValue = adaptedValue +"_x19"
+                        if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x19" ):
+                            newAdaptedValue = adaptedValue +"_x20"
+                        if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x20" ):
+                            newAdaptedValue = adaptedValue +"_x21"
+                        if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x21" ):
+                            newAdaptedValue = adaptedValue +"_x22"
+                        if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x22" ):
+                            newAdaptedValue = adaptedValue +"_x23"
+                        if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x23" ):
+                            newAdaptedValue = adaptedValue +"_x24"
+                        if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x24" ):
+                            newAdaptedValue = adaptedValue +"_x25"
+                        if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x25" ):
+                            newAdaptedValue = adaptedValue +"_x26"
+                        if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x26" ):
+                            newAdaptedValue = adaptedValue +"_x27"
+                        if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x27" ):
+                            newAdaptedValue = adaptedValue +"_x28"
+                        if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x28" ):
+                            newAdaptedValue = adaptedValue +"_x29"
+                            
+                        newAdaptedName = enumUsedName
+                        if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName ):
+                            newAdaptedName = enumUsedName +"_x2"
+                        if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x2" ):
+                            newAdaptedName = enumUsedName +"_x3"
+                        if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x3" ):
+                            newAdaptedName = enumUsedName +"_x4"
+                        if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x4" ):
+                            newAdaptedName = enumUsedName +"_x5"
+                        if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x5" ):
+                            newAdaptedName = enumUsedName +"_x6"
+                        if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x6" ):
+                            newAdaptedName = enumUsedName +"_x7"
+                        if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x7" ):
+                            newAdaptedName = enumUsedName +"_x8"
+                        if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x8" ):
+                            newAdaptedName = enumUsedName +"_x9"
+                        if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x9" ):
+                            newAdaptedName = enumUsedName +"_x10"
+                        if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x10" ):
+                            newAdaptedName = enumUsedName +"_x11"
+                        if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x11" ):
+                            newAdaptedName = enumUsedName +"_x12"
+                        if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_12" ):
+                            newAdaptedName = enumUsedName +"_x13"
+                        if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x13" ):
+                            newAdaptedName = enumUsedName +"_x14"
+                        if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x14" ):
+                            newAdaptedName = enumUsedName +"_x15"
+                        if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x15" ):
+                            newAdaptedName = enumUsedName +"_x16"
+                        if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x16" ):
+                            newAdaptedName = enumUsedName +"_x17"
+                        if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x17" ):
+                            newAdaptedName = enumUsedName +"_x18"
+                        if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x18" ):
+                            newAdaptedName = enumUsedName +"_x19"
+                        if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x19" ):
+                            newAdaptedName = enumUsedName +"_x20"
+                        if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x20" ):
+                            newAdaptedName = enumUsedName +"_x21"
+                        if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x21" ):
+                            newAdaptedName = enumUsedName +"_x22"
+                        if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x22" ):
+                            newAdaptedName = enumUsedName +"_x23"
+                        if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x23" ):
+                            newAdaptedName = enumUsedName +"_x24"
+                        if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x24" ):
+                            newAdaptedName = enumUsedName +"_x25"
+                        if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x25" ):
+                            newAdaptedName = enumUsedName +"_x26"
+                        if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x26" ):
+                            newAdaptedName = enumUsedName +"_x27"
+                        if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x27" ):
+                            newAdaptedName = enumUsedName +"_x28"
+                        if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x28" ):
+                            newAdaptedName = enumUsedName +"_x29"
+                        if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x29" ):
+                            newAdaptedName = enumUsedName +"_x30"
+                        if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x30" ):
+                            newAdaptedName = enumUsedName +"_x31"
+                        if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName +"_x31" ):
+                            newAdaptedName = enumUsedName +"_x32"
+                        
+                        enumLiteral.name = newAdaptedName
+                        enumLiteral.literal = newAdaptedValue
+                        counter1 = counter1 + 1
+                        enumLiteral.value = counter1
+                        theEnum.literals.extend([enumLiteral])
+                
+                # create the meber as a literal , with its name and code and add it to the enum.
+            fileLocation = fileDirectory + "\\cube_structure_item.csv"
+            headerSkipped = False
+            # or each attribute add an Xattribute to the correct XClass represtnting the Entity
+            # the attribute should have the correct type, which may be a specific
+            # enumeration
+    
+            with open(fileLocation,  encoding='utf-8') as csvfile:
+                filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+                for row in filereader:
+                    if (not headerSkipped):
+                            headerSkipped = True
+                    else:
+                        attributeName = row[1]
+                        amendedAttributeName = SQLDeveloperImport.replaceSpaceWithUnderscore(self,attributeName)
+                        variable = row[2]
+                       
+                        classID = row[0]
+                        try: 
+                            theClass = classesMap[classID]
+                            
+                            classIsDerived = True
+                                
+                            theAttributeName =  amendedAttributeName
+           
+                            domainID = variableToDomainMap[variable]
+                            domain_ID_Name = domainToDomainNameMap[domainID]
+                            amendedDomainName = SQLDeveloperImport.replaceSpaceWithUnderscore(self,domain_ID_Name)
+                            theEnum =  SQLDeveloperImport.findROLEnum(self,amendedDomainName+"_domain",enumMap)
+                            if  theEnum is not None:                     
+                                attribute = XAttribute()
+    
+                                attribute.lowerBound=0
+                                attribute.upperBound=1
+                                if(theEnum.name == "String"):
+                                    attribute.name = theAttributeName
+                                    attribute.type = xString
+                                elif(theEnum.name.startswith("String_")):
+                                    attribute.name = theAttributeName
+                                    attribute.type = xString
+                                elif(theEnum.name == "Number"):
+                                    attribute.name = theAttributeName
+                                    attribute.type = xDouble
+                                elif(theEnum.name.startswith("Real_")):
+                                    attribute.name = theAttributeName
+                                    attribute.type = xDouble
+                                elif(theEnum.name.startswith("Monetary")):
+                                    attribute.name = theAttributeName
+                                    attribute.type = xInt
+                                elif(theEnum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")): 
+                                    attribute.name = theAttributeName
+                                    attribute.type = xInt
+                                elif(theEnum.name.startswith("Non_negative_integers")): 
+                                    attribute.name = theAttributeName
+                                    attribute.type = xInt
+                                elif(theEnum.name.startswith("All_possible_dates")):
+                                    attribute.name = theAttributeName
+                                    attribute.type = xDate
+                                    
+                                # This is a common domain used for String identifiers in BIRD in SQLDeveloper
+                                
+                                else:
+                                    attribute.name = theAttributeName
+                                    attribute.type = theEnum  
+                                
+                                if classIsDerived:
+                                    operation = XOperation()
+                                    operation.lowerBound=0
+                                    operation.upperBound=1
+                                    if(theEnum.name == "String"):
+                                        operation.name = theAttributeName
+                                        operation.type = xString
+                                    elif(theEnum.name.startswith("String_")):
+                                        operation.name = theAttributeName
+                                        operation.type = xString
+                                    elif(theEnum.name == "Number"):
+                                        operation.name = theAttributeName
+                                        operation.type = xDouble
+                                    
+                                    elif(theEnum.name.startswith("Real_")):
+                                        operation.name = theAttributeName
+                                        operation.type = xDouble
+                                    elif(theEnum.name.startswith("Monetary")): 
+                                        operation.name = theAttributeName
+                                        operation.type = xInt
+                                    elif(theEnum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")): 
+                                        operation.name = theAttributeName
+                                        operation.type = xInt
+                                    elif(theEnum.name.startswith("Non_negative_integers")): 
+                                        operation.name = theAttributeName
+                                        operation.type = xInt
+                                    elif(theEnum.name.startswith("All_possible_dates")):   
+                                        operation.name = theAttributeName
+                                        operation.type = xDate  
+                                    else:
+                                        operation.name = theAttributeName
+                                        operation.type = theEnum  
+            
+                                try:
+                
+                                    theClass = classesMap[classID]
+                                    theClass.members.extend([attribute])
+                                    if classIsDerived:
+                                         theClass.members.extend([operation])
+                
+                                except:
+                                    print( "missing class2: " )
+                            else:
+                                print( "missing domainID: " )
+                                print(domainID)
+                                print(classID)
+                                if not(domainID in missingDomains):
+                                    missingDomains.append(domainID)
+                        except:
+                                print( "missing ROL class: " )
+                                print(classID)                                
+                            
         SQLDeveloperImport.saveModelAsXMIFile(self, rpmnPackage, outputDirectory )  
         SQLDeveloperImport.saveModelAsRPMNFile(self, rpmnPackage, outputDirectory ) 
 
-        
+    def  getMembersOfTheDomain  (self,  theDomain, memberIDToDomainMap):
+        returnList = []
+        for key, value in memberIDToDomainMap.items():
+            if value == theDomain:
+                returnList.append(key)
+        return returnList
+    
     def saveModelAsRPMNFile(self, rpmnPackage, outputDirectory ):
         
-            f = open(outputDirectory + 'data_model.rpmn', "a")
+            f = open(outputDirectory + 'data_model.rpmn', "a",  encoding='utf-8')
             f.write("\t\t package " + rpmnPackage.name + "\r")    
             for classifier in  rpmnPackage.classifiers:
                 if isinstance(classifier,XClass):
@@ -692,9 +1167,7 @@ class SQLDeveloperImport(object):
     def saveModelAsXMIFile(self, rpmnPackage, outputDirectory ):
         # save model as a xmi file
         rset = ResourceSet()
-        print("openRegSpecs")
-        print(rpmnPackage)
-        print("openRegSpecs")
+
         resource = rset.create_resource(URI(outputDirectory + 'ldm.rpmn'))  # This will create an XMI resource
         resource.append(rpmnPackage)
         resource.save()
@@ -782,6 +1255,14 @@ class SQLDeveloperImport(object):
 
         return contains
     
+    def containsName(self,members,adaptedName):
+        contains = False;
+        for eEnumLiteral in members:
+            if (eEnumLiteral.name.lower() == adaptedName.lower()):
+                contains = True
+
+        return contains
+    
     def getLiteralsForEnumeration(self, domain, membersModule): 
         returnMembersList = []   
         for member in membersModule.members:
@@ -804,9 +1285,16 @@ class SQLDeveloperImport(object):
     def getEcoreDataTypeForDataType(self,domainDataTypeMap,datatype,xString):
 
         return xString
+    
+    def findROLEnum(self,enumName, enumMap):
+        returnVal= None
+        for key,value in enumMap.items():
+            if value.name.lower() == enumName.lower():
+               returnVal =  value
         
+        return returnVal
 if __name__ == '__main__':
-    SQLDeveloperImport().convert('C:\\Users\\Neil\\freebirdtools-develop-oct-22\\git\\efbt\\openregspecs\\python\\resources','C:\\Users\\Neil\\freebirdtools-develop-oct-22\\git\\efbt\\openregspecs\\python\\results\\')
+    SQLDeveloperImport().convert('C:\\Users\\Neil\\freebirdtools-develop-oct-22\\git\\efbt\\openregspecs\\python\\resources','C:\\Users\\Neil\\freebirdtools-develop-oct-22\\git\\efbt\\openregspecs\\python\\results\\', False)
     
             
             
