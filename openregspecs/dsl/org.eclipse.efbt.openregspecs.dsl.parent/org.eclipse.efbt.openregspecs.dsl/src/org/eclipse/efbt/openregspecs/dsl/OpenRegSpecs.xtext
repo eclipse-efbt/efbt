@@ -40,7 +40,7 @@ Activity returns open_reg_specs::Activity:
 
 
 SelectColumn returns open_reg_specs::SelectColumn:
-	SelectColumn_Impl | SelectColumnMemberAs | SelectColumnAttributeAs;
+	 SelectColumnMemberAs | SelectColumnAttributeAs;
 
 
 TestScope returns open_reg_specs::TestScope:
@@ -417,27 +417,29 @@ XPackage returns open_reg_specs::XPackage:
 	(classifiers += XClassifier)*
 	;
 
-	
+LayerSQL returns open_reg_specs::LayerSQL:
+	{open_reg_specs::LayerSQL}
+	'LayerSQL'
+	'{'
+		('selectionLayer' selectionLayer=[open_reg_specs::SelectionLayer|EString])?
+		( columns+=SelectColumn ( columns+=SelectColumn)*  )?
+		( whereClause+=WhereClause ( whereClause+=WhereClause)*  )?
+	'}';
+
 View returns open_reg_specs::View:
 	{open_reg_specs::View}
 	'View'
 	name=EString
-		('select' selectClause=SelectClause)?
-		('where' whereClause=WhereClause)?
-		('selectionLayer' selectionLayer=[open_reg_specs::SelectionLayer|EString])?
-	;
-
-SelectClause returns open_reg_specs::SelectClause:
-	{open_reg_specs::SelectClause}
-	'SelectClause'
 	'{'
-		('columns' '{' columns+=SelectColumn ( "," columns+=SelectColumn)* '}' )?
+		('outputLayer' outputLayer=[open_reg_specs::XClass|EString])?
+		(selectionLayerSQL+=LayerSQL (selectionLayerSQL+=LayerSQL)*  )?
 	'}';
+
 	
 	
 WhereClause returns open_reg_specs::WhereClause:
 	{open_reg_specs::WhereClause}
-	'condition'
+	'where'
 
 		( attribute1=[open_reg_specs::XAttribute|EString])?
 		( comparitor=Comparitor)?
@@ -445,24 +447,19 @@ WhereClause returns open_reg_specs::WhereClause:
 		('value' value=EString)?
 ;
 
-SelectColumn_Impl returns open_reg_specs::SelectColumn:
-	{open_reg_specs::SelectColumn}
-	'SelectColumn'
-	'{'
-		('as' ^as=[open_reg_specs::XAttribute|EString])?
-	'}';
+
 	
 	
 SelectColumnMemberAs returns open_reg_specs::SelectColumnMemberAs:
 	{open_reg_specs::SelectColumnMemberAs}
-	'SelectColumnMember'
+	'SelectMember'
 		( memberAsConstant=[open_reg_specs::XEnumLiteral|EString])?
 		('as' ^as=[open_reg_specs::XAttribute|EString])?
 		;
 	
 SelectColumnAttributeAs returns open_reg_specs::SelectColumnAttributeAs:
 	{open_reg_specs::SelectColumnAttributeAs}
-	'SelectColumnAttribute'
+	'SelectAttribute'
 		( attribute=[open_reg_specs::XAttribute|EString])?
 		('as' ^as=[open_reg_specs::XAttribute|EString])?
 	;
