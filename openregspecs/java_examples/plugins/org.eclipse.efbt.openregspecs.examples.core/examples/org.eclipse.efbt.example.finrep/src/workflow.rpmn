@@ -1,0 +1,36 @@
+WorkflowModule workflow1
+{ 
+	annotation "dependency" as bird  
+	subProcess { 
+		SubProcess finrep  flowElements { 
+			SubProcess generateReports incoming ( sf2)  flowElements {
+				ScriptTask F01_01 incoming ( sf1 ) outputLayer "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem" selectionLayers { 
+					SelectionLayer cash_on_hand { generatedEntity "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem" } , 
+					SelectionLayer other_loans { generatedEntity "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem" }, 
+					SelectionLayer debt_securities { generatedEntity "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem" }, 
+					SelectionLayer equity_instruments { generatedEntity "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem" }, 
+					SelectionLayer fv_changes_hedged_items { generatedEntity "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem" }, 
+					SelectionLayer goodwill { generatedEntity "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem" }, 
+					SelectionLayer hfs_assets { generatedEntity "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem" }, 
+					SelectionLayer haircuts_trading_assets { generatedEntity "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem" }, 
+					SelectionLayer investment_property { generatedEntity "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem" }, 
+					SelectionLayer loans_andvances { generatedEntity "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem" }, 
+					SelectionLayer other_assets { generatedEntity "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem" }, 
+					SelectionLayer other_intangible_assets { generatedEntity "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem" }, 
+					SelectionLayer property_plant_equipment { generatedEntity "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem" }, 
+					SelectionLayer joint_ventures { generatedEntity "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem" }, 
+					SelectionLayer tax_assets { generatedEntity "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem" }} , 
+				ScriptTask F01_02 incoming ( sf1 ) outputLayer "bird.FINREP_REF_F_01_02_REF_FINREP_3_0_OutputItem",
+				InclusiveGateway gw1 outgoing ( sf1 )  , 
+				SequenceFlow sf1 from gw1 to F01_01,
+				SequenceFlow sf3 from gw1 to F01_02  } ,
+			InclusiveGateway gw2 outgoing (  sf2 ) ,
+			SequenceFlow sf2 from gw2 to generateReports 
+
+	}
+	
+	}
+	
+	}
+	
+

@@ -1,0 +1,61 @@
+ViewModule generations
+{
+	annotation "dependency" as bird
+	annotation "dependency" as workflow1
+	
+	views {
+		View f01 { 
+			outputLayer "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem" 
+			
+				LayerSQL { 
+					selectionLayer "workflow1.finrep.generateReports.F01_01.cash_on_hand" 
+					SelectAttribute "bird.Accounting_classification_for_financial_assets.Accounting_classification" as "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem.ACCNTNG_CLSSFCTN"
+					SelectMember "bird.Accounting_framework_domain.m__5" 								as  "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem.ACCNTNG_FRMWRK"
+					SelectMember "bird.Accounting_portfolio_valuation_rules_domain_domain.m__4" 		as "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem.ACCNTNG_PRTFL_VLTN_RL"
+					SelectMember "bird.Hedged_or_hedging_instrument_domain.m__0" 						as  "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem.HDG_INSTRMNT"
+					SelectMember "bird.Held_to_maturity_domain.m__0" 									as "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem.HLD_MTRTY_INDCTR"
+					SelectMember "bird.Held_for_sale_domain.m__0" 										as "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem.HLD_SL_INDCTR"
+					SelectMember "bird.Held_for_trading_domain.m__2" 									as  "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem.HLD_TRDNG_INDCTR"
+					SelectAttribute "bird.Party.Institutional_sector" 									as "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem.INSTTTNL_SCTR"
+					SelectMember "bird.Repayment_rights_domain.m__1" 									as "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem.RPYMNT_RGHTS"
+					SelectMember "bird.Held_for_sale_domain_domain.m__1"  as "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem.SBJCT_IMPRMNT_INDCTR"
+					SelectMember "bird.Type_of_accounting_item_domain.m__10" as "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem.TYP_ACCNTNG_ITM"
+					SelectMember "bird.Type_of_hedge_domain.m__8" as "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem.TYP_HDG"
+					SelectMember "bird.Type_of_instrument_domain.m__0" as  "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem.TYP_INSTRMNT"
+					SelectAttribute "bird.Cash_on_hand.Carrying_amount" as "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem.VALUE_DECIMAL"
+					
+					
+					
+					where "bird.Cash_on_hand.Held_for_sale_indicator" equals member "bird.Held_for_sale_domain.m__0"
+					where "bird.Cash_on_hand.Carrying_amount"  greater_than value "0"
+					}
+
+				LayerSQL { 
+					selectionLayer "workflow1.finrep.generateReports.F01_01.debt_securities"
+					SelectAttribute "bird.Accounting_classification_for_financial_assets.Accounting_classification" as "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem.ACCNTNG_CLSSFCTN"
+					SelectMember "bird.Accounting_framework_domain.m__5" 								as  "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem.ACCNTNG_FRMWRK"
+					SelectMember "bird.Accounting_portfolio_valuation_rules_domain_domain.m__4" 		as "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem.ACCNTNG_PRTFL_VLTN_RL"
+					SelectMember "bird.Hedged_or_hedging_instrument_domain.m__0" 						as  "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem.HDG_INSTRMNT"
+					SelectMember "bird.Held_to_maturity_domain.m__0" 									as "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem.HLD_MTRTY_INDCTR"
+					SelectMember "bird.Held_for_sale_domain.m__0" 										as "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem.HLD_SL_INDCTR"
+					SelectMember "bird.Held_for_trading_domain.m__2" 									as  "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem.HLD_TRDNG_INDCTR"
+					SelectAttribute "bird.Party.Institutional_sector" 									as "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem.INSTTTNL_SCTR"
+					SelectMember "bird.Repayment_rights_domain.m__1" 									as "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem.RPYMNT_RGHTS"
+					SelectMember "bird.Held_for_sale_domain_domain.m__1"  as "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem.SBJCT_IMPRMNT_INDCTR"
+					SelectMember "bird.Type_of_accounting_item_domain.m__10" as "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem.TYP_ACCNTNG_ITM"
+					SelectMember "bird.Type_of_hedge_domain.m__8" as "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem.TYP_HDG"
+					SelectMember "bird.Type_of_instrument_domain.m__0" as  "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem.TYP_INSTRMNT"
+					SelectAttribute "bird.Cash_on_hand.Carrying_amount" as "bird.FINREP_REF_F_01_01_REF_FINREP_3_0_OutputItem.VALUE_DECIMAL"
+					
+					
+					where "bird.Cash_on_hand.Held_for_sale_indicator" equals member "bird.Held_for_sale_domain.m__0"
+					where "bird.Cash_on_hand.Carrying_amount"  greater_than value "0"
+					}
+		}
+	
+	}
+}
+
+	
+	
+		
