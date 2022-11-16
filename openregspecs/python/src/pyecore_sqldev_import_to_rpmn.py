@@ -960,7 +960,7 @@ class SQLDeveloperImport(object):
         # it would be better if BIRD addressed this repetition.
         # it i particularly noticeable in NUTS and NACE codes.
         # this high limit increases the processing time from under 1 minute
-        # to a few minutes.
+        # to a few minutes for the full BIRD data model.
         limit = 1400
         while ((counter < limit) and not(finished)):
             counter = counter + 1
