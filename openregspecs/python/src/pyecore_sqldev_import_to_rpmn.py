@@ -958,7 +958,7 @@ class SQLDeveloperImport(object):
         # of domains this is in the hundreds or over one thousand,
         # which is why we need a high limit here.
         # it would be better if BIRD addressed this repetition.
-        # it i particularly noticeable in NUTS and NACE codes.
+        # it is particularly noticeable in NUTS and NACE codes.
         # this high limit increases the processing time from under 1 minute
         # to a few minutes for the full BIRD data model.
         limit = 1400
