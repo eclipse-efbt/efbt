@@ -139,11 +139,11 @@ class Tag(EObject, metaclass=MetaEClass):
 class View(EObject, metaclass=MetaEClass):
 
     name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
-    selectClause = EReference(ordered=True, unique=True, containment=True, derived=False)
-    whereClause = EReference(ordered=True, unique=True, containment=True, derived=False)
-    selectionLayer = EReference(ordered=True, unique=True, containment=False, derived=False)
+    outputLayer = EReference(ordered=True, unique=True, containment=False, derived=False)
+    selectionLayerSQL = EReference(ordered=True, unique=True,
+                                   containment=True, derived=False, upper=-1)
 
-    def __init__(self, *, selectClause=None, whereClause=None, name=None, selectionLayer=None):
+    def __init__(self, *, name=None, outputLayer=None, selectionLayerSQL=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
@@ -152,28 +152,42 @@ class View(EObject, metaclass=MetaEClass):
         if name is not None:
             self.name = name
 
-        if selectClause is not None:
-            self.selectClause = selectClause
+        if outputLayer is not None:
+            self.outputLayer = outputLayer
 
-        if whereClause is not None:
-            self.whereClause = whereClause
-
-        if selectionLayer is not None:
-            self.selectionLayer = selectionLayer
+        if selectionLayerSQL:
+            self.selectionLayerSQL.extend(selectionLayerSQL)
 
 
-class SelectClause(EObject, metaclass=MetaEClass):
+class LayerSQL(EObject, metaclass=MetaEClass):
 
+    selectionLayer = EReference(ordered=True, unique=True, containment=False, derived=False)
     columns = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    whereClause = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
-    def __init__(self, *, columns=None):
+    def __init__(self, *, selectionLayer=None, columns=None, whereClause=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
         super().__init__()
 
+        if selectionLayer is not None:
+            self.selectionLayer = selectionLayer
+
         if columns:
             self.columns.extend(columns)
+
+        if whereClause:
+            self.whereClause.extend(whereClause)
+
+
+class SelectClause(EObject, metaclass=MetaEClass):
+
+    def __init__(self):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
 
 
 class SelectColumn(EObject, metaclass=MetaEClass):
