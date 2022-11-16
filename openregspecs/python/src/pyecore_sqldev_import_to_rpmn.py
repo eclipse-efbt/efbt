@@ -1235,7 +1235,7 @@ class SQLDeveloperImport(object):
         return returnVal
     
 if __name__ == '__main__':
-    SQLDeveloperImport().convert('C:\\Users\\LENOVO\\freebirdtools-develop-nov\\git\\efbt\\openregspecs\\python\\resources','C:\\Users\\LENOVO\\freebirdtools-develop-nov\\git\\efbt\\openregspecs\\python\\results\\', True)
+    SQLDeveloperImport().convert('C:\\Users\\LENOVO\\freebirdtools-develop-nov\\git\\efbt\\openregspecs\\python\\resources','C:\\Users\\LENOVO\\freebirdtools-develop-nov\\git\\efbt\\openregspecs\\python\\results\\', False)
     
             
             
