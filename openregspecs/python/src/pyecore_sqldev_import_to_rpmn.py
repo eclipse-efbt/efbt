@@ -23,6 +23,7 @@ from pyecore.resources.xmi import XMIResource
 from pyecore.resources.xmi import XMIOptions
 
 import csv
+import unidecode 
 class SQLDeveloperImport(object):
     
     # we create the main 4 'primitive' data types
@@ -65,6 +66,9 @@ class SQLDeveloperImport(object):
     # For the reference output layers we record a map between members ids  
     # and their codes
     memberIDToMemberCodeMap = {}
+    
+    FKtoMandatoryMap = {}
+    FKToColumnMap = {}
     # we record a list of missing domains
     missingDomains = []
     # enumMap keeps a reference between ldm ID's for domains and
@@ -75,7 +79,7 @@ class SQLDeveloperImport(object):
     # the directory where we save our outputs.
     outputDirectory = ""
          
-    def convert (self,theFileDirectory,theOutputDirectory, ROLAvailable):
+    def convert (self,theFileDirectory,theOutputDirectory, layer, ROLAvailable):
         '''
         from a set of CSV files exported from SQL developer, we create a RPMN file
         representing the LDM
@@ -90,7 +94,10 @@ class SQLDeveloperImport(object):
         self.rpmnPackage.classifiers.append(self.xDouble)
         self.rpmnPackage.classifiers.append(self.xInt)
         
-        SQLDeveloperImport.importLDM(self)
+        if(layer == "LDM"):
+            SQLDeveloperImport.importLDM(self)
+        if(layer == "IL"):
+            SQLDeveloperImport.importInputLayer(self)
         if (ROLAvailable):
             SQLDeveloperImport.importReferenceOutputLayers(self) 
         
@@ -109,6 +116,18 @@ class SQLDeveloperImport(object):
         SQLDeveloperImport.addLDMAttributesToClasses(self) 
         SQLDeveloperImport.removeLDMAttributesAlreadyInSuperClass(self) 
         SQLDeveloperImport.addLDMRelationshipsBetweenClasses(self)
+        
+    def importInputLayer(self):
+        '''
+        import the items from the BIRD LDM csv files
+        '''
+        SQLDeveloperImport.addILClassesToPackage(self)
+        SQLDeveloperImport.addILEnumsToPackage(self)
+        SQLDeveloperImport.addILLiteralsToEnums(self) 
+        SQLDeveloperImport.createILTypesMap(self) 
+        SQLDeveloperImport.addILAttributesToClasses(self) 
+        SQLDeveloperImport.createFKToColumnMap(self) 
+        SQLDeveloperImport.addILRelationshipsBetweenClasses(self)
         
     def importReferenceOutputLayers(self): 
         '''
@@ -254,9 +273,9 @@ class SQLDeveloperImport(object):
                     try:
                         counter=counter+1
                         enumID = row[0]
-                        enumUsedName = "m_" + SQLDeveloperImport.makeValidID(self,row[3])
-                        enumName = row[5]
-                        adaptedEnumName = SQLDeveloperImport.makeValidID(self,enumName)
+                        enumUsedName = SQLDeveloperImport.makeValidID(self,row[3])
+                        #enumName = row[5]
+                        adaptedEnumName = SQLDeveloperImport.makeValidID(self,enumUsedName)
                         value = row[4]
                         adaptedValue = SQLDeveloperImport.makeValidID(self,value)
                         try:
@@ -640,6 +659,510 @@ class SQLDeveloperImport(object):
                     if (not (theClass is None) ) :                 
                         theClass.members.append(eReference)
                         
+    def addILClassesToPackage(self):
+        '''
+        for each entity in the IL, create a class and add it to the package
+        '''
+        
+        fileLocation = self.fileDirectory + "\\DM_Tables.csv"
+        
+        
+        headerSkipped = False
+        # Load all the entities from the csv file, make an XClass per entity,
+        # and add the XClass to the package
+        with open(fileLocation) as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                # skip the first line which is the header.
+                if (not headerSkipped):
+                    headerSkipped = True
+                else:
+
+                    className = row[0];
+                    objectID = row[1];
+                    
+                    # assume that SQLDve gives valid IDS fro table names according 
+                    # to the validity rules of RPMN
+                    alteredClassName = SQLDeveloperImport.makeValidID(self,className);
+                   
+                    if(alteredClassName.endswith("_derived")):
+                        xclass = XClass(name=alteredClassName)
+                        xclassTable = XClass(name=alteredClassName+"_DerivedTable")
+                        xclassTable.containedEntityType = xclass
+                        containmentReference  = XReference()
+                        containmentReference.name=xclass.name+"s"
+                        containmentReference.type=xclass
+                        containmentReference.upperBound = -1
+                        containmentReference.lowerBound=0
+                        containmentReference.containment= True
+                        xclassTable.members.append(containmentReference)
+                        xclassTableOperation = XOperation()
+                        xclassTableOperation.name=xclass.name+"s"
+                        xclassTableOperation.type=xclass
+                        xclassTableOperation.upperBound = -1
+                        xclassTableOperation.lowerBound=0
+                        xclassTable.members.append(xclassTableOperation)
+                        self.rpmnPackage.classifiers.extend([xclass])
+                        self.rpmnPackage.classifiers.extend([xclassTable])
+                    elif(className.startswith("OUTPUT_LAYER_")):
+                        xclass = XClass(name=alteredClassName)
+                        
+                        self.rpmnPackage.classifiers.extend([xclass])
+                      
+                    else:
+                        xclass = XClass(name=alteredClassName)
+                        # of engineering type is single table, as i should be for all members of a type
+                        # heirarchy, and num_suptype is blanck, then this means that this class is a root
+                        # of a type heirarchy....we will set such classes to be abstract.
+                        xclassTable = XClass(name=alteredClassName+"_BaseTable")
+                        containmentReference  = XReference()
+                        containmentReference.name=xclass.name+"s"
+                        containmentReference.type=xclass
+                        containmentReference.upperBound = -1
+                        containmentReference.lowerBound=0
+                        containmentReference.containment= True
+                        xclassTable.members.append(containmentReference)
+                        self.rpmnPackage.classifiers.extend([xclass])
+                        self.rpmnPackage.classifiers.extend([xclassTable])
+        
+                    # maintain a map a objectIDs to XClasses
+                    self.classesMap[objectID]=xclass
+                    self.tableMap[xclass]=xclassTable
+         
+                        
+                       
+    def addILEnumsToPackage(self):
+        '''
+        for each domain in the IL add an enum to the package
+        '''
+        fileLocation = self.fileDirectory + "\\DM_Domains.csv"
+        headerSkipped = False
+        counter = 0
+        # Create an XEnum for each domain, and add it to the XPackage
+        with open(fileLocation) as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if (not headerSkipped):
+                        headerSkipped = True
+                else:
+                    counter=counter+1
+                    enumID = row[0]
+                    enumName = row[1]
+                    adaptedEnumName = SQLDeveloperImport.makeValidID(self,enumName)+"_domain"
+                    if(not SQLDeveloperImport.inEnumBlackList(self,adaptedEnumName)):
+                        theEnum = XEnum()
+                        theEnum.name = adaptedEnumName
+                        #maintain a map of enum IDS to XEnum objects
+                        self.enumMap[enumID] = theEnum
+                        self.rpmnPackage.classifiers.extend([theEnum])
+                        
+    def addILLiteralsToEnums(self):
+        '''
+        for each memebr of a domain the IL, add a literal to the corresponding enum
+        '''
+        fileLocation = self.fileDirectory + "\\DM_Domain_AVT.csv"
+        headerSkipped = False
+        counter = 0
+        # Add the members of a domain as literals of the related Enum
+        with open(fileLocation) as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if (not headerSkipped):
+                        headerSkipped = True
+                else:
+                    try:
+                        counter=counter+1
+                        enumID = row[0]
+                        enumUsedName = SQLDeveloperImport.makeValidID(self,row[3])
+                        #enumName = row[5]
+                        adaptedEnumName = SQLDeveloperImport.makeValidID(self,enumUsedName)
+                        value = row[4]
+                        adaptedValue = SQLDeveloperImport.makeValidID(self,value)
+                        try:
+                            theEnum = self.enumMap[enumID]
+                            newAdaptedValue = SQLDeveloperImport.uniqueValue(self,theEnum,adaptedValue)
+                            newAdaptedName = SQLDeveloperImport.uniqueName(self,theEnum,adaptedEnumName)
+                            enumLiteral = XEnumLiteral()
+                            enumLiteral.name = newAdaptedName
+                            enumLiteral.literal = newAdaptedValue
+                            enumLiteral.value = counter
+                            theEnum.literals.extend([enumLiteral])
+                                
+                        except KeyError:
+                            print( "missing domain: " + enumID )
+                             
+                    except IndexError:
+                        print( "row in DM_Domain_AVT.csv skipped  due to improper formatting at row number")
+                        print(counter)
+
+    def createILTypesMap(self):                
+        # for each logicalDatatype for orcle 12c, make a Datatype if we have an
+        # equivalent
+        
+        fileLocation = self.fileDirectory + "\\DM_Logical_To_Native.csv"
+        headerSkipped = False
+        with open(fileLocation) as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if (not headerSkipped):
+                        headerSkipped = True
+                else:
+                    rdbms_Type = row[3]
+                    rdbms_Version = row[4]
+                    dataTypeID = row[0]
+                    if ((rdbms_Type.strip() == "Oracle Database") and (rdbms_Version.strip() =="12cR2")):
+                        native_type = row[2]
+
+                        if (native_type.strip() == "VARCHAR") :
+
+                            self.datatypeMap[dataTypeID] = self.xString
+                      
+                        if (native_type.strip() == "VARCHAR2") :
+
+                            self.datatypeMap[dataTypeID] = self.xString
+                      
+                        if (native_type.strip() == "INTEGER") :
+
+                            self.datatypeMap[dataTypeID] = self.xInt
+                      
+                        if (native_type.strip() == "DATE") :
+
+                            self.datatypeMap[dataTypeID] = self.xDate
+                        
+                        if (native_type.strip() == "NUMBER") :
+
+                            self.datatypeMap[dataTypeID] = self.xDouble
+                        
+                        if (native_type.strip() == "UNKNOWN") :
+
+                            self.datatypeMap[dataTypeID] = self.xString
+        
+                                     
+    def addILAttributesToClasses(self):
+        '''
+        For each attribute on an entity of the IL, add an attribute
+        to the relevant class in the package
+        '''
+            
+        fileLocation = self.fileDirectory + "\\DM_Columns.csv"
+        headerSkipped = False
+        # For each attribute add an XAttribute to the correct XClass representing the Entity
+        # the attribute should have the correct type, which may be a specific
+        # enumeration
+
+        with open(fileLocation) as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if (not headerSkipped):
+                        headerSkipped = True
+                else:
+                    attributeName = row[0]
+                    attributeID = row[1]
+                    amendedAttributeName = SQLDeveloperImport.makeValidID(self,attributeName);
+                    mandatory = row[6]
+                    attributeKind = row[7]
+                   
+                    classID = row[4]
+                    relationID = row[35]
+                    primary_key_or_not = row[34]
+                    theClass = self.classesMap[classID]
+                    
+                    classIsDerived = False
+                    if (theClass.name.endswith("_derived")):
+                        classIsDerived = True
+                        
+                    theAttributeName =  amendedAttributeName
+                    
+                    # we only add attributes here if they are not representing a relationship
+                    if relationID == "":
+                        
+                        if (attributeKind == "Domain"):
+                            enumID = row[13]
+                            theEnum = self.enumMap[enumID]
+                            
+                            attribute = XAttribute()
+                            if(primary_key_or_not == "P"):
+                                attribute.iD = True
+                                
+                            attribute.lowerBound=0
+                            attribute.upperBound=1
+                            if(theEnum.name == "String"):
+                                attribute.name = theAttributeName
+                                attribute.type = self.xString
+                            elif(theEnum.name.startswith("String_")):
+                                attribute.name = theAttributeName
+                                attribute.type = self.xString
+                            elif(theEnum.name == "Number"):
+                                attribute.name = theAttributeName
+                                attribute.type = self.xDouble
+                            elif(theEnum.name.startswith("Real_")):
+                                attribute.name = theAttributeName
+                                attribute.type = self.xDouble
+                            elif(theEnum.name.startswith("Monetary")):
+                                attribute.name = theAttributeName
+                                attribute.type = self.xInt
+                            elif(theEnum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")): 
+                                attribute.name = theAttributeName
+                                attribute.type = self.xInt
+                            elif(theEnum.name.startswith("Non_negative_integers")): 
+                                attribute.name = theAttributeName
+                                attribute.type = self.xInt
+                            elif(theEnum.name.startswith("All_possible_dates")):
+                                attribute.name = theAttributeName
+                                attribute.type = self.xDate
+                                
+                            # This is a common domain used for String identifiers in BIRD in SQLDeveloper
+                            
+                            else:
+                                attribute.name = theAttributeName
+                                attribute.type = theEnum  
+                            
+                            if classIsDerived:
+                                operation = XOperation()
+                                operation.lowerBound=0
+                                operation.upperBound=1
+                                if(theEnum.name == "String"):
+                                    operation.name = theAttributeName
+                                    operation.type = self.xString
+                                elif(theEnum.name.startswith("String_")):
+                                    operation.name = theAttributeName
+                                    operation.type = self.xString
+                                elif(theEnum.name == "Number"):
+                                    operation.name = theAttributeName
+                                    operation.type = self.xDouble
+                                
+                                elif(theEnum.name.startswith("Real_")):
+                                    operation.name = theAttributeName
+                                    operation.type = self.xDouble
+                                elif(theEnum.name.startswith("Monetary")): 
+                                    operation.name = theAttributeName
+                                    operation.type = self.xInt
+                                elif(theEnum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")): 
+                                    operation.name = theAttributeName
+                                    operation.type = self.xInt
+                                elif(theEnum.name.startswith("Non_negative_integers")): 
+                                    operation.name = theAttributeName
+                                    operation.type = self.xInt
+                                elif(theEnum.name.startswith("All_possible_dates")):   
+                                    operation.name = theAttributeName
+                                    operation.type = self.xDate  
+                                else:
+                                    operation.name = theAttributeName
+                                    operation.type = theEnum  
+                                          
+    
+                        if (attributeKind == "Logical Type"):
+                            print("Logical Type")
+                            dataTypeID = row[14]
+                            try:
+                                datatype = self.datatypeMap[dataTypeID]
+                                attribute = XAttribute()
+                                attribute.lowerBound=0
+                                attribute.upperBound=1
+                                attribute.name =amendedAttributeName
+                                attribute.type = SQLDeveloperImport.getEcoreDataTypeForDataType(self)
+                                
+                                if classIsDerived:
+                                    operation = XOperation()
+                                    operation.lowerBound=0
+                                    operation.upperBound=1
+                                    operation.name =amendedAttributeName
+                                    operation.type = SQLDeveloperImport.getEcoreDataTypeForDataType(self)
+                                
+                            except KeyError:
+                                print("missing datatype: ")
+                                print(dataTypeID)                       
+    
+                        
+    
+                        try:
+    
+                            theClass = self.classesMap[classID]
+                            theClass.members.extend([attribute])
+                            if classIsDerived:
+                                theClass.members.extend([operation])
+    
+                        except:
+                            print( "missing class2: " )
+                            print(classID)
+                    else:
+                        if mandatory == "Y":
+                            self.FKtoMandatoryMap[attributeID] = "M"  
+                        
+    def createFKToColumnMap(self):
+        fileLocation = self.fileDirectory + "\\DM_Constr_Index_Columns.csv"
+        headerSkipped = False
+        with open(fileLocation) as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if (not headerSkipped):
+                        headerSkipped = True
+                else:
+                    fk_name = row[6]
+                    columnID = row[2]
+                    self.FKToColumnMap[fk_name] = columnID
+                
+    def addILRelationshipsBetweenClasses(self):
+        '''
+        For each relationship in the IL, add a reference between the relevant classes
+        '''    
+        fileLocation = self.fileDirectory + "\\DM_ForeignKeys.csv"
+        headerSkipped = False
+        with open(fileLocation) as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if (not headerSkipped):
+                        headerSkipped = True
+                else:
+                    fk_id = row[0]
+                    sourceID = row[10]
+                    targetID = row[12]
+                    
+                    targetClassName = row[7]
+                    
+                    fkColumnnID = self.FKToColumnMap[fk_id]
+                    
+                    if fkColumnnID in self.FKtoMandatoryMap:
+                        target_Optional = "N"
+                    else:
+                        target_Optional = "Y"
+                        
+                    sourceTo_Target_Cardinality = "1"
+                    
+                    referenceName = "the" + SQLDeveloperImport.makeValidID(self,targetClassName);
+
+                    try:
+                        theClass = self.classesMap[sourceID]
+                    except KeyError:
+                        print("missing class1: " + sourceID)
+                    
+                    try:   
+                        targetClass = self.classesMap[targetID] 
+                    except KeyError:
+                        print("missing target class: " + targetID) 
+                                          
+                    numOfRelations = SQLDeveloperImport.numberofRelationShipsToThisClass(self,theClass,targetClass)
+                    if(numOfRelations>0):
+                        print("numOfRelations")
+                        print(numOfRelations)
+                        referenceName = referenceName + str(numOfRelations)
+                    relationalAttribute = None
+                    if (target_Optional.strip() == "Y"):
+                        if (sourceTo_Target_Cardinality.strip() == "*"):
+                            referenceName = referenceName + "s"
+                            eReference  = XReference()
+                            eReference.name=referenceName
+                            eReference.type=targetClass
+                            #upper bound of -1 means there is no upper bounds, so represents an open list of reference
+                            eReference.upperBound = -1
+                            eReference.lowerBound=0
+                            eReference.containment= False
+                            if (theClass.name.endswith("_derived")):
+                                theSourceTable = self.tableMap[theClass]
+                                theTargetTable = self.tableMap[targetClass]
+                                if not(SQLDeveloperImport.hasMemberCalled(self, theSourceTable, "sourceTable1")):
+                                   
+                                    sourceTablesReference  = XReference()
+                                    sourceTablesReference.name="sourceTable1"
+                                    sourceTablesReference.type=theTargetTable
+                                    sourceTablesReference.upperBound = -1
+                                    sourceTablesReference.lowerBound=0
+                                    sourceTablesReference.containment= False
+                                    theSourceTable.members.append(sourceTablesReference)
+                                else:
+                                   
+                                    sourceTablesReference  = XReference()
+                                    sourceTablesReference.name="sourceTable2"
+                                    sourceTablesReference.type=theTargetTable
+                                    sourceTablesReference.upperBound = -1
+                                    sourceTablesReference.lowerBound=0
+                                    sourceTablesReference.containment= False
+                                    theSourceTable.members.append(sourceTablesReference)
+                        else:
+                            eReference  = XReference()
+                            eReference.name=referenceName
+                            eReference.type=targetClass
+                            eReference.upperBound = 1
+                            eReference.lowerBound=0
+                            eReference.containment= False
+                            if (theClass.name.endswith("_derived")):
+                                theSourceTable = self.tableMap[theClass]
+                                theTargetTable = self.tableMap[targetClass]
+                                if not(SQLDeveloperImport.hasMemberCalled(self, theSourceTable, "sourceTable1")):
+                                    
+                                    sourceTablesReference  = XReference()
+                                    sourceTablesReference.name="sourceTable1"
+                                    sourceTablesReference.type=theTargetTable
+                                    sourceTablesReference.upperBound = -1
+                                    sourceTablesReference.lowerBound=0
+                                    sourceTablesReference.containment= False
+                                    theSourceTable.members.append(sourceTablesReference)
+                                else:
+                                    
+                                    sourceTablesReference  = XReference()
+                                    sourceTablesReference.name="sourceTable2"
+                                    sourceTablesReference.type=theTargetTable
+                                    sourceTablesReference.upperBound = -1
+                                    sourceTablesReference.lowerBound=0
+                                    sourceTablesReference.containment= False
+                                    theSourceTable.members.append(sourceTablesReference)                 
+                    else:
+                        if (sourceTo_Target_Cardinality.strip() == "*"):
+                            referenceName = referenceName + "s"                       
+                            eReference  = XReference()
+                            eReference.name=referenceName
+                            eReference.type=targetClass
+                            eReference.upperBound = -1
+                            eReference.lowerBound=1
+                            eReference.containment= False
+                            if (theClass.name.endswith("_derived")):
+
+                                theSourceTable = self.tableMap[theClass]
+                                theTargetTable = self.tableMap[targetClass]
+                                if not(SQLDeveloperImport.hasMemberCalled(self, theSourceTable, "sourceTable1")):
+                                    
+                                    sourceTablesReference  = XReference()
+                                    sourceTablesReference.name="sourceTable1"
+                                    sourceTablesReference.type=theTargetTable
+                                    sourceTablesReference.upperBound = -1
+                                    sourceTablesReference.lowerBound=0
+                                    sourceTablesReference.containment= False
+                                    theSourceTable.members.append(sourceTablesReference)
+                                else:
+                                    sourceTablesReference = XReference("sourceTable2", theTargetTable, upper=-1, lower=0, containment=False)
+                                    theSourceTable.members.append(sourceTablesReference)                       
+                        else:      
+                            eReference  = XReference()
+                            eReference.name=referenceName
+                            eReference.type=targetClass
+                            eReference.upperBound = 1
+                            eReference.lowerBound=1
+                            eReference.containment= False
+                            if (theClass.name.endswith("_derived")):
+                                theSourceTable = self.tableMap[theClass]
+                                theTargetTable = self.tableMap[targetClass]
+                                if not(SQLDeveloperImport.hasMemberCalled(self, theSourceTable, "sourceTable1")):
+                                    
+                                    sourceTablesReference  = XReference()
+                                    sourceTablesReference.name="sourceTable1"
+                                    sourceTablesReference.type=theTargetTable
+                                    sourceTablesReference.upperBound = -1
+                                    sourceTablesReference.lowerBound=0
+                                    sourceTablesReference.containment= False
+                                    theSourceTable.members.append(sourceTablesReference)
+                                else:
+                                    
+                                    sourceTablesReference  = XReference()
+                                    sourceTablesReference.name="sourceTable2"
+                                    sourceTablesReference.type=theTargetTable
+                                    sourceTablesReference.upperBound = -1
+                                    sourceTablesReference.lowerBound=0
+                                    sourceTablesReference.containment= False
+                                    theSourceTable.members.append(sourceTablesReference)
+                    if (not (theClass is None) ) :                 
+                        theClass.members.append(eReference)
+                        
+    
     
 
         
@@ -716,7 +1239,6 @@ class SQLDeveloperImport(object):
         fileLocation = self.fileDirectory + "\\domain.csv"
         headerSkipped = False
 
-        domainToDomainNameMap = {}
         with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -726,7 +1248,7 @@ class SQLDeveloperImport(object):
                     domainID = row[1]
                     #domainName = SQLDeveloperImport.makeValidID(self,row[3])
                     domainName = row[2]
-                    domainToDomainNameMap[domainID] = domainName
+                    self.domainToDomainNameMap[domainID] = domainName
                    
     def createMemberMaps(self):   
          # Make a domain  to Domain Name Map 
@@ -764,21 +1286,13 @@ class SQLDeveloperImport(object):
                 if (not headerSkipped):
                         headerSkipped = True
                 else:
-                    attributeName = row[1]
-                    amendedAttributeName = SQLDeveloperImport.makeValidID(self,attributeName)
                     variable = row[2]
-                   
                     classID = row[0]
                     try: 
-                        theClass = self.classesMap[classID]
-                        
-                        classIsDerived = True
-                            
-                        theAttributeName =  amendedAttributeName
-       
+
                         domainID = self.variableToDomainMap[variable]
-                        domain_ID_Name = self.domainToDomainNameMap[domainID]
-                        amendedDomainName = SQLDeveloperImport.makeValidID(self,domain_ID_Name)
+                        # domain_ID_Name = self.domainToDomainNameMap[domainID]
+                        amendedDomainName = SQLDeveloperImport.makeValidID(self,domainID)
                         theEnum =  SQLDeveloperImport.findROLEnum(self,amendedDomainName+"_domain",self.enumMap)
                         if  theEnum is not None:                     
                             print( "not missing domainID: " )
@@ -789,13 +1303,13 @@ class SQLDeveloperImport(object):
                             if not(domainID in self.missingDomains):
                                 self.missingDomains.append(domainID)
                     except:
-                            print( "missing ROL class: " )
+                            print( "missing ROL class2: " )
                             print(classID)    
                             
         for theDomain in self.missingDomains:
             
-            domain_ID_Name = self.domainToDomainNameMap[theDomain]
-            amendedDomainName = SQLDeveloperImport.makeValidID(self,domain_ID_Name)+ "_domain"
+            #domain_ID_Name = self.domainToDomainNameMap[theDomain]
+            amendedDomainName = SQLDeveloperImport.makeValidID(self,theDomain)+ "_domain"
             if not( (amendedDomainName == "String") or (amendedDomainName == "Date")  ):
                 theEnum = XEnum()
                 theEnum.name = amendedDomainName 
@@ -806,7 +1320,7 @@ class SQLDeveloperImport(object):
                 counter1 = 0
                 for member in theDomainMembers:
                     enumLiteral = XEnumLiteral()
-                    enumUsedName = "m_" + SQLDeveloperImport.makeValidID(self,self.memberIDToMemberCodeMap[member])
+                    enumUsedName = SQLDeveloperImport.makeValidID(self,self.memberIDToMemberCodeMap[member])
                     adaptedValue = SQLDeveloperImport.makeValidID(self,self.memberIDToMemberNameMap[member])
                     newAdaptedValue = SQLDeveloperImport.uniqueValue(self, theEnum, adaptedValue)
                     newAdaptedName = SQLDeveloperImport.uniqueName(self, theEnum, enumUsedName)
@@ -848,8 +1362,8 @@ class SQLDeveloperImport(object):
                         theAttributeName =  amendedAttributeName
        
                         domainID = self.variableToDomainMap[variable]
-                        domain_ID_Name = self.domainToDomainNameMap[domainID]
-                        amendedDomainName = SQLDeveloperImport.makeValidID(self,domain_ID_Name)
+                        #domain_ID_Name = self.domainToDomainNameMap[domainID]
+                        amendedDomainName = SQLDeveloperImport.makeValidID(self,domainID)
                         theEnum =  SQLDeveloperImport.findROLEnum(self,amendedDomainName+"_domain",self.enumMap)
                         if  theEnum is not None:                     
                             attribute = XAttribute()
@@ -930,13 +1444,13 @@ class SQLDeveloperImport(object):
                             except:
                                 print( "missing class2: " )
                         else:
-                            print( "missing domainID: " )
+                            print( "XXXXX missing domainID: " )
                             print(domainID)
                             print(classID)
                             if not(domainID in self.missingDomains):
                                 self.missingDomains.append(domainID)
                     except:
-                            print( "missing ROL class: " )
+                            print( "XX missing ROL class1: " )
                             print(classID)                                
                             
         
@@ -961,7 +1475,7 @@ class SQLDeveloperImport(object):
         # it is particularly noticeable in NUTS and NACE codes.
         # this high limit increases the processing time from under 1 minute
         # to a few minutes for the full BIRD data model.
-        limit = 1400
+        limit = 32
         while ((counter < limit) and not(finished)):
             counter = counter + 1
             if SQLDeveloperImport.containsLiteral(self,theEnum.literals, adaptedValue +"_x" + str(counter)):
@@ -981,7 +1495,7 @@ class SQLDeveloperImport(object):
         newAdaptedName = enumUsedName
         counter = 1
         finished = False
-        limit = 1400
+        limit = 32
         if SQLDeveloperImport.containsName(self,theEnum.literals, enumUsedName ):
                 newAdaptedName = enumUsedName +"_x2"
                 
@@ -1080,7 +1594,7 @@ class SQLDeveloperImport(object):
         '''
         rset = ResourceSet()
 
-        resource = rset.create_resource(URI(self.outputDirectory + 'ldm.rpmn'))  # This will create an XMI resource
+        resource = rset.create_resource(URI(self.outputDirectory + 'IL.rpmn'))  # This will create an XMI resource
         resource.append(self.rpmnPackage)
         resource.save()
     
@@ -1140,13 +1654,17 @@ class SQLDeveloperImport(object):
             if((inputString[0] >= '0') and (inputString[0] <= '9')) :
                 inputString = "_" + inputString
         # we replace special characters not allowed in id's with an underscore
-        amendedInputString  =  inputString.replace(' ', '_').replace(')', '_').replace('(', '_') \
+        amendedInputString  =  inputString.replace('  ', ' ').replace(' ', '_').replace(')', '_').replace('(', '_') \
                 .replace(',', '_').replace('\\', '_').replace('/', '_').replace('-', '_').replace(':', '_') \
-                .replace('+', '_').replace('.', '_').replace('?', '_').replace('\'', '_').replace('>', '_') \
-                .replace('<', '_').replace('\"', '_').replace(';', '_').replace('$', '_').replace('=', '_').replace('#', '_') \
-                .replace('&', '_').replace('%', '_').replace('[', '_').replace(']', '_').replace('?', '_').replace('–', '_') \
+                .replace('+', '_').replace('.', '_').replace('?', '_').replace('\'', '_').replace('>', '_gt') \
+                .replace('<', '_lt').replace('\"', '_').replace(';', '_').replace('$', '_').replace('=', '_eq').replace('#', '_') \
+                .replace('&', '_').replace('%', '_').replace('[', '_').replace(']', '_').replace('?', '_').replace('–', '_').replace('__', '_').replace('__', '_') \
                 .replace( chr(0x2019), '_').replace( chr(65533), '_') \
-                .replace(chr(0x2018), '_').replace(chr(0x0060), '_').replace(chr(0x00B4), '_') 
+                .replace(chr(0x2018), '_').replace(chr(0x0060), '_').replace(chr(0x00B4), '_').replace(chr(0x2026), '_') \
+                .replace(chr(0x200B), '_').replace(chr(0x202F), '_').replace(chr(0x205F), '_').replace(chr(0x3000), '_') \
+                .replace(chr(0x2000), '_').replace(chr(0x2001), '_').replace(chr(0x2002), '_').replace(chr(0x2003), '_') \
+                .replace(chr(0x2004), '_').replace(chr(0x2005), '_').replace(chr(0x2006), '_').replace(chr(0x2007), '_') \
+                .replace(chr(0x2008), '_').replace(chr(0x2009), '_').replace(chr(0x200A), '_').replace(chr(0x00A0), '_')
           
         returnString = SQLDeveloperImport.replaceAcutesGravesAndCircumflexes(self, amendedInputString)      
 
@@ -1156,26 +1674,24 @@ class SQLDeveloperImport(object):
         '''
         We replace letters with acutes , graves, and circumflexes, with the basic letter.
         So for example "a acute" is replaced with "a"
-        '''
-        returnString = theInputString.replace(chr(0x00E9), 'e').replace(chr(0x00C9), 'E').replace(chr(0x00E8), 'e').replace(chr(0x00EB), 'e').replace(chr(0x00CB), 'E') \
-                .replace(chr(0x00CA), 'E').replace(chr(0x00EA), 'e').replace(chr(0x00E7), 'c').replace(chr(0x00FC), 'u') \
+        
+        returnString = theInputString.replace(chr(0x00E9), 'e').replace(chr(0x00C9), 'E').replace(chr(0x00E8), 'e')  \
+                .replace(chr(0x00EB), 'e').replace(chr(0x00CB), 'E').replace(chr(0x0116), 'E').replace(chr(0x0117), 'e').replace(chr(0x0118), 'E').replace(chr(0x0119), 'e') \
+                .replace(chr(0x00CA), 'E').replace(chr(0x00EA), 'e').replace(chr(0x00E7), 'c').replace(chr(0x00C7), 'C').replace(chr(0x010C), 'C').replace(chr(0x010D), 'c').replace(chr(0x00FC), 'u') \
                 .replace(chr(0x00DA), 'U').replace(chr(0x00FA), 'u').replace(chr(0x00DC), 'U').replace(chr(0x00FC), 'u').replace(chr(0x00F6), 'o') \
-                .replace(chr(0x200B), '_').replace(chr(0x202F), '_').replace(chr(0x205F), '_').replace(chr(0x3000), '_') \
-                .replace(chr(0x2000), '_').replace(chr(0x2001), '_').replace(chr(0x2002), '_').replace(chr(0x2003), '_') \
-                .replace(chr(0x2004), '_').replace(chr(0x2005), '_').replace(chr(0x2006), '_').replace(chr(0x2007), '_') \
-                .replace(chr(0x2008), '_').replace(chr(0x2009), '_').replace(chr(0x200A), '_').replace(chr(0x00A0), '_') \
                 .replace(chr(0x00ED), 'i').replace(chr(0x00CC), 'I').replace(chr(0x00EC), 'i').replace(chr(0x00CE), 'I') \
                 .replace(chr(0x00EE), 'i').replace(chr(0x00E4), 'a').replace(chr(0x00E1), 'a').replace(chr(0x00C1), 'A').replace(chr(0x00D6), 'O') \
-                .replace(chr(0x00D3), 'O').replace(chr(0x00F3), 'o').replace(chr(0x00D1), 'N').replace(chr(0x00F1), 'n') \
+                .replace(chr(0x00D3), 'O').replace(chr(0x00D4), 'O').replace(chr(0x00F3), 'o').replace(chr(0x00D1), 'N').replace(chr(0x00F1), 'n') \
                 .replace(chr(0x00DF), 'ss').replace(chr(0x00E0), 'a').replace(chr(0x00C0), 'A').replace(chr(0x00C2), 'A').replace(chr(0x00E2), 'a') \
                 .replace(chr(0x00C3), 'A').replace(chr(0x00E3), 'a') \
-                .replace(chr(0x00FD), 'y').replace(chr(0x017D), 'Z').replace(chr(0x017E), 'z') \
-                .replace(chr(0x0160), 'S').replace(chr(0x0161), 's').replace(chr(0x00D8), 'O').replace(chr(0x00F8), 'o').replace(chr(0x00F4), 'o').replace(chr(0x00D5), 'O').replace(chr(0x00F5), 'o')  \
+                .replace(chr(0x00FD), 'y').replace(chr(0x017D), 'Z').replace(chr(0x017E), 'z').replace(chr(0x0179), 'Z').replace(chr(0x017A), 'z').replace(chr(0x017B), 'Z').replace(chr(0x017C), 'z') \
+                .replace(chr(0x0160), 'S').replace(chr(0x0161), 's').replace(chr(0x015A), 'S').replace(chr(0x015B), 's').replace(chr(0x00D8), 'O').replace(chr(0x00F8), 'o').replace(chr(0x00F4), 'o').replace(chr(0x00D5), 'O').replace(chr(0x00F5), 'o')  \
                 .replace(chr(0x00C6), 'AE').replace(chr(0x01E2), 'AE').replace(chr(0x01FC), 'AE')   \
                 .replace(chr(0x00E6), 'ae').replace(chr(0x01E3), 'ae').replace(chr(0x01FD), 'ae')    \
-                .replace(chr(0x00C5), 'A').replace(chr(0x00E5), 'a')
-             
-        return returnString;
+                .replace(chr(0x00C5), 'A').replace(chr(0x00E5), 'a').replace(chr(0x0143), 'N').replace(chr(0x0144), 'n').replace(chr(0x0141), 'L').replace(chr(0x0142), 'l').replace(chr(0x0173), 'u')
+        '''
+        return unidecode.unidecode(theInputString)     
+       
 
     def inEnumBlackList(self,adaptedEnumName):
         # TODO not sure if we still need this, it was introduces to deal with 
@@ -1235,7 +1751,7 @@ class SQLDeveloperImport(object):
         return returnVal
     
 if __name__ == '__main__':
-    SQLDeveloperImport().convert('C:\\Users\\LENOVO\\freebirdtools-develop-nov\\git\\efbt\\openregspecs\\python\\resources','C:\\Users\\LENOVO\\freebirdtools-develop-nov\\git\\efbt\\openregspecs\\python\\results\\', False)
+    SQLDeveloperImport().convert('C:\\Users\\LENOVO\\freebirdtools-develop-nov\\git\\efbt\\openregspecs\\python\\resources','C:\\Users\\LENOVO\\freebirdtools-develop-nov\\git\\efbt\\openregspecs\\python\\results\\', "IL", True)
     
             
             
