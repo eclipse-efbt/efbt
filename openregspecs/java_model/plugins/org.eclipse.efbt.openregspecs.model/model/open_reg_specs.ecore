@@ -36,10 +36,15 @@
   <eClassifiers xsi:type="ecore:EClass" name="InclusiveGateway" eSuperTypes="#//Gateway"/>
   <eClassifiers xsi:type="ecore:EClass" name="ParallelGateway" eSuperTypes="#//Gateway"/>
   <eClassifiers xsi:type="ecore:EClass" name="ServiceTask" eSuperTypes="#//Task">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="enrichedAttribute" eType="#//XAttribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="enrichedAttribute" eType="#//XOperation"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="scenarios" upperBound="-1"
         eType="#//Scenario" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="secondAttribute" eType="#//XAttribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="requiredAttributesForScenarioChoice"
+        upperBound="-1" eType="#//XMember"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="requiredAttributesForEntityCreation"
+        upperBound="-1" eType="#//XMember"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="entityCreationTask" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SubProcess" eSuperTypes="#//Activity #//FlowElementsContainer"/>
   <eClassifiers xsi:type="ecore:EClass" name="ScriptTask" eSuperTypes="#//Task">
@@ -262,13 +267,13 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SelectClause"/>
   <eClassifiers xsi:type="ecore:EClass" name="SelectColumn">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="as" eType="#//XAttribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="as" eType="#//XMember"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SelectColumnMemberAs" eSuperTypes="#//SelectColumn">
     <eStructuralFeatures xsi:type="ecore:EReference" name="memberAsConstant" eType="#//XEnumLiteral"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SelectColumnAttributeAs" eSuperTypes="#//SelectColumn">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" eType="#//XAttribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" eType="#//XMember"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="Comparitor">
     <eLiterals name="less_than"/>

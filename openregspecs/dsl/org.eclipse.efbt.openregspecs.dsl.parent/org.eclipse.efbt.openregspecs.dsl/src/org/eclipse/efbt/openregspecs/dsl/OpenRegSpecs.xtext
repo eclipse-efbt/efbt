@@ -261,8 +261,10 @@ ServiceTask returns open_reg_specs::ServiceTask:
 		
 		('outgoing' '(' outgoing+=[open_reg_specs::SequenceFlow|EString] ( "," outgoing+=[open_reg_specs::SequenceFlow|EString])* ')' )?
 		('incoming' '(' incoming+=[open_reg_specs::SequenceFlow|EString] ( "," incoming+=[open_reg_specs::SequenceFlow|EString])* ')' )?
-		('enrichedAttribute' enrichedAttribute=[open_reg_specs::XAttribute|EString])?
+		('enrichedAttribute' enrichedAttribute=[open_reg_specs::XOperation|EString])?
 		('secondAttribute' secondAttribute=[open_reg_specs::XAttribute|EString])?
+		('requiredAttributesForScenarioChoice' '(' requiredAttributesForScenarioChoice+=[open_reg_specs::XMember|EString] ( "," requiredAttributesForScenarioChoice+=[open_reg_specs::XMember|EString])* ')' )?
+		('requiredAttributesForEntityCreation' '(' requiredAttributesForEntityCreation+=[open_reg_specs::XMember|EString] ( "," requiredAttributesForEntityCreation+=[open_reg_specs::XMember|EString])* ')' )?
 		('scenarios' '{' scenarios+=Scenario ( "," scenarios+=Scenario)* '}' )?
 		('description' description=EString)?
 	'}';
@@ -460,8 +462,8 @@ SelectColumnMemberAs returns open_reg_specs::SelectColumnMemberAs:
 SelectColumnAttributeAs returns open_reg_specs::SelectColumnAttributeAs:
 	{open_reg_specs::SelectColumnAttributeAs}
 	'SelectAttribute'
-		( attribute=[open_reg_specs::XAttribute|EString])?
-		('as' ^as=[open_reg_specs::XAttribute|EString])?
+		( attribute=[open_reg_specs::XMember|EString])?
+		('as' ^as=[open_reg_specs::XMember|EString])? 
 	;
 	
 
