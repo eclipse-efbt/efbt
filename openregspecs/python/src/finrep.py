@@ -97,29 +97,32 @@ class Finrep(object):
     def addLayers(self,view, task):
         fileLocation = self.fileDirectory + "\\VTL_layer_to_IL.csv"
         
+        vtlLayers = self.outputLayerToVTLLayerMap[view.name]
         
-        headerSkipped = False
-        # Load all the entities from the csv file, make an XClass per entity,
-        # and add the XClass to the package
-        with open(fileLocation) as csvfile:
-            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
-            for row in filereader:
-                # skip the first line which is the header.
-                if (not headerSkipped):
-                    headerSkipped = True
-                else:
-                    vtlLayer = row[0];
-                    input_layer = row[2]
-                    sqlfilter = row[3]
-                    if(input_layer == view.name):
-                        selectionLayer = SelectionLayer(name = input_layer)
-                        task.selectionLayers.extend([selectionLayer])
-                        layerSQL = LayerSQL(name = input_layer)
-                        layerSQL.selectionLayer = selectionLayer
-                        layerSQL.comment = sqlfilter
-                        view.selectionLayerSQL.extend([layerSQL])
-                        Finrep.addColumnsToLayer(self,layerSQL)
-                        
+        for layer in vtlLayers:
+            
+            headerSkipped = False
+            # Load all the entities from the csv file, make an XClass per entity,
+            # and add the XClass to the package
+            with open(fileLocation) as csvfile:
+                filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+                for row in filereader:
+                    # skip the first line which is the header.
+                    if (not headerSkipped):
+                        headerSkipped = True
+                    else:
+                        vtlLayer = row[0];
+                        input_layer = row[2]
+                        sqlfilter = row[3]
+                        if vtlLayer == layer:
+                            selectionLayer = SelectionLayer(name = input_layer)
+                            task.selectionLayers.extend([selectionLayer])
+                            layerSQL = LayerSQL(name = input_layer)
+                            layerSQL.selectionLayer = selectionLayer
+                            layerSQL.comment = sqlfilter
+                            view.selectionLayerSQL.extend([layerSQL])
+                            Finrep.addColumnsToLayer(self,layerSQL)
+                            
                         
     def addColumnsToLayer(self,layerSQL):
         fileLocation = self.fileDirectory + "\\cube_structure_item.csv"
