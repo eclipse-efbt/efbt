@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="vtl_logic" nsURI="http://www.eclipse.org/efbt/vtl_logic" nsPrefix="vtl_logic">
+  <eClassifiers xsi:type="ecore:EClass" name="VTLEnrichedCube">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="transformations" upperBound="-1"
+        eType="#//VTLTransformation"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VTLGeneratedOutputlayer">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dependant_intermediate_layers"
+        upperBound="-1" eType="#//VTLGeneratedIntermediateLayer"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="VTLForOutputLayerAndIntemedateLayerCombinations"
+        upperBound="-1" eType="#//VTLForOutputLayerAndIntermediateLayerCombination"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="outputLayer" eType="ecore:EClass Xcore.ecore#//XClass"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VTLForOutputLayerAndIntermediateLayerCombination">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="transformations" upperBound="-1"
+        eType="#//VTLTransformation"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="outputLayer" eType="#//VTLGeneratedOutputlayer"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="intermediateLayer" eType="#//VTLGeneratedIntermediateLayer"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VTLGeneratedIntermediateLayer">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dependant_enriched_cubes"
+        eType="#//VTLEnrichedCube"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="transformations" upperBound="-1"
+        eType="#//VTLTransformation"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VTLTransformation">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="expression" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="transformation_id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="order_in_scheme" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VTLScheme">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expressions" upperBound="-1"
+        eType="#//VTLTransformation" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="scheme_id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VTLForSelectionLayer">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="selectionLayer" eType="ecore:EClass sql_lite.ecore#//LayerSQL"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="outputLayer" eType="#//VTLGeneratedOutputlayer"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="intermediateLayer" eType="#//VTLGeneratedIntermediateLayer"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VTLModule" eSuperTypes="module_management.ecore#//Module">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="VTLSchemes" upperBound="-1"
+        eType="#//VTLScheme" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="VTLGeneratedOutputLayers"
+        upperBound="-1" eType="#//VTLGeneratedOutputlayer" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="VTLGeneratedIntermediateLayers"
+        upperBound="-1" eType="#//VTLGeneratedIntermediateLayer" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="VTLEnrichedCubes" upperBound="-1"
+        eType="#//VTLEnrichedCube" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="VTLForSelectionLayers"
+        upperBound="-1" eType="#//VTLForSelectionLayer" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entityToVTLIntermediateLayerLinks"
+        upperBound="-1" eType="#//EntityToVTLIntermediateLayerLink" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EntityToVTLIntermediateLayerLink">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="VTLIntermediateLayer" eType="#//VTLGeneratedIntermediateLayer"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entity" eType="ecore:EClass Xcore.ecore#//XClass"/>
+  </eClassifiers>
+</ecore:EPackage>

@@ -5,7 +5,7 @@ Created on 22 Jan 2022
 '''
 import csv
 from open_reg_specs import *
-class Finrep(object):
+class ImportFinrepVTL(object):
     '''
     1.) Look throug in scope reports
     2.) Fro each report:
@@ -15,35 +15,25 @@ class Finrep(object):
     6.) for each layer: 
     7.) get the Input Layers.
     8.) for each input layer:
-    9.) write the rpmn:
-    10.) write the relevent VTL commands fro that VTL layer.
+    9.) write the rpmn volumns:
+    10.) write the filter condition
+    11.) write the VTL that is on top of the layer to make the report
+    12.) write the VTL that is for the layer
+    13.) write the VTL that is for the enrichment cube under the layer
+
     Thats all.
     Document this in a powerpoint.
     '''
-    
-    # the directory where we get our input files
-    fileDirectory = ""
-    # the directory where we save our outputs.
-    outputDirectory = ""
-     # This is the root Module for generation rpmn files
-    viewModule = ViewModule(name='generations')
-    
-    workflowModule = WorkflowModule(name='finrep')
-    
-    outputLayerToVTLLayerMap = {}
-    
-    
-    def convert(self,theFileDirectory,theOutputDirectory):
+
+    def doImport(self,context):
         
-        Finrep.buildOutputLayerToVTLLayerMap(self)
-        self.fileDirectory = theFileDirectory
-        self.outputDirectory = theOutputDirectory
+        ImportFinrepVTL.buildOutputLayerToVTLLayerMap(self)
         subProcess = SubProcess(name = "finrepReports")
-        self.workflowModule.subProcess.extend([subProcess])
-        Finrep.addReports(self)
+        context.workflowModule.subProcess.extend([subProcess])
+        ImportFinrepVTL.addReports(self,context)
     
-    def buildOutputLayerToVTLLayerMap(self):
-        fileLocation = self.fileDirectory + "\\TRANSFORMATIONS_50.csv"
+    def buildOutputLayerToVTLLayerMap(self,context):
+        fileLocation = context.fileDirectory + "\\TRANSFORMATIONS_50.csv"
 
         headerSkipped = False
         # Load all the entities from the csv file, make an XClass per entity,
@@ -66,13 +56,56 @@ class Finrep(object):
                             indexOfSchemeStart = expression.find('G_')
                             indexOfSchemeEnd= expression.find('UNFLDD_FINREP_1')
                             output_layer = scheme.substring(indexOfSchemeStart,indexOfSchemeEnd)
-                            self.outputLayerToVTLLayerMap[output_layer, vtl_layer_list]
-                            
-                            
+                            context.outputLayerToVTLLayerMap[output_layer, vtl_layer_list]
+    
+    def buildListOfVTLLayersForFinrep(self,context):
+        fileLocation = context.fileDirectory + "\\TRANSFORMATIONS_50.csv"
+
+        headerSkipped = False
+        # Load all the entities from the csv file, make an XClass per entity,
+        # and add the XClass to the package
+        with open(fileLocation) as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                # skip the first line which is the header.
+                if (not headerSkipped):
+                    headerSkipped = True
+                else:
+                    expression = row[2]
+                    scheme = row[7] 
+                    if scheme.startsWith("G_") and not(scheme.startsWith("G_F_")) and scheme.endsWith("_FINREP_1"):   
+                        indexOfSchemeStart = expression.find('G_')
+                        indexOfSchemeEnd= expression.find('_FINREP_1')
+                        output_layer = scheme.substring(indexOfSchemeStart,indexOfSchemeEnd)
+                        if not(context.vtl_layers.contains(output_layer)):
+                            context.vtl_layers.append(output_layer)
+                                                                      
+    def VTLLayerToVTLLayerLogicMap(self,context):
+        
+        for vtl_layer in context.vtl_layers:
+            expressionlist = []
+            fileLocation = context.fileDirectory + "\\TRANSFORMATIONS_50.csv"
+    
+            headerSkipped = False
+            # Load all the entities from the csv file, make an XClass per entity,
+            # and add the XClass to the package
+            with open(fileLocation) as csvfile:
+                filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+                for row in filereader:
+                    # skip the first line which is the header.
+                    if (not headerSkipped):
+                        headerSkipped = True
+                    else:
+                        expression = row[2]
+                        scheme = row[7]
+                        if ("G_F_" + vtl_layer + "_FINREP_1") == scheme:
+                            expressionlist.add()
+                        
+                    
                        
         
-    def addReports(self):
-        fileLocation = self.fileDirectory + "\\in_scope_reports.csv"
+    def addReports(self,context):
+        fileLocation = context.fileDirectory + "\\in_scope_reports.csv"
         
         
         headerSkipped = False
@@ -89,15 +122,15 @@ class Finrep(object):
                     new = row[1];
                     view =  View(name = reportTemplate)
                     task = ScriptTask(name = reportTemplate)
-                    self.viewModule.views.extend([view])
-                    self.workflowModule.subProcess[0].extend([task])
-                    Finrep.addLayers(self, view, task)
+                    context.viewModule.views.extend([view])
+                    context.workflowModule.subProcess[0].extend([task])
+                    ImportFinrepVTL.addLayers(self, view, task)
                     
                     
-    def addLayers(self,view, task):
-        fileLocation = self.fileDirectory + "\\VTL_layer_to_IL.csv"
+    def addLayers(self,context,view, task):
+        fileLocation = context.fileDirectory + "\\VTL_layer_to_IL.csv"
         
-        vtlLayers = self.outputLayerToVTLLayerMap[view.name]
+        vtlLayers = context.outputLayerToVTLLayerMap[view.name]
         
         for layer in vtlLayers:
             
@@ -119,13 +152,14 @@ class Finrep(object):
                             task.selectionLayers.extend([selectionLayer])
                             layerSQL = LayerSQL(name = input_layer)
                             layerSQL.selectionLayer = selectionLayer
-                            layerSQL.comment = sqlfilter
+                            layerSQL.filter_comment = sqlfilter
+                            layerSQL.original_vtl_layer_comment = vtlLayer
                             view.selectionLayerSQL.extend([layerSQL])
-                            Finrep.addColumnsToLayer(self,layerSQL)
+                            ImportFinrepVTL.addColumnsToLayer(self,layerSQL)
                             
                         
-    def addColumnsToLayer(self,layerSQL):
-        fileLocation = self.fileDirectory + "\\cube_structure_item.csv"
+    def addColumnsToLayer(self,context,layerSQL):
+        fileLocation = context.fileDirectory + "\\cube_structure_item.csv"
         il_name = layerSQL.name
         amended_il_name = "FINREP_REF_" + il_name + "_REF_FINREP 3.0"
 
@@ -149,7 +183,4 @@ class Finrep(object):
                         layerSQL.columns.extend([selectColumn])
                     
 
-if __name__ == '__main__':
-    Finrep().convert('C:\\Users\\LENOVO\\freebirdtools-develop-nov\\git\\efbt\\openregspecs\\python\\resources\\vtl_breakdown','C:\\Users\\LENOVO\\freebirdtools-develop-nov\\git\\efbt\\openregspecs\\python\\results\\')
-    
             
