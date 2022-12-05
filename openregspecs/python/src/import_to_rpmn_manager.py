@@ -24,34 +24,28 @@ from import_ldm_to_rpmn import LDMImport
 from import_input_layer_to_rpmn import InputLayerImport
 from import_output_layer_to_rpmn import ROLImport
 from import_finrep_vtl import ImportFinrepVTL
-
-
-class ImportManager(object):
+from persistToFile import PersistToFile 
 
 if __name__ == '__main__':
     context = Context()
-    importLDM = FALSE
-    importIL=TRUE
-    importROL=TRUE
-    importFinrepVTL=TRUE
-    persistToXML = TRUE
-    persistToRPMN = TRUE
+    importLDM = False
+    importIL=True
+    importROL=True
+    importFinrepVTL=True
+    persistToXML = True
+    persistToRPMN = True
     context.fileDirectory = 'C:\\Users\\LENOVO\\freebirdtools-develop-nov\\git\\efbt\\openregspecs\\python\\resources'
     context.outputDirectory = 'C:\\Users\\LENOVO\\freebirdtools-develop-nov\\git\\efbt\\openregspecs\\python\\results\\'
     
     if importLDM:
-        LDMImport.doImport(context)
+        LDMImport().doImport(context)
     if importIL:
-        InputLayerImport.doImport(context)
+        InputLayerImport().doImport(context)
     if importROL:
-        ROLImport.doImport(context)
+        ROLImport().doImport(context)
     if importFinrepVTL:
-        ImportFinrepVTL.doImport(context)
+        ImportFinrepVTL().doImport(context)
         
     persister = PersistToFile()
     persister.persist(context,persistToXML,persistToRPMN)
-        
-    
-   
-            
-            
+ 

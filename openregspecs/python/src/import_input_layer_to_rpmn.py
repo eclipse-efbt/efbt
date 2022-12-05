@@ -63,7 +63,7 @@ class InputLayerImport(object):
                     
                     # assume that SQLDve gives valid IDS fro table names according 
                     # to the validity rules of RPMN
-                    alteredClassName = Utils.makeValidID(self,className);
+                    alteredClassName = Utils.makeValidID(className);
                    
                     if(alteredClassName.endswith("_derived")):
                         xclass = XClass(name=alteredClassName)
@@ -128,8 +128,8 @@ class InputLayerImport(object):
                     counter=counter+1
                     enumID = row[0]
                     enumName = row[1]
-                    adaptedEnumName = Utils.makeValidID(self,enumName)+"_domain"
-                    if(not Utils.inEnumBlackList(self,adaptedEnumName)):
+                    adaptedEnumName = Utils.makeValidID(enumName)+"_domain"
+                    if(not Utils.inEnumBlackList(adaptedEnumName)):
                         theEnum = XEnum()
                         theEnum.name = adaptedEnumName
                         #maintain a map of enum IDS to XEnum objects
@@ -153,15 +153,15 @@ class InputLayerImport(object):
                     try:
                         counter=counter+1
                         enumID = row[0]
-                        enumUsedName = Utils.makeValidID(self,row[3])
+                        enumUsedName = Utils.makeValidID(row[3])
                         #enumName = row[5]
-                        adaptedEnumName = Utils.makeValidID(self,enumUsedName)
+                        adaptedEnumName = Utils.makeValidID(enumUsedName)
                         value = row[4]
-                        adaptedValue = Utils.makeValidID(self,value)
+                        adaptedValue = Utils.makeValidID(value)
                         try:
                             theEnum = context.enumMap[enumID]
-                            newAdaptedValue = Utils.uniqueValue(self,theEnum,adaptedValue)
-                            newAdaptedName = Utils.uniqueName(self,theEnum,adaptedEnumName)
+                            newAdaptedValue = Utils.uniqueValue(theEnum,adaptedValue)
+                            newAdaptedName = Utils.uniqueName(theEnum,adaptedEnumName)
                             enumLiteral = XEnumLiteral()
                             enumLiteral.name = newAdaptedName
                             enumLiteral.literal = newAdaptedValue
@@ -238,7 +238,7 @@ class InputLayerImport(object):
                 else:
                     attributeName = row[0]
                     attributeID = row[1]
-                    amendedAttributeName = Utils.makeValidID(self,attributeName);
+                    amendedAttributeName = Utils.makeValidID(attributeName);
                     mandatory = row[6]
                     attributeKind = row[7]
                    
@@ -409,7 +409,7 @@ class InputLayerImport(object):
                         
                     sourceTo_Target_Cardinality = "1"
                     
-                    referenceName = "the" + Utils.makeValidID(self,targetClassName);
+                    referenceName = "the" + Utils.makeValidID(targetClassName);
 
                     try:
                         theClass = context.classesMap[sourceID]
@@ -421,7 +421,7 @@ class InputLayerImport(object):
                     except KeyError:
                         print("missing target class: " + targetID) 
                                           
-                    numOfRelations = Utils.numberofRelationShipsToThisClass(self,theClass,targetClass)
+                    numOfRelations = Utils.numberofRelationShipsToThisClass(theClass,targetClass)
                     if(numOfRelations>0):
                         print("numOfRelations")
                         print(numOfRelations)
@@ -440,7 +440,7 @@ class InputLayerImport(object):
                             if (theClass.name.endswith("_derived")):
                                 theSourceTable = context.tableMap[theClass]
                                 theTargetTable = context.tableMap[targetClass]
-                                if not(Utils.hasMemberCalled(self, theSourceTable, "sourceTable1")):
+                                if not(Utils.hasMemberCalled( theSourceTable, "sourceTable1")):
                                    
                                     sourceTablesReference  = XReference()
                                     sourceTablesReference.name="sourceTable1"
@@ -468,7 +468,7 @@ class InputLayerImport(object):
                             if (theClass.name.endswith("_derived")):
                                 theSourceTable = context.tableMap[theClass]
                                 theTargetTable = context.tableMap[targetClass]
-                                if not(Utils.hasMemberCalled(self, theSourceTable, "sourceTable1")):
+                                if not(Utils.hasMemberCalled( theSourceTable, "sourceTable1")):
                                     
                                     sourceTablesReference  = XReference()
                                     sourceTablesReference.name="sourceTable1"
@@ -499,7 +499,7 @@ class InputLayerImport(object):
 
                                 theSourceTable = context.tableMap[theClass]
                                 theTargetTable = context.tableMap[targetClass]
-                                if not(Utils.hasMemberCalled(self, theSourceTable, "sourceTable1")):
+                                if not(Utils.hasMemberCalled( theSourceTable, "sourceTable1")):
                                     
                                     sourceTablesReference  = XReference()
                                     sourceTablesReference.name="sourceTable1"

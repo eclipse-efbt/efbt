@@ -36,7 +36,7 @@ class Utils(object):
             if that exists then _x4 etc.
         '''
         newAdaptedValue = adaptedValue
-        if Utils.containsLiteral(cls,theEnum.literals, adaptedValue ):
+        if Utils.containsLiteral(theEnum.literals, adaptedValue ):
             newAdaptedValue = adaptedValue +"_x2"
         counter = 1
         finished = False
@@ -51,7 +51,7 @@ class Utils(object):
         limit = 32
         while ((counter < limit) and not(finished)):
             counter = counter + 1
-            if Utils.containsLiteral(cls,theEnum.literals, adaptedValue +"_x" + str(counter)):
+            if Utils.containsLiteral(theEnum.literals, adaptedValue +"_x" + str(counter)):
                 newAdaptedValue = adaptedValue +"_x"+ str(counter+1)
             else:
                 finished = True
@@ -69,12 +69,12 @@ class Utils(object):
         counter = 1
         finished = False
         limit = 32
-        if Utils.containsName(cls,theEnum.literals, enumUsedName ):
+        if Utils.containsName(theEnum.literals, enumUsedName ):
                 newAdaptedName = enumUsedName +"_x2"
                 
         while ((counter < limit) and not(finished)):
             counter = counter + 1
-            if Utils.containsName(cls,theEnum.literals, enumUsedName +"_x" + str(counter)):
+            if Utils.containsName(theEnum.literals, enumUsedName +"_x" + str(counter)):
                 newAdaptedName = enumUsedName +"_x"+ str(counter+1)
             else:
                 finished = True 
@@ -244,7 +244,7 @@ class Utils(object):
                 .replace(chr(0x2004), '_').replace(chr(0x2005), '_').replace(chr(0x2006), '_').replace(chr(0x2007), '_') \
                 .replace(chr(0x2008), '_').replace(chr(0x2009), '_').replace(chr(0x200A), '_').replace(chr(0x00A0), '_')
           
-        returnString = Utils.replaceAcutesGravesAndCircumflexes(cls, amendedInputString)      
+        returnString = Utils.replaceAcutesGravesAndCircumflexes(amendedInputString)      
 
         return returnString;
     

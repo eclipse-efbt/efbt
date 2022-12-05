@@ -6,7 +6,8 @@ from pyecore.resources.xmi import XMIOptions
 from Utils import Utils
 from context import Context
 
-def saveModelAsRPMNFile(self ):
+class PersistToFile:
+    def saveModelAsRPMNFile(self ):
         
             f = open(self.outputDirectory + 'data_model.rpmn', "a",  encoding='utf-8')
             f.write("\t\t package " + self.rpmnPackage.name + "\r")    

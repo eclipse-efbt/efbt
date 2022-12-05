@@ -50,15 +50,15 @@ class ROLImport(object):
                     headerSkipped = True
                 else:
 
-                    className = row[5]
+                    className = row[0]
                     objectID  = className
-                    cube_type = row[6]
-                    valid_to  = row[9]
-                    version   = row[10]
+                    cube_type = row[3]
+                    valid_to  = row[11]
+                    framework   = row[5]
                     
-                    if ( (version ==  "FINREP 3.0") and (cube_type == "RC") and (valid_to == "31.12.9999") ) :
+                    if ( (framework ==  "FINREP_REF") and (cube_type == "RC") and (valid_to == "12/31/9999") ) :
 
-                        alteredClassName = Utils.makeValidID(self,className);  
+                        alteredClassName = Utils.makeValidID(className);  
                         
                         xclass = XClass(name=alteredClassName+"_OutputItem")
                         xclassTable = XClass(name=alteredClassName+"_OutputTable")
@@ -98,9 +98,9 @@ class ROLImport(object):
                 if (not headerSkipped):
                         headerSkipped = True
                 else:
-                    variableName = row[1]
-                    #domainName = Utils.makeValidID(self,row[3])
-                    domain = row[4]
+                    variableName = row[6]
+                    #domainName = Utils.makeValidID(row[3])
+                    domain = row[2]
                     context.variableToDomainMap[variableName] = domain
              
     def createDomainToDomainNameMap(self,context):         
@@ -116,9 +116,9 @@ class ROLImport(object):
                 if (not headerSkipped):
                         headerSkipped = True
                 else:
-                    domainID = row[1]
-                    #domainName = Utils.makeValidID(self,row[3])
-                    domainName = row[2]
+                    domainID = row[0]
+                    #domainName = Utils.makeValidID(row[3])
+                    domainName = row[8]
                     context.domainToDomainNameMap[domainID] = domainName
                    
     def createMemberMaps(self,context):   
@@ -133,11 +133,13 @@ class ROLImport(object):
                 if (not headerSkipped):
                         headerSkipped = True
                 else:
-                    memberID = row[1]
-                    #domainName = Utils.makeValidID(self,row[3])
-                    memberCode= row[2]
-                    memberName = row[3]
-                    domainId =  row[4]
+                    memberID = row[4]
+                    print("memberid")
+                    print(memberID)
+                    #domainName = Utils.makeValidID(row[3])
+                    memberCode= row[0]
+                    memberName = row[5]
+                    domainId =  row[2]
                     context.memberIDToDomainMap[memberID] = domainId
                     context.memberIDToMemberNameMap[memberID] = memberName
                     context.memberIDToMemberCodeMap[memberID] = memberCode
@@ -163,8 +165,8 @@ class ROLImport(object):
 
                         domainID = context.variableToDomainMap[variable]
                         # domain_ID_Name = context.domainToDomainNameMap[domainID]
-                        amendedDomainName = Utils.makeValidID(self,domainID)
-                        theEnum =  Utils.findROLEnum(self,amendedDomainName+"_domain",context.enumMap)
+                        amendedDomainName = Utils.makeValidID(domainID)
+                        theEnum =  Utils.findROLEnum(amendedDomainName+"_domain",context.enumMap)
                         if  theEnum is not None:                     
                             print( "not missing domainID: " )
                         else:
@@ -180,21 +182,21 @@ class ROLImport(object):
         for theDomain in context.missingDomains:
             
             #domain_ID_Name = context.domainToDomainNameMap[theDomain]
-            amendedDomainName = Utils.makeValidID(self,theDomain)+ "_domain"
+            amendedDomainName = Utils.makeValidID(theDomain)+ "_domain"
             if not( (amendedDomainName == "String") or (amendedDomainName == "Date")  ):
                 theEnum = XEnum()
                 theEnum.name = amendedDomainName 
                 #maintain a map of enum IDS to XEnum objects
                 context.enumMap[amendedDomainName] = theEnum
                 context.rpmnPackage.classifiers.extend([theEnum])
-                theDomainMembers= Utils.getMembersOfTheDomain(self,theDomain, context.memberIDToDomainMap)
+                theDomainMembers= Utils.getMembersOfTheDomain(theDomain, context.memberIDToDomainMap)
                 counter1 = 0
                 for member in theDomainMembers:
                     enumLiteral = XEnumLiteral()
-                    enumUsedName = Utils.makeValidID(self,context.memberIDToMemberCodeMap[member])
-                    adaptedValue = Utils.makeValidID(self,context.memberIDToMemberNameMap[member])
-                    newAdaptedValue = Utils.uniqueValue(self, theEnum, adaptedValue)
-                    newAdaptedName = Utils.uniqueName(self, theEnum, enumUsedName)
+                    enumUsedName = Utils.makeValidID(context.memberIDToMemberCodeMap[member])
+                    adaptedValue = Utils.makeValidID(context.memberIDToMemberNameMap[member])
+                    newAdaptedValue = Utils.uniqueValue( theEnum, adaptedValue)
+                    newAdaptedName = Utils.uniqueName( theEnum, enumUsedName)
                     
                     
                     
@@ -221,7 +223,7 @@ class ROLImport(object):
                         headerSkipped = True
                 else:
                     attributeName = row[1]
-                    amendedAttributeName = Utils.makeValidID(self,attributeName)
+                    amendedAttributeName = Utils.makeValidID(attributeName)
                     variable = row[2]
                    
                     classID = row[0]
@@ -234,8 +236,8 @@ class ROLImport(object):
        
                         domainID = context.variableToDomainMap[variable]
                         #domain_ID_Name = context.domainToDomainNameMap[domainID]
-                        amendedDomainName = Utils.makeValidID(self,domainID)
-                        theEnum =  Utils.findROLEnum(self,amendedDomainName+"_domain",context.enumMap)
+                        amendedDomainName = Utils.makeValidID(domainID)
+                        theEnum =  Utils.findROLEnum(amendedDomainName+"_domain",context.enumMap)
                         if  theEnum is not None:                     
                             attribute = XAttribute()
 

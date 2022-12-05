@@ -27,7 +27,7 @@ class ImportFinrepVTL(object):
 
     def doImport(self,context):
         
-        ImportFinrepVTL.buildOutputLayerToVTLLayerMap(self)
+        ImportFinrepVTL.buildOutputLayerToVTLLayerMap(self,context)
         subProcess = SubProcess(name = "finrepReports")
         context.workflowModule.subProcess.extend([subProcess])
         ImportFinrepVTL.addReports(self,context)
@@ -38,7 +38,7 @@ class ImportFinrepVTL(object):
         headerSkipped = False
         # Load all the entities from the csv file, make an XClass per entity,
         # and add the XClass to the package
-        with open(fileLocation) as csvfile:
+        with open(fileLocation,encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
                 # skip the first line which is the header.
@@ -47,15 +47,19 @@ class ImportFinrepVTL(object):
                 else:
                     expression = row[2]
                     scheme = row[7]
-                    if scheme.startsWith("G_F") and scheme.endsWith("_FINREP_1"):
-                        if expression.contains("union"):
+                    if scheme.startswith("G_F") and scheme.endswith("_FINREP_1"):
+                        if "union" in expression:
+                            print("expression")
+                            print(expression)
                             indexOfExpressionOpenBracket = expression.find('(')
                             indexOfExpressionClosedBracket = expression.find(')')
-                            vtl_layer_list = expression.substring(indexOfExpressionOpenBracket,indexOfExpressionClosedBracket).split(',')
+                            print(indexOfExpressionOpenBracket)
+                            print(indexOfExpressionClosedBracket)
+                            vtl_layer_list = expression[indexOfExpressionOpenBracket:indexOfExpressionClosedBracket].split(',')
                             
                             indexOfSchemeStart = expression.find('G_')
                             indexOfSchemeEnd= expression.find('UNFLDD_FINREP_1')
-                            output_layer = scheme.substring(indexOfSchemeStart,indexOfSchemeEnd)
+                            output_layer = scheme[indexOfSchemeStart:indexOfSchemeEnd]
                             context.outputLayerToVTLLayerMap[output_layer, vtl_layer_list]
     
     def buildListOfVTLLayersForFinrep(self,context):
