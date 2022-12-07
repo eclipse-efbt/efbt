@@ -5,6 +5,8 @@ Created on 22 Jan 2022
 '''
 import csv
 from open_reg_specs import *
+from import_to_rpmn_manager import context
+from pickle import TRUE
 class ImportFinrepVTL(object):
     '''
     1.) Look throug in scope reports
@@ -31,6 +33,53 @@ class ImportFinrepVTL(object):
         subProcess = SubProcess(name = "finrepReports")
         context.workflowModule.subProcess.extend([subProcess])
         ImportFinrepVTL.addReports(self,context)
+        
+    def importTransformationsAndSchemes(selfself,context):
+        fileLocation = context.fileDirectory + "\\TRANSFORMATIONS_50.csv"
+
+        headerSkipped = False
+        # Load all the entities from the csv file, make an XClass per entity,
+        # and add the XClass to the package
+        with open(fileLocation,encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                # skip the first line which is the header.
+                if (not headerSkipped):
+                    headerSkipped = True
+                else:
+                    expression = row[2]
+                    scheme = row[7]
+                    description = row[1]
+                    transformationID = row[6]
+                    order = row[5]
+                    vtlScheme = None
+                    if not(ImportFinrepVTL.schemesContains(self,context,scheme)):
+                        #new scheme
+                        vtlScheme = VTLScheme(name=scheme)
+                    else:
+                        vtlScheme = ImportFinrepVTL.lookupScheme(self,context,scheme)
+                        
+                    transformation = VTLTransformation()
+                    transformation.transformationID = transformationID
+                    transformation.description = description
+                    transformation.order_in_scheme = order
+                    transformation.expression = expression
+                    vtlScheme.expressions.append(transformation)
+                    
+                    #if scheme.startswith("G_F") and scheme.endswith("_FINREP_1"):
+                    #    if "union" in expressio
+        
+    def schemesContains(self,context,scheme):
+        for scheme in context.vtlModule.VTLSchemes:
+            if scheme.scheme_id == scheme:
+                return True
+        return False
+    
+    def lookupScheme(self,context,scheme):
+        for scheme in context.vtlModule.VTLSchemes:
+            if scheme.scheme_id == scheme:
+                return scheme
+        return None
     
     def buildOutputLayerToVTLLayerMap(self,context):
         fileLocation = context.fileDirectory + "\\TRANSFORMATIONS_50.csv"
@@ -62,6 +111,15 @@ class ImportFinrepVTL(object):
                             output_layer = scheme[indexOfSchemeStart:indexOfSchemeEnd]
                             context.outputLayerToVTLLayerMap[output_layer, vtl_layer_list]
     
+    def buildListOfIntermediateFinrepLayers(self,context):
+        for scheme in context.vtlModule.VTLSchemes:
+            if scheme.scheme_id.startsWith("G_") and not(scheme.scheme_id.startsWith("G_F_")) and scheme.scheme_id.endsWith("_FINREP_1"):  
+                intermediateLayer = VTLGeneratedIntermediateLayer()
+                intermediateLayer.transformations = scheme
+                ImportFinrepVTL.findEnrichedCubeFor(self, scheme.scheme_id)
+                
+    
+        
     def buildListOfVTLLayersForFinrep(self,context):
         fileLocation = context.fileDirectory + "\\TRANSFORMATIONS_50.csv"
 

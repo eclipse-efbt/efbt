@@ -58,8 +58,9 @@ class Context(object):
     
     viewModule = ViewModule(name='generations')
     
-    workflowModule = WorkflowModule(name='import_finrep_vtl')
+    workflowModule = WorkflowModule(name='finrepWorkflow')
     
+    vtlModule = VTLModule(name = "vtl")
     moduleList = ModuleList()
     
     vtl_layers = []

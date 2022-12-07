@@ -459,8 +459,7 @@ class VTLGeneratedIntermediateLayer(EObject, metaclass=MetaEClass):
 
     dependant_enriched_cubes = EReference(
         ordered=True, unique=True, containment=False, derived=False)
-    transformations = EReference(ordered=True, unique=True,
-                                 containment=False, derived=False, upper=-1)
+    transformations = EReference(ordered=True, unique=True, containment=False, derived=False)
 
     def __init__(self, *, dependant_enriched_cubes=None, transformations=None):
         # if kwargs:
@@ -471,8 +470,8 @@ class VTLGeneratedIntermediateLayer(EObject, metaclass=MetaEClass):
         if dependant_enriched_cubes is not None:
             self.dependant_enriched_cubes = dependant_enriched_cubes
 
-        if transformations:
-            self.transformations.extend(transformations)
+        if transformations is not None:
+            self.transformations = transformations
 
 
 class VTLTransformation(EObject, metaclass=MetaEClass):
