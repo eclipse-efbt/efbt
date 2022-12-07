@@ -81,6 +81,23 @@ class ImportFinrepVTL(object):
                 return scheme
         return None
     
+    def buildROLToIntermediateLayerLink(self,context):
+        for scheme in context.vtlModule.VTLSchemes:
+            if scheme.scheme_id.startswith("G_F") and scheme.endswith("_FINREP_1"):
+                outputLayer=VTLGeneratedOutputlayer()
+                for transformation in scheme.expressions:
+                    expression = transformation.expression
+                    if "union" in expression:
+                        indexOfExpressionOpenBracket = expression.find('(')
+                        indexOfExpressionClosedBracket = expression.find(')')
+                        print(indexOfExpressionOpenBracket)
+                        print(indexOfExpressionClosedBracket)
+                        vtl_layer_list = expression[indexOfExpressionOpenBracket:indexOfExpressionClosedBracket].split(',')
+                        for vtl_layer in vtl_layer_list:
+                            outputLayer.dependant_intermediate_layers.append(ImportFinrepVTL.findIntermediateLAyer(self,context,vtl_layer))
+                
+            
+    
     def buildOutputLayerToVTLLayerMap(self,context):
         fileLocation = context.fileDirectory + "\\TRANSFORMATIONS_50.csv"
 
@@ -116,10 +133,20 @@ class ImportFinrepVTL(object):
             if scheme.scheme_id.startsWith("G_") and not(scheme.scheme_id.startsWith("G_F_")) and scheme.scheme_id.endsWith("_FINREP_1"):  
                 intermediateLayer = VTLGeneratedIntermediateLayer()
                 intermediateLayer.transformations = scheme
-                ImportFinrepVTL.findEnrichedCubeFor(self, scheme.scheme_id)
+                intermediateLayer.dependant_enriched_cubes = ImportFinrepVTL.findEnrichedCubeFor(self, context, scheme.scheme_id)
                 
     
-        
+    def findEnrichedCubeFor(self,context,scheme_id):
+        indexOfSchemeStart = scheme_id.find('G_')
+        indexOfSchemeEnd= scheme_id.find('_FINREP_1')
+        enrichedCube = scheme_id[indexOfSchemeStart:indexOfSchemeEnd] + "E_1"
+        returnTransformations = None
+        for scheme in context.vtlModule.VTLSchemes:
+            if scheme.scheme_id == enrichedCube:  
+                returnTransformations = scheme
+                
+        return returnTransformations
+                
     def buildListOfVTLLayersForFinrep(self,context):
         fileLocation = context.fileDirectory + "\\TRANSFORMATIONS_50.csv"
 
