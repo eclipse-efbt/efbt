@@ -494,9 +494,16 @@
         upperBound="-1" eType="#//VTLForSelectionLayer" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="entityToVTLIntermediateLayerLinks"
         upperBound="-1" eType="#//EntityToVTLIntermediateLayerLink" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="VTLForViews" upperBound="-1"
+        eType="#//VTLForView" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EntityToVTLIntermediateLayerLink">
     <eStructuralFeatures xsi:type="ecore:EReference" name="VTLIntermediateLayer" eType="#//VTLGeneratedIntermediateLayer"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="entity" eType="#//XClass"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="filter" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VTLForView">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="view" eType="#//View"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="vtl" eType="#//VTLGeneratedOutputlayer"/>
   </eClassifiers>
 </ecore:EPackage>

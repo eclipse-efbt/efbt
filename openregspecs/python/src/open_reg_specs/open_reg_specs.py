@@ -543,20 +543,42 @@ class VTLForSelectionLayer(EObject, metaclass=MetaEClass):
 
 class EntityToVTLIntermediateLayerLink(EObject, metaclass=MetaEClass):
 
+    filter = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     VTLIntermediateLayer = EReference(ordered=True, unique=True, containment=False, derived=False)
     entity = EReference(ordered=True, unique=True, containment=False, derived=False)
 
-    def __init__(self, *, VTLIntermediateLayer=None, entity=None):
+    def __init__(self, *, VTLIntermediateLayer=None, entity=None, filter=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
         super().__init__()
+
+        if filter is not None:
+            self.filter = filter
 
         if VTLIntermediateLayer is not None:
             self.VTLIntermediateLayer = VTLIntermediateLayer
 
         if entity is not None:
             self.entity = entity
+
+
+class VTLForView(EObject, metaclass=MetaEClass):
+
+    view = EReference(ordered=True, unique=True, containment=False, derived=False)
+    vtl = EReference(ordered=True, unique=True, containment=False, derived=False)
+
+    def __init__(self, *, view=None, vtl=None):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+        if view is not None:
+            self.view = view
+
+        if vtl is not None:
+            self.vtl = vtl
 
 
 @abstract
@@ -847,8 +869,9 @@ class VTLModule(Module):
                                        containment=True, derived=False, upper=-1)
     entityToVTLIntermediateLayerLinks = EReference(
         ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    VTLForViews = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
-    def __init__(self, *, VTLSchemes=None, VTLGeneratedOutputLayers=None, VTLGeneratedIntermediateLayers=None, VTLEnrichedCubes=None, VTLForSelectionLayers=None, entityToVTLIntermediateLayerLinks=None, **kwargs):
+    def __init__(self, *, VTLSchemes=None, VTLGeneratedOutputLayers=None, VTLGeneratedIntermediateLayers=None, VTLEnrichedCubes=None, VTLForSelectionLayers=None, entityToVTLIntermediateLayerLinks=None, VTLForViews=None, **kwargs):
 
         super().__init__(**kwargs)
 
@@ -869,6 +892,9 @@ class VTLModule(Module):
 
         if entityToVTLIntermediateLayerLinks:
             self.entityToVTLIntermediateLayerLinks.extend(entityToVTLIntermediateLayerLinks)
+
+        if VTLForViews:
+            self.VTLForViews.extend(VTLForViews)
 
 
 @abstract

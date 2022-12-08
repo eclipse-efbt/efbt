@@ -80,12 +80,12 @@ class PersistToFile:
             f.close()
         
         
-    def saveModelAsXMIFile(self):
+    def saveModelAsXMIFile(self,context):
         '''
          save model as an xmi file representing an object tree.
         '''
         rset = ResourceSet()
 
         resource = rset.create_resource(URI(self.outputDirectory + 'IL.rpmn'))  # This will create an XMI resource
-        resource.append(self.rpmnPackage)
+        resource.append(context.moduleList)
         resource.save()

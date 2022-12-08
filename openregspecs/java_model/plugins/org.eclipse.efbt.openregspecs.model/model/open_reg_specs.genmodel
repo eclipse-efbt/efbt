@@ -272,10 +272,16 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//VTLModule/VTLEnrichedCubes"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//VTLModule/VTLForSelectionLayers"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//VTLModule/entityToVTLIntermediateLayerLinks"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//VTLModule/VTLForViews"/>
     </genClasses>
     <genClasses ecoreClass="open_reg_specs.ecore#//EntityToVTLIntermediateLayerLink">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//EntityToVTLIntermediateLayerLink/VTLIntermediateLayer"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//EntityToVTLIntermediateLayerLink/entity"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//EntityToVTLIntermediateLayerLink/filter"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//VTLForView">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//VTLForView/view"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//VTLForView/vtl"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

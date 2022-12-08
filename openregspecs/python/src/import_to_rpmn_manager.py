@@ -47,5 +47,5 @@ if __name__ == '__main__':
         ImportFinrepVTL().doImport(context)
         
     persister = PersistToFile()
-    persister.persist(context,persistToXML,persistToRPMN)
+    persister.saveModelAsXMIFile(context)
  

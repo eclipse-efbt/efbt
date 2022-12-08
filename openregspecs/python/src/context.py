@@ -62,12 +62,7 @@ class Context(object):
     
     vtlModule = VTLModule(name = "vtl")
     moduleList = ModuleList()
-    
-    vtl_layers = []
-    outputLayerToVTLLayerMap = {}
-    VTLLayerToVTLLayerLogicMap = {}
-    VTLLayerToEnrichedLayerMap = {}
-    EnrichedLayerToVTLLogicMap = {}
+
     
     def __init__(self):
         
@@ -77,3 +72,8 @@ class Context(object):
         self.rpmnPackage.classifiers.append(self.xString)
         self.rpmnPackage.classifiers.append(self.xDouble)
         self.rpmnPackage.classifiers.append(self.xInt)
+        self.moduleList.modules.append(self.rpmnPackage)
+        self.moduleList.modules.append(self.viewModule)
+        self.moduleList.modules.append(self.workflowModule)
+        self.moduleList.modules.append(self.vtlModule)
+        

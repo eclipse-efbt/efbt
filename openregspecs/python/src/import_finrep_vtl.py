@@ -5,7 +5,6 @@ Created on 22 Jan 2022
 '''
 import csv
 from open_reg_specs import *
-from import_to_rpmn_manager import context
 from pickle import TRUE
 class ImportFinrepVTL(object):
     '''
@@ -29,12 +28,17 @@ class ImportFinrepVTL(object):
 
     def doImport(self,context):
         
-        ImportFinrepVTL.buildOutputLayerToVTLLayerMap(self,context)
+        #ImportFinrepVTL.buildOutputLayerToVTLLayerMap(self,context)
         subProcess = SubProcess(name = "finrepReports")
         context.workflowModule.subProcess.extend([subProcess])
-        ImportFinrepVTL.addReports(self,context)
+        #ImportFinrepVTL.addReports(self,context)
+        ImportFinrepVTL.importTransformationsAndSchemes(self,context)
+        ImportFinrepVTL.buildListOfIntermediateFinrepLayers(self,context)
+        ImportFinrepVTL.buildROLToIntermediateLayerLink(self,context)
+        ImportFinrepVTL.buildIntermediateLayerToInputLayer(self,context)
+        ImportFinrepVTL.addReports(self, context)
         
-    def importTransformationsAndSchemes(selfself,context):
+    def importTransformationsAndSchemes(self,context):
         fileLocation = context.fileDirectory + "\\TRANSFORMATIONS_50.csv"
 
         headerSkipped = False
@@ -55,7 +59,8 @@ class ImportFinrepVTL(object):
                     vtlScheme = None
                     if not(ImportFinrepVTL.schemesContains(self,context,scheme)):
                         #new scheme
-                        vtlScheme = VTLScheme(name=scheme)
+                        vtlScheme = VTLScheme()
+                        vtlScheme.scheme_id = scheme
                     else:
                         vtlScheme = ImportFinrepVTL.lookupScheme(self,context,scheme)
                         
@@ -83,8 +88,14 @@ class ImportFinrepVTL(object):
     
     def buildROLToIntermediateLayerLink(self,context):
         for scheme in context.vtlModule.VTLSchemes:
-            if scheme.scheme_id.startswith("G_F") and scheme.endswith("_FINREP_1"):
+            if scheme.scheme_id.startswith("G_F") and scheme.endswith("_REF_UNFLDD_FINREP_1"):
+                # indexOfSchemeStart = scheme.scheme_id.find('G_')
+                indexOfSchemeEnd= scheme.scheme_id.find('UNFLDD_FINREP_1')
+                output_layer_name = scheme[2:indexOfSchemeEnd]
+                
                 outputLayer=VTLGeneratedOutputlayer()
+                outputLayer.outputLayer = ImportFinrepVTL.findEntity(self,context,output_layer_name)
+                
                 for transformation in scheme.expressions:
                     expression = transformation.expression
                     if "union" in expression:
@@ -94,9 +105,35 @@ class ImportFinrepVTL(object):
                         print(indexOfExpressionClosedBracket)
                         vtl_layer_list = expression[indexOfExpressionOpenBracket:indexOfExpressionClosedBracket].split(',')
                         for vtl_layer in vtl_layer_list:
-                            outputLayer.dependant_intermediate_layers.append(ImportFinrepVTL.findIntermediateLAyer(self,context,vtl_layer))
-                
+                            intermediateLayer = ImportFinrepVTL.findIntermediateLayer(self,context,vtl_layer)
+                            outputLayer.dependant_intermediate_layers.append(intermediateLayer)
+                            combo = VTLForOutputLayerAndIntermediateLayerCombination()
+                            combo.outputLayer = outputLayer
+                            combo.intermediateLayer = intermediateLayer
+                            #get the special commands specific to the output layer and intermediate layer
+                            for  trans in scheme.expressions:
+                                indexOfColon = trans.expression.find(':')
+                                lhs = indexOfColon[0:indexOfColon]
+                                if lhs == intermediateLayer.transformations.scheme_id:
+                                    combo.transformations.append(trans)
+                            outputLayer.VTLForOutputLayerAndIntemedateLayerCombinations.append(combo)
+                                    
+
+    def findEntity(self,context,outputLayerName):
+        for rol in context.rpmnPackage.classifiers:
+            if rol.name == outputLayerName:
+                return rol
+        return None
             
+        
+    def findIntermediateLayer(self,context,layer):
+        
+        for layer in context.vtlModule.VTLGeneratedIntermediateLayers:
+            if layer.transformations.scheme_id == layer:
+                return layer
+            
+        return None
+                
     
     def buildOutputLayerToVTLLayerMap(self,context):
         fileLocation = context.fileDirectory + "\\TRANSFORMATIONS_50.csv"
@@ -134,7 +171,7 @@ class ImportFinrepVTL(object):
                 intermediateLayer = VTLGeneratedIntermediateLayer()
                 intermediateLayer.transformations = scheme
                 intermediateLayer.dependant_enriched_cubes = ImportFinrepVTL.findEnrichedCubeFor(self, context, scheme.scheme_id)
-                
+                context.vtlModule.VTLGeneratedIntermediateLayers.append(intermediateLayer)
     
     def findEnrichedCubeFor(self,context,scheme_id):
         indexOfSchemeStart = scheme_id.find('G_')
@@ -210,43 +247,52 @@ class ImportFinrepVTL(object):
                     reportTemplate = row[0];
                     new = row[1];
                     view =  View(name = reportTemplate)
+                    context.viewModule.views.append(view)
+                    
                     task = ScriptTask(name = reportTemplate)
-                    context.viewModule.views.extend([view])
-                    context.workflowModule.subProcess[0].extend([task])
-                    ImportFinrepVTL.addLayers(self, view, task)
+                    context.workflowModule.subProcess[0].flowElements.append(task)
+                    ImportFinrepVTL.addLayers(self, context, view, task)
                     
                     
     def addLayers(self,context,view, task):
-        fileLocation = context.fileDirectory + "\\VTL_layer_to_IL.csv"
         
-        vtlLayers = context.outputLayerToVTLLayerMap[view.name]
+        viewVTL = VTLForView()
+        viewVTL.view = view
+        rolVTL = ImportFinrepVTL.findOutputLayerVTL(self,context,view.name)
+        viewVTL.vtl = rolVTL
+        context.vtlModule.VTLForViews.append(viewVTL)
         
-        for layer in vtlLayers:
+        for intermediateLayer in rolVTL.dependant_intermediate_layers:
             
-            headerSkipped = False
-            # Load all the entities from the csv file, make an XClass per entity,
-            # and add the XClass to the package
-            with open(fileLocation) as csvfile:
-                filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
-                for row in filereader:
-                    # skip the first line which is the header.
-                    if (not headerSkipped):
-                        headerSkipped = True
-                    else:
-                        vtlLayer = row[0];
-                        input_layer = row[2]
-                        sqlfilter = row[3]
-                        if vtlLayer == layer:
-                            selectionLayer = SelectionLayer(name = input_layer)
-                            task.selectionLayers.extend([selectionLayer])
-                            layerSQL = LayerSQL(name = input_layer)
-                            layerSQL.selectionLayer = selectionLayer
-                            layerSQL.filter_comment = sqlfilter
-                            layerSQL.original_vtl_layer_comment = vtlLayer
-                            view.selectionLayerSQL.extend([layerSQL])
-                            ImportFinrepVTL.addColumnsToLayer(self,layerSQL)
-                            
-                        
+            vtlLayer = intermediateLayer.transformations
+            link = ImportFinrepVTL.findEntityIntermediateLayerLink(self,context,vtlLayer) 
+            input_layer = link.entity
+            sqlfilter = link.filter
+            
+            selectionLayer = SelectionLayer(name = input_layer)
+            task.selectionLayers.extend([selectionLayer])
+            layerSQL = LayerSQL(name = input_layer)
+            vtlForSelectionLayer = VTLForSelectionLayer()
+            vtlForSelectionLayer.selectionLayer = selectionLayer
+            vtlForSelectionLayer.outputLayer = rolVTL
+            vtlForSelectionLayer.intermediateLayer = intermediateLayer
+            
+            
+            view.selectionLayerSQL.extend([layerSQL])
+            ImportFinrepVTL.addColumnsToLayer(self,layerSQL)
+           
+    def findOutputLayerVTL(self,context, outputLayerName):
+        for rol in context.vtlModule.VTLGeneratedOutputLayers:
+            if rol.outputLayer.name == outputLayerName:
+                return rol
+        
+
+    def findEntityIntermediateLayerLink(self,context,intermediateLayer):     
+        for link in context.vtlModule.entityToVTLIntermediateLayerLinks:
+            if link.VTLIntermediateLayer == intermediateLayer:
+                return link
+    
+                       
     def addColumnsToLayer(self,context,layerSQL):
         fileLocation = context.fileDirectory + "\\cube_structure_item.csv"
         il_name = layerSQL.name
@@ -271,5 +317,28 @@ class ImportFinrepVTL(object):
                         selectColumn.attribute = attribute
                         layerSQL.columns.extend([selectColumn])
                     
+    def buildIntermediateLayerToInputLayer(self,context):
+        fileLocation = context.fileDirectory + "\\VTL_layer_to_IL.csv"
+        #il_name = layerSQL.name
+        #amended_il_name = "FINREP_REF_" + il_name + "_REF_FINREP 3.0"
 
-            
+        
+        headerSkipped = False
+        # Load all the entities from the csv file, make an XClass per entity,
+        # and add the XClass to the package
+        with open(fileLocation) as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                # skip the first line which is the header.
+                if (not headerSkipped):
+                    headerSkipped = True
+                else:
+                    vtlLayer = row[0]
+                    inputLayer = row[2]
+                    filter = row[3]
+                    link = EntityToVTLIntermediateLayerLink()
+                    link.VTLIntermediateLayer = ImportFinrepVTL.findIntermediateLayer(self,context,vtlLayer)
+                    link.entity = ImportFinrepVTL.findEntity(self,context,inputLayer)
+                    link.filter = filter 
+                    
+     
